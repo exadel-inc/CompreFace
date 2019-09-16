@@ -1,0 +1,14 @@
+version: '3'
+services:
+  ml:
+    build: .
+    ports:
+      - "5001:5000" #flask
+    depends_on:
+      - mongo
+  mongo:
+    image: "mongo:4.0.4-xenial"
+    ports:
+      - "27117:27017" #mongo
+    volumes:
+      - ./mongo_data:/data

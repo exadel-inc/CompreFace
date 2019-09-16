@@ -1,0 +1,102 @@
+swagger: "2.0"
+info:
+  description: "Service for face recognition. You load images of people that you know, and then can load image of a person and recognize it."
+  version: "0.1-snapshot"
+  title: "Exadel Face Recognition Service"
+host: "msqv355.exadel.by:5001"
+tags:
+  - name: "Recognition"
+schemes:
+  - "http"
+paths:
+  /save/{person_name}:
+    post:
+      tags:
+        - "Recognition"
+      summary: "Save image"
+      description: "Saves new image of known person. It will be used during face recognition"
+      operationId: "saveImage"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "text/plain"
+      parameters:
+        - name: "person_name"
+          in: "path"
+          description: "Name of the person on the image"
+          required: true
+          type: "string"
+        - name: "X-Api-Key"
+          in: "header"
+          description: "Your API Key"
+          required: true
+          type: "string"
+        - in: formData
+          name: file
+          type: file
+          required: true
+          description: Image of a known person(jpeg or png)
+      responses:
+        400:
+          description: "No file part; No selected file; Api key not specified"
+  /recognize:
+    post:
+      tags:
+        - "Recognition"
+      summary: "Recognize image"
+      description: "Recognizes person on specified image"
+      operationId: "recognizeImage"
+      consumes:
+        - "multipart/form-data"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "X-Api-Key"
+          in: "header"
+          description: "Your API Key"
+          required: true
+          type: "string"
+        - in: formData
+          name: file
+          type: file
+          required: true
+          description: Image of a unknown person(jpeg or png)
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/RecognizeResponse"
+        400:
+          description: "No file part; No selected file; Api key not specified"
+  /retrain:
+    post:
+      tags:
+        - "Recognition"
+      summary: "Retrains model for specified API Key"
+      description: "This REST endpoint could be usefull if you want to load a lot of images and then retrain model"
+      operationId: "retrain"
+      produces:
+        - "text/plain"
+      parameters:
+        - name: "X-Api-Key"
+          in: "header"
+          description: "Your API Key"
+          required: true
+          type: "string"
+      responses:
+        400:
+          description: "Api key not specified"
+definitions:
+  RecognizeResponse:
+    type: "object"
+    properties:
+      prediction:
+        type: "string"
+        example: "Albert Einstein"
+      probability:
+        type: "number"
+        format: "float"
+        example: "0.95"
+externalDocs:
+  description: "Find out more about Exadel Face Recognition Service"
+  url: "https://confluence.exadel.com/display/KC/Exadel+Face+Recognition+Service"

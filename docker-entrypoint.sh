@@ -1,0 +1,19 @@
+#!/bin/bash
+
+./wait-for-it.sh mongo:27017
+
+result=$(mongo "mongo/recognition" --eval "db.getCollection('models.files').count({'filename': '20170512-110547.pb'})" | tail -n 1)
+if [[ $result == "1" ]]; then
+  echo 'Mongo DB is not empty'
+else
+   echo 'Mongo DB is empty, initializing'
+  `mongorestore --gzip --archive=dump.archive --host=mongo --db=recognition`
+fi
+
+export LC_ALL=C.UTF-8
+export LANG=C.UTF-8
+export FLASK_APP=facerecognition
+export PYTHONUNBUFFERED=0
+flask run --host=0.0.0.0
+#python3 test.py
+#sleep 1h
