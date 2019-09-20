@@ -59,3 +59,10 @@ class MongoStorage:
 
     def get_api_keys(self):
         return self._faces_collection.find({}, {"projection": ["api_key"]}).distinct("api_key")
+
+
+    def get_all_face_name(self, api_key):
+        return self._faces_collection.find({"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key}, {"face_name": 1}).distinct("face_name")
+
+    def delete(self, api_key):
+        return self._faces_collection.remove({"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key}, {'face_name': 1})

@@ -53,3 +53,22 @@ def classify(embedding, api_key):
         "prediction": model_data["face_names"][best_class_indices[0]],
         "probability": best_class_probability
     }
+
+
+def get_face_name(api_key):
+    print('Retrieving the data from the database')
+    listOfFaces = get_storage().get_all_face_name(api_key)
+    if len(listOfFaces)==0:
+        print('No faces found in the database for this api-key')
+    print(listOfFaces)
+    return {
+        "faces": listOfFaces
+    }
+
+def delete_record(api_key):
+    print('Looking for the record in the database and deleting it')
+    deleted_result = get_storage().delete(api_key)
+    if not deleted_result:
+        print('No records were deleted')
+        return 'No records found'
+    return 'Records were successfully deleted'
