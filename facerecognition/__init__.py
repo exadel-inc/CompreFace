@@ -96,20 +96,20 @@ def retrieveFaces():
         return str(e), 400
 
 
-@app.route('/remove', methods=['DELETE'])
+@app.route('/remove/<face_name>', methods=['DELETE'])
 @swag_from('flasgger/delete_record.yaml')
 
-def deleteRecord():
+def deleteRecord(face_name):
     if api_key_header not in request.headers:
         print('Api key not specified')
         return 'Api key not specified', 400
     try:
         api_key = request.headers[api_key_header]
-
-        return jsonify(classifier.delete_record(api_key))
+        classifier.delete_record(api_key, face_name)
     except RuntimeError as e:
         print(str(e))
         return str(e), 400
+    return '', 201
 
 
 print("__name__ %s" % __name__)
