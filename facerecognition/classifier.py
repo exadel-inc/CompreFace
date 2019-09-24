@@ -67,7 +67,5 @@ def get_face_name(api_key):
 
 def delete_record(api_key, face_name):
     print('Looking for the record in the database and deleting it')
-    deleted_result = get_storage().delete(api_key, face_name)
-    if not deleted_result:
-        print('No records were deleted')
+    get_storage().delete(api_key, face_name)
     print('Records were successfully deleted')

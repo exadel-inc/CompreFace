@@ -89,7 +89,7 @@ def retrieveFaces():
         return 'Api key not specified', 400
     try:
         api_key = request.headers[api_key_header]
-        return jsonify(classifier.get_face_name(api_key), 201)
+        return jsonify(classifier.get_face_name(api_key), 200)
 
     except RuntimeError as e:
         print(str(e))
@@ -109,7 +109,7 @@ def deleteRecord(face_name):
     except RuntimeError as e:
         print(str(e))
         return str(e), 400
-    return '', 201
+    return '', 204
 
 
 print("__name__ %s" % __name__)
