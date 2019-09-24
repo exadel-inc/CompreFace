@@ -60,10 +60,7 @@ def get_face_name(api_key):
     listOfFaces = get_storage().get_all_face_name(api_key)
     if len(listOfFaces)==0:
         print('No faces found in the database for this api-key')
-    print(listOfFaces)
-    return {
-        "faces": listOfFaces
-    }
+    return listOfFaces
 
 def delete_record(api_key, face_name):
     print('Looking for the record in the database and deleting it')

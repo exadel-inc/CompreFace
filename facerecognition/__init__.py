@@ -89,7 +89,7 @@ def retrieveFaces():
         return 'Api key not specified', 400
     try:
         api_key = request.headers[api_key_header]
-        return jsonify(classifier.get_face_name(api_key), 200)
+        return jsonify(classifier.get_face_name(api_key)), 200
 
     except RuntimeError as e:
         print(str(e))
