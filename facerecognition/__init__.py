@@ -81,6 +81,36 @@ def retrain():
         return str(e), 400
     return '', 201
 
+@app.route('/all')
+@swag_from('flasgger/get_all_names.yaml')
+def retrieveFaces():
+    if api_key_header not in request.headers:
+        print('Api key not specified')
+        return 'Api key not specified', 400
+    try:
+        api_key = request.headers[api_key_header]
+        return jsonify(classifier.get_face_name(api_key)), 200
+
+    except RuntimeError as e:
+        print(str(e))
+        return str(e), 400
+
+
+@app.route('/remove/<face_name>', methods=['DELETE'])
+@swag_from('flasgger/delete_record.yaml')
+
+def deleteRecord(face_name):
+    if api_key_header not in request.headers:
+        print('Api key not specified')
+        return 'Api key not specified', 400
+    try:
+        api_key = request.headers[api_key_header]
+        classifier.delete_record(api_key, face_name)
+    except RuntimeError as e:
+        print(str(e))
+        return str(e), 400
+    return '', 204
+
 
 print("__name__ %s" % __name__)
 if __name__ == 'facerecognition':

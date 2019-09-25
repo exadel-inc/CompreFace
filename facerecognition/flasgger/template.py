@@ -28,6 +28,13 @@ template = {
                     "example": "0.95"
                 }
             }
+        },
+        "GetAllNamesResponse": {
+            "type": "array",
+            "items": {
+                "type": "string",
+                "example":  "Albert Einstein"
+            }
         }
     },
     "externalDocs": {
