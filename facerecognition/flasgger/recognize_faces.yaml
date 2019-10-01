@@ -1,0 +1,27 @@
+tags:
+  - "Recognition"
+summary: "Recognize image"
+description: "Recognizes all people on specified image"
+operationId: "recognizeImageMany"
+consumes:
+  - "multipart/form-data"
+produces:
+  - "application/json"
+parameters:
+  - name: "X-Api-Key"
+    in: "header"
+    description: "Your API Key"
+    required: true
+    type: "string"
+  - in: formData
+    name: file
+    type: file
+    required: true
+    description: Image of a group of unknown people(jpeg or png)
+responses:
+  200:
+    description: "successful operation"
+    schema:
+      $ref: "#/definitions/RecognizeResponseMany"
+  400:
+    description: "No file part; No selected file; Api key not specified"

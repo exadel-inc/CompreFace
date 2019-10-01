@@ -55,12 +55,31 @@ def classify(embedding, api_key):
     }
 
 
+def classifyMany(embedding, api_key, box):
+    if api_key not in models:
+        raise RuntimeError("There is no model for api key %s." % api_key)
+    model_data = models[api_key]
+    predictions = model_data["model"].predict_proba([embedding])[0]
+    print("predictions:")
+    best_class_indices = np.argsort(-predictions)
+    best_class_probability = predictions[best_class_indices[0]]
+    print('Best guess: %s with probability %.5f' % (
+        model_data["face_names"][best_class_indices[0]], best_class_probability))
+    print('Second guess: %s with probability %.5f' % (
+        model_data["face_names"][best_class_indices[1]], predictions[best_class_indices[1]]))
+    return {
+        "box parameters": box,
+        "prediction": model_data["face_names"][best_class_indices[0]],
+        "probability": best_class_probability
+    }
+
 def get_face_name(api_key):
     print('Retrieving the data from the database')
     listOfFaces = get_storage().get_all_face_name(api_key)
-    if len(listOfFaces)==0:
+    if len(listOfFaces) == 0:
         print('No faces found in the database for this api-key')
     return listOfFaces
+
 
 def delete_record(api_key, face_name):
     print('Looking for the record in the database and deleting it')
