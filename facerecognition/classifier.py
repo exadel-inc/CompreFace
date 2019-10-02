@@ -36,23 +36,6 @@ def train(api_key):
     }
 
 
-def classify(embedding, api_key):
-    if api_key not in models:
-        raise RuntimeError("There is no model for api key %s." % api_key)
-    model_data = models[api_key]
-    predictions = model_data["model"].predict_proba([embedding])[0]
-    print("predictions:")
-    # print(predictions)
-    best_class_indices = np.argsort(-predictions)
-    best_class_probability = predictions[best_class_indices[0]]
-    print('Best guess: %s with probability %.5f' % (
-        model_data["face_names"][best_class_indices[0]], best_class_probability))
-    print('Second guess: %s with probability %.5f' % (
-        model_data["face_names"][best_class_indices[1]], predictions[best_class_indices[1]]))
-    return {
-        "prediction": model_data["face_names"][best_class_indices[0]],
-        "probability": best_class_probability
-    }
 
 
 def classifyMany(embedding, api_key, box):
