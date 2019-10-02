@@ -44,14 +44,21 @@ def upload_face(face_name):
 
 
 @app.route('/recognize', methods=['POST'])
-@swag_from('flasgger/recognize_face.yaml')
-def recognize_face():
+@swag_from('flasgger/recognize_faces.yaml')
+def recognize_faces():
+
     if 'file' not in request.files:
         flash('No file part')
         return redirect(request.url), 400
     if api_key_header not in request.headers:
         print('Api key not specified')
         return 'Api key not specified', 400
+    if 'limit' not in request.values or request.values['limit']=='':
+        limit = -1
+        print('Limit is not specified, find all faces')
+    else:
+        limit = int(request.values['limit'])
+        print("the limit is:", limit)
     api_key = request.headers[api_key_header]
     file = request.files['file']
     if file.filename == '':
@@ -59,9 +66,15 @@ def recognize_face():
         return 'No selected file', 400
     try:
         img = imageio.imread(file)
-        face_img = image_helper.crop_face(img)
-        embedding = tf_helper.calc_embedding(face_img)
-        return jsonify(classifier.classify(embedding, api_key))
+        face_img = image_helper.crop_faces(img, limit)
+        list_faces = []
+        for face in range(0, len(face_img), 2):
+            embedding = tf_helper.calc_embedding(face_img[face])
+            face = classifier.classifyMany(embedding, api_key, face_img[face + 1].tolist())
+            if face not in list_faces:
+                list_faces.append(face)
+        print("The faces that were found:", list_faces)
+        return jsonify(list_faces)
     except RuntimeError as e:
         print(str(e))
         return str(e), 400
@@ -98,7 +111,6 @@ def retrieveFaces():
 
 @app.route('/remove/<face_name>', methods=['DELETE'])
 @swag_from('flasgger/delete_record.yaml')
-
 def deleteRecord(face_name):
     if api_key_header not in request.headers:
         print('Api key not specified')

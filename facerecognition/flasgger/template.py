@@ -33,7 +33,25 @@ template = {
             "type": "array",
             "items": {
                 "type": "string",
-                "example":  "Albert Einstein"
+                "example": "Albert Einstein"
+            }
+        },
+        "RecognizeResponse": {
+            "type": "object",
+            "properties": {
+                "box parameters": {
+                    "type": "array",
+                    "example": "[100, 50, 150, 130]"
+                },
+                "prediction": {
+                    "type": "string",
+                    "example": "Albert Einstein"
+                },
+                "probability": {
+                    "type": "number",
+                    "format": "float",
+                    "example": "0.95"
+                }
             }
         }
     },
