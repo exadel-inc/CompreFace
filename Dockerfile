@@ -1,6 +1,6 @@
 from jjanzic/docker-python3-opencv
 
-RUN apt-get update && apt-get install -y mongo-tools
+RUN apt-get update && apt-get install -y mongo-tools mongodb-clients
 
 # Install other useful Python packages using pip
 RUN pip3 --no-cache-dir install \
