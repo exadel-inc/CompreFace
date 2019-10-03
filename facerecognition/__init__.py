@@ -32,7 +32,7 @@ def upload_face(face_name):
     need_retrain = request.args.get(retrain_param, 'true')
     try:
         img = imageio.imread(file)
-        face_img = image_helper.crop_face(img)
+        face_img = image_helper.crop_faces(img)[0]
         embedding = tf_helper.calc_embedding(face_img)
         storage_factory.get_storage().save_face(img, face_img, embedding, face_name, api_key)
         if need_retrain == 'true':
