@@ -7,10 +7,10 @@ produces:
   - "text/plain"
 parameters:
   - name: "person_name"
-      in: "path"
-      description: "Name of the person whose image is being deleted"
-      required: true
-      type: "string"
+    in: "path"
+    description: "Name of the person whose image is being deleted"
+    required: true
+    type: "string"
   - name: "X-Api-Key"
     in: "header"
     description: "Your API Key"
