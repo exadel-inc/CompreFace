@@ -4,7 +4,7 @@ databaseChangeLog:
       author: vlad
       changes:
 
-# client
+        # client
         - createTable:
             tableName: client
             columns:
@@ -12,14 +12,26 @@ databaseChangeLog:
                   name: id
                   type: bigint
               - column:
-                  name: name
+                  name: email
                   type: varchar(63)
               - column:
-                  name: email
+                  name: username
                   type: varchar(63)
               - column:
                   name: password
                   type: varchar(255)
+              - column:
+                  name: account_non_expired
+                  type: boolean
+              - column:
+                  name: account_non_locked
+                  type: boolean
+              - column:
+                  name: credentials_non_expired
+                  type: boolean
+              - column:
+                  name: enabled
+                  type: boolean
 
         - addPrimaryKey:
             columnNames: id
@@ -29,7 +41,17 @@ databaseChangeLog:
         - createSequence:
             sequenceName: client_id_seq
 
-# app
+        - addUniqueConstraint:
+            columnNames: username
+            constraintName: client_username_uindex
+            tableName: client
+
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: client_email_uindex
+            tableName: client
+
+        # app
         - createTable:
             tableName: app
             columns:
@@ -42,6 +64,9 @@ databaseChangeLog:
               - column:
                   name: guid
                   type: varchar(36)
+              - column:
+                  name: owner_id
+                  type: bigint
 
         - addPrimaryKey:
             columnNames: id
@@ -51,7 +76,16 @@ databaseChangeLog:
         - createSequence:
             sequenceName: app_id_seq
 
-# model
+        - addForeignKeyConstraint:
+            baseColumnNames: owner_id
+            baseTableName: app
+            referencedColumnNames: id
+            referencedTableName: client
+            constraintName: fk_owner_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        # model
         - createTable:
             tableName: model
             columns:
@@ -64,6 +98,9 @@ databaseChangeLog:
               - column:
                   name: guid
                   type: varchar(36)
+              - column:
+                  name: owner_id
+                  type: bigint
 
         - addPrimaryKey:
             columnNames: id
@@ -73,7 +110,16 @@ databaseChangeLog:
         - createSequence:
             sequenceName: model_id_seq
 
-# app-model
+        - addForeignKeyConstraint:
+            baseColumnNames: owner_id
+            baseTableName: model
+            referencedColumnNames: id
+            referencedTableName: client
+            constraintName: fk_owner_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        # app_model
         - createTable:
             tableName: app_model
             columns:
@@ -109,3 +155,7 @@ databaseChangeLog:
             constraintName: fk_model_id
             onDelete: CASCADE
             onUpdate: CASCADE
+
+        - addNotNullConstraint:
+            columnName: access_type
+            tableName: app_model

@@ -21,6 +21,10 @@ public class Model {
     private String name;
     private String guid;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private Client owner;
+
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppModel> appModelList;
 

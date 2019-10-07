@@ -12,15 +12,19 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper
 public interface ModelMapper extends ModelAccessTypeMapper {
 
     ModelMapper INSTANCE = Mappers.getMapper(ModelMapper.class);
 
     @Mapping(source = "appAccess", target = "appModelList")
+    @Mapping(source = "ownerId", target = "owner.id")
     Model toEntity(ModelDto modelDto);
 
     @Mapping(source = "appAccess", target = "appModelList", qualifiedByName = "toAppModel")
+    @Mapping(source = "ownerId", target = "owner.id")
     Model toEntity(ModelDto modelDto, @Context Long modelId);
 
     default AppModel toAppModel(AppAccess appAccess) {
@@ -54,6 +58,7 @@ public interface ModelMapper extends ModelAccessTypeMapper {
     }
 
     @Mapping(source = "appModelList", target = "appAccess")
+    @Mapping(source = "owner.id", target = "ownerId")
     ModelDto toDto(Model model);
 
     @Mapping(source = "id.appId", target = "appId")

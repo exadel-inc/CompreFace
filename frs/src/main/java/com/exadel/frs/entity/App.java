@@ -21,7 +21,11 @@ public class App {
     private String name;
     private String guid;
 
-    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private Client owner;
+
+    @OneToMany(mappedBy = "app")
     private List<AppModel> appModelList;
 
 }

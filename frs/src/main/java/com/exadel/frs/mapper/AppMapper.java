@@ -18,9 +18,11 @@ public interface AppMapper extends ModelAccessTypeMapper {
     AppMapper INSTANCE = Mappers.getMapper(AppMapper.class);
 
     @Mapping(source = "modelAccess", target = "appModelList")
+    @Mapping(source = "ownerId", target = "owner.id")
     App toEntity(AppDto appDto);
 
     @Mapping(source = "modelAccess", target = "appModelList", qualifiedByName = "toAppModel")
+    @Mapping(source = "ownerId", target = "owner.id")
     App toEntity(AppDto appDto, @Context Long appId);
 
     @Named("toAppModel")
@@ -50,6 +52,7 @@ public interface AppMapper extends ModelAccessTypeMapper {
     }
 
     @Mapping(source = "appModelList", target = "modelAccess")
+    @Mapping(source = "owner.id", target = "ownerId")
     AppDto toDto(App app);
 
     @Mapping(source = "id.modelId", target = "modelId")
