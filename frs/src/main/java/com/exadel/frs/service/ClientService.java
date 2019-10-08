@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class ClientService {
 
     private final ClientRepository clientRepository;
-    private final ClientMapper clientMapper = Mappers.getMapper(ClientMapper.class);
+    private final ClientMapper clientMapper;
     private final PasswordEncoder encoder;
 
     public ClientDto getClient(Long id) {

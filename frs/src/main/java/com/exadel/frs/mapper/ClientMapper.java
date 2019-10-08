@@ -4,7 +4,7 @@ import com.exadel.frs.dto.ClientDto;
 import com.exadel.frs.entity.Client;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ClientMapper {
 
     ClientDto toDto(Client entity);

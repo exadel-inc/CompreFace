@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class AppService {
 
     private final AppRepository appRepository;
-    private final AppMapper appMapper = AppMapper.INSTANCE;
+    private final AppMapper appMapper;
 
     public AppDto getApp(Long id, Long clientId) {
         return appMapper.toDto(appRepository.findByIdAndOwnerId(id, clientId)

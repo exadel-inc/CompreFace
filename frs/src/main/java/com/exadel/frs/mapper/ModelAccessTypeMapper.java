@@ -6,10 +6,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.stream.Stream;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface ModelAccessTypeMapper {
-
-    ModelAccessTypeMapper INSTANCE = Mappers.getMapper(ModelAccessTypeMapper.class);
 
     default ModelAccessType toModelAccessType(String code) {
         return code == null ? null : Stream.of(ModelAccessType.values())

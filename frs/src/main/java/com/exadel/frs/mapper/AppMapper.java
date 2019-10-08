@@ -12,10 +12,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface AppMapper extends ModelAccessTypeMapper {
-
-    AppMapper INSTANCE = Mappers.getMapper(AppMapper.class);
 
     @Mapping(source = "modelAccess", target = "appModelList")
     @Mapping(source = "ownerId", target = "owner.id")

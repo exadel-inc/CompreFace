@@ -24,7 +24,7 @@ public class ModelService {
 
     private final ModelRepository modelRepository;
     private final SecurityUtils securityUtils;
-    private final ModelMapper modelMapper = ModelMapper.INSTANCE;
+    private final ModelMapper modelMapper;
 
     public ModelDto getModel(Long id, Long clientId) {
         return modelMapper.toDto(modelRepository.findByIdAndOwnerId(id, clientId)
