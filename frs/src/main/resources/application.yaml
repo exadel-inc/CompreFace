@@ -35,3 +35,9 @@ security:
   signing-key: MaYzkSjmkzPC57L
   encoding-strength: 256
   security-realm: Spring Boot JWT Example Realm
+
+swagger:
+  auth:
+    server: http://localhost:8080
+  info:
+    title: FRS
