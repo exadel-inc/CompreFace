@@ -38,3 +38,9 @@ security:
 
 proxy:
   baseUrl: http://msqv355.exadel.by:5001
+
+swagger:
+  auth:
+    server: http://localhost:8080
+  info:
+    title: FRS
