@@ -25,6 +25,7 @@ import springfox.documentation.swagger.web.SecurityConfigurationBuilder;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableSwagger2
@@ -44,7 +45,7 @@ public class SwaggerConfig {
   public Docket api() {
     Docket docket = new Docket(DocumentationType.SWAGGER_2)
         .select()
-        .apis(RequestHandlerSelectors.any())
+        .apis((RequestHandlerSelectors.basePackage("com.exadel.frs.controller")))
         .paths(PathSelectors.ant("/**"))
         .build();
 
@@ -52,8 +53,8 @@ public class SwaggerConfig {
         .apiInfo(swaggerInfoProperties.getApiInfo());
 
     docket
-        .securitySchemes(Arrays.asList(securityScheme()))
-        .securityContexts(Arrays.asList(securityContext()));
+        .securitySchemes(Collections.singletonList(securityScheme()))
+        .securityContexts(Collections.singletonList(securityContext()));
 
     return docket;
   }
@@ -69,34 +70,30 @@ public class SwaggerConfig {
   }
 
   private SecurityScheme securityScheme() {
-    GrantType grantType = new ResourceOwnerPasswordCredentialsGrant(AUTH_SERVER);
-
-    SecurityScheme oauth = new OAuthBuilder().name("password")
+    GrantType grantType = new ResourceOwnerPasswordCredentialsGrant(AUTH_SERVER + "/oauth/token");
+    return new OAuthBuilder().name("password")
         .grantTypes(Arrays.asList(grantType))
         .scopes(Arrays.asList(scopes()))
         .build();
-    return oauth;
   }
 
   private SecurityContext securityContext() {
     return SecurityContext.builder()
         .securityReferences(
-            Arrays.asList(new SecurityReference("spring_oauth2",
+            Collections.singletonList(new SecurityReference("password",
                 scopes())))
         .forPaths(PathSelectors.regex("/.*"))
         .build();
   }
 
   private AuthorizationScope[] scopes() {
-    AuthorizationScope[] scopes = new AuthorizationScope[0];
-    return scopes;
+    return new AuthorizationScope[0];
   }
 
   @ConfigurationProperties(prefix = "security.oauth2.client")
   @Getter
   @Setter
   class AuthProperties {
-
     private String clientId;
     private String clientSecret;
   }
