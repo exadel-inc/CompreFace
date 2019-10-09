@@ -5,7 +5,6 @@ import com.exadel.frs.entity.Client;
 import com.exadel.frs.mapper.ClientMapper;
 import com.exadel.frs.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
-import org.mapstruct.factory.Mappers;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

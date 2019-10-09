@@ -29,30 +29,9 @@ public class ClientController {
         clientService.updateClient(securityUtils.getPrincipal().getId(), clientDto);
     }
 
-    @GetMapping("/delete")
+    @DeleteMapping("/delete")
     public void deleteClient() {
         clientService.deleteClient(securityUtils.getPrincipal().getId());
     }
 
-    /*
-    @GetMapping("/{id}")
-    public ClientDto getClient(@PathVariable Long id) {
-        return clientService.getClient(id);
-    }
-
-    @GetMapping("/")
-    public List<ClientDto> getClients() {
-        return clientService.getClients();
-    }
-
-    @PutMapping("/{id}")
-    public void updateClient(@PathVariable Long id, @RequestBody ClientDto clientDto) {
-        clientService.updateClient(id, clientDto);
-    }
-
-    @DeleteMapping("/{id}")
-    public void deleteClient(@PathVariable Long id) {
-        clientService.deleteClient(id);
-    }
-    */
 }

@@ -2,7 +2,6 @@ package com.exadel.frs.mapper;
 
 import com.exadel.frs.helpers.ModelAccessType;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
 
 import java.util.stream.Stream;
 
