@@ -20,7 +20,7 @@ services:
       - "8080:8080"
     environment:
       - spring.datasource.url=jdbc:postgresql://postgres:5432/frs
-    links:
+    depends_on:
       - db
 
 volumes:
