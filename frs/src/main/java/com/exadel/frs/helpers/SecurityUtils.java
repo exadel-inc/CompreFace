@@ -1,6 +1,7 @@
 package com.exadel.frs.helpers;
 
 import com.exadel.frs.entity.Client;
+import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,7 @@ public final class SecurityUtils {
 
     private final ClientRepository clientRepository;
     private final AppRepository appRepository;
-//    private final ModelRepository modelRepository;
+    private final AppModelRepository appModelRepository;
 
     public Client getPrincipal() {
         // todo: get Id from authentication and replace clientRepository.findByUsername method
@@ -25,8 +26,8 @@ public final class SecurityUtils {
         return appRepository.findByIdAndOwnerId(appId, clientId).isPresent();
     }
 
-//    public boolean isClientModelOwner(Long modelId, Long clientId) {
-//        return modelRepository.findByIdAndClientId(modelId, clientId).isPresent();
-//    }
+    public boolean isAppHasAccessToModel(String appGuid, String modelGuid) {
+        return appModelRepository.findByAppGuidAndModelGuid(appGuid, modelGuid).isPresent();
+    }
 
 }
