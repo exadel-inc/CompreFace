@@ -1,4 +1,4 @@
-package com.exadel.frs.config;
+package com.exadel.frs.properties;
 
 import static org.springframework.util.StringUtils.isEmpty;
 

@@ -1,6 +1,7 @@
 package com.exadel.frs.config;
 
 import com.exadel.frs.config.SwaggerConfig.AuthProperties;
+import com.exadel.frs.properties.SwaggerInfoProperties;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
