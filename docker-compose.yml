@@ -3,7 +3,7 @@ services:
   ml:
     build: .
     ports:
-      - "5001:5000" #flask
+      - "5001:5000" #api
     depends_on:
       - mongo
   mongo:

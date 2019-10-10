@@ -124,8 +124,13 @@ def deleteRecord(face_name):
     return '', 204
 
 
+@app.route('/status', methods=['GET'])
+def status():
+    return jsonify({'status': 'OK'}), 200
+
+
 print("__name__ %s" % __name__)
-if __name__ == 'facerecognition':
+if __name__ == '__main__':
     app.config.from_mapping(
         SECRET_KEY='dev'
     )
