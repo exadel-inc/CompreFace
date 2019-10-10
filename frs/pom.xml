@@ -127,13 +127,6 @@
                 <groupId>org.liquibase</groupId>
                 <artifactId>liquibase-maven-plugin</artifactId>
                 <version>3.8.0</version>
-                <configuration>
-                    <changeLogFile>src/main/resources/db/changelog/db.changelog-master.yaml</changeLogFile>
-                    <driver>org.postgresql.Driver</driver>
-                    <url>jdbc:postgresql://localhost:5432/frs</url>
-                    <username>postgres</username>
-                    <password>postgres</password>
-                </configuration>
                 <executions>
                     <execution>
                         <phase>process-resources</phase>
