@@ -12,8 +12,7 @@ fi
 
 export LC_ALL=C.UTF-8
 export LANG=C.UTF-8
-export FLASK_APP=facerecognition
 export PYTHONUNBUFFERED=0
-flask run --host=0.0.0.0
-#python3 test.py
-#sleep 1h
+
+service nginx start
+uwsgi --ini uwsgi.ini
