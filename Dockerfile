@@ -1,16 +1,19 @@
-from jjanzic/docker-python3-opencv
+FROM jjanzic/docker-python3-opencv
+
+# Variables
+ARG DIR=/srv
 
 # Copy sources
-RUN mkdir /facerecognition
-COPY facerecognition /facerecognition/facerecognition
-COPY docker-entrypoint.sh /facerecognition/docker-entrypoint.sh
-COPY wait-for-it.sh /facerecognition/wait-for-it.sh
-COPY dump.archive /facerecognition/dump.archive
-COPY uwsgi.ini /facerecognition/uwsgi.ini
-COPY requirements.txt /facerecognition/requirements.txt
-RUN chmod +x /facerecognition/docker-entrypoint.sh
-RUN chmod +x /facerecognition/wait-for-it.sh
-RUN mkdir /facerecognition/mongo_data
+RUN mkdir -p $DIR
+COPY facerecognition $DIR/facerecognition
+COPY docker-entrypoint.sh $DIR/docker-entrypoint.sh
+COPY wait-for-it.sh $DIR/wait-for-it.sh
+COPY dump.archive $DIR/dump.archive
+COPY uwsgi.ini $DIR/uwsgi.ini
+COPY requirements.txt $DIR/requirements.txt
+RUN chmod +x $DIR/docker-entrypoint.sh
+RUN chmod +x $DIR/wait-for-it.sh
+RUN mkdir $DIR/mongo_data
 
 
 # Install dependencies
@@ -20,7 +23,7 @@ RUN apt-get update && apt-get install -y \
     nginx
 COPY nginx.conf /etc/nginx
 
-RUN pip3 --no-cache-dir install -r /facerecognition/requirements.txt
+RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
 
 # Expose API port
@@ -29,5 +32,7 @@ EXPOSE 5000
 EXPOSE 6006
 
 
-WORKDIR /facerecognition
-ENTRYPOINT ["/facerecognition/docker-entrypoint.sh"]
+WORKDIR $DIR
+
+RUN ln -s $DIR/docker-entrypoint.sh /var/tmp/docker-entrypoint.sh
+ENTRYPOINT ["/var/tmp/docker-entrypoint.sh"]
