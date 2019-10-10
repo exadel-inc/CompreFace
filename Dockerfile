@@ -15,24 +15,18 @@ RUN chmod +x $DIR/docker-entrypoint.sh
 RUN chmod +x $DIR/wait-for-it.sh
 RUN mkdir $DIR/mongo_data
 
-
 # Install dependencies
 RUN apt-get update && apt-get install -y \
     mongo-tools \
-    mongodb-clients \
-    nginx
-COPY nginx.conf /etc/nginx
-
+    mongodb-clients
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
-
-# Expose API port
-EXPOSE 5000
-# Expose TensorBoard port
+# Expose port for uWSGI
+EXPOSE 3000
+# Expose port for API and TensorBoard port (6006)
 EXPOSE 6006
 
-
+# Entrypoint
 WORKDIR $DIR
-
 RUN ln -s $DIR/docker-entrypoint.sh /var/tmp/docker-entrypoint.sh
 ENTRYPOINT ["/var/tmp/docker-entrypoint.sh"]

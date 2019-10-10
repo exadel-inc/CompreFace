@@ -6,8 +6,8 @@ result=$(mongo "mongo/recognition" --eval "db.getCollection('models.files').coun
 if [[ $result == "1" ]]; then
   echo 'Mongo DB is not empty'
 else
-   echo 'Mongo DB is empty, initializing'
-  `mongorestore --gzip --archive=dump.archive --host=mongo --db=recognition`
+  echo 'Mongo DB is empty, initializing'
+  $(mongorestore --gzip --archive=dump.archive --host=mongo --db=recognition)
 fi
 
 export LC_ALL=C.UTF-8
