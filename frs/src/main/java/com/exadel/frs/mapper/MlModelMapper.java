@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 @Mapper(componentModel = "spring")
-public interface ModelMapper extends ModelAccessTypeMapper {
+public interface MlModelMapper extends ModelAccessTypeMapper {
 
     @Mapping(source = "appAccess", target = "appModelList")
     @Mapping(source = "ownerId", target = "owner.id")

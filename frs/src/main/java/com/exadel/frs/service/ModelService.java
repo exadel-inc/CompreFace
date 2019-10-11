@@ -8,7 +8,7 @@ import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.NullAccessTypeException;
 import com.exadel.frs.helpers.AccessUpdateType;
 import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.mapper.ModelMapper;
+import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class ModelService {
 
     private final ModelRepository modelRepository;
     private final SecurityUtils securityUtils;
-    private final ModelMapper modelMapper;
+    private final MlModelMapper modelMapper;
 
     public ModelDto getModel(Long id, Long clientId) {
         return modelMapper.toDto(modelRepository.findByIdAndOwnerId(id, clientId)
