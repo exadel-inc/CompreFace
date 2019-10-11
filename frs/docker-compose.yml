@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   db:
-    image: "postgres"
+    image: postgres:11.5
     container_name: "postgres"
     environment:
       - POSTGRES_USER=postgres
@@ -10,8 +10,7 @@ services:
       - POSTGRES_DB=frs
     ports:
       - "5533:5432"
-    volumes:
-      - pgdata:/var/lib/postgresql/data
+
 
   frs:
     build: .
@@ -22,6 +21,3 @@ services:
       - spring.datasource.url=jdbc:postgresql://postgres:5432/frs
     depends_on:
       - db
-
-volumes:
-   pgdata:
