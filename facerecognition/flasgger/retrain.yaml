@@ -1,7 +1,7 @@
 tags:
   - "Recognition"
 summary: "Retrains model for specified API Key"
-description: "This REST endpoint could be usefull if you want to load a lot of images and then retrain model"
+description: "This REST endpoint could be useful if you want to load a lot of images and then retrain model"
 operationId: "retrain"
 produces:
   - "text/plain"
