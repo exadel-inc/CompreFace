@@ -1,7 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from skimage import transform
-
+import logging
 from facerecognition import facenet
 from facerecognition.align import detect_face
 
@@ -11,6 +11,7 @@ factor = 0.709  # scale factor
 margin = 32
 image_size = 160
 
+logging.basicConfig(level=logging.DEBUG)
 
 with tf.Graph().as_default():
     sess = tf.Session()
@@ -37,7 +38,7 @@ def crop_faces(img, face_lim = -1):
     else:
         range_lim = nrof_faces
     if nrof_faces > 1:
-        print(nrof_faces)
+        logging.debug(nrof_faces)
         img_center = img_size / 2
         for start in range(range_lim):
             bounding_box_size = (det[start:, 2] - det[start:, 0]) * (det[start:, 3] - det[start:, 1])
@@ -53,7 +54,7 @@ def crop_faces(img, face_lim = -1):
 
     transformedPics = []
     for elem in detected:
-        print('the box around this face has dimensions of', elem[0:4])
+        logging.debug('the box around this face has dimensions of', elem[0:4])
         det = np.squeeze(elem)
         bb = np.zeros(4, dtype=np.int32)
         bb[0] = np.maximum(det[0] - margin / 2, 0)
