@@ -43,7 +43,7 @@ def needs_attached_file(f):
 
 
 @app.route('/faces/<face_name>', methods=['POST'])
-@swag_from('flasgger/upload_face.yaml')
+@swag_from('flasgger/add_face.yaml')
 @needs_authentication
 @needs_attached_file
 def upload_face(face_name):
@@ -89,26 +89,26 @@ def recognize_faces():
 
 
 @app.route('/retrain', methods=['POST'])
-@swag_from('flasgger/retrain.yaml')
+@swag_from('flasgger/retrain_model.yaml')
 @needs_authentication
-def retrain():
+def retrain_model():
     api_key = request.headers[API_KEY_HEADER]
     classifier.train_async(api_key)
     return Response(status=HTTPStatus.CREATED)
 
 
 @app.route('/faces')
-@swag_from('flasgger/get_all_names.yaml')
+@swag_from('flasgger/get_face_names.yaml')
 @needs_authentication
-def retrieve_faces():
+def get_face_names():
     api_key = request.headers[API_KEY_HEADER]
     return jsonify(classifier.get_face_name(api_key))
 
 
 @app.route('/faces/<face_name>', methods=['DELETE'])
-@swag_from('flasgger/delete_record.yaml')
+@swag_from('flasgger/remove_face.yaml')
 @needs_authentication
-def delete_record(face_name):
+def remove_face(face_name):
     api_key = request.headers[API_KEY_HEADER]
     classifier.delete_record(api_key, face_name)
     return Response(status=HTTPStatus.NO_CONTENT)
