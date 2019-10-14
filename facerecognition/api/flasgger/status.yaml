@@ -1,13 +1,13 @@
 tags:
   - "Recognition"
-summary: "Get the status"
-description: "This REST endpoint could be useful for retrieving the status"
+summary: "Get server health status"
+description: "Endpoint useful for checking whether the server is up and running"
 operationId: "status"
 produces:
   - "application/json"
 responses:
   200:
-    description: "The model was retrained"
+    description: "Server is live"
     schema:
       type: "object"
       properties:

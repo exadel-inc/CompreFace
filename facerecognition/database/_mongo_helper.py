@@ -1,11 +1,11 @@
-from pymongo import MongoClient
 import gridfs
-import os
+from pymongo import MongoClient
 
 CURRENT_MODEL_NAME = "20170512-110547.pb"
 MODELS_COLLECTION_NAME = "models"
 FACES_COLLECTION_NAME = "faces"
 DATABASE_NAME = "recognition"
+
 
 class MongoStorage:
     def __init__(self, host, port):
@@ -60,9 +60,10 @@ class MongoStorage:
     def get_api_keys(self):
         return self._faces_collection.find({}, {"projection": ["api_key"]}).distinct("api_key")
 
-
-    def get_all_face_name(self, api_key):
-        return self._faces_collection.find({"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key}, {"face_name": 1}).distinct("face_name")
+    def get_all_face_names(self, api_key):
+        return self._faces_collection.find({"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key},
+                                           {"face_name": 1}).distinct("face_name")
 
     def delete(self, api_key, face_name):
-        return self._faces_collection.delete_many({"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key, 'face_name': face_name})
+        return self._faces_collection.delete_many(
+            {"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key, 'face_name': face_name})

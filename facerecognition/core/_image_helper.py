@@ -1,9 +1,12 @@
+import logging
+
 import numpy as np
 import tensorflow as tf
 from skimage import transform
-import logging
-from facerecognition import facenet
-from facerecognition.align import detect_face
+
+from facerecognition.core.exceptions import NoFaceIsFoundError, OneDimensionalImageIsGivenError
+from facerecognition.core.libraries import facenet
+from facerecognition.core.libraries.align import detect_face
 
 minsize = 20  # minimum size of face
 threshold = [0.6, 0.7, 0.7]  # three steps's threshold
@@ -11,17 +14,18 @@ factor = 0.709  # scale factor
 margin = 32
 image_size = 160
 
-logging.basicConfig(level=logging.DEBUG)
-
 with tf.Graph().as_default():
     sess = tf.Session()
     pnet, rnet, onet = detect_face.create_mtcnn(sess, None)
 
 
+def crop_face(img):
+    return crop_faces(img, 1)[0]
 
-def crop_faces(img, face_lim = -1):
+
+def crop_faces(img, face_lim=-1):
     if img.ndim < 2:
-        raise RuntimeError("Unable to align image")
+        raise OneDimensionalImageIsGivenError("Unable to align image, it has only one dimension")
     if img.ndim == 2:
         img = facenet.to_rgb(img)
     img = img[:, :, 0:3]
@@ -29,7 +33,7 @@ def crop_faces(img, face_lim = -1):
                                                 factor)
     nrof_faces = bounding_boxes.shape[0]
     if nrof_faces < 1:
-        raise RuntimeError("Haven't found face")
+        raise NoFaceIsFoundError("Haven't found face")
     det = bounding_boxes[:, 0:4]
     img_size = np.asarray(img.shape)[0:2]
     detected = []

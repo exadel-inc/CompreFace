@@ -1,11 +1,11 @@
+import logging
+from threading import Thread
+
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-from facerecognition.storage_factory import get_storage
-import numpy as np
-from threading import Thread
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
+from facerecognition.core.exceptions import ThereIsNoModelForAPIKeyError
+from facerecognition.database import get_storage
 
 models = {}
 
@@ -39,11 +39,9 @@ def train(api_key):
     }
 
 
-
-
 def classify_many(embedding, api_key, box):
     if api_key not in models:
-        raise RuntimeError("There is no model for api key %s." % api_key)
+        raise ThereIsNoModelForAPIKeyError("There is no model for api key %s." % api_key)
     model_data = models[api_key]
     predictions = model_data["model"].predict_proba([embedding])[0]
     logging.debug("predictions:")
@@ -58,16 +56,3 @@ def classify_many(embedding, api_key, box):
         "prediction": model_data["face_names"][best_class_indices[0]],
         "probability": best_class_probability
     }
-
-def get_face_name(api_key):
-    logging.debug('Retrieving the data from the database')
-    listOfFaces = get_storage().get_all_face_name(api_key)
-    if len(listOfFaces) == 0:
-        logging.warning('No faces found in the database for this api-key')
-    return listOfFaces
-
-
-def delete_record(api_key, face_name):
-    logging.debug('Looking for the record in the database and deleting it')
-    get_storage().delete(api_key, face_name)
-    logging.debug('Records were successfully deleted')
