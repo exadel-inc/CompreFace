@@ -110,11 +110,15 @@ def get_face_names():
 @needs_authentication
 def remove_face(face_name):
     api_key = request.headers[API_KEY_HEADER]
+    need_retrain = request.args.get(RETRAIN_PARAM, 'true')
     classifier.delete_record(api_key, face_name)
+    if need_retrain.lower() == 'true' or need_retrain == '1':
+        classifier.train_async(api_key)
     return Response(status=HTTPStatus.NO_CONTENT)
 
 
 @app.route('/status')
+@swag_from('flasgger/status.yaml')
 def status():
     return jsonify(status="OK")
 

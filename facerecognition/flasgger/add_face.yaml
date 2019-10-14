@@ -23,6 +23,15 @@ parameters:
     type: file
     required: true
     description: Image of a known person(jpeg or png)
+  - name: "retrain"
+    in: query
+    description: "Specify if  the model needs to be retrained"
+    required: false
+    schema:
+      type: "string"
+      default: "true"
 responses:
   400:
     description: "No file part; No selected file; Api key not specified"
+  201:
+    description: "The file was successfully uploaded"

@@ -1,0 +1,16 @@
+tags:
+  - "Recognition"
+summary: "Get the status"
+description: "This REST endpoint could be useful for retrieving the status"
+operationId: "status"
+produces:
+  - "application/json"
+responses:
+  200:
+    description: "The model was retrained"
+    schema:
+      type: "object"
+      properties:
+        status:
+          type: "string"
+      example: "status: OK"
