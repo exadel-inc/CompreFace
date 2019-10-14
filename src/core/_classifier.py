@@ -4,8 +4,8 @@ from threading import Thread
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-from facerecognition.core.exceptions import ThereIsNoModelForAPIKeyError
-from facerecognition.database import get_storage
+from src.core.exceptions import ThereIsNoModelForAPIKeyError
+from src.database import get_storage
 
 models = {}
 

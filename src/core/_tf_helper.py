@@ -3,7 +3,7 @@ import math
 import numpy as np
 import tensorflow as tf
 
-from facerecognition.database import get_storage
+from src.database import get_storage
 
 BATCH_SIZE = 25
 

@@ -1,7 +1,7 @@
 import os
 
-from facerecognition.database._mongo_helper import MongoStorage
-from facerecognition.database._mysql_helper import MysqlStorage
+from src.database._mongo_helper import MongoStorage
+from src.database._mysql_helper import MysqlStorage
 
 
 def get_storage():

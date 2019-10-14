@@ -4,9 +4,9 @@ import numpy as np
 import tensorflow as tf
 from skimage import transform
 
-from facerecognition.core.exceptions import NoFaceIsFoundError, OneDimensionalImageIsGivenError
-from facerecognition.core.libraries import facenet
-from facerecognition.core.libraries.align import detect_face
+from src.core.exceptions import NoFaceIsFoundError, OneDimensionalImageIsGivenError
+from src.core.libraries import facenet
+from src.core.libraries.align import detect_face
 
 minsize = 20  # minimum size of face
 threshold = [0.6, 0.7, 0.7]  # three steps's threshold

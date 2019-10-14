@@ -5,7 +5,7 @@ ARG DIR=/srv
 
 # Copy sources
 RUN mkdir -p $DIR
-COPY facerecognition $DIR/facerecognition
+COPY src $DIR/src
 COPY docker-entrypoint.sh $DIR/docker-entrypoint.sh
 COPY wait-for-it.sh $DIR/wait-for-it.sh
 COPY dump.archive $DIR/dump.archive

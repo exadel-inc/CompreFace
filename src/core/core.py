@@ -1,6 +1,6 @@
 import imageio
 
-from facerecognition.core import _image_helper, _tf_helper, _classifier
+from src.core import _image_helper, _tf_helper, _classifier
 
 
 def init():
