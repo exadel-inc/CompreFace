@@ -1,15 +1,15 @@
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary, Text
-from sqlalchemy.dialects.mysql.types import LONGBLOB
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, relationship
+import json
 from contextlib import contextmanager
 
-
-import json
+from sqlalchemy import Column, Integer, String, ForeignKey, LargeBinary
+from sqlalchemy import create_engine
+from sqlalchemy.dialects.mysql.types import LONGBLOB
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
 
 Base = declarative_base()
 CURRENT_MODEL_NAME = '20170512-110547.pb'
+
 
 class Face(Base):
     __tablename__ = 'face'
@@ -19,10 +19,11 @@ class Face(Base):
     face_name = Column(String(255))
     face_b_id = Column(ForeignKey('blob.id'))
     raw_b_id = Column(ForeignKey('blob.id'))
-    
+
     embeddings = relationship('Embedding', uselist=True, back_populates='face')
     raw_pic = relationship('Blob', uselist=False, foreign_keys='Face.raw_b_id')
     pic = relationship('Blob', uselist=False, foreign_keys='Face.face_b_id')
+
 
 class Model(Base):
     __tablename__ = 'model'
@@ -31,9 +32,10 @@ class Model(Base):
     api_key_id = Column(ForeignKey('apikey.id'))
     model_name = Column(String(255))
     b_id = Column(ForeignKey('blob.id'))
-    
+
     blob = relationship('Blob', foreign_keys='Model.b_id')
     apikey = relationship('APIKey', foreign_keys='Model.api_key_id')
+
 
 class APIKey(Base):
     __tablename__ = 'apikey'
@@ -41,11 +43,13 @@ class APIKey(Base):
     id = Column(Integer, primary_key=True)
     key_name = Column(String(255))
 
+
 class Blob(Base):
     __tablename__ = 'blob'
 
     id = Column(Integer, primary_key=True)
     blob = Column(LargeBinary().with_variant(LONGBLOB, 'mysql'))
+
 
 class Embedding(Base):
     __tablename__ = 'embeddings'
@@ -58,6 +62,7 @@ class Embedding(Base):
 
     face = relationship('Face', foreign_keys='Embedding.face_id')
     blob = relationship('Blob', foreign_keys='Embedding.blob_id')
+
 
 class MysqlStorage:
     def __init__(self, db_url):
@@ -101,11 +106,11 @@ class MysqlStorage:
 
     def get_train_data(self, api_key_name):
         with self.create_session() as session:
-            model = session.query(Model).filter_by(model_name = CURRENT_MODEL_NAME).first()
+            model = session.query(Model).filter_by(model_name=CURRENT_MODEL_NAME).first()
 
-            faces = session.query(Face).join(Embedding).join(APIKey)\
-                .filter(Embedding.model_id == model.id)\
-                .filter(APIKey.key_name == api_key_name)\
+            faces = session.query(Face).join(Embedding).join(APIKey) \
+                .filter(Embedding.model_id == model.id) \
+                .filter(APIKey.key_name == api_key_name) \
                 .all()
 
             values = []
@@ -123,7 +128,6 @@ class MysqlStorage:
                 val = json.loads(found.blob.blob.decode('utf-8'))
                 values.append(val)
             return values, labels, {v: k for k, v in face_names.items()}
-        
 
     def get_api_keys(self):
         with self.create_session() as session:

@@ -7,7 +7,7 @@ if [[ $result == "1" ]]; then
   echo 'Mongo DB is not empty'
 else
   echo 'Mongo DB is empty, initializing'
-  $(mongorestore --gzip --archive=dump.archive --host=mongo --db=recognition)
+  $(mongorestore --gzip --archive=dump.archive --host=mongo --database=recognition)
 fi
 
 export LC_ALL=C.UTF-8

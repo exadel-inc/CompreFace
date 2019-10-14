@@ -1,6 +1,8 @@
 import os
-from facerecognition.mongo_helper import MongoStorage
-from facerecognition.mysql_helper import MysqlStorage
+
+from facerecognition.database._mongo_helper import MongoStorage
+from facerecognition.database._mysql_helper import MysqlStorage
+
 
 def get_storage():
     if os.environ.get('MYSQL_URL', None):

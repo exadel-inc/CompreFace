@@ -1,0 +1,22 @@
+class FaceRecognitionCoreError(Exception):
+    pass
+
+
+class FaceRecognitionInternalError(FaceRecognitionCoreError):
+    pass
+
+
+class ThereIsNoModelForAPIKeyError(FaceRecognitionInternalError):
+    pass
+
+
+class FaceRecognitionInputError(FaceRecognitionCoreError):
+    pass
+
+
+class OneDimensionalImageIsGivenError(FaceRecognitionInputError):
+    pass
+
+
+class NoFaceIsFoundError(FaceRecognitionInputError):
+    pass

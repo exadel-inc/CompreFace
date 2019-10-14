@@ -1,1 +1,1 @@
-from .app import app
+from facerecognition.api.main import app
