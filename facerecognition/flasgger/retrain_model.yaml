@@ -14,3 +14,5 @@ parameters:
 responses:
   400:
     description: "Api key not specified"
+  200:
+    description: "The model was retrained"

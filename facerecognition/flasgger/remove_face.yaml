@@ -16,6 +16,15 @@ parameters:
     description: "Your API Key"
     required: true
     type: "string"
+  - name: "retrain"
+    in: query
+    description: "Specify if  the model needs to be retrained"
+    required: false
+    schema:
+      type: "string"
+      default: "true"
 responses:
   400:
     description: "Api key not specified"
+  204:
+    description: "The faces were successfully deleted"

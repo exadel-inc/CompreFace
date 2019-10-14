@@ -15,20 +15,6 @@ template = {
         "http"
     ],
     "definitions": {
-        "RecognizeResponse": {
-            "type": "object",
-            "properties": {
-                "prediction": {
-                    "type": "string",
-                    "example": "Albert Einstein"
-                },
-                "probability": {
-                    "type": "number",
-                    "format": "float",
-                    "example": "0.95"
-                }
-            }
-        },
         "GetAllNamesResponse": {
             "type": "array",
             "items": {
@@ -36,7 +22,7 @@ template = {
                 "example": "Albert Einstein"
             }
         },
-        "RecognizeResponse": {
+        "RecognizeResponseMany": {
             "type": "object",
             "properties": {
                 "box parameters": {
