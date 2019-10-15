@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 # ===============================
-# docker-test-build.sh
+# e2e-test.sh
 # Manually launched containerization and local deployment test
 # ===============================
 
