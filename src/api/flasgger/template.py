@@ -1,48 +1,94 @@
 template = {
     "swagger": "2.0",
     "info": {
-        "description": "Service for face recognition. You load images of people that you know, and then can load image of a person and recognize it.",
+        "description": "Service for face recognition. Upload images with faces of known people, then upload a "
+                       "new image, and the service will recognize faces in it. All operations are applied only "
+                       "for faces associated with the specified API key.",
         "version": "0.1-snapshot",
         "title": "Exadel Face Recognition Service"
     },
     "host": "msqv355.exadel.by:5001",
     "tags": [
         {
-            "name": "Recognition"
+            "name": "Face Database",
+        },
+        {
+            "name": "Face Recognition Model",
+        },
+        {
+            "name": "Maintenance",
         }
     ],
     "schemes": [
         "http"
     ],
-    "definitions": {
-        "GetAllNamesResponse": {
-            "type": "array",
-            "items": {
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "X-Api-Key"
+        }
+    },
+    "components": {
+        "parameters": {
+            "RetrainParameter": {
+                "name": "retrain",
+                "in": "query",
+                "description": "Specify whether the model should start retraining immediately after the request is "
+                               "completed (set this to False, if operating with a lot of images one after another).",
+                "required": "false",
                 "type": "string",
-                "example": "Albert Einstein"
-            }
+                "default": "true"
+            },
+            "FaceNameParameter": {
+                "name": "face_name",
+                "in": "path",
+                "description": "Person's name to whom the face belongs to.",
+                "required": "false",
+                "type": "string"
+            },
         },
-        "RecognizeResponseMany": {
-            "type": "object",
-            "properties": {
-                "box parameters": {
-                    "type": "array",
-                    "example": "[100, 50, 150, 130]"
-                },
-                "prediction": {
-                    "type": "string",
-                    "example": "Albert Einstein"
-                },
-                "probability": {
-                    "type": "number",
-                    "format": "float",
-                    "example": "0.95"
+        "responses": {
+            "BadRequestResponse": {
+                "description": "Bad request is provided",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "example": "Detailed information about the error"
+                        }
+                    }
+                }
+            },
+            "AccessUnauthorizedResponse": {
+                "description": "Given API Key is not authorized",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "example": "Given API Key is not authorized"
+                        }
+                    }
+                }
+            },
+            "InternalServerErrorResponse": {
+                "description": "Internal error has occurred",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "example": "Detailed information about the error"
+                        }
+                    }
                 }
             }
         }
     },
     "externalDocs": {
-        "description": "Find out more about Exadel Face Recognition Service",
+        "description": "More documentation is available in Confluence",
         "url": "https://confluence.exadel.com/display/KC/Exadel+Face+Recognition+Service"
     }
 }

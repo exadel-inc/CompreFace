@@ -20,6 +20,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route('/status')
+@swag_from('flasgger/get_status.yaml')
 def status():
     return jsonify(status="OK")
 

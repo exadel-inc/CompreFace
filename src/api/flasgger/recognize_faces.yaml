@@ -1,32 +1,44 @@
 tags:
-  - "Recognition"
-summary: "Recognize image"
-description: "Recognizes all people on specified image"
-operationId: "recognizeImageMany"
+  - "Face Recognition Model"
+summary: "Recognize faces from the given image."
+operationId: "recognizeFaces"
 consumes:
   - "multipart/form-data"
 produces:
   - "application/json"
 parameters:
-  - name: "X-Api-Key"
-    in: "header"
-    description: "Your API Key"
-    required: true
-    type: "string"
-  - in: formData
-    name: file
-    type: file
-    required: true
-    description: Image of a group of unknown people(jpeg or png)
+  - in: "formData"
+    name: "file"
+    type: "file"
+    required: "true"
+    description: "Image of a group of unknown people (accepted formats: jpeg, png)."
   - name: "limit"
-    in: formData
-    description: "The limit of faces that you want recognized"
-    required: false
-    type: "string"
+    in: "formData"
+    description: "The limit of faces that you want recognized. Value of -1 represents no limit."
+    required: "false"
+    type: "integer"
+    default: -1
+security:
+  - ApiKeyAuth: []
 responses:
   200:
     description: "successful operation"
     schema:
-      $ref: "#/definitions/RecognizeResponseMany"
+      type: "object"
+      properties:
+        box_parameters:
+          type: "array"
+          example: "[100, 50, 150, 130]"
+        prediction:
+          type: "string"
+          example: "Paul Dirac"
+        probability:
+          type: "number"
+          format: "float"
+          example: "0.95"
   400:
-    description: "No file part; No selected file; Api key not specified"
+    $ref: "#/components/responses/BadRequestResponse"
+  401:
+    $ref: "#/components/responses/AccessUnauthorizedResponse"
+  500:
+    $ref: "#/components/responses/InternalServerErrorResponse"

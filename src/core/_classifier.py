@@ -52,7 +52,7 @@ def classify_many(embedding, api_key, box):
     logging.debug('Second guess: %s with probability %.5f' % (
         model_data["face_names"][best_class_indices[1]], predictions[best_class_indices[1]]))
     return {
-        "box parameters": box,
+        "box_parameters": box,
         "prediction": model_data["face_names"][best_class_indices[0]],
         "probability": best_class_probability
     }

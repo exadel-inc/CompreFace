@@ -1,18 +1,18 @@
 tags:
-  - "Recognition"
-summary: "Retrains model for specified API Key"
-description: "This REST endpoint could be useful if you want to load a lot of images and then retrain model"
-operationId: "retrain"
+  - "Face Recognition Model"
+summary: "Retrain face model."
+description: "The model should be retrained if updates to the face database were done with the `retrain` flag set to `false`."
+operationId: "retrainModel"
 produces:
-  - "text/plain"
-parameters:
-  - name: "X-Api-Key"
-    in: "header"
-    description: "Your API Key"
-    required: true
-    type: "string"
+  - ""  # Because the response has no body, no MIME type is specified
+security:
+  - ApiKeyAuth: []
 responses:
+  201:
+    description: "Model training has been started."
   400:
-    description: "Api key not specified"
-  200:
-    description: "The model was retrained"
+    $ref: "#/components/responses/BadRequestResponse"
+  401:
+    $ref: "#/components/responses/AccessUnauthorizedResponse"
+  500:
+    $ref: "#/components/responses/InternalServerErrorResponse"

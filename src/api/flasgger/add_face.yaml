@@ -1,37 +1,23 @@
 tags:
-  - "Recognition"
-description: "Saves new image of known person. It will be used during face recognition"
-summary: "Save image"
-operationId: "saveImage"
+  - "Face Database"
+summary: "Save an example of a face."
+description: "Add a new example image with a known person's face. It will be used during face recognition. Face will be recognized after the model is retrained."
+operationId: "addFace"
 consumes:
   - "multipart/form-data"
 produces:
-  - "text/plain"
+  - ""  # Because the response has no body, no MIME type is specified
+security:
+  - ApiKeyAuth: []
 parameters:
-  - name: "person_name"
-    in: "path"
-    description: "Name of the person on the image"
-    required: true
-    type: "string"
-  - name: "X-Api-Key"
-    in: "header"
-    description: "Your API Key"
-    required: true
-    type: "string"
-  - in: formData
-    name: file
-    type: file
-    required: true
-    description: Image of a known person(jpeg or png)
-  - name: "retrain"
-    in: query
-    description: "Specify if  the model needs to be retrained"
-    required: false
-    schema:
-      type: "string"
-      default: "true"
+  - $ref: "#/components/parameters/FaceNameParameter"
+  - $ref: "#/components/parameters/RetrainParameter"
 responses:
-  400:
-    description: "No file part; No selected file; Api key not specified"
   201:
-    description: "The file was successfully uploaded"
+    description: "Face example is saved."
+  400:
+    $ref: "#/components/responses/BadRequestResponse"
+  401:
+    $ref: "#/components/responses/AccessUnauthorizedResponse"
+  500:
+    $ref: "#/components/responses/InternalServerErrorResponse"

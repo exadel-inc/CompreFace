@@ -1,20 +1,24 @@
 tags:
-  - "Recognition"
-summary: "Retrieve all face names for specified API Key"
-description: "This REST endpoint could be used to retrieve all the face names for the specified API Key"
-operationId: "getImages"
+  - "Face Database"
+summary: "List names of all saved faces."
+description: "As with all other endpoints, applies only to faces uploaded with the specified API key."
+operationId: "listFaces"
 produces:
   - "application/json"
-parameters:
-  - name: "X-Api-Key"
-    in: "header"
-    description: "Your API Key"
-    required: true
-    type: "string"
+security:
+  - ApiKeyAuth: []
 responses:
   200:
-    description: "successful operation"
+    description: "List of face names."
     schema:
-      $ref: "#/definitions/GetAllNamesResponse"
+      type: "object"
+      properties:
+        names:
+          type: "array"
+          example: ["Albert Einstein", "Richard Feynman"]
   400:
-    description: "Api key not specified"
+    $ref: "#/components/responses/BadRequestResponse"
+  401:
+    $ref: "#/components/responses/AccessUnauthorizedResponse"
+  500:
+    $ref: "#/components/responses/InternalServerErrorResponse"

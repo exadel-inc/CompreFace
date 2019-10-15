@@ -1,30 +1,21 @@
 tags:
-  - "Recognition"
-summary: "Delete all the faces for the specified face name"
-description: "This REST endpoint could be used to delete all the faces for the specified face name"
-operationId: "deleteImages"
+  - "Face Database"
+summary: "Delete face examples."
+description: "Delete all image examples of the face. Face will not be recognized after the model is retrained."
+operationId: "removeFace"
 produces:
-  - "text/plain"
+  - ""  # Because the response has no body, no MIME type is specified
 parameters:
-  - name: "person_name"
-    in: "path"
-    description: "Name of the person whose image is being deleted"
-    required: true
-    type: "string"
-  - name: "X-Api-Key"
-    in: "header"
-    description: "Your API Key"
-    required: true
-    type: "string"
-  - name: "retrain"
-    in: query
-    description: "Specify if  the model needs to be retrained"
-    required: false
-    schema:
-      type: "string"
-      default: "true"
+  - $ref: "#/components/parameters/FaceNameParameter"
+  - $ref: "#/components/parameters/RetrainParameter"
+security:
+  - ApiKeyAuth: []
 responses:
-  400:
-    description: "Api key not specified"
   204:
-    description: "The faces were successfully deleted"
+    description: "Example images of a face were deleted."
+  400:
+    $ref: "#/components/responses/BadRequestResponse"
+  401:
+    $ref: "#/components/responses/AccessUnauthorizedResponse"
+  500:
+    $ref: "#/components/responses/InternalServerErrorResponse"
