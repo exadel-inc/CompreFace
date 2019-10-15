@@ -35,10 +35,10 @@ def list_faces():
 
 
 @app.route('/faces/<face_name>', methods=['POST'])
-@swag_from('flasgger/add_face.yaml')
+@swag_from('flasgger/add_face_example.yaml')
 @needs_authentication
 @needs_attached_file
-def upload_face(face_name):
+def add_face_example(face_name):
     file = request.files['file']
     api_key = request.headers[API_KEY_HEADER]
     do_retrain = request.args.get(RETRAIN_PARAM, 'true').lower() in ('true', '1')
@@ -92,7 +92,7 @@ def recognize_faces():
 
     recognized_faces = core.recognize_faces(limit, file, api_key)
 
-    return jsonify(recognized_faces)
+    return jsonify(result=recognized_faces)
 
 
 @app.errorhandler(BadRequestException)

@@ -22,20 +22,25 @@ security:
   - ApiKeyAuth: []
 responses:
   200:
-    description: "successful operation"
+    description: "Face recognition results"
     schema:
-      type: "object"
+      type: object
       properties:
-        box_parameters:
-          type: "array"
-          example: "[100, 50, 150, 130]"
-        prediction:
-          type: "string"
-          example: "Paul Dirac"
-        probability:
-          type: "number"
-          format: "float"
-          example: "0.95"
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              box_parameters:
+                type: "array"
+                example: "[100, 50, 150, 130]"
+              prediction:
+                type: "string"
+                example: "Paul Dirac"
+              probability:
+                type: "number"
+                format: "float"
+                example: "0.95"
   400:
     $ref: "#/components/responses/BadRequestResponse"
   401:

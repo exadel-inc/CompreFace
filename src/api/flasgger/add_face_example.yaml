@@ -1,8 +1,8 @@
 tags:
   - "Face Database"
-summary: "Save an example of a face."
+summary: "Add an example of a face."
 description: "Add a new example image with a known person's face. It will be used during face recognition. Face will be recognized after the model is retrained."
-operationId: "addFace"
+operationId: "addFaceExample"
 consumes:
   - "multipart/form-data"
 produces:
