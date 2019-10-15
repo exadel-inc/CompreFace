@@ -1,1 +1,1 @@
-from ._storage_factory import get_storage
+from src.database.database import get_storage

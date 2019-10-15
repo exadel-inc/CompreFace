@@ -10,6 +10,7 @@ from src.api._validation import needs_authentication, needs_attached_file
 from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
 from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
+from src.core.constants import FaceLimit
 from src.core.exceptions import FaceRecognitionInputError
 from src.database import get_storage
 
@@ -28,12 +29,7 @@ def status():
 @needs_authentication
 def list_faces():
     api_key = request.headers[API_KEY_HEADER]
-
-    logging.debug('Retrieving the data from the database')
     face_names = get_storage().get_all_face_names(api_key)
-    if len(face_names) == 0:
-        logging.warning('No faces found in the database for this api-key')
-
     return jsonify(names=face_names)
 
 
@@ -50,40 +46,8 @@ def upload_face(face_name):
     face_img = core.crop_face(img)
     embedding = core.calc_embedding(face_img)
     get_storage().save_face(img, face_img, embedding, face_name, api_key)
-
     if do_retrain:
-        core.train_model(api_key)
-
-    return Response(status=HTTPStatus.CREATED)
-
-
-@app.route('/recognize', methods=['POST'])
-@swag_from('flasgger/recognize_faces.yaml')
-@needs_authentication
-@needs_attached_file
-def recognize_faces():
-    if 'limit' not in request.values or request.values['limit'] == '':
-        limit = -1
-        logging.debug('Limit is not specified, find all faces')
-    else:
-        limit = int(request.values['limit'])
-        logging.debug("the limit is:", limit)
-    api_key = request.headers[API_KEY_HEADER]
-    file = request.files['file']
-
-    recognition_result = core.recognize_faces(limit, file, api_key)
-    logging.debug("The faces that were found:", recognition_result)
-
-    return jsonify(recognition_result)
-
-
-@app.route('/retrain', methods=['POST'])
-@swag_from('flasgger/retrain_model.yaml')
-@needs_authentication
-def retrain_model():
-    api_key = request.headers[API_KEY_HEADER]
-
-    core.train_model(api_key)
+        core.train_async(api_key)
 
     return Response(status=HTTPStatus.CREATED)
 
@@ -93,12 +57,41 @@ def retrain_model():
 @needs_authentication
 def remove_face(face_name):
     api_key = request.headers[API_KEY_HEADER]
+    do_retrain = request.args.get(RETRAIN_PARAM, 'true').lower() in ('true', '1')
 
-    logging.debug('Looking for the record in the database and deleting it')
     get_storage().delete(api_key, face_name)
-    logging.debug('Records were successfully deleted')
+    if do_retrain:
+        core.train_async(api_key)
 
     return Response(status=HTTPStatus.NO_CONTENT)
+
+
+@app.route('/retrain', methods=['POST'])
+@swag_from('flasgger/retrain_model.yaml')
+@needs_authentication
+def retrain_model():
+    api_key = request.headers[API_KEY_HEADER]
+    core.train_async(api_key)
+    return Response(status=HTTPStatus.CREATED)
+
+
+@app.route('/recognize', methods=['POST'])
+@swag_from('flasgger/recognize_faces.yaml')
+@needs_authentication
+@needs_attached_file
+def recognize_faces():
+    if 'limit' not in request.values or request.values['limit'] == '':
+        limit = FaceLimit.NO_LIMIT
+        logging.debug('Limit is not specified, find all faces')
+    else:
+        limit = int(request.values['limit'])
+        logging.debug("the limit is:", limit)
+    api_key = request.headers[API_KEY_HEADER]
+    file = request.files['file']
+
+    recognized_faces = core.recognize_faces(limit, file, api_key)
+
+    return jsonify(recognized_faces)
 
 
 @app.errorhandler(BadRequestException)

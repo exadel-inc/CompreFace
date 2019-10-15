@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 
-# File pre-processing (container crashes with CRLF endings in certain files)
+# File pre-processing (CRLF endings in certain files cause `docker-compose up` to crash)
 dos2unix ./*
 
 # Build and launch containers

@@ -19,10 +19,10 @@ def init():
 
 
 def calc_embedding(image):
-    return calc_embeddings(np.array([image]))[0]
+    return _calc_embeddings(np.array([image]))[0]
 
 
-def calc_embeddings(images):
+def _calc_embeddings(images):
     # Get inppredictut and output tensors
     images_placeholder = graph.get_tensor_by_name("input:0")
     embeddings = graph.get_tensor_by_name("embeddings:0")

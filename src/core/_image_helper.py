@@ -1,9 +1,11 @@
 import logging
+from typing import Union
 
 import numpy as np
 import tensorflow as tf
 from skimage import transform
 
+from src.core.constants import FaceLimit
 from src.core.exceptions import NoFaceIsFoundError, OneDimensionalImageIsGivenError
 from src.core.libraries import facenet
 from src.core.libraries.align import detect_face
@@ -23,7 +25,7 @@ def crop_face(img):
     return crop_faces(img, 1)[0]
 
 
-def crop_faces(img, face_lim=-1):
+def crop_faces(img, face_lim: Union[int, FaceLimit] = FaceLimit.NO_LIMIT):
     if img.ndim < 2:
         raise OneDimensionalImageIsGivenError("Unable to align image, it has only one dimension")
     if img.ndim == 2:
@@ -37,7 +39,7 @@ def crop_faces(img, face_lim=-1):
     det = bounding_boxes[:, 0:4]
     img_size = np.asarray(img.shape)[0:2]
     detected = []
-    if face_lim != -1:
+    if face_lim != FaceLimit.NO_LIMIT:
         range_lim = face_lim
     else:
         range_lim = nrof_faces
