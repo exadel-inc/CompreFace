@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 class FaceRecognitionAPIException(Exception):
     http_status = HTTPStatus.INTERNAL_SERVER_ERROR
-    message = "Error has occurred"
+    message = "Internal error has occurred"
 
     def __str__(self):
         return self.message
@@ -11,7 +11,7 @@ class FaceRecognitionAPIException(Exception):
 
 class BadRequestException(FaceRecognitionAPIException):
     http_status = HTTPStatus.BAD_REQUEST
-    message = 'Incorrect request format'
+    message = 'Bad request is provided'
 
 
 class APIKeyNotSpecifiedError(BadRequestException):
