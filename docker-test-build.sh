@@ -5,8 +5,7 @@ dos2unix ./*
 
 # Build and launch containers
 docker-compose build
-docker-compose up &
-sleep 60s
+docker-compose up -d
 
 # Run test
 curl --silent --fail http://localhost:5001/status
@@ -14,4 +13,5 @@ curl --silent --fail http://localhost:5001/status
 # Teardown
 docker-compose down
 
-echo "=== DOCKER BUILD TEST: SUCCESS ==="
+# Confirm test result
+echo "TEST: SUCCESS"
