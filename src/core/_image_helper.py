@@ -16,9 +16,12 @@ factor = 0.709  # scale factor
 margin = 32
 image_size = 160
 
-with tf.Graph().as_default():
-    sess = tf.Session()
-    pnet, rnet, onet = detect_face.create_mtcnn(sess, None)
+
+def init():
+    with tf.Graph().as_default():
+        global pnet, rnet, onet
+        sess = tf.Session()
+        pnet, rnet, onet = detect_face.create_mtcnn(sess, None)
 
 
 def crop_face(img):

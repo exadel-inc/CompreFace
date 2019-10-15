@@ -2,11 +2,12 @@ import logging
 
 import imageio
 
-from src.core import _tf_helper, _classifier, calc_embedding
+from src.core import _tf_helper, _classifier, calc_embedding, _image_helper
 from src.core._image_helper import crop_faces
 
 
 def init():
+    _image_helper.init()
     _tf_helper.init()
     _classifier.initial_train()
 
