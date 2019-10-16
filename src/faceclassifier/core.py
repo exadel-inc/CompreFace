@@ -3,8 +3,9 @@ import logging
 import imageio
 
 from src.core._classifier import train_async as _train_async, classify_many
-from src.core._tf_helper import calc_embedding as _calc_embedding
-from src.facecrop import crop_faces
+from src.facecropper import crop_faces
+from src.faceembedder._tf_helper import calc_embedding as _calc_embedding
+
 
 
 # def init():

@@ -5,13 +5,13 @@ import numpy as np
 import tensorflow as tf
 from skimage import transform
 
-from src import utils
-from src.facecrop.constants import FaceLimit
+from src import pyutils
+from src.crop.constants import FaceLimit
 from src.core.libraries import facenet
 from src.core.libraries.align import detect_face
 from src.dto import BoundingBox
 from src.dto.cropped_face import CroppedFace
-from src.facecrop.exceptions import OneDimensionalImageIsGivenError, NoFaceFoundError
+from src.crop.exceptions import OneDimensionalImageIsGivenError, NoFaceFoundError
 
 FACE_MIN_SIZE = 20
 THRESHOLD = [0.6, 0.7, 0.7]  # three steps's threshold
@@ -21,7 +21,7 @@ IMAGE_SIZE = 160
 pnet, rnet, onet = None, None, None
 
 
-@utils.run_once
+@pyutils.run_once
 def _init():
     with tf.Graph().as_default():
         global pnet, rnet, onet
@@ -33,7 +33,7 @@ def crop_face(img):
     return crop_faces(img, 1)[0].img
 
 
-@utils.run_first(_init)
+@pyutils.run_first(_init)
 def crop_faces(img, face_lim: Union[int, FaceLimit] = FaceLimit.NO_LIMIT):
     if img.ndim < 2:
         raise OneDimensionalImageIsGivenError("Unable to align image, it has only one dimension")
