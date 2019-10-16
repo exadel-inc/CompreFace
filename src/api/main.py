@@ -10,7 +10,7 @@ from src.api._validation import needs_authentication, needs_attached_file
 from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
 from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
-from src.core.constants import FaceLimit
+from src.facecrop.constants import FaceLimit
 from src.core.exceptions import FaceRecognitionInputError
 from src.database import get_storage
 

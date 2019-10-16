@@ -6,7 +6,7 @@ import tensorflow as tf
 from skimage import transform
 
 from src import utils
-from src.core.constants import FaceLimit
+from src.facecrop.constants import FaceLimit
 from src.core.libraries import facenet
 from src.core.libraries.align import detect_face
 from src.dto import BoundingBox
