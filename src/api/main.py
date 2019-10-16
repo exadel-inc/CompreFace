@@ -6,8 +6,8 @@ from flasgger import Swagger, swag_from
 from flask import Flask, request, jsonify, Response
 
 from src import core
-from src.api._validation import needs_authentication, needs_attached_file
-from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
+from src.api._validation import needs_authentication, needs_attached_file, needs_retrain
+from src.api.constants import API_KEY_HEADER
 from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
 from src.core.constants import FaceLimit
@@ -38,32 +38,24 @@ def list_faces():
 @swag_from('flasgger/add_face_example.yaml')
 @needs_authentication
 @needs_attached_file
+@needs_retrain
 def add_face_example(face_name):
     file = request.files['file']
     api_key = request.headers[API_KEY_HEADER]
-    do_retrain = request.args.get(RETRAIN_PARAM, 'true').lower() in ('true', '1')
-
     img = imageio.imread(file)
     face_img = core.crop_face(img)
     embedding = core.calc_embedding(face_img)
     get_storage().save_face(img, face_img, embedding, face_name, api_key)
-    if do_retrain:
-        core.train_async(api_key)
-
     return Response(status=HTTPStatus.CREATED)
 
 
 @app.route('/faces/<face_name>', methods=['DELETE'])
 @swag_from('flasgger/remove_face.yaml')
 @needs_authentication
+@needs_retrain
 def remove_face(face_name):
     api_key = request.headers[API_KEY_HEADER]
-    do_retrain = request.args.get(RETRAIN_PARAM, 'true').lower() in ('true', '1')
-
     get_storage().delete(api_key, face_name)
-    if do_retrain:
-        core.train_async(api_key)
-
     return Response(status=HTTPStatus.NO_CONTENT)
 
 
