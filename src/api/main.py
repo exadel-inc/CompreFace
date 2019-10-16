@@ -125,5 +125,5 @@ def do_after_request(response):
 
 if __name__ == '__main__':
     app.config.from_mapping(SECRET_KEY='dev')
-    core.init()
+    #core.init()
     app.run(debug=True, use_debugger=False, use_reloader=False)
