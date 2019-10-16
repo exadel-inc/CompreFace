@@ -21,9 +21,6 @@ RUN apt-get update && apt-get install -y \
     mongodb-clients
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
-# Run tests
-RUN python3 -m pytest $DIR/src
-
 # Expose port for uWSGI
 EXPOSE 3000
 # Expose port for API and TensorBoard port (6006)
