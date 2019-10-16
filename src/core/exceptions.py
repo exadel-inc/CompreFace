@@ -14,9 +14,3 @@ class FaceRecognitionInputError(FaceRecognitionCoreError):
     pass
 
 
-class OneDimensionalImageIsGivenError(FaceRecognitionInputError):
-    pass
-
-
-class NoFaceIsFoundError(FaceRecognitionInputError):
-    pass

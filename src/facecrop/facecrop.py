@@ -5,19 +5,24 @@ import numpy as np
 import tensorflow as tf
 from skimage import transform
 
+from src import utils
 from src.core.constants import FaceLimit
-from src.core.exceptions import NoFaceIsFoundError, OneDimensionalImageIsGivenError
 from src.core.libraries import facenet
 from src.core.libraries.align import detect_face
+from src.dto import BoundingBox
+from src.dto.cropped_face import CroppedFace
+from src.facecrop.exceptions import OneDimensionalImageIsGivenError, NoFaceFoundError
 
-minsize = 20  # minimum size of face
-threshold = [0.6, 0.7, 0.7]  # three steps's threshold
-factor = 0.709  # scale factor
-margin = 32
-image_size = 160
+FACE_MIN_SIZE = 20
+THRESHOLD = [0.6, 0.7, 0.7]  # three steps's threshold
+SCALE_FACTOR = 0.709
+MARGIN = 32
+IMAGE_SIZE = 160
+pnet, rnet, onet = None, None, None
 
 
-def init():
+@utils.run_once
+def _init():
     with tf.Graph().as_default():
         global pnet, rnet, onet
         sess = tf.Session()
@@ -25,20 +30,21 @@ def init():
 
 
 def crop_face(img):
-    return crop_faces(img, 1)[0]
+    return crop_faces(img, 1)[0].img
 
 
+@utils.run_first(_init)
 def crop_faces(img, face_lim: Union[int, FaceLimit] = FaceLimit.NO_LIMIT):
     if img.ndim < 2:
         raise OneDimensionalImageIsGivenError("Unable to align image, it has only one dimension")
     if img.ndim == 2:
         img = facenet.to_rgb(img)
     img = img[:, :, 0:3]
-    bounding_boxes, _ = detect_face.detect_face(img, minsize, pnet, rnet, onet, threshold,
-                                                factor)
+    bounding_boxes, _ = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, THRESHOLD,
+                                                SCALE_FACTOR)
     nrof_faces = bounding_boxes.shape[0]
     if nrof_faces < 1:
-        raise NoFaceIsFoundError("Haven't found face")
+        raise NoFaceFoundError("Haven't found face")
     det = bounding_boxes[:, 0:4]
     img_size = np.asarray(img.shape)[0:2]
     detected = []
@@ -61,17 +67,18 @@ def crop_faces(img, face_lim: Union[int, FaceLimit] = FaceLimit.NO_LIMIT):
     else:
         detected.append(det)
 
-    transformedPics = []
+    faces = []
     for elem in detected:
-        logging.debug('the box around this face has dimensions of', elem[0:4])
+        logging.debug(f'the box around this face has dimensions of {elem[0:4]}')
         det = np.squeeze(elem)
         bb = np.zeros(4, dtype=np.int32)
-        bb[0] = np.maximum(det[0] - margin / 2, 0)
-        bb[1] = np.maximum(det[1] - margin / 2, 0)
-        bb[2] = np.minimum(det[2] + margin / 2, img_size[1])
-        bb[3] = np.minimum(det[3] + margin / 2, img_size[0])
+        bb[0] = np.maximum(det[0] - MARGIN / 2, 0)
+        bb[1] = np.maximum(det[1] - MARGIN / 2, 0)
+        bb[2] = np.minimum(det[2] + MARGIN / 2, img_size[1])
+        bb[3] = np.minimum(det[3] + MARGIN / 2, img_size[0])
         cropped = img[bb[1]:bb[3], bb[0]:bb[2], :]
-        transformedPics.append(transform.resize(cropped, (image_size, image_size)))
-        transformedPics.append(elem[0:4])
+        resized = transform.resize(cropped, (IMAGE_SIZE, IMAGE_SIZE))
+        face = CroppedFace(box=BoundingBox(xmin=bb[0], ymin=bb[1], xmax=bb[2], ymax=bb[3]), img=resized)
+        faces.append(face)
 
-    return transformedPics
+    return faces
