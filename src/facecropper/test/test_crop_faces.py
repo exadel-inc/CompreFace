@@ -1,7 +1,6 @@
 import os
 
 import imageio
-
 from src.crop import crop_faces
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))

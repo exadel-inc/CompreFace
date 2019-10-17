@@ -5,14 +5,15 @@ import imageio
 from flasgger import Swagger, swag_from
 from flask import Flask, request, jsonify, Response
 
-from src import core
 from src.api._validation import needs_authentication, needs_attached_file
 from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
 from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
-from src.crop.constants import FaceLimit
-from src.core.exceptions import FaceRecognitionInputError
 from src.database import get_storage
+from src.faceclassifier.faceclassifier import train_async
+from src.facecropper import crop_face
+from src.facecropper.constants import FaceLimit
+from src.faceembedder.faceembedder import calc_embedding
 
 app = Flask(__name__)
 swagger = Swagger(app, template=template.template)
@@ -44,11 +45,11 @@ def add_face_example(face_name):
     do_retrain = request.args.get(RETRAIN_PARAM, 'true').lower() in ('true', '1')
 
     img = imageio.imread(file)
-    face_img = core.crop_face(img)
-    embedding = core.calc_embedding(face_img)
+    face_img = crop_face(img)
+    embedding = calc_embedding(face_img)
     get_storage().save_face(img, face_img, embedding, face_name, api_key)
     if do_retrain:
-        core.train_async(api_key)
+        train_async(api_key)
 
     return Response(status=HTTPStatus.CREATED)
 
@@ -62,7 +63,7 @@ def remove_face(face_name):
 
     get_storage().delete(api_key, face_name)
     if do_retrain:
-        core.train_async(api_key)
+        train_async(api_key)
 
     return Response(status=HTTPStatus.NO_CONTENT)
 
@@ -72,7 +73,7 @@ def remove_face(face_name):
 @needs_authentication
 def retrain_model():
     api_key = request.headers[API_KEY_HEADER]
-    core.train_async(api_key)
+    train_async(api_key)
     return Response(status=HTTPStatus.CREATED)
 
 
@@ -90,7 +91,7 @@ def recognize_faces():
     api_key = request.headers[API_KEY_HEADER]
     file = request.files['file']
 
-    recognized_faces = core.recognize_faces(limit, file, api_key)
+    recognized_faces = recognize_faces(limit, file, api_key)
 
     return jsonify(result=recognized_faces)
 
@@ -101,10 +102,10 @@ def handle_api_exception(e: BadRequestException):
     return jsonify(message=e.message), e.http_status
 
 
-@app.errorhandler(FaceRecognitionInputError)
-def handle_api_exception(e):
-    logging.warning(str(e))
-    return jsonify(message=str(e)), HTTPStatus.BAD_REQUEST
+# @app.errorhandler(FaceRecognitionInputError)
+# def handle_api_exception(e):
+#     logging.warning(str(e))
+#     return jsonify(message=str(e)), HTTPStatus.BAD_REQUEST
 
 
 @app.errorhandler(Exception)
@@ -125,5 +126,5 @@ def do_after_request(response):
 
 if __name__ == '__main__':
     app.config.from_mapping(SECRET_KEY='dev')
-    #core.init()
+    # core.init()
     app.run(debug=True, use_debugger=False, use_reloader=False)

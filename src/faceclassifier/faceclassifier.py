@@ -1,26 +1,31 @@
 import logging
 from threading import Thread
 
+import imageio
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-from src.core.exceptions import ThereIsNoModelForAPIKeyError
+from src import pyutils
 from src.database import get_storage
+from src.faceclassifier.exceptions import ThereIsNoModelForAPIKeyError
+from src.facecropper import crop_faces
+from src.faceembedder import calc_embedding
 
 models = {}
 
+@pyutils.run_once
+def train_all_models_once():
+    api_keys = get_storage().get_api_keys()
+    if not api_keys:
+        print("[WARNING] Face classifier training hasn't been started, because no API Keys were found in storage.")
+        exit(0)
+
+    for api_key in api_keys:
+        train(api_key)
 
 def train_async(api_key):
     thread = Thread(target=train, daemon=False, args=[api_key])
     thread.start()
-
-
-def initial_train():
-    api_keys = get_storage().get_api_keys()
-    if not api_keys:
-        return
-    for api_key in api_keys:
-        train(api_key)
 
 
 def train(api_key):
@@ -56,3 +61,16 @@ def classify_many(embedding, api_key, box):
         "prediction": model_data["face_names"][best_class_indices[0]],
         "probability": best_class_probability
     }
+
+
+def recognize_faces(limit, file, api_key):
+    img = imageio.imread(file)
+    face_img = crop_faces(img, limit)
+    recognized_faces = []
+    for face in range(0, len(face_img), 2):
+        embedding = calc_embedding(face_img[face])
+        face = classify_many(embedding, api_key, face_img[face + 1].tolist())
+        if face not in recognized_faces:
+            recognized_faces.append(face)
+    logging.debug("The faces that were found:", recognized_faces)
+    return recognized_faces

@@ -4,9 +4,9 @@ import imageio
 import pytest
 from PIL import Image
 
-from src.crop import crop_face
-from src.crop.exceptions import NoFaceFoundError
-from src.crop.test._img_utils import ndarray_to_img, images_are_the_same
+from src.facecropper import crop_face
+from src.facecropper.exceptions import NoFaceFoundError
+from src.facecropper.test._img_utils import ndarray_to_img, images_are_the_same
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 

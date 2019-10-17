@@ -1,16 +1,6 @@
-class FaceRecognitionCoreError(Exception):
+class FaceClassifierException(Exception):
     pass
 
 
-class FaceRecognitionInternalError(FaceRecognitionCoreError):
+class ThereIsNoModelForAPIKeyError(FaceClassifierException):
     pass
-
-
-class ThereIsNoModelForAPIKeyError(FaceRecognitionInternalError):
-    pass
-
-
-class FaceRecognitionInputError(FaceRecognitionCoreError):
-    pass
-
-
