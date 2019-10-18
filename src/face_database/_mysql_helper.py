@@ -64,7 +64,7 @@ class Embedding(Base):
     blob = relationship('Blob', foreign_keys='Embedding.blob_id')
 
 
-class MysqlStorage:
+class MySQLStorage:
     def __init__(self, db_url):
         engine = create_engine(db_url)
         Base.metadata.create_all(engine)

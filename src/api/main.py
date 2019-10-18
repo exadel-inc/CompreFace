@@ -10,7 +10,7 @@ from src.api._validation import needs_authentication, needs_attached_file
 from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
 from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
-from src.database import get_storage
+from src.face_database import get_storage
 from src.dto.cropped_face import CroppedFace
 from src.face_recognition.embedding_calculator.calc_embedding import calc_embedding
 from src.face_recognition.embedding_classifier.classifier import classify_many, train_async

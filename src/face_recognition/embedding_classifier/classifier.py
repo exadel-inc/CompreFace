@@ -4,7 +4,7 @@ from threading import Thread
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-from src.database import get_storage
+from src.face_database import get_storage
 from src.dto import BoundingBox
 from src.dto.face_prediction import FacePrediction
 from src.face_recognition.embedding_classifier.exceptions import ThereIsNoModelForAPIKeyError

@@ -1,7 +1,7 @@
 import os
 
-from src.database._mongo_helper import MongoStorage
-from src.database._mysql_helper import MysqlStorage
+from src.face_database._mongo_helper import MongoStorage
+from src.face_database._mysql_helper import MySQLStorage
 
 
 def get_storage():
@@ -16,4 +16,4 @@ def get_storage():
         return MongoStorage(mongo_host, mongo_port)
     elif model_type == 'mysql':
         url = os.environ.get('MYSQL_URL', 'mysql://root:root@localhost/recognition')
-        return MysqlStorage(url)
+        return MySQLStorage(url)
