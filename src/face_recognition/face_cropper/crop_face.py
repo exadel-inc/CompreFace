@@ -11,7 +11,6 @@ from src.dto.cropped_face import CroppedFace
 from src.face_recognition.embedding_classifier.libraries import facenet
 from src.face_recognition.face_cropper.constants import FaceLimit
 from src.face_recognition.face_cropper.exceptions import OneDimensionalImageIsGivenError, NoFaceFoundError
-
 from src.face_recognition.face_cropper.libraries.align import detect_face
 
 FACE_MIN_SIZE = 20

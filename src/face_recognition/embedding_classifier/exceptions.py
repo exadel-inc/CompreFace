@@ -4,5 +4,3 @@ class FaceClassifierException(Exception):
 
 class ThereIsNoModelForAPIKeyError(FaceClassifierException):
     pass
-
-

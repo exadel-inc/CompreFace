@@ -3,7 +3,7 @@ from http import HTTPStatus
 import pytest
 
 from src import app
-from src.api._validation import needs_attached_file
+from src.api._decorators import needs_attached_file
 from src.api.constants import API_KEY_HEADER
 from src.api.exceptions import NoFileAttachedError, NoFileSelectedError
 from src.api.test.constants import VALID_API_KEY, SUCCESS_BODY
