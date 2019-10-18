@@ -5,18 +5,18 @@ Builds a container locally and then runs tests
 
 Usage: ./run-e2e-tests-dev.sh [-s] [-u]
 Options:
-    -r      Reuse existing Docker containers (don't rebuild)
+    -d      Don't build Docker containers
     -f      If tests run successfully, freeze versions and dependencies in requirements.txt (useful after manually adding new dependencies)
 "
 }
 
 ## Parse arguments
-REUSE_EXISTING_CONTAINERS=''
+DONT_BUILD_CONTAINERS=''
 FREEZE_REQUIREMENTS=''
 
-while getopts 'rf' flag; do
+while getopts 'df' flag; do
   case "${flag}" in
-  r) REUSE_EXISTING_CONTAINERS='true' ;;
+  d) DONT_BUILD_CONTAINERS='true' ;;
   f) FREEZE_REQUIREMENTS='true' ;;
   *)
     print_usage
@@ -29,7 +29,7 @@ cd "${0%/*}" # Set Current Dir to the script's dir
 
 ## Build docker containers
 dos2unix ./* # File pre-processing (CRLF endings in certain files cause `docker-compose up` to crash)
-if [ "$REUSE_EXISTING_CONTAINERS" != 'true' ]; then
+if [ "$DONT_BUILD_CONTAINERS" != 'true' ]; then
   docker-compose build
 fi
 docker-compose up &
@@ -41,13 +41,13 @@ trap "docker-compose down" SIGINT SIGTERM EXIT
 
 ## TEST 1 - Smoke test (Allow up to 1h (=3600s) for the service to start)
 export HOST=http://localhost:5001
-timeout 3600 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; done' || false
+timeout 3600 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; done'
 
 ## TEST 2 - Unit tests
-docker exec ml python3 -m pytest /srv/src
+docker exec ml python3 -m pytest src
 
 ## TEST 3 - E2E tests
-create_and_activate_python_venv() {
+set_up_venv_and_activate() {
   python -m pip install --user virtualenv
   python -m venv venv
   if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
@@ -59,7 +59,7 @@ create_and_activate_python_venv() {
     requests \
     pytest
 }
-create_and_activate_python_venv
+set_up_venv_and_activate
 python -m pytest --host $HOST test_e2e/test_e2e.py
 deactivate
 

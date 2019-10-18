@@ -1,4 +1,4 @@
-sabsl-py==0.7.1
+absl-py==0.7.1
 astor==0.8.0
 atomicwrites==1.3.0
 attrs==19.1.0
