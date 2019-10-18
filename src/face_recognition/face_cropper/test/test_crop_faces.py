@@ -2,7 +2,7 @@ import os
 
 import imageio
 
-from src.facecropper import crop_faces
+from src.face_recognition.face_cropper.crop_face import crop_faces
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 

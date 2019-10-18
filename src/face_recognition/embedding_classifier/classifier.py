@@ -1,18 +1,13 @@
 import logging
 from threading import Thread
-from typing import List
 
-import imageio
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from src.database import get_storage
 from src.dto import BoundingBox
-from src.dto.cropped_face import CroppedFace
 from src.dto.face_prediction import FacePrediction
-from src.faceclassifier.exceptions import ThereIsNoModelForAPIKeyError
-from src.facecropper import crop_faces
-from src.faceembedder import calc_embedding
+from src.face_recognition.embedding_classifier.exceptions import ThereIsNoModelForAPIKeyError
 
 models = {}
 
@@ -49,7 +44,7 @@ def train_all_models():
         train(api_key)
 
 
-def _classify_many(embedding, api_key, box: BoundingBox):
+def classify_many(embedding, api_key, box: BoundingBox):
     if api_key not in models:
         raise ThereIsNoModelForAPIKeyError("There is no model for api key %s." % api_key)
     model_data = models[api_key]
@@ -63,15 +58,3 @@ def _classify_many(embedding, api_key, box: BoundingBox):
                   predictions[best_class_indices[1]])
     prediction = model_data["face_names"][best_class_indices[0]]
     return FacePrediction(box=box, prediction=prediction, probability=best_class_probability)
-
-
-def recognize_faces(limit, file, api_key):
-    img = imageio.imread(file)
-    faces: List[CroppedFace] = crop_faces(img, limit)
-    recognized_faces = []
-    for face in faces:
-        embedding = calc_embedding(face.img)
-        recognized_face = _classify_many(embedding, api_key, face.box)
-        recognized_faces.append(recognized_face)
-    logging.debug("The faces that were found:", recognized_faces)
-    return recognized_faces

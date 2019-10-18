@@ -1,5 +1,6 @@
 import logging
 from http import HTTPStatus
+from typing import List
 
 import imageio
 from flasgger import Swagger, swag_from
@@ -10,10 +11,11 @@ from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
 from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
 from src.database import get_storage
-from src.faceclassifier.faceclassifier import train_async
-from src.facecropper import crop_face
-from src.facecropper.constants import FaceLimit
-from src.faceembedder.faceembedder import calc_embedding
+from src.dto.cropped_face import CroppedFace
+from src.face_recognition.embedding_calculator.calc_embedding import calc_embedding
+from src.face_recognition.embedding_classifier.classifier import classify_many, train_async
+from src.face_recognition.face_cropper.constants import FaceLimit
+from src.face_recognition.face_cropper.crop_face import crop_face, crop_faces
 
 app = Flask(__name__)
 swagger = Swagger(app, template=template.template)
@@ -91,7 +93,14 @@ def recognize_faces():
     api_key = request.headers[API_KEY_HEADER]
     file = request.files['file']
 
-    recognized_faces = recognize_faces(limit, file, api_key)
+    img = imageio.imread(file)
+    faces: List[CroppedFace] = crop_faces(img, limit)
+    recognized_faces = []
+    for face in faces:
+        embedding = calc_embedding(face.img)
+        recognized_face = classify_many(embedding, api_key, face.box)
+        recognized_faces.append(recognized_face)
+    logging.debug("The faces that were found:", recognized_faces)
 
     return jsonify(result=recognized_faces)
 

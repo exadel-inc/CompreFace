@@ -3,7 +3,7 @@ import os
 import imageio
 import pytest
 
-from src.faceembedder import calc_embedding
+from src.face_recognition.embedding_calculator import calc_embedding
 
 SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 

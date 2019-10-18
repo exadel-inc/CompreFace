@@ -8,10 +8,11 @@ from skimage import transform
 from src import pyutils
 from src.dto import BoundingBox
 from src.dto.cropped_face import CroppedFace
-from src.faceclassifier.libraries import facenet
-from src.faceclassifier.libraries.align import detect_face
-from src.facecropper.constants import FaceLimit
-from src.facecropper.exceptions import OneDimensionalImageIsGivenError, NoFaceFoundError
+from src.face_recognition.embedding_classifier.libraries import facenet
+from src.face_recognition.face_cropper.constants import FaceLimit
+from src.face_recognition.face_cropper.exceptions import OneDimensionalImageIsGivenError, NoFaceFoundError
+
+from src.face_recognition.face_cropper.libraries.align import detect_face
 
 FACE_MIN_SIZE = 20
 THRESHOLD = [0.6, 0.7, 0.7]  # three steps's threshold
