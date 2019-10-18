@@ -57,7 +57,7 @@ tensorboard==1.13.1
 tensorflow==1.13.1
 tensorflow-estimator==1.13.0
 termcolor==1.1.0
-uWSGI==2.0.18
+uWSGI
 wcwidth==0.1.7
 Werkzeug==0.15.4
 zipp==0.6.0

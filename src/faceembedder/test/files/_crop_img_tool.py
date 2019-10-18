@@ -10,7 +10,7 @@ SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
 def crop_img_file(filename):
     img = imageio.imread(f'{SCRIPT_DIR}/{filename}.jpg')
     img = crop_face(img)
-    imageio.imwrite(f'{SCRIPT_DIR}/{filename}-facecropped.jpg', img)
+    imageio.imwrite(f'{SCRIPT_DIR}/{filename}-cropped.jpg', img)
 
 
 if __name__ == '__main__':

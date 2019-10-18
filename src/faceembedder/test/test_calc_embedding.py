@@ -19,7 +19,7 @@ def test__when_given_two_faces_of_the_same_person__then_returns_equal_embeddings
 
 def test__when_given_two_faces_of_different_people__then_returns_different_embeddings():
     person_a_im = imageio.imread(f'{SCRIPT_DIR}/files/personA-img1-cropped.jpg')
-    person_b_im = imageio.imread(f'{SCRIPT_DIR}/files/personA-img2-cropped.jpg')
+    person_b_im = imageio.imread(f'{SCRIPT_DIR}/files/personB-img1-cropped.jpg')
 
     person_a_face_embedding = calc_embedding(person_a_im)
     person_b_face_embedding = calc_embedding(person_b_im)
