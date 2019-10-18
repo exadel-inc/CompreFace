@@ -8,7 +8,7 @@ produces:
 security:
   - ApiKeyAuth: []
 responses:
-  201:
+  202:
     description: "Model training has been started."
   400:
     $ref: "#/components/responses/BadRequestResponse"

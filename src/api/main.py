@@ -74,7 +74,7 @@ def remove_face(face_name):
 def retrain_model():
     api_key = request.headers[API_KEY_HEADER]
     train_async(api_key)
-    return Response(status=HTTPStatus.CREATED)
+    return Response(status=HTTPStatus.ACCEPTED)
 
 
 @app.route('/recognize', methods=['POST'])
