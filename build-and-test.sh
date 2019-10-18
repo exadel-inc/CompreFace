@@ -1,9 +1,9 @@
 #!/bin/bash -xe
 print_usage() {
   printf "
-Builds a container locally and then runs tests
+Builds containers and runs all tests against them
 
-Usage: ./run-e2e-tests-dev.sh [-s] [-u]
+Usage: ./build-and-test.sh [-s] [-u]
 Options:
     -d      Don't build Docker containers (useful when changes are made only outside the already built containers)
     -f      If tests run successfully, freeze versions and dependencies in requirements.txt (useful after manually adding new dependencies)
