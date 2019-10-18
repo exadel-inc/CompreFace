@@ -1,17 +1,34 @@
 #!/bin/bash -xe
-####################
-# Runs e2e tests against an already running container
-# Usage:             ./run-e2e-tests.sh http://<HOST>:<PORT>
-# Usage example:     ./run-e2e-tests.sh http://localhost:5001
-####################
+print_usage() {
+  printf "
+Runs e2e tests against an already running container
 
-if [ -z "$1" ]; then
-  echo "Incorrect usage. Usage example: ./run-e2e-tests.sh http://localhost:5001"
+Usage: ./run-e2e-tests.sh -h \"http://localhost:5001\"
+Options:
+    -h <HOST>      Specify the API host to be tested
+"
+}
+
+## Parse arguments
+HOST=''
+
+while getopts 'h:' flag; do
+  case "${flag}" in
+  h) HOST=$OPTARG ;;
+  *)
+    print_usage
+    exit 1
+    ;;
+  esac
+done
+
+if [ ! "$HOST" ]; then
+  print_usage
   exit 1
 fi
 
-export HOST=$1
-cd "${0%/*}" # Change Current Dir to the script's dir
+export HOST
+cd "${0%/*}" # Set Current Dir to the script's dir
 
 ## Set up Python environment
 python -m pip install --user virtualenv
