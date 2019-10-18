@@ -3,9 +3,9 @@ print_usage() {
   printf "
 Runs e2e tests against an already running container
 
-Usage: ./run-e2e-tests.sh -h \"http://localhost:5001\"
+Usage: ./run-e2e-tests.sh -h <HOST>
 Options:
-    -h <HOST>      Specify the API host to be tested
+    -h <HOST>      Specify the API host to be tested, e.g. \"http://localhost:5001\"
 "
 }
 
