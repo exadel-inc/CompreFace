@@ -18,7 +18,7 @@ def run_once(func):
 
 
 def run_first(preceding_func):
-    """ Runs some function before running decorated function"""
+    """ Runs some function before running decorated function """
 
     def decorator(func):
         @functools.wraps(func)

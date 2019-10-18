@@ -1,8 +1,8 @@
 import pytest
 
-import src
+from src.api.main import app
 
 
 @pytest.fixture(scope='session')
 def client():
-    return src.app.test_client()
+    return app.test_client()

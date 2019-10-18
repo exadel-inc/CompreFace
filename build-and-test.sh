@@ -5,7 +5,7 @@ Builds a container locally and then runs tests
 
 Usage: ./run-e2e-tests-dev.sh [-s] [-u]
 Options:
-    -d      Don't build Docker containers
+    -d      Don't build Docker containers (useful when changes are made only outside the already built containers)
     -f      If tests run successfully, freeze versions and dependencies in requirements.txt (useful after manually adding new dependencies)
 "
 }
@@ -35,37 +35,16 @@ fi
 docker-compose up &
 trap "docker-compose down" SIGINT SIGTERM EXIT
 
-############################
-###### START OF TESTS ######
-############################
-
-## TEST 1 - Smoke test (Allow up to 1h (=3600s) for the service to start)
+## Wait until successful start of the service with 60s timeout
 export HOST=http://localhost:5001
-timeout 3600 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; done'
+timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; done'
 
-## TEST 2 - Unit tests
+## Run Unit Tests inside the container
 docker exec ml python3 -m pytest src
 
-## TEST 3 - E2E tests
-set_up_venv_and_activate() {
-  python -m pip install --user virtualenv
-  python -m venv venv
-  if [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    source venv/bin/activate # In Linux
-  else
-    venv/Scripts/activate # In Windows
-  fi
-  python -m pip install \
-    requests \
-    pytest
-}
-set_up_venv_and_activate
+## Run E2E tests from outside the container
+python -m pip install pytest requests
 python -m pytest --host $HOST test_e2e/test_e2e.py
-deactivate
-
-##########################
-###### END OF TESTS ######
-##########################
 
 ## Freeze versions and dependencies in requirements.txt
 if [ "$FREEZE_REQUIREMENTS" = 'true' ]; then

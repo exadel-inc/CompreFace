@@ -3,7 +3,7 @@ from http import HTTPStatus
 from typing import List
 
 import imageio
-from flasgger import Swagger, swag_from
+from flasgger import swag_from, Swagger
 from flask import Flask, request, jsonify, Response
 
 from src.api._decorators import needs_authentication, needs_attached_file
@@ -13,13 +13,12 @@ from src.api.flasgger import template
 from src.dto.cropped_face import CroppedFace
 from src.face_database.storage_factory import get_storage
 from src.face_recognition.embedding_calculator.calc_embedding import calc_embedding
-from src.face_recognition.embedding_classifier.classifier import classify_many, train_async
+from src.face_recognition.embedding_classifier.classifier import classify_many, train_async, train_all_models
 from src.face_recognition.face_cropper.constants import FaceLimit
 from src.face_recognition.face_cropper.crop_face import crop_face, crop_faces
 
 app = Flask(__name__)
 swagger = Swagger(app, template=template.template)
-logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route('/status')
@@ -124,7 +123,7 @@ def handle_runtime_error(e):
 
 
 @app.after_request
-def do_after_request(response):
+def disable_caching(response):
     response.cache_control.max_age = 0
     response.cache_control.no_cache = True
     response.cache_control.no_store = True
@@ -133,7 +132,13 @@ def do_after_request(response):
     return response
 
 
+def init_app():
+    logging.basicConfig(level=logging.DEBUG)
+    train_all_models()
+    return app
+
+
 if __name__ == '__main__':
+    app = init_app()
     app.config.from_mapping(SECRET_KEY='dev')
-    # core.init()
     app.run(debug=True, use_debugger=False, use_reloader=False)
