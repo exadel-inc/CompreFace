@@ -11,8 +11,8 @@ def get_storage():
         model_type = 'mongo'
 
     if model_type == 'mongo':
-        mongo_host = os.environ.get('MONGO_HOST', 'localhost')
-        mongo_port = int(os.environ.get('MONGO_PORT', '27117'))
+        mongo_host = os.environ.get('MONGO_HOST', 'mongo')
+        mongo_port = int(os.environ.get('MONGO_PORT', '27017'))
         return MongoStorage(mongo_host, mongo_port)
     elif model_type == 'mysql':
         url = os.environ.get('MYSQL_URL', 'mysql://root:root@localhost/recognition')
