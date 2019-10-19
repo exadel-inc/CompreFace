@@ -5,11 +5,12 @@ How to run:
 python -m pytest --host http://localhost:5000 test_e2e.py
 """
 import os
+from pathlib import Path
 
 import pytest
 import requests
 
-SCRIPT_DIR = os.path.dirname(os.path.realpath(__file__))
+CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
 
 @pytest.fixture
@@ -19,8 +20,8 @@ def host(request):
 
 def test_e2e(host):
     face_name = "Marie Curie"
-    face_image1_filepath = f'{SCRIPT_DIR}/files/a1.jpg'
-    face_image2_filepath = f'{SCRIPT_DIR}/files/a2.jpg'
+    face_image1_filepath = CURRENT_DIR / 'files' / 'a1.jpg'
+    face_image2_filepath = CURRENT_DIR / 'files' / 'a2.jpg'
     headers = {'X-Api-Key': 'valid-api-key'}
 
     assert True

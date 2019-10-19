@@ -1,1 +1,4 @@
+from src.face_database import _mongo_helper, _mysql_helper
 
+MYSQL_CURRENT_MODEL_NAME = _mysql_helper.CURRENT_MODEL_NAME
+MONGO_CURRENT_MODEL_NAME = _mongo_helper.CURRENT_MODEL_NAME

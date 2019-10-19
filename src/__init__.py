@@ -1,1 +1,1 @@
-from src.api.main import init_app
+from src.api.app import init_app

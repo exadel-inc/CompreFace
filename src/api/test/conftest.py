@@ -1,6 +1,6 @@
 import pytest
 
-from src.api.main import app
+from src.api.app import app
 
 
 @pytest.fixture(scope='session')

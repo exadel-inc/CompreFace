@@ -12,7 +12,7 @@ from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
 from src.dto.cropped_face import CroppedFace
 from src.face_database.storage_factory import get_storage
-from src.face_recognition.embedding_calculator.calc_embedding import calc_embedding
+from src.face_recognition.embedding_calculator.embedding_calculator import calc_embedding
 from src.face_recognition.embedding_classifier.classifier import classify_many, train_async, train_all_models
 from src.face_recognition.face_cropper.constants import FaceLimit
 from src.face_recognition.face_cropper.crop_face import crop_face, crop_faces
@@ -136,9 +136,3 @@ def init_app():
     logging.basicConfig(level=logging.DEBUG)
     train_all_models()
     return app
-
-
-if __name__ == '__main__':
-    app = init_app()
-    app.config.from_mapping(SECRET_KEY='dev')
-    app.run(debug=True, use_debugger=False, use_reloader=False)
