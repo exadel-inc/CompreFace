@@ -3,9 +3,9 @@ from http import HTTPStatus
 import pytest
 
 from src.api._decorators import needs_authentication
+from src.api.app import app
 from src.api.constants import API_KEY_HEADER
 from src.api.exceptions import APIKeyNotSpecifiedError, APIKeyNotAuthorizedError
-from src.api.app import app
 from src.api.test.constants import INVALID_API_KEY, SUCCESS_BODY, VALID_API_KEY
 
 ROUTE = '/test-locked-endpoint'

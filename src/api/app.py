@@ -7,7 +7,7 @@ from flasgger import swag_from, Swagger
 from flask import Flask, request, jsonify, Response
 
 from src.api._decorators import needs_authentication, needs_attached_file, needs_retrain
-from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
+from src.api.constants import API_KEY_HEADER
 from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
 from src.dto.cropped_face import CroppedFace

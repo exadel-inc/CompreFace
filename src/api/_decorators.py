@@ -1,12 +1,12 @@
 import functools
 
 from flask import request
-from src import core
 
 from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
 from src.api.exceptions import APIKeyNotSpecifiedError, APIKeyNotAuthorizedError, NoFileAttachedError, \
     NoFileSelectedError
 from src.api.test.constants import INVALID_API_KEY
+from src.face_recognition.embedding_classifier.classifier import train_async
 
 
 def needs_authentication(f):
@@ -42,7 +42,7 @@ def needs_retrain(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         if not request.args.get(RETRAIN_PARAM) or request.args.get(RETRAIN_PARAM).lower() in ('true', '1'):
-            core.train_async(request.headers[API_KEY_HEADER])
+            train_async(request.headers[API_KEY_HEADER])
         return f(*args, **kwargs)
 
     return wrapper

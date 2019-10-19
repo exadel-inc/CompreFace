@@ -4,8 +4,8 @@ import pytest
 
 
 @pytest.fixture(scope='module')
-def client_with_file_endpoint():
-    ...
+def client_with_retrain_endpoint():
+    return ...
 
 
 def test__given_no_retrain_flag__when_needs_retrain_endpoint_is_requested__then_starts_retraining(
