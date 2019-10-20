@@ -57,7 +57,7 @@ def test__when_client_uploads_a_face_example__returns_201(host):
     assert res_a.status_code == 201
     assert res_b.status_code == 201
 
-    time.sleep(10)
+    time.sleep(20)
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -70,28 +70,3 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
     result = res.json()['result']
     assert len(result) == 1
     assert result[0]['prediction'] == "Marie Curie"
-
-
-@pytest.mark.run(order=next(after_previous))
-def test__when_client_requests_to_delete_the_face_in_another_image__then_service_returns_204(host):
-    pass
-
-    res_a = requests.delete(f"{host}/faces/Marie Curie?retrain=false", headers=AUTH_HEADERS)
-    res_b = requests.delete(f"{host}/faces/Stephen Hawking", headers=AUTH_HEADERS)
-
-    assert res_a.status_code == 204
-    assert res_b.status_code == 204
-
-    time.sleep(10)
-
-
-@pytest.mark.xfail(reason="EGP-699")
-@pytest.mark.run(order=next(after_previous))
-def test__when_client_requests_to_recognize_a_deleted_face__then_service_does_not_recognize_it(host):
-    files = {'file': open(CURRENT_DIR / 'files' / 'personA-img2.jpg', 'rb')}
-
-    res = requests.post(f"{host}/recognize", headers=AUTH_HEADERS, files=files)
-
-    assert res.status_code == 200
-    result = res.json()['result']
-    assert len(result) == 0
