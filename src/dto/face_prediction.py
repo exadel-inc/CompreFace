@@ -1,9 +1,11 @@
-from typing import NamedTuple
+import attr
 
 from src.dto import BoundingBox
+from src.dto.serializable import Serializable
 
 
-class FacePrediction(NamedTuple):
+@attr.s(auto_attribs=True)
+class FacePrediction(Serializable):
     box: BoundingBox
-    prediction: str
-    probability: float
+    prediction: str = attr.ib(converter=str)
+    probability: float = attr.ib(converter=float)

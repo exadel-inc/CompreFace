@@ -1,16 +1,24 @@
 """
-How to run:
+Usage:
+python -m pytest [--host <HOST>] test_e2e.py
+
+Arguments:
+    <HOST>  Host of the service, default value: http://localhost:5000
+
+Instructions:
 1. Start the Face Recognition Service
-2. Run command:
-python -m pytest --host http://localhost:5000 test_e2e.py
+2. Run command, for example
+python -m pytest --host http://localhost:5001 test_e2e.py
 """
 import os
+import time
 from pathlib import Path
 
 import pytest
 import requests
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+AUTH_HEADERS = {'X-Api-Key': 'valid-api-key'}
 
 
 @pytest.fixture
@@ -18,35 +26,72 @@ def host(request):
     return request.config.getoption('host')
 
 
-def test_e2e(host):
-    face_name = "Marie Curie"
-    face_image1_filepath = CURRENT_DIR / 'files' / 'personA-img1.jpg'
-    face_image2_filepath = CURRENT_DIR / 'files' / 'personA-img2.jpg'
-    headers = {'X-Api-Key': 'valid-api-key'}
+def after_previous_gen():
+    order_no = 1
+    while True:
+        yield order_no
+        order_no += 1
 
-    # GIVEN Client uploads a face example
-    files = {'file': open(face_image1_filepath, 'rb')}
-    res = requests.post(f"{host}/faces/{face_name}", headers=headers, files=files)
-    assert res.status_code == 201
 
-    # WHEN Client requests to recognize the face in another image
-    # THEN Service should recognize it
-    files = {'file': open(face_image2_filepath, 'rb')}
-    res = requests.post(f"{host}/recognize", headers=headers, files=files)
+after_previous = after_previous_gen()
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_checks_service_availability__returns_200(host):
+    pass
+
+    res = requests.get(f"{host}/status")
+
+    assert res.status_code == 200
+    assert res.json()['status'] == 'OK'
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_uploads_a_face_example__returns_201(host):
+    files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
+    files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
+
+    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false", headers=AUTH_HEADERS, files=files_a)
+    res_b = requests.post(f"{host}/faces/Stephen Hawking", headers=AUTH_HEADERS, files=files_b)
+
+    assert res_a.status_code == 201
+    assert res_b.status_code == 201
+
+    time.sleep(10)
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_requests_to_recognize_the_face_in_another_image__then_service_recognizes_it(host):
+    files = {'file': open(CURRENT_DIR / 'files' / 'personA-img2.jpg', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers=AUTH_HEADERS, files=files)
+
     assert res.status_code == 200
     result = res.json()['result']
     assert len(result) == 1
-    assert result[0]['prediction'] == face_name
+    assert result[0]['prediction'] == "Marie Curie"
 
-    # GIVEN Client deletes the face
-    files = {'file': open(face_image2_filepath, 'rb')}
-    res = requests.post(f"{host}/recognize", headers=headers, files=files)
-    assert res.status_code == 204
 
-    # WHEN Client requests to recognize the face in another image
-    # THEN Service should not recognize it
-    files = {'file': open(face_image2_filepath, 'rb')}
-    res = requests.post(f"{host}/recognize", headers=headers, files=files)
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_requests_to_delete_the_face_in_another_image__then_service_returns_204(host):
+    pass
+
+    res_a = requests.delete(f"{host}/faces/Marie Curie?retrain=false", headers=AUTH_HEADERS)
+    res_b = requests.delete(f"{host}/faces/Stephen Hawking", headers=AUTH_HEADERS)
+
+    assert res_a.status_code == 204
+    assert res_b.status_code == 204
+
+    time.sleep(10)
+
+
+@pytest.mark.xfail(reason="EGP-699")
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_requests_to_recognize_a_deleted_face__then_service_does_not_recognize_it(host):
+    files = {'file': open(CURRENT_DIR / 'files' / 'personA-img2.jpg', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers=AUTH_HEADERS, files=files)
+
     assert res.status_code == 200
     result = res.json()['result']
     assert len(result) == 0

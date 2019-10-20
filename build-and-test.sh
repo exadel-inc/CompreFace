@@ -43,7 +43,7 @@ timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/s
 docker exec ml python3 -m pytest src
 
 ## Run E2E tests from outside the container
-python -m pip install pytest requests
+python -m pip install requests pytest pytest-ordering
 python -m pytest --host $HOST test_e2e/test_e2e.py
 
 ## Freeze versions and dependencies in requirements.txt

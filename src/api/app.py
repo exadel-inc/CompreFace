@@ -5,20 +5,32 @@ from typing import List
 import imageio
 from flasgger import swag_from, Swagger
 from flask import Flask, request, jsonify, Response
+from flask.json import JSONEncoder
 
 from src.api._decorators import needs_authentication, needs_attached_file, needs_retrain
 from src.api.constants import API_KEY_HEADER
 from src.api.exceptions import BadRequestException
 from src.api.flasgger import template
 from src.dto.cropped_face import CroppedFace
+from src.dto.serializable import Serializable
 from src.face_database.storage_factory import get_storage
 from src.face_recognition.embedding_calculator.embedding_calculator import calc_embedding
-from src.face_recognition.embedding_classifier.classifier import classify_many, train_async, train_all_models
+from src.face_recognition.embedding_classifier.classifier import classify_many, train_all_models, train_async
 from src.face_recognition.face_cropper.constants import FaceLimit
 from src.face_recognition.face_cropper.crop_face import crop_face, crop_faces
 
 app = Flask(__name__)
 swagger = Swagger(app, template=template.template)
+
+
+class MyJSONEncoder(JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Serializable):
+            return obj.serialize()
+        return super(MyJSONEncoder, self).default(obj)
+
+
+app.json_encoder = MyJSONEncoder
 
 
 @app.route('/status')

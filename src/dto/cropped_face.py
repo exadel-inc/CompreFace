@@ -1,10 +1,11 @@
-from typing import NamedTuple
-
+import attr
 from numpy.core.multiarray import ndarray
 
 from src.dto import BoundingBox
+from src.dto.serializable import Serializable
 
 
-class CroppedFace(NamedTuple):
+@attr.s(auto_attribs=True)
+class CroppedFace(Serializable):
     box: BoundingBox
     img: ndarray
