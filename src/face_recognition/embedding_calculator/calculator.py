@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 from src import pyutils
-from src.face_database.storage_factory import get_storage
+from src.storage.storage_factory import get_storage
 
 BATCH_SIZE = 25
 
@@ -17,15 +17,15 @@ def _init_once():
     global graph
     with tf.Graph().as_default() as graph:
         graph_def = tf.GraphDef()
-        graph_def.ParseFromString(get_storage().get_model())
+        graph_def.ParseFromString(get_storage().get_embedding_calculator_model())
         tf.import_graph_def(graph_def, name='')
         global sess
         sess = tf.Session(graph=graph)
 
 
-def calc_embedding(image):
+def calculate_embedding(image):
     @pyutils.run_first(_init_once)
-    def _calc_embeddings(images):
+    def _calculate_embeddings(images):
         # Get inppredictut and output tensors
         images_placeholder = graph.get_tensor_by_name("input:0")
         embeddings = graph.get_tensor_by_name("embeddings:0")
@@ -42,4 +42,4 @@ def calc_embedding(image):
             emb_array[start_index:end_index, :] = sess.run(embeddings, feed_dict=feed_dict)
         return emb_array
 
-    return _calc_embeddings(np.array([image]))[0]
+    return _calculate_embeddings(np.array([image]))[0]

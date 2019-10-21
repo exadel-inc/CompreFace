@@ -13,7 +13,7 @@ template = {
             "name": "Face Database",
         },
         {
-            "name": "Face Recognition Model",
+            "name": "Face Recognition ML Model",
         },
         {
             "name": "Maintenance",

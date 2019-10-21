@@ -3,7 +3,7 @@ from pathlib import Path
 
 import imageio
 
-from src.face_recognition.face_cropper.crop_face import crop_faces
+from src.face_recognition.face_cropper.cropper import crop_faces
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 

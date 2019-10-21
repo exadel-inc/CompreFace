@@ -9,7 +9,7 @@ from src import pyutils
 from src.dto import BoundingBox
 from src.dto.cropped_face import CroppedFace
 from src.face_recognition.embedding_classifier.libraries import facenet
-from src.face_recognition.face_cropper.constants import FaceLimit
+from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.face_recognition.face_cropper.exceptions import OneDimensionalImageIsGivenError, NoFaceFoundError
 from src.face_recognition.face_cropper.libraries.align import detect_face
 
@@ -34,7 +34,7 @@ def crop_face(img):
 
 
 @pyutils.run_first(_init_once)
-def crop_faces(img, face_lim: Union[int, FaceLimit] = FaceLimit.NO_LIMIT):
+def crop_faces(img, face_lim: Union[int, FaceLimitConstant] = FaceLimitConstant.NO_LIMIT):
     if img.ndim < 2:
         raise OneDimensionalImageIsGivenError("Unable to align image, it has only one dimension")
     if img.ndim == 2:
@@ -48,7 +48,7 @@ def crop_faces(img, face_lim: Union[int, FaceLimit] = FaceLimit.NO_LIMIT):
     det = bounding_boxes[:, 0:4]
     img_size = np.asarray(img.shape)[0:2]
     detected = []
-    if face_lim != FaceLimit.NO_LIMIT:
+    if face_lim != FaceLimitConstant.NO_LIMIT:
         range_lim = face_lim
     else:
         range_lim = nrof_faces

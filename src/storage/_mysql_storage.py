@@ -7,6 +7,8 @@ from sqlalchemy.dialects.mysql.types import LONGBLOB
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 
+from src.storage._storage_base import StorageBase
+
 Base = declarative_base()
 CURRENT_MODEL_NAME = '20170512-110547.pb'
 
@@ -64,7 +66,7 @@ class Embedding(Base):
     blob = relationship('Blob', foreign_keys='Embedding.blob_id')
 
 
-class MySQLStorage:
+class MySQLStorage(StorageBase):
     def __init__(self, db_url):
         engine = create_engine(db_url)
         Base.metadata.create_all(engine)
@@ -72,23 +74,23 @@ class MySQLStorage:
         self._engine = engine
 
     @contextmanager
-    def create_session(self):
+    def _create_session(self):
         session = self._Session()
         yield session
         session.close()
 
-    def get_model(self):
-        with self.create_session() as session:
+    def get_embedding_calculator_model(self):
+        with self._create_session() as session:
             model = session.query(Model).filter_by(model_name=CURRENT_MODEL_NAME).first()
             if model:
                 return model.blob.blob
             else:
                 raise Exception('No model available')
 
-    def save_face(self, raw_img, face_img, embedding, face_name, api_key_name):
-        with self.create_session() as session:
+    def add_face(self, raw_img, face_img, embedding, face_name, api_key):
+        with self._create_session() as session:
             model = session.query(Model).filter(Model.model_name == CURRENT_MODEL_NAME).first()
-            api_key = session.query(APIKey).filter(APIKey.key_name == api_key_name).first()
+            api_key = session.query(APIKey).filter(APIKey.key_name == api_key).first()
             api_key_id = api_key.id
             face_blob = Blob(blob=face_img)
             raw_blob = Blob(blob=raw_img)
@@ -104,13 +106,13 @@ class MySQLStorage:
             session.add(embedding)
             session.commit()
 
-    def get_train_data(self, api_key_name):
-        with self.create_session() as session:
+    def get_classifier_training_data(self, api_key):
+        with self._create_session() as session:
             model = session.query(Model).filter_by(model_name=CURRENT_MODEL_NAME).first()
 
             faces = session.query(Face).join(Embedding).join(APIKey) \
                 .filter(Embedding.model_id == model.id) \
-                .filter(APIKey.key_name == api_key_name) \
+                .filter(APIKey.key_name == api_key) \
                 .all()
 
             values = []
@@ -130,5 +132,8 @@ class MySQLStorage:
             return values, labels, {v: k for k, v in face_names.items()}
 
     def get_api_keys(self):
-        with self.create_session() as session:
+        with self._create_session() as session:
             return [key.key_name for key in session.query(APIKey).all()]
+
+    def remove_face(self, api_key, face_name):
+        raise NotImplementedError

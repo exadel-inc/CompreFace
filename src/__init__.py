@@ -1,1 +1,1 @@
-from src.api.app import init_app
+from src.api.controller import init_app

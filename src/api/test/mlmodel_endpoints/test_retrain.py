@@ -6,7 +6,7 @@ from src.api.test.constants import VALID_API_KEY
 
 
 def test__when_retrain_endpoint_is_requested__then_starts_training_and_returns_accepted(client, mocker):
-    mock: Mock = mocker.patch('src.api.app.train_async')
+    mock: Mock = mocker.patch('src.api.controller.train_async')
 
     res = client.post('/retrain', headers={API_KEY_HEADER: VALID_API_KEY})
 

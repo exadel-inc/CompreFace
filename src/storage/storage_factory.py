@@ -1,7 +1,7 @@
 import os
 
-from src.face_database._mongo_helper import MongoStorage
-from src.face_database._mysql_helper import MySQLStorage
+from src.storage._mongo_storage import MongoStorage
+from src.storage._mysql_storage import MySQLStorage
 
 
 def get_storage():

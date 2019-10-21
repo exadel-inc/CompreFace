@@ -1,10 +1,9 @@
-class FaceCropException(Exception):
+from src.dto.exceptions import InvalidArgumentError
+
+
+class OneDimensionalImageIsGivenError(InvalidArgumentError):
     pass
 
 
-class OneDimensionalImageIsGivenError(FaceCropException):
-    pass
-
-
-class NoFaceFoundError(FaceCropException):
+class NoFaceFoundError(InvalidArgumentError):
     pass

@@ -1,5 +1,5 @@
 from enum import IntEnum
 
 
-class FaceLimit(IntEnum):
-    NO_LIMIT = -1
+class FaceLimitConstant(IntEnum):
+    NO_LIMIT = 0

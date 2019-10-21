@@ -3,7 +3,7 @@ Usage:
 python -m pytest [--host <HOST>] test_e2e.py
 
 Arguments:
-    <HOST>  Host of the service, default value: http://localhost:5000
+    <HOST>  Host of the service, default value: http://localhost:5001
 
 Instructions:
 1. Start the Face Recognition Service
@@ -44,6 +44,25 @@ def test__when_client_checks_service_availability__returns_200(host):
 
     assert res.status_code == 200
     assert res.json()['status'] == 'OK'
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_opens_apidocs__returns_200(host):
+    pass
+
+    res = requests.get(f"{host}/apidocs")
+
+    assert res.status_code == 200
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__given_client_has_invalid_api_key__when_client_uploads_a_face_example__returns_401(host):
+    files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
+
+    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false",
+                          headers={'X-Api-Key': 'invalid-api-key'}, files=files_a)
+
+    assert res_a.status_code == 401
 
 
 @pytest.mark.run(order=next(after_previous))

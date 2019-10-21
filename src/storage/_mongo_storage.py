@@ -1,13 +1,15 @@
 import gridfs
 from pymongo import MongoClient
 
+from src.storage._storage_base import StorageBase
+
 CURRENT_MODEL_NAME = "20170512-110547.pb"
 MODELS_COLLECTION_NAME = "models"
 FACES_COLLECTION_NAME = "faces"
 DATABASE_NAME = "recognition"
 
 
-class MongoStorage:
+class MongoStorage(StorageBase):
     def __init__(self, host, port):
         self._host = host
         self._port = port
@@ -18,13 +20,13 @@ class MongoStorage:
         self._models_fs = gridfs.GridFS(db, MODELS_COLLECTION_NAME)
         self._faces_collection = db[FACES_COLLECTION_NAME]
 
-    def get_model(self):
+    def get_embedding_calculator_model(self):
         model = self._models_fs.find_one({"filename": CURRENT_MODEL_NAME})
         if model is None:
             raise RuntimeError("Can't find a model file %s." % CURRENT_MODEL_NAME)
         return model.read()
 
-    def save_face(self, raw_img, face_img, embedding, face_name, api_key):
+    def add_face(self, raw_img, face_img, embedding, face_name, api_key):
         raw_img_id = self._faces_fs.put(raw_img.tobytes())
         face_img_id = self._faces_fs.put(face_img.tobytes())
         face_object = {
@@ -41,7 +43,7 @@ class MongoStorage:
         }
         self._faces_collection.insert_one(face_object)
 
-    def get_train_data(self, api_key):
+    def get_classifier_training_data(self, api_key):
         values = []
         labels = []
         face_names = {}
@@ -64,6 +66,6 @@ class MongoStorage:
         return self._faces_collection.find({"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key},
                                            {"face_name": 1}).distinct("face_name")
 
-    def delete(self, api_key, face_name):
+    def remove_face(self, api_key, face_name):
         return self._faces_collection.delete_many(
             {"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key, 'face_name': face_name})

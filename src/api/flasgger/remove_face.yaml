@@ -1,6 +1,6 @@
 tags:
   - "Face Database"
-summary: "Delete face examples."
+summary: "Delete face examples and retrain the model."
 description: "Delete all image examples of the face. Face will not be recognized after the model is retrained."
 operationId: "removeFace"
 produces:
