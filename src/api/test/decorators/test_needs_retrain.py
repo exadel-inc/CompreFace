@@ -11,7 +11,7 @@ ROUTE = '/test-retrain-endpoint'
 def client_with_retrain_endpoint():
     @app.route(ROUTE, methods=['POST'])
     @needs_retrain
-    def locked_endpoint():
+    def retrain_endpoint():
         return SUCCESS_BODY, HTTPStatus.ACCEPTED
     return app.test_client()
 
