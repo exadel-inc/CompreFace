@@ -44,7 +44,7 @@ def needs_retrain(f):
         if not request.args.get(RETRAIN_PARAM) or request.args.get(RETRAIN_PARAM).lower() in ('true', '1'):
             train_async(request.headers[API_KEY_HEADER])
         elif request.args.get(RETRAIN_PARAM).lower() in ('false', '0'):
-            return f(*args, **kwargs)
+            pass
         else:
             raise BadRequestException('Retrain parameter accepts only true and false')
         return f(*args, **kwargs)
