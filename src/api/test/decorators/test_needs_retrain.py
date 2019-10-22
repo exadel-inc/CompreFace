@@ -20,7 +20,9 @@ def test__given_retrain_flag_value_true__when_needs_retrain_endpoint_is_requeste
         client_with_retrain_endpoint, mocker):
 
     retrain_mocker = mocker.patch('src.api._decorators.train_async', return_value=[])
-    res = client_with_retrain_endpoint.post(ROUTE+'?retrain=true', headers={API_KEY_HEADER: VALID_API_KEY})
+
+    res = client_with_retrain_endpoint.post(f'{ROUTE}?retrain=true', headers={API_KEY_HEADER: VALID_API_KEY})
+
     retrain_mocker.assert_called()
     assert res.status_code == HTTPStatus.ACCEPTED
     assert res.data.decode() == SUCCESS_BODY
