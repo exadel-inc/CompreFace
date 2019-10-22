@@ -6,8 +6,8 @@ import numpy as np
 import pytest
 
 from src import pyutils
-from src.storage import MYSQL_CURRENT_MODEL_NAME, MONGO_CURRENT_MODEL_NAME
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
+from src.storage import MYSQL_CURRENT_MODEL_NAME, MONGO_CURRENT_MODEL_NAME
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
@@ -45,7 +45,8 @@ def return_value_for_mock(mocker, val):
 @pytest.mark.skipif(not CACHED_MODEL_FILEPATH.exists(), reason=SKIP_REASON_NO_FILE_FOUND)
 @pytest.mark.skipif(not is_cached_model_up_to_date(), reason=SKIP_REASON_CACHE_OUTDATED)
 def test__when_given_two_images_of_the_same_faces__then_returns_equal_embeddings(mocker):
-    mocker.patch('src.api.controller.get_storage', return_value=return_value_for_mock(mocker, get_cached_file_contents()))
+    mocker.patch('src.api.controller.get_storage',
+                 return_value=return_value_for_mock(mocker, get_cached_file_contents()))
     person_a_im1 = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1-cropped.jpg')
     person_a_im2 = imageio.imread(CURRENT_DIR / 'files' / 'personA-img2-cropped.jpg')
 
@@ -58,7 +59,8 @@ def test__when_given_two_images_of_the_same_faces__then_returns_equal_embeddings
 @pytest.mark.skipif(not CACHED_MODEL_FILEPATH.exists(), reason=SKIP_REASON_NO_FILE_FOUND)
 @pytest.mark.skipif(not is_cached_model_up_to_date(), reason=SKIP_REASON_CACHE_OUTDATED)
 def test__when_given_two_images_of_different_faces__then_returns_different_embeddings(mocker):
-    mocker.patch('src.api.controller.get_storage', return_value=return_value_for_mock(mocker, get_cached_file_contents()))
+    mocker.patch('src.api.controller.get_storage',
+                 return_value=return_value_for_mock(mocker, get_cached_file_contents()))
     person_a_im = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1-cropped.jpg')
     person_b_im = imageio.imread(CURRENT_DIR / 'files' / 'personB-img1-cropped.jpg')
 

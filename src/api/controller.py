@@ -25,7 +25,7 @@ class MyJSONEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Serializable):
             return obj.serialize()
-        return super(MyJSONEncoder, self).default(obj)
+        return super().default(obj)
 
 
 app.json_encoder = MyJSONEncoder

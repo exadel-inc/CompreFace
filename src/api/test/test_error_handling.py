@@ -13,8 +13,6 @@ def test__given_core_raises_bad_request_error__when_list_faces_endpoint_is_reque
     assert res.json['message'] == 'Detailed bad request information'
 
 
-
-
 def test__when_some_other_error_is_raised__then_returns_500(client):
     @app.route('/_raises_error')
     def _raises_error():
