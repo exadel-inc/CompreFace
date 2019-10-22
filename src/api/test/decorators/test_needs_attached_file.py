@@ -4,20 +4,18 @@ import pytest
 
 from src.api._decorators import needs_attached_file
 from src.api.constants import API_KEY_HEADER
-from src.api.controller import app
 from src.api.exceptions import NoFileAttachedError, NoFileSelectedError
-from src.api.test.constants import VALID_API_KEY, SUCCESS_BODY
 
 ROUTE = '/test-file-endpoint'
 FILE_BYTES = b''
 
 
-@pytest.fixture(scope='module')
-def client_with_file_endpoint():
+@pytest.fixture
+def client_with_file_endpoint(app):
     @app.route(ROUTE, methods=['POST'])
     @needs_attached_file
     def file_endpoint():
-        return SUCCESS_BODY, HTTPStatus.OK
+        return 'success-body', HTTPStatus.OK
 
     return app.test_client()
 
@@ -25,7 +23,7 @@ def client_with_file_endpoint():
 def test__given_no_file__when_file_upload_endpoint_is_requested__then_completes_request(client_with_file_endpoint):
     pass
 
-    res = client_with_file_endpoint.post(ROUTE, headers={API_KEY_HEADER: VALID_API_KEY})
+    res = client_with_file_endpoint.post(ROUTE, headers={API_KEY_HEADER: 'valid-api-key'})
 
     assert res.status_code == NoFileAttachedError.http_status
     assert res.json['message'] == NoFileAttachedError.message
@@ -35,7 +33,7 @@ def test__given_no_selected_file__when_file_upload_endpoint_is_requested__then_r
     filename = ''
     request_data = dict(file=(FILE_BYTES, filename))
 
-    res = client_with_file_endpoint.post(ROUTE, headers={API_KEY_HEADER: VALID_API_KEY}, data=request_data)
+    res = client_with_file_endpoint.post(ROUTE, headers={API_KEY_HEADER: 'valid-api-key'}, data=request_data)
 
     assert res.status_code == NoFileSelectedError.http_status
     assert res.json['message'] == NoFileSelectedError.message
@@ -45,7 +43,7 @@ def test__given_file__when_file_upload_endpoint_is_requested__then_completes_req
     filename = 'test-file.xyz'
     request_data = dict(file=(FILE_BYTES, filename))
 
-    res = client_with_file_endpoint.post(ROUTE, headers={API_KEY_HEADER: VALID_API_KEY}, data=request_data)
+    res = client_with_file_endpoint.post(ROUTE, headers={API_KEY_HEADER: 'valid-api-key'}, data=request_data)
 
     assert res.status_code == HTTPStatus.OK
-    assert res.data.decode() == SUCCESS_BODY
+    assert res.data.decode() == 'success-body'

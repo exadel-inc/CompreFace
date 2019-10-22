@@ -18,7 +18,6 @@ import pytest
 import requests
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-AUTH_HEADERS = {'X-Api-Key': 'valid-api-key'}
 
 
 @pytest.fixture
@@ -70,8 +69,10 @@ def test__when_client_uploads_a_face_example__then_returns_201(host):
     files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
     files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
 
-    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false", headers=AUTH_HEADERS, files=files_a)
-    res_b = requests.post(f"{host}/faces/Stephen Hawking", headers=AUTH_HEADERS, files=files_b)
+    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false",
+                          headers={'X-Api-Key': 'valid-api-key'}, files=files_a)
+    res_b = requests.post(f"{host}/faces/Stephen Hawking",
+                          headers={'X-Api-Key': 'valid-api-key'}, files=files_b)
 
     assert res_a.status_code == 201
     assert res_b.status_code == 201
@@ -83,7 +84,7 @@ def test__when_client_uploads_a_face_example__then_returns_201(host):
 def test__when_client_requests_to_recognize_the_face_in_another_image__then_service_recognizes_it(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img2.jpg', 'rb')}
 
-    res = requests.post(f"{host}/recognize", headers=AUTH_HEADERS, files=files)
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files)
 
     assert res.status_code == 200
     result = res.json()['result']

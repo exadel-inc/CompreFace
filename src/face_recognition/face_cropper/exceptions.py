@@ -1,7 +1,7 @@
 from src.dto.exceptions import InvalidArgumentError
 
 
-class OneDimensionalImageIsGivenError(InvalidArgumentError):
+class IncorrectImageDimensionsError(InvalidArgumentError):
     pass
 
 
