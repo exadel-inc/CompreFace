@@ -27,7 +27,7 @@ done
 
 cd "${0%/*}" # Set Current Dir to the script's dir
 
-## Build docker containers
+## Build and run docker containers
 dos2unix ./* # File pre-processing (CRLF endings in certain files cause `docker-compose up` to crash)
 if [ "$DONT_BUILD_CONTAINERS" != 'true' ]; then
   docker-compose build
