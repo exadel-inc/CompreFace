@@ -3,7 +3,7 @@ print_usage() {
   printf "
 Builds containers and runs all tests against them
 
-Usage: ./build-and-test.sh [-s] [-u]
+Usage: ./build-and-test.sh [-d] [-f]
 Options:
     -d      Don't build Docker containers (useful when changes are made only outside the already built containers)
     -f      If tests run successfully, freeze versions and dependencies in requirements.txt (useful after manually adding new dependencies)
@@ -27,7 +27,7 @@ done
 
 cd "${0%/*}" # Set Current Dir to the script's dir
 
-## Build docker containers
+## Build and run docker containers
 dos2unix ./* # File pre-processing (CRLF endings in certain files cause `docker-compose up` to crash)
 if [ "$DONT_BUILD_CONTAINERS" != 'true' ]; then
   docker-compose build
@@ -39,8 +39,9 @@ trap "docker-compose down" SIGINT SIGTERM EXIT
 export HOST=http://localhost:5001
 timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; done'
 
-## Run Unit Tests inside the container
-docker exec ml python3 -m pytest src
+## Run tests from inside the container
+docker exec ml python3 -m pytest -m "not integration" src
+docker exec ml python3 -m pytest -m integration src
 
 ## Run E2E tests from outside the container
 python -m pip install requests pytest pytest-ordering
