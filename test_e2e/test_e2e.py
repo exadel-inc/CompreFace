@@ -56,7 +56,7 @@ def test__when_client_opens_apidocs__returns_200(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_client_has_invalid_api_key__when_client_uploads_a_face_example__returns_401(host):
+def test__given_client_has_invalid_api_key__when_client_uploads_a_face_example__then_returns_401(host):
     files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
     res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false",
@@ -66,7 +66,7 @@ def test__given_client_has_invalid_api_key__when_client_uploads_a_face_example__
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_client_uploads_a_face_example__returns_201(host):
+def test__when_client_uploads_a_face_example__then_returns_201(host):
     files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
     files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
 
