@@ -1,5 +1,6 @@
 from http import HTTPStatus
-from unittest.mock import Mock
+
+from mock import Mock
 
 from src.api.constants import API_KEY_HEADER
 from src.api.test.constants import VALID_API_KEY
@@ -8,13 +9,15 @@ from src.pyutils.expando import Expando
 
 def crop_face(img):
     s = Expando()
-    s.crop_face__img = img
+    s.ISFROM_crop_face_GETARG_img = img
+    s.img = Expando()
+    s.img.PROP_img = s
     return s
 
 
 def calc_embedding(img):
     s = Expando()
-    s.calc_embedding__img = img
+    s.ISFROM_calc_embedding_GETARG_img = img
     return s
 
 
@@ -34,7 +37,7 @@ def test__when_add_face_is_requested__then_saves_it_correctly(client, mocker):
     assert imread_mock.call_args[0][0].filename == 'albert-einstein.jpg'
     save_face_kwargs = get_storage_mock.add_face.call_args[1]
     assert save_face_kwargs['raw_img'] == img
-    assert save_face_kwargs['face_img'].crop_face__img == img
-    assert save_face_kwargs['embedding'].calc_embedding__img.crop_face__img == img
+    assert save_face_kwargs['face_img'].PROP_img.ISFROM_crop_face_GETARG_img == img
+    assert save_face_kwargs['embedding'].ISFROM_calc_embedding_GETARG_img.PROP_img.ISFROM_crop_face_GETARG_img == img
     assert save_face_kwargs['face_name'] == 'Albert Einstein'
     assert save_face_kwargs['api_key'] == VALID_API_KEY

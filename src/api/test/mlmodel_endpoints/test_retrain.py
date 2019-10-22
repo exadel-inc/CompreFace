@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from unittest.mock import Mock
+from mock import Mock
 
 from src.api.constants import API_KEY_HEADER
 from src.api.test.constants import VALID_API_KEY

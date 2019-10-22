@@ -1,5 +1,5 @@
 import logging
-from typing import Union
+from typing import Union, List
 
 import numpy as np
 import tensorflow as tf
@@ -29,12 +29,13 @@ def _init_once():
         pnet, rnet, onet = detect_face.create_mtcnn(sess, None)
 
 
-def crop_face(img):
-    return crop_faces(img, 1)[0].img
+def crop_face(img) -> CroppedFace:
+    cropped_faces = crop_faces(img, face_lim=1)
+    return cropped_faces[0]
 
 
 @pyutils.run_first(_init_once)
-def crop_faces(img, face_lim: Union[int, FaceLimitConstant] = FaceLimitConstant.NO_LIMIT):
+def crop_faces(img, face_lim: Union[int, FaceLimitConstant] = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
     if img.ndim < 2:
         raise OneDimensionalImageIsGivenError("Unable to align image, it has only one dimension")
     if img.ndim == 2:

@@ -10,7 +10,7 @@ CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
 def crop_img_file(filename):
     img = imageio.imread(CURRENT_DIR / f'{filename}.jpg')
-    img = crop_face(img)
+    img = crop_face(img).img
     imageio.imwrite(CURRENT_DIR / f'{filename}-cropped.jpg', img)
 
 

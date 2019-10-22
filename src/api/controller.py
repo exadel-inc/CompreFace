@@ -56,7 +56,7 @@ def add_face(face_name):
     api_key = request.headers[API_KEY_HEADER]
 
     img = imageio.imread(file)
-    face_img = crop_face(img)
+    face_img = crop_face(img).img
     embedding = calculate_embedding(face_img)
     get_storage().add_face(raw_img=img, face_img=face_img, embedding=embedding, face_name=face_name, api_key=api_key)
 
