@@ -40,7 +40,8 @@ export HOST=http://localhost:5001
 timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; done'
 
 ## Run Unit Tests inside the container
-docker exec ml python3 -m pytest src
+docker exec ml python3 -m pytest -m "not integration" src
+docker exec ml python3 -m pytest -m integration src
 
 ## Run E2E Tests from outside the container
 python -m pip install requests pytest pytest-ordering
