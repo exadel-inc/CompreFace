@@ -26,6 +26,13 @@ class MongoStorage(StorageBase):
             raise RuntimeError("Can't find a model file %s." % CURRENT_MODEL_NAME)
         return model.read()
 
+    def remove_model(self, api_key):
+        model = self._models_fs.find_one({"filename": CURRENT_MODEL_NAME})
+        if model is None:
+            raise RuntimeError("Can't find a model file %s." % CURRENT_MODEL_NAME)
+        #return self._models_fs.delete(
+        #    {"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key})
+
     def add_face(self, raw_img, face_img, embedding, face_name, api_key):
         raw_img_id = self._faces_fs.put(raw_img.tobytes())
         face_img_id = self._faces_fs.put(face_img.tobytes())
