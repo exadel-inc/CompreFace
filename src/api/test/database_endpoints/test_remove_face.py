@@ -6,7 +6,7 @@ FILE_BYTES = b''
 
 
 
-def test__when_remove_face_example_is_requested__then_removes_the_face(client, mocker):
+def test__when_remove_face_is_requested__then_removes_the_face(client, mocker):
     mock = mocker.Mock()
     mock.remove_face.return_value = {"embeddings.model_name": "Model", "api_key": VALID_API_KEY, 'face_name': "John Smith"}
     mocker.patch('src.api.controller.get_storage', return_value=mock)
