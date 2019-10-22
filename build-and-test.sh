@@ -3,7 +3,7 @@ print_usage() {
   printf "
 Builds containers and runs all tests against them
 
-Usage: ./build-and-test.sh [-s] [-u]
+Usage: ./build-and-test.sh [-d] [-f]
 Options:
     -d      Don't build Docker containers (useful when changes are made only outside the already built containers)
     -f      If tests run successfully, freeze versions and dependencies in requirements.txt (useful after manually adding new dependencies)
