@@ -21,7 +21,7 @@ def train(api_key):
     values, labels, face_names = get_storage().get_classifier_training_data(api_key)
     if len(face_names) <= 1:
         logging.warning("Not enough training data, model hasn't been created")
-        if len(face_names):
+        if len(face_names) == 1:
             get_storage().remove_model(api_key)
         return
     logging.debug('Training classifier, api key: %s' % api_key)
