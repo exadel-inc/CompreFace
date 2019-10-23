@@ -111,7 +111,7 @@ def create_app():
         except ValueError as e:
             raise BadRequestException('Limit format is invalid') from e
         except AssertionError as e:
-            raise BadRequestException('Limit value is not invalid') from e
+            raise BadRequestException('Limit value is invalid') from e
         api_key = request.headers[API_KEY_HEADER]
         file = request.files['file']
 
