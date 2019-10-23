@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 import imageio
 from flasgger import Swagger, swag_from
-from flask import request, jsonify, Response, Flask
+from flask import request as flask_request, jsonify, Response, Flask
 from flask.json import JSONEncoder
 
 from src.api._decorators import needs_authentication, needs_attached_file, needs_retrain
@@ -39,7 +39,7 @@ def create_app():
     @swag_from('flasgger/list_faces.yaml')
     @needs_authentication
     def list_faces():
-        api_key = request.headers[API_KEY_HEADER]
+        api_key = flask_request.headers[API_KEY_HEADER]
         face_names = get_storage().get_all_face_names(api_key)
         return jsonify(names=face_names)
 
@@ -49,8 +49,8 @@ def create_app():
     @needs_attached_file
     @needs_retrain
     def add_face(face_name):
-        file = request.files['file']
-        api_key = request.headers[API_KEY_HEADER]
+        file = flask_request.files['file']
+        api_key = flask_request.headers[API_KEY_HEADER]
 
         img = imageio.imread(file)
         face_img = crop_face(img).img
@@ -65,7 +65,7 @@ def create_app():
     @needs_authentication
     @needs_retrain
     def remove_face(face_name):
-        api_key = request.headers[API_KEY_HEADER]
+        api_key = flask_request.headers[API_KEY_HEADER]
         get_storage().remove_face(api_key, face_name)
         return Response(status=HTTPStatus.NO_CONTENT)
 
@@ -73,7 +73,7 @@ def create_app():
     @swag_from('flasgger/retrain_model.yaml')
     @needs_authentication
     def retrain_model():
-        api_key = request.headers[API_KEY_HEADER]
+        api_key = flask_request.headers[API_KEY_HEADER]
         train_async(api_key)
         return Response(status=HTTPStatus.ACCEPTED)
 
@@ -83,14 +83,14 @@ def create_app():
     @needs_attached_file
     def recognize_faces():
         try:
-            limit = int(request.values.get('limit', FaceLimitConstant.NO_LIMIT))
+            limit = int(flask_request.values.get('limit', FaceLimitConstant.NO_LIMIT))
             assert limit >= 0
         except ValueError as e:
             raise BadRequestException('Limit format is invalid') from e
         except AssertionError as e:
             raise BadRequestException('Limit value is not invalid') from e
-        api_key = request.headers[API_KEY_HEADER]
-        file = request.files['file']
+        api_key = flask_request.headers[API_KEY_HEADER]
+        file = flask_request.files['file']
 
         img = imageio.imread(file)
         face_predictions = get_face_predictions(img, limit, api_key)

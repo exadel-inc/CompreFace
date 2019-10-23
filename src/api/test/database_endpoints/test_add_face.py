@@ -50,7 +50,7 @@ def test__when_add_face_is_requested__then_saves_it_correctly(client, mocker):
     res = client.post('/faces/Albert Einstein', content_type='multipart/form-data',
                       data=dict(file=(b'', 'albert-einstein.jpg')))
 
-    assert res.status_code == HTTPStatus.CREATED
+    assert res.status_code == HTTPStatus.CREATED, res.json
     assert imread_mock.call_args[0][0].filename == 'albert-einstein.jpg'
     save_face_kwargs = get_storage_mock.add_face.call_args[1]
     assert save_face_kwargs['raw_img'] == img

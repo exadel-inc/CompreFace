@@ -11,5 +11,5 @@ def test__when_retrain_endpoint_is_requested__then_starts_training_and_returns_a
 
     res = client.post('/retrain')
 
-    assert res.status_code == HTTPStatus.ACCEPTED
+    assert res.status_code == HTTPStatus.ACCEPTED, res.json
     train_async_mock.assert_called_with('valid-api-key')

@@ -13,7 +13,7 @@ def test__given_no_saved_faces__when_list_faces_is_requested__then_returns_empty
 
     res = client.get('/faces')
 
-    assert res.status_code == HTTPStatus.OK
+    assert res.status_code == HTTPStatus.OK, res.json
     assert res.json['names'] == expected_names
 
 
@@ -23,5 +23,5 @@ def test__given_saved_faces__when_list_faces_is_requested__then_returns_array_wi
 
     res = client.get('/faces')
 
-    assert res.status_code == HTTPStatus.OK
+    assert res.status_code == HTTPStatus.OK, res.json
     assert res.json['names'] == expected_names

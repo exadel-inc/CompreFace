@@ -45,5 +45,5 @@ def test__given_file__when_file_upload_endpoint_is_requested__then_completes_req
 
     res = client_with_file_endpoint.post(ROUTE, headers={API_KEY_HEADER: 'valid-api-key'}, data=request_data)
 
-    assert res.status_code == HTTPStatus.OK
+    assert res.status_code == HTTPStatus.OK, res.json
     assert res.data.decode() == 'success-body'

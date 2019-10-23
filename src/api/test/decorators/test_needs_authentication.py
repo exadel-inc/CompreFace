@@ -42,5 +42,5 @@ def test__given_valid_api_key__when_locked_endpoint_is_requested__then_completes
 
     res = client_with_locked_endpoint.get(ROUTE, headers={API_KEY_HEADER: 'valid-api-key'})
 
-    assert res.status_code == HTTPStatus.OK
+    assert res.status_code == HTTPStatus.OK, res.json
     assert res.data.decode() == 'success-body'

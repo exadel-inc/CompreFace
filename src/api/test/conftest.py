@@ -10,24 +10,25 @@ from src.pyutils.pytest_utils import pass_through_decorator
 
 def needs_authentication(f):
     """
-    Makes the request.headers dictionary editable, then injects a header.
+    Makes the flask_request.headers dictionary editable, then injects a header.
     Other attributes of request (e.g. request.url) should still work after the patch.
     """
+
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
-        from flask import request
+        from flask import request as flask_request
 
         class RequestMock:
-            _flask_request = request
-            headers = dict(request.headers)
+            _flask_request = flask_request
+            headers = dict(flask_request.headers)
 
             def __getattr__(self, name):
                 return getattr(self._flask_request, name)
 
-        with patch('src.api.controller.request', RequestMock()):
-            from src.api.controller import request
-            if API_KEY_HEADER not in request.headers:
-                request.headers[API_KEY_HEADER] = 'valid-api-key'
+        with patch('src.api.controller.flask_request', RequestMock()):
+            from src.api.controller import flask_request
+            if API_KEY_HEADER not in flask_request.headers:
+                flask_request.headers[API_KEY_HEADER] = 'valid-api-key'
             result = f(*args, **kwargs)
         return result
 
