@@ -11,7 +11,6 @@ Instructions:
 python -m pytest --host http://localhost:5001 test_e2e.py
 """
 import os
-import time
 from pathlib import Path
 
 import pytest
@@ -41,7 +40,7 @@ def test__when_client_checks_service_availability__returns_200(host):
 
     res = requests.get(f"{host}/status")
 
-    assert res.status_code == 200
+    assert res.status_code == 200, res.content
     assert res.json()['status'] == 'OK'
 
 
@@ -51,17 +50,16 @@ def test__when_client_opens_apidocs__returns_200(host):
 
     res = requests.get(f"{host}/apidocs")
 
-    assert res.status_code == 200
+    assert res.status_code == 200, res.content
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_client_has_invalid_api_key__when_client_uploads_a_face_example__then_returns_401(host):
-    files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
+    files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
-    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false",
-                          headers={'X-Api-Key': 'invalid-api-key'}, files=files_a)
+    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'invalid-api-key'}, files=files)
 
-    assert res_a.status_code == 401
+    assert res.status_code == 401, res.content
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -71,13 +69,13 @@ def test__when_client_uploads_a_face_example__then_returns_201(host):
 
     res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false",
                           headers={'X-Api-Key': 'valid-api-key'}, files=files_a)
-    res_b = requests.post(f"{host}/faces/Stephen Hawking",
+    res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=false",
                           headers={'X-Api-Key': 'valid-api-key'}, files=files_b)
+    res_retrain = requests.post(f"{host}/retrain_await", headers={'X-Api-Key': 'valid-api-key'})
 
-    assert res_a.status_code == 201
-    assert res_b.status_code == 201
-
-    time.sleep(20)
+    assert res_a.status_code == 201, res_a.content
+    assert res_b.status_code == 201, res_b.content
+    assert res_retrain.status_code == 200, res_retrain.content
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -86,7 +84,7 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files)
 
-    assert res.status_code == 200
+    assert res.status_code == 200, res.content
     result = res.json()['result']
     assert len(result) == 1
     assert result[0]['prediction'] == "Marie Curie"

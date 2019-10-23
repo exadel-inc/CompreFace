@@ -1,0 +1,21 @@
+tags:
+  - 'Face Database'
+summary: 'Delete face examples and retrain the model.'
+description: 'Delete all image examples of the face. Face will not be recognized after the model is retrained.'
+operationId: removeFace
+produces:
+  - ""
+parameters:
+  - $ref: '#/components/parameters/FaceNameParameter'
+  - $ref: '#/components/parameters/RetrainParameter'
+security:
+  - ApiKeyAuth: []
+responses:
+  '204':
+    description: 'Example images of a face were deleted.'
+  '400':
+    $ref: '#/components/responses/BadRequestResponse'
+  '401':
+    $ref: '#/components/responses/AccessUnauthorizedResponse'
+  '500':
+    $ref: '#/components/responses/InternalServerErrorResponse'

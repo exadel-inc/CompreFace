@@ -35,6 +35,7 @@ def train(api_key):
 def train_async(api_key):
     thread = Thread(target=train, daemon=False, args=[api_key])
     thread.start()
+    return thread
 
 
 def train_all_models():

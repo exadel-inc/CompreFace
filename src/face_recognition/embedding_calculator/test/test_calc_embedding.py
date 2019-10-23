@@ -14,7 +14,7 @@ CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 assert MYSQL_CURRENT_MODEL_NAME == MONGO_CURRENT_MODEL_NAME
 CACHED_MODEL_NAME = MYSQL_CURRENT_MODEL_NAME
 
-CACHED_MODEL_FILEPATH = CURRENT_DIR / 'files' / CACHED_MODEL_NAME
+CACHED_MODEL_FILEPATH = CURRENT_DIR / 'files' / 'cache' / CACHED_MODEL_NAME
 SKIP_REASON_NO_FILE_FOUND = f"Cannot calculate embeddings without model saved at {CACHED_MODEL_FILEPATH}. " \
                             f"You can generate it by running _tool_generate_cache.py while connected to the DB."
 
@@ -39,7 +39,8 @@ def return_value_for_mock(mocker, val):
 
 @pytest.mark.integration
 @pytest.mark.skipif(not CACHED_MODEL_FILEPATH.exists(), reason=SKIP_REASON_NO_FILE_FOUND)
-def test_integration__when_calculating_embeddings_of_two_images_with_the_same_face__then_returns_similar_embeddings(mocker):
+def test_integration__when_calculating_embeddings_of_two_images_with_the_same_face__then_returns_similar_embeddings(
+        mocker):
     mocker.patch('src.face_recognition.embedding_calculator.calculator.get_storage',
                  return_value=return_value_for_mock(mocker, get_cached_file_contents()))
     person_a_im1 = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1-cropped.jpg')
@@ -53,7 +54,8 @@ def test_integration__when_calculating_embeddings_of_two_images_with_the_same_fa
 
 @pytest.mark.integration
 @pytest.mark.skipif(not CACHED_MODEL_FILEPATH.exists(), reason=SKIP_REASON_NO_FILE_FOUND)
-def test_integration__when_calculating_embeddings_of_two_images_with_different_faces__then_returns_different_embeddings(mocker):
+def test_integration__when_calculating_embeddings_of_two_images_with_different_faces__then_returns_different_embeddings(
+        mocker):
     mocker.patch('src.face_recognition.embedding_calculator.calculator.get_storage',
                  return_value=return_value_for_mock(mocker, get_cached_file_contents()))
     person_a_im = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1-cropped.jpg')

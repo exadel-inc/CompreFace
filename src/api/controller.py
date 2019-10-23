@@ -1,21 +1,26 @@
 import logging
+import os
 from http import HTTPStatus
+from pathlib import Path
 
 import imageio
-from flasgger import Swagger, swag_from
+from flasgger import Swagger
 from flask import jsonify, Response, Flask
 from flask.json import JSONEncoder
 
 from src.api._decorators import needs_authentication, needs_attached_file, needs_retrain
 from src.api.constants import API_KEY_HEADER
 from src.api.exceptions import BadRequestException
-from src.api.flasgger.template import template
 from src.dto.serializable import Serializable
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.face_recognition.embedding_classifier.classifier import train_all_models, train_async, get_face_predictions
+from src.face_recognition.embedding_classifier.classifier import train_all_models, train_async, get_face_predictions, \
+    train
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.face_recognition.face_cropper.cropper import crop_face
 from src.storage.storage_factory import get_storage
+
+CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+DOCS_DIR = CURRENT_DIR / 'docs'
 
 
 class MyJSONEncoder(JSONEncoder):
@@ -28,15 +33,15 @@ class MyJSONEncoder(JSONEncoder):
 def create_app():
     app = Flask(__name__)
     app.json_encoder = MyJSONEncoder
-    Swagger(app, template=template)
+    app.url_map.strict_slashes = False
+    app.config['SWAGGER'] = dict(title='FRS - Swagger UI', doc_dir=str(DOCS_DIR))
+    Swagger(app, template_file=str(DOCS_DIR / 'template.yml'))
 
     @app.route('/status')
-    @swag_from('flasgger/get_status.yaml')
-    def status():
+    def get_status():
         return jsonify(status="OK")
 
     @app.route('/faces')
-    @swag_from('flasgger/list_faces.yaml')
     @needs_authentication
     def list_faces():
         from flask import request
@@ -47,7 +52,6 @@ def create_app():
         return jsonify(names=face_names)
 
     @app.route('/faces/<face_name>', methods=['POST'])
-    @swag_from('flasgger/add_face.yaml')
     @needs_authentication
     @needs_attached_file
     @needs_retrain
@@ -65,7 +69,6 @@ def create_app():
         return Response(status=HTTPStatus.CREATED)
 
     @app.route('/faces/<face_name>', methods=['DELETE'])
-    @swag_from('flasgger/remove_face.yaml')
     @needs_authentication
     @needs_retrain
     def remove_face(face_name):
@@ -77,7 +80,6 @@ def create_app():
         return Response(status=HTTPStatus.NO_CONTENT)
 
     @app.route('/retrain', methods=['POST'])
-    @swag_from('flasgger/retrain_model.yaml')
     @needs_authentication
     def retrain_model():
         from flask import request
@@ -87,8 +89,18 @@ def create_app():
 
         return Response(status=HTTPStatus.ACCEPTED)
 
+    # TODO Remove this endpoint after there is an official way for E2E tests to determine that training has finished
+    @app.route('/retrain_await', methods=['POST'])
+    @needs_authentication
+    def retrain_model_await():
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+
+        train_async(api_key).join()
+
+        return Response(status=HTTPStatus.OK)
+
     @app.route('/recognize', methods=['POST'])
-    @swag_from('flasgger/recognize_faces.yaml')
     @needs_authentication
     @needs_attached_file
     def recognize_faces():

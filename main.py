@@ -1,11 +1,6 @@
-import os
-from pathlib import Path
-
-from src import init_app
-
-ROOT_DIR = Path(os.path.dirname(os.path.abspath(__file__)))
+from src.api.controller import init_app
 
 if __name__ == '__main__':
-    app = init_app()
-    app.config.from_mapping(SECRET_KEY='dev')
-    app.run(debug=True, use_debugger=False, use_reloader=False)
+    debug_app = init_app()
+    debug_app.config.from_mapping(SECRET_KEY='dev')
+    debug_app.run(debug=True, use_debugger=False, use_reloader=True)
