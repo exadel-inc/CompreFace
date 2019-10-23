@@ -9,3 +9,6 @@ class BoundingBox(Serializable):
     ymin: int = attr.ib(converter=int)
     xmax: int = attr.ib(converter=int)
     ymax: int = attr.ib(converter=int)
+
+    def serialize(self):
+        return [self.xmin, self.ymin, self.xmax, self.ymax]

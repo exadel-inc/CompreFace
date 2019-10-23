@@ -40,16 +40,28 @@ def needs_attached_file(f):
 
 
 def needs_retrain(f):
+    """
+    Is expected to be used only with @needs_authentication decorator,
+    otherwise request.headers[API_KEY_HEADER] will throw Exception.
+    """
+
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         from flask import request
-
-        if not request.args.get(RETRAIN_PARAM) or request.args.get(RETRAIN_PARAM).lower() in ('true', '1'):
-            train_async(request.headers[API_KEY_HEADER])
-        elif request.args.get(RETRAIN_PARAM).lower() in ('false', '0'):
-            pass
+        retrain_value = request.args.get(RETRAIN_PARAM)
+        api_key = request.headers[API_KEY_HEADER]
+        if not retrain_value or retrain_value.lower() in ('true', '1'):
+            do_retrain = True
+        elif retrain_value.lower() in ('false', '0'):
+            do_retrain = False
         else:
             raise BadRequestException('Retrain parameter accepts only true and false')
-        return f(*args, **kwargs)
+
+        return_val = f(*args, **kwargs)
+
+        if do_retrain:
+            train_async(api_key)
+
+        return return_val
 
     return wrapper

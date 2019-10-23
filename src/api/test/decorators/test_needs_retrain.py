@@ -1,74 +1,155 @@
-import pytest
-from src.api._decorators import needs_retrain
-from src.api.controller import app
 from http import HTTPStatus
-from src.api.constants import API_KEY_HEADER
-from src.api.test.constants import SUCCESS_BODY, VALID_API_KEY
 
-ROUTE = '/test-retrain-endpoint'
+import pytest
 
-@pytest.fixture(scope='module')
-def client_with_retrain_endpoint():
-    @app.route(ROUTE, methods=['POST'])
+from src.api._decorators import needs_retrain
+from src.pyutils.pytest_utils import Expando
+
+
+@pytest.fixture
+def client_with_retrain_endpoint(app):
+    @app.route('/endpoint', methods=['POST'])
     @needs_retrain
-    def retrain_endpoint():
-        return SUCCESS_BODY, HTTPStatus.ACCEPTED
+    def endpoint():
+        return 'success-body', HTTPStatus.OK
+
     return app.test_client()
+
+
+def test__given_retrain_decorator_raises_error__when_needs_endpoint_is_requested__then_does_not_call_endpoint_function(
+        app, mocker):
+    # Arrange
+    flags = Expando()
+    flags.endpoint_was_executed = None
+
+    @app.route('/endpoint', methods=['POST'])
+    @needs_retrain
+    def endpoint():
+        flags.endpoint_was_executed = True
+        return 'success-body', HTTPStatus.OK
+
+    mocker.patch('src.api._decorators.train_async')
+    client = app.test_client()
+
+    # Act
+    res = client.post('/endpoint?retrain=raise-error', headers={'X-Api-Key': 'valid-api-key'})
+
+    # Assert
+    assert res.status_code == HTTPStatus.BAD_REQUEST, res.json
+    assert flags.endpoint_was_executed is None
+    assert res.json['message'] == 'Retrain parameter accepts only true and false'
+
+
+def test__given_endpoint_raises_error__when_needs_retrain_endpoint_is_requested__then_skips_retraining(
+        app, mocker):
+    # Arrange
+    @app.route('/endpoint', methods=['POST'])
+    @needs_retrain
+    def endpoint():
+        raise Exception
+
+    train_async_mock = mocker.patch('src.api._decorators.train_async')
+    client = app.test_client()
+
+    # Act
+    res = client.post('/endpoint?retrain=true', headers={'X-Api-Key': 'valid-api-key'})
+
+    # Assert
+    assert res.status_code == HTTPStatus.INTERNAL_SERVER_ERROR, res.json
+    train_async_mock.assert_not_called()
+
+
+def test__when_needs_retrain_endpoint_is_requested__then_starts_retraining_only_after_endpoint_function(
+        app, mocker):
+    # Arrange
+    flags = Expando()
+    flags.endpoint_was_executed = None
+    flags.endpoint_was_executed_before_training = None
+
+    @app.route('/endpoint', methods=['POST'])
+    @needs_retrain
+    def endpoint():
+        flags.endpoint_was_executed = True
+        return 'success-body', HTTPStatus.OK
+
+    def train_async_mock(api_key):
+        flags.endpoint_was_executed_before_training = flags.endpoint_was_executed
+
+    mocker.patch('src.api._decorators.train_async', train_async_mock)
+    client = app.test_client()
+
+    # Act
+    res = client.post('/endpoint?retrain=true', headers={'X-Api-Key': 'valid-api-key'})
+
+    # Assert
+    assert res.status_code == HTTPStatus.OK, res.json
+    assert flags.endpoint_was_executed_before_training is not None
+    assert flags.endpoint_was_executed_before_training
+    assert res.data.decode() == 'success-body'
 
 
 def test__given_retrain_flag_value_true__when_needs_retrain_endpoint_is_requested__then_starts_retraining(
         client_with_retrain_endpoint, mocker):
+    train_async_mock = mocker.patch('src.api._decorators.train_async')
 
-    retrain_mocker = mocker.patch('src.api._decorators.train_async', return_value=[])
+    res = client_with_retrain_endpoint.post('/endpoint?retrain=true', headers={'X-Api-Key': 'valid-api-key'})
 
-    res = client_with_retrain_endpoint.post(f'{ROUTE}?retrain=true', headers={API_KEY_HEADER: VALID_API_KEY})
-
-    retrain_mocker.assert_called()
-    assert res.status_code == HTTPStatus.ACCEPTED
-    assert res.data.decode() == SUCCESS_BODY
+    assert res.status_code == HTTPStatus.OK, res.json
+    train_async_mock.assert_called()
+    assert res.data.decode() == 'success-body'
 
 
 def test__given_retrain_flag_value_1__when_needs_retrain_endpoint_is_requested__then_starts_retraining(
         client_with_retrain_endpoint, mocker):
-    retrain_mocker = mocker.patch('src.api._decorators.train_async', return_value=[])
-    res = client_with_retrain_endpoint.post(ROUTE + '?retrain=1', headers={API_KEY_HEADER: VALID_API_KEY})
-    retrain_mocker.assert_called()
-    assert res.status_code == HTTPStatus.ACCEPTED
-    assert res.data.decode() == SUCCESS_BODY
+    train_async_mock = mocker.patch('src.api._decorators.train_async')
+
+    res = client_with_retrain_endpoint.post('/endpoint?retrain=1', headers={'X-Api-Key': 'valid-api-key'})
+
+    assert res.status_code == HTTPStatus.OK, res.json
+    train_async_mock.assert_called()
+    assert res.data.decode() == 'success-body'
 
 
 def test__given_retrain_flag_value_false__when_needs_retrain_endpoint_is_requested__then_skips_retraining(
         client_with_retrain_endpoint, mocker):
-    retrain_mocker = mocker.patch('src.api._decorators.train_async', return_value=[])
-    res = client_with_retrain_endpoint.post(ROUTE + '?retrain=false', headers={API_KEY_HEADER: VALID_API_KEY})
-    retrain_mocker.assert_not_called()
-    assert res.status_code == HTTPStatus.ACCEPTED
-    assert res.data.decode() == SUCCESS_BODY
+    train_async_mock = mocker.patch('src.api._decorators.train_async')
+
+    res = client_with_retrain_endpoint.post('/endpoint?retrain=false', headers={'X-Api-Key': 'valid-api-key'})
+
+    assert res.status_code == HTTPStatus.OK, res.json
+    train_async_mock.assert_not_called()
+    assert res.data.decode() == 'success-body'
+
 
 def test__given_retrain_flag_value_0__when_needs_retrain_endpoint_is_requested__then_skips_retraining(
         client_with_retrain_endpoint, mocker):
-    retrain_mocker = mocker.patch('src.api._decorators.train_async', return_value=[])
-    res = client_with_retrain_endpoint.post(ROUTE + '?retrain=0', headers={API_KEY_HEADER: VALID_API_KEY})
-    retrain_mocker.assert_not_called()
-    assert res.status_code == HTTPStatus.ACCEPTED
-    assert res.data.decode() == SUCCESS_BODY
+    train_async_mock = mocker.patch('src.api._decorators.train_async')
+
+    res = client_with_retrain_endpoint.post('/endpoint?retrain=0', headers={'X-Api-Key': 'valid-api-key'})
+
+    assert res.status_code == HTTPStatus.OK, res.json
+    train_async_mock.assert_not_called()
+    assert res.data.decode() == 'success-body'
 
 
 def test__given_retrain_flag_any_other_string__when_needs_retrain_endpoint_is_requested__then_returns_error(
         client_with_retrain_endpoint, mocker):
-    message = 'Retrain parameter accepts only true and false'
-    retrain_mocker = mocker.patch('src.api._decorators.train_async', return_value=[])
-    res = client_with_retrain_endpoint.post(ROUTE+ '?retrain=retraining', headers={API_KEY_HEADER: VALID_API_KEY})
-    retrain_mocker.assert_not_called()
-    assert res.status_code == HTTPStatus.BAD_REQUEST
-    assert res.json['message'] == message
+    train_async_mock = mocker.patch('src.api._decorators.train_async')
+
+    res = client_with_retrain_endpoint.post('/endpoint?retrain=raise-error', headers={'X-Api-Key': 'valid-api-key'})
+
+    assert res.status_code == HTTPStatus.BAD_REQUEST, res.json
+    assert res.status_code == HTTPStatus.BAD_REQUEST, res.json
+    train_async_mock.assert_not_called()
+    assert res.json['message'] == 'Retrain parameter accepts only true and false'
 
 
 def test__given_no_retrain_flag__when_needs_retrain_endpoint_is_requested__then_starts_retraining(
         client_with_retrain_endpoint, mocker):
-    retrain_mocker = mocker.patch('src.api._decorators.train_async', return_value=[])
-    res = client_with_retrain_endpoint.post(ROUTE, headers={API_KEY_HEADER: VALID_API_KEY})
-    retrain_mocker.assert_called()
-    assert res.status_code == HTTPStatus.ACCEPTED
-    assert res.data.decode() == SUCCESS_BODY
+    train_async_mock = mocker.patch('src.api._decorators.train_async')
 
+    res = client_with_retrain_endpoint.post('/endpoint', headers={'X-Api-Key': 'valid-api-key'})
+
+    assert res.status_code == HTTPStatus.OK, res.json
+    train_async_mock.assert_called()
+    assert res.data.decode() == 'success-body'
