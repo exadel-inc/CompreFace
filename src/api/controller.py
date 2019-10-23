@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 import imageio
 from flasgger import Swagger, swag_from
-from flask import request as flask_request, jsonify, Response, Flask
+from flask import jsonify, Response, Flask
 from flask.json import JSONEncoder
 
 from src.api._decorators import needs_authentication, needs_attached_file, needs_retrain
@@ -39,8 +39,11 @@ def create_app():
     @swag_from('flasgger/list_faces.yaml')
     @needs_authentication
     def list_faces():
-        api_key = flask_request.headers[API_KEY_HEADER]
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+
         face_names = get_storage().get_all_face_names(api_key)
+
         return jsonify(names=face_names)
 
     @app.route('/faces/<face_name>', methods=['POST'])
@@ -49,8 +52,9 @@ def create_app():
     @needs_attached_file
     @needs_retrain
     def add_face(face_name):
-        file = flask_request.files['file']
-        api_key = flask_request.headers[API_KEY_HEADER]
+        from flask import request
+        file = request.files['file']
+        api_key = request.headers[API_KEY_HEADER]
 
         img = imageio.imread(file)
         face_img = crop_face(img).img
@@ -65,16 +69,22 @@ def create_app():
     @needs_authentication
     @needs_retrain
     def remove_face(face_name):
-        api_key = flask_request.headers[API_KEY_HEADER]
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+
         get_storage().remove_face(api_key, face_name)
+
         return Response(status=HTTPStatus.NO_CONTENT)
 
     @app.route('/retrain', methods=['POST'])
     @swag_from('flasgger/retrain_model.yaml')
     @needs_authentication
     def retrain_model():
-        api_key = flask_request.headers[API_KEY_HEADER]
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+
         train_async(api_key)
+
         return Response(status=HTTPStatus.ACCEPTED)
 
     @app.route('/recognize', methods=['POST'])
@@ -82,15 +92,16 @@ def create_app():
     @needs_authentication
     @needs_attached_file
     def recognize_faces():
+        from flask import request
         try:
-            limit = int(flask_request.values.get('limit', FaceLimitConstant.NO_LIMIT))
+            limit = int(request.values.get('limit', FaceLimitConstant.NO_LIMIT))
             assert limit >= 0
         except ValueError as e:
             raise BadRequestException('Limit format is invalid') from e
         except AssertionError as e:
             raise BadRequestException('Limit value is not invalid') from e
-        api_key = flask_request.headers[API_KEY_HEADER]
-        file = flask_request.files['file']
+        api_key = request.headers[API_KEY_HEADER]
+        file = request.files['file']
 
         img = imageio.imread(file)
         face_predictions = get_face_predictions(img, limit, api_key)
@@ -99,12 +110,12 @@ def create_app():
 
     @app.errorhandler(BadRequestException)
     def handle_api_exception(e: BadRequestException):
-        logging.warning(str(e))
+        logging.warning(f'Response {e.http_status}: {e.message}; {str(e)}', exc_info=True)
         return jsonify(message=e.message), e.http_status
 
     @app.errorhandler(Exception)
     def handle_runtime_error(e):
-        logging.critical(str(e))
+        logging.critical(f'Response 500: {str(e)}', exc_info=True)
         return jsonify(message=str(e)), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @app.after_request

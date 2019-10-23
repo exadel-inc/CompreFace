@@ -1,2 +1,2 @@
-API_KEY_HEADER = 'yX-Api-Key'
+API_KEY_HEADER = 'X-Api-Key'
 RETRAIN_PARAM = 'retrain'
