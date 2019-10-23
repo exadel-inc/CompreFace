@@ -1,6 +1,8 @@
 package com.exadel.frs.controller;
 
+import com.exadel.frs.exception.AppOrModelNotFoundException;
 import com.exadel.frs.helpers.SecurityUtils;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -35,6 +37,7 @@ public class ProxyController {
     private String baseUrl;
 
     @RequestMapping(value = "/**")
+    @ApiOperation(value = "Send request to core service")
     public ResponseEntity<String> proxy(
             @RequestHeader(APP_GUID_HEADER) String appGuid,
             @RequestHeader(MODEL_GUID_HEADER) String modelGuid,
@@ -43,7 +46,7 @@ public class ProxyController {
             @RequestParam(required = false) Map<String, MultipartFile> files,
             HttpServletRequest request) {
         if (!securityUtils.isAppHasAccessToModel(appGuid, modelGuid)) {
-            throw new RuntimeException("App or model does not exists, or app do not have permission to this model");
+            throw new AppOrModelNotFoundException();
         }
         String url = request.getRequestURI().replaceFirst("/proxy", "");
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();

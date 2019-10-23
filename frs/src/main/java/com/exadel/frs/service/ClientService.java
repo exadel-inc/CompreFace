@@ -2,6 +2,8 @@ package com.exadel.frs.service;
 
 import com.exadel.frs.dto.ClientDto;
 import com.exadel.frs.entity.Client;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.UsernameAlreadyExistException;
 import com.exadel.frs.mapper.ClientMapper;
 import com.exadel.frs.repository.ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,13 +36,17 @@ public class ClientService {
 
     public void createClient(ClientDto clientDto) {
         if (StringUtils.isEmpty(clientDto.getPassword())) {
-            throw new RuntimeException("Password cannot be empty");
+            throw new EmptyRequiredFieldException("Password cannot be empty");
         }
         if (StringUtils.isEmpty(clientDto.getUsername())) {
-            throw new RuntimeException("Username cannot be empty");
+            throw new EmptyRequiredFieldException("Username cannot be empty");
         }
         if (StringUtils.isEmpty(clientDto.getEmail())) {
-            throw new RuntimeException("Email cannot be empty");
+            throw new EmptyRequiredFieldException("Email cannot be empty");
+        }
+        Optional<Client> clientOptional = clientRepository.findByUsername(clientDto.getUsername());
+        if (clientOptional.isPresent()) {
+            throw new UsernameAlreadyExistException();
         }
         clientDto.setPassword(encoder.encode(clientDto.getPassword()));
         clientDto.setAccountNonExpired(true);

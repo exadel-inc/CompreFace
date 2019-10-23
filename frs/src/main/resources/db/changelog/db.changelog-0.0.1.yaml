@@ -85,6 +85,11 @@ databaseChangeLog:
             onDelete: CASCADE
             onUpdate: CASCADE
 
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: app_guid_uindex
+            tableName: app
+
         # model
         - createTable:
             tableName: model
@@ -118,6 +123,11 @@ databaseChangeLog:
             constraintName: fk_owner_id
             onDelete: CASCADE
             onUpdate: CASCADE
+
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: model_guid_uindex
+            tableName: model
 
         # app_model
         - createTable:
