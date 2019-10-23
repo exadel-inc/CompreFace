@@ -8,7 +8,7 @@ from src.dto.face_prediction import FacePrediction
 
 
 def test__when_recognize_endpoint_is_requested__then_returns_predictions(client, mocker):
-    expected_names = [
+    expected_result = [
         {'box': [50, 60, 70, 80], 'prediction': 'Joe Bloggs', 'probability': 0.9},
         {'box': [10, 20, 30, 40], 'prediction': 'Fred Bloggs', 'probability': 0.85},
         {'box': [15, 25, 35, 45], 'prediction': 'John Smith', 'probability': 0.91},
@@ -33,7 +33,7 @@ def test__when_recognize_endpoint_is_requested__then_returns_predictions(client,
     assert res.status_code == HTTPStatus.OK, res.json
     assert imread_mock.call_args[0][0].filename == 'group-photo.jpg'
     assert get_face_predictions_mock.call_args[0][0] == img
-    assert res.json['result'] == expected_names
+    assert res.json['result'] == expected_result
 
 
 def test__given_no_limit_value__when_recognize_endpoint_is_requested__then_uses_no_limit(client, mocker):
