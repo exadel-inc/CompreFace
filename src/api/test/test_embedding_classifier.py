@@ -24,5 +24,7 @@ def test_added_two_faces_to_the_database_recognizes_the_third_person():
     add_image(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'Person A', api_key)
     add_image(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'Person B', api_key)
     img = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1.jpg')
+
     face_predictions = get_face_predictions(img, 1, api_key)
+
     assert face_predictions[0].prediction == 'Person A'
