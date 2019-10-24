@@ -40,12 +40,12 @@ export HOST=http://localhost:5001
 timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; done'
 
 ## Run tests from inside the container
-docker exec ml python3 -m pytest -m "not integration" src
-docker exec ml python3 -m pytest -m integration src
+docker exec ml python3 -m pytest -m "not integration" -ra --verbose src
+docker exec ml python3 -m pytest -m integration -ra --verbose src
 
 ## Run E2E tests from outside the container
 python -m pip install requests pytest pytest-ordering
-python -m pytest --host $HOST test_e2e/test_e2e.py
+python -m pytest --host $HOST -ra --verbose test_e2e/test_e2e.py
 
 ## Freeze versions and dependencies in requirements.txt
 if [ "$FREEZE_REQUIREMENTS" = 'true' ]; then
