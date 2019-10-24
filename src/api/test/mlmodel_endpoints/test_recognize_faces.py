@@ -9,19 +9,19 @@ from src.dto.face_prediction import FacePrediction
 
 def test__when_recognize_endpoint_is_requested__then_returns_predictions(client, mocker):
     expected_result = [
-        {'box': {"xmax": 50, "xmin": 60, "ymax": 70, "ymin": 80}, 'prediction': 'Joe Bloggs', 'probability': 0.9},
-        {'box': {"xmax": 10, "xmin": 20, "ymax": 30, "ymin": 40}, 'prediction': 'Fred Bloggs', 'probability': 0.85},
-        {'box': {"xmax": 15, "xmin": 25, "ymax": 35, "ymin": 45}, 'prediction': 'John Smith', 'probability': 0.91},
-        {'box': {"xmax": 35, "xmin": 36, "ymax": 39, "ymin": 40}, 'prediction': 'Igor Shaw', 'probability': 0.89}
+        {'box': {"xmin": 50, "ymin": 60, "xmax": 70, "ymax": 80}, 'prediction': 'Joe Bloggs', 'probability': 0.9},
+        {'box': {"xmin": 10, "ymin": 20, "xmax": 30, "ymax": 40}, 'prediction': 'Fred Bloggs', 'probability': 0.85},
+        {'box': {"xmin": 15, "ymin": 25, "xmax": 35, "ymax": 45}, 'prediction': 'John Smith', 'probability': 0.91},
+        {'box': {"xmin": 35, "ymin": 36, "xmax": 39, "ymax": 40}, 'prediction': 'Igor Shaw', 'probability': 0.89}
     ]
     ret_val = [
-        FacePrediction(box=BoundingBox(xmax=int32(50), xmin=int32(60), ymax=int32(70), ymin=int32(80)),
+        FacePrediction(box=BoundingBox(xmin=int32(50), ymin=int32(60), xmax=int32(70), ymax=int32(80)),
                        prediction='Joe Bloggs', probability=float64(0.9)),
-        FacePrediction(box=BoundingBox(xmax=int32(10), xmin=int32(20), ymax=int32(30), ymin=int32(40)),
+        FacePrediction(box=BoundingBox(xmin=int32(10), ymin=int32(20), xmax=int32(30), ymax=int32(40)),
                        prediction='Fred Bloggs', probability=float64(0.85)),
-        FacePrediction(box=BoundingBox(xmax=int32(15), xmin=int32(25), ymax=int32(35), ymin=int32(45)),
+        FacePrediction(box=BoundingBox(xmin=int32(15), ymin=int32(25), xmax=int32(35), ymax=int32(45)),
                        prediction='John Smith', probability=float64(0.91)),
-        FacePrediction(box=BoundingBox(xmax=int32(35), xmin=int32(36), ymax=int32(39), ymin=int32(40)),
+        FacePrediction(box=BoundingBox(xmin=int32(35), ymin=int32(36), xmax=int32(39), ymax=int32(40)),
                        prediction='Igor Shaw', probability=float64(0.89))
     ]
     img = object()
@@ -31,8 +31,8 @@ def test__when_recognize_endpoint_is_requested__then_returns_predictions(client,
     res = client.post('/recognize', data=dict(file=(b'', 'group-photo.jpg'), content_type='multipart/form-data'))
 
     assert res.status_code == HTTPStatus.OK, res.json
-    assert imread_mock.call_args[0][0].filename == 'group-photo.jpg'
-    assert get_face_predictions_mock.call_args[0][0] == img
+    assert imread_mock.call_args_list[0][0][0].filename == 'group-photo.jpg'
+    assert get_face_predictions_mock.call_args_list[0][0][0] == img
     assert res.json['result'] == expected_result
 
 

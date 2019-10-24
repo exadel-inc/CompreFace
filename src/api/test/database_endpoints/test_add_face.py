@@ -51,7 +51,7 @@ def test__when_add_face_is_requested__then_saves_it_correctly(client, mocker):
                       data=dict(file=(b'', 'albert-einstein.jpg')))
 
     assert res.status_code == HTTPStatus.CREATED, res.json
-    assert imread_mock.call_args[0][0].filename == 'albert-einstein.jpg'
+    assert imread_mock.call_args_list[0][0][0].filename == 'albert-einstein.jpg'
     save_face_kwargs = get_storage_mock.add_face.call_args[1]
     assert save_face_kwargs['raw_img'] == img
     assert save_face_kwargs['face_img'].PROP_img.ISFROM_crop_face_GETARG_img == img
