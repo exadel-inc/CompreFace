@@ -18,11 +18,12 @@ def add_image(path, name, api_key):
     train_async(api_key)
 
 @pytest.mark.integration
-def test_added_two_faces_to_the_database_recognizes_the_third_person():
-
+def test_integration__given_2_faces_in_db__when_asked_to_recognize_known_face__then_recognizes_correct_face():
     api_key = 1111
     add_image(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'Person A', api_key)
     add_image(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'Person B', api_key)
     img = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1.jpg')
+
     face_predictions = get_face_predictions(img, 1, api_key)
+
     assert face_predictions[0].prediction == 'Person A'
