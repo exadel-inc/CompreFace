@@ -70,7 +70,7 @@ def test_integration__given_limit_2__when_called_with_multiple_faces__then_retur
     assert len(cropped_faces) == 2
 
 
-@pytest.mark.skip(reason="TODO EGP-703")
+@pytest.mark.xfail(reason="TODO EGP-703")
 @pytest.mark.integration
 def test_integration__when_called_with_multiple_faces__then_returns_all_faces(cropped_faces_result_5faces):
     assert len(cropped_faces_result_5faces) == 5
