@@ -9,6 +9,7 @@ from src.face_recognition.embedding_classifier.classifier import get_face_predic
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
+
 def add_image(path, name, api_key):
     im = imageio.imread(path)
     cropped_faces = crop_faces(im)[0].img
@@ -16,6 +17,7 @@ def add_image(path, name, api_key):
     get_storage().add_face(raw_img=im, face_img=cropped_faces, embedding=embedding, face_name=name,
                            api_key=api_key)
     train_async(api_key)
+
 
 @pytest.mark.integration
 def test_integration__given_2_faces_in_db__when_asked_to_recognize_known_face__then_recognizes_correct_face():
