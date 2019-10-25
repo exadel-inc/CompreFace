@@ -37,7 +37,7 @@ public class ModelController {
     @PostMapping("/")
     @ApiOperation(value = "Create model")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application access type to model is not correct"),
+            @ApiResponse(code = 400, message = "Model name is required | Application access type to model is not correct")
     })
     public void createModel(@ApiParam(value = "Model object that needs to be created", required = true) @Valid @RequestBody ModelDto inputModelDto) {
         modelService.createModel(inputModelDto, securityUtils.getPrincipal().getId());
@@ -46,7 +46,7 @@ public class ModelController {
     @PutMapping("/{id}")
     @ApiOperation(value = "Update model data")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application access type to model is not correct"),
+            @ApiResponse(code = 400, message = "Application access type to model is not correct")
     })
     public void updateModel(@ApiParam(value = "ID of model that needs to be updated", required = true, example = "0") @PathVariable Long id,
                             @ApiParam(value = "Model data", required = true) @Valid @RequestBody ModelDto inputModelDto) {
@@ -56,7 +56,7 @@ public class ModelController {
     @PutMapping("/{id}/grant-access")
     @ApiOperation(value = "Grant access to model for applications")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application access type to model is not correct"),
+            @ApiResponse(code = 400, message = "Application access type to model is not correct")
     })
     public void grantPrivileges(@ApiParam(value = "ID of model that needs to be updated", required = true, example = "0") @PathVariable Long id,
                                 @ApiParam(value = "Privileges, that will be granted for applications", required = true) @Valid @RequestBody ModelDto inputModelDto) {

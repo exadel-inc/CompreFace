@@ -5,6 +5,8 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.service.AppService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +35,9 @@ public class AppController {
 
     @PostMapping("/")
     @ApiOperation(value = "Create application")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Application name is required")
+    })
     public void createApp(@ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody AppDto inputAppDto) {
         appService.createApp(inputAppDto, securityUtils.getPrincipal().getId());
     }

@@ -27,7 +27,7 @@ public class ClientController {
     @PostMapping("/register")
     @ApiOperation(value = "Register new client")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Such username or email already registered. One or more of required fields are empty"),
+            @ApiResponse(code = 400, message = "Such username or email already registered | One or more of required fields are empty")
     })
     public void createClient(@ApiParam(value = "Client object that needs to be created", required = true) @RequestBody ClientDto clientDto) {
         clientService.createClient(clientDto);
@@ -36,7 +36,7 @@ public class ClientController {
     @PutMapping("/update")
     @ApiOperation(value = "Update client data")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Such username or email already registered"),
+            @ApiResponse(code = 400, message = "Such username or email already registered")
     })
     public void updateClient(@ApiParam(value = "Client data that needs to be updated", required = true) @RequestBody ClientDto clientDto) {
         clientService.updateClient(securityUtils.getPrincipal().getId(), clientDto);
