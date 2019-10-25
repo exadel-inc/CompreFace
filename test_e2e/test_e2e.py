@@ -66,6 +66,16 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
 
 
 @pytest.mark.run(order=next(after_previous))
+def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_face_found(host):
+    files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
+
+    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'valid-api-key'}, files=files)
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "Haven't found face"
+
+
+@pytest.mark.run(order=next(after_previous))
 def test__when_client_uploads_3_face_examples__then_returns_201(host):
     files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
     files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
@@ -81,6 +91,16 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
     assert res_a.status_code == 201, res_a.content
     assert res_b.status_code == 201, res_b.content
     assert res_c.status_code == 201, res_c.content
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
+    files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files)
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "Haven't found face"
 
 
 @pytest.mark.run(order=next(after_previous))
