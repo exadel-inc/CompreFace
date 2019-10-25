@@ -3,6 +3,7 @@ package com.exadel.frs.controller;
 import com.exadel.frs.exception.AppOrModelNotFoundException;
 import com.exadel.frs.helpers.SecurityUtils;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -39,11 +40,11 @@ public class ProxyController {
     @RequestMapping(value = "/**")
     @ApiOperation(value = "Send request to core service")
     public ResponseEntity<String> proxy(
-            @RequestHeader(APP_GUID_HEADER) String appGuid,
-            @RequestHeader(MODEL_GUID_HEADER) String modelGuid,
-            @RequestHeader MultiValueMap<String, String> headers,
-            @RequestParam(required = false) Map<String, String> params,
-            @RequestParam(required = false) Map<String, MultipartFile> files,
+            @ApiParam(value = "GUID of application", required = true) @RequestHeader(APP_GUID_HEADER) String appGuid,
+            @ApiParam(value = "GUID of model, to which application has access", required = true) @RequestHeader(MODEL_GUID_HEADER) String modelGuid,
+            @ApiParam(value = "Headers that will be proxied to core service", required = true) @RequestHeader MultiValueMap<String, String> headers,
+            @ApiParam(value = "String parameters that will be proxied to core service") @RequestParam(required = false) Map<String, String> params,
+            @ApiParam(value = "Files that will be proxied to core service") @RequestParam(required = false) Map<String, MultipartFile> files,
             HttpServletRequest request) {
         if (!securityUtils.isAppHasAccessToModel(appGuid, modelGuid)) {
             throw new AppOrModelNotFoundException();

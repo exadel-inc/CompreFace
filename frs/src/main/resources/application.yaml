@@ -43,4 +43,4 @@ swagger:
   auth:
     server: http://localhost:8080
   info:
-    title: FRS
+    title: Face Recognition Service - Client

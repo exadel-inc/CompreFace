@@ -4,6 +4,7 @@ import com.exadel.frs.dto.AppDto;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.service.AppService;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class AppController {
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get application, created by client")
-    public AppDto getApp(@PathVariable Long id) {
+    public AppDto getApp(@ApiParam(value = "ID of application to return", required = true, example = "0") @PathVariable Long id) {
         return appService.getApp(id, securityUtils.getPrincipal().getId());
     }
 
@@ -32,25 +33,26 @@ public class AppController {
 
     @PostMapping("/")
     @ApiOperation(value = "Create application")
-    public void createApp(@Valid @RequestBody AppDto inputAppDto) {
+    public void createApp(@ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody AppDto inputAppDto) {
         appService.createApp(inputAppDto, securityUtils.getPrincipal().getId());
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update application")
-    public void updateApp(@PathVariable Long id, @Valid @RequestBody AppDto inputAppDto) {
+    public void updateApp(@ApiParam(value = "ID of application that needs to be updated", required = true, example = "0") @PathVariable Long id,
+                          @ApiParam(value = "Application data", required = true) @Valid @RequestBody AppDto inputAppDto) {
         appService.updateApp(id, inputAppDto, securityUtils.getPrincipal().getId());
     }
 
     @PutMapping("/{id}/guid")
     @ApiOperation(value = "Generate new GUID for application")
-    public void regenerateGuid(@PathVariable Long id) {
+    public void regenerateGuid(@ApiParam(value = "ID of the application which GUID needs to be regenerated", required = true, example = "0") @PathVariable Long id) {
         appService.regenerateGuid(id, securityUtils.getPrincipal().getId());
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete application")
-    public void deleteApp(@PathVariable Long id) {
+    public void deleteApp(@ApiParam(value = "ID of the application that needs to be deleted", required = true, example = "0") @PathVariable Long id) {
         appService.deleteApp(id, securityUtils.getPrincipal().getId());
     }
 
