@@ -34,17 +34,16 @@ responses:
               box:
                 type: object
                 properties:
-                  type: object
-                  'xmax':
+                  xmax:
                     type: integer
                     example: 10
-                  'xmin':
+                  xmin:
                     type: integer
                     example: 40
-                  'ymax':
+                  ymax:
                     type: integer
                     example: 50
-                  'ymin':
+                  ymin:
                     type: integer
                     example: 60
               prediction:
