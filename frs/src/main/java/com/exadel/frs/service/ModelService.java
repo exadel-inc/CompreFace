@@ -5,7 +5,7 @@ import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.ModelNotFoundException;
-import com.exadel.frs.exception.NullAccessTypeException;
+import com.exadel.frs.exception.IncorrectAccessTypeException;
 import com.exadel.frs.helpers.AccessUpdateType;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
@@ -92,7 +92,7 @@ public class ModelService {
             }
             if (accessUpdateType == AccessUpdateType.CLEAN_ADD || accessUpdateType == AccessUpdateType.ADD) {
                 if (appModel.getAccessType() == null) {
-                    throw new NullAccessTypeException();
+                    throw new IncorrectAccessTypeException();
                 }
                 repoModel.getAppModelList().add(appModel);
             }

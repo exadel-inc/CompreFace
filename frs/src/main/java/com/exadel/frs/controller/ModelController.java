@@ -6,6 +6,8 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.service.ModelService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,12 +36,18 @@ public class ModelController {
 
     @PostMapping("/")
     @ApiOperation(value = "Create model")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Application access type to model is not correct"),
+    })
     public void createModel(@ApiParam(value = "Model object that needs to be created", required = true) @Valid @RequestBody ModelDto inputModelDto) {
         modelService.createModel(inputModelDto, securityUtils.getPrincipal().getId());
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update model data")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Application access type to model is not correct"),
+    })
     public void updateModel(@ApiParam(value = "ID of model that needs to be updated", required = true, example = "0") @PathVariable Long id,
                             @ApiParam(value = "Model data", required = true) @Valid @RequestBody ModelDto inputModelDto) {
         modelService.updateModel(id, inputModelDto, securityUtils.getPrincipal().getId());
@@ -47,6 +55,9 @@ public class ModelController {
 
     @PutMapping("/{id}/grant-access")
     @ApiOperation(value = "Grant access to model for applications")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Application access type to model is not correct"),
+    })
     public void grantPrivileges(@ApiParam(value = "ID of model that needs to be updated", required = true, example = "0") @PathVariable Long id,
                                 @ApiParam(value = "Privileges, that will be granted for applications", required = true) @Valid @RequestBody ModelDto inputModelDto) {
         modelService.updatePrivileges(id, inputModelDto, AccessUpdateType.ADD, securityUtils.getPrincipal().getId());

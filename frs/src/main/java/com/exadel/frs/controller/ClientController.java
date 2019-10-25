@@ -5,6 +5,8 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.service.ClientService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +26,9 @@ public class ClientController {
 
     @PostMapping("/register")
     @ApiOperation(value = "Register new client")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Such username already exists. One or more of required fields are empty."),
+    })
     public void createClient(@ApiParam(value = "Client object that needs to be created", required = true) @RequestBody ClientDto clientDto) {
         clientService.createClient(clientDto);
     }

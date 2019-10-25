@@ -1,5 +1,6 @@
 package com.exadel.frs.mapper;
 
+import com.exadel.frs.exception.IncorrectAccessTypeException;
 import com.exadel.frs.helpers.ModelAccessType;
 import org.mapstruct.Mapper;
 
@@ -12,7 +13,7 @@ public interface ModelAccessTypeMapper {
         return code == null ? null : Stream.of(ModelAccessType.values())
                 .filter(accessType -> accessType.getCode().equals(code))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Access type " + code + " does not exists"));
+                .orElseThrow(() -> new IncorrectAccessTypeException(code));
     }
 
     default String fromModelAccessType(ModelAccessType modelAccessType) {
