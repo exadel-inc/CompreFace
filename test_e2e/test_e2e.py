@@ -85,12 +85,23 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_api_key__when_client_asks_to_get_faces_list__then_returns_3_face_names_with_correct_values(host):
-    ...  # TODO EGP-687
+    pass
+
+    res = requests.get(f"{host}/faces", headers={'X-Api-Key': 'valid-api-key'})
+
+    result = res.json()['names']
+    assert len(result) == 3
+    assert result == ['Marie Curie', 'Stephen Hawking', 'Paul Walker']
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_other_api_key__when_client_asks_to_get_faces_list__then_returns_0_face_names(host):
-    ...  # TODO EGP-687
+    pass
+
+    res = requests.get(f"{host}/faces", headers={'X-Api-Key': 'different-api-key'})
+
+    result = res.json()['names']
+    assert len(result) == 0
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -107,14 +118,44 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_deletes_person_c__then_returns_204_and_only_persons_a_and_b_are_recognized(host):
-    ...  # TODO EGP-687, call retrain retrain?await=true endpoint after deletion
+    files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
+    files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
+    files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
+
+    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true", headers={'X-Api-Key': 'valid-api-key'})
+    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'valid-api-key'})
+    res_a = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files_a)
+    res_b = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files_b)
+    res_c = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files_c)
+
+    assert res_del.status_code == 204, res_del.content
+    assert res_a.status_code == 200, res_a.content
+    result_a = res_a.json()['result']
+    assert result_a[0]['prediction'] == "Marie Curie"
+    assert res_b.status_code == 200, res_b.content
+    result_b = res_b.json()['result']
+    assert result_b[0]['prediction'] == "Stephen Hawking"
+    assert res_c.status_code == 200, res_a.content
+    result_c = res_c.json()['result']
+    assert not (result_c[0]['prediction'] == 'Paul Walker')
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_deletes_person_b__then_returns_204(host):
-    ...  # TODO EGP-687, call retrain retrain?await=true endpoint after deletion
+    pass
+
+    res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true", headers={'X-Api-Key': 'valid-api-key'})
+    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'valid-api-key'})
+
+    assert res_del.status_code == 204, res_del.content
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__requests_to_recognize_person_a__then_returns_500_no_models_found_for_api_key(host):
-    ...  # TODO EGP-687, call retrain retrain?await=true endpoint after deletion
+    files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
+
+    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'valid-api-key'})
+    res = requests.post(f"{host}/recognize?retrain=true", headers={'X-Api-Key': 'valid-api-key'}, files=files)
+
+    assert res.status_code == 500, res.content
+    assert res.json()['message'] == "No model is yet trained for this api key"
