@@ -9,10 +9,10 @@ from src.dto.face_prediction import FacePrediction
 
 def test__when_recognize_endpoint_is_requested__then_returns_predictions(client, mocker):
     expected_result = [
-        {'box': [50, 60, 70, 80], 'prediction': 'Joe Bloggs', 'probability': 0.9},
-        {'box': [10, 20, 30, 40], 'prediction': 'Fred Bloggs', 'probability': 0.85},
-        {'box': [15, 25, 35, 45], 'prediction': 'John Smith', 'probability': 0.91},
-        {'box': [35, 36, 39, 40], 'prediction': 'Igor Shaw', 'probability': 0.89}
+        {'box': {"xmin": 50, "ymin": 60, "xmax": 70, "ymax": 80}, 'prediction': 'Joe Bloggs', 'probability': 0.9},
+        {'box': {"xmin": 10, "ymin": 20, "xmax": 30, "ymax": 40}, 'prediction': 'Fred Bloggs', 'probability': 0.85},
+        {'box': {"xmin": 15, "ymin": 25, "xmax": 35, "ymax": 45}, 'prediction': 'John Smith', 'probability': 0.91},
+        {'box': {"xmin": 35, "ymin": 36, "xmax": 39, "ymax": 40}, 'prediction': 'Igor Shaw', 'probability': 0.89}
     ]
     ret_val = [
         FacePrediction(box=BoundingBox(xmin=int32(50), ymin=int32(60), xmax=int32(70), ymax=int32(80)),
@@ -31,8 +31,8 @@ def test__when_recognize_endpoint_is_requested__then_returns_predictions(client,
     res = client.post('/recognize', data=dict(file=(b'', 'group-photo.jpg'), content_type='multipart/form-data'))
 
     assert res.status_code == HTTPStatus.OK, res.json
-    assert imread_mock.call_args[0][0].filename == 'group-photo.jpg'
-    assert get_face_predictions_mock.call_args[0][0] == img
+    assert imread_mock.call_args_list[0][0][0].filename == 'group-photo.jpg'
+    assert get_face_predictions_mock.call_args_list[0][0][0] == img
     assert res.json['result'] == expected_result
 
 
