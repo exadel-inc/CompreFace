@@ -12,7 +12,7 @@ security:
   - ApiKeyAuth: []
 responses:
   '204':
-    description: 'Example images of a face were deleted.'
+    description: "Example images were deleted (or no items to be deleted were found)."
   '400':
     $ref: '#/components/responses/BadRequestResponse'
   '401':
