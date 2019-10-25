@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  description: 'Service for face recognition. Upload images with faces of known people,then upload a new image, and the service will recognize faces in it. All operations are applied only for faces associated with the specified API key.'
+  description: 'Service for face recognition. Upload images with faces of known people, then upload a new image, and the service will recognize faces in it. All operations are applied only for faces associated with the specified API key. Recognition is not performed if the model is trained on only one face.'
   version: 0.1-snapshot
   title: 'Exadel Face Recognition Service'
 tags:
