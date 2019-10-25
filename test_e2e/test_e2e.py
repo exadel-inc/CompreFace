@@ -71,11 +71,11 @@ def test__when_client_uploads_a_face_example__then_returns_201(host):
                           headers={'X-Api-Key': 'valid-api-key'}, files=files_a)
     res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=false",
                           headers={'X-Api-Key': 'valid-api-key'}, files=files_b)
-    res_retrain = requests.post(f"{host}/retrain_await", headers={'X-Api-Key': 'valid-api-key'})
+    res_retrain = requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'valid-api-key'})
 
     assert res_a.status_code == 201, res_a.content
     assert res_b.status_code == 201, res_b.content
-    assert res_retrain.status_code == 200, res_retrain.content
+    assert res_retrain.status_code == 202, res_retrain.content
 
 
 @pytest.mark.run(order=next(after_previous))

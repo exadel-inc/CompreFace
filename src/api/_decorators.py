@@ -48,14 +48,14 @@ def needs_retrain(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         from flask import request
-        retrain_value = request.args.get(RETRAIN_PARAM)
-        api_key = request.headers[API_KEY_HEADER]
-        if not retrain_value or retrain_value.lower() in ('true', '1'):
+        retrain_param_value = request.args.get(RETRAIN_PARAM).lower()
+        if retrain_param_value in ('true', '1'):
             do_retrain = True
-        elif retrain_value.lower() in ('false', '0'):
+        elif retrain_param_value in ('false', '0'):
             do_retrain = False
         else:
             raise BadRequestException('Retrain parameter accepts only true and false')
+        api_key = request.headers[API_KEY_HEADER]
 
         return_val = f(*args, **kwargs)
 

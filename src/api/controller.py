@@ -13,8 +13,7 @@ from src.api.constants import API_KEY_HEADER
 from src.api.exceptions import BadRequestException
 from src.dto.serializable import Serializable
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.face_recognition.embedding_classifier.classifier import train_all_models, train_async, get_face_predictions, \
-    train
+from src.face_recognition.embedding_classifier.classifier import train_all_models, train_async, get_face_predictions
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.face_recognition.face_cropper.cropper import crop_face
 from src.storage.storage_factory import get_storage
@@ -85,20 +84,12 @@ def create_app():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
-        train_async(api_key)
+        train_thread = train_async(api_key)
+        # TODO Remove this temporary 'await' parameter when there is an official way for E2E tests to wait for the training to finish
+        if request.args.get('await').lower() in ('true', '1'):
+            train_thread.join()
 
         return Response(status=HTTPStatus.ACCEPTED)
-
-    # TODO Remove this endpoint after there is an official way for E2E tests to determine that training has finished
-    @app.route('/retrain_await', methods=['POST'])
-    @needs_authentication
-    def retrain_model_await():
-        from flask import request
-        api_key = request.headers[API_KEY_HEADER]
-
-        train_async(api_key).join()
-
-        return Response(status=HTTPStatus.OK)
 
     @app.route('/recognize', methods=['POST'])
     @needs_authentication
