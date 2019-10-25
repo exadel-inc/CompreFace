@@ -31,8 +31,8 @@ def test__given_empty_api_key__when_locked_endpoint_is_requested__then_returns_e
 
     res = client_with_locked_endpoint.get('/endpoint', headers={API_KEY_HEADER: ''})
 
-    assert res.status_code == HTTPStatus.OK, res.json
-    assert res.data.decode() == 'success-body'
+    assert res.status_code == APIKeyNotSpecifiedError.http_status
+    assert res.json['message'] == APIKeyNotSpecifiedError.message
 
 
 def test__given_valid_api_key__when_locked_endpoint_is_requested__then_completes_request(client_with_locked_endpoint):
