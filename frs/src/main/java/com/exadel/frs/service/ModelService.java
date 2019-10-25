@@ -4,14 +4,16 @@ import com.exadel.frs.dto.ModelDto;
 import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.exception.AppNotFoundException;
-import com.exadel.frs.exception.ModelNotFoundException;
+import com.exadel.frs.exception.EmptyModelNameException;
 import com.exadel.frs.exception.IncorrectAccessTypeException;
+import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.helpers.AccessUpdateType;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -40,6 +42,9 @@ public class ModelService {
 
     @Transactional
     public void createModel(ModelDto inputModelDto, Long clientId) {
+        if (StringUtils.isEmpty(inputModelDto.getName())) {
+            throw new EmptyModelNameException();
+        }
         inputModelDto.setGuid(UUID.randomUUID().toString());
         inputModelDto.setOwnerId(clientId);
         Model inputModel = modelMapper.toEntity(inputModelDto);
@@ -63,7 +68,7 @@ public class ModelService {
         Model inputModel = modelMapper.toEntity(inputModelDto, id);
         Model repoModel = modelRepository.findByIdAndOwnerId(id, clientId)
                 .orElseThrow(() -> new ModelNotFoundException(id));
-        if (inputModel.getName() != null) {
+        if (!StringUtils.isEmpty(inputModel.getName())) {
             repoModel.setName(inputModel.getName());
         }
         if (inputModel.getAppModelList() != null) {

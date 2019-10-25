@@ -3,10 +3,12 @@ package com.exadel.frs.service;
 import com.exadel.frs.dto.AppDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.exception.AppNotFoundException;
+import com.exadel.frs.exception.EmptyAppNameException;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,6 +34,9 @@ public class AppService {
     }
 
     public void createApp(AppDto inputAppDto, Long clientId) {
+        if (StringUtils.isEmpty(inputAppDto.getName())) {
+            throw new EmptyAppNameException();
+        }
         inputAppDto.setGuid(UUID.randomUUID().toString());
         inputAppDto.setOwnerId(clientId);
         appRepository.save(appMapper.toEntity(inputAppDto));
@@ -41,7 +46,7 @@ public class AppService {
         App inputApp = appMapper.toEntity(inputAppDto, id);
         App repoApp = appRepository.findByIdAndOwnerId(id, clientId)
                 .orElseThrow(() -> new AppNotFoundException(id));
-        if (inputApp.getName() != null) {
+        if (!StringUtils.isEmpty(inputApp.getName())) {
             repoApp.setName(inputApp.getName());
         }
         appRepository.save(repoApp);
