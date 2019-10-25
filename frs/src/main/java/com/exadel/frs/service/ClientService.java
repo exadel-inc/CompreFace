@@ -2,6 +2,7 @@ package com.exadel.frs.service;
 
 import com.exadel.frs.dto.ClientDto;
 import com.exadel.frs.entity.Client;
+import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.UsernameAlreadyExistException;
 import com.exadel.frs.mapper.ClientMapper;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,9 +44,11 @@ public class ClientService {
         if (StringUtils.isEmpty(clientDto.getEmail())) {
             throw new EmptyRequiredFieldException("Email cannot be empty");
         }
-        Optional<Client> clientOptional = clientRepository.findByUsername(clientDto.getUsername());
-        if (clientOptional.isPresent()) {
+        if (clientRepository.findByUsername(clientDto.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistException();
+        }
+        if (clientRepository.findByEmail(clientDto.getEmail()).isPresent()) {
+            throw new EmailAlreadyRegisteredException();
         }
         clientDto.setPassword(encoder.encode(clientDto.getPassword()));
         clientDto.setAccountNonExpired(true);
@@ -57,6 +59,12 @@ public class ClientService {
     }
 
     public void updateClient(Long id, ClientDto clientDto) {
+        if (clientRepository.findByUsername(clientDto.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExistException();
+        }
+        if (clientRepository.findByEmail(clientDto.getEmail()).isPresent()) {
+            throw new EmailAlreadyRegisteredException();
+        }
         Client client = clientRepository.findById(id).orElseThrow();
         if (!StringUtils.isEmpty(clientDto.getUsername())) {
             client.setUsername(clientDto.getUsername());
