@@ -31,9 +31,22 @@ responses:
           items:
             type: object
             properties:
-              box_parameters:
-                type: array
-                example: '[100, 50, 150, 130]'
+              box:
+                type: object
+                properties:
+                  type: object
+                  'xmax':
+                    type: integer
+                    example: 10
+                  'xmin':
+                    type: integer
+                    example: 40
+                  'ymax':
+                    type: integer
+                    example: 50
+                  'ymin':
+                    type: integer
+                    example: 60
               prediction:
                 type: string
                 example: 'Paul Dirac'
