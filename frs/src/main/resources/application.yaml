@@ -41,6 +41,6 @@ proxy:
 
 swagger:
   auth:
-    server: http://localhost:8080
+    server: http://localhost:${server.port}
   info:
     title: Face Recognition Service - Client
