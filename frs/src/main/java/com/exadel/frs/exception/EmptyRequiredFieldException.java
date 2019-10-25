@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(value = HttpStatus.BAD_REQUEST)
 public class EmptyRequiredFieldException extends RuntimeException {
 
-    public EmptyRequiredFieldException(String message) {
-        super(message);
+    public EmptyRequiredFieldException(String fieldName) {
+        super("Field " + fieldName + " cannot be empty");
     }
 
 }

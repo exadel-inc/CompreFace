@@ -36,13 +36,13 @@ public class ClientService {
 
     public void createClient(ClientDto clientDto) {
         if (StringUtils.isEmpty(clientDto.getPassword())) {
-            throw new EmptyRequiredFieldException("Password cannot be empty");
+            throw new EmptyRequiredFieldException("password");
         }
         if (StringUtils.isEmpty(clientDto.getUsername())) {
-            throw new EmptyRequiredFieldException("Username cannot be empty");
+            throw new EmptyRequiredFieldException("username");
         }
         if (StringUtils.isEmpty(clientDto.getEmail())) {
-            throw new EmptyRequiredFieldException("Email cannot be empty");
+            throw new EmptyRequiredFieldException("email");
         }
         if (clientRepository.findByUsername(clientDto.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistException();

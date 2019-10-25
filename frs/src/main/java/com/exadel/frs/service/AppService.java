@@ -3,7 +3,7 @@ package com.exadel.frs.service;
 import com.exadel.frs.dto.AppDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.exception.AppNotFoundException;
-import com.exadel.frs.exception.EmptyAppNameException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class AppService {
 
     public void createApp(AppDto inputAppDto, Long clientId) {
         if (StringUtils.isEmpty(inputAppDto.getName())) {
-            throw new EmptyAppNameException();
+            throw new EmptyRequiredFieldException("name");
         }
         inputAppDto.setGuid(UUID.randomUUID().toString());
         inputAppDto.setOwnerId(clientId);

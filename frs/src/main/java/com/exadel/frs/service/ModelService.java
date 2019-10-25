@@ -4,7 +4,7 @@ import com.exadel.frs.dto.ModelDto;
 import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.exception.AppNotFoundException;
-import com.exadel.frs.exception.EmptyModelNameException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.IncorrectAccessTypeException;
 import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.helpers.AccessUpdateType;
@@ -43,7 +43,7 @@ public class ModelService {
     @Transactional
     public void createModel(ModelDto inputModelDto, Long clientId) {
         if (StringUtils.isEmpty(inputModelDto.getName())) {
-            throw new EmptyModelNameException();
+            throw new EmptyRequiredFieldException("name");
         }
         inputModelDto.setGuid(UUID.randomUUID().toString());
         inputModelDto.setOwnerId(clientId);
