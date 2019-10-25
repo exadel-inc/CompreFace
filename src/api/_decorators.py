@@ -1,7 +1,7 @@
 import functools
 
 from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
-from src.api.exceptions import APIKeyNotSpecifiedError, APIKeyNotAuthorizedError, NoFileAttachedError, \
+from src.api.exceptions import APIKeyNotSpecifiedError, NoFileAttachedError, \
     NoFileSelectedError, BadRequestException
 from src.face_recognition.embedding_classifier.classifier import train_async
 
@@ -11,12 +11,8 @@ def needs_authentication(f):
     def wrapper(*args, **kwargs):
         from flask import request
 
-        if API_KEY_HEADER not in request.headers:
+        if API_KEY_HEADER not in request.headers or not request.headers[API_KEY_HEADER]:
             raise APIKeyNotSpecifiedError
-
-        if request.headers[API_KEY_HEADER] == 'invalid-api-key':
-            raise APIKeyNotAuthorizedError
-
         return f(*args, **kwargs)
 
     return wrapper

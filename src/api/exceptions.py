@@ -23,11 +23,6 @@ class APIKeyNotSpecifiedError(BadRequestException):
     message = 'No API Key is given'
 
 
-class APIKeyNotAuthorizedError(BadRequestException):
-    http_status = HTTPStatus.UNAUTHORIZED
-    message = 'Given API Key is not authorized'
-
-
 class NoFileAttachedError(BadRequestException):
     message = 'No file is attached'
 

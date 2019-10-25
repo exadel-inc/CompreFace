@@ -57,10 +57,10 @@ def test__when_client_opens_apidocs__returns_200(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_client_has_invalid_api_key__when_client_uploads_a_face_example__then_returns_401(host):
+def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_401(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
-    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'invalid-api-key'}, files=files)
+    res = requests.post(f"{host}/faces/Marie Curie", headers={}, files=files)
 
     assert res.status_code == 401, res.content
 
