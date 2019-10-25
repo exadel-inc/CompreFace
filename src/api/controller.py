@@ -85,7 +85,7 @@ def create_app():
         api_key = request.headers[API_KEY_HEADER]
 
         train_thread = train_async(api_key)
-        # TODO Remove this temporary 'await' parameter when there is an official way for E2E tests to wait for the training to finish
+        # TODO EGP-708 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
         if request.args.get('await').lower() in ('true', '1'):
             train_thread.join()
 

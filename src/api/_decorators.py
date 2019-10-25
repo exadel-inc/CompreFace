@@ -60,7 +60,10 @@ def needs_retrain(f):
         return_val = f(*args, **kwargs)
 
         if do_retrain:
-            train_async(api_key)
+            train_thread = train_async(api_key)
+            # TODO EGP-708 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
+            if request.args.get('await').lower() in ('true', '1'):
+                train_thread.join()
 
         return return_val
 
