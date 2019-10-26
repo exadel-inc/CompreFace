@@ -53,7 +53,7 @@ def test__when_client_opens_apidocs__returns_200(host):
 
     res = requests.get(f"{host}/apidocs")
 
-    assert res.status_code == 200, res.content
+    assert res.status_code == 200, res.status_code
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -62,14 +62,15 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
 
     res = requests.post(f"{host}/faces/Marie Curie", headers={}, files=files)
 
-    assert res.status_code == 401, res.content
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == 'No API Key is given'
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_face_found(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
 
-    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'valid-api-key'}, files=files)
+    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "Haven't found face"
@@ -82,11 +83,11 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
     files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
 
     res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false",
-                          headers={'X-Api-Key': 'valid-api-key'}, files=files_a)
+                          headers={'X-Api-Key': 'api-key-001'}, files=files_a)
     res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=false",
-                          headers={'X-Api-Key': 'valid-api-key'}, files=files_b)
+                          headers={'X-Api-Key': 'api-key-001'}, files=files_b)
     res_c = requests.post(f"{host}/faces/Paul Walker?retrain=true&await=true",
-                          headers={'X-Api-Key': 'valid-api-key'}, files=files_c)
+                          headers={'X-Api-Key': 'api-key-001'}, files=files_c)
 
     assert res_a.status_code == 201, res_a.content
     assert res_b.status_code == 201, res_b.content
@@ -97,7 +98,7 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
 def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
 
-    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files)
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "Haven't found face"
@@ -107,11 +108,11 @@ def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_40
 def test__given_api_key__when_client_asks_to_get_faces_list__then_returns_3_face_names_with_correct_values(host):
     pass
 
-    res = requests.get(f"{host}/faces", headers={'X-Api-Key': 'valid-api-key'})
+    res = requests.get(f"{host}/faces", headers={'X-Api-Key': 'api-key-001'})
 
     result = res.json()['names']
     assert len(result) == 3
-    assert result == ['Marie Curie', 'Stephen Hawking', 'Paul Walker']
+    assert set(result) == {'Marie Curie', 'Stephen Hawking', 'Paul Walker'}
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -128,7 +129,7 @@ def test__given_other_api_key__when_client_asks_to_get_faces_list__then_returns_
 def test__when_client_requests_to_recognize_the_face_in_another_image__then_service_recognizes_it(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img2.jpg', 'rb')}
 
-    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files)
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 200, res.content
     result = res.json()['result']
@@ -142,11 +143,11 @@ def test__when_client_deletes_person_c__then_returns_204_and_only_persons_a_and_
     files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
     files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
 
-    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true", headers={'X-Api-Key': 'valid-api-key'})
-    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'valid-api-key'})
-    res_a = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files_a)
-    res_b = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files_b)
-    res_c = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'valid-api-key'}, files=files_c)
+    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true", headers={'X-Api-Key': 'api-key-001'})
+    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'api-key-001'})
+    res_a = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_a)
+    res_b = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_b)
+    res_c = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_c)
 
     assert res_del.status_code == 204, res_del.content
     assert res_a.status_code == 200, res_a.content
@@ -164,8 +165,7 @@ def test__when_client_deletes_person_c__then_returns_204_and_only_persons_a_and_
 def test__when_client_deletes_person_b__then_returns_204(host):
     pass
 
-    res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true", headers={'X-Api-Key': 'valid-api-key'})
-    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'valid-api-key'})
+    res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true&await=true", headers={'X-Api-Key': 'api-key-001'})
 
     assert res_del.status_code == 204, res_del.content
 
@@ -174,8 +174,8 @@ def test__when_client_deletes_person_b__then_returns_204(host):
 def test__requests_to_recognize_person_a__then_returns_500_no_models_found_for_api_key(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
-    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'valid-api-key'})
-    res = requests.post(f"{host}/recognize?retrain=true", headers={'X-Api-Key': 'valid-api-key'}, files=files)
+    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'api-key-001'})
+    res = requests.post(f"{host}/recognize?retrain=true", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 500, res.content
     assert res.json()['message'] == "No model is yet trained for this api key"

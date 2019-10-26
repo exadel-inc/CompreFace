@@ -19,7 +19,7 @@ class BadRequestException(FaceRecognitionAPIException):
 
 
 class APIKeyNotSpecifiedError(BadRequestException):
-    http_status = HTTPStatus.UNAUTHORIZED
+    http_status = HTTPStatus.BAD_REQUEST
     message = 'No API Key is given'
 
 

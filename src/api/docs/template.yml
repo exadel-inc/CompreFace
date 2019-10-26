@@ -38,14 +38,6 @@ components:
           message:
             type: string
             example: 'Detailed information about the error'
-    AccessUnauthorizedResponse:
-      description: 'Given API Key is not authorized'
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example: 'Given API Key is not authorized'
     InternalServerErrorResponse:
       description: 'Internal error has occurred'
       schema:

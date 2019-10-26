@@ -11,7 +11,7 @@ def needs_authentication(f):
     def wrapper(*args, **kwargs):
         from flask import request
 
-        if API_KEY_HEADER not in request.headers or not request.headers[API_KEY_HEADER]:
+        if not request.headers.get(API_KEY_HEADER, ''):
             raise APIKeyNotSpecifiedError
         return f(*args, **kwargs)
 

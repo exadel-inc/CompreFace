@@ -57,4 +57,4 @@ def test__when_add_face_is_requested__then_saves_it_correctly(client, mocker):
     assert save_face_kwargs['face_img'].PROP_img.ISFROM_crop_face_GETARG_img == img
     assert save_face_kwargs['embedding'].ISFROM_calc_embedding_GETARG_img.PROP_img.ISFROM_crop_face_GETARG_img == img
     assert save_face_kwargs['face_name'] == 'Albert Einstein'
-    assert save_face_kwargs['api_key'] == 'valid-api-key'
+    assert save_face_kwargs['api_key'] == 'api-key-001'

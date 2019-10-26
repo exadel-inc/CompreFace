@@ -15,7 +15,5 @@ responses:
     description: "Example images were deleted (or no items to be deleted were found)."
   '400':
     $ref: '#/components/responses/BadRequestResponse'
-  '401':
-    $ref: '#/components/responses/AccessUnauthorizedResponse'
   '500':
     $ref: '#/components/responses/InternalServerErrorResponse'

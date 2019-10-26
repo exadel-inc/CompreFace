@@ -21,6 +21,7 @@ def add_image(path, name, api_key):
 
 
 @pytest.mark.integration
+@pytest.mark.skip(reason="TODO EGP-709")
 def test_integration__given_2_faces_in_db__when_asked_to_recognize_known_face__then_recognizes_correct_face():
     api_key = 'api-key'
     add_image(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'Person A', api_key)

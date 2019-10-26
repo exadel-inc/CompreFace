@@ -17,7 +17,5 @@ responses:
     description: 'Face example is saved.'
   '400':
     $ref: '#/components/responses/BadRequestResponse'
-  '401':
-    $ref: '#/components/responses/AccessUnauthorizedResponse'
   '500':
     $ref: '#/components/responses/InternalServerErrorResponse'
