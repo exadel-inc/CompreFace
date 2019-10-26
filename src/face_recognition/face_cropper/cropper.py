@@ -45,7 +45,7 @@ def crop_faces(img, face_lim: Union[int, FaceLimitConstant] = FaceLimitConstant.
                                                 SCALE_FACTOR)
     nrof_faces = bounding_boxes.shape[0]
     if nrof_faces < 1:
-        raise NoFaceFoundError("Haven't found face")
+        raise NoFaceFoundError("No face is found in the given image")
     det = bounding_boxes[:, 0:4]
     img_size = np.asarray(img.shape)[0:2]
     detected = []

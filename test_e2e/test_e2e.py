@@ -73,7 +73,7 @@ def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_
     res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 400, res.content
-    assert res.json()['message'] == "Haven't found face"
+    assert res.json()['message'] == "No face is found in the given image"
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -101,7 +101,7 @@ def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_40
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 400, res.content
-    assert res.json()['message'] == "Haven't found face"
+    assert res.json()['message'] == "No face is found in the given image"
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -138,17 +138,24 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_client_deletes_person_c__then_returns_204_and_only_persons_a_and_b_are_recognized(host):
+def test__when_client_deletes_person_c__then_returns_204(host):
+    pass
+
+    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true&await=true", headers={'X-Api-Key': 'api-key-001'})
+
+    assert res_del.status_code == 204, res_del.content
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_requests_to_recognize__then_only_persons_a_and_b_are_recognized(host):
     files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
     files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
     files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
 
-    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true&await=true", headers={'X-Api-Key': 'api-key-001'})
     res_a = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_a)
     res_b = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_b)
     res_c = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_c)
 
-    assert res_del.status_code == 204, res_del.content
     assert res_a.status_code == 200, res_a.content
     result_a = res_a.json()['result']
     assert result_a[0]['prediction'] == "Marie Curie"
@@ -164,7 +171,8 @@ def test__when_client_deletes_person_c__then_returns_204_and_only_persons_a_and_
 def test__when_client_deletes_person_b__then_returns_204(host):
     pass
 
-    res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true&await=true", headers={'X-Api-Key': 'api-key-001'})
+    res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true&await=true",
+                              headers={'X-Api-Key': 'api-key-001'})
 
     assert res_del.status_code == 204, res_del.content
 

@@ -72,7 +72,8 @@ def test_integration__given_limit_2__when_called_with_multiple_faces__then_retur
 
 @pytest.mark.xfail(reason="TODO EGP-703")
 @pytest.mark.integration
-def test_integration__when_called_with_multiple_faces__then_returns_correct_amount_of_results(cropped_faces_result_5faces):
+def test_integration__when_called_with_multiple_faces__then_returns_correct_amount_of_results(
+        cropped_faces_result_5faces):
     assert len(cropped_faces_result_5faces) == 5
 
 
