@@ -57,7 +57,7 @@ def test__when_client_opens_apidocs__returns_200(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_401(host):
+def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_400(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", headers={}, files=files)
@@ -143,8 +143,7 @@ def test__when_client_deletes_person_c__then_returns_204_and_only_persons_a_and_
     files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
     files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
 
-    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true", headers={'X-Api-Key': 'api-key-001'})
-    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'api-key-001'})
+    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true&await=true", headers={'X-Api-Key': 'api-key-001'})
     res_a = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_a)
     res_b = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_b)
     res_c = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files_c)
@@ -174,8 +173,7 @@ def test__when_client_deletes_person_b__then_returns_204(host):
 def test__requests_to_recognize_person_a__then_returns_500_no_models_found_for_api_key(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
-    requests.post(f"{host}/retrain?await=true", headers={'X-Api-Key': 'api-key-001'})
-    res = requests.post(f"{host}/recognize?retrain=true", headers={'X-Api-Key': 'api-key-001'}, files=files)
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 500, res.content
     assert res.json()['message'] == "No model is yet trained for this api key"
