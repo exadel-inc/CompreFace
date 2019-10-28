@@ -12,6 +12,7 @@ from src.face_recognition.embedding_calculator.calculator import calculate_embed
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.face_recognition.face_cropper.cropper import crop_faces
 from src.storage.storage_factory import get_storage
+from src.face_recognition.embedding_classifier.exceptions import ApiKeyNotInModels
 
 models = {}
 
@@ -53,7 +54,8 @@ def train_all_models():
 
 def get_face_predictions(img, limit: Union[FaceLimitConstant, int], api_key) -> List[FacePrediction]:
     def _classify_many(embedding, api_key, box: BoundingBox):
-        assert api_key in models, 'No model is yet trained for this api key'
+        if api_key not in models:
+            raise ApiKeyNotInModels
         model_data = models[api_key]
         predictions = model_data["model"].predict_proba([embedding])[0]
         logging.debug("predictions:")
