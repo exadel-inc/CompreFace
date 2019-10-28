@@ -1,9 +1,9 @@
 from http import HTTPStatus
+
 import pytest
 
 from src.api._decorators import needs_retrain
 from src.pyutils.pytest_utils import Expando
-import pytest
 
 
 @pytest.fixture
@@ -39,16 +39,19 @@ def test__given_retrain_decorator_raises_error__when_needs_endpoint_is_requested
     assert flags.endpoint_was_executed is None
     assert res.json['message'] == 'Retrain parameter accepts only true and false'
 
-@pytest.mark.parametrize("test_input, was_called", [('true', True), ("1", True), (None, True), ('false', False), ("0", False)])
-def test__given_retrain_flag_value__when_needs_retrain_endpoint_is_requested__then_starts_or_skips_retraining_depening_on_value(
-        client_with_retrain_endpoint, mocker, test_input, was_called):
+
+@pytest.mark.xfail(reason="Task 4")
+@pytest.mark.parametrize("retrain_arg, should_train",
+                         [(..., True), ('', True), ('true', True), ("1", True), ('false', False), ("0", False)])
+def test__given_retrain_flag_value__when_needs_retrain_endpoint_is_requested__then_starts_or_skips_retraining_depending_on_value(
+        client_with_retrain_endpoint, mocker, retrain_arg, should_train):
     train_async_mock = mocker.patch('src.api._decorators.train_async')
 
-    endpoint = '/endpoint?retrain=' + test_input if test_input is not None else '/retrain'
+    endpoint = f'/endpoint?retrain={retrain_arg}' if retrain_arg is not ... else '/retrain'
     res = client_with_retrain_endpoint.post(endpoint, headers={'X-Api-Key': 'api-key-001'})
 
-    assert res.status_code == HTTPStatus.OK, res.json
-    assert train_async_mock.called == was_called
+    assert res.status_code == HTTPStatus.ACCEPTED, res.json
+    assert train_async_mock.called == should_train
     assert res.data.decode() == 'success-body'
 
 
@@ -100,7 +103,6 @@ def test__when_needs_retrain_endpoint_is_requested__then_starts_retraining_only_
     assert res.data.decode() == 'success-body'
 
 
-
 def test__given_retrain_flag_any_other_string__when_needs_retrain_endpoint_is_requested__then_returns_error(
         client_with_retrain_endpoint, mocker):
     train_async_mock = mocker.patch('src.api._decorators.train_async')
@@ -110,5 +112,3 @@ def test__given_retrain_flag_any_other_string__when_needs_retrain_endpoint_is_re
     assert res.status_code == HTTPStatus.BAD_REQUEST, res.json
     train_async_mock.assert_not_called()
     assert res.json['message'] == 'Retrain parameter accepts only true and false'
-
-
