@@ -3,7 +3,7 @@ import functools
 from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
 from src.api.exceptions import APIKeyNotSpecifiedError, NoFileAttachedError, \
     NoFileSelectedError, BadRequestException
-from src.face_recognition.embedding_classifier.classifier import train_async
+from src.face_recognition.embedding_classifier.train import train_async
 
 
 def needs_authentication(f):

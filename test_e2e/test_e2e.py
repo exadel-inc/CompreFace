@@ -183,5 +183,5 @@ def test__requests_to_recognize_person_a__then_returns_500_no_models_found_for_a
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
-    assert res.status_code == 500, res.content
-    assert res.json()['message'] == "No model is yet trained for this api key"
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "No model is yet trained for this API key"

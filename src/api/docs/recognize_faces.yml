@@ -46,7 +46,7 @@ responses:
                   ymin:
                     type: integer
                     example: 60
-              prediction:
+              face_name:
                 type: string
                 example: 'Paul Dirac'
               probability:

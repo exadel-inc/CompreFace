@@ -5,7 +5,8 @@ import imageio
 import pytest
 
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.face_recognition.embedding_classifier.classifier import get_face_predictions, train
+from src.face_recognition.embedding_classifier.train import train
+from src.face_recognition.embedding_classifier.predict import predict_from_image
 from src.face_recognition.face_cropper.cropper import crop_faces
 from src.storage.storage_factory import get_storage
 
@@ -29,6 +30,6 @@ def test_integration__given_2_faces_in_db__when_asked_to_recognize_known_face__t
     train(api_key)
     img = imageio.imread(CURRENT_DIR / 'files' / 'personA-img2.jpg')
 
-    face_predictions = get_face_predictions(img=img, limit=1, api_key=api_key)
+    face_predictions = predict_from_image(img=img, limit=1, api_key=api_key)
 
-    assert face_predictions[0].prediction == 'Person A'
+    assert face_predictions[0].face_name == 'Person A'

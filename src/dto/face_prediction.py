@@ -7,5 +7,5 @@ from src.dto.serializable import Serializable
 @attr.s(auto_attribs=True)
 class FacePrediction(Serializable):
     box: BoundingBox
-    prediction: str = attr.ib(converter=str)
+    face_name: str = attr.ib(converter=str)
     probability: float = attr.ib(converter=float)
