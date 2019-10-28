@@ -1,9 +1,9 @@
-from src.dto.exceptions import InvalidArgumentError
+from src.dto.exceptions import IncorrectUsageError
 
 
-class IncorrectImageDimensionsError(InvalidArgumentError):
+class IncorrectImageDimensionsError(IncorrectUsageError):
     pass
 
 
-class NoFaceFoundError(InvalidArgumentError):
+class NoFaceFoundError(IncorrectUsageError):
     pass
