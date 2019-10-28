@@ -43,10 +43,9 @@ def test__given_retrain_decorator_raises_error__when_needs_endpoint_is_requested
 def test__given_retrain_flag_value__when_needs_retrain_endpoint_is_requested__then_starts_or_skips_retraining_depening_on_value(
         client_with_retrain_endpoint, mocker, test_input, was_called):
     train_async_mock = mocker.patch('src.api._decorators.train_async')
-    if test_input:
-        res = client_with_retrain_endpoint.post('/endpoint?retrain='+test_input, headers={'X-Api-Key': 'api-key-001'})
-    else:
-        res = client_with_retrain_endpoint.post('/endpoint', headers={'X-Api-Key': 'api-key-001'})
+
+    endpoint = '/endpoint?retrain=' + test_input if test_input is not None else '/retrain'
+    res = client_with_retrain_endpoint.post(endpoint, headers={'X-Api-Key': 'api-key-001'})
 
     assert res.status_code == HTTPStatus.OK, res.json
     assert train_async_mock.called == was_called
