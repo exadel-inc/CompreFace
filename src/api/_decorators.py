@@ -1,9 +1,9 @@
 import functools
 
 from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
-from src.api.exceptions import APIKeyNotSpecifiedError, APIKeyNotAuthorizedError, NoFileAttachedError, \
+from src.api.exceptions import APIKeyNotSpecifiedError, NoFileAttachedError, \
     NoFileSelectedError, BadRequestException
-from src.face_recognition.embedding_classifier.classifier import train_async
+from src.face_recognition.embedding_classifier.train import train_async
 
 
 def needs_authentication(f):
@@ -11,12 +11,8 @@ def needs_authentication(f):
     def wrapper(*args, **kwargs):
         from flask import request
 
-        if API_KEY_HEADER not in request.headers:
+        if not request.headers.get(API_KEY_HEADER, ''):
             raise APIKeyNotSpecifiedError
-
-        if request.headers[API_KEY_HEADER] == 'invalid-api-key':
-            raise APIKeyNotAuthorizedError
-
         return f(*args, **kwargs)
 
     return wrapper
@@ -48,8 +44,8 @@ def needs_retrain(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         from flask import request
-        retrain_param_value = request.args.get(RETRAIN_PARAM).lower()
-        if retrain_param_value in ('true', '1'):
+        retrain_param_value = request.args.get(RETRAIN_PARAM, '__default__').lower()
+        if retrain_param_value in ('__default__', 'true', '1'):
             do_retrain = True
         elif retrain_param_value in ('false', '0'):
             do_retrain = False
@@ -60,7 +56,10 @@ def needs_retrain(f):
         return_val = f(*args, **kwargs)
 
         if do_retrain:
-            train_async(api_key)
+            train_thread = train_async(api_key)
+            # TODO EGP-708 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
+            if request.args.get('await', '__default__').lower() in ('true', '1'):
+                train_thread.join()
 
         return return_val
 

@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+import pytest
 from mock import Mock
 from numpy import int32, float64
 
@@ -9,24 +10,24 @@ from src.dto.face_prediction import FacePrediction
 
 def test__when_recognize_endpoint_is_requested__then_returns_predictions(client, mocker):
     expected_result = [
-        {'box': {"xmin": 50, "ymin": 60, "xmax": 70, "ymax": 80}, 'prediction': 'Joe Bloggs', 'probability': 0.9},
-        {'box': {"xmin": 10, "ymin": 20, "xmax": 30, "ymax": 40}, 'prediction': 'Fred Bloggs', 'probability': 0.85},
-        {'box': {"xmin": 15, "ymin": 25, "xmax": 35, "ymax": 45}, 'prediction': 'John Smith', 'probability': 0.91},
-        {'box': {"xmin": 35, "ymin": 36, "xmax": 39, "ymax": 40}, 'prediction': 'Igor Shaw', 'probability': 0.89}
+        {'box': {"xmin": 50, "ymin": 60, "xmax": 70, "ymax": 80}, 'face_name': 'Joe Bloggs', 'probability': 0.9},
+        {'box': {"xmin": 10, "ymin": 20, "xmax": 30, "ymax": 40}, 'face_name': 'Fred Bloggs', 'probability': 0.85},
+        {'box': {"xmin": 15, "ymin": 25, "xmax": 35, "ymax": 45}, 'face_name': 'John Smith', 'probability': 0.91},
+        {'box': {"xmin": 35, "ymin": 36, "xmax": 39, "ymax": 40}, 'face_name': 'Igor Shaw', 'probability': 0.89}
     ]
     ret_val = [
         FacePrediction(box=BoundingBox(xmin=int32(50), ymin=int32(60), xmax=int32(70), ymax=int32(80)),
-                       prediction='Joe Bloggs', probability=float64(0.9)),
+                       face_name='Joe Bloggs', probability=float64(0.9)),
         FacePrediction(box=BoundingBox(xmin=int32(10), ymin=int32(20), xmax=int32(30), ymax=int32(40)),
-                       prediction='Fred Bloggs', probability=float64(0.85)),
+                       face_name='Fred Bloggs', probability=float64(0.85)),
         FacePrediction(box=BoundingBox(xmin=int32(15), ymin=int32(25), xmax=int32(35), ymax=int32(45)),
-                       prediction='John Smith', probability=float64(0.91)),
+                       face_name='John Smith', probability=float64(0.91)),
         FacePrediction(box=BoundingBox(xmin=int32(35), ymin=int32(36), xmax=int32(39), ymax=int32(40)),
-                       prediction='Igor Shaw', probability=float64(0.89))
+                       face_name='Igor Shaw', probability=float64(0.89))
     ]
     img = object()
     imread_mock = mocker.patch('src.api.controller.imageio.imread', return_value=img)
-    get_face_predictions_mock = mocker.patch('src.api.controller.get_face_predictions', return_value=ret_val)
+    get_face_predictions_mock = mocker.patch('src.api.controller.predict_from_image', return_value=ret_val)
 
     res = client.post('/recognize', data=dict(file=(b'', 'group-photo.jpg'), content_type='multipart/form-data'))
 
@@ -36,39 +37,26 @@ def test__when_recognize_endpoint_is_requested__then_returns_predictions(client,
     assert res.json['result'] == expected_result
 
 
-def test__given_no_limit_value__when_recognize_endpoint_is_requested__then_uses_no_limit(client, mocker):
+@pytest.mark.parametrize("test_input,expected", [(None, 0), ("0", 0), ("1", 1)])
+def test__given_limit_1_or_0_or_no_value__when_recognize_endpoint_is_required__then_uses_concrete_limit_value(client,
+                                                                                                              mocker,
+                                                                                                              test_input,
+                                                                                                              expected):
     mocker.patch('src.api.controller.imageio.imread')
-    get_face_predictions_mock: Mock = mocker.patch('src.api.controller.get_face_predictions', return_value=[])
+    get_face_predictions_mock: Mock = mocker.patch('src.api.controller.predict_from_image', return_value=[])
 
-    res = client.post('/recognize')
+    if test_input:
+        res = client.post('/recognize?limit=' + test_input)
+    else:
+        res = client.post('/recognize')
 
     assert res.status_code == HTTPStatus.OK, res.json
-    assert get_face_predictions_mock.call_args[0][1] == 0
-
-
-def test__given_limit_value_0__when_recognize_endpoint_is_requested__then_uses_no_limit(client, mocker):
-    mocker.patch('src.api.controller.imageio.imread')
-    get_face_predictions_mock: Mock = mocker.patch('src.api.controller.get_face_predictions', return_value=[])
-
-    res = client.post('/recognize?limit=0')
-
-    assert res.status_code == HTTPStatus.OK, res.json
-    assert get_face_predictions_mock.call_args[0][1] == 0
-
-
-def test__given_limit_value_1__when_recognize_endpoint_is_requested__then_uses_limit_1(client, mocker):
-    mocker.patch('src.api.controller.imageio.imread')
-    get_face_predictions_mock: Mock = mocker.patch('src.api.controller.get_face_predictions', return_value=[])
-
-    res = client.post('/recognize?limit=1')
-
-    assert res.status_code == HTTPStatus.OK, res.json
-    assert get_face_predictions_mock.call_args[0][1] == 1
+    assert get_face_predictions_mock.call_args[0][1] == expected
 
 
 def test__given_limit_value_minus_1__when_recognize_endpoint_is_requested__then_returns_400(client, mocker):
     mocker.patch('src.api.controller.imageio.imread')
-    mocker.patch('src.api.controller.get_face_predictions')
+    mocker.patch('src.api.controller.predict_from_image')
 
     res = client.post('/recognize?limit=-1')
 
@@ -78,7 +66,7 @@ def test__given_limit_value_minus_1__when_recognize_endpoint_is_requested__then_
 
 def test__given_limit_value_words__when_recognize_endpoint_is_requested__then_returns_400(client, mocker):
     mocker.patch('src.api.controller.imageio.imread')
-    mocker.patch('src.api.controller.get_face_predictions')
+    mocker.patch('src.api.controller.predict_from_image')
 
     res = client.post('/recognize?limit=hello')
 

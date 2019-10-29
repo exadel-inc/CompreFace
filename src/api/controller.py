@@ -13,10 +13,11 @@ from src.api.constants import API_KEY_HEADER
 from src.api.exceptions import BadRequestException
 from src.dto.serializable import Serializable
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.face_recognition.embedding_classifier.classifier import train_all_models, train_async, get_face_predictions
+from src.face_recognition.embedding_classifier.predict import predict_from_image
+from src.face_recognition.embedding_classifier.train import train_all_models, train_async
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.face_recognition.face_cropper.cropper import crop_face
-from src.storage.storage_factory import get_storage
+from src.storage.storage import get_storage
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 DOCS_DIR = CURRENT_DIR / 'docs'
@@ -85,8 +86,8 @@ def create_app():
         api_key = request.headers[API_KEY_HEADER]
 
         train_thread = train_async(api_key)
-        # TODO Remove this temporary 'await' parameter when there is an official way for E2E tests to wait for the training to finish
-        if request.args.get('await').lower() in ('true', '1'):
+        # TODO EGP-708 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
+        if request.args.get('await', '').lower() in ('true', '1'):
             train_thread.join()
 
         return Response(status=HTTPStatus.ACCEPTED)
@@ -107,7 +108,7 @@ def create_app():
         file = request.files['file']
 
         img = imageio.imread(file)
-        face_predictions = get_face_predictions(img, limit, api_key)
+        face_predictions = predict_from_image(img, limit, api_key)
 
         return jsonify(result=face_predictions)
 

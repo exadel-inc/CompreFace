@@ -1,5 +1,5 @@
 from src.api.exceptions import BadRequestException
 
 
-class InvalidArgumentError(BadRequestException):
+class IncorrectUsageError(BadRequestException):
     pass

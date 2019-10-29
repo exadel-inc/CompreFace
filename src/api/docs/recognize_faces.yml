@@ -46,7 +46,7 @@ responses:
                   ymin:
                     type: integer
                     example: 60
-              prediction:
+              face_name:
                 type: string
                 example: 'Paul Dirac'
               probability:
@@ -55,7 +55,5 @@ responses:
                 example: '0.95'
   '400':
     $ref: '#/components/responses/BadRequestResponse'
-  '401':
-    $ref: '#/components/responses/AccessUnauthorizedResponse'
   '500':
     $ref: '#/components/responses/InternalServerErrorResponse'

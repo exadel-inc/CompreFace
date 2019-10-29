@@ -70,16 +70,17 @@ def test_integration__given_limit_2__when_called_with_multiple_faces__then_retur
     assert len(cropped_faces) == 2
 
 
-@pytest.mark.xfail(reason="TODO EGP-703")
-@pytest.mark.integration
-def test_integration__when_called_with_multiple_faces__then_returns_correct_amount_of_results(cropped_faces_result_5faces):
-    assert len(cropped_faces_result_5faces) == 5
-
-
-@pytest.mark.xfail(reason="TODO EGP-700")
+@pytest.mark.xfail(reason="TODO EFRS-24")
 @pytest.mark.integration
 def test_integration__when_called_with_multiple_faces__then_all_returned_faces_must_be_different(
         cropped_faces_result_5faces):
-    img_combinations = itertools.combinations((ndarray_to_img(f.img) for f in cropped_faces_result_5faces), r=2)
+    img_combinations = itertools.combinations((ndarray_to_img(face.img) for face in cropped_faces_result_5faces), r=2)
     images_are_same = (images_are_almost_the_same(*pair) for pair in img_combinations)
     assert not any(images_are_same)
+
+
+@pytest.mark.xfail(reason="TODO EFRS-25")
+@pytest.mark.integration
+def test_integration__when_called_with_multiple_faces__then_returns_correct_amount_of_results(
+        cropped_faces_result_5faces):
+    assert len(cropped_faces_result_5faces) == 5

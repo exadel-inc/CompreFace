@@ -27,7 +27,7 @@ def needs_authentication(f):
         request_mock = RequestMock()
         with patch('flask.request', request_mock):
             if API_KEY_HEADER not in request_mock.headers:
-                request_mock.headers[API_KEY_HEADER] = 'valid-api-key'
+                request_mock.headers[API_KEY_HEADER] = 'api-key-001'
             return f(*args, **kwargs)
 
     return wrapper

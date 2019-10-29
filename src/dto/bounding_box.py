@@ -9,4 +9,3 @@ class BoundingBox(Serializable):
     ymin: int = attr.ib(converter=int)
     xmax: int = attr.ib(converter=int)
     ymax: int = attr.ib(converter=int)
-

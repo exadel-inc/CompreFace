@@ -1,7 +1,9 @@
+import os
+
 import gridfs
 from pymongo import MongoClient
 
-from src.storage._storage_base import StorageBase
+from src import pyutils
 
 CURRENT_MODEL_NAME = "20170512-110547.pb"
 MODELS_COLLECTION_NAME = "models"
@@ -9,7 +11,14 @@ FACES_COLLECTION_NAME = "faces"
 DATABASE_NAME = "recognition"
 
 
-class MongoStorage(StorageBase):
+@pyutils.run_once  # Don't recreate connection on subsequent requests (Singleton pattern)
+def get_storage():
+    mongo_host = os.environ.get('MONGO_HOST', 'mongo')
+    mongo_port = int(os.environ.get('MONGO_PORT', '27017'))
+    return Storage(mongo_host, mongo_port)
+
+
+class Storage:
     def __init__(self, host, port):
         self._host = host
         self._port = port
@@ -48,8 +57,8 @@ class MongoStorage(StorageBase):
         labels = []
         face_names = {}
         curr_face_encoding = -1
-        for face in self._faces_collection.find({"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key}).sort(
-                "face_name"):
+        conditions = {"embeddings.model_name": CURRENT_MODEL_NAME, "api_key": api_key}
+        for face in self._faces_collection.find(conditions).sort("face_name"):
             if face['face_name'] not in face_names:
                 curr_face_encoding += 1
                 face_names[face['face_name']] = curr_face_encoding
