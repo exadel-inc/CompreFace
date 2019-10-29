@@ -7,7 +7,7 @@ import pytest
 
 from src import pyutils
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.storage.storage import CURRENT_MODEL_NAME
+from src.storage._mongo_storage import CURRENT_MODEL_NAME
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 

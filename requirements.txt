@@ -1,3 +1,5 @@
+mongomock
+pytest-mongodb
 absl-py==0.7.1
 aniso8601==8.0.0
 astor==0.8.0
