@@ -11,7 +11,7 @@ Instructions:
 python -m pytest --host http://localhost:5001 test_e2e.py
 """
 
-# TODO EGP-708 Remove the use of 'await' parameter in all of the end-to-end tests once there is an official way for E2E tests to wait for the training to finish
+# TODO EFRS-42 Remove the use of 'await' parameter in all of the end-to-end tests once there is an official way for E2E tests to wait for the training to finish
 
 import os
 from pathlib import Path
@@ -60,7 +60,7 @@ def test__when_client_opens_apidocs__returns_200(host):
 def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_400(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
-    res = requests.post(f"{host}/faces/Marie Curie", headers={}, files=files)
+    res = requests.post(f"{host}/faces/Marie Curie?await=true", headers={}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == 'No API Key is given'
@@ -70,7 +70,7 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
 def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_face_found(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
 
-    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'api-key-001'}, files=files)
+    res = requests.post(f"{host}/faces/Marie Curie?await=true", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "No face is found in the given image"

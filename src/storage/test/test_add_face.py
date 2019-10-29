@@ -1,35 +1,26 @@
+import numpy as np
 import pytest
-from mongomock.gridfs import enable_gridfs_integration
-from numpy.core.multiarray import ndarray
+from numpy import int8
 
 from src.storage._mongo_storage import MongoStorage
+from src.storage.test.conftest import STORAGES
 
 
-@pytest.fixture
-def gridfs_support():
-    enable_gridfs_integration()
+@pytest.mark.xfail(reason="TODO EFRS-50")
+@pytest.mark.integration
+@pytest.mark.parametrize('storage', STORAGES, indirect=True)
+def test_integration__when_adding_face__then_adds_face(storage):
+    data = dict(
+        raw_img=np.zeros(shape=(15, 15, 3), dtype=int8),
+        face_img=np.zeros(shape=(5, 5, 3), dtype=int8),
+        embedding=np.zeros(shape=(16,), dtype=int8),
+        face_name='Niels Bohr',
+        api_key='api-key-001'
+    )
 
+    storage.add_face(**data)
 
-@pytest.mark.usefixtures('gridfs_support')
-@pytest.fixture
-def storage(mongodb):
-    return MongoStorage(mongo_client=mongodb)
-
-
-@pytest.mark.usefixtures('gridfs_support')
-def test__when_adding_face__face_is_added(storage):
-    pass
-
-    storage.add_face(raw_img=ndarray(shape=(15, 15, 3)),
-                     face_img=ndarray(shape=(5, 5, 3)),
-                     embedding=ndarray(shape=(16,)),
-                     face_name='Niels Bohr',
-                     api_key='api-key-001')
-
-    client = mongomock.MongoClient()
-    db = client.db
-    runs = db.runs
-    metrics = db.metrics
-    fs = gridfs.GridFS(db)
-
-    pass
+    if isinstance(storage, MongoStorage):
+        faces = list(storage._faces_collection.find())
+        assert len(faces) == 1
+        assert faces[0] == data  # TODO EFRS-50 Only certain faces[0] dict values should be compared

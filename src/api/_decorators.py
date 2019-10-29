@@ -57,7 +57,7 @@ def needs_retrain(f):
 
         if do_retrain:
             train_thread = train_async(api_key)
-            # TODO EGP-708 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
+            # TODO EFRS-42 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
             if request.args.get('await', '__default__').lower() in ('true', '1'):
                 train_thread.join()
 

@@ -1,3 +1,5 @@
+import os
+
 import gridfs
 from pymongo import MongoClient
 
@@ -10,9 +12,9 @@ DATABASE_NAME = "recognition"
 
 
 class MongoStorage(StorageBase):
-    def __init__(self, host=None, port=None, mongo_client=None):
-        assert host and port or mongo_client
-        self._mongo_client = mongo_client or MongoClient(host, port)
+    def __init__(self):
+        self._mongo_client = MongoClient(host=os.environ.get('MONGO_HOST', 'mongo'),
+                                         port=int(os.environ.get('MONGO_PORT', '27017')))
         db = self._mongo_client[DATABASE_NAME]
         self._db = db
         self._faces_fs = gridfs.GridFS(db, FACES_COLLECTION_NAME)

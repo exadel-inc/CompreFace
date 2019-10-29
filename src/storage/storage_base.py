@@ -21,3 +21,7 @@ class StorageBase(ABC):  # Ensures that child classes will override abstract met
     @abstractmethod
     def get_api_keys(self):
         pass
+
+    @abstractmethod
+    def get_all_face_names(self, api_key):
+        pass
