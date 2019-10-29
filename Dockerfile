@@ -24,7 +24,7 @@ RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
 # Expose port for uWSGI
 EXPOSE 3000
-# Expose port for API and TensorBoard port (6006)
+# Expose port for TensorBoard
 EXPOSE 6006
 
 # Entrypoint
