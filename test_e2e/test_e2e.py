@@ -134,7 +134,7 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
     assert res.status_code == 200, res.content
     result = res.json()['result']
     assert len(result) == 1
-    assert result[0]['prediction'] == "Marie Curie"
+    assert result[0]['face_name'] == "Marie Curie"
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -158,13 +158,13 @@ def test__when_client_requests_to_recognize__then_only_persons_a_and_b_are_recog
 
     assert res_a.status_code == 200, res_a.content
     result_a = res_a.json()['result']
-    assert result_a[0]['prediction'] == "Marie Curie"
+    assert result_a[0]['face_name'] == "Marie Curie"
     assert res_b.status_code == 200, res_b.content
     result_b = res_b.json()['result']
-    assert result_b[0]['prediction'] == "Stephen Hawking"
+    assert result_b[0]['face_name'] == "Stephen Hawking"
     assert res_c.status_code == 200, res_a.content
     result_c = res_c.json()['result']
-    assert not (result_c[0]['prediction'] == 'Paul Walker')
+    assert not (result_c[0]['face_name'] == 'Paul Walker')
 
 
 @pytest.mark.run(order=next(after_previous))

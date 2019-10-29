@@ -9,15 +9,11 @@ from src import pyutils
 from src.dto import BoundingBox
 from src.dto.cropped_face import CroppedFace
 from src.face_recognition.embedding_classifier.libraries import facenet
-from src.face_recognition.face_cropper.constants import FaceLimitConstant
+from src.face_recognition.face_cropper.constants import FACE_MIN_SIZE, THRESHOLD, SCALE_FACTOR, FaceLimitConstant, \
+    MARGIN, IMAGE_SIZE
 from src.face_recognition.face_cropper.exceptions import IncorrectImageDimensionsError, NoFaceFoundError
 from src.face_recognition.face_cropper.libraries.align import detect_face
 
-FACE_MIN_SIZE = 20
-THRESHOLD = [0.6, 0.7, 0.7]  # three steps's threshold
-SCALE_FACTOR = 0.709
-MARGIN = 32
-IMAGE_SIZE = 160
 pnet, rnet, onet = None, None, None
 
 
@@ -34,29 +30,35 @@ def crop_face(img) -> CroppedFace:
     return cropped_faces[0]
 
 
-@pyutils.run_first(_init_once)
-def crop_faces(img, face_lim: Union[int, FaceLimitConstant] = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
+def _preprocess_img(img):
     if img.ndim < 2:
         raise IncorrectImageDimensionsError("Unable to align image, it has only one dimension")
+
     if img.ndim == 2:
         img = facenet.to_rgb(img)
-    img = img[:, :, 0:3]
-    bounding_boxes, _ = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, THRESHOLD,
-                                                SCALE_FACTOR)
-    nrof_faces = bounding_boxes.shape[0]
-    if nrof_faces < 1:
+    return img[:, :, 0:3]
+
+
+def _get_face_bounding_boxes(img):
+    bounding_boxes, _ = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, THRESHOLD, SCALE_FACTOR)
+    return bounding_boxes
+
+
+@pyutils.run_first(_init_once)
+def crop_faces(img, face_lim: Union[int, FaceLimitConstant] = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
+    img = _preprocess_img(img)
+    bounding_boxes = _get_face_bounding_boxes(img)
+    face_count = bounding_boxes.shape[0]
+    if face_count < 1:
         raise NoFaceFoundError("No face is found in the given image")
+    face_lim = face_lim or face_count
+
     det = bounding_boxes[:, 0:4]
     img_size = np.asarray(img.shape)[0:2]
     detected = []
-    if face_lim != FaceLimitConstant.NO_LIMIT:
-        range_lim = face_lim
-    else:
-        range_lim = nrof_faces
-    if nrof_faces > 1:
-        logging.debug(nrof_faces)
+    if face_count > 1:
         img_center = img_size / 2
-        for start in range(range_lim):
+        for start in range(face_lim):
             bounding_box_size = (det[start:, 2] - det[start:, 0]) * (det[start:, 3] - det[start:, 1])
 
             offsets = np.vstack(

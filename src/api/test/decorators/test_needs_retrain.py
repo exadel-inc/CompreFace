@@ -11,7 +11,7 @@ def client_with_retrain_endpoint(app):
     @app.route('/endpoint', methods=['POST'])
     @needs_retrain
     def endpoint():
-        return 'success-body', HTTPStatus.ACCEPTED
+        return 'success-body', HTTPStatus.OK
 
     return app.test_client()
 
@@ -22,10 +22,10 @@ def test__given_retrain_flag_value__when_needs_retrain_endpoint_is_requested__th
         client_with_retrain_endpoint, mocker, retrain_arg, should_train):
     train_async_mock = mocker.patch('src.api._decorators.train_async')
 
-    endpoint = f'/endpoint?retrain={retrain_arg}' if retrain_arg is not None else '/retrain'
+    endpoint = f'/endpoint?retrain={retrain_arg}' if retrain_arg is not None else '/endpoint'
     res = client_with_retrain_endpoint.post(endpoint, headers={'X-Api-Key': 'api-key-001'})
 
-    assert res.status_code == HTTPStatus.ACCEPTED, res.json
+    assert res.status_code == HTTPStatus.OK, res.json
     assert train_async_mock.called == should_train
     assert res.data.decode() == 'success-body'
 
