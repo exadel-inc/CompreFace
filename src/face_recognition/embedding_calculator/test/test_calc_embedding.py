@@ -7,12 +7,11 @@ import pytest
 
 from src import pyutils
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.storage import MYSQL_CURRENT_MODEL_NAME, MONGO_CURRENT_MODEL_NAME
+from src.storage.storage import CURRENT_MODEL_NAME
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
-assert MYSQL_CURRENT_MODEL_NAME == MONGO_CURRENT_MODEL_NAME
-CACHED_MODEL_NAME = MYSQL_CURRENT_MODEL_NAME
+CACHED_MODEL_NAME = CURRENT_MODEL_NAME
 
 CACHED_MODEL_FILEPATH = CURRENT_DIR / 'files' / 'cache' / CACHED_MODEL_NAME
 SKIP_REASON_NO_FILE_FOUND = f"Cannot calculate embeddings without model saved at {CACHED_MODEL_FILEPATH}. " \

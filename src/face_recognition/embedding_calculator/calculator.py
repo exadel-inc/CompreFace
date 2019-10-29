@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 from src import pyutils
-from src.storage.storage_factory import get_storage
+from src.storage.storage import get_storage
 
 BATCH_SIZE = 25
 
