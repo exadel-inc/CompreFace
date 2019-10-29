@@ -17,7 +17,7 @@ from src.face_recognition.embedding_classifier.predict import predict_from_image
 from src.face_recognition.embedding_classifier.train import train_all_models, train_async
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.face_recognition.face_cropper.cropper import crop_face
-from src.storage.storage_factory import get_storage
+from src.storage.storage import get_storage
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 DOCS_DIR = CURRENT_DIR / 'docs'

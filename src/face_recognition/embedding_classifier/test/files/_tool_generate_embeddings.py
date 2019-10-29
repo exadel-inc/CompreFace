@@ -4,7 +4,7 @@ from pathlib import Path
 import imageio
 import joblib
 
-from src.api.test.database_endpoints.test_add_face import calc_embedding
+from src.face_recognition.embedding_calculator.calculator import calculate_embedding
 from src.face_recognition.face_cropper.cropper import crop_face
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -13,7 +13,7 @@ CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 def generate_embedding_from_img(filename):
     img = imageio.imread(CURRENT_DIR / f'{filename}.jpg')
     img = crop_face(img).img
-    embedding = calc_embedding(img)
+    embedding = calculate_embedding(img)
     joblib.dump(embedding, f'{filename}.embedding.joblib')
 
 

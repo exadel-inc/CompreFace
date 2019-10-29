@@ -25,7 +25,7 @@ from mock import Mock
 from src.pyutils.pytest_utils import Expando
 
 
-def crop_face(img):
+def crop_face_mock(img):
     s = Expando()
     s.ISFROM_crop_face_GETARG_img = img
     s.img = Expando()
@@ -33,7 +33,7 @@ def crop_face(img):
     return s
 
 
-def calc_embedding(img):
+def calculate_embedding_mock(img):
     s = Expando()
     s.ISFROM_calc_embedding_GETARG_img = img
     return s
@@ -43,8 +43,8 @@ def test__when_add_face_is_requested__then_saves_it_correctly(client, mocker):
     img = object()
     imread_mock, get_storage_mock = mocker.Mock(return_value=img), mocker.Mock()
     imread_mock: Mock = mocker.patch('src.api.controller.imageio.imread', imread_mock)
-    mocker.patch('src.api.controller.crop_face', crop_face)
-    mocker.patch('src.api.controller.calculate_embedding', calc_embedding)
+    mocker.patch('src.api.controller.crop_face', crop_face_mock)
+    mocker.patch('src.api.controller.calculate_embedding', calculate_embedding_mock)
     mocker.patch('src.api.controller.get_storage', return_value=get_storage_mock)
 
     res = client.post('/faces/Albert Einstein', content_type='multipart/form-data',

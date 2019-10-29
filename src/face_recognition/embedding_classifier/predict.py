@@ -1,5 +1,5 @@
 import logging
-from typing import Union, List
+from typing import List
 
 import numpy as np
 
@@ -8,13 +8,12 @@ from src.dto.cropped_face import CroppedFace
 from src.dto.face_prediction import FacePrediction
 from src.dto.trained_model import TrainedModel
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.face_recognition.face_cropper.constants import FaceLimitConstant
+from src.face_recognition.face_cropper.constants import FaceLimit
 from src.face_recognition.face_cropper.cropper import crop_faces
-from src.storage.model_storage import get_model
+from src.storage.trained_model_storage import get_trained_model
 
 
-def predict_from_embedding(embedding, face_box: BoundingBox, api_key: str) -> FacePrediction:
-    model: TrainedModel = get_model(api_key)
+def predict_from_embedding(model: TrainedModel, embedding, face_box: BoundingBox) -> FacePrediction:
     probabilities = model.classifier.predict_proba([embedding])[0]
     top_classes = np.argsort(-probabilities)
 
@@ -28,9 +27,11 @@ def predict_from_embedding(embedding, face_box: BoundingBox, api_key: str) -> Fa
     return FacePrediction(face_name=face_name, probability=probability, box=face_box)
 
 
-def predict_from_image(img, limit: Union[FaceLimitConstant, int], api_key: str) -> List[FacePrediction]:
+def predict_from_image(img, limit: FaceLimit, api_key: str) -> List[FacePrediction]:
+    model: TrainedModel = get_trained_model(api_key)
+
     def predict_from_cropped_face(face: CroppedFace):
         embedding = calculate_embedding(face.img)
-        return predict_from_embedding(embedding, face.box, api_key)
+        return predict_from_embedding(model, embedding, face.box)
 
     return [predict_from_cropped_face(cropped_face) for cropped_face in crop_faces(img, limit)]
