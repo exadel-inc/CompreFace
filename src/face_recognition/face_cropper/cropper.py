@@ -31,17 +31,19 @@ def crop_face(img) -> CroppedFace:
 
 
 def _post_process_bounding_boxes(bounding_boxes, face_lim, img_size):
-    det = bounding_boxes
-    detected = []
+    processed_bounding_boxes = []
+
+    bbs = bounding_boxes
     img_center = img_size / 2
     for start in range(face_lim or len(bounding_boxes)):
-        bounding_box_size = (det[start:, 2] - det[start:, 0]) * (det[start:, 3] - det[start:, 1])
-        offsets = np.vstack([(det[start, 0] + det[start, 2]) / 2 - img_center[1],
-                             (det[start, 1] + det[start, 3]) / 2 - img_center[0]])
+        bounding_box_size = (bbs[start:, 2] - bbs[start:, 0]) * (bbs[start:, 3] - bbs[start:, 1])
+        offsets = np.vstack([(bbs[start, 0] + bbs[start, 2]) / 2 - img_center[1],
+                             (bbs[start, 1] + bbs[start, 3]) / 2 - img_center[0]])
         offset_dist_squared = np.sum(np.power(offsets, 2.0), 0)
         index = np.argmax(bounding_box_size - offset_dist_squared * 2.0)  # some extra weight on the centering
-        detected.append(det[index, :])
-    return detected
+
+        processed_bounding_boxes.append(bbs[index, :])
+    return processed_bounding_boxes
 
 
 def _get_bounding_boxes(img, face_lim, img_size):
