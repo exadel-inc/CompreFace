@@ -1,11 +1,11 @@
 from http import HTTPStatus
 
+import pytest
 from mock import Mock
 from numpy import int32, float64
 
 from src.dto import BoundingBox
 from src.dto.face_prediction import FacePrediction
-import pytest
 
 
 def test__when_recognize_endpoint_is_requested__then_returns_predictions(client, mocker):
@@ -36,20 +36,22 @@ def test__when_recognize_endpoint_is_requested__then_returns_predictions(client,
     assert get_face_predictions_mock.call_args_list[0][0][0] == img
     assert res.json['result'] == expected_result
 
+
 @pytest.mark.parametrize("test_input,expected", [(None, 0), ("0", 0), ("1", 1)])
-def test__given_limit_1_or_0_or_no_value__when_recognize_endpoint_is_required__then_uses_concrete_limit_value(client, mocker, test_input, expected):
+def test__given_limit_1_or_0_or_no_value__when_recognize_endpoint_is_required__then_uses_concrete_limit_value(client,
+                                                                                                              mocker,
+                                                                                                              test_input,
+                                                                                                              expected):
     mocker.patch('src.api.controller.imageio.imread')
     get_face_predictions_mock: Mock = mocker.patch('src.api.controller.predict_from_image', return_value=[])
 
     if test_input:
-        res = client.post('/recognize?limit='+test_input)
+        res = client.post('/recognize?limit=' + test_input)
     else:
         res = client.post('/recognize')
 
     assert res.status_code == HTTPStatus.OK, res.json
     assert get_face_predictions_mock.call_args[0][1] == expected
-
-
 
 
 def test__given_limit_value_minus_1__when_recognize_endpoint_is_requested__then_returns_400(client, mocker):

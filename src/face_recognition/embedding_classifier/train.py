@@ -1,11 +1,11 @@
 import logging
 from threading import Thread
 
+from sklearn.linear_model import LogisticRegression
 
 from src.dto.trained_model import TrainedModel
 from src.storage.model_storage import save_model, delete_model
 from src.storage.storage_factory import get_storage
-from src.types.classifier import Classifier
 
 
 def train(api_key):
@@ -16,7 +16,7 @@ def train(api_key):
         return
 
     logging.debug('Training classifier, api key: %s' % api_key)
-    classifier = Classifier(C=100000, solver='lbfgs', multi_class='multinomial')
+    classifier = LogisticRegression(C=100000, solver='lbfgs', multi_class='multinomial')
     classifier.fit(values, labels)
     logging.debug('Training finished, api key: %s' % api_key)
 

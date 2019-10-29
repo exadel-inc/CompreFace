@@ -1,11 +1,10 @@
 from typing import Dict
 
 import attr
-
-from src.types.classifier import Classifier
+from sklearn.linear_model import LogisticRegression
 
 
 @attr.s(auto_attribs=True)
 class TrainedModel:
-    classifier: Classifier
+    classifier: LogisticRegression
     class_2_face_name: Dict[int, str]

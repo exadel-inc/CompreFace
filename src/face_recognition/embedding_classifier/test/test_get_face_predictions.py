@@ -5,8 +5,8 @@ import imageio
 import pytest
 
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.face_recognition.embedding_classifier.train import train
 from src.face_recognition.embedding_classifier.predict import predict_from_image
+from src.face_recognition.embedding_classifier.train import train
 from src.face_recognition.face_cropper.cropper import crop_faces
 from src.storage.storage_factory import get_storage
 
