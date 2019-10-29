@@ -56,6 +56,7 @@ def test__when_client_opens_apidocs__returns_200(host):
     assert res.status_code == 200, res.status_code
 
 
+@pytest.mark.xfail(reason="TODO EFRS-57")
 @pytest.mark.run(order=next(after_previous))
 def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_400(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
