@@ -1,4 +1,5 @@
 import logging
+import multiprocessing
 import os
 from http import HTTPStatus
 from pathlib import Path
@@ -14,10 +15,11 @@ from src.api.exceptions import BadRequestException
 from src.dto.serializable import Serializable
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
 from src.face_recognition.embedding_classifier.predict import predict_from_image
-from src.face_recognition.embedding_classifier.train import train_all_models, train_async
+from src.face_recognition.embedding_classifier.train import train_all_models, train_async, train
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.face_recognition.face_cropper.cropper import crop_face
 from src.storage.storage import get_storage
+from threading import Thread
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 DOCS_DIR = CURRENT_DIR / 'docs'
@@ -81,16 +83,34 @@ def create_app():
 
     @app.route('/retrain', methods=['POST'])
     @needs_authentication
-    def retrain_model():
+    def retrain_model_post():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-
         train_thread = train_async(api_key)
-        # TODO EFRS-42 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
-        if request.args.get('await', '').lower() in ('true', '1'):
-            train_thread.join()
+        if not train_thread:
+            return jsonify(message={"is_done_training": train_thread}, status=HTTPStatus.LOCKED)
 
+        return jsonify(message={"is_done_training": train_thread}, status=HTTPStatus.ACCEPTED)
+
+    @app.route('/retrain')
+    @needs_authentication
+    def retrain_model_get():
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+        process = multiprocessing.Process(target=train, daemon=False, args=[api_key])
+        if not process.is_alive():
+            return Response(status=HTTPStatus.OK)
         return Response(status=HTTPStatus.ACCEPTED)
+
+    @app.route('/retrain', methods=['DELETE'])
+    @needs_authentication
+    def retrain_model_delete():
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+        process = multiprocessing.Process(target=train, daemon=False, args=[api_key])
+        if process.is_alive():
+            process.terminate()
+        return Response(status=HTTPStatus.NO_CONTENT)
 
     @app.route('/recognize', methods=['POST'])
     @needs_authentication

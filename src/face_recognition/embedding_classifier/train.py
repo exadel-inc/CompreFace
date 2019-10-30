@@ -1,5 +1,5 @@
 import logging
-from threading import Thread
+from multiprocessing import Process
 
 from sklearn.linear_model import LogisticRegression
 
@@ -7,6 +7,7 @@ from src.dto.trained_model import TrainedModel
 from src.storage.storage import get_storage
 from src.storage.trained_model_storage import save_trained_model, delete_trained_model
 
+currently_training_api_keys = []
 
 def get_trained_classifier(values, labels):
     classifier = LogisticRegression(C=100000, solver='lbfgs', multi_class='multinomial')
@@ -29,9 +30,20 @@ def train(api_key):
 
 
 def train_async(api_key):
-    thread = Thread(target=train, daemon=False, args=[api_key])
-    thread.start()
-    return thread
+    global currently_training_api_keys
+    process = Process(target=train, daemon=False, args=[api_key])
+    if not process.is_alive() and api_key in currently_training_api_keys:
+        logging.debug('the api key is going to be removed')
+        currently_training_api_keys.remove(api_key)
+
+    if api_key in currently_training_api_keys:
+        logging.debug('we are not retraining')
+        return False
+    logging.debug('the api keys that are currently training: %s' % currently_training_api_keys)
+    process.run()
+    if process.is_alive():
+        currently_training_api_keys.append(api_key)
+    return True
 
 
 def train_all_models():

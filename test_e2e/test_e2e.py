@@ -61,7 +61,7 @@ def test__when_client_opens_apidocs__returns_200(host):
 def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_400(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
-    res = requests.post(f"{host}/faces/Marie Curie?await=true", headers={}, files=files)
+    res = requests.post(f"{host}/faces/Marie Curie", headers={}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == 'No API Key is given'
@@ -71,7 +71,7 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
 def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_face_found(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
 
-    res = requests.post(f"{host}/faces/Marie Curie?await=true", headers={'X-Api-Key': 'api-key-001'}, files=files)
+    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'api-key-001'}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "No face is found in the given image"
@@ -87,7 +87,7 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
                           headers={'X-Api-Key': 'api-key-001'}, files=files_a)
     res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=false",
                           headers={'X-Api-Key': 'api-key-001'}, files=files_b)
-    res_c = requests.post(f"{host}/faces/Paul Walker?retrain=true&await=true",
+    res_c = requests.post(f"{host}/faces/Paul Walker?retrain=true",
                           headers={'X-Api-Key': 'api-key-001'}, files=files_c)
 
     assert res_a.status_code == 201, res_a.content
@@ -142,7 +142,7 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
 def test__when_client_deletes_person_c__then_returns_204(host):
     pass
 
-    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true&await=true", headers={'X-Api-Key': 'api-key-001'})
+    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true", headers={'X-Api-Key': 'api-key-001'})
 
     assert res_del.status_code == 204, res_del.content
 
@@ -172,7 +172,7 @@ def test__when_client_requests_to_recognize__then_only_persons_a_and_b_are_recog
 def test__when_client_deletes_person_b__then_returns_204(host):
     pass
 
-    res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true&await=true",
+    res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true",
                               headers={'X-Api-Key': 'api-key-001'})
 
     assert res_del.status_code == 204, res_del.content
