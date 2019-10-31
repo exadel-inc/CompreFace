@@ -49,7 +49,7 @@ def layer(op):
             layer_input = self.terminals[0]
         else:
             layer_input = list(self.terminals)
-        # Perform the operation and get the output.
+        # Perform the operation and get_embedding_classifier the output.
         layer_output = op(self, layer_input, *args, **kwargs)
         # Add to layer LUT.
         self.layers[name] = layer_output

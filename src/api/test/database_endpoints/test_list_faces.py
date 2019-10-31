@@ -15,7 +15,7 @@ def test__given_certain_amount_of_saved_faces__when_list_faces_is_requested__the
                                                                                                                mocker,
                                                                                                                test_input,
                                                                                                                expected_names):
-    mocker.patch('src.api.controller.get_storage', return_value=return_value_for_mock(mocker, test_input))
+    mocker.patch('src.api.controller.get_database', return_value=return_value_for_mock(mocker, test_input))
 
     res = client.get('/faces')
 

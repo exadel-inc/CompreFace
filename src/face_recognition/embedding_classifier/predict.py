@@ -6,15 +6,15 @@ import numpy as np
 from src.dto import BoundingBox
 from src.dto.cropped_face import CroppedFace
 from src.dto.face_prediction import FacePrediction
-from src.dto.trained_model import TrainedModel
+from src.dto.embedding_classifier import EmbeddingClassifier
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
 from src.face_recognition.face_cropper.constants import FaceLimit
 from src.face_recognition.face_cropper.cropper import crop_faces
-from src.storage.trained_model_storage import get_trained_model
+from src.storage.embedding_classifier import get_embedding_classifier
 
 
-def predict_from_embedding(model: TrainedModel, embedding, face_box: BoundingBox) -> FacePrediction:
-    probabilities = model.classifier.predict_proba([embedding])[0]
+def predict_from_embedding(model: EmbeddingClassifier, embedding, face_box: BoundingBox) -> FacePrediction:
+    probabilities = model.model.predict_proba([embedding])[0]
     top_classes = np.argsort(-probabilities)
 
     for k, pred_class in enumerate(top_classes[:2], 1):
@@ -28,7 +28,7 @@ def predict_from_embedding(model: TrainedModel, embedding, face_box: BoundingBox
 
 
 def predict_from_image(img, limit: FaceLimit, api_key: str) -> List[FacePrediction]:
-    model: TrainedModel = get_trained_model(api_key)
+    model: EmbeddingClassifier = get_embedding_classifier(api_key)
 
     def predict_from_cropped_face(face: CroppedFace):
         embedding = calculate_embedding(face.img)

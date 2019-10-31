@@ -7,11 +7,11 @@ import pytest
 
 from src import pyutils
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.storage._mongo_storage import CURRENT_MODEL_NAME
+from src.storage._mongo_database import CURRENT_CALCULATOR_MODEL_NAME
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
-CACHED_MODEL_NAME = CURRENT_MODEL_NAME
+CACHED_MODEL_NAME = CURRENT_CALCULATOR_MODEL_NAME
 
 CACHED_MODEL_FILEPATH = CURRENT_DIR / 'files' / 'cache' / CACHED_MODEL_NAME
 SKIP_REASON_NO_FILE_FOUND = f"Cannot calculate embeddings without model saved at {CACHED_MODEL_FILEPATH}. " \
@@ -40,7 +40,7 @@ def return_value_for_mock(mocker, val):
 @pytest.mark.skipif(not CACHED_MODEL_FILEPATH.exists(), reason=SKIP_REASON_NO_FILE_FOUND)
 def test_integration__when_calculating_embeddings_of_two_images_with_the_same_face__then_returns_similar_embeddings(
         mocker):
-    mocker.patch('src.face_recognition.embedding_calculator.calculator.get_storage',
+    mocker.patch('src.face_recognition.embedding_calculator.calculator.get_database',
                  return_value=return_value_for_mock(mocker, get_cached_file_contents()))
     person_a_im1 = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1-cropped.jpg')
     person_a_im2 = imageio.imread(CURRENT_DIR / 'files' / 'personA-img2-cropped.jpg')
@@ -55,7 +55,7 @@ def test_integration__when_calculating_embeddings_of_two_images_with_the_same_fa
 @pytest.mark.skipif(not CACHED_MODEL_FILEPATH.exists(), reason=SKIP_REASON_NO_FILE_FOUND)
 def test_integration__when_calculating_embeddings_of_two_images_with_different_faces__then_returns_different_embeddings(
         mocker):
-    mocker.patch('src.face_recognition.embedding_calculator.calculator.get_storage',
+    mocker.patch('src.face_recognition.embedding_calculator.calculator.get_database',
                  return_value=return_value_for_mock(mocker, get_cached_file_contents()))
     person_a_im = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1-cropped.jpg')
     person_b_im = imageio.imread(CURRENT_DIR / 'files' / 'personB-img1-cropped.jpg')

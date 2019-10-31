@@ -4,7 +4,7 @@ import numpy as np
 import tensorflow as tf
 
 from src import pyutils
-from src.storage.storage import get_storage
+from src.storage.get_database import get_database
 
 BATCH_SIZE = 25
 
@@ -17,7 +17,7 @@ def _init_once():
     global graph
     with tf.Graph().as_default() as graph:
         graph_def = tf.GraphDef()
-        graph_def.ParseFromString(get_storage().get_embedding_calculator_model())
+        graph_def.ParseFromString(get_database().get_embedding_calculator_model())
         tf.import_graph_def(graph_def, name='')
         global sess
         sess = tf.Session(graph=graph)

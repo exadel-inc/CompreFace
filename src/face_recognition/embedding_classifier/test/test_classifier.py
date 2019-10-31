@@ -5,7 +5,7 @@ import joblib
 import pytest
 
 from src.dto import BoundingBox
-from src.dto.trained_model import TrainedModel
+from src.dto.embedding_classifier import EmbeddingClassifier
 from src.face_recognition.embedding_classifier.predict import predict_from_embedding
 from src.face_recognition.embedding_classifier.train import get_trained_classifier
 
@@ -19,8 +19,8 @@ def test_integration__given_2_faces_in_db__when_asked_to_recognize_known_face__t
     person_b_emb_1 = joblib.load(CURRENT_DIR / 'files' / 'personB-img1.embedding.joblib')
 
     classifier = get_trained_classifier(values=[person_a_emb_1, person_b_emb_1], labels=[0, 1])
-    trained_model = TrainedModel(classifier=classifier,
-                                 class_2_face_name={0: 'Person A', 1: 'Person B'})
-    face_prediction = predict_from_embedding(trained_model, person_a_emb_2, BoundingBox(0, 0, 0, 0))
+    embedding_classifier = EmbeddingClassifier(classifier=classifier,
+                                        class_2_face_name={0: 'Person A', 1: 'Person B'})
+    face_prediction = predict_from_embedding(embedding_classifier, person_a_emb_2, BoundingBox(0, 0, 0, 0))
 
     assert face_prediction.face_name == 'Person A'

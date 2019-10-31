@@ -17,7 +17,7 @@ RUN chmod +x $DIR/wait-for-it.sh
 RUN mkdir $DIR/mongo_data
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
+RUN apt-get_embedding_classifier update && apt-get_embedding_classifier install -y \
     mongo-tools \
     mongodb-clients
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt

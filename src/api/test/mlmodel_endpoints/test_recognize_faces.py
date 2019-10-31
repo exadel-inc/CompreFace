@@ -6,6 +6,7 @@ from numpy import int32, float64
 
 from src.dto import BoundingBox
 from src.dto.face_prediction import FacePrediction
+from src.pyutils.pytest_utils import one
 
 
 def test__when_recognize_endpoint_is_requested__then_returns_predictions(client, mocker):
@@ -32,8 +33,8 @@ def test__when_recognize_endpoint_is_requested__then_returns_predictions(client,
     res = client.post('/recognize', data=dict(file=(b'', 'group-photo.jpg'), content_type='multipart/form-data'))
 
     assert res.status_code == HTTPStatus.OK, res.json
-    assert imread_mock.call_args_list[0][0][0].filename == 'group-photo.jpg'
-    assert get_face_predictions_mock.call_args_list[0][0][0] == img
+    assert one(imread_mock.call_args_list)[0][0].filename == 'group-photo.jpg'
+    assert one(get_face_predictions_mock.call_args_list)[0][0] == img
     assert res.json['result'] == expected_result
 
 

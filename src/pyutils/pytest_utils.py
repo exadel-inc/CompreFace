@@ -1,5 +1,5 @@
 import functools
-from typing import Callable, Type
+from typing import Callable, Type, Iterable
 
 
 class Expando:
@@ -13,6 +13,14 @@ def raises(e: Type[Exception], callable_: Callable):
         return True
     else:
         return False
+
+
+def one(iterable: Iterable):
+    """ Ensures that iterable contains only one element and returns it """
+
+    list_ = list(iterable)
+    assert len(list_) == 1
+    return list_[0]
 
 
 def pass_through_decorator(*ignored_args, **ignored_kwargs):

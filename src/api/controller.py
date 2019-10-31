@@ -17,7 +17,7 @@ from src.face_recognition.embedding_classifier.predict import predict_from_image
 from src.face_recognition.embedding_classifier.train import train_all_models, train_async
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.face_recognition.face_cropper.cropper import crop_face
-from src.storage.storage import get_storage
+from src.storage.get_database import get_database
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 DOCS_DIR = CURRENT_DIR / 'docs'
@@ -47,7 +47,7 @@ def create_app():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
-        face_names = get_storage().get_all_face_names(api_key)
+        face_names = get_database().get_all_face_names(api_key)
 
         return jsonify(names=face_names)
 
@@ -63,7 +63,7 @@ def create_app():
         img = imageio.imread(file)
         face_img = crop_face(img).img
         embedding = calculate_embedding(face_img)
-        get_storage().add_face(raw_img=img, face_img=face_img, embedding=embedding, face_name=face_name,
+        get_database().add_face(raw_img=img, face_img=face_img, embedding=embedding, face_name=face_name,
                                api_key=api_key)
 
         return Response(status=HTTPStatus.CREATED)
@@ -75,7 +75,7 @@ def create_app():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
-        get_storage().remove_face(api_key, face_name)
+        get_database().remove_face(api_key, face_name)
 
         return Response(status=HTTPStatus.NO_CONTENT)
 
@@ -114,13 +114,13 @@ def create_app():
 
     @app.errorhandler(BadRequestException)
     def handle_api_exception(e: BadRequestException):
-        logging.warning(f'Response {e.http_status}: {e.message}; {str(e)}', exc_info=True)
-        return jsonify(message=e.message), e.http_status
+        logging.warning(f'Response {e.http_status}: {str(e)}; {e.message}', exc_info=True)
+        return jsonify(message=f'{str(e)}; {e.message}'), e.http_status
 
     @app.errorhandler(Exception)
     def handle_runtime_error(e):
         logging.critical(f'Response 500: {str(e)}', exc_info=True)
-        return jsonify(message=str(e)), HTTPStatus.INTERNAL_SERVER_ERROR
+        return jsonify(message=str(e) or getattr(e, 'message', '')), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @app.after_request
     def disable_caching(response):
