@@ -74,12 +74,12 @@ def assembleDockerImage(appName, dockerfileDir, fullVersion) {
     dockerCmd = 'docker'
     dockerRegistryURL = "msqv502.exadel.by:5000"
     dir ('ops'){
-#        dir ("Docker/${dockerfileDir}") {
+//        dir ("Docker/${dockerfileDir}") {
         dir ("../") {
             unstash "app-${fullVersion}.zip"
             sh "mv app-${fullVersion}.zip app.zip"
         }
-#        sh "${dockerCmd} build --pull --build-arg=APP_VERSION_STRING='${fullVersion}' -t app-${appName}:JENKINS-${env.BUILD_NUMBER} Docker/${dockerfileDir}/"
+//        sh "${dockerCmd} build --pull --build-arg=APP_VERSION_STRING='${fullVersion}' -t app-${appName}:JENKINS-${env.BUILD_NUMBER} Docker/${dockerfileDir}/"
         sh "${dockerCmd} build --pull --build-arg=APP_VERSION_STRING='${fullVersion}' -t app-${appName}:JENKINS-${env.BUILD_NUMBER} ../"
     }
     sh "${dockerCmd} rmi msqv502.exadel.by:5000/app-${appName}:latest || echo 'Not tagged yet'"
