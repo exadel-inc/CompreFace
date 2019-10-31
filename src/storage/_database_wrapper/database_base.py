@@ -31,11 +31,11 @@ class DatabaseBase(ABC):  # Ensures that child classes will override abstract me
         pass
 
     @abstractmethod
-    def get_embedding_classifier(self, api_key: str) -> Union[EmbeddingClassifier, None]:
+    def get_embedding_classifier(self, api_key: str, name: str, embedding_calculator_name: str) -> Union[EmbeddingClassifier, None]:
         pass
 
     @abstractmethod
-    def delete_embedding_classifier(self, api_key: str) -> None:
+    def delete_embedding_classifiers(self, api_key: str) -> None:
         pass
 
     @abstractmethod

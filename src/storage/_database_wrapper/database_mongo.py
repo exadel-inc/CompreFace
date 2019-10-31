@@ -38,7 +38,7 @@ class DatabaseMongo(DatabaseBase):
             "embeddings": [
                 {
                     "array": face.embedding.array.tolist(),
-                    "calculator_id": face.embedding.calculator_id
+                    "calculator_name": face.embedding.calculator_name
                 }
             ],
             "raw_img_fs_id": self._faces_fs.put(face.raw_img.tobytes()),
@@ -53,12 +53,12 @@ class DatabaseMongo(DatabaseBase):
     def _document_to_embedding(document):
         try:
             embedding_object = next((emb for emb in document['embeddings']
-                                     if emb["calculator_id"] == EMBEDDING_CALCULATOR_MODEL_FILENAME))
+                                     if emb["calculator_name"] == EMBEDDING_CALCULATOR_MODEL_FILENAME))
         except StopIteration as e:
             raise FaceHasNoEmbeddingSavedError from e
 
         return Embedding(array=embedding_object['array'],
-                         calculator_id=embedding_object['calculator_id'])
+                         calculator_name=embedding_object['calculator_name'])
 
     def get_faces(self, api_key):
         def document_to_face(document):
@@ -88,28 +88,43 @@ class DatabaseMongo(DatabaseBase):
         return [document_to_face_embedding(document) for document in self._get_faces_iterator(api_key)]
 
     def save_embedding_classifier(self, api_key, embedding_classifier):
-        self._classifiers_collection.insert_one({
-            "classifier_fs_id": self._classifiers_fs.put(serialize(embedding_classifier.model)),
+        self._classifiers_collection.update({
+            'name': embedding_classifier.name,
+            'embedding_calculator_name': embedding_classifier.embedding_calculator_name,
+            "api_key": api_key
+        }, {
+            'name': embedding_classifier.name,
+            'embedding_calculator_name': embedding_classifier.embedding_calculator_name,
+            "api_key": api_key,
             "class_2_face_name": {str(k): v for k, v in embedding_classifier.class_2_face_name.items()},
+            "classifier_fs_id": self._classifiers_fs.put(serialize(embedding_classifier.model))
+        }, upsert=True)
+
+    def get_embedding_classifier(self, api_key, name, embedding_calculator_name):
+        document = self._classifiers_collection.find_one({
+            'name': name,
+            'embedding_calculator_name': embedding_calculator_name,
             "api_key": api_key
         })
-
-    def get_embedding_classifier(self, api_key):
-        document = self._classifiers_collection.find_one({"api_key": api_key})
         if document is None:
             return None
 
         model = deserialize(self._classifiers_fs.get(document['classifier_fs_id']))
         class_2_face_name = {int(k): v for k, v in document['class_2_face_name']}
-        return EmbeddingClassifier(model=model, class_2_face_name=class_2_face_name)
+        embedding_calculator_name = document['embedding_calculator_name']
+        return EmbeddingClassifier(name, model, class_2_face_name, embedding_calculator_name)
 
-    def delete_embedding_classifier(self, api_key):
+    def delete_embedding_classifiers(self, api_key):
         self._classifiers_collection.delete_many({'api_key': api_key})
 
     def get_api_keys(self):
         return self._faces_collection.find({}, {"projection": ["api_key"]}).distinct("api_key")
 
     def save_file(self, filename, bytes_data):
+        result = self._files_fs.find_one({"filename": filename})
+        if result:
+            self._files_fs.delete(result['_id'])
+
         self._files_fs.put(bytes_data, filename=filename)
 
     def get_file(self, filename):

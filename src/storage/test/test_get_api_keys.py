@@ -23,7 +23,7 @@ def test_integration__given_saved_faces__when_getting_api_keys__then_returns_the
     face = Face(name='Robert Oppenheimer',
                 raw_img=np.zeros(shape=(15, 15, 3), dtype=np.int8),
                 face_img=np.zeros(shape=(5, 5, 3), dtype=np.int8),
-                embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A'))
+                embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A'))
     storage.with_key('api-key-001').add_face(face)
     storage.with_key('api-key-002').add_face(face)
 

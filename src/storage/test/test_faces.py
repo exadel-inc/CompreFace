@@ -11,14 +11,14 @@ def get_face1():
     return Face(name='Robert Oppenheimer',
                 raw_img=np.zeros(shape=(15, 15, 3), dtype=np.int8),
                 face_img=np.zeros(shape=(5, 5, 3), dtype=np.int8),
-                embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A'))
+                embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A'))
 
 
 def get_face2():
     return Face(name='Nikola Tesla',
                 raw_img=np.ones(shape=(15, 15, 3), dtype=np.int8),
                 face_img=np.ones(shape=(5, 5, 3), dtype=np.int8),
-                embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A'))
+                embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A'))
 
 
 @pytest.mark.integration
@@ -55,19 +55,19 @@ def test_integration__given_saved_faces__when_getting_face_embeddings__then_retu
     storage1.add_face(Face(name='Robert Oppenheimer',
                            raw_img=np.zeros(shape=(15, 15, 3), dtype=np.int8),
                            face_img=np.zeros(shape=(5, 5, 3), dtype=np.int8),
-                           embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A')))
+                           embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A')))
     storage1.add_face(Face(name='Nikola Tesla',
                            raw_img=np.ones(shape=(15, 15, 3), dtype=np.int8),
                            face_img=np.ones(shape=(5, 5, 3), dtype=np.int8),
-                           embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A')))
+                           embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A')))
 
     returned_face_embeddings = storage.with_key('api-key-001').get_face_embeddings()
 
     assert set(returned_face_embeddings) == {
         FaceEmbedding(name='Robert Oppenheimer',
-                      embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A')),
+                      embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A')),
         FaceEmbedding(name='Nikola Tesla',
-                      embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A'))
+                      embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A'))
     }
 
 
@@ -78,7 +78,7 @@ def test_integration__given_saved_and_deleted_faces__when_getting_faces__then_re
     storage1.add_face(Face(name='Robert Oppenheimer',
                            raw_img=np.zeros(shape=(15, 15, 3), dtype=np.int8),
                            face_img=np.zeros(shape=(5, 5, 3), dtype=np.int8),
-                           embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A')))
+                           embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A')))
     storage1.remove_face('Robert Oppenheimer')
 
     returned_faces = storage.with_key('api-key-001').get_faces()
@@ -93,7 +93,7 @@ def test_integration__given_saved__when_deleting_face_twice__then_does_not_raise
     storage1.add_face(Face(name='Robert Oppenheimer',
                            raw_img=np.zeros(shape=(15, 15, 3), dtype=np.int8),
                            face_img=np.zeros(shape=(5, 5, 3), dtype=np.int8),
-                           embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_id='A')))
+                           embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8), calculator_name='A')))
     storage1.remove_face('Robert Oppenheimer')
     storage1.remove_face('Robert Oppenheimer')
 
@@ -110,7 +110,7 @@ def test_integration__given_saved_faces__when_getting_faces_with_different_api_k
                                                   raw_img=np.zeros(shape=(15, 15, 3), dtype=np.int8),
                                                   face_img=np.zeros(shape=(5, 5, 3), dtype=np.int8),
                                                   embedding=Embedding(array=np.zeros(shape=(16,), dtype=np.int8),
-                                                                      calculator_id='A')))
+                                                                      calculator_name='A')))
 
     returned_faces = storage.with_key('api-key-002').get_faces()
 

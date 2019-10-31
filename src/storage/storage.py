@@ -53,15 +53,14 @@ class StorageWithKey(_StorageBase):
     def save_embedding_classifier(self, api_key: str, embedding_classifier: EmbeddingClassifier) -> None:
         self._db.save_embedding_classifier(api_key, embedding_classifier)
 
-    def get_embedding_classifier(self, api_key: str) -> EmbeddingClassifier:
-        classifier = self._db.get_embedding_classifier(api_key)
+    def get_embedding_classifier(self, api_key: str, name: str, embedding_calculator_name: str) -> EmbeddingClassifier:
+        classifier = self._db.get_embedding_classifier(api_key, name, embedding_calculator_name)
         if classifier is None:
-            msg = 'No trained classifier model is found for the api_key %s'
-            raise NoTrainedEmbeddingClassifierFoundError(msg, api_key)
+            raise NoTrainedEmbeddingClassifierFoundError('No trained classifier model is found', api_key)
         return classifier
 
-    def delete_embedding_classifier(self, api_key: str) -> None:
-        self._db.delete_embedding_classifier(api_key)
+    def delete_embedding_classifiers(self, api_key: str) -> None:
+        self._db.delete_embedding_classifiers(api_key)
 
 
 @pyutils.run_once
