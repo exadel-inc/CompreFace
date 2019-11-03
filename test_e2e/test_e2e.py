@@ -14,6 +14,7 @@ python -m pytest --host http://localhost:5001 test_e2e.py
 # TODO EFRS-42 Remove the use of 'await' parameter in all of the end-to-end tests once there is an official way for E2E tests to wait for the training to finish
 
 import os
+from http import HTTPStatus
 from pathlib import Path
 
 import pytest
@@ -21,6 +22,12 @@ import requests
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
+def wait_until_training_is_complete(host):
+
+    res = requests.get(f"{host}/retrain", headers={'X-Api-Key': 'api-key-001'})
+    while res.status_code != HTTPStatus.OK:
+        res = requests.get(f"{host}/retrain", headers={'X-Api-Key': 'api-key-001'})
+    return res.status_code == HTTPStatus.OK
 
 @pytest.fixture
 def host(request):
@@ -56,12 +63,12 @@ def test__when_client_opens_apidocs__returns_200(host):
     assert res.status_code == 200, res.status_code
 
 
-@pytest.mark.xfail(reason="TODO EFRS-57")
 @pytest.mark.run(order=next(after_previous))
 def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_400(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", headers={}, files=files)
+    wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == 'No API Key is given'
@@ -72,6 +79,7 @@ def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_
     files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'api-key-001'}, files=files)
+    wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "No face is found in the given image"
@@ -89,6 +97,7 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
                           headers={'X-Api-Key': 'api-key-001'}, files=files_b)
     res_c = requests.post(f"{host}/faces/Paul Walker?retrain=true",
                           headers={'X-Api-Key': 'api-key-001'}, files=files_c)
+    wait_until_training_is_complete(host)
 
     assert res_a.status_code == 201, res_a.content
     assert res_b.status_code == 201, res_b.content
@@ -143,6 +152,7 @@ def test__when_client_deletes_person_c__then_returns_204(host):
     pass
 
     res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true", headers={'X-Api-Key': 'api-key-001'})
+    wait_until_training_is_complete(host)
 
     assert res_del.status_code == 204, res_del.content
 
@@ -174,6 +184,7 @@ def test__when_client_deletes_person_b__then_returns_204(host):
 
     res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true",
                               headers={'X-Api-Key': 'api-key-001'})
+    wait_until_training_is_complete(host)
 
     assert res_del.status_code == 204, res_del.content
 
