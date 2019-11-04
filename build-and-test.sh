@@ -18,6 +18,8 @@ curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compo
 chmod +x /usr/bin/docker-compose
 apt install dos2unix -y 
 
+cat docker-compose.yml
+
 while getopts 'df' flag; do
   case "${flag}" in
   d) DONT_BUILD_CONTAINERS='true' ;;
