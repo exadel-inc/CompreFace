@@ -17,9 +17,7 @@ RUN chmod +x $DIR/wait-for-it.sh
 RUN mkdir $DIR/mongo_data
 
 # Install dependencies
-RUN apt-get update && apt-get install -y \
-    mongo-tools \
-    mongodb-clients
+RUN apt-get update && apt-get install -y mongo-tools
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
 # Expose port for uWSGI
