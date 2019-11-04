@@ -17,7 +17,9 @@ RUN chmod +x $DIR/wait-for-it.sh
 RUN mkdir $DIR/mongo_data
 
 # Install dependencies
-RUN apt-get update && apt-get install -y mongo-tools
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4 && \
+    echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" |tee /etc/apt/sources.list.d/mongodb-org-4.0.list && \
+    apt update && apt install -y mongodb-org-tools mongodb-org-shell
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
 # Expose port for uWSGI
@@ -28,4 +30,3 @@ EXPOSE 6006
 # Entrypoint
 WORKDIR $DIR
 RUN ln -s $DIR/docker-entrypoint.sh /var/tmp/docker-entrypoint.sh
-ENTRYPOINT ["/var/tmp/docker-entrypoint.sh"]
