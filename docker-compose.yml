@@ -9,6 +9,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - ml
+    restart: on-failure
   ml:
     container_name: ml
     build: .
