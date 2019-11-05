@@ -10,7 +10,7 @@ from numpy.core.multiarray import ndarray
 from src.face_recognition.face_cropper.cropper import crop_faces
 from src.face_recognition.face_cropper.exceptions import IncorrectImageDimensionsError, NoFaceFoundError
 from src.face_recognition.face_cropper.test._img_utils import ndarray_to_img, images_are_almost_the_same
-from src.pyutils.pytest_utils import raises
+from src.pyutils.raises import raises
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 

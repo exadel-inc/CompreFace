@@ -11,7 +11,7 @@ class DatabaseBase(ABC):  # Ensures that child classes will override abstract me
         pass
 
     @abstractmethod
-    def get_faces(self, api_key: str) -> List[Face]:
+    def get_faces(self, api_key: str, calculator_version: str) -> List[Face]:
         pass
 
     @abstractmethod
@@ -23,7 +23,7 @@ class DatabaseBase(ABC):  # Ensures that child classes will override abstract me
         pass
 
     @abstractmethod
-    def get_face_embeddings(self, api_key: str) -> List[FaceEmbedding]:
+    def get_face_embeddings(self, api_key: str, calculator_version: str) -> List[FaceEmbedding]:
         pass
 
     @abstractmethod
@@ -31,7 +31,8 @@ class DatabaseBase(ABC):  # Ensures that child classes will override abstract me
         pass
 
     @abstractmethod
-    def get_embedding_classifier(self, api_key: str, name: str, embedding_calculator_name: str) -> Union[EmbeddingClassifier, None]:
+    def get_embedding_classifier(self, api_key: str, version: str, embedding_calculator_version: str) -> Union[
+        EmbeddingClassifier, None]:
         pass
 
     @abstractmethod

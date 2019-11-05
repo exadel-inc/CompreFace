@@ -1,7 +1,7 @@
 import pytest
 
-from src.pyutils.pytest_utils import raises
-from src.storage.exceptions import NoEmbeddingCalculatorModelFoundError
+from src.pyutils.raises import raises
+from src.storage.exceptions import NoFileFoundInDatabaseError
 from src.storage.storage import Storage
 from src.storage.test.conftest import STORAGES
 
@@ -14,7 +14,7 @@ def test_integration__given_no_saved_file__when_getting_file__then_raises_error(
     def act():
         storage.get_file('filename.bin')
 
-    assert raises(NoEmbeddingCalculatorModelFoundError, act)
+    assert raises(NoFileFoundInDatabaseError, act)
 
 
 @pytest.mark.integration

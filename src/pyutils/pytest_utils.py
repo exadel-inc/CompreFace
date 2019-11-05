@@ -1,18 +1,9 @@
 import functools
-from typing import Callable, Type, Iterable
+from typing import Iterable
 
 
 class Expando:
     pass
-
-
-def raises(e: Type[Exception], callable_: Callable):
-    try:
-        callable_()
-    except e:
-        return True
-    else:
-        return False
 
 
 def one(iterable: Iterable):

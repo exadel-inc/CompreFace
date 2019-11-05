@@ -20,4 +20,3 @@ STORAGES = ['with_mongo_database']
 @pytest.fixture
 def storage(request):
     return request.getfixturevalue(request.param)
-

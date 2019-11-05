@@ -4,9 +4,9 @@ import attr
 from sklearn.linear_model import LogisticRegression
 
 
-@attr.s(auto_attribs=True)
+@attr.s(auto_attribs=True, frozen=True)
 class EmbeddingClassifier:
-    name: str
+    version: str
     model: Union[object, LogisticRegression]
     class_2_face_name: Dict[int, str]
-    embedding_calculator_name: str
+    embedding_calculator_version: str

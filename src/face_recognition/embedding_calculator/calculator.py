@@ -4,12 +4,15 @@ import numpy as np
 import tensorflow as tf
 
 from src import pyutils
-from src.storage.get_database import get_database
+from src.face_recognition.dto.embedding import Embedding
+from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
+from src.storage.storage import get_storage
 
 BATCH_SIZE = 25
 
 graph = None
 sess = None
+CALCULATOR_VERSION = EMBEDDING_CALCULATOR_MODEL_FILENAME
 
 
 @pyutils.run_once
@@ -17,13 +20,13 @@ def _init_once():
     global graph
     with tf.Graph().as_default() as graph:
         graph_def = tf.GraphDef()
-        graph_def.ParseFromString(get_database().get_embedding_calculator_model())
+        graph_def.ParseFromString(get_storage().get_file(CALCULATOR_VERSION))
         tf.import_graph_def(graph_def, name='')
         global sess
         sess = tf.Session(graph=graph)
 
 
-def calculate_embedding(image):
+def calculate_embedding(image) -> Embedding:
     @pyutils.run_first(_init_once)
     def _calculate_embeddings(images):
         # Get inppredictut and output tensors
@@ -42,4 +45,6 @@ def calculate_embedding(image):
             emb_array[start_index:end_index, :] = sess.run(embeddings, feed_dict=feed_dict)
         return emb_array
 
-    return _calculate_embeddings(np.array([image]))[0]
+    embedding = Embedding(array=_calculate_embeddings(np.array([image]))[0],
+                          calculator_version=CALCULATOR_VERSION)
+    return embedding
