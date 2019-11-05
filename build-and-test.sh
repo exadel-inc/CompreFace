@@ -51,7 +51,7 @@ docker exec ml python3 -m pytest -m "not integration" -ra --verbose src
 docker exec ml python3 -m pytest -m integration -ra --verbose src
 
 ## Run E2E tests from outside the container
-python3 -m pip3 install requests pytest pytest-ordering
+pip3 install requests pytest pytest-ordering
 python3 -m pytest --host $HOST -ra --verbose test_e2e/test_e2e.py
 
 ## Freeze versions and dependencies in requirements.txt
