@@ -9,7 +9,6 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - ml
-    command: ["pwd" ]
   ml:
     container_name: ml
     build: .
