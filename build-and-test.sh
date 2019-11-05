@@ -42,7 +42,7 @@ docker-compose up &
 trap "docker-compose down" SIGINT SIGTERM EXIT
 
 ## Wait until successful start of the service with 60s timeout
-export HOST=http://localhost:5001
+export HOST=http://localhost:3000
 timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; done'
 
 ## Run tests from inside the container
