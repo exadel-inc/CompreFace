@@ -30,3 +30,4 @@ EXPOSE 6006
 # Entrypoint
 WORKDIR $DIR
 RUN ln -s $DIR/docker-entrypoint.sh /var/tmp/docker-entrypoint.sh
+ENTRYPOINT ["/var/tmp/docker-entrypoint.sh"]
