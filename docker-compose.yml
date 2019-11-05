@@ -9,6 +9,7 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
     depends_on:
       - ml
+    command: ["./wait-for", "ml:3000" ]
   ml:
     container_name: ml
     build: .
