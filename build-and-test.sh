@@ -16,7 +16,9 @@ FREEZE_REQUIREMENTS=''
 
 curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
 chmod +x /usr/bin/docker-compose 
-apt install dos2unix python-pip -y 
+echo "deb http://ftp.de.debian.org/debian testing main" >> /etc/apt/sources.list
+echo 'APT::Default-Release "testing";' | sudo tee -a /etc/apt/apt.conf.d/00local
+apt install dos2unix python3.6 python3-pip -y 
 
 while getopts 'df' flag; do
   case "${flag}" in
@@ -49,8 +51,8 @@ docker exec ml python3 -m pytest -m "not integration" -ra --verbose src
 docker exec ml python3 -m pytest -m integration -ra --verbose src
 
 ## Run E2E tests from outside the container
-python -m pip install requests pytest pytest-ordering
-python -m pytest --host $HOST -ra --verbose test_e2e/test_e2e.py
+python3 -m pip3 install requests pytest pytest-ordering
+python3 -m pytest --host $HOST -ra --verbose test_e2e/test_e2e.py
 
 ## Freeze versions and dependencies in requirements.txt
 if [ "$FREEZE_REQUIREMENTS" = 'true' ]; then
