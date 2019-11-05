@@ -19,6 +19,7 @@ chmod +x /usr/bin/docker-compose
 echo "deb http://ftp.de.debian.org/debian testing main" >> /etc/apt/sources.list
 echo 'APT::Default-Release "testing";' | sudo tee -a /etc/apt/apt.conf.d/00local
 apt install dos2unix python3.6 python3-pip -y 
+ln -sf python3.7 /usr/bin/python
 
 while getopts 'df' flag; do
   case "${flag}" in
@@ -51,8 +52,8 @@ docker exec ml python3 -m pytest -m "not integration" -ra --verbose src
 docker exec ml python3 -m pytest -m integration -ra --verbose src
 
 ## Run E2E tests from outside the container
-pip3 install requests pytest pytest-ordering
-python3 -m pytest --host $HOST -ra --verbose test_e2e/test_e2e.py
+python -m pip install requests pytest pytest-ordering
+python -m pytest --host $HOST -ra --verbose test_e2e/test_e2e.py
 
 ## Freeze versions and dependencies in requirements.txt
 if [ "$FREEZE_REQUIREMENTS" = 'true' ]; then
