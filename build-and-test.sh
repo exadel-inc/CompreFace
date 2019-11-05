@@ -41,7 +41,7 @@ trap "docker-compose down" SIGINT SIGTERM EXIT
 
 ## Wait until successful start of the service with 60s timeout
 export HOST=http://localhost:5001
-timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; echo "request sent"; done'
+timeout 60 bash -c 'while [[ "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)" != "200" ]]; do sleep 1; echo "$(curl -s -o /dev/null -w ''%{http_code}'' $HOST/status)"; done'
 
 ## Run tests from inside the container
 docker exec ml python3 -m pytest -m "not integration" -ra --verbose src
