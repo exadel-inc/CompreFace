@@ -53,7 +53,7 @@ docker exec ml python3 -m pytest -m integration -ra --verbose src
 
 ## Run E2E tests from outside the container
 python -m pip install requests pytest pytest-ordering
-python -m pytest --host $HOST -ra --verbose test_e2e/test_e2e.py
+python -m pytest --host http://10.130.66.131:5001 -ra --verbose test_e2e/test_e2e.py
 
 ## Freeze versions and dependencies in requirements.txt
 if [ "$FREEZE_REQUIREMENTS" = 'true' ]; then
