@@ -96,6 +96,21 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
 
 
 @pytest.mark.run(order=next(after_previous))
+def test__five_people_test(host):
+    file = {'file': open(CURRENT_DIR / 'files' / 'five-people-picture.png', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=file)
+
+    result = res.json()['result']
+    list_boxes = []
+    for element in range(len(result)):
+        box = result[element]["box"]
+        assert box not in list_boxes
+        list_boxes.append(box)
+
+    assert len(result) == 5
+
+@pytest.mark.run(order=next(after_previous))
 def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
 
