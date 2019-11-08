@@ -1,0 +1,17 @@
+tags:
+  - 'Face Recognition ML Model'
+summary: 'Get face model retraining status.'
+operationId: retrainModelStatus
+produces:
+  - ""
+security:
+  - ApiKeyAuth: []
+responses:
+  '200':
+    description: 'Currently not training a classifier.'
+  '202':
+    description: 'Currently training a classifier.'
+  '400':
+    $ref: '#/components/responses/BadRequestResponse'
+  '500':
+    $ref: '#/components/responses/InternalServerErrorResponse'

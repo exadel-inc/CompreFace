@@ -107,10 +107,10 @@ def test_integration__given_saved__when_deleting_face_twice__then_does_not_raise
 def test_integration__given_saved_faces__when_getting_faces_with_different_api_key__then_returns_empty_array(
         storage: Storage):
     storage.with_key('test-api-key').add_face(Face(name='Robert Oppenheimer',
-                                                  raw_img=np.zeros(shape=(15, 15, 3)),
-                                                  face_img=np.zeros(shape=(5, 5, 3)),
-                                                  embedding=Embedding(array=np.zeros(shape=(16,)),
-                                                                      calculator_version='v1')))
+                                                   raw_img=np.zeros(shape=(15, 15, 3)),
+                                                   face_img=np.zeros(shape=(5, 5, 3)),
+                                                   embedding=Embedding(array=np.zeros(shape=(16,)),
+                                                                       calculator_version='v1')))
 
     returned_faces = storage.with_key('api-key-002').get_faces(calculator_version='v1')
 

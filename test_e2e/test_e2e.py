@@ -12,9 +12,8 @@ Instructions:
 python -m pytest test_e2e.py --host http://localhost:5001
 """
 
-# TODO EFRS-42 Remove the use of 'await' parameter in all of the end-to-end tests once there is an official way for E2E tests to wait for the training to finish
-
 import os
+import time
 from http import HTTPStatus
 from pathlib import Path
 
@@ -26,12 +25,17 @@ from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PO
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
-def wait_until_training_is_complete(host):
+TRAINING_TIMEOUT_S = 60
 
-    res = requests.get(f"{host}/retrain", headers={'X-Api-Key': 'api-key-001'})
-    while res.status_code != HTTPStatus.OK:
-        res = requests.get(f"{host}/retrain", headers={'X-Api-Key': 'api-key-001'})
-    return res.status_code == HTTPStatus.OK
+
+def _wait_until_training_is_complete(host):
+    for _ in range(TRAINING_TIMEOUT_S):
+        time.sleep(1)
+        res = requests.get(f"{host}/retrain", headers={'X-Api-Key': 'test-api-key'})
+        if res.status_code == HTTPStatus.OK:
+            return
+    raise Exception("Waiting for classifier training completion has reached a timeout")
+
 
 @pytest.fixture
 def host(request):
@@ -84,7 +88,7 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", headers={}, files=files)
-    wait_until_training_is_complete(host)
+    _wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == 'No API Key is given'
@@ -94,8 +98,8 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
 def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_face_found(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
 
-    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'api-key-001'}, files=files)
-    wait_until_training_is_complete(host)
+    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    _wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "No face is found in the given image"
@@ -107,13 +111,13 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
     files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
     files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
 
-    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false",
-                          headers={'X-Api-Key': 'api-key-001'}, files=files_a)
-    res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=false",
-                          headers={'X-Api-Key': 'test-api-key'}, files=files_b)
-    res_c = requests.post(f"{host}/faces/Paul Walker?retrain=true",
+    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false", headers={'X-Api-Key': 'test-api-key'},
+                          files=files_a)
+    res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=false", headers={'X-Api-Key': 'test-api-key'},
+                          files=files_b)
+    res_c = requests.post(f"{host}/faces/Paul Walker",
                           headers={'X-Api-Key': 'test-api-key'}, files=files_c)
-    wait_until_training_is_complete(host)
+    _wait_until_training_is_complete(host)
 
     assert res_a.status_code == 201, res_a.content
     assert res_b.status_code == 201, res_b.content
@@ -167,9 +171,8 @@ def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_40
 def test__when_client_deletes_person_c__then_returns_204(host):
     pass
 
-    res_del = requests.delete(f"{host}/faces/Paul Walker?retrain=true",
-                              headers={'X-Api-Key': 'test-api-key'})
-    wait_until_training_is_complete(host)
+    res_del = requests.delete(f"{host}/faces/Paul Walker", headers={'X-Api-Key': 'test-api-key'})
+    _wait_until_training_is_complete(host)
 
     assert res_del.status_code == 204, res_del.content
 
@@ -199,9 +202,8 @@ def test__when_client_requests_to_recognize__then_only_persons_a_and_b_are_recog
 def test__when_client_deletes_person_b__then_returns_204(host):
     pass
 
-    res_del = requests.delete(f"{host}/faces/Stephen Hawking?retrain=true",
-                              headers={'X-Api-Key': 'test-api-key'})
-    wait_until_training_is_complete(host)
+    res_del = requests.delete(f"{host}/faces/Stephen Hawking", headers={'X-Api-Key': 'test-api-key'})
+    _wait_until_training_is_complete(host)
 
     assert res_del.status_code == 204, res_del.content
 

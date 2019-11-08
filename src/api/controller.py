@@ -1,5 +1,4 @@
 import logging
-import multiprocessing
 import os
 from http import HTTPStatus
 from pathlib import Path
@@ -9,11 +8,12 @@ from flasgger import Swagger
 from flask import jsonify, Response, Flask
 from flask.json import JSONEncoder
 
-from src.api._decorators import needs_authentication, needs_attached_file, needs_retrain
 from src.api.constants import API_KEY_HEADER
+from src.api.endpoint_decorators import needs_authentication, needs_attached_file, needs_retrain
 from src.api.exceptions import BadRequestException
+from src.api.parse_request_arg import parse_request_bool_arg
+from src.api.training_task_manager import start_training, is_training, abort_training
 from src.face_recognition.embedding_classifier.predict import predict_from_image
-from src.face_recognition.embedding_classifier.train import train_async
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
 from src.pyutils.convertible_to_dict import ConvertibleToDict
 from src.storage.dto.face import Face
@@ -77,34 +77,37 @@ def create_app():
 
         return Response(status=HTTPStatus.NO_CONTENT)
 
-    @app.route('/retrain', methods=['POST'])
+    @app.route('/retrain', methods=['GET'])
     @needs_authentication
-    def retrain_model_post():
+    def retrain_model_status():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
-        train_thread = train_async(api_key)
-        if not train_thread:
-            return jsonify(message={"is_done_training": train_thread}, status=HTTPStatus.LOCKED)
+        it_is_training = is_training(api_key)
+
+        return Response(status=HTTPStatus.ACCEPTED if it_is_training else HTTPStatus.OK)
+
+    @app.route('/retrain', methods=['POST'])
+    @needs_authentication
+    def retrain_model_start():
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+        force_start = parse_request_bool_arg(name='force', default=False, request=request)
+
+        if force_start:
+            abort_training(api_key)
+        start_training(api_key)
 
         return Response(status=HTTPStatus.ACCEPTED)
 
-    @app.route('/retrain')
-    @needs_authentication
-    def retrain_model_get():
-        from flask import request
-        api_key = request.headers[API_KEY_HEADER]
-        if is_currently_training(api_key):
-            return Response(status=HTTPStatus.ACCEPTED)
-        return Response(status=HTTPStatus.OK)
-
-
     @app.route('/retrain', methods=['DELETE'])
     @needs_authentication
-    def retrain_model_delete():
+    def retrain_model_abort():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-        cancel_training(api_key)
+
+        abort_training(api_key)
+
         return Response(status=HTTPStatus.NO_CONTENT)
 
     @app.route('/recognize', methods=['POST'])

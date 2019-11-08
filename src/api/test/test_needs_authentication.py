@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 import pytest
 
-from src.api._decorators import needs_authentication
 from src.api.constants import API_KEY_HEADER
+from src.api.endpoint_decorators import needs_authentication
 from src.api.exceptions import APIKeyNotSpecifiedError
 
 

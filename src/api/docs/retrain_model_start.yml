@@ -1,15 +1,25 @@
 tags:
   - 'Face Recognition ML Model'
 summary: 'Retrain face model.'
+parameters:
+  - in: path
+    name: force
+    schema:
+      type: string
+      default: false
+    required: false
+    description: Abort currently running training tasks, before starting
 description: 'The model should be retrained if updates to the face database were done with the `retrain` flag set to `false`.'
-operationId: retrainModel
+operationId: retrainModelStart
 produces:
   - ""
 security:
   - ApiKeyAuth: []
 responses:
-  '204':
-    description: 'Model for the api key is forced to stop retraining'
+  '202':
+    description: 'Model training has been started.'
+  '423':
+    description: 'Previous retraining was not yet finished. Model training has not been started.'
   '400':
     $ref: '#/components/responses/BadRequestResponse'
   '500':
