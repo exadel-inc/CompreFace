@@ -37,7 +37,7 @@ def train(api_key):
     # Get trained model
     names = [face.name for face in unique_faces]
     embedding_arrays = [embedding.array for embedding in embeddings]
-    classes = list(range(1, len(names) + 1))
+    classes = list(range(len(names)))
     model_version, model = get_trained_model(embedding_arrays, classes)
 
     # Create EmbeddingClassifier DTO and save it to DB

@@ -22,7 +22,7 @@ CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 DOCS_DIR = CURRENT_DIR / 'docs'
 
 
-class MyJSONEncoder(JSONEncoder):
+class DictJSONEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, ConvertibleToDict):
             return obj.to_dict()
@@ -31,9 +31,9 @@ class MyJSONEncoder(JSONEncoder):
 
 def create_app():
     app = Flask(__name__)
-    app.json_encoder = MyJSONEncoder
+    app.json_encoder = DictJSONEncoder
     app.url_map.strict_slashes = False
-    app.config['SWAGGER'] = dict(title='FRS - Swagger UI', doc_dir=str(DOCS_DIR))
+    app.config['SWAGGER'] = dict(title='EFRS - Swagger UI', doc_dir=str(DOCS_DIR))
     Swagger(app, template_file=str(DOCS_DIR / 'template.yml'))
 
     @app.route('/status')
