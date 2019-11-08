@@ -1,5 +1,5 @@
 import logging
-from threading import Thread
+from multiprocessing import Process
 
 import toolz as toolz
 from sklearn.linear_model import LogisticRegression
@@ -7,6 +7,30 @@ from sklearn.linear_model import LogisticRegression
 from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.storage import get_storage
+from src.storage.trained_model_storage import save_trained_model, delete_trained_model
+from src.face_recognition.embedding_classifier.exceptions import ClassifierIsAlreadyTrainingError
+
+currently_training_api_keys = {}
+
+def cancel_training(api_key):
+    logging.debug("currently in the training list %s" %currently_training_api_keys)
+    if api_key in currently_training_api_keys and currently_training_api_keys[api_key].is_alive() == False:
+        del currently_training_api_keys[api_key]
+    logging.debug("currently in the training list %s" %currently_training_api_keys)
+    if api_key in currently_training_api_keys:
+        logging.debug("currently in the training list %s" % currently_training_api_keys[api_key])
+        currently_training_api_keys[api_key].terminate()
+        del currently_training_api_keys[api_key]
+    logging.debug("currently in the training list %s" %currently_training_api_keys)
+
+
+def is_currently_training(api_key):
+    if api_key in currently_training_api_keys:
+        if currently_training_api_keys[api_key].is_alive():
+            return True
+        else:
+            del currently_training_api_keys[api_key]
+    return False
 
 CLASSIFIER_VERSION = 'LogisticRegression'
 
@@ -33,6 +57,13 @@ def train(api_key):
     embeddings = [face.embedding for face in unique_faces]
     embedding_calculator_version = embeddings[0].calculator_version
     assert all(embedding_calculator_version == embedding.calculator_version for embedding in embeddings)
+    if is_currently_training(api_key):
+        raise ClassifierIsAlreadyTrainingError
+    logging.debug('Training started, api key: %s', api_key)
+    classifier = get_trained_classifier(values, labels)
+    process = Process(target=train, daemon=False, args=[api_key])
+    currently_training_api_keys[api_key] = process
+    logging.debug('Training finished, api key: %s', api_key)
 
     # Get trained model
     names = [face.name for face in unique_faces]
@@ -47,9 +78,18 @@ def train(api_key):
 
 
 def train_async(api_key):
-    thread = Thread(target=train, daemon=False, args=[api_key])
-    thread.start()
-    return thread
+    global currently_training_api_keys
+    process = Process(target=train, daemon=False, args=[api_key])
+    if api_key in currently_training_api_keys and process.is_alive() == False:
+        logging.debug('the api key is going to be removed')
+        del currently_training_api_keys[api_key]
+
+    if is_currently_training(api_key):
+        logging.debug('we are not retraining')
+        return False
+    process.start()
+    currently_training_api_keys[api_key] = process
+    return True
 
 
 def train_all_models():

@@ -1,0 +1,18 @@
+tags:
+  - 'Face Recognition ML Model'
+summary: 'Retrain face model.'
+description: 'The model should be retrained if updates to the face database were done with the `retrain` flag set to `false`.'
+operationId: retrainModel
+produces:
+  - ""
+security:
+  - ApiKeyAuth: []
+responses:
+  '200':
+    description: 'The model for this api key is not currently retraining'
+  '202':
+    description: 'The model for this api key is currently retraining'
+  '400':
+    $ref: '#/components/responses/BadRequestResponse'
+  '500':
+    $ref: '#/components/responses/InternalServerErrorResponse'

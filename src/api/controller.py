@@ -1,4 +1,5 @@
 import logging
+import multiprocessing
 import os
 from http import HTTPStatus
 from pathlib import Path
@@ -78,16 +79,33 @@ def create_app():
 
     @app.route('/retrain', methods=['POST'])
     @needs_authentication
-    def retrain_model():
+    def retrain_model_post():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
         train_thread = train_async(api_key)
-        # TODO EFRS-42 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
-        if request.args.get('await', '').lower() in ('true', '1'):
-            train_thread.join()
+        if not train_thread:
+            return jsonify(message={"is_done_training": train_thread}, status=HTTPStatus.LOCKED)
 
         return Response(status=HTTPStatus.ACCEPTED)
+
+    @app.route('/retrain')
+    @needs_authentication
+    def retrain_model_get():
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+        if is_currently_training(api_key):
+            return Response(status=HTTPStatus.ACCEPTED)
+        return Response(status=HTTPStatus.OK)
+
+
+    @app.route('/retrain', methods=['DELETE'])
+    @needs_authentication
+    def retrain_model_delete():
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+        cancel_training(api_key)
+        return Response(status=HTTPStatus.NO_CONTENT)
 
     @app.route('/recognize', methods=['POST'])
     @needs_authentication
