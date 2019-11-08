@@ -4,6 +4,7 @@ from typing import List
 import numpy as np
 
 from src.dto import BoundingBox
+from src.dto.cropped_face import CroppedFace
 from src.dto.face_prediction import FacePrediction
 from src.dto.trained_model import TrainedModel
 from src.face_recognition.embedding_calculator.calculator import calculate_embedding
@@ -28,5 +29,11 @@ def predict_from_embedding(model: TrainedModel, embedding, face_box: BoundingBox
 
 def predict_from_image(img, limit: FaceLimit, api_key: str) -> List[FacePrediction]:
     model = get_trained_model(api_key)
-    faces = crop_faces(img, limit)
-    return [predict_from_embedding(model, calculate_embedding(face.img), face.box) for face in faces]
+    cropped_faces = crop_faces(img, limit)
+
+    def predict_from_cropped_face(face: CroppedFace):
+        embedding = calculate_embedding(face.img)
+        prediction = predict_from_embedding(model, embedding, face.box)
+        return prediction
+
+    return [predict_from_cropped_face(cropped_face) for cropped_face in cropped_faces]
