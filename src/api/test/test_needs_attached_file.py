@@ -39,7 +39,7 @@ def test__given_no_selected_file__when_file_upload_endpoint_is_requested__then_r
 
 
 def test__given_file__when_file_upload_endpoint_is_requested__then_completes_request(client_with_file_endpoint):
-    filename = 'test_old-file.xyz'
+    filename = 'test-file.xyz'
     request_data = dict(file=(FILE_BYTES, filename))
 
     res = client_with_file_endpoint.post('/endpoint', headers={API_KEY_HEADER: 'test-api-key'}, data=request_data)
