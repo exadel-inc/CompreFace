@@ -184,7 +184,6 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
     assert result[0]['face_name'] == "Marie Curie"
 
 
-
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_deletes_person_c__then_returns_204(host):
     pass
