@@ -184,15 +184,6 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
     assert result[0]['face_name'] == "Marie Curie"
 
 
-@pytest.mark.run(order=next(after_previous))
-def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
-    files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
-
-    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
-
-    assert res.status_code == 400, res.content
-    assert res.json()['message'] == "No face is found in the given image"
-
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_deletes_person_c__then_returns_204(host):
