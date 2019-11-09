@@ -1,4 +1,4 @@
-from src.dto.exceptions import IncorrectUsageError
+from src.exceptions import IncorrectUsageError
 
 
 class ApiKeyNotInModels(IncorrectUsageError):

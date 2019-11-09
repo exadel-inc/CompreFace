@@ -387,11 +387,11 @@ def split_dataset(dataset, split_ratio, mode):
             np.random.shuffle(paths)
             split = int(round(len(paths) * split_ratio))
             if split < min_nrof_images:
-                continue  # Not enough images for test set. Skip class...
+                continue  # Not enough images for test_old set. Skip class...
             train_set.append(ImageClass(cls.name, paths[0:split]))
             test_set.append(ImageClass(cls.name, paths[split:-1]))
     else:
-        raise ValueError('Invalid train/test split mode "%s"' % mode)
+        raise ValueError('Invalid train/test_old split mode "%s"' % mode)
     return train_set, test_set
 
 

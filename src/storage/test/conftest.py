@@ -2,18 +2,19 @@ import mongomock
 import pytest
 from mongomock.gridfs import enable_gridfs_integration
 
-from src.storage._mongo_storage import MongoStorage
+from src.storage._database_wrapper.database_mongo import DatabaseMongo
+from src.storage.storage import Storage
 
 
 @pytest.mark.usefixtures()
 @pytest.fixture
-def mongo(mocker):
+def with_mongo_database(mocker):
     enable_gridfs_integration()
-    mocker.patch('src.storage._mongo_storage.MongoClient', mongomock.MongoClient)
-    return MongoStorage()
+    mocker.patch('src.storage._database_wrapper.database_mongo.MongoClient', mongomock.MongoClient)
+    return Storage(DatabaseMongo())
 
 
-STORAGES = ['mongo']
+STORAGES = ['with_mongo_database']
 
 
 @pytest.fixture

@@ -6,8 +6,8 @@ import tensorflow as tf
 from skimage import transform
 
 from src import pyutils
-from src.dto import BoundingBox
-from src.dto.cropped_face import CroppedFace
+from src.face_recognition.dto.bounding_box import BoundingBox
+from src.face_recognition.dto.cropped_face import CroppedFace
 from src.face_recognition.embedding_classifier.libraries import facenet
 from src.face_recognition.face_cropper.constants import FACE_MIN_SIZE, THRESHOLD, SCALE_FACTOR, FaceLimitConstant, \
     MARGIN, IMAGE_SIZE, FaceLimit
