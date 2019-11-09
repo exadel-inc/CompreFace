@@ -1,5 +1,13 @@
-from src.dto.exceptions import IncorrectUsageError
+from src.exceptions import IncorrectUsageError
 
 
-class NoTrainedModelFoundError(IncorrectUsageError):
-    message = 'No model is yet trained for this API key'
+class NoTrainedEmbeddingClassifierFoundError(IncorrectUsageError):
+    message = 'No classifier model is yet trained for this API key'
+
+
+class FaceHasNoEmbeddingSavedError(Exception):
+    message = 'Face has no embedding saved with it'
+
+
+class NoFileFoundInDatabaseError(Exception):
+    message = 'File is not found in the database'

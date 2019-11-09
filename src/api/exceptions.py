@@ -29,3 +29,8 @@ class NoFileAttachedError(BadRequestException):
 
 class NoFileSelectedError(BadRequestException):
     message = 'No file is selected'
+
+
+class ClassifierIsAlreadyTrainingError(BadRequestException):
+    http_status = HTTPStatus.LOCKED
+    message = 'Classifier training is already in progress'
