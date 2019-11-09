@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import List, Union
 from typing import TYPE_CHECKING
 
-from src import pyutils
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 
 if TYPE_CHECKING:
@@ -60,13 +59,10 @@ class StorageWithKey(_StorageBase):
         self._db.delete_embedding_classifiers(self._api_key)
 
 
-@pyutils.run_once
-def _storage_singleton():
+def get_storage(api_key: str = None) -> Union[Storage, StorageWithKey]:
     from src.storage._database_wrapper.database_mongo import DatabaseMongo
 
-    return Storage(DatabaseMongo())
-
-
-def get_storage(api_key: str = None) -> Union[Storage, StorageWithKey]:
-    storage = _storage_singleton()
+    # DatabaseMongo instances are not fork-safe, src: https://api.mongodb.com/python/current/faq.html#id3
+    # A quick fix is to recreate the object on every request
+    storage = Storage(DatabaseMongo())
     return storage.with_key(api_key) if api_key else storage

@@ -1,4 +1,3 @@
-import logging
 from multiprocessing import Process
 
 from toolz import valfilter
@@ -19,15 +18,20 @@ def _is_training(api_key):
     return api_key in _api_key_2_train_process
 
 
-@pyutils.run_first(_update_currently_training_api_keys)
-def is_training(api_key):
-    return _is_training(api_key)
+def _abort_training(api_key):
+    if not _is_training(api_key):
+        return
+    _api_key_2_train_process[api_key].terminate()
+    del _api_key_2_train_process[api_key]
 
 
 @pyutils.run_first(_update_currently_training_api_keys)
-def start_training(api_key):
-    if _is_training(api_key):
+def start_training(api_key, force=False):
+    if force:
+        _abort_training(api_key)
+    elif _is_training(api_key):
         raise ClassifierIsAlreadyTrainingError
+
     process = Process(target=train_and_save_model, daemon=True, args=[api_key])
     process.start()
     _api_key_2_train_process[api_key] = process
@@ -35,10 +39,9 @@ def start_training(api_key):
 
 @pyutils.run_first(_update_currently_training_api_keys)
 def abort_training(api_key):
-    if not _is_training(api_key):
-        logging.debug("Request to abort training is ignored, because currently not training for api_key '%s'", api_key)
-        return
+    _abort_training(api_key)
 
-    _api_key_2_train_process[api_key].terminate()
-    del _api_key_2_train_process[api_key]
-    logging.debug("Aborted training for api-key '%s'", api_key)
+
+@pyutils.run_first(_update_currently_training_api_keys)
+def is_training(api_key):
+    return _is_training(api_key)

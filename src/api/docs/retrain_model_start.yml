@@ -18,9 +18,9 @@ security:
 responses:
   '202':
     description: 'Model training has been started.'
-  '423':
-    description: 'Previous retraining was not yet finished. Model training has not been started.'
   '400':
     $ref: '#/components/responses/BadRequestResponse'
+  '423':
+    $ref: '#/components/responses/ClassifierIsAlreadyTrainingErrorResponse'
   '500':
     $ref: '#/components/responses/InternalServerErrorResponse'

@@ -1,9 +1,9 @@
 import functools
 
-from src.api.constants import API_KEY_HEADER, RETRAIN_PARAM
+from src.api.constants import API_KEY_HEADER, GET_PARAM, RETRAIN_VALUES
 from src.api.exceptions import APIKeyNotSpecifiedError, NoFileAttachedError, \
     NoFileSelectedError
-from src.api.parse_request_arg import parse_request_bool_arg
+from src.api.parse_request_arg import parse_request_string_arg
 from src.api.training_task_manager import start_training
 
 
@@ -45,13 +45,16 @@ def needs_retrain(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         from flask import request
-        do_retrain = parse_request_bool_arg(name=RETRAIN_PARAM, default=True, request=request)
+        retrain_value = parse_request_string_arg(name=GET_PARAM.RETRAIN, default=RETRAIN_VALUES.FORCE,
+                                                 allowed_values=RETRAIN_VALUES, request=request)
         api_key = request.headers[API_KEY_HEADER]
 
         return_val = f(*args, **kwargs)
 
-        if do_retrain:
+        if retrain_value == RETRAIN_VALUES.YES:
             start_training(api_key)
+        elif retrain_value == RETRAIN_VALUES.FORCE:
+            start_training(api_key, force=True)
 
         return return_val
 

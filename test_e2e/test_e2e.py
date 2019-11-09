@@ -15,12 +15,13 @@ python -m pytest test_e2e.py --host http://localhost:5001
 import os
 import time
 from http import HTTPStatus
+from json import JSONDecodeError
 from pathlib import Path
 
 import pytest
 import requests
 
-from init_mongo_db import init_mongo_db
+from src.init_mongo_db import init_mongo_db
 from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -42,18 +43,6 @@ def host(request):
     return request.config.getoption('host')
 
 
-@pytest.mark.first
-def test_setup(request):
-    if not request.config.getoption('drop-db'):
-        return
-    print("Dropping database...")
-    from pymongo import MongoClient
-    client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
-    client.drop_database(MONGO_EFRS_DATABASE_NAME)
-    print("Database dropped.")
-    init_mongo_db()
-
-
 def after_previous_gen():
     order_no = 1
     while True:
@@ -62,6 +51,18 @@ def after_previous_gen():
 
 
 after_previous = after_previous_gen()
+
+
+@pytest.mark.run(order=next(after_previous))
+def test_setup__drop_db(request):
+    if not request.config.getoption('drop-db'):
+        return
+    print("Dropping database...")
+    from pymongo import MongoClient
+    client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
+    client.drop_database(MONGO_EFRS_DATABASE_NAME)
+    print("Database dropped.")
+    init_mongo_db()
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -87,11 +88,14 @@ def test__when_client_opens_apidocs__returns_200(host):
 def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_400(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
 
-    res = requests.post(f"{host}/faces/Marie Curie", headers={}, files=files)
+    res = requests.post(f"{host}/faces/Marie Curie", files=files)
     _wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
-    assert res.json()['message'] == 'No API Key is given'
+    try:
+        assert res.json()['message'] == 'No API Key is given'
+    except JSONDecodeError:
+        pass
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -111,9 +115,9 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
     files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
     files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
 
-    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=false", headers={'X-Api-Key': 'test-api-key'},
+    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=no", headers={'X-Api-Key': 'test-api-key'},
                           files=files_a)
-    res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=false", headers={'X-Api-Key': 'test-api-key'},
+    res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=no", headers={'X-Api-Key': 'test-api-key'},
                           files=files_b)
     res_c = requests.post(f"{host}/faces/Paul Walker",
                           headers={'X-Api-Key': 'test-api-key'}, files=files_c)

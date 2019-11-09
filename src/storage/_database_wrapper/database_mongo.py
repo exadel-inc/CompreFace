@@ -5,17 +5,11 @@ from pymongo import MongoClient
 from src.face_recognition.dto.embedding import Embedding
 from src.pyutils.serialization import deserialize, serialize
 from src.storage._database_wrapper.database_base import DatabaseBase
-from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT
+from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT, COLLECTION_NAME
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.dto.face import Face, FaceEmbedding
-from src.storage.exceptions import FaceHasNoEmbeddingSavedError, NoFileFoundInDatabaseError, \
-    NoTrainedEmbeddingClassifierFoundError
-
-
-class COLLECTION_NAME:
-    FACES = 'faces'
-    CLASSIFIERS = 'classifiers'
-    FILES = 'files'
+from src.storage.exceptions import FaceHasNoEmbeddingSavedError, NoTrainedEmbeddingClassifierFoundError
+from src.storage._database_wrapper.mongo_fileio import save_file_to_mongo, get_file_from_mongo
 
 
 class DatabaseMongo(DatabaseBase):
@@ -115,14 +109,7 @@ class DatabaseMongo(DatabaseBase):
         return self._faces_collection.find(projection=["api_key"]).distinct("api_key")
 
     def save_file(self, filename, bytes_data):
-        result = self._files_fs.find_one({"filename": filename})
-        if result:
-            self._files_fs.delete(result['_id'])
-
-        self._files_fs.put(bytes_data, filename=filename)
+        save_file_to_mongo(self._files_fs, filename, bytes_data)
 
     def get_file(self, filename):
-        result = self._files_fs.find_one({"filename": filename})
-        if result is None:
-            raise NoFileFoundInDatabaseError(f'File with filename {filename} is not found in the database')
-        return result.read()
+        return get_file_from_mongo(self._files_fs, filename)

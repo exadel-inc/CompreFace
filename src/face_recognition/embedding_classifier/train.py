@@ -22,11 +22,11 @@ def train_and_save_model(api_key):
     # Load FaceEmbedding DTOs from DB
     storage = get_storage(api_key)
     faces = storage.get_face_embeddings(EMBEDDING_CALCULATOR_MODEL_FILENAME)
-    if len(faces) <= 1:
+    unique_faces = list(toolz.unique(faces, lambda e: e.name))
+    if len(unique_faces) <= 1:
         logging.warning("Not enough training data, model hasn't been created. Deleting existing models, if any.")
         storage.delete_embedding_classifiers()
         return
-    unique_faces = list(toolz.unique(faces, lambda e: e.name))
 
     # Get embedding arrays
     embeddings = [face.embedding for face in unique_faces]
@@ -35,6 +35,7 @@ def train_and_save_model(api_key):
 
     # Get trained model
     names = [face.name for face in unique_faces]
+
     embedding_arrays = [embedding.array for embedding in embeddings]
     classes = list(range(len(names)))
     logging.debug("Training started for api_key, '%s'", api_key)

@@ -5,6 +5,6 @@ export LANG=C.UTF-8
 export PYTHONUNBUFFERED=0
 
 ./wait-for-it.sh mongo:27017
-./init_mongo_db.py
+./src/init_mongo_db.py
 service nginx start
 uwsgi --ini uwsgi.ini
