@@ -97,7 +97,18 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_client_asks_to_recognize_faces_in_5_person_image__then_returns_5_different_bounding_boxes(host):
+def test__when_client_asks_to_recognize_faces_in_5_person_image__then_returns_5_different_bounding_boxes_png(host):
+    file = {'file': open(CURRENT_DIR / 'files' / 'five-people-picture.png', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=file)
+
+    assert res.status_code == 200, res.content
+    result_items = res.json()['result']
+    assert itertoolz.isdistinct(tuple(item['box'].values()) for item in result_items), result_items
+    assert len(result_items) == 5
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_asks_to_recognize_faces_in_5_person_image__then_returns_5_different_bounding_boxes_jpg(host):
     file = {'file': open(CURRENT_DIR / 'files' / 'five-faces.jpg', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=file)
