@@ -5,22 +5,22 @@ from pymongo import MongoClient
 from src.face_recognition.dto.embedding import Embedding
 from src.pyutils.serialization import deserialize, serialize
 from src.storage._database_wrapper.database_base import DatabaseBase
-from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT, COLLECTION_NAME
+from src.storage._database_wrapper.mongo_fileio import save_file_to_mongo, get_file_from_mongo
+from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT, CollectionName
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.dto.face import Face, FaceEmbedding
 from src.storage.exceptions import FaceHasNoEmbeddingSavedError, NoTrainedEmbeddingClassifierFoundError
-from src.storage._database_wrapper.mongo_fileio import save_file_to_mongo, get_file_from_mongo
 
 
 class DatabaseMongo(DatabaseBase):
     def __init__(self):
         self._mongo_client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
         db = self._mongo_client[MONGO_EFRS_DATABASE_NAME]
-        self._faces_collection = db[COLLECTION_NAME.FACES]
-        self._faces_fs = gridfs.GridFS(db, COLLECTION_NAME.FACES)
-        self._classifiers_collection = db[COLLECTION_NAME.CLASSIFIERS]
-        self._classifiers_fs = gridfs.GridFS(db, COLLECTION_NAME.CLASSIFIERS)
-        self._files_fs = gridfs.GridFS(db, COLLECTION_NAME.FILES)
+        self._faces_collection = db[CollectionName.FACES]
+        self._faces_fs = gridfs.GridFS(db, CollectionName.FACES)
+        self._classifiers_collection = db[CollectionName.CLASSIFIERS]
+        self._classifiers_fs = gridfs.GridFS(db, CollectionName.CLASSIFIERS)
+        self._files_fs = gridfs.GridFS(db, CollectionName.FILES)
 
     def add_face(self, api_key, face):
         self._faces_collection.insert_one({

@@ -15,13 +15,12 @@ python -m pytest test_e2e.py --host http://localhost:5001
 import os
 import time
 from http import HTTPStatus
-from json import JSONDecodeError
 from pathlib import Path
 
 import pytest
 import requests
 
-from src.init_mongo_db import init_mongo_db
+from init_mongo_db import init_mongo_db
 from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -92,10 +91,10 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
     _wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
-    try:
+    if res.content:
         assert res.json()['message'] == 'No API Key is given'
-    except JSONDecodeError:
-        pass
+    else:
+        print("00000000000000000000000000000000WARNING NO CONTENT")
 
 
 @pytest.mark.run(order=next(after_previous))

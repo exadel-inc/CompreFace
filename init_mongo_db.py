@@ -1,17 +1,13 @@
-#!/usr/bin/env python3
-import sys
-
 import gridfs
 from pymongo import MongoClient
 
-sys.path.insert(0, '..')
 from main import ROOT_DIR
 from src import pyutils
 from src.init_runtime import init_runtime
 from src.pyutils.raises import raises
 from src.storage import get_file_from_mongo, save_file_to_mongo
 from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME, MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT, \
-    COLLECTION_NAME
+    CollectionName
 from src.storage.exceptions import NoFileFoundInDatabaseError
 
 EMBEDDING_CALCULATOR_MODEL_FILEPATH = ROOT_DIR / 'db_data' / EMBEDDING_CALCULATOR_MODEL_FILENAME
@@ -21,7 +17,7 @@ EMBEDDING_CALCULATOR_MODEL_FILEPATH = ROOT_DIR / 'db_data' / EMBEDDING_CALCULATO
 def files_fs():
     mongo_client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
     db = mongo_client[MONGO_EFRS_DATABASE_NAME]
-    return gridfs.GridFS(db, COLLECTION_NAME.FILES)
+    return gridfs.GridFS(db, CollectionName.FILES)
 
 
 def stdout(msg):

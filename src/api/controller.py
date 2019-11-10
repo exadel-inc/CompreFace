@@ -8,14 +8,13 @@ from flasgger import Swagger
 from flask import jsonify, Response, Flask
 from flask.json import JSONEncoder
 
-from src.api.constants import API_KEY_HEADER, GET_PARAM
+from src.api.constants import API_KEY_HEADER, GetParameter
 from src.api.endpoint_decorators import needs_authentication, needs_attached_file, needs_retrain
 from src.api.exceptions import BadRequestException
 from src.api.parse_request_arg import parse_request_bool_arg
 from src.api.training_task_manager import start_training, is_training, abort_training
 from src.face_recognition.embedding_classifier.predict import predict_from_image
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
-from src.init_runtime import init_runtime
 from src.pyutils.convertible_to_dict import ConvertibleToDict
 from src.storage.dto.face import Face
 from src.storage.storage import get_storage
@@ -93,7 +92,7 @@ def create_app():
     def retrain_model_start():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-        force_start = parse_request_bool_arg(name=GET_PARAM.FORCE, default=False, request=request)
+        force_start = parse_request_bool_arg(name=GetParameter.FORCE, default=False, request=request)
 
         start_training(api_key, force_start)
 

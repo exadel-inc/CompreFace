@@ -9,7 +9,7 @@ MONGO_HOST = os.environ.get('MONGO_HOST', 'mongo'),
 MONGO_PORT = int(os.environ.get('MONGO_PORT', '27017'))
 
 
-class COLLECTION_NAME(StrEnum):
+class CollectionName(StrEnum):
     FACES = auto()
     CLASSIFIERS = auto()
     FILES = auto()

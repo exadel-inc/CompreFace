@@ -5,12 +5,12 @@ from strenum import StrEnum
 API_KEY_HEADER = 'X-Api-Key'
 
 
-class GET_PARAM(StrEnum):
+class GetParameter(StrEnum):
     RETRAIN = auto()
     FORCE = auto()
 
 
-class RETRAIN_VALUES(StrEnum):
+class RetrainValue(StrEnum):
     YES = auto()
     NO = auto()
     FORCE = auto()
