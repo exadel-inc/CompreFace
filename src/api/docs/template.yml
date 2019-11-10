@@ -19,10 +19,10 @@ components:
     RetrainParameter:
       name: retrain
       in: query
-      description: 'Specify whether the model should start retraining immediately after the request is completed (set this to False, if operating with a lot of images one after another).'
+      description: 'Specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". "Force" option will abort already running processes of classifier training.'
       required: 'false'
       type: string
-      default: 'true'
+      default: 'force'
     FaceNameParameter:
       name: face_name
       in: path
@@ -32,6 +32,14 @@ components:
   responses:
     BadRequestResponse:
       description: 'Bad request is provided'
+      schema:
+        type: object
+        properties:
+          message:
+            type: string
+            example: 'Detailed information about the error'
+    ClassifierIsAlreadyTrainingErrorResponse:
+      description: 'Classifier is already training. Use parameters to force start training.'
       schema:
         type: object
         properties:

@@ -8,33 +8,34 @@ from flasgger import Swagger
 from flask import jsonify, Response, Flask
 from flask.json import JSONEncoder
 
-from src.api._decorators import needs_authentication, needs_attached_file, needs_retrain
-from src.api.constants import API_KEY_HEADER
+from src.api.constants import API_KEY_HEADER, GET_PARAM
+from src.api.endpoint_decorators import needs_authentication, needs_attached_file, needs_retrain
 from src.api.exceptions import BadRequestException
-from src.dto.serializable import Serializable
-from src.face_recognition.embedding_calculator.calculator import calculate_embedding
+from src.api.parse_request_arg import parse_request_bool_arg
+from src.api.training_task_manager import start_training, is_training, abort_training
 from src.face_recognition.embedding_classifier.predict import predict_from_image
-from src.face_recognition.embedding_classifier.train import train_all_models, train_async
 from src.face_recognition.face_cropper.constants import FaceLimitConstant
-from src.face_recognition.face_cropper.cropper import crop_face
+from src.init_runtime import init_runtime
+from src.pyutils.convertible_to_dict import ConvertibleToDict
+from src.storage.dto.face import Face
 from src.storage.storage import get_storage
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 DOCS_DIR = CURRENT_DIR / 'docs'
 
 
-class MyJSONEncoder(JSONEncoder):
+class DictJSONEncoder(JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, Serializable):
-            return obj.serialize()
+        if isinstance(obj, ConvertibleToDict):
+            return obj.to_dict()
         return super().default(obj)
 
 
 def create_app():
     app = Flask(__name__)
-    app.json_encoder = MyJSONEncoder
+    app.json_encoder = DictJSONEncoder
     app.url_map.strict_slashes = False
-    app.config['SWAGGER'] = dict(title='FRS - Swagger UI', doc_dir=str(DOCS_DIR))
+    app.config['SWAGGER'] = dict(title='EFRS - Swagger UI', doc_dir=str(DOCS_DIR))
     Swagger(app, template_file=str(DOCS_DIR / 'template.yml'))
 
     @app.route('/status')
@@ -47,7 +48,7 @@ def create_app():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
-        face_names = get_storage().get_all_face_names(api_key)
+        face_names = get_storage(api_key).get_face_names()
 
         return jsonify(names=face_names)
 
@@ -59,12 +60,10 @@ def create_app():
         from flask import request
         file = request.files['file']
         api_key = request.headers[API_KEY_HEADER]
-
         img = imageio.imread(file)
-        face_img = crop_face(img).img
-        embedding = calculate_embedding(face_img)
-        get_storage().add_face(raw_img=img, face_img=face_img, embedding=embedding, face_name=face_name,
-                               api_key=api_key)
+
+        face = Face.from_image(face_name, img)
+        get_storage(api_key).add_face(face)
 
         return Response(status=HTTPStatus.CREATED)
 
@@ -75,22 +74,40 @@ def create_app():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
-        get_storage().remove_face(api_key, face_name)
+        get_storage(api_key).remove_face(face_name)
 
         return Response(status=HTTPStatus.NO_CONTENT)
 
-    @app.route('/retrain', methods=['POST'])
+    @app.route('/retrain', methods=['GET'])
     @needs_authentication
-    def retrain_model():
+    def retrain_model_status():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
-        train_thread = train_async(api_key)
-        # TODO EFRS-42 Remove this temporary 'await' parameter once there is an official way for E2E tests to wait for the training to finish
-        if request.args.get('await', '').lower() in ('true', '1'):
-            train_thread.join()
+        it_is_training = is_training(api_key)
+
+        return Response(status=HTTPStatus.ACCEPTED if it_is_training else HTTPStatus.OK)
+
+    @app.route('/retrain', methods=['POST'])
+    @needs_authentication
+    def retrain_model_start():
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+        force_start = parse_request_bool_arg(name=GET_PARAM.FORCE, default=False, request=request)
+
+        start_training(api_key, force_start)
 
         return Response(status=HTTPStatus.ACCEPTED)
+
+    @app.route('/retrain', methods=['DELETE'])
+    @needs_authentication
+    def retrain_model_abort():
+        from flask import request
+        api_key = request.headers[API_KEY_HEADER]
+
+        abort_training(api_key)
+
+        return Response(status=HTTPStatus.NO_CONTENT)
 
     @app.route('/recognize', methods=['POST'])
     @needs_authentication
@@ -114,8 +131,8 @@ def create_app():
 
     @app.errorhandler(BadRequestException)
     def handle_api_exception(e: BadRequestException):
-        logging.warning(f'Response {e.http_status}: {e.message}; {str(e)}', exc_info=True)
-        return jsonify(message=e.message), e.http_status
+        logging.warning(f'Response {e.http_status}: {str(e)}', exc_info=True)
+        return jsonify(message=str(e)), e.http_status
 
     @app.errorhandler(Exception)
     def handle_runtime_error(e):
@@ -135,7 +152,7 @@ def create_app():
 
 
 def init_app():
+    # Use create_app() for unit tests, use init_app() for actual running of
+    # the server, so that additional server init steps can be done here.
     app = create_app()
-    logging.basicConfig(level=logging.DEBUG)
-    train_all_models()
     return app
