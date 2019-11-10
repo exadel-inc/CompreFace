@@ -137,7 +137,8 @@ def test__when_client_asks_to_recognize_faces_in_5_person_jpg_image__then_return
 
     assert res.status_code == 200, res.content
     result_items = res.json()['result']
-    assert itertoolz.isdistinct(tuple(item['box'].values()) for item in result_items), result_items
+    result_items_list = [tuple(item['box'].values()) for item in result_items]
+    assert itertoolz.isdistinct(result_items_list), result_items
     assert len(result_items) == 5
 
 @pytest.mark.run(order=next(after_previous))
@@ -148,7 +149,8 @@ def test__when_client_asks_to_recognize_faces_in_5_person_png_image__then_return
 
     assert res.status_code == 200, res.content
     result_items = res.json()['result']
-    assert itertoolz.isdistinct(tuple(item['box'].values()) for item in result_items), result_items
+    result_items_list = [tuple(item['box'].values()) for item in result_items]
+    assert itertoolz.isdistinct(result_items_list), result_items
     assert len(result_items) == 5
 
 
