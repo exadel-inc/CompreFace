@@ -130,10 +130,21 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_client_asks_to_recognize_faces_in_5_person_image__then_returns_5_different_bounding_boxes(host):
+def test__when_client_asks_to_recognize_faces_in_5_person_jpg_image__then_returns_5_different_bounding_boxes(host):
     file = {'file': open(CURRENT_DIR / 'files' / 'five-faces.jpg', 'rb')}
 
-    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=file)
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
+
+    assert res.status_code == 200, res.content
+    result_items = res.json()['result']
+    assert itertoolz.isdistinct(tuple(item['box'].values()) for item in result_items), result_items
+    assert len(result_items) == 5
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_asks_to_recognize_faces_in_5_person_png_image__then_returns_5_different_bounding_boxes(host):
+    file = {'file': open(CURRENT_DIR / 'files' / 'five-faces.png', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
 
     assert res.status_code == 200, res.content
     result_items = res.json()['result']
@@ -145,7 +156,7 @@ def test__when_client_asks_to_recognize_faces_in_5_person_image__then_returns_5_
 def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
     files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
 
-    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'api-key-001'}, files=files)
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "No face is found in the given image"
