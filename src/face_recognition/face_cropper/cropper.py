@@ -48,12 +48,13 @@ def _post_process_bounding_boxes(bounding_boxes, face_lim, img_size):
 
 def _get_bounding_boxes(img, face_lim, img_size):
     detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, THRESHOLD, SCALE_FACTOR)
-    bounding_boxes = detect_face_result[0][:, 0:4]
+    bounding_boxes = list(detect_face_result[0][:, 0:4])
     if len(bounding_boxes) < 1:
         raise NoFaceFoundError("No face is found in the given image")
-    if len(bounding_boxes) == 1:
-        return list(bounding_boxes)
-    return _post_process_bounding_boxes(bounding_boxes, face_lim, img_size)
+    #if len(bounding_boxes) == 1:
+    #    return list(bounding_boxes)
+    return list(bounding_boxes)
+    #return _post_process_bounding_boxes(bounding_boxes, face_lim, img_size)
 
 
 def _bounding_box_2_cropped_face(bounding_box, img, img_size) -> CroppedFace:
