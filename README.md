@@ -1,2 +1,2 @@
-Hello-world-nginx
+hello-world-nginx
 =================
