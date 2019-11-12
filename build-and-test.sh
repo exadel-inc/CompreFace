@@ -46,7 +46,7 @@ if [ "$IS_DEV_ENV" = 'false' ]; then
   chmod +x /usr/bin/docker-compose
   grep -q 'deb http://ftp.de.debian.org/debian testing main' /etc/apt/sources.list || echo "deb http://ftp.de.debian.org/debian testing main" >>/etc/apt/sources.list
   grep -q 'APT::Default-Release "testing";' /etc/apt/apt.conf.d/00local || echo 'APT::Default-Release "testing";' | sudo tee -a /etc/apt/apt.conf.d/00local
-  apt update && apt install dos2unix python3.6 python3-pip -y
+  apt update && apt install dos2unix python3.7 python3-pip -y
   ln -sf python3.7 /usr/bin/python
 fi
 python -m pip install -r requirements-build.txt
