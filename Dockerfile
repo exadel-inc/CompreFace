@@ -1,6 +1,6 @@
 FROM jjanzic/docker-python3-opencv
 
-## Variables
+# Variables
 ARG DIR=/srv
 ARG IS_DEV_ENV=false
 
