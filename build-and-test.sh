@@ -42,11 +42,10 @@ fi
 
 ## Install dependencies
 if [ "$IS_DEV_ENV" = 'false' ]; then
-  curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose
-  chmod +x /usr/bin/docker-compose
-  echo "deb http://ftp.de.debian.org/debian testing main" >>/etc/apt/sources.list
-  echo 'APT::Default-Release "testing";' | sudo tee -a /etc/apt/apt.conf.d/00local
-  apt install dos2unix python3.6 python3-pip -y
+  which docker-compose || curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/bin/docker-compose && chmod +x /usr/bin/docker-compose
+  grep -q 'deb http://ftp.de.debian.org/debian testing main' /etc/apt/sources.list || echo "deb http://ftp.de.debian.org/debian testing main" >>/etc/apt/sources.list
+  grep -q 'APT::Default-Release "testing";' /etc/apt/apt.conf.d/00local || echo 'APT::Default-Release "testing";' | sudo tee -a /etc/apt/apt.conf.d/00local
+  apt update && apt install dos2unix python3.7 python3-pip -y
   ln -sf python3.7 /usr/bin/python
 fi
 python -m pip install -r requirements-build.txt
