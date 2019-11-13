@@ -30,7 +30,6 @@ def crop_face(img) -> CroppedFace:
     return cropped_faces[0]
 
 
-
 def _get_bounding_boxes(img, face_lim):
     detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, THRESHOLD, SCALE_FACTOR)
     bounding_boxes = list(detect_face_result[0][:, 0:4])
@@ -39,7 +38,6 @@ def _get_bounding_boxes(img, face_lim):
     if face_lim and face_lim <= len(bounding_boxes):
         return bounding_boxes[:face_lim]
     return bounding_boxes
-
 
 
 def _bounding_box_2_cropped_face(bounding_box, img, img_size) -> CroppedFace:
