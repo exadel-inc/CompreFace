@@ -1,6 +1,7 @@
 import logging
 from typing import List
 
+import np as np
 import numpy as np
 import tensorflow as tf
 from skimage import transform
@@ -69,3 +70,33 @@ def crop_faces(img, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[Cr
     bounding_boxes = _get_bounding_boxes(img, face_lim)
     cropped_faces = [_bounding_box_2_cropped_face(bounding_box, img, img_size) for bounding_box in bounding_boxes]
     return cropped_faces
+
+if __name__ == "__main__" :
+    import os
+    from pathlib import Path
+
+    CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+    def draw_bounding_box(nparray, bounding_box):
+        color = np.array([0, 255, 0], dtype=np.uint8)
+        nparray[bounding_box[1], bounding_box[0]:bounding_box[0] + bounding_box[2]] = color
+        nparray[bounding_box[1]:bounding_box[1] + bounding_box[3], bounding_box[0]] = color
+        nparray[bounding_box[1] + bounding_box[3], bounding_box[0]:bounding_box[0] + bounding_box[2]] = color
+        nparray[bounding_box[1]:bounding_box[1] + bounding_box[3], bounding_box[0] + bounding_box[2]] = color
+
+
+    def show_image(nparray):
+        from PIL import Image
+        Image.fromarray(nparray, 'RGB').show()
+
+
+    def crop_faces_TEST():
+        import imageio
+        im = imageio.imread(CURRENT_DIR / 'test'/ 'files' / 'five-faces.png')
+        img, img_size = _preprocess_img(im)
+        bounding_boxes = _get_bounding_boxes(img, FaceLimitConstant.NO_LIMIT)
+        arr = img.astype(np.uint8)
+        for bounding_box in bounding_boxes:
+            draw_bounding_box(arr, bounding_box)
+        show_image(arr)
+
+    crop_faces_TEST()

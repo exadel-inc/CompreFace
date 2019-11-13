@@ -17,7 +17,7 @@ CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
 @pytest.fixture(scope='module')
 def cropped_faces_result_5faces():
-    im = imageio.imread(CURRENT_DIR / 'files' / 'five-faces.jpg')
+    im = imageio.imread(CURRENT_DIR / 'files' / 'five-faces.png')
 
     cropped_faces = crop_faces(im)
 
@@ -78,8 +78,10 @@ def test_integration__when_called_with_multiple_faces__then_all_returned_faces_m
     assert not any(images_are_same)
 
 
-@pytest.mark.xfail(reason="TODO EFRS-25")
+#@pytest.mark.xfail(reason="TODO EFRS-25")
 @pytest.mark.integration
 def test_integration__when_called_with_multiple_faces__then_returns_correct_amount_of_results(
         cropped_faces_result_5faces):
     assert len(cropped_faces_result_5faces) == 5
+
+
