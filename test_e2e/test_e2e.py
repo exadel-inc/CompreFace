@@ -19,6 +19,7 @@ from pathlib import Path
 
 import pytest
 import requests
+from toolz import itertoolz
 
 from init_mongo_db import init_mongo_db
 from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT
@@ -128,6 +129,41 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
 
 
 @pytest.mark.run(order=next(after_previous))
+def test__when_client_asks_to_recognize_faces_in_5_person_jpg_image__then_returns_5_different_bounding_boxes(host):
+    file = {'file': open(CURRENT_DIR / 'files' / 'five-faces.jpg', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
+
+    assert res.status_code == 200, res.content
+    result_items = res.json()['result']
+    result_items_list = [tuple(item['box'].values()) for item in result_items]
+    assert itertoolz.isdistinct(result_items_list), result_items
+    assert len(result_items) == 5
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_asks_to_recognize_faces_in_5_person_png_image__then_returns_5_different_bounding_boxes(host):
+    file = {'file': open(CURRENT_DIR / 'files' / 'five-faces.png', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
+
+    assert res.status_code == 200, res.content
+    result_items = res.json()['result']
+    result_items_list = [tuple(item['box'].values()) for item in result_items]
+    assert itertoolz.isdistinct(result_items_list), result_items
+    assert len(result_items) == 5
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
+    files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "No face is found in the given image"
+
+
+@pytest.mark.run(order=next(after_previous))
 def test__given_api_key__when_client_asks_to_get_faces_list__then_returns_3_face_names_with_correct_values(host):
     pass
 
@@ -158,16 +194,6 @@ def test__when_client_requests_to_recognize_the_face_in_another_image__then_serv
     result = res.json()['result']
     assert len(result) == 1
     assert result[0]['face_name'] == "Marie Curie"
-
-
-@pytest.mark.run(order=next(after_previous))
-def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
-    files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
-
-    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
-
-    assert res.status_code == 400, res.content
-    assert res.json()['message'] == "No face is found in the given image"
 
 
 @pytest.mark.run(order=next(after_previous))

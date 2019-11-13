@@ -30,30 +30,16 @@ def crop_face(img) -> CroppedFace:
     return cropped_faces[0]
 
 
-def _post_process_bounding_boxes(bounding_boxes, face_lim, img_size):
-    processed_bounding_boxes = []
 
-    bbs = bounding_boxes
-    img_center = img_size / 2
-    for start in range(face_lim or len(bounding_boxes)):
-        bounding_box_size = (bbs[start:, 2] - bbs[start:, 0]) * (bbs[start:, 3] - bbs[start:, 1])
-        offsets = np.vstack([(bbs[start, 0] + bbs[start, 2]) / 2 - img_center[1],
-                             (bbs[start, 1] + bbs[start, 3]) / 2 - img_center[0]])
-        offset_dist_squared = np.sum(np.power(offsets, 2.0), 0)
-        index = np.argmax(bounding_box_size - offset_dist_squared * 2.0)  # some extra weight on the centering
-
-        processed_bounding_boxes.append(bbs[index, :])
-    return processed_bounding_boxes
-
-
-def _get_bounding_boxes(img, face_lim, img_size):
+def _get_bounding_boxes(img, face_lim):
     detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, THRESHOLD, SCALE_FACTOR)
-    bounding_boxes = detect_face_result[0][:, 0:4]
+    bounding_boxes = list(detect_face_result[0][:, 0:4])
     if len(bounding_boxes) < 1:
         raise NoFaceFoundError("No face is found in the given image")
-    if len(bounding_boxes) == 1:
-        return list(bounding_boxes)
-    return _post_process_bounding_boxes(bounding_boxes, face_lim, img_size)
+    if face_lim and face_lim <= len(bounding_boxes):
+        return bounding_boxes[:face_lim]
+    return bounding_boxes
+
 
 
 def _bounding_box_2_cropped_face(bounding_box, img, img_size) -> CroppedFace:
@@ -80,6 +66,6 @@ def _preprocess_img(img):
 @pyutils.run_first(_init_once)
 def crop_faces(img, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
     img, img_size = _preprocess_img(img)
-    bounding_boxes = _get_bounding_boxes(img, face_lim, img_size)
+    bounding_boxes = _get_bounding_boxes(img, face_lim)
     cropped_faces = [_bounding_box_2_cropped_face(bounding_box, img, img_size) for bounding_box in bounding_boxes]
     return cropped_faces
