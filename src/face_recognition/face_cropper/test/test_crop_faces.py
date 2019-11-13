@@ -70,7 +70,6 @@ def test_integration__given_limit_2__when_called_with_multiple_faces__then_retur
     assert len(cropped_faces) == 2
 
 
-@pytest.mark.xfail(reason="TODO EFRS-24")
 @pytest.mark.integration
 def test_integration__when_called_with_multiple_faces__then_all_returned_faces_must_be_different(
         cropped_faces_result_5faces):
