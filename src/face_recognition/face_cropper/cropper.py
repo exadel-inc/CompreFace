@@ -37,7 +37,7 @@ def _get_bounding_boxes(img, face_lim):
     if len(bounding_boxes) < 1:
         raise NoFaceFoundError("No face is found in the given image")
     if face_lim and face_lim <= len(bounding_boxes):
-        return list(bounding_boxes[:face_lim])
+        return bounding_boxes[:face_lim]
     return list(bounding_boxes)
 
 
