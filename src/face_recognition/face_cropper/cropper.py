@@ -37,7 +37,7 @@ def _get_bounding_boxes(img, face_lim):
     bounding_boxes = list(detect_face_result[0][:, 0:4])
     if len(bounding_boxes) < 1:
         raise NoFaceFoundError("No face is found in the given image")
-    if face_lim and face_lim <= len(bounding_boxes):
+    if face_lim:
         return bounding_boxes[:face_lim]
     return bounding_boxes
 
@@ -75,13 +75,23 @@ if __name__ == "__main__" :
     import os
     from pathlib import Path
 
+    pnet, rnet, onet = None, None, None
+
+    @pyutils.run_once
+    def _init_once():
+        with tf.Graph().as_default():
+            global pnet, rnet, onet
+            sess = tf.Session()
+            pnet, rnet, onet = detect_face.create_mtcnn(sess, None)
+
+
     CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
     def draw_bounding_box(nparray, bounding_box):
         color = np.array([0, 255, 0], dtype=np.uint8)
-        nparray[bounding_box[1], bounding_box[0]:bounding_box[0] + bounding_box[2]] = color
-        nparray[bounding_box[1]:bounding_box[1] + bounding_box[3], bounding_box[0]] = color
-        nparray[bounding_box[1] + bounding_box[3], bounding_box[0]:bounding_box[0] + bounding_box[2]] = color
-        nparray[bounding_box[1]:bounding_box[1] + bounding_box[3], bounding_box[0] + bounding_box[2]] = color
+        nparray[int(bounding_box[1]), int(bounding_box[0]):int(bounding_box[0]) + int(bounding_box[2])] = color
+        nparray[int(bounding_box[1]):int(bounding_box[1]) + int(bounding_box[3]), int(bounding_box[0])] = color
+        #nparray[int(bounding_box[1])+int(bounding_box[3]), int(bounding_box[0]):int(bounding_box[0])+ int(bounding_box[2])] = color
+        #nparray[int(bounding_box[1]):int(bounding_box[1]) , int(bounding_box[3]), int(bounding_box[0]) + int(bounding_box[2])] = color
 
 
     def show_image(nparray):
@@ -89,14 +99,19 @@ if __name__ == "__main__" :
         Image.fromarray(nparray, 'RGB').show()
 
 
-    def crop_faces_TEST():
-        import imageio
-        im = imageio.imread(CURRENT_DIR / 'test'/ 'files' / 'five-faces.png')
-        img, img_size = _preprocess_img(im)
-        bounding_boxes = _get_bounding_boxes(img, FaceLimitConstant.NO_LIMIT)
+    def crop_faces_TEST(img, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
+        img, img_size = _preprocess_img(img)
+        bounding_boxes = _get_bounding_boxes(img, face_lim)
         arr = img.astype(np.uint8)
         for bounding_box in bounding_boxes:
             draw_bounding_box(arr, bounding_box)
         show_image(arr)
 
-    crop_faces_TEST()
+
+    import imageio
+
+    _init_once()
+    im = imageio.imread(CURRENT_DIR / 'test' / 'files' / 'five-faces.png')
+    crop_faces_TEST(im)
+    im = imageio.imread(CURRENT_DIR / 'test' / 'files' / 'five-faces.jpg')
+    crop_faces_TEST(im)
