@@ -78,10 +78,21 @@ def test_integration__when_called_with_multiple_faces__then_all_returned_faces_m
     assert not any(images_are_same)
 
 
-#@pytest.mark.xfail(reason="TODO EFRS-25")
 @pytest.mark.integration
 def test_integration__when_called_with_multiple_faces__then_returns_correct_amount_of_results(
         cropped_faces_result_5faces):
     assert len(cropped_faces_result_5faces) == 5
+
+
+@pytest.mark.integration
+def test_test_if_the_same_number_of_faces_png_vs_jpg():
+    imPNG = imageio.imread(CURRENT_DIR / 'files' / 'eight-faces.png')
+    imJPG = imageio.imread(CURRENT_DIR / 'files' / 'eight-faces.jpg')
+
+    cropped_faces_png = crop_faces(imPNG)
+    cropped_faces_jpg = crop_faces(imJPG)
+
+    assert len(cropped_faces_png) == len(cropped_faces_jpg)
+
 
 

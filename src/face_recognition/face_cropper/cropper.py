@@ -88,10 +88,10 @@ if __name__ == "__main__" :
     CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
     def draw_bounding_box(nparray, bounding_box):
         color = np.array([0, 255, 0], dtype=np.uint8)
-        nparray[int(bounding_box[1]), int(bounding_box[0]):int(bounding_box[0]) + int(bounding_box[2])] = color
-        nparray[int(bounding_box[1]):int(bounding_box[1]) + int(bounding_box[3]), int(bounding_box[0])] = color
-        #nparray[int(bounding_box[1])+int(bounding_box[3]), int(bounding_box[0]):int(bounding_box[0])+ int(bounding_box[2])] = color
-        #nparray[int(bounding_box[1]):int(bounding_box[1]) , int(bounding_box[3]), int(bounding_box[0]) + int(bounding_box[2])] = color
+        nparray[int(bounding_box[1]), int(bounding_box[0]):int(bounding_box[2])] = color
+        nparray[int(bounding_box[1]):int(bounding_box[3]), int(bounding_box[0])] = color
+        nparray[int(bounding_box[3]), int(bounding_box[0]):int(bounding_box[2])] = color
+        nparray[int(bounding_box[1]):int(bounding_box[3]),  int(bounding_box[2])] = color
 
 
     def show_image(nparray):
