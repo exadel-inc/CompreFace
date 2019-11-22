@@ -1,2 +1,2 @@
-hello-world-nginx
+nginx proxy
 =================
