@@ -24,13 +24,13 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/proxy")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class ProxyController {
 
     private static final String API_KEY_HEADER = "X-Api-Key";
-    private static final String APP_GUID_HEADER = "app-guid";
-    private static final String MODEL_GUID_HEADER = "model-guid";
+    private static final String APP_GUID_HEADER = "x-frs-app-key";
+    private static final String MODEL_GUID_HEADER = "x-frs-model-key";
 
     private final SecurityUtils securityUtils;
 
