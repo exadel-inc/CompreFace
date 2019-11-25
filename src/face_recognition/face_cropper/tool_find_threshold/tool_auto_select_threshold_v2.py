@@ -100,14 +100,6 @@ def open_image(img_filepath):
     return img
 
 
-def tuple_sum(*tuples):
-    """
-    >>> tuple_sum((1,2,3),(10,20,30),(100,200,300))
-    (111, 222, 333)
-    """
-    return tuple(sum(x) for x in zip(*tuples))
-
-
 ThresholdScore = namedtuple('ThresholdScore', 'threshold score')
 
 if __name__ == "__main__":
