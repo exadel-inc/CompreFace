@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 
 import imageio
-import np as np
 from src import pyutils
 
 import tensorflow as tf
@@ -66,18 +65,18 @@ def _calculate_threshold(list_of_thresholds):
 if __name__ == "__main__" :
     _init_once()
 
-    dict_faces_and_noses = {#CURRENT_DIR / 'files' / 'four-faces.png': [(996,469), (650, 457), (788,450), (1157, 455)],
-                            #CURRENT_DIR / 'files' / 'four-faces.jpg': [(212,209),(319,238),(443,234),(629,248)],
-                            #CURRENT_DIR / 'files' / 'four-plus-one-faces.png': [(660,630), (808, 618), (898,665), (972, 513), (1153, 576)],
-                            #CURRENT_DIR / 'files' / 'four-plus-one-faces.jpg': [(281,268),(344,261),(383,283),(413,221),(494,248)],
-                            #CURRENT_DIR / 'files' / 'five-people.png': [(225, 666), (484, 625), (956, 419), (1417, 638), (1617, 716)],
+    dict_faces_and_noses = {CURRENT_DIR / 'files' / 'four-faces.png': [(996,469), (650, 457), (788,450), (1157, 455)],
+                            CURRENT_DIR / 'files' / 'four-faces.jpg': [(212,209),(319,238),(443,234),(629,248)],
+                            CURRENT_DIR / 'files' / 'four-plus-one-faces.png': [(660,630), (808, 618), (898,665), (972, 513), (1153, 576)],
+                            CURRENT_DIR / 'files' / 'four-plus-one-faces.jpg': [(281,268),(344,261),(383,283),(413,221),(494,248)],
+                            CURRENT_DIR / 'files' / 'five-people.png': [(225, 666), (484, 625), (956, 419), (1417, 638), (1617, 716)],
                             #CURRENT_DIR / 'files' / 'five-people.jpg': [(95, 283), (207, 262), (407, 175), (605, 270), (691, 305)],
                             #CURRENT_DIR / 'files' / 'six-faces.png': [(384, 537), (632, 631), (823,666), (1060, 636), (1306, 623), (1494, 590)],
                             #CURRENT_DIR / 'files' / 'six-faces.jpg': [(164, 229), (269, 269), (352,282), (453,269), (557,263), (635,250)],
-                            CURRENT_DIR / 'files' / 'eight-faces.png': [(461,651),(612,686),(619,400),(836,663),(1034,499),(1064,676),(1217,386),(1613,479)],
-                            CURRENT_DIR / 'files' / 'eight-faces.jpg': [(194,277),(262,169),(260,292),(357,278),(440,213),(459,287),(521,161),(691,201)],
+                            #CURRENT_DIR / 'files' / 'eight-faces.png': [(461,651),(612,686),(619,400),(836,663),(1034,499),(1064,676),(1217,386),(1613,479)],
+                            #CURRENT_DIR / 'files' / 'eight-faces.jpg': [(194,277),(262,169),(260,292),(357,278),(440,213),(459,287),(521,161),(691,201)],
                             #CURRENT_DIR / 'files' / 'five-faces.png': [(221,103),(304,251),(391,222),(469,311),(598,296)],
-                            #CURRENT_DIR / 'files' / 'five-faces.jpg': [(219, 105, 300, 252, 392, 220, 469, 309, 600, 294)],
+                            #CURRENT_DIR / 'files' / 'five-faces.jpg': [(219, 105), (300, 252), (392, 220), (469, 309), (600, 294)],
                             #CURRENT_DIR / 'files' / 'two-faces.png': [(809,534),(1165,600)],
                             #CURRENT_DIR / 'files' / 'two-faces.jpg': [(354,232),(505,258)],
                             #CURRENT_DIR / 'files' / 'three-people.png': [(740,598),(906,520),(1045,548)],
@@ -94,6 +93,8 @@ if __name__ == "__main__" :
             for x in range(1, 10):
                 for y in range(1, 10):
                     for z in range(1, 10):
+                        print(f'{picture.name}, {(x,y,z)}')
+
                         box = _get_bounding_boxes_for_threshold(img, [(x * 0.1), (y * 0.1), (z * 0.1)])
                         if len(box) == len(dict_faces_and_noses[picture]):
                             for box_dim in box:
@@ -108,8 +109,11 @@ if __name__ == "__main__" :
                                         else:
                                             dict_of_thresholds[x, y, z] += 1
 
+                        list_of_thresholds = sorted(dict_of_thresholds.items(), key=itemgetter(1), reverse=True)
+                        print(f'Top threshold: {list_of_thresholds[0] if list_of_thresholds else None}')
+
         list_of_thresholds = sorted(dict_of_thresholds.items(), key=itemgetter(1), reverse=True)
-        return _calculate_threshold(list_of_thresholds)
+        return _calculate_threshold(list_of_thresholds) if list_of_thresholds else None
 
     print(find_face(dict_faces_and_noses))
 

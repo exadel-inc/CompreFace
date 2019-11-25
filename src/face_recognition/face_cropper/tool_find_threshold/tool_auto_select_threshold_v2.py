@@ -7,7 +7,7 @@ from pathlib import Path
 import imageio
 
 from src import pyutils
-from src.face_recognition.face_cropper.constants import FACE_MIN_SIZE, SCALE_FACTOR
+from src.face_recognition.face_cropper.constants import FACE_MIN_SIZE, SCALE_FACTOR, THRESHOLD
 from src.face_recognition.face_cropper.cropper import _preprocess_img, _init_once as init_tensorflow
 from src.face_recognition.face_cropper.libraries.align import detect_face
 
@@ -36,7 +36,7 @@ DATASET = {
     IMG_DIR / 'four-people.jpg': [(275, 196), (332, 188), (421, 197), (495, 188)]
 }
 
-Score = namedtuple('Score', 'points_outside_one_box boxes_with_not_one_point total_boxes total_points')
+CalcResult = namedtuple('Score', 'points_outside_one_box boxes_with_not_one_point total_boxes total_points')
 
 
 def point_inside_bounding_box(bounding_box, point) -> bool:
@@ -55,7 +55,7 @@ def filter_only_noses_with_max_one_bounding_box(bounding_boxes, nose_locations):
                    for bounding_box in bounding_boxes) <= 1]
 
 
-def calc_score_for_bounding_boxes(bounding_boxes, points) -> Score:
+def calc_score_for_bounding_boxes(bounding_boxes, points) -> CalcResult:
     """
     >>> calc_score_for_bounding_boxes([(100,500,150,550)], [(125, 525)])
     Score(points_outside_one_box=0, boxes_with_not_one_point=0, total_boxes=1, total_points=1)
@@ -80,13 +80,13 @@ def calc_score_for_bounding_boxes(bounding_boxes, points) -> Score:
         if points_inside_box_count != 1:
             boxes_with_not_one_point += 1
 
-    return Score(points_outside_one_box=points_outside_one_box,
-                 boxes_with_not_one_point=boxes_with_not_one_point,
-                 total_boxes=len(bounding_boxes),
-                 total_points=len(points))
+    return CalcResult(points_outside_one_box=points_outside_one_box,
+                      boxes_with_not_one_point=boxes_with_not_one_point,
+                      total_boxes=len(bounding_boxes),
+                      total_points=len(points))
 
 
-def calc_score_for_image(img, threshold, nose_locations) -> Score:
+def calc_score_for_image(img, threshold, nose_locations) -> CalcResult:
     detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, threshold,
                                                  SCALE_FACTOR)
     bounding_boxes = list(detect_face_result[0][:, 0:4])
@@ -100,38 +100,60 @@ def open_image(img_filepath):
     return img
 
 
+Score = namedtuple('Score', 'errors boxes_with_not_one_point points_outside_one_box')
 ThresholdScore = namedtuple('ThresholdScore', 'threshold score')
+
+
+def save_state():
+    with (CURRENT_DIR / 'threshold_scores.pickle').open('wb') as file_:
+        pickle.dump(threshold_scores, file_, protocol=pickle.HIGHEST_PROTOCOL)
+    print('Saved state.')
+
 
 if __name__ == "__main__":
     pnet, rnet, onet = init_tensorflow()
-    thresholds = [[random.uniform(0, 1) for _ in range(3)] for _ in range(2)]
+
+    thresholds = ([THRESHOLD]
+                  + [[random.uniform(0.5, 1) for _ in range(3)] for _ in range(3000)])
 
     threshold_scores = []
-    for threshold in thresholds:
+    for i, threshold in enumerate(thresholds):
         scores = []
-        print(f"Threshold: {threshold}")
         for img_filepath, nose_locations in DATASET.items():
             img = open_image(img_filepath)
-            score = calc_score_for_image(img, threshold, nose_locations)
-            print(f' - {img_filepath.name}: {score}')
-            scores.append(score)
-        total_score = (sum(score.boxes_with_not_one_point + score.points_outside_one_box
-                           for score in scores),
-                       sum(score.boxes_with_not_one_point
-                           for score in scores),
-                       sum(score.points_outside_one_box
-                           for score in scores))
-        threshold_score = ThresholdScore(threshold, total_score)
-        print(f' - TOTAL: {threshold_score}')
-        threshold_scores.append(threshold_score)
 
-    threshold_scores = sorted(threshold_scores, key=lambda x: x[1][0])
+            while True:
+                try:
+                    score = calc_score_for_image(img, list(threshold), nose_locations)
+                except Exception as e:
+                    print(str(e))
+                    save_state()
+                    print(
+                        f'Top score (out of {len(threshold_scores)}): {threshold_scores[0] if len(threshold_scores) else None}')
+                else:
+                    break
+
+            # print(f' - {img_filepath.name}: {score}')
+            scores.append(score)
+        total_score = Score(errors=sum(score.boxes_with_not_one_point + score.points_outside_one_box
+                                       for score in scores),
+                            boxes_with_not_one_point=sum(score.boxes_with_not_one_point
+                                                         for score in scores),
+                            points_outside_one_box=sum(score.points_outside_one_box
+                                                       for score in scores))
+        threshold_score = ThresholdScore(threshold, total_score)
+        print(f'{threshold_score}')
+        threshold_scores.append(threshold_score)
+        threshold_scores = sorted(threshold_scores, key=lambda x: x.score.errors)
+        print(f'Top score (out of {len(threshold_scores)}): {threshold_scores[0] if threshold_scores else None}')
+
+        if i % 50 == 0:
+            save_state()
 
     print("\nLeaderboard:")
     for i, threshold_score in enumerate(threshold_scores, start=1):
         print(f'#{i}. {threshold_score}')
-        if i == 3:
+        if i == 50:
             break
 
-    with (CURRENT_DIR / 'threshold_scores.pickle').open('wb') as file_:
-        pickle.dump(threshold_scores, file_, protocol=pickle.HIGHEST_PROTOCOL)
+    save_state()
