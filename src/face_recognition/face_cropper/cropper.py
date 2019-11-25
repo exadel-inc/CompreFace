@@ -1,7 +1,6 @@
 import logging
 from typing import List
 
-import np as np
 import numpy as np
 import tensorflow as tf
 from skimage import transform
@@ -24,6 +23,7 @@ def _init_once():
         global pnet, rnet, onet
         sess = tf.Session()
         pnet, rnet, onet = detect_face.create_mtcnn(sess, None)
+    return pnet, rnet, onet
 
 
 def crop_face(img) -> CroppedFace:

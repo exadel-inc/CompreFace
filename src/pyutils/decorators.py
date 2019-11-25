@@ -30,3 +30,18 @@ def run_first(preceding_func):
         return wrapper_decorator
 
     return decorator
+
+
+def cached(func):
+    cache = {}
+
+    @functools.wraps(func)
+    def decorator(arg):
+        if arg in cache:
+            return cache[arg]
+
+        result = func(arg)
+        cache[arg] = result
+        return result
+
+    return decorator
