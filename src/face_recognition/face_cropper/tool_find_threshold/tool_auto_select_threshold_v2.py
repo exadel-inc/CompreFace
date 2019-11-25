@@ -58,13 +58,13 @@ def filter_only_noses_with_max_one_bounding_box(bounding_boxes, nose_locations):
 def calc_score_for_bounding_boxes(bounding_boxes, points) -> Score:
     """
     >>> calc_score_for_bounding_boxes([(100,500,150,550)], [(125, 525)])
-    Score(points_outside_one_box=0, boxes_with_not_one_point=0)
+    Score(points_outside_one_box=0, boxes_with_not_one_point=0, total_boxes=1, total_points=1)
     >>> calc_score_for_bounding_boxes([(100,500,150,550)], [(1125, 1525)])
-    Score(points_outside_one_box=1, boxes_with_not_one_point=1)
+    Score(points_outside_one_box=1, boxes_with_not_one_point=1, total_boxes=1, total_points=1)
     >>> calc_score_for_bounding_boxes([(100,500,150,550), (100,500,150,550)], [(125, 525)])
-    Score(points_outside_one_box=1, boxes_with_not_one_point=0)
+    Score(points_outside_one_box=1, boxes_with_not_one_point=0, total_boxes=2, total_points=1)
     >>> calc_score_for_bounding_boxes([(100,500,150,550)], [(125, 525), (125, 525)])
-    Score(points_outside_one_box=0, boxes_with_not_one_point=1)
+    Score(points_outside_one_box=0, boxes_with_not_one_point=1, total_boxes=1, total_points=2)
     """
     points_outside_one_box, boxes_with_not_one_point = 0, 0
 
