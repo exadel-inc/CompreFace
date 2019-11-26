@@ -37,7 +37,7 @@ security:
   security-realm: Spring Boot JWT Example Realm
 
 proxy:
-  baseUrl: http://msqv355.exadel.by:5001
+  baseUrl: ${PROXY_URL:http://localhost:5000}
 
 swagger:
   auth:
