@@ -13,7 +13,8 @@ class FaceLimitConstant(IntEnum):
 FaceLimit = Union[FaceLimitConstant, int]
 
 FACE_MIN_SIZE = 20
-THRESHOLD = [0.6, 0.7, 0.7]  # three steps's threshold
+THRESHOLD = [0.9436513301, 0.7059968943, 0.5506904359] # three steps's threshold
+#THRESHOLD = [0.6, 0.7, 0.7]  # old threshold
 SCALE_FACTOR = 0.709
 MARGIN = 32
 IMAGE_SIZE = 160

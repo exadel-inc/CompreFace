@@ -15,7 +15,7 @@ CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 IMG_DIR = CURRENT_DIR / 'files'
 
 DATASET = {
-    IMG_DIR / 'four-faces.png': [(996, 469), (650, 457), (788, 450), (1157, 455)],
+    IMG_DIR / 'four-faces.png': [(746, 568), (495, 487), (1046, 548), (1485, 578)],
     IMG_DIR / 'four-faces.jpg': [(212, 209), (319, 238), (443, 234), (629, 248)],
     IMG_DIR / 'four-plus-one-faces.png': [(660, 630), (808, 618), (898, 665), (972, 513), (1153, 576)],
     IMG_DIR / 'four-plus-one-faces.jpg': [(281, 268), (344, 261), (383, 283), (413, 221), (494, 248)],
@@ -115,6 +115,7 @@ if __name__ == "__main__":
 
     thresholds = ([THRESHOLD]
                   + [[random.uniform(0.5, 1) for _ in range(3)] for _ in range(3000)])
+    # thresholds = ([[0.9436513301, 0.7059968943, 0.5506904359]])
 
     threshold_scores = []
     for i, threshold in enumerate(thresholds):
