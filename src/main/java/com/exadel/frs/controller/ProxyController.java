@@ -24,10 +24,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping(ProxyController.PREFIX)
 @RequiredArgsConstructor
 public class ProxyController {
 
+    static final String PREFIX = "/api";
     private static final String API_KEY_HEADER = "X-Api-Key";
     private static final String APP_GUID_HEADER = "x-frs-app-key";
     private static final String MODEL_GUID_HEADER = "x-frs-model-key";
@@ -49,7 +50,7 @@ public class ProxyController {
         if (!securityUtils.isAppHasAccessToModel(appGuid, modelGuid)) {
             throw new AppOrModelNotFoundException();
         }
-        String url = request.getRequestURI().replaceFirst("/proxy", "");
+        String url = request.getRequestURI().replaceFirst(PREFIX, "");
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         params.forEach(body::add);
         files.forEach((key, file) -> body.add(key, file.getResource()));
