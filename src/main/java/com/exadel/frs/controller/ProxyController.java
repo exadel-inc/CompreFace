@@ -30,8 +30,7 @@ public class ProxyController {
 
     static final String PREFIX = "/api";
     private static final String API_KEY_HEADER = "X-Api-Key";
-    private static final String APP_GUID_HEADER = "x-frs-app-key";
-    private static final String MODEL_GUID_HEADER = "x-frs-model-key";
+    private static final String API_GUID_HEADER = "x-frs-api-key";
 
     private final SecurityUtils securityUtils;
 
@@ -41,12 +40,13 @@ public class ProxyController {
     @RequestMapping(value = "/**")
     @ApiOperation(value = "Send request to core service")
     public ResponseEntity<String> proxy(
-            @ApiParam(value = "GUID of application", required = true) @RequestHeader(APP_GUID_HEADER) String appGuid,
-            @ApiParam(value = "GUID of model, to which application has access", required = true) @RequestHeader(MODEL_GUID_HEADER) String modelGuid,
+            @ApiParam(value = "Id of application and model", required = true) @RequestHeader(API_GUID_HEADER) String apiGuid,
             @ApiParam(value = "Headers that will be proxied to core service", required = true) @RequestHeader MultiValueMap<String, String> headers,
             @ApiParam(value = "String parameters that will be proxied to core service") @RequestParam(required = false) Map<String, String> params,
             @ApiParam(value = "Files that will be proxied to core service") @RequestParam(required = false) Map<String, MultipartFile> files,
             HttpServletRequest request) {
+        String appGuid = apiGuid.substring(0, apiGuid.length()/2);
+        String modelGuid = apiGuid.substring(apiGuid.length()/2);
         if (!securityUtils.isAppHasAccessToModel(appGuid, modelGuid)) {
             throw new AppOrModelNotFoundException();
         }
@@ -55,8 +55,7 @@ public class ProxyController {
         params.forEach(body::add);
         files.forEach((key, file) -> body.add(key, file.getResource()));
         headers.add(API_KEY_HEADER, modelGuid);
-        headers.remove(APP_GUID_HEADER);
-        headers.remove(MODEL_GUID_HEADER);
+        headers.remove(API_GUID_HEADER);
         RestTemplate restTemplate = new RestTemplate();
         try {
             return restTemplate.exchange(baseUrl + url,
