@@ -53,8 +53,8 @@ class Face(FaceEmbedding):
     face_img: ndarray
 
     @classmethod
-    def from_image(cls, face_name: str, img):
-        face_img = crop_face(img).img
+    def from_image(cls, face_name: str, img, threshold):
+        face_img = crop_face(img, threshold).img
         embedding = calculate_embedding(face_img)
         return Face(face_name, embedding, img, face_img)
 

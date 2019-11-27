@@ -10,7 +10,7 @@ from src.face_recognition.dto.bounding_box import BoundingBox
 from src.face_recognition.dto.cropped_face import CroppedFace
 from src.face_recognition.embedding_classifier.libraries import facenet
 from src.face_recognition.face_cropper.constants import FACE_MIN_SIZE, THRESHOLD, SCALE_FACTOR, FaceLimitConstant, \
-    MARGIN, IMAGE_SIZE, FaceLimit
+    MARGIN, IMAGE_SIZE, FaceLimit, ThresholdConstant
 from src.face_recognition.face_cropper.exceptions import IncorrectImageDimensionsError, NoFaceFoundError
 from src.face_recognition.face_cropper.libraries.align import detect_face
 
@@ -26,14 +26,18 @@ def _init_once():
     return pnet, rnet, onet
 
 
-def crop_face(img) -> CroppedFace:
-    cropped_faces = crop_faces(img, face_lim=1)
+def crop_face(img, threshold) -> CroppedFace:
+    cropped_faces = crop_faces(img, threshold, face_lim=1)
     return cropped_faces[0]
 
 
 
-def _get_bounding_boxes(img, face_lim):
-    detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, THRESHOLD, SCALE_FACTOR)
+def _get_bounding_boxes(img, face_lim, threshold):
+    if threshold:
+        threshold = [THRESHOLD[0], THRESHOLD[1], threshold]
+    else:
+        threshold = THRESHOLD
+    detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, threshold, SCALE_FACTOR)
     bounding_boxes = list(detect_face_result[0][:, 0:4])
     if len(bounding_boxes) < 1:
         raise NoFaceFoundError("No face is found in the given image")
@@ -65,9 +69,9 @@ def _preprocess_img(img):
 
 
 @pyutils.run_first(_init_once)
-def crop_faces(img, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
+def crop_faces(img, threshold = ThresholdConstant.NO_THRESHOLD, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
     img, img_size = _preprocess_img(img)
-    bounding_boxes = _get_bounding_boxes(img, face_lim)
+    bounding_boxes = _get_bounding_boxes(img, face_lim, threshold)
     cropped_faces = [_bounding_box_2_cropped_face(bounding_box, img, img_size) for bounding_box in bounding_boxes]
     return cropped_faces
 
@@ -99,19 +103,60 @@ if __name__ == "__main__" :
         Image.fromarray(nparray, 'RGB').show()
 
 
-    def crop_faces_TEST(img, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
+    def crop_faces_TEST(img, threshold = ThresholdConstant.NO_THRESHOLD, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
         img, img_size = _preprocess_img(img)
-        bounding_boxes = _get_bounding_boxes(img, face_lim)
+        bounding_boxes = _get_bounding_boxes(img, face_lim, threshold)
         arr = img.astype(np.uint8)
         for bounding_box in bounding_boxes:
             draw_bounding_box(arr, bounding_box)
         show_image(arr)
 
+    def number_of_boxes_test(img, threshold, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT):
+        img, img_size = _preprocess_img(img)
+        bounding_boxes = _get_bounding_boxes(img, face_lim, threshold)
+        return len(bounding_boxes)
 
     import imageio
 
     _init_once()
     im = imageio.imread(CURRENT_DIR / 'test' / 'files' / 'five-faces.png')
     crop_faces_TEST(im)
+
     im = imageio.imread(CURRENT_DIR / 'test' / 'files' / 'five-faces.jpg')
     crop_faces_TEST(im)
+
+    def test_for_boxes_for_diff_thresholds():
+        _init_once()
+        CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+        IMG_DIR = CURRENT_DIR / 'tool_find_threshold' / 'files'
+
+        DATASET = [
+            IMG_DIR / 'four-faces.png',
+            IMG_DIR / 'four-faces.jpg',
+            IMG_DIR / 'four-plus-one-faces.png',
+            IMG_DIR / 'four-plus-one-faces.jpg',
+            IMG_DIR / 'five-people.png',
+            IMG_DIR / 'five-people.jpg',
+            IMG_DIR / 'six-faces.png',
+            IMG_DIR / 'six-faces.jpg',
+            IMG_DIR / 'eight-faces.png',
+            IMG_DIR / 'eight-faces.jpg',
+            IMG_DIR / 'five-faces.png',
+            IMG_DIR / 'two-faces.png',
+            IMG_DIR / 'two-faces.jpg',
+            IMG_DIR / 'three-people.png',
+            IMG_DIR / 'three-people.jpg',
+            IMG_DIR / 'four-people.png',
+            IMG_DIR / 'four-people.jpg'
+        ]
+
+        for picture in DATASET:
+            im = imageio.imread(picture)
+            len_our_threshold = number_of_boxes_test(im, threshold=None)
+            len_new_threshold = number_of_boxes_test(im, 0.1)
+            if len_new_threshold == len_our_threshold:
+                print(picture, ":", "the number of boxes has not changed")
+            else:
+                print(picture, ":", len_new_threshold, len_our_threshold)
+
+    test_for_boxes_for_diff_thresholds()

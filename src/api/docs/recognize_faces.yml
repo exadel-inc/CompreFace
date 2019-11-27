@@ -18,6 +18,12 @@ parameters:
     required: 'false'
     type: integer
     default: 0
+  - in: path
+    name: threshold
+    description: 'The minimal percent confidence that found face is actually a face.'
+    required: 'false'
+    type: float
+    default: 0.5
 security:
   - ApiKeyAuth: []
 responses:

@@ -14,7 +14,7 @@ from src.api.exceptions import BadRequestException
 from src.api.parse_request_arg import parse_request_bool_arg
 from src.api.training_task_manager import start_training, is_training, abort_training
 from src.face_recognition.embedding_classifier.predict import predict_from_image
-from src.face_recognition.face_cropper.constants import FaceLimitConstant
+from src.face_recognition.face_cropper.constants import FaceLimitConstant, ThresholdConstant
 from src.pyutils.convertible_to_dict import ConvertibleToDict
 from src.storage.dto.face import Face
 from src.storage.storage import get_storage
@@ -59,9 +59,10 @@ def create_app():
         from flask import request
         file = request.files['file']
         api_key = request.headers[API_KEY_HEADER]
+        threshold = float(request.values.get('threshold', ThresholdConstant.NO_THRESHOLD))
         img = imageio.imread(file)
 
-        face = Face.from_image(face_name, img)
+        face = Face.from_image(face_name, img, threshold)
         get_storage(api_key).add_face(face)
 
         return Response(status=HTTPStatus.CREATED)
@@ -115,6 +116,7 @@ def create_app():
         from flask import request
         try:
             limit = int(request.values.get('limit', FaceLimitConstant.NO_LIMIT))
+            threshold = float(request.values.get('threshold', ThresholdConstant.NO_THRESHOLD))
             assert limit >= 0
         except ValueError as e:
             raise BadRequestException('Limit format is invalid') from e
@@ -124,7 +126,7 @@ def create_app():
         file = request.files['file']
 
         img = imageio.imread(file)
-        face_predictions = predict_from_image(img, limit, api_key)
+        face_predictions = predict_from_image(img, threshold, limit, api_key)
 
         return jsonify(result=face_predictions)
 
