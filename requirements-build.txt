@@ -3,4 +3,3 @@ pytest
 pytest-ordering
 pymongo
 strenum
-toolz
