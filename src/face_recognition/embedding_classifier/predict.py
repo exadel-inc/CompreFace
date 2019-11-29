@@ -15,11 +15,11 @@ from src.storage.storage import get_storage
 
 
 def predict_from_embedding(classifier: EmbeddingClassifier, embedding: Embedding,
-                           face_box: BoundingBox) -> FacePrediction:
+                           face_box: BoundingBox, is_face_prob) -> FacePrediction:
     probabilities = classifier.model.predict_proba([embedding.array])[0]
     top_class = np.argsort(-probabilities)[0]
     return FacePrediction(face_name=classifier.class_2_face_name[top_class],
-                          probability=probabilities[top_class], box=face_box)
+                          probability=probabilities[top_class], box=face_box, is_face_prob=is_face_prob)
 
 
 def predict_from_image(img, threshold: Threshold, limit: FaceLimit, api_key: str) -> List[FacePrediction]:
@@ -27,7 +27,7 @@ def predict_from_image(img, threshold: Threshold, limit: FaceLimit, api_key: str
 
     def predict_from_cropped_face(face: CroppedFace):
         embedding = calculate_embedding(face.img)
-        face_prediction = predict_from_embedding(classifier, embedding, face.box)
+        face_prediction = predict_from_embedding(classifier, embedding, face.box, face.is_face_prob)
         return face_prediction
 
     return [predict_from_cropped_face(cropped_face) for cropped_face in crop_faces(img, threshold, limit)]

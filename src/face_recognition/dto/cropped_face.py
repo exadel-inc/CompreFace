@@ -9,3 +9,4 @@ from src.pyutils.convertible_to_dict import ConvertibleToDict
 class CroppedFace(ConvertibleToDict):
     box: BoundingBox
     img: ndarray
+    is_face_prob: float

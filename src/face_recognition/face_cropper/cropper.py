@@ -26,7 +26,7 @@ def _init_once():
     return pnet, rnet, onet
 
 
-def crop_face(img, threshold) -> CroppedFace:
+def crop_face(img, threshold = ThresholdConstant.NO_THRESHOLD) -> CroppedFace:
     cropped_faces = crop_faces(img, threshold, face_lim=1)
     return cropped_faces[0]
 
@@ -38,7 +38,7 @@ def _get_bounding_boxes(img, face_lim, threshold):
     else:
         threshold = THRESHOLD
     detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, threshold, SCALE_FACTOR)
-    bounding_boxes = list(detect_face_result[0][:, 0:4])
+    bounding_boxes = list(detect_face_result[0])
     if len(bounding_boxes) < 1:
         raise NoFaceFoundError("No face is found in the given image")
     if face_lim:
@@ -49,6 +49,7 @@ def _get_bounding_boxes(img, face_lim, threshold):
 
 def _bounding_box_2_cropped_face(bounding_box, img, img_size) -> CroppedFace:
     logging.debug(f"the box around this face has dimensions of {bounding_box[0:4]}")
+    is_face_prob = bounding_box[4]
     bounding_box = np.squeeze(bounding_box)
     xmin = int(np.maximum(bounding_box[0] - MARGIN / 2, 0))
     ymin = int(np.maximum(bounding_box[1] - MARGIN / 2, 0))
@@ -56,7 +57,7 @@ def _bounding_box_2_cropped_face(bounding_box, img, img_size) -> CroppedFace:
     ymax = int(np.minimum(bounding_box[3] + MARGIN / 2, img_size[0]))
     cropped_img = img[ymin:ymax, xmin:xmax, :]
     resized_img = transform.resize(cropped_img, (IMAGE_SIZE, IMAGE_SIZE))
-    return CroppedFace(box=BoundingBox(xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax), img=resized_img)
+    return CroppedFace(box=BoundingBox(xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax), img=resized_img, is_face_prob=is_face_prob)
 
 
 def _preprocess_img(img):
@@ -108,7 +109,7 @@ if __name__ == "__main__" :
         bounding_boxes = _get_bounding_boxes(img, face_lim, threshold)
         arr = img.astype(np.uint8)
         for bounding_box in bounding_boxes:
-            draw_bounding_box(arr, bounding_box)
+            draw_bounding_box(arr, bounding_box[0:4])
         show_image(arr)
 
     def number_of_boxes_test(img, threshold, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT):
@@ -119,10 +120,10 @@ if __name__ == "__main__" :
     import imageio
 
     _init_once()
-    im = imageio.imread(CURRENT_DIR / 'test' / 'files' / 'five-faces.png')
+    im = imageio.imread(CURRENT_DIR / 'test' / 'files' / 'eight-faces.png')
     crop_faces_TEST(im)
 
-    im = imageio.imread(CURRENT_DIR / 'test' / 'files' / 'five-faces.jpg')
+    im = imageio.imread(CURRENT_DIR / 'test' / 'files' / 'eight-faces.jpg')
     crop_faces_TEST(im)
 
     def test_for_boxes_for_diff_thresholds():
@@ -159,4 +160,4 @@ if __name__ == "__main__" :
             else:
                 print(picture, ":", len_new_threshold, len_our_threshold)
 
-    test_for_boxes_for_diff_thresholds()
+    #test_for_boxes_for_diff_thresholds()

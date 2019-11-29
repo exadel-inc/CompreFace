@@ -59,6 +59,10 @@ responses:
                 type: number
                 format: float
                 example: '0.95'
+              is_face_prob:
+                type: number
+                format: float
+                example: '0.99'
   '400':
     $ref: '#/components/responses/BadRequestResponse'
   '500':
