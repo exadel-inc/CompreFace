@@ -19,7 +19,7 @@ parameters:
     type: integer
     default: 0
   - in: path
-    name: threshold
+    name: det_prob_threshold
     description: 'The minimal percent confidence that found face is actually a face.'
     required: 'false'
     type: float

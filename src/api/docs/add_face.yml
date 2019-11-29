@@ -12,7 +12,7 @@ security:
 parameters:
   - $ref: '#/components/parameters/FaceNameParameter'
   - $ref: '#/components/parameters/RetrainParameter'
-  - $ref: '#/components/parameters/ThresholdParameter'
+  - $ref: '#/components/parameters/DetProbThresholdParameter'
 responses:
   '201':
     description: 'Face example is saved.'

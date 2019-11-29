@@ -29,8 +29,8 @@ components:
       description: 'Person''s name to whom the face belongs to.'
       required: 'false'
       type: string
-    ThresholdParameter:
-      name: threshold
+    DetProbThresholdParameter:
+      name: det_prob_threshold
       in: path
       description: 'The minimal percent confidence that found face is actually a face.'
       required: 'false'

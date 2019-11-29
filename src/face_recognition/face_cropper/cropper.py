@@ -9,8 +9,8 @@ from src import pyutils
 from src.face_recognition.dto.bounding_box import BoundingBox
 from src.face_recognition.dto.cropped_face import CroppedFace
 from src.face_recognition.embedding_classifier.libraries import facenet
-from src.face_recognition.face_cropper.constants import FACE_MIN_SIZE, THRESHOLD, SCALE_FACTOR, FaceLimitConstant, \
-    MARGIN, IMAGE_SIZE, FaceLimit, ThresholdConstant
+from src.face_recognition.face_cropper.constants import FACE_MIN_SIZE, DEFAULT_1ST_THRESHOLD, DEFAULT_2DN_THRESHOLD, DEFAULT_3RD_THRESHOLD, SCALE_FACTOR, FaceLimitConstant, \
+    MARGIN, IMAGE_SIZE, FaceLimit
 from src.face_recognition.face_cropper.exceptions import IncorrectImageDimensionsError, NoFaceFoundError
 from src.face_recognition.face_cropper.libraries.align import detect_face
 
@@ -26,18 +26,15 @@ def _init_once():
     return pnet, rnet, onet
 
 
-def crop_face(img, threshold = ThresholdConstant.NO_THRESHOLD) -> CroppedFace:
-    cropped_faces = crop_faces(img, threshold, face_lim=1)
+def crop_face(img, detection_3rd_threshold = DEFAULT_3RD_THRESHOLD) -> CroppedFace:
+    cropped_faces = crop_faces(img, detection_3rd_threshold, face_lim=1)
     return cropped_faces[0]
 
 
 
-def _get_bounding_boxes(img, face_lim, threshold):
-    if threshold:
-        threshold = [THRESHOLD[0], THRESHOLD[1], threshold]
-    else:
-        threshold = THRESHOLD
-    detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, threshold, SCALE_FACTOR)
+def _get_bounding_boxes(img, face_lim, detection_3rd_threshold):
+
+    detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, [DEFAULT_1ST_THRESHOLD, DEFAULT_2DN_THRESHOLD, detection_3rd_threshold], SCALE_FACTOR)
     bounding_boxes = list(detect_face_result[0])
     if len(bounding_boxes) < 1:
         raise NoFaceFoundError("No face is found in the given image")
@@ -70,9 +67,9 @@ def _preprocess_img(img):
 
 
 @pyutils.run_first(_init_once)
-def crop_faces(img, threshold = ThresholdConstant.NO_THRESHOLD, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
+def crop_faces(img, detection_3rd_threshold = DEFAULT_3RD_THRESHOLD, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
     img, img_size = _preprocess_img(img)
-    bounding_boxes = _get_bounding_boxes(img, face_lim, threshold)
+    bounding_boxes = _get_bounding_boxes(img, face_lim, detection_3rd_threshold)
     cropped_faces = [_bounding_box_2_cropped_face(bounding_box, img, img_size) for bounding_box in bounding_boxes]
     return cropped_faces
 
@@ -104,17 +101,17 @@ if __name__ == "__main__" :
         Image.fromarray(nparray, 'RGB').show()
 
 
-    def crop_faces_TEST(img, threshold = ThresholdConstant.NO_THRESHOLD, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
+    def crop_faces_TEST(img, detection_3rd_threshold = DEFAULT_3RD_THRESHOLD, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT) -> List[CroppedFace]:
         img, img_size = _preprocess_img(img)
-        bounding_boxes = _get_bounding_boxes(img, face_lim, threshold)
+        bounding_boxes = _get_bounding_boxes(img, face_lim, detection_3rd_threshold)
         arr = img.astype(np.uint8)
         for bounding_box in bounding_boxes:
             draw_bounding_box(arr, bounding_box[0:4])
         show_image(arr)
 
-    def number_of_boxes_test(img, threshold, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT):
+    def number_of_boxes_test(img, detection_3rd_threshold, face_lim: FaceLimit = FaceLimitConstant.NO_LIMIT):
         img, img_size = _preprocess_img(img)
-        bounding_boxes = _get_bounding_boxes(img, face_lim, threshold)
+        bounding_boxes = _get_bounding_boxes(img, face_lim, detection_3rd_threshold)
         return len(bounding_boxes)
 
     import imageio
@@ -153,7 +150,7 @@ if __name__ == "__main__" :
 
         for picture in DATASET:
             im = imageio.imread(picture)
-            len_our_threshold = number_of_boxes_test(im, threshold=None)
+            len_our_threshold = number_of_boxes_test(im, detection_3rd_threshold=None)
             len_new_threshold = number_of_boxes_test(im, 0.1)
             if len_new_threshold == len_our_threshold:
                 print(picture, ":", "the number of boxes has not changed")

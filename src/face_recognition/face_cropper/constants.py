@@ -12,19 +12,21 @@ class FaceLimitConstant(IntEnum):
 
 FaceLimit = Union[FaceLimitConstant, int]
 
-class ThresholdConstant(IntEnum):
+class DetProbThresholdConstant(IntEnum):
     """
-    >>> bool(FaceLimitConstant.NO_THRESHOLD)  # Because implicit cast to bool is used for this constant
+    >>> bool(DetProbThresholdConstant.NO_DET_PROB_THRESHOLD)  # Because implicit cast to bool is used for this constant
     False
     """
-    NO_THRESHOLD = 0
+    NO_DET_PROB_THRESHOLD = 0
 
 
-Threshold = Union[ThresholdConstant, int]
+Detection_3rd_Threshold = Union[DetProbThresholdConstant, int]
 
 FACE_MIN_SIZE = 20
-THRESHOLD = [0.9436513301, 0.7059968943, 0.5506904359]  # three steps's threshold
-#THRESHOLD = [0.6, 0.7, 0.7]  # old threshold
+DEFAULT_1ST_THRESHOLD = 0.9436513301
+DEFAULT_2DN_THRESHOLD = .7059968943
+DEFAULT_3RD_THRESHOLD = 0.5506904359  # three steps's threshold
+
 SCALE_FACTOR = 0.709
 MARGIN = 32
 IMAGE_SIZE = 160
