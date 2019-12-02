@@ -54,7 +54,7 @@ def _calculate_embeddings(cropped_images):
 
 
 def calculate_embedding(image: np.ndarray) -> Embedding:
-    return calculate_embeddings([image])[0]
+    return _calculate_embeddings([image])[0]
 
 
 def calculate_embeddings(cropped_images: List[np.ndarray]) -> List[Embedding]:
