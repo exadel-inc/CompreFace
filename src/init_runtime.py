@@ -5,4 +5,4 @@ from dotenv import load_dotenv
 
 def init_runtime():
     logging.basicConfig(level=logging.DEBUG)
-    load_dotenv()
+    load_dotenv(verbose=True)

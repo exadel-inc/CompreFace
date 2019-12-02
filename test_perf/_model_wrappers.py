@@ -28,7 +28,7 @@ class PythonModel(ModelWrapperBase):
         self._classifier = None
 
     def add_example(self, img: Image, name: Name):
-        cropped_img = crop_one_face(img)
+        cropped_img = crop_one_face(img).img
         self._cropped_images.append(cropped_img)
         self._names.append(name)
 
