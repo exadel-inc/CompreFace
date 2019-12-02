@@ -25,7 +25,12 @@ def _calculator() -> Calculator:
         return Calculator(graph=graph, sess=tf.Session(graph=graph))
 
 
-def calculate_embeddings(cropped_images: List[np.ndarray]) -> List[Embedding]:
+def _calculate_embeddings(cropped_images):
+    """
+    Quick fix for a bug where it can't handle many cropped_images
+    is to give one image at a time.
+    """
+
     calculator = _calculator()
 
     # Get tensors and constants
@@ -50,3 +55,7 @@ def calculate_embeddings(cropped_images: List[np.ndarray]) -> List[Embedding]:
 
 def calculate_embedding(image: np.ndarray) -> Embedding:
     return calculate_embeddings([image])[0]
+
+
+def calculate_embeddings(cropped_images: List[np.ndarray]) -> List[Embedding]:
+    return [calculate_embedding(image) for image in cropped_images]
