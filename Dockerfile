@@ -8,6 +8,7 @@ ARG IS_DEV_ENV=false
 RUN mkdir -p $DIR
 COPY src $DIR/src
 COPY models $DIR/models
+COPY test_files $DIR/test_files
 COPY main.py $DIR/main.py
 COPY docker-entrypoint.sh $DIR/docker-entrypoint.sh
 COPY wait-for-it.sh $DIR/wait-for-it.sh
