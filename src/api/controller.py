@@ -13,7 +13,7 @@ from src.api.endpoint_decorators import needs_authentication, needs_attached_fil
 from src.api.exceptions import BadRequestException
 from src.api.parse_request_arg import parse_request_bool_arg
 from src.api.training_task_manager import start_training, is_training, abort_training
-from src.face_recognition.classify_embedding.predict import predict_from_image
+from src.face_recognition.classify_embedding.predict import predict_from_image_with_api_key
 from src.face_recognition.crop_faces.constants import FaceLimitConstant, DEFAULT_THRESHOLD_C
 from src.pyutils.convertible_to_dict import ConvertibleToDict
 from src.storage.dto.face import Face
@@ -126,7 +126,7 @@ def create_app():
         file = request.files['file']
 
         img = imageio.imread(file)
-        face_predictions = predict_from_image(img, limit, detection_threshold_c, api_key)
+        face_predictions = predict_from_image_with_api_key(img, limit, api_key, detection_threshold_c)
 
         return jsonify(result=face_predictions)
 

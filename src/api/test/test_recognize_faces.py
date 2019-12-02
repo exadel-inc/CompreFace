@@ -32,7 +32,7 @@ def test__when_recognize_endpoint_is_requested__then_returns_predictions(client,
     ]
     img = object()
     imread_mock = mocker.patch('src.api.controller.imageio.imread', return_value=img)
-    get_face_predictions_mock = mocker.patch('src.api.controller.predict_from_image', return_value=ret_val)
+    get_face_predictions_mock = mocker.patch('src.api.controller.predict_from_image_with_api_key', return_value=ret_val)
 
     res = client.post('/recognize', data=dict(file=(b'', 'group-photo.jpg'), content_type='multipart/form-data'))
 
@@ -48,7 +48,8 @@ def test__given_limit_1_or_0_or_no_value__when_recognize_endpoint_is_required__t
                                                                                                               test_input,
                                                                                                               expected):
     mocker.patch('src.api.controller.imageio.imread')
-    get_face_predictions_mock: Mock = mocker.patch('src.api.controller.predict_from_image', return_value=[])
+    get_face_predictions_mock: Mock = mocker.patch('src.api.controller.predict_from_image_with_api_key',
+                                                   return_value=[])
 
     if test_input:
         res = client.post('/recognize?limit=' + test_input)
@@ -61,7 +62,7 @@ def test__given_limit_1_or_0_or_no_value__when_recognize_endpoint_is_required__t
 
 def test__given_limit_value_minus_1__when_recognize_endpoint_is_requested__then_returns_400(client, mocker):
     mocker.patch('src.api.controller.imageio.imread')
-    mocker.patch('src.api.controller.predict_from_image')
+    mocker.patch('src.api.controller.predict_from_image_with_api_key')
 
     res = client.post('/recognize?limit=-1')
 
@@ -71,7 +72,7 @@ def test__given_limit_value_minus_1__when_recognize_endpoint_is_requested__then_
 
 def test__given_limit_value_words__when_recognize_endpoint_is_requested__then_returns_400(client, mocker):
     mocker.patch('src.api.controller.imageio.imread')
-    mocker.patch('src.api.controller.predict_from_image')
+    mocker.patch('src.api.controller.predict_from_image_with_api_key')
 
     res = client.post('/recognize?limit=hello')
 

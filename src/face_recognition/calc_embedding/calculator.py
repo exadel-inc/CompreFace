@@ -25,7 +25,7 @@ def _calculator() -> Calculator:
         return Calculator(graph=graph, sess=tf.Session(graph=graph))
 
 
-def calculate_embeddings(images: List[np.ndarray]) -> List[Embedding]:
+def calculate_embeddings(cropped_images: List[np.ndarray]) -> List[Embedding]:
     calculator = _calculator()
 
     # Get tensors and constants
@@ -35,13 +35,13 @@ def calculate_embeddings(images: List[np.ndarray]) -> List[Embedding]:
     embedding_size = embeddings.get_shape()[1]
 
     # Run forward pass to calculate embeddings
-    image_count = len(images)
+    image_count = len(cropped_images)
     batches_per_epoch = int(math.ceil(1.0 * image_count / BATCH_SIZE))
     emb_array = np.zeros((image_count, embedding_size))
     for i in range(batches_per_epoch):
         start_index = i * BATCH_SIZE
         end_index = min((i + 1) * BATCH_SIZE, image_count)
-        feed_dict = {images_placeholder: images, phase_train_placeholder: False}
+        feed_dict = {images_placeholder: cropped_images, phase_train_placeholder: False}
         emb_array[start_index:end_index, :] = calculator.sess.run(embeddings, feed_dict=feed_dict)
 
     # Return DTO

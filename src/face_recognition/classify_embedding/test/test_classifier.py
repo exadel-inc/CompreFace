@@ -19,7 +19,7 @@ def _load_embedding(name):
 
 
 @pytest.mark.integration
-def test_integration__given_2_faces_in_db__when_asked_to_recognize_known_face__then_recognizes_correct_face(mocker):
+def test_integration__given_2_faces_in_db__when_asked_to_recognize_known_face__then_recognizes_correct_face():
     person_a_emb_1 = _load_embedding('personA-img1.embedding')
     person_a_emb_2 = _load_embedding('personA-img2.embedding')
     person_b_emb_1 = _load_embedding('personB-img1.embedding')

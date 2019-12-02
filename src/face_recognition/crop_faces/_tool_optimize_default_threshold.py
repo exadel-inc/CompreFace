@@ -6,6 +6,7 @@ from pathlib import Path
 
 import imageio
 
+from main import ROOT_DIR
 from src import pyutils
 from src.face_recognition.crop_faces._detect_faces import _face_detection_nets
 from src.face_recognition.crop_faces._lib.align import detect_face
@@ -13,7 +14,7 @@ from src.face_recognition.crop_faces.constants import SCALE_FACTOR, FACE_MIN_SIZ
 from src.face_recognition.crop_faces.crop_faces import _preprocess_img
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-IMG_DIR = CURRENT_DIR / 'files'
+IMG_DIR = ROOT_DIR / 'test_files'
 
 EXPERIMENT_SIZE = 3000
 
@@ -163,4 +164,5 @@ if __name__ == "__main__":
         if i == 50:
             break
 
-    save_state()
+    save_state()  # Saving optimization results for further analysis
+    # Note: Default threshold has to be selected and updated manually

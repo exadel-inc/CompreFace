@@ -7,6 +7,7 @@ import pytest
 from PIL import Image
 from numpy.core.multiarray import ndarray
 
+from main import ROOT_DIR
 from src.face_recognition.crop_faces.crop_faces import crop_faces
 from src.face_recognition.crop_faces.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
 from src.face_recognition.crop_faces.test._img_utils import ndarray_to_img, images_are_almost_the_same
@@ -14,10 +15,12 @@ from src.pyutils.raises import raises
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 
+IMG_DIR = ROOT_DIR / 'test_files'
+
 
 @pytest.fixture(scope='module')
 def cropped_faces_result_5faces():
-    im = imageio.imread(CURRENT_DIR / 'files' / 'five-faces.png')
+    im = imageio.imread(IMG_DIR / 'five-faces.png')
 
     cropped_faces = crop_faces(im)
 
@@ -36,7 +39,7 @@ def test_integration__when_called_with_less_than_2dimensional_image__then_raises
 
 @pytest.mark.integration
 def test_integration__when_called_with_no_faces__then_raises_error():
-    im = imageio.imread(CURRENT_DIR / 'files' / 'no-faces.jpg')
+    im = imageio.imread(IMG_DIR / 'no-faces.jpg')
 
     def act():
         crop_faces(im)
@@ -46,7 +49,7 @@ def test_integration__when_called_with_no_faces__then_raises_error():
 
 @pytest.mark.integration
 def test_integration__when_called_with_one_face__then_returns_one_cropped_face():
-    im = imageio.imread(CURRENT_DIR / 'files' / 'one-face.jpg')
+    im = imageio.imread(IMG_DIR / 'one-face.jpg')
 
     cropped_faces = crop_faces(im)
 
@@ -63,7 +66,7 @@ def test_integration__when_called_with_multiple_faces__then_returns_multiple_ite
 
 @pytest.mark.integration
 def test_integration__given_limit_2__when_called_with_multiple_faces__then_returns_2_items():
-    im = imageio.imread(CURRENT_DIR / 'files' / 'five-faces.jpg')
+    im = imageio.imread(IMG_DIR / 'five-faces.jpg')
 
     cropped_faces = crop_faces(im, face_limit=2)
 
@@ -86,10 +89,10 @@ def test_integration__when_called_with_multiple_faces__then_returns_correct_amou
 
 @pytest.mark.integration
 def test_test_if_the_same_number_of_faces_png_vs_jpg():
-    imPNG = imageio.imread(CURRENT_DIR / 'files' / 'eight-faces.png')
-    imJPG = imageio.imread(CURRENT_DIR / 'files' / 'eight-faces.jpg')
+    img_png = imageio.imread(IMG_DIR / 'eight-faces.png')
+    img_jpg = imageio.imread(IMG_DIR / 'eight-faces.jpg')
 
-    cropped_faces_png = crop_faces(imPNG)
-    cropped_faces_jpg = crop_faces(imJPG)
+    cropped_faces_png = crop_faces(img_png)
+    cropped_faces_jpg = crop_faces(img_jpg)
 
     assert len(cropped_faces_png) == len(cropped_faces_jpg)
