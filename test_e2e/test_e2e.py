@@ -137,6 +137,7 @@ def test__when_client_asks_to_recognize_faces_in_5_person_jpg_image__then_return
     assert itertoolz.isdistinct(result_items_list), result_items
     assert len(result_items) == 5
 
+
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_asks_to_recognize_faces_in_5_person_png_image__then_returns_5_different_bounding_boxes(host):
     file = {'file': open(CURRENT_DIR / 'files' / 'five-faces.png', 'rb')}

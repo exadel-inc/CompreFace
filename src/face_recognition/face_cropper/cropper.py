@@ -43,7 +43,6 @@ def _get_bounding_boxes(img, face_lim, detection_3rd_threshold):
     return bounding_boxes
 
 
-
 def _bounding_box_2_cropped_face(bounding_box, img, img_size) -> CroppedFace:
     logging.debug(f"the box around this face has dimensions of {bounding_box[0:4]}")
     is_face_prob = bounding_box[4]
