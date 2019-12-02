@@ -92,7 +92,6 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
     _wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
-    assert res.json()['message'] == 'No API Key is given'
 
 
 @pytest.mark.run(order=next(after_previous))
