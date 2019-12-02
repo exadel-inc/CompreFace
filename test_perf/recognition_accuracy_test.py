@@ -8,7 +8,7 @@ from main import ROOT_DIR
 from src.face_recognition.crop_faces.exceptions import NoFaceFoundError
 from src.init_runtime import init_runtime
 from test_perf._data_wrangling import split_train_test, parse_lfw_data
-from test_perf._model_wrappers import PythonModel, ModelWrapperBase, RESTAPIModel
+from test_perf._model_wrappers import EfrsLocal, ModelWrapperBase, EfrsRestApi
 from test_perf.dto import Dataset
 
 IMG_DIR = ROOT_DIR / 'test_files'
@@ -41,7 +41,7 @@ def calculate_accuracy(model: ModelWrapperBase, dataset: Dataset) -> float:
         try:
             model.add_example(img, name)
         except NoFaceFoundError as e:
-            logging.warning(str(e))
+            logging.warning(f"{str(e)}. Skipping.")
     model.train()
     return sum(name == model.recognize(img) for name, img in dataset.test) / len(dataset.test)
 
@@ -49,7 +49,7 @@ def calculate_accuracy(model: ModelWrapperBase, dataset: Dataset) -> float:
 if __name__ == '__main__':
     init_runtime()
     args = parse_args()
-    model = RESTAPIModel(args.host) if args.host else PythonModel()
+    model = EfrsRestApi(args.host) if args.host else EfrsLocal()
     dataset = get_test_dataset() if args.test else get_lfw_dataset()
 
     accuracy = calculate_accuracy(model, dataset)

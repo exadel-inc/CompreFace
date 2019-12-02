@@ -1,10 +1,17 @@
 import logging
+import random
+import string
+import time
 from abc import ABC, abstractmethod
+from http import HTTPStatus
+
+import requests
 
 from src.face_recognition.calc_embedding.calculator import calculate_embeddings
 from src.face_recognition.classify_embedding.predict import predict_from_image_with_classifier
 from src.face_recognition.classify_embedding.train import get_trained_classifier
 from src.face_recognition.crop_faces.crop_faces import crop_one_face
+from src.pyutils.serialization import serialize
 from test_perf.dto import Image, Name
 
 
@@ -22,7 +29,7 @@ class ModelWrapperBase(ABC):
         pass
 
 
-class PythonModel(ModelWrapperBase):
+class EfrsLocal(ModelWrapperBase):
     def __init__(self):
         self._cropped_images = []
         self._names = []
@@ -40,20 +47,38 @@ class PythonModel(ModelWrapperBase):
     def recognize(self, img: Image) -> Name:
         predictions = predict_from_image_with_classifier(img=img, classifier=self._classifier, limit=1)
         if not predictions:
-            logging.warning("")
+            logging.warning("Face is not found in the image to be recognized. Skipping.")
             return ''
         return predictions[0].face_name
 
 
-class RESTAPIModel(ModelWrapperBase):
+class EfrsRestApi(ModelWrapperBase):
+    TRAINING_TIMEOUT_S = 60 * 60 * 48
+
+    @staticmethod
+    def _random_string():
+        return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
+
     def __init__(self, host):
         self._host = host
+        self._api_key = f"test-{self._random_string()}"
 
     def add_example(self, img: Image, name: Name):
-        pass
+        requests.post(f"{self._host}/faces/{name}?retrain=no",
+                      headers={'X-Api-Key': self._api_key},
+                      files={'file': serialize(img)})
 
     def train(self):
-        pass
+        for _ in range(self.TRAINING_TIMEOUT_S):
+            time.sleep(1)
+            res = requests.get(f"{self._host}/retrain", headers={'X-Api-Key': self._api_key})
+            if res.status_code == HTTPStatus.OK:
+                return
+        raise Exception("Waiting for classifier training completion has reached a timeout")
 
     def recognize(self, img: Image) -> Name:
-        pass
+        response = requests.post(f"{self._host}/recognize",
+                                 headers={'X-Api-Key': self._api_key},
+                                 files={'file': serialize(img)})
+        result = response.json()['result']
+        return result[0]['face_name']
