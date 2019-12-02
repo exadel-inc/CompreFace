@@ -1,5 +1,6 @@
 from sklearn.datasets import fetch_lfw_people
 
+from src.face_recognition.crop_faces.exceptions import NoFaceFoundError
 from test_perf._data_wrangling import split_train_test, parse_lfw_data
 from test_perf._model_wrappers import PythonModel, ModelWrapperBase
 from test_perf.dto import Dataset
@@ -13,7 +14,10 @@ def get_lfw_dataset() -> Dataset:
 
 def calculate_accuracy(model: ModelWrapperBase, dataset: Dataset) -> float:
     for name, img in dataset.train:
-        model.add_example(img, name)
+        try:
+            model.add_example(img, name)
+        except NoFaceFoundError as e:
+            print(str(e))
     model.train()
     return sum(name == model.recognize(img) for name, img in dataset.test) / len(dataset.test)
 
