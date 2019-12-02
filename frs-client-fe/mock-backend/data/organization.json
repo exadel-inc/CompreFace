@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "name": "string",
+    "userOrganizationRoles": [
+      {
+        "organizationId": 0,
+        "role": "OWNER",
+        "userId": 0
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "string",
+    "userOrganizationRoles": [
+      {
+        "organizationId": 0,
+        "role": "OWNER",
+        "userId": 0
+      }
+    ]
+  }
+]
