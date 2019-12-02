@@ -22,7 +22,7 @@ def parse_args():
 
 
 def get_lfw_dataset() -> Dataset:
-    lfw_data = fetch_lfw_people(min_faces_per_person=120, color=True, funneled=False)
+    lfw_data = fetch_lfw_people(min_faces_per_person=2, color=True, funneled=False)
     dataset_full = parse_lfw_data(lfw_data)
     return split_train_test(dataset_full)
 
