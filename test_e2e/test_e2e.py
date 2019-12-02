@@ -22,10 +22,11 @@ import requests
 from toolz import itertoolz
 
 from init_mongo_db import init_mongo_db
+from main import ROOT_DIR
 from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-
+IMG_DIR = ROOT_DIR / 'test_files'
 TRAINING_TIMEOUT_S = 60
 
 
@@ -86,7 +87,7 @@ def test__when_client_opens_apidocs__returns_200(host):
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_400(host):
-    files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", files=files)
     _wait_until_training_is_complete(host)
@@ -96,7 +97,7 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_face_found(host):
-    files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / 'landscape.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'test-api-key'}, files=files)
     _wait_until_training_is_complete(host)
@@ -107,9 +108,9 @@ def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_uploads_3_face_examples__then_returns_201(host):
-    files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
-    files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
-    files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
+    files_a = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
+    files_b = {'file': open(IMG_DIR / 'e2e-personB-img1.jpg', 'rb')}
+    files_c = {'file': open(IMG_DIR / 'e2e-personC-img1.jpg', 'rb')}
 
     res_a = requests.post(f"{host}/faces/Marie Curie?retrain=no", headers={'X-Api-Key': 'test-api-key'},
                           files=files_a)
@@ -126,7 +127,7 @@ def test__when_client_uploads_3_face_examples__then_returns_201(host):
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_asks_to_recognize_faces_in_5_person_jpg_image__then_returns_5_different_bounding_boxes(host):
-    file = {'file': open(CURRENT_DIR / 'files' / 'five-faces.jpg', 'rb')}
+    file = {'file': open(IMG_DIR / 'five-faces.jpg', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
 
@@ -139,7 +140,7 @@ def test__when_client_asks_to_recognize_faces_in_5_person_jpg_image__then_return
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_asks_to_recognize_faces_in_5_person_png_image__then_returns_5_different_bounding_boxes(host):
-    file = {'file': open(CURRENT_DIR / 'files' / 'five-faces.png', 'rb')}
+    file = {'file': open(IMG_DIR / 'five-faces.png', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
 
@@ -152,7 +153,7 @@ def test__when_client_asks_to_recognize_faces_in_5_person_png_image__then_return
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
-    files = {'file': open(CURRENT_DIR / 'files' / 'landscape.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / 'landscape.jpg', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
 
@@ -183,7 +184,7 @@ def test__given_other_api_key__when_client_asks_to_get_faces_list__then_returns_
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_requests_to_recognize_the_face_in_another_image__then_service_recognizes_it(host):
-    files = {'file': open(CURRENT_DIR / 'files' / 'personA-img2.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / 'e2e-personA-img2.jpg', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
 
@@ -205,9 +206,9 @@ def test__when_client_deletes_person_c__then_returns_204(host):
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_client_requests_to_recognize__then_only_persons_a_and_b_are_recognized(host):
-    files_a = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
-    files_b = {'file': open(CURRENT_DIR / 'files' / 'personB-img1.jpg', 'rb')}
-    files_c = {'file': open(CURRENT_DIR / 'files' / 'personC-img1.jpg', 'rb')}
+    files_a = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
+    files_b = {'file': open(IMG_DIR / 'e2e-personB-img1.jpg', 'rb')}
+    files_c = {'file': open(IMG_DIR / 'e2e-personC-img1.jpg', 'rb')}
 
     res_a = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files_a)
     res_b = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files_b)
@@ -236,7 +237,7 @@ def test__when_client_deletes_person_b__then_returns_204(host):
 
 @pytest.mark.run(order=next(after_previous))
 def test__requests_to_recognize_person_a__then_returns_500_no_models_found_for_api_key(host):
-    files = {'file': open(CURRENT_DIR / 'files' / 'personA-img1.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
 

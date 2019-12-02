@@ -1,3 +1,4 @@
+import logging
 from abc import ABC, abstractmethod
 
 from src.face_recognition.calc_embedding.calculator import calculate_embeddings
@@ -17,7 +18,7 @@ class ModelWrapperBase(ABC):
         pass
 
     @abstractmethod
-    def recognize(self, img: Image):
+    def recognize(self, img: Image) -> Name:
         pass
 
 
@@ -36,16 +37,23 @@ class PythonModel(ModelWrapperBase):
         embeddings = calculate_embeddings(self._cropped_images)
         self._classifier = get_trained_classifier(embeddings, self._names)
 
-    def recognize(self, img: Image):
-        return predict_from_image_with_classifier(img=img, classifier=self._classifier, limit=1)
+    def recognize(self, img: Image) -> Name:
+        predictions = predict_from_image_with_classifier(img=img, classifier=self._classifier, limit=1)
+        if not predictions:
+            logging.warning("")
+            return ''
+        return predictions[0].face_name
 
 
 class RESTAPIModel(ModelWrapperBase):
+    def __init__(self, host):
+        self._host = host
+
     def add_example(self, img: Image, name: Name):
         pass
 
     def train(self):
         pass
 
-    def recognize(self, img: Image):
+    def recognize(self, img: Image) -> Name:
         pass
