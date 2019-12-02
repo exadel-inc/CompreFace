@@ -38,10 +38,7 @@ def get_test_dataset() -> Dataset:
 
 def calculate_accuracy(model: ModelWrapperBase, dataset: Dataset) -> float:
     for name, img in dataset.train:
-        try:
-            model.add_example(img, name)
-        except NoFaceFoundError as e:
-            logging.warning(f"{str(e)}. Skipping.")
+        model.add_face_example(img, name)
     model.train()
     return sum(name == model.recognize(img) for name, img in dataset.test) / len(dataset.test)
 

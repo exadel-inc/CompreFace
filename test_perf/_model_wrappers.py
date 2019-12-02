@@ -11,13 +11,14 @@ from src.face_recognition.calc_embedding.calculator import calculate_embeddings
 from src.face_recognition.classify_embedding.predict import predict_from_image_with_classifier
 from src.face_recognition.classify_embedding.train import get_trained_classifier
 from src.face_recognition.crop_faces.crop_faces import crop_one_face
-from src.pyutils.serialization import serialize
+from src.face_recognition.crop_faces.exceptions import NoFaceFoundError
+from src.pyutils.serialization import numpy_to_jpg_file
 from test_perf.dto import Image, Name
 
 
 class ModelWrapperBase(ABC):
     @abstractmethod
-    def add_example(self, img: Image, name: Name):
+    def add_face_example(self, img: Image, name: Name):
         pass
 
     @abstractmethod
@@ -35,8 +36,12 @@ class EfrsLocal(ModelWrapperBase):
         self._names = []
         self._classifier = None
 
-    def add_example(self, img: Image, name: Name):
-        cropped_img = crop_one_face(img).img
+    def add_face_example(self, img: Image, name: Name):
+        try:
+            cropped_img = crop_one_face(img).img
+        except NoFaceFoundError as e:
+            logging.warning(f"Failed to add face example. Skipping. {str(e)}")
+            return
         self._cropped_images.append(cropped_img)
         self._names.append(name)
 
@@ -45,9 +50,10 @@ class EfrsLocal(ModelWrapperBase):
         self._classifier = get_trained_classifier(embeddings, self._names)
 
     def recognize(self, img: Image) -> Name:
-        predictions = predict_from_image_with_classifier(img=img, classifier=self._classifier, limit=1)
-        if not predictions:
-            logging.warning("Face is not found in the image to be recognized. Skipping.")
+        try:
+            predictions = predict_from_image_with_classifier(img=img, classifier=self._classifier, limit=1)
+        except NoFaceFoundError as e:
+            logging.warning(f"Face is not found in the image to be recognized. Skipping. {str(e)}")
             return ''
         return predictions[0].face_name
 
@@ -63,12 +69,15 @@ class EfrsRestApi(ModelWrapperBase):
         self._host = host
         self._api_key = f"test-{self._random_string()}"
 
-    def add_example(self, img: Image, name: Name):
-        requests.post(f"{self._host}/faces/{name}?retrain=no",
+    def add_face_example(self, img: Image, name: Name):
+        response = requests.post(f"{self._host}/faces/{name}?retrain=no",
                       headers={'X-Api-Key': self._api_key},
-                      files={'file': serialize(img)})
+                      files={'file': numpy_to_jpg_file(img)})
+        if response.status_code != 201:
+            logging.warning(f"Failed to add face example. Skipping. {str(response.content)}")
 
     def train(self):
+        requests.post(f"{self._host}/retrain", headers={'X-Api-Key': self._api_key})
         for _ in range(self.TRAINING_TIMEOUT_S):
             time.sleep(1)
             res = requests.get(f"{self._host}/retrain", headers={'X-Api-Key': self._api_key})
@@ -79,6 +88,9 @@ class EfrsRestApi(ModelWrapperBase):
     def recognize(self, img: Image) -> Name:
         response = requests.post(f"{self._host}/recognize",
                                  headers={'X-Api-Key': self._api_key},
-                                 files={'file': serialize(img)})
+                                 files={'file': numpy_to_jpg_file(img)})
+        if response.status_code != 200:
+            logging.warning(f"Face is not found in the image to be recognized. Skipping. {str(response.content)}")
+            return ''
         result = response.json()['result']
         return result[0]['face_name']

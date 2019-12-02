@@ -1,6 +1,8 @@
 from io import BytesIO
 
 import joblib
+import matplotlib.pyplot as plt
+from numpy.core.multiarray import ndarray
 
 
 def serialize(obj: object) -> bytes:
@@ -15,3 +17,9 @@ def deserialize(bytes_data: bytes) -> object:
     bytes_container = BytesIO(bytes_data)
     obj = joblib.load(bytes_container)
     return obj
+
+
+def numpy_to_jpg_file(img: ndarray):
+    bytes_container = BytesIO()
+    plt.imsave(bytes_container, img, format='jpg')
+    return bytes_container.getvalue()
