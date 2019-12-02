@@ -7,7 +7,7 @@ ARG IS_DEV_ENV=false
 ## Copy sources
 RUN mkdir -p $DIR
 COPY src $DIR/src
-COPY db_data $DIR/db_data
+COPY models $DIR/db_data
 COPY main.py $DIR/main.py
 COPY docker-entrypoint.sh $DIR/docker-entrypoint.sh
 COPY wait-for-it.sh $DIR/wait-for-it.sh

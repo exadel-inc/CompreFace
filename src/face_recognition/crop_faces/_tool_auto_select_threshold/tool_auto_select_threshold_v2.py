@@ -7,12 +7,20 @@ from pathlib import Path
 import imageio
 
 from src import pyutils
-from src.face_recognition.face_cropper.constants import FACE_MIN_SIZE, SCALE_FACTOR, THRESHOLD
-from src.face_recognition.face_cropper.cropper import _preprocess_img, _init_once as init_tensorflow
-from src.face_recognition.face_cropper.libraries.align import detect_face
+from src.face_recognition.crop_faces._detect_faces import _face_detection_nets
+from src.face_recognition.crop_faces._lib.align import detect_face
+from src.face_recognition.crop_faces.constants import SCALE_FACTOR, FACE_MIN_SIZE
+from src.face_recognition.crop_faces.crop_faces import _preprocess_img
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 IMG_DIR = CURRENT_DIR / 'files'
+
+EXPERIMENT_SIZE = 3000
+
+
+def get_random_threshold():
+    return [random.uniform(0.5, 1) for _ in range(3)]
+
 
 DATASET = {
     IMG_DIR / 'four-faces.png': [(746, 568), (495, 487), (1046, 548), (1485, 578)],
@@ -28,6 +36,7 @@ DATASET = {
     IMG_DIR / 'eight-faces.jpg': [(194, 277), (262, 169), (260, 292), (357, 278), (440, 213), (459, 287), (521, 161),
                                   (691, 201)],
     IMG_DIR / 'five-faces.png': [(221, 103), (304, 251), (391, 222), (469, 311), (598, 296)],
+    IMG_DIR / 'five-faces.jpg': [(219, 105), (300, 252), (392, 220), (469, 309), (600, 294)],
     IMG_DIR / 'two-faces.png': [(809, 534), (1165, 600)],
     IMG_DIR / 'two-faces.jpg': [(354, 232), (505, 258)],
     IMG_DIR / 'three-people.png': [(740, 598), (906, 520), (1045, 548)],
@@ -87,7 +96,8 @@ def calc_score_for_bounding_boxes(bounding_boxes, points) -> CalcResult:
 
 
 def calc_score_for_image(img, threshold, nose_locations) -> CalcResult:
-    detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, pnet, rnet, onet, threshold,
+    fdn = _face_detection_nets()
+    detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet, threshold,
                                                  SCALE_FACTOR)
     bounding_boxes = list(detect_face_result[0][:, 0:4])
     return calc_score_for_bounding_boxes(bounding_boxes, nose_locations)
@@ -96,7 +106,7 @@ def calc_score_for_image(img, threshold, nose_locations) -> CalcResult:
 @pyutils.cached
 def open_image(img_filepath):
     img = imageio.imread(img_filepath)
-    img, img_size = _preprocess_img(img)
+    img = _preprocess_img(img)
     return img
 
 
@@ -111,11 +121,7 @@ def save_state():
 
 
 if __name__ == "__main__":
-    pnet, rnet, onet = init_tensorflow()
-
-    thresholds = ([THRESHOLD]
-                  + [[random.uniform(0.5, 1) for _ in range(3)] for _ in range(3000)])
-    # thresholds = ([[0.9436513301, 0.7059968943, 0.5506904359]])
+    thresholds = ([get_random_threshold() for _ in range(EXPERIMENT_SIZE)])
 
     threshold_scores = []
     for i, threshold in enumerate(thresholds):

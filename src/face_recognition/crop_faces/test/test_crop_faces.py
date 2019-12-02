@@ -7,9 +7,9 @@ import pytest
 from PIL import Image
 from numpy.core.multiarray import ndarray
 
-from src.face_recognition.face_cropper.cropper import crop_faces
-from src.face_recognition.face_cropper.exceptions import IncorrectImageDimensionsError, NoFaceFoundError
-from src.face_recognition.face_cropper.test._img_utils import ndarray_to_img, images_are_almost_the_same
+from src.face_recognition.crop_faces.crop_faces import crop_faces
+from src.face_recognition.crop_faces.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
+from src.face_recognition.crop_faces.test._img_utils import ndarray_to_img, images_are_almost_the_same
 from src.pyutils.raises import raises
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -65,7 +65,7 @@ def test_integration__when_called_with_multiple_faces__then_returns_multiple_ite
 def test_integration__given_limit_2__when_called_with_multiple_faces__then_returns_2_items():
     im = imageio.imread(CURRENT_DIR / 'files' / 'five-faces.jpg')
 
-    cropped_faces = crop_faces(im, face_lim=2)
+    cropped_faces = crop_faces(im, face_limit=2)
 
     assert len(cropped_faces) == 2
 
@@ -93,6 +93,3 @@ def test_test_if_the_same_number_of_faces_png_vs_jpg():
     cropped_faces_jpg = crop_faces(imJPG)
 
     assert len(cropped_faces_png) == len(cropped_faces_jpg)
-
-
-

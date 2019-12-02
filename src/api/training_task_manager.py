@@ -4,7 +4,7 @@ from toolz import valfilter
 
 from src import pyutils
 from src.api.exceptions import ClassifierIsAlreadyTrainingError
-from src.face_recognition.embedding_classifier.train import train_and_save_model
+from src.face_recognition.classify_embedding.train import train_and_save_model
 
 _api_key_2_train_process = {}
 
