@@ -13,5 +13,5 @@ if [ "$IS_DEV_ENV" = 'false' ]; then
   apt-get install -y mongodb-org-tools mongodb-org-shell
 else
   apt-get update
-  apt-get install -y mongo-tools mongodb-clients
+  apt-get install -y mongo-tools
 fi
