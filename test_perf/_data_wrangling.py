@@ -11,7 +11,7 @@ def parse_lfw_data(lfw_people):
     for i in range(count):
         name = lfw_people.target[i]
         image = lfw_people.images[i, :, :, :].reshape((img_height, img_width, img_colors)).astype(np.uint8)
-        yield name, image
+        yield str(name), image
 
 
 def split_train_test(dataset_full: Datarows):
