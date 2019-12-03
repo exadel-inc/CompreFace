@@ -1,121 +1,124 @@
 package com.exadel.frs.service;
 
-import com.exadel.frs.dto.ModelDto;
-import com.exadel.frs.entity.AppModel;
+import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
-import com.exadel.frs.exception.AppNotFoundException;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.IncorrectAccessTypeException;
-import com.exadel.frs.exception.ModelNotFoundException;
-import com.exadel.frs.helpers.AccessUpdateType;
-import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.mapper.MlModelMapper;
+import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.enums.AppModelAccess;
+import com.exadel.frs.enums.AppRole;
+import com.exadel.frs.enums.OrganizationRole;
+import com.exadel.frs.exception.*;
+import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelRepository;
+import com.exadel.frs.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class ModelService {
 
+    private final AppRepository appRepository;
     private final ModelRepository modelRepository;
-    private final SecurityUtils securityUtils;
-    private final MlModelMapper modelMapper;
+    private final OrganizationRepository organizationRepository;
 
-    public ModelDto getModel(Long id, Long clientId) {
-        return modelMapper.toDto(modelRepository.findByIdAndOwnerId(id, clientId)
-                .orElseThrow(() -> new ModelNotFoundException(id)));
+    private Model getModelFromRepo(Long modelId) {
+        return modelRepository.findById(modelId)
+                .orElseThrow(() -> new ModelNotFoundException(modelId));
     }
 
-    public List<ModelDto> getModels(Long clientId) {
-        return modelRepository.findAllByOwnerId(clientId)
-                .stream()
-                .map(modelMapper::toDto)
-                .collect(Collectors.toList());
+    private App getAppFromRepo(Long appId) {
+        return appRepository.findById(appId)
+                .orElseThrow(() -> new AppNotFoundException(appId));
     }
 
-    @Transactional
-    public void createModel(ModelDto inputModelDto, Long clientId) {
-        if (StringUtils.isEmpty(inputModelDto.getName())) {
+    private Organization getOrganizationFromRepo(Long organizationId) {
+        return organizationRepository
+                .findById(organizationId)
+                .orElseThrow(() -> new OrganizationNotFoundException(organizationId));
+    }
+
+    private OrganizationRole getUserOrganizationRole(Long organizationId, Long userId) {
+        return getOrganizationFromRepo(organizationId).getUserOrganizationRoleOrThrow(userId).getRole();
+    }
+
+    private void verifyUserHasReadPrivileges(Long userId, App app) {
+        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization().getId(), userId);
+        if (OrganizationRole.USER == organizationRole) {
+            app.getUserAppRole(userId)
+                    .orElseThrow(() -> new InsufficientPrivilegesException(userId));
+        }
+    }
+
+    private void verifyUserHasWritePrivileges(Long userId, App app) {
+        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization().getId(), userId);
+        if (OrganizationRole.USER == organizationRole) {
+            Optional<UserAppRole> userAppRole = app.getUserAppRole(userId);
+            if (userAppRole.isEmpty() || AppRole.USER == userAppRole.get().getRole()) {
+                throw new InsufficientPrivilegesException(userId);
+            }
+        }
+    }
+
+    public Model getModel(Long id, Long userId) {
+        Model model = getModelFromRepo(id);
+        verifyUserHasReadPrivileges(userId, model.getApp());
+        return model;
+    }
+
+    public List<Model> getModels(Long appId, Long userId) {
+        verifyUserHasReadPrivileges(userId, getAppFromRepo(appId));
+        return modelRepository.findAllByAppModelAccess_Id_AppId(appId);
+    }
+
+    public void createModel(Model model, Long userId) {
+        App repoApp = getAppFromRepo(model.getApp().getId());
+        verifyUserHasWritePrivileges(userId, repoApp);
+        if (StringUtils.isEmpty(model.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        inputModelDto.setGuid(UUID.randomUUID().toString());
-        inputModelDto.setOwnerId(clientId);
-        Model inputModel = modelMapper.toEntity(inputModelDto);
-        List<AppModel> appModelList = inputModel.getAppModelList();
-        inputModel.setAppModelList(null);
-        Model repoModel = modelRepository.save(inputModel);
-        if (appModelList != null) {
-            appModelList.forEach(appModel -> {
-                if (!securityUtils.isClientAppOwner(appModel.getApp().getId(), clientId)) {
-                    throw new AppNotFoundException(appModel.getApp().getId());
+        model.setGuid(UUID.randomUUID().toString());
+        model.setAppModelAccess(new ArrayList<>());
+        model.addAppModelAccess(repoApp, AppModelAccess.TRAIN);
+        modelRepository.save(model);
+    }
+
+    public void updateModel(Long id, Model model, Long userId) {
+        Model repoModel = getModelFromRepo(id);
+        verifyUserHasWritePrivileges(userId, repoModel.getApp());
+        if (!StringUtils.isEmpty(model.getName())) {
+            repoModel.setName(model.getName());
+        }
+        if (model.getAppModelAccess() != null) {
+            Long repoModelOrganizationId = repoModel.getApp().getOrganization().getId();
+            repoModel.getAppModelAccess().clear();
+            model.getAppModelAccess().forEach(appModel -> {
+                App app = getAppFromRepo(appModel.getApp().getId());
+                if (!repoModelOrganizationId.equals(app.getOrganization().getId())) {
+                    throw new OrganizationMismatchException();
                 }
-                appModel.getId().setModelId(repoModel.getId());
-                appModel.getModel().setId(repoModel.getId());
+                repoModel.addAppModelAccess(app, appModel.getAccessType());
             });
-            repoModel.setAppModelList(appModelList);
-            modelRepository.save(repoModel);
-        }
-    }
-
-    public void updateModel(Long id, ModelDto inputModelDto, Long clientId) {
-        Model inputModel = modelMapper.toEntity(inputModelDto, id);
-        Model repoModel = modelRepository.findByIdAndOwnerId(id, clientId)
-                .orElseThrow(() -> new ModelNotFoundException(id));
-        if (!StringUtils.isEmpty(inputModel.getName())) {
-            repoModel.setName(inputModel.getName());
-        }
-        if (inputModel.getAppModelList() != null) {
-            updatePrivileges(inputModel, repoModel, AccessUpdateType.CLEAN_ADD, clientId);
         }
         modelRepository.save(repoModel);
     }
 
-    public void updatePrivileges(Long id, ModelDto inputModelDto, AccessUpdateType accessUpdateType, Long clientId) {
-        Model inputModel = modelMapper.toEntity(inputModelDto, id);
-        Model repoModel = modelRepository.findByIdAndOwnerId(id, clientId)
-                .orElseThrow(() -> new ModelNotFoundException(id));
-        if (inputModel.getAppModelList() != null) {
-            updatePrivileges(inputModel, repoModel, accessUpdateType, clientId);
-        }
-        modelRepository.save(repoModel);
-    }
-
-    private void updatePrivileges(Model inputModel, Model repoModel, AccessUpdateType accessUpdateType, Long clientId) {
-        if (accessUpdateType == AccessUpdateType.CLEAN_ADD) {
-            repoModel.getAppModelList().clear();
-        }
-        inputModel.getAppModelList().forEach(appModel -> {
-            if (!securityUtils.isClientAppOwner(appModel.getApp().getId(), clientId)) {
-                throw new AppNotFoundException(appModel.getApp().getId());
-            }
-            if (accessUpdateType == AccessUpdateType.CLEAN_ADD || accessUpdateType == AccessUpdateType.ADD) {
-                if (appModel.getAccessType() == null) {
-                    throw new IncorrectAccessTypeException();
-                }
-                repoModel.getAppModelList().add(appModel);
-            }
-            if (accessUpdateType == AccessUpdateType.REMOVE) {
-                repoModel.getAppModelList().removeIf(repoAppModel -> repoAppModel.getApp().getId().equals(appModel.getApp().getId()));
-            }
-        });
-    }
-
-    public void regenerateGuid(Long id, Long clientId) {
-        Model repoModel = modelRepository.findByIdAndOwnerId(id, clientId)
-                .orElseThrow(() -> new ModelNotFoundException(id));
+    public void regenerateGuid(Long id, Long userId) {
+        Model repoModel = getModelFromRepo(id);
+        verifyUserHasWritePrivileges(userId, repoModel.getApp());
         repoModel.setGuid(UUID.randomUUID().toString());
         modelRepository.save(repoModel);
     }
 
-    public void deleteModel(Long id, Long clientId) {
-        modelRepository.deleteByIdAndOwnerId(id, clientId);
+    public void deleteModel(Long id, Long userId) {
+        verifyUserHasWritePrivileges(userId, getModelFromRepo(id).getApp());
+        modelRepository.deleteById(id);
     }
 
 }

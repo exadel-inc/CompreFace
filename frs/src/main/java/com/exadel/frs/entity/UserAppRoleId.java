@@ -11,10 +11,10 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppModelId implements Serializable {
+public class UserAppRoleId implements Serializable {
+
+    private Long userId;
 
     private Long appId;
-
-    private Long modelId;
 
 }

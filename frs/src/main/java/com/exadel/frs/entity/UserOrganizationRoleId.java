@@ -1,6 +1,7 @@
 package com.exadel.frs.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,10 +12,11 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppModelId implements Serializable {
+@Builder
+public class UserOrganizationRoleId implements Serializable {
 
-    private Long appId;
+    private Long userId;
 
-    private Long modelId;
+    private Long organizationId;
 
 }

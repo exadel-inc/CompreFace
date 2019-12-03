@@ -1,4 +1,4 @@
-package com.exadel.frs.helpers;
+package com.exadel.frs.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,9 +7,10 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public enum ModelAccessType {
-    READONLY("R"),
-    TRAIN("T");
+public enum OrganizationRole {
+    OWNER("O"),
+    ADMINISTRATOR("A"),
+    USER("U");
 
     @Getter
     @Setter

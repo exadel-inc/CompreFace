@@ -1,6 +1,6 @@
 package com.exadel.frs.config;
 
-import com.exadel.frs.repository.ClientRepository;
+import com.exadel.frs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final ClientRepository clientRepository;
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return clientRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Client " + username + " does not exists"));
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " does not exists"));
     }
 
 }

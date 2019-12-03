@@ -1,17 +1,19 @@
 package com.exadel.frs.entity;
 
+import com.exadel.frs.enums.AppRole;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"name", "guid"})
+@Builder
 public class App {
 
     @Id
@@ -22,10 +24,32 @@ public class App {
     private String guid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private Client owner;
+    @JoinColumn(name = "organization_id")
+    private Organization organization;
 
+    @ToString.Exclude
+    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<UserAppRole> userAppRoles = new ArrayList<>();
+
+    @ToString.Exclude
     @OneToMany(mappedBy = "app")
-    private List<AppModel> appModelList;
+    private List<AppModel> appModelAccess = new ArrayList<>();
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "app")
+    private List<Model> models = new ArrayList<>();
+
+    public Optional<UserAppRole> getUserAppRole(Long userId) {
+        return userAppRoles
+                .stream()
+                .filter(userAppRole -> userAppRole.getId().getUserId().equals(userId))
+                .findFirst();
+    }
+
+    public void addUserAppRole(User user, AppRole role) {
+        UserAppRole userAppRole = new UserAppRole(user, this, role);
+        userAppRoles.add(userAppRole);
+        user.getUserAppRoles().add(userAppRole);
+    }
 
 }

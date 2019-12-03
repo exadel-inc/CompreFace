@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+#  jackson:
+#    default-property-inclusion: non_null
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/frs
@@ -11,7 +13,7 @@ spring:
     properties:
       hibernate:
         jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
-        format_sql: false
+        format_sql: true
     hibernate:
       ddl-auto: none
     show_sql: true
@@ -44,3 +46,4 @@ swagger:
     server: http://localhost:${server.port}
   info:
     title: Face Recognition Service - Client
+    version: 0.0.2-SNAPSHOT

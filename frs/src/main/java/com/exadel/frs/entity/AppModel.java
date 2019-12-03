@@ -1,19 +1,17 @@
 package com.exadel.frs.entity;
 
-import com.exadel.frs.helpers.ModelAccessType;
+import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.helpers.ModelAccessTypeConverter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Entity
 @Table
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(of = {"app", "model"})
 public class AppModel {
 
     @EmbeddedId
@@ -21,15 +19,20 @@ public class AppModel {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("appId")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private App app;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("modelId")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Model model;
 
     @Convert(converter = ModelAccessTypeConverter.class)
-    private ModelAccessType accessType;
+    private AppModelAccess accessType;
+
+    public AppModel(App app, Model model, AppModelAccess accessType) {
+        this.app = app;
+        this.model = model;
+        this.accessType = accessType;
+        this.id = new AppModelId(app.getId(), model.getId());
+    }
 
 }

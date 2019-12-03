@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class ModelNotFoundException extends RuntimeException {
 
     public ModelNotFoundException(Long modelId) {
-        super("Model " + modelId + " not found or you do not have access to it");
+        super("Model " + modelId + " not found");
     }
 
 }

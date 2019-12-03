@@ -8,10 +8,8 @@ import java.util.Optional;
 
 public interface ModelRepository extends JpaRepository<Model, Long> {
 
-    Optional<Model> findByIdAndOwnerId(Long id, Long clientId);
+    List<Model> findAllByAppModelAccess_Id_AppId(Long appId);
 
-    List<Model> findAllByOwnerId(Long clientId);
-
-    void deleteByIdAndOwnerId(Long id, Long clientId);
+    Optional<Model> findByGuid(String guid);
 
 }

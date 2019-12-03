@@ -1,17 +1,17 @@
-package com.exadel.frs.dto;
+package com.exadel.frs.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AppAccess {
+public enum AppModelAccess {
+    READONLY("R"),
+    TRAIN("T");
 
-    private Long appId;
-    private String accessType;
-
+    @Getter
+    @Setter
+    private String code;
 }

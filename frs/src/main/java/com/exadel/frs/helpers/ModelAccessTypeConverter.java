@@ -1,29 +1,26 @@
 package com.exadel.frs.helpers;
 
-import com.exadel.frs.mapper.ModelAccessTypeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.stereotype.Component;
+import com.exadel.frs.enums.AppModelAccess;
+import com.exadel.frs.exception.IncorrectAccessTypeException;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.util.stream.Stream;
 
 @Converter(autoApply = true)
-@Component
-public class ModelAccessTypeConverter implements AttributeConverter<ModelAccessType, String> {
-
-    @Autowired
-    @Qualifier("modelAccessTypeMapperImpl")
-    private ModelAccessTypeMapper modelAccessTypeMapper;
+public class ModelAccessTypeConverter implements AttributeConverter<AppModelAccess, String> {
 
     @Override
-    public String convertToDatabaseColumn(ModelAccessType modelAccessType) {
-        return modelAccessTypeMapper.fromModelAccessType(modelAccessType);
+    public String convertToDatabaseColumn(AppModelAccess appModelAccess) {
+        return appModelAccess == null ? null : appModelAccess.getCode();
     }
 
     @Override
-    public ModelAccessType convertToEntityAttribute(String code) {
-        return modelAccessTypeMapper.toModelAccessType(code);
+    public AppModelAccess convertToEntityAttribute(String code) {
+        return code == null ? null : Stream.of(AppModelAccess.values())
+                .filter(accessType -> accessType.getCode().equals(code))
+                .findFirst()
+                .orElseThrow(() -> new IncorrectAccessTypeException(code));
     }
 
 }

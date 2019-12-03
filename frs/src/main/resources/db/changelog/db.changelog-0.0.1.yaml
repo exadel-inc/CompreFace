@@ -4,9 +4,9 @@ databaseChangeLog:
       author: vlad
       changes:
 
-        # client
+        # user
         - createTable:
-            tableName: client
+            tableName: user
             columns:
               - column:
                   name: id
@@ -20,6 +20,12 @@ databaseChangeLog:
               - column:
                   name: password
                   type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(63)
+              - column:
+                  name: last_name
+                  type: varchar(63)
               - column:
                   name: account_non_expired
                   type: boolean
@@ -35,21 +41,40 @@ databaseChangeLog:
 
         - addPrimaryKey:
             columnNames: id
-            constraintName: pk_client
-            tableName: client
+            constraintName: pk_user
+            tableName: user
 
         - createSequence:
-            sequenceName: client_id_seq
+            sequenceName: user_id_seq
 
         - addUniqueConstraint:
             columnNames: username
-            constraintName: client_username_uindex
-            tableName: client
+            constraintName: user_username_uindex
+            tableName: user
 
         - addUniqueConstraint:
             columnNames: email
-            constraintName: client_email_uindex
-            tableName: client
+            constraintName: user_email_uindex
+            tableName: user
+
+        # organization
+        - createTable:
+            tableName: organization
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_organization
+            tableName: organization
+
+        - createSequence:
+            sequenceName: organization_id_seq
 
         # app
         - createTable:
@@ -65,7 +90,7 @@ databaseChangeLog:
                   name: guid
                   type: varchar(36)
               - column:
-                  name: owner_id
+                  name: organization_id
                   type: bigint
 
         - addPrimaryKey:
@@ -73,17 +98,17 @@ databaseChangeLog:
             constraintName: pk_app
             tableName: app
 
-        - createSequence:
-            sequenceName: app_id_seq
-
         - addForeignKeyConstraint:
-            baseColumnNames: owner_id
+            baseColumnNames: organization_id
             baseTableName: app
             referencedColumnNames: id
-            referencedTableName: client
-            constraintName: fk_owner_id
+            referencedTableName: organization
+            constraintName: fk_organization_id
             onDelete: CASCADE
             onUpdate: CASCADE
+
+        - createSequence:
+            sequenceName: app_id_seq
 
         - addUniqueConstraint:
             columnNames: guid
@@ -104,7 +129,7 @@ databaseChangeLog:
                   name: guid
                   type: varchar(36)
               - column:
-                  name: owner_id
+                  name: app_id
                   type: bigint
 
         - addPrimaryKey:
@@ -115,19 +140,19 @@ databaseChangeLog:
         - createSequence:
             sequenceName: model_id_seq
 
-        - addForeignKeyConstraint:
-            baseColumnNames: owner_id
-            baseTableName: model
-            referencedColumnNames: id
-            referencedTableName: client
-            constraintName: fk_owner_id
-            onDelete: CASCADE
-            onUpdate: CASCADE
-
         - addUniqueConstraint:
             columnNames: guid
             constraintName: model_guid_uindex
             tableName: model
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: model
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
 
         # app_model
         - createTable:
@@ -169,3 +194,77 @@ databaseChangeLog:
         - addNotNullConstraint:
             columnName: access_type
             tableName: app_model
+
+        # user_organization_role
+        - createTable:
+            tableName: user_organization_role
+            columns:
+              - column:
+                  name: organization_id
+                  type: bigint
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: role
+                  type: varchar(1)
+
+        - addPrimaryKey:
+            columnNames: organization_id, user_id
+            constraintName: pk_user_organization_role
+            tableName: user_organization_role
+
+        - addForeignKeyConstraint:
+            baseColumnNames: organization_id
+            baseTableName: user_organization_role
+            referencedColumnNames: id
+            referencedTableName: organization
+            constraintName: fk_organization_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_organization_role
+            referencedColumnNames: id
+            referencedTableName: user
+            constraintName: fk_user_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        # user_app_role
+        - createTable:
+            tableName: user_app_role
+            columns:
+              - column:
+                  name: app_id
+                  type: bigint
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: role
+                  type: varchar(1)
+
+        - addPrimaryKey:
+            columnNames: app_id, user_id
+            constraintName: pk_user_app_role
+            tableName: user_app_role
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: user_app_role
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_app_role
+            referencedColumnNames: id
+            referencedTableName: user
+            constraintName: fk_user_id
+            onDelete: CASCADE
+            onUpdate: CASCADE

@@ -1,17 +1,18 @@
 package com.exadel.frs.entity;
 
+import com.exadel.frs.enums.AppModelAccess;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(of = {"name", "guid"})
+@Builder
 public class Model {
 
     @Id
@@ -22,10 +23,17 @@ public class Model {
     private String guid;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private Client owner;
+    @JoinColumn(name = "app_id")
+    private App app;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AppModel> appModelList;
+    private List<AppModel> appModelAccess = new ArrayList<>();
+
+    public void addAppModelAccess(App app, AppModelAccess access) {
+        AppModel appModel = new AppModel(app, this, access);
+        appModelAccess.add(appModel);
+        app.getAppModelAccess().add(appModel);
+    }
 
 }

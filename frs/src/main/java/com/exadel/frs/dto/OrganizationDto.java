@@ -5,12 +5,10 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ModelDto {
+public class OrganizationDto {
 
     private Long id;
     private String name;
-    private String guid;
-    private List<AppModelDto> appModelAccess;
-    private Long appId;
+    private List<UserOrganizationRoleDto> userOrganizationRoles;
 
 }
