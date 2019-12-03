@@ -1,14 +1,14 @@
 server:
-  port: 8080
+  port: ${CRUD_PORT:8080}
 
 spring:
 #  jackson:
 #    default-property-inclusion: non_null
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/frs
-    username: postgres
-    password: postgres
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/frs}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
   jpa:
     properties:
       hibernate:
@@ -39,7 +39,7 @@ security:
   security-realm: Spring Boot JWT Example Realm
 
 proxy:
-  baseUrl: http://msqv355.exadel.by:5001
+  baseUrl: ${PROXY_URL:http://localhost:5000}
 
 swagger:
   auth:
