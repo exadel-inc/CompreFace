@@ -7,7 +7,8 @@ const routes: Routes = [
   { path: '', component: MainLayoutComponent, children: [
       { path: 'organization', loadChildren: './pages/organization/organization.module#OrganizationModule'}
     ]},
-  { path: 'admin', loadChildren: './pages/admin/admin.module#AdminModule'}
+  { path: 'login', loadChildren: './pages/login/login.module#LoginModule'},
+  { path: '**', redirectTo: '/' }
   ];
 
 @NgModule({
