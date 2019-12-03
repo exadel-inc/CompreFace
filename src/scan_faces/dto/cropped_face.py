@@ -8,7 +8,6 @@ from src.scan_faces.dto.embedding import Embedding
 @attr.s(auto_attribs=True, frozen=True)
 class DetectedFace(ConvertibleToDict):
     box: BoundingBox
-    probability: float
 
 
 @attr.s(auto_attribs=True, frozen=True)

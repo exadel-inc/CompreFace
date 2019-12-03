@@ -9,3 +9,4 @@ class BoundingBox(ConvertibleToDict):
     y_min: int = attr.ib(converter=int)
     x_max: int = attr.ib(converter=int)
     y_max: int = attr.ib(converter=int)
+    probability: float

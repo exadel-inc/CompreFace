@@ -10,8 +10,9 @@ from flask.json import JSONEncoder
 
 from src.api.endpoint_decorators import needs_attached_file
 from src.api.exceptions import BadRequestException
-from src.scan_faces._detect_faces.constants import FaceLimitConstant, DEFAULT_THRESHOLD_C
 from src.pyutils.convertible_to_dict import ConvertibleToDict
+from src.scan_faces._calc_embedding.calculator import CALCULATOR_VERSION
+from src.scan_faces._detect_faces.constants import FaceLimitConstant, DEFAULT_THRESHOLD_C
 from src.scan_faces.scan_faces import scan_faces
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -57,7 +58,7 @@ def create_app():
         img = imageio.imread(file)
         scanned_faces = scan_faces(img, face_limit, detection_threshold_c)
 
-        return jsonify(result=scanned_faces)
+        return jsonify(result=scanned_faces, calculator_version=CALCULATOR_VERSION)
 
     @app.errorhandler(BadRequestException)
     def handle_api_exception(e: BadRequestException):

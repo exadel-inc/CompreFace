@@ -6,10 +6,9 @@ import tensorflow as tf
 
 from src import pyutils
 from src.scan_faces._calc_embedding._face_crop import crop_image
+from src.scan_faces._calc_embedding.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
 from src.scan_faces.dto.bounding_box import BoundingBox
 from src.scan_faces.dto.embedding import Embedding
-from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
-from src.storage.storage import get_storage
 
 BATCH_SIZE = 25
 CALCULATOR_VERSION = EMBEDDING_CALCULATOR_MODEL_FILENAME
@@ -21,6 +20,7 @@ Calculator = namedtuple('Calculator', 'graph sess')
 def _calculator() -> Calculator:
     with tf.Graph().as_default() as graph:
         graph_def = tf.GraphDef()
+        # TODO EFRS-103 Read from file instead of storage
         graph_def.ParseFromString(get_storage().get_file(CALCULATOR_VERSION))
         tf.import_graph_def(graph_def, name='')
         return Calculator(graph=graph, sess=tf.Session(graph=graph))
@@ -45,8 +45,8 @@ def _calculate_embeddings(cropped_images):
         feed_dict = {images_placeholder: cropped_images, phase_train_placeholder: False}
         emb_array[start_index:end_index, :] = calculator.sess.run(embeddings, feed_dict=feed_dict)
 
-    # Return DTO
-    return [Embedding(array=emb, calculator_version=CALCULATOR_VERSION) for emb in emb_array]
+    # Return embeddings
+    return [emb.tolist() for emb in emb_array]
 
 
 def calculate_embedding(image: np.ndarray, box: BoundingBox) -> Embedding:
