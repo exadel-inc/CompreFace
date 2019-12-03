@@ -61,7 +61,14 @@ class DatabaseMongo(DatabaseBase):
         return [document_to_face(document) for document in self._get_faces_iterator(api_key)]
 
     def remove_face(self, api_key, face_name):
+
+        img_query = self._faces_collection.find(filter={"api_key": api_key, "face_name": face_name}, projection={"raw_img_fs_id"})
+        img = img_query.distinct("raw_img_fs_id")[0]
+        face_query = self._faces_collection.find(filter={"api_key": api_key, "face_name": face_name}, projection={"face_img_fs_id"})
+        face = face_query.distinct("face_img_fs_id")[0]
         self._faces_collection.delete_many({'face_name': face_name, 'api_key': api_key})
+        self._faces_fs.delete(img)
+        self._faces_fs.delete(face)
 
     def get_face_names(self, api_key):
         find_query = self._faces_collection.find(filter={"api_key": api_key}, projection={"face_name": 1})
