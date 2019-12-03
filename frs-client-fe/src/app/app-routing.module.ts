@@ -8,6 +8,7 @@ const routes: Routes = [
       { path: 'organization', loadChildren: './pages/organization/organization.module#OrganizationModule'}
     ]},
   { path: 'login', loadChildren: './pages/login/login.module#LoginModule'},
+  { path: 'sign-up', loadChildren: './pages/sign-up/sign-up.module#SignUpModule'},
   { path: '**', redirectTo: '/' }
   ];
 

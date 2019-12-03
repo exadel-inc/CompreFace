@@ -3,17 +3,18 @@
     <mat-card-title>Login</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form class="login-form">
+    <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
       <mat-form-field class="login-full-width">
-        <input matInput placeholder="Username" [(ngModel)]="username" name="username" required>
+        <input matInput placeholder="Username" formControlName="username" name="username" required>
       </mat-form-field>
       <mat-form-field class="login-full-width">
-        <input matInput placeholder="Password" [(ngModel)]="password" type="password" name="password" required>
+        <input matInput placeholder="Password" formControlName="password" type="password" name="password" required>
       </mat-form-field>
     </form>
     <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
+    <a [routerLink]="['/sign-up']">sign-up</a>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button (click)="login()" color="primary">Login</button>
+    <button mat-raised-button type="submit" color="primary">Login</button>
   </mat-card-actions>
 </mat-card>

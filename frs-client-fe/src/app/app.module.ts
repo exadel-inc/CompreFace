@@ -6,14 +6,11 @@ import { AppComponent } from './app.component';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FeatureModule} from "./feature/feature.module";
-import { SingUpComponent } from './pages/sing-up/sing-up.component';
-import {CustomMaterialModule} from "./ui/custom-material/custom-material.module";
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
-    SingUpComponent,
   ],
   imports: [
     BrowserModule,

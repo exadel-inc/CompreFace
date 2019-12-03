@@ -3,18 +3,23 @@ import { CommonModule } from '@angular/common';
 import { LoginFormComponent } from './containers/login-form/login-form.component';
 import { ToolBarComponent } from './containers/tool-bar/tool-bar.component';
 import {CustomMaterialModule} from "../ui/custom-material/custom-material.module";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {RouterModule} from "@angular/router";
+import { SignUpFormComponent } from './containers/sign-up-form/sign-up-form.component';
 
 @NgModule({
-  declarations: [LoginFormComponent, ToolBarComponent],
+  declarations: [LoginFormComponent, ToolBarComponent, SignUpFormComponent],
   exports: [
     ToolBarComponent,
-    LoginFormComponent
+    LoginFormComponent,
+    SignUpFormComponent
   ],
   imports: [
     CommonModule,
     CustomMaterialModule,
-    FormsModule
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule
   ]
 })
 export class FeatureModule { }
