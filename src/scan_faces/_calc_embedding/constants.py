@@ -1,0 +1,1 @@
+IMAGE_SIZE = 160

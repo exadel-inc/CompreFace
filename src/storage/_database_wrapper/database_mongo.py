@@ -2,7 +2,7 @@ import gridfs
 import numpy as np
 from pymongo import MongoClient
 
-from src.face_recognition.dto.embedding import Embedding
+from src.scan_faces.dto.embedding import Embedding
 from src.pyutils.serialization import deserialize, serialize
 from src.storage._database_wrapper.database_base import DatabaseBase
 from src.storage._database_wrapper.mongo_fileio import save_file_to_mongo, get_file_from_mongo

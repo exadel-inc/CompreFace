@@ -12,12 +12,3 @@ services:
   ml:
     container_name: ml
     build: .
-    depends_on:
-      - mongo
-  mongo:
-    container_name: mongo
-    image: "mongo:4.0.4-xenial"
-    ports:
-      - "27117:27017"
-    volumes:
-      - ./mongo_data:/data
