@@ -110,7 +110,10 @@ class DatabaseMongo(DatabaseBase):
         return EmbeddingClassifier(version, model, class_2_face_name, embedding_calculator_version)
 
     def delete_embedding_classifiers(self, api_key):
+        face_query = self._classifiers_collection.find(filter={"api_key": api_key}, projection = {"classifier_fs_id"})
+        face = face_query.distinct("classifier_fs_id")[0]
         self._classifiers_collection.delete_many({'api_key': api_key})
+        self._classifiers_fs.delete(face)
 
     def get_api_keys(self):
         return self._faces_collection.find(projection=["api_key"]).distinct("api_key")
