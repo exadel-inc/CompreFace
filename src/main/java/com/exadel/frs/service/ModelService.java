@@ -10,7 +10,6 @@ import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.*;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelRepository;
-import com.exadel.frs.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -26,7 +25,6 @@ public class ModelService {
 
     private final AppRepository appRepository;
     private final ModelRepository modelRepository;
-    private final OrganizationRepository organizationRepository;
 
     private Model getModelFromRepo(Long modelId) {
         return modelRepository.findById(modelId)
@@ -38,18 +36,12 @@ public class ModelService {
                 .orElseThrow(() -> new AppNotFoundException(appId));
     }
 
-    private Organization getOrganizationFromRepo(Long organizationId) {
-        return organizationRepository
-                .findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException(organizationId));
-    }
-
-    private OrganizationRole getUserOrganizationRole(Long organizationId, Long userId) {
-        return getOrganizationFromRepo(organizationId).getUserOrganizationRoleOrThrow(userId).getRole();
+    private OrganizationRole getUserOrganizationRole(Organization organization, Long userId) {
+        return organization.getUserOrganizationRoleOrThrow(userId).getRole();
     }
 
     private void verifyUserHasReadPrivileges(Long userId, App app) {
-        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization().getId(), userId);
+        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
         if (OrganizationRole.USER == organizationRole) {
             app.getUserAppRole(userId)
                     .orElseThrow(() -> new InsufficientPrivilegesException(userId));
@@ -57,7 +49,7 @@ public class ModelService {
     }
 
     private void verifyUserHasWritePrivileges(Long userId, App app) {
-        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization().getId(), userId);
+        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
         if (OrganizationRole.USER == organizationRole) {
             Optional<UserAppRole> userAppRole = app.getUserAppRole(userId);
             if (userAppRole.isEmpty() || AppRole.USER == userAppRole.get().getRole()) {
