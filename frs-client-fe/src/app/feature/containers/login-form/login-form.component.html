@@ -3,7 +3,7 @@
     <mat-card-title>Login</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form class="login-form" [formGroup]="form" (ngSubmit)="submit()">
+    <form class="login-form" [formGroup]="form">
       <mat-form-field class="login-full-width">
         <input matInput placeholder="Username" formControlName="username" name="username" required>
       </mat-form-field>
@@ -15,6 +15,6 @@
     <a [routerLink]="['/sign-up']">sign-up</a>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button type="submit" color="primary">Login</button>
+    <button mat-raised-button type="submit" (click)="onSubmit()" color="primary">Login</button>
   </mat-card-actions>
 </mat-card>

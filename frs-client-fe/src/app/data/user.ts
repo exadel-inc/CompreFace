@@ -11,4 +11,5 @@ export interface User {
   // userAppRoles?: Array<UserAppRoleDto>;
   // userOrganizationRoles?: Array<UserOrganizationRoleDto>;
   username?: string;
+  token?: string;
 }

@@ -1,12 +1,32 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const bodyParser = require('body-parser');
 const dataPath = './mock-backend/data/';
 let mockData = {};
 
 
 const app = express();
 app.use(express.urlencoded());
+// Add headers
+app.use(function (req, res, next) {
+  // Website you wish to allow to connect
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4201');
+  // Request methods you wish to allow
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+  // Request headers you wish to allow
+  res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+  // Set to true if you need the website to include cookies in the requests sent
+  // to the API (e.g. in case you use sessions)
+  res.setHeader('Access-Control-Allow-Credentials', true);
+  // Pass to next layer of middleware
+  next();
+});
+app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+}));
+
 // user with some login:
 const user = {
   email: "email",
@@ -30,8 +50,8 @@ app.get('/', function (req, res) {
 });
 
 app.post('/admin/oauth/token', function (req, res) {
-  if (req && req.query.email === user.email && req.query.password) {
-    token = `${user.email}${user.password}${+new Date()}`;
+  if (req && req.body.username === user.username && req.body.password === user.password) {
+    token = `${user.username}${user.password}${+new Date()}`;
     res.send({token});
   }
   else{
