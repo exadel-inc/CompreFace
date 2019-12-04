@@ -50,4 +50,5 @@ if __name__ == '__main__':
     dataset = get_test_dataset() if args.test else get_lfw_dataset()
 
     accuracy = calculate_accuracy(model, dataset)
+
     print(f'Accuracy: {accuracy * 100}%\nTraining set size: {len(dataset.train)}\nTest set size: {len(dataset.test)}')
