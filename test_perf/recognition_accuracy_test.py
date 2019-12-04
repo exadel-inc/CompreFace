@@ -1,11 +1,9 @@
 import argparse
-import logging
 
 import imageio
 from sklearn.datasets import fetch_lfw_people
 
 from main import ROOT_DIR
-from src.face_recognition.crop_faces.exceptions import NoFaceFoundError
 from src.init_runtime import init_runtime
 from test_perf._data_wrangling import split_train_test, parse_lfw_data
 from test_perf._model_wrappers import EfrsLocal, ModelWrapperBase, EfrsRestApi
