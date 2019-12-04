@@ -31,7 +31,7 @@ import java.util.Map;
 public class ProxyController {
 
     static final String PREFIX = "/api";
-    private static final String API_KEY_HEADER = "x-frs-api-key";
+    private static final String API_KEY_HEADER = "X-Api-Key";
 
     private final ModelRepository modelRepository;
 
@@ -89,15 +89,14 @@ public class ProxyController {
                     .findFirst()
                     .orElseThrow(AccessDeniedException::new);
         }
+        String remoteUrl = baseUrl + request.getRequestURI().replaceFirst(PREFIX, "");
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         params.forEach(body::add);
         files.forEach((key, file) -> body.add(key, file.getResource()));
         RestTemplate restTemplate = new RestTemplate();
         try {
-            return restTemplate.exchange(baseUrl + request.getRequestURI(),
-                    HttpMethod.resolve(request.getMethod()),
-                    new HttpEntity<>(body, headers),
-                    String.class);
+            return restTemplate.exchange(remoteUrl, HttpMethod.resolve(request.getMethod()),
+                    new HttpEntity<>(body, headers), String.class);
         } catch (HttpClientErrorException e) {
             return new ResponseEntity<>(e.getResponseBodyAsString(), e.getStatusCode());
         }
