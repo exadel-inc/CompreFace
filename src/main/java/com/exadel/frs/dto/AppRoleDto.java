@@ -4,9 +4,8 @@ import com.exadel.frs.enums.AppRole;
 import lombok.Data;
 
 @Data
-public class UserAppRoleDto {
+public class AppRoleDto {
 
-    private Long userId;
     private Long appId;
     private AppRole role;
 

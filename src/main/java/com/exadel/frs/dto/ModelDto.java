@@ -10,7 +10,7 @@ public class ModelDto {
     private Long id;
     private String name;
     private String guid;
-    private List<AppModelDto> appModelAccess;
+    private List<AppAccessDto> appModelAccess;
     private Long appId;
 
 }

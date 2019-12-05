@@ -17,8 +17,8 @@ public class UserDto {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
-    private List<UserAppRoleDto> userAppRoles;
-    private List<UserOrganizationRoleDto> userOrganizationRoles;
+    private List<AppRoleDto> userAppRoles;
+    private List<OrganizationRoleDto> userOrganizationRoles;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
