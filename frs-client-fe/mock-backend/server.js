@@ -65,7 +65,7 @@ app.post('/admin/client/register', function (req, res) {
   if (req && req.body.username && req.body.password && req.body.email) {
     user = { ...user, ...req.body};
     console.log(user);
-    res.sendStatus(201);
+    res.status(201).send({message: 'Created'});
   }
   else{
     res.sendStatus(400);

@@ -15,6 +15,10 @@
     <a [routerLink]="['/sign-up']">sign-up</a>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button type="submit" (click)="onSubmit()" color="primary">Login</button>
+    <button mat-raised-button
+            type="submit"
+            (click)="onSubmit()"
+            color="primary"
+            [disabled]="form.invalid">Login</button>
   </mat-card-actions>
 </mat-card>

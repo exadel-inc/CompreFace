@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {SignUp} from "../../../data/sign-up";
 import {User} from "../../../data/user";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../../store/state/app.state";
@@ -13,7 +12,6 @@ import {LogIn} from "../../../store/actions/auth";
 })
 export class LoginFormComponent implements OnInit {
   form: FormGroup;
-  userData: SignUp;
   user: User;
 
   constructor(private store: Store<AppState>) {
@@ -28,7 +26,6 @@ export class LoginFormComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.form.value);
     this.user = this.form.value;
     const payload = {
       username: this.user.username,

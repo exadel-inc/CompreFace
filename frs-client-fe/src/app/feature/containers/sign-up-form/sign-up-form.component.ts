@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {User} from "../../../data/user";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../../store/state/app.state";
@@ -13,6 +13,14 @@ import {SignUp} from "../../../store/actions/auth";
 export class SignUpFormComponent implements OnInit {
   form: FormGroup;
   user: User;
+  EMAIL_REGEX = '\\S+@\\S+\\.\\S+';
+
+  passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
+    if (formGroup.get('password').value === formGroup.get('confirmPassword').value)
+      return null;
+    else
+      return {passwordMismatch: true};
+  };
 
   constructor(private store: Store<AppState>) {
 
@@ -21,14 +29,16 @@ export class SignUpFormComponent implements OnInit {
   ngOnInit() {
     this.form = new FormGroup({
       username: new FormControl(),
-      email: new FormControl(),
-      password: new FormControl(),
-      confirmPassword: new FormControl(),
-    })
+      email: new FormControl(null, [Validators.required, Validators.pattern(this.EMAIL_REGEX)]),
+      password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      confirmPassword: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(8),
+      ]),
+    }, {validators: this.passwordMatchValidator })
   }
 
   onSubmit() {
-    console.log(this.form.value);
     this.user = this.form.value;
     const payload = {
       email: this.user.email,

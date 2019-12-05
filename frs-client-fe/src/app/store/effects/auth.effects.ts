@@ -52,8 +52,7 @@ export class AuthEffects {
     switchMap(payload => {
       return this.authService.signUp(payload.username, payload.password, payload.email).pipe(
         map((user) => {
-          console.log(user);
-          return new SignUpSuccess({token: user.token, email: payload.email});
+          return new SignUpSuccess({});
         }),
         catchError(error =>
           observableOf(new SignUpFailure({ error }))
@@ -64,15 +63,14 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   SignUpSuccess: Observable<any> = this.actions.pipe(
-    ofType(AuthActionTypes.LOGIN_SUCCESS),
-    tap((user) => {
-      // localStorage.setItem('token', user.payload.token);
+    ofType(AuthActionTypes.SIGNUP_SUCCESS),
+    tap(() => {
       this.router.navigateByUrl('/login');
     })
   );
 
   @Effect({ dispatch: false })
   SignUpFailure: Observable<any> = this.actions.pipe(
-    ofType(AuthActionTypes.LOGIN_FAILURE)
+    ofType(AuthActionTypes.SIGNUP_FAILURE)
   );
 }
