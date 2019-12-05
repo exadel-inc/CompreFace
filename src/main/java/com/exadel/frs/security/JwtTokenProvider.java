@@ -76,9 +76,4 @@ public class JwtTokenProvider {
       throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Expired or invalid JWT token");
     }
   }
-
-  /*public OAuth2AccessToken fromString(String token){
-    new DefaultOAuth2AccessToken(token)
-  }*/
-
 }

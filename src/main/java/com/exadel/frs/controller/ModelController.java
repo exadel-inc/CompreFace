@@ -20,19 +20,18 @@ import java.util.List;
 public class ModelController {
 
     private final ModelService modelService;
-    private final SecurityUtils securityUtils;
     private final MlModelMapper modelMapper;
 
     @GetMapping("/{id}")
     @ApiOperation(value = "Get model, created by user")
     public ModelDto getModel(@ApiParam(value = "ID of model to return", required = true, example = "0") @PathVariable Long id) {
-        return modelMapper.toDto(modelService.getModel(id, securityUtils.getPrincipal().getId()));
+        return modelMapper.toDto(modelService.getModel(id, SecurityUtils.getPrincipal().getId()));
     }
 
     @GetMapping("/app/{appId}")
     @ApiOperation(value = "Get all models, created by user")
     public List<ModelDto> getModels(@PathVariable Long appId) {
-        return modelMapper.toDto(modelService.getModels(appId, securityUtils.getPrincipal().getId()));
+        return modelMapper.toDto(modelService.getModels(appId, SecurityUtils.getPrincipal().getId()));
     }
 
     @PostMapping("/")
@@ -41,7 +40,7 @@ public class ModelController {
             @ApiResponse(code = 400, message = "Model name is required | Application access type to model is not correct")
     })
     public void createModel(@ApiParam(value = "Model object that needs to be created", required = true) @Valid @RequestBody ModelDto modelDto) {
-        modelService.createModel(modelMapper.toEntity(modelDto), securityUtils.getPrincipal().getId());
+        modelService.createModel(modelMapper.toEntity(modelDto), SecurityUtils.getPrincipal().getId());
     }
 
     @PutMapping("/{id}")
@@ -51,19 +50,19 @@ public class ModelController {
     })
     public void updateModel(@ApiParam(value = "ID of model that needs to be updated", required = true, example = "0") @PathVariable Long id,
                             @ApiParam(value = "Model data", required = true) @Valid @RequestBody ModelDto modelDto) {
-        modelService.updateModel(id, modelMapper.toEntity(modelDto), securityUtils.getPrincipal().getId());
+        modelService.updateModel(id, modelMapper.toEntity(modelDto), SecurityUtils.getPrincipal().getId());
     }
 
     @PutMapping("/{id}/guid")
     @ApiOperation(value = "Generate new GUID for model")
     public void regenerateGuid(@ApiParam(value = "ID of the model which GUID needs to be regenerated", required = true, example = "0") @PathVariable Long id) {
-        modelService.regenerateGuid(id, securityUtils.getPrincipal().getId());
+        modelService.regenerateGuid(id, SecurityUtils.getPrincipal().getId());
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete model")
     public void deleteModel(@ApiParam(value = "ID of the model that needs to be deleted", required = true, example = "0") @PathVariable Long id) {
-        modelService.deleteModel(id, securityUtils.getPrincipal().getId());
+        modelService.deleteModel(id, SecurityUtils.getPrincipal().getId());
     }
 
 }

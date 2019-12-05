@@ -25,22 +25,11 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final AuthenticationManager authenticationManager;
 
 
     public User getUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserDoesNotExistException(id));
-    }
-
-    public String login(String username, String password){
-        try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            return jwtTokenProvider.createToken(username);
-        } catch (AuthenticationException e) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username/password supplied");
-        }
     }
 
     public void createUser(User user) {

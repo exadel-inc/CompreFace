@@ -17,13 +17,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final SecurityUtils securityUtils;
     private final UserMapper userMapper;
 
     @GetMapping("/me")
     @ApiOperation(value = "Get information about user, that logged in")
     public UserDto getUser() {
-        return userMapper.toDto(securityUtils.getPrincipal());
+        return userMapper.toDto(SecurityUtils.getPrincipal());
     }
 
     @PostMapping("/register")
@@ -41,13 +40,13 @@ public class UserController {
             @ApiResponse(code = 400, message = "Such username or email already registered")
     })
     public void updateUser(@ApiParam(value = "User data that needs to be updated", required = true) @RequestBody UserDto userDto) {
-        userService.updateUser(securityUtils.getPrincipal(), userMapper.toEntity(userDto));
+        userService.updateUser(SecurityUtils.getPrincipal(), userMapper.toEntity(userDto));
     }
 
     @DeleteMapping("/delete")
     @ApiOperation(value = "Delete user")
     public void deleteUser() {
-        userService.deleteUser(securityUtils.getPrincipal().getId());
+        userService.deleteUser(SecurityUtils.getPrincipal().getId());
     }
 
 }

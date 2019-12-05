@@ -1,5 +1,15 @@
 package com.exadel.frs;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
@@ -15,167 +25,161 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.util.Optional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
-
 public class UserServiceTest {
 
-    private UserRepository userRepositoryMock;
-    private UserService userService;
-    private JwtTokenProvider jwtTokenProvider;
-    private AuthenticationManager authenticationManager;
+  private UserRepository userRepositoryMock;
+  private UserService userService;
 
-    public UserServiceTest() {
-        userRepositoryMock = mock(UserRepository.class);
-        jwtTokenProvider = mock(JwtTokenProvider.class);
-        authenticationManager = mock(AuthenticationManager.class);
-        userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder(),jwtTokenProvider,authenticationManager);
-    }
+  public UserServiceTest() {
+    userRepositoryMock = mock(UserRepository.class);
+    userService = new UserService(userRepositoryMock,
+        PasswordEncoderFactories.createDelegatingPasswordEncoder());
+  }
 
-    @Test
-    public void successGetUser() {
-        Long userId = 1L;
+  @Test
+  public void successGetUser() {
+    Long userId = 1L;
 
-        User user = User.builder().id(userId).build();
+    User user = User.builder().id(userId).build();
 
-        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(user));
+    when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(user));
 
-        User result = userService.getUser(userId);
+    User result = userService.getUser(userId);
 
-        assertThat(result.getId(), is(userId));
-    }
+    assertThat(result.getId(), is(userId));
+  }
 
-    @Test
-    public void failGetUser() {
-        Long userId = 1L;
+  @Test
+  public void failGetUser() {
+    Long userId = 1L;
 
-        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
+    when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(UserDoesNotExistException.class, () -> userService.getUser(userId));
-    }
+    Assertions.assertThrows(UserDoesNotExistException.class, () -> userService.getUser(userId));
+  }
 
-    @Test
-    public void successCreateUser() {
-        User user = User.builder()
-                .username("username")
-                .password("password")
-                .email("email")
-                .build();
+  @Test
+  public void successCreateUser() {
+    User user = User.builder()
+        .username("username")
+        .password("password")
+        .email("email")
+        .build();
 
-        userService.createUser(user);
+    userService.createUser(user);
 
-        verify(userRepositoryMock).save(any(User.class));
-    }
+    verify(userRepositoryMock).save(any(User.class));
+  }
 
-    @Test
-    public void failCreateUserEmptyUsername() {
-        User user = User.builder()
-                .username("")
-                .password("password")
-                .email("email")
-                .build();
+  @Test
+  public void failCreateUserEmptyUsername() {
+    User user = User.builder()
+        .username("")
+        .password("password")
+        .email("email")
+        .build();
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(user));
-    }
+    Assertions.assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(user));
+  }
 
-    @Test
-    public void failCreateUserEmptyPassword() {
-        User user = User.builder()
-                .username("username")
-                .password("")
-                .email("email")
-                .build();
+  @Test
+  public void failCreateUserEmptyPassword() {
+    User user = User.builder()
+        .username("username")
+        .password("")
+        .email("email")
+        .build();
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(user));
-    }
+    Assertions.assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(user));
+  }
 
-    @Test
-    public void failCreateUserEmptyEmail() {
-        User user = User.builder()
-                .username("username")
-                .password("password")
-                .email("")
-                .build();
+  @Test
+  public void failCreateUserEmptyEmail() {
+    User user = User.builder()
+        .username("username")
+        .password("password")
+        .email("")
+        .build();
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(user));
-    }
+    Assertions.assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(user));
+  }
 
-    @Test
-    public void failCreateUserDuplicateUsername() {
-        User user = User.builder()
-                .username("username")
-                .password("password")
-                .email("email")
-                .build();
+  @Test
+  public void failCreateUserDuplicateUsername() {
+    User user = User.builder()
+        .username("username")
+        .password("password")
+        .email("email")
+        .build();
 
-        when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(user));
+    when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(user));
 
-        Assertions.assertThrows(UsernameAlreadyExistException.class, () -> userService.createUser(user));
-    }
+    Assertions
+        .assertThrows(UsernameAlreadyExistException.class, () -> userService.createUser(user));
+  }
 
-    @Test
-    public void failCreateUserDuplicateEmail() {
-        User user = User.builder()
-                .username("username")
-                .password("password")
-                .email("email")
-                .build();
+  @Test
+  public void failCreateUserDuplicateEmail() {
+    User user = User.builder()
+        .username("username")
+        .password("password")
+        .email("email")
+        .build();
 
-        when(userRepositoryMock.findByEmail(anyString())).thenReturn(Optional.of(user));
+    when(userRepositoryMock.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        Assertions.assertThrows(EmailAlreadyRegisteredException.class, () -> userService.createUser(user));
-    }
+    Assertions
+        .assertThrows(EmailAlreadyRegisteredException.class, () -> userService.createUser(user));
+  }
 
-    @Test
-    public void successUpdateUser() {
-        User repoUser = User.builder()
-                .username("username")
-                .password("password")
-                .email("email")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+  @Test
+  public void successUpdateUser() {
+    User repoUser = User.builder()
+        .username("username")
+        .password("password")
+        .email("email")
+        .firstName("firstName")
+        .lastName("lastName")
+        .build();
 
-        User user = User.builder()
-                .username("new_username")
-                .password("new_password")
-                .email("new_email")
-                .firstName("new_firstName")
-                .lastName("new_lastName")
-                .build();
+    User user = User.builder()
+        .username("new_username")
+        .password("new_password")
+        .email("new_email")
+        .firstName("new_firstName")
+        .lastName("new_lastName")
+        .build();
 
-        userService.updateUser(repoUser, user);
+    userService.updateUser(repoUser, user);
 
-        verify(userRepositoryMock).save(any(User.class));
+    verify(userRepositoryMock).save(any(User.class));
 
-        assertThat(repoUser.getFirstName(), is(user.getFirstName()));
-        assertThat(repoUser.getLastName(), is(user.getLastName()));
-        assertThat(repoUser.getEmail(), is(user.getEmail()));
-        assertThat(repoUser.getPassword(), not("password"));
-        assertThat(repoUser.getUsername(), not(user.getUsername()));
-    }
+    assertThat(repoUser.getFirstName(), is(user.getFirstName()));
+    assertThat(repoUser.getLastName(), is(user.getLastName()));
+    assertThat(repoUser.getEmail(), is(user.getEmail()));
+    assertThat(repoUser.getPassword(), not("password"));
+    assertThat(repoUser.getUsername(), not(user.getUsername()));
+  }
 
-    @Test
-    public void failUpdateUser() {
-        User user = User.builder()
-                .email("email")
-                .build();
+  @Test
+  public void failUpdateUser() {
+    User user = User.builder()
+        .email("email")
+        .build();
 
-        when(userRepositoryMock.findByEmail(anyString())).thenReturn(Optional.of(user));
+    when(userRepositoryMock.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        Assertions.assertThrows(EmailAlreadyRegisteredException.class, () -> userService.updateUser(user, user));
-    }
+    Assertions.assertThrows(EmailAlreadyRegisteredException.class,
+        () -> userService.updateUser(user, user));
+  }
 
-    @Test
-    public void successDeleteUser() {
-        Long userId = 1L;
+  @Test
+  public void successDeleteUser() {
+    Long userId = 1L;
 
-        userService.deleteUser(userId);
+    userService.deleteUser(userId);
 
-        verify(userRepositoryMock).deleteById(anyLong());
-    }
+    verify(userRepositoryMock).deleteById(anyLong());
+  }
 
 }

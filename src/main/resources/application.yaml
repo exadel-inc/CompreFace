@@ -26,7 +26,6 @@ security:
   signing-key: MaYzkSjmkzPC57L
   encoding-strength: 256
   expire-length: 86400000
-  oauth2:
 
 proxy:
   baseUrl: ${PROXY_URL:http://localhost:5000}
