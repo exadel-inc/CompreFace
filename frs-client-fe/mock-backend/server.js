@@ -35,7 +35,7 @@ let user = {
 };
 
 
-collectData();
+getJSONData();
 let token = '';
 
 // view engine setup
@@ -86,7 +86,7 @@ app.listen(3000, function () {
 
 });
 
-function collectData() {
+function getJSONData() {
   let  organization;
   let  apps;
   try {
@@ -108,4 +108,4 @@ function auth(req, res, next) {
     return next();
   else
     return res.sendStatus(401);
-};
+}
