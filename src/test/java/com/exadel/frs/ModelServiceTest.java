@@ -273,7 +273,6 @@ public class ModelServiceTest {
         verify(modelRepositoryMock).save(any(Model.class));
 
         assertThat(model.getGuid(), not(isEmptyOrNullString()));
-        assertThat(model.getAppModelAccess().size(), is(1));
     }
 
     @ParameterizedTest

@@ -44,12 +44,6 @@ public class OrganizationServiceTest {
                 .build();
     }
 
-    private static Stream<Arguments> allRoles() {
-        return Stream.of(Arguments.of(OrganizationRole.OWNER),
-                Arguments.of(OrganizationRole.ADMINISTRATOR),
-                Arguments.of(OrganizationRole.USER));
-    }
-
     private static Stream<Arguments> readRoles() {
         return Stream.of(Arguments.of(OrganizationRole.ADMINISTRATOR),
                 Arguments.of(OrganizationRole.USER));
@@ -60,7 +54,7 @@ public class OrganizationServiceTest {
     }
 
     @ParameterizedTest
-    @MethodSource("allRoles")
+    @MethodSource({"readRoles", "writeRoles"})
     public void successGetOrganization(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long organizationId = 1L;

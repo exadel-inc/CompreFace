@@ -8,7 +8,6 @@ import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
-import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.OrganizationRepository;
 import com.exadel.frs.service.AppService;
@@ -384,7 +383,7 @@ public class AppServiceTest {
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(UserDoesNotExistException.class, () -> appService.updateApp(appId, app, userId));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.updateApp(appId, app, userId));
     }
 
     @ParameterizedTest

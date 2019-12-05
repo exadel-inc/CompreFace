@@ -85,7 +85,9 @@ public class ModelService {
         }
         if (model.getAppModelAccess() != null) {
             Long repoModelOrganizationId = repoModel.getApp().getOrganization().getId();
-            repoModel.getAppModelAccess().clear();
+            if (repoModel.getAppModelAccess() != null) {
+                repoModel.getAppModelAccess().clear();
+            }
             model.getAppModelAccess().forEach(appModel -> {
                 App app = getAppFromRepo(appModel.getApp().getId());
                 if (!repoModelOrganizationId.equals(app.getOrganization().getId())) {

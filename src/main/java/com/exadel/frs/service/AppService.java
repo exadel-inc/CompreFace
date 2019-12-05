@@ -89,10 +89,12 @@ public class AppService {
             repoApp.setName(app.getName());
         }
         if (app.getUserAppRoles() != null) {
-            if (getNumberOfOwners(app.getUserAppRoles()) == 0) {
-                repoApp.getUserAppRoles().removeIf(userAppRole -> !AppRole.OWNER.equals(userAppRole.getRole()));
-            } else {
-                repoApp.getUserAppRoles().clear();
+            if (repoApp.getUserAppRoles() != null) {
+                if (getNumberOfOwners(app.getUserAppRoles()) == 0) {
+                    repoApp.getUserAppRoles().removeIf(userAppRole -> !AppRole.OWNER.equals(userAppRole.getRole()));
+                } else {
+                    repoApp.getUserAppRoles().clear();
+                }
             }
             app.getUserAppRoles().forEach(userAppRole -> {
                 UserOrganizationRole userOrganizationRole = repoApp.getOrganization()
