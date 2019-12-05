@@ -28,9 +28,15 @@ public class Model {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AppModel> appModelAccess = new ArrayList<>();
+    private List<AppModel> appModelAccess;
 
     public void addAppModelAccess(App app, AppModelAccess access) {
+        if (appModelAccess == null) {
+            appModelAccess = new ArrayList<>();
+        }
+        if (app.getAppModelAccess() == null) {
+            app.setAppModelAccess(new ArrayList<>());
+        }
         AppModel appModel = new AppModel(app, this, access);
         appModelAccess.add(appModel);
         app.getAppModelAccess().add(appModel);

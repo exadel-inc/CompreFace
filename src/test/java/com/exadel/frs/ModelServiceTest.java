@@ -18,7 +18,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -44,15 +43,12 @@ public class ModelServiceTest {
     private User user(Long id) {
         return User.builder()
                 .id(id)
-                .userOrganizationRoles(new ArrayList<>())
-                .userAppRoles(new ArrayList<>())
                 .build();
     }
 
     private Organization organization(Long id) {
         return Organization.builder()
                 .id(id)
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
     }
 
@@ -81,7 +77,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -112,7 +107,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
@@ -144,7 +138,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -173,7 +166,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -181,7 +173,7 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findAllByAppModelAccess_Id_AppId(anyLong())).thenReturn(List.of(model));
+        when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         List<Model> result = modelService.getModels(appId, userId);
@@ -205,7 +197,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
@@ -214,7 +205,7 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findAllByAppModelAccess_Id_AppId(anyLong())).thenReturn(List.of(model));
+        when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         List<Model> result = modelService.getModels(appId, userId);
@@ -238,7 +229,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -246,7 +236,7 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findAllByAppModelAccess_Id_AppId(anyLong())).thenReturn(List.of(model));
+        when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.getModels(appId, userId));
@@ -268,15 +258,12 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .id(modelId)
                 .name("name")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
@@ -305,15 +292,12 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .id(modelId)
                 .name("name")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
@@ -337,14 +321,11 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .id(modelId)
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
@@ -368,22 +349,18 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model repoModel = Model.builder()
                 .name("name")
                 .guid("guid")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .name("new_name")
                 .guid("new_guid")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
         model.addAppModelAccess(app, AppModelAccess.TRAIN);
 
@@ -415,20 +392,16 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model repoModel = Model.builder()
                 .name("name")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .name("new_name")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
@@ -454,24 +427,20 @@ public class ModelServiceTest {
         App app1 = App.builder()
                 .id(appId)
                 .organization(organization1)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model repoModel = Model.builder()
                 .app(app1)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Organization organization2 = organization(organizationId2);
         App app2 = App.builder()
                 .id(appId)
                 .organization(organization2)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .app(app2)
-                .appModelAccess(new ArrayList<>())
                 .build();
         model.addAppModelAccess(app2, AppModelAccess.TRAIN);
 
@@ -497,7 +466,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -529,7 +497,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -559,7 +526,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -591,7 +557,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()

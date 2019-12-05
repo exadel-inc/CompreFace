@@ -11,7 +11,6 @@ import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.OrganizationRepository;
-import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.AppService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -19,7 +18,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -32,30 +30,25 @@ import static org.mockito.Mockito.*;
 
 public class AppServiceTest {
 
-    private UserRepository userRepositoryMock;
     private AppRepository appRepositoryMock;
     private OrganizationRepository organizationRepositoryMock;
     private AppService appService;
 
     public AppServiceTest() {
         appRepositoryMock = mock(AppRepository.class);
-        userRepositoryMock = mock(UserRepository.class);
         organizationRepositoryMock = mock(OrganizationRepository.class);
-        appService = new AppService(appRepositoryMock, organizationRepositoryMock, userRepositoryMock);
+        appService = new AppService(appRepositoryMock, organizationRepositoryMock);
     }
 
     private User user(Long id) {
         return User.builder()
                 .id(id)
-                .userOrganizationRoles(new ArrayList<>())
-                .userAppRoles(new ArrayList<>())
                 .build();
     }
 
     private Organization organization(Long id) {
         return Organization.builder()
                 .id(id)
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
     }
 
@@ -127,7 +120,6 @@ public class AppServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
@@ -154,7 +146,6 @@ public class AppServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
@@ -178,7 +169,6 @@ public class AppServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findAllByOrganizationId(anyLong())).thenReturn(List.of(app));
@@ -216,7 +206,6 @@ public class AppServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
@@ -246,7 +235,7 @@ public class AppServiceTest {
 
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
-        appService.createApp(app, userId);
+        appService.createApp(app, user);
 
         verify(appRepositoryMock).save(any(App.class));
 
@@ -270,13 +259,15 @@ public class AppServiceTest {
 
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(app, userId));
+        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(app, user));
     }
 
     @Test
     public void failCreateAppUserDoesNotBelongToOrganization() {
         Long userId = 1L;
         Long organizationId = 1L;
+
+        User user = user(userId);
 
         Organization organization = organization(organizationId);
 
@@ -287,7 +278,7 @@ public class AppServiceTest {
 
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(app, userId));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(app, user));
     }
 
     @ParameterizedTest
@@ -308,7 +299,7 @@ public class AppServiceTest {
 
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(app, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(app, user));
     }
 
     @ParameterizedTest
@@ -327,19 +318,16 @@ public class AppServiceTest {
                 .name("name")
                 .guid("guid")
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         App app = App.builder()
                 .name("new_name")
                 .guid("new_guid")
-                .userAppRoles(new ArrayList<>())
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
-        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(user));
 
         appService.updateApp(appId, app, userId);
 
@@ -364,7 +352,6 @@ public class AppServiceTest {
 
         App app = App.builder()
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
@@ -388,17 +375,14 @@ public class AppServiceTest {
         App repoApp = App.builder()
                 .name("name")
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         App app = App.builder()
-                .userAppRoles(new ArrayList<>())
                 .build();
         app.addUserAppRole(user(2L), AppRole.USER);
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
-        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
 
         Assertions.assertThrows(UserDoesNotExistException.class, () -> appService.updateApp(appId, app, userId));
     }
@@ -419,7 +403,6 @@ public class AppServiceTest {
                 .name("name")
                 .guid("guid")
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
@@ -448,7 +431,6 @@ public class AppServiceTest {
                 .name("name")
                 .guid("guid")
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
@@ -472,7 +454,6 @@ public class AppServiceTest {
         App app = App.builder()
                 .name("name")
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
@@ -499,7 +480,6 @@ public class AppServiceTest {
                 .name("name")
                 .guid("guid")
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));

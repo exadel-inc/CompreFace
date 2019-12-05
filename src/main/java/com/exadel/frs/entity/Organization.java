@@ -25,13 +25,16 @@ public class Organization {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserOrganizationRole> userOrganizationRoles = new ArrayList<>();
+    private List<UserOrganizationRole> userOrganizationRoles;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<App> apps = new ArrayList<>();
+    private List<App> apps;
 
     public Optional<UserOrganizationRole> getUserOrganizationRole(Long userId) {
+        if (userOrganizationRoles == null) {
+            return Optional.empty();
+        }
         return userOrganizationRoles
                 .stream()
                 .filter(userOrganizationRole -> userOrganizationRole.getId().getUserId().equals(userId))
@@ -44,6 +47,12 @@ public class Organization {
     }
 
     public void addUserOrganizationRole(User user, OrganizationRole role) {
+        if (userOrganizationRoles == null) {
+            userOrganizationRoles = new ArrayList<>();
+        }
+        if (user.getUserOrganizationRoles() == null) {
+            user.setUserOrganizationRoles(new ArrayList<>());
+        }
         UserOrganizationRole userOrganizationRole = new UserOrganizationRole(user, this, role);
         userOrganizationRoles.add(userOrganizationRole);
         user.getUserOrganizationRoles().add(userOrganizationRole);

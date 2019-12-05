@@ -6,18 +6,17 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
-import com.exadel.frs.exception.SelfRemoveFromOrganizationException;
-import com.exadel.frs.exception.SelfRoleChangeInOrganizationException;
+import com.exadel.frs.exception.SelfRemoveException;
+import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.repository.OrganizationRepository;
-import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.OrganizationService;
+import com.exadel.frs.service.UserService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -29,20 +28,19 @@ import static org.mockito.Mockito.*;
 
 public class OrganizationServiceTest {
 
-    private UserRepository userRepositoryMock;
+    private UserService userServiceMock;
     private OrganizationRepository organizationRepositoryMock;
     private OrganizationService organizationService;
 
     public OrganizationServiceTest() {
-        userRepositoryMock = mock(UserRepository.class);
+        userServiceMock = mock(UserService.class);
         organizationRepositoryMock = mock(OrganizationRepository.class);
-        organizationService = new OrganizationService(organizationRepositoryMock, userRepositoryMock);
+        organizationService = new OrganizationService(organizationRepositoryMock, userServiceMock);
     }
 
     private User user(Long id) {
         return User.builder()
                 .id(id)
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
     }
 
@@ -71,7 +69,6 @@ public class OrganizationServiceTest {
 
         Organization organization = Organization.builder()
                 .id(organizationId)
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
@@ -128,14 +125,12 @@ public class OrganizationServiceTest {
 
         Organization organization = Organization.builder()
                 .name("Organization 1")
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user1, OrganizationRole.OWNER);
         organization.addUserOrganizationRole(user2, OrganizationRole.USER);
 
         Organization organizationUpdate = Organization.builder()
                 .name("Organization 2")
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.ADMINISTRATOR);
 
@@ -158,7 +153,6 @@ public class OrganizationServiceTest {
 
         Organization organization = Organization.builder()
                 .id(organizationId)
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
@@ -176,18 +170,16 @@ public class OrganizationServiceTest {
         User user = user(userId);
 
         Organization organization = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
         Organization organizationUpdate = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organizationUpdate.addUserOrganizationRole(user, OrganizationRole.USER);
 
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(SelfRoleChangeInOrganizationException.class, () -> organizationService.updateOrganization(organizationId, organizationUpdate, userId));
+        Assertions.assertThrows(SelfRoleChangeException.class, () -> organizationService.updateOrganization(organizationId, organizationUpdate, userId));
     }
 
     // todo implement user invitation to organization by email. then delete this test method
@@ -202,18 +194,16 @@ public class OrganizationServiceTest {
         User user2 = user(userId2);
 
         Organization organization = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user1, organizationRole);
 
         Organization organizationUpdate = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organizationUpdate.addUserOrganizationRole(user1, organizationRole);
         organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.USER);
 
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
-        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(user2));
+        when(userServiceMock.getUser(anyLong())).thenReturn(user2);
 
         organizationService.addUserToOrganization(organizationId, organizationUpdate, userId1);
 
@@ -231,7 +221,6 @@ public class OrganizationServiceTest {
         User user = user(userId);
 
         Organization organization = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
@@ -251,13 +240,11 @@ public class OrganizationServiceTest {
         User user2 = user(userId2);
 
         Organization organization = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user1, organizationRole);
         organization.addUserOrganizationRole(user2, OrganizationRole.USER);
 
         Organization organizationUpdate = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.USER);
 
@@ -277,7 +264,6 @@ public class OrganizationServiceTest {
         User user = user(userId);
 
         Organization organization = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
@@ -295,13 +281,12 @@ public class OrganizationServiceTest {
         User user = user(userId);
 
         Organization organization = Organization.builder()
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(SelfRemoveFromOrganizationException.class, () -> organizationService.removeUserFromOrganization(organizationId, organization, userId));
+        Assertions.assertThrows(SelfRemoveException.class, () -> organizationService.removeUserFromOrganization(organizationId, organization, userId));
     }
 
     @ParameterizedTest
@@ -314,7 +299,6 @@ public class OrganizationServiceTest {
 
         Organization organization = Organization.builder()
                 .id(organizationId)
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
@@ -335,7 +319,6 @@ public class OrganizationServiceTest {
 
         Organization organization = Organization.builder()
                 .id(organizationId)
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 

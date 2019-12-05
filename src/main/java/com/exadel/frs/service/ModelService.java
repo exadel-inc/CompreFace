@@ -4,7 +4,6 @@ import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserAppRole;
-import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.*;
@@ -14,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -66,7 +64,7 @@ public class ModelService {
 
     public List<Model> getModels(Long appId, Long userId) {
         verifyUserHasReadPrivileges(userId, getAppFromRepo(appId));
-        return modelRepository.findAllByAppModelAccess_Id_AppId(appId);
+        return modelRepository.findAllByAppId(appId);
     }
 
     public void createModel(Model model, Long userId) {
@@ -76,8 +74,6 @@ public class ModelService {
             throw new EmptyRequiredFieldException("name");
         }
         model.setGuid(UUID.randomUUID().toString());
-        model.setAppModelAccess(new ArrayList<>());
-        model.addAppModelAccess(repoApp, AppModelAccess.TRAIN);
         modelRepository.save(model);
     }
 
