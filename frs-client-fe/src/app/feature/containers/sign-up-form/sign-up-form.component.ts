@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {SignUp} from "../../../data/sign-up";
 import {User} from "../../../data/user";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../../store/state/app.state";
-import {LogIn} from "../../../store/actions/auth";
+import {SignUp} from "../../../store/actions/auth";
 
 @Component({
   selector: 'app-sign-up-form',
@@ -13,7 +12,6 @@ import {LogIn} from "../../../store/actions/auth";
 })
 export class SignUpFormComponent implements OnInit {
   form: FormGroup;
-  userData: SignUp;
   user: User;
 
   constructor(private store: Store<AppState>) {
@@ -31,11 +29,13 @@ export class SignUpFormComponent implements OnInit {
 
   onSubmit() {
     console.log(this.form.value);
-    // const payload = {
-    //   email: this.user.email,
-    //   password: this.user.password
-    // };
-    // this.store.dispatch(new LogIn(payload));
+    this.user = this.form.value;
+    const payload = {
+      email: this.user.email,
+      password: this.user.password,
+      username: this.user.username
+    };
+    this.store.dispatch(new SignUp(payload));
   }
 
 }

@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 }));
 
 // user with some login:
-const user = {
+let user = {
   email: "email",
   username: "username",
   password: "password"
@@ -50,12 +50,25 @@ app.get('/', function (req, res) {
 });
 
 app.post('/admin/oauth/token', function (req, res) {
+  console.log(req.body);
   if (req && req.body.username === user.username && req.body.password === user.password) {
     token = `${user.username}${user.password}${+new Date()}`;
     res.send({token});
   }
   else{
     res.sendStatus(401);
+  }
+});
+
+app.post('/admin/client/register', function (req, res) {
+  console.log(req.body);
+  if (req && req.body.username && req.body.password && req.body.email) {
+    user = { ...user, ...req.body};
+    console.log(user);
+    res.sendStatus(201);
+  }
+  else{
+    res.sendStatus(400);
   }
 });
 
@@ -70,6 +83,7 @@ app.get('/organization', auth, function (req, res) {
 
 app.listen(3000, function () {
   console.log('Listening on port 3000!');
+
 });
 
 function collectData() {
@@ -82,8 +96,7 @@ function collectData() {
     organization = [];
     apps = [];
   }
-  //...
-console.log(organization);
+
   mockData = {
     organization,
     apps
