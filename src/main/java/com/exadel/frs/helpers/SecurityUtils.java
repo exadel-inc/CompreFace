@@ -11,13 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public final class SecurityUtils {
 
-    private final UserRepository userRepository;
-
     public User getPrincipal() {
-        // todo: get Id from authentication and replace clientRepository.findByUsername method
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return userRepository.findByUsername(principal.toString())
-                .orElseThrow(() -> new UsernameNotFoundException("User " + principal.toString() + " does not exists"));
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
 }

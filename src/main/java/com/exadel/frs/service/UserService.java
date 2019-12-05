@@ -1,15 +1,23 @@
 package com.exadel.frs.service;
 
 import com.exadel.frs.entity.User;
+import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.exception.UsernameAlreadyExistException;
 import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -17,10 +25,22 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+
 
     public User getUser(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserDoesNotExistException(id));
+    }
+
+    public String login(String username, String password){
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            return jwtTokenProvider.createToken(username);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username/password supplied");
+        }
     }
 
     public void createUser(User user) {

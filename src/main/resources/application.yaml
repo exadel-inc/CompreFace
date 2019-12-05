@@ -19,24 +19,14 @@ spring:
     show_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: true
+    open-in-view: false
     generate-ddl: false
 
 security:
-  oauth2:
-    client:
-      client-id: frs-service
-      client-secret: H)g4N3&DgZV59m@Y
-  jwt:
-    client-id: frs-service
-    client-secret: "{noop}H)g4N3&DgZV59m@Y"
-    grant-type: password
-    scope-read: read
-    scope-write: write
-    resource-ids: testjwtresourceid
   signing-key: MaYzkSjmkzPC57L
   encoding-strength: 256
-  security-realm: Spring Boot JWT Example Realm
+  expire-length: 86400000
+  oauth2:
 
 proxy:
   baseUrl: ${PROXY_URL:http://localhost:5000}

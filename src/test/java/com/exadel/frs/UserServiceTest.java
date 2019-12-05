@@ -6,9 +6,11 @@ import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.exception.UsernameAlreadyExistException;
 import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.security.JwtTokenProvider;
 import com.exadel.frs.service.UserService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.util.Optional;
@@ -23,10 +25,14 @@ public class UserServiceTest {
 
     private UserRepository userRepositoryMock;
     private UserService userService;
+    private JwtTokenProvider jwtTokenProvider;
+    private AuthenticationManager authenticationManager;
 
     public UserServiceTest() {
         userRepositoryMock = mock(UserRepository.class);
-        userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder());
+        jwtTokenProvider = mock(JwtTokenProvider.class);
+        authenticationManager = mock(AuthenticationManager.class);
+        userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder(),jwtTokenProvider,authenticationManager);
     }
 
     @Test
