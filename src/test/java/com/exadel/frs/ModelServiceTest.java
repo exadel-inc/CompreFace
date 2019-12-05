@@ -12,14 +12,12 @@ import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.OrganizationMismatchException;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelRepository;
-import com.exadel.frs.repository.OrganizationRepository;
 import com.exadel.frs.service.ModelService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -34,28 +32,23 @@ public class ModelServiceTest {
 
     private AppRepository appRepositoryMock;
     private ModelRepository modelRepositoryMock;
-    private OrganizationRepository organizationRepositoryMock;
     private ModelService modelService;
 
     public ModelServiceTest() {
         appRepositoryMock = mock(AppRepository.class);
         modelRepositoryMock = mock(ModelRepository.class);
-        organizationRepositoryMock = mock(OrganizationRepository.class);
-        modelService = new ModelService(appRepositoryMock, modelRepositoryMock, organizationRepositoryMock);
+        modelService = new ModelService(appRepositoryMock, modelRepositoryMock);
     }
 
     private User user(Long id) {
         return User.builder()
                 .id(id)
-                .userOrganizationRoles(new ArrayList<>())
-                .userAppRoles(new ArrayList<>())
                 .build();
     }
 
     private Organization organization(Long id) {
         return Organization.builder()
                 .id(id)
-                .userOrganizationRoles(new ArrayList<>())
                 .build();
     }
 
@@ -84,7 +77,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -93,7 +85,6 @@ public class ModelServiceTest {
                 .build();
 
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
         Model result = modelService.getModel(modelId, userId);
 
@@ -116,7 +107,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
@@ -126,7 +116,6 @@ public class ModelServiceTest {
                 .build();
 
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
         Model result = modelService.getModel(modelId, userId);
 
@@ -149,7 +138,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -158,7 +146,6 @@ public class ModelServiceTest {
                 .build();
 
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.getModel(modelId, userId));
     }
@@ -179,7 +166,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -187,8 +173,7 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findAllByAppModelAccess_Id_AppId(anyLong())).thenReturn(List.of(model));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         List<Model> result = modelService.getModels(appId, userId);
@@ -212,7 +197,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
@@ -221,8 +205,7 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findAllByAppModelAccess_Id_AppId(anyLong())).thenReturn(List.of(model));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         List<Model> result = modelService.getModels(appId, userId);
@@ -246,7 +229,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -254,8 +236,7 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findAllByAppModelAccess_Id_AppId(anyLong())).thenReturn(List.of(model));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.getModels(appId, userId));
@@ -277,18 +258,14 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .id(modelId)
                 .name("name")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         modelService.createModel(model, userId);
@@ -296,7 +273,6 @@ public class ModelServiceTest {
         verify(modelRepositoryMock).save(any(Model.class));
 
         assertThat(model.getGuid(), not(isEmptyOrNullString()));
-        assertThat(model.getAppModelAccess().size(), is(1));
     }
 
     @ParameterizedTest
@@ -315,18 +291,14 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .id(modelId)
                 .name("name")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.createModel(model, userId));
@@ -348,17 +320,13 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .id(modelId)
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         Assertions.assertThrows(EmptyRequiredFieldException.class, () -> modelService.createModel(model, userId));
@@ -380,27 +348,22 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model repoModel = Model.builder()
                 .name("name")
                 .guid("guid")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .name("new_name")
                 .guid("new_guid")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
         model.addAppModelAccess(app, AppModelAccess.TRAIN);
 
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         modelService.updateModel(modelId, model, userId);
@@ -428,24 +391,19 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model repoModel = Model.builder()
                 .name("name")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .name("new_name")
                 .app(app)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.updateModel(modelId, model, userId));
@@ -468,29 +426,24 @@ public class ModelServiceTest {
         App app1 = App.builder()
                 .id(appId)
                 .organization(organization1)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model repoModel = Model.builder()
                 .app(app1)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Organization organization2 = organization(organizationId2);
         App app2 = App.builder()
                 .id(appId)
                 .organization(organization2)
-                .appModelAccess(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
                 .app(app2)
-                .appModelAccess(new ArrayList<>())
                 .build();
         model.addAppModelAccess(app2, AppModelAccess.TRAIN);
 
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization1));
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app2));
 
         Assertions.assertThrows(OrganizationMismatchException.class, () -> modelService.updateModel(modelId, model, userId));
@@ -512,7 +465,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -521,7 +473,6 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
 
         modelService.regenerateGuid(appId, userId);
@@ -545,7 +496,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -554,7 +504,6 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.regenerateGuid(appId, userId));
@@ -576,7 +525,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -585,7 +533,6 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
 
         modelService.deleteModel(appId, userId);
@@ -609,7 +556,6 @@ public class ModelServiceTest {
         App app = App.builder()
                 .id(appId)
                 .organization(organization)
-                .userAppRoles(new ArrayList<>())
                 .build();
 
         Model model = Model.builder()
@@ -618,7 +564,6 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
         when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.deleteModel(appId, userId));

@@ -9,6 +9,6 @@ public class OrganizationDto {
 
     private Long id;
     private String name;
-    private List<UserOrganizationRoleDto> userOrganizationRoles;
+    private List<UserRoleDto> userOrganizationRoles;
 
 }

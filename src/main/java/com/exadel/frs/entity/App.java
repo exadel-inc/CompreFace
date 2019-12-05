@@ -29,17 +29,20 @@ public class App {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserAppRole> userAppRoles = new ArrayList<>();
+    private List<UserAppRole> userAppRoles;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "app")
-    private List<AppModel> appModelAccess = new ArrayList<>();
+    private List<AppModel> appModelAccess;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "app")
-    private List<Model> models = new ArrayList<>();
+    private List<Model> models;
 
     public Optional<UserAppRole> getUserAppRole(Long userId) {
+        if (userAppRoles == null) {
+            return Optional.empty();
+        }
         return userAppRoles
                 .stream()
                 .filter(userAppRole -> userAppRole.getId().getUserId().equals(userId))
@@ -47,6 +50,12 @@ public class App {
     }
 
     public void addUserAppRole(User user, AppRole role) {
+        if (userAppRoles == null) {
+            userAppRoles = new ArrayList<>();
+        }
+        if (user.getUserAppRoles() == null) {
+            user.setUserAppRoles(new ArrayList<>());
+        }
         UserAppRole userAppRole = new UserAppRole(user, this, role);
         userAppRoles.add(userAppRole);
         user.getUserAppRoles().add(userAppRole);

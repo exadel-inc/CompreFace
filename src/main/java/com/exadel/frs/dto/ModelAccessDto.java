@@ -4,9 +4,8 @@ import com.exadel.frs.enums.AppModelAccess;
 import lombok.Data;
 
 @Data
-public class AppModelDto {
+public class ModelAccessDto {
 
-    private Long appId;
     private Long modelId;
     private AppModelAccess accessType;
 

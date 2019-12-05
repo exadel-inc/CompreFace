@@ -1,7 +1,8 @@
 package com.exadel.frs.mapper;
 
-import com.exadel.frs.dto.UserAppRoleDto;
-import com.exadel.frs.entity.*;
+import com.exadel.frs.dto.AppRoleDto;
+import com.exadel.frs.dto.UserRoleDto;
+import com.exadel.frs.entity.UserAppRole;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -9,13 +10,17 @@ import org.mapstruct.Mapping;
 public interface UserAppRoleMapper {
 
     @Mapping(source = "user.id", target = "userId")
+    UserRoleDto toUserRoleDto(UserAppRole userAppRole);
+
     @Mapping(source = "app.id", target = "appId")
-    UserAppRoleDto toDto(UserAppRole userAppRoleDto);
+    AppRoleDto toAppRoleDto(UserAppRole userAppRole);
 
     @Mapping(source = "userId", target = "id.userId")
     @Mapping(source = "userId", target = "user.id")
+    UserAppRole toEntity(UserRoleDto userRoleDto);
+
     @Mapping(source = "appId", target = "id.appId")
     @Mapping(source = "appId", target = "app.id")
-    UserAppRole toEntity(UserAppRoleDto userAppRoleDto);
+    UserAppRole toEntity(AppRoleDto appRoleDto);
 
 }

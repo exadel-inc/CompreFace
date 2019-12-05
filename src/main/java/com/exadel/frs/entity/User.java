@@ -33,11 +33,11 @@ public class User implements UserDetails {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user")
-    private List<UserAppRole> userAppRoles = new ArrayList<>();
+    private List<UserAppRole> userAppRoles;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user")
-    private List<UserOrganizationRole> userOrganizationRoles = new ArrayList<>();
+    private List<UserOrganizationRole> userOrganizationRoles;
 
     @Override
     public List<GrantedAuthority> getAuthorities() {

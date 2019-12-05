@@ -40,7 +40,7 @@ public class AppController {
             @ApiResponse(code = 400, message = "Application name is required")
     })
     public void createApp(@ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody AppDto appDto) {
-        appService.createApp(appMapper.toEntity(appDto), SecurityUtils.getPrincipal().getId());
+        appService.createApp(appMapper.toEntity(appDto), SecurityUtils.getPrincipal());
     }
 
     @PutMapping("/{id}")

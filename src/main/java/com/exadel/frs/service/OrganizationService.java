@@ -2,16 +2,15 @@ package com.exadel.frs.service;
 
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.*;
 import com.exadel.frs.repository.OrganizationRepository;
-import com.exadel.frs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,7 +18,7 @@ import java.util.List;
 public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     private Organization getOrganizationFromRepo(Long organizationId) {
         return organizationRepository
@@ -51,9 +50,17 @@ public class OrganizationService {
         if (StringUtils.isEmpty(organization.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        organization.setUserOrganizationRoles(new ArrayList<>());
         organization.addUserOrganizationRole(user, OrganizationRole.OWNER);
         organizationRepository.save(organization);
+    }
+
+    private void verifyNumberOfOwners(List<UserOrganizationRole> userOrganizationRoles) {
+        long ownersCount = userOrganizationRoles.stream()
+                .filter(userOrganizationRole -> OrganizationRole.OWNER.equals(userOrganizationRole.getRole()))
+                .count();
+        if (ownersCount > 1) {
+            throw new MultipleOwnersException();
+        }
     }
 
     public void updateOrganization(Long id, Organization organization, Long userId) {
@@ -63,9 +70,14 @@ public class OrganizationService {
             organizationFromRepo.setName(organization.getName());
         }
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
+            verifyNumberOfOwners(organization.getUserOrganizationRoles());
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
                 if (userId.equals(userOrganizationRole.getId().getUserId())) {
-                    throw new SelfRoleChangeInOrganizationException();
+                    throw new SelfRoleChangeException();
+                }
+                if (OrganizationRole.OWNER.equals(userOrganizationRole.getRole())) {
+                    organizationFromRepo.getUserOrganizationRoleOrThrow(userId)
+                            .setRole(OrganizationRole.ADMINISTRATOR);
                 }
                 organizationFromRepo.getUserOrganizationRoleOrThrow(userOrganizationRole.getId().getUserId())
                         .setRole(userOrganizationRole.getRole());
@@ -81,9 +93,8 @@ public class OrganizationService {
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
                 if (organizationFromRepo.getUserOrganizationRole(userOrganizationRole.getId().getUserId()).isEmpty()) {
-                    User user = userRepository.findById(userOrganizationRole.getId().getUserId())
-                            .orElseThrow(() -> new UserDoesNotExistException(userOrganizationRole.getId().getUserId()));
-                    organizationFromRepo.addUserOrganizationRole(user, userOrganizationRole.getRole());
+                    User user = userService.getUser(userOrganizationRole.getId().getUserId());
+                    organizationFromRepo.addUserOrganizationRole(user, OrganizationRole.USER);
                 }
             });
         }
@@ -96,7 +107,7 @@ public class OrganizationService {
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
                 if (userId.equals(userOrganizationRole.getId().getUserId())) {
-                    throw new SelfRemoveFromOrganizationException();
+                    throw new SelfRemoveException();
                 }
                 organizationFromRepo.getUserOrganizationRoles().removeIf(userOrganizationRole1 ->
                         userOrganizationRole1.getId().getUserId().equals(userOrganizationRole.getId().getUserId()));

@@ -11,8 +11,8 @@ public class AppDto {
     private String name;
     private String guid;
     private Long organizationId;
-    private List<UserAppRoleDto> userAppRoles;
-    private List<AppModelDto> appModelAccess;
+    private List<UserRoleDto> userAppRoles;
+    private List<ModelAccessDto> appModelAccess;
     private List<ModelDto> models;
 
 }

@@ -4,18 +4,15 @@ import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserAppRole;
-import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.*;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelRepository;
-import com.exadel.frs.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,7 +23,6 @@ public class ModelService {
 
     private final AppRepository appRepository;
     private final ModelRepository modelRepository;
-    private final OrganizationRepository organizationRepository;
 
     private Model getModelFromRepo(Long modelId) {
         return modelRepository.findById(modelId)
@@ -38,18 +34,12 @@ public class ModelService {
                 .orElseThrow(() -> new AppNotFoundException(appId));
     }
 
-    private Organization getOrganizationFromRepo(Long organizationId) {
-        return organizationRepository
-                .findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException(organizationId));
-    }
-
-    private OrganizationRole getUserOrganizationRole(Long organizationId, Long userId) {
-        return getOrganizationFromRepo(organizationId).getUserOrganizationRoleOrThrow(userId).getRole();
+    private OrganizationRole getUserOrganizationRole(Organization organization, Long userId) {
+        return organization.getUserOrganizationRoleOrThrow(userId).getRole();
     }
 
     private void verifyUserHasReadPrivileges(Long userId, App app) {
-        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization().getId(), userId);
+        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
         if (OrganizationRole.USER == organizationRole) {
             app.getUserAppRole(userId)
                     .orElseThrow(() -> new InsufficientPrivilegesException(userId));
@@ -57,7 +47,7 @@ public class ModelService {
     }
 
     private void verifyUserHasWritePrivileges(Long userId, App app) {
-        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization().getId(), userId);
+        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
         if (OrganizationRole.USER == organizationRole) {
             Optional<UserAppRole> userAppRole = app.getUserAppRole(userId);
             if (userAppRole.isEmpty() || AppRole.USER == userAppRole.get().getRole()) {
@@ -74,7 +64,7 @@ public class ModelService {
 
     public List<Model> getModels(Long appId, Long userId) {
         verifyUserHasReadPrivileges(userId, getAppFromRepo(appId));
-        return modelRepository.findAllByAppModelAccess_Id_AppId(appId);
+        return modelRepository.findAllByAppId(appId);
     }
 
     public void createModel(Model model, Long userId) {
@@ -84,8 +74,6 @@ public class ModelService {
             throw new EmptyRequiredFieldException("name");
         }
         model.setGuid(UUID.randomUUID().toString());
-        model.setAppModelAccess(new ArrayList<>());
-        model.addAppModelAccess(repoApp, AppModelAccess.TRAIN);
         modelRepository.save(model);
     }
 
@@ -97,7 +85,9 @@ public class ModelService {
         }
         if (model.getAppModelAccess() != null) {
             Long repoModelOrganizationId = repoModel.getApp().getOrganization().getId();
-            repoModel.getAppModelAccess().clear();
+            if (repoModel.getAppModelAccess() != null) {
+                repoModel.getAppModelAccess().clear();
+            }
             model.getAppModelAccess().forEach(appModel -> {
                 App app = getAppFromRepo(appModel.getApp().getId());
                 if (!repoModelOrganizationId.equals(app.getOrganization().getId())) {
