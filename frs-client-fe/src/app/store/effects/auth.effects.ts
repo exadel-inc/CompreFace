@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import { Observable, of as observableOf } from 'rxjs';
 import {AuthService} from "../../core/auth/auth.service";
-import {AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess} from "../actions/auth";
+import {AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess, LogOut} from "../actions/auth";
 import {catchError, map, switchMap, tap} from "rxjs/operators";
 import { LogIn } from '../actions/auth';
 import {Router} from "@angular/router";
@@ -72,5 +72,14 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   SignUpFailure: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.SIGNUP_FAILURE)
+  );
+
+  @Effect({ dispatch: false })
+  public LogOut: Observable<any> = this.actions.pipe(
+    ofType(AuthActionTypes.LOGOUT),
+    tap((user) => {
+      localStorage.removeItem('token');
+      this.router.navigateByUrl('/login');
+    })
   );
 }

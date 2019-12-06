@@ -25,4 +25,10 @@ export class AuthService {
     const url = `${environment.apiUrl}/admin/client/register`;
     return this.http.post(url, {email, password, username});
   }
+
+  // todo: for feature
+  logOut(token: string): Observable<User> {
+    const url = `${environment.apiUrl}/admin/oauth/logout`;
+    return this.http.post(url, {token});
+  }
 }
