@@ -4,7 +4,13 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4201/`. The app will automatically reload if you change any of the source files.
+
+## Mock API server 
+
+Run `mock-server` for API server. Server host  `http://localhost:3000/`. The app will automatically reload if you change server.js file. \
+JSON files are used for creating data storage in `mock-backend/data` folder. Server uses ExpressJs framework and nodemon. \
+API is described in confluence: https://confluence.exadel.com/pages/viewpage.action?spaceKey=KC&title=FRS+REST+API
 
 ## Code scaffolding
 
@@ -25,3 +31,11 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 ## Further help
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+#Project structure and architecture
+
+###Folder structure
+ ... to be continue ...
+ 
+###NgRx
+ ... to be continue ...
