@@ -2,8 +2,9 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 import {User} from "../../../data/user";
 import {Store} from "@ngrx/store";
-import {AppState} from "../../../store/state/app.state";
+import {AppState, selectAuthState} from "../../../store/state/app.state";
 import {LogIn} from "../../../store/actions/auth";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-login-form',
@@ -13,16 +14,22 @@ import {LogIn} from "../../../store/actions/auth";
 export class LoginFormComponent implements OnInit {
   form: FormGroup;
   user: User;
+  getState: Observable<any>;
+  errorMessage: string | null;
 
   constructor(private store: Store<AppState>) {
-
+    this.getState = this.store.select(selectAuthState);
   }
 
   ngOnInit() {
     this.form = new FormGroup({
       username: new FormControl(),
       password: new FormControl(),
-    })
+    });
+
+    this.getState.subscribe((state) => {
+      this.errorMessage = state.errorMessage;
+    });
   }
 
   onSubmit() {

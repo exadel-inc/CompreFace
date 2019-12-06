@@ -6,13 +6,15 @@ import {CustomMaterialModule} from "../ui/custom-material/custom-material.module
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import { SignUpFormComponent } from './containers/sign-up-form/sign-up-form.component';
+import { AlertComponent } from './containers/alert/alert.component';
 
 @NgModule({
-  declarations: [LoginFormComponent, ToolBarComponent, SignUpFormComponent],
+  declarations: [LoginFormComponent, ToolBarComponent, SignUpFormComponent, AlertComponent],
   exports: [
     ToolBarComponent,
     LoginFormComponent,
-    SignUpFormComponent
+    SignUpFormComponent,
+    AlertComponent
   ],
   imports: [
     CommonModule,

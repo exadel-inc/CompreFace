@@ -3,13 +3,20 @@
     <mat-card-title>Login</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form class="login-form" [formGroup]="form">
+    <div *ngIf="errorMessage">
+      <div class="alert alert-danger" role="alert">
+        {{errorMessage}}
+      </div>
+    </div>
+    <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
       <mat-form-field class="login-full-width">
         <input matInput placeholder="Username" formControlName="username" name="username" required>
       </mat-form-field>
+
       <mat-form-field class="login-full-width">
         <input matInput placeholder="Password" formControlName="password" type="password" name="password" required>
       </mat-form-field>
+
     </form>
     <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
     <a [routerLink]="['/sign-up']">sign-up</a>
@@ -17,8 +24,8 @@
   <mat-card-actions>
     <button mat-raised-button
             type="submit"
-            (click)="onSubmit()"
             color="primary"
+            form="loginForm"
             [disabled]="form.invalid">Login</button>
   </mat-card-actions>
 </mat-card>

@@ -3,7 +3,12 @@
     <mat-card-title>Sign up</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form class="sign-up-form" [formGroup]="form">
+    <div *ngIf="errorMessage">
+      <div class="alert alert-danger" role="alert">
+        {{errorMessage}}
+      </div>
+    </div>
+    <form class="sign-up-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
       <mat-form-field class="sign-up-full-width">
         <mat-error>User name is required</mat-error>
         <input matInput placeholder="Username" formControlName="username" name="username" required>
@@ -29,7 +34,7 @@
   </mat-card-content>
   <mat-card-actions>
     <button mat-raised-button type="submit"
-            (click)="onSubmit()"
+            form="signUpForm"
             color="primary"
             [disabled]="form.invalid">Sign up</button>
   </mat-card-actions>

@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
   res.redirect('/home');
 });
 
-app.post('/admin/oauth/token', function (req, res) {
+app.post('/admin/oauth/token', wait(), function (req, res) {
   console.log(req.body);
   if (req && req.body.username === user.username && req.body.password === user.password) {
     token = `${user.username}${user.password}${+new Date()}`;
@@ -63,8 +63,11 @@ app.post('/admin/oauth/token', function (req, res) {
 app.post('/admin/client/register', function (req, res) {
   console.log(req.body);
   if (req && req.body.username && req.body.password && req.body.email) {
+
+    // if user already exists:
+    if(req.body.username === user.username) return res.sendStatus(400);
+
     user = { ...user, ...req.body};
-    console.log(user);
     res.status(201).send({message: 'Created'});
   }
   else{
@@ -108,4 +111,12 @@ function auth(req, res, next) {
     return next();
   else
     return res.sendStatus(401);
+}
+
+function wait(time = 1000) {
+  return function (req, res, next) {
+    setTimeout(() => {
+      return next();
+    }, time)
+  }
 }

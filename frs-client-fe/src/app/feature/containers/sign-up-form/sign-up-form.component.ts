@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {User} from "../../../data/user";
 import {Store} from "@ngrx/store";
-import {AppState} from "../../../store/state/app.state";
+import {AppState, selectAuthState} from "../../../store/state/app.state";
 import {SignUp} from "../../../store/actions/auth";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-sign-up-form',
@@ -14,6 +15,8 @@ export class SignUpFormComponent implements OnInit {
   form: FormGroup;
   user: User;
   EMAIL_REGEX = '\\S+@\\S+\\.\\S+';
+  getState: Observable<any>;
+  errorMessage: string | null;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value)
@@ -23,7 +26,7 @@ export class SignUpFormComponent implements OnInit {
   };
 
   constructor(private store: Store<AppState>) {
-
+    this.getState = this.store.select(selectAuthState);
   }
 
   ngOnInit() {
@@ -35,7 +38,11 @@ export class SignUpFormComponent implements OnInit {
         Validators.required,
         Validators.minLength(8),
       ]),
-    }, {validators: this.passwordMatchValidator })
+    }, {validators: this.passwordMatchValidator });
+
+    this.getState.subscribe((state) => {
+      this.errorMessage = state.errorMessage;
+    });
   }
 
   onSubmit() {
