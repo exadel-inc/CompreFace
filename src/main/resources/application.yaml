@@ -2,8 +2,10 @@ server:
   port: ${CRUD_PORT:8080}
 
 spring:
-#  jackson:
-#    default-property-inclusion: non_null
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/frs}
