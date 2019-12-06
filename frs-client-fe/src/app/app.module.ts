@@ -9,8 +9,9 @@ import {FeatureModule} from "./feature/feature.module";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {AuthEffects} from "./store/effects/auth.effects";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {reducers} from "./store/state/app.state";
+import {ErrorInterceptor, TokenInterceptor} from "./core/auth/token.inerceptor";
 
 @NgModule({
   declarations: [
@@ -26,7 +27,18 @@ import {reducers} from "./store/state/app.state";
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([AuthEffects])
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
