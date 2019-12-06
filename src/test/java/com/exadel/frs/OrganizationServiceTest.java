@@ -93,7 +93,9 @@ public class OrganizationServiceTest {
 
         User user = user(userId);
 
-        organizationService.createOrganization(organization, user);
+        when(userServiceMock.getUser(anyLong())).thenReturn(user);
+
+        organizationService.createOrganization(organization, userId);
 
         assertThat(organization.getUserOrganizationRoles().size(), is(1));
         assertThat(organization.getUserOrganizationRole(userId).get().getRole(), is(OrganizationRole.OWNER));

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class SelfRoleChangeException extends RuntimeException {
 
     public SelfRoleChangeException() {
-        super("Owner cannot change his own organization role");
+        super("Owner cannot change his own organization/application role");
     }
 
 }

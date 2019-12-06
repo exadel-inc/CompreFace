@@ -47,8 +47,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void updateUser(User repoUser, User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    public void updateUser(Long repoUserId, User user) {
+        User repoUser = getUser(repoUserId);
+        if (!repoUser.getEmail().equals(user.getEmail()) &&
+                userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyRegisteredException();
         }
         if (!StringUtils.isEmpty(user.getFirstName())) {

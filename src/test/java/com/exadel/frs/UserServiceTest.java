@@ -107,7 +107,8 @@ public class UserServiceTest {
 
         when(userRepositoryMock.findByUsername(anyString())).thenReturn(Optional.of(user));
 
-        Assertions.assertThrows(UsernameAlreadyExistException.class, () -> userService.createUser(user));
+        Assertions
+                .assertThrows(UsernameAlreadyExistException.class, () -> userService.createUser(user));
     }
 
     @Test
@@ -120,12 +121,16 @@ public class UserServiceTest {
 
         when(userRepositoryMock.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        Assertions.assertThrows(EmailAlreadyRegisteredException.class, () -> userService.createUser(user));
+        Assertions
+                .assertThrows(EmailAlreadyRegisteredException.class, () -> userService.createUser(user));
     }
 
     @Test
     public void successUpdateUser() {
+        Long userId = 1L;
+
         User repoUser = User.builder()
+                .id(userId)
                 .username("username")
                 .password("password")
                 .email("email")
@@ -133,7 +138,7 @@ public class UserServiceTest {
                 .lastName("lastName")
                 .build();
 
-        User user = User.builder()
+        User userUpdate = User.builder()
                 .username("new_username")
                 .password("new_password")
                 .email("new_email")
@@ -141,26 +146,42 @@ public class UserServiceTest {
                 .lastName("new_lastName")
                 .build();
 
-        userService.updateUser(repoUser, user);
+        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoUser));
+
+        userService.updateUser(userId, userUpdate);
 
         verify(userRepositoryMock).save(any(User.class));
 
-        assertThat(repoUser.getFirstName(), is(user.getFirstName()));
-        assertThat(repoUser.getLastName(), is(user.getLastName()));
-        assertThat(repoUser.getEmail(), is(user.getEmail()));
+        assertThat(repoUser.getFirstName(), is(userUpdate.getFirstName()));
+        assertThat(repoUser.getLastName(), is(userUpdate.getLastName()));
+        assertThat(repoUser.getEmail(), is(userUpdate.getEmail()));
         assertThat(repoUser.getPassword(), not("password"));
-        assertThat(repoUser.getUsername(), not(user.getUsername()));
+        assertThat(repoUser.getUsername(), not(userUpdate.getUsername()));
     }
 
     @Test
     public void failUpdateUser() {
+        Long userId1 = 1L;
+        Long userId2 = 2L;
+
         User user = User.builder()
+                .id(userId1)
                 .email("email")
                 .build();
 
-        when(userRepositoryMock.findByEmail(anyString())).thenReturn(Optional.of(user));
+        User userUpdate = User.builder()
+                .email("new_email")
+                .build();
 
-        Assertions.assertThrows(EmailAlreadyRegisteredException.class, () -> userService.updateUser(user, user));
+        User userWithSameEmail = User.builder()
+                .id(userId2)
+                .email("new_email")
+                .build();
+
+        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(user));
+        when(userRepositoryMock.findByEmail(anyString())).thenReturn(Optional.of(userWithSameEmail));
+
+        Assertions.assertThrows(EmailAlreadyRegisteredException.class, () -> userService.updateUser(userId1, userUpdate));
     }
 
     @Test

@@ -9,8 +9,9 @@ import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.repository.OrganizationRepository;
 import com.exadel.frs.service.AppService;
+import com.exadel.frs.service.OrganizationService;
+import com.exadel.frs.service.UserService;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -30,13 +31,15 @@ import static org.mockito.Mockito.*;
 public class AppServiceTest {
 
     private AppRepository appRepositoryMock;
-    private OrganizationRepository organizationRepositoryMock;
+    private OrganizationService organizationServiceMock;
+    private UserService userServiceMock;
     private AppService appService;
 
     public AppServiceTest() {
         appRepositoryMock = mock(AppRepository.class);
-        organizationRepositoryMock = mock(OrganizationRepository.class);
-        appService = new AppService(appRepositoryMock, organizationRepositoryMock);
+        organizationServiceMock = mock(OrganizationService.class);
+        userServiceMock = mock(UserService.class);
+        appService = new AppService(appRepositoryMock, organizationServiceMock, userServiceMock);
     }
 
     private User user(Long id) {
@@ -78,7 +81,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         App result = appService.getApp(appId, userId);
 
@@ -99,7 +102,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.getApp(appId, userId));
     }
@@ -123,7 +126,7 @@ public class AppServiceTest {
         app.addUserAppRole(user, AppRole.USER);
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         App result = appService.getApp(appId, userId);
 
@@ -148,7 +151,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.getApp(appId, userId));
     }
@@ -171,7 +174,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findAllByOrganizationId(anyLong())).thenReturn(List.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         List<App> result = appService.getApps(organizationId, userId);
 
@@ -185,7 +188,7 @@ public class AppServiceTest {
 
         Organization organization = organization(organizationId);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.getApps(organizationId, userId));
     }
@@ -209,7 +212,7 @@ public class AppServiceTest {
         app.addUserAppRole(user, AppRole.USER);
 
         when(appRepositoryMock.findAllByOrganizationIdAndUserAppRoles_Id_UserId(anyLong(), anyLong())).thenReturn(List.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         List<App> result = appService.getApps(organizationId, userId);
 
@@ -232,9 +235,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        appService.createApp(app, user);
+        appService.createApp(app, userId);
 
         verify(appRepositoryMock).save(any(App.class));
 
@@ -256,9 +260,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(app, user));
+        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(app, userId));
     }
 
     @Test
@@ -275,9 +280,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(app, user));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(app, userId));
     }
 
     @ParameterizedTest
@@ -296,9 +302,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(app, user));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(app, userId));
     }
 
     @ParameterizedTest
@@ -326,7 +333,7 @@ public class AppServiceTest {
         app.addUserAppRole(user, AppRole.USER);
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         appService.updateApp(appId, app, userId);
 
@@ -354,7 +361,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.updateApp(appId, app, userId));
     }
@@ -381,7 +388,7 @@ public class AppServiceTest {
         app.addUserAppRole(user(2L), AppRole.USER);
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.updateApp(appId, app, userId));
     }
@@ -405,7 +412,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         appService.regenerateGuid(appId, userId);
 
@@ -433,7 +440,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.regenerateGuid(appId, userId));
     }
@@ -456,7 +463,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         appService.deleteApp(appId, userId);
 
@@ -482,7 +489,7 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.deleteApp(appId, userId));
     }

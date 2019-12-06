@@ -6,8 +6,10 @@ import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
-import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.ModelNotFoundException;
+import com.exadel.frs.exception.OrganizationMismatchException;
 import com.exadel.frs.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,17 +23,12 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ModelService {
 
-    private final AppRepository appRepository;
     private final ModelRepository modelRepository;
+    private final AppService appService;
 
-    private Model getModelFromRepo(Long modelId) {
+    public Model getModel(Long modelId) {
         return modelRepository.findById(modelId)
                 .orElseThrow(() -> new ModelNotFoundException(modelId));
-    }
-
-    private App getAppFromRepo(Long appId) {
-        return appRepository.findById(appId)
-                .orElseThrow(() -> new AppNotFoundException(appId));
     }
 
     private OrganizationRole getUserOrganizationRole(Organization organization, Long userId) {
@@ -57,18 +54,18 @@ public class ModelService {
     }
 
     public Model getModel(Long id, Long userId) {
-        Model model = getModelFromRepo(id);
+        Model model = getModel(id);
         verifyUserHasReadPrivileges(userId, model.getApp());
         return model;
     }
 
     public List<Model> getModels(Long appId, Long userId) {
-        verifyUserHasReadPrivileges(userId, getAppFromRepo(appId));
+        verifyUserHasReadPrivileges(userId, appService.getApp(appId));
         return modelRepository.findAllByAppId(appId);
     }
 
     public void createModel(Model model, Long userId) {
-        App repoApp = getAppFromRepo(model.getApp().getId());
+        App repoApp = appService.getApp(model.getApp().getId());
         verifyUserHasWritePrivileges(userId, repoApp);
         if (StringUtils.isEmpty(model.getName())) {
             throw new EmptyRequiredFieldException("name");
@@ -78,7 +75,7 @@ public class ModelService {
     }
 
     public void updateModel(Long id, Model model, Long userId) {
-        Model repoModel = getModelFromRepo(id);
+        Model repoModel = getModel(id);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
         if (!StringUtils.isEmpty(model.getName())) {
             repoModel.setName(model.getName());
@@ -89,7 +86,7 @@ public class ModelService {
                 repoModel.getAppModelAccess().clear();
             }
             model.getAppModelAccess().forEach(appModel -> {
-                App app = getAppFromRepo(appModel.getApp().getId());
+                App app = appService.getApp(appModel.getApp().getId());
                 if (!repoModelOrganizationId.equals(app.getOrganization().getId())) {
                     throw new OrganizationMismatchException();
                 }
@@ -100,14 +97,14 @@ public class ModelService {
     }
 
     public void regenerateGuid(Long id, Long userId) {
-        Model repoModel = getModelFromRepo(id);
+        Model repoModel = getModel(id);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
         repoModel.setGuid(UUID.randomUUID().toString());
         modelRepository.save(repoModel);
     }
 
     public void deleteModel(Long id, Long userId) {
-        verifyUserHasWritePrivileges(userId, getModelFromRepo(id).getApp());
+        verifyUserHasWritePrivileges(userId, getModel(id).getApp());
         modelRepository.deleteById(id);
     }
 

@@ -1,11 +1,13 @@
 package com.exadel.frs.service;
 
-import com.exadel.frs.entity.*;
+import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.*;
 import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -18,17 +20,12 @@ import java.util.UUID;
 public class AppService {
 
     private final AppRepository appRepository;
-    private final OrganizationRepository organizationRepository;
+    private final OrganizationService organizationService;
+    private final UserService userService;
 
-    private App getAppFromRepo(Long appId) {
+    public App getApp(Long appId) {
         return appRepository.findById(appId)
                 .orElseThrow(() -> new AppNotFoundException(appId));
-    }
-
-    private Organization getOrganizationFromRepo(Long organizationId) {
-        return organizationRepository
-                .findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException(organizationId));
     }
 
     private OrganizationRole getUserOrganizationRole(Organization organization, Long userId) {
@@ -50,25 +47,25 @@ public class AppService {
     }
 
     public App getApp(Long id, Long userId) {
-        App repoApp = getAppFromRepo(id);
+        App repoApp = getApp(id);
         verifyUserHasReadPrivileges(userId, repoApp);
         return repoApp;
     }
 
     public List<App> getApps(Long organizationId, Long userId) {
-        if (OrganizationRole.USER == getUserOrganizationRole(getOrganizationFromRepo(organizationId), userId)) {
+        if (OrganizationRole.USER == getUserOrganizationRole(organizationService.getOrganization(organizationId), userId)) {
             return appRepository.findAllByOrganizationIdAndUserAppRoles_Id_UserId(organizationId, userId);
         }
         return appRepository.findAllByOrganizationId(organizationId);
     }
 
-    public void createApp(App app, User user) {
+    public void createApp(App app, Long userId) {
         if (StringUtils.isEmpty(app.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        verifyUserHasWritePrivileges(user.getId(), getOrganizationFromRepo(app.getOrganization().getId()));
+        verifyUserHasWritePrivileges(userId, organizationService.getOrganization(app.getOrganization().getId()));
         app.setGuid(UUID.randomUUID().toString());
-        app.addUserAppRole(user, AppRole.OWNER);
+        app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
         appRepository.save(app);
     }
 
@@ -83,7 +80,7 @@ public class AppService {
     }
 
     public void updateApp(Long id, App app, Long userId) {
-        App repoApp = getAppFromRepo(id);
+        App repoApp = getApp(id);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
         if (!StringUtils.isEmpty(app.getName())) {
             repoApp.setName(app.getName());
@@ -97,6 +94,9 @@ public class AppService {
                 }
             }
             app.getUserAppRoles().forEach(userAppRole -> {
+                if (userId.equals(userAppRole.getId().getUserId())) {
+                    throw new SelfRoleChangeException();
+                }
                 UserOrganizationRole userOrganizationRole = repoApp.getOrganization()
                         .getUserOrganizationRoleOrThrow(userAppRole.getId().getUserId());
                 repoApp.addUserAppRole(userOrganizationRole.getUser(), userAppRole.getRole());
@@ -106,14 +106,14 @@ public class AppService {
     }
 
     public void regenerateGuid(Long id, Long userId) {
-        App repoApp = getAppFromRepo(id);
+        App repoApp = getApp(id);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
         repoApp.setGuid(UUID.randomUUID().toString());
         appRepository.save(repoApp);
     }
 
     public void deleteApp(Long id, Long userId) {
-        App repoApp = getAppFromRepo(id);
+        App repoApp = getApp(id);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
         appRepository.deleteById(id);
     }
