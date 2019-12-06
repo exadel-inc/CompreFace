@@ -13,19 +13,16 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class LoginService {
 
-  private final AuthenticationManager authenticationManager;
-  private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
 
-  public String login(String username, String password) {
-    try {
-      authenticationManager
-          .authenticate(new UsernamePasswordAuthenticationToken(username, password));
-      return jwtTokenProvider.createToken(username);
-    } catch (AuthenticationException e) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-          "Invalid username/password supplied");
+    public String login(String username, String password) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+            return jwtTokenProvider.createToken(username);
+        } catch (AuthenticationException e) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username/password supplied");
+        }
     }
-  }
-
 
 }

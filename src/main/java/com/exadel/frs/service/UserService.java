@@ -1,23 +1,15 @@
 package com.exadel.frs.service;
 
 import com.exadel.frs.entity.User;
-import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.exception.UsernameAlreadyExistException;
 import com.exadel.frs.repository.UserRepository;
-import com.exadel.frs.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +17,6 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-
 
     public User getUser(Long id) {
         return userRepository.findById(id)
@@ -56,8 +47,10 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void updateUser(User repoUser, User user) {
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+    public void updateUser(Long repoUserId, User user) {
+        User repoUser = getUser(repoUserId);
+        if (!repoUser.getEmail().equals(user.getEmail()) &&
+                userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyRegisteredException();
         }
         if (!StringUtils.isEmpty(user.getFirstName())) {

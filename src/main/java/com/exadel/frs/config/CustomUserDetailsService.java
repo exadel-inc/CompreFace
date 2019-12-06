@@ -10,8 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-
 @RequiredArgsConstructor
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
@@ -22,8 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username)
-            .orElseThrow(
-                () -> new UsernameNotFoundException("User " + username + " does not exists"));
+                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " does not exists"));
         Hibernate.initialize(user.getUserOrganizationRoles());
         Hibernate.initialize(user.getUserAppRoles());
         return user;

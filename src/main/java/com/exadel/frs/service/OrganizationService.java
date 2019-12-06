@@ -20,7 +20,7 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final UserService userService;
 
-    private Organization getOrganizationFromRepo(Long organizationId) {
+    public Organization getOrganization(Long organizationId) {
         return organizationRepository
                 .findById(organizationId)
                 .orElseThrow(() -> new OrganizationNotFoundException(organizationId));
@@ -37,7 +37,7 @@ public class OrganizationService {
     }
 
     public Organization getOrganization(Long id, Long userId) {
-        Organization organization = getOrganizationFromRepo(id);
+        Organization organization = getOrganization(id);
         verifyUserHasReadPrivileges(userId, organization);
         return organization;
     }
@@ -46,11 +46,11 @@ public class OrganizationService {
         return organizationRepository.findAllByUserOrganizationRoles_Id_UserId(userId);
     }
 
-    public void createOrganization(Organization organization, User user) {
+    public void createOrganization(Organization organization, Long userId) {
         if (StringUtils.isEmpty(organization.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        organization.addUserOrganizationRole(user, OrganizationRole.OWNER);
+        organization.addUserOrganizationRole(userService.getUser(userId), OrganizationRole.OWNER);
         organizationRepository.save(organization);
     }
 
@@ -64,7 +64,7 @@ public class OrganizationService {
     }
 
     public void updateOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganizationFromRepo(id);
+        Organization organizationFromRepo = getOrganization(id);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!StringUtils.isEmpty(organization.getName())) {
             organizationFromRepo.setName(organization.getName());
@@ -88,7 +88,7 @@ public class OrganizationService {
 
     // todo implement user invitation to organization by email. then delete this method
     public void addUserToOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganizationFromRepo(id);
+        Organization organizationFromRepo = getOrganization(id);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
@@ -102,7 +102,7 @@ public class OrganizationService {
     }
 
     public void removeUserFromOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganizationFromRepo(id);
+        Organization organizationFromRepo = getOrganization(id);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
@@ -117,7 +117,7 @@ public class OrganizationService {
     }
 
     public void deleteOrganization(Long id, Long userId) {
-        Organization organization = getOrganizationFromRepo(id);
+        Organization organization = getOrganization(id);
         verifyUserHasWritePrivileges(userId, organization);
         organizationRepository.deleteById(id);
     }

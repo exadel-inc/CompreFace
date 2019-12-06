@@ -25,13 +25,13 @@ public class AppController {
     @GetMapping("/{id}")
     @ApiOperation(value = "Get application, created by user")
     public AppDto getApp(@ApiParam(value = "ID of application to return", required = true, example = "0") @PathVariable Long id) {
-        return appMapper.toDto(appService.getApp(id, SecurityUtils.getPrincipal().getId()));
+        return appMapper.toDto(appService.getApp(id, SecurityUtils.getPrincipalId()));
     }
 
     @GetMapping("/org/{organizationId}")
     @ApiOperation(value = "Get all applications, created by user")
     public List<AppDto> getApps(@PathVariable Long organizationId) {
-        return appMapper.toDto(appService.getApps(organizationId, SecurityUtils.getPrincipal().getId()));
+        return appMapper.toDto(appService.getApps(organizationId, SecurityUtils.getPrincipalId()));
     }
 
     @PostMapping("/")
@@ -40,26 +40,26 @@ public class AppController {
             @ApiResponse(code = 400, message = "Application name is required")
     })
     public void createApp(@ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody AppDto appDto) {
-        appService.createApp(appMapper.toEntity(appDto), SecurityUtils.getPrincipal());
+        appService.createApp(appMapper.toEntity(appDto), SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update application")
     public void updateApp(@ApiParam(value = "ID of application that needs to be updated", required = true, example = "0") @PathVariable Long id,
                           @ApiParam(value = "Application data", required = true) @Valid @RequestBody AppDto appDto) {
-        appService.updateApp(id, appMapper.toEntity(appDto), SecurityUtils.getPrincipal().getId());
+        appService.updateApp(id, appMapper.toEntity(appDto), SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/{id}/guid")
     @ApiOperation(value = "Generate new GUID for application")
     public void regenerateGuid(@ApiParam(value = "ID of the application which GUID needs to be regenerated", required = true, example = "0") @PathVariable Long id) {
-        appService.regenerateGuid(id, SecurityUtils.getPrincipal().getId());
+        appService.regenerateGuid(id, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete application")
     public void deleteApp(@ApiParam(value = "ID of the application that needs to be deleted", required = true, example = "0") @PathVariable Long id) {
-        appService.deleteApp(id, SecurityUtils.getPrincipal().getId());
+        appService.deleteApp(id, SecurityUtils.getPrincipalId());
     }
 
 }

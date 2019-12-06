@@ -40,13 +40,13 @@ public class UserController {
             @ApiResponse(code = 400, message = "Such username or email already registered")
     })
     public void updateUser(@ApiParam(value = "User data that needs to be updated", required = true) @RequestBody UserDto userDto) {
-        userService.updateUser(SecurityUtils.getPrincipal(), userMapper.toEntity(userDto));
+        userService.updateUser(SecurityUtils.getPrincipalId(), userMapper.toEntity(userDto));
     }
 
     @DeleteMapping("/delete")
     @ApiOperation(value = "Delete user")
     public void deleteUser() {
-        userService.deleteUser(SecurityUtils.getPrincipal().getId());
+        userService.deleteUser(SecurityUtils.getPrincipalId());
     }
 
 }

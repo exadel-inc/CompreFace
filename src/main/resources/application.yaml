@@ -19,7 +19,7 @@ spring:
     show_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
-    open-in-view: false
+    open-in-view: true
     generate-ddl: false
 
 security:
