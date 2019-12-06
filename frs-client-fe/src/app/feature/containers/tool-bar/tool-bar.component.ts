@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import {AppState} from "../../../store/state/app.state";
+import {AppState, selectAuthState} from "../../../store/state/app.state";
 import {Store} from "@ngrx/store";
 import {LogOut} from "../../../store/actions/auth";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-tool-bar',
@@ -9,10 +10,19 @@ import {LogOut} from "../../../store/actions/auth";
   styleUrls: ['./tool-bar.component.sass']
 })
 export class ToolBarComponent implements OnInit {
+  getState: Observable<any>;
+  isAuthenticated: false;
+  user = null;
 
-  constructor( private store: Store<AppState>) { }
+  constructor( private store: Store<AppState>) {
+    this.getState = this.store.select(selectAuthState);
+  }
 
   ngOnInit() {
+    this.getState.subscribe((state) => {
+      this.isAuthenticated = state.isAuthenticated;
+      this.user = state.user;
+    });
   }
 
   logout() {
