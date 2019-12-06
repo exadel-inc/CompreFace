@@ -2,6 +2,7 @@ package com.exadel.frs.controller;
 
 import com.exadel.frs.dto.AppDto;
 import com.exadel.frs.helpers.SecurityUtils;
+import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.service.AppService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -19,18 +20,18 @@ import java.util.List;
 public class AppController {
 
     private final AppService appService;
-    private final SecurityUtils securityUtils;
+    private final AppMapper appMapper;
 
     @GetMapping("/{id}")
-    @ApiOperation(value = "Get application, created by client")
+    @ApiOperation(value = "Get application, created by user")
     public AppDto getApp(@ApiParam(value = "ID of application to return", required = true, example = "0") @PathVariable Long id) {
-        return appService.getApp(id, securityUtils.getPrincipal().getId());
+        return appMapper.toDto(appService.getApp(id, SecurityUtils.getPrincipalId()));
     }
 
-    @GetMapping("/")
-    @ApiOperation(value = "Get all applications, created by client")
-    public List<AppDto> getApps() {
-        return appService.getApps(securityUtils.getPrincipal().getId());
+    @GetMapping("/org/{organizationId}")
+    @ApiOperation(value = "Get all applications, created by user")
+    public List<AppDto> getApps(@PathVariable Long organizationId) {
+        return appMapper.toDto(appService.getApps(organizationId, SecurityUtils.getPrincipalId()));
     }
 
     @PostMapping("/")
@@ -38,27 +39,27 @@ public class AppController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Application name is required")
     })
-    public void createApp(@ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody AppDto inputAppDto) {
-        appService.createApp(inputAppDto, securityUtils.getPrincipal().getId());
+    public void createApp(@ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody AppDto appDto) {
+        appService.createApp(appMapper.toEntity(appDto), SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/{id}")
     @ApiOperation(value = "Update application")
     public void updateApp(@ApiParam(value = "ID of application that needs to be updated", required = true, example = "0") @PathVariable Long id,
-                          @ApiParam(value = "Application data", required = true) @Valid @RequestBody AppDto inputAppDto) {
-        appService.updateApp(id, inputAppDto, securityUtils.getPrincipal().getId());
+                          @ApiParam(value = "Application data", required = true) @Valid @RequestBody AppDto appDto) {
+        appService.updateApp(id, appMapper.toEntity(appDto), SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/{id}/guid")
     @ApiOperation(value = "Generate new GUID for application")
     public void regenerateGuid(@ApiParam(value = "ID of the application which GUID needs to be regenerated", required = true, example = "0") @PathVariable Long id) {
-        appService.regenerateGuid(id, securityUtils.getPrincipal().getId());
+        appService.regenerateGuid(id, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/{id}")
     @ApiOperation(value = "Delete application")
     public void deleteApp(@ApiParam(value = "ID of the application that needs to be deleted", required = true, example = "0") @PathVariable Long id) {
-        appService.deleteApp(id, securityUtils.getPrincipal().getId());
+        appService.deleteApp(id, SecurityUtils.getPrincipalId());
     }
 
 }

@@ -10,7 +10,9 @@ public class AppDto {
     private Long id;
     private String name;
     private String guid;
-    private Long ownerId;
-    private List<ModelAccess> modelAccess;
+    private Long organizationId;
+    private List<UserRoleDto> userAppRoles;
+    private List<ModelAccessDto> appModelAccess;
+    private List<ModelDto> models;
 
 }

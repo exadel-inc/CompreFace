@@ -11,9 +11,9 @@
     </parent>
     <groupId>com.exadel</groupId>
     <artifactId>frs</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>frs</name>
-    <description>Service for clients, apps, models handling for Face recognition service</description>
+    <description>Service for users, organizations, apps, models handling for Face recognition service</description>
 
     <properties>
         <spring.boot.version>2.1.8.RELEASE</spring.boot.version>
@@ -22,6 +22,8 @@
         <lombok.version>1.18.8</lombok.version>
         <swagger.version>2.9.2</swagger.version>
         <docker.image.prefix>frs</docker.image.prefix>
+        <jwt.version>1.0.10.RELEASE</jwt.version>
+        <jupiter.version>5.5.2</jupiter.version>
     </properties>
 
     <dependencies>
@@ -85,14 +87,14 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security.oauth.boot</groupId>
-            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-            <version>${spring.boot.version}</version>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-jwt</artifactId>
-            <version>1.0.10.RELEASE</version>
+            <version>${jwt.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
         </dependency>
         <!-- TEST -->
         <dependency>
@@ -103,6 +105,12 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>${jupiter.version}</version>
             <scope>test</scope>
         </dependency>
         <!-- DEVTOOLS -->

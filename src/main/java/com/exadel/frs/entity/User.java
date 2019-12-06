@@ -1,32 +1,43 @@
 package com.exadel.frs.entity;
 
-import lombok.Data;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
-public class Client implements UserDetails {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class User implements UserDetails {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "client_id_seq")
-    @SequenceGenerator(name = "client_id_seq", sequenceName = "client_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_id_seq")
+    @SequenceGenerator(name = "user_id_seq", sequenceName = "user_id_seq", allocationSize = 1)
     private Long id;
     private String email;
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
 
-    @OneToMany(mappedBy = "owner")
-    private List<App> apps;
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user")
+    private List<UserAppRole> userAppRoles;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "user")
+    private List<UserOrganizationRole> userOrganizationRoles;
 
     @Override
     public List<GrantedAuthority> getAuthorities() {

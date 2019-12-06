@@ -15,7 +15,7 @@ spring:
     properties:
       hibernate:
         jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
-        format_sql: false
+        format_sql: true
     hibernate:
       ddl-auto: none
     show_sql: true
@@ -25,20 +25,9 @@ spring:
     generate-ddl: false
 
 security:
-  oauth2:
-    client:
-      client-id: frs-service
-      client-secret: H)g4N3&DgZV59m@Y
-  jwt:
-    client-id: frs-service
-    client-secret: "{noop}H)g4N3&DgZV59m@Y"
-    grant-type: password
-    scope-read: read
-    scope-write: write
-    resource-ids: testjwtresourceid
   signing-key: MaYzkSjmkzPC57L
   encoding-strength: 256
-  security-realm: Spring Boot JWT Example Realm
+  expire-length: 86400000
 
 proxy:
   baseUrl: ${PROXY_URL:http://localhost:5000}
@@ -48,3 +37,4 @@ swagger:
     server: http://localhost:${server.port}
   info:
     title: Face Recognition Service - Client
+    version: 0.0.2-SNAPSHOT
