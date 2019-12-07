@@ -4,12 +4,11 @@ import {initialState} from "../state/auth.state";
 import {User} from "../../data/user";
 
 export interface State {
-  // is a user authenticated?
   isAuthenticated: boolean;
-  // if authenticated, there should be a user object
   user: User | null;
-  // error message
   errorMessage: string | null;
+  successMessage: string | null;
+  isLoading: boolean;
 }
 
 export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
@@ -25,14 +24,16 @@ export function reducer(state = initialState, action: All): State {
           token: action.payload.token,
           email: action.payload.email
         },
-        errorMessage: null
+        errorMessage: null,
+        isLoading: false
       };
     }
 
     case AuthActionTypes.LOGIN_FAILURE: {
       return {
         ...state,
-        errorMessage: 'Incorrect email and/or password.'
+        errorMessage: 'Incorrect email and/or password.',
+        isLoading: false
       };
     }
 
@@ -44,14 +45,17 @@ export function reducer(state = initialState, action: All): State {
           token: action.payload.token,
           email: action.payload.email
         },
-        errorMessage: null
+        errorMessage: null,
+        successMessage: 'You have created new account, please login into your account',
+        isLoading: false
       };
     }
 
     case AuthActionTypes.SIGNUP_FAILURE: {
       return {
         ...state,
-        errorMessage: 'That email is already in use.'
+        errorMessage: 'That email is already in use.',
+        isLoading: false
       };
     }
 

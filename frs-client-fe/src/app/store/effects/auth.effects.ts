@@ -6,6 +6,7 @@ import {AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSucces
 import {catchError, map, switchMap, tap} from "rxjs/operators";
 import { LogIn } from '../actions/auth';
 import {Router} from "@angular/router";
+import {ROUTERS_URL} from "../../data/routers-url";
 
 @Injectable()
 export class AuthEffects {
@@ -35,7 +36,7 @@ export class AuthEffects {
     ofType(AuthActionTypes.LOGIN_SUCCESS),
     tap((user) => {
       localStorage.setItem('token', user.payload.token);
-      this.router.navigateByUrl('/organization');
+      this.router.navigateByUrl(ROUTERS_URL.ORGANIZATION);
     })
   );
 
@@ -65,7 +66,7 @@ export class AuthEffects {
   SignUpSuccess: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.SIGNUP_SUCCESS),
     tap(() => {
-      this.router.navigateByUrl('/login');
+      this.router.navigateByUrl(ROUTERS_URL.LOGIN);
     })
   );
 
@@ -79,7 +80,7 @@ export class AuthEffects {
     ofType(AuthActionTypes.LOGOUT),
     tap((user) => {
       localStorage.removeItem('token');
-      this.router.navigateByUrl('/login');
+      this.router.navigateByUrl(ROUTERS_URL.LOGIN);
     })
   );
 }

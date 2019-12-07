@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
   res.redirect('/home');
 });
 
-app.post('/admin/oauth/token', wait(), function (req, res) {
+app.post('/admin/oauth/token', wait(2000), function (req, res) {
   console.log(req.body);
   if (req && req.body.username === user.username && req.body.password === user.password) {
     token = `${user.username}${user.password}${+new Date()}`;

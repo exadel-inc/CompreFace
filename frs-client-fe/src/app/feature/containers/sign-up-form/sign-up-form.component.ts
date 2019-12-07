@@ -5,6 +5,7 @@ import {Store} from "@ngrx/store";
 import {AppState, selectAuthState} from "../../../store/state/app.state";
 import {SignUp} from "../../../store/actions/auth";
 import {Observable} from "rxjs";
+import {ROUTERS_URL} from "../../../data/routers-url";
 
 @Component({
   selector: 'app-sign-up-form',
@@ -17,6 +18,8 @@ export class SignUpFormComponent implements OnInit {
   EMAIL_REGEX = '\\S+@\\S+\\.\\S+';
   getState: Observable<any>;
   errorMessage: string | null;
+  isLoading = false;
+  ROUTERS_URL = ROUTERS_URL;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value)
@@ -42,6 +45,7 @@ export class SignUpFormComponent implements OnInit {
 
     this.getState.subscribe((state) => {
       this.errorMessage = state.errorMessage;
+      this.isLoading = state.isLoading;
     });
   }
 
@@ -52,6 +56,7 @@ export class SignUpFormComponent implements OnInit {
       password: this.user.password,
       username: this.user.username
     };
+    this.isLoading = true;
     this.store.dispatch(new SignUp(payload));
   }
 

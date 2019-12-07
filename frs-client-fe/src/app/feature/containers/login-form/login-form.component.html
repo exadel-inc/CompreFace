@@ -8,6 +8,11 @@
         {{errorMessage}}
       </div>
     </div>
+    <div *ngIf="successMessage">
+      <div class="alert alert-success" role="alert">
+        {{successMessage}}
+      </div>
+    </div>
     <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
       <mat-form-field class="login-full-width">
         <input matInput placeholder="Username" formControlName="username" name="username" required>
@@ -18,14 +23,14 @@
       </mat-form-field>
 
     </form>
-    <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
-    <a [routerLink]="['/sign-up']">sign-up</a>
+
+    <a [routerLink]="[ROUTERS_URL.SIGN_UP]">sign-up</a>
   </mat-card-content>
   <mat-card-actions>
     <button mat-raised-button
             type="submit"
             color="primary"
             form="loginForm"
-            [disabled]="form.invalid">Login</button>
+            [disabled]="form.invalid || isLoading">Login</button>
   </mat-card-actions>
 </mat-card>

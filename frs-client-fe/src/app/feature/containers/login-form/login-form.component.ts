@@ -5,6 +5,7 @@ import {Store} from "@ngrx/store";
 import {AppState, selectAuthState} from "../../../store/state/app.state";
 import {LogIn} from "../../../store/actions/auth";
 import {Observable} from "rxjs";
+import {ROUTERS_URL} from "../../../data/routers-url";
 
 @Component({
   selector: 'app-login-form',
@@ -16,6 +17,9 @@ export class LoginFormComponent implements OnInit {
   user: User;
   getState: Observable<any>;
   errorMessage: string | null;
+  successMessage: string | null;
+  isLoading = false;
+  ROUTERS_URL = ROUTERS_URL;
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);
@@ -29,6 +33,8 @@ export class LoginFormComponent implements OnInit {
 
     this.getState.subscribe((state) => {
       this.errorMessage = state.errorMessage;
+      this.successMessage = state.successMessage;
+      this.isLoading = state.isLoading;
     });
   }
 
@@ -38,6 +44,7 @@ export class LoginFormComponent implements OnInit {
       username: this.user.username,
       password: this.user.password
     };
+    this.isLoading = true;
     this.store.dispatch(new LogIn(payload));
   }
 
