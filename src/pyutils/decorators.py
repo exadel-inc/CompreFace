@@ -20,13 +20,29 @@ def run_once(func):
 def run_first(preceding_func):
     """ Runs some function before running decorated function """
 
-    def decorator(func):
+    def wrapper_decorator(func):
         @functools.wraps(func)
-        def wrapper_decorator(*args, **kwargs):
+        def decorator(*args, **kwargs):
             preceding_func()
             returned_value = func(*args, **kwargs)
             return returned_value
 
-        return wrapper_decorator
+        return decorator
+
+    return wrapper_decorator
+
+
+def cached(func):
+    """ Caches the return values for a function with one argument """
+    cache = {}
+
+    @functools.wraps(func)
+    def decorator(arg):
+        if arg in cache:
+            return cache[arg]
+
+        result = func(arg)
+        cache[arg] = result
+        return result
 
     return decorator

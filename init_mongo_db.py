@@ -10,7 +10,7 @@ from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME, MONGO_EFR
     CollectionName
 from src.storage.exceptions import NoFileFoundInDatabaseError
 
-EMBEDDING_CALCULATOR_MODEL_FILEPATH = ROOT_DIR / 'db_data' / EMBEDDING_CALCULATOR_MODEL_FILENAME
+EMBEDDING_CALCULATOR_MODEL_FILEPATH = ROOT_DIR / 'models' / EMBEDDING_CALCULATOR_MODEL_FILENAME
 
 
 @pyutils.run_once

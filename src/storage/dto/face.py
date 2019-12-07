@@ -2,9 +2,9 @@ import attr
 import numpy as np
 from numpy.core.multiarray import ndarray
 
+from src.face_recognition.calc_embedding.calculator import calculate_embedding
+from src.face_recognition.crop_faces.crop_faces import crop_one_face
 from src.face_recognition.dto.embedding import Embedding
-from src.face_recognition.embedding_calculator.calculator import calculate_embedding
-from src.face_recognition.face_cropper.cropper import crop_face
 
 
 @attr.s(auto_attribs=True, frozen=True)
@@ -53,8 +53,8 @@ class Face(FaceEmbedding):
     face_img: ndarray
 
     @classmethod
-    def from_image(cls, face_name: str, img):
-        face_img = crop_face(img).img
+    def from_image(cls, face_name: str, img, detection_threshold_c):
+        face_img = crop_one_face(img, detection_threshold_c).img
         embedding = calculate_embedding(face_img)
         return Face(face_name, embedding, img, face_img)
 

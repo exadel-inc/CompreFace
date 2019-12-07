@@ -2,10 +2,14 @@ import attr
 from numpy.core.multiarray import ndarray
 
 from src.face_recognition.dto.bounding_box import BoundingBox
-from src.pyutils.convertible_to_dict import ConvertibleToDict
 
 
 @attr.s(auto_attribs=True, frozen=True)
-class CroppedFace(ConvertibleToDict):
+class DetectedFace:
     box: BoundingBox
+    is_face_prob: float
+
+
+@attr.s(auto_attribs=True, frozen=True)
+class CroppedFace(DetectedFace):
     img: ndarray

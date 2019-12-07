@@ -13,8 +13,8 @@ from src.api.endpoint_decorators import needs_authentication, needs_attached_fil
 from src.api.exceptions import BadRequestException
 from src.api.parse_request_arg import parse_request_bool_arg
 from src.api.training_task_manager import start_training, is_training, abort_training
-from src.face_recognition.embedding_classifier.predict import predict_from_image
-from src.face_recognition.face_cropper.constants import FaceLimitConstant
+from src.face_recognition.classify_embedding.predict import predict_from_image_with_api_key
+from src.face_recognition.crop_faces.constants import FaceLimitConstant, DEFAULT_THRESHOLD_C
 from src.pyutils.convertible_to_dict import ConvertibleToDict
 from src.storage.dto.face import Face
 from src.storage.storage import get_storage
@@ -59,9 +59,10 @@ def create_app():
         from flask import request
         file = request.files['file']
         api_key = request.headers[API_KEY_HEADER]
+        detection_threshold_c = float(request.values.get('det_prob_threshold', DEFAULT_THRESHOLD_C))
         img = imageio.imread(file)
 
-        face = Face.from_image(face_name, img)
+        face = Face.from_image(face_name, img, detection_threshold_c)
         get_storage(api_key).add_face(face)
 
         return Response(status=HTTPStatus.CREATED)
@@ -115,6 +116,7 @@ def create_app():
         from flask import request
         try:
             limit = int(request.values.get('limit', FaceLimitConstant.NO_LIMIT))
+            detection_threshold_c = float(request.values.get('det_prob_threshold', DEFAULT_THRESHOLD_C))
             assert limit >= 0
         except ValueError as e:
             raise BadRequestException('Limit format is invalid') from e
@@ -124,7 +126,7 @@ def create_app():
         file = request.files['file']
 
         img = imageio.imread(file)
-        face_predictions = predict_from_image(img, limit, api_key)
+        face_predictions = predict_from_image_with_api_key(img, limit, api_key, detection_threshold_c)
 
         return jsonify(result=face_predictions)
 

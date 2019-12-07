@@ -9,3 +9,4 @@ class FacePrediction(ConvertibleToDict):
     box: BoundingBox
     face_name: str = attr.ib(converter=str)
     probability: float = attr.ib(converter=float)
+    is_face_prob: float = attr.ib(converter=float)

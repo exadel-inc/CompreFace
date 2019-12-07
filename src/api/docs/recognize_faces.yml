@@ -13,11 +13,17 @@ parameters:
     required: 'true'
     description: 'Image of a group of unknown people (accepted formats: jpeg, png).'
   - in: formData
-    name: limitso
+    name: limits
     description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
     required: 'false'
     type: integer
     default: 0
+  - in: path
+    name: det_prob_threshold
+    description: 'The minimal percent confidence that found face is actually a face.'
+    required: 'false'
+    type: float
+    default: 0.5
 security:
   - ApiKeyAuth: []
 responses:
@@ -53,6 +59,10 @@ responses:
                 type: number
                 format: float
                 example: '0.95'
+              is_face_prob:
+                type: number
+                format: float
+                example: '0.99'
   '400':
     $ref: '#/components/responses/BadRequestResponse'
   '500':
