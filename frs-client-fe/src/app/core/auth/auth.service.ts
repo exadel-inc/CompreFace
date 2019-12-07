@@ -13,7 +13,7 @@ export class AuthService {
   }
 
   getToken(): string {
-    return localStorage.getItem('token');
+    return localStorage.getItem('token') || '';
   }
 
   logIn(username: string, password: string): Observable<any> {
