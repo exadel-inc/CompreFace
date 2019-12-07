@@ -31,7 +31,8 @@ import java.util.Map;
 public class ProxyController {
 
     static final String PREFIX = "/api";
-    private static final String API_KEY_HEADER = "X-Api-Key";
+    private static final String X_FRS_API_KEY_HEADER = "x-frs-api-key";
+    private static final String X_API_KEY_HEADER = "X-Api-Key";
 
     private final ModelRepository modelRepository;
 
@@ -74,7 +75,7 @@ public class ProxyController {
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
     @ApiOperation(value = "Send request to core service")
     public ResponseEntity<String> proxy(
-            @ApiParam(value = "GUID of application and model", required = true) @RequestHeader(API_KEY_HEADER) String apiKey,
+            @ApiParam(value = "GUID of application and model", required = true) @RequestHeader(X_FRS_API_KEY_HEADER) String apiKey,
             @ApiParam(value = "Headers that will be proxied to core service", required = true) @RequestHeader MultiValueMap<String, String> headers,
             @ApiParam(value = "String parameters that will be proxied to core service") @RequestParam(required = false) Map<String, String> params,
             @ApiParam(value = "Files that will be proxied to core service") @RequestParam(required = false) Map<String, MultipartFile> files,
@@ -93,6 +94,8 @@ public class ProxyController {
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         params.forEach(body::add);
         files.forEach((key, file) -> body.add(key, file.getResource()));
+        headers.remove(X_FRS_API_KEY_HEADER);
+        headers.add(X_API_KEY_HEADER, apiKey);
         RestTemplate restTemplate = new RestTemplate();
         try {
             return restTemplate.exchange(remoteUrl, HttpMethod.resolve(request.getMethod()),
