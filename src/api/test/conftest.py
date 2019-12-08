@@ -3,9 +3,8 @@ from unittest.mock import patch
 
 import pytest
 
-from src.api.constants import API_KEY_HEADER
 from src.api.controller import create_app
-from src.pyutils.pytest_utils import pass_through_decorator
+
 
 
 def needs_authentication(f):
@@ -26,8 +25,6 @@ def needs_authentication(f):
 
         request_mock = RequestMock()
         with patch('flask.request', request_mock):
-            if API_KEY_HEADER not in request_mock.headers:
-                request_mock.headers[API_KEY_HEADER] = 'test-api-key'
             return f(*args, **kwargs)
 
     return wrapper
@@ -61,8 +58,6 @@ def needs_attached_file(f):
 @pytest.fixture
 def app(mocker):
     mocker.patch('src.api.controller.Swagger')
-    mocker.patch('src.api.controller.needs_authentication', needs_authentication)
-    mocker.patch('src.api.controller.needs_retrain', pass_through_decorator())
     mocker.patch('src.api.controller.needs_attached_file', needs_attached_file)
     return create_app()
 

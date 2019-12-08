@@ -8,7 +8,7 @@ import pytest
 from main import ROOT_DIR
 from src import pyutils
 from src.scan_faces._calc_embedding.calculator import calculate_embedding
-from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
+from src.scan_faces._calc_embedding.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 CACHED_MODEL_FILEPATH = ROOT_DIR / 'models' / EMBEDDING_CALCULATOR_MODEL_FILENAME
@@ -32,6 +32,7 @@ def return_value_for_mock(mocker, val):
     return mock
 
 
+# TODO: fix the test according to new service logic
 @pytest.mark.integration
 def test_integration__when_calculating_embeddings_of_two_images_with_the_same_face__then_returns_similar_embeddings(
         mocker):
@@ -46,6 +47,7 @@ def test_integration__when_calculating_embeddings_of_two_images_with_the_same_fa
     assert embeddings_are_the_same(person_a_face_embedding1, person_a_face_embedding2)
 
 
+# TODO: fix the test according to new service logic
 @pytest.mark.integration
 def test_integration__when_calculating_embeddings_of_two_images_with_different_faces__then_returns_different_embeddings(
         mocker):
