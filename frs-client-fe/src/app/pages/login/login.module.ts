@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login.component';
 import {RouterModule} from "@angular/router";
 import {FeatureModule} from "../../feature/feature.module";
-import {AuthGuard} from "../../core/auth/auth-guard.service";
+import {LoginGuard} from "../../core/auth/auth-guard.service";
 
 
 
@@ -12,7 +12,7 @@ import {AuthGuard} from "../../core/auth/auth-guard.service";
   imports: [
     CommonModule,
     RouterModule.forChild([
-      {path: '', component: LoginComponent, canActivate: [AuthGuard]}
+      {path: '', component: LoginComponent, canActivate: [LoginGuard]}
     ]),
     FeatureModule
   ]

@@ -18,3 +18,17 @@ export class AuthGuard implements CanActivate {
     return true;
   }
 }
+
+@Injectable()
+export class LoginGuard implements CanActivate {
+
+  constructor( public auth: AuthService,  public router: Router ) {}
+
+  canActivate(): boolean {
+    if (this.auth.getToken()) {
+      this.router.navigateByUrl(ROUTERS_URL.ORGANIZATION);
+      return false;
+    }
+    return true;
+  }
+}
