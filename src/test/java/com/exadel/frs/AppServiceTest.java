@@ -65,7 +65,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successGetAppOrganizationOwner(OrganizationRole organizationRole) {
+    public void successGetApp(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long appId = 1L;
         Long organizationId = 1L;
@@ -158,7 +158,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successGetAppsOrganizationOwner(OrganizationRole organizationRole) {
+    public void successGetApps(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long appId = 1L;
         Long organizationId = 1L;
@@ -221,7 +221,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successCreateAppOrganizationOwner(OrganizationRole organizationRole) {
+    public void successCreateApp(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long organizationId = 1L;
 
@@ -310,38 +310,42 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successUpdateAppOrganizationOwner(OrganizationRole organizationRole) {
-        Long userId = 1L;
+    public void successUpdateApp(OrganizationRole organizationRole) {
+        Long userId1 = 1L;
+        Long userId2 = 2L;
         Long appId = 1L;
         Long organizationId = 1L;
 
-        User user = user(userId);
+        User user1 = user(userId1);
+        User user2 = user(userId2);
 
         Organization organization = organization(organizationId);
-        organization.addUserOrganizationRole(user, organizationRole);
+        organization.addUserOrganizationRole(user1, organizationRole);
+        organization.addUserOrganizationRole(user2, OrganizationRole.USER);
 
         App repoApp = App.builder()
                 .name("name")
                 .guid("guid")
                 .organization(organization)
                 .build();
+        repoApp.addUserAppRole(user1, AppRole.OWNER);
 
         App app = App.builder()
                 .name("new_name")
                 .guid("new_guid")
                 .build();
-        app.addUserAppRole(user, AppRole.USER);
+        app.addUserAppRole(user2, AppRole.USER);
 
         when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        appService.updateApp(appId, app, userId);
+        appService.updateApp(appId, app, userId1);
 
         verify(appRepositoryMock).save(any(App.class));
 
         assertThat(repoApp.getName(), is(app.getName()));
         assertThat(repoApp.getGuid(), is("guid"));
-        assertThat(repoApp.getUserAppRoles().size(), is(1));
+        assertThat(repoApp.getUserAppRoles().size(), is(2));
     }
 
     @ParameterizedTest

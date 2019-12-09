@@ -63,7 +63,7 @@ public class ModelServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successGetModelOrganizationOwner(OrganizationRole organizationRole) {
+    public void successGetModel(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long modelId = 1L;
         Long appId = 1L;
@@ -152,7 +152,7 @@ public class ModelServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successGetModelsOrganizationOwner(OrganizationRole organizationRole) {
+    public void successGetModels(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long modelId = 1L;
         Long appId = 1L;
