@@ -47,7 +47,7 @@ def test_integration__when_calculating_embeddings_of_two_images_with_the_same_fa
     assert embeddings_are_the_same(person_a_face_embedding1, person_a_face_embedding2)
 
 
-# TODO: fix the test according to new service logic
+# TODO EFRS-103: fix the test according to new service logic
 @pytest.mark.integration
 def test_integration__when_calculating_embeddings_of_two_images_with_different_faces__then_returns_different_embeddings(
         mocker):
