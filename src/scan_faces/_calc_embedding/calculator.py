@@ -27,7 +27,7 @@ def _calculator() -> Calculator:
         with gfile.FastGFile("./models/embedding_calc_model_20170512.pb", 'rb') as f:
             graph_def = tf.GraphDef()
 
-        graph_def.ParseFromString(f.read())
+            graph_def.ParseFromString(f.read())
         tf.import_graph_def(graph_def, name='')
         return Calculator(graph=graph, sess=tf.Session(graph=graph))
 
