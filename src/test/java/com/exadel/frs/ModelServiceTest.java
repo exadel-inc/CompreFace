@@ -9,6 +9,7 @@ import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.OrganizationMismatchException;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.service.AppService;
@@ -276,6 +277,36 @@ public class ModelServiceTest {
     }
 
     @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failCreateModelNameIsNotUnique(OrganizationRole organizationRole) {
+        Long userId = 1L;
+        Long modelId = 1L;
+        Long appId = 1L;
+        Long organizationId = 1L;
+
+        User user = user(userId);
+
+        Organization organization = organization(organizationId);
+        organization.addUserOrganizationRole(user, organizationRole);
+
+        App app = App.builder()
+                .id(appId)
+                .organization(organization)
+                .build();
+
+        Model model = Model.builder()
+                .id(modelId)
+                .name("name")
+                .app(app)
+                .build();
+
+        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(modelRepositoryMock.findByNameAndAppId(anyString(), anyLong())).thenReturn(Optional.of(model));
+
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> modelService.createModel(model, userId));
+    }
+
+    @ParameterizedTest
     @MethodSource("readRoles")
     public void failCreateModelInsufficientPrivileges(OrganizationRole organizationRole) {
         Long userId = 1L;
@@ -359,7 +390,6 @@ public class ModelServiceTest {
         Model model = Model.builder()
                 .name("new_name")
                 .guid("new_guid")
-                .app(app)
                 .build();
         model.addAppModelAccess(app, AppModelAccess.TRAIN);
 
@@ -373,6 +403,40 @@ public class ModelServiceTest {
         assertThat(repoModel.getName(), is(model.getName()));
         assertThat(repoModel.getGuid(), not(model.getGuid()));
         assertThat(repoModel.getAppModelAccess().size(), is(1));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failUpdateModelNameIsNotUnique(OrganizationRole organizationRole) {
+        Long userId = 1L;
+        Long modelId = 1L;
+        Long appId = 1L;
+        Long organizationId = 1L;
+
+        User user = user(userId);
+
+        Organization organization = organization(organizationId);
+        organization.addUserOrganizationRole(user, organizationRole);
+
+        App app = App.builder()
+                .id(appId)
+                .organization(organization)
+                .build();
+
+        Model repoModel = Model.builder()
+                .name("name")
+                .app(app)
+                .build();
+
+        Model model = Model.builder()
+                .name("new_name")
+                .build();
+
+        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(modelRepositoryMock.findByNameAndAppId(anyString(), anyLong())).thenReturn(Optional.of(model));
+
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> modelService.updateModel(modelId, model, userId));
     }
 
     @ParameterizedTest

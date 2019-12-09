@@ -7,6 +7,7 @@ import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.service.AppService;
@@ -247,6 +248,28 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
+    public void failCreateOrganizationNameIsNotUnique(OrganizationRole organizationRole) {
+        Long userId = 1L;
+        Long organizationId = 1L;
+
+        User user = user(userId);
+
+        Organization organization = organization(organizationId);
+        organization.addUserOrganizationRole(user, organizationRole);
+
+        App app = App.builder()
+                .name("app")
+                .organization(organization)
+                .build();
+
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(appRepositoryMock.findByNameAndOrganizationId(anyString(), anyLong())).thenReturn(Optional.of(app));
+
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(app, userId));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
     public void failCreateAppEmptyName(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long organizationId = 1L;
@@ -346,6 +369,35 @@ public class AppServiceTest {
         assertThat(repoApp.getName(), is(app.getName()));
         assertThat(repoApp.getGuid(), is("guid"));
         assertThat(repoApp.getUserAppRoles().size(), is(2));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failUpdateAppNameIsNotUnique(OrganizationRole organizationRole) {
+        Long userId = 1L;
+        Long appId = 1L;
+        Long organizationId = 1L;
+
+        User user = user(userId);
+
+        Organization organization = organization(organizationId);
+        organization.addUserOrganizationRole(user, organizationRole);
+
+        App repoApp = App.builder()
+                .name("name")
+                .organization(organization)
+                .build();
+        repoApp.addUserAppRole(user, AppRole.OWNER);
+
+        App app = App.builder()
+                .name("new_name")
+                .build();
+
+        when(appRepositoryMock.findByNameAndOrganizationId(anyString(), anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.updateApp(appId, app, userId));
     }
 
     @ParameterizedTest

@@ -4,10 +4,7 @@ package com.exadel.frs;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.InsufficientPrivilegesException;
-import com.exadel.frs.exception.SelfRemoveException;
-import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.exception.*;
 import com.exadel.frs.repository.OrganizationRepository;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
@@ -102,6 +99,17 @@ public class OrganizationServiceTest {
     }
 
     @Test
+    public void failCreateOrganizationNameIsNotUnique() {
+        Organization organization = Organization.builder()
+                .name("Organization")
+                .build();
+
+        when(organizationRepositoryMock.findByName(anyString())).thenReturn(Optional.of(organization));
+
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.createOrganization(organization, null));
+    }
+
+    @Test
     public void failCreateOrganizationEmptyRequiredField() {
         Organization organization = Organization.builder()
                 .name("")
@@ -137,6 +145,28 @@ public class OrganizationServiceTest {
         assertThat(organization.getName(), is(organizationUpdate.getName()));
         assertThat(organization.getUserOrganizationRoles().size(), is(2));
         assertThat(organization.getUserOrganizationRole(userId2).get().getRole(), is(OrganizationRole.ADMINISTRATOR));
+    }
+
+    @Test
+    public void failUpdateOrganizationNameIsNotUnique() {
+        Long userId = 1L;
+        Long organizationId = 1L;
+
+        User user = user(userId);
+
+        Organization organization = Organization.builder()
+                .name("Organization 1")
+                .build();
+        organization.addUserOrganizationRole(user, OrganizationRole.OWNER);
+
+        Organization organizationUpdate = Organization.builder()
+                .name("Organization 2")
+                .build();
+
+        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByName(anyString())).thenReturn(Optional.of(organizationUpdate));
+
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.updateOrganization(organizationId, organizationUpdate, userId));
     }
 
     @ParameterizedTest
