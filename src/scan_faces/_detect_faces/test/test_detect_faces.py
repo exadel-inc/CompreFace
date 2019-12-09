@@ -55,7 +55,7 @@ def test_integration__when_called_with_no_faces__then_raises_error():
 def test_integration__when_called_with_one_face__then_returns_one_cropped_face():
     im = imageio.imread(IMG_DIR / 'one-face.jpg')
 
-    detected_faces = detect_faces(im,  face_limit=FaceLimitConstant.NO_LIMIT, detection_threshold_c=DEFAULT_THRESHOLD_C)
+    detected_faces = detect_faces(im)
 
     assert len(detected_faces) == 1
     assert detected_faces == [DetectedFace(box=BoundingBox(x_min=85, y_min=108, x_max=261, y_max=330, probability=0.9999908208847046))]
