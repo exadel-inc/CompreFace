@@ -97,7 +97,7 @@ def test_test_if_the_same_number_of_faces_png_vs_jpg():
     img_png = _preprocess_img(img_png)
 
 
-    detected_faces_jpg = detect_faces(img_jpg,  face_limit=FaceLimitConstant.NO_LIMIT, detection_threshold_c=DEFAULT_THRESHOLD_C)
+    detected_faces_jpg = detect_faces(img_jpg)
     detected_faces_png = detect_faces(img_png, face_limit=FaceLimitConstant.NO_LIMIT,
                                       detection_threshold_c=DEFAULT_THRESHOLD_C)
 
