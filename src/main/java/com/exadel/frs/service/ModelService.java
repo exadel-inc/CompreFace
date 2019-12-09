@@ -6,10 +6,7 @@ import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.InsufficientPrivilegesException;
-import com.exadel.frs.exception.ModelNotFoundException;
-import com.exadel.frs.exception.OrganizationMismatchException;
+import com.exadel.frs.exception.*;
 import com.exadel.frs.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -70,6 +67,10 @@ public class ModelService {
         if (StringUtils.isEmpty(model.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
+        modelRepository.findByNameAndAppId(model.getName(), model.getApp().getId())
+                .ifPresent(model1 -> {
+                    throw new NameIsNotUniqueException(model1.getName());
+                });
         model.setGuid(UUID.randomUUID().toString());
         modelRepository.save(model);
     }
@@ -77,7 +78,11 @@ public class ModelService {
     public void updateModel(Long id, Model model, Long userId) {
         Model repoModel = getModel(id);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        if (!StringUtils.isEmpty(model.getName())) {
+        if (!StringUtils.isEmpty(model.getName()) && !repoModel.getName().equals(model.getName())) {
+            modelRepository.findByNameAndAppId(model.getName(), repoModel.getApp().getId())
+                    .ifPresent(model1 -> {
+                        throw new NameIsNotUniqueException(model1.getName());
+                    });
             repoModel.setName(model.getName());
         }
         if (model.getAppModelAccess() != null) {

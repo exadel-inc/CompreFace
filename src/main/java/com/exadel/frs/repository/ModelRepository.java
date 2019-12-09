@@ -17,4 +17,6 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     Optional<Model> findByGuid(String guid);
 
+    Optional<Model> findByNameAndAppId(String name, Long appId);
+
 }

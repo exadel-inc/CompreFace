@@ -1,0 +1,20 @@
+databaseChangeLog:
+  - changeSet:
+      id: init
+      author: vlad
+      changes:
+
+        - addUniqueConstraint:
+            columnNames: name
+            constraintName: organization_name_uindex
+            tableName: organization
+
+        - addUniqueConstraint:
+            columnNames: name, organization_id
+            constraintName: app_name_organization_id_uindex
+            tableName: app
+
+        - addUniqueConstraint:
+            columnNames: name, app_id
+            constraintName: app_name_app_id_uindex
+            tableName: model

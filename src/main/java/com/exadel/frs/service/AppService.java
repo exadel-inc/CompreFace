@@ -60,10 +60,14 @@ public class AppService {
     }
 
     public void createApp(App app, Long userId) {
+        verifyUserHasWritePrivileges(userId, organizationService.getOrganization(app.getOrganization().getId()));
         if (StringUtils.isEmpty(app.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        verifyUserHasWritePrivileges(userId, organizationService.getOrganization(app.getOrganization().getId()));
+        appRepository.findByNameAndOrganizationId(app.getName(), app.getOrganization().getId())
+                .ifPresent(app1 -> {
+                    throw new NameIsNotUniqueException(app1.getName());
+                });
         app.setGuid(UUID.randomUUID().toString());
         app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
         appRepository.save(app);
@@ -82,7 +86,11 @@ public class AppService {
     public void updateApp(Long id, App app, Long userId) {
         App repoApp = getApp(id);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        if (!StringUtils.isEmpty(app.getName())) {
+        if (!StringUtils.isEmpty(app.getName()) && !repoApp.getName().equals(app.getName())) {
+            appRepository.findByNameAndOrganizationId(app.getName(), repoApp.getOrganization().getId())
+                    .ifPresent(app1 -> {
+                        throw new NameIsNotUniqueException(app1.getName());
+                    });
             repoApp.setName(app.getName());
         }
         if (app.getUserAppRoles() != null) {

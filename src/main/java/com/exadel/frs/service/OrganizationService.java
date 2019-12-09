@@ -50,6 +50,10 @@ public class OrganizationService {
         if (StringUtils.isEmpty(organization.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
+        organizationRepository.findByName(organization.getName())
+                .ifPresent(organization1 -> {
+                    throw new NameIsNotUniqueException(organization1.getName());
+                });
         organization.addUserOrganizationRole(userService.getUser(userId), OrganizationRole.OWNER);
         organizationRepository.save(organization);
     }
@@ -64,10 +68,14 @@ public class OrganizationService {
     }
 
     public void updateOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
-        verifyUserHasWritePrivileges(userId, organizationFromRepo);
-        if (!StringUtils.isEmpty(organization.getName())) {
-            organizationFromRepo.setName(organization.getName());
+        Organization repoOrganization = getOrganization(id);
+        verifyUserHasWritePrivileges(userId, repoOrganization);
+        if (!StringUtils.isEmpty(organization.getName()) && !repoOrganization.getName().equals(organization.getName())) {
+            organizationRepository.findByName(organization.getName())
+                    .ifPresent(organization1 -> {
+                        throw new NameIsNotUniqueException(organization1.getName());
+                    });
+            repoOrganization.setName(organization.getName());
         }
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             verifyNumberOfOwners(organization.getUserOrganizationRoles());
@@ -76,44 +84,44 @@ public class OrganizationService {
                     throw new SelfRoleChangeException();
                 }
                 if (OrganizationRole.OWNER.equals(userOrganizationRole.getRole())) {
-                    organizationFromRepo.getUserOrganizationRoleOrThrow(userId)
+                    repoOrganization.getUserOrganizationRoleOrThrow(userId)
                             .setRole(OrganizationRole.ADMINISTRATOR);
                 }
-                organizationFromRepo.getUserOrganizationRoleOrThrow(userOrganizationRole.getId().getUserId())
+                repoOrganization.getUserOrganizationRoleOrThrow(userOrganizationRole.getId().getUserId())
                         .setRole(userOrganizationRole.getRole());
             });
         }
-        organizationRepository.save(organizationFromRepo);
+        organizationRepository.save(repoOrganization);
     }
 
     // todo implement user invitation to organization by email. then delete this method
     public void addUserToOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
-        verifyUserHasWritePrivileges(userId, organizationFromRepo);
+        Organization repoOrganization = getOrganization(id);
+        verifyUserHasWritePrivileges(userId, repoOrganization);
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
-                if (organizationFromRepo.getUserOrganizationRole(userOrganizationRole.getId().getUserId()).isEmpty()) {
+                if (repoOrganization.getUserOrganizationRole(userOrganizationRole.getId().getUserId()).isEmpty()) {
                     User user = userService.getUser(userOrganizationRole.getId().getUserId());
-                    organizationFromRepo.addUserOrganizationRole(user, OrganizationRole.USER);
+                    repoOrganization.addUserOrganizationRole(user, OrganizationRole.USER);
                 }
             });
         }
-        organizationRepository.save(organizationFromRepo);
+        organizationRepository.save(repoOrganization);
     }
 
     public void removeUserFromOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
-        verifyUserHasWritePrivileges(userId, organizationFromRepo);
+        Organization repoOrganization = getOrganization(id);
+        verifyUserHasWritePrivileges(userId, repoOrganization);
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
                 if (userId.equals(userOrganizationRole.getId().getUserId())) {
                     throw new SelfRemoveException();
                 }
-                organizationFromRepo.getUserOrganizationRoles().removeIf(userOrganizationRole1 ->
+                repoOrganization.getUserOrganizationRoles().removeIf(userOrganizationRole1 ->
                         userOrganizationRole1.getId().getUserId().equals(userOrganizationRole.getId().getUserId()));
             });
         }
-        organizationRepository.save(organizationFromRepo);
+        organizationRepository.save(repoOrganization);
     }
 
     public void deleteOrganization(Long id, Long userId) {
