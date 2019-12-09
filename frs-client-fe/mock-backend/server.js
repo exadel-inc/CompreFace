@@ -11,7 +11,7 @@ app.use(express.urlencoded());
 // Add headers
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:4201');
+  res.setHeader('Access-Control-Allow-Origin', '*');
   // Request methods you wish to allow
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
   // Request headers you wish to allow
@@ -49,7 +49,7 @@ app.get('/', function (req, res) {
   res.redirect('/home');
 });
 
-app.post('/admin/oauth/token', wait(1000), function (req, res) {
+app.post('/oauth/token', wait(1000), function (req, res) {
   console.log(req.body);
   if (req && req.body.username === user.username && req.body.password === user.password) {
     token = `${user.username}${user.password}${+new Date()}`;
@@ -60,7 +60,7 @@ app.post('/admin/oauth/token', wait(1000), function (req, res) {
   }
 });
 
-app.post('/admin/client/register', function (req, res) {
+app.post('/user/register', function (req, res) {
   console.log(req.body);
   if (req && req.body.username && req.body.password && req.body.email) {
 

@@ -6,7 +6,9 @@ import {Environment} from "./interface";
 
 export const environment: Environment = {
   production: false,
+  // local mock server:
   apiUrl: 'http://localhost:3000'
+  // apiUrl: 'https://msqv500.exadel.by/admin'
 };
 
 /*
