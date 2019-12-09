@@ -29,7 +29,6 @@ def _calculator() -> Calculator:
 
         graph_def.ParseFromString(f.read())
         tf.import_graph_def(graph_def, name='')
-        f.close()
         return Calculator(graph=graph, sess=tf.Session(graph=graph))
 
 
