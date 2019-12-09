@@ -32,7 +32,7 @@ def return_value_for_mock(mocker, val):
     return mock
 
 
-# TODO: fix the test according to new service logic
+# TODO EFRS-103: fix the test according to new service logic
 @pytest.mark.integration
 def test_integration__when_calculating_embeddings_of_two_images_with_the_same_face__then_returns_similar_embeddings(
         mocker):
