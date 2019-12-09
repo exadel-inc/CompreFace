@@ -46,7 +46,7 @@ def test_integration__when_called_with_no_faces__then_raises_error():
     im = imageio.imread(IMG_DIR / 'no-faces.jpg')
 
     def act():
-        detect_faces(im,  face_limit=FaceLimitConstant.NO_LIMIT, detection_threshold_c=DEFAULT_THRESHOLD_C)
+        detect_faces(im)
 
     assert raises(NoFaceFoundError, act)
 
