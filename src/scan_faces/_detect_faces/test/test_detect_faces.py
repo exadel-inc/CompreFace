@@ -71,7 +71,7 @@ def test_integration__when_called_with_multiple_faces__then_returns_multiple_ite
 def test_integration__given_limit_2__when_called_with_multiple_faces__then_returns_2_items():
     im = imageio.imread(IMG_DIR / 'five-faces.jpg')
 
-    detected_faces = detect_faces(im,  face_limit=2, detection_threshold_c=DEFAULT_THRESHOLD_C)
+    detected_faces = detect_faces(im,  face_limit=2)
 
     assert len(detected_faces) == 2
 
