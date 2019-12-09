@@ -80,7 +80,7 @@ def test_integration__given_limit_2__when_called_with_multiple_faces__then_retur
 def test_integration__when_called_with_multiple_faces__then_all_returned_faces_must_be_different(
         detected_faces_result_5faces):
     img_combinations = itertools.combinations(([face.box.x_max, face.box.x_min, face.box.y_max, face.box.y_min, face.box.probability] for face in detected_faces_result_5faces), r=2)
-    images_are_same = (boxes_are_almost_the_same(*pair) for pair in img_combinations)
+    boxes_are_same = (boxes_are_almost_the_same(*pair) for pair in img_combinations)
     assert not any(images_are_same)
 
 
