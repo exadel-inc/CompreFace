@@ -386,6 +386,7 @@ public class ModelServiceTest {
                 .guid("guid")
                 .app(app)
                 .build();
+        repoModel.addAppModelAccess(app, AppModelAccess.READONLY);
 
         Model model = Model.builder()
                 .name("new_name")

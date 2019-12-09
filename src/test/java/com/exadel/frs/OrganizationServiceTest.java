@@ -136,7 +136,7 @@ public class OrganizationServiceTest {
         Organization organizationUpdate = Organization.builder()
                 .name("Organization 2")
                 .build();
-        organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.ADMINISTRATOR);
+        organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.OWNER);
 
         when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
 
@@ -144,7 +144,33 @@ public class OrganizationServiceTest {
 
         assertThat(organization.getName(), is(organizationUpdate.getName()));
         assertThat(organization.getUserOrganizationRoles().size(), is(2));
-        assertThat(organization.getUserOrganizationRole(userId2).get().getRole(), is(OrganizationRole.ADMINISTRATOR));
+        assertThat(organization.getUserOrganizationRole(userId1).get().getRole(), is(OrganizationRole.ADMINISTRATOR));
+        assertThat(organization.getUserOrganizationRole(userId2).get().getRole(), is(OrganizationRole.OWNER));
+    }
+
+    @Test
+    public void failUpdateOrganizationMultipleOwners() {
+        Long userId1 = 1L;
+        Long userId2 = 1L;
+        Long userId3 = 1L;
+        Long organizationId = 1L;
+
+        User user1 = user(userId1);
+        User user2 = user(userId2);
+        User user3 = user(userId3);
+
+        Organization organization = Organization.builder()
+                .name("Organization 1")
+                .build();
+        organization.addUserOrganizationRole(user1, OrganizationRole.OWNER);
+
+        Organization organizationUpdate = Organization.builder().build();
+        organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.OWNER);
+        organizationUpdate.addUserOrganizationRole(user3, OrganizationRole.OWNER);
+
+        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+
+        Assertions.assertThrows(MultipleOwnersException.class, () -> organizationService.updateOrganization(organizationId, organizationUpdate, userId1));
     }
 
     @Test
@@ -189,7 +215,7 @@ public class OrganizationServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failUpdateOrganizationDemotion(OrganizationRole organizationRole) {
+    public void failUpdateOrganizationSelfRoleChange(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long organizationId = 1L;
 
