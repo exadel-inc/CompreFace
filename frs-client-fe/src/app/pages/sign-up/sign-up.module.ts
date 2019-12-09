@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import {RouterModule} from "@angular/router";
 import {FeatureModule} from "../../feature/feature.module";
 import {SignUpComponent} from "./sign-up.component";
-import {LoginGuard} from "../../core/auth/auth-guard.service";
+import {LoginGuard} from "../../core/auth/auth.guard";
 
 
 

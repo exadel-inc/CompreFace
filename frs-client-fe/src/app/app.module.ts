@@ -12,7 +12,7 @@ import {AuthEffects} from "./store/effects/auth.effects";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {reducers} from "./store/state/app.state";
 import {ErrorInterceptor, TokenInterceptor} from "./core/auth/token.inerceptor";
-import {AuthGuard, LoginGuard} from "./core/auth/auth-guard.service";
+import {AuthGuard, LoginGuard} from "./core/auth/auth.guard";
 
 @NgModule({
   declarations: [

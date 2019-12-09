@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SignUpFormComponent } from './sign-up-form.component';
+import {NO_ERRORS_SCHEMA} from "@angular/core";
 
 describe('SignUpFormComponent', () => {
   let component: SignUpFormComponent;
@@ -8,7 +9,8 @@ describe('SignUpFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SignUpFormComponent ]
+      declarations: [ SignUpFormComponent ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   }));
