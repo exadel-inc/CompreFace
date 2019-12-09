@@ -3,7 +3,7 @@ from http import HTTPStatus
 FILE_BYTES = b''
 
 
-def test_scan_faces_returns_object(mocker, client):
+def test__when_image_uploaded_to_scan_face_endpoint__then_returns_scan_results(mocker, client):
     filename = 'test-file.jpg'
     request_data = dict(file=(FILE_BYTES, filename), limit=0)
     expected_names = [{"embedding": [34, 31, 53, 64]},
