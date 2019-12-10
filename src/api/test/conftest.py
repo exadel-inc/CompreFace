@@ -7,28 +7,6 @@ from src.api.controller import create_app
 
 
 
-def needs_authentication(f):
-    """
-    Makes the request attribute dictionary editable, then injects a key-value into it.
-    Other attributes of request (e.g. request.url) should still work after the patch.
-    """
-
-    @functools.wraps(f)
-    def wrapper(*args, **kwargs):
-        from flask import request
-
-        class RequestMock:
-            headers = dict(request.headers)
-
-            def __getattr__(self, name):
-                return getattr(request, name)
-
-        request_mock = RequestMock()
-        with patch('flask.request', request_mock):
-            return f(*args, **kwargs)
-
-    return wrapper
-
 
 def needs_attached_file(f):
     """

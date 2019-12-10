@@ -7,10 +7,12 @@ import tensorflow as tf
 from src import pyutils
 from src.scan_faces._detect_faces._lib.align import detect_face
 from src.scan_faces._detect_faces.constants import SCALE_FACTOR, DEFAULT_THRESHOLD_A, DEFAULT_THRESHOLD_B, \
-    FACE_MIN_SIZE, BOX_MARGIN
+    FACE_MIN_SIZE, BOX_MARGIN, FaceLimitConstant, DEFAULT_THRESHOLD_C
 from src.scan_faces._detect_faces.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
 from src.scan_faces.dto.bounding_box import BoundingBox
 from src.scan_faces.dto.cropped_face import DetectedFace
+from numpy.core._multiarray_umath import ndarray
+from src.scan_faces._detect_faces._lib import facenet
 
 FaceDetectionNets = namedtuple('FaceDetectionNets', 'pnet rnet onet')
 
@@ -21,11 +23,17 @@ def _face_detection_nets():
         sess = tf.Session()
         return FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
 
+def _preprocess_img(img: ndarray):
+    if img.ndim < 2:
+        raise IncorrectImageDimensionsError("Unable to align image, it has only one dimension")
+    img = facenet.to_rgb(img) if img.ndim == 2 else img
+    img = img[:, :, 0:3]
+    return img
 
-def detect_faces(img, face_limit, detection_threshold_c) -> List[DetectedFace]:
+
+def detect_faces(img, face_limit = FaceLimitConstant.NO_LIMIT, detection_threshold_c = DEFAULT_THRESHOLD_C) -> List[DetectedFace]:
+    img = _preprocess_img(img)
     fdn = _face_detection_nets()
-    if len(img.shape) < 2:
-        raise IncorrectImageDimensionsError
     detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
                                                  [DEFAULT_THRESHOLD_A, DEFAULT_THRESHOLD_B, detection_threshold_c],
                                                  SCALE_FACTOR)
