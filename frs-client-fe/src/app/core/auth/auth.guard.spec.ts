@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import {AuthGuard, LoginGuard} from './auth.guard';
 import {AuthService} from "./auth.service";
 import {Router} from "@angular/router";
-import {ROUTERS_URL} from "../../data/routers-url";
+import {ROUTERS_URL} from "../../data/routers-url.variable";
 
 describe('Auth Guard', () => {
   let guard: AuthGuard;

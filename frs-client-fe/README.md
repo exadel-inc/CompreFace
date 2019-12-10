@@ -35,7 +35,18 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 #Project structure and architecture
 
 ###Folder structure
- ... to be continue ...
+`styles:` folder with sass variables \
+`core` folder with Global framework-based services \
+`data` global models, enums, classes, interfaces (user model, permissions, roles ect. NO Dto's data inside!!!!). Don't based on specific framework/plugin \
+`feature/containers` Feature specific smart/container components. Communicates with store through facade. Styles less.\
+`feature/compoentns` Feature specific dump/presentational components. Communicates with containers  through Input/Output. Logic less.\
+`pages/` Page specific router modules (home, 404, login ect.) with component which are responsible for page layout and composition of features
  
+`store` Store
+`store/action` Store actions. Can be handled by effect and/or reducer. Can be called in facade.\
+`store/effects` Actions handler which needs to produce some side effect(API call, etc.) and then call facade method if needed.\
+`store/facade` ... ?\
+`store/reducer` Actions handler which directly changes store data. Pure function.\
+
 ###NgRx
- ... to be continue ...
+ 

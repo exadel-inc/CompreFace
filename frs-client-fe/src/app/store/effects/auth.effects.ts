@@ -6,7 +6,7 @@ import {AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSucces
 import {catchError, map, switchMap, tap} from "rxjs/operators";
 import { LogIn } from '../actions/auth';
 import {Router} from "@angular/router";
-import {ROUTERS_URL} from "../../data/routers-url";
+import {ROUTERS_URL} from "../../data/routers-url.variable";
 
 @Injectable()
 export class AuthEffects {

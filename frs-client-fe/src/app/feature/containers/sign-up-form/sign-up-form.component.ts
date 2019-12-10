@@ -5,7 +5,7 @@ import {Store} from "@ngrx/store";
 import {AppState, selectAuthState} from "../../../store/state/app.state";
 import {SignUp} from "../../../store/actions/auth";
 import {Observable} from "rxjs";
-import {ROUTERS_URL} from "../../../data/routers-url";
+import {ROUTERS_URL} from "../../../data/routers-url.variable";
 
 @Component({
   selector: 'app-sign-up-form',
