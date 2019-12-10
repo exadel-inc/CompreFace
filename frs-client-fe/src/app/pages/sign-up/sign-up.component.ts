@@ -1,8 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {Store} from "@ngrx/store";
-import {User} from "../../data/user";
-import {AppState} from "../../store/state/app.state";
-import {LogIn} from "../../store/actions/auth";
 
 @Component({
   selector: 'app-sign-up',

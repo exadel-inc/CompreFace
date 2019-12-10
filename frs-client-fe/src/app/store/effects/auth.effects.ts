@@ -52,7 +52,7 @@ export class AuthEffects {
     map((action: LogIn) => action.payload),
     switchMap(payload => {
       return this.authService.signUp(payload.username, payload.password, payload.email).pipe(
-        map((user) => {
+        map(() => {
           return new SignUpSuccess({});
         }),
         catchError(error =>

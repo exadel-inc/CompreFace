@@ -15,20 +15,20 @@ export class AuthService {
 
   getToken(): string {
     return localStorage.getItem('token') || '';
-  }
+}
 
   logIn(username: string, password: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.LOGIN}`;
     return this.http.post<User>(url, {username, password});
   }
 
-  signUp(username: string, password: string, email: string): Observable<User> {
+  signUp(username: string, password: string, email: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.REGISTER}`;
-    return this.http.post(url, {email, password, username});
+    return this.http.post<User>(url, {email, password, username});
   }
 
   // todo: for feature
-  logOut(token: string): Observable<User> {
+  logOut(token: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.LOGOUT}`;
     return this.http.post(url, {token});
   }

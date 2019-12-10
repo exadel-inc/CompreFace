@@ -10,7 +10,7 @@ import {RouterModule} from "@angular/router";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterTestingModule} from "@angular/router/testing";
 
-fdescribe('LoginFormComponent', () => {
+describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
   let fixture: ComponentFixture<LoginFormComponent>;
   let store: MockStore<{ isAuthenticated: boolean, errorMessage: string,  successMessage: string }>;
