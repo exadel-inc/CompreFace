@@ -10,9 +10,13 @@ import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {AuthEffects} from "./store/effects/auth.effects";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {reducers} from "./store/state/app.state";
+import {reducers} from "./store";
 import {ErrorInterceptor, TokenInterceptor} from "./core/auth/token.inerceptor";
 import {AuthGuard, LoginGuard} from "./core/auth/auth.guard";
+import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
+import {AppSerializer} from "./store/state/router.state";
+import {environment} from "../environments/environment";
+import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 
 @NgModule({
   declarations: [
@@ -26,7 +30,13 @@ import {AuthGuard, LoginGuard} from "./core/auth/auth.guard";
     FeatureModule,
     HttpClientModule,
     StoreModule.forRoot(reducers),
-    EffectsModule.forRoot([AuthEffects])
+    EffectsModule.forRoot([AuthEffects]),
+    StoreRouterConnectingModule.forRoot({
+      stateKey: 'router'
+    }),
+    !environment.production
+      ? StoreDevtoolsModule.instrument({ maxAge: 30 })
+      : [],
   ],
   providers: [
     AuthGuard,
@@ -40,7 +50,8 @@ import {AuthGuard, LoginGuard} from "./core/auth/auth.guard";
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
       multi: true
-    }
+    },
+    { provide: RouterStateSerializer, useClass: AppSerializer }
   ],
   bootstrap: [AppComponent]
 })

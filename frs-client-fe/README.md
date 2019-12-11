@@ -42,7 +42,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 `feature/compoentns` Feature specific dump/presentational components. Communicates with containers  through Input/Output. Logic less.\
 `pages/` Page specific router modules (home, 404, login ect.) with component which are responsible for page layout and composition of features
  
-`store` Store
+`store` Store folder. index.ts contains union store and reducers\
 `store/action` Store actions. Can be handled by effect and/or reducer. Can be called in facade.\
 `store/effects` Actions handler which needs to produce some side effect(API call, etc.) and then call facade method if needed.\
 `store/facade` ... ?\
