@@ -1,0 +1,37 @@
+[
+  {
+    "appModelAccess": [
+      {
+        "accessType": "READONLY",
+        "appId": 0,
+        "modelId": 0
+      }
+    ],
+    "guid": "string",
+    "id": 0,
+    "models": [
+      {
+        "appId": 0,
+        "appModelAccess": [
+          {
+            "accessType": "READONLY",
+            "appId": 0,
+            "modelId": 0
+          }
+        ],
+        "guid": "string",
+        "id": 0,
+        "name": "string"
+      }
+    ],
+    "name": "string",
+    "organizationId": 0,
+    "userAppRoles": [
+      {
+        "appId": 0,
+        "role": "OWNER",
+        "userId": 0
+      }
+    ]
+  }
+]

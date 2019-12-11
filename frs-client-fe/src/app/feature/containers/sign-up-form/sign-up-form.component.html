@@ -1,0 +1,40 @@
+<mat-card class="sign-up-card">
+  <mat-card-header>
+    <mat-card-title>Sign up</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <div *ngIf="errorMessage">
+      <div class="alert alert-danger" role="alert">
+        {{errorMessage}}
+      </div>
+    </div>
+    <form class="sign-up-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
+      <mat-form-field class="sign-up-full-width">
+        <mat-error>User name is required</mat-error>
+        <input matInput placeholder="Username" formControlName="username" name="username" required>
+      </mat-form-field>
+      <mat-form-field class="sign-up-full-width">
+        <mat-error>Email should have correct format</mat-error>
+        <input matInput placeholder="Email" formControlName="email" name="email" type="email" required>
+      </mat-form-field>
+      <mat-form-field class="sign-up-full-width">
+        <mat-hint>Minimum 8 characters</mat-hint>
+        <mat-error>Minimum 8 characters</mat-error>
+        <input matInput placeholder="Password" formControlName="password" type="password" name="password" required>
+      </mat-form-field>
+      <mat-form-field class="sign-up-full-width">
+        <mat-hint>Minimum 8 characters</mat-hint>
+        <mat-error>Minimum 8 characters</mat-error>
+        <input matInput placeholder="Confirm password" formControlName="confirmPassword" type="password" name="confirmPassword" required>
+      </mat-form-field>
+      <mat-error *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">Passwords don't match</mat-error>
+    </form>
+    <a [routerLink]="[ROUTERS_URL.LOGIN]">login</a>
+  </mat-card-content>
+  <mat-card-actions>
+    <button mat-raised-button type="submit"
+            form="signUpForm"
+            color="primary"
+            [disabled]="form.invalid  || isLoading">Sign up</button>
+  </mat-card-actions>
+</mat-card>
