@@ -1,13 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.USER_DOES_NOT_EXIST;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class UserDoesNotExistException extends RuntimeException {
+public class UserDoesNotExistException extends BasicException {
 
-    public UserDoesNotExistException(Long userId) {
-        super("User " + userId + " does not exist");
+    public static final String MESSAGE = "User %s does not exist";
+
+    public UserDoesNotExistException(final Long userId) {
+        super(USER_DOES_NOT_EXIST, format(MESSAGE, userId));
     }
 
 }

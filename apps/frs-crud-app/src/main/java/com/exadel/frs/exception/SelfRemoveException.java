@@ -1,13 +1,13 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.SELF_REMOVE;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class SelfRemoveException extends RuntimeException {
+public class SelfRemoveException extends BasicException {
+
+    private static final String MESSAGE = "Owner cannot remove himself from organization";
 
     public SelfRemoveException() {
-        super("Owner cannot remove himself from organization");
+        super(SELF_REMOVE, MESSAGE);
     }
 
 }

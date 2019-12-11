@@ -1,13 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.MODEL_NOT_FOUND;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class ModelNotFoundException extends RuntimeException {
+public class ModelNotFoundException extends BasicException {
 
-    public ModelNotFoundException(Long modelId) {
-        super("Model " + modelId + " not found");
+    public static final String MESSAGE = "Model %s not found";
+
+    public ModelNotFoundException(final Long modelId) {
+        super(MODEL_NOT_FOUND, format(MESSAGE, modelId));
     }
 
 }

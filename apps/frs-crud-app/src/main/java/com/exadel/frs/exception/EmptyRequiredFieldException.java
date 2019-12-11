@@ -1,13 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.EMPTY_REQUIRED_FIELD;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class EmptyRequiredFieldException extends RuntimeException {
+public class EmptyRequiredFieldException extends BasicException {
 
-    public EmptyRequiredFieldException(String fieldName) {
-        super("Field " + fieldName + " cannot be empty");
+    public static final String MESSAGE = "Field %s cannot be empty";
+
+    public EmptyRequiredFieldException(final String fieldName) {
+        super(EMPTY_REQUIRED_FIELD, format(MESSAGE, fieldName));
     }
 
 }

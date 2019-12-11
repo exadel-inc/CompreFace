@@ -1,13 +1,13 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.MULTIPLE_OWNERS;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class MultipleOwnersException extends RuntimeException {
+public class MultipleOwnersException extends BasicException {
+
+    public static final String MESSAGE = "Only one owner allowed per organization or app";
 
     public MultipleOwnersException() {
-        super("Only one owner allowed per organization or app");
+        super(MULTIPLE_OWNERS, MESSAGE);
     }
 
 }

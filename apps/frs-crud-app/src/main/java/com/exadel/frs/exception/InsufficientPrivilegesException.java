@@ -1,13 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.INSUFFICIENT_PRIVILEGES;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class InsufficientPrivilegesException extends RuntimeException {
+public class InsufficientPrivilegesException extends BasicException {
 
-    public InsufficientPrivilegesException(Long userId) {
-        super("User " + userId + " does not have permission to do this action");
+    public static final String MESSAGE = "User %s does not have permission to do this action";
+
+    public InsufficientPrivilegesException(final Long userId) {
+        super(INSUFFICIENT_PRIVILEGES, format(MESSAGE, userId));
     }
 
 }

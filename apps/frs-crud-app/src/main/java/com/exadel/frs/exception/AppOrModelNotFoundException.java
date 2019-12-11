@@ -1,13 +1,13 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.APP_OR_MODEL_NOT_FOUND_OR_PERMISSION_ISSUE;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class AppOrModelNotFoundException extends RuntimeException {
+public class AppOrModelNotFoundException extends BasicException {
+
+    private static final String MESSAGE = "App or model does not exists, or app do not have permission to this model";
 
     public AppOrModelNotFoundException() {
-        super("App or model does not exists, or app do not have permission to this model");
+        super(APP_OR_MODEL_NOT_FOUND_OR_PERMISSION_ISSUE, MESSAGE);
     }
 
 }
