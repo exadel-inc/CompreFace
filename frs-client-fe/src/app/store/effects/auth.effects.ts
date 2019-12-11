@@ -19,9 +19,8 @@ export class AuthEffects {
     map((action: LogIn) => action.payload),
     switchMap(payload => {
       return this.authService.logIn(payload.username, payload.password).pipe(
-        map((user) => {
-          console.log(user);
-          return new LogInSuccess({token: user.token, email: payload.email});
+        map(res => {
+          return new LogInSuccess({token: res.token});
         }),
         catchError(error =>
           observableOf(new LogInFailure({ error }))
@@ -34,8 +33,8 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   LogInSuccess: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.LOGIN_SUCCESS),
-    tap((user) => {
-      localStorage.setItem('token', user.payload.token);
+    tap(data => {
+      localStorage.setItem('token', data.payload.token);
       this.router.navigateByUrl(ROUTERS_URL.ORGANIZATION);
     })
   );
@@ -78,7 +77,7 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   public LogOut: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.LOGOUT),
-    tap((user) => {
+    tap(() => {
       localStorage.removeItem('token');
       this.router.navigateByUrl(ROUTERS_URL.LOGIN);
     })

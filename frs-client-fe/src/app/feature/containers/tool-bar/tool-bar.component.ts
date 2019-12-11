@@ -21,7 +21,7 @@ export class ToolBarComponent implements OnInit {
   ngOnInit() {
     this.getState.subscribe((state) => {
       this.isAuthenticated = state.isAuthenticated;
-      this.user = state.user;
+      this.user.name = state.user.name;
     });
   }
 
