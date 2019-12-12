@@ -1,15 +1,6 @@
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import {All, AuthActionTypes} from "../actions/auth";
-import {initialState} from "../state/auth.state";
-import {User} from "../../data/user";
-
-export interface State {
-  isAuthenticated: boolean;
-  user: User | null;
-  errorMessage: string | null;
-  successMessage: string | null;
-  isLoading: boolean;
-}
+import {initialState, State} from "../state/auth.state";
 
 export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
 
@@ -55,6 +46,7 @@ export function reducer(state = initialState, action: All): State {
       return {
         ...state,
         errorMessage: 'That email is already in use.',
+        successMessage: null,
         isLoading: false
       };
     }
