@@ -1,14 +1,14 @@
-import * as auth from './reducers/auth';
-import {createFeatureSelector} from "@ngrx/store";
-import {RouterStateUrl} from "./reducers/router";
 import {routerReducer, RouterReducerState} from "@ngrx/router-store";
+import {RouterStateUrl} from "./state/router.state";
+import {State} from "./state/auth.state";
+import {reducer} from "./reducers/auth";
 
 export interface AppState {
-  authState: auth.State;
+  authState: State;
   router: RouterReducerState<RouterStateUrl>
 }
 
 export const reducers = {
-  auth: auth.reducer,
+  auth: reducer,
   router: routerReducer
 };
