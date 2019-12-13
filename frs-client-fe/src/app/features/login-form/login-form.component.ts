@@ -3,10 +3,10 @@ import {FormControl, FormGroup} from "@angular/forms";
 import {User} from "../../data/user";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store";
-import {LogIn} from "../../store/actions/auth";
 import {Observable} from "rxjs";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
-import {selectAuthState} from "../../store/selectors/auth";
+import {LogIn} from "../../store/auth/action";
+import {selectAuthState} from "../../store/auth/selectors";
 
 @Component({
   selector: 'app-login-form',

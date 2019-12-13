@@ -3,12 +3,14 @@ import { SignUpFormComponent } from './sign-up-form.component';
 import {Store} from "@ngrx/store";
 import {MockStore} from "@ngrx/store/testing";
 import {of} from "rxjs";
-import {CustomMaterialModule} from "../../ui/custom-material/custom-material.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CommonModule} from "@angular/common";
 import {RouterModule} from "@angular/router";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterTestingModule} from "@angular/router/testing";
+import {MatCardModule} from "@angular/material/card";
+import {MatInputModule} from "@angular/material/input";
+import {MatDialogModule} from "@angular/material/dialog";
 
 describe('SignUpFormComponent', () => {
   let component: SignUpFormComponent;
@@ -34,7 +36,9 @@ describe('SignUpFormComponent', () => {
       ],
       imports: [
         CommonModule,
-        CustomMaterialModule,
+        MatCardModule,
+        MatInputModule,
+        MatDialogModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule,

@@ -1,7 +1,5 @@
-import { RouterStateSnapshot } from '@angular/router'
-import { RouterStateSerializer } from '@ngrx/router-store'
-
-import {Data, Params} from "@angular/router";
+import {Data, Params, RouterStateSnapshot} from "@angular/router";
+import {RouterStateSerializer} from "@ngrx/router-store";
 
 export interface RouterStateUrl  {
   url: string

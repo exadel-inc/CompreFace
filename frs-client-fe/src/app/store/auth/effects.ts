@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import { Observable, of as observableOf } from 'rxjs';
 import {AuthService} from "../../core/auth/auth.service";
-import {AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess, LogOut} from "../actions/auth";
+import {AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess, LogIn, SignUp} from "./action";
 import {catchError, map, switchMap, tap} from "rxjs/operators";
-import { LogIn } from '../actions/auth';
 import {Router} from "@angular/router";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 
@@ -48,7 +47,7 @@ export class AuthEffects {
   @Effect()
   SignUp: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.SIGNUP),
-    map((action: LogIn) => action.payload),
+    map((action: SignUp) => action.payload),
     switchMap(payload => {
       return this.authService.signUp(payload.username, payload.password, payload.email).pipe(
         map(() => {

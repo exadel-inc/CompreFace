@@ -3,10 +3,10 @@ import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from 
 import {User} from "../../data/user";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store";
-import {SignUp} from "../../store/actions/auth";
 import {Observable} from "rxjs";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
-import {selectAuthState} from "../../store/selectors/auth";
+import {SignUp} from "../../store/auth/action";
+import {selectAuthState} from "../../store/auth/selectors";
 
 @Component({
   selector: 'app-sign-up-form',

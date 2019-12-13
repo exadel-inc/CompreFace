@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {AppState} from "../../store";
 import {Store} from "@ngrx/store";
-import {LogOut} from "../../store/actions/auth";
 import {Observable} from "rxjs";
-import {selectAuthState} from "../../store/selectors/auth";
+import {LogOut} from "../../store/auth/action";
+import {selectAuthState} from "../../store/auth/selectors";
 
 @Component({
   selector: 'app-tool-bar',
