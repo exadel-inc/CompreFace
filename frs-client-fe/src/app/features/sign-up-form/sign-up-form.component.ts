@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
 import {User} from "../../data/user";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {SignUp} from "../../store/auth/action";
 import {selectAuthState} from "../../store/auth/selectors";
@@ -13,7 +13,7 @@ import {selectAuthState} from "../../store/auth/selectors";
   templateUrl: './sign-up-form.component.html',
   styleUrls: ['./sign-up-form.component.sass']
 })
-export class SignUpFormComponent implements OnInit {
+export class SignUpFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
   EMAIL_REGEX = '\\S+@\\S+\\.\\S+';
@@ -21,6 +21,7 @@ export class SignUpFormComponent implements OnInit {
   errorMessage: string | null;
   isLoading = false;
   ROUTERS_URL = ROUTERS_URL;
+  stateSubscription: Subscription;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value)
@@ -44,10 +45,14 @@ export class SignUpFormComponent implements OnInit {
       ]),
     }, {validators: this.passwordMatchValidator });
 
-    this.getState.subscribe((state) => {
+    this.stateSubscription = this.getState.subscribe((state) => {
       this.errorMessage = state.errorMessage;
       this.isLoading = state.isLoading;
     });
+  }
+
+  ngOnDestroy() {
+    this.stateSubscription.unsubscribe();
   }
 
   onSubmit() {
