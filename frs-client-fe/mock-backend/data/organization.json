@@ -1,7 +1,7 @@
 [
   {
     "id": 1,
-    "name": "string",
+    "name": "Exadel Organization",
     "userOrganizationRoles": [
       {
         "organizationId": 0,
@@ -12,7 +12,7 @@
   },
   {
     "id": 2,
-    "name": "string",
+    "name": "home Organization",
     "userOrganizationRoles": [
       {
         "organizationId": 0,

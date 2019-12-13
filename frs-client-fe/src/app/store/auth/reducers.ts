@@ -1,11 +1,5 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import {User} from "../../data/user";
 import {AuthActions, AuthActionTypes} from "./action";
-
-// todo: for users list example
-export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
-
-
 
 export interface State {
   isAuthenticated: boolean;

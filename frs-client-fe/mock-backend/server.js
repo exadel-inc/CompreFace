@@ -107,7 +107,7 @@ function getJSONData() {
 }
 
 function auth(req, res, next) {
-  if (req && req.headers.token === token)
+  if (req && req.headers.authorization === token)
     return next();
   else
     return res.sendStatus(401);
