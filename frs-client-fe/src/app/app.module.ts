@@ -5,18 +5,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {FeatureModule} from "./feature/feature.module";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
-import {AuthEffects} from "./store/effects/auth.effects";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
-import {reducers} from "./store";
+import {sharedReducers} from "./store";
 import {ErrorInterceptor, TokenInterceptor} from "./core/auth/token.inerceptor";
 import {AuthGuard, LoginGuard} from "./core/auth/auth.guard";
 import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-store";
-import {AppSerializer} from "./store/state/router.state";
 import {environment} from "../environments/environment";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
+import {ToolBarModule} from "./features/tool-bar/tool-bar.module";
+import {AppSerializer} from "./store/router/reducer";
+import {AuthEffects} from "./store/auth/effects";
 
 @NgModule({
   declarations: [
@@ -27,9 +27,9 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FeatureModule,
+    ToolBarModule,
     HttpClientModule,
-    StoreModule.forRoot(reducers),
+    StoreModule.forRoot(sharedReducers),
     EffectsModule.forRoot([AuthEffects]),
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'

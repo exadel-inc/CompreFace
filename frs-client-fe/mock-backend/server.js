@@ -49,8 +49,8 @@ app.get('/', function (req, res) {
   res.redirect('/home');
 });
 
-app.post('/oauth/token', wait(1000), function (req, res) {
-  console.log(req.body);
+app.post('/login', wait(1000), function (req, res) {
+  console.log(req.body, req.query);
   if (req && req.body.username === user.username && req.body.password === user.password) {
     token = `${user.username}${user.password}${+new Date()}`;
     res.send({token});
@@ -60,7 +60,7 @@ app.post('/oauth/token', wait(1000), function (req, res) {
   }
 });
 
-app.post('/user/register', function (req, res) {
+app.post('/client/register', function (req, res) {
   console.log(req.body);
   if (req && req.body.username && req.body.password && req.body.email) {
 

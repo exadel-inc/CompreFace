@@ -15,7 +15,7 @@ export class AuthService {
 
   getToken(): string {
     return localStorage.getItem('token') || '';
-}
+  }
 
   logIn(username: string, password: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.LOGIN}`;

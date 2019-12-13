@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
-import {User} from "../../../data/user";
+import {User} from "../../data/user";
 import {Store} from "@ngrx/store";
-import {AppState} from "../../../store/";
-import {LogIn} from "../../../store/actions/auth";
+import {AppState} from "../../store";
 import {Observable} from "rxjs";
-import {ROUTERS_URL} from "../../../data/routers-url.variable";
-import {selectAuthState} from "../../../store/selectors/auth";
+import {ROUTERS_URL} from "../../data/routers-url.variable";
+import {LogIn} from "../../store/auth/action";
+import {selectAuthState} from "../../store/auth/selectors";
 
 @Component({
   selector: 'app-login-form',
