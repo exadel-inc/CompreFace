@@ -1,5 +1,5 @@
 export enum API_URL {
-  LOGIN= '/oauth/token',
-  REGISTER= '/admin/client/register',
-  LOGOUT= '/admin/oauth/logout',
+  LOGIN= '/login',
+  REGISTER= '/client/register',
+  LOGOUT= '/oauth/logout',
 }

@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
-import {User} from "../../../data/user";
+import {User} from "../../data/user";
 import {Store} from "@ngrx/store";
-import {AppState} from "../../../store/";
-import {SignUp} from "../../../store/actions/auth";
+import {AppState} from "../../store";
+import {SignUp} from "../../store/actions/auth";
 import {Observable} from "rxjs";
-import {ROUTERS_URL} from "../../../data/routers-url.variable";
-import {selectAuthState} from "../../../store/selectors/auth";
+import {ROUTERS_URL} from "../../data/routers-url.variable";
+import {selectAuthState} from "../../store/selectors/auth";
 
 @Component({
   selector: 'app-sign-up-form',

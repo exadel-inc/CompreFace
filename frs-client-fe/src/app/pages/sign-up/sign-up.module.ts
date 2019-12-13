@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RouterModule} from "@angular/router";
-import {FeatureModule} from "../../feature/feature.module";
 import {SignUpComponent} from "./sign-up.component";
 import {LoginGuard} from "../../core/auth/auth.guard";
+import {SignUpFormModule} from "../../features/sign-up-form/sign-up-form.module";
 
 
 
@@ -14,7 +14,7 @@ import {LoginGuard} from "../../core/auth/auth.guard";
     RouterModule.forChild([
       {path: '', component: SignUpComponent, canActivate: [LoginGuard]}
     ]),
-    FeatureModule
+    SignUpFormModule
   ]
 })
 export class SignUpModule { }

@@ -2,13 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ToolBarComponent } from './tool-bar.component';
 import {CommonModule} from "@angular/common";
-import {CustomMaterialModule} from "../../../ui/custom-material/custom-material.module";
+import {CustomMaterialModule} from "../../ui/custom-material/custom-material.module";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {RouterTestingModule} from "@angular/router/testing";
 import {MockStore} from "@ngrx/store/testing";
-import {User} from "../../../data/user";
+import {User} from "../../data/user";
 import {Store} from "@ngrx/store";
 import {of} from "rxjs";
 

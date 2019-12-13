@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subscription} from "rxjs";
 import {Store} from "@ngrx/store";
-import {AppState} from "../../../store/";
+import {AppState} from "../../store";
 
 @Component({
   selector: 'app-alert',

@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login.component';
 import {RouterModule} from "@angular/router";
-import {FeatureModule} from "../../feature/feature.module";
 import {LoginGuard} from "../../core/auth/auth.guard";
+import {LoginFormModule} from "../../features/login-form/login-form.module";
 
 
 
@@ -14,7 +14,7 @@ import {LoginGuard} from "../../core/auth/auth.guard";
     RouterModule.forChild([
       {path: '', component: LoginComponent, canActivate: [LoginGuard]}
     ]),
-    FeatureModule
+    LoginFormModule,
   ]
 })
 export class LoginModule { }

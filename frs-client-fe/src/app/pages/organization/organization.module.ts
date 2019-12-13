@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import {OrganizationComponent} from "./organization.component";
 import {RouterModule} from "@angular/router";
 import {AuthGuard} from "../../core/auth/auth.guard";
+import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 
 
 
@@ -12,7 +13,8 @@ import {AuthGuard} from "../../core/auth/auth.guard";
     CommonModule,
     RouterModule.forChild([
       {path: '', component: OrganizationComponent, canActivate: [AuthGuard]}
-    ])
+    ]),
+    ToolBarModule,
   ],
   exports: [RouterModule]
 })

@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {FeatureModule} from "./feature/feature.module";
 import {StoreModule} from "@ngrx/store";
 import {EffectsModule} from "@ngrx/effects";
 import {AuthEffects} from "./store/effects/auth.effects";
@@ -17,6 +16,7 @@ import {RouterStateSerializer, StoreRouterConnectingModule} from "@ngrx/router-s
 import {AppSerializer} from "./store/state/router.state";
 import {environment} from "../environments/environment";
 import {StoreDevtoolsModule} from "@ngrx/store-devtools";
+import {ToolBarModule} from "./features/tool-bar/tool-bar.module";
 
 @NgModule({
   declarations: [
@@ -27,7 +27,7 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    FeatureModule,
+    ToolBarModule,
     HttpClientModule,
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([AuthEffects]),

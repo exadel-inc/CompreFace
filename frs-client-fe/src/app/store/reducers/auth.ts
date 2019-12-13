@@ -2,6 +2,7 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import {All, AuthActionTypes} from "../actions/auth";
 import {initialState, State} from "../state/auth.state";
 
+// todo: for users list example
 export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
 
 export function reducer(state = initialState, action: All): State {
