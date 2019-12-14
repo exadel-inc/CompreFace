@@ -17,6 +17,8 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {ToolBarModule} from "./features/tool-bar/tool-bar.module";
 import {AppSerializer} from "./store/router/reducer";
 import {AuthEffects} from "./store/auth/effects";
+import {defaultDataServiceConfig, entityMetadata, EntityStoreModule, pluralNames} from "./store/ngrx-data";
+import {DefaultDataServiceConfig, NgrxDataModule} from "ngrx-data";
 
 @NgModule({
   declarations: [
@@ -31,6 +33,7 @@ import {AuthEffects} from "./store/auth/effects";
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
     EffectsModule.forRoot([AuthEffects]),
+    NgrxDataModule.forRoot({ entityMetadata, pluralNames }),
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
@@ -51,7 +54,8 @@ import {AuthEffects} from "./store/auth/effects";
       useClass: ErrorInterceptor,
       multi: true
     },
-    { provide: RouterStateSerializer, useClass: AppSerializer }
+    { provide: RouterStateSerializer, useClass: AppSerializer },
+    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig }
   ],
   bootstrap: [AppComponent]
 })

@@ -4,9 +4,6 @@ import {OrganizationComponent} from "./organization.component";
 import {RouterModule} from "@angular/router";
 import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
-import {OrganizationStoreModule} from "../../store/organization/organization.module";
-
-
 
 @NgModule({
   declarations: [OrganizationComponent],
@@ -17,7 +14,6 @@ import {OrganizationStoreModule} from "../../store/organization/organization.mod
       {path: ':id', component: OrganizationComponent, canActivate: [AuthGuard]}
     ]),
     ToolBarModule,
-    OrganizationStoreModule
   ],
   exports: [RouterModule]
 })
