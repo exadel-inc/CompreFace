@@ -13,7 +13,8 @@ import {OrganizationStoreModule} from "../../store/organization/organization.mod
   imports: [
     CommonModule,
     RouterModule.forChild([
-      {path: '', component: OrganizationComponent, canActivate: [AuthGuard]}
+      {path: '', component: OrganizationComponent, canActivate: [AuthGuard]},
+      {path: ':id', component: OrganizationComponent, canActivate: [AuthGuard]}
     ]),
     ToolBarModule,
     OrganizationStoreModule

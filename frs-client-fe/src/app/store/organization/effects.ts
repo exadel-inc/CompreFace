@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import { Observable, of as observableOf } from 'rxjs';
-import {OrganizationActionTypes, GetAll, GetAllSuccess} from "./action";
+import {OrganizationActionTypes, LoadedAllSuccess} from "./action";
 import {catchError, map, switchMap, tap} from "rxjs/operators";
 import {OrganizationService} from "../../core/organization/organization.service";
 
@@ -12,12 +12,12 @@ export class OrganizationEffects {
   // Listen for the 'LOGIN' action
   @Effect()
   GetAll: Observable<any> = this.actions.pipe(
-    ofType(OrganizationActionTypes.GET_ALL),
+    ofType(OrganizationActionTypes.LOAD_ALL),
     map(() => null),
     switchMap(() => {
       return this.organizationService.GetAll().pipe(
         map(res => {
-          return new GetAllSuccess({ organizations: res });
+          return new LoadedAllSuccess({ organizations: res });
         }),
       )
 

@@ -3,7 +3,8 @@ import {Store} from "@ngrx/store";
 import {AppState} from "../../store";
 import {selectOrganizationState} from "../../store/organization/selectors";
 import {Observable, Subscription} from "rxjs";
-import {GetAll} from "../../store/organization/action";
+import {LoadAll} from "../../store/organization/action";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-organization',
@@ -14,16 +15,17 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   getState: Observable<any>;
   stateSubscription: Subscription;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private Router: Router) {
     this.getState = this.store.select(selectOrganizationState);
   }
 
   ngOnInit() {
-    this.stateSubscription = this.getState.subscribe(data => {
+    this.stateSubscription = this.getState.subscribe(organization => {
       console.log(data);
+      this.Router.navigate(['organization', '0'] )
     });
 
-    this.store.dispatch(new GetAll());
+    this.store.dispatch(new LoadAll());
   }
 
   ngOnDestroy() {

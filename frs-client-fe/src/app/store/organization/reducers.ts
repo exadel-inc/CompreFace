@@ -15,7 +15,7 @@ export const initialState: State = adapter.getInitialState({
 export function OrganizationReducer(state = initialState, action: OrganizationActions): State {
   switch (action.type) {
 
-    case OrganizationActionTypes.GET_ALL_SUCCESS: {
+    case OrganizationActionTypes.LOADED_ALL_SUCCESS: {
       return adapter.addAll(action.payload.organizations, state)
     }
 
