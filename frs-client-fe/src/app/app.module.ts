@@ -17,8 +17,9 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {ToolBarModule} from "./features/tool-bar/tool-bar.module";
 import {AppSerializer} from "./store/router/reducer";
 import {AuthEffects} from "./store/auth/effects";
-import {defaultDataServiceConfig, entityMetadata, EntityStoreModule, pluralNames} from "./store/ngrx-data";
+import {defaultDataServiceConfig, entityMetadata, pluralNames} from "./store/ngrx-data";
 import {DefaultDataServiceConfig, NgrxDataModule} from "ngrx-data";
+import {CustomMaterialModule} from "./ui/material/material.module";
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import {DefaultDataServiceConfig, NgrxDataModule} from "ngrx-data";
   ],
   imports: [
     BrowserModule,
+    CustomMaterialModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ToolBarModule,

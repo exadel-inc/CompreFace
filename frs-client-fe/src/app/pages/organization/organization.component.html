@@ -1,2 +1,5 @@
 <p>organization works!</p>
-<div class="add-new" (click)="addNew()">add new</div>
+<div *ngIf="organization$ | async as organization">
+  <app-organization-header [organizations]="organization" [selected]="selected"></app-organization-header>
+</div>
+

@@ -1,0 +1,17 @@
+<div class="title">
+  <mat-form-field *ngIf="isEditing" class="login-full-width">
+    <input matInput placeholder="{{placeholder}}" ngModel="optionName">
+  </mat-form-field>
+  <mat-form-field *ngIf="!isEditing">
+    <mat-label>Organization name</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let option of options" [value]="selected">
+        {{option.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  {{selected}}
+  <button mat-icon-button *ngIf="!isEditing" (click)="isEditing=true"><mat-icon>edit</mat-icon></button>
+  <button mat-icon-button *ngIf="isEditing" (click)="apply()"><mat-icon>done</mat-icon></button>
+  <button mat-icon-button *ngIf="isEditing" (click)="discard()"><mat-icon>replay</mat-icon></button>
+</div>
