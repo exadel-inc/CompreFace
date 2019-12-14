@@ -27,7 +27,7 @@ export class Create implements Action {
 
 export class GetAllSuccess implements Action {
   readonly type = OrganizationActionTypes.GET_ALL_SUCCESS;
-  constructor(public payload: State) {}
+  constructor(public payload: { organizations: Organization[] }) {}
 }
 
 

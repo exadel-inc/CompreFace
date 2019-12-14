@@ -17,7 +17,7 @@ export class OrganizationEffects {
     switchMap(() => {
       return this.organizationService.GetAll().pipe(
         map(res => {
-          return new GetAllSuccess(res);
+          return new GetAllSuccess({ organizations: res });
         }),
       )
 

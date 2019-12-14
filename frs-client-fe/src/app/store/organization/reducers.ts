@@ -2,19 +2,21 @@ import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
 import {OrganizationActions, OrganizationActionTypes} from "./action";
 import {Organization} from "../../data/organization";
 
-// todo: for users list example
-export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
+export interface State extends EntityState<Organization> {
+  selected: number | null
+}
 
-export interface State extends Array<Organization>{}
+export const adapter: EntityAdapter<Organization> = createEntityAdapter<Organization>();
 
-export const initialState: [Organization?] = [];
-
+export const initialState: State = adapter.getInitialState({
+  selected: null
+});
 
 export function OrganizationReducer(state = initialState, action: OrganizationActions): State {
   switch (action.type) {
 
     case OrganizationActionTypes.GET_ALL_SUCCESS: {
-      return action.payload;
+      return adapter.addAll(action.payload.organizations, state)
     }
 
     // case OrganizationActionTypes.LOGIN_FAILURE: {
