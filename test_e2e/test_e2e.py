@@ -80,11 +80,13 @@ def test__when_client_requests_to_scan_face__then_correct_box_and_embedding_retu
     assert calc_version == "embedding_calc_model_20170512.pb"
     result = res.json()['result']
     box = result[0]['box']
-    assert box == {'probability': 0.9997376799583435,
-                   'x_max': 284,
-                   'x_min': 146,
-                   'y_max': 373,
-                   'y_min': 193}
+
+    expected_box = {'probability': 0.9997376799583435,
+                    'x_max': 284,
+                    'x_min': 146,
+                    'y_max': 373,
+                    'y_min': 193}
+    assert boxes_are_the_same(box, expected_box)
     expected_embedding = [-0.02487223595380783,
                           -0.004412464797496796,
                           0.06423000246286392,
@@ -222,5 +224,14 @@ def embeddings_are_the_same(embedding1, embedding2):
     for i in range(len(embedding1)):
 
         if (embedding1[i] - embedding2[i]) / embedding2[i] > 0.01:
+            return False
+    return True
+
+
+def boxes_are_the_same(box1, box2):
+    if box1['probability'] != box2['probability']:
+        return False
+    for key in box1:
+        if box2[key] > box1[key] + 1 or box2[key] < box1[key] - 1:
             return False
     return True
