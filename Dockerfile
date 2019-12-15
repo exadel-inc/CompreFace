@@ -16,14 +16,14 @@ COPY requirements.txt $DIR/requirements.txt
 COPY install-dependencies.sh $DIR/install-dependencies.sh
 RUN chmod +x $DIR/docker-entrypoint.sh
 RUN chmod +x $DIR/install-dependencies.sh
-RUN mkdir $DIR/mongo_data
+
 
 ## Install dependencies
 RUN $DIR/install-dependencies.sh $IS_DEV_ENV
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
 ## Expose port for uWSGI
-EXPOSE 3000
+EXPOSE 5001
 
 ## Entrypoint
 WORKDIR $DIR

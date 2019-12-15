@@ -1,14 +1,5 @@
 version: '3'
 services:
-  nginx:
-    container_name: nginx
-    image: "nginx:1.17.4"
-    ports:
-      - "5001:5000"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - ml
   ml:
     container_name: ml
     build: .

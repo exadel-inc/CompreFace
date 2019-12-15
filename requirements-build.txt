@@ -1,5 +1,4 @@
 requests
 pytest
 pytest-ordering
-pymongo
 strenum
