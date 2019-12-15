@@ -9,6 +9,7 @@ from main import ROOT_DIR
 from src import pyutils
 from src.scan_faces._calc_embedding.calculator import calculate_embedding
 from src.scan_faces._calc_embedding.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
+from src.scan_faces.dto.bounding_box import BoundingBox
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 CACHED_MODEL_FILEPATH = ROOT_DIR / 'models' / EMBEDDING_CALCULATOR_MODEL_FILENAME
@@ -40,9 +41,10 @@ def test_integration__when_calculating_embeddings_of_two_images_with_the_same_fa
                  return_value=return_value_for_mock(mocker, get_cached_file_contents()))
     person_a_im1 = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1-cropped.jpg')
     person_a_im2 = imageio.imread(CURRENT_DIR / 'files' / 'personA-img2-cropped.jpg')
+    img_box = BoundingBox(x_min=0, x_max=160, y_min=0, y_max=160, probability=0.95)
 
-    person_a_face_embedding1 = calculate_embedding(person_a_im1)
-    person_a_face_embedding2 = calculate_embedding(person_a_im2)
+    person_a_face_embedding1 = calculate_embedding(person_a_im1, img_box)
+    person_a_face_embedding2 = calculate_embedding(person_a_im2, img_box)
 
     assert embeddings_are_the_same(person_a_face_embedding1, person_a_face_embedding2)
 
@@ -55,8 +57,9 @@ def test_integration__when_calculating_embeddings_of_two_images_with_different_f
                  return_value=return_value_for_mock(mocker, get_cached_file_contents()))
     person_a_im = imageio.imread(CURRENT_DIR / 'files' / 'personA-img1-cropped.jpg')
     person_b_im = imageio.imread(CURRENT_DIR / 'files' / 'personB-img1-cropped.jpg')
+    img_box = BoundingBox(x_min=0, x_max=160, y_min=0, y_max=160, probability=0.95)
 
-    person_a_face_embedding = calculate_embedding(person_a_im)
-    person_b_face_embedding = calculate_embedding(person_b_im)
+    person_a_face_embedding = calculate_embedding(person_a_im, img_box)
+    person_b_face_embedding = calculate_embedding(person_b_im, img_box)
 
     assert not embeddings_are_the_same(person_a_face_embedding, person_b_face_embedding)

@@ -8,10 +8,9 @@ import imageio
 
 from main import ROOT_DIR
 from src import pyutils
-from src.scan_faces._detect_faces.detect_faces import _face_detection_nets
+from src.scan_faces._detect_faces.detect_faces import _face_detection_nets, _preprocess_img
 from src.scan_faces._detect_faces._lib.align import detect_face
 from src.scan_faces._detect_faces.constants import SCALE_FACTOR, FACE_MIN_SIZE
-from src.scan_faces.scan_faces import _preprocess_img
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 IMG_DIR = ROOT_DIR / 'test_files'
