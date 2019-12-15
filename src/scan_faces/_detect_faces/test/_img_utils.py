@@ -14,7 +14,7 @@ def boxes_are_almost_the_same(box1, box2):
     xmin1, xmax1, ymin1, ymax1, probabitity1 = box1
     xmin2, xmax2, ymin2, ymax2, probabitity2 = box2
     return abs(xmax1 - xmax2) <= DIFFERENCE_THRESHOLD and abs(xmin1 - xmin2) <= DIFFERENCE_THRESHOLD and \
-            abs(ymax1 - ymax2) <= DIFFERENCE_THRESHOLD and abs(ymin1 - ymin2) <= DIFFERENCE_THRESHOLD
+           abs(ymax1 - ymax2) <= DIFFERENCE_THRESHOLD and abs(ymin1 - ymin2) <= DIFFERENCE_THRESHOLD
 
 
 def ndarray_to_img(ndarray) -> Image:

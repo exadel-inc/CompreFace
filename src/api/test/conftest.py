@@ -6,8 +6,6 @@ import pytest
 from src.api.controller import create_app
 
 
-
-
 def needs_attached_file(f):
     """
     Makes the request attribute dictionary editable, then injects a key-value into it.

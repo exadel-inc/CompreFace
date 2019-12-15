@@ -1,12 +1,13 @@
 import math
-from collections import namedtuple
-
 import os
+from collections import namedtuple
+from pathlib import Path
+
 import numpy as np
 import tensorflow as tf
-from pathlib import Path
 from tensorflow.python.platform import gfile
 
+from main import ROOT_DIR
 from src import pyutils
 from src.scan_faces._calc_embedding._face_crop import crop_image
 from src.scan_faces._calc_embedding.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
@@ -19,15 +20,19 @@ CALCULATOR_VERSION = EMBEDDING_CALCULATOR_MODEL_FILENAME
 Calculator = namedtuple('Calculator', 'graph sess')
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+MODEL_PATH = ROOT_DIR / 'models' / 'embedding_calc_model_20170512.pb'
+
+
+def _get_model():
+    with gfile.FastGFile(str(MODEL_PATH), 'rb') as f:
+        return f.read()
+
 
 @pyutils.run_once
 def _calculator() -> Calculator:
-
     with tf.Graph().as_default() as graph:
-        with gfile.FastGFile("./models/embedding_calc_model_20170512.pb", 'rb') as f:
-            graph_def = tf.GraphDef()
-
-            graph_def.ParseFromString(f.read())
+        graph_def = tf.GraphDef()
+        graph_def.ParseFromString(_get_model())
         tf.import_graph_def(graph_def, name='')
         return Calculator(graph=graph, sess=tf.Session(graph=graph))
 

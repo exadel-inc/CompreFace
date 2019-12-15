@@ -22,9 +22,6 @@ RUN chmod +x $DIR/install-dependencies.sh
 RUN $DIR/install-dependencies.sh $IS_DEV_ENV
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
-## Expose port for uWSGI
-EXPOSE 5001
-
 ## Entrypoint
 WORKDIR $DIR
 RUN ln -s $DIR /var/tmp/efrs_rootdir

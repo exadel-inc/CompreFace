@@ -1,15 +1,11 @@
 from typing import List
 
-
+from numpy.core._multiarray_umath import ndarray
 
 from src.scan_faces._calc_embedding.calculator import calculate_embedding
-from numpy.core._multiarray_umath import ndarray
 from src.scan_faces._detect_faces.constants import FaceLimit, FaceLimitConstant, DEFAULT_THRESHOLD_C
 from src.scan_faces._detect_faces.detect_faces import detect_faces
-from src.scan_faces._detect_faces.exceptions import IncorrectImageDimensionsError
 from src.scan_faces.dto.cropped_face import ScannedFace, DetectedFace
-
-
 
 
 def get_scanned_face(img: ndarray, detected_face: DetectedFace) -> ScannedFace:
