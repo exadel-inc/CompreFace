@@ -11,6 +11,8 @@ describe('AuthService', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
+    localStorage.clear();
+    localStorage.setItem('token', 'some token');
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [AuthService]
@@ -59,8 +61,13 @@ describe('AuthService', () => {
   });
 
   it('be able to get token', () => {
-    localStorage.clear();
-    localStorage.setItem('token', 'some token');
-    expect(service.getToken()).toEqual('some token');
-  })
+    service.getToken().subscribe(token => expect(token).toEqual('some token'));
+  });
+
+  it('be able to update token', () => {
+    const subscription = service.getToken().subscribe(token => expect(token).toEqual('some token'));
+    subscription.unsubscribe();
+    service.updateToken('token the second value');
+    service.getToken().subscribe(token => expect(token).toEqual('token the second value'));
+  });
 });
