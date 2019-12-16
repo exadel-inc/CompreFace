@@ -1,9 +1,9 @@
 import {routerReducer, RouterReducerState} from "@ngrx/router-store";
-import {AuthReducer, State} from "./auth/reducers";
+import {AuthReducer, AuthState} from "./auth/reducers";
 import {RouterStateUrl} from "./router/reducer";
 
 export interface AppState {
-  authState: State;
+  authState: AuthState;
   router: RouterReducerState<RouterStateUrl>
 }
 

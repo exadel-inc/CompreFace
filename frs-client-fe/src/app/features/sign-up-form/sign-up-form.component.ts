@@ -60,5 +60,4 @@ export class SignUpFormComponent implements OnInit {
     this.isLoading = true;
     this.store.dispatch(new SignUp(payload));
   }
-
 }

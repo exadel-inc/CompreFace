@@ -1,44 +1,55 @@
 import { Injectable, Injector } from '@angular/core';
-import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from './auth.service';
-import {Observable} from "rxjs";
-import {Router} from "@angular/router";
-import {catchError} from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { concatMap } from "rxjs/operators";
+import { Router } from "@angular/router";
+import { catchError } from "rxjs/operators";
 
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
-  private authService: AuthService;
+    private authService: AuthService;
 
-  constructor(private injector: Injector) {}
+    constructor(private injector: Injector) {
+        this.authService = this.injector.get(AuthService);
+    }
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.authService = this.injector.get(AuthService);
-    const token: string = this.authService.getToken();
-    request = request.clone({
-      setHeaders: {
-        'Authorization': token,
-      }
-    });
-    return next.handle(request);
-  }
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+        return this.authService.getToken()
+            .pipe(
+                concatMap(tokenValue => {
+                    request.clone({
+                        setHeaders: {
+                            'Authorization': tokenValue,
+                        }
+                    });
+
+                    return next.handle(request);
+                })
+            );
+    }
 }
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(private router: Router) {}
+    private authService: AuthService;
 
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    constructor(private router: Router, private injector: Injector) {
+        this.authService = this.injector.get(AuthService);
+    }
 
-    return next.handle(request).pipe(
-      catchError((response: any) => {
-        if (response instanceof HttpErrorResponse && response.status === 401) {
-          // todo: create authService...
-          localStorage.removeItem('token');
-          this.router.navigateByUrl('/login');
-        }
-        return Observable.throw(response);
-      })
-    )
-  }
+    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+
+        return next.handle(request).pipe(
+            catchError((response: any) => {
+                if (response instanceof HttpErrorResponse && response.status === 401) {
+                    this.authService.removeToken();
+                    this.router.navigateByUrl('/login');
+                }
+
+                return Observable.throw(response);
+            })
+        )
+    }
 }

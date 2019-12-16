@@ -48,5 +48,4 @@ export class LoginFormComponent implements OnInit {
     this.isLoading = true;
     this.store.dispatch(new LogIn(payload));
   }
-
 }
