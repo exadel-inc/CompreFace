@@ -6,42 +6,42 @@ import { API_URL } from "../../data/api.variables";
 import { User } from "../../data/user";
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class AuthService {
-    private token: BehaviorSubject<string>
+  public token$: BehaviorSubject<string>
 
-    constructor(private http: HttpClient) {
-        this.token = new BehaviorSubject<string>(localStorage.getItem('token'));
-    }
+  constructor(private http: HttpClient) {
+    this.token$ = new BehaviorSubject<string>(localStorage.getItem('token'));
+  }
 
-    getToken(): BehaviorSubject<string> {
-        return this.token;
-    }
+  getToken(): string {
+    return this.token$.getValue();
+  }
 
-    updateToken(token: string): void {
-        this.token.next(token);
-        localStorage.setItem('token', token);
-    }
+  updateToken(token: string): void {
+    this.token$.next(token);
+    localStorage.setItem('token', token);
+  }
 
-    removeToken(): void {
-        this.token.next(null);
-        localStorage.removeItem('token');
-    }
+  removeToken(): void {
+    this.token$.next(null);
+    localStorage.removeItem('token');
+  }
 
-    logIn(username: string, password: string): Observable<any> {
-        const url = `${environment.apiUrl}${API_URL.LOGIN}`;
-        return this.http.post<User>(url, { username, password });
-    }
+  logIn(username: string, password: string): Observable<any> {
+    const url = `${environment.apiUrl}${API_URL.LOGIN}`;
+    return this.http.post<User>(url, { username, password });
+  }
 
-    signUp(username: string, password: string, email: string): Observable<any> {
-        const url = `${environment.apiUrl}${API_URL.REGISTER}`;
-        return this.http.post<User>(url, { email, password, username });
-    }
+  signUp(username: string, password: string, email: string): Observable<any> {
+    const url = `${environment.apiUrl}${API_URL.REGISTER}`;
+    return this.http.post<User>(url, { email, password, username });
+  }
 
-    // todo: for feature
-    logOut(token: string): Observable<any> {
-        const url = `${environment.apiUrl}${API_URL.LOGOUT}`;
-        return this.http.post(url, { token });
-    }
+  // todo: for feature
+  logOut(token: string): Observable<any> {
+    const url = `${environment.apiUrl}${API_URL.LOGOUT}`;
+    return this.http.post(url, { token });
+  }
 }

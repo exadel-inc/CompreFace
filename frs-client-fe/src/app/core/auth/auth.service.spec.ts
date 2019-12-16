@@ -1,10 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-
 import { AuthService } from './auth.service';
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {User} from "../../data/user";
-import {environment} from "../../../environments/environment";
-import {API_URL} from "../../data/api.variables";
+import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { User } from "../../data/user";
+import { environment } from "../../../environments/environment";
+import { API_URL } from "../../data/api.variables";
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -37,7 +36,7 @@ describe('AuthService', () => {
       expect(token).toEqual(dummyToken);
     });
 
-    const request = httpMock.expectOne( `${environment.apiUrl}${API_URL.LOGIN}`);
+    const request = httpMock.expectOne(`${environment.apiUrl}${API_URL.LOGIN}`);
     expect(request.request.method).toBe('POST');
     request.flush(dummyToken);
   });
@@ -55,19 +54,24 @@ describe('AuthService', () => {
       expect(token).toEqual(dummyToken);
     });
 
-    const request = httpMock.expectOne( `${environment.apiUrl}${API_URL.REGISTER}`);
+    const request = httpMock.expectOne(`${environment.apiUrl}${API_URL.REGISTER}`);
     expect(request.request.method).toBe('POST');
-    request.flush(dummyToken, {status: 201, statusText: 'Created'});
+    request.flush(dummyToken, { status: 201, statusText: 'Created' });
   });
 
   it('be able to get token', () => {
-    service.getToken().subscribe(token => expect(token).toEqual('some token'));
+    expect(service.getToken()).toEqual('some token');
   });
 
   it('be able to update token', () => {
-    const subscription = service.getToken().subscribe(token => expect(token).toEqual('some token'));
-    subscription.unsubscribe();
+    expect(service.getToken()).toEqual('some token');
     service.updateToken('token the second value');
-    service.getToken().subscribe(token => expect(token).toEqual('token the second value'));
+    expect(service.getToken()).toEqual('token the second value');
+  });
+
+  it('be able to remove token', () => {
+    expect(service.getToken()).toEqual('some token');
+    service.removeToken();
+    expect(service.getToken()).toEqual(null);
   });
 });

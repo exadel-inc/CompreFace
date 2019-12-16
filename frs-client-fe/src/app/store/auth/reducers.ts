@@ -1,6 +1,6 @@
 import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import {User} from "../../data/user";
-import {AuthActions, AuthActionTypes} from "./action";
+import { User } from "../../data/user";
+import { AuthActions, AuthActionTypes } from "./action";
 
 // todo: for users list example
 export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
@@ -51,8 +51,8 @@ export function AuthReducer(state = initialState, action: AuthActions): AuthStat
         ...state,
         isAuthenticated: true,
         user: {
-            username: action.payload.username,
-            email: action.payload.email
+          username: action.payload.username,
+          email: action.payload.email
         },
         errorMessage: null,
         successMessage: 'You have created new account, please login into your account',
@@ -79,6 +79,3 @@ export function AuthReducer(state = initialState, action: AuthActions): AuthStat
     }
   }
 }
-
-
-
