@@ -1,0 +1,270 @@
+databaseChangeLog:
+  - changeSet:
+      id: init
+      author: vlad
+      changes:
+
+        # user
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: email
+                  type: varchar(63)
+              - column:
+                  name: username
+                  type: varchar(63)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(63)
+              - column:
+                  name: last_name
+                  type: varchar(63)
+              - column:
+                  name: account_non_expired
+                  type: boolean
+              - column:
+                  name: account_non_locked
+                  type: boolean
+              - column:
+                  name: credentials_non_expired
+                  type: boolean
+              - column:
+                  name: enabled
+                  type: boolean
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_user
+            tableName: user
+
+        - createSequence:
+            sequenceName: user_id_seq
+
+        - addUniqueConstraint:
+            columnNames: username
+            constraintName: user_username_uindex
+            tableName: user
+
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: user_email_uindex
+            tableName: user
+
+        # organization
+        - createTable:
+            tableName: organization
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_organization
+            tableName: organization
+
+        - createSequence:
+            sequenceName: organization_id_seq
+
+        # app
+        - createTable:
+            tableName: app
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: guid
+                  type: varchar(36)
+              - column:
+                  name: organization_id
+                  type: bigint
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_app
+            tableName: app
+
+        - addForeignKeyConstraint:
+            baseColumnNames: organization_id
+            baseTableName: app
+            referencedColumnNames: id
+            referencedTableName: organization
+            constraintName: fk_organization_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - createSequence:
+            sequenceName: app_id_seq
+
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: app_guid_uindex
+            tableName: app
+
+        # model
+        - createTable:
+            tableName: model
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: guid
+                  type: varchar(36)
+              - column:
+                  name: app_id
+                  type: bigint
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_model
+            tableName: model
+
+        - createSequence:
+            sequenceName: model_id_seq
+
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: model_guid_uindex
+            tableName: model
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: model
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        # app_model
+        - createTable:
+            tableName: app_model
+            columns:
+              - column:
+                  name: app_id
+                  type: bigint
+              - column:
+                  name: model_id
+                  type: bigint
+              - column:
+                  name: access_type
+                  type: varchar(1)
+
+        - addPrimaryKey:
+            columnNames: app_id, model_id
+            constraintName: pk_app_model
+            tableName: app_model
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: app_model
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: model_id
+            baseTableName: app_model
+            referencedColumnNames: id
+            referencedTableName: model
+            constraintName: fk_model_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addNotNullConstraint:
+            columnName: access_type
+            tableName: app_model
+
+        # user_organization_role
+        - createTable:
+            tableName: user_organization_role
+            columns:
+              - column:
+                  name: organization_id
+                  type: bigint
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: role
+                  type: varchar(1)
+
+        - addPrimaryKey:
+            columnNames: organization_id, user_id
+            constraintName: pk_user_organization_role
+            tableName: user_organization_role
+
+        - addForeignKeyConstraint:
+            baseColumnNames: organization_id
+            baseTableName: user_organization_role
+            referencedColumnNames: id
+            referencedTableName: organization
+            constraintName: fk_organization_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_organization_role
+            referencedColumnNames: id
+            referencedTableName: user
+            constraintName: fk_user_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        # user_app_role
+        - createTable:
+            tableName: user_app_role
+            columns:
+              - column:
+                  name: app_id
+                  type: bigint
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: role
+                  type: varchar(1)
+
+        - addPrimaryKey:
+            columnNames: app_id, user_id
+            constraintName: pk_user_app_role
+            tableName: user_app_role
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: user_app_role
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_app_role
+            referencedColumnNames: id
+            referencedTableName: user
+            constraintName: fk_user_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
