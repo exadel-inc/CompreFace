@@ -44,4 +44,8 @@ export class AuthService {
     const url = `${environment.apiUrl}${API_URL.LOGOUT}`;
     return this.http.post(url, { token });
   }
+
+  isTokenValid(token: string): boolean {
+    return true;
+  }
 }

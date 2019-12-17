@@ -6,19 +6,15 @@ import { AuthActions, AuthActionTypes } from "./action";
 export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
 
 export interface AuthState {
-  isAuthenticated: boolean;
-  user: User | null;
   errorMessage: string | null;
   successMessage: string | null;
   isLoading: boolean;
 }
 
 export const initialState: AuthState = {
-  isAuthenticated: false,
-  user: null,
   errorMessage: null,
   successMessage: null,
-  isLoading: false,
+  isLoading: false
 };
 
 
@@ -28,11 +24,6 @@ export function AuthReducer(state = initialState, action: AuthActions): AuthStat
     case AuthActionTypes.LOGIN_SUCCESS: {
       return {
         ...state,
-        isAuthenticated: true,
-        user: {
-          username: action.payload.username,
-          email: action.payload.email
-        },
         errorMessage: null,
         isLoading: false
       };
@@ -49,11 +40,6 @@ export function AuthReducer(state = initialState, action: AuthActions): AuthStat
     case AuthActionTypes.SIGNUP_SUCCESS: {
       return {
         ...state,
-        isAuthenticated: true,
-        user: {
-          username: action.payload.username,
-          email: action.payload.email
-        },
         errorMessage: null,
         successMessage: 'You have created new account, please login into your account',
         isLoading: false

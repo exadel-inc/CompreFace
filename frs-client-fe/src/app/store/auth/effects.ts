@@ -3,6 +3,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of as observableOf } from 'rxjs';
 import { AuthService } from "../../core/auth/auth.service";
 import { AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess, LogIn, SignUp } from "./action";
+import { UpdateUserInfo, ResetUserInfo } from '../userInfo/action';
 import { catchError, map, switchMap, tap } from "rxjs/operators";
 import { Router } from "@angular/router";
 import { ROUTERS_URL } from "../../data/routers-url.variable";
@@ -18,16 +19,17 @@ export class AuthEffects {
     map((action: LogIn) => action.payload),
     switchMap(payload => {
       return this.authService.logIn(payload.username, payload.password).pipe(
-        map(res => {
+        switchMap(res => {
           this.authService.updateToken(res.token);
 
-          return new LogInSuccess(
-            {
-              isAuthenticated: true,
-              user: {
+          return [
+            new LogInSuccess(),
+            new UpdateUserInfo(
+              {
+                isAuthenticated: true,
                 username: payload.username
-              }
-            });
+              })
+          ];
         }),
         catchError(error =>
           observableOf(new LogInFailure({ error }))
@@ -57,17 +59,11 @@ export class AuthEffects {
     map((action: SignUp) => action.payload),
     switchMap(payload => {
       return this.authService.signUp(payload.username, payload.password, payload.email).pipe(
-        map(() => {
-          return new SignUpSuccess({
-            username: payload.username,
-            email: payload.email
-          });
-        }),
+        map(() => new SignUpSuccess()),
         catchError(error =>
           observableOf(new SignUpFailure({ error }))
         )
       )
-
     }));
 
   @Effect({ dispatch: false })
@@ -83,12 +79,14 @@ export class AuthEffects {
     ofType(AuthActionTypes.SIGNUP_FAILURE)
   );
 
-  @Effect({ dispatch: false })
+  @Effect()
   public LogOut: Observable<any> = this.actions.pipe(
     ofType(AuthActionTypes.LOGOUT),
-    tap(() => {
+    map(() => {
       this.authService.removeToken();
       this.router.navigateByUrl(ROUTERS_URL.LOGIN);
+
+      return new ResetUserInfo();
     })
   );
 }

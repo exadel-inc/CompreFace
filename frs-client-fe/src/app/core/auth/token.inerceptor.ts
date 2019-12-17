@@ -4,6 +4,9 @@ import { AuthService } from './auth.service';
 import { Observable } from "rxjs";
 import { Router } from "@angular/router";
 import { catchError } from "rxjs/operators";
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store';
+import { UpdateUserAuthorization } from '../../store/userInfo/action';
 
 
 @Injectable()
@@ -33,7 +36,7 @@ export class TokenInterceptor implements HttpInterceptor {
 export class ErrorInterceptor implements HttpInterceptor {
   private authService: AuthService;
 
-  constructor(private router: Router, private injector: Injector) {
+  constructor(private router: Router, private injector: Injector, private store: Store<AppState>) {
     this.authService = this.injector.get(AuthService);
   }
 
@@ -43,6 +46,7 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((response: any) => {
         if (response instanceof HttpErrorResponse && response.status === 401) {
           this.authService.removeToken();
+          this.store.dispatch(new UpdateUserAuthorization(false));
           this.router.navigateByUrl('/login');
         }
 
