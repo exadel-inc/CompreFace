@@ -29,16 +29,35 @@ def get_test_dataset() -> Dataset:
     dataset_full = [
         ('Person A', imageio.imread(IMG_DIR / 'personA-img1.jpg')),
         ('Person A', imageio.imread(IMG_DIR / 'personA-img2.jpg')),
-        ('Person B', imageio.imread(IMG_DIR / 'personB-img1.jpg'))
+        ('Person B', imageio.imread(IMG_DIR / 'personB-img1.jpg')),
+        ('Person D', imageio.imread(IMG_DIR / 'personD-img1.jpg')),
+        ('Person D', imageio.imread(IMG_DIR / 'personD-img2.jpg')),
+        ('Person E', imageio.imread(IMG_DIR / 'personE-img1.jpg')),
+        ('Person E', imageio.imread(IMG_DIR / 'personE-img2.jpg')),
+        ('Person E', imageio.imread(IMG_DIR / 'personE-img3.jpg')),
+        ('Person F', imageio.imread(IMG_DIR / 'personF-img1.jpg')),
+        ('Person F', imageio.imread(IMG_DIR / 'personF-img2.jpg')),
+        ('Person G', imageio.imread(IMG_DIR / 'personG-img1.jpg')),
+        ('Person G', imageio.imread(IMG_DIR / 'personG-img2.jpg')),
+        ('Person G', imageio.imread(IMG_DIR / 'personG-img3.jpg')),
+        ('Person H', imageio.imread(IMG_DIR / 'personH-img1.jpg')),
+        ('Person H', imageio.imread(IMG_DIR / 'personH-img2.jpg')),
+        ('Person J', imageio.imread(IMG_DIR / 'personJ-img1.jpg')),
+        ('Person J', imageio.imread(IMG_DIR / 'personJ-img2.jpg')),
+        ('Person J', imageio.imread(IMG_DIR / 'personJ-img3.jpg')),
+        ('Person J', imageio.imread(IMG_DIR / 'personJ-img4.jpg'))
+
     ]
     return split_train_test(dataset_full)
 
 
-def calculate_accuracy(model: ModelWrapperBase, dataset: Dataset) -> float:
+def calculate_accuracy(model: ModelWrapperBase, dataset: Dataset) -> (int, int):
+    undetected = 0
     for name, img in dataset.train:
-        model.add_face_example(img, name)
+        undetected += model.add_face_example(img, name)
     model.train()
-    return sum(name == model.recognize(img) for name, img in dataset.test) / len(dataset.test)
+    recognized = sum(name == model.recognize(img) for name, img in dataset.test)
+    return recognized, undetected
 
 
 if __name__ == '__main__':
@@ -47,6 +66,15 @@ if __name__ == '__main__':
     model = EfrsRestApi(args.host) if args.host else EfrsLocal()
     dataset = get_test_dataset() if args.test else get_lfw_dataset()
 
-    accuracy = calculate_accuracy(model, dataset)
+    dataset_length = len(dataset.train)
+    recognized_faces, undetected_faces = calculate_accuracy(model, dataset)
+    detected_faces = dataset_length - undetected_faces
+    detected_percent = (detected_faces / dataset_length) * 100
+    total_recognized = round((recognized_faces / dataset_length) * 100, 1)
+    recognized_from_detected = round((recognized_faces / detected_faces) * 100, 1)
 
-    print(f'Accuracy: {accuracy * 100}%\nTraining set size: {len(dataset.train)}\nTest set size: {len(dataset.test)}')
+    print(f'Training dataset: {dataset_length}\nUnique faces: {dataset_length}\nTest dataset: {dataset_length}\n'
+          f'Detected faces: {detected_percent}% ({detected_faces}/{dataset_length})\n'
+          f'Recognized faces: {recognized_from_detected}% ({recognized_faces}/{detected_faces})\n'
+          f'-----\n'
+          f'Recognized faces (total): {total_recognized}% ({recognized_faces}/{dataset_length})\n')
