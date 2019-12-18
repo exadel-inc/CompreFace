@@ -37,6 +37,9 @@ public class ResponseExceptionHandler {
     }
 
     private ExceptionResponseDto buildBody(final Exception ex) {
-        return ExceptionResponseDto.builder().code(UNDEFINED.getCode()).message(ex.getMessage()).build();
+        return ExceptionResponseDto.builder()
+                                   .code(UNDEFINED.getCode())
+                                   .message(ex.getMessage())
+                                   .build();
     }
 }
