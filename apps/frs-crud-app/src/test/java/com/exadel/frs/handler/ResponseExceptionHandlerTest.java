@@ -50,7 +50,10 @@ class ResponseExceptionHandlerTest {
     }
 
     private static Stream<Arguments> definedExceptions() {
-        return Stream.of(Arguments.of(new AccessDeniedException()), Arguments.of(new UsernameAlreadyExistException()));
+        return Stream.of(
+                   Arguments.of(new AccessDeniedException()),
+                   Arguments.of(new UsernameAlreadyExistException())
+        );
     }
 
     private static Stream<Arguments> undefinedExceptions() {
