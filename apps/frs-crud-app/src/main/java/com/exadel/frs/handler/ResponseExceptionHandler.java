@@ -30,7 +30,10 @@ public class ResponseExceptionHandler {
     }
 
     private ExceptionResponseDto buildBody(final BasicException ex) {
-        return ExceptionResponseDto.builder().code(ex.getExceptionCode().getCode()).message(ex.getMessage()).build();
+        return ExceptionResponseDto.builder()
+                                   .code(ex.getExceptionCode().getCode())
+                                   .message(ex.getMessage())
+                                   .build();
     }
 
     private ExceptionResponseDto buildBody(final Exception ex) {
