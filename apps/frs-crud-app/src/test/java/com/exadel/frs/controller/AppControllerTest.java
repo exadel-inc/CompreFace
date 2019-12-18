@@ -102,6 +102,9 @@ class AppControllerTest {
     }
 
     private ExceptionResponseDto buildUndefinedExceptionResponse(final Exception ex) {
-        return ExceptionResponseDto.builder().code(ExceptionCode.UNDEFINED.getCode()).message(ex.getMessage()).build();
+        return ExceptionResponseDto.builder()
+                                   .code(ExceptionCode.UNDEFINED.getCode())
+                                   .message(ex.getMessage())
+                                   .build();
     }
 }
