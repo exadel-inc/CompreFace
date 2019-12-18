@@ -57,9 +57,10 @@ class AppControllerTest {
 
         when(appService.getApp(APP_ID, USER_ID)).thenThrow(expectedException);
 
+        String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
         mockMvc.perform(get("/apps/" + APP_ID).with(user(buildDefaultUser())))
                 .andExpect(status().isNotFound())
-                .andExpect(content().string(mapper.writeValueAsString(buildExceptionResponse(expectedException))));
+                .andExpect(content().string(expectedContent));
     }
 
     @Test
@@ -85,9 +86,10 @@ class AppControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(App.builder().id(APP_ID).build()));
 
+        String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(mapper.writeValueAsString(buildExceptionResponse(expectedException))));
+                .andExpect(content().string(expectedContent));
     }
 
     private static User buildDefaultUser() {
