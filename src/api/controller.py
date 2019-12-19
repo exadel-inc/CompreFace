@@ -10,10 +10,8 @@ from flask.json import JSONEncoder
 
 from src.api.endpoint_decorators import needs_attached_file
 from src.api.exceptions import BadRequestException
-from src.pyutils.convertible_to_dict import ConvertibleToDict
-from src.scan_faces._calc_embedding.calculator import CALCULATOR_VERSION
-from src.scan_faces._detect_faces.constants import FaceLimitConstant, DEFAULT_THRESHOLD_C
-from src.scan_faces.scan_faces import scan_faces
+from src.pyutils import ConvertibleToDict
+from src.scan_faces import scan_faces, CALCULATOR_VERSION, DEFAULT_THRESHOLD_C, FaceLimitConstant
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 DOCS_DIR = CURRENT_DIR / 'docs'

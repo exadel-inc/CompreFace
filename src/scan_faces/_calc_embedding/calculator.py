@@ -15,12 +15,12 @@ from src.scan_faces.dto.bounding_box import BoundingBox
 from src.scan_faces.dto.embedding import Embedding
 
 BATCH_SIZE = 25
-CALCULATOR_VERSION = EMBEDDING_CALCULATOR_MODEL_FILENAME
+
 
 Calculator = namedtuple('Calculator', 'graph sess')
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-MODEL_PATH = ROOT_DIR / 'models' / 'embedding_calc_model_20170512.pb'
+MODEL_PATH = ROOT_DIR / 'models' / EMBEDDING_CALCULATOR_MODEL_FILENAME
 
 
 def _get_model():

@@ -77,7 +77,7 @@ def test__when_client_requests_to_scan_face__then_correct_box_and_embedding_retu
     res = requests.post(f"{host}/scan_faces", files=files)
 
     assert res.status_code == 200, res.content
-    assert res.json()['calculator_version'] == "embedding_calc_model_20170512.pb"
+    assert res.json()['calculator_version'] == "v20180402"
     assert len(res.json()['result']) == 1
     result_item = res.json()['result'][0]
     assert _boxes_are_the_same(result_item['box'], {'x_max': 284, 'x_min': 146, 'y_max': 373, 'y_min': 193})
