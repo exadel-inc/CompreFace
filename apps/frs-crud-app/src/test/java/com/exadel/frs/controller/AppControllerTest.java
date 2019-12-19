@@ -42,6 +42,8 @@ class AppControllerTest {
     private static final long ORG_ID = 2L;
     private static final long USER_ID = 3L;
     private static final String USERNAME = "test";
+    private static final String APP_GUID = "app-guid";
+    private static final String ORG_GUID = "org-guid";
 
     @MockBean
     private AppService appService;
@@ -53,12 +55,12 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnMessageAndCodeWhenAppNotFoundExceptionThrown() throws Exception {
-        final BasicException expectedException = new AppNotFoundException(APP_ID);
+        final BasicException expectedException = new AppNotFoundException(APP_GUID);
 
-        when(appService.getApp(APP_ID, USER_ID)).thenThrow(expectedException);
+        when(appService.getApp(APP_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
-        mockMvc.perform(get("/apps/" + APP_ID).with(user(buildDefaultUser())))
+        mockMvc.perform(get("/apps/" + APP_GUID).with(user(buildDefaultUser())))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(expectedContent));
     }
@@ -67,10 +69,10 @@ class AppControllerTest {
     public void shouldReturnMessageAndCodeWhenUnexpectedExceptionThrown() throws Exception {
         final Exception expectedException = new NullPointerException("test");
 
-        when(appService.getApps(ORG_ID, USER_ID)).thenThrow(expectedException);
+        when(appService.getApps(ORG_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildUndefinedExceptionResponse(expectedException));
-        mockMvc.perform(get("/apps/org/" + ORG_ID).with(user(buildDefaultUser())))
+        mockMvc.perform(get("/apps/org/" + ORG_GUID).with(user(buildDefaultUser())))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
     }
@@ -98,15 +100,15 @@ class AppControllerTest {
 
     private ExceptionResponseDto buildExceptionResponse(final BasicException ex) {
         return ExceptionResponseDto.builder()
-                                   .code(ex.getExceptionCode().getCode())
-                                   .message(ex.getMessage())
-                                   .build();
+                .code(ex.getExceptionCode().getCode())
+                .message(ex.getMessage())
+                .build();
     }
 
     private ExceptionResponseDto buildUndefinedExceptionResponse(final Exception ex) {
         return ExceptionResponseDto.builder()
-                                   .code(ExceptionCode.UNDEFINED.getCode())
-                                   .message(ex.getMessage())
-                                   .build();
+                .code(ExceptionCode.UNDEFINED.getCode())
+                .message(ex.getMessage())
+                .build();
     }
 }

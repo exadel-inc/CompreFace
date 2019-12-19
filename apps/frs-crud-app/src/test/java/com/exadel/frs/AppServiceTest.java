@@ -12,9 +12,10 @@ import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -30,6 +31,12 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 
 public class AppServiceTest {
+
+    private static final String APPLICATION_GUID = "app-guid";
+    private static final String ORGANISATION_GUID = "org-guid";
+    private static final long APPLICATION_ID = 1L;
+    private static final long ORGANISATION_ID = 2L;
+    private static final long USER_ID = 3L;
 
     private AppRepository appRepositoryMock;
     private OrganizationService organizationServiceMock;
@@ -67,155 +74,137 @@ public class AppServiceTest {
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successGetAppOrganizationOwner(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        App result = appService.getApp(appId, userId);
+        App result = appService.getApp(APPLICATION_GUID, USER_ID);
 
-        assertThat(result.getId(), is(appId));
+        assertThat(result.getId(), Matchers.is(APPLICATION_ID));
     }
 
     @Test
     public void failGetAppUserDoesNotBelongToOrganization() {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.getApp(appId, userId));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.getApp(APPLICATION_GUID, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
     public void successGetAppOrganizationUser(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        App result = appService.getApp(appId, userId);
+        App result = appService.getApp(APPLICATION_GUID, USER_ID);
 
-        assertThat(result.getId(), is(appId));
+        assertThat(result.getId(), Matchers.is(APPLICATION_ID));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failGetAppInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.getApp(appId, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.getApp(APPLICATION_GUID, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successGetAppsOrganizationOwner(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
+        organization.setGuid(ORGANISATION_GUID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
         when(appRepositoryMock.findAllByOrganizationId(anyLong())).thenReturn(List.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(organizationServiceMock.getOrganization(ORGANISATION_GUID)).thenReturn(organization);
 
-        List<App> result = appService.getApps(organizationId, userId);
+        List<App> result = appService.getApps(ORGANISATION_GUID, USER_ID);
 
         assertThat(result.size(), is(1));
     }
 
     @Test
     public void failGetAppsUserDoesNotBelongToOrganization() {
-        Long userId = 1L;
-        Long organizationId = 1L;
+        Organization organization = organization(ORGANISATION_ID);
+        organization.setGuid(ORGANISATION_GUID);
 
-        Organization organization = organization(organizationId);
+        when(organizationServiceMock.getOrganization(ORGANISATION_GUID)).thenReturn(organization);
 
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
-
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.getApps(organizationId, userId));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.getApps(ORGANISATION_GUID, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
     public void successGetAppsOrganizationUser(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
+        organization.setGuid(ORGANISATION_GUID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
         when(appRepositoryMock.findAllByOrganizationIdAndUserAppRoles_Id_UserId(anyLong(), anyLong())).thenReturn(List.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(organizationServiceMock.getOrganization(ORGANISATION_GUID)).thenReturn(organization);
 
-        List<App> result = appService.getApps(organizationId, userId);
+        List<App> result = appService.getApps(ORGANISATION_GUID, USER_ID);
 
         assertThat(result.size(), is(1));
     }
@@ -223,12 +212,9 @@ public class AppServiceTest {
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successCreateAppOrganizationOwner(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -239,7 +225,7 @@ public class AppServiceTest {
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        appService.createApp(app, userId);
+        appService.createApp(app, USER_ID);
 
         verify(appRepositoryMock).save(any(App.class));
 
@@ -249,12 +235,9 @@ public class AppServiceTest {
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void failCreateAppEmptyName(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -264,17 +247,14 @@ public class AppServiceTest {
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(app, userId));
+        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(app, USER_ID));
     }
 
     @Test
     public void failCreateAppUserDoesNotBelongToOrganization() {
-        Long userId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
 
         App app = App.builder()
                 .name("name")
@@ -284,18 +264,15 @@ public class AppServiceTest {
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(app, userId));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(app, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failCreateAppInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -306,24 +283,21 @@ public class AppServiceTest {
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(app, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(app, USER_ID));
     }
 
-    //@ParameterizedTest
-    //@MethodSource("writeRoles")
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    @Disabled("Disabled until resolve issue when try to change own organisation!")
     public void successUpdateAppOrganizationOwner(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App repoApp = App.builder()
                 .name("name")
-                .guid("guid")
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
@@ -333,10 +307,10 @@ public class AppServiceTest {
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        appService.updateApp(appId, app, userId);
+        appService.updateApp(APPLICATION_GUID, app, USER_ID);
 
         verify(appRepositoryMock).save(any(App.class));
 
@@ -348,35 +322,27 @@ public class AppServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failUpdateAppInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
                 .organization(organization)
                 .build();
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.updateApp(appId, app, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.updateApp(APPLICATION_GUID, app, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void failUpdateAppUserDoesNotExist(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App repoApp = App.builder()
@@ -388,34 +354,30 @@ public class AppServiceTest {
                 .build();
         app.addUserAppRole(user(2L), AppRole.USER);
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoApp));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.updateApp(appId, app, userId));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.updateApp(APPLICATION_GUID, app, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successRegenerateGuid(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
                 .name("name")
-                .guid("guid")
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        appService.regenerateGuid(appId, userId);
+        appService.regenerateGuid(APPLICATION_GUID, USER_ID);
 
         verify(appRepositoryMock).save(any(App.class));
 
@@ -425,48 +387,42 @@ public class AppServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failRegenerateGuidInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
                 .name("name")
-                .guid("guid")
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.regenerateGuid(appId, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.regenerateGuid(APPLICATION_GUID, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successDeleteApp(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
+                .id(APPLICATION_ID)
                 .name("name")
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        appService.deleteApp(appId, userId);
+        appService.deleteApp(APPLICATION_GUID, USER_ID);
 
         verify(appRepositoryMock).deleteById(anyLong());
     }
@@ -474,25 +430,21 @@ public class AppServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failDeleteAppInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANISATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
                 .name("name")
-                .guid("guid")
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
-        when(appRepositoryMock.findById(anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.deleteApp(appId, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.deleteApp(APPLICATION_GUID, USER_ID));
     }
 
 }

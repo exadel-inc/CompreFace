@@ -27,6 +27,12 @@ public class OrganizationService {
                 .orElseThrow(() -> new OrganizationNotFoundException(organizationId));
     }
 
+    public Organization getOrganization(final String organizationGuid) {
+        return organizationRepository
+                .findByGuid(organizationGuid)
+                .orElseThrow(() -> new OrganizationNotFoundException(organizationGuid));
+    }
+
     private void verifyUserHasReadPrivileges(Long userId, Organization organization) {
         organization.getUserOrganizationRoleOrThrow(userId);
     }

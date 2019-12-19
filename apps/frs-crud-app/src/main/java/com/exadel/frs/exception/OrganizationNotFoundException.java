@@ -7,8 +7,8 @@ public class OrganizationNotFoundException extends BasicException {
 
     private static final String MESSAGE = "Organization %s not found";
 
-    public OrganizationNotFoundException(final Long organizationId) {
-        super(ORGANIZATION_NOT_FOUND, format(MESSAGE, organizationId));
+    public OrganizationNotFoundException(final Object identifier) {
+        super(ORGANIZATION_NOT_FOUND, format(MESSAGE, identifier));
     }
 
 }
