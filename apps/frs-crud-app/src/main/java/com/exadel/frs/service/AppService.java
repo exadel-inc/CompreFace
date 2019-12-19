@@ -23,11 +23,6 @@ public class AppService {
     private final OrganizationService organizationService;
     private final UserService userService;
 
-    public App getApp(Long appId) {
-        return appRepository.findById(appId)
-                .orElseThrow(() -> new AppNotFoundException(appId));
-    }
-
     public App getApp(final String appGuid) {
         return appRepository.findByGuid(appGuid)
                 .orElseThrow(() -> new AppNotFoundException(appGuid));

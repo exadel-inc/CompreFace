@@ -7,8 +7,8 @@ public class ModelNotFoundException extends BasicException {
 
     public static final String MESSAGE = "Model %s not found";
 
-    public ModelNotFoundException(final Long modelId) {
-        super(MODEL_NOT_FOUND, format(MESSAGE, modelId));
+    public ModelNotFoundException(final Object identifier) {
+        super(MODEL_NOT_FOUND, format(MESSAGE, identifier));
     }
 
 }
