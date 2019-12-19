@@ -1,0 +1,52 @@
+databaseChangeLog:
+  - changeSet:
+      id: changelog-0.0.4.1
+      author: Siarhei Blashuk
+      changes:
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: guid
+                  type: varchar(36)
+
+        - addColumn:
+            tableName: organization
+            columns:
+              - column:
+                  name: guid
+                  type: varchar(36)
+
+  - changeSet:
+      id: changelog-0.0.4.2
+      author: Siarhei Blashuk
+      changes:
+        - sql:
+            comment: Enable uuid ossp extention
+            sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+
+  - changeSet:
+      id: changelog-0.0.4.3
+      author: Siarhei Blashuk
+      changes:
+        - sql:
+            comment: Fullfill guid column for user
+            sql: UPDATE "user" SET guid = uuid_generate_v4()
+        - sql:
+            comment: Fullfill guid column for organization
+            sql: UPDATE organization SET guid = uuid_generate_v4()
+
+  - changeSet:
+      id: changelog-0.0.4.4
+      author: Siarhei Blashuk
+      changes:
+
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: user_guid_uindex
+            tableName: user
+
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: organization_guid_uindex
+            tableName: organization
