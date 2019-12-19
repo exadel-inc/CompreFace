@@ -45,7 +45,9 @@ def get_test_dataset() -> Dataset:
         ('Person J', imageio.imread(IMG_DIR / 'personJ-img1.jpg')),
         ('Person J', imageio.imread(IMG_DIR / 'personJ-img2.jpg')),
         ('Person J', imageio.imread(IMG_DIR / 'personJ-img3.jpg')),
-        ('Person J', imageio.imread(IMG_DIR / 'personJ-img4.jpg'))
+        ('Person J', imageio.imread(IMG_DIR / 'personJ-img4.jpg')),
+        ('No Face', imageio.imread(IMG_DIR / 'NoFace-img1.jpg')),
+        ('No Face', imageio.imread(IMG_DIR / 'NoFace-img2.jpg'))
 
     ]
     return split_train_test(dataset_full)
@@ -53,11 +55,34 @@ def get_test_dataset() -> Dataset:
 
 def calculate_accuracy(model: ModelWrapperBase, dataset: Dataset) -> (int, int):
     undetected = 0
+    list_to_remove = []
+    unique_detection = 1
+    name, img = dataset.train[0]
+    prev_name = name
     for name, img in dataset.train:
-        undetected += model.add_face_example(img, name)
+        was_not_detected = model.add_face_example(img, name)
+        undetected += was_not_detected
+        if name != prev_name:
+            unique_detection += 1
+
+        if was_not_detected:
+            list_to_remove.append(name)
+        prev_name = name
     model.train()
-    recognized = sum(name == model.recognize(img) for name, img in dataset.test)
-    return recognized, undetected
+    list_recognized = []
+    name, img = dataset.test[0]
+    prev_name = name
+    unique_recognized = 1
+    for name, img in dataset.test:
+        if name in list_to_remove:
+            dataset.test.remove((name, img))
+        else:
+            if name != prev_name:
+                unique_recognized +=1
+            list_recognized.append(name == model.recognize(img))
+            prev_name = name
+    recognized = sum(list_recognized)
+    return recognized, undetected, unique_detection, unique_recognized
 
 
 if __name__ == '__main__':
@@ -66,15 +91,23 @@ if __name__ == '__main__':
     model = EfrsRestApi(args.host) if args.host else EfrsLocal()
     dataset = get_test_dataset() if args.test else get_lfw_dataset()
 
-    dataset_length = len(dataset.train)
-    recognized_faces, undetected_faces = calculate_accuracy(model, dataset)
-    detected_faces = dataset_length - undetected_faces
-    detected_percent = (detected_faces / dataset_length) * 100
-    total_recognized = round((recognized_faces / dataset_length) * 100, 1)
+    dataset_length_total = len(dataset.train) + len(dataset.test)
+    train_set_len = len(dataset.train)
+
+    recognized_faces, undetected_faces, unique_detection_faces, unique_recognition_faces = calculate_accuracy(model, dataset)
+    test_set_len = len(dataset.test)
+    detected_faces = train_set_len - undetected_faces
+    detected_percent = round((detected_faces / train_set_len) * 100, 1)
+    total_recognized = round((recognized_faces / test_set_len) * 100, 1)
     recognized_from_detected = round((recognized_faces / detected_faces) * 100, 1)
 
-    print(f'Training dataset: {dataset_length}\nUnique faces: {dataset_length}\nTest dataset: {dataset_length}\n'
-          f'Detected faces: {detected_percent}% ({detected_faces}/{dataset_length})\n'
-          f'Recognized faces: {recognized_from_detected}% ({recognized_faces}/{detected_faces})\n'
-          f'-----\n'
-          f'Recognized faces (total): {total_recognized}% ({recognized_faces}/{dataset_length})\n')
+    print(f'==================\n'
+          f'Face detection performance:\n'
+          f'Input dataset: {dataset_length_total} (Unique: {unique_detection_faces})\n'
+          f'Detected faces: {detected_percent}% ({detected_faces}/{train_set_len})\n'
+          f'\n'
+          f'Face recognition performance:\n'
+          f'Training dataset: {train_set_len} (Unique faces: {unique_detection_faces}), '
+          f'test dataset: {test_set_len} (Unique faces: {unique_recognition_faces})\n'
+          f'Recognized faces: {recognized_from_detected}% ({recognized_faces}/{detected_faces})\n')
+
