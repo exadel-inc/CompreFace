@@ -1,17 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_ORGANIZATION_ROLE;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class IncorrectOrganizationRoleException extends RuntimeException {
+public class IncorrectOrganizationRoleException extends BasicException {
 
-    public IncorrectOrganizationRoleException() {
-        super("Organization role can not be null");
-    }
+    public static final String ORGANIZATION_ROLE_NOT_EXISTS_MESSAGE = "Organization role %s does not exists";
 
-    public IncorrectOrganizationRoleException(String organizationRole) {
-        super("Organization role " + organizationRole + " does not exists");
+    public IncorrectOrganizationRoleException(final String organizationRole) {
+        super(INCORRECT_ORGANIZATION_ROLE, format(ORGANIZATION_ROLE_NOT_EXISTS_MESSAGE, organizationRole));
     }
 
 }

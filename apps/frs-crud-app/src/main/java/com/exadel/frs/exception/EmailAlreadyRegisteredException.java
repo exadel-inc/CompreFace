@@ -1,13 +1,13 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.EMAIL_ALREADY_REGISTERED;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class EmailAlreadyRegisteredException extends RuntimeException {
+public class EmailAlreadyRegisteredException extends BasicException {
+
+    public static final String MESSAGE = "This email already registered";
 
     public EmailAlreadyRegisteredException() {
-        super("This email already registered");
+        super(EMAIL_ALREADY_REGISTERED, MESSAGE);
     }
 
 }

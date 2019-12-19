@@ -1,17 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_ACCESS_TYPE;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class IncorrectAccessTypeException extends RuntimeException {
+public class IncorrectAccessTypeException extends BasicException {
 
-    public IncorrectAccessTypeException() {
-        super("Access type can not be null");
-    }
+    public static final String ACCESS_TYPE_NOT_EXISTS_MESSAGE = "Access type %s does not exists";
 
-    public IncorrectAccessTypeException(String accessType) {
-        super("Access type " + accessType + " does not exists");
+    public IncorrectAccessTypeException(final String accessType) {
+        super(INCORRECT_ACCESS_TYPE, format(ACCESS_TYPE_NOT_EXISTS_MESSAGE, accessType));
     }
 
 }

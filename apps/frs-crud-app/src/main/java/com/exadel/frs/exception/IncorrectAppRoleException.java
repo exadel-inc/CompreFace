@@ -1,17 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_APP_ROLE;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class IncorrectAppRoleException extends RuntimeException {
+public class IncorrectAppRoleException extends BasicException {
 
-    public IncorrectAppRoleException() {
-        super("App role can not be null");
-    }
+    public static final String APP_ROLE_NOT_EXISTS_MESSAGE = "App role %s does not exists";
 
-    public IncorrectAppRoleException(String appRole) {
-        super("App role " + appRole + " does not exists");
+    public IncorrectAppRoleException(final String appRole) {
+        super(INCORRECT_APP_ROLE, format(APP_ROLE_NOT_EXISTS_MESSAGE, appRole));
     }
 
 }

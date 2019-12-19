@@ -1,13 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.ORGANIZATION_NOT_FOUND;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class OrganizationNotFoundException extends RuntimeException {
+public class OrganizationNotFoundException extends BasicException {
 
-    public OrganizationNotFoundException(Long organizationId) {
-        super("Organization " + organizationId + " not found");
+    private static final String MESSAGE = "Organization %s not found";
+
+    public OrganizationNotFoundException(final Long organizationId) {
+        super(ORGANIZATION_NOT_FOUND, format(MESSAGE, organizationId));
     }
 
 }

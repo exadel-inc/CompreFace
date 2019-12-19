@@ -1,13 +1,13 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.USERNAME_ALREADY_EXIST;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class UsernameAlreadyExistException extends RuntimeException {
+public class UsernameAlreadyExistException extends BasicException {
+
+    public static final String MESSAGE = "Such username already exists";
 
     public UsernameAlreadyExistException() {
-        super("Such username already exists");
+        super(USERNAME_ALREADY_EXIST, MESSAGE);
     }
 
 }

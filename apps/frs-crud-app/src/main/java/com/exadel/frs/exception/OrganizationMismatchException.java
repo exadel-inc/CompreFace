@@ -1,13 +1,13 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.ORGANIZATION_MISMATCH;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class OrganizationMismatchException extends RuntimeException {
+public class OrganizationMismatchException extends BasicException {
+
+    private static final String MESSAGE = "Model cannot give access to apps from different organizations";
 
     public OrganizationMismatchException() {
-        super("Model cannot give access to apps from different organizations");
+        super(ORGANIZATION_MISMATCH, MESSAGE);
     }
 
 }
