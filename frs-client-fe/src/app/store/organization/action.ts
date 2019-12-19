@@ -1,84 +1,27 @@
-// import {Action} from '@ngrx/store';
-// import {Organization} from "../../data/organization";
-// import {EntityMap, Update} from "@ngrx/entity";
-//
-// export enum OrganizationActionTypes {
-//   LOAD_ALL = '[Organization] Load All Organizations',
-//   LOADED_ALL_SUCCESS = '[Organization] Loaded All Organization Success',
-//   LOAD_ORGANIZATION = '[Organization] Get Organization',
-//   LOADED_ONE_SUCCESS = '[Organization] Loaded One Organization Success',
-//   GET_ONE = '[Organization] Get One Organization',
-//   CREATE = '[Organization] Create Organization',
-//   ADD_ORGANIZATION = '[Organization] Add Organization',
-//   UPDATE_ORGANIZATION = '[Organization] Add Organization',
-//   MAP_ORGANIZATIONS = '[Organization] Add Organization',
-//   DELETE_ORGANIZATION = '[Organization] Add Organization',
-// }
-//
-// export class LoadAll implements Action {
-//   readonly type = OrganizationActionTypes.LOAD_ALL;
-//
-//   constructor() {
-//   }
-// }
-//
-// export class GetOne implements Action {
-//   readonly type = OrganizationActionTypes.LOAD_ORGANIZATION;
-//
-//   constructor(public payload: Organization) {
-//   }
-// }
-//
-// export class Create implements Action {
-//   readonly type = OrganizationActionTypes.CREATE;
-//
-//   constructor(public payload: Organization) {
-//   }
-// }
-//
-// export class LoadedAllSuccess implements Action {
-//   readonly type = OrganizationActionTypes.LOADED_ALL_SUCCESS;
-//
-//   constructor(public payload: { organizations: Organization[] }) {
-//   }
-// }
-//
-// export class AddOrganization implements Action {
-//   readonly type = OrganizationActionTypes.ADD_ORGANIZATION;
-//
-//   constructor(public payload: { Organization: Organization }) {
-//   }
-// }
-//
-// export class UpdateOrganization implements Action {
-//   readonly type = OrganizationActionTypes.UPDATE_ORGANIZATION;
-//
-//   constructor(public payload: { Organization: Update<Organization> }) {
-//   }
-// }
-//
-// export class MapOrganizations implements Action {
-//   readonly type = OrganizationActionTypes.MAP_ORGANIZATIONS;
-//
-//   constructor(public payload: { entityMap: EntityMap<Organization> }) {
-//   }
-// }
-//
-// export class DeleteOrganization implements Action {
-//   readonly type = OrganizationActionTypes.DELETE_ORGANIZATION;
-//
-//   constructor(public payload: { id: string }) {
-//   }
-// }
-//
-//
-// export type OrganizationActions =
-//   | LoadAll
-//   | GetOne
-//   | Create
-//   | LoadedAllSuccess
-//   | AddOrganization
-//   | MapOrganizations
-//   | UpdateOrganization
-//   | DeleteOrganization
-//
+import {Action, createAction, props} from '@ngrx/store';
+import {EntityMap, Predicate, Update} from '@ngrx/entity';
+import {Organization} from "../../data/organization";
+import {LogIn, LogInSuccess} from "../auth/action";
+
+
+// export const setSelectedId = createAction('[Organization/API] Set Select id', props<{ selectId: string | null}>());
+
+export enum OrganizationActionTypes {
+  GET_SELECTED_ID = '[Organization] Get Selected Id',
+  SET_SELECTED_ID = '[Organization] Set Selected Id',
+}
+
+export class GetSelectedId implements Action {
+  readonly type = OrganizationActionTypes.GET_SELECTED_ID;
+  constructor() {}
+}
+
+export class SetSelectedId implements Action {
+  readonly type = OrganizationActionTypes.SET_SELECTED_ID;
+  constructor(public payload: any) {}
+}
+
+export type OrganizationActions =
+  | GetSelectedId
+  | SetSelectedId
+

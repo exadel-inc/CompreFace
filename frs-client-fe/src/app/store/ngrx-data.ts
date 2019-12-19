@@ -1,18 +1,32 @@
-
-import {
-  EntityMetadataMap,
-  DefaultDataServiceConfig
-} from 'ngrx-data';
+import { EntityMetadataMap, EntityDataModuleConfig, DefaultDataServiceConfig } from '@ngrx/data';
 import {environment} from "../../environments/environment";
 
 export const defaultDataServiceConfig: DefaultDataServiceConfig = {
-  root: environment.apiUrl
+  root: environment.apiUrl,
+  // example of configuration:
+  // entityHttpResourceUrls: {
+  //   // Case matters. Match the case of the entity name.
+  //   Organization: {
+  //     // You must specify the root as part of the resource URL.
+  //     entityResourceUrl: 'organizations',
+  //     collectionResourceUrl: 'organizations'
+  //   }
+  // },
 };
 
-export const entityMetadata: EntityMetadataMap = {
-  Organization: {},
-  User:{}
+const entityMetadata: EntityMetadataMap = {
+  Organization: {
+    // selectId: null,
+    // entityName: 'bla'
+    additionalCollectionState: {
+      selectId: null
+    }
+  }
 };
 
-export const pluralNames = { Organization: 'organizations'};
+const pluralNames = {};
 
+export const entityConfig: EntityDataModuleConfig = {
+  entityMetadata,
+  pluralNames
+};

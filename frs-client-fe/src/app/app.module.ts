@@ -17,9 +17,11 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {ToolBarModule} from "./features/tool-bar/tool-bar.module";
 import {AppSerializer} from "./store/router/reducer";
 import {AuthEffects} from "./store/auth/effects";
-import {defaultDataServiceConfig, entityMetadata, pluralNames} from "./store/ngrx-data";
-import {DefaultDataServiceConfig, NgrxDataModule} from "ngrx-data";
+import {defaultDataServiceConfig, entityConfig} from "./store/ngrx-data";
 import {CustomMaterialModule} from "./ui/material/material.module";
+import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
+import {OrganizationStoreModule} from "./store/organization/organization.module";
+// import { entityConfig } from './entity-metadata';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import {CustomMaterialModule} from "./ui/material/material.module";
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
     EffectsModule.forRoot([AuthEffects]),
-    NgrxDataModule.forRoot({ entityMetadata, pluralNames }),
+    EntityDataModule.forRoot(entityConfig),
+    OrganizationStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
@@ -44,6 +47,7 @@ import {CustomMaterialModule} from "./ui/material/material.module";
       : [],
   ],
   providers: [
+    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig },
     AuthGuard,
     LoginGuard,
     {
@@ -57,7 +61,6 @@ import {CustomMaterialModule} from "./ui/material/material.module";
       multi: true
     },
     { provide: RouterStateSerializer, useClass: AppSerializer },
-    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig }
   ],
   bootstrap: [AppComponent]
 })

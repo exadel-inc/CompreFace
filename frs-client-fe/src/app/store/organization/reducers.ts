@@ -1,60 +1,44 @@
-// import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-// import {OrganizationActions, OrganizationActionTypes} from "./action";
-// import {Organization} from "../../data/organization";
-//
-// export interface State extends EntityState<Organization> {
-//   selected: number | null
+import {Action, createReducer, on} from "@ngrx/store";
+import {ENTITY_CACHE_NAME} from "@ngrx/data";
+import {OrganizationActions, OrganizationActionTypes} from "./action";
+
+export interface OrganizationsState {
+  selectId: string | null
+}
+
+const initialOrganizationState: OrganizationsState = {
+  selectId: null
+};
+
+// export function OrganizationReducer(state: OrganizationsState = initialOrganizationState, action: Action) {
+//   return organizationReducer(state, action);
 // }
-//
-// export const adapter: EntityAdapter<Organization> = createEntityAdapter<Organization>();
-//
-// export const initialState: State = adapter.getInitialState({
-//   selected: null
-// });
-//
-// export function OrganizationReducer(state = initialState, action: OrganizationActions): State {
-//   switch (action.type) {
-//
-//     case OrganizationActionTypes.LOADED_ALL_SUCCESS: {
-//       return adapter.addAll(action.payload.organizations, state)
+
+// const organizationReducer = createReducer(
+//   initialOrganizationState,
+//   on(OrganizationActions.setSelectedId, (state,   { selectId }) => {
+//     console.log(state, selectId);
+//     return {
+//       ...state,
+//       selectId
 //     }
-//
-//     // case OrganizationActionTypes.LOGIN_FAILURE: {
-//     //   return {
-//     //     ...state,
-//     //     errorMessage: 'Incorrect email and/or password.',
-//     //     isLoading: false
-//     //   };
-//     // }
-//     //
-//     // case OrganizationActionTypes.SIGNUP_SUCCESS: {
-//     //   return {
-//     //     ...state,
-//     //     isAuthenticated: true,
-//     //     user: {
-//     //       token: action.payload.token,
-//     //       email: action.payload.email
-//     //     },
-//     //     errorMessage: null,
-//     //     successMessage: 'You have created new account, please login into your account',
-//     //     isLoading: false
-//     //   };
-//     // }
-//     //
-//     // case OrganizationActionTypes.SIGNUP_FAILURE: {
-//     //   return {
-//     //     ...state,
-//     //     errorMessage: 'That email is already in use.',
-//     //     successMessage: null,
-//     //     isLoading: false
-//     //   };
-//     // }
-//
-//     default: {
-//       return state;
-//     }
-//   }
-// }
-//
-//
-//
+//   }),
+// );
+
+export function OrganizationReducer(state = initialOrganizationState, action: OrganizationActions): OrganizationsState {
+  switch (action.type) {
+    case OrganizationActionTypes.SET_SELECTED_ID: {
+      console.log(action);
+      return {
+        ...state,
+        selectId: action.payload
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+}
+// export const getSelectedOrganizationId = (state: OrganizationsState) => state.selectId;
+
+

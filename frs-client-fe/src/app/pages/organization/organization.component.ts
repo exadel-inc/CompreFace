@@ -1,11 +1,17 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {Store} from "@ngrx/store";
+import {createFeatureSelector, Store} from "@ngrx/store";
 import {AppState} from "../../store";
 import {Observable, Subscription} from "rxjs";
 import {ActivatedRoute, Params, Router} from "@angular/router";
-import {EntityCollectionService, EntityServices} from "ngrx-data";
 import {Organization} from "../../data/organization";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
+import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
+import {
+  getSelectedOrganization,
+  getSelectOrganizationId,
+  OrganizationSelectors
+} from "../../store/organization/selectors";
+import {SetSelectedId} from "../../store/organization/action";
 
 @Component({
   selector: 'app-organization',
@@ -16,22 +22,50 @@ import {ROUTERS_URL} from "../../data/routers-url.variable";
 export class OrganizationComponent implements OnInit, OnDestroy {
   organizationSubscription: Subscription;
   selected: string | null;
+  getState: Observable<any>;
 
   organization$: Observable<Organization[]>;
-  organizationService: EntityCollectionService<Organization>;
 
-  constructor(private store: Store<AppState>, private router: Router, private route: ActivatedRoute, entityServices: EntityServices) {
-    this.organizationService = entityServices.getEntityCollectionService('Organization');
+  constructor(
+    private store: Store<AppState>,
+    private router: Router,
+    private route: ActivatedRoute,
+    private organizationEnService: OrganizationEnService,
+  ) {
+    console.log('OrganizationSelectors', OrganizationSelectors);
+
+    this.store.select(getSelectedOrganization).subscribe(e => {
+      console.log('getSelectedOrganization', e);
+    });
+
+    this.store.select(OrganizationSelectors.selectCollection).subscribe(e => {
+      console.log('selectOrganizationEntities', e);
+    });
+
+
+
+    const selectEntityCache = createFeatureSelector<any>('entityCache');
+    this.getState = this.store.select(selectEntityCache);
+
+    this.store.subscribe(e => {
+      console.log('store', e);
+    });
+
+    this.getState.subscribe(e => {
+      console.log('test selector', e);
+    });
   }
 
   ngOnInit() {
-    this.organization$ = this.organizationService.entities$;
-    this.organizationService.getAll();
+    this.organization$ = this.organizationEnService.entities$;
+    this.organizationEnService.getAll();
+    this.store.select(getSelectOrganizationId).subscribe(e => {
+      console.log('getSelectOrganizationId', e);
+    });
 
     this.route.queryParams.subscribe((params: Params) => {
       console.log(params);
     });
-
 
     console.log(this.route.snapshot.params);
 
@@ -52,10 +86,15 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   }
 
   addNew() {
-    this.organizationService.add({
-      id: '',
+    this.organizationEnService.add({
+      id: '33333',
       name: 'some new name'
-    })
+    });
+
+    // OrganizationActions.addOrganization
+    // this.store.dispatch(addOrganization({organization: { id: 'id12', name: 'name'}}));
+    // setSelectedId({selectId: 'blabla'});
+    this.store.dispatch(new SetSelectedId('asdfdasdfdaf222222222222'))
   }
 
 }
