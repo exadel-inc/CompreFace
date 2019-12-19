@@ -1,40 +1,29 @@
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import {User} from "../../data/user";
-import {AuthActions, AuthActionTypes} from "./action";
+import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
+import { User } from "../../data/user";
+import { AuthActions, AuthActionTypes } from "./action";
 
 // todo: for users list example
 export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
 
-
-
-export interface State {
-  isAuthenticated: boolean;
-  user: User | null;
+export interface AuthState {
   errorMessage: string | null;
   successMessage: string | null;
   isLoading: boolean;
 }
 
-export const initialState: State = {
-  isAuthenticated: false,
-  user: null,
+export const initialState: AuthState = {
   errorMessage: null,
   successMessage: null,
-  isLoading: false,
+  isLoading: false
 };
 
 
-export function AuthReducer(state = initialState, action: AuthActions): State {
+export function AuthReducer(state = initialState, action: AuthActions): AuthState {
   switch (action.type) {
 
     case AuthActionTypes.LOGIN_SUCCESS: {
       return {
         ...state,
-        isAuthenticated: true,
-        user: {
-          token: action.payload.token,
-          email: action.payload.email
-        },
         errorMessage: null,
         isLoading: false
       };
@@ -51,11 +40,6 @@ export function AuthReducer(state = initialState, action: AuthActions): State {
     case AuthActionTypes.SIGNUP_SUCCESS: {
       return {
         ...state,
-        isAuthenticated: true,
-        user: {
-          token: action.payload.token,
-          email: action.payload.email
-        },
         errorMessage: null,
         successMessage: 'You have created new account, please login into your account',
         isLoading: false
@@ -81,6 +65,3 @@ export function AuthReducer(state = initialState, action: AuthActions): State {
     }
   }
 }
-
-
-

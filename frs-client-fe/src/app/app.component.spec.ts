@@ -1,10 +1,22 @@
 import { TestBed, async } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
+import { HttpClient } from "@angular/common/http";
+import { Store } from '@ngrx/store';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { AppState } from 'src/app/store';
+
 
 describe('AppComponent', () => {
+  let mockStore: MockStore<AppState>;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      providers: [provideMockStore(),
+      {
+        provide: HttpClient,
+        useValue: {}
+      }],
       imports: [
         RouterTestingModule
       ],
@@ -12,6 +24,8 @@ describe('AppComponent', () => {
         AppComponent
       ],
     }).compileComponents();
+
+    mockStore = TestBed.get(Store);
   }));
 
   it('should create the app', () => {

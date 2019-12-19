@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
-import {User} from "../../data/user";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../store";
-import {Observable} from "rxjs";
-import {ROUTERS_URL} from "../../data/routers-url.variable";
-import {SignUp} from "../../store/auth/action";
-import {selectAuthState} from "../../store/auth/selectors";
+import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
+import { User } from "../../data/user";
+import { Store } from "@ngrx/store";
+import { AppState } from "../../store";
+import { Observable } from "rxjs";
+import { ROUTERS_URL } from "../../data/routers-url.variable";
+import { SignUp } from "../../store/auth/action";
+import { selectAuthState } from "../../store/auth/selectors";
 
 @Component({
   selector: 'app-sign-up-form',
@@ -26,7 +26,7 @@ export class SignUpFormComponent implements OnInit {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value)
       return null;
     else
-      return {passwordMismatch: true};
+      return { passwordMismatch: true };
   };
 
   constructor(private store: Store<AppState>) {
@@ -42,7 +42,7 @@ export class SignUpFormComponent implements OnInit {
         Validators.required,
         Validators.minLength(8),
       ]),
-    }, {validators: this.passwordMatchValidator });
+    }, { validators: this.passwordMatchValidator });
 
     this.getState.subscribe((state) => {
       this.errorMessage = state.errorMessage;
@@ -60,5 +60,4 @@ export class SignUpFormComponent implements OnInit {
     this.isLoading = true;
     this.store.dispatch(new SignUp(payload));
   }
-
 }
