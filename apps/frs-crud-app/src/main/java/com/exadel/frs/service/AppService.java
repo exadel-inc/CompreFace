@@ -65,6 +65,7 @@ public class AppService {
         }
         verifyUserHasWritePrivileges(userId, organizationService.getOrganization(app.getOrganization().getId()));
         app.setGuid(UUID.randomUUID().toString());
+        app.setApiKey(UUID.randomUUID().toString());
         app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
         appRepository.save(app);
     }

@@ -22,6 +22,7 @@ public class Organization {
     @SequenceGenerator(name = "organization_id_seq", sequenceName = "organization_id_seq", allocationSize = 1)
     private Long id;
     private String name;
+    private String guid;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -71,6 +71,7 @@ public class ModelService {
             throw new EmptyRequiredFieldException("name");
         }
         model.setGuid(UUID.randomUUID().toString());
+        model.setApiKey(UUID.randomUUID().toString());
         modelRepository.save(model);
     }
 

@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -50,6 +51,7 @@ public class OrganizationService {
         if (StringUtils.isEmpty(organization.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
+        organization.setGuid(UUID.randomUUID().toString());
         organization.addUserOrganizationRole(userService.getUser(userId), OrganizationRole.OWNER);
         organizationRepository.save(organization);
     }

@@ -22,6 +22,7 @@ public class App {
     private Long id;
     private String name;
     private String guid;
+    private String apiKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id")
