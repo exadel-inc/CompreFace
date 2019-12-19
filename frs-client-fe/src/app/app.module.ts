@@ -17,11 +17,12 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {ToolBarModule} from "./features/tool-bar/tool-bar.module";
 import {AppSerializer} from "./store/router/reducer";
 import {AuthEffects} from "./store/auth/effects";
+import { ApplciationListEffect } from './store/applicationList/effects';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainLayoutComponent,
+    MainLayoutComponent
   ],
   imports: [
     BrowserModule,
@@ -30,7 +31,7 @@ import {AuthEffects} from "./store/auth/effects";
     ToolBarModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
-    EffectsModule.forRoot([AuthEffects]),
+    EffectsModule.forRoot([AuthEffects, ApplciationListEffect]),
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),

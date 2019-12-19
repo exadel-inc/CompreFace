@@ -1,0 +1,30 @@
+@import "colors.sass"
+
+h3
+  font-weight: 400
+.application-list
+  ul
+    list-style-type: none
+    padding: 0
+    border: 2px solid $black
+  li
+    span
+      display: inline-block
+      box-sizing: border-box
+      &.list-header-title
+        width: 70%
+        border-right: 2px solid $black
+      &.list-header-owner
+        width: 30%
+    &.list-header span
+      border-bottom: 2px solid $black
+      background-color: $pale-gray
+    &:nth-child(odd)
+        background-color: $pale-gray
+
+.add-applciation-button-container button
+  background: none
+  border: none
+  font-weight: 700
+  &:after
+    content: '+'

@@ -1,0 +1,11 @@
+<h3>List of application for current organization</h3>
+<!-- <div class="filters-container">filters: <a>one</a><a>two</a><a>three</a></div> -->
+<div class="application-list">
+  <ul>
+    <li class="list-header"><span class="list-header-title">title:</span><span class="list-header-owner">owner name</span></li>
+    <li *ngFor="let application of applicationList"><span class="list-header-title">{{application.name}}</span><span class="list-header-owner">{{application.owner}}</span></li>
+  </ul>
+</div>
+<div class="add-applciation-button-container">
+  <button (click)="onCreateNewApp()">Create new application</button>
+</div>

@@ -4,11 +4,12 @@ import {OrganizationComponent} from "./organization.component";
 import {RouterModule} from "@angular/router";
 import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
+import { ApplicationListComponent } from 'src/app/pages/organization/components/application-list/application-list-container.component';
 
 
 
 @NgModule({
-  declarations: [OrganizationComponent],
+  declarations: [OrganizationComponent, ApplicationListComponent],
   imports: [
     CommonModule,
     RouterModule.forChild([
