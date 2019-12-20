@@ -109,10 +109,10 @@ public class AppService {
         appRepository.save(repoApp);
     }
 
-    public void regenerateGuid(final String guid, final Long userId) {
+    public void regenerateApiKey(final String guid, final Long userId) {
         App repoApp = getApp(guid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        repoApp.setGuid(UUID.randomUUID().toString());
+        repoApp.setApiKey(UUID.randomUUID().toString());
         appRepository.save(repoApp);
     }
 

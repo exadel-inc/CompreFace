@@ -98,10 +98,10 @@ public class ModelService {
         modelRepository.save(repoModel);
     }
 
-    public void regenerateGuid(final String guid, final Long userId) {
+    public void regenerateApiKey(final String guid, final Long userId) {
         Model repoModel = getModel(guid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        repoModel.setGuid(UUID.randomUUID().toString());
+        repoModel.setApiKey(UUID.randomUUID().toString());
         modelRepository.save(repoModel);
     }
 

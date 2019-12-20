@@ -48,22 +48,26 @@ public class ModelController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Application access type to model is not correct")
     })
-    public void updateModel(@ApiParam(value = "ID of model that needs to be updated", required = true, example = "0") @PathVariable final String guid,
+    public void updateModel(@ApiParam(value = "GUID of model that needs to be updated",
+                                      required = true,
+                                      example = "0") @PathVariable final String guid,
                             @ApiParam(value = "Model data", required = true) @Valid @RequestBody ModelDto modelDto) {
         modelService.updateModel(guid, modelMapper.toEntity(modelDto), SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/{guid}/guid")
-    @ApiOperation(value = "Generate new GUID for model")
-    public void regenerateGuid(@ApiParam(value = "GUID of the model which GUID needs to be regenerated",
+    @PutMapping("/{guid}/api-key")
+    @ApiOperation(value = "Generate new api-key for model")
+    public void regenerateApiKey(@ApiParam(value = "GUID of the model which GUID needs to be regenerated",
                                          required = true,
                                          example = "0") @PathVariable final String guid) {
-        modelService.regenerateGuid(guid, SecurityUtils.getPrincipalId());
+        modelService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/{guid}")
     @ApiOperation(value = "Delete model")
-    public void deleteModel(@ApiParam(value = "GUID of the model that needs to be deleted", required = true, example = "0") @PathVariable final String guid) {
+    public void deleteModel(@ApiParam(value = "GUID of the model that needs to be deleted",
+                                      required = true,
+                                      example = "0") @PathVariable final String guid) {
         modelService.deleteModel(guid, SecurityUtils.getPrincipalId());
     }
 

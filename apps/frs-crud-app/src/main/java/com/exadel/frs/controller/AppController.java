@@ -45,22 +45,24 @@ public class AppController {
         appService.createApp(appMapper.toEntity(appDto), SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{guid}")
     @ApiOperation(value = "Update application")
-    public void updateApp(@ApiParam(value = "UUID of application that needs to be updated", required = true, example = "0") @PathVariable String uuid,
+    public void updateApp(@ApiParam(value = "GUID of application that needs to be updated", required = true, example = "0") @PathVariable String guid,
                           @ApiParam(value = "Application data", required = true) @Valid @RequestBody AppDto appDto) {
-        appService.updateApp(uuid, appMapper.toEntity(appDto), SecurityUtils.getPrincipalId());
+        appService.updateApp(guid, appMapper.toEntity(appDto), SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/{guid}/guid")
-    @ApiOperation(value = "Generate new GUID for application")
-    public void regenerateGuid(@ApiParam(value = "ID of the application which GUID needs to be regenerated", required = true, example = "0") @PathVariable String guid) {
-        appService.regenerateGuid(guid, SecurityUtils.getPrincipalId());
+    @PutMapping("/{guid}/api-key")
+    @ApiOperation(value = "Generate new api-key for application")
+    public void regenerateApiKey(@ApiParam(value = "GUID of the application which api-key needs to be regenerated",
+                                           required = true,
+                                           example = "0") @PathVariable final String guid) {
+        appService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/{guid}")
     @ApiOperation(value = "Delete application")
-    public void deleteApp(@ApiParam(value = "ID of the application that needs to be deleted", required = true, example = "0") @PathVariable String guid) {
+    public void deleteApp(@ApiParam(value = "GUID of the application that needs to be deleted", required = true, example = "0") @PathVariable String guid) {
         appService.deleteApp(guid, SecurityUtils.getPrincipalId());
     }
 

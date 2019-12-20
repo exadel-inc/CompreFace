@@ -377,7 +377,7 @@ public class AppServiceTest {
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        appService.regenerateGuid(APPLICATION_GUID, USER_ID);
+        appService.regenerateApiKey(APPLICATION_GUID, USER_ID);
 
         verify(appRepositoryMock).save(any(App.class));
 
@@ -401,7 +401,7 @@ public class AppServiceTest {
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.regenerateGuid(APPLICATION_GUID, USER_ID));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.regenerateApiKey(APPLICATION_GUID, USER_ID));
     }
 
     @ParameterizedTest

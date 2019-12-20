@@ -437,7 +437,7 @@ public class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        modelService.regenerateGuid(MODEL_GUID, USER_ID);
+        modelService.regenerateApiKey(MODEL_GUID, USER_ID);
 
         assertThat(model.getGuid(), not("guid"));
     }
@@ -463,7 +463,7 @@ public class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.regenerateGuid(MODEL_GUID, USER_ID));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.regenerateApiKey(MODEL_GUID, USER_ID));
     }
 
     @ParameterizedTest
