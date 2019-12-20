@@ -4,6 +4,7 @@ import {OrganizationHeaderComponent} from "./organization-header.component";
 import {RouterModule} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
 import {EntityTitleModule} from "../entity-title/entity-title.module";
+import {OrganizationHeaderService} from "./organization-header.service";
 
 @NgModule({
   declarations: [OrganizationHeaderComponent],
@@ -15,6 +16,7 @@ import {EntityTitleModule} from "../entity-title/entity-title.module";
     RouterModule,
     MatButtonModule,
     EntityTitleModule
-  ]
+  ],
+  providers: [OrganizationHeaderService],
 })
 export class OrganizationHeaderModule { }

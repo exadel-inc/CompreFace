@@ -1,5 +1,14 @@
+<div *ngIf="organizations$ | async as organizations">
+  <app-entity-title [options]="organizations"></app-entity-title>
+</div>
 
-<app-entity-title [options]="organizations"></app-entity-title>
+
+{{selected$ | async}}
+<!--<div *ngIf="selected$ | async as selected">-->
+<!--  <app-entity-title [options]="organizations"></app-entity-title>-->
+<!--</div>-->
+
+
 
 <button mat-raised-button
         type="submit"
@@ -7,5 +16,5 @@
         (click)="createNew()"
   >Create New Organization</button>
 
-
-<div class="your_role">{{role}}</div>
+<button (click)="select('ksdfklsn1111111')">select</button>
+<!--<div class="your_role">{{role}}</div>-->

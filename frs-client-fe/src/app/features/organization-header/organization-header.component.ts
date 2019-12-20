@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {Organization} from "../../data/organization";
+import {OrganizationHeaderService} from "./organization-header.service";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-organization-header',
@@ -10,17 +12,24 @@ import {Organization} from "../../data/organization";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationHeaderComponent implements OnInit {
-  @Input() organizations: [Organization];
-  @Input() selected: string;
+  organizations$: Observable<Organization[]>;
+  private selected$: Observable<string | null>;
 
-  constructor(private router: Router) { }
+  constructor(private router: Router, private organizationHeaderService: OrganizationHeaderService) { }
 
   ngOnInit() {
+    this.organizations$ = this.organizationHeaderService.organization$;
+    this.selected$ = this.organizationHeaderService.selected$;
+
   }
 
   createNew() {
-    this.router.navigate([ROUTERS_URL.ORGANIZATION, 'new']);
-    console.log('createNew');
+    // this.router.navigate([ROUTERS_URL.ORGANIZATION, 'new']);
+    console.log('show popup');
+  }
+
+  select(id) {
+    this.organizationHeaderService.select(id)
   }
 
 }

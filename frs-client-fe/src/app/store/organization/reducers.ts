@@ -10,28 +10,13 @@ const initialOrganizationState: OrganizationsState = {
   selectId: null
 };
 
-// export function OrganizationReducer(state: OrganizationsState = initialOrganizationState, action: Action) {
-//   return organizationReducer(state, action);
-// }
-
-// const organizationReducer = createReducer(
-//   initialOrganizationState,
-//   on(OrganizationActions.setSelectedId, (state,   { selectId }) => {
-//     console.log(state, selectId);
-//     return {
-//       ...state,
-//       selectId
-//     }
-//   }),
-// );
-
 export function OrganizationReducer(state = initialOrganizationState, action: OrganizationActions): OrganizationsState {
   switch (action.type) {
     case OrganizationActionTypes.SET_SELECTED_ID: {
       console.log(action);
       return {
         ...state,
-        selectId: action.payload
+        selectId: action.payload.selectId
       };
     }
     default: {
@@ -39,6 +24,5 @@ export function OrganizationReducer(state = initialOrganizationState, action: Or
     }
   }
 }
-// export const getSelectedOrganizationId = (state: OrganizationsState) => state.selectId;
 
 
