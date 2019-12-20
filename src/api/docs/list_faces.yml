@@ -1,0 +1,24 @@
+tags:
+  - 'Face Database'
+summary: 'List names of all saved faces.'
+description: 'As with all other endpoints, applies only to faces uploaded with the specified API key.'
+operationId: listFaces
+produces:
+  - application/json
+security:
+  - ApiKeyAuth: []
+responses:
+  '200':
+    description: 'List of face names.'
+    schema:
+      type: object
+      properties:
+        names:
+          type: array
+          example:
+            - 'Albert Einstein'
+            - 'Richard Feynman'
+  '400':
+    $ref: '#/components/responses/BadRequestResponse'
+  '500':
+    $ref: '#/components/responses/InternalServerErrorResponse'
