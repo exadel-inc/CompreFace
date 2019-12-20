@@ -43,8 +43,8 @@ public class OrganizationService {
         }
     }
 
-    public Organization getOrganization(Long id, Long userId) {
-        Organization organization = getOrganization(id);
+    public Organization getOrganization(final String guid, final Long userId) {
+        Organization organization = getOrganization(guid);
         verifyUserHasReadPrivileges(userId, organization);
         return organization;
     }
@@ -71,8 +71,8 @@ public class OrganizationService {
         }
     }
 
-    public void updateOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
+    public void updateOrganization(final String guid, Organization organization, Long userId) {
+        Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!StringUtils.isEmpty(organization.getName())) {
             organizationFromRepo.setName(organization.getName());
@@ -95,8 +95,8 @@ public class OrganizationService {
     }
 
     // todo implement user invitation to organization by email. then delete this method
-    public void addUserToOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
+    public void addUserToOrganization(final String guid, Organization organization, final Long userId) {
+        Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
@@ -109,8 +109,8 @@ public class OrganizationService {
         organizationRepository.save(organizationFromRepo);
     }
 
-    public void removeUserFromOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
+    public void removeUserFromOrganization(final String guid, Organization organization, final Long userId) {
+        Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
@@ -124,10 +124,10 @@ public class OrganizationService {
         organizationRepository.save(organizationFromRepo);
     }
 
-    public void deleteOrganization(Long id, Long userId) {
-        Organization organization = getOrganization(id);
+    public void deleteOrganization(final String guid, final Long userId) {
+        Organization organization = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organization);
-        organizationRepository.deleteById(id);
+        organizationRepository.deleteById(organization.getId());
     }
 
 }

@@ -11,8 +11,8 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.repository.OrganizationRepository;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
-import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -27,6 +27,8 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 public class OrganizationServiceTest {
+
+    private static final String ORGANISATION_GUID = "organisation-guid";
 
     private UserService userServiceMock;
     private OrganizationRepository organizationRepositoryMock;
@@ -66,9 +68,9 @@ public class OrganizationServiceTest {
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Organization result = organizationService.getOrganization(organizationId, userId);
+        Organization result = organizationService.getOrganization(ORGANISATION_GUID, userId);
 
         assertThat(result.getId(), is(organizationId));
     }
@@ -130,9 +132,9 @@ public class OrganizationServiceTest {
                 .build();
         organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.ADMINISTRATOR);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        organizationService.updateOrganization(organizationId, organizationUpdate, userId1);
+        organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId1);
 
         assertThat(organization.getName(), is(organizationUpdate.getName()));
         assertThat(organization.getUserOrganizationRoles().size(), is(2));
@@ -152,9 +154,9 @@ public class OrganizationServiceTest {
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.updateOrganization(organizationId, Organization.builder().build(), userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, Organization.builder().build(), userId));
     }
 
     @ParameterizedTest
@@ -173,9 +175,9 @@ public class OrganizationServiceTest {
                 .build();
         organizationUpdate.addUserOrganizationRole(user, OrganizationRole.USER);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(SelfRoleChangeException.class, () -> organizationService.updateOrganization(organizationId, organizationUpdate, userId));
+        Assertions.assertThrows(SelfRoleChangeException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId));
     }
 
     // todo implement user invitation to organization by email. then delete this test method
@@ -198,10 +200,10 @@ public class OrganizationServiceTest {
         organizationUpdate.addUserOrganizationRole(user1, organizationRole);
         organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.USER);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
         when(userServiceMock.getUser(anyLong())).thenReturn(user2);
 
-        organizationService.addUserToOrganization(organizationId, organizationUpdate, userId1);
+        organizationService.addUserToOrganization(ORGANISATION_GUID, organizationUpdate, userId1);
 
         assertThat(organization.getUserOrganizationRoles().size(), is(2));
         assertThat(organization.getUserOrganizationRole(userId2).get().getRole(), is(OrganizationRole.USER));
@@ -220,9 +222,9 @@ public class OrganizationServiceTest {
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.addUserToOrganization(organizationId, null, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.addUserToOrganization(ORGANISATION_GUID, null, userId));
     }
 
     @ParameterizedTest
@@ -244,9 +246,9 @@ public class OrganizationServiceTest {
                 .build();
         organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.USER);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        organizationService.removeUserFromOrganization(organizationId, organizationUpdate, userId1);
+        organizationService.removeUserFromOrganization(ORGANISATION_GUID, organizationUpdate, userId1);
 
         assertThat(organization.getUserOrganizationRoles().size(), is(1));
     }
@@ -263,9 +265,9 @@ public class OrganizationServiceTest {
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.removeUserFromOrganization(organizationId, null, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.removeUserFromOrganization(ORGANISATION_GUID, null, userId));
     }
 
     @ParameterizedTest
@@ -280,9 +282,9 @@ public class OrganizationServiceTest {
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(SelfRemoveException.class, () -> organizationService.removeUserFromOrganization(organizationId, organization, userId));
+        Assertions.assertThrows(SelfRemoveException.class, () -> organizationService.removeUserFromOrganization(ORGANISATION_GUID, organization, userId));
     }
 
     @ParameterizedTest
@@ -298,9 +300,9 @@ public class OrganizationServiceTest {
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        organizationService.deleteOrganization(organizationId, userId);
+        organizationService.deleteOrganization(ORGANISATION_GUID, userId);
 
         verify(organizationRepositoryMock).deleteById(anyLong());
     }
@@ -318,9 +320,9 @@ public class OrganizationServiceTest {
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.deleteOrganization(organizationId, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.deleteOrganization(ORGANISATION_GUID, userId));
     }
 
 }
