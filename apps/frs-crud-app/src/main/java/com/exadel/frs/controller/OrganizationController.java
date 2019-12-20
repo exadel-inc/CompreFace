@@ -47,7 +47,9 @@ public class OrganizationController {
 
     @PutMapping("/{guid}")
     @ApiOperation(value = "Update Organization")
-    public void updateOrganization(@ApiParam(value = "GUID of Organization that needs to be updated", required = true, example = "0") @PathVariable final String guid,
+    public void updateOrganization(@ApiParam(value = "GUID of Organization that needs to be updated",
+                                             required = true,
+                                             example = "0") @PathVariable final String guid,
                                    @ApiParam(value = "Organization data", required = true) @Valid @RequestBody OrganizationDto organizationDto) {
         organizationService.updateOrganization(guid, organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
     }
