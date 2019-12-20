@@ -24,7 +24,9 @@ public class ModelController {
 
     @GetMapping("/{guid}")
     @ApiOperation(value = "Get model, created by user")
-    public ModelDto getModel(@ApiParam(value = "GUID of model to return", required = true, example = "0") @PathVariable final String guid) {
+    public ModelDto getModel(@ApiParam(value = "GUID of model to return",
+                                       required = true,
+                                       example = "0") @PathVariable final String guid) {
         return modelMapper.toDto(modelService.getModel(guid, SecurityUtils.getPrincipalId()));
     }
 
