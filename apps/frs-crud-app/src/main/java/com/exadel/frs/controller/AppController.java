@@ -62,7 +62,9 @@ public class AppController {
 
     @DeleteMapping("/{guid}")
     @ApiOperation(value = "Delete application")
-    public void deleteApp(@ApiParam(value = "GUID of the application that needs to be deleted", required = true, example = "0") @PathVariable String guid) {
+    public void deleteApp(@ApiParam(value = "GUID of the application that needs to be deleted",
+                                    required = true,
+                                    example = "0") @PathVariable String guid) {
         appService.deleteApp(guid, SecurityUtils.getPrincipalId());
     }
 
