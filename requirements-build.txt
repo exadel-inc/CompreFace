@@ -1,4 +1,0 @@
-requests
-pytest
-pytest-ordering
-strenum
