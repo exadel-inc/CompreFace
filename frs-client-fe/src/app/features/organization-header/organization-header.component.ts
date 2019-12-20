@@ -32,4 +32,11 @@ export class OrganizationHeaderComponent implements OnInit {
     this.organizationHeaderService.select(id)
   }
 
+  selectOrganization($event) {
+    console.log($event);
+  }
+
+  rename($event) {
+    console.log($event);
+  }
 }

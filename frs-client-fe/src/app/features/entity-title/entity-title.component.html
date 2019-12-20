@@ -1,17 +1,16 @@
 <div class="title">
-  <mat-form-field *ngIf="isEditing" class="login-full-width">
-    <input matInput placeholder="{{placeholder}}" ngModel="optionName">
+  <mat-form-field *ngIf="editing" class="login-full-width">
+    <input matInput placeholder="{{placeholder}}" [(ngModel)]="newName">
   </mat-form-field>
-  <mat-form-field *ngIf="!isEditing">
+  <mat-form-field *ngIf="!editing" >
     <mat-label>Organization name</mat-label>
-    <mat-select>
-      <mat-option *ngFor="let option of options" [value]="selected">
+    <mat-select [(value)]="selected">
+      <mat-option *ngFor="let option of options" [value]="option.id">
         {{option.name}}
       </mat-option>
     </mat-select>
   </mat-form-field>
-  {{selected}}
-  <button mat-icon-button *ngIf="!isEditing" (click)="isEditing=true"><mat-icon>edit</mat-icon></button>
-  <button mat-icon-button *ngIf="isEditing" (click)="apply()"><mat-icon>done</mat-icon></button>
-  <button mat-icon-button *ngIf="isEditing" (click)="discard()"><mat-icon>replay</mat-icon></button>
+  <button mat-icon-button *ngIf="!editing" [disabled]="renameDisable" (click)="edit()"><mat-icon>edit</mat-icon></button>
+  <button mat-icon-button *ngIf="editing" (click)="apply()"><mat-icon>done</mat-icon></button>
+  <button mat-icon-button *ngIf="editing" (click)="discard()"><mat-icon>replay</mat-icon></button>
 </div>

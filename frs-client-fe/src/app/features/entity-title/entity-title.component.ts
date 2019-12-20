@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Organization} from "../../data/organization";
 
 @Component({
@@ -8,24 +8,42 @@ import {Organization} from "../../data/organization";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntityTitleComponent implements OnInit {
-  isEditing = false;
-  optionName: string;
+  editing = false;
+  newName: string;
+  selectedId: string;
   @Input() options: [Organization];
-  @Output() selected: string;
-  @Output() name: string;
+  @Input() renameDisable: boolean;
+  @Input() selectId: string;
+  @Output() selectIdChange = new EventEmitter();
+  @Output() rename = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
+    this.selectedId = this.selectId;
+  }
+
+  set selected(value) {
+    console.log(value);
+    this.selectedId = (value);
+    this.selectIdChange.emit(value);
+  }
+
+  get selected() {
+    return this.selectedId;
   }
 
   discard() {
-    this.isEditing = false;
+    this.editing = false;
   }
 
   apply() {
-    this.name = this.optionName;
-    this.isEditing = false;
+    this.rename.emit(this.newName);
+    this.editing = false;
   }
 
+  edit() {
+    this.editing = true;
+    this.newName = this.options.find(option => option.id === this.selectId).name;
+  }
 }
