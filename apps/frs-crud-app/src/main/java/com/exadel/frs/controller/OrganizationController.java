@@ -54,7 +54,9 @@ public class OrganizationController {
 
     @PutMapping("/{guid}/add-users")
     @ApiOperation(value = "Add users to Organization")
-    public void addUsersToOrganization(@ApiParam(value = "GUID of Organization that needs to be updated", required = true, example = "0") @PathVariable final String guid,
+    public void addUsersToOrganization(@ApiParam(value = "GUID of Organization that needs to be updated",
+                                                 required = true,
+                                                 example = "0") @PathVariable final String guid,
                                        @ApiParam(value = "Organization data", required = true) @Valid @RequestBody OrganizationDto organizationDto) {
         organizationService.addUserToOrganization(guid, organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
     }
