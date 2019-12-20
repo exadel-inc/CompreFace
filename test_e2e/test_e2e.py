@@ -13,17 +13,30 @@ python -m pytest test_e2e.py --host http://localhost:5001
 """
 
 import os
+import time
+from http import HTTPStatus
 from pathlib import Path
 
 import pytest
 import requests
+from toolz import itertoolz
 
+from init_mongo_db import init_mongo_db
 from main import ROOT_DIR
-from test_e2e.constants import EXPECTED_EMBEDDING
+from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 IMG_DIR = ROOT_DIR / 'test_files'
 TRAINING_TIMEOUT_S = 60
+
+
+def _wait_until_training_is_complete(host):
+    for _ in range(TRAINING_TIMEOUT_S):
+        time.sleep(1)
+        res = requests.get(f"{host}/retrain", headers={'X-Api-Key': 'test-api-key'})
+        if res.status_code == HTTPStatus.OK:
+            return
+    raise Exception("Waiting for classifier training completion has reached a timeout")
 
 
 @pytest.fixture
@@ -39,6 +52,18 @@ def after_previous_gen():
 
 
 after_previous = after_previous_gen()
+
+
+@pytest.mark.run(order=next(after_previous))
+def test_setup__drop_db(request):
+    if not request.config.getoption('drop-db'):
+        return
+    print("Dropping database...")
+    from pymongo import MongoClient
+    client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
+    client.drop_database(MONGO_EFRS_DATABASE_NAME)
+    print("Database dropped.")
+    init_mongo_db()
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -61,44 +86,160 @@ def test__when_client_opens_apidocs__returns_200(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_client_tries_to_scan_an_image_without_faces__then_returns_400_no_face_found(host):
+def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_returns_400(host):
+    files = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
+
+    res = requests.post(f"{host}/faces/Marie Curie", files=files)
+    _wait_until_training_is_complete(host)
+
+    assert res.status_code == 400, res.content
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_face_found(host):
     files = {'file': open(IMG_DIR / 'landscape.jpg', 'rb')}
 
-    res = requests.post(f"{host}/scan_faces", files=files)
+    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    _wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "No face is found in the given image"
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_client_requests_to_scan_face__then_correct_box_and_embedding_returned(host):
-    files = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
+def test__when_client_uploads_3_face_examples__then_returns_201(host):
+    files_a = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
+    files_b = {'file': open(IMG_DIR / 'e2e-personB-img1.jpg', 'rb')}
+    files_c = {'file': open(IMG_DIR / 'e2e-personC-img1.jpg', 'rb')}
 
-    res = requests.post(f"{host}/scan_faces", files=files)
+    res_a = requests.post(f"{host}/faces/Marie Curie?retrain=no", headers={'X-Api-Key': 'test-api-key'},
+                          files=files_a)
+    res_b = requests.post(f"{host}/faces/Stephen Hawking?retrain=no", headers={'X-Api-Key': 'test-api-key'},
+                          files=files_b)
+    res_c = requests.post(f"{host}/faces/Paul Walker",
+                          headers={'X-Api-Key': 'test-api-key'}, files=files_c)
+    _wait_until_training_is_complete(host)
+
+    assert res_a.status_code == 201, res_a.content
+    assert res_b.status_code == 201, res_b.content
+    assert res_c.status_code == 201, res_c.content
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_asks_to_recognize_faces_in_5_person_jpg_image__then_returns_5_different_bounding_boxes(host):
+    file = {'file': open(IMG_DIR / 'five-faces.jpg', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
 
     assert res.status_code == 200, res.content
-    assert res.json()['calculator_version'] == "v20180402"
-    assert len(res.json()['result']) == 1
-    result_item = res.json()['result'][0]
-    assert _boxes_are_the_same(result_item['box'], {'x_max': 284, 'x_min': 146, 'y_max': 373, 'y_min': 193})
-    assert _embeddings_are_the_same(result_item['embedding'], EXPECTED_EMBEDDING)
-    assert result_item['box']['probability'] > 0.9
+    result_items = res.json()['result']
+    result_items_list = [tuple(item['box'].values()) for item in result_items]
+    assert itertoolz.isdistinct(result_items_list), result_items
+    assert len(result_items) == 5
 
 
-def _embeddings_are_the_same(embedding1, embedding2):
-    threshold = 0.01
-    for i in range(len(embedding1)):
-        if (embedding1[i] - embedding2[i]) / embedding2[i] > threshold:
-            return False
-    return True
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_asks_to_recognize_faces_in_5_person_png_image__then_returns_5_different_bounding_boxes(host):
+    file = {'file': open(IMG_DIR / 'five-faces.png', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
+
+    assert res.status_code == 200, res.content
+    result_items = res.json()['result']
+    result_items_list = [tuple(item['box'].values()) for item in result_items]
+    assert itertoolz.isdistinct(result_items_list), result_items
+    assert len(result_items) == 5
 
 
-def _boxes_are_the_same(box1, box2):
-    def value_is_the_same(key):
-        allowed_px_diff = 10
-        return abs(box2[key] - box1[key]) < allowed_px_diff
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_tries_to_recognize_an_image_without_faces__then_returns_400_no_face_found(host):
+    files = {'file': open(IMG_DIR / 'landscape.jpg', 'rb')}
 
-    return (value_is_the_same('x_max')
-            and value_is_the_same('x_min')
-            and value_is_the_same('y_max')
-            and value_is_the_same('y_min'))
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "No face is found in the given image"
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__given_api_key__when_client_asks_to_get_faces_list__then_returns_3_face_names_with_correct_values(host):
+    pass
+
+    res = requests.get(f"{host}/faces", headers={'X-Api-Key': 'test-api-key'})
+
+    result = res.json()['names']
+    assert len(result) == 3
+    assert set(result) == {'Marie Curie', 'Stephen Hawking', 'Paul Walker'}
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__given_other_api_key__when_client_asks_to_get_faces_list__then_returns_0_face_names(host):
+    pass
+
+    res = requests.get(f"{host}/faces", headers={'X-Api-Key': 'different-api-key'})
+
+    result = res.json()['names']
+    assert len(result) == 0
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_requests_to_recognize_the_face_in_another_image__then_service_recognizes_it(host):
+    files = {'file': open(IMG_DIR / 'e2e-personA-img2.jpg', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
+
+    assert res.status_code == 200, res.content
+    result = res.json()['result']
+    assert len(result) == 1
+    assert result[0]['face_name'] == "Marie Curie"
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_deletes_person_c__then_returns_204(host):
+    pass
+
+    res_del = requests.delete(f"{host}/faces/Paul Walker", headers={'X-Api-Key': 'test-api-key'})
+    _wait_until_training_is_complete(host)
+
+    assert res_del.status_code == 204, res_del.content
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_requests_to_recognize__then_only_persons_a_and_b_are_recognized(host):
+    files_a = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
+    files_b = {'file': open(IMG_DIR / 'e2e-personB-img1.jpg', 'rb')}
+    files_c = {'file': open(IMG_DIR / 'e2e-personC-img1.jpg', 'rb')}
+
+    res_a = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files_a)
+    res_b = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files_b)
+    res_c = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files_c)
+
+    assert res_a.status_code == 200, res_a.content
+    result_a = res_a.json()['result']
+    assert result_a[0]['face_name'] == "Marie Curie"
+    assert res_b.status_code == 200, res_b.content
+    result_b = res_b.json()['result']
+    assert result_b[0]['face_name'] == "Stephen Hawking"
+    assert res_c.status_code == 200, res_a.content
+    result_c = res_c.json()['result']
+    assert not (result_c[0]['face_name'] == 'Paul Walker')
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_deletes_person_b__then_returns_204(host):
+    pass
+
+    res_del = requests.delete(f"{host}/faces/Stephen Hawking", headers={'X-Api-Key': 'test-api-key'})
+    _wait_until_training_is_complete(host)
+
+    assert res_del.status_code == 204, res_del.content
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__requests_to_recognize_person_a__then_returns_500_no_models_found_for_api_key(host):
+    files = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
+
+    res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "No classifier model is yet trained for API key 'test-api-key'"

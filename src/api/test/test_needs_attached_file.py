@@ -2,6 +2,7 @@ from http import HTTPStatus
 
 import pytest
 
+from src.api.constants import API_KEY_HEADER
 from src.api.endpoint_decorators import needs_attached_file
 from src.api.exceptions import NoFileAttachedError, NoFileSelectedError
 
@@ -21,7 +22,7 @@ def client_with_file_endpoint(app):
 def test__given_no_file__when_file_upload_endpoint_is_requested__then_completes_request(client_with_file_endpoint):
     pass
 
-    res = client_with_file_endpoint.post('/endpoint')
+    res = client_with_file_endpoint.post('/endpoint', headers={API_KEY_HEADER: 'test-api-key'})
 
     assert res.status_code == NoFileAttachedError.http_status
     assert res.json['message'] == NoFileAttachedError.message
@@ -31,7 +32,7 @@ def test__given_no_selected_file__when_file_upload_endpoint_is_requested__then_r
     filename = ''
     request_data = dict(file=(FILE_BYTES, filename))
 
-    res = client_with_file_endpoint.post('/endpoint', data=request_data)
+    res = client_with_file_endpoint.post('/endpoint', headers={API_KEY_HEADER: 'test-api-key'}, data=request_data)
 
     assert res.status_code == NoFileSelectedError.http_status
     assert res.json['message'] == NoFileSelectedError.message
@@ -41,7 +42,7 @@ def test__given_file__when_file_upload_endpoint_is_requested__then_completes_req
     filename = 'test-file.xyz'
     request_data = dict(file=(FILE_BYTES, filename))
 
-    res = client_with_file_endpoint.post('/endpoint', data=request_data)
+    res = client_with_file_endpoint.post('/endpoint', headers={API_KEY_HEADER: 'test-api-key'}, data=request_data)
 
     assert res.status_code == HTTPStatus.OK, res.json
     assert res.data.decode() == 'success-body'

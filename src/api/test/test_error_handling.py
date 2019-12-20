@@ -1,7 +1,7 @@
 from src.api.exceptions import BadRequestException
 
 
-def test__given_core_raises_bad_request_error_with_custom_msg__then_returns_400_error_with_custom_msg(
+def test__given_core_raises_bad_request_error_with_custom_msg__when_list_faces_endpoint_is_requested__then_returns_400_error_with_custom_msg(
         app):
     @app.route('/_raises_bad_request_error')
     def _raises_bad_request_error():
@@ -15,7 +15,7 @@ def test__given_core_raises_bad_request_error_with_custom_msg__then_returns_400_
     assert res.json['message'] == 'Detailed bad request information'
 
 
-def test__given_core_raises_bad_request_error_with_no_custom_msg__then_returns_400_error_with_default_message(
+def test__given_core_raises_bad_request_error_with_no_msg__when_list_faces_endpoint_is_requested__then_returns_400_error_with_default_message(
         app):
     @app.route('/_raises_bad_request_error')
     def _raises_bad_request_error():
