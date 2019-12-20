@@ -7,8 +7,8 @@ public class AppNotFoundException extends BasicException {
 
     private static final String MESSAGE = "App %s not found";
 
-    public AppNotFoundException(final Object identifier) {
-        super(APP_NOT_FOUND, format(MESSAGE, identifier));
+    public AppNotFoundException(final String guid) {
+        super(APP_NOT_FOUND, format(MESSAGE, guid));
     }
 
 }
