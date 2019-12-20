@@ -14,9 +14,9 @@ export class EntityTitleComponent implements OnInit {
   @Input() options: [Organization];
   @Input() renameDisable: boolean;
   @Input() selectId: string;
+  @Input() entityName: string;
   @Output() selectIdChange = new EventEmitter();
   @Output() rename = new EventEmitter();
-
   constructor() { }
 
   ngOnInit() {
@@ -38,7 +38,9 @@ export class EntityTitleComponent implements OnInit {
   }
 
   apply() {
+    console.log(this.newName);
     this.rename.emit(this.newName);
+
     this.editing = false;
   }
 

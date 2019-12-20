@@ -13,17 +13,22 @@ import {SetSelectedId} from "../../store/organization/action";
 export class OrganizationHeaderService {
   organizationSubscription: Subscription;
   selected$: Observable<string | null>;
+  selectedId: string | null;
   getState: Observable<any>;
   public organization$: Observable<Organization[]>;
 
   constructor(private organizationEnService: OrganizationEnService, private store: Store<AppState>) {
     this.organization$ = this.organizationEnService.entities$;
     this.selected$ = this.store.select(getSelectOrganizationId);
+    this.selected$.subscribe(id => {
+      console.log('getSelectOrganizationId', id);
+      this.selectedId = id;
+    });
     // console.log('OrganizationSelectors', OrganizationSelectors);
     //
-    this.store.select(getSelectOrganizationId).subscribe(e => {
-      console.log('getSelectOrganizationId', e);
-    });
+    // this.store.select(getSelectOrganizationId).subscribe(e => {
+    //   console.log('getSelectOrganizationId', e);
+    // });
     //
     // this.store.select(OrganizationSelectors.selectCollection).subscribe(e => {
     //   console.log('selectOrganizationEntities', e);
@@ -45,5 +50,10 @@ export class OrganizationHeaderService {
 
   select(id: string) {
     this.store.dispatch(new SetSelectedId({selectId: id}));
+  }
+
+  rename(name: string) {
+    console.log(this.selectedId);
+    this.organizationEnService.update({name, id: this.selectedId})
   }
 }

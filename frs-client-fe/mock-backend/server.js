@@ -76,7 +76,7 @@ app.post('/client/register', function (req, res) {
 });
 
 app.get('/organizations', auth, function (req, res) {
-  const id = +req.query.id;
+  const id = req.query.id;
   if(id) {
     res.send(mockData.organization.filter(item => item.id === id))
   } else {
@@ -84,9 +84,17 @@ app.get('/organizations', auth, function (req, res) {
   }
 });
 
-app.post('/organization', auth, function (req, res) {
+app.post('/organization/:id', auth, function (req, res) {
   const organization = req.body;
   mockData.organization.push(organization);
+  res.send(organization);
+});
+
+app.put('/organization/:id', auth, function (req, res) {
+  const newData = req.body;
+  const id = req.params.id;
+  let organization = mockData.organization.find(item => item.id === id);
+  organization.name = newData.name;
   res.send(organization);
 });
 

@@ -2,8 +2,11 @@
   <mat-form-field *ngIf="editing" class="login-full-width">
     <input matInput placeholder="{{placeholder}}" [(ngModel)]="newName">
   </mat-form-field>
-  <mat-form-field *ngIf="!editing" >
-    <mat-label>Organization name</mat-label>
+  <mat-form-field *ngIf="!editing && options.length === 1" >
+    {{options[0].name}}
+  </mat-form-field>
+  <mat-form-field *ngIf="!editing && options.length > 1" >
+    <mat-label>{{entityName}} name</mat-label>
     <mat-select [(value)]="selected">
       <mat-option *ngFor="let option of options" [value]="option.id">
         {{option.name}}

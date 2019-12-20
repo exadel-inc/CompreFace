@@ -14,13 +14,13 @@ import {Observable} from "rxjs";
 export class OrganizationHeaderComponent implements OnInit {
   organizations$: Observable<Organization[]>;
   private selected$: Observable<string | null>;
+  private selectedId: string | null;
 
   constructor(private router: Router, private organizationHeaderService: OrganizationHeaderService) { }
 
   ngOnInit() {
     this.organizations$ = this.organizationHeaderService.organization$;
-    this.selected$ = this.organizationHeaderService.selected$;
-
+    this.organizationHeaderService.selected$.subscribe(id => this.selectedId = id);
   }
 
   createNew() {
@@ -28,15 +28,12 @@ export class OrganizationHeaderComponent implements OnInit {
     console.log('show popup');
   }
 
-  select(id) {
+  selectOrganization(id) {
     this.organizationHeaderService.select(id)
   }
 
-  selectOrganization($event) {
-    console.log($event);
-  }
-
-  rename($event) {
-    console.log($event);
+  rename(name) {
+    console.log(name);
+    this.organizationHeaderService.rename(name)
   }
 }
