@@ -5,6 +5,7 @@ import {RouterModule} from "@angular/router";
 import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 import { ApplicationListComponent } from 'src/app/pages/organization/components/application-list/application-list-container.component';
+import { MatButtonModule } from '@angular/material/button';
 
 
 
@@ -12,6 +13,7 @@ import { ApplicationListComponent } from 'src/app/pages/organization/components/
   declarations: [OrganizationComponent, ApplicationListComponent],
   imports: [
     CommonModule,
+    MatButtonModule,
     RouterModule.forChild([
       {path: '', component: OrganizationComponent, canActivate: [AuthGuard]}
     ]),

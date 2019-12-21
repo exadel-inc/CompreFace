@@ -5,6 +5,9 @@ import { AppState } from 'src/app/store';
 import { selectApplicationListState } from 'src/app/store/applicationList/selectors';
 import { ApplicationListState } from 'src/app/store/applicationList/reducers';
 import { FetchApplicationList } from 'src/app/store/applicationList/action';
+import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
+import { MatDialog } from '@angular/material';
+
 
 @Component({
   selector: 'application-list-container',
@@ -17,7 +20,7 @@ export class ApplicationListComponent implements OnInit {
   public applicationList: any[];
   private applicationListState: Observable<ApplicationListState>;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, public dialog: MatDialog) {
     this.applicationListState = this.store.select(selectApplicationListState);
   }
 
@@ -32,6 +35,14 @@ export class ApplicationListComponent implements OnInit {
   }
 
   public onCreateNewApp(): void {
-    alert('create app alert');
+    const dialog = this.dialog.open(CreateDialogComponent, {
+      data: {
+        entityType: 'application',
+        name: ''
+      }
+    });
+
+    dialog.afterClosed().subscribe(res => console.log('dispatch', res));
+    // alert('create app alert'); CreateDialogComponent
   }
 }
