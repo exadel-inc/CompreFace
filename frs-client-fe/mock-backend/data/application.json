@@ -1,0 +1,21 @@
+[{
+  "id": "0",
+  "organizationId": "0",
+  "name": "Application 0",
+  "owner": "Owner 0"
+}, {
+  "id": "1",
+  "organizationId": "0",
+  "name": "Application 1",
+  "owner": "Owner 1"
+}, {
+  "id": "2",
+  "organizationId": "0",
+  "name": "Application 2",
+  "owner": "Owner 2"
+}, {
+  "id": "3",
+  "organizationId": "0",
+  "name": "Application 3",
+  "owner": "Owner 3"
+}]

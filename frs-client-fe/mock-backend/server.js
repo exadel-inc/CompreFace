@@ -3,8 +3,8 @@ const path = require('path');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const dataPath = './mock-backend/data/';
+const mockApps = require('./data/application.json');
 let mockData = {};
-
 
 const app = express();
 app.use(express.urlencoded());
@@ -61,7 +61,6 @@ app.post('/login', wait(1000), function (req, res) {
 });
 
 app.post('/client/register', function (req, res) {
-  console.log(req.body);
   if (req && req.body.username && req.body.password && req.body.email) {
 
     // if user already exists:
@@ -84,6 +83,16 @@ app.get('/organization', auth, function (req, res) {
   }
 });
 
+app.get('/apps/org/:orgId', auth, (req, res) => {
+  const id = req.params.orgId;
+
+  if(id) {
+    res.send(mockData.application.filter(app => app.organizationId === id));
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 app.listen(3000, function () {
   console.log('Listening on port 3000!');
 
@@ -102,12 +111,13 @@ function getJSONData() {
 
   mockData = {
     organization,
-    apps
+    apps,
+    application: mockApps
   }
 }
 
 function auth(req, res, next) {
-  if (req && req.headers.token === token)
+  if (req && req.headers.authorization === token)
     return next();
   else
     return res.sendStatus(401);
