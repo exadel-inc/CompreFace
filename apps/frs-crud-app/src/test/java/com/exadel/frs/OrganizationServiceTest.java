@@ -106,7 +106,7 @@ public class OrganizationServiceTest {
                 .name("Organization")
                 .build();
 
-        when(organizationRepositoryMock.findByName(anyString())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.existsByName(anyString())).thenReturn(true);
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.createOrganization(organization, null));
     }
@@ -193,7 +193,7 @@ public class OrganizationServiceTest {
                 .build();
 
         when(organizationRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(organization));
-        when(organizationRepositoryMock.findByName(anyString())).thenReturn(Optional.of(organizationUpdate));
+        when(organizationRepositoryMock.existsByName(anyString())).thenReturn(true);
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId));
     }

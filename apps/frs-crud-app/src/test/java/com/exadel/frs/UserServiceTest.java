@@ -7,8 +7,8 @@ import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.exception.UsernameAlreadyExistException;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.util.Optional;

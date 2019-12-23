@@ -279,7 +279,7 @@ public class ModelServiceTest {
                 .build();
 
         when(appServiceMock.getApp(anyString())).thenReturn(app);
-        when(modelRepositoryMock.findByNameAndAppId(anyString(), anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> modelService.createModel(model, USER_ID));
     }
@@ -401,7 +401,7 @@ public class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(anyString())).thenReturn(app);
-        when(modelRepositoryMock.findByNameAndAppId(anyString(), anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> modelService.updateModel(MODEL_GUID, model, USER_ID));
     }

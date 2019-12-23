@@ -67,10 +67,9 @@ public class AppService {
         if (StringUtils.isEmpty(app.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        appRepository.findByNameAndOrganizationId(app.getName(), app.getOrganization().getId())
-                .ifPresent(app1 -> {
-                    throw new NameIsNotUniqueException(app1.getName());
-                });
+        if (appRepository.existsByNameAndOrganizationId(app.getName(), app.getOrganization().getId())) {
+            throw new NameIsNotUniqueException(app.getName());
+        }
         app.setGuid(UUID.randomUUID().toString());
         app.setApiKey(UUID.randomUUID().toString());
         app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
@@ -91,10 +90,9 @@ public class AppService {
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
         if (!StringUtils.isEmpty(app.getName()) && !repoApp.getName().equals(app.getName())) {
-            appRepository.findByNameAndOrganizationId(app.getName(), repoApp.getOrganization().getId())
-                    .ifPresent(app1 -> {
-                        throw new NameIsNotUniqueException(app1.getName());
-                    });
+            if (appRepository.existsByNameAndOrganizationId(app.getName(), repoApp.getOrganization().getId())) {
+                throw new NameIsNotUniqueException(app.getName());
+            }
             repoApp.setName(app.getName());
         }
         if (app.getUserAppRoles() != null) {

@@ -1,13 +1,14 @@
 package com.exadel.frs.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.handler.ExceptionCode.NAME_IS_NOT_UNIQUE;
+import static java.lang.String.format;
 
-@ResponseStatus(value = HttpStatus.BAD_REQUEST)
-public class NameIsNotUniqueException extends RuntimeException {
+public class NameIsNotUniqueException extends BasicException {
+
+    public static final String MESSAGE = "Name %s is not unique";
 
     public NameIsNotUniqueException(String fieldName) {
-        super("Name '" + fieldName + "' is not unique");
+        super(NAME_IS_NOT_UNIQUE, format(MESSAGE, fieldName));
     }
 
 }

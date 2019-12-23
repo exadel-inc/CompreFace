@@ -68,10 +68,9 @@ public class ModelService {
         if (StringUtils.isEmpty(model.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        modelRepository.findByNameAndAppId(model.getName(), model.getApp().getId())
-                .ifPresent(model1 -> {
-                    throw new NameIsNotUniqueException(model1.getName());
-                });
+        if (modelRepository.existsByNameAndAppId(model.getName(), model.getApp().getId())) {
+            throw new NameIsNotUniqueException(model.getName());
+        }
         model.setGuid(UUID.randomUUID().toString());
         model.setApiKey(UUID.randomUUID().toString());
         modelRepository.save(model);
@@ -81,10 +80,9 @@ public class ModelService {
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
         if (!StringUtils.isEmpty(model.getName()) && !repoModel.getName().equals(model.getName())) {
-            modelRepository.findByNameAndAppId(model.getName(), repoModel.getApp().getId())
-                    .ifPresent(model1 -> {
-                        throw new NameIsNotUniqueException(model1.getName());
-                    });
+            if (modelRepository.existsByNameAndAppId(model.getName(), repoModel.getApp().getId())) {
+                throw new NameIsNotUniqueException(model.getName());
+            }
             repoModel.setName(model.getName());
         }
         if (model.getAppModelAccess() != null) {

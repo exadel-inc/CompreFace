@@ -12,7 +12,6 @@ import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -244,7 +243,7 @@ public class AppServiceTest {
                 .build();
 
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
-        when(appRepositoryMock.findByNameAndOrganizationId(anyString(), anyLong())).thenReturn(Optional.of(app));
+        when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(app, USER_ID));
     }
@@ -408,7 +407,7 @@ public class AppServiceTest {
                 .name("new_name")
                 .build();
 
-        when(appRepositoryMock.findByNameAndOrganizationId(anyString(), anyLong())).thenReturn(Optional.of(appUpdate));
+        when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 

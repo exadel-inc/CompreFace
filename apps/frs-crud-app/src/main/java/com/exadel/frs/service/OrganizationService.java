@@ -57,10 +57,9 @@ public class OrganizationService {
         if (StringUtils.isEmpty(organization.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        organizationRepository.findByName(organization.getName())
-                .ifPresent(organization1 -> {
-                    throw new NameIsNotUniqueException(organization1.getName());
-                });
+        if (organizationRepository.existsByName(organization.getName())) {
+            throw new NameIsNotUniqueException(organization.getName());
+        }
         organization.setGuid(UUID.randomUUID().toString());
         organization.addUserOrganizationRole(userService.getUser(userId), OrganizationRole.OWNER);
         organizationRepository.save(organization);
@@ -79,10 +78,9 @@ public class OrganizationService {
         Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!StringUtils.isEmpty(organization.getName()) && !organizationFromRepo.getName().equals(organization.getName())) {
-            organizationRepository.findByName(organization.getName())
-                    .ifPresent(organization1 -> {
-                        throw new NameIsNotUniqueException(organization1.getName());
-                    });
+            if (organizationRepository.existsByName(organization.getName())) {
+                throw new NameIsNotUniqueException(organization.getName());
+            }
             organizationFromRepo.setName(organization.getName());
         }
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
