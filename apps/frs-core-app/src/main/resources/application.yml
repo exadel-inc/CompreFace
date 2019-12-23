@@ -1,0 +1,28 @@
+server:
+  port: 8081
+
+spring:
+  profiles:
+    active: dev
+
+---
+
+spring:
+  jackson:
+    serialization:
+      indent-output: true
+  data:
+    mongodb:
+      uri: ${MONGO_URL:mongodb://msqv355.exadel.by:27017}
+      database: recognition
+
+---
+
+spring:
+  profiles: dev
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+

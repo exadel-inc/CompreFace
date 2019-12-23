@@ -1,0 +1,37 @@
+package com.exadel.frs.handler;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+import static org.springframework.http.HttpStatus.*;
+
+@AllArgsConstructor
+@Getter
+public enum ExceptionCode {
+    ACCESS_DENIED(1, FORBIDDEN),
+    APP_NOT_FOUND(2, NOT_FOUND),
+    APP_OR_MODEL_NOT_FOUND_OR_PERMISSION_ISSUE(3, NOT_FOUND),
+    EMAIL_ALREADY_REGISTERED(4, BAD_REQUEST),
+    EMPTY_REQUIRED_FIELD(5, BAD_REQUEST),
+    INCORRECT_ACCESS_TYPE(6, BAD_REQUEST),
+    INCORRECT_APP_ROLE(7, BAD_REQUEST),
+    INCORRECT_ORGANIZATION_ROLE(8, BAD_REQUEST),
+    INSUFFICIENT_PRIVILEGES(9, BAD_REQUEST),
+    MODEL_NOT_FOUND(10, NOT_FOUND),
+    MULTIPLE_OWNERS(11, BAD_REQUEST),
+    ORGANIZATION_MISMATCH(12, BAD_REQUEST),
+    ORGANIZATION_NOT_FOUND(13, NOT_FOUND),
+    SELF_REMOVE(14, BAD_REQUEST),
+    SELF_ROLE_CHANGE(15, BAD_REQUEST),
+    USER_DOES_NOT_BELONG_TO_ORGANIZATION(16, NOT_FOUND),
+    USER_DOES_NOT_EXIST(17, NOT_FOUND),
+    USERNAME_ALREADY_EXIST(18, BAD_REQUEST),
+
+
+    UNDEFINED(0, BAD_REQUEST);
+
+    private final Integer code;
+    private final HttpStatus httpStatus;
+}
+
