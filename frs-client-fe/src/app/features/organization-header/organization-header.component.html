@@ -1,7 +1,7 @@
 <div *ngIf="organizations$ | async as organizations">
   <app-entity-title
     [entityName]="'Organization'"
-    [selectId]="selectedId"
+    [selectId$]="selected$"
     [options]="organizations"
     (selectIdChange)="selectOrganization($event)"
     [renameDisable]="false"

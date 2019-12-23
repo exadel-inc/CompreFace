@@ -53,7 +53,7 @@ export class OrganizationHeaderService {
   }
 
   rename(name: string) {
-    console.log(this.selectedId);
+    // console.log(this.selectedId);
     this.organizationEnService.update({name, id: this.selectedId})
   }
 }

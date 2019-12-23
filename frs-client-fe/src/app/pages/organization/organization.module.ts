@@ -5,6 +5,7 @@ import {RouterModule} from "@angular/router";
 import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 import {OrganizationHeaderModule} from "../../features/organization-header/organization-header.module";
+import {OrganizationService} from "./organization.service";
 
 @NgModule({
   declarations: [OrganizationComponent],
@@ -17,6 +18,7 @@ import {OrganizationHeaderModule} from "../../features/organization-header/organ
     ToolBarModule,
     OrganizationHeaderModule
   ],
+  providers: [OrganizationService],
   exports: [RouterModule]
 })
 export class OrganizationModule { }
