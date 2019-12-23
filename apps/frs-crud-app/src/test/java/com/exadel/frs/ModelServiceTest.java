@@ -30,6 +30,13 @@ import static org.mockito.Mockito.*;
 
 public class ModelServiceTest {
 
+    private static final String MODEL_GUID = "model-guid";
+    private static final String APPLICATION_GUID = "application-guid";
+    private static final Long USER_ID = 1L;
+    private static final Long MODEL_ID = 2L;
+    private static final Long APPLICATION_ID = 3L;
+    private static final Long ORGANIZATION_ID = 4L;
+
     private AppService appServiceMock;
     private ModelRepository modelRepositoryMock;
     private ModelService modelService;
@@ -64,119 +71,104 @@ public class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successGetModelOrganizationOwner(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        Model result = modelService.getModel(modelId, userId);
+        Model result = modelService.getModel(MODEL_GUID, USER_ID);
 
-        assertThat(result.getId(), is(modelId));
+        assertThat(result.getGuid(), is(MODEL_GUID));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
     public void successGetModelOrganizationUser(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
                 .organization(organization)
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        Model result = modelService.getModel(modelId, userId);
+        Model result = modelService.getModel(MODEL_GUID, USER_ID);
 
-        assertThat(result.getId(), is(modelId));
+        assertThat(result.getId(), is(MODEL_ID));
+        assertThat(result.getGuid(), is(MODEL_GUID));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failGetModelInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.getModel(modelId, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.getModel(MODEL_GUID, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successGetModelsOrganizationOwner(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
         when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        List<Model> result = modelService.getModels(appId, userId);
+        List<Model> result = modelService.getModels(APPLICATION_GUID, USER_ID);
 
         assertThat(result.size(), is(1));
     }
@@ -184,31 +176,27 @@ public class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void successGetModelsOrganizationUser(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
         app.addUserAppRole(user, AppRole.USER);
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
                 .app(app)
                 .build();
 
         when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        List<Model> result = modelService.getModels(appId, userId);
+        List<Model> result = modelService.getModels(APPLICATION_GUID, USER_ID);
 
         assertThat(result.size(), is(1));
     }
@@ -216,59 +204,52 @@ public class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failGetModelsInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
                 .app(app)
                 .build();
 
         when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.getModels(appId, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.getModels(APPLICATION_GUID, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successCreateModel(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .name("name")
                 .app(app)
                 .build();
 
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        modelService.createModel(model, userId);
+        modelService.createModel(model, USER_ID);
 
         verify(modelRepositoryMock).save(any(Model.class));
 
@@ -278,81 +259,70 @@ public class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failCreateModelInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .name("name")
                 .app(app)
                 .build();
 
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.createModel(model, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.createModel(model, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void failCreateModelEmptyName(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
+                .id(MODEL_ID)
                 .app(app)
                 .build();
 
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> modelService.createModel(model, userId));
+        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> modelService.createModel(model, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successUpdateModel(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
         Model repoModel = Model.builder()
                 .name("name")
-                .guid("guid")
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
@@ -363,10 +333,10 @@ public class ModelServiceTest {
                 .build();
         model.addAppModelAccess(app, AppModelAccess.TRAIN);
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        modelService.updateModel(modelId, model, userId);
+        modelService.updateModel(MODEL_GUID, model, USER_ID);
 
         verify(modelRepositoryMock).save(any(Model.class));
 
@@ -378,23 +348,20 @@ public class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failUpdateModelInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
         Model repoModel = Model.builder()
                 .name("name")
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
@@ -403,38 +370,38 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.updateModel(modelId, model, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.updateModel(MODEL_GUID, model, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void failUpdateModelOrganizationMismatch(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
         Long organizationId1 = 1L;
         Long organizationId2 = 2L;
 
-        User user = user(userId);
+        User user = user(USER_ID);
 
         Organization organization1 = organization(organizationId1);
         organization1.addUserOrganizationRole(user, organizationRole);
 
         App app1 = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization1)
                 .build();
 
         Model repoModel = Model.builder()
+                .guid(MODEL_GUID)
                 .app(app1)
                 .build();
 
         Organization organization2 = organization(organizationId2);
         App app2 = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization2)
                 .build();
 
@@ -443,39 +410,34 @@ public class ModelServiceTest {
                 .build();
         model.addAppModelAccess(app2, AppModelAccess.TRAIN);
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
-        when(appServiceMock.getApp(anyLong())).thenReturn(app2);
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app2);
 
-        Assertions.assertThrows(OrganizationMismatchException.class, () -> modelService.updateModel(modelId, model, userId));
+        Assertions.assertThrows(OrganizationMismatchException.class, () -> modelService.updateModel(MODEL_GUID, model, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successRegenerateGuid(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
-                .guid("guid")
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        modelService.regenerateGuid(appId, userId);
+        modelService.regenerateApiKey(MODEL_GUID, USER_ID);
 
         assertThat(model.getGuid(), not("guid"));
     }
@@ -483,59 +445,49 @@ public class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failRegenerateGuidInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
-                .guid("guid")
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.regenerateGuid(appId, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.regenerateApiKey(MODEL_GUID, USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void successDeleteModel(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
-                .guid("guid")
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        modelService.deleteModel(appId, userId);
+        modelService.deleteModel(MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).deleteById(anyLong());
     }
@@ -543,30 +495,25 @@ public class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("readRoles")
     public void failDeleteModelInsufficientPrivileges(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long modelId = 1L;
-        Long appId = 1L;
-        Long organizationId = 1L;
+        User user = user(USER_ID);
 
-        User user = user(userId);
-
-        Organization organization = organization(organizationId);
+        Organization organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .id(appId)
+                .id(APPLICATION_ID)
                 .organization(organization)
                 .build();
 
         Model model = Model.builder()
-                .id(modelId)
-                .guid("guid")
+                .id(MODEL_ID)
+                .guid(MODEL_GUID)
                 .app(app)
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(model));
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.deleteModel(appId, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.deleteModel(MODEL_GUID, USER_ID));
     }
 
 }

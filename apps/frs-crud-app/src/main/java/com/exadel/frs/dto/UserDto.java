@@ -13,6 +13,7 @@ public class UserDto {
     private String username;
     private String firstName;
     private String lastName;
+    private String guid;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;

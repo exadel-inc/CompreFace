@@ -26,9 +26,9 @@ public class ModelService {
     private final ModelRepository modelRepository;
     private final AppService appService;
 
-    public Model getModel(Long modelId) {
-        return modelRepository.findById(modelId)
-                .orElseThrow(() -> new ModelNotFoundException(modelId));
+    public Model getModel(final String modelGuid) {
+        return modelRepository.findByGuid(modelGuid)
+                .orElseThrow(() -> new ModelNotFoundException(modelGuid));
     }
 
     private OrganizationRole getUserOrganizationRole(Organization organization, Long userId) {
@@ -53,29 +53,31 @@ public class ModelService {
         }
     }
 
-    public Model getModel(Long id, Long userId) {
-        Model model = getModel(id);
+    public Model getModel(final String modelGuid, final Long userId) {
+        Model model = getModel(modelGuid);
         verifyUserHasReadPrivileges(userId, model.getApp());
         return model;
     }
 
-    public List<Model> getModels(Long appId, Long userId) {
-        verifyUserHasReadPrivileges(userId, appService.getApp(appId));
-        return modelRepository.findAllByAppId(appId);
+    public List<Model> getModels(final String appGuid, final Long userId) {
+        App app = appService.getApp(appGuid);
+        verifyUserHasReadPrivileges(userId, app);
+        return modelRepository.findAllByAppId(app.getId());
     }
 
     public void createModel(Model model, Long userId) {
-        App repoApp = appService.getApp(model.getApp().getId());
+        App repoApp = appService.getApp(model.getApp().getGuid());
         verifyUserHasWritePrivileges(userId, repoApp);
         if (StringUtils.isEmpty(model.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
         model.setGuid(UUID.randomUUID().toString());
+        model.setApiKey(UUID.randomUUID().toString());
         modelRepository.save(model);
     }
 
-    public void updateModel(Long id, Model model, Long userId) {
-        Model repoModel = getModel(id);
+    public void updateModel(final String modelGuid, Model model, Long userId) {
+        Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
         if (!StringUtils.isEmpty(model.getName())) {
             repoModel.setName(model.getName());
@@ -86,7 +88,7 @@ public class ModelService {
                 repoModel.getAppModelAccess().clear();
             }
             model.getAppModelAccess().forEach(appModel -> {
-                App app = appService.getApp(appModel.getApp().getId());
+                App app = appService.getApp(appModel.getApp().getGuid());
                 if (!repoModelOrganizationId.equals(app.getOrganization().getId())) {
                     throw new OrganizationMismatchException();
                 }
@@ -96,16 +98,17 @@ public class ModelService {
         modelRepository.save(repoModel);
     }
 
-    public void regenerateGuid(Long id, Long userId) {
-        Model repoModel = getModel(id);
+    public void regenerateApiKey(final String guid, final Long userId) {
+        Model repoModel = getModel(guid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        repoModel.setGuid(UUID.randomUUID().toString());
+        repoModel.setApiKey(UUID.randomUUID().toString());
         modelRepository.save(repoModel);
     }
 
-    public void deleteModel(Long id, Long userId) {
-        verifyUserHasWritePrivileges(userId, getModel(id).getApp());
-        modelRepository.deleteById(id);
+    public void deleteModel(final String guid, final Long userId) {
+        Model model = getModel(guid);
+        verifyUserHasWritePrivileges(userId, model.getApp());
+        modelRepository.deleteById(model.getId());
     }
 
 }

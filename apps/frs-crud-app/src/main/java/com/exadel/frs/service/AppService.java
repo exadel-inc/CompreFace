@@ -23,9 +23,9 @@ public class AppService {
     private final OrganizationService organizationService;
     private final UserService userService;
 
-    public App getApp(Long appId) {
-        return appRepository.findById(appId)
-                .orElseThrow(() -> new AppNotFoundException(appId));
+    public App getApp(final String appGuid) {
+        return appRepository.findByGuid(appGuid)
+                .orElseThrow(() -> new AppNotFoundException(appGuid));
     }
 
     private OrganizationRole getUserOrganizationRole(Organization organization, Long userId) {
@@ -46,17 +46,20 @@ public class AppService {
         }
     }
 
-    public App getApp(Long id, Long userId) {
-        App repoApp = getApp(id);
+    public App getApp(final String appGuid, Long userId) {
+        App repoApp = getApp(appGuid);
         verifyUserHasReadPrivileges(userId, repoApp);
         return repoApp;
     }
 
-    public List<App> getApps(Long organizationId, Long userId) {
-        if (OrganizationRole.USER == getUserOrganizationRole(organizationService.getOrganization(organizationId), userId)) {
-            return appRepository.findAllByOrganizationIdAndUserAppRoles_Id_UserId(organizationId, userId);
+    public List<App> getApps(final String organizationGuid, final Long userId) {
+        final Organization organization = organizationService.getOrganization(organizationGuid);
+
+        if (OrganizationRole.USER == getUserOrganizationRole(organization, userId)) {
+            return appRepository.findAllByOrganizationIdAndUserAppRoles_Id_UserId(organization.getId(), userId);
         }
-        return appRepository.findAllByOrganizationId(organizationId);
+
+        return appRepository.findAllByOrganizationId(organization.getId());
     }
 
     public void createApp(App app, Long userId) {
@@ -65,6 +68,7 @@ public class AppService {
         }
         verifyUserHasWritePrivileges(userId, organizationService.getOrganization(app.getOrganization().getId()));
         app.setGuid(UUID.randomUUID().toString());
+        app.setApiKey(UUID.randomUUID().toString());
         app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
         appRepository.save(app);
     }
@@ -79,8 +83,8 @@ public class AppService {
         return ownersCount;
     }
 
-    public void updateApp(Long id, App app, Long userId) {
-        App repoApp = getApp(id);
+    public void updateApp(final String appGuid, final App app, final Long userId) {
+        App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
         if (!StringUtils.isEmpty(app.getName())) {
             repoApp.setName(app.getName());
@@ -105,17 +109,17 @@ public class AppService {
         appRepository.save(repoApp);
     }
 
-    public void regenerateGuid(Long id, Long userId) {
-        App repoApp = getApp(id);
+    public void regenerateApiKey(final String guid, final Long userId) {
+        App repoApp = getApp(guid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        repoApp.setGuid(UUID.randomUUID().toString());
+        repoApp.setApiKey(UUID.randomUUID().toString());
         appRepository.save(repoApp);
     }
 
-    public void deleteApp(Long id, Long userId) {
-        App repoApp = getApp(id);
+    public void deleteApp(final String guid, final Long userId) {
+        App repoApp = getApp(guid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        appRepository.deleteById(id);
+        appRepository.deleteById(repoApp.getId());
     }
 
 }

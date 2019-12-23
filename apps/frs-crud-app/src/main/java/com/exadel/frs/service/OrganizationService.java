@@ -12,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,12 @@ public class OrganizationService {
                 .orElseThrow(() -> new OrganizationNotFoundException(organizationId));
     }
 
+    public Organization getOrganization(final String organizationGuid) {
+        return organizationRepository
+                .findByGuid(organizationGuid)
+                .orElseThrow(() -> new OrganizationNotFoundException(organizationGuid));
+    }
+
     private void verifyUserHasReadPrivileges(Long userId, Organization organization) {
         organization.getUserOrganizationRoleOrThrow(userId);
     }
@@ -36,8 +43,8 @@ public class OrganizationService {
         }
     }
 
-    public Organization getOrganization(Long id, Long userId) {
-        Organization organization = getOrganization(id);
+    public Organization getOrganization(final String guid, final Long userId) {
+        Organization organization = getOrganization(guid);
         verifyUserHasReadPrivileges(userId, organization);
         return organization;
     }
@@ -50,6 +57,7 @@ public class OrganizationService {
         if (StringUtils.isEmpty(organization.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
+        organization.setGuid(UUID.randomUUID().toString());
         organization.addUserOrganizationRole(userService.getUser(userId), OrganizationRole.OWNER);
         organizationRepository.save(organization);
     }
@@ -63,8 +71,8 @@ public class OrganizationService {
         }
     }
 
-    public void updateOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
+    public void updateOrganization(final String guid, Organization organization, Long userId) {
+        Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!StringUtils.isEmpty(organization.getName())) {
             organizationFromRepo.setName(organization.getName());
@@ -87,8 +95,8 @@ public class OrganizationService {
     }
 
     // todo implement user invitation to organization by email. then delete this method
-    public void addUserToOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
+    public void addUserToOrganization(final String guid, Organization organization, final Long userId) {
+        Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
@@ -101,8 +109,8 @@ public class OrganizationService {
         organizationRepository.save(organizationFromRepo);
     }
 
-    public void removeUserFromOrganization(Long id, Organization organization, Long userId) {
-        Organization organizationFromRepo = getOrganization(id);
+    public void removeUserFromOrganization(final String guid, Organization organization, final Long userId) {
+        Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {
             organization.getUserOrganizationRoles().forEach(userOrganizationRole -> {
@@ -116,10 +124,10 @@ public class OrganizationService {
         organizationRepository.save(organizationFromRepo);
     }
 
-    public void deleteOrganization(Long id, Long userId) {
-        Organization organization = getOrganization(id);
+    public void deleteOrganization(final String guid, final Long userId) {
+        Organization organization = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organization);
-        organizationRepository.deleteById(id);
+        organizationRepository.deleteById(organization.getId());
     }
 
 }

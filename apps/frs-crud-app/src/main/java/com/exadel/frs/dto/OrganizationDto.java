@@ -9,6 +9,7 @@ public class OrganizationDto {
 
     private Long id;
     private String name;
+    private String guid;
     private List<UserRoleDto> userOrganizationRoles;
 
 }

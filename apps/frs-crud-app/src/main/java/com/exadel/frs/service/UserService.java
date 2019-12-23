@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.UUID;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -39,6 +41,7 @@ public class UserService {
         if (userRepository.findByEmail(user.getEmail()).isPresent()) {
             throw new EmailAlreadyRegisteredException();
         }
+        user.setGuid(UUID.randomUUID().toString());
         user.setPassword(encoder.encode(user.getPassword()));
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);

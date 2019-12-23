@@ -22,10 +22,12 @@ public class OrganizationController {
     private final OrganizationService organizationService;
     private final OrganizationMapper organizationMapper;
 
-    @GetMapping("/{id}")
+    @GetMapping("/{guid}")
     @ApiOperation(value = "Get Organization, created by user")
-    public OrganizationDto getOrganization(@ApiParam(value = "ID of Organization to return", required = true, example = "0") @PathVariable Long id) {
-        return organizationMapper.toDto(organizationService.getOrganization(id, SecurityUtils.getPrincipalId()));
+    public OrganizationDto getOrganization(@ApiParam(value = "GUID of Organization to return",
+                                                     required = true,
+                                                     example = "0") @PathVariable final String guid) {
+        return organizationMapper.toDto(organizationService.getOrganization(guid, SecurityUtils.getPrincipalId()));
     }
 
     @GetMapping("/")
@@ -43,31 +45,35 @@ public class OrganizationController {
         organizationService.createOrganization(organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{guid}")
     @ApiOperation(value = "Update Organization")
-    public void updateOrganization(@ApiParam(value = "ID of Organization that needs to be updated", required = true, example = "0") @PathVariable Long id,
+    public void updateOrganization(@ApiParam(value = "GUID of Organization that needs to be updated",
+                                             required = true,
+                                             example = "0") @PathVariable final String guid,
                                    @ApiParam(value = "Organization data", required = true) @Valid @RequestBody OrganizationDto organizationDto) {
-        organizationService.updateOrganization(id, organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
+        organizationService.updateOrganization(guid, organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/{id}/add-users")
+    @PutMapping("/{guid}/add-users")
     @ApiOperation(value = "Add users to Organization")
-    public void addUsersToOrganization(@ApiParam(value = "ID of Organization that needs to be updated", required = true, example = "0") @PathVariable Long id,
+    public void addUsersToOrganization(@ApiParam(value = "GUID of Organization that needs to be updated",
+                                                 required = true,
+                                                 example = "0") @PathVariable final String guid,
                                        @ApiParam(value = "Organization data", required = true) @Valid @RequestBody OrganizationDto organizationDto) {
-        organizationService.addUserToOrganization(id, organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
+        organizationService.addUserToOrganization(guid, organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/{id}/remove-users")
+    @PutMapping("/{guid}/remove-users")
     @ApiOperation(value = "Remove users from Organization")
-    public void removeUsersFromOrganization(@ApiParam(value = "ID of Organization that needs to be updated", required = true, example = "0") @PathVariable Long id,
+    public void removeUsersFromOrganization(@ApiParam(value = "GUID of Organization that needs to be updated", required = true, example = "0") @PathVariable final String guid,
                                             @ApiParam(value = "Organization data", required = true) @Valid @RequestBody OrganizationDto organizationDto) {
-        organizationService.removeUserFromOrganization(id, organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
+        organizationService.removeUserFromOrganization(guid, organizationMapper.toEntity(organizationDto), SecurityUtils.getPrincipalId());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{guid}")
     @ApiOperation(value = "Delete Organization")
-    public void deleteOrganization(@ApiParam(value = "ID of the Organization that needs to be deleted", required = true, example = "0") @PathVariable Long id) {
-        organizationService.deleteOrganization(id, SecurityUtils.getPrincipalId());
+    public void deleteOrganization(@ApiParam(value = "GUID of the Organization that needs to be deleted", required = true, example = "0") @PathVariable final String guid) {
+        organizationService.deleteOrganization(guid, SecurityUtils.getPrincipalId());
     }
 
 }
