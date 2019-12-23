@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { selectApplicationListState } from 'src/app/store/applicationList/selectors';
 import { ApplicationListState } from 'src/app/store/applicationList/reducers';
-import { FetchApplicationList } from 'src/app/store/applicationList/action';
+import { FetchApplicationList, CreateApplication } from 'src/app/store/applicationList/action';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatDialog } from '@angular/material';
 
@@ -22,6 +22,9 @@ export class ApplicationListComponent implements OnInit {
 
   constructor(private store: Store<AppState>, public dialog: MatDialog) {
     this.applicationListState = this.store.select(selectApplicationListState);
+    this.store.dispatch(new FetchApplicationList({
+      organizationId: '0'
+    }));
   }
 
   ngOnInit() {
@@ -30,8 +33,6 @@ export class ApplicationListComponent implements OnInit {
       this.errorMessage = state.errorMessage;
       this.applicationList = state.applicationList;
     });
-
-    this.store.dispatch(new FetchApplicationList());
   }
 
   public onCreateNewApp(): void {
@@ -42,7 +43,13 @@ export class ApplicationListComponent implements OnInit {
       }
     });
 
-    dialog.afterClosed().subscribe(res => console.log('dispatch', res));
-    // alert('create app alert'); CreateDialogComponent
+    dialog.afterClosed().subscribe(res => {
+      if (res) {
+        this.store.dispatch(new CreateApplication({
+          organizationId: '0',
+          name: res
+        }));
+      }
+    });
   }
 }
