@@ -278,7 +278,7 @@ public class ModelServiceTest {
                 .app(app)
                 .build();
 
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(appServiceMock.getApp(anyString())).thenReturn(app);
         when(modelRepositoryMock.findByNameAndAppId(anyString(), anyLong())).thenReturn(Optional.of(model));
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> modelService.createModel(model, USER_ID));
@@ -377,8 +377,6 @@ public class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("writeRoles")
     public void failUpdateModelNameIsNotUnique(OrganizationRole organizationRole) {
-        Long appId = 1L;
-
         User user = user(USER_ID);
 
         Organization organization = organization(ORGANIZATION_ID);
@@ -401,8 +399,8 @@ public class ModelServiceTest {
                 .name("new_name")
                 .build();
 
-        when(modelRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoModel));
-        when(appServiceMock.getApp(anyLong())).thenReturn(app);
+        when(modelRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(anyString())).thenReturn(app);
         when(modelRepositoryMock.findByNameAndAppId(anyString(), anyLong())).thenReturn(Optional.of(model));
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> modelService.updateModel(MODEL_GUID, model, USER_ID));

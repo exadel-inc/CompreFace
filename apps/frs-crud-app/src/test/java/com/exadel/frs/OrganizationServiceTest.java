@@ -163,6 +163,7 @@ public class OrganizationServiceTest {
 
         Organization organization = Organization.builder()
                 .name("Organization 1")
+                .guid(ORGANISATION_GUID)
                 .build();
         organization.addUserOrganizationRole(user1, OrganizationRole.OWNER);
 
@@ -170,20 +171,20 @@ public class OrganizationServiceTest {
         organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.OWNER);
         organizationUpdate.addUserOrganizationRole(user3, OrganizationRole.OWNER);
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(MultipleOwnersException.class, () -> organizationService.updateOrganization(organizationId, organizationUpdate, userId1));
+        Assertions.assertThrows(MultipleOwnersException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId1));
     }
 
     @Test
     public void failUpdateOrganizationNameIsNotUnique() {
         Long userId = 1L;
-        Long organizationId = 1L;
 
         User user = user(userId);
 
         Organization organization = Organization.builder()
                 .name("Organization 1")
+                .guid(ORGANISATION_GUID)
                 .build();
         organization.addUserOrganizationRole(user, OrganizationRole.OWNER);
 
@@ -191,10 +192,10 @@ public class OrganizationServiceTest {
                 .name("Organization 2")
                 .build();
 
-        when(organizationRepositoryMock.findById(anyLong())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(organization));
         when(organizationRepositoryMock.findByName(anyString())).thenReturn(Optional.of(organizationUpdate));
 
-        Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.updateOrganization(organizationId, organizationUpdate, userId));
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId));
     }
 
     @ParameterizedTest

@@ -334,7 +334,7 @@ public class AppServiceTest {
         verify(appRepositoryMock).save(any(App.class));
 
         assertThat(repoApp.getName(), is(app.getName()));
-        assertThat(repoApp.getGuid(), is("guid"));
+        assertThat(repoApp.getGuid(), is(APPLICATION_GUID));
         assertThat(repoApp.getUserAppRoles().size(), is(1));
     }
 

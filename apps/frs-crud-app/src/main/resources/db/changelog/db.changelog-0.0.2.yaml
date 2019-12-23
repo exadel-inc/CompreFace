@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: init
-      author: vlad
+      id: changelog-0.0.2.1
+      author: Vladyslav Yavorskyi
       changes:
 
         - addUniqueConstraint:

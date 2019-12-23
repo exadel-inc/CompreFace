@@ -78,7 +78,7 @@ public class OrganizationService {
     public void updateOrganization(final String guid, Organization organization, Long userId) {
         Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
-        if (!StringUtils.isEmpty(organization.getName()) && !repoOrganization.getName().equals(organization.getName())) {
+        if (!StringUtils.isEmpty(organization.getName()) && !organizationFromRepo.getName().equals(organization.getName())) {
             organizationRepository.findByName(organization.getName())
                     .ifPresent(organization1 -> {
                         throw new NameIsNotUniqueException(organization1.getName());
