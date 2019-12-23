@@ -21,6 +21,7 @@ export function ApplicationListReducer(state = initialState, action: Application
     case ApplicationListTypes.FETCH_APPLICATION: {
       return {
         ...state,
+        errorMessage: null,
         isLoading: true
       };
     }
@@ -37,6 +38,28 @@ export function ApplicationListReducer(state = initialState, action: Application
       return {
         ...state,
         applicationList: action.payload.applicationList,
+        errorMessage: action.payload.errorMessage,
+        isLoading: false
+      }
+    }
+
+    case ApplicationListTypes.CREATE_APPLICATION: {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+
+    case ApplicationListTypes.CREATE_APPLICATION_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false
+      }
+    }
+
+    case ApplicationListTypes.CREATE_APPLICATION_FAIL: {
+      return {
+        ...state,
         errorMessage: action.payload.errorMessage,
         isLoading: false
       }

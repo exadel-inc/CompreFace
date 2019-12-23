@@ -52,5 +52,6 @@ export type ApplicationListActions =
   | FetchApplicationList
   | FetchApplicationListSuccess
   | FetchApplicationListFail
+  | CreateApplication
   | CreateApplicationSuccess
   | CreateApplicationFail;

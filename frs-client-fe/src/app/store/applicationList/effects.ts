@@ -12,18 +12,17 @@ import {
   CreateApplicationFail
 } from './action';
 import { HttpClient } from '@angular/common/http';
-import { Application } from 'src/app/data/application';
+import { ApplicationService } from 'src/app/core/application/application.service';
 
 @Injectable()
 export class ApplciationListEffect {
-  constructor(private actions: Actions, private http: HttpClient) { }
+  constructor(private actions: Actions, private applicationService: ApplicationService, private http: HttpClient) { }
 
   @Effect()
   fetchApplicationList: Observable<FetchApplicationListSuccess | FetchApplicationListFail> = this.actions.pipe(
     ofType(ApplicationListTypes.FETCH_APPLICATION),
     switchMap((action: FetchApplicationList) =>
-      // fetch service call here
-      this.http.get<Application>(`http://localhost:3000/org/${action.payload.organizationId}/apps`).pipe(
+      this.applicationService.getAll(action.payload.organizationId).pipe(
         map(apps => new FetchApplicationListSuccess({ applicationList: apps })),
         catchError(e => of(new FetchApplicationListFail({ errorMessage: e })))
       )
@@ -34,7 +33,7 @@ export class ApplciationListEffect {
   createApplication: Observable<CreateApplicationSuccess | CreateApplicationFail> = this.actions.pipe(
     ofType(ApplicationListTypes.CREATE_APPLICATION),
     switchMap((action: CreateApplication) => {
-      return this.http.post<Application>(`http://localhost:3000/org/${action.payload.organizationId}/app`, { name: action.payload.name })
+      return this.applicationService.create(action.payload.organizationId, action.payload.name)
         .pipe(
           map(() => new CreateApplicationSuccess({ organizationId: action.payload.organizationId })),
           catchError(error => of(new CreateApplicationFail({ errorMessage: error })))

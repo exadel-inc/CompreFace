@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { Component, OnInit } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from 'src/app/store';
 import { selectApplicationListState } from 'src/app/store/applicationList/selectors';
@@ -14,11 +14,12 @@ import { MatDialog } from '@angular/material';
   templateUrl: './application-list-container.component.html',
   styleUrls: ['./application-list-container.component.sass']
 })
-export class ApplicationListComponent implements OnInit {
+export class ApplicationListComponent implements OnInit, OnDestroy {
   public isLoading: boolean = true;
   public errorMessage: string;
   public applicationList: any[];
   private applicationListState: Observable<ApplicationListState>;
+  private applicationListStateSubscription: Subscription;
 
   constructor(private store: Store<AppState>, public dialog: MatDialog) {
     this.applicationListState = this.store.select(selectApplicationListState);
@@ -28,7 +29,7 @@ export class ApplicationListComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.applicationListState.subscribe((state: ApplicationListState) => {
+    this.applicationListStateSubscription = this.applicationListState.subscribe((state: ApplicationListState) => {
       this.isLoading = state.isLoading;
       this.errorMessage = state.errorMessage;
       this.applicationList = state.applicationList;
@@ -51,5 +52,9 @@ export class ApplicationListComponent implements OnInit {
         }));
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.applicationListStateSubscription.unsubscribe();
   }
 }
