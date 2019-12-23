@@ -9,7 +9,7 @@ let mockData = {};
 const app = express();
 app.use(express.urlencoded());
 // Add headers
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   // Website you wish to allow to connect
   res.setHeader('Access-Control-Allow-Origin', '*');
   // Request methods you wish to allow
@@ -22,7 +22,7 @@ app.use(function (req, res, next) {
   // Pass to next layer of middleware
   next();
 });
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
@@ -45,62 +45,90 @@ app.use('/static', express.static('static'));
 app.use('/', express.static('public'));
 
 
-app.get('/', function (req, res) {
+app.get('/', function(req, res) {
   res.redirect('/home');
 });
 
-app.post('/login', wait(1000), function (req, res) {
+app.post('/login', wait(1000), function(req, res) {
   console.log(req.body, req.query);
   if (req && req.body.username === user.username && req.body.password === user.password) {
-    token = `${user.username}${user.password}${+new Date()}`;
-    res.send({token});
+    token = `${user.username}_${user.password}_${+new Date()}`;
+    res.send({ token });
   }
-  else{
+  else {
     res.sendStatus(401);
   }
 });
 
-app.post('/client/register', function (req, res) {
+app.post('/client/register', function(req, res) {
   if (req && req.body.username && req.body.password && req.body.email) {
 
     // if user already exists:
-    if(req.body.username === user.username) return res.sendStatus(400);
+    if (req.body.username === user.username) return res.sendStatus(400);
 
-    user = { ...user, ...req.body};
-    res.status(201).send({message: 'Created'});
+    user = { ...user, ...req.body };
+    res.status(201).send({ message: 'Created' });
   }
-  else{
+  else {
     res.sendStatus(400);
   }
 });
 
-app.get('/organization', auth, function (req, res) {
+app.get('/organization', auth, function(req, res) {
   const id = +req.query.id;
-  if(id) {
+  if (id) {
     res.send(mockData.organization.filter(item => item.id === id))
   } else {
     res.send(mockData.organization);
   }
 });
 
-app.get('/apps/org/:orgId', auth, (req, res) => {
+app.get('/org/:orgId/apps', auth, (req, res) => {
   const id = req.params.orgId;
 
-  if(id) {
-    res.send(mockData.application.filter(app => app.organizationId === id));
+  if (id) {
+    const data = mockData.application
+      .filter(app => app.organizationId === id)
+      .map(app => {
+        const { organizationId, ...sendData } = app;
+        return sendData;
+      });
+    res.send(data);
   } else {
     res.sendStatus(400);
   }
 });
 
-app.listen(3000, function () {
-  console.log('Listening on port 3000!');
+app.post('/org/:orgId/app', auth, (req, res) => {
+  const organizationId = req.params.orgId;
+  const firstName = req.headers.authorization.split('_')[0];
+  const name = req.body.name;
 
+  const app = {
+    id: mockData.application.length.toString(),
+    name,
+    owner: {
+      id: 'uniqUserId',
+      firstName,
+      lastName: 'owner_lastname'
+    }
+  };
+
+  mockData.application.push({
+    ...app,
+    organizationId
+  });
+
+  res.status(201).json(app);
+});
+
+app.listen(3000, function() {
+  console.log('Listening on port 3000!');
 });
 
 function getJSONData() {
-  let  organization;
-  let  apps;
+  let organization;
+  let apps;
   try {
     organization = JSON.parse(fs.readFileSync(`${dataPath}organization.json`, 'utf8'));
     apps = JSON.parse(fs.readFileSync(`${dataPath}apps.json`, 'utf8'));
@@ -124,7 +152,7 @@ function auth(req, res, next) {
 }
 
 function wait(time = 1000) {
-  return function (req, res, next) {
+  return function(req, res, next) {
     setTimeout(() => {
       return next();
     }, time)
