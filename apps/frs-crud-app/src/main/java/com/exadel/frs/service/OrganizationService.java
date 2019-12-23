@@ -43,6 +43,12 @@ public class OrganizationService {
         }
     }
 
+    private void verifyNameIsUnique(String name) {
+        if (organizationRepository.existsByName(name)) {
+            throw new NameIsNotUniqueException(name);
+        }
+    }
+
     public Organization getOrganization(final String guid, final Long userId) {
         Organization organization = getOrganization(guid);
         verifyUserHasReadPrivileges(userId, organization);
@@ -57,9 +63,7 @@ public class OrganizationService {
         if (StringUtils.isEmpty(organization.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        if (organizationRepository.existsByName(organization.getName())) {
-            throw new NameIsNotUniqueException(organization.getName());
-        }
+        verifyNameIsUnique(organization.getName());
         organization.setGuid(UUID.randomUUID().toString());
         organization.addUserOrganizationRole(userService.getUser(userId), OrganizationRole.OWNER);
         organizationRepository.save(organization);
@@ -78,9 +82,7 @@ public class OrganizationService {
         Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!StringUtils.isEmpty(organization.getName()) && !organizationFromRepo.getName().equals(organization.getName())) {
-            if (organizationRepository.existsByName(organization.getName())) {
-                throw new NameIsNotUniqueException(organization.getName());
-            }
+            verifyNameIsUnique(organization.getName());
             organizationFromRepo.setName(organization.getName());
         }
         if (!CollectionUtils.isEmpty(organization.getUserOrganizationRoles())) {

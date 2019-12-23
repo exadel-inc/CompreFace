@@ -50,6 +50,12 @@ public class ModelService {
         }
     }
 
+    private void verifyNameIsUnique(String name, Long appId) {
+        if (modelRepository.existsByNameAndAppId(name, appId)) {
+            throw new NameIsNotUniqueException(name);
+        }
+    }
+
     public Model getModel(final String modelGuid, final Long userId) {
         Model model = getModel(modelGuid);
         verifyUserHasReadPrivileges(userId, model.getApp());
@@ -68,9 +74,7 @@ public class ModelService {
         if (StringUtils.isEmpty(model.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        if (modelRepository.existsByNameAndAppId(model.getName(), model.getApp().getId())) {
-            throw new NameIsNotUniqueException(model.getName());
-        }
+        verifyNameIsUnique(model.getName(), model.getApp().getId());
         model.setGuid(UUID.randomUUID().toString());
         model.setApiKey(UUID.randomUUID().toString());
         modelRepository.save(model);
@@ -80,9 +84,7 @@ public class ModelService {
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
         if (!StringUtils.isEmpty(model.getName()) && !repoModel.getName().equals(model.getName())) {
-            if (modelRepository.existsByNameAndAppId(model.getName(), repoModel.getApp().getId())) {
-                throw new NameIsNotUniqueException(model.getName());
-            }
+            verifyNameIsUnique(model.getName(), repoModel.getApp().getId());
             repoModel.setName(model.getName());
         }
         if (model.getAppModelAccess() != null) {

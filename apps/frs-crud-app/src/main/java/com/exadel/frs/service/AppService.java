@@ -46,6 +46,12 @@ public class AppService {
         }
     }
 
+    private void verifyNameIsUnique(String name, Long orgId) {
+        if (appRepository.existsByNameAndOrganizationId(name, orgId)) {
+            throw new NameIsNotUniqueException(name);
+        }
+    }
+
     public App getApp(final String appGuid, Long userId) {
         App repoApp = getApp(appGuid);
         verifyUserHasReadPrivileges(userId, repoApp);
@@ -67,9 +73,7 @@ public class AppService {
         if (StringUtils.isEmpty(app.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        if (appRepository.existsByNameAndOrganizationId(app.getName(), app.getOrganization().getId())) {
-            throw new NameIsNotUniqueException(app.getName());
-        }
+        verifyNameIsUnique(app.getName(), app.getOrganization().getId());
         app.setGuid(UUID.randomUUID().toString());
         app.setApiKey(UUID.randomUUID().toString());
         app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
@@ -90,9 +94,7 @@ public class AppService {
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
         if (!StringUtils.isEmpty(app.getName()) && !repoApp.getName().equals(app.getName())) {
-            if (appRepository.existsByNameAndOrganizationId(app.getName(), repoApp.getOrganization().getId())) {
-                throw new NameIsNotUniqueException(app.getName());
-            }
+            verifyNameIsUnique(app.getName(), repoApp.getOrganization().getId());
             repoApp.setName(app.getName());
         }
         if (app.getUserAppRoles() != null) {
