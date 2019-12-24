@@ -12,4 +12,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
 
     List<Organization> findAllByUserOrganizationRoles_Id_UserId(Long userId);
 
+    boolean existsByName(String name);
+
 }

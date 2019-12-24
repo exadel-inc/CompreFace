@@ -17,4 +17,6 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     Optional<Model> findByGuid(String guid);
 
+    boolean existsByNameAndAppId(String name, Long appId);
+
 }

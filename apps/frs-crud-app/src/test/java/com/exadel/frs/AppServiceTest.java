@@ -5,16 +5,13 @@ import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.InsufficientPrivilegesException;
-import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
+import com.exadel.frs.exception.*;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -73,7 +70,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successGetAppOrganizationOwner(OrganizationRole organizationRole) {
+    public void successGetApp(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
         Organization organization = organization(ORGANISATION_ID);
@@ -154,7 +151,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successGetAppsOrganizationOwner(OrganizationRole organizationRole) {
+    public void successGetApps(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
         Organization organization = organization(ORGANISATION_ID);
@@ -211,7 +208,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successCreateAppOrganizationOwner(OrganizationRole organizationRole) {
+    public void successCreateApp(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
         Organization organization = organization(ORGANISATION_ID);
@@ -230,6 +227,25 @@ public class AppServiceTest {
         verify(appRepositoryMock).save(any(App.class));
 
         assertThat(app.getGuid(), not(isEmptyOrNullString()));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failCreateOrganizationNameIsNotUnique(OrganizationRole organizationRole) {
+        User user = user(USER_ID);
+
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(user, organizationRole);
+
+        App app = App.builder()
+                .name("app")
+                .organization(organization)
+                .build();
+
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
+
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(app, USER_ID));
     }
 
     @ParameterizedTest
@@ -288,8 +304,42 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    @Disabled("Disabled until resolve issue when try to change own organisation!")
-    public void successUpdateAppOrganizationOwner(OrganizationRole organizationRole) {
+    public void successUpdateApp(OrganizationRole organizationRole) {
+        User user1 = user(USER_ID);
+        User user2 = user(4L);
+
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(user1, organizationRole);
+        organization.addUserOrganizationRole(user2, OrganizationRole.USER);
+
+        App repoApp = App.builder()
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .organization(organization)
+                .build();
+        repoApp.addUserAppRole(user1, AppRole.OWNER);
+
+        App app = App.builder()
+                .name("new_name")
+                .guid("new_guid")
+                .build();
+        app.addUserAppRole(user2, AppRole.OWNER);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+
+        appService.updateApp(APPLICATION_GUID, app, USER_ID);
+
+        verify(appRepositoryMock).save(any(App.class));
+
+        assertThat(repoApp.getName(), is(app.getName()));
+        assertThat(repoApp.getGuid(), is(APPLICATION_GUID));
+        assertThat(repoApp.getUserAppRoles().size(), is(1));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failUpdateAppSelfRoleChange(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
         Organization organization = organization(ORGANISATION_ID);
@@ -300,23 +350,68 @@ public class AppServiceTest {
                 .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
+        repoApp.addUserAppRole(user, AppRole.OWNER);
 
-        App app = App.builder()
-                .name("new_name")
-                .guid("new_guid")
-                .build();
-        app.addUserAppRole(user, AppRole.USER);
+        App appUpdate = App.builder().build();
+        appUpdate.addUserAppRole(user, AppRole.USER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
         when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
-        appService.updateApp(APPLICATION_GUID, app, USER_ID);
+        Assertions.assertThrows(SelfRoleChangeException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
+    }
 
-        verify(appRepositoryMock).save(any(App.class));
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failUpdateAppMultipleOwners(OrganizationRole organizationRole) {
+        User user1 = user(USER_ID);
+        User user2 = user(4L);
+        User user3 = user(5L);
 
-        assertThat(repoApp.getName(), is(app.getName()));
-        assertThat(repoApp.getGuid(), is("guid"));
-        assertThat(repoApp.getUserAppRoles().size(), is(1));
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(user1, organizationRole);
+
+        App repoApp = App.builder()
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .organization(organization)
+                .build();
+        repoApp.addUserAppRole(user1, AppRole.OWNER);
+
+        App appUpdate = App.builder().build();
+        appUpdate.addUserAppRole(user2, AppRole.OWNER);
+        appUpdate.addUserAppRole(user3, AppRole.OWNER);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+
+        Assertions.assertThrows(MultipleOwnersException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failUpdateAppNameIsNotUnique(OrganizationRole organizationRole) {
+        User user = user(USER_ID);
+
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(user, organizationRole);
+
+        App repoApp = App.builder()
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .organization(organization)
+                .build();
+        repoApp.addUserAppRole(user, AppRole.OWNER);
+
+        App appUpdate = App.builder()
+                .name("new_name")
+                .build();
+
+        when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
+        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
     }
 
     @ParameterizedTest
