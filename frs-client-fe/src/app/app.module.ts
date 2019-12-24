@@ -21,7 +21,6 @@ import {defaultDataServiceConfig, entityConfig} from "./store/ngrx-data";
 import {CustomMaterialModule} from "./ui/material/material.module";
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import {OrganizationStoreModule} from "./store/organization/organization.module";
-// import { entityConfig } from './entity-metadata';
 
 @NgModule({
   declarations: [

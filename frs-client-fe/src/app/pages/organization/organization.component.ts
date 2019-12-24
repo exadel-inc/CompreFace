@@ -7,11 +7,15 @@ import {OrganizationService} from "./organization.service";
   styleUrls: ['./organization.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationComponent implements OnInit {
+export class OrganizationComponent implements OnInit, OnDestroy {
 
   constructor( private organizationService: OrganizationService) {}
 
   ngOnInit() {
-    // this.organizationService.init();
+    this.organizationService.initUrlBindingStreams();
+  }
+
+  ngOnDestroy() {
+    this.organizationService.unSubscribe();
   }
 }

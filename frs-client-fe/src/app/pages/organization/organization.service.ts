@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {getSelectOrganizationId} from "../../store/organization/selectors";
-import {combineLatest, fromEvent, Observable, Subscription} from "rxjs";
+import {combineLatest, merge, Observable, Subscription} from "rxjs";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {SetSelectedId} from "../../store/organization/action";
 import {Organization} from "../../data/organization";
@@ -8,15 +8,17 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store";
-import {SelectRouterIdParam, selectRouterState} from "../../store/router/selectors";
+import {SelectRouterIdParam} from "../../store/router/selectors";
 import {filter, map} from "rxjs/operators";
 
 @Injectable()
 export class OrganizationService {
   selectedId$: Observable<string>;
-  private subscription: Subscription;
   private setInitialValueFromUrl$: Observable<any>;
   private redirectToOrganization$: Observable<any>;
+  private setFirstOrganization$: Observable<any>;
+  private setSelectedIdSubscription: Subscription;
+  private redirectSubscription: Subscription;
   private organization$: Observable<Array<Organization>>;
 
   constructor(
@@ -24,60 +26,56 @@ export class OrganizationService {
     private route: ActivatedRoute,
     private organizationEnService: OrganizationEnService,
     private store: Store<AppState>
-  ) {
-      this.organizationEnService.getAll();
-      this.organization$ = this.organizationEnService.entities$;
-      this.selectedId$ = this.store.select(getSelectOrganizationId);
+  ) {}
 
-      // combineLatest(this.store.select(SelectRouterIdParam), fromEvent(window,'popstate')).subscribe(([id, event]) => {
-      //   console.warn("location: " + document.location + ", state: ", event);
-      //   // const {id } = this.route.snapshot.params;
-      //   console.log(id);
-      //   if (id) this.store.dispatch(new SetSelectedId({selectId: id}));
-      // });
-
-
-      this.subscription = combineLatest(this.selectedId$, this.organization$, this.store.select(SelectRouterIdParam))
-        .subscribe(( [ selectedId, data, routerId] )  => {
-          // console.log(routerParams);
-          // const { id: routerId } = routerParams;
-          console.log('getSelectOrganizationId', selectedId, data);
-          console.log(routerId);
-          if(selectedId) {
-            if(selectedId !== routerId) {
-              // console.warn('do redirect');
-              // this.router.navigate([ROUTERS_URL.ORGANIZATION, selectedId ])
-            }
-          } else {
-            if(routerId) {
-              // console.warn('selectId', routerId);
-              // this.store.dispatch(new SetSelectedId({selectId: routerId}));
-            }
-          }
-        });
+  initUrlBindingStreams () {
+    this.organizationEnService.getAll();
+    this.organization$ = this.organizationEnService.entities$;
+    this.selectedId$ = this.store.select(getSelectOrganizationId);
 
     this.setInitialValueFromUrl$ = combineLatest(this.selectedId$, this.organization$, this.store.select(SelectRouterIdParam)).pipe(
-      filter(( [ selectedId, data, routerId] ) => {
-        return data.length && routerId && selectedId ===null;
+      filter(([selectedId, data, routerId]) => {
+        return data.length && routerId && selectedId === null;
       }),
-      map(( [ selectedId, data, routerId] ) => routerId)
+      filter(this.isValidId),
+      map(([selectedId, data, routerId]) => routerId)
+    );
+
+    this.setFirstOrganization$ = combineLatest(this.selectedId$, this.organization$, this.store.select(SelectRouterIdParam)).pipe(
+      filter(([selectedId, data, routerId]) => {
+        return data.length && routerId && selectedId === null;
+      }),
+      filter((data) => !this.isValidId(data)),
+      map(([selectedId, data, routerId]) => data[0].id)
     );
 
     this.redirectToOrganization$ = combineLatest(this.selectedId$, this.organization$, this.store.select(SelectRouterIdParam)).pipe(
-      filter(( [ selectedId, data, routerId] ) => {
-        return !!(data.length && selectedId !== routerId && selectedId);
+      filter(([selectedId, data, routerId]) => {
+        return !!(data.length && !routerId && selectedId === null);
       }),
-      map(( [ selectedId, data, routerId] ) => selectedId)
+      map(([selectedId, data, routerId]) => data[0].id)
     );
 
-    this.setInitialValueFromUrl$.subscribe(routerId  => {
-      console.warn('selectId', routerId);
+    this.setSelectedIdSubscription = this.setInitialValueFromUrl$.subscribe(routerId => {
       this.store.dispatch(new SetSelectedId({selectId: routerId}));
     });
 
-    this.redirectToOrganization$.subscribe(selectedId => {
-      console.warn('do redirect', selectedId);
-      this.router.navigate([ROUTERS_URL.ORGANIZATION, selectedId ])
+    this.redirectSubscription = merge(
+      this.redirectToOrganization$,
+      this.setFirstOrganization$
+    ).subscribe(selectedId => {
+      this.router.navigate([ROUTERS_URL.ORGANIZATION, selectedId])
     })
+  }
+
+  unSubscribe () {
+    this.setSelectedIdSubscription.unsubscribe();
+    this.redirectSubscription.unsubscribe();
+    // clear selected Id for Organization
+    this.store.dispatch(new SetSelectedId({selectId: null}));
+  }
+
+  isValidId([selectedId, data, routerId]) {
+    return data.some(array => array.id === routerId);
   }
 }

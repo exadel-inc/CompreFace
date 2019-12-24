@@ -1,10 +1,4 @@
-import {Action, createAction, props} from '@ngrx/store';
-import {EntityMap, Predicate, Update} from '@ngrx/entity';
-import {Organization} from "../../data/organization";
-import {LogIn, LogInSuccess} from "../auth/action";
-
-
-// export const setSelectedId = createAction('[Organization/API] Set Select id', props<{ selectId: string | null}>());
+import {Action} from '@ngrx/store';
 
 export enum OrganizationActionTypes {
   GET_SELECTED_ID = '[Organization] Get Selected Id',

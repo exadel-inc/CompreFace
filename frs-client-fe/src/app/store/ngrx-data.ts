@@ -16,8 +16,6 @@ export const defaultDataServiceConfig: DefaultDataServiceConfig = {
 
 const entityMetadata: EntityMetadataMap = {
   Organization: {
-    // selectId: null,
-    // entityName: 'bla'
     additionalCollectionState: {
       selectId: null
     }

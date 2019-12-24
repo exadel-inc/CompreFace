@@ -14,7 +14,6 @@ import {Observable} from "rxjs";
 export class OrganizationHeaderComponent implements OnInit {
   organizations$: Observable<Organization[]>;
   private selected$: Observable<any>;
-  // private selectedId: string | null;
 
   constructor(private router: Router, private organizationHeaderService: OrganizationHeaderService) { }
 
@@ -24,7 +23,6 @@ export class OrganizationHeaderComponent implements OnInit {
   }
 
   createNew() {
-    // this.router.navigate([ROUTERS_URL.ORGANIZATION, 'new']);
     console.log('show popup');
   }
 

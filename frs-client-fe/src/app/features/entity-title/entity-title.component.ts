@@ -21,7 +21,6 @@ export class EntityTitleComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    // this.selectedId = this.selectId;
     this.selectId$.subscribe(e => this.selectedId = e);
   }
 
@@ -39,7 +38,6 @@ export class EntityTitleComponent implements OnInit {
   }
 
   apply() {
-    // console.log(this.newName);
     this.rename.emit(this.newName);
 
     this.editing = false;
