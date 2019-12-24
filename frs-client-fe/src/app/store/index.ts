@@ -9,7 +9,6 @@ export interface AppState {
   userInfo: UserInfoState
 }
 
-
 // feature reducer need to import into specific module on the page
 // this for shared reducers:
 export const sharedReducers = {

@@ -1,4 +1,3 @@
-import {User} from "../../data/user";
 import {AuthActions, AuthActionTypes} from "./action";
 
 export interface AuthState {
@@ -12,7 +11,6 @@ export const initialState: AuthState = {
   successMessage: null,
   isLoading: false
 };
-
 
 export function AuthReducer(state = initialState, action: AuthActions): AuthState {
   switch (action.type) {
