@@ -6,10 +6,9 @@ describe('AuthReducer', () => {
 
   describe('LOGIN_SUCCESS action', () => {
     it('should set isAuthenticated to true, and loading false', () => {
-      const action = new LogInSuccess({});
+      const action = new LogInSuccess();
       const state = AuthReducer(initialState, action);
 
-      expect(state.isAuthenticated).toBe(true);
       expect(state.errorMessage).toBe(null);
       expect(state.isLoading).toBe(false);
     });
@@ -19,7 +18,7 @@ describe('AuthReducer', () => {
     it('should set errorMessage to value, and loading false', () => {
       const action = new LogInFailure({});
       const state = AuthReducer(initialState, action);
-      expect(state.isAuthenticated).toBe(false);
+
       expect(state.errorMessage).toBe('Incorrect email and/or password.');
       expect(state.isLoading).toBe(false);
     });
@@ -27,7 +26,7 @@ describe('AuthReducer', () => {
 
   describe('SIGNUP_SUCCESS action', () => {
     it('should set successMessage to value, and loading false', () => {
-      const action = new SignUpSuccess({});
+      const action = new SignUpSuccess();
       const state = AuthReducer(initialState, action);
 
       expect(state.successMessage).toBe('You have created new account, please login into your account');
@@ -44,7 +43,6 @@ describe('AuthReducer', () => {
 
       expect(state.errorMessage).toBe('That email is already in use.');
       expect(state.successMessage).toBe(null);
-      expect(state.isAuthenticated).toBe(false);
       expect(state.isLoading).toBe(false);
     });
   });

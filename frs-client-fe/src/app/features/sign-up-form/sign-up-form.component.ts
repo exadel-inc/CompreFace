@@ -4,9 +4,9 @@ import {User} from "../../data/user";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store";
 import {Observable, Subscription} from "rxjs";
-import {ROUTERS_URL} from "../../data/routers-url.variable";
-import {SignUp} from "../../store/auth/action";
-import {selectAuthState} from "../../store/auth/selectors";
+import { ROUTERS_URL } from "../../data/routers-url.variable";
+import { SignUp } from "../../store/auth/action";
+import { selectAuthState } from "../../store/auth/selectors";
 
 @Component({
   selector: 'app-sign-up-form',
@@ -27,7 +27,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value)
       return null;
     else
-      return {passwordMismatch: true};
+      return { passwordMismatch: true };
   };
 
   constructor(private store: Store<AppState>) {
@@ -43,7 +43,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.minLength(8),
       ]),
-    }, {validators: this.passwordMatchValidator });
+    }, { validators: this.passwordMatchValidator });
 
     this.stateSubscription = this.getState.subscribe((state) => {
       this.errorMessage = state.errorMessage;
@@ -65,5 +65,4 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
     this.isLoading = true;
     this.store.dispatch(new SignUp(payload));
   }
-
 }
