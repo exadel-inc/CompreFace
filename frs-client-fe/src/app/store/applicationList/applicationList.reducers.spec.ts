@@ -13,7 +13,6 @@ describe('ApplicationListReducer', () => {
     isLoading: false,
     filters: [],
     selectedFilter: null,
-    applicationList: [],
     errorMessage: null
   };
 
@@ -47,14 +46,11 @@ describe('ApplicationListReducer', () => {
       expect(state.errorMessage).toBeNull();
     });
 
-    it('should update application list and set loading to false', () => {
-      const action = new FetchApplicationListSuccess({
-        applicationList: mockApplications
-      });
+    it('should set loading to false', () => {
+      const action = new FetchApplicationListSuccess();
       const state = ApplicationListReducer(initialState, action);
 
       expect(state.isLoading).toBeFalsy();
-      expect(state.applicationList.length).toBeGreaterThan(0);
     });
 
     it('should update errorMesaage and set loading to false', () => {
@@ -79,14 +75,11 @@ describe('ApplicationListReducer', () => {
       expect(state.errorMessage).toBeNull();
     });
 
-    it('should update application list and set loading to false', () => {
-      const action = new FetchApplicationListSuccess({
-        applicationList: mockApplications
-      });
+    it('should set loading to false', () => {
+      const action = new FetchApplicationListSuccess();
       const state = ApplicationListReducer(initialState, action);
 
       expect(state.isLoading).toBeFalsy();
-      expect(state.applicationList.length).toBeGreaterThan(0);
     });
 
     it('should update errorMesaage and set loading to false', () => {
@@ -112,9 +105,7 @@ describe('ApplicationListReducer', () => {
     });
 
     it('should set loading to false', () => {
-      const action = new CreateApplicationSuccess({
-        organizationId: '0'
-      });
+      const action = new CreateApplicationSuccess();
       const state = ApplicationListReducer(initialState, action);
 
       expect(state.isLoading).toBeFalsy();

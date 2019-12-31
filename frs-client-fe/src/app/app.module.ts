@@ -21,6 +21,7 @@ import { ApplciationListEffect } from './store/applicationList/effects';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/material';
+import { ApplicationReducer } from './store/application/reducers';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/ma
     ToolBarModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
+    StoreModule.forFeature('application', ApplicationReducer),
     EffectsModule.forRoot([AuthEffects, ApplciationListEffect]),
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'

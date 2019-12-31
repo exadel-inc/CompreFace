@@ -18,12 +18,14 @@ export class FetchApplicationList implements Action {
 
 export class FetchApplicationListSuccess implements Action {
   readonly type = ApplicationListTypes.FETCH_APPLICATION_SUCCESS;
-  constructor(public payload: any) {}
+  constructor() {}
 }
 
 export class FetchApplicationListFail implements Action {
   readonly type = ApplicationListTypes.FETCH_AFETCH_APPLICATION_FAIL;
-  constructor(public payload: any) {}
+  constructor(public payload: {
+    errorMessage: string
+  }) {}
 }
 
 export class CreateApplication implements Action {
@@ -36,9 +38,7 @@ export class CreateApplication implements Action {
 
 export class CreateApplicationSuccess implements Action {
   readonly type = ApplicationListTypes.CREATE_APPLICATION_SUCCESS;
-  constructor(public payload: {
-    organizationId: string
-  }) {}
+  constructor() {}
 }
 
 export class CreateApplicationFail implements Action {

@@ -15,7 +15,11 @@ describe('OrganizationComponent', () => {
       declarations: [ OrganizationComponent, ApplicationListComponent ],
       providers: [provideMockStore({
         initialState: {
-          applicationList: {}
+          applicationList: {},
+          application: {
+            ids: [],
+            entities: []
+          }
         }
       }), { provide: MatDialog, useValue: {}}]
     })
