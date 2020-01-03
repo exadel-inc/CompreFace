@@ -2,8 +2,8 @@ package com.exadel.frs.entity;
 
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.helpers.ModelAccessTypeConverter;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -12,6 +12,7 @@ import javax.persistence.*;
 @Table
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"id"})
 public class AppModel {
 
     @EmbeddedId
@@ -34,5 +35,4 @@ public class AppModel {
         this.accessType = accessType;
         this.id = new AppModelId(app.getId(), model.getId());
     }
-
 }

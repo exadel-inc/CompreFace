@@ -13,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"id"})
 public class Model {
 
     @Id
@@ -42,5 +43,4 @@ public class Model {
         appModelAccess.add(appModel);
         app.getAppModelAccess().add(appModel);
     }
-
 }

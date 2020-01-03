@@ -5,16 +5,25 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+@NamedEntityGraph(
+        name = "by-name",
+        attributeNodes = {
+                @NamedAttributeNode("userAppRoles"),
+                @NamedAttributeNode("userOrganizationRoles")
+        }
+)
 @Entity
 @Table(schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"id"})
 public class User implements UserDetails {
 
     @Id
@@ -33,16 +42,17 @@ public class User implements UserDetails {
     private boolean enabled;
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "user")
-    private List<UserAppRole> userAppRoles;
+    private Set<UserAppRole> userAppRoles = new HashSet<>();
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "user")
-    private List<UserOrganizationRole> userOrganizationRoles;
+    private Set<UserOrganizationRole> userOrganizationRoles = new HashSet<>();
 
     @Override
     public List<GrantedAuthority> getAuthorities() {
         return Collections.emptyList();
     }
-
 }

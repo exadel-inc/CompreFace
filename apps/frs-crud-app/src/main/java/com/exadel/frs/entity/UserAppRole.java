@@ -2,11 +2,7 @@ package com.exadel.frs.entity;
 
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.helpers.AppRoleConverter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,6 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"id"})
 public class UserAppRole {
 
     @EmbeddedId
@@ -38,5 +35,4 @@ public class UserAppRole {
         this.role = role;
         this.id = new UserAppRoleId(user.getId(), app.getId());
     }
-
 }

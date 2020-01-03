@@ -1,15 +1,16 @@
-package com.exadel.frs.properties;
-
-import static org.springframework.util.StringUtils.isEmpty;
+package com.exadel.frs.system.swagger;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
+@Profile("!local-test")
 @Data
 @ConfigurationProperties(prefix = "swagger.info")
 @Component
@@ -30,8 +31,8 @@ public class SwaggerInfoProperties {
     ApiInfoBuilder builder = new ApiInfoBuilder();
 
     if (!isEmpty(this.contactName)
-        || !isEmpty(this.contactUrl)
-        || !isEmpty(this.contactEmail)) {
+            || !isEmpty(this.contactUrl)
+            || !isEmpty(this.contactEmail)) {
       builder.contact(new Contact(this.contactName, this.contactUrl, this.contactEmail));
     }
 

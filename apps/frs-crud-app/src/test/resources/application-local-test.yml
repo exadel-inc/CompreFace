@@ -21,8 +21,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   datasource:
-    driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/frs}
+    driver-class-name: org.h2.Driver
+    url: ${POSTGRES_URL:jdbc:h2:mem:db;DB_CLOSE_DELAY=-1}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
   jpa:
@@ -31,28 +31,23 @@ spring:
         jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
         format_sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     open-in-view: true
     generate-ddl: false
+  liquibase:
+    enabled: false
 
 proxy:
   baseUrl: ${PROXY_URL:http://localhost:5000}
-
-swagger:
-  auth:
-    server: http://localhost:${server.port}
-  info:
-    title: Face Recognition Service - Client
-    version: 0.0.2-SNAPSHOT
 
 host:
   full:
     dns:
       auth:
-        link: http://localhost:${server.port}
+        link: http://localhost:${server.port
 
 logging:
   level:

@@ -8,17 +8,18 @@ import com.exadel.frs.exception.BasicException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.handler.ExceptionCode;
 import com.exadel.frs.mapper.AppMapper;
-import com.exadel.frs.security.JwtTokenFilter;
-import com.exadel.frs.security.JwtTokenFilterConfigurer;
-import com.exadel.frs.security.JwtTokenProvider;
 import com.exadel.frs.service.AppService;
+import com.exadel.frs.system.security.JwtAuthenticationFilter;
+import com.exadel.frs.system.security.config.AuthServerConfig;
+import com.exadel.frs.system.security.config.ResourceServerConfig;
+import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -33,9 +34,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AppController.class)
-@Import(value = {JwtTokenFilter.class, JwtTokenFilterConfigurer.class})
-@MockBeans({@MockBean(AppMapper.class), @MockBean(JwtTokenProvider.class)})
+@WebMvcTest(value = AppController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class})
+)
 class AppControllerTest {
 
     private static final long APP_ID = 1L;
@@ -47,11 +49,17 @@ class AppControllerTest {
 
     @MockBean
     private AppService appService;
+    @MockBean
+    private AppMapper appMapper;
 
     @Autowired
     private MockMvc mockMvc;
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    private static User buildDefaultUser() {
+        return User.builder().username(USERNAME).id(USER_ID).build();
+    }
 
     @Test
     public void shouldReturnMessageAndCodeWhenAppNotFoundExceptionThrown() throws Exception {
@@ -92,10 +100,6 @@ class AppControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
-    }
-
-    private static User buildDefaultUser() {
-        return User.builder().username(USERNAME).id(USER_ID).build();
     }
 
     private ExceptionResponseDto buildExceptionResponse(final BasicException ex) {
