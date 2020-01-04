@@ -22,6 +22,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
   public listConfig: any;
   private applicationListState: Observable<ApplicationListState>;
   private applicationListStateSubscription: Subscription;
+  private applicationsSubscription: Subscription;
 
   constructor(private store: Store<any>, public dialog: MatDialog) {
     this.applicationListState = this.store.select(selectApplicationListState);
@@ -37,7 +38,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       this.errorMessage = state.errorMessage;
     });
 
-    this.applications.subscribe(apps => {
+    this.applicationsSubscription = this.applications.subscribe(apps => {
       this.applicationList = apps;
       this.listConfig = {
         displayedColumns: ['name', 'time'],
@@ -79,5 +80,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.applicationListStateSubscription.unsubscribe();
+    this.applicationsSubscription.unsubscribe();
   }
 }
