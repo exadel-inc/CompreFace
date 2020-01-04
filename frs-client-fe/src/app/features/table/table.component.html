@@ -1,8 +1,8 @@
 <table mat-table [dataSource]="data">
   <!-- Position Column -->
-  <ng-container *ngFor="let col of displayedColumns" matColumnDef={{col}}>
-    <th mat-header-cell *matHeaderCellDef> {{col}} </th>
-    <td mat-cell *matCellDef="let element" (click)="change(element)"> {{element[col]}} </td>
+  <ng-container *ngFor="let col of columnsDefenition" matColumnDef={{col.title}}>
+    <th mat-header-cell *matHeaderCellDef> {{col.title}} </th>
+    <td mat-cell *matCellDef="let element" (click)="change(element)"> {{element[col.property]}} </td>
   </ng-container>
 
 

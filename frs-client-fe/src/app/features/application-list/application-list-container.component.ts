@@ -8,6 +8,7 @@ import { FetchApplicationList, CreateApplication } from 'src/app/store/applicati
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatDialog } from '@angular/material';
 import { Application } from 'src/app/data/application';
+import { ITableConfig } from 'src/app/features/table/table.component';
 
 @Component({
   selector: 'application-list-container',
@@ -19,7 +20,10 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
   public errorMessage: string;
   public applicationList: any[];
   public applications: Observable<Application[]>;
-  public listConfig: any;
+  public tableConfig: ITableConfig;
+
+  userTableConfig: ITableConfig;
+
   private applicationListState: Observable<ApplicationListState>;
   private applicationListStateSubscription: Subscription;
   private applicationsSubscription: Subscription;
@@ -40,22 +44,44 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
     this.applicationsSubscription = this.applications.subscribe(apps => {
       this.applicationList = apps;
-      this.listConfig = {
-        displayedColumns: ['name', 'time'],
-        data: [
-          {
-            name: 'first',
-            time: '123'
-          },
-          {
-            name: 'second',
-            time: '456'
-          },
-          {
-            name: 'third',
-            time: '789'
-          }
-        ]
+      this.tableConfig = {
+        columns: [{ title: 'Title', property: 'name' } , { title: 'Owner name', property: 'owner' }],
+        data: apps.map(app => {
+          return { id: app.id, name: app.name, owner: app.owner.firstName };
+        })
+      };
+
+      this.userTableConfig = {
+        columns: [{ title: 'user', property: 'username' } , { title: 'role', property: 'role' }],
+          data: [
+            {
+              "id": 0,
+              "firstName": "John",
+              "lastName": "Malkovich",
+              "accessLevel": "USER"
+            },
+            {
+              "id": 1,
+              "firstName": "Tony",
+              "lastName": "Stark",
+              "accessLevel": "ADMINISTRATOR"
+            },
+            {
+              "id": 2,
+              "firstName": "User",
+              "lastName": "Role",
+              "accessLevel": "USER"
+            }
+          ]
+      }
+    });
+  }
+
+  public onClick(application): void {
+    const dialog = this.dialog.open(CreateDialogComponent, {
+      data: {
+        entityType: `${application.name} application has been opened`,
+        name: ''
       }
     });
   }

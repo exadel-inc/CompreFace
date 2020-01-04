@@ -23,6 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/material';
 import { ApplicationReducer } from './store/application/reducers';
 import { TableModule } from './features/table/table.module';
+import { UserTableModule } from './features/user-table/user-table.module';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { TableModule } from './features/table/table.module';
     MatButtonModule,
     ToolBarModule,
     TableModule,
+    UserTableModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
     StoreModule.forFeature('application', ApplicationReducer),

@@ -1,0 +1,20 @@
+[
+  {
+    "id": 0,
+    "firstName": "John",
+    "lastName": "Malkovich",
+    "accessLevel": "USER"
+  },
+  {
+    "id": 1,
+    "firstName": "Tony",
+    "lastName": "Stark",
+    "accessLevel": "ADMINISTRATOR"
+  },
+  {
+    "id": 2,
+    "firstName": "User",
+    "lastName": "Role",
+    "accessLevel": "USER"
+  }
+]

@@ -1,8 +1,11 @@
 import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 
 export interface ITableConfig {
-  displayedColumns: string[];
-  data: { [key: string]: string }[];
+  columns: {
+    title: string;
+    property: string;
+  }[];
+  data: any[];
 }
 
 @Component({
@@ -12,12 +15,17 @@ export interface ITableConfig {
 })
 export class TableComponent implements OnInit {
   @Input() set tableConfig(config: ITableConfig) {
-    this.displayedColumns = config.displayedColumns;
+    this.columnsDefenition = config.columns;
+    this.displayedColumns = config.columns.map(column => column.title);
     this.data = config.data;
   }
 
   @Output() onChange = new EventEmitter<any>();
 
+  public columnsDefenition: {
+    title: string;
+    property: string;
+  }[];
   public displayedColumns: string[];
   public data: any[];
 

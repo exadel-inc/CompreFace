@@ -7,6 +7,7 @@ import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 import { ApplicationListComponent } from 'src/app/features/application-list/application-list-container.component';
 import { MatButtonModule } from '@angular/material/button';
 import { TableModule } from 'src/app/features/table/table.module';
+import { UserTableModule } from 'src/app/features/user-table/user-table.module';
 
 
 
@@ -14,6 +15,7 @@ import { TableModule } from 'src/app/features/table/table.module';
   declarations: [OrganizationComponent, ApplicationListComponent],
   imports: [
     TableModule,
+    UserTableModule,
     CommonModule,
     MatButtonModule,
     RouterModule.forChild([

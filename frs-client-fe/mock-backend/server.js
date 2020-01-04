@@ -4,6 +4,8 @@ const fs = require('fs');
 const bodyParser = require('body-parser');
 const dataPath = './mock-backend/data/';
 const mockApps = require('./data/application.json');
+const mockUsers = require('./data/users.json');
+const mockRoles = require('./data/roles.json');
 let mockData = {};
 
 const app = express();
@@ -122,6 +124,45 @@ app.post('/org/:orgId/app', auth, (req, res) => {
   res.status(201).json(app);
 });
 
+app.get('org/:orgId/roles', auth, (req, res) => {
+  res.status(201).json(mockData.users);
+});
+
+app.post('org/:orgId/role', auth, (req, res) => {
+  const { id, role } = req.body;
+
+  if (id && role) {
+    const userIndex = mockData.users.findIndex(user => user.id === id);
+
+    if (~userIndex) {
+      mockData.users[userIndex].role = role;
+
+      res.status(201).json(mockData.users[userIndex]);
+    } else {
+      res.status(404).json({ message: 'user not found' });
+    }
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+app.post('org/:orgId/invite', auth, (req, res) => {
+  const { role, userEmail } = req.body;
+
+  if (userEmail && role) {
+    mockData.users.push({
+      id: mockData.users.length,
+      firstName: userEmail,
+      lastName: userEmail,
+      accessLevel: role
+    });
+
+    res.status(201).json({ message: 'created' });
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 app.listen(3000, function() {
   console.log('Listening on port 3000!');
 });
@@ -140,7 +181,9 @@ function getJSONData() {
   mockData = {
     organization,
     apps,
-    application: mockApps
+    application: mockApps,
+    users: mockUsers,
+    roles: mockRoles
   }
 }
 
