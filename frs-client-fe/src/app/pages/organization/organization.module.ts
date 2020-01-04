@@ -6,12 +6,14 @@ import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 import { ApplicationListComponent } from 'src/app/features/application-list/application-list-container.component';
 import { MatButtonModule } from '@angular/material/button';
+import { TableModule } from 'src/app/features/table/table.module';
 
 
 
 @NgModule({
   declarations: [OrganizationComponent, ApplicationListComponent],
   imports: [
+    TableModule,
     CommonModule,
     MatButtonModule,
     RouterModule.forChild([

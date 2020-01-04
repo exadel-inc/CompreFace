@@ -22,6 +22,7 @@ import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dia
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/material';
 import { ApplicationReducer } from './store/application/reducers';
+import { TableModule } from './features/table/table.module';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { ApplicationReducer } from './store/application/reducers';
     MatInputModule,
     MatButtonModule,
     ToolBarModule,
+    TableModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
     StoreModule.forFeature('application', ApplicationReducer),

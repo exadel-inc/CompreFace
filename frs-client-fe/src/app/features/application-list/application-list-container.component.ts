@@ -19,6 +19,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
   public errorMessage: string;
   public applicationList: any[];
   public applications: Observable<Application[]>;
+  public listConfig: any;
   private applicationListState: Observable<ApplicationListState>;
   private applicationListStateSubscription: Subscription;
 
@@ -38,6 +39,23 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
     this.applications.subscribe(apps => {
       this.applicationList = apps;
+      this.listConfig = {
+        displayedColumns: ['name', 'time'],
+        data: [
+          {
+            name: 'first',
+            time: '123'
+          },
+          {
+            name: 'second',
+            time: '456'
+          },
+          {
+            name: 'third',
+            time: '789'
+          }
+        ]
+      }
     });
   }
 
