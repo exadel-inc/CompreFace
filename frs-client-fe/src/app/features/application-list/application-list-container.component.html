@@ -6,6 +6,6 @@
     <li *ngFor="let application of applications | async"><span class="list-header-title">{{application.name}}</span><span class="list-header-owner">{{application.owner.firstName}}</span></li>
   </ul>
 </div>
-<div class="add-applciation-button-container">
+<div class="add-application-button-container">
   <button (click)="onCreateNewApp()">Create new application</button>
 </div>
