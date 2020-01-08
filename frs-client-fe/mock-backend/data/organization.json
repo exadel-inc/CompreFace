@@ -1,7 +1,7 @@
 [
   {
-    "id": 1,
-    "name": "string",
+    "id": "ksdfklsn1111111",
+    "name": "Exadel Organization",
     "userOrganizationRoles": [
       {
         "organizationId": 0,
@@ -11,8 +11,8 @@
     ]
   },
   {
-    "id": 2,
-    "name": "string",
+    "id": "asdfdasdfdaf222222222222",
+    "name": "home Organization",
     "userOrganizationRoles": [
       {
         "organizationId": 0,

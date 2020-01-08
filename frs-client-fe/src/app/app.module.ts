@@ -21,6 +21,10 @@ import { ApplciationListEffect } from './store/applicationList/effects';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/material';
+import {defaultDataServiceConfig, entityConfig} from "./store/ngrx-data";
+import {CustomMaterialModule} from "./ui/material/material.module";
+import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
+import {OrganizationStoreModule} from "./store/organization/organization.module";
 import { ApplicationReducer } from './store/application/reducers';
 
 @NgModule({
@@ -31,6 +35,7 @@ import { ApplicationReducer } from './store/application/reducers';
   ],
   imports: [
     BrowserModule,
+    CustomMaterialModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
@@ -42,7 +47,9 @@ import { ApplicationReducer } from './store/application/reducers';
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
     StoreModule.forFeature('application', ApplicationReducer),
+    EntityDataModule.forRoot(entityConfig),
     EffectsModule.forRoot([AuthEffects, ApplciationListEffect]),
+    OrganizationStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
@@ -51,6 +58,7 @@ import { ApplicationReducer } from './store/application/reducers';
       : [],
   ],
   providers: [
+    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig },
     AuthGuard,
     LoginGuard,
     {
@@ -63,7 +71,7 @@ import { ApplicationReducer } from './store/application/reducers';
       useClass: ErrorInterceptor,
       multi: true
     },
-    { provide: RouterStateSerializer, useClass: AppSerializer }
+    { provide: RouterStateSerializer, useClass: AppSerializer },
   ],
   bootstrap: [AppComponent],
   entryComponents: [CreateDialogComponent]
