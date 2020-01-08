@@ -29,7 +29,7 @@ cd "${0%/*}"
 
 ## Warm-up
 ab -n 30 -c 30 -s 60 $HOST/status > /dev/null
-ab -n 1 -c 1 -p ./post_data.txt -T "multipart/form-data; boundary=1234567890" "$HOST/faces/JohnJohnson?retrain=no" > /dev/null
+ab -n 1 -c 1 -p ./post_data.txt -H "X-Api-Key:key001" -T "multipart/form-data; boundary=1234567890" "$HOST/faces/JohnJohnson?retrain=no" > /dev/null
 
 ## Run test
 # 1. Status endpoint test with concurrency
