@@ -40,8 +40,8 @@ done
 ## Run test
 ab -n 10000 -c 100 -s 60 $HOST/status
 ab -n 100 -c 50 -p ./post_data.txt -H "X-Api-Key:key1" -T "multipart/form-data; boundary=1234567890" "$HOST/faces/JohnJohnson?retrain=no"
-for i in {1..10}
+for i in {1..30}
 do
-   ab -n 50 -c 10 -p ./post_data.txt -H "X-Api-Key:key$i" -T "multipart/form-data; boundary=1234567890" "$HOST/faces/JohnJohnson?retrain=yes" &
+   ab -n 10 -c 1 -p ./post_data.txt -H "X-Api-Key:key$i" -T "multipart/form-data; boundary=1234567890" "$HOST/faces/JohnJohnson?retrain=yes" &
 done
 
