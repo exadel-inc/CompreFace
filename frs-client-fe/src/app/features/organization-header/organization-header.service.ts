@@ -8,17 +8,25 @@ import {AppState} from "../../store";
 import {SetSelectedId} from "../../store/organization/action";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {Router} from "@angular/router";
+import {selectUserInfoState} from "../../store/userInfo/selectors";
+import {GetUserInfo} from "../../store/userInfo/action";
 
 @Injectable()
 export class OrganizationHeaderService {
-  selected$: Observable<string | null>;
+  selectedId$: Observable<string | null>;
+  user$: Observable<any>;
   selectedId: string | null;
   public organization$: Observable<Organization[]>;
 
   constructor(private organizationEnService: OrganizationEnService, private store: Store<AppState>, private router: Router) {
+    this.store.dispatch(new GetUserInfo());
+
     this.organization$ = this.organizationEnService.entities$;
-    this.selected$ = this.store.select(getSelectOrganizationId);
-    this.selected$.subscribe(id => {
+
+    this.selectedId$ = this.store.select(getSelectOrganizationId);
+    this.user$ = this.store.select(selectUserInfoState);
+
+    this.selectedId$.subscribe(id => {
       this.selectedId = id;
     });
   }

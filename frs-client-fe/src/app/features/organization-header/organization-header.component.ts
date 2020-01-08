@@ -19,7 +19,7 @@ export class OrganizationHeaderComponent implements OnInit {
 
   ngOnInit() {
     this.organizations$ = this.organizationHeaderService.organization$;
-    this.selected$ = this.organizationHeaderService.selected$
+    this.selected$ = this.organizationHeaderService.selectedId$
   }
 
   createNew() {

@@ -25,6 +25,7 @@ import { CustomMaterialModule } from "./ui/material/material.module";
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import { OrganizationStoreModule } from "./store/organization/organization.module";
 import { ApplicationStoreModule } from './store/application/application.module';
+import {UserInfoStoreModule} from "./store/userInfo/user-info.module";
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { ApplicationStoreModule } from './store/application/application.module';
     EffectsModule.forRoot([AuthEffects, ApplicationListEffect]),
     EntityDataModule.forRoot(entityConfig),
     OrganizationStoreModule,
+    UserInfoStoreModule,
     ApplicationStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'

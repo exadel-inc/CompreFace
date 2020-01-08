@@ -1,4 +1,4 @@
-import { UserInfoActions, UserInfoActionTypes } from './action';
+import {UserInfoActions, UserInfoActionTypes} from './action';
 
 export interface UserInfoState {
   isAuthenticated: boolean;
@@ -13,14 +13,14 @@ export const initialState: UserInfoState = {
 
 export function UserInfoReducer(state = initialState, action: UserInfoActions): UserInfoState {
   switch(action.type) {
-    case UserInfoActionTypes.UPDATE_USERINFO: {
+    case UserInfoActionTypes.UPDATE_USER_INFO: {
       return {
         ...state,
         ...action.payload
       };
     }
 
-    case UserInfoActionTypes.RESET_USERINFO: {
+    case UserInfoActionTypes.RESET_USER_INFO: {
       return {
         ...initialState
       };
@@ -30,6 +30,13 @@ export function UserInfoReducer(state = initialState, action: UserInfoActions): 
       return {
         ...state,
         isAuthenticated: action.payload
+      }
+    }
+
+    case UserInfoActionTypes.GET_USER_INFO_SUCCESS: {
+      return {
+        ...state,
+        ...action.payload,
       }
     }
 

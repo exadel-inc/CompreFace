@@ -33,11 +33,12 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 let user = {
   email: "email",
   username: "username",
-  password: "password"
+  password: "password",
+  firstName: "string",
+  guid: "guid_0",
+  lastName: "string"
 };
 
-
-// getJSONData();
 let token = '';
 
 // view engine setup
@@ -137,6 +138,10 @@ app.post('/org/:orgId/app', auth, (req, res) => {
   });
 
   res.status(201).json(app);
+});
+
+app.get('/user/me', auth, (req, res) => {
+  res.send(user);
 });
 
 app.listen(3000, function() {
