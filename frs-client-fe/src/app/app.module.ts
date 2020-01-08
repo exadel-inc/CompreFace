@@ -25,7 +25,7 @@ import {defaultDataServiceConfig, entityConfig} from "./store/ngrx-data";
 import {CustomMaterialModule} from "./ui/material/material.module";
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import {OrganizationStoreModule} from "./store/organization/organization.module";
-import { ApplicationReducer } from './store/application/reducers';
+import { ApplicationStoreModule } from './store/application/application.module';
 
 @NgModule({
   declarations: [
@@ -46,10 +46,10 @@ import { ApplicationReducer } from './store/application/reducers';
     ToolBarModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
-    StoreModule.forFeature('application', ApplicationReducer),
-    EntityDataModule.forRoot(entityConfig),
     EffectsModule.forRoot([AuthEffects, ApplciationListEffect]),
+    EntityDataModule.forRoot(entityConfig),
     OrganizationStoreModule,
+    ApplicationStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
