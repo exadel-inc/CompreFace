@@ -75,14 +75,29 @@ app.post('/client/register', function (req, res) {
   }
 });
 
-app.get('/organization', auth, function (req, res) {
-  const id = +req.query.id;
+app.get('/organizations', auth, function (req, res) {
+  const id = req.query.id;
   if(id) {
     res.send(mockData.organization.filter(item => item.id === id))
   } else {
     res.send(mockData.organization);
   }
 });
+
+app.post('/organization/:id', auth, function (req, res) {
+  const organization = req.body;
+  mockData.organization.push(organization);
+  res.send(organization);
+});
+
+app.put('/organization/:id', auth, function (req, res) {
+  const newData = req.body;
+  const id = req.params.id;
+  let organization = mockData.organization.find(item => item.id === id);
+  organization.name = newData.name;
+  res.send(organization);
+});
+
 
 app.listen(3000, function () {
   console.log('Listening on port 3000!');
@@ -107,7 +122,7 @@ function getJSONData() {
 }
 
 function auth(req, res, next) {
-  if (req && req.headers.token === token)
+  if (req && req.headers.authorization === token)
     return next();
   else
     return res.sendStatus(401);

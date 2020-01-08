@@ -17,6 +17,10 @@ import {StoreDevtoolsModule} from "@ngrx/store-devtools";
 import {ToolBarModule} from "./features/tool-bar/tool-bar.module";
 import {AppSerializer} from "./store/router/reducer";
 import {AuthEffects} from "./store/auth/effects";
+import {defaultDataServiceConfig, entityConfig} from "./store/ngrx-data";
+import {CustomMaterialModule} from "./ui/material/material.module";
+import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
+import {OrganizationStoreModule} from "./store/organization/organization.module";
 
 @NgModule({
   declarations: [
@@ -25,12 +29,15 @@ import {AuthEffects} from "./store/auth/effects";
   ],
   imports: [
     BrowserModule,
+    CustomMaterialModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     ToolBarModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
     EffectsModule.forRoot([AuthEffects]),
+    EntityDataModule.forRoot(entityConfig),
+    OrganizationStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
@@ -39,6 +46,7 @@ import {AuthEffects} from "./store/auth/effects";
       : [],
   ],
   providers: [
+    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig },
     AuthGuard,
     LoginGuard,
     {
@@ -51,7 +59,7 @@ import {AuthEffects} from "./store/auth/effects";
       useClass: ErrorInterceptor,
       multi: true
     },
-    { provide: RouterStateSerializer, useClass: AppSerializer }
+    { provide: RouterStateSerializer, useClass: AppSerializer },
   ],
   bootstrap: [AppComponent]
 })
