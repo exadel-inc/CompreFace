@@ -1,0 +1,17 @@
+<div *ngIf="organizations$ | async as organizations">
+  <app-entity-title
+    [entityName]="'Organization'"
+    [selectId$]="selected$"
+    [options]="organizations"
+    (selectIdChange)="selectOrganization($event)"
+    [renameDisable]="false"
+    (rename)="rename($event)"></app-entity-title>
+</div>
+
+<button mat-raised-button
+        type="submit"
+        color="primary"
+        (click)="createNew()"
+  >Create New Organization</button>
+
+<!--<div class="your_role">{{role}}</div>-->

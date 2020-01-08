@@ -1,0 +1,19 @@
+<div class="title">
+  <mat-form-field *ngIf="editing" class="login-full-width">
+    <input matInput placeholder="{{placeholder}}" [(ngModel)]="newName">
+  </mat-form-field>
+  <mat-form-field *ngIf="!editing && options.length === 1" >
+    {{options[0].name}}
+  </mat-form-field>
+  <mat-form-field *ngIf="!editing && options.length > 1" >
+    <mat-label>{{entityName}} name</mat-label>
+    <mat-select [(value)]="selected">
+      <mat-option *ngFor="let option of options" [value]="option.id">
+        {{option.name}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-icon-button *ngIf="!editing" [disabled]="renameDisable" (click)="edit()"><mat-icon>edit</mat-icon></button>
+  <button mat-icon-button *ngIf="editing" (click)="apply()"><mat-icon>done</mat-icon></button>
+  <button mat-icon-button *ngIf="editing" (click)="discard()"><mat-icon>replay</mat-icon></button>
+</div>

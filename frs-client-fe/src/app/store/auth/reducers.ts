@@ -1,9 +1,4 @@
-import { EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { User } from "../../data/user";
-import { AuthActions, AuthActionTypes } from "./action";
-
-// todo: for users list example
-export const adapter: EntityAdapter<any> = createEntityAdapter<any>();
+import {AuthActions, AuthActionTypes} from "./action";
 
 export interface AuthState {
   errorMessage: string | null;
@@ -16,7 +11,6 @@ export const initialState: AuthState = {
   successMessage: null,
   isLoading: false
 };
-
 
 export function AuthReducer(state = initialState, action: AuthActions): AuthState {
   switch (action.type) {
