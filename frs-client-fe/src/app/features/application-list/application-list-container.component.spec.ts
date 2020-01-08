@@ -1,18 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { OrganizationComponent } from './organization.component';
-import { ApplicationListComponent } from '../../features/application-list/application-list-container.component';
-import { AppState } from 'src/app/store';
-import { MatDialog } from '@angular/material';
 
-describe('OrganizationComponent', () => {
-  let component: OrganizationComponent;
-  let fixture: ComponentFixture<OrganizationComponent>;
+import { ApplicationListComponent } from './application-list-container.component';
+import { MatDialog } from '@angular/material';
+import { AppState } from 'src/app/store';
+
+describe('ApplicationListComponent', () => {
+  let component: ApplicationListComponent;
+  let fixture: ComponentFixture<ApplicationListComponent>;
   let mockStore: MockStore<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizationComponent, ApplicationListComponent ],
+      declarations: [ ApplicationListComponent ],
       providers: [provideMockStore({
         initialState: {
           applicationList: {},
@@ -27,7 +27,7 @@ describe('OrganizationComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OrganizationComponent);
+    fixture = TestBed.createComponent(ApplicationListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
