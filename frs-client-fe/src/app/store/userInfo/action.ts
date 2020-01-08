@@ -3,7 +3,8 @@ import {Action} from '@ngrx/store';
 export enum UserInfoActionTypes {
   UPDATE_USERINFO = '[User] Login Success',
   RESET_USERINFO = '[User] Update Token',
-  UPDATE_AUTHORIZED = '[User] Toggle Authorized'
+  UPDATE_AUTHORIZED = '[User] Toggle Authorized',
+  GET_USER_INFO = '[User] Get User Info'
 }
 
 export class UpdateUserInfo implements Action {
@@ -24,7 +25,13 @@ export class UpdateUserAuthorization implements Action {
   constructor(public payload: boolean) {}
 }
 
+export class GetUserInfo implements Action {
+  readonly type = UserInfoActionTypes.GET_USER_INFO;
+  constructor(public payload: boolean) {}
+}
+
 export type UserInfoActions =
   | UpdateUserInfo
   | ResetUserInfo
-  | UpdateUserAuthorization;
+  | UpdateUserAuthorization
+  | GetUserInfo;
