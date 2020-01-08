@@ -76,7 +76,7 @@ app.post('/client/register', function(req, res) {
   }
 });
 
-app.get('/organization', auth, function (req, res) {
+app.get('/organizations', auth, function (req, res) {
   const id = req.query.id;
   if (id) {
     res.send(mockData.organization.filter(item => item.id === id))
