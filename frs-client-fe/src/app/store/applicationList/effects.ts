@@ -13,12 +13,10 @@ import {
 } from './action';
 import { AddApplicationEntityAction, AddApplicationsEntityAction } from '../application/action';
 import { ApplicationService } from 'src/app/core/application/application.service';
-import { Store } from '@ngrx/store';
-import { AppState } from '..';
 
 @Injectable()
-export class ApplciationListEffect {
-  constructor(private actions: Actions, private applicationService: ApplicationService, private store: Store<AppState>) { }
+export class ApplicationListEffect {
+  constructor(private actions: Actions, private applicationService: ApplicationService) { }
 
   @Effect()
   fetchApplicationList: Observable<FetchApplicationListSuccess | AddApplicationsEntityAction | FetchApplicationListFail> = this.actions.pipe(

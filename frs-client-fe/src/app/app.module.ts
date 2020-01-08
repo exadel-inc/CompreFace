@@ -17,16 +17,15 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { ToolBarModule } from "./features/tool-bar/tool-bar.module";
 import { AppSerializer } from "./store/router/reducer";
 import { AuthEffects } from "./store/auth/effects";
-import { ApplciationListEffect } from './store/applicationList/effects';
+import { ApplicationListEffect } from './store/applicationList/effects';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/material';
-import {defaultDataServiceConfig, entityConfig} from "./store/ngrx-data";
-import {CustomMaterialModule} from "./ui/material/material.module";
+import { MatFormFieldModule } from '@angular/material';
+import { defaultDataServiceConfig, entityConfig } from "./store/ngrx-data";
+import { CustomMaterialModule } from "./ui/material/material.module";
 import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import { TableModule } from './features/table/table.module';
 import { UserTableModule } from './features/user-table/user-table.module';
-import {OrganizationStoreModule} from "./store/organization/organization.module";
+import { OrganizationStoreModule } from "./store/organization/organization.module";
 import { ApplicationStoreModule } from './store/application/application.module';
 
 @NgModule({
@@ -42,15 +41,12 @@ import { ApplicationStoreModule } from './store/application/application.module';
     BrowserAnimationsModule,
     MatFormFieldModule,
     FormsModule,
-    MatDialogModule,
-    MatInputModule,
-    MatButtonModule,
     ToolBarModule,
     TableModule,
     UserTableModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
-    EffectsModule.forRoot([AuthEffects, ApplciationListEffect]),
+    EffectsModule.forRoot([AuthEffects, ApplicationListEffect]),
     EntityDataModule.forRoot(entityConfig),
     OrganizationStoreModule,
     ApplicationStoreModule,
