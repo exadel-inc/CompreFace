@@ -23,7 +23,7 @@ public class ModelController {
     private final MlModelMapper modelMapper;
 
     @GetMapping("/{guid}")
-    @ApiOperation(value = "Get model, created by user")
+    @ApiOperation(value = "Get model")
     public ModelDto getModel(@ApiParam(value = "GUID of model to return",
                                        required = true,
                                        example = "0") @PathVariable final String guid) {
@@ -31,7 +31,7 @@ public class ModelController {
     }
 
     @GetMapping("/app/{appGuid}")
-    @ApiOperation(value = "Get all models, created by user")
+    @ApiOperation(value = "Get all models in application")
     public List<ModelDto> getModels(@PathVariable final String appGuid) {
         return modelMapper.toDto(modelService.getModels(appGuid, SecurityUtils.getPrincipalId()));
     }

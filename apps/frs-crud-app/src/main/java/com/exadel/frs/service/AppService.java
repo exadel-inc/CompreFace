@@ -68,16 +68,18 @@ public class AppService {
         return appRepository.findAllByOrganizationId(organization.getId());
     }
 
-    public void createApp(App app, Long userId) {
-        verifyUserHasWritePrivileges(userId, organizationService.getOrganization(app.getOrganization().getId()));
+    public App createApp(String organizationGuid, App app, Long userId) {
+        Organization organization = organizationService.getOrganization(organizationGuid);
+        verifyUserHasWritePrivileges(userId, organization);
         if (StringUtils.isEmpty(app.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        verifyNameIsUnique(app.getName(), app.getOrganization().getId());
+        verifyNameIsUnique(app.getName(), organization.getId());
+        app.setOrganization(organization);
         app.setGuid(UUID.randomUUID().toString());
         app.setApiKey(UUID.randomUUID().toString());
         app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
-        appRepository.save(app);
+        return appRepository.save(app);
     }
 
     private long getNumberOfOwners(List<UserAppRole> userAppRoles) {
@@ -90,7 +92,7 @@ public class AppService {
         return ownersCount;
     }
 
-    public void updateApp(final String appGuid, final App app, final Long userId) {
+    public App updateApp(final String appGuid, final App app, final Long userId) {
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
         if (!StringUtils.isEmpty(app.getName()) && !repoApp.getName().equals(app.getName())) {
@@ -114,7 +116,7 @@ public class AppService {
                 repoApp.addUserAppRole(userOrganizationRole.getUser(), userAppRole.getRole());
             });
         }
-        appRepository.save(repoApp);
+        return appRepository.save(repoApp);
     }
 
     public void regenerateApiKey(final String guid, final Long userId) {

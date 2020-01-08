@@ -23,7 +23,7 @@ public class OrganizationController {
     private final OrganizationMapper organizationMapper;
 
     @GetMapping("/{guid}")
-    @ApiOperation(value = "Get Organization, created by user")
+    @ApiOperation(value = "Get Organization")
     public OrganizationDto getOrganization(@ApiParam(value = "GUID of Organization to return",
                                                      required = true,
                                                      example = "0") @PathVariable final String guid) {
@@ -31,7 +31,7 @@ public class OrganizationController {
     }
 
     @GetMapping("/")
-    @ApiOperation(value = "Get all Organizations, created by user")
+    @ApiOperation(value = "Get all Organizations, the user is a member of")
     public List<OrganizationDto> getOrganizations() {
         return organizationMapper.toDto(organizationService.getOrganizations(SecurityUtils.getPrincipalId()));
     }

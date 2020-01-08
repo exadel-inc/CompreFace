@@ -84,7 +84,7 @@
         <plugin>
           <groupId>org.liquibase</groupId>
           <artifactId>liquibase-maven-plugin</artifactId>
-          <version>3.8.0</version>
+          <version>3.8.4</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

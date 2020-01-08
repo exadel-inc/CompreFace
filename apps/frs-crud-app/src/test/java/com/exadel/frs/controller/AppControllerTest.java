@@ -60,7 +60,7 @@ class AppControllerTest {
         when(appService.getApp(APP_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
-        mockMvc.perform(get("/apps/" + APP_GUID).with(user(buildDefaultUser())))
+        mockMvc.perform(get("/admin/app/" + APP_GUID).with(user(buildDefaultUser())))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(expectedContent));
     }
@@ -72,7 +72,7 @@ class AppControllerTest {
         when(appService.getApps(ORG_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildUndefinedExceptionResponse(expectedException));
-        mockMvc.perform(get("/apps/org/" + ORG_GUID).with(user(buildDefaultUser())))
+        mockMvc.perform(get("/admin/org/" + ORG_GUID + "/apps").with(user(buildDefaultUser())))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
     }
@@ -81,9 +81,9 @@ class AppControllerTest {
     public void shouldReturnMessageAndCodeWhenAppNameIsMissing() throws Exception {
         final BasicException expectedException = new EmptyRequiredFieldException("name");
 
-        doThrow(expectedException).when(appService).createApp(any(), eq(USER_ID));
+        doThrow(expectedException).when(appService).createApp(eq(ORG_GUID), any(), eq(USER_ID));
 
-        MockHttpServletRequestBuilder request = post("/apps/")
+        MockHttpServletRequestBuilder request = post("/admin/org/" + ORG_GUID + "/app")
                 .with(user(buildDefaultUser()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(App.builder().id(APP_ID).build()));

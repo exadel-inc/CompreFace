@@ -83,7 +83,6 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         App result = appService.getApp(APPLICATION_GUID, USER_ID);
 
@@ -101,7 +100,6 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.getApp(APPLICATION_GUID, USER_ID));
     }
@@ -122,7 +120,6 @@ public class AppServiceTest {
         app.addUserAppRole(user, AppRole.USER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         App result = appService.getApp(APPLICATION_GUID, USER_ID);
 
@@ -144,7 +141,6 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.getApp(APPLICATION_GUID, USER_ID));
     }
@@ -219,10 +215,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        appService.createApp(app, USER_ID);
+        appService.createApp(ORGANISATION_GUID, app, USER_ID);
 
         verify(appRepositoryMock).save(any(App.class));
 
@@ -242,10 +238,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
 
-        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(app, USER_ID));
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(ORGANISATION_GUID, app, USER_ID));
     }
 
     @ParameterizedTest
@@ -260,10 +256,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(app, USER_ID));
+        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(ORGANISATION_GUID, app, USER_ID));
     }
 
     @Test
@@ -277,10 +273,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(app, USER_ID));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(ORGANISATION_GUID, app, USER_ID));
     }
 
     @ParameterizedTest
@@ -296,10 +292,10 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
 
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
+        when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(app, USER_ID));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(ORGANISATION_GUID, app, USER_ID));
     }
 
     @ParameterizedTest
@@ -326,7 +322,6 @@ public class AppServiceTest {
         app.addUserAppRole(user2, AppRole.OWNER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         appService.updateApp(APPLICATION_GUID, app, USER_ID);
 
@@ -356,7 +351,6 @@ public class AppServiceTest {
         appUpdate.addUserAppRole(user, AppRole.USER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(SelfRoleChangeException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
     }
@@ -383,7 +377,6 @@ public class AppServiceTest {
         appUpdate.addUserAppRole(user3, AppRole.OWNER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(MultipleOwnersException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
     }
@@ -409,7 +402,6 @@ public class AppServiceTest {
 
         when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
     }
@@ -427,7 +419,6 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.updateApp(APPLICATION_GUID, app, USER_ID));
     }
@@ -450,7 +441,6 @@ public class AppServiceTest {
         app.addUserAppRole(user(2L), AppRole.USER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.updateApp(APPLICATION_GUID, app, USER_ID));
     }
@@ -470,7 +460,6 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         appService.regenerateApiKey(APPLICATION_GUID, USER_ID);
 
@@ -494,7 +483,6 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.regenerateApiKey(APPLICATION_GUID, USER_ID));
     }
@@ -515,7 +503,6 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         appService.deleteApp(APPLICATION_GUID, USER_ID);
 
@@ -537,7 +524,6 @@ public class AppServiceTest {
                 .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(organizationServiceMock.getOrganization(anyLong())).thenReturn(organization);
 
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.deleteApp(APPLICATION_GUID, USER_ID));
     }
