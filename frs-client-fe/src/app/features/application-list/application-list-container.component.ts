@@ -40,35 +40,37 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       this.isLoading = state.isLoading;
       this.errorMessage = state.errorMessage;
     });
+
+    this.applications.subscribe(apps => {
       this.tableConfig = {
-        columns: [{ title: 'Title', property: 'name' } , { title: 'Owner name', property: 'owner' }],
+        columns: [{ title: 'Title', property: 'name' }, { title: 'Owner name', property: 'owner' }],
         data: apps.map(app => {
           return { id: app.id, name: app.name, owner: app.owner.firstName };
         })
       };
 
       this.userTableConfig = {
-        columns: [{ title: 'user', property: 'username' } , { title: 'role', property: 'role' }],
-          data: [
-            {
-              "id": 0,
-              "firstName": "John",
-              "lastName": "Malkovich",
-              "accessLevel": "USER"
-            },
-            {
-              "id": 1,
-              "firstName": "Tony",
-              "lastName": "Stark",
-              "accessLevel": "ADMINISTRATOR"
-            },
-            {
-              "id": 2,
-              "firstName": "User",
-              "lastName": "Role",
-              "accessLevel": "USER"
-            }
-          ]
+        columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
+        data: [
+          {
+            "id": 0,
+            "firstName": "John",
+            "lastName": "Malkovich",
+            "accessLevel": "USER"
+          },
+          {
+            "id": 1,
+            "firstName": "Tony",
+            "lastName": "Stark",
+            "accessLevel": "ADMINISTRATOR"
+          },
+          {
+            "id": 2,
+            "firstName": "User",
+            "lastName": "Role",
+            "accessLevel": "USER"
+          }
+        ]
       }
     });
   }
@@ -79,6 +81,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         entityType: `${application.name} application has been opened`,
         name: ''
       }
+    })
   }
 
   public onCreateNewApp(): void {
