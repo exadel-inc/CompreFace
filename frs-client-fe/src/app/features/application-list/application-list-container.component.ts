@@ -1,5 +1,5 @@
 import { Observable, Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectApplications } from 'src/app/store/application/selectors';
 import { selectApplicationListState } from 'src/app/store/applicationList/selectors';
@@ -12,16 +12,15 @@ import { Application } from 'src/app/data/application';
 @Component({
   selector: 'application-list-container',
   templateUrl: './application-list-container.component.html',
-  styleUrls: ['./application-list-container.component.sass']
+  styleUrls: ['./application-list-container.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationListComponent implements OnInit, OnDestroy {
   public isLoading: boolean = true;
   public errorMessage: string;
-  public applicationList: any[];
   public applications: Observable<Application[]>;
   private applicationListState: Observable<ApplicationListState>;
   private applicationListStateSubscription: Subscription;
-  private applicationsSubscription: Subscription;
 
   constructor(private store: Store<any>, public dialog: MatDialog) {
     this.applicationListState = this.store.select(selectApplicationListState);
@@ -35,10 +34,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     this.applicationListStateSubscription = this.applicationListState.subscribe((state: ApplicationListState) => {
       this.isLoading = state.isLoading;
       this.errorMessage = state.errorMessage;
-    });
-
-    this.applicationsSubscription = this.applications.subscribe(apps => {
-      this.applicationList = apps;
     });
   }
 
@@ -62,6 +57,5 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.applicationListStateSubscription.unsubscribe();
-    this.applicationsSubscription.unsubscribe();
   }
 }

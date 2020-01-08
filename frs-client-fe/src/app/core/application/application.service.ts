@@ -12,10 +12,10 @@ export class ApplicationService {
   constructor(private http: HttpClient) {}
 
   public getAll(organizationId: string): Observable<Application[]> {
-    return this.http.get<Application[]>(`${environment.apiUrl}/org/${organizationId}/apps`);
+    return this.http.get<Application[]>(`${environment.apiUrl}org/${organizationId}/apps`);
   }
 
   public create(organizationId: string, name: string): Observable<Application> {
-    return this.http.post<Application>(`${environment.apiUrl}/org/${organizationId}/app`, { name })
+    return this.http.post<Application>(`${environment.apiUrl}org/${organizationId}/app`, { name })
   }
 }
