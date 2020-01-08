@@ -31,7 +31,6 @@ export class OrganizationHeaderComponent implements OnInit {
   }
 
   rename(name) {
-    console.log(name);
     this.organizationHeaderService.rename(name)
   }
 }
