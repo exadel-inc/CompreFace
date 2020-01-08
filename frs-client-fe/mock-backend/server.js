@@ -1,10 +1,12 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const bodyParser = require('body-parser');
-const dataPath = './mock-backend/data/';
-const mockApps = require('./data/application.json');
-let mockData = {};
+const application = require('./data/application.json');
+const organization = require('./data/organization.json');
+let mockData = {
+  application,
+  organization
+};
 
 const app = express();
 app.use(express.urlencoded());
@@ -35,7 +37,7 @@ let user = {
 };
 
 
-getJSONData();
+// getJSONData();
 let token = '';
 
 // view engine setup
@@ -74,7 +76,7 @@ app.post('/client/register', function(req, res) {
   }
 });
 
-app.get('/organizations', auth, function (req, res) {
+app.get('/organization', auth, function (req, res) {
   const id = req.query.id;
   if (id) {
     res.send(mockData.organization.filter(item => item.id === id))
@@ -140,24 +142,6 @@ app.post('/org/:orgId/app', auth, (req, res) => {
 app.listen(3000, function() {
   console.log('Listening on port 3000!');
 });
-
-function getJSONData() {
-  let organization;
-  let apps;
-  try {
-    organization = JSON.parse(fs.readFileSync(`${dataPath}organization.json`, 'utf8'));
-    apps = JSON.parse(fs.readFileSync(`${dataPath}apps.json`, 'utf8'));
-  } catch (e) {
-    organization = [];
-    apps = [];
-  }
-
-  mockData = {
-    organization,
-    apps,
-    application: mockApps
-  }
-}
 
 function auth(req, res, next) {
   if (req && req.headers.authorization === token)
