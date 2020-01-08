@@ -33,10 +33,10 @@ public interface AppMapper {
     @Named("getOwner")
     default User getOwner(List<UserAppRole> userAppRoles) {
         return userAppRoles.stream()
-                .filter(userAppRole -> userAppRole.getRole().equals(AppRole.OWNER))
+                .filter(userAppRole -> AppRole.OWNER.equals(userAppRole.getRole()))
                 .findFirst()
-                .orElseThrow()
-                .getUser();
+                .map(UserAppRole::getUser)
+                .orElse(null);
     }
 
 }

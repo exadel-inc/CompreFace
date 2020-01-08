@@ -1,9 +1,6 @@
 package com.exadel.frs.service;
 
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.Organization;
-import com.exadel.frs.entity.UserAppRole;
-import com.exadel.frs.entity.UserOrganizationRole;
+import com.exadel.frs.entity.*;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.*;
@@ -12,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -66,6 +64,46 @@ public class AppService {
         }
 
         return appRepository.findAllByOrganizationId(organization.getId());
+    }
+
+    public List<UserAppRole> getAppUsers(final String searchText, final String organizationGuid, final String appGuid, final Long userId) {
+        final App app = getApp(appGuid);
+        verifyUserHasReadPrivileges(userId, app);
+        if (!app.getOrganization().getGuid().equals(organizationGuid)) {
+            throw new AppDoesNotBelongToOrgException(appGuid, organizationGuid);
+        }
+        if (!StringUtils.isEmpty(searchText)) {
+            List<UserAppRole> result = new ArrayList<>();
+            app.getUserAppRoles().forEach(userAppRole -> {
+                String searchTextLowerCase = searchText.toLowerCase();
+                if (userAppRole.getUser().getFirstName().toLowerCase().contains(searchTextLowerCase) ||
+                        userAppRole.getUser().getLastName().toLowerCase().contains(searchTextLowerCase) ||
+                        userAppRole.getUser().getEmail().toLowerCase().contains(searchTextLowerCase)) {
+                    result.add(userAppRole);
+                }
+            });
+            return result;
+        }
+        return app.getUserAppRoles();
+    }
+
+    public UserAppRole inviteUser(final String userEmail, final AppRole userRole, final String organizationGuid,
+                                  final String appGuid, final Long userId) {
+        final App app = getApp(appGuid);
+        verifyUserHasWritePrivileges(userId, app.getOrganization());
+
+        if (!app.getOrganization().getGuid().equals(organizationGuid)) {
+            throw new AppDoesNotBelongToOrgException(appGuid, organizationGuid);
+        }
+        final User user = userService.getUser(userEmail);
+        UserOrganizationRole userOrganizationRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
+        if (!OrganizationRole.USER.equals(userOrganizationRole.getRole()) || app.getUserAppRole(user.getId()).isPresent()) {
+            throw new UserAlreadyHasAccessToAppException(userEmail, appGuid);
+        }
+
+        app.addUserAppRole(user, userRole);
+        final App savedApp = appRepository.save(app);
+        return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
 
     public App createApp(String organizationGuid, App app, Long userId) {

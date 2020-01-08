@@ -7,7 +7,7 @@ public class UserDoesNotExistException extends BasicException {
 
     public static final String MESSAGE = "User %s does not exist";
 
-    public UserDoesNotExistException(final Long userId) {
+    public UserDoesNotExistException(final String userId) {
         super(USER_DOES_NOT_EXIST, format(MESSAGE, userId));
     }
 

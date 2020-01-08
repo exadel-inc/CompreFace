@@ -2,7 +2,6 @@ package com.exadel.frs.entity;
 
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.helpers.OrganizationRoleConverter;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

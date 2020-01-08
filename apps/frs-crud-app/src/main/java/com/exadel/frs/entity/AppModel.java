@@ -2,7 +2,6 @@ package com.exadel.frs.entity;
 
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.helpers.ModelAccessTypeConverter;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

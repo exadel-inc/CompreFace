@@ -8,6 +8,7 @@ import com.exadel.frs.exception.BasicException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.handler.ExceptionCode;
 import com.exadel.frs.mapper.AppMapper;
+import com.exadel.frs.mapper.UserAppRoleMapper;
 import com.exadel.frs.security.JwtTokenFilter;
 import com.exadel.frs.security.JwtTokenFilterConfigurer;
 import com.exadel.frs.security.JwtTokenProvider;
@@ -35,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(AppController.class)
 @Import(value = {JwtTokenFilter.class, JwtTokenFilterConfigurer.class})
-@MockBeans({@MockBean(AppMapper.class), @MockBean(JwtTokenProvider.class)})
+@MockBeans({@MockBean(AppMapper.class), @MockBean(UserAppRoleMapper.class), @MockBean(JwtTokenProvider.class)})
 class AppControllerTest {
 
     private static final long APP_ID = 1L;
