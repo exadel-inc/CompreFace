@@ -21,9 +21,13 @@ import { ApplciationListEffect } from './store/applicationList/effects';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule, MatInputModule, MatButtonModule } from '@angular/material';
-import { ApplicationReducer } from './store/application/reducers';
+import {defaultDataServiceConfig, entityConfig} from "./store/ngrx-data";
+import {CustomMaterialModule} from "./ui/material/material.module";
+import { EntityDataModule, DefaultDataServiceConfig } from '@ngrx/data';
 import { TableModule } from './features/table/table.module';
 import { UserTableModule } from './features/user-table/user-table.module';
+import {OrganizationStoreModule} from "./store/organization/organization.module";
+import { ApplicationStoreModule } from './store/application/application.module';
 
 @NgModule({
   declarations: [
@@ -33,6 +37,7 @@ import { UserTableModule } from './features/user-table/user-table.module';
   ],
   imports: [
     BrowserModule,
+    CustomMaterialModule,
     AppRoutingModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
@@ -45,8 +50,10 @@ import { UserTableModule } from './features/user-table/user-table.module';
     UserTableModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
-    StoreModule.forFeature('application', ApplicationReducer),
     EffectsModule.forRoot([AuthEffects, ApplciationListEffect]),
+    EntityDataModule.forRoot(entityConfig),
+    OrganizationStoreModule,
+    ApplicationStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
@@ -55,6 +62,7 @@ import { UserTableModule } from './features/user-table/user-table.module';
       : [],
   ],
   providers: [
+    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig },
     AuthGuard,
     LoginGuard,
     {
@@ -67,7 +75,7 @@ import { UserTableModule } from './features/user-table/user-table.module';
       useClass: ErrorInterceptor,
       multi: true
     },
-    { provide: RouterStateSerializer, useClass: AppSerializer }
+    { provide: RouterStateSerializer, useClass: AppSerializer },
   ],
   bootstrap: [AppComponent],
   entryComponents: [CreateDialogComponent]

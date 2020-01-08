@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from "@angular/forms";
-import { User } from "../../data/user";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../store";
-import { Observable } from "rxjs";
+import { Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from "@angular/forms";
+import {User} from "../../data/user";
+import {Store} from "@ngrx/store";
+import {AppState} from "../../store";
+import {Observable, Subscription} from "rxjs";
 import { ROUTERS_URL } from "../../data/routers-url.variable";
 import { LogIn } from "../../store/auth/action";
 import { selectAuthState } from "../../store/auth/selectors";
@@ -13,7 +13,7 @@ import { selectAuthState } from "../../store/auth/selectors";
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.sass']
 })
-export class LoginFormComponent implements OnInit {
+export class LoginFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
   getState: Observable<any>;
@@ -21,6 +21,7 @@ export class LoginFormComponent implements OnInit {
   successMessage: string | null;
   isLoading = false;
   ROUTERS_URL = ROUTERS_URL;
+  stateSubscription: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);
@@ -32,11 +33,15 @@ export class LoginFormComponent implements OnInit {
       password: new FormControl(),
     });
 
-    this.getState.subscribe((state) => {
+    this.stateSubscription = this.getState.subscribe((state) => {
       this.errorMessage = state.errorMessage;
       this.successMessage = state.successMessage;
       this.isLoading = state.isLoading;
     });
+  }
+
+  ngOnDestroy() {
+    this.stateSubscription.unsubscribe();
   }
 
   onSubmit() {

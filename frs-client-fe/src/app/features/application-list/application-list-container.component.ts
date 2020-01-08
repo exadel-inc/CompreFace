@@ -1,5 +1,5 @@
 import { Observable, Subscription } from 'rxjs';
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { selectApplications } from 'src/app/store/application/selectors';
 import { selectApplicationListState } from 'src/app/store/applicationList/selectors';
@@ -13,12 +13,12 @@ import { ITableConfig } from 'src/app/features/table/table.component';
 @Component({
   selector: 'application-list-container',
   templateUrl: './application-list-container.component.html',
-  styleUrls: ['./application-list-container.component.sass']
+  styleUrls: ['./application-list-container.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationListComponent implements OnInit, OnDestroy {
   public isLoading: boolean = true;
   public errorMessage: string;
-  public applicationList: any[];
   public applications: Observable<Application[]>;
   public tableConfig: ITableConfig;
 
@@ -26,7 +26,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
   private applicationListState: Observable<ApplicationListState>;
   private applicationListStateSubscription: Subscription;
-  private applicationsSubscription: Subscription;
 
   constructor(private store: Store<any>, public dialog: MatDialog) {
     this.applicationListState = this.store.select(selectApplicationListState);
@@ -41,9 +40,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       this.isLoading = state.isLoading;
       this.errorMessage = state.errorMessage;
     });
-
-    this.applicationsSubscription = this.applications.subscribe(apps => {
-      this.applicationList = apps;
       this.tableConfig = {
         columns: [{ title: 'Title', property: 'name' } , { title: 'Owner name', property: 'owner' }],
         data: apps.map(app => {
@@ -83,7 +79,6 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
         entityType: `${application.name} application has been opened`,
         name: ''
       }
-    });
   }
 
   public onCreateNewApp(): void {
@@ -106,6 +101,5 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.applicationListStateSubscription.unsubscribe();
-    this.applicationsSubscription.unsubscribe();
   }
 }

@@ -1,12 +1,14 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const bodyParser = require('body-parser');
-const dataPath = './mock-backend/data/';
-const mockApps = require('./data/application.json');
+const application = require('./data/application.json');
+const organization = require('./data/organization.json');
 const mockUsers = require('./data/users.json');
 const mockRoles = require('./data/roles.json');
-let mockData = {};
+let mockData = {
+  application,
+  organization
+};
 
 const app = express();
 app.use(express.urlencoded());
@@ -37,7 +39,7 @@ let user = {
 };
 
 
-getJSONData();
+// getJSONData();
 let token = '';
 
 // view engine setup
@@ -76,14 +78,29 @@ app.post('/client/register', function(req, res) {
   }
 });
 
-app.get('/organization', auth, function(req, res) {
-  const id = +req.query.id;
+app.get('/organizations', auth, function (req, res) {
+  const id = req.query.id;
   if (id) {
     res.send(mockData.organization.filter(item => item.id === id))
   } else {
     res.send(mockData.organization);
   }
 });
+
+app.post('/organization/:id', auth, function (req, res) {
+  const organization = req.body;
+  mockData.organization.push(organization);
+  res.send(organization);
+});
+
+app.put('/organization/:id', auth, function (req, res) {
+  const newData = req.body;
+  const id = req.params.id;
+  let organization = mockData.organization.find(item => item.id === id);
+  organization.name = newData.name;
+  res.send(organization);
+});
+
 
 app.get('/org/:orgId/apps', auth, (req, res) => {
   const id = req.params.orgId;
@@ -167,25 +184,6 @@ app.listen(3000, function() {
   console.log('Listening on port 3000!');
 });
 
-function getJSONData() {
-  let organization;
-  let apps;
-  try {
-    organization = JSON.parse(fs.readFileSync(`${dataPath}organization.json`, 'utf8'));
-    apps = JSON.parse(fs.readFileSync(`${dataPath}apps.json`, 'utf8'));
-  } catch (e) {
-    organization = [];
-    apps = [];
-  }
-
-  mockData = {
-    organization,
-    apps,
-    application: mockApps,
-    users: mockUsers,
-    roles: mockRoles
-  }
-}
 
 function auth(req, res, next) {
   if (req && req.headers.authorization === token)
