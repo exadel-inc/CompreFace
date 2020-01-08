@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -92,6 +93,7 @@ class AppControllerTest {
         doThrow(expectedException).when(appService).createApp(any(), eq(USER_ID));
 
         MockHttpServletRequestBuilder request = post("/apps/")
+                .with(csrf())
                 .with(user(buildDefaultUser()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(App.builder().id(APP_ID).build()));
