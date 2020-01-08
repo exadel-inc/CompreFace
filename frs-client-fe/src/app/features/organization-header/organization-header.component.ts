@@ -1,6 +1,5 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {Organization} from "../../data/organization";
 import {OrganizationHeaderService} from "./organization-header.service";
 import {Observable} from "rxjs";
@@ -13,13 +12,13 @@ import {Observable} from "rxjs";
 })
 export class OrganizationHeaderComponent implements OnInit {
   organizations$: Observable<Organization[]>;
-  private selected$: Observable<any>;
+  private selectedId$: Observable<any>;
 
   constructor(private router: Router, private organizationHeaderService: OrganizationHeaderService) { }
 
   ngOnInit() {
     this.organizations$ = this.organizationHeaderService.organization$;
-    this.selected$ = this.organizationHeaderService.selectedId$
+    this.selectedId$ = this.organizationHeaderService.selectedId$
   }
 
   createNew() {
