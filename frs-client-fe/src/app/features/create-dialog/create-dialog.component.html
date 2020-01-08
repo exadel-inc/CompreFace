@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>Create {{data.entityType}}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.entityName">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="data.entityName" cdkFocusInitial>create</button>
+</div>
