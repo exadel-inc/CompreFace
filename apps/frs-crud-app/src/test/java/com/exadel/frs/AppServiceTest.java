@@ -551,6 +551,53 @@ public class AppServiceTest {
         assertThat(result.size(), is(1));
     }
 
+    @ParameterizedTest
+    @MethodSource({"readRoles", "writeRoles"})
+    public void successAppUsersSearch(OrganizationRole organizationRole) {
+        Long user1Id = 1L;
+        Long user2Id = 2L;
+        Long user3Id = 3L;
+
+        User user1 = User.builder()
+                .id(user1Id)
+                .firstName("Will")
+                .lastName("Smith")
+                .email("ws@example.com")
+                .build();
+        User user2 = User.builder()
+                .id(user2Id)
+                .firstName("Maria")
+                .lastName("Smith")
+                .email("sj@example.com")
+                .build();
+        User user3 = User.builder()
+                .id(user3Id)
+                .firstName("Steve")
+                .lastName("Jobs")
+                .email("sj@example.com")
+                .build();
+
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(user1, organizationRole);
+        organization.addUserOrganizationRole(user2, OrganizationRole.USER);
+        organization.addUserOrganizationRole(user3, OrganizationRole.USER);
+
+        App app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .organization(organization)
+                .build();
+        app.addUserAppRole(user1, AppRole.OWNER);
+        app.addUserAppRole(user2, AppRole.USER);
+        app.addUserAppRole(user3, AppRole.USER);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        List<UserAppRole> result = appService.getAppUsers("smith", ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+
+        assertThat(result.size(), is(2));
+    }
+
     @Test
     public void failGetAppRolesUserDoesNotBelongToOrganization() {
         Organization organization = organization(ORGANISATION_ID);
@@ -622,6 +669,90 @@ public class AppServiceTest {
 
         assertThat(userAppRole.getUser().getEmail(), is(userEmail));
         assertThat(userAppRole.getRole(), is(userRole));
+    }
+
+    @ParameterizedTest
+    @MethodSource("readRoles")
+    public void failUserInviteInsufficientPrivileges(OrganizationRole organizationRole) {
+        User user = user(USER_ID);
+
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(user, organizationRole);
+
+        App app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .organization(organization)
+                .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.inviteUser(null, null, ORGANISATION_GUID, APPLICATION_GUID, USER_ID));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failUserInviteAppDoesNotBelongToOrg(OrganizationRole organizationRole) {
+        User admin = user(USER_ID);
+
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(admin, organizationRole);
+
+        App app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .organization(organization)
+                .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        Assertions.assertThrows(AppDoesNotBelongToOrgException.class, () -> appService.inviteUser(null, null, "org-guid-2", APPLICATION_GUID, USER_ID));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failUserInviteUserDoesNotBelongToOrg(OrganizationRole organizationRole) {
+        Long userId = 4L;
+        User admin = user(USER_ID);
+        User user = user(userId);
+
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(admin, organizationRole);
+
+        App app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .organization(organization)
+                .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(anyString())).thenReturn(user);
+
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.inviteUser("email", null, ORGANISATION_GUID, APPLICATION_GUID, USER_ID));
+    }
+
+    @ParameterizedTest
+    @MethodSource("writeRoles")
+    public void failUserInviteUserAlreadyHasAccessToApp(OrganizationRole organizationRole) {
+        Long userId = 4L;
+        User admin = user(USER_ID);
+        User user = user(userId);
+
+        Organization organization = organization(ORGANISATION_ID);
+        organization.addUserOrganizationRole(admin, organizationRole);
+        organization.addUserOrganizationRole(user, OrganizationRole.USER);
+
+        App app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .organization(organization)
+                .build();
+        app.addUserAppRole(user, AppRole.USER);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(anyString())).thenReturn(user);
+
+        Assertions.assertThrows(UserAlreadyHasAccessToAppException.class, () -> appService.inviteUser("email", AppRole.USER, ORGANISATION_GUID, APPLICATION_GUID, USER_ID));
     }
 
 }

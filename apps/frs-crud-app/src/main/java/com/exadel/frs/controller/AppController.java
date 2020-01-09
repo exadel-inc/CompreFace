@@ -35,50 +35,51 @@ public class AppController {
         return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()));
     }
 
-    @GetMapping("/org/{organizationGuid}/apps")
+    @GetMapping("/org/{orgGuid}/apps")
     @ApiOperation(value = "Get all applications in organization")
     public List<AppResponseDto> getApps(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String organizationGuid) {
-        return appMapper.toResponseDto(appService.getApps(organizationGuid, SecurityUtils.getPrincipalId()));
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid) {
+        return appMapper.toResponseDto(appService.getApps(orgGuid, SecurityUtils.getPrincipalId()));
     }
 
-    @GetMapping("/org/{organizationGuid}/app/{appGuid}/roles")
+    @GetMapping("/org/{orgGuid}/app/{guid}/roles")
     @ApiOperation(value = "Get users of application")
     public List<UserRoleResponseDto> getAppUsers(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String organizationGuid,
-            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE) @PathVariable String appGuid,
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
+            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE) @PathVariable String guid,
             @ApiParam(value = "Filter by first name, last name or email of user") @RequestParam(required = false) String search) {
-        return userAppRoleMapper.toUserRoleResponseDto(appService.getAppUsers(search, organizationGuid, appGuid, SecurityUtils.getPrincipalId()));
+        return userAppRoleMapper.toUserRoleResponseDto(appService.getAppUsers(search, orgGuid, guid, SecurityUtils.getPrincipalId()));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/org/{organizationGuid}/app/{appGuid}/invite")
+    @PostMapping("/org/{orgGuid}/app/{guid}/invite")
     @ApiOperation(value = "Invite user to application")
     public UserRoleResponseDto inviteUser(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String organizationGuid,
-            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE) @PathVariable String appGuid,
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
+            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE) @PathVariable String guid,
             @ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody UserInviteDto userInviteDto) {
         return userAppRoleMapper.toUserRoleResponseDto(appService.inviteUser(userInviteDto.getUserEmail(),
-                userInviteDto.getRole(), organizationGuid, appGuid, SecurityUtils.getPrincipalId()));
+                userInviteDto.getRole(), orgGuid, guid, SecurityUtils.getPrincipalId()));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/org/{organizationGuid}/app")
+    @PostMapping("/org/{orgGuid}/app")
     @ApiOperation(value = "Create application")
     @ApiResponses({
             @ApiResponse(code = 400, message = "Application name is required")
     })
     public AppResponseDto createApp(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String organizationGuid,
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
             @ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody AppCreateDto appCreateDto) {
-        App app = appService.createApp(organizationGuid, appMapper.toEntity(appCreateDto), SecurityUtils.getPrincipalId());
+        App app = appService.createApp(orgGuid, appMapper.toEntity(appCreateDto), SecurityUtils.getPrincipalId());
         return appMapper.toResponseDto(app);
     }
 
     @PutMapping("/app/{guid}")
     @ApiOperation(value = "Update application")
     public AppResponseDto updateApp(
-            @ApiParam(value = "GUID of application that needs to be updated", required = true, example = GUID_EXAMPLE) @PathVariable String guid,
+            @ApiParam(value = "GUID of application that needs to be updated", required = true, example = GUID_EXAMPLE)
+            @PathVariable String guid,
             @ApiParam(value = "Application data", required = true) @Valid @RequestBody AppUpdateDto appUpdateDto) {
         App app = appService.updateApp(guid, appMapper.toEntity(appUpdateDto), SecurityUtils.getPrincipalId());
         return appMapper.toResponseDto(app);
