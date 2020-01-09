@@ -2,9 +2,9 @@
   <mat-form-field *ngIf="editing" class="login-full-width">
     <input matInput placeholder="{{placeholder}}" [(ngModel)]="newName">
   </mat-form-field>
-  <mat-form-field *ngIf="!editing && options.length === 1" >
+  <div *ngIf="!editing && options.length === 1" >
     {{options[0].name}}
-  </mat-form-field>
+  </div>
   <mat-form-field *ngIf="!editing && options.length > 1" >
     <mat-label>{{entityName}} name</mat-label>
     <mat-select [(value)]="selected">

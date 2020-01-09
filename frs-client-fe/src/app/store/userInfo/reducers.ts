@@ -1,7 +1,7 @@
 import {UserInfoActions, UserInfoActionTypes} from './action';
 
 export interface UserInfoState {
-  guid: string;
+  guid?: string;
   isAuthenticated: boolean;
   username: string;
 }

@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Organization} from "../../data/organization";
 import {OrganizationHeaderService} from "./organization-header.service";
 import {Observable} from "rxjs";
@@ -15,7 +14,7 @@ export class OrganizationHeaderComponent implements OnInit {
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
 
-  constructor(private router: Router, private organizationHeaderService: OrganizationHeaderService) { }
+  constructor(private organizationHeaderService: OrganizationHeaderService) { }
 
   ngOnInit() {
     this.organizations$ = this.organizationHeaderService.organization$;
