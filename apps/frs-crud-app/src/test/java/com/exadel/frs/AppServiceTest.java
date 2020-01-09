@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.*;
 
-public class AppServiceTest {
+class AppServiceTest {
 
     private static final String APPLICATION_GUID = "app-guid";
     private static final String ORGANISATION_GUID = "org-guid";
@@ -40,7 +41,7 @@ public class AppServiceTest {
     private UserService userServiceMock;
     private AppService appService;
 
-    public AppServiceTest() {
+    AppServiceTest() {
         appRepositoryMock = mock(AppRepository.class);
         organizationServiceMock = mock(OrganizationService.class);
         userServiceMock = mock(UserService.class);
@@ -53,9 +54,9 @@ public class AppServiceTest {
                 .build();
     }
 
-    private Organization organization(Long id) {
+    private Organization organization() {
         return Organization.builder()
-                .id(id)
+                .id(ORGANISATION_ID)
                 .guid(ORGANISATION_GUID)
                 .build();
     }
@@ -71,10 +72,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successGetApp(OrganizationRole organizationRole) {
+    void successGetApp(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -91,8 +92,8 @@ public class AppServiceTest {
     }
 
     @Test
-    public void failGetAppUserDoesNotBelongToOrganization() {
-        Organization organization = organization(ORGANISATION_ID);
+    void failGetAppUserDoesNotBelongToOrganization() {
+        Organization organization = organization();
 
         App app = App.builder()
                 .id(APPLICATION_ID)
@@ -107,10 +108,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void successGetAppOrganizationUser(OrganizationRole organizationRole) {
+    void successGetAppOrganizationUser(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -129,10 +130,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failGetAppInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failGetAppInsufficientPrivileges(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -148,10 +149,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successGetApps(OrganizationRole organizationRole) {
+    void successGetApps(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.setGuid(ORGANISATION_GUID);
         organization.addUserOrganizationRole(user, organizationRole);
 
@@ -170,8 +171,8 @@ public class AppServiceTest {
     }
 
     @Test
-    public void failGetAppsUserDoesNotBelongToOrganization() {
-        Organization organization = organization(ORGANISATION_ID);
+    void failGetAppsUserDoesNotBelongToOrganization() {
+        Organization organization = organization();
         organization.setGuid(ORGANISATION_GUID);
 
         when(organizationServiceMock.getOrganization(ORGANISATION_GUID)).thenReturn(organization);
@@ -181,10 +182,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void successGetAppsOrganizationUser(OrganizationRole organizationRole) {
+    void successGetAppsOrganizationUser(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.setGuid(ORGANISATION_GUID);
         organization.addUserOrganizationRole(user, organizationRole);
 
@@ -205,140 +206,160 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successCreateApp(OrganizationRole organizationRole) {
+    void successCreateApp(OrganizationRole organizationRole) {
+        String appName = "appName";
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
-
-        App app = App.builder()
-                .name("name")
-                .organization(organization)
-                .build();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        appService.createApp(ORGANISATION_GUID, app, USER_ID);
+        appService.createApp(ORGANISATION_GUID, appName, USER_ID);
 
-        verify(appRepositoryMock).save(any(App.class));
+        ArgumentCaptor<App> varArgs = ArgumentCaptor.forClass(App.class);
+        verify(appRepositoryMock).save(varArgs.capture());
 
-        assertThat(app.getGuid(), not(isEmptyOrNullString()));
+        assertThat(varArgs.getValue().getName(), is(appName));
+        assertThat(varArgs.getValue().getGuid(), not(isEmptyOrNullString()));
+        assertThat(varArgs.getValue().getApiKey(), not(isEmptyOrNullString()));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failCreateOrganizationNameIsNotUnique(OrganizationRole organizationRole) {
+    void failCreateOrganizationNameIsNotUnique(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
-
-        App app = App.builder()
-                .name("app")
-                .organization(organization)
-                .build();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
 
-        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(ORGANISATION_GUID, app, USER_ID));
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(ORGANISATION_GUID, "appName", USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failCreateAppEmptyName(OrganizationRole organizationRole) {
+    void failCreateAppEmptyName(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
-
-        App app = App.builder()
-                .organization(organization)
-                .build();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(ORGANISATION_GUID, app, USER_ID));
+        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(ORGANISATION_GUID, "", USER_ID));
     }
 
     @Test
-    public void failCreateAppUserDoesNotBelongToOrganization() {
+    void failCreateAppUserDoesNotBelongToOrganization() {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
-
-        App app = App.builder()
-                .name("name")
-                .organization(organization)
-                .build();
+        Organization organization = organization();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(ORGANISATION_GUID, app, USER_ID));
+        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(ORGANISATION_GUID, "appName", USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failCreateAppInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failCreateAppInsufficientPrivileges(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
-
-        App app = App.builder()
-                .name("name")
-                .organization(organization)
-                .build();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(ORGANISATION_GUID, app, USER_ID));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(ORGANISATION_GUID, "appName", USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successUpdateApp(OrganizationRole organizationRole) {
-        User user1 = user(USER_ID);
-        User user2 = user(4L);
+    void successUpdateApp(OrganizationRole organizationRole) {
+        String newAppName = "appName";
+        User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
-        organization.addUserOrganizationRole(user1, organizationRole);
-        organization.addUserOrganizationRole(user2, OrganizationRole.USER);
-
-        App repoApp = App.builder()
-                .name("name")
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
-        repoApp.addUserAppRole(user1, AppRole.OWNER);
+        Organization organization = organization();
+        organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
-                .name("new_name")
-                .guid("new_guid")
+                .name("name")
+                .organization(organization)
                 .build();
-        app.addUserAppRole(user2, AppRole.OWNER);
+        app.addUserAppRole(user, AppRole.OWNER);
 
-        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
 
-        appService.updateApp(APPLICATION_GUID, app, USER_ID);
+        appService.updateApp(APPLICATION_GUID, newAppName, USER_ID);
 
-        verify(appRepositoryMock).save(any(App.class));
+        ArgumentCaptor<App> varArgs = ArgumentCaptor.forClass(App.class);
+        verify(appRepositoryMock).save(varArgs.capture());
 
-        assertThat(repoApp.getName(), is(app.getName()));
-        assertThat(repoApp.getGuid(), is(APPLICATION_GUID));
-        assertThat(repoApp.getUserAppRoles().size(), is(1));
+        assertThat(varArgs.getValue().getName(), is(newAppName));
     }
+
+//    @ParameterizedTest
+//    @MethodSource("writeRoles")
+//    void failUpdateAppSelfRoleChange(OrganizationRole organizationRole) {
+//        User user = user(USER_ID);
+//
+//        Organization organization = organization();
+//        organization.addUserOrganizationRole(user, organizationRole);
+//
+//        App repoApp = App.builder()
+//                .name("name")
+//                .guid(APPLICATION_GUID)
+//                .organization(organization)
+//                .build();
+//        repoApp.addUserAppRole(user, AppRole.OWNER);
+//
+//        App appUpdate = App.builder().build();
+//        appUpdate.addUserAppRole(user, AppRole.USER);
+//
+//        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
+//
+//        Assertions.assertThrows(SelfRoleChangeException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
+//    }
+
+//    @ParameterizedTest
+//    @MethodSource("writeRoles")
+//    void failUpdateAppMultipleOwners(OrganizationRole organizationRole) {
+//        User user1 = user(USER_ID);
+//        User user2 = user(4L);
+//        User user3 = user(5L);
+//
+//        Organization organization = organization();
+//        organization.addUserOrganizationRole(user1, organizationRole);
+//
+//        App repoApp = App.builder()
+//                .name("name")
+//                .guid(APPLICATION_GUID)
+//                .organization(organization)
+//                .build();
+//        repoApp.addUserAppRole(user1, AppRole.OWNER);
+//
+//        App appUpdate = App.builder().build();
+//        appUpdate.addUserAppRole(user2, AppRole.OWNER);
+//        appUpdate.addUserAppRole(user3, AppRole.OWNER);
+//
+//        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
+//
+//        Assertions.assertThrows(MultipleOwnersException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
+//    }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failUpdateAppSelfRoleChange(OrganizationRole organizationRole) {
+    void failUpdateAppNameIsNotUnique(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App repoApp = App.builder()
@@ -347,72 +368,19 @@ public class AppServiceTest {
                 .organization(organization)
                 .build();
         repoApp.addUserAppRole(user, AppRole.OWNER);
-
-        App appUpdate = App.builder().build();
-        appUpdate.addUserAppRole(user, AppRole.USER);
-
-        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
-
-        Assertions.assertThrows(SelfRoleChangeException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
-    }
-
-    @ParameterizedTest
-    @MethodSource("writeRoles")
-    public void failUpdateAppMultipleOwners(OrganizationRole organizationRole) {
-        User user1 = user(USER_ID);
-        User user2 = user(4L);
-        User user3 = user(5L);
-
-        Organization organization = organization(ORGANISATION_ID);
-        organization.addUserOrganizationRole(user1, organizationRole);
-
-        App repoApp = App.builder()
-                .name("name")
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
-        repoApp.addUserAppRole(user1, AppRole.OWNER);
-
-        App appUpdate = App.builder().build();
-        appUpdate.addUserAppRole(user2, AppRole.OWNER);
-        appUpdate.addUserAppRole(user3, AppRole.OWNER);
-
-        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
-
-        Assertions.assertThrows(MultipleOwnersException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
-    }
-
-    @ParameterizedTest
-    @MethodSource("writeRoles")
-    public void failUpdateAppNameIsNotUnique(OrganizationRole organizationRole) {
-        User user = user(USER_ID);
-
-        Organization organization = organization(ORGANISATION_ID);
-        organization.addUserOrganizationRole(user, organizationRole);
-
-        App repoApp = App.builder()
-                .name("name")
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
-        repoApp.addUserAppRole(user, AppRole.OWNER);
-
-        App appUpdate = App.builder()
-                .name("new_name")
-                .build();
 
         when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
 
-        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.updateApp(APPLICATION_GUID, appUpdate, USER_ID));
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> appService.updateApp(APPLICATION_GUID, "new_name", USER_ID));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failUpdateAppInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failUpdateAppInsufficientPrivileges(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -421,37 +389,37 @@ public class AppServiceTest {
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.updateApp(APPLICATION_GUID, app, USER_ID));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> appService.updateApp(APPLICATION_GUID, "appName", USER_ID));
     }
+
+//    @ParameterizedTest
+//    @MethodSource("writeRoles")
+//    void failUpdateAppUserDoesNotExist(OrganizationRole organizationRole) {
+//        User user = user(USER_ID);
+//
+//        Organization organization = organization();
+//        organization.addUserOrganizationRole(user, organizationRole);
+//
+//        App repoApp = App.builder()
+//                .name("name")
+//                .organization(organization)
+//                .build();
+//
+//        App app = App.builder()
+//                .build();
+//        app.addUserAppRole(user(2L), AppRole.USER);
+//
+//        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
+//
+//        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.updateApp(APPLICATION_GUID, app, USER_ID));
+//    }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failUpdateAppUserDoesNotExist(OrganizationRole organizationRole) {
+    void successRegenerateGuid(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
-        organization.addUserOrganizationRole(user, organizationRole);
-
-        App repoApp = App.builder()
-                .name("name")
-                .organization(organization)
-                .build();
-
-        App app = App.builder()
-                .build();
-        app.addUserAppRole(user(2L), AppRole.USER);
-
-        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(repoApp));
-
-        Assertions.assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.updateApp(APPLICATION_GUID, app, USER_ID));
-    }
-
-    @ParameterizedTest
-    @MethodSource("writeRoles")
-    public void successRegenerateGuid(OrganizationRole organizationRole) {
-        User user = user(USER_ID);
-
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -471,10 +439,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failRegenerateGuidInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failRegenerateGuidInsufficientPrivileges(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -490,10 +458,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successDeleteApp(OrganizationRole organizationRole) {
+    void successDeleteApp(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -512,10 +480,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failDeleteAppInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failDeleteAppInsufficientPrivileges(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -531,10 +499,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource({"readRoles", "writeRoles"})
-    public void successGetAppRoles(OrganizationRole organizationRole) {
+    void successGetAppRoles(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -553,7 +521,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource({"readRoles", "writeRoles"})
-    public void successAppUsersSearch(OrganizationRole organizationRole) {
+    void successAppUsersSearch(OrganizationRole organizationRole) {
         Long user1Id = 1L;
         Long user2Id = 2L;
         Long user3Id = 3L;
@@ -577,7 +545,7 @@ public class AppServiceTest {
                 .email("sj@example.com")
                 .build();
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user1, organizationRole);
         organization.addUserOrganizationRole(user2, OrganizationRole.USER);
         organization.addUserOrganizationRole(user3, OrganizationRole.USER);
@@ -599,8 +567,8 @@ public class AppServiceTest {
     }
 
     @Test
-    public void failGetAppRolesUserDoesNotBelongToOrganization() {
-        Organization organization = organization(ORGANISATION_ID);
+    void failGetAppRolesUserDoesNotBelongToOrganization() {
+        Organization organization = organization();
 
         App app = App.builder()
                 .id(APPLICATION_ID)
@@ -615,7 +583,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource({"readRoles", "writeRoles"})
-    public void failGetAppRolesAppDoesNotBelongToOrg(OrganizationRole organizationRole) {
+    void failGetAppRolesAppDoesNotBelongToOrg(OrganizationRole organizationRole) {
         User user = user(USER_ID);
         Long org2Id = 3L;
         String org2Guid = "org-guid-3";
@@ -640,7 +608,7 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successUserInvite(OrganizationRole organizationRole) {
+    void successUserInvite(OrganizationRole organizationRole) {
         User admin = user(USER_ID);
 
         Long userId = 4L;
@@ -651,7 +619,7 @@ public class AppServiceTest {
                 .email(userEmail)
                 .build();
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(admin, organizationRole);
         organization.addUserOrganizationRole(user, OrganizationRole.USER);
 
@@ -673,10 +641,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failUserInviteInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failUserInviteInsufficientPrivileges(OrganizationRole organizationRole) {
         User user = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
         App app = App.builder()
@@ -692,10 +660,10 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failUserInviteAppDoesNotBelongToOrg(OrganizationRole organizationRole) {
+    void failUserInviteAppDoesNotBelongToOrg(OrganizationRole organizationRole) {
         User admin = user(USER_ID);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(admin, organizationRole);
 
         App app = App.builder()
@@ -711,12 +679,12 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failUserInviteUserDoesNotBelongToOrg(OrganizationRole organizationRole) {
+    void failUserInviteUserDoesNotBelongToOrg(OrganizationRole organizationRole) {
         Long userId = 4L;
         User admin = user(USER_ID);
         User user = user(userId);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(admin, organizationRole);
 
         App app = App.builder()
@@ -733,12 +701,12 @@ public class AppServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failUserInviteUserAlreadyHasAccessToApp(OrganizationRole organizationRole) {
+    void failUserInviteUserAlreadyHasAccessToApp(OrganizationRole organizationRole) {
         Long userId = 4L;
         User admin = user(USER_ID);
         User user = user(userId);
 
-        Organization organization = organization(ORGANISATION_ID);
+        Organization organization = organization();
         organization.addUserOrganizationRole(admin, organizationRole);
         organization.addUserOrganizationRole(user, OrganizationRole.USER);
 

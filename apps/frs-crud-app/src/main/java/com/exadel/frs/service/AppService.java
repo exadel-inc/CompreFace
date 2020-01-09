@@ -106,54 +106,57 @@ public class AppService {
         return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
 
-    public App createApp(String organizationGuid, App app, Long userId) {
+    public App createApp(String organizationGuid, String appName, Long userId) {
         Organization organization = organizationService.getOrganization(organizationGuid);
         verifyUserHasWritePrivileges(userId, organization);
-        if (StringUtils.isEmpty(app.getName())) {
+        if (StringUtils.isEmpty(appName)) {
             throw new EmptyRequiredFieldException("name");
         }
-        verifyNameIsUnique(app.getName(), organization.getId());
-        app.setOrganization(organization);
-        app.setGuid(UUID.randomUUID().toString());
-        app.setApiKey(UUID.randomUUID().toString());
+        verifyNameIsUnique(appName, organization.getId());
+        App app = App.builder()
+                .name(appName)
+                .organization(organization)
+                .guid(UUID.randomUUID().toString())
+                .apiKey(UUID.randomUUID().toString())
+                .build();
         app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
         return appRepository.save(app);
     }
 
-    private long getNumberOfOwners(List<UserAppRole> userAppRoles) {
-        long ownersCount = userAppRoles.stream()
-                .filter(userAppRole -> AppRole.OWNER.equals(userAppRole.getRole()))
-                .count();
-        if (ownersCount > 1) {
-            throw new MultipleOwnersException();
-        }
-        return ownersCount;
-    }
+//    private long getNumberOfOwners(List<UserAppRole> userAppRoles) {
+//        long ownersCount = userAppRoles.stream()
+//                .filter(userAppRole -> AppRole.OWNER.equals(userAppRole.getRole()))
+//                .count();
+//        if (ownersCount > 1) {
+//            throw new MultipleOwnersException();
+//        }
+//        return ownersCount;
+//    }
 
-    public App updateApp(final String appGuid, final App app, final Long userId) {
+    public App updateApp(final String appGuid, final String appName, final Long userId) {
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        if (!StringUtils.isEmpty(app.getName()) && !repoApp.getName().equals(app.getName())) {
-            verifyNameIsUnique(app.getName(), repoApp.getOrganization().getId());
-            repoApp.setName(app.getName());
+        if (!StringUtils.isEmpty(appName) && !repoApp.getName().equals(appName)) {
+            verifyNameIsUnique(appName, repoApp.getOrganization().getId());
+            repoApp.setName(appName);
         }
-        if (app.getUserAppRoles() != null) {
-            if (repoApp.getUserAppRoles() != null) {
-                if (getNumberOfOwners(app.getUserAppRoles()) == 0) {
-                    repoApp.getUserAppRoles().removeIf(userAppRole -> !AppRole.OWNER.equals(userAppRole.getRole()));
-                } else {
-                    repoApp.getUserAppRoles().clear();
-                }
-            }
-            app.getUserAppRoles().forEach(userAppRole -> {
-                if (userId.equals(userAppRole.getId().getUserId())) {
-                    throw new SelfRoleChangeException();
-                }
-                UserOrganizationRole userOrganizationRole = repoApp.getOrganization()
-                        .getUserOrganizationRoleOrThrow(userAppRole.getId().getUserId());
-                repoApp.addUserAppRole(userOrganizationRole.getUser(), userAppRole.getRole());
-            });
-        }
+//        if (app.getUserAppRoles() != null) {
+//            if (repoApp.getUserAppRoles() != null) {
+//                if (getNumberOfOwners(app.getUserAppRoles()) == 0) {
+//                    repoApp.getUserAppRoles().removeIf(userAppRole -> !AppRole.OWNER.equals(userAppRole.getRole()));
+//                } else {
+//                    repoApp.getUserAppRoles().clear();
+//                }
+//            }
+//            app.getUserAppRoles().forEach(userAppRole -> {
+//                if (userId.equals(userAppRole.getId().getUserId())) {
+//                    throw new SelfRoleChangeException();
+//                }
+//                UserOrganizationRole userOrganizationRole = repoApp.getOrganization()
+//                        .getUserOrganizationRoleOrThrow(userAppRole.getId().getUserId());
+//                repoApp.addUserAppRole(userOrganizationRole.getUser(), userAppRole.getRole());
+//            });
+//        }
         return appRepository.save(repoApp);
     }
 

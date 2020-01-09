@@ -1,7 +1,6 @@
 package com.exadel.frs.controller;
 
 import com.exadel.frs.dto.ui.*;
-import com.exadel.frs.entity.App;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.mapper.UserAppRoleMapper;
@@ -71,8 +70,7 @@ public class AppController {
     public AppResponseDto createApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
             @ApiParam(value = "Application object that needs to be created", required = true) @Valid @RequestBody AppCreateDto appCreateDto) {
-        App app = appService.createApp(orgGuid, appMapper.toEntity(appCreateDto), SecurityUtils.getPrincipalId());
-        return appMapper.toResponseDto(app);
+        return appMapper.toResponseDto(appService.createApp(orgGuid, appCreateDto.getName(), SecurityUtils.getPrincipalId()));
     }
 
     @PutMapping("/app/{guid}")
@@ -81,8 +79,7 @@ public class AppController {
             @ApiParam(value = "GUID of application that needs to be updated", required = true, example = GUID_EXAMPLE)
             @PathVariable String guid,
             @ApiParam(value = "Application data", required = true) @Valid @RequestBody AppUpdateDto appUpdateDto) {
-        App app = appService.updateApp(guid, appMapper.toEntity(appUpdateDto), SecurityUtils.getPrincipalId());
-        return appMapper.toResponseDto(app);
+        return appMapper.toResponseDto(appService.updateApp(guid, appUpdateDto.getName(), SecurityUtils.getPrincipalId()));
     }
 
     @PutMapping("/app/{guid}/api-key")
