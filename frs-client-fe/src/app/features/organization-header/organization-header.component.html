@@ -18,7 +18,7 @@
     </button>
   </div>
 
-  <div class="organization-header_right-coll">
-    <div class="your_role">role</div>
+  <div class="organization-header_right-coll" *ngIf="userRole$ | async as userRole">
+    <div class="your_role">Your role: {{userRole}}</div>
   </div>
 </div>

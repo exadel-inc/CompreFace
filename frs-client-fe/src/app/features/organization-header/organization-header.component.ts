@@ -11,13 +11,15 @@ import {Observable} from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationHeaderComponent implements OnInit {
-  organizations$: Observable<Organization[]>;
-  private selectedId$: Observable<any>;
+  public organizations$: Observable<Organization[]>;
+  public userRole$: Observable<string | null>;
+  public selectedId$: Observable<any>;
 
   constructor(private router: Router, private organizationHeaderService: OrganizationHeaderService) { }
 
   ngOnInit() {
     this.organizations$ = this.organizationHeaderService.organization$;
+    this.userRole$ = this.organizationHeaderService.userRole$;
     this.selectedId$ = this.organizationHeaderService.selectedId$
   }
 

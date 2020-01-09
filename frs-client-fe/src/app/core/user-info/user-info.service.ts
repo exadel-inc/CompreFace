@@ -15,9 +15,4 @@ export class UserInfoService {
   public get(): Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}${API_URL.GET_USER_INFO}`);
   }
-
-  // public create(organizationId: string, name: string): Observable<Application> {
-  //   return this.http.post<Application>(`${environment.apiUrl}org/${organizationId}/app`, { name })
-  // }
-
 }

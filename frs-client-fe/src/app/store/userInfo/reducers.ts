@@ -1,13 +1,15 @@
 import {UserInfoActions, UserInfoActionTypes} from './action';
 
 export interface UserInfoState {
+  guid: string;
   isAuthenticated: boolean;
   username: string;
 }
 
 export const initialState: UserInfoState = {
   isAuthenticated: false,
-  username: null
+  username: null,
+  guid: null
 };
 
 

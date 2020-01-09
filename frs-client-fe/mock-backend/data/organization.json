@@ -4,9 +4,12 @@
     "name": "Exadel Organization",
     "userOrganizationRoles": [
       {
-        "organizationId": 0,
         "role": "OWNER",
-        "userId": 0
+        "userId": "guid_0"
+      },
+      {
+        "role": "ADMIN",
+        "userId": "guid_1"
       }
     ]
   },
@@ -15,9 +18,8 @@
     "name": "home Organization",
     "userOrganizationRoles": [
       {
-        "organizationId": 0,
-        "role": "OWNER",
-        "userId": 0
+        "role": "ADMIN",
+        "userId": "guid_0"
       }
     ]
   }
