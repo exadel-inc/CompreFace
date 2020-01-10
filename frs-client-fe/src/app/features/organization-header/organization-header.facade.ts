@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
 import {selectUserInfoState} from "../../store/userInfo/selectors";
 
 @Injectable()
-export class OrganizationHeaderService {
+export class OrganizationHeaderFacade {
   selectedId$: Observable<string | null>;
   user$: Observable<any>;
   selectedId: string | null;

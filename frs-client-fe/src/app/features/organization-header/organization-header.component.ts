@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Organization} from "../../data/organization";
-import {OrganizationHeaderService} from "./organization-header.service";
+import {OrganizationHeaderFacade} from "./organization-header.facade";
 import {Observable} from "rxjs";
 
 @Component({
@@ -14,12 +14,12 @@ export class OrganizationHeaderComponent implements OnInit {
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
 
-  constructor(private organizationHeaderService: OrganizationHeaderService) { }
+  constructor(private organizationHeaderFacade: OrganizationHeaderFacade) { }
 
   ngOnInit() {
-    this.organizations$ = this.organizationHeaderService.organization$;
-    this.userRole$ = this.organizationHeaderService.userRole$;
-    this.selectedId$ = this.organizationHeaderService.selectedId$
+    this.organizations$ = this.organizationHeaderFacade.organization$;
+    this.userRole$ = this.organizationHeaderFacade.userRole$;
+    this.selectedId$ = this.organizationHeaderFacade.selectedId$
   }
 
   createNew() {
@@ -27,10 +27,10 @@ export class OrganizationHeaderComponent implements OnInit {
   }
 
   selectOrganization(id) {
-    this.organizationHeaderService.select(id)
+    this.organizationHeaderFacade.select(id)
   }
 
   rename(name) {
-    this.organizationHeaderService.rename(name)
+    this.organizationHeaderFacade.rename(name)
   }
 }
