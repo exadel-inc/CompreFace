@@ -5,21 +5,23 @@ import {
   SelectUserRollForSelectedOrganization
 } from "../../store/organization/selectors";
 import {Store} from "@ngrx/store";
-import {Observable} from "rxjs";
+import {Observable, Subscription} from "rxjs";
 import {Organization} from "../../data/organization";
 import {AppState} from "../../store";
 import {SetSelectedId} from "../../store/organization/action";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {Router} from "@angular/router";
 import {selectUserInfoState} from "../../store/userInfo/selectors";
+import {IFacade} from "../../core/facade/IFacade";
 
 @Injectable()
-export class OrganizationHeaderFacade {
+export class OrganizationHeaderFacade implements IFacade{
   selectedId$: Observable<string | null>;
   user$: Observable<any>;
   selectedId: string | null;
   public userRole$: Observable<string | null>;
   public organization$: Observable<Organization[]>;
+  selectedIdSub: Subscription;
 
   constructor(private organizationEnService: OrganizationEnService, private store: Store<AppState>, private router: Router) {
     this.organization$ = this.organizationEnService.entities$;
@@ -27,10 +29,16 @@ export class OrganizationHeaderFacade {
 
     this.selectedId$ = this.store.select(getSelectedOrganizationId);
     this.user$ = this.store.select(selectUserInfoState);
+  }
 
-    this.selectedId$.subscribe(id => {
+  initSubscriptions() {
+    this.selectedIdSub = this.selectedId$.subscribe(id => {
       this.selectedId = id;
     });
+  }
+
+  unsubscribe() {
+    this.selectedIdSub.unsubscribe();
   }
 
   select(id: string) {

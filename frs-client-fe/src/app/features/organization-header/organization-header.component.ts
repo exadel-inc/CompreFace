@@ -14,7 +14,9 @@ export class OrganizationHeaderComponent implements OnInit {
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
 
-  constructor(private organizationHeaderFacade: OrganizationHeaderFacade) { }
+  constructor(private organizationHeaderFacade: OrganizationHeaderFacade) {
+    organizationHeaderFacade.initSubscriptions();
+  }
 
   ngOnInit() {
     this.organizations$ = this.organizationHeaderFacade.organization$;
