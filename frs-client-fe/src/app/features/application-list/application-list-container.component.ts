@@ -1,14 +1,11 @@
 import { Observable, Subscription } from 'rxjs';
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { selectApplications } from 'src/app/store/application/selectors';
-import { selectApplicationListState } from 'src/app/store/applicationList/selectors';
+import { map } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ApplicationListState } from 'src/app/store/applicationList/reducers';
-import { FetchApplicationList, CreateApplication } from 'src/app/store/applicationList/action';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatDialog } from '@angular/material';
-import { Application } from 'src/app/data/application';
 import { ITableConfig } from 'src/app/features/table/table.component';
+import { ApplicationListFacade } from './application-list-facade.service';
 
 @Component({
   selector: 'application-list-container',
@@ -19,60 +16,31 @@ import { ITableConfig } from 'src/app/features/table/table.component';
 export class ApplicationListComponent implements OnInit, OnDestroy {
   public isLoading: boolean = true;
   public errorMessage: string;
-  public applications: Observable<Application[]>;
-  public tableConfig: ITableConfig;
+  public tableConfig$: Observable<ITableConfig>;
 
-  userTableConfig: ITableConfig;
-
-  private applicationListState: Observable<ApplicationListState>;
   private applicationListStateSubscription: Subscription;
 
-  constructor(private store: Store<any>, public dialog: MatDialog) {
-    this.applicationListState = this.store.select(selectApplicationListState);
-    this.applications = this.store.select(selectApplications);
-    this.store.dispatch(new FetchApplicationList({
-      organizationId: '0'
-    }));
+  constructor(private applicationFacade: ApplicationListFacade, public dialog: MatDialog, private cdr: ChangeDetectorRef) {
+    this.applicationFacade.initSubscriptions();
   }
 
   ngOnInit() {
-    this.applicationListStateSubscription = this.applicationListState.subscribe((state: ApplicationListState) => {
-      this.isLoading = state.isLoading;
-      this.errorMessage = state.errorMessage;
-    });
+    this.applicationListStateSubscription = this.applicationFacade.applicationListState$
+      .subscribe((state: ApplicationListState) => {
+        this.isLoading = state.isLoading;
+        this.errorMessage = state.errorMessage;
+        this.cdr.markForCheck();
+      });
 
-    this.applications.subscribe(apps => {
-      this.tableConfig = {
-        columns: [{ title: 'Title', property: 'name' }, { title: 'Owner name', property: 'owner' }],
-        data: apps.map(app => {
-          return { id: app.id, name: app.name, owner: app.owner.firstName };
+    this.tableConfig$ = this.applicationFacade.applications$
+      .pipe(
+        map(apps => {
+          return ({
+            columns: [{ title: 'Title', property: 'name' }, { title: 'Owner name', property: 'owner' }],
+            data: apps.map(app => ({ id: app.id, name: app.name, owner: app.owner.firstName }))
+          })
         })
-      };
-
-      this.userTableConfig = {
-        columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
-        data: [
-          {
-            "id": 0,
-            "firstName": "John",
-            "lastName": "Malkovich",
-            "accessLevel": "USER"
-          },
-          {
-            "id": 1,
-            "firstName": "Tony",
-            "lastName": "Stark",
-            "accessLevel": "ADMINISTRATOR"
-          },
-          {
-            "id": 2,
-            "firstName": "User",
-            "lastName": "Role",
-            "accessLevel": "USER"
-          }
-        ]
-      }
-    });
+      );
   }
 
   public onClick(application): void {
@@ -92,17 +60,16 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       }
     });
 
-    dialog.afterClosed().subscribe(res => {
-      if (res) {
-        this.store.dispatch(new CreateApplication({
-          organizationId: '0',
-          name: res
-        }));
+    const dialogSubscription = dialog.afterClosed().subscribe(name => {
+      if (name) {
+        this.applicationFacade.createApplication(name);
+        dialogSubscription.unsubscribe();
       }
     });
   }
 
   ngOnDestroy(): void {
+    this.applicationFacade.unsubscribe();
     this.applicationListStateSubscription.unsubscribe();
   }
 }

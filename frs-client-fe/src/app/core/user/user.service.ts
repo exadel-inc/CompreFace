@@ -8,19 +8,19 @@ import { environment } from '../../../environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class UserServiceService {
+export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  public getAll(organizationId: string): Observable<AppUser> {
-    return this.http.get<AppUser>(`${environment.apiUrl}/org/${organizationId}/roles`);
+  public getAll(organizationId: string): Observable<AppUser[]> {
+    return this.http.get<AppUser[]>(`${environment.apiUrl}org/${organizationId}/roles`);
   }
 
   public updateRole(organizationId: string, id: string, role: string): Observable<any> {
-    return this.http.post<AppUser>(`${environment.apiUrl}/org/${organizationId}/role`, { id, role });
+    return this.http.post<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role });
   }
 
   public inviteUser(organizationId: string, role: string, userEmail: string): Observable<{message: string}> {
-    return this.http.post<{message: string}>(`${environment.apiUrl}/org/${organizationId}/invite`, { role, userEmail });
+    return this.http.post<{message: string}>(`${environment.apiUrl}org/${organizationId}/invite`, { role, userEmail });
   }
 }

@@ -6,14 +6,17 @@ import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 import {OrganizationHeaderModule} from "../../features/organization-header/organization-header.module";
 import {OrganizationService} from "./organization.service";
-import { ApplicationListComponent } from 'src/app/features/application-list/application-list-container.component';
+import { ApplicationListModule } from 'src/app/features/application-list/application-list.module';
 import { MatButtonModule } from '@angular/material/button';
 import { TableModule } from 'src/app/features/table/table.module';
 import { UserTableModule } from 'src/app/features/user-table/user-table.module';
+import { UserListModule } from 'src/app/features/user-list/user-list.module';
 
 @NgModule({
-  declarations: [OrganizationComponent, ApplicationListComponent],
+  declarations: [OrganizationComponent],
   imports: [
+    ApplicationListModule,
+    UserListModule,
     TableModule,
     UserTableModule,
     CommonModule,

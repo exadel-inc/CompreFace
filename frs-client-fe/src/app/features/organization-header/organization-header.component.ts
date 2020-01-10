@@ -1,6 +1,4 @@
 import {ChangeDetectionStrategy, Component, Input, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {Organization} from "../../data/organization";
 import {OrganizationHeaderService} from "./organization-header.service";
 import {Observable} from "rxjs";
@@ -12,10 +10,10 @@ import {Observable} from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationHeaderComponent implements OnInit {
-  organizations$: Observable<Organization[]>;
-  private selected$: Observable<any>;
+  public organizations$: Observable<Organization[]>;
+  public selected$: Observable<any>;
 
-  constructor(private router: Router, private organizationHeaderService: OrganizationHeaderService) { }
+  constructor(private organizationHeaderService: OrganizationHeaderService) { }
 
   ngOnInit() {
     this.organizations$ = this.organizationHeaderService.organization$;

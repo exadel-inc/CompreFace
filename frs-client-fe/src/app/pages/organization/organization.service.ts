@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {getSelectOrganizationId} from "../../store/organization/selectors";
+import {getSelectedOrganizationId} from "../../store/organization/selectors";
 import {combineLatest, merge, Observable, Subscription} from "rxjs";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {SetSelectedId} from "../../store/organization/action";
@@ -31,7 +31,7 @@ export class OrganizationService {
   initUrlBindingStreams () {
     this.organizationEnService.getAll();
     this.organization$ = this.organizationEnService.entities$;
-    this.selectedId$ = this.store.select(getSelectOrganizationId);
+    this.selectedId$ = this.store.select(getSelectedOrganizationId);
 
     this.setInitialValueFromUrl$ = combineLatest(this.selectedId$, this.organization$, this.store.select(SelectRouterIdParam)).pipe(
       filter(([selectedId, data, routerId]) => {

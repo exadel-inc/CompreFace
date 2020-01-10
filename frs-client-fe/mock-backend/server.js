@@ -103,7 +103,7 @@ app.put('/organization/:id', auth, function (req, res) {
 });
 
 
-app.get('/org/:orgId/apps', auth, (req, res) => {
+app.get('/org/:orgId/apps', auth, wait(), (req, res) => {
   const id = req.params.orgId;
 
   if (id) {
@@ -142,18 +142,19 @@ app.post('/org/:orgId/app', auth, (req, res) => {
   res.status(201).json(app);
 });
 
-app.get('org/:orgId/roles', auth, (req, res) => {
-  res.status(201).json(mockData.users);
+app.get('/org/:orgId/roles', auth, wait(), (req, res) => {
+  const organizationId = req.params.orgId;
+  res.status(201).json(mockData.users.filter(user => user.organizationId === organizationId));
 });
 
-app.post('org/:orgId/role', auth, (req, res) => {
+app.post('/org/:orgId/role', auth, (req, res) => {
   const { id, role } = req.body;
 
-  if (id && role) {
+  if (id !== undefined && role) {
     const userIndex = mockData.users.findIndex(user => user.id === id);
 
     if (~userIndex) {
-      mockData.users[userIndex].role = role;
+      mockData.users[userIndex].accessLevel = role;
 
       res.status(201).json(mockData.users[userIndex]);
     } else {
@@ -164,7 +165,7 @@ app.post('org/:orgId/role', auth, (req, res) => {
   }
 });
 
-app.post('org/:orgId/invite', auth, (req, res) => {
+app.post('/org/:orgId/invite', auth, (req, res) => {
   const { role, userEmail } = req.body;
 
   if (userEmail && role) {

@@ -27,6 +27,10 @@ import { TableModule } from './features/table/table.module';
 import { UserTableModule } from './features/user-table/user-table.module';
 import { OrganizationStoreModule } from "./store/organization/organization.module";
 import { ApplicationStoreModule } from './store/application/application.module';
+import { ApplicationListModule } from './features/application-list/application-list.module';
+import { UserListModule } from './features/user-list/user-list.module';
+import { UserListEffect } from './store/userList/effects';
+import { UserStoreModule } from './store/user/user.module';
 
 @NgModule({
   declarations: [
@@ -46,10 +50,13 @@ import { ApplicationStoreModule } from './store/application/application.module';
     UserTableModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
-    EffectsModule.forRoot([AuthEffects, ApplicationListEffect]),
+    EffectsModule.forRoot([AuthEffects, ApplicationListEffect, UserListEffect]),
     EntityDataModule.forRoot(entityConfig),
     OrganizationStoreModule,
     ApplicationStoreModule,
+    UserStoreModule,
+    ApplicationListModule,
+    UserListModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),

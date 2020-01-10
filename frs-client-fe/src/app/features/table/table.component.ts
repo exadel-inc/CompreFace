@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy,Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 
 export interface ITableConfig {
   columns: {
@@ -11,7 +11,8 @@ export interface ITableConfig {
 @Component({
   selector: 'app-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.sass']
+  styleUrls: ['./table.component.sass'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements OnInit {
   @Input() set tableConfig(config: ITableConfig) {
