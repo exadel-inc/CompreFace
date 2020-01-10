@@ -10,6 +10,7 @@ export class UserTableComponent extends TableComponent implements OnInit {
   public availableRoles: string[];
 
   ngOnInit() {
+    // TODO: Load roles from server
     this.availableRoles = [
       "OWNER",
       "ADMINISTRATOR",
