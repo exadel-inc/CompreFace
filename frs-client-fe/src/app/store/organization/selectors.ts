@@ -10,7 +10,7 @@ export const selectOrganizationState = createFeatureSelector<FromOrganization.Or
 
 export const SelectOrganizationId = createSelector(
   selectOrganizationState,
-  (state) => state.selectId
+  state => state.selectId
 );
 
 export const SelectSelectedOrganization = createSelector(
