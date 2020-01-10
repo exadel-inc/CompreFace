@@ -46,16 +46,7 @@ let user = {
 
 let token = '';
 
-// view engine setup
-app.set('views', 'src/pages');
 app.locals.basedir = path.join(__dirname, 'mock-backend');
-app.use('/static', express.static('static'));
-app.use('/', express.static('public'));
-
-
-app.get('/', function(req, res) {
-  res.redirect('/home');
-});
 
 app.post('/login', wait(1000), function(req, res) {
   if (req && req.body.username === user.username && req.body.password === user.password) {
@@ -103,7 +94,6 @@ app.put('/organization/:id', auth, function (req, res) {
   organization.name = newData.name;
   res.send(organization);
 });
-
 
 app.get('/org/:orgId/apps', auth, wait(), (req, res) => {
   const id = req.params.orgId;
@@ -191,7 +181,6 @@ app.get('/user/me', auth, (req, res) => {
 app.listen(3000, function() {
   console.log('Listening on port 3000!');
 });
-
 
 function auth(req, res, next) {
   if (req && req.headers.authorization === token)
