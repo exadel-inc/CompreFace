@@ -1,4 +1,4 @@
-<table mat-table [dataSource]="data">
+<table *ngIf="!(isLoading$ | async)" mat-table [dataSource]="data">
   <!-- Position Column -->
   <ng-container matColumnDef="user">
     <th mat-header-cell *matHeaderCellDef> User </th>

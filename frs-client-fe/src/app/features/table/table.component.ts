@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy,Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export interface ITableConfig {
   columns: {
@@ -15,15 +16,16 @@ export interface ITableConfig {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements OnInit {
+  @Input() isLoading$: Observable<boolean>;
   @Input() set tableConfig(config: ITableConfig) {
-    this.columnsDefenition = config.columns;
+    this.columnsDefinition = config.columns;
     this.displayedColumns = config.columns.map(column => column.title);
     this.data = config.data;
   }
 
   @Output() onChange = new EventEmitter<any>();
 
-  public columnsDefenition: {
+  public columnsDefinition: {
     title: string;
     property: string;
   }[];

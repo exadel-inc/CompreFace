@@ -1,6 +1,6 @@
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ApplicationListState } from 'src/app/store/applicationList/reducers';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -14,23 +14,24 @@ import { ApplicationListFacade } from './application-list-facade';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationListComponent implements OnInit, OnDestroy {
-  public isLoading: boolean = true;
+  public isLoading$: Observable<boolean>;
   public errorMessage: string;
   public tableConfig$: Observable<ITableConfig>;
 
   private applicationListStateSubscription: Subscription;
 
-  constructor(private applicationFacade: ApplicationListFacade, public dialog: MatDialog, private cdr: ChangeDetectorRef) {
+  constructor(private applicationFacade: ApplicationListFacade, public dialog: MatDialog) {
     this.applicationFacade.initSubscriptions();
   }
 
   ngOnInit() {
     this.applicationListStateSubscription = this.applicationFacade.applicationListState$
       .subscribe((state: ApplicationListState) => {
-        this.isLoading = state.isLoading;
         this.errorMessage = state.errorMessage;
-        this.cdr.markForCheck();
       });
+
+    this.isLoading$ = this.applicationFacade.applicationListState$
+      .pipe(map(state => state.isLoading));
 
     this.tableConfig$ = this.applicationFacade.applications$
       .pipe(

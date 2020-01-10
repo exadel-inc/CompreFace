@@ -1,6 +1,6 @@
-<table mat-table [dataSource]="data">
+<table mat-table *ngIf="!(isLoading$ | async)" [dataSource]="data">
   <!-- Position Column -->
-  <ng-container *ngFor="let col of columnsDefenition" matColumnDef={{col.title}}>
+  <ng-container *ngFor="let col of columnsDefinition" matColumnDef={{col.title}}>
     <th mat-header-cell *matHeaderCellDef> {{col.title}} </th>
     <td mat-cell *matCellDef="let element" (click)="change(element)"> {{element[col.property]}} </td>
   </ng-container>

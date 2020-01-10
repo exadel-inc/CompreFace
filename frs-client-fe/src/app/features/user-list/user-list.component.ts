@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { UserListFacade } from './user-list-facade';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, of } from 'rxjs';
 import { AppUser } from 'src/app/data/appUser';
 import { map } from 'rxjs/operators';
 import { ITableConfig } from '../table/table.component';
@@ -13,21 +13,21 @@ import { ITableConfig } from '../table/table.component';
 })
 export class UserListComponent implements OnInit, OnDestroy {
   public tableConfig$: Observable<ITableConfig>;
-  public isLoading: boolean;
+  public isLoading$: Observable<boolean>;
   public errorMessage: string;
 
   private userListStateSubscription: Subscription;
 
-  constructor(private userListFacade: UserListFacade, private cdr: ChangeDetectorRef) {
+  constructor(private userListFacade: UserListFacade) {
     userListFacade.initSubscriptions();
   }
 
   ngOnInit() {
     this.userListStateSubscription = this.userListFacade.userListState$.subscribe(state => {
-      this.isLoading = state.isLoading;
       this.errorMessage = state.errorMessage;
-      this.cdr.markForCheck();
     });
+
+    this.isLoading$ = this.userListFacade.userListState$.pipe(map(state => state.isLoading));
 
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       return {
