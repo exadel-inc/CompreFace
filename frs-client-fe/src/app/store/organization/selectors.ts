@@ -8,7 +8,7 @@ export const OrganizationSelectors = new EntitySelectorsFactory().create<any>('O
 
 export const selectOrganizationState = createFeatureSelector<FromOrganization.OrganizationsState>('Organization');
 
-export const SelectOrganizationId = createSelector(
+export const getSelectedOrganizationId = createSelector(
   selectOrganizationState,
   state => state.selectId
 );

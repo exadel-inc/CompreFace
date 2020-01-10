@@ -1,11 +1,16 @@
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
-const application = require('./data/application.json');
-const organization = require('./data/organization.json');
-let mockData = {
-  application,
-  organization
+const applications = require('./data/application.json');
+const organizations = require('./data/organization.json');
+const users = require('./data/users.json');
+const roles = require('./data/roles.json');
+
+const mockData = {
+  applications,
+  organizations,
+  users,
+  roles
 };
 
 const app = express();
@@ -79,32 +84,32 @@ app.post('/client/register', function(req, res) {
 app.get('/organizations', auth, function (req, res) {
   const id = req.query.id;
   if (id) {
-    res.send(mockData.organization.filter(item => item.id === id))
+    res.send(mockData.organizations.filter(item => item.id === id))
   } else {
-    res.send(mockData.organization);
+    res.send(mockData.organizations);
   }
 });
 
 app.post('/organization/:id', auth, function (req, res) {
   const organization = req.body;
-  mockData.organization.push(organization);
+  mockData.organizations.push(organization);
   res.send(organization);
 });
 
 app.put('/organization/:id', auth, function (req, res) {
   const newData = req.body;
   const id = req.params.id;
-  let organization = mockData.organization.find(item => item.id === id);
+  let organization = mockData.organizations.find(item => item.id === id);
   organization.name = newData.name;
   res.send(organization);
 });
 
 
-app.get('/org/:orgId/apps', auth, (req, res) => {
+app.get('/org/:orgId/apps', auth, wait(), (req, res) => {
   const id = req.params.orgId;
 
   if (id) {
-    const data = mockData.application
+    const data = mockData.applications
       .filter(app => app.organizationId === id)
       .map(app => {
         const { organizationId, ...sendData } = app;
@@ -122,7 +127,7 @@ app.post('/org/:orgId/app', auth, (req, res) => {
   const name = req.body.name;
 
   const app = {
-    id: mockData.application.length.toString(),
+    id: mockData.applications.length.toString(),
     name,
     owner: {
       id: 'uniqUserId',
@@ -131,12 +136,52 @@ app.post('/org/:orgId/app', auth, (req, res) => {
     }
   };
 
-  mockData.application.push({
+  mockData.applications.push({
     ...app,
     organizationId
   });
 
   res.status(201).json(app);
+});
+
+app.get('/org/:orgId/roles', auth, wait(), (req, res) => {
+  const organizationId = req.params.orgId;
+  res.status(201).json(mockData.users.filter(user => user.organizationId === organizationId));
+});
+
+app.post('/org/:orgId/role', auth, (req, res) => {
+  const { id, role } = req.body;
+
+  if (id !== undefined && role) {
+    const userIndex = mockData.users.findIndex(user => user.id === id);
+
+    if (~userIndex) {
+      mockData.users[userIndex].accessLevel = role;
+
+      res.status(201).json(mockData.users[userIndex]);
+    } else {
+      res.status(404).json({ message: 'user not found' });
+    }
+  } else {
+    res.sendStatus(400);
+  }
+});
+
+app.post('/org/:orgId/invite', auth, (req, res) => {
+  const { role, userEmail } = req.body;
+
+  if (userEmail && role) {
+    mockData.users.push({
+      id: mockData.users.length,
+      firstName: userEmail,
+      lastName: userEmail,
+      accessLevel: role
+    });
+
+    res.status(201).json({ message: 'created' });
+  } else {
+    res.sendStatus(400);
+  }
 });
 
 app.get('/user/me', auth, (req, res) => {
@@ -146,6 +191,7 @@ app.get('/user/me', auth, (req, res) => {
 app.listen(3000, function() {
   console.log('Listening on port 3000!');
 });
+
 
 function auth(req, res, next) {
   if (req && req.headers.authorization === token)

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
-import { SelectOrganizationId, SelectUserRollForSelectedOrganization } from "../../store/organization/selectors";
+import {getSelectOrganizationId} from "../../store/organization/selectors";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Organization} from "../../data/organization";

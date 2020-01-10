@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {SelectOrganizationId} from "../../store/organization/selectors";
+import {getSelectOrganizationId} from "../../store/organization/selectors";
 import {combineLatest, merge, Observable, Subscription} from "rxjs";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {SetSelectedId} from "../../store/organization/action";
