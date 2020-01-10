@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
-import {getSelectOrganizationId} from "../../store/organization/selectors";
+import {getSelectedOrganizationId} from "../../store/organization/selectors";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Organization} from "../../data/organization";
@@ -17,7 +17,7 @@ export class OrganizationHeaderService {
 
   constructor(private organizationEnService: OrganizationEnService, private store: Store<AppState>, private router: Router) {
     this.organization$ = this.organizationEnService.entities$;
-    this.selected$ = this.store.select(getSelectOrganizationId);
+    this.selected$ = this.store.select(getSelectedOrganizationId);
     this.selected$.subscribe(id => {
       this.selectedId = id;
     });

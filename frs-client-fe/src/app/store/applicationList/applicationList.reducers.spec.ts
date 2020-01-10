@@ -16,25 +16,6 @@ describe('ApplicationListReducer', () => {
     errorMessage: null
   };
 
-  const mockApplications = [{
-    "id": "0",
-    "name": "Application 0",
-    "owner": {
-      "id": "0",
-      "firstName": "Owner 0",
-      "lastName": "lastname owner 0"
-    }
-  },
-  {
-    "id": "1",
-    "organizationId": "0",
-    "owner": {
-      "id": "1",
-      "firstName": "Owner 1",
-      "lastName": "lastname owner 1"
-    }
-  }];
-
   describe('Fetch application actions', () => {
     it('should set loading to true and reset error message', () => {
       const action = new FetchApplicationList({

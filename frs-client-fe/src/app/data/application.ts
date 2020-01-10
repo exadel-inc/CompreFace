@@ -1,6 +1,10 @@
 export interface Application {
   id: string;
   name: string;
-  owner: string;
+  owner: {
+    id: string,
+    firstName: string,
+    lastName: string
+  };
   organizationId: string;
 }
