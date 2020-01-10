@@ -1,0 +1,44 @@
+[
+  {
+    "id": 0,
+    "organizationId": "ksdfklsn1111111",
+    "firstName": "John",
+    "lastName": "Malkovich",
+    "accessLevel": "USER"
+  },
+  {
+    "id": 1,
+    "organizationId": "ksdfklsn1111111",
+    "firstName": "Tony",
+    "lastName": "Stark",
+    "accessLevel": "ADMINISTRATOR"
+  },
+  {
+    "id": 2,
+    "organizationId": "ksdfklsn1111111",
+    "firstName": "User",
+    "lastName": "Role",
+    "accessLevel": "USER"
+  },
+  {
+    "id": 3,
+    "organizationId": "asdfdasdfdaf222222222222",
+    "firstName": "John",
+    "lastName": "Doe",
+    "accessLevel": "USER"
+  },
+  {
+    "id": 4,
+    "organizationId": "asdfdasdfdaf222222222222",
+    "firstName": "Tony",
+    "lastName": "Montana",
+    "accessLevel": "ADMINISTRATOR"
+  },
+  {
+    "id": 5,
+    "organizationId": "asdfdasdfdaf222222222222",
+    "firstName": "Tommy",
+    "lastName": "Vercetti",
+    "accessLevel": "OWNER"
+  }
+]
