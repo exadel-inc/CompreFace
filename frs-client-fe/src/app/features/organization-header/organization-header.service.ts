@@ -38,4 +38,11 @@ export class OrganizationHeaderService {
   rename(name: string) {
     this.organizationEnService.update({name, id: this.selectedId})
   }
+
+  add(org) {
+    this.organizationEnService.add(org).subscribe(org => {
+      org.id ? this.store.dispatch(new SetSelectedId({selectId: org.id })): null;
+      org.id ? this.router.navigate([ROUTERS_URL.ORGANIZATION, org.id]): null;
+    });
+  }
 }

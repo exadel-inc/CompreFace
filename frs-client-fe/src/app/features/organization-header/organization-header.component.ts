@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Organization} from "../../data/organization";
 import {OrganizationHeaderService} from "./organization-header.service";
 import {Observable} from "rxjs";
+import {CreateDialogComponent} from "../create-dialog/create-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-organization-header',
@@ -14,7 +16,7 @@ export class OrganizationHeaderComponent implements OnInit {
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
 
-  constructor(private organizationHeaderService: OrganizationHeaderService) { }
+  constructor(private organizationHeaderService: OrganizationHeaderService, public dialog: MatDialog) { }
 
   ngOnInit() {
     this.organizations$ = this.organizationHeaderService.organization$;
@@ -23,7 +25,20 @@ export class OrganizationHeaderComponent implements OnInit {
   }
 
   createNew() {
-    console.log('show popup');
+      const dialog = this.dialog.open(CreateDialogComponent, {
+        data: {
+          entityType: 'organization',
+          name: ''
+        }
+      });
+
+    dialog.afterClosed().subscribe(res => {
+      if (res) {
+        this.organizationHeaderService.add({
+          name: res
+        })
+      }
+    });
   }
 
   selectOrganization(id) {

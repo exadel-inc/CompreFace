@@ -2,10 +2,10 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const application = require('./data/application.json');
-const organization = require('./data/organization.json');
+const organizations = require('./data/organization.json');
 let mockData = {
   application,
-  organization
+  organizations
 };
 
 const app = express();
@@ -79,22 +79,33 @@ app.post('/client/register', function(req, res) {
 app.get('/organizations', auth, function (req, res) {
   const id = req.query.id;
   if (id) {
-    res.send(mockData.organization.filter(item => item.id === id))
+    res.send(mockData.organizations.filter(item => item.id === id))
   } else {
-    res.send(mockData.organization);
+    res.send(mockData.organizations);
   }
+});
+
+app.post('/organization', auth, function (req, res) {
+  console.log('body', req.body);
+  const org = {
+    name: req.body.name,
+    id: req.body.name+'_guid',
+    userOrganizationRoles: [{role: "OWNER", userId: "guid_0"}]
+  };
+  mockData.organizations.push(org);
+  res.send(org);
 });
 
 app.post('/organization/:id', auth, function (req, res) {
   const organization = req.body;
-  mockData.organization.push(organization);
+  mockData.organizations.push(organization);
   res.send(organization);
 });
 
 app.put('/organization/:id', auth, function (req, res) {
   const newData = req.body;
   const id = req.params.id;
-  let organization = mockData.organization.find(item => item.id === id);
+  let organization = mockData.organizations.find(item => item.id === id);
   organization.name = newData.name;
   res.send(organization);
 });
