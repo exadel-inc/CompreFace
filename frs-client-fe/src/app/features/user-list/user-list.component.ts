@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { UserListFacade } from './user-list-facade.service';
+import { UserListFacade } from './user-list-facade';
 import { Observable, Subscription } from 'rxjs';
 import { AppUser } from 'src/app/data/appUser';
 import { map } from 'rxjs/operators';

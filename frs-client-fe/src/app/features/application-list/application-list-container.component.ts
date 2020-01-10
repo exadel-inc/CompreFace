@@ -5,7 +5,7 @@ import { ApplicationListState } from 'src/app/store/applicationList/reducers';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatDialog } from '@angular/material';
 import { ITableConfig } from 'src/app/features/table/table.component';
-import { ApplicationListFacade } from './application-list-facade.service';
+import { ApplicationListFacade } from './application-list-facade';
 
 @Component({
   selector: 'application-list-container',
@@ -44,12 +44,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
   }
 
   public onClick(application): void {
-    const dialog = this.dialog.open(CreateDialogComponent, {
-      data: {
-        entityType: `${application.name} application has been opened`,
-        name: ''
-      }
-    })
+    console.log(`navigate to ${application.name}`);
   }
 
   public onCreateNewApp(): void {
