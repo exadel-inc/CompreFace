@@ -18,7 +18,6 @@ export class EntityTitleComponent implements OnInit {
   @Input() entityName: string;
   @Output() selectIdChange = new EventEmitter();
   @Output() rename = new EventEmitter();
-  constructor() { }
 
   ngOnInit() {
     this.selectId$.subscribe(e => this.selectedId = e);

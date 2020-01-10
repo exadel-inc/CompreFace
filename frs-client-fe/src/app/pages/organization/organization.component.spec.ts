@@ -1,27 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { OrganizationComponent } from './organization.component';
-import { ApplicationListComponent } from '../../features/application-list/application-list-container.component';
-import { AppState } from 'src/app/store';
-import { MatDialog } from '@angular/material';
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
+import {OrganizationService} from "./organization.service";
 
 describe('OrganizationComponent', () => {
   let component: OrganizationComponent;
   let fixture: ComponentFixture<OrganizationComponent>;
-  let mockStore: MockStore<AppState>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrganizationComponent, ApplicationListComponent ],
-      providers: [provideMockStore({
-        initialState: {
-          applicationList: {},
-          application: {
-            ids: [],
-            entities: []
-          }
-        }
-      }), { provide: MatDialog, useValue: {}}]
+      declarations: [OrganizationComponent],
+      providers: [
+        {provide: OrganizationService, useValue: {
+            initUrlBindingStreams: () => {},
+            unSubscribe: () => {},
+          }}
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

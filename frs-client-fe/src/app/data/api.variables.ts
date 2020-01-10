@@ -3,4 +3,5 @@ export enum API_URL {
   REGISTER= 'client/register',
   LOGOUT= 'oauth/logout',
   ORGANIZATIONS = 'organization',
+  GET_USER_INFO = 'user/me'
 }

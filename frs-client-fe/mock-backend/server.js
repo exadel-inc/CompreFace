@@ -38,7 +38,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 let user = {
   email: "email",
   username: "username",
-  password: "password"
+  password: "password",
+  firstName: "string",
+  guid: "guid_0",
+  lastName: "string"
 };
 
 let token = '';
@@ -55,7 +58,6 @@ app.get('/', function(req, res) {
 });
 
 app.post('/login', wait(1000), function(req, res) {
-  console.log(req.body, req.query);
   if (req && req.body.username === user.username && req.body.password === user.password) {
     token = `${user.username}_${user.password}_${+new Date()}`;
     res.send({ token });
@@ -180,6 +182,10 @@ app.post('/org/:orgId/invite', auth, (req, res) => {
   } else {
     res.sendStatus(400);
   }
+});
+
+app.get('/user/me', auth, (req, res) => {
+  res.send(user);
 });
 
 app.listen(3000, function() {

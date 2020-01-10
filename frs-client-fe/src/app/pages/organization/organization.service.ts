@@ -10,10 +10,12 @@ import {Store} from "@ngrx/store";
 import {AppState} from "../../store";
 import {SelectRouterIdParam} from "../../store/router/selectors";
 import {filter, map} from "rxjs/operators";
+import {GetUserInfo} from "../../store/userInfo/action";
 
 @Injectable()
 export class OrganizationService {
   selectedId$: Observable<string>;
+  routId$: Observable<string>;
   private setInitialValueFromUrl$: Observable<any>;
   private redirectToOrganization$: Observable<any>;
   private setFirstOrganization$: Observable<any>;
@@ -30,10 +32,13 @@ export class OrganizationService {
 
   initUrlBindingStreams () {
     this.organizationEnService.getAll();
+    this.store.dispatch(new GetUserInfo());
+
     this.organization$ = this.organizationEnService.entities$;
     this.selectedId$ = this.store.select(getSelectedOrganizationId);
+    this.routId$ = this.store.select(SelectRouterIdParam);
 
-    this.setInitialValueFromUrl$ = combineLatest(this.selectedId$, this.organization$, this.store.select(SelectRouterIdParam)).pipe(
+    this.setInitialValueFromUrl$ = combineLatest(this.selectedId$, this.organization$, this.routId$).pipe(
       filter(([selectedId, data, routerId]) => {
         return data.length && routerId && selectedId === null;
       }),
@@ -41,7 +46,7 @@ export class OrganizationService {
       map(([selectedId, data, routerId]) => routerId)
     );
 
-    this.setFirstOrganization$ = combineLatest(this.selectedId$, this.organization$, this.store.select(SelectRouterIdParam)).pipe(
+    this.setFirstOrganization$ = combineLatest(this.selectedId$, this.organization$, this.routId$).pipe(
       filter(([selectedId, data, routerId]) => {
         return data.length && routerId && selectedId === null;
       }),
@@ -49,7 +54,7 @@ export class OrganizationService {
       map(([selectedId, data, routerId]) => data[0].id)
     );
 
-    this.redirectToOrganization$ = combineLatest(this.selectedId$, this.organization$, this.store.select(SelectRouterIdParam)).pipe(
+    this.redirectToOrganization$ = combineLatest(this.selectedId$, this.organization$, this.routId$).pipe(
       filter(([selectedId, data, routerId]) => {
         return !!(data.length && !routerId && selectedId === null);
       }),
