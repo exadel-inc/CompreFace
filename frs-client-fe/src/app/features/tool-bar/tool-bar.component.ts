@@ -27,7 +27,6 @@ export class ToolBarComponent implements OnInit {
   }
 
   logout() {
-    console.log('logout');
     this.store.dispatch(new LogOut);
   }
 

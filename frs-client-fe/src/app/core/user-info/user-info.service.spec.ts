@@ -32,7 +32,6 @@ describe('UserInfoService', () => {
 
   it('should return user info', () => {
     service.get().subscribe((data) => {
-      console.log(data);
       expect(data).toEqual(mockData);
     });
 

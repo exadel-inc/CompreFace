@@ -53,7 +53,6 @@ app.get('/', function(req, res) {
 });
 
 app.post('/login', wait(1000), function(req, res) {
-  console.log(req.body, req.query);
   if (req && req.body.username === user.username && req.body.password === user.password) {
     token = `${user.username}_${user.password}_${+new Date()}`;
     res.send({ token });
