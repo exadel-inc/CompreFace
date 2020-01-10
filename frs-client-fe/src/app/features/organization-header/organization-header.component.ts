@@ -16,7 +16,7 @@ export class OrganizationHeaderComponent implements OnInit {
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
 
-  constructor(private organizationHeaderFacade: OrganizationHeaderFacade) {
+  constructor(private organizationHeaderFacade: OrganizationHeaderFacade, public dialog: MatDialog) {
     organizationHeaderFacade.initSubscriptions();
   }
 
@@ -36,7 +36,7 @@ export class OrganizationHeaderComponent implements OnInit {
 
     dialog.afterClosed().subscribe(res => {
       if (res) {
-        this.organizationHeaderService.add({
+        this.organizationHeaderFacade.add({
           name: res
         })
       }
