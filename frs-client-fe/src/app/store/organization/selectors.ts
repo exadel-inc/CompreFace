@@ -15,7 +15,7 @@ export const getSelectedOrganizationId = createSelector(
 
 export const SelectSelectedOrganization = createSelector(
   OrganizationSelectors.selectEntities,
-  SelectOrganizationId,
+  getSelectedOrganizationId,
   (organizationCash, selectId) => organizationCash.find(org => org.id === selectId)
 );
 

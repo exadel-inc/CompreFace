@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
-import {getSelectOrganizationId} from "../../store/organization/selectors";
+import {
+  getSelectedOrganizationId,
+  SelectUserRollForSelectedOrganization
+} from "../../store/organization/selectors";
 import {Store} from "@ngrx/store";
 import {Observable} from "rxjs";
 import {Organization} from "../../data/organization";
@@ -22,7 +25,7 @@ export class OrganizationHeaderFacade {
     this.organization$ = this.organizationEnService.entities$;
     this.userRole$ = this.store.select(SelectUserRollForSelectedOrganization);
 
-    this.selectedId$ = this.store.select(SelectOrganizationId);
+    this.selectedId$ = this.store.select(getSelectedOrganizationId);
     this.user$ = this.store.select(selectUserInfoState);
 
     this.selectedId$.subscribe(id => {

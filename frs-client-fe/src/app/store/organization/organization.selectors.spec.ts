@@ -1,9 +1,13 @@
-import {SelectOrganizationId, SelectSelectedOrganization, SelectUserRollForSelectedOrganization} from "./selectors";
+import {
+  getSelectedOrganizationId,
+  SelectSelectedOrganization,
+  SelectUserRollForSelectedOrganization
+} from "./selectors";
 
 describe('OrganizationSelectors', () => {
 
-  it('SelectOrganizationId', () => {
-    expect(SelectOrganizationId.projector({selectId: 'someId'})).toBe('someId');
+  it('getSelectedOrganizationId', () => {
+    expect(getSelectedOrganizationId.projector({selectId: 'someId'})).toBe('someId');
   });
 
   it('SelectSelectedOrganization', () => {
