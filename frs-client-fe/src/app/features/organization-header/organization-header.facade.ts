@@ -52,8 +52,10 @@ export class OrganizationHeaderFacade implements IFacade{
 
   add(org) {
     this.organizationEnService.add(org).subscribe(org => {
-      org.id ? this.store.dispatch(new SetSelectedId({selectId: org.id })): null;
-      org.id ? this.router.navigate([ROUTERS_URL.ORGANIZATION, org.id]): null;
+      if(org) {
+        this.store.dispatch(new SetSelectedId({selectId: org.id }));
+        this.router.navigate([ROUTERS_URL.ORGANIZATION, org.id])
+      }
     });
   }
 }

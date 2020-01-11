@@ -82,7 +82,6 @@ app.get('/organizations', auth, function (req, res) {
 });
 
 app.post('/organization', auth, function (req, res) {
-  console.log('body', req.body);
   const org = {
     name: req.body.name,
     id: req.body.name+'_guid',
