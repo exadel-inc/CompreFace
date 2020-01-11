@@ -81,6 +81,16 @@ app.get('/organizations', auth, function (req, res) {
   }
 });
 
+app.post('/organization', auth, function (req, res) {
+  const org = {
+    name: req.body.name,
+    id: req.body.name+'_guid',
+    userOrganizationRoles: [{role: "OWNER", userId: "guid_0"}]
+  };
+  mockData.organizations.push(org);
+  res.send(org);
+});
+
 app.post('/organization/:id', auth, function (req, res) {
   const organization = req.body;
   mockData.organizations.push(organization);

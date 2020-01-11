@@ -49,4 +49,13 @@ export class OrganizationHeaderFacade implements IFacade{
   rename(name: string) {
     this.organizationEnService.update({name, id: this.selectedId})
   }
+
+  add(org) {
+    this.organizationEnService.add(org).subscribe(org => {
+      if(org) {
+        this.store.dispatch(new SetSelectedId({selectId: org.id }));
+        this.router.navigate([ROUTERS_URL.ORGANIZATION, org.id])
+      }
+    });
+  }
 }
