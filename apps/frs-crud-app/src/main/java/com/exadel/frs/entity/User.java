@@ -23,7 +23,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = {"id", "email", "guid"})
+@EqualsAndHashCode(of = {"guid"})
 public class User implements UserDetails {
 
     @Id

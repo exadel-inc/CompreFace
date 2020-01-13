@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"user", "app"})
 public class UserAppRole {
 
     @EmbeddedId

@@ -14,7 +14,7 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = {"id", "guid"})
+@EqualsAndHashCode(of = {"guid"})
 public class App {
 
     @Id

@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = {"id", "guid"})
+@EqualsAndHashCode(of = {"guid"})
 public class Model {
 
     @Id

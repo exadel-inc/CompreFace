@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Table
 @Data
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"app", "model"})
 public class AppModel {
 
     @EmbeddedId
