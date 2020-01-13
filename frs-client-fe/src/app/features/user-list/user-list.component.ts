@@ -41,6 +41,10 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.userListFacade.updateUserRole(user.id, user.accessLevel);
   }
 
+  public onInviteUser(email: string): void {
+    this.userListFacade.inviteUser(email);
+  }
+
   ngOnDestroy() {
     this.userListStateSubscription.unsubscribe();
     this.userListFacade.unsubscribe();

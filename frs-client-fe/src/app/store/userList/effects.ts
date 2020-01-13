@@ -48,6 +48,6 @@ export class UserListEffect {
   InviteUser: Observable<{message: string}> =
     this.actions.pipe(
       ofType(UserListActionTypes.INVITE_USER),
-      switchMap((action: InviteUser) => this.userService.inviteUser(action.payload.organizationId ,action.payload.accessLevel, action.payload.userEmail))
+      switchMap((action: InviteUser) => this.userService.inviteUser(action.payload.organizationId, action.payload.accessLevel, action.payload.userEmail))
     );
 }
