@@ -16,7 +16,7 @@ export class InviteUserComponent implements OnInit {
 
   ngOnInit() {
     this.form = new FormGroup({
-      email: new FormControl(null, [Validators.pattern(EMAIL_REGEXP_PATTERN)]),
+      email: new FormControl(null, [Validators.pattern(EMAIL_REGEXP_PATTERN)])
     });
   }
 
