@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicationComponent } from './application.component';
+import {ApplicationService} from "./application.service";
 import {MatButtonModule} from "@angular/material/button";
 import {RouterModule} from "@angular/router";
 import {AuthGuard} from "../../core/auth/auth.guard";
@@ -21,5 +22,6 @@ import {OrganizationHeaderModule} from "../../features/organization-header/organ
     ToolBarModule,
     OrganizationHeaderModule
   ],
+  providers: [ApplicationService]
 })
 export class ApplicationModule { }

@@ -4,9 +4,17 @@ import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 
 export const applicationAdapter: EntityAdapter<Application> = createEntityAdapter<Application>();
 
-const initialState: EntityState<Application> = applicationAdapter.getInitialState();
+export interface State extends EntityState<Application> {
+  // additional entities state properties
+  selectedAppId: number | null;
+}
 
-export function ApplicationReducer(state = initialState, action: ApplicationEntityActionType): EntityState<Application> {
+export const initialState: State = applicationAdapter.getInitialState({
+  // additional entity state properties
+  selectedAppId: null,
+});
+
+export function ApplicationReducer(state = initialState, action: ApplicationEntityActionType): State {
   switch(action.type) {
     case ApplicationEntityActionList.ADD_APPLICATION: {
       return applicationAdapter.addOne(action.payload.application, state);
@@ -21,3 +29,24 @@ export function ApplicationReducer(state = initialState, action: ApplicationEnti
     }
   }
 }
+
+export const getSelectedAppId = (state: State) => state.selectedAppId;
+
+const {
+  selectIds,
+  selectEntities,
+  selectAll,
+  selectTotal,
+} = applicationAdapter.getSelectors();
+
+// select the array of applications ids
+export const selectAppIds = selectIds;
+
+// select the dictionary of application entities
+export const selectAppEntities = selectEntities;
+
+// select the array of applications
+export const selectAllApps = selectAll;
+
+// select the total application count
+export const selectAppTotal = selectTotal;
