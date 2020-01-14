@@ -8,7 +8,9 @@ const routes: Routes = [
       { path: '', redirectTo: '/organization', pathMatch: 'full' },
       { path: 'organization', loadChildren: './pages/organization/organization.module#OrganizationModule'}
     ]},
-  { path: 'application', loadChildren: './pages/application/application.module#ApplicationModule'},
+  { path: 'application', component: MainLayoutComponent, children: [
+      {path: '', loadChildren: './pages/application/application.module#ApplicationModule'}
+    ]},
   { path: 'login', loadChildren: './pages/login/login.module#LoginModule'},
   { path: 'sign-up', loadChildren: './pages/sign-up/sign-up.module#SignUpModule'},
   { path: '**', redirectTo: '/' }

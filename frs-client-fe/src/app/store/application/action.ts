@@ -6,7 +6,8 @@ export enum ApplicationEntityActionList {
   ADD_APPLICATIONS = '[Application/API] Add Applications',
   REMOVE_APPLICATION = '[Application/API] Remove Application',
   REMOVE_APPLICATIONS = '[Application/API] Remove Applications',
-  UPDATE_APPLICATION = '[Application/API] Update Application'
+  UPDATE_APPLICATION = '[Application/API] Update Application',
+  SET_SELECTED_ID = '[Application/API] Set Selected ID Application',
 }
 
 export class AddApplicationEntityAction implements Action {
@@ -22,7 +23,6 @@ export class AddApplicationsEntityAction implements Action {
     applications: Application[]
   }) {}
 }
-
 
 export type ApplicationEntityActionType =
   | AddApplicationEntityAction

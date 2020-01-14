@@ -7,6 +7,7 @@ import {RouterModule} from "@angular/router";
 import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 import {OrganizationHeaderModule} from "../../features/organization-header/organization-header.module";
+import {SpinnerModule} from "../../features/spinner/spinner.module";
 
 
 
@@ -15,9 +16,9 @@ import {OrganizationHeaderModule} from "../../features/organization-header/organ
   imports: [
     CommonModule,
     MatButtonModule,
+    SpinnerModule,
     RouterModule.forChild([
       {path: '', component: ApplicationComponent, canActivate: [AuthGuard]},
-      {path: ':id', component: ApplicationComponent, canActivate: [AuthGuard]}
     ]),
     ToolBarModule,
     OrganizationHeaderModule
