@@ -17,7 +17,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   public tableConfig$: Observable<ITableConfig>;
   public isLoading$: Observable<boolean>;
   public errorMessage: string;
-  public invitationNotification$: Observable<string>;
 
   private userListStateSubscription: Subscription;
 
@@ -32,7 +31,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
 
     this.isLoading$ = this.userListFacade.userListState$.pipe(map(state => state.isLoading));
-    this.invitationNotification$ = this.userListFacade.userListState$.pipe(map(state => state.invitedEmail));
 
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       return {
