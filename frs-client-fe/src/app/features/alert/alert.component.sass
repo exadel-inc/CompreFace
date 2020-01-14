@@ -1,23 +1,19 @@
 @import 'colors.sass'
 
+.mat-dialog-title, .mat-dialog-content
+  text-align: center
+.mat-dialog-actions
+  display: flex
+  flex-direction: column
 .alert
-  &-wrap
-    position: fixed
-    top: 50px
-    right: 40px
-    max-width: 200px
-
-  &-success
+  &-info
     background-color: $green
     color: $white
 
   &-warning
     background-color: $pale-gray
 
-  &-danger
+  &-error
     background-color: $red
     color: $white
 
-  &-content
-    padding: 10px 20px
-    box-shadow: 0 10px 10px rgba($black, 0.3)
