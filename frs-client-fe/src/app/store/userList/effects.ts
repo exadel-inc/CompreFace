@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { UserService } from 'src/app/core/user/user.service';
-import { Observable, of } from 'rxjs';
+import { Observable, of, forkJoin } from 'rxjs';
 import {
   UserListActionTypes,
   FetchUsers,
@@ -10,7 +10,9 @@ import {
   UpdateUserRole,
   UpdateUserRoleSuccess,
   UpdateUserRoleFail,
-  InviteUser
+  InviteUser,
+  InviteUserSuccess,
+  InviteUserFail
 } from './actions';
 import { AddUsersEntityAction, UpdateUserRoleEntityAction } from 'src/app/store/user/action';
 import { catchError, switchMap, map } from 'rxjs/operators';
@@ -42,12 +44,17 @@ export class UserListEffect {
       catchError(e => of(new UpdateUserRoleFail({errorMessage: e})))
     );
 
-  @Effect({
-    dispatch: false
-  })
-  InviteUser: Observable<{message: string}> =
+  @Effect()
+  InviteUser: Observable<InviteUserSuccess | InviteUserFail> =
     this.actions.pipe(
       ofType(UserListActionTypes.INVITE_USER),
-      switchMap((action: InviteUser) => this.userService.inviteUser(action.payload.organizationId ,action.payload.accessLevel, action.payload.userEmail))
+      switchMap((action: InviteUser) => forkJoin([
+        this.userService.inviteUser(action.payload.organizationId, action.payload.accessLevel, action.payload.userEmail),
+        of(action.payload.userEmail)])
+      ),
+      map((res) => {
+        return new InviteUserSuccess({ userEmail: res[1] })
+      }),
+      catchError(e => of(new InviteUserFail({errorMessage: e})))
     );
 }

@@ -6,6 +6,7 @@ export interface UserListState {
   selectedFilter: string;
   errorMessage: string;
   searchTerm: string;
+  invitedEmail: string;
 }
 
 const initialState: UserListState = {
@@ -13,7 +14,8 @@ const initialState: UserListState = {
   filters: [],
   selectedFilter: null,
   errorMessage: null,
-  searchTerm: null
+  searchTerm: null,
+  invitedEmail: null
 }
 
 export function UserListReducer(state = initialState, action: UserListActions): UserListState {
@@ -21,6 +23,7 @@ export function UserListReducer(state = initialState, action: UserListActions): 
     case UserListActionTypes.FETCH_USERS: {
       return {
         ...state,
+        invitedEmail: null,
         errorMessage: null,
         isLoading: true
       }
@@ -43,6 +46,7 @@ export function UserListReducer(state = initialState, action: UserListActions): 
     case UserListActionTypes.UPDATE_USER_ROLE: {
       return {
         ...state,
+        invitedEmail: null,
         errorMessage: null,
         isLoading: true
       }
@@ -56,6 +60,28 @@ export function UserListReducer(state = initialState, action: UserListActions): 
     }
 
     case UserListActionTypes.UPDATE_USER_ROLE_FAIL: {
+      return {
+        ...state,
+        errorMessage: action.payload.errorMessage
+      }
+    }
+
+    case UserListActionTypes.INVITE_USER: {
+      return {
+        ...state,
+        invitedEmail: null,
+        errorMessage: null
+      }
+    }
+
+    case UserListActionTypes.INVITE_USER_SUCCESS: {
+      return {
+        ...state,
+        invitedEmail: action.payload.userEmail
+      }
+    }
+
+    case UserListActionTypes.INVITE_USER_FAIL: {
       return {
         ...state,
         errorMessage: action.payload.errorMessage

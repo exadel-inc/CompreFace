@@ -6,7 +6,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { getSelectedOrganizationId } from 'src/app/store/organization/selectors';
 import { selectUsers } from 'src/app/store/user/selectors';
-import { FetchUsers, UpdateUserRole } from 'src/app/store/userList/actions';
+import { FetchUsers, UpdateUserRole, InviteUser } from 'src/app/store/userList/actions';
 import { selectUserListState } from 'src/app/store/userList/selectors';
 import { UserListState } from 'src/app/store/userList/reducers';
 
@@ -42,11 +42,19 @@ export class UserListFacade implements IFacade {
     }));
   }
 
-  public updateUserRole(id, accessLevel): void {
+  public updateUserRole(id: string, accessLevel: string): void {
     this.store.dispatch(new UpdateUserRole({
       organizationId: this.selectedOrganization,
       id,
       accessLevel
+    }));
+  }
+
+  public inviteUser(userEmail: string): void {
+    this.store.dispatch(new InviteUser({
+      userEmail,
+      organizationId: this.selectedOrganization,
+      accessLevel: 'USER'
     }));
   }
 

@@ -1,11 +1,11 @@
-<div class="alert-wrap" *ngIf="text">
-  <div class="alert"
-       [ngClass]="{
-    'alert-success': type === 'success',
-    'alert-warning': type === 'warning',
-    'alert-danger': type === 'danger'
-    }" >
-<!--    <p>{{ text }}</p>-->
-    <p class="alert-content">asdf sadfsad fsdaf </p>
-  </div>
+<h1 mat-dialog-title [ngClass]="{
+  'alert-error': type === 'error',
+  'alert-warning': type === 'warning',
+  'alert-info': type === 'info'
+}">{{type | uppercase }}</h1>
+<div mat-dialog-content>
+    {{message}}
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onOkClick()">ok</button>
 </div>
