@@ -1,0 +1,24 @@
+<div class="application-header">
+  <div class="application-header_left-coll">
+    <div *ngIf="app$ | async as app">
+      <app-entity-title
+        [entityName]="'Application'"
+        [selectId$]="selectedId$"
+        [options]="[app]"
+        (selectIdChange)="selectOrganization($event)"
+        [renameDisable]="false"
+        (rename)="rename($event)"></app-entity-title>
+    </div>
+
+    <button mat-raised-button
+            type="submit"
+            color="primary"
+            (click)="createNew()"
+    >Create New Application
+    </button>
+  </div>
+
+  <div class="application-header_right-coll" *ngIf="userRole$ | async as userRole">
+    <div class="your_role">Your role: {{userRole}}</div>
+  </div>
+</div>

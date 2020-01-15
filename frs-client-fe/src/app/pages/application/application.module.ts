@@ -8,6 +8,7 @@ import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 import {OrganizationHeaderModule} from "../../features/organization-header/organization-header.module";
 import {SpinnerModule} from "../../features/spinner/spinner.module";
+import {ApplicationHeaderModule} from "../../features/application-header/application-header.module";
 
 
 
@@ -17,6 +18,7 @@ import {SpinnerModule} from "../../features/spinner/spinner.module";
     CommonModule,
     MatButtonModule,
     SpinnerModule,
+    ApplicationHeaderModule,
     RouterModule.forChild([
       {path: '', component: ApplicationComponent, canActivate: [AuthGuard]},
     ]),

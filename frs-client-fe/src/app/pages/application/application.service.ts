@@ -37,7 +37,8 @@ export class ApplicationService {
 
       this.app$ = this.apps$.pipe(
         filter(apps => !!apps.length),
-        map(apps => {return apps.find(app => app.id === this.appId) })
+        map(apps => {return apps.find(app => app.id === this.appId) }),
+        // tap(app => {this.store.dispatch(new )})
       );
 
       this.apps$.pipe(

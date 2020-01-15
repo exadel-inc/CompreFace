@@ -2,6 +2,7 @@
 <app-spinner [isVisible$]="isLoading$"></app-spinner>
 <div *ngIf="app$ | async as app">
   {{app.name}}
+  <app-application-header></app-application-header>
 </div>
 
 
