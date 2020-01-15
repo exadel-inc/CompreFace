@@ -9,6 +9,7 @@ import { selectUsers } from 'src/app/store/user/selectors';
 import { FetchUsers, UpdateUserRole, InviteUser } from 'src/app/store/userList/actions';
 import { selectUserListState } from 'src/app/store/userList/selectors';
 import { UserListState } from 'src/app/store/userList/reducers';
+import { FetchRoles } from 'src/app/store/role/actions';
 
 @Injectable()
 export class UserListFacade implements IFacade {
@@ -56,6 +57,10 @@ export class UserListFacade implements IFacade {
       organizationId: this.selectedOrganization,
       accessLevel: 'USER'
     }));
+  }
+
+  public loadAvailableRoles(): void {
+    this.store.dispatch()
   }
 
   public unsubscribe(): void {

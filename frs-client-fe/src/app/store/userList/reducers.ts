@@ -39,6 +39,7 @@ export function UserListReducer(state = initialState, action: UserListActions): 
     case UserListActionTypes.FETCH_USERS_FAIL: {
       return {
         ...state,
+        isLoading: false,
         errorMessage: action.payload.errorMessage
       }
     }
@@ -62,6 +63,7 @@ export function UserListReducer(state = initialState, action: UserListActions): 
     case UserListActionTypes.UPDATE_USER_ROLE_FAIL: {
       return {
         ...state,
+        isLoading: false,
         errorMessage: action.payload.errorMessage
       }
     }
@@ -84,6 +86,28 @@ export function UserListReducer(state = initialState, action: UserListActions): 
     case UserListActionTypes.INVITE_USER_FAIL: {
       return {
         ...state,
+        errorMessage: action.payload.errorMessage
+      }
+    }
+
+    case UserListActionTypes.FETCH_AVAILABLE_USER_ROLES: {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+
+    case UserListActionTypes.FETCH_AVAILABLE_USER_ROLES_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false
+      }
+    }
+
+    case UserListActionTypes.FETCH_AVAILABLE_USER_ROLES_FAIL: {
+      return {
+        ...state,
+        isLoading: false,
         errorMessage: action.payload.errorMessage
       }
     }

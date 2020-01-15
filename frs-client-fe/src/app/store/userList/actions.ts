@@ -9,7 +9,10 @@ export enum UserListActionTypes {
   UPDATE_USER_ROLE_FAIL = '[User List] Update User Role Fail',
   INVITE_USER = '[User List] Invite User',
   INVITE_USER_SUCCESS = '[User List] Invite User Success',
-  INVITE_USER_FAIL = '[User List] Invite User Fail'
+  INVITE_USER_FAIL = '[User List] Invite User Fail',
+  FETCH_AVAILABLE_USER_ROLES = '[User List] Fetch Available User Roles ',
+  FETCH_AVAILABLE_USER_ROLES_SUCCESS = '[User List] Fetch Available User Roles Success',
+  FETCH_AVAILABLE_USER_ROLES_FAIL = '[User List] Fetch Available User Roles Fail'
 }
 
 export class FetchUsers implements Action {
@@ -75,6 +78,25 @@ export class InviteUserFail implements Action {
   }) {}
 }
 
+export class FetchRoles implements Action {
+  readonly type = UserListActionTypes.FETCH_AVAILABLE_USER_ROLES;
+  constructor(public payload: {
+    organizationId: string;
+  }) {}
+}
+
+export class FetchRolesSuccess implements Action {
+  readonly type = UserListActionTypes.FETCH_AVAILABLE_USER_ROLES_SUCCESS;
+  constructor() {}
+}
+
+export class FetchRolesFail implements Action {
+  readonly type = UserListActionTypes.FETCH_AVAILABLE_USER_ROLES_FAIL;
+  constructor(public payload: {
+    errorMessage: string;
+  }) {}
+}
+
 export type UserListActions =
   | FetchUsers
   | FetchUsersSuccess
@@ -84,4 +106,7 @@ export type UserListActions =
   | UpdateUserRoleFail
   | InviteUser
   | InviteUserSuccess
-  | InviteUserFail;
+  | InviteUserFail
+  | FetchRoles
+  | FetchRolesSuccess
+  | FetchRolesFail;

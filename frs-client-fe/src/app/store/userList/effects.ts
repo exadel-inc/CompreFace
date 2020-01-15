@@ -57,4 +57,11 @@ export class UserListEffect {
       }),
       catchError(e => of(new InviteUserFail({errorMessage: e})))
     );
+
+    @Effect()
+    FetchAvailableRoles: Observable<any> = this.actions
+      .pipe(
+        ofType(UserListActionTypes.FETCH_AVAILABLE_USER_ROLES),
+        
+      )
 }
