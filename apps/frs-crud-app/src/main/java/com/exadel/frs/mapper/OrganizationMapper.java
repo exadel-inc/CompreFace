@@ -1,17 +1,17 @@
 package com.exadel.frs.mapper;
 
-import com.exadel.frs.dto.OrganizationDto;
+import com.exadel.frs.dto.ui.OrgResponseDto;
 import com.exadel.frs.entity.Organization;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = UserOrganizationRoleMapper.class)
+@Mapper(componentModel = "spring", uses = UserOrgRoleMapper.class)
 public interface OrganizationMapper {
 
-    Organization toEntity(OrganizationDto organizationDto);
-
-    OrganizationDto toDto(Organization organization);
-    List<OrganizationDto> toDto(List<Organization> organizations);
+    @Mapping(source = "guid", target = "id")
+    OrgResponseDto toResponseDto(Organization organization);
+    List<OrgResponseDto> toResponseDto(List<Organization> organizations);
 
 }

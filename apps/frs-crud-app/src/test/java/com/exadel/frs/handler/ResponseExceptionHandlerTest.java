@@ -3,7 +3,6 @@ package com.exadel.frs.handler;
 import com.exadel.frs.dto.ExceptionResponseDto;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.BasicException;
-import com.exadel.frs.exception.UsernameAlreadyExistException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -51,8 +50,7 @@ class ResponseExceptionHandlerTest {
 
     private static Stream<Arguments> definedExceptions() {
         return Stream.of(
-                   Arguments.of(new AccessDeniedException()),
-                   Arguments.of(new UsernameAlreadyExistException())
+                Arguments.of(new AccessDeniedException())
         );
     }
 

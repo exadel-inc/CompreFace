@@ -1,10 +1,11 @@
 package com.exadel.frs.service;
 
+import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.UserDoesNotExistException;
-import com.exadel.frs.exception.UsernameAlreadyExistException;
 import com.exadel.frs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -20,63 +21,60 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
 
-    public User getUser(Long id) {
+    public User getUser(final Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserDoesNotExistException(id.toString()));
     }
 
-    public User getUser(String email) {
+    public User getUser(final String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserDoesNotExistException(email));
     }
 
-    public void createUser(User user) {
-        if (StringUtils.isEmpty(user.getUsername())) {
-            throw new EmptyRequiredFieldException("username");
-        }
-        if (StringUtils.isEmpty(user.getPassword())) {
-            throw new EmptyRequiredFieldException("password");
-        }
-        if (StringUtils.isEmpty(user.getEmail())) {
+    public User getUserByGuid(final String guid) {
+        return userRepository.findByGuid(guid)
+                .orElseThrow(() -> new UserDoesNotExistException(guid));
+    }
+
+    public User createUser(final UserCreateDto userCreateDto) {
+        if (StringUtils.isEmpty(userCreateDto.getEmail())) {
             throw new EmptyRequiredFieldException("email");
         }
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            throw new UsernameAlreadyExistException();
+        if (StringUtils.isEmpty(userCreateDto.getPassword())) {
+            throw new EmptyRequiredFieldException("password");
         }
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+        if (userRepository.existsByEmail(userCreateDto.getEmail())) {
             throw new EmailAlreadyRegisteredException();
         }
-        user.setGuid(UUID.randomUUID().toString());
-        user.setPassword(encoder.encode(user.getPassword()));
-        user.setAccountNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setCredentialsNonExpired(true);
-        user.setEnabled(true);
+        User user = User.builder()
+                .email(userCreateDto.getEmail())
+                .firstName(userCreateDto.getFirstName())
+                .lastName(userCreateDto.getLastName())
+                .password(encoder.encode(userCreateDto.getPassword()))
+                .guid(UUID.randomUUID().toString())
+                .accountNonExpired(true)
+                .accountNonLocked(true)
+                .credentialsNonExpired(true)
+                .enabled(true)
+                .build();
+        return userRepository.save(user);
+    }
+
+    public void updateUser(final UserUpdateDto userUpdateDto, final Long userId) {
+        User user = getUser(userId);
+        if (!StringUtils.isEmpty(userUpdateDto.getFirstName())) {
+            user.setFirstName(userUpdateDto.getFirstName());
+        }
+        if (!StringUtils.isEmpty(userUpdateDto.getLastName())) {
+            user.setLastName(userUpdateDto.getLastName());
+        }
+        if (!StringUtils.isEmpty(userUpdateDto.getPassword())) {
+            user.setPassword(encoder.encode(userUpdateDto.getPassword()));
+        }
         userRepository.save(user);
     }
 
-    public void updateUser(Long repoUserId, User user) {
-        User repoUser = getUser(repoUserId);
-        if (!repoUser.getEmail().equals(user.getEmail()) &&
-                userRepository.findByEmail(user.getEmail()).isPresent()) {
-            throw new EmailAlreadyRegisteredException();
-        }
-        if (!StringUtils.isEmpty(user.getFirstName())) {
-            repoUser.setFirstName(user.getFirstName());
-        }
-        if (!StringUtils.isEmpty(user.getLastName())) {
-            repoUser.setLastName(user.getLastName());
-        }
-        if (!StringUtils.isEmpty(user.getEmail())) {
-            repoUser.setEmail(user.getEmail());
-        }
-        if (!StringUtils.isEmpty(user.getPassword())) {
-            repoUser.setPassword(encoder.encode(user.getPassword()));
-        }
-        userRepository.save(repoUser);
-    }
-
-    public void deleteUser(Long id) {
+    public void deleteUser(final Long id) {
         userRepository.deleteById(id);
     }
 

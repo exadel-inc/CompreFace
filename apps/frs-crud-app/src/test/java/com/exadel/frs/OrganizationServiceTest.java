@@ -1,6 +1,6 @@
 package com.exadel.frs;
 
-
+import com.exadel.frs.dto.ui.*;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.OrganizationRole;
@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
-public class OrganizationServiceTest {
+class OrganizationServiceTest {
 
     private static final String ORGANISATION_GUID = "organisation-guid";
 
@@ -31,7 +32,7 @@ public class OrganizationServiceTest {
     private OrganizationRepository organizationRepositoryMock;
     private OrganizationService organizationService;
 
-    public OrganizationServiceTest() {
+    OrganizationServiceTest() {
         userServiceMock = mock(UserService.class);
         organizationRepositoryMock = mock(OrganizationRepository.class);
         organizationService = new OrganizationService(organizationRepositoryMock, userServiceMock);
@@ -54,7 +55,7 @@ public class OrganizationServiceTest {
 
     @ParameterizedTest
     @MethodSource({"readRoles", "writeRoles"})
-    public void successGetOrganization(OrganizationRole organizationRole) {
+    void successGetOrganization(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long organizationId = 1L;
 
@@ -73,7 +74,7 @@ public class OrganizationServiceTest {
     }
 
     @Test
-    public void successGetOrganizations() {
+    void successGetOrganizations() {
         when(organizationRepositoryMock.findAllByUserOrganizationRoles_Id_UserId(anyLong()))
                 .thenReturn(List.of(Organization.builder().build()));
 
@@ -83,101 +84,63 @@ public class OrganizationServiceTest {
     }
 
     @Test
-    public void successCreateOrganization() {
+    void successCreateOrganization() {
+        OrgCreateDto orgCreateDto = OrgCreateDto.builder().name("Organization").build();
         Long userId = 1L;
-
-        Organization organization = Organization.builder()
-                .name("Organization")
-                .build();
 
         User user = user(userId);
 
-        when(userServiceMock.getUser(anyLong())).thenReturn(user);
+        when(userServiceMock.getUser(userId)).thenReturn(user);
 
-        organizationService.createOrganization(organization, userId);
+        organizationService.createOrganization(orgCreateDto, userId);
 
-        assertThat(organization.getUserOrganizationRoles().size(), is(1));
-        assertThat(organization.getUserOrganizationRole(userId).get().getRole(), is(OrganizationRole.OWNER));
+        ArgumentCaptor<Organization> varArgs = ArgumentCaptor.forClass(Organization.class);
+        verify(organizationRepositoryMock).save(varArgs.capture());
+
+        assertThat(varArgs.getValue().getName(), is(orgCreateDto.getName()));
+        assertThat(varArgs.getValue().getUserOrganizationRoles().size(), is(1));
+        assertThat(varArgs.getValue().getUserOrganizationRole(userId).get().getRole(), is(OrganizationRole.OWNER));
     }
 
     @Test
-    public void failCreateOrganizationNameIsNotUnique() {
-        Organization organization = Organization.builder()
-                .name("Organization")
-                .build();
+    void failCreateOrganizationNameIsNotUnique() {
+        OrgCreateDto orgCreateDto = OrgCreateDto.builder().name("Organization").build();
 
         when(organizationRepositoryMock.existsByName(anyString())).thenReturn(true);
 
-        Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.createOrganization(organization, null));
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.createOrganization(orgCreateDto, null));
     }
 
     @Test
-    public void failCreateOrganizationEmptyRequiredField() {
-        Organization organization = Organization.builder()
-                .name("")
-                .build();
-
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> organizationService.createOrganization(organization, null));
+    void failCreateOrganizationEmptyRequiredField() {
+        OrgCreateDto orgCreateDto = OrgCreateDto.builder().name("").build();
+        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> organizationService.createOrganization(orgCreateDto, null));
     }
 
     @Test
-    public void successUpdateOrganization() {
-        Long userId1 = 1L;
-        Long userId2 = 2L;
+    void successUpdateOrganization() {
+        OrgUpdateDto orgUpdateDto = OrgUpdateDto.builder().name("Organization 2").build();
+        Long userId = 1L;
         Long organizationId = 1L;
 
-        User user1 = user(userId1);
-        User user2 = user(userId2);
+        User admin = user(userId);
 
         Organization organization = Organization.builder()
+                .id(organizationId)
                 .name("Organization 1")
                 .build();
-        organization.addUserOrganizationRole(user1, OrganizationRole.OWNER);
-        organization.addUserOrganizationRole(user2, OrganizationRole.USER);
-
-        Organization organizationUpdate = Organization.builder()
-                .name("Organization 2")
-                .build();
-        organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.OWNER);
+        organization.addUserOrganizationRole(admin, OrganizationRole.OWNER);
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId1);
+        organizationService.updateOrganization(orgUpdateDto, ORGANISATION_GUID, userId);
 
-        assertThat(organization.getName(), is(organizationUpdate.getName()));
-        assertThat(organization.getUserOrganizationRoles().size(), is(2));
-        assertThat(organization.getUserOrganizationRole(userId1).get().getRole(), is(OrganizationRole.ADMINISTRATOR));
-        assertThat(organization.getUserOrganizationRole(userId2).get().getRole(), is(OrganizationRole.OWNER));
+        assertThat(organization.getName(), is(orgUpdateDto.getName()));
     }
 
     @Test
-    public void failUpdateOrganizationMultipleOwners() {
-        Long userId1 = 1L;
-        Long userId2 = 1L;
-        Long userId3 = 1L;
-        Long organizationId = 1L;
-
-        User user1 = user(userId1);
-        User user2 = user(userId2);
-        User user3 = user(userId3);
-
-        Organization organization = Organization.builder()
-                .name("Organization 1")
-                .guid(ORGANISATION_GUID)
-                .build();
-        organization.addUserOrganizationRole(user1, OrganizationRole.OWNER);
-
-        Organization organizationUpdate = Organization.builder().build();
-        organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.OWNER);
-        organizationUpdate.addUserOrganizationRole(user3, OrganizationRole.OWNER);
-
-        when(organizationRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(organization));
-
-        Assertions.assertThrows(MultipleOwnersException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId1));
-    }
-
-    @Test
-    public void failUpdateOrganizationNameIsNotUnique() {
+    void failUpdateOrganizationNameIsNotUnique() {
+        OrgUpdateDto orgUpdateDto = OrgUpdateDto.builder().name("Organization 2").build();
         Long userId = 1L;
 
         User user = user(userId);
@@ -188,19 +151,16 @@ public class OrganizationServiceTest {
                 .build();
         organization.addUserOrganizationRole(user, OrganizationRole.OWNER);
 
-        Organization organizationUpdate = Organization.builder()
-                .name("Organization 2")
-                .build();
-
-        when(organizationRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(organization));
+        when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
         when(organizationRepositoryMock.existsByName(anyString())).thenReturn(true);
 
-        Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId));
+        Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.updateOrganization(orgUpdateDto, ORGANISATION_GUID, userId));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failUpdateOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failUpdateOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
+        OrgUpdateDto orgUpdateDto = OrgUpdateDto.builder().name("Organization 2").build();
         Long userId = 1L;
         Long organizationId = 1L;
 
@@ -213,140 +173,148 @@ public class OrganizationServiceTest {
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, Organization.builder().build(), userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.updateOrganization(orgUpdateDto, ORGANISATION_GUID, userId));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failUpdateOrganizationSelfRoleChange(OrganizationRole organizationRole) {
+    void failUpdateOrganizationSelfRoleChange(OrganizationRole organizationRole) {
+        UserRoleUpdateDto userRoleUpdateDto = UserRoleUpdateDto.builder()
+                .id("userGuid")
+                .role(OrganizationRole.USER.toString())
+                .build();
         Long userId = 1L;
         Long organizationId = 1L;
 
         User user = user(userId);
 
         Organization organization = Organization.builder()
+                .id(organizationId)
+                .guid(ORGANISATION_GUID)
                 .build();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        Organization organizationUpdate = Organization.builder()
-                .build();
+        Organization organizationUpdate = Organization.builder().build();
         organizationUpdate.addUserOrganizationRole(user, OrganizationRole.USER);
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
 
-        Assertions.assertThrows(SelfRoleChangeException.class, () -> organizationService.updateOrganization(ORGANISATION_GUID, organizationUpdate, userId));
+        Assertions.assertThrows(SelfRoleChangeException.class, () -> organizationService.updateUserOrgRole(userRoleUpdateDto, ORGANISATION_GUID, userId));
     }
 
-    // todo implement user invitation to organization by email. then delete this test method
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successAddToOrganization(OrganizationRole organizationRole) {
-        Long userId1 = 1L;
-        Long userId2 = 2L;
-        Long organizationId = 1L;
-
-        User user1 = user(userId1);
-        User user2 = user(userId2);
-
-        Organization organization = Organization.builder()
+    void successAddToOrganization(OrganizationRole organizationRole) {
+        UserInviteDto userInviteDto = UserInviteDto.builder()
+                .userEmail("email")
+                .role(OrganizationRole.USER.toString())
                 .build();
-        organization.addUserOrganizationRole(user1, organizationRole);
+        Long adminId = 1L;
+        Long userId = 2L;
 
-        Organization organizationUpdate = Organization.builder()
-                .build();
-        organizationUpdate.addUserOrganizationRole(user1, organizationRole);
-        organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.USER);
+        User admin = user(adminId);
+        User user = user(userId);
+
+        Organization organization = Organization.builder().build();
+        organization.addUserOrganizationRole(admin, organizationRole);
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
-        when(userServiceMock.getUser(anyLong())).thenReturn(user2);
+        when(userServiceMock.getUser(anyString())).thenReturn(user);
+        when(organizationRepositoryMock.save(organization)).thenReturn(organization);
 
-        organizationService.addUserToOrganization(ORGANISATION_GUID, organizationUpdate, userId1);
+        organizationService.inviteUser(userInviteDto, ORGANISATION_GUID, adminId);
 
         assertThat(organization.getUserOrganizationRoles().size(), is(2));
-        assertThat(organization.getUserOrganizationRole(userId2).get().getRole(), is(OrganizationRole.USER));
+        assertThat(organization.getUserOrganizationRole(userId).get().getRole(), is(OrganizationRole.USER));
     }
 
-    // todo implement user invitation to organization by email. then delete this test method
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failAddToOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failAddToOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
+        UserInviteDto userInviteDto = UserInviteDto.builder()
+                .userEmail("email")
+                .role(OrganizationRole.USER.toString())
+                .build();
         Long userId = 1L;
-        Long organizationId = 1L;
 
         User user = user(userId);
 
-        Organization organization = Organization.builder()
-                .build();
+        Organization organization = Organization.builder().build();
         organization.addUserOrganizationRole(user, organizationRole);
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.addUserToOrganization(ORGANISATION_GUID, null, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.inviteUser(userInviteDto, ORGANISATION_GUID, userId));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successRemoveFromOrganization(OrganizationRole organizationRole) {
-        Long userId1 = 1L;
-        Long userId2 = 2L;
-        Long organizationId = 1L;
-
-        User user1 = user(userId1);
-        User user2 = user(userId2);
-
-        Organization organization = Organization.builder()
+    void successRemoveFromOrganization(OrganizationRole organizationRole) {
+        UserRemoveDto userRemoveDto = UserRemoveDto.builder()
+                .userId("userGuid")
                 .build();
-        organization.addUserOrganizationRole(user1, organizationRole);
-        organization.addUserOrganizationRole(user2, OrganizationRole.USER);
+        Long adminId = 1L;
+        Long userId = 2L;
 
-        Organization organizationUpdate = Organization.builder()
-                .build();
-        organizationUpdate.addUserOrganizationRole(user2, OrganizationRole.USER);
+        User admin = user(adminId);
+        User user = user(userId);
+
+        Organization organization = Organization.builder().build();
+        organization.addUserOrganizationRole(admin, organizationRole);
+        organization.addUserOrganizationRole(user, OrganizationRole.USER);
+
+        Organization organizationUpdate = Organization.builder().build();
+        organizationUpdate.addUserOrganizationRole(user, OrganizationRole.USER);
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
 
-        organizationService.removeUserFromOrganization(ORGANISATION_GUID, organizationUpdate, userId1);
+        organizationService.removeUserFromOrganization(userRemoveDto, ORGANISATION_GUID, adminId);
 
         assertThat(organization.getUserOrganizationRoles().size(), is(1));
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failRemoveFromOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failRemoveFromOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
+        UserRemoveDto userRemoveDto = UserRemoveDto.builder()
+                .userId("userGuid")
+                .build();
         Long userId = 1L;
-        Long organizationId = 1L;
 
         User user = user(userId);
 
-        Organization organization = Organization.builder()
-                .build();
+        Organization organization = Organization.builder().build();
         organization.addUserOrganizationRole(user, organizationRole);
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
 
-        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.removeUserFromOrganization(ORGANISATION_GUID, null, userId));
+        Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.removeUserFromOrganization(userRemoveDto, ORGANISATION_GUID, userId));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void failRemoveFromOrganizationRemoveYourself(OrganizationRole organizationRole) {
-        Long userId = 1L;
-        Long organizationId = 1L;
-
-        User user = user(userId);
-
-        Organization organization = Organization.builder()
+    void failRemoveFromOrganizationSelfRemove(OrganizationRole organizationRole) {
+        UserRemoveDto userRemoveDto = UserRemoveDto.builder()
+                .userId("userGuid")
                 .build();
-        organization.addUserOrganizationRole(user, organizationRole);
+        Long adminId = 1L;
+
+        User admin = user(adminId);
+
+        Organization organization = Organization.builder().build();
+        organization.addUserOrganizationRole(admin, organizationRole);
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(admin);
 
-        Assertions.assertThrows(SelfRemoveException.class, () -> organizationService.removeUserFromOrganization(ORGANISATION_GUID, organization, userId));
+        Assertions.assertThrows(SelfRemoveException.class, () -> organizationService.removeUserFromOrganization(userRemoveDto, ORGANISATION_GUID, adminId));
     }
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    public void successDeleteOrganization(OrganizationRole organizationRole) {
+    void successDeleteOrganization(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long organizationId = 1L;
 
@@ -366,7 +334,7 @@ public class OrganizationServiceTest {
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    public void failDeleteOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failDeleteOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
         Long userId = 1L;
         Long organizationId = 1L;
 

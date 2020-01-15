@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppCreateDto {
+public class UserRemoveDto {
 
-    private String name;
+    private String userId;
 
 }

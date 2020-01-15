@@ -3,11 +3,11 @@ package com.exadel.frs.dto.ui;
 import lombok.Data;
 
 @Data
-public class UserRoleResponseDto {
+public class ModelResponseDto {
 
     private String id;
-    private String firstName;
-    private String lastName;
+    private String name;
+    private String apiKey;
     private String accessLevel;
 
 }

@@ -61,7 +61,7 @@ class AppControllerTest {
         when(appService.getApp(APP_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
-        mockMvc.perform(get("/admin/app/" + APP_GUID).with(user(buildDefaultUser())))
+        mockMvc.perform(get("/admin/org/" + ORG_GUID + "/app/" + APP_GUID).with(user(buildDefaultUser())))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(expectedContent));
     }
@@ -82,7 +82,7 @@ class AppControllerTest {
     public void shouldReturnMessageAndCodeWhenAppNameIsMissing() throws Exception {
         final BasicException expectedException = new EmptyRequiredFieldException("name");
 
-        doThrow(expectedException).when(appService).createApp(eq(ORG_GUID), any(), eq(USER_ID));
+        doThrow(expectedException).when(appService).createApp(any(), eq(ORG_GUID), eq(USER_ID));
 
         MockHttpServletRequestBuilder request = post("/admin/org/" + ORG_GUID + "/app")
                 .with(user(buildDefaultUser()))
@@ -96,7 +96,7 @@ class AppControllerTest {
     }
 
     private static User buildDefaultUser() {
-        return User.builder().username(USERNAME).id(USER_ID).build();
+        return User.builder().email(USERNAME).id(USER_ID).build();
     }
 
     private ExceptionResponseDto buildExceptionResponse(final BasicException ex) {

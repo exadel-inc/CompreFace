@@ -3,6 +3,7 @@ package com.exadel.frs.entity;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.helpers.ModelAccessTypeConverter;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Table
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(of = {"app", "model"})
 public class AppModel {
 
     @EmbeddedId

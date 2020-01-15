@@ -1,5 +1,7 @@
 package com.exadel.frs.service;
 
+import com.exadel.frs.dto.ui.ModelCreateDto;
+import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
@@ -28,11 +30,11 @@ public class ModelService {
                 .orElseThrow(() -> new ModelNotFoundException(modelGuid));
     }
 
-    private OrganizationRole getUserOrganizationRole(Organization organization, Long userId) {
+    private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {
         return organization.getUserOrganizationRoleOrThrow(userId).getRole();
     }
 
-    private void verifyUserHasReadPrivileges(Long userId, App app) {
+    private void verifyUserHasReadPrivileges(final Long userId, final App app) {
         OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
         if (OrganizationRole.USER == organizationRole) {
             app.getUserAppRole(userId)
@@ -40,7 +42,7 @@ public class ModelService {
         }
     }
 
-    private void verifyUserHasWritePrivileges(Long userId, App app) {
+    private void verifyUserHasWritePrivileges(final Long userId, final App app) {
         OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
         if (OrganizationRole.USER == organizationRole) {
             Optional<UserAppRole> userAppRole = app.getUserAppRole(userId);
@@ -50,7 +52,7 @@ public class ModelService {
         }
     }
 
-    private void verifyNameIsUnique(String name, Long appId) {
+    private void verifyNameIsUnique(final String name, final Long appId) {
         if (modelRepository.existsByNameAndAppId(name, appId)) {
             throw new NameIsNotUniqueException(name);
         }
@@ -68,38 +70,45 @@ public class ModelService {
         return modelRepository.findAllByAppId(app.getId());
     }
 
-    public void createModel(Model model, Long userId) {
-        App repoApp = appService.getApp(model.getApp().getGuid());
-        verifyUserHasWritePrivileges(userId, repoApp);
-        if (StringUtils.isEmpty(model.getName())) {
+    public Model createModel(final ModelCreateDto modelCreateDto, final String orgGuid, final String appGuid, final Long userId) {
+        App app = appService.getApp(appGuid);
+        verifyUserHasWritePrivileges(userId, app);
+        if (StringUtils.isEmpty(modelCreateDto.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        verifyNameIsUnique(model.getName(), model.getApp().getId());
-        model.setGuid(UUID.randomUUID().toString());
-        model.setApiKey(UUID.randomUUID().toString());
-        modelRepository.save(model);
+        if (!app.getOrganization().getGuid().equals(orgGuid)) {
+            throw new AppDoesNotBelongToOrgException(appGuid, orgGuid);
+        }
+        verifyNameIsUnique(modelCreateDto.getName(), app.getId());
+        Model model = Model.builder()
+                .name(modelCreateDto.getName())
+                .guid(UUID.randomUUID().toString())
+                .apiKey(UUID.randomUUID().toString())
+                .app(app)
+                .build();
+        return modelRepository.save(model);
     }
 
-    public void updateModel(final String modelGuid, Model model, Long userId) {
+    public void updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        if (!StringUtils.isEmpty(model.getName()) && !repoModel.getName().equals(model.getName())) {
-            verifyNameIsUnique(model.getName(), repoModel.getApp().getId());
-            repoModel.setName(model.getName());
+        if (!StringUtils.isEmpty(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
+            verifyNameIsUnique(modelUpdateDto.getName(), repoModel.getApp().getId());
+            repoModel.setName(modelUpdateDto.getName());
         }
-        if (model.getAppModelAccess() != null) {
-            Long repoModelOrganizationId = repoModel.getApp().getOrganization().getId();
-            if (repoModel.getAppModelAccess() != null) {
-                repoModel.getAppModelAccess().clear();
-            }
-            model.getAppModelAccess().forEach(appModel -> {
-                App app = appService.getApp(appModel.getApp().getGuid());
-                if (!repoModelOrganizationId.equals(app.getOrganization().getId())) {
-                    throw new OrganizationMismatchException();
-                }
-                repoModel.addAppModelAccess(app, appModel.getAccessType());
-            });
-        }
+//        if (model.getAppModelAccess() != null) {
+//            Long repoModelOrganizationId = repoModel.getApp().getOrganization().getId();
+//            if (repoModel.getAppModelAccess() != null) {
+//                repoModel.getAppModelAccess().clear();
+//            }
+//            model.getAppModelAccess().forEach(appModel -> {
+//                App app = appService.getApp(appModel.getApp().getGuid());
+//                if (!repoModelOrganizationId.equals(app.getOrganization().getId())) {
+//                    throw new OrganizationMismatchException();
+//                }
+//                repoModel.addAppModelAccess(app, appModel.getAccessType());
+//            });
+//        }
         modelRepository.save(repoModel);
     }
 

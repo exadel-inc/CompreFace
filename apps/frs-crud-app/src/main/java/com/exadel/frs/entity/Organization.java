@@ -15,6 +15,7 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"guid"})
 public class Organization {
 
     @Id
@@ -25,17 +26,16 @@ public class Organization {
     private String guid;
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserOrganizationRole> userOrganizationRoles;
+    private List<UserOrganizationRole> userOrganizationRoles = new ArrayList<>();
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "organization", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<App> apps;
+    private List<App> apps = new ArrayList<>();
 
     public Optional<UserOrganizationRole> getUserOrganizationRole(Long userId) {
-        if (userOrganizationRoles == null) {
-            return Optional.empty();
-        }
         return userOrganizationRoles
                 .stream()
                 .filter(userOrganizationRole -> userOrganizationRole.getId().getUserId().equals(userId))
@@ -48,12 +48,6 @@ public class Organization {
     }
 
     public void addUserOrganizationRole(User user, OrganizationRole role) {
-        if (userOrganizationRoles == null) {
-            userOrganizationRoles = new ArrayList<>();
-        }
-        if (user.getUserOrganizationRoles() == null) {
-            user.setUserOrganizationRoles(new ArrayList<>());
-        }
         UserOrganizationRole userOrganizationRole = new UserOrganizationRole(user, this, role);
         userOrganizationRoles.add(userOrganizationRole);
         user.getUserOrganizationRoles().add(userOrganizationRole);

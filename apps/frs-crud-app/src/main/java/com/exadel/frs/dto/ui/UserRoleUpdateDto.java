@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppCreateDto {
+public class UserRoleUpdateDto {
 
-    private String name;
+    private String id;
+    private String role;
 
 }

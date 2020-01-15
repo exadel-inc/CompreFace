@@ -6,6 +6,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Table
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"guid"})
 public class Model {
 
     @Id
@@ -28,19 +30,21 @@ public class Model {
     private App app;
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AppModel> appModelAccess;
+    private List<AppModel> appModelAccess = new ArrayList<>();
 
     public void addAppModelAccess(App app, AppModelAccess access) {
-        if (appModelAccess == null) {
-            appModelAccess = new ArrayList<>();
-        }
-        if (app.getAppModelAccess() == null) {
-            app.setAppModelAccess(new ArrayList<>());
-        }
         AppModel appModel = new AppModel(app, this, access);
         appModelAccess.add(appModel);
         app.getAppModelAccess().add(appModel);
+    }
+
+    public Optional<AppModel> getAppModel(String appGuid) {
+        return appModelAccess
+                .stream()
+                .filter(appModel -> appModel.getApp().getGuid().equals(appGuid))
+                .findFirst();
     }
 
 }

@@ -1,21 +1,32 @@
 package com.exadel.frs.mapper;
 
-import com.exadel.frs.dto.ModelDto;
+import com.exadel.frs.dto.ui.ModelResponseDto;
+import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
+import com.exadel.frs.enums.AppModelAccess;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = AppModelAccessMapper.class)
+@Mapper(componentModel = "spring")
 public interface MlModelMapper {
 
-    @Mapping(source = "appId", target = "app.id")
-    Model toEntity(ModelDto modelDto);
+    @Mapping(source = "guid", target = "id")
+    @Mapping(source = "model", target = "accessLevel", qualifiedByName = "getAccessLevel")
+    ModelResponseDto toResponseDto(Model model, @Context String appGuid);
+    List<ModelResponseDto> toResponseDto(List<Model> model, @Context String appGuid);
 
-    @Mapping(source = "app.id", target = "appId")
-    ModelDto toDto(Model model);
-
-    List<ModelDto> toDto(List<Model> model);
+    @Named("getAccessLevel")
+    default AppModelAccess getAccessLevel(Model model, @Context String appGuid) {
+        if (model.getApp().getGuid().equals(appGuid)) {
+            return AppModelAccess.OWNER;
+        }
+        return model.getAppModel(appGuid)
+                .map(AppModel::getAccessType)
+                .orElse(null);
+    }
 
 }

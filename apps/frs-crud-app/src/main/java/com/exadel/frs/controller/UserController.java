@@ -1,6 +1,8 @@
 package com.exadel.frs.controller;
 
-import com.exadel.frs.dto.UserDto;
+import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserResponseDto;
+import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.UserService;
@@ -12,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/admin/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -21,8 +23,8 @@ public class UserController {
 
     @GetMapping("/me")
     @ApiOperation(value = "Get information about user, that logged in")
-    public UserDto getUser() {
-        return userMapper.toDto(SecurityUtils.getPrincipal());
+    public UserResponseDto getUser() {
+        return userMapper.toResponseDto(SecurityUtils.getPrincipal());
     }
 
     @PostMapping("/register")
@@ -30,8 +32,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Such username or email already registered | One or more of required fields are empty")
     })
-    public void createUser(@ApiParam(value = "User object that needs to be created", required = true) @RequestBody UserDto userDto) {
-        userService.createUser(userMapper.toEntity(userDto));
+    public UserResponseDto createUser(@ApiParam(value = "User object that needs to be created", required = true) @RequestBody UserCreateDto userCreateDto) {
+        return userMapper.toResponseDto(userService.createUser(userCreateDto));
     }
 
     @PutMapping("/update")
@@ -39,8 +41,8 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Such username or email already registered")
     })
-    public void updateUser(@ApiParam(value = "User data that needs to be updated", required = true) @RequestBody UserDto userDto) {
-        userService.updateUser(SecurityUtils.getPrincipalId(), userMapper.toEntity(userDto));
+    public void updateUser(@ApiParam(value = "User data that needs to be updated", required = true) @RequestBody UserUpdateDto userUpdateDto) {
+        userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/delete")

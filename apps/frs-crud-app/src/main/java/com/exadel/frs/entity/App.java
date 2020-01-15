@@ -14,6 +14,7 @@ import java.util.Optional;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(of = {"guid"})
 public class App {
 
     @Id
@@ -29,21 +30,28 @@ public class App {
     private Organization organization;
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<UserAppRole> userAppRoles;
+    private List<UserAppRole> userAppRoles = new ArrayList<>();
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "app")
-    private List<AppModel> appModelAccess;
+    private List<AppModel> appModelAccess = new ArrayList<>();
 
     @ToString.Exclude
+    @Builder.Default
     @OneToMany(mappedBy = "app")
-    private List<Model> models;
+    private List<Model> models = new ArrayList<>();
+
+    public Optional<UserAppRole> getOwner() {
+        return userAppRoles
+                .stream()
+                .filter(userAppRole -> AppRole.OWNER.equals(userAppRole.getRole()))
+                .findFirst();
+    }
 
     public Optional<UserAppRole> getUserAppRole(Long userId) {
-        if (userAppRoles == null) {
-            return Optional.empty();
-        }
         return userAppRoles
                 .stream()
                 .filter(userAppRole -> userAppRole.getId().getUserId().equals(userId))
@@ -51,12 +59,6 @@ public class App {
     }
 
     public void addUserAppRole(User user, AppRole role) {
-        if (userAppRoles == null) {
-            userAppRoles = new ArrayList<>();
-        }
-        if (user.getUserAppRoles() == null) {
-            user.setUserAppRoles(new ArrayList<>());
-        }
         UserAppRole userAppRole = new UserAppRole(user, this, role);
         userAppRoles.add(userAppRole);
         user.getUserAppRoles().add(userAppRole);

@@ -1,5 +1,9 @@
 package com.exadel.frs.service;
 
+import com.exadel.frs.dto.ui.AppCreateDto;
+import com.exadel.frs.dto.ui.AppUpdateDto;
+import com.exadel.frs.dto.ui.UserInviteDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.*;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
@@ -26,11 +30,11 @@ public class AppService {
                 .orElseThrow(() -> new AppNotFoundException(appGuid));
     }
 
-    private OrganizationRole getUserOrganizationRole(Organization organization, Long userId) {
+    private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {
         return organization.getUserOrganizationRoleOrThrow(userId).getRole();
     }
 
-    private void verifyUserHasReadPrivileges(Long userId, App app) {
+    private void verifyUserHasReadPrivileges(final Long userId, final App app) {
         OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
         if (OrganizationRole.USER == organizationRole) {
             app.getUserAppRole(userId)
@@ -38,19 +42,19 @@ public class AppService {
         }
     }
 
-    private void verifyUserHasWritePrivileges(Long userId, Organization organization) {
+    private void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
         if (OrganizationRole.USER == getUserOrganizationRole(organization, userId)) {
             throw new InsufficientPrivilegesException(userId);
         }
     }
 
-    private void verifyNameIsUnique(String name, Long orgId) {
+    private void verifyNameIsUnique(final String name, final Long orgId) {
         if (appRepository.existsByNameAndOrganizationId(name, orgId)) {
             throw new NameIsNotUniqueException(name);
         }
     }
 
-    public App getApp(final String appGuid, Long userId) {
+    public App getApp(final String appGuid, final Long userId) {
         App repoApp = getApp(appGuid);
         verifyUserHasReadPrivileges(userId, repoApp);
         return repoApp;
@@ -66,11 +70,11 @@ public class AppService {
         return appRepository.findAllByOrganizationId(organization.getId());
     }
 
-    public List<UserAppRole> getAppUsers(final String searchText, final String organizationGuid, final String appGuid, final Long userId) {
+    public List<UserAppRole> getAppUsers(final String searchText, final String orgGuid, final String appGuid, final Long userId) {
         final App app = getApp(appGuid);
         verifyUserHasReadPrivileges(userId, app);
-        if (!app.getOrganization().getGuid().equals(organizationGuid)) {
-            throw new AppDoesNotBelongToOrgException(appGuid, organizationGuid);
+        if (!app.getOrganization().getGuid().equals(orgGuid)) {
+            throw new AppDoesNotBelongToOrgException(appGuid, orgGuid);
         }
         if (!StringUtils.isEmpty(searchText)) {
             List<UserAppRole> result = new ArrayList<>();
@@ -87,7 +91,7 @@ public class AppService {
         return app.getUserAppRoles();
     }
 
-    public UserAppRole inviteUser(final String userEmail, final AppRole userRole, final String organizationGuid,
+    public UserAppRole inviteUser(final UserInviteDto userInviteDto, final String organizationGuid,
                                   final String appGuid, final Long userId) {
         final App app = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, app.getOrganization());
@@ -95,26 +99,26 @@ public class AppService {
         if (!app.getOrganization().getGuid().equals(organizationGuid)) {
             throw new AppDoesNotBelongToOrgException(appGuid, organizationGuid);
         }
-        final User user = userService.getUser(userEmail);
+        final User user = userService.getUser(userInviteDto.getUserEmail());
         UserOrganizationRole userOrganizationRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
         if (!OrganizationRole.USER.equals(userOrganizationRole.getRole()) || app.getUserAppRole(user.getId()).isPresent()) {
-            throw new UserAlreadyHasAccessToAppException(userEmail, appGuid);
+            throw new UserAlreadyHasAccessToAppException(userInviteDto.getUserEmail(), appGuid);
         }
 
-        app.addUserAppRole(user, userRole);
+        app.addUserAppRole(user, AppRole.valueOf(userInviteDto.getRole()));
         final App savedApp = appRepository.save(app);
         return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
 
-    public App createApp(String organizationGuid, String appName, Long userId) {
+    public App createApp(final AppCreateDto appCreateDto, final String organizationGuid, final Long userId) {
         Organization organization = organizationService.getOrganization(organizationGuid);
         verifyUserHasWritePrivileges(userId, organization);
-        if (StringUtils.isEmpty(appName)) {
+        if (StringUtils.isEmpty(appCreateDto.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
-        verifyNameIsUnique(appName, organization.getId());
+        verifyNameIsUnique(appCreateDto.getName(), organization.getId());
         App app = App.builder()
-                .name(appName)
+                .name(appCreateDto.getName())
                 .organization(organization)
                 .guid(UUID.randomUUID().toString())
                 .apiKey(UUID.randomUUID().toString())
@@ -123,41 +127,31 @@ public class AppService {
         return appRepository.save(app);
     }
 
-//    private long getNumberOfOwners(List<UserAppRole> userAppRoles) {
-//        long ownersCount = userAppRoles.stream()
-//                .filter(userAppRole -> AppRole.OWNER.equals(userAppRole.getRole()))
-//                .count();
-//        if (ownersCount > 1) {
-//            throw new MultipleOwnersException();
-//        }
-//        return ownersCount;
-//    }
-
-    public App updateApp(final String appGuid, final String appName, final Long userId) {
+    public App updateApp(final AppUpdateDto appUpdateDto, final String appGuid, final Long userId) {
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        if (!StringUtils.isEmpty(appName) && !repoApp.getName().equals(appName)) {
-            verifyNameIsUnique(appName, repoApp.getOrganization().getId());
-            repoApp.setName(appName);
+        if (!StringUtils.isEmpty(appUpdateDto.getName()) && !repoApp.getName().equals(appUpdateDto.getName())) {
+            verifyNameIsUnique(appUpdateDto.getName(), repoApp.getOrganization().getId());
+            repoApp.setName(appUpdateDto.getName());
         }
-//        if (app.getUserAppRoles() != null) {
-//            if (repoApp.getUserAppRoles() != null) {
-//                if (getNumberOfOwners(app.getUserAppRoles()) == 0) {
-//                    repoApp.getUserAppRoles().removeIf(userAppRole -> !AppRole.OWNER.equals(userAppRole.getRole()));
-//                } else {
-//                    repoApp.getUserAppRoles().clear();
-//                }
-//            }
-//            app.getUserAppRoles().forEach(userAppRole -> {
-//                if (userId.equals(userAppRole.getId().getUserId())) {
-//                    throw new SelfRoleChangeException();
-//                }
-//                UserOrganizationRole userOrganizationRole = repoApp.getOrganization()
-//                        .getUserOrganizationRoleOrThrow(userAppRole.getId().getUserId());
-//                repoApp.addUserAppRole(userOrganizationRole.getUser(), userAppRole.getRole());
-//            });
-//        }
         return appRepository.save(repoApp);
+    }
+
+    public void updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
+        App app = getApp(guid);
+        verifyUserHasWritePrivileges(adminId, app.getOrganization());
+
+        User user = userService.getUserByGuid(userRoleUpdateDto.getId());
+        if (user.getId().equals(adminId)) {
+            throw new SelfRoleChangeException();
+        }
+        UserAppRole userAppRole = app.getUserAppRole(user.getId()).orElseThrow();
+        AppRole newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
+        if (AppRole.OWNER.equals(newAppRole)) {
+            app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(AppRole.ADMINISTRATOR));
+        }
+        userAppRole.setRole(newAppRole);
+        appRepository.save(app);
     }
 
     public void regenerateApiKey(final String guid, final Long userId) {

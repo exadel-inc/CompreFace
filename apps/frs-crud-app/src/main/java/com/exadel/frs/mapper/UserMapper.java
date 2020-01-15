@@ -1,17 +1,18 @@
 package com.exadel.frs.mapper;
 
-import com.exadel.frs.dto.UserDto;
+import com.exadel.frs.dto.ui.AppOwnerDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.entity.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {UserOrganizationRoleMapper.class, UserAppRoleMapper.class})
+@Mapper(componentModel = "spring", uses = {UserOrgRoleMapper.class, UserAppRoleMapper.class})
 public interface UserMapper {
 
-    User toEntity(UserDto dto);
+    @Mapping(source = "guid", target = "id")
+    AppOwnerDto toAppOwnerDto(User entity);
 
-    UserDto toDto(User entity);
-
+    @Mapping(source = "guid", target = "id")
     UserResponseDto toResponseDto(User entity);
 
 }

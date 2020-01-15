@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AppCreateDto {
+public class ModelCreateDto {
 
     private String name;
 
