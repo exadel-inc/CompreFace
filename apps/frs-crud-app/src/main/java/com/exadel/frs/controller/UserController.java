@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,6 +28,7 @@ public class UserController {
         return userMapper.toResponseDto(SecurityUtils.getPrincipal());
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     @ApiOperation(value = "Register new user")
     @ApiResponses({

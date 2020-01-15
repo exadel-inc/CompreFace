@@ -80,6 +80,7 @@ public class OrganizationController {
         return userOrgRoleMapper.toUserRoleResponseDto(organizationService.getOrgUsers(guid, SecurityUtils.getPrincipalId()));
     }
 
+    @ResponseStatus(HttpStatus.CREATED)
     @PutMapping("/org/{guid}/invite")
     @ApiOperation(value = "Add users to organization")
     public UserRoleResponseDto inviteUser(
