@@ -4,17 +4,17 @@ import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 
 export const applicationAdapter: EntityAdapter<Application> = createEntityAdapter<Application>();
 
-export interface State extends EntityState<Application> {
+export interface AppEntityState extends EntityState<Application> {
   // additional entities state properties
   selectedAppId: number | null;
 }
 
-export const initialState: State = applicationAdapter.getInitialState({
+export const initialState: AppEntityState = applicationAdapter.getInitialState({
   // additional entity state properties
   selectedAppId: null,
 });
 
-export function ApplicationReducer(state = initialState, action: ApplicationEntityActionType): State {
+export function ApplicationReducer(state = initialState, action: ApplicationEntityActionType): AppEntityState {
   switch(action.type) {
     case ApplicationEntityActionList.ADD_APPLICATION: {
       return applicationAdapter.addOne(action.payload.application, state);
@@ -30,7 +30,7 @@ export function ApplicationReducer(state = initialState, action: ApplicationEnti
   }
 }
 
-export const getSelectedAppId = (state: State) => state.selectedAppId;
+export const getSelectedAppId = (state: AppEntityState) => state.selectedAppId;
 
 const {
   selectIds,
