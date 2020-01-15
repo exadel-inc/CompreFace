@@ -11,22 +11,22 @@ import {
   CreateApplicationSuccess,
   CreateApplicationFail
 } from './action';
-import { AddApplicationEntityAction, AddApplicationsEntityAction } from '../application/action';
 import { ApplicationService } from 'src/app/core/application/application.service';
+import {addApplication, addApplications} from "../application/action";
 
 @Injectable()
 export class ApplicationListEffect {
   constructor(private actions: Actions, private applicationService: ApplicationService) { }
 
   @Effect()
-  fetchApplicationList: Observable<FetchApplicationListSuccess | AddApplicationsEntityAction | FetchApplicationListFail> = this.actions.pipe(
+  fetchApplicationList = this.actions.pipe(
     ofType(ApplicationListTypes.FETCH_APPLICATION),
     switchMap((action: FetchApplicationList) => {
       return this.applicationService.getAll(action.payload.organizationId).pipe(
         switchMap(apps =>
           [
             new FetchApplicationListSuccess(),
-            new AddApplicationsEntityAction({ applications: apps })
+            addApplications({ applications: apps })
           ]),
         catchError(e => of(new FetchApplicationListFail({ errorMessage: e })))
       )
@@ -34,14 +34,14 @@ export class ApplicationListEffect {
   )
 
   @Effect()
-  createApplication: Observable<CreateApplicationSuccess | AddApplicationEntityAction | CreateApplicationFail> = this.actions.pipe(
+  createApplication = this.actions.pipe(
     ofType(ApplicationListTypes.CREATE_APPLICATION),
     switchMap((action: CreateApplication) => {
       return this.applicationService.create(action.payload.organizationId, action.payload.name)
         .pipe(
           switchMap((app) => [
             new CreateApplicationSuccess(),
-            new AddApplicationEntityAction({ application: app })
+            addApplication({ application: app })
           ]),
           catchError(error => of(new CreateApplicationFail({ errorMessage: error })))
         )

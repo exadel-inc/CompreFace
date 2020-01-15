@@ -16,7 +16,7 @@ export const selectCurrentAppId = createSelector(
 );
 
 export const selectCurrentApp = createSelector(
-  selectAppEntities,
+  selectApplicationEntityState,
   selectCurrentAppId,
-  (appEntities, appId) => appEntities[appId]
+  (apps, selectedId) => { console.log('appEntities',apps,  selectedId); return apps.entities ? apps.entities[selectedId] : null; }
 );

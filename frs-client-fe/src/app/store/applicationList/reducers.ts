@@ -31,7 +31,7 @@ export function ApplicationListReducer(state = initialState, action: Application
       }
     }
 
-    case ApplicationListTypes.FETCH_AFETCH_APPLICATION_FAIL: {
+    case ApplicationListTypes.FETCH_APPLICATION_FAIL: {
       return {
         ...state,
         errorMessage: action.payload.errorMessage,
