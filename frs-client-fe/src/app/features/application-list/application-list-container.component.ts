@@ -6,6 +6,8 @@ import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dia
 import { MatDialog } from '@angular/material';
 import { ITableConfig } from 'src/app/features/table/table.component';
 import { ApplicationListFacade } from './application-list-facade';
+import {ROUTERS_URL} from "../../data/routers-url.variable";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'application-list-container',
@@ -20,7 +22,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
   private applicationListStateSubscription: Subscription;
 
-  constructor(private applicationFacade: ApplicationListFacade, public dialog: MatDialog) {
+  constructor(private applicationFacade: ApplicationListFacade, public dialog: MatDialog, private router: Router) {
     this.applicationFacade.initSubscriptions();
   }
 
@@ -45,7 +47,10 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
   }
 
   public onClick(application): void {
-    console.log(`navigate to ${application.name}`);
+    this.router.navigate([ROUTERS_URL.APPLICATION], {queryParams: {
+      org: this.applicationFacade.getOrgId(),
+      app: application.id}
+    });
   }
 
   public onCreateNewApp(): void {
