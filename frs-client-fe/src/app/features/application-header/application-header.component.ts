@@ -16,6 +16,7 @@ export class ApplicationHeaderComponent implements OnInit {
   public app$: Observable<Application>;
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
+  public loading$: Observable<boolean>;
 
   constructor(private applicationHeaderFacade: ApplicationHeaderFacade, public dialog: MatDialog) {
     applicationHeaderFacade.initSubscriptions();
