@@ -4,6 +4,7 @@ import com.exadel.frs.dto.ModelDto;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
+import com.exadel.frs.system.statistics.CallStatistics;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -22,11 +23,12 @@ public class ModelController {
     private final ModelService modelService;
     private final MlModelMapper modelMapper;
 
+    @CallStatistics
     @GetMapping("/{guid}")
     @ApiOperation(value = "Get model, created by user")
     public ModelDto getModel(@ApiParam(value = "GUID of model to return",
-                                       required = true,
-                                       example = "0") @PathVariable final String guid) {
+            required = true,
+            example = "0") @PathVariable final String guid) {
         return modelMapper.toDto(modelService.getModel(guid, SecurityUtils.getPrincipalId()));
     }
 

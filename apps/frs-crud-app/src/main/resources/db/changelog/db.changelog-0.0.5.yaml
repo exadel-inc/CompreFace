@@ -1,0 +1,42 @@
+databaseChangeLog:
+  - changeSet:
+      id: frs call statistics
+      author: Dmitry Andryianau
+      changes:
+        # system_call_statistics
+        - createTable:
+            tableName: system_call_statistics
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: object_type
+                  type: varchar(255)
+              - column:
+                  name: guid
+                  type: varchar(36)
+              - column:
+                  name: call_count
+                  type: bigint
+              - column:
+                  name: object_guid
+                  type: varchar(36)
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_system_call_statistics
+            tableName: system_call_statistics
+        - createSequence:
+            sequenceName: call_statistics_info_seq
+        - addNotNullConstraint:
+            columnName: call_count
+            tableName: system_call_statistics
+        - addUniqueConstraint:
+            columnNames: object_type,object_guid
+            constraintName: call_statistics_object_index
+            tableName: system_call_statistics
+        - addDefaultValue:
+            columnName: call_count
+            defaultValue: 1
+            tableName: system_call_statistics

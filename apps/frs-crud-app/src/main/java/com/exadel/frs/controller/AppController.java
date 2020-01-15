@@ -4,6 +4,7 @@ import com.exadel.frs.dto.AppDto;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.service.AppService;
+import com.exadel.frs.system.statistics.CallStatistics;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -22,11 +23,12 @@ public class AppController {
     private final AppService appService;
     private final AppMapper appMapper;
 
+    @CallStatistics
     @GetMapping("/{guid}")
     @ApiOperation(value = "Get application, created by user")
     public AppDto getApp(@ApiParam(value = "GUID of application to return",
-                                   required = true,
-                                   example = "3913717b-a40b-4d6f-acc4-a861aa612651") @PathVariable String guid) {
+            required = true,
+            example = "3913717b-a40b-4d6f-acc4-a861aa612651") @PathVariable String guid) {
         return appMapper.toDto(appService.getApp(guid, SecurityUtils.getPrincipalId()));
     }
 
