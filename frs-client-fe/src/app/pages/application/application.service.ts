@@ -9,6 +9,7 @@ import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {filter} from "rxjs/operators";
 import {setSelectedId} from "../../store/application/action";
 import {GetUserInfo} from "../../store/userInfo/action";
+import {SetSelectedId} from "../../store/organization/action";
 
 @Injectable()
 export class ApplicationService {
@@ -28,6 +29,7 @@ export class ApplicationService {
 
     if (this.appId && this.orgId) {
       this.store.dispatch(setSelectedId({ selectedAppId: this.appId}));
+      this.store.dispatch(new SetSelectedId({ selectId: this.orgId}));
       this.appsSub = this.store.select(selectApplications).pipe(
         filter(apps => !apps.length)
       ).subscribe(() => {

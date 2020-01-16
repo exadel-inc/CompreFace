@@ -4,7 +4,7 @@ import { ApplicationListState } from './reducers';
 
 export const selectApplicationListState = createFeatureSelector<AppState, ApplicationListState>('applicationList');
 
-export const isLoadingApps = createSelector(
+export const isLoading = createSelector(
   selectApplicationListState,
   selectApplicationListState => selectApplicationListState.isLoading
 );

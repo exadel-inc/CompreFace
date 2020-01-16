@@ -1,5 +1,5 @@
 import { Application } from 'src/app/data/application';
-import {addApplication, addApplications, setSelectedId} from './action';
+import {addApplication, addApplications, setSelectedId, updateApplication} from './action';
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import {Action, createReducer, on} from "@ngrx/store";
 
@@ -7,7 +7,7 @@ export const applicationAdapter: EntityAdapter<Application> = createEntityAdapte
 
 export interface AppEntityState extends EntityState<Application> {
   // additional entities state properties
-  selectedAppId: number | null;
+  selectedAppId: string | null;
 }
 
 export const initialState: AppEntityState = applicationAdapter.getInitialState({
@@ -22,6 +22,9 @@ const reducer = createReducer(
   }),
   on(addApplications, (state, { applications }) => {
     return applicationAdapter.addAll(applications, state);
+  }),
+  on(updateApplication, (state, { application }) => {
+    return applicationAdapter.updateOne({ id: application.id, changes: application }, state);
   }),
   on(setSelectedId, (state, { selectedAppId }) => {
     return { ...state, selectedAppId };

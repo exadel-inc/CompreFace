@@ -46,6 +46,13 @@ export function ApplicationListReducer(state = initialState, action: Application
       }
     }
 
+    case ApplicationListTypes.UPDATE_APPLICATION: {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+
     case ApplicationListTypes.CREATE_APPLICATION_SUCCESS: {
       return {
         ...state,
