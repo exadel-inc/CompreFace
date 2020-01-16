@@ -7,6 +7,8 @@ import {selectApplications} from "../../store/application/selectors";
 import {FetchApplicationList} from "../../store/applicationList/action";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {filter} from "rxjs/operators";
+import {setSelectedId} from "../../store/application/action";
+import {GetUserInfo} from "../../store/userInfo/action";
 
 @Injectable()
 export class ApplicationService {
@@ -25,11 +27,11 @@ export class ApplicationService {
     this.appId = this.route.snapshot.queryParams.app;
 
     if (this.appId && this.orgId) {
+      this.store.dispatch(setSelectedId({ selectedAppId: this.appId}));
       this.appsSub = this.store.select(selectApplications).pipe(
         filter(apps => !apps.length)
       ).subscribe(() => {
         this.fetchApps();
-
       })
     } else {
       this.router.navigate([ROUTERS_URL.ORGANIZATION]);
@@ -41,8 +43,7 @@ export class ApplicationService {
   }
 
   fetchApps() {
-      this.store.dispatch(
-        new FetchApplicationList({organizationId: this.orgId})
-      )
+    this.store.dispatch(new FetchApplicationList({organizationId: this.orgId}));
+    this.store.dispatch(new GetUserInfo());
   }
 }

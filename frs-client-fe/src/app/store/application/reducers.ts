@@ -1,5 +1,5 @@
 import { Application } from 'src/app/data/application';
-import { addApplication, addApplications} from './action';
+import {addApplication, addApplications, setSelectedId} from './action';
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import {Action, createReducer, on} from "@ngrx/store";
 
@@ -21,8 +21,10 @@ const reducer = createReducer(
     return applicationAdapter.addOne(application, state);
   }),
   on(addApplications, (state, { applications }) => {
-    console.log(applications, state);
     return applicationAdapter.addAll(applications, state);
+  }),
+  on(setSelectedId, (state, { selectedAppId }) => {
+    return { ...state, selectedAppId };
   })
 );
 

@@ -6,17 +6,9 @@
         [entityName]="'Application'"
         [selectId$]="selectedId$"
         [options]="[app]"
-        (selectIdChange)="selectOrganization($event)"
         [renameDisable]="false"
         (rename)="rename($event)"></app-entity-title>
     </div>
-
-    <button mat-raised-button
-            type="submit"
-            color="primary"
-            (click)="createNew()"
-    >Create New Application
-    </button>
   </div>
 
   <div class="application-header_right-coll" *ngIf="userRole$ | async as userRole">
