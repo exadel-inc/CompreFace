@@ -1,72 +1,142 @@
 [
   {
-    "id": "0",
+    "id": "app_0",
     "organizationId": "ksdfklsn1111111",
     "name": "Application 0",
     "owner": {
       "id": "0",
       "firstName": "Owner 0",
       "lastName": "lastname owner 0"
-    }
+    },
+    "userAppRoles": [
+      {
+        "role": "OWNER",
+        "userId": "guid_1"
+      },
+      {
+        "role": "ADMIN",
+        "userId": "guid_0"
+      }
+    ]
   },
   {
-    "id": "1",
+    "id": "app_1",
     "organizationId": "ksdfklsn1111111",
     "name": "Application 1",
     "owner": {
       "id": "1",
       "firstName": "Owner 1",
       "lastName": "lastname owner 1"
-    }
+    },
+    "userAppRoles": [
+      {
+        "role": "USER",
+        "userId": "guid_0"
+      },
+      {
+        "role": "ADMIN",
+        "userId": "guid_1"
+      }
+    ]
   },
   {
-    "id": "2",
+    "id": "app_2",
     "organizationId": "ksdfklsn1111111",
     "name": "Application 2",
     "owner": {
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+        "userAppRoles": [
+      {
+        "role": "OWNER",
+        "userId": "guid_0"
+      },
+      {
+        "role": "ADMIN",
+        "userId": "guid_1"
+      }
+    ]
   },
   {
-    "id": "3",
+    "id": "app_3",
     "organizationId": "ksdfklsn1111111",
     "name": "Application 3",
     "owner": {
       "id": "3",
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
-    }
+    },
+        "userAppRoles": [
+      {
+        "role": "OWNER",
+        "userId": "guid_0"
+      },
+      {
+        "role": "ADMIN",
+        "userId": "guid_1"
+      }
+    ]
   },
   {
-    "id": "4",
+    "id": "app_4",
     "organizationId": "asdfdasdfdaf222222222222",
     "name": "Application 4",
     "owner": {
       "id": "3",
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
-    }
+    },
+        "userAppRoles": [
+      {
+        "role": "OWNER",
+        "userId": "guid_0"
+      },
+      {
+        "role": "ADMIN",
+        "userId": "guid_1"
+      }
+    ]
   },
   {
-    "id": "5",
+    "id": "app_5",
     "organizationId": "asdfdasdfdaf222222222222",
     "name": "Application 5",
     "owner": {
       "id": "3",
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
-    }
+    },
+        "userAppRoles": [
+      {
+        "role": "OWNER",
+        "userId": "guid_0"
+      },
+      {
+        "role": "ADMIN",
+        "userId": "guid_1"
+      }
+    ]
   },
   {
-    "id": "4",
+    "id": "app_6",
     "organizationId": "asdfdasdfdaf222222222222",
     "name": "Application 6",
     "owner": {
       "id": "3",
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
-    }
+    },
+        "userAppRoles": [
+      {
+        "role": "OWNER",
+        "userId": "guid_0"
+      },
+      {
+        "role": "ADMIN",
+        "userId": "guid_1"
+      }
+    ]
   }
 ]
