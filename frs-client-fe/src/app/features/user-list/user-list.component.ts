@@ -16,6 +16,7 @@ import { AlertComponent } from '../alert/alert.component';
 export class UserListComponent implements OnInit, OnDestroy {
   public tableConfig$: Observable<ITableConfig>;
   public isLoading$: Observable<boolean>;
+  public availableRoles$: Observable<string[]>;
   public errorMessage: string;
 
   private userListStateSubscription: Subscription;
@@ -38,6 +39,8 @@ export class UserListComponent implements OnInit, OnDestroy {
           data: users
         }
     }));
+
+    this.availableRoles$ = this.userListFacade.availableRoles$;
   }
 
   public onChange(user: AppUser): void {

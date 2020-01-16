@@ -12,11 +12,13 @@ import {
   UpdateUserRoleFail,
   InviteUser,
   InviteUserSuccess,
-  InviteUserFail
+  InviteUserFail,
+  FetchRolesFail
 } from './actions';
 import { AddUsersEntityAction, UpdateUserRoleEntityAction } from 'src/app/store/user/action';
 import { catchError, switchMap, map } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
+import { FetchRoles } from 'src/app/store/role/actions';
 
 @Injectable()
 export class UserListEffect {
@@ -41,7 +43,7 @@ export class UserListEffect {
         action.payload.accessLevel
       )),
       switchMap(user => [new UpdateUserRoleSuccess(), new UpdateUserRoleEntityAction({ user })]),
-      catchError(e => of(new UpdateUserRoleFail({errorMessage: e})))
+      catchError(e => of(new UpdateUserRoleFail({ errorMessage: e })))
     );
 
   @Effect()
@@ -55,13 +57,15 @@ export class UserListEffect {
       map((res) => {
         return new InviteUserSuccess({ userEmail: res[1] })
       }),
-      catchError(e => of(new InviteUserFail({errorMessage: e})))
+      catchError(e => of(new InviteUserFail({ errorMessage: e })))
     );
 
-    @Effect()
-    FetchAvailableRoles: Observable<any> = this.actions
-      .pipe(
-        ofType(UserListActionTypes.FETCH_AVAILABLE_USER_ROLES),
-        
-      )
+  @Effect()
+  FetchAvailableRoles: Observable<any> = this.actions
+    .pipe(
+      ofType(UserListActionTypes.FETCH_AVAILABLE_USER_ROLES),
+      switchMap(action => this.userService.fetchAvailableRoles()),
+      switchMap((rolesArray) => [new FetchRoles({ role: { accessLevels: rolesArray } })]),
+      catchError(e => of(new FetchRolesFail({ errorMessage: e })))
+    )
 }

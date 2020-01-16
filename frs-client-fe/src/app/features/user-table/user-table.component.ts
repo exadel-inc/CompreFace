@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TableComponent } from '../table/table.component';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-table',
@@ -8,13 +9,5 @@ import { TableComponent } from '../table/table.component';
 })
 export class UserTableComponent extends TableComponent implements OnInit {
   public availableRoles: string[];
-
-  ngOnInit() {
-    // TODO: Load roles from server
-    this.availableRoles = [
-      "OWNER",
-      "ADMINISTRATOR",
-      "USER"
-    ];
-  }
+  @Input() availableRoles$: Observable<string[]>;
 }

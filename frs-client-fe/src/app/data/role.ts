@@ -1,3 +1,4 @@
 export interface Role {
-  accessLevels: string[]
+  id: number;
+  accessLevels: string[];
 }

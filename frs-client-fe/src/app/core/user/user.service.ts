@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { AppUser } from 'src/app/data/appUser';
 import { environment } from '../../../environments/environment';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -24,7 +23,7 @@ export class UserService {
     return this.http.post<{message: string}>(`${environment.apiUrl}org/${organizationId}/invite`, { role, userEmail });
   }
 
-  public fetchAvailableRoles(organizationId: string): Observable<any> {
-    
+  public fetchAvailableRoles(): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiUrl}roles`);
   }
 }

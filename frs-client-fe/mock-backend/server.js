@@ -184,6 +184,11 @@ app.post('/org/:orgId/invite', auth, (req, res) => {
   }
 });
 
+app.get('/roles', auth, (req, res) => {
+  res.send(mockData.roles);
+});
+
+
 app.get('/user/me', auth, (req, res) => {
   res.send(user);
 });

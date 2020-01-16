@@ -1,7 +1,7 @@
 import {
   getSelectedOrganizationId,
-  SelectSelectedOrganization,
-  SelectUserRollForSelectedOrganization
+  selectSelectedOrganization,
+  selectUserRollForSelectedOrganization
 } from "./selectors";
 
 describe('OrganizationSelectors', () => {
@@ -12,9 +12,9 @@ describe('OrganizationSelectors', () => {
 
   it('SelectSelectedOrganization', () => {
     const org = [{id: 1, name: 'name1'}, {id: 2, name: 'name2'}];
-    expect(SelectSelectedOrganization.projector(org, 1)).toEqual({id: 1, name: 'name1'});
-    expect(SelectSelectedOrganization.projector(org, 2)).toEqual({id: 2, name: 'name2'});
-    expect(SelectSelectedOrganization.projector(org, 0)).toBeFalsy();
+    expect(selectSelectedOrganization.projector(org, 1)).toEqual({id: 1, name: 'name1'});
+    expect(selectSelectedOrganization.projector(org, 2)).toEqual({id: 2, name: 'name2'});
+    expect(selectSelectedOrganization.projector(org, 0)).toBeFalsy();
   });
 
   it('SelectUserRollForSelectedOrganization', () => {
@@ -26,8 +26,8 @@ describe('OrganizationSelectors', () => {
         {userId: 2, role: 'OWNER'},
       ]
     };
-    expect(SelectUserRollForSelectedOrganization.projector(org, 1)).toBe('ADMIN');
-    expect(SelectUserRollForSelectedOrganization.projector(org, 2)).toBe('OWNER');
-    expect(SelectUserRollForSelectedOrganization.projector(org, 0)).toBeFalsy();
+    expect(selectUserRollForSelectedOrganization.projector(org, 1)).toBe('ADMIN');
+    expect(selectUserRollForSelectedOrganization.projector(org, 2)).toBe('OWNER');
+    expect(selectUserRollForSelectedOrganization.projector(org, 0)).toBeFalsy();
   });
 });

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
 import {
   getSelectedOrganizationId,
-  SelectUserRollForSelectedOrganization
+  selectUserRollForSelectedOrganization
 } from "../../store/organization/selectors";
 import {Store} from "@ngrx/store";
 import {Observable, Subscription} from "rxjs";
@@ -25,7 +25,7 @@ export class OrganizationHeaderFacade implements IFacade{
 
   constructor(private organizationEnService: OrganizationEnService, private store: Store<AppState>, private router: Router) {
     this.organization$ = this.organizationEnService.entities$;
-    this.userRole$ = this.store.select(SelectUserRollForSelectedOrganization);
+    this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
 
     this.selectedId$ = this.store.select(getSelectedOrganizationId);
     this.user$ = this.store.select(selectUserInfoState);

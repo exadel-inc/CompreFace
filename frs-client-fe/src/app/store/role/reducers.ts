@@ -8,13 +8,9 @@ export const initialState: EntityState<Role> = roleAdapter.getInitialState();
 export function RoleReducer(state = initialState, action: RoleEntityActionType): EntityState<Role> {
   switch(action.type) {
     case RoleEntityActionList.FETCH_ROLES: {
-      return roleAdapter.addOne(action.payload.role, state);
-    }
-
-    case RoleEntityActionList.UPDATE_ROLES: {
       const newState = roleAdapter.removeAll(state);
 
-      return roleAdapter.addOne(action.payload.role, newState);
+      return roleAdapter.addOne({ id: 0, accessLevels: action.payload.role.accessLevels }, newState);
     }
 
     default:

@@ -80,9 +80,7 @@ export class InviteUserFail implements Action {
 
 export class FetchRoles implements Action {
   readonly type = UserListActionTypes.FETCH_AVAILABLE_USER_ROLES;
-  constructor(public payload: {
-    organizationId: string;
-  }) {}
+  constructor() {}
 }
 
 export class FetchRolesSuccess implements Action {
