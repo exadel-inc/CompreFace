@@ -37,13 +37,13 @@ export class UserListFacade implements IFacade {
   }
 
   public loadUsers(): void {
-    this.store.dispatch(new FetchUsers({
+    this.store.dispatch(FetchUsers({
       organizationId: this.selectedOrganization
     }));
   }
 
   public updateUserRole(id: string, accessLevel: string): void {
-    this.store.dispatch(new UpdateUserRole({
+    this.store.dispatch(UpdateUserRole({
       organizationId: this.selectedOrganization,
       id,
       accessLevel
@@ -51,7 +51,7 @@ export class UserListFacade implements IFacade {
   }
 
   public inviteUser(userEmail: string): void {
-    this.store.dispatch(new InviteUser({
+    this.store.dispatch(InviteUser({
       userEmail,
       organizationId: this.selectedOrganization,
       accessLevel: 'USER'

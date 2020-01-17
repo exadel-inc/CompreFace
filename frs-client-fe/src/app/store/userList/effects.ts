@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { UserService } from 'src/app/core/user/user.service';
-import { Observable, of, forkJoin } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
 import {
-  UserListActionTypes,
   FetchUsers,
   FetchUsersSuccess,
   FetchUsersFail,
@@ -23,38 +22,38 @@ export class UserListEffect {
   constructor(private actions: Actions, private userService: UserService) { }
 
   @Effect()
-  fetchUserList: Observable<AddUsersEntityAction | FetchUsersSuccess | FetchUsersFail> =
+  fetchUserList =
     this.actions.pipe(
-      ofType(UserListActionTypes.FETCH_USERS),
-      switchMap((action: FetchUsers) => this.userService.getAll(action.payload.organizationId)),
-      switchMap((users: AppUser[]) => [new FetchUsersSuccess(), new AddUsersEntityAction({ users: users })]),
-      catchError(e => of(new FetchUsersFail({ errorMessage: e })))
+      ofType(FetchUsers),
+      switchMap((action) => this.userService.getAll(action.organizationId)),
+      switchMap((users: AppUser[]) => [FetchUsersSuccess({}), new AddUsersEntityAction({ users: users })]),
+      catchError(e => of(FetchUsersFail({ errorMessage: e })))
     );
 
   @Effect()
-  UpdateUserRole: Observable<UpdateUserRoleEntityAction | UpdateUserRoleSuccess | UpdateUserRoleFail> =
+  UpdateUserRole =
     this.actions.pipe(
-      ofType(UserListActionTypes.UPDATE_USER_ROLE),
-      switchMap((action: UpdateUserRole) => this.userService.updateRole(
-        action.payload.organizationId,
-        action.payload.id,
-        action.payload.accessLevel
+      ofType(UpdateUserRole),
+      switchMap((action) => this.userService.updateRole(
+        action.organizationId,
+        action.id,
+        action.accessLevel
       )),
-      switchMap(user => [new UpdateUserRoleSuccess(), new UpdateUserRoleEntityAction({ user })]),
-      catchError(e => of(new UpdateUserRoleFail({errorMessage: e})))
+      switchMap(user => [UpdateUserRoleSuccess({}), new UpdateUserRoleEntityAction({ user })]),
+      catchError(e => of(UpdateUserRoleFail({errorMessage: e})))
     );
 
   @Effect()
-  InviteUser: Observable<InviteUserSuccess | InviteUserFail> =
+  InviteUser =
     this.actions.pipe(
-      ofType(UserListActionTypes.INVITE_USER),
-      switchMap((action: InviteUser) => forkJoin([
-        this.userService.inviteUser(action.payload.organizationId, action.payload.accessLevel, action.payload.userEmail),
-        of(action.payload.userEmail)])
+      ofType(InviteUser),
+      switchMap((action) => forkJoin([
+        this.userService.inviteUser(action.organizationId, action.accessLevel, action.userEmail),
+        of(action)])
       ),
-      map((res) => {
-        return new InviteUserSuccess({ userEmail: res[1] })
+      switchMap((res) => {
+        return [InviteUserSuccess({ userEmail: res[1].userEmail }), FetchUsers({organizationId: res[1].organizationId})]
       }),
-      catchError(e => of(new InviteUserFail({errorMessage: e})))
+      catchError(e => of(InviteUserFail({errorMessage: e})))
     );
 }
