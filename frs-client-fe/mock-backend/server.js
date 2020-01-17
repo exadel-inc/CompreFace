@@ -177,11 +177,13 @@ app.post('/org/:orgId/role', auth, (req, res) => {
 });
 
 app.post('/org/:orgId/invite', auth, (req, res) => {
+  const organizationId = req.params.orgId;
   const { role, userEmail } = req.body;
 
   if (userEmail && role) {
     mockData.users.push({
       id: mockData.users.length,
+      organizationId: organizationId,
       firstName: userEmail,
       lastName: userEmail,
       accessLevel: role
