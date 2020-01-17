@@ -7,6 +7,7 @@ import {Observable, Subscription} from "rxjs";
 import { ROUTERS_URL } from "../../data/routers-url.variable";
 import { SignUp } from "../../store/auth/action";
 import { selectAuthState } from "../../store/auth/selectors";
+import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -37,7 +38,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.form = new FormGroup({
       username: new FormControl(),
-      email: new FormControl(null, [Validators.required, Validators.pattern(this.EMAIL_REGEX)]),
+      email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
       password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
       confirmPassword: new FormControl(null, [
         Validators.required,
