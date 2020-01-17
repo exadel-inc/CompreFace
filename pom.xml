@@ -108,6 +108,11 @@
                 <version>${spring.boot.version}</version>
               </path>
             </annotationProcessorPaths>
+            <compilerArgs>
+              <compilerArg>
+                -Amapstruct.defaultComponentModel=spring
+              </compilerArg>
+            </compilerArgs>
           </configuration>
         </plugin>
         <plugin>
