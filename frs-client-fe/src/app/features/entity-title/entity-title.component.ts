@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Organization} from "../../data/organization";
 import {Observable} from "rxjs";
+import {Application} from "../../data/application";
 
 @Component({
   selector: 'app-entity-title',
@@ -12,7 +13,7 @@ export class EntityTitleComponent implements OnInit {
   editing = false;
   newName: string;
   selectedId: string;
-  @Input() options: [Organization];
+  @Input() options: [Organization | Application];
   @Input() renameDisable: boolean;
   @Input() selectId$: Observable<any>;
   @Input() entityName: string;

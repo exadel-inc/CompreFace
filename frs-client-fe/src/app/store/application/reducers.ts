@@ -1,12 +1,13 @@
 import { Application } from 'src/app/data/application';
-import { ApplicationEntityActionType, ApplicationEntityActionList } from './action';
+import {addApplication, addApplications, setSelectedId, updateApplication} from './action';
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
+import {ActionReducer, createReducer, on} from "@ngrx/store";
 
 export const applicationAdapter: EntityAdapter<Application> = createEntityAdapter<Application>();
 
 export interface AppEntityState extends EntityState<Application> {
   // additional entities state properties
-  selectedAppId: number | null;
+  selectedAppId: string | null;
 }
 
 export const initialState: AppEntityState = applicationAdapter.getInitialState({
@@ -14,21 +15,21 @@ export const initialState: AppEntityState = applicationAdapter.getInitialState({
   selectedAppId: null,
 });
 
-export function ApplicationReducer(state = initialState, action: ApplicationEntityActionType): AppEntityState {
-  switch(action.type) {
-    case ApplicationEntityActionList.ADD_APPLICATION: {
-      return applicationAdapter.addOne(action.payload.application, state);
-    }
-
-    case ApplicationEntityActionList.ADD_APPLICATIONS: {
-      return applicationAdapter.addAll(action.payload.applications, state);
-    }
-
-    default: {
-      return state;
-    }
-  }
-}
+export const ApplicationReducer:ActionReducer<AppEntityState> = createReducer(
+  initialState,
+  on(addApplication, (state, { application }) => {
+    return applicationAdapter.addOne(application, state);
+  }),
+  on(addApplications, (state, { applications }) => {
+    return applicationAdapter.addAll(applications, state);
+  }),
+  on(updateApplication, (state, { application }) => {
+    return applicationAdapter.updateOne({ id: application.id, changes: application }, state);
+  }),
+  on(setSelectedId, (state, { selectedAppId }) => {
+    return { ...state, selectedAppId };
+  })
+);
 
 export const getSelectedAppId = (state: AppEntityState) => state.selectedAppId;
 

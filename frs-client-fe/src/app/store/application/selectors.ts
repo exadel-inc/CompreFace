@@ -3,6 +3,7 @@ import {applicationAdapter, selectAppEntities} from './reducers';
 import * as fromApp from './reducers';
 import { Application } from 'src/app/data/application';
 import { EntityState } from '@ngrx/entity';
+import {selectUserId} from "../userInfo/selectors";
 
 export const selectApplicationEntityState = createFeatureSelector<EntityState<Application>>('application');
 const { selectEntities, selectIds, selectAll } = applicationAdapter.getSelectors();
@@ -16,7 +17,16 @@ export const selectCurrentAppId = createSelector(
 );
 
 export const selectCurrentApp = createSelector(
-  selectAppEntities,
+  selectApplicationEntityState,
   selectCurrentAppId,
-  (appEntities, appId) => appEntities[appId]
+  (apps, selectedId) => apps.entities ? apps.entities[selectedId] : null
+);
+
+export const SelectUserRollForSelectedApp= createSelector(
+  selectCurrentApp,
+  selectUserId,
+  (app, userId) => {
+    const role = app ? app.userAppRoles.find(role => role.userId === userId) : null;
+    return role ? role.role : null;
+  }
 );
