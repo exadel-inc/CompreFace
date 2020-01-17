@@ -1,4 +1,15 @@
-import { UserListActions, UserListActionTypes } from './actions';
+import {
+  FetchUsers,
+  FetchUsersSuccess,
+  FetchUsersFail,
+  UpdateUserRole,
+  UpdateUserRoleSuccess,
+  UpdateUserRoleFail,
+  InviteUser,
+  InviteUserSuccess,
+  InviteUserFail
+} from './actions';
+import { createReducer, on, ActionReducer } from '@ngrx/store';
 
 export interface UserListState {
   isLoading: boolean;
@@ -6,6 +17,7 @@ export interface UserListState {
   selectedFilter: string;
   errorMessage: string;
   searchTerm: string;
+  invitedEmail: string;
 }
 
 const initialState: UserListState = {
@@ -13,57 +25,52 @@ const initialState: UserListState = {
   filters: [],
   selectedFilter: null,
   errorMessage: null,
-  searchTerm: null
+  searchTerm: null,
+  invitedEmail: null
 }
 
-export function UserListReducer(state = initialState, action: UserListActions): UserListState {
-  switch (action.type) {
-    case UserListActionTypes.FETCH_USERS: {
-      return {
-        ...state,
-        errorMessage: null,
-        isLoading: true
-      }
-    }
-
-    case UserListActionTypes.FETCH_USERS_SUCCESS: {
-      return {
-        ...state,
-        isLoading: false
-      }
-    }
-
-    case UserListActionTypes.FETCH_USERS_FAIL: {
-      return {
-        ...state,
-        errorMessage: action.payload.errorMessage
-      }
-    }
-
-    case UserListActionTypes.UPDATE_USER_ROLE: {
-      return {
-        ...state,
-        errorMessage: null,
-        isLoading: true
-      }
-    }
-
-    case UserListActionTypes.UPDATE_USER_ROLE_SUCCESS: {
-      return {
-        ...state,
-        isLoading: false
-      }
-    }
-
-    case UserListActionTypes.UPDATE_USER_ROLE_FAIL: {
-      return {
-        ...state,
-        errorMessage: action.payload.errorMessage
-      }
-    }
-
-    default: {
-      return state;
-    }
-  }
-}
+export const UserListReducer: ActionReducer<UserListState> = createReducer(
+  initialState,
+  on(FetchUsers, (state) => ({
+    ...state,
+    invitedEmail: null,
+    errorMessage: null,
+    isLoading: true
+  })),
+  on(FetchUsersSuccess, (state) => ({
+    ...state,
+    isLoading: false
+  })),
+  on(FetchUsersFail, (state, { errorMessage }) => ({
+    ...state,
+    errorMessage,
+    isLoading: false
+  })),
+  on(UpdateUserRole, (state) => ({
+    ...state,
+    invitedEmail: null,
+    errorMessage: null,
+    isLoading: true
+  })),
+  on(UpdateUserRoleSuccess, (state) => ({
+    ...state,
+    isLoading: false
+  })),
+  on(UpdateUserRoleFail, (state, { errorMessage }) => ({
+    ...state,
+    errorMessage
+  })),
+  on(InviteUser, (state) => ({
+    ...state,
+    invitedEmail: null,
+    errorMessage: null
+  })),
+  on(InviteUserSuccess, (state, { userEmail }) => ({
+    ...state,
+    invitedEmail: userEmail
+  })),
+  on(InviteUserFail, (state, { errorMessage }) => ({
+    ...state,
+    errorMessage
+  }))
+);

@@ -32,12 +32,14 @@ import { ApplicationListModule } from './features/application-list/application-l
 import { UserListModule } from './features/user-list/user-list.module';
 import { UserListEffect } from './store/userList/effects';
 import { UserStoreModule } from './store/user/user.module';
+import { AlertComponent } from './features/alert/alert.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
-    CreateDialogComponent
+    CreateDialogComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +85,6 @@ import { UserStoreModule } from './store/user/user.module';
     { provide: RouterStateSerializer, useClass: AppSerializer },
   ],
   bootstrap: [AppComponent],
-  entryComponents: [CreateDialogComponent]
+  entryComponents: [CreateDialogComponent, AlertComponent]
 })
 export class AppModule { }
