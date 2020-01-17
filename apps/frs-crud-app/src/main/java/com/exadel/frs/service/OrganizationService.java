@@ -22,12 +22,6 @@ public class OrganizationService {
     private final OrganizationRepository organizationRepository;
     private final UserService userService;
 
-    public Organization getOrganization(final Long organizationId) {
-        return organizationRepository
-                .findById(organizationId)
-                .orElseThrow(() -> new OrganizationNotFoundException(organizationId));
-    }
-
     public Organization getOrganization(final String organizationGuid) {
         return organizationRepository
                 .findByGuid(organizationGuid)

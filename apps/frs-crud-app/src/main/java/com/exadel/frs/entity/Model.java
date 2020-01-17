@@ -26,7 +26,6 @@ public class Model {
     private String apiKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "app_id")
     private App app;
 
     @ToString.Exclude

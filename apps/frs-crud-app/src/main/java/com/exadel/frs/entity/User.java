@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Entity
-@Table(schema = "public")
+@Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

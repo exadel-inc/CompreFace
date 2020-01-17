@@ -11,7 +11,7 @@ import org.mapstruct.Named;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface MlModelMapper {
 
     @Mapping(source = "guid", target = "id")

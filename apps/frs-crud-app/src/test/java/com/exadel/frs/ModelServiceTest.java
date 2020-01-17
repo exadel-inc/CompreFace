@@ -421,42 +421,6 @@ class ModelServiceTest {
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> modelService.updateModel(modelUpdateDto, MODEL_GUID, USER_ID));
     }
 
-//    @ParameterizedTest
-//    @MethodSource("writeRoles")
-//    void failUpdateModelOrganizationMismatch(OrganizationRole organizationRole) {
-//        String newModelName = "new_name";
-//        Long organizationId1 = 1L;
-//        Long organizationId2 = 2L;
-//
-//        User user = user(USER_ID);
-//
-//        Organization organization1 = organization(organizationId1);
-//        organization1.addUserOrganizationRole(user, organizationRole);
-//
-//        App app1 = App.builder()
-//                .id(APPLICATION_ID)
-//                .guid(APPLICATION_GUID)
-//                .organization(organization1)
-//                .build();
-//
-//        Model repoModel = Model.builder()
-//                .guid(MODEL_GUID)
-//                .app(app1)
-//                .build();
-//
-//        Organization organization2 = organization(organizationId2);
-//        App app2 = App.builder()
-//                .id(APPLICATION_ID)
-//                .guid(APPLICATION_GUID)
-//                .organization(organization2)
-//                .build();
-//
-//        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
-//        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app2);
-//
-//        Assertions.assertThrows(OrganizationMismatchException.class, () -> modelService.updateModel(MODEL_GUID, newModelName, USER_ID));
-//    }
-
     @ParameterizedTest
     @MethodSource("writeRoles")
     void successRegenerateGuid(OrganizationRole organizationRole) {

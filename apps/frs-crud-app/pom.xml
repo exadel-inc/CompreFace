@@ -7,7 +7,7 @@
         <groupId>com.exadel</groupId>
         <artifactId>apps</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../</relativePath>
     </parent>
 
     <artifactId>frs-crud-app</artifactId>

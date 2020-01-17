@@ -7,7 +7,7 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = UserOrgRoleMapper.class)
+@Mapper(uses = UserOrgRoleMapper.class)
 public interface OrganizationMapper {
 
     @Mapping(source = "guid", target = "id")

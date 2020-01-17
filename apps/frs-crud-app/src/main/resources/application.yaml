@@ -14,6 +14,7 @@ spring:
   jpa:
     properties:
       hibernate:
+        default_schema: public
         jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
         format_sql: true
     hibernate:

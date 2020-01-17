@@ -96,19 +96,6 @@ public class ModelService {
             verifyNameIsUnique(modelUpdateDto.getName(), repoModel.getApp().getId());
             repoModel.setName(modelUpdateDto.getName());
         }
-//        if (model.getAppModelAccess() != null) {
-//            Long repoModelOrganizationId = repoModel.getApp().getOrganization().getId();
-//            if (repoModel.getAppModelAccess() != null) {
-//                repoModel.getAppModelAccess().clear();
-//            }
-//            model.getAppModelAccess().forEach(appModel -> {
-//                App app = appService.getApp(appModel.getApp().getGuid());
-//                if (!repoModelOrganizationId.equals(app.getOrganization().getId())) {
-//                    throw new OrganizationMismatchException();
-//                }
-//                repoModel.addAppModelAccess(app, appModel.getAccessType());
-//            });
-//        }
         modelRepository.save(repoModel);
     }
 

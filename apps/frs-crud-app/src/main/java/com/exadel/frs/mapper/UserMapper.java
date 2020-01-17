@@ -6,7 +6,7 @@ import com.exadel.frs.entity.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", uses = {UserOrgRoleMapper.class, UserAppRoleMapper.class})
+@Mapper(uses = {UserOrgRoleMapper.class, UserAppRoleMapper.class})
 public interface UserMapper {
 
     @Mapping(source = "guid", target = "id")

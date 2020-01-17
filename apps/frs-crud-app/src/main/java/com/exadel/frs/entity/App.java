@@ -26,7 +26,6 @@ public class App {
     private String apiKey;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id")
     private Organization organization;
 
     @ToString.Exclude
