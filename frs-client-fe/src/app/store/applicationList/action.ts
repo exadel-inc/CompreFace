@@ -7,7 +7,9 @@ export enum ApplicationListTypes {
   CREATE_APPLICATION = '[Application List] Create Application',
   UPDATE_APPLICATION = '[Application List] Update Application',
   CREATE_APPLICATION_SUCCESS = '[Application List] Create Application Success',
-  CREATE_APPLICATION_FAIL = '[Application List] Create Application Fail'
+  CREATE_APPLICATION_FAIL = '[Application List] Create Application Fail',
+  UPDATE_APPLICATION_SUCCESS = '[Application List] Update Application Success',
+  UPDATE_APPLICATION_FAIL = '[Application List] Update Application Fail'
 }
 
 export class FetchApplicationList implements Action {
@@ -58,6 +60,18 @@ export class CreateApplicationFail implements Action {
   }) {}
 }
 
+export class UpdateApplicationSuccess implements Action {
+  readonly type = ApplicationListTypes.UPDATE_APPLICATION_SUCCESS;
+  constructor() {}
+}
+
+export class UpdateApplicationFail implements Action {
+  readonly type = ApplicationListTypes.UPDATE_APPLICATION_FAIL;
+  constructor(public payload: {
+    errorMessage: string
+  }) {}
+}
+
 export type ApplicationListActions =
   | FetchApplicationList
   | FetchApplicationListSuccess
@@ -65,4 +79,6 @@ export type ApplicationListActions =
   | CreateApplication
   | UpdateApplication
   | CreateApplicationSuccess
-  | CreateApplicationFail;
+  | CreateApplicationFail
+  | UpdateApplicationSuccess
+  | UpdateApplicationFail

@@ -5,14 +5,14 @@ export interface ApplicationListState {
   filters: any[];
   selectedFilter: string;
   errorMessage: string;
-};
+}
 
 export const initialState: ApplicationListState = {
   isLoading: false,
   filters: [],
   selectedFilter: null,
   errorMessage: null
-}
+};
 
 export function ApplicationListReducer(state = initialState, action: ApplicationListActions): ApplicationListState {
   switch (action.type) {
@@ -61,6 +61,21 @@ export function ApplicationListReducer(state = initialState, action: Application
     }
 
     case ApplicationListTypes.CREATE_APPLICATION_FAIL: {
+      return {
+        ...state,
+        errorMessage: action.payload.errorMessage,
+        isLoading: false
+      }
+    }
+
+    case ApplicationListTypes.UPDATE_APPLICATION_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false
+      }
+    }
+
+    case ApplicationListTypes.UPDATE_APPLICATION_FAIL: {
       return {
         ...state,
         errorMessage: action.payload.errorMessage,

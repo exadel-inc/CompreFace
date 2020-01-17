@@ -9,7 +9,10 @@ import {
   FetchApplicationListFail,
   CreateApplication,
   CreateApplicationSuccess,
-  CreateApplicationFail, UpdateApplication
+  CreateApplicationFail,
+  UpdateApplication,
+  UpdateApplicationSuccess,
+  UpdateApplicationFail
 } from './action';
 import { ApplicationService } from 'src/app/core/application/application.service';
 import {addApplication, addApplications, updateApplication} from "../application/action";
@@ -55,10 +58,10 @@ export class ApplicationListEffect {
       return this.applicationService.put(action.payload)
         .pipe(
           switchMap((app) => [
-            new CreateApplicationSuccess(),
+            new UpdateApplicationSuccess(),
             updateApplication({ application: app })
           ]),
-          catchError(error => of(new CreateApplicationFail({ errorMessage: error })))
+          catchError(error => of(new UpdateApplicationFail({ errorMessage: error })))
         )
     })
   )

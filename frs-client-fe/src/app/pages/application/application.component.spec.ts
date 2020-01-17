@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ApplicationComponent } from './application.component';
+import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
+import {ApplicationService} from "./application.service";
 
 describe('ApplicationComponent', () => {
   let component: ApplicationComponent;
@@ -8,7 +9,14 @@ describe('ApplicationComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApplicationComponent ]
+      declarations: [ ApplicationComponent ],
+      providers: [
+        {provide: ApplicationService, useValue: {
+            initUrlBindingStreams: () => {},
+            unSubscribe: () => {},
+          }}
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
   }));

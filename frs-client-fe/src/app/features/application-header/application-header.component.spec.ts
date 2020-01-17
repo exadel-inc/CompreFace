@@ -4,8 +4,8 @@ import {CommonModule} from "@angular/common";
 import {RouterModule} from "@angular/router";
 import {MatButtonModule} from "@angular/material/button";
 import {EntityTitleModule} from "../entity-title/entity-title.module";
-import {Subject} from "rxjs";
 import {ApplicationHeaderFacade} from "./application-header.facade";
+import {SpinnerModule} from "../spinner/spinner.module";
 
 describe('ApplicationHeaderComponent', () => {
   let component: ApplicationHeaderComponent;
@@ -18,11 +18,9 @@ describe('ApplicationHeaderComponent', () => {
         {
           provide: ApplicationHeaderFacade,
           useValue: {
-            select: () => {},
             rename: () => {},
-            organization$: new Subject(),
-            userRole$: new Subject(),
-            selectedId$: new Subject(),
+            initSubscriptions: () => {},
+            unsubscribe: () => {},
           }
         },
       ],
@@ -30,7 +28,8 @@ describe('ApplicationHeaderComponent', () => {
         CommonModule,
         RouterModule,
         MatButtonModule,
-        EntityTitleModule
+        EntityTitleModule,
+        SpinnerModule
       ]
     })
     .compileComponents();
