@@ -1,12 +1,24 @@
-.organization-header
+@import 'media.sass'
+
+.grid-container
+  grid-template-columns: 1fr 1fr
+  align-items: center
+  grid-gap: 2rem
+
+.organization-header_left-coll
   display: flex
-  width: 80%
-  margin: 20px auto
+  flex-direction: row
+  justify-content: space-between
 
-  &_left-coll
-    width: 80%
+.organization-header_right-coll
+  text-align: right
+.mat-raised-button
+  margin: 15px 0
 
-  &_right-coll
-    display: flex
-    align-items: center
-    justify-content: right
+@include mobile
+  .grid-container
+    grid-template-columns: 1fr
+
+@include tablet-portrait
+  .grid-container
+    grid-template-columns: 1fr

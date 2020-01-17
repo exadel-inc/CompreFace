@@ -50,6 +50,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
 
   public onCreateNewApp(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
+      width: '300px',
       data: {
         entityType: 'application',
         name: ''

@@ -1,4 +1,4 @@
-<div class="organization-header">
+<div class="organization-header grid-container">
   <div class="organization-header_left-coll">
     <div *ngIf="organizations$ | async as organizations">
       <app-entity-title
@@ -9,7 +9,6 @@
         [renameDisable]="false"
         (rename)="rename($event)"></app-entity-title>
     </div>
-
     <button mat-raised-button
             type="submit"
             color="primary"
@@ -17,7 +16,6 @@
     >Create New Organization
     </button>
   </div>
-
   <div class="organization-header_right-coll" *ngIf="userRole$ | async as userRole">
     <div class="your_role">Your role: {{userRole}}</div>
   </div>

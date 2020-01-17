@@ -1,28 +1,29 @@
 
-<mat-toolbar color="primary">
-  <mat-toolbar-row>
-    <span>My First App</span>
-    <span class="example-fill-remaining-space"></span>
-    <span class="align-center"></span>
-    <span class="example-spacer"></span>
-    <button mat-button (click)="logout()">Logout</button>
-    <button mat-button>Contact</button>
-    <button mat-icon-button [matMenuTriggerFor]="menu">
-      <mat-icon>more_vert</mat-icon>
-    </button>
-    <mat-menu #menu="matMenu">
-      <button mat-menu-item>
-        <mat-icon>dialpad</mat-icon>
-        <span>Redial</span>
-      </button>
-      <button mat-menu-item disabled>
-        <mat-icon>voicemail</mat-icon>
-        <span>Check voicemail</span>
-      </button>
-      <button mat-menu-item>
-        <mat-icon>notifications_off</mat-icon>
-        <span>Disable alerts</span>
-      </button>
-    </mat-menu>
+<mat-toolbar>
+  <mat-toolbar-row class="container">
+    <span>Organization page</span>
+    <span>
+      <button mat-flat-button>User Name</button>
+      <button mat-flat-button (click)="logout()">Logout</button>
+
+      <!--<button mat-icon-button [matMenuTriggerFor]="menu">-->
+        <!--<mat-icon>more_vert</mat-icon>-->
+      <!--</button>-->
+    </span>
+    <!--<span class="example-spacer"></span>-->
+    <!--<mat-menu #menu="matMenu">-->
+      <!--<button mat-menu-item>-->
+        <!--<mat-icon>dialpad</mat-icon>-->
+        <!--<span>Redial</span>-->
+      <!--</button>-->
+      <!--<button mat-menu-item disabled>-->
+        <!--<mat-icon>voicemail</mat-icon>-->
+        <!--<span>Check voicemail</span>-->
+      <!--</button>-->
+      <!--<button mat-menu-item>-->
+        <!--<mat-icon>notifications_off</mat-icon>-->
+        <!--<span>Disable alerts</span>-->
+      <!--</button>-->
+    <!--</mat-menu>-->
   </mat-toolbar-row>
 </mat-toolbar>

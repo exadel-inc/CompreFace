@@ -1,1 +1,45 @@
 /* You can add global styles to this file, and also import other style files */
+
+@import 'media.sass'
+@import 'colors.sass'
+
+.container
+  width: 100%
+  padding-right: 16px
+  padding-left: 16px
+  margin-right: auto
+  margin-left: auto
+  flex-wrap: wrap
+
+.grid-container
+  display: grid
+
+mat-card
+  box-sizing: border-box
+
+.mat-raised-button
+  &.mat-primary
+    background-color: $primary
+
+.btn-block
+  width: 100%
+
+.mat-table
+  .mat-row
+    height: 58px
+
+@include mobile
+  .container
+    max-width: 540px
+
+@include tablet-portrait
+  .container
+    max-width: 720px
+
+@include tablet-landscape
+  .container
+    max-width: 960px
+
+@include desktop
+  .container
+    max-width: 1140px

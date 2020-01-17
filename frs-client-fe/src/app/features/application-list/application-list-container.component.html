@@ -4,5 +4,8 @@
   <app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (onChange)="onClick($event)"></app-table>
 </div>
 <div class="add-application-button-container">
-  <button (click)="onCreateNewApp()">Create new application</button>
+  <button mat-raised-button
+          class="btn-block"
+          color="primary"
+          (click)="onCreateNewApp()">Create new application</button>
 </div>
