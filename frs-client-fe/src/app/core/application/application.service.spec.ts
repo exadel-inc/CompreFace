@@ -63,4 +63,19 @@ describe('ApplicationService', () => {
       organizationId: 'organizationId'
     });
   });
+
+  it('should rename application', () => {
+    service.put({ name: 'new name', organizationId: 'orgId', appId: 'appId'}).subscribe((data: Application) => {
+      expect(data.name).toBe('new app');
+    });
+
+    const req = httpMock.expectOne(`${environment.apiUrl}org/orgId/app/appId`);
+    expect(req.request.method).toBe('PUT');
+    req.flush({
+      name: 'new app',
+      id: '2',
+      owner: 'owner',
+      organizationId: 'orgId'
+    });
+  });
 });

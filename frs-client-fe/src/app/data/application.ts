@@ -7,4 +7,5 @@ export interface Application {
     lastName: string
   };
   organizationId: string;
+  userAppRoles?: [any]
 }

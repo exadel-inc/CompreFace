@@ -1,29 +1,7 @@
-import { Action } from '@ngrx/store';
+import {createAction, props} from '@ngrx/store';
 import { Application } from 'src/app/data/application';
 
-export enum ApplicationEntityActionList {
-  ADD_APPLICATION = '[Application/API] Add Application',
-  ADD_APPLICATIONS = '[Application/API] Add Applications',
-  REMOVE_APPLICATION = '[Application/API] Remove Application',
-  REMOVE_APPLICATIONS = '[Application/API] Remove Applications',
-  UPDATE_APPLICATION = '[Application/API] Update Application'
-}
-
-export class AddApplicationEntityAction implements Action {
-  readonly type = ApplicationEntityActionList.ADD_APPLICATION;
-  constructor(public payload: {
-    application: Application
-  }) {}
-}
-
-export class AddApplicationsEntityAction implements Action {
-  readonly type = ApplicationEntityActionList.ADD_APPLICATIONS;
-  constructor(public payload: {
-    applications: Application[]
-  }) {}
-}
-
-
-export type ApplicationEntityActionType =
-  | AddApplicationEntityAction
-  | AddApplicationsEntityAction;
+export const addApplication = createAction('[Application/API] Add Application', props<{ application: Application }>());
+export const addApplications = createAction('[Application/API] Add Applications', props<{ applications: Application[] }>());
+export const updateApplication = createAction('[Application/API] Update Applications', props<{ application: Application }>());
+export const setSelectedId = createAction('[Application/API] Set Selected Id Applications', props<{ selectedAppId }>());
