@@ -1,9 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
 export const FetchUsers = createAction('[User List] Fetch Users', props<{ organizationId: string }>());
-  FETCH_AVAILABLE_USER_ROLES = '[User List] Fetch Available User Roles ',
-  FETCH_AVAILABLE_USER_ROLES_SUCCESS = '[User List] Fetch Available User Roles Success',
-  FETCH_AVAILABLE_USER_ROLES_FAIL = '[User List] Fetch Available User Roles Fail'
 
 export const FetchUsersSuccess = createAction('[User List] Fetch Users Success', props());
 
@@ -32,24 +29,9 @@ export const InviteUserSuccess = createAction('[User List] Invite User Success',
 export const InviteUserFail = createAction('[User List] Invite User Fail', props<{
   errorMessage: string;
 }>());
-export class FetchRoles implements Action {
-  readonly type = UserListActionTypes.FETCH_AVAILABLE_USER_ROLES;
-  constructor() {}
-}
 
-export class FetchRolesSuccess implements Action {
-  readonly type = UserListActionTypes.FETCH_AVAILABLE_USER_ROLES_SUCCESS;
-  constructor() {}
-}
+export const FetchAllRoles = createAction('[User List] Fetch Available User Roles', props());
 
-export class FetchRolesFail implements Action {
-  readonly type = UserListActionTypes.FETCH_AVAILABLE_USER_ROLES_FAIL;
-  constructor(public payload: {
-    errorMessage: string;
-  }) {}
-}
-
-  | InviteUserFail
-  | FetchRoles
-  | FetchRolesSuccess
-  | FetchRolesFail;
+export const FetchAllRolesFail = createAction('[User List] Fetch Available User Roles Fail', props<{
+  errorMessage: string;
+}>());

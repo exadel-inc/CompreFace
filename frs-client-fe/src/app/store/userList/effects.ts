@@ -12,7 +12,8 @@ import {
   InviteUser,
   InviteUserSuccess,
   InviteUserFail,
-  FetchRolesFail
+  FetchAllRoles,
+  FetchAllRolesFail
 } from './actions';
 import { AddUsersEntityAction, UpdateUserRoleEntityAction } from 'src/app/store/user/action';
 import { catchError, switchMap, map } from 'rxjs/operators';
@@ -60,11 +61,11 @@ export class UserListEffect {
     );
 
   @Effect()
-  FetchAvailableRoles: Observable<any> = this.actions
+  FetchAvailableRoles = this.actions
     .pipe(
-      ofType(UserListActionTypes.FETCH_AVAILABLE_USER_ROLES),
+      ofType(FetchAllRoles),
       switchMap(action => this.userService.fetchAvailableRoles()),
-      switchMap((rolesArray) => [new FetchRoles({ role: { accessLevels: rolesArray } })]),
-      catchError(e => of(new FetchRolesFail({ errorMessage: e })))
+      switchMap((rolesArray) => [new FetchRoles({ role: { id: 0, accessLevels: rolesArray } })]),
+      catchError(e => of(FetchAllRolesFail({ errorMessage: e })))
     )
 }
