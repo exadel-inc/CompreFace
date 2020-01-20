@@ -24,9 +24,5 @@ export const selectCurrentApp = createSelector(
 
 export const SelectUserRollForSelectedApp= createSelector(
   selectCurrentApp,
-  selectUserId,
-  (app, userId) => {
-    const role = app ? app.userAppRoles.find(role => role.userId === userId) : null;
-    return role ? role.role : null;
-  }
+  app => app ? app.role : null
 );

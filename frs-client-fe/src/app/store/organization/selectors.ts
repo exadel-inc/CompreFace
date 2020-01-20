@@ -21,9 +21,5 @@ export const SelectSelectedOrganization = createSelector(
 
 export const SelectUserRollForSelectedOrganization = createSelector(
   SelectSelectedOrganization,
-  selectUserId,
-  (organization, userId) => {
-    const role = organization ? organization.userOrganizationRoles.find(role => role.userId === userId) : null;
-    return role ? role.role : null;
-  }
+  organization => organization ? organization.role : null
 );
