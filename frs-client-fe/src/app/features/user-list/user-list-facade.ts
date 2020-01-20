@@ -9,7 +9,7 @@ import { selectUsers } from 'src/app/store/user/selectors';
 import { FetchUsers, UpdateUserRole, InviteUser } from 'src/app/store/userList/actions';
 import { selectUserListState } from 'src/app/store/userList/selectors';
 import { UserListState } from 'src/app/store/userList/reducers';
-import { FetchRoles } from 'src/app/store/userList/actions';
+import { FetchAllRoles } from 'src/app/store/userList/actions';
 import { selectAllRoles } from 'src/app/store/role/selectors';
 import { selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
 import { map } from 'rxjs/operators';
@@ -89,7 +89,7 @@ export class UserListFacade implements IFacade {
   }
 
   public loadAvailableRoles(): void {
-    this.store.dispatch(new FetchRoles());
+    this.store.dispatch(FetchAllRoles({}));
   }
 
   public unsubscribe(): void {

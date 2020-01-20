@@ -74,22 +74,3 @@ export const UserListReducer: ActionReducer<UserListState> = createReducer(
     errorMessage
   }))
 );
-
-    case UserListActionTypes.FETCH_AVAILABLE_USER_ROLES: {
-      return {
-        ...state,
-        isLoading: true
-      }
-    }
-
-    case UserListActionTypes.FETCH_AVAILABLE_USER_ROLES_SUCCESS: {
-      return {
-        ...state,
-        isLoading: false
-      }
-    }
-
-    case UserListActionTypes.FETCH_AVAILABLE_USER_ROLES_FAIL: {
-      return {
-        ...state,
-        isLoading: false,
