@@ -10,6 +10,7 @@ import {filter} from "rxjs/operators";
 import {setSelectedId} from "../../store/application/action";
 import {GetUserInfo} from "../../store/userInfo/action";
 import {SetSelectedId} from "../../store/organization/action";
+import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
 
 @Injectable()
 export class ApplicationService {
@@ -21,6 +22,7 @@ export class ApplicationService {
     private router: Router,
     private route: ActivatedRoute,
     private store: Store<AppState>,
+    private organizationEnService: OrganizationEnService
   ) {}
 
   initUrlBindingStreams() {
@@ -47,5 +49,6 @@ export class ApplicationService {
   fetchApps() {
     this.store.dispatch(new FetchApplicationList({organizationId: this.orgId}));
     this.store.dispatch(new GetUserInfo());
+    this.organizationEnService.getAll();
   }
 }
