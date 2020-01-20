@@ -8,5 +8,4 @@ export interface Application {
   };
   role: string
   organizationId: string;
-  userAppRoles?: [any]
 }

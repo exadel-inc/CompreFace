@@ -32,7 +32,8 @@ describe('EntityTitleComponent', () => {
     component = fixture.componentInstance;
     component.options = [{
       id: '',
-      name: 'someName'
+      name: 'someName',
+      role: '',
     }];
     component.selectId$ = new Subject();
     fixture.detectChanges();
