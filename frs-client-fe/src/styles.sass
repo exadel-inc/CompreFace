@@ -26,6 +26,14 @@ mat-card
 .mat-raised-button
   &.mat-primary
     background-color: $primary
+    &:hover
+      background-color: $primary-light
+
+.mat-flat-button
+  &.mat-accent
+    background-color: $green
+    &:hover
+      background-color: lighten($green, 10%)
 
 .btn-block
   width: 100%

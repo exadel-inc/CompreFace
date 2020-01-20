@@ -11,7 +11,6 @@ $desktop-width: 1200px
   @media (min-width: #{$tablet-portrait-width}) and (max-width: #{$tablet-landscape-width - 1px})
     @content
 
-
 @mixin tablet-landscape
   @media (min-width: #{$tablet-landscape-width}) and (max-width: #{$desktop-width - 1px})
   @content
@@ -19,5 +18,3 @@ $desktop-width: 1200px
 @mixin desktop
   @media (min-width: #{$desktop-width})
   @content
-
-
