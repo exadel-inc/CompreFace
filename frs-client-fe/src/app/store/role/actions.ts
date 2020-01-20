@@ -1,25 +1,9 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { Role } from 'src/app/data/role';
 
-export enum RoleEntityActionList {
-  FETCH_ROLES = '[Role/API] Add Roles',
-  UPDATE_ROLES = '[Role/API] Update Roles'
-};
 
-export class FetchRoles implements Action {
-  readonly type = RoleEntityActionList.FETCH_ROLES;
-  constructor(public payload: {
-    role: Role
-  }) {}
-}
+export const SetPendingRoleEntityAction = createAction('[Role/API] Set Pending', props<{isPending: boolean}>());
 
-export class UpdateRoles implements Action {
-  readonly type = RoleEntityActionList.UPDATE_ROLES;
-  constructor(public payload: {
-    role: Role
-  }) {}
-}
+export const FetchRolesEntityAction = createAction('[Role/API] Add Roles', props<{ role: Role }>());
 
-export type RoleEntityActionType =
-  | FetchRoles
-  | UpdateRoles;
+export const UpdateRolesEntityAction = createAction('[Role/API] Update Roles', props<{id: number, role: Role}>());

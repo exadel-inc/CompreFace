@@ -1,25 +1,8 @@
-import { Action } from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { AppUser } from 'src/app/data/appUser';
 
-export enum UserEntityActionList {
-    ADD_USERS = '[User/API] Add Users',
-    UPDATE_ROLE = '[User/API] Update role'
-};
+export const SetPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
 
-export class AddUsersEntityAction implements Action {
-    readonly type = UserEntityActionList.ADD_USERS;
-    constructor(public payload: {
-        users: AppUser[]
-    }) {}
-}
+export const AddUsersEntityAction = createAction('[User/API] Add Users', props<{ users: AppUser[] }>());
 
-export class UpdateUserRoleEntityAction implements Action {
-    readonly type = UserEntityActionList.UPDATE_ROLE;
-    constructor(public payload: {
-        user: AppUser
-    }) {}
-}
-
-export type UserEntityActionType =
-    | AddUsersEntityAction
-    | UpdateUserRoleEntityAction;
+export const UpdateUserRoleEntityAction = createAction('[User/API] Update role', props<{ user: AppUser }>());
