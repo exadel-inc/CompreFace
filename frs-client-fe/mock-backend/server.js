@@ -144,6 +144,15 @@ app.post('/org/:orgId/app', auth, (req, res) => {
   res.status(201).json(app);
 });
 
+app.put('/org/:orgId/app/:appId', auth, (req, res) => {
+  const appId = req.params.appId;
+  const newData = req.body;
+
+  let app = mockData.applications.find(app => app.id === appId);
+  app.name = newData.name;
+  res.send(app);
+});
+
 app.get('/org/:orgId/roles', auth, wait(), (req, res) => {
   const organizationId = req.params.orgId;
   res.status(201).json(mockData.users.filter(user => user.organizationId === organizationId));
@@ -168,11 +177,13 @@ app.post('/org/:orgId/role', auth, (req, res) => {
 });
 
 app.post('/org/:orgId/invite', auth, (req, res) => {
+  const organizationId = req.params.orgId;
   const { role, userEmail } = req.body;
 
   if (userEmail && role) {
     mockData.users.push({
       id: mockData.users.length,
+      organizationId: organizationId,
       firstName: userEmail,
       lastName: userEmail,
       accessLevel: role

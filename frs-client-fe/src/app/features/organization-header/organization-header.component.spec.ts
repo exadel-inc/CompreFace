@@ -6,6 +6,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {EntityTitleModule} from "../entity-title/entity-title.module";
 import {Subject} from "rxjs";
 import {OrganizationHeaderFacade} from "./organization-header.facade";
+import {MatDialog} from "@angular/material/dialog";
 
 describe('OrganizationHeaderComponent', () => {
   let component: OrganizationHeaderComponent;
@@ -20,17 +21,23 @@ describe('OrganizationHeaderComponent', () => {
           useValue: {
             select: () => {},
             rename: () => {},
+            initSubscriptions : () => {},
+            unsubscribe : () => {},
             organization$: new Subject(),
             userRole$: new Subject(),
             selectedId$: new Subject(),
           }
         },
+        {
+          provide: MatDialog,
+          useValue: {}
+        }
       ],
       imports: [
         CommonModule,
         RouterModule,
         MatButtonModule,
-        EntityTitleModule
+        EntityTitleModule,
       ]
     })
     .compileComponents();
