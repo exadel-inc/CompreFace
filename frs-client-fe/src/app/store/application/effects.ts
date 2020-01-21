@@ -1,19 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { switchMap, catchError, map } from 'rxjs/operators';
-import {
-  ApplicationListTypes,
-  FetchApplicationList,
-  FetchApplicationListSuccess,
-  FetchApplicationListFail,
-  CreateApplication,
-  CreateApplicationSuccess,
-  CreateApplicationFail,
-  UpdateApplication,
-  UpdateApplicationSuccess,
-  UpdateApplicationFail
-} from './action';
+import { switchMap, map } from 'rxjs/operators';
 import { ApplicationService } from 'src/app/core/application/application.service';
 import {
   addApplicationEntityAction,
@@ -22,7 +9,7 @@ import {
   updateApplicationEntityAction,
   putUpdatedApplicationEntityAction,
   loadApplicationsEntityAction
-} from "../application/action";
+} from "./action";
 
 @Injectable()
 export class ApplicationListEffect {
