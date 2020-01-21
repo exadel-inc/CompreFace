@@ -17,7 +17,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { ToolBarModule } from "./features/tool-bar/tool-bar.module";
 import { AppSerializer } from "./store/router/reducer";
 import { AuthEffects } from "./store/auth/effects";
-import { ApplicationListEffect } from './store/applicationList/effects';
+import { ApplicationListEffect } from './store/applicationList12/effects';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatFormFieldModule } from '@angular/material';
 import { defaultDataServiceConfig, entityConfig } from "./store/ngrx-data";

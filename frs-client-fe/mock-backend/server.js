@@ -123,7 +123,7 @@ app.get('/org/:orgId/apps', auth, wait(), (req, res) => {
 
 app.post('/org/:orgId/app', auth, (req, res) => {
   const organizationId = req.params.orgId;
-  const [firstName, password, id] = req.headers.authorization.split('_')[0];
+  const [firstName, password, id] = req.headers.authorization.split('_');
   const name = req.body.name;
 
   const app = {

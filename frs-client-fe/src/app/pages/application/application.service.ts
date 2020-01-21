@@ -4,10 +4,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Store} from "@ngrx/store";
 import {AppState} from "../../store";
 import {selectApplications} from "../../store/application/selectors";
-import {FetchApplicationList} from "../../store/applicationList/action";
+// import {FetchApplicationList} from "../../store/applicationList12/action";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 import {filter} from "rxjs/operators";
-import {setSelectedId} from "../../store/application/action";
+import { setSelectedIdEntityAction } from "../../store/application/action";
 import {GetUserInfo} from "../../store/userInfo/action";
 import {SetSelectedId} from "../../store/organization/action";
 
@@ -28,7 +28,7 @@ export class ApplicationService {
     this.appId = this.route.snapshot.queryParams.app;
 
     if (this.appId && this.orgId) {
-      this.store.dispatch(setSelectedId({ selectedAppId: this.appId}));
+      this.store.dispatch(setSelectedIdEntityAction({ selectedAppId: this.appId}));
       this.store.dispatch(new SetSelectedId({ selectId: this.orgId}));
       this.appsSub = this.store.select(selectApplications).pipe(
         filter(apps => !apps.length)
@@ -45,7 +45,7 @@ export class ApplicationService {
   }
 
   fetchApps() {
-    this.store.dispatch(new FetchApplicationList({organizationId: this.orgId}));
+    // this.store.dispatch(new FetchApplicationList({organizationId: this.orgId}));
     this.store.dispatch(new GetUserInfo());
   }
 }

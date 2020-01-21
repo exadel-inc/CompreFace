@@ -3,10 +3,10 @@ import {Store} from "@ngrx/store";
 import {Observable, Subscription} from "rxjs";
 import {AppState} from "../../store";
 import {IFacade} from "../../core/facade/IFacade";
-import {selectCurrentApp, selectCurrentAppId, SelectUserRollForSelectedApp} from "../../store/application/selectors";
+import {selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp} from "../../store/application/selectors";
 import {Application} from "../../data/application";
-import {isLoading} from "../../store/applicationList/selectors";
-import {UpdateApplication} from "../../store/applicationList/action";
+import {isLoading} from "../../store/applicationList12/selectors";
+import {UpdateApplication} from "../../store/applicationList12/action";
 import {getSelectedOrganizationId} from "../../store/organization/selectors";
 
 @Injectable()
@@ -22,7 +22,7 @@ export class ApplicationHeaderFacade implements IFacade{
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
-    this.userRole$ = this.store.select(SelectUserRollForSelectedApp);
+    this.userRole$ = this.store.select(selectUserRollForSelectedApp);
     this.selectedId$ = this.store.select(selectCurrentAppId);
     this.loading$ = this.store.select(isLoading);
   }
