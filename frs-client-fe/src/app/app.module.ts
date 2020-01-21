@@ -30,7 +30,7 @@ import { ApplicationStoreModule } from './store/application/application.module';
 import { UserInfoStoreModule } from "./store/userInfo/user-info.module";
 import { ApplicationListModule } from './features/application-list/application-list.module';
 import { UserListModule } from './features/user-list/user-list.module';
-import { UserListEffect } from './store/userList/effects';
+import { UserListEffect } from './store/user/effects';
 import { UserStoreModule } from './store/user/user.module';
 import { AlertComponent } from './features/alert/alert.component';
 import { RoleStoreModule } from './store/role/role.module';

@@ -6,4 +6,4 @@ export const selectAllRoles = createSelector(
   selectRoleState,
   (state) => state.ids.length ? state.entities[0].accessLevels : []
 );
-export const selectIsPending = createSelector(selectRoleState, (state) => state.isPending);
+export const selectIsPendingRoleStore = createSelector(selectRoleState, (state) => state.isPending);

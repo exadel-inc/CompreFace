@@ -1,6 +1,6 @@
 import { Role } from 'src/app/data/role';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { SetPendingRoleEntityAction, FetchRolesEntityAction } from './actions';
+import { SetPendingRoleEntityAction, FetchRolesEntityAction, LoadRolesEntityAction } from './actions';
 import { ActionReducer, createReducer, on } from '@ngrx/store';
 
 export interface RoleEntityState extends EntityState<Role> {
@@ -14,12 +14,17 @@ export const initialState: RoleEntityState = roleAdapter.getInitialState({
 
 export const RoleReducer: ActionReducer<RoleEntityState> = createReducer(
   initialState,
+  on(LoadRolesEntityAction, (state) => ({
+    ...state,
+    isPending: true
+  })),
   on(SetPendingRoleEntityAction, (state, { isPending }) => ({
     ...state,
     isPending
   })),
   on(FetchRolesEntityAction, (state, action) => {
     const newState = roleAdapter.removeAll(state);
+    newState.isPending = false;
 
     return roleAdapter.addOne({ id: 0, accessLevels: action.role.accessLevels }, newState);
   }));

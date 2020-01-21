@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { UserListFacade } from './user-list-facade';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AppUser } from 'src/app/data/appUser';
 import { map } from 'rxjs/operators';
 import { ITableConfig } from '../table/table.component';
@@ -19,19 +19,12 @@ export class UserListComponent implements OnInit, OnDestroy {
   public availableRoles$: Observable<string[]>;
   public errorMessage: string;
 
-  private userListStateSubscription: Subscription;
-
   constructor(private userListFacade: UserListFacade, public dialog: MatDialog) {
     userListFacade.initSubscriptions();
   }
 
   ngOnInit() {
-    this.userListStateSubscription = this.userListFacade.userListState$.subscribe(state => {
-      this.errorMessage = state.errorMessage;
-      this.openEmailNotification(state.invitedEmail);
-    });
-
-    this.isLoading$ = this.userListFacade.userListState$.pipe(map(state => state.isLoading));
+    this.isLoading$ = this.userListFacade.isLoading$;
 
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       return {
@@ -48,11 +41,11 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   public onInviteUser(email: string): void {
-    this.userListFacade.inviteUser(email);
+    this.userListFacade.inviteUser(email)
+      .subscribe(() => this.openEmailNotification(email));
   }
 
   public ngOnDestroy(): void {
-    this.userListStateSubscription.unsubscribe();
     this.userListFacade.unsubscribe();
   }
 

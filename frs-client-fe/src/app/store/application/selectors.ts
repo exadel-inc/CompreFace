@@ -22,7 +22,7 @@ export const selectCurrentApp = createSelector(
   (apps, selectedId) => apps.entities ? apps.entities[selectedId] : null
 );
 
-export const SelectUserRollForSelectedApp= createSelector(
+export const SelectUserRollForSelectedApp = createSelector(
   selectCurrentApp,
   selectUserId,
   (app, userId) => {
