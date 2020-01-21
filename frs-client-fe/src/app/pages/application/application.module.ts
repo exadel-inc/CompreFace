@@ -8,6 +8,7 @@ import {AuthGuard} from "../../core/auth/auth.guard";
 import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
 import {OrganizationHeaderModule} from "../../features/organization-header/organization-header.module";
 import {ApplicationHeaderModule} from "../../features/application-header/application-header.module";
+import { MatCardModule } from '@angular/material/card';
 import {BreadcrumbsModule} from "../../features/breadcrumbs/breadcrumbs.module";
 
 
@@ -23,7 +24,8 @@ import {BreadcrumbsModule} from "../../features/breadcrumbs/breadcrumbs.module";
     ]),
     ToolBarModule,
     OrganizationHeaderModule,
-    BreadcrumbsModule
+    BreadcrumbsModule,
+    MatCardModule
   ],
   providers: [ApplicationService]
 })

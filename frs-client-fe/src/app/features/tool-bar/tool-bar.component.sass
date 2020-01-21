@@ -1,0 +1,24 @@
+@import 'colors.sass'
+@import 'media.sass'
+
+.mat-toolbar
+  background-color: $primary
+  color: $white
+
+.mat-toolbar-row
+  justify-content: space-between
+
+.mat-button-focus-overlay
+  background: none
+
+.mat-flat-button
+  box-shadow: none
+  background: none
+  text-decoration: underline
+  color: $basic
+  &:hover
+    color: $hovered
+
+  @include mobile-portrait
+    padding: 0
+    min-width: 55px

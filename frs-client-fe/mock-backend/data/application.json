@@ -75,5 +75,49 @@
       "lastName": "lastname owner 3"
     },
     "role": "ADMIN"
+  },
+  {
+    "id": "app_7",
+    "organizationId": "ksdfklsn1111111",
+    "name": "Application 7",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    },
+    "role": "USER"
+  },
+  {
+    "id": "app_8",
+    "organizationId": "asdfdasdfdaf222222222222",
+    "name": "Application 8",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    },
+    "role": "ADMIN"
+  },
+  {
+    "id": "app_9",
+    "organizationId": "asdfdasdfdaf222222222222",
+    "name": "Application 9",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    },
+    "role": "OWNER"
+  },
+  {
+    "id": "app_10",
+    "organizationId": "asdfdasdfdaf222222222222",
+    "name": "Application 10",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    },
+    "role": "ADMIN"
   }
 ]
