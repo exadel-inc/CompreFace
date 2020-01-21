@@ -1,7 +1,7 @@
 import {createSelector, createFeatureSelector} from '@ngrx/store';
 import * as FromOrganization from './reducers';
+import {Organization} from "../../data/organization";
 import {EntitySelectorsFactory} from "@ngrx/data";
-import {selectUserId} from "../userInfo/selectors";
 
 export const organizationSelectors = new EntitySelectorsFactory().create<any>('Organization');
 
@@ -20,9 +20,5 @@ export const selectSelectedOrganization = createSelector(
 
 export const selectUserRollForSelectedOrganization = createSelector(
   selectSelectedOrganization,
-  selectUserId,
-  (organization, userId) => {
-    const role = organization ? organization.userOrganizationRoles.find(role => role.userId === userId) : null;
-    return role ? role.role : null;
-  }
+  organization => organization ? organization.role : null
 );

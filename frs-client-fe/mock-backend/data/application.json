@@ -8,16 +8,7 @@
       "firstName": "Owner 0",
       "lastName": "lastname owner 0"
     },
-    "userAppRoles": [
-      {
-        "role": "OWNER",
-        "userId": "guid_1"
-      },
-      {
-        "role": "ADMIN",
-        "userId": "guid_0"
-      }
-    ]
+    "role": "OWNER"
   },
   {
     "id": "app_1",
@@ -27,17 +18,8 @@
       "id": "1",
       "firstName": "Owner 1",
       "lastName": "lastname owner 1"
-    },"userAppRoles": [
-    {
-      "role": "USER",
-      "userId": "guid_0"
     },
-    {
-      "role": "ADMIN",
-      "userId": "guid_1"
-    }
-  ]
-
+    "role": "OWNER"
   },
   {
     "id": "app_2",
@@ -48,16 +30,7 @@
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
     },
-        "userAppRoles": [
-      {
-        "role": "OWNER",
-        "userId": "guid_0"
-      },
-      {
-        "role": "ADMIN",
-        "userId": "guid_1"
-      }
-    ]
+    "role": "USER"
   },
   {
     "id": "app_3",
@@ -68,16 +41,7 @@
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
     },
-        "userAppRoles": [
-      {
-        "role": "OWNER",
-        "userId": "guid_0"
-      },
-      {
-        "role": "ADMIN",
-        "userId": "guid_1"
-      }
-    ]
+    "role": "USER"
   },
   {
     "id": "app_4",
@@ -88,16 +52,7 @@
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
     },
-        "userAppRoles": [
-      {
-        "role": "OWNER",
-        "userId": "guid_0"
-      },
-      {
-        "role": "ADMIN",
-        "userId": "guid_1"
-      }
-    ]
+    "role": "ADMIN"
   },
   {
     "id": "app_5",
@@ -108,16 +63,7 @@
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
     },
-        "userAppRoles": [
-      {
-        "role": "OWNER",
-        "userId": "guid_0"
-      },
-      {
-        "role": "ADMIN",
-        "userId": "guid_1"
-      }
-    ]
+    "role": "OWNER"
   },
   {
     "id": "app_6",
@@ -128,15 +74,50 @@
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
     },
-        "userAppRoles": [
-      {
-        "role": "OWNER",
-        "userId": "guid_0"
-      },
-      {
-        "role": "ADMIN",
-        "userId": "guid_1"
-      }
-    ]
+    "role": "ADMIN"
+  },
+  {
+    "id": "app_7",
+    "organizationId": "ksdfklsn1111111",
+    "name": "Application 7",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    },
+    "role": "USER"
+  },
+  {
+    "id": "app_8",
+    "organizationId": "asdfdasdfdaf222222222222",
+    "name": "Application 8",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    },
+    "role": "ADMIN"
+  },
+  {
+    "id": "app_9",
+    "organizationId": "asdfdasdfdaf222222222222",
+    "name": "Application 9",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    },
+    "role": "OWNER"
+  },
+  {
+    "id": "app_10",
+    "organizationId": "asdfdasdfdaf222222222222",
+    "name": "Application 10",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    },
+    "role": "ADMIN"
   }
 ]

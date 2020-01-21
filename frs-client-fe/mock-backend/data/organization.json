@@ -2,25 +2,11 @@
   {
     "id": "ksdfklsn1111111",
     "name": "Exadel Organization",
-    "userOrganizationRoles": [
-      {
-        "role": "OWNER",
-        "userId": "guid_0"
-      },
-      {
-        "role": "ADMIN",
-        "userId": "guid_1"
-      }
-    ]
+    "role": "OWNER"
   },
   {
     "id": "asdfdasdfdaf222222222222",
     "name": "home Organization",
-    "userOrganizationRoles": [
-      {
-        "role": "ADMIN",
-        "userId": "guid_0"
-      }
-    ]
+    "role": "ADMIN"
   }
 ]

@@ -1,10 +1,10 @@
 <h1 mat-dialog-title>Create {{data.entityType}}</h1>
 <div mat-dialog-content>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.entityName">
+    <input matInput [(ngModel)]="data.entityName" placeholder="Name">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="data.entityName" cdkFocusInitial>create</button>
-  <button mat-button (click)="onCancelClick()">cancel</button>
+  <button mat-flat-button [mat-dialog-close]="data.entityName" color="accent" cdkFocusInitial>create</button>
+  <button mat-flat-button (click)="onCancelClick()">cancel</button>
 </div>

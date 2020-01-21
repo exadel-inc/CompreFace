@@ -5,11 +5,12 @@ import { ApplicationListFacade } from './application-list-facade';
 import { TableModule } from '../table/table.module';
 // import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
+import {MatButtonModule} from "@angular/material/button";
 
 @NgModule({
   declarations: [ApplicationListComponent],
   exports: [ApplicationListComponent],
   providers: [ApplicationListFacade],
-  imports: [CommonModule, TableModule, SpinnerModule]
+  imports: [CommonModule, TableModule, SpinnerModule, MatButtonModule]
 })
 export class ApplicationListModule {}

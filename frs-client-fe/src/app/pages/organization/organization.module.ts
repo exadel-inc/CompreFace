@@ -11,6 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { TableModule } from 'src/app/features/table/table.module';
 import { UserTableModule } from 'src/app/features/user-table/user-table.module';
 import { UserListModule } from 'src/app/features/user-list/user-list.module';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [OrganizationComponent],
@@ -26,7 +27,8 @@ import { UserListModule } from 'src/app/features/user-list/user-list.module';
       {path: ':id', component: OrganizationComponent, canActivate: [AuthGuard]}
     ]),
     ToolBarModule,
-    OrganizationHeaderModule
+    OrganizationHeaderModule,
+    MatCardModule
   ],
   providers: [OrganizationService],
   exports: [RouterModule]
