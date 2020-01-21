@@ -1,5 +1,6 @@
 <div *ngIf="org$ | async as org" class="breadcrumbs">
-  <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.ORGANIZATION, org.id]">Organization: {{org.name}}</a>
+  <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.ORGANIZATION, org.id]">{{org.name}}</a>
+  <div *ngIf="!modalPage" class="breadcrumbs-link" href=""> / Application</div>
   <a *ngIf="modalPage && app$ | async as app" class="breadcrumbs-link" href="">/ Application: {{app.name}}</a>
 </div>
 
