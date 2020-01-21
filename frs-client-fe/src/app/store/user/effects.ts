@@ -10,10 +10,16 @@ import {
 import { switchMap, map } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
 import { FetchRolesEntityAction, LoadRolesEntityAction } from 'src/app/store/role/actions';
+import { forkJoin, of } from 'rxjs';
+import { OrganizationEnService } from '../organization/organization-entitys.service';
 
 @Injectable()
 export class UserListEffect {
-  constructor(private actions: Actions, private userService: UserService) { }
+  constructor(
+    private actions: Actions,
+    private userService: UserService,
+    private organizationEnService: OrganizationEnService
+  ) {}
 
   @Effect()
   fetchUserList =
@@ -27,12 +33,17 @@ export class UserListEffect {
   UpdateUserRole =
     this.actions.pipe(
       ofType(PutUpdatedUserRoleEntityAction),
-      switchMap((action) => this.userService.updateRole(
+      switchMap((action) => forkJoin([this.userService.updateRole(
         action.organizationId,
         action.user.id,
         action.user.accessLevel
-      )),
-      map(user => UpdateUserRoleEntityAction({ user }))
+      ), of(action.organizationId)])),
+      switchMap(res => {
+        const [user, organizationId] = res;
+        this.organizationEnService.getAll();
+
+        return [UpdateUserRoleEntityAction({ user }), LoadUsersEntityAction({organizationId})]
+      })
     );
 
   @Effect()

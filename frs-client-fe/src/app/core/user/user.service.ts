@@ -16,7 +16,7 @@ export class UserService {
   }
 
   public updateRole(organizationId: string, id: string, role: string): Observable<any> {
-    return this.http.post<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role });
+    return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role });
   }
 
   public inviteUser(organizationId: string, role: string, userEmail: string): Observable<{message: string}> {
