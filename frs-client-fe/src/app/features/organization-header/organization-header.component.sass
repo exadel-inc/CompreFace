@@ -4,7 +4,6 @@
   grid-template-columns: 1fr 1fr
   align-items: center
   grid-gap: 2rem
-  margin-bottom: 50px
 
 .organization-header_left-coll
   display: flex
@@ -13,10 +12,14 @@
 
 .organization-header_right-coll
   text-align: right
+
 .mat-raised-button
   margin: 15px 0
 
 @include mobile
+  .organization-header_left-coll
+    flex-direction: column
+
   .grid-container
     grid-template-columns: 1fr
 

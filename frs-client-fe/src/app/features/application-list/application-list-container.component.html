@@ -1,5 +1,5 @@
-<h2>List of application for current organization</h2>
 <div class="application-list">
+  <h2>List of application for current organization</h2>
   <app-spinner [isVisible$]="isLoading$"></app-spinner>
   <app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (onChange)="onClick($event)"></app-table>
 </div>

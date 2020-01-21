@@ -7,6 +7,18 @@ $desktop-width: 1200px
   @media (max-width: #{$tablet-portrait-width - 1px})
     @content
 
+@mixin mobile-portrait
+  @media (max-width: #{$mobile-width - 1px})
+    @content
+
+@mixin mobile-landscape
+  @media (min-width: #{$mobile-width}) and (max-width: #{$tablet-portrait-width - 1px})
+    @content
+
+@mixin tablet
+  @media (min-width: #{$tablet-portrait-width}) and (max-width: #{$desktop-width - 1px})
+    @content
+
 @mixin tablet-portrait
   @media (min-width: #{$tablet-portrait-width}) and (max-width: #{$tablet-landscape-width - 1px})
     @content
