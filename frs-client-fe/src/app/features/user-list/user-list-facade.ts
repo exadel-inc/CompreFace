@@ -9,7 +9,7 @@ import { selectUsers, selectIsPendingUserStore } from 'src/app/store/user/select
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import { selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
 import { map, tap } from 'rxjs/operators';
-import { LoadUsersEntityAction, PutUpdatedUserRoleEntityAction, InviteUser } from 'src/app/store/user/action';
+import { LoadUsersEntityAction, PutUpdatedUserRoleEntityAction } from 'src/app/store/user/action';
 import { LoadRolesEntityAction } from 'src/app/store/role/actions';
 import { UserService } from 'src/app/core/user/user.service';
 
