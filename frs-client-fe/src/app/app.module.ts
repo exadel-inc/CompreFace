@@ -40,7 +40,7 @@ import { RoleStoreModule } from './store/role/role.module';
     AppComponent,
     MainLayoutComponent,
     CreateDialogComponent,
-    AlertComponent
+    AlertComponent,
   ],
   imports: [
     BrowserModule,

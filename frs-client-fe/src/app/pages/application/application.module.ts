@@ -9,6 +9,8 @@ import { ToolBarModule } from "../../features/tool-bar/tool-bar.module";
 import { OrganizationHeaderModule } from "../../features/organization-header/organization-header.module";
 import { ApplicationHeaderModule } from "../../features/application-header/application-header.module";
 import { MatCardModule } from '@angular/material/card';
+import {BreadcrumbsModule} from "../../features/breadcrumbs/breadcrumbs.module";
+
 
 
 @NgModule({
@@ -22,6 +24,7 @@ import { MatCardModule } from '@angular/material/card';
     ]),
     ToolBarModule,
     OrganizationHeaderModule,
+    BreadcrumbsModule,
     MatCardModule
   ],
   providers: [ApplicationPageService]
