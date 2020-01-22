@@ -1,5 +1,5 @@
 import {
-  getSelectedOrganizationId,
+  selectCurrentOrganizationId,
   selectSelectedOrganization,
   selectUserRollForSelectedOrganization
 } from "./selectors";
@@ -7,8 +7,8 @@ import {Organization} from "../../data/organization";
 
 describe('OrganizationSelectors', () => {
 
-  it('getSelectedOrganizationId', () => {
-    expect(getSelectedOrganizationId.projector({selectId: 'someId'})).toBe('someId');
+  it('selectCurrentOrganizationId', () => {
+    expect(selectCurrentOrganizationId.projector({selectId: 'someId'})).toBe('someId');
   });
 
   it('SelectSelectedOrganization', () => {

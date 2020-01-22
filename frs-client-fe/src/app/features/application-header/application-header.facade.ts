@@ -11,7 +11,7 @@ import {
 } from "../../store/application/selectors";
 import { Application } from "../../data/application";
 import { putUpdatedApplicationEntityAction } from "../../store/application/action";
-import { getSelectedOrganizationId } from "../../store/organization/selectors";
+import { selectCurrentOrganizationId } from "../../store/organization/selectors";
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {
@@ -32,7 +32,7 @@ export class ApplicationHeaderFacade implements IFacade {
   }
 
   initSubscriptions() {
-    this.orgIdSub = this.store.select(getSelectedOrganizationId).subscribe(orgId => this.orgId = orgId);
+    this.orgIdSub = this.store.select(selectCurrentOrganizationId).subscribe(orgId => this.orgId = orgId);
     this.appIdSub = this.selectedId$.subscribe(selectedId => this.selectedId = selectedId);
   }
 
