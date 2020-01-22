@@ -5,12 +5,14 @@ const applications = require('./data/application.json');
 const organizations = require('./data/organization.json');
 const users = require('./data/users.json');
 const roles = require('./data/roles.json');
+const models = require('./data/models.json');
 
 const mockData = {
   applications,
   organizations,
   users,
-  roles
+  roles,
+  models
 };
 
 const app = express();
@@ -171,13 +173,13 @@ app.put('/org/:orgId/role', auth, (req, res) => {
         if (currentOrganization.role === 'OWNER') {
           mockData.users[userIndex].accessLevel = role;
           currentOrganization.role = 'ADMIN';
-          res.status(201).json(mockData.users[userIndex]);
+          res.status(200).json(mockData.users[userIndex]);
         } else {
           res.status(403).json({ message: 'forbidden' });
         }
       } else {
         mockData.users[userIndex].accessLevel = role;
-        res.status(201).json(mockData.users[userIndex]);
+        res.status(200).json(mockData.users[userIndex]);
       }
     } else {
       res.status(404).json({ message: 'user not found' });
@@ -215,9 +217,48 @@ app.get('/user/me', auth, (req, res) => {
   res.send(user);
 });
 
+//http://localhost:3000/org/asdfdasdfdaf222222222222/app/app_4/models
+app.get('/org/:orgId/app/:appId/models', auth, (req, res) => {
+  const appId = req.params.appId;
+  const models = mockData.models.filter(model => model.applicationId === appId);
+
+  res.send(models);
+});
+
+app.post('/org/:orgId/app/:appId/model', auth, (req, res) => {
+  const { name } = req.body;
+  const { appId, orgId } = req.params;
+
+  if (isModelAccessAllowed(appId, orgId)) {
+    const [firstName, password, id] = req.headers.authorization.split('_');
+    const newModel = {
+      id: mockData.models.length,
+      name,
+      owner: {
+        firstName
+      },
+      accessLevel: 'OWNER',
+      applicationId: appId
+    };
+
+    mockData.models.push(newModel);
+
+    res.status(201).send(newModel);
+  } else {
+    res.status(404).json({ message: 'Organization or Application wasnt found' });
+  }
+});
+
 app.listen(3000, function() {
   console.log('Listening on port 3000!');
 });
+
+function isModelAccessAllowed(appId, orgId) {
+  const application = mockData.applications.find(app => app.id === appId);
+  const organization = mockData.organizations.find(org => org.id === application.organizationId);
+
+  return application && organization && organization.id === orgId;
+}
 
 function auth(req, res, next) {
   if (req && req.headers.authorization === token)
