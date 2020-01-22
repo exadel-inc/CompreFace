@@ -69,7 +69,7 @@ describe('UserService', () => {
     });
 
     const req = httpMock.expectOne(`${environment.apiUrl}org/organizationId/role`);
-    expect(req.request.method).toBe('POST');
+    expect(req.request.method).toBe('PUT');
     req.flush(mock);
   });
 });

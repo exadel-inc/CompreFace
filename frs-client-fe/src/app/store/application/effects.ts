@@ -33,9 +33,9 @@ export class ApplicationListEffect {
   updateApplication = this.actions.pipe(
     ofType(putUpdatedApplicationEntityAction),
     switchMap((action) => this.applicationService.put(
-      action.application.organizationId,
-      action.application.id,
-      action.application.name
+      action.organizationId,
+      action.id,
+      action.name
     )),
     map((app) => updateApplicationEntityAction({ application: app }))
   )

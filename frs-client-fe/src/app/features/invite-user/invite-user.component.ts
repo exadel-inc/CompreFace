@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter } from '@angular/core';
-import {FormControl, FormGroup, Validators} from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
 @Component({

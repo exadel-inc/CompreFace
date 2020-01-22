@@ -1,16 +1,20 @@
 import { Injectable } from '@angular/core';
-import {Store} from "@ngrx/store";
-import {Observable, Subscription} from "rxjs";
-import {AppState} from "../../store";
-import {IFacade} from "../../core/facade/IFacade";
-import {selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp} from "../../store/application/selectors";
-import {Application} from "../../data/application";
-import {isLoading} from "../../store/applicationList12/selectors";
-import {UpdateApplication} from "../../store/applicationList12/action";
-import {getSelectedOrganizationId} from "../../store/organization/selectors";
+import { Store } from "@ngrx/store";
+import { Observable, Subscription } from "rxjs";
+import { AppState } from "../../store";
+import { IFacade } from "../../core/facade/IFacade";
+import {
+  selectCurrentApp,
+  selectCurrentAppId,
+  selectUserRollForSelectedApp,
+  selectIsPendingApplicationList
+} from "../../store/application/selectors";
+import { Application } from "../../data/application";
+import { putUpdatedApplicationEntityAction } from "../../store/application/action";
+import { getSelectedOrganizationId } from "../../store/organization/selectors";
 
 @Injectable()
-export class ApplicationHeaderFacade implements IFacade{
+export class ApplicationHeaderFacade implements IFacade {
   selectedId$: Observable<string | null>;
   selectedId: string | null;
   loading$: Observable<boolean>;
@@ -24,7 +28,7 @@ export class ApplicationHeaderFacade implements IFacade{
     this.app$ = this.store.select(selectCurrentApp);
     this.userRole$ = this.store.select(selectUserRollForSelectedApp);
     this.selectedId$ = this.store.select(selectCurrentAppId);
-    this.loading$ = this.store.select(isLoading);
+    this.loading$ = this.store.select(selectIsPendingApplicationList);
   }
 
   initSubscriptions() {
@@ -38,6 +42,6 @@ export class ApplicationHeaderFacade implements IFacade{
   }
 
   rename(name: string) {
-    this.store.dispatch(new UpdateApplication({name, appId: this.selectedId, organizationId: this.orgId}));
+    this.store.dispatch(putUpdatedApplicationEntityAction({ name, id: this.selectedId, organizationId: this.orgId }));
   }
 }
