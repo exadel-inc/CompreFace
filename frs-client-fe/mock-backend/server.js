@@ -191,15 +191,15 @@ app.put('/org/:orgId/role', auth, (req, res) => {
 
 app.post('/org/:orgId/invite', auth, (req, res) => {
   const organizationId = req.params.orgId;
-  const { role, userEmail } = req.body;
+  const { userEmail } = req.body;
 
-  if (userEmail && role) {
+  if (userEmail) {
     mockData.users.push({
       id: mockData.users.length,
       organizationId: organizationId,
       firstName: userEmail,
       lastName: userEmail,
-      accessLevel: role
+      accessLevel: 'USER'
     });
 
     res.status(201).json({ message: 'created' });
