@@ -39,7 +39,7 @@ import { AlertComponent } from './features/alert/alert.component';
     AppComponent,
     MainLayoutComponent,
     CreateDialogComponent,
-    AlertComponent
+    AlertComponent,
   ],
   imports: [
     BrowserModule,
