@@ -42,6 +42,16 @@ mat-card
   .mat-row
     height: 58px
 
+app-table, app-user-table
+  height: calc(100vh - 400px)
+  overflow-y: auto
+  display: block
+  min-height: 340px
+
+  +tablet
+    min-height: 290px
+    max-height: 297px
+
 @include mobile
   .container
     max-width: 540px
