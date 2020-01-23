@@ -12,7 +12,7 @@ import {selectCurrentOrganizationId, selectUserRollForSelectedOrganization} from
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 
 
-fdescribe('OrganizationHeaderFacade', () => {
+describe('OrganizationHeaderFacade', () => {
   let mockStore: MockStore<AppState>;
   let mockRoleSelector: MemoizedSelector<AppState, OrganizationsState>;
   let mockOrgIdSelector: MemoizedSelector<AppState, string>;
