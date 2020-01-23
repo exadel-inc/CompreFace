@@ -11,21 +11,21 @@ import { loadApplicationsEntityAction, createApplicationEntityAction } from 'src
 @Injectable()
 export class ApplicationListFacade implements IFacade {
   public applications$: Observable<Application[]>;
-  public selectedOrganization$: Observable<string>;
+  public selectedOrganizationId$: Observable<string>;
   public isLoading$: Observable<boolean>;
 
-  private selectedOrganizationSubscription: Subscription;
+  private selectedOrganizationIdSubscription: Subscription;
   private selectedOrgId: string;
 
   constructor(private store: Store<AppState>) {
     this.applications$ = store.select(selectApplications);
-    this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
+    this.selectedOrganizationId$ = store.select(selectCurrentOrganizationId);
 
     this.isLoading$ = store.select(selectIsPendingApplicationList);
   }
 
   public initSubscriptions(): void {
-    this.selectedOrganizationSubscription = this.selectedOrganization$.subscribe(
+    this.selectedOrganizationIdSubscription = this.selectedOrganizationId$.subscribe(
       organizationId => {
         if (organizationId) {
           this.selectedOrgId = organizationId;
@@ -48,7 +48,7 @@ export class ApplicationListFacade implements IFacade {
   }
 
   public unsubscribe(): void {
-    this.selectedOrganizationSubscription.unsubscribe();
+    this.selectedOrganizationIdSubscription.unsubscribe();
   }
 
   public getOrgId():string {

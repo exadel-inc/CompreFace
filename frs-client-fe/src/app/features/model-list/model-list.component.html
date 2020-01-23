@@ -1,9 +1,9 @@
-<div class="application-list">
+<div class="model-list">
   <h2>List of models for current application</h2>
   <app-spinner [isVisible$]="isLoading$"></app-spinner>
   <app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (onChange)="onClick($event)"></app-table>
 </div>
-<div class="add-application-button-container">
+<div class="add-model-button-container">
   <button mat-raised-button
           class="btn-block"
           color="primary"

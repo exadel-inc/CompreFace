@@ -12,7 +12,7 @@ import { ModelListFacade } from './model-list-facade';
   styleUrls: ['./model-list.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModelListComponent implements OnInit {
+export class ModelListComponent implements OnInit, OnDestroy {
   public isLoading$: Observable<boolean>;
   public errorMessage: string;
   public tableConfig$: Observable<ITableConfig>;
@@ -59,5 +59,4 @@ export class ModelListComponent implements OnInit {
   ngOnDestroy(): void {
     this.modelListFacade.unsubscribe();
   }
-
 }
