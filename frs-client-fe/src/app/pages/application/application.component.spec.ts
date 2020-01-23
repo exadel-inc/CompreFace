@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ApplicationComponent } from './application.component';
 import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
-import {ApplicationService} from "./application.service";
+import { ApplicationPageService } from "./application.service";
 
 describe('ApplicationComponent', () => {
   let component: ApplicationComponent;
@@ -11,7 +11,7 @@ describe('ApplicationComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ApplicationComponent ],
       providers: [
-        {provide: ApplicationService, useValue: {
+        {provide: ApplicationPageService, useValue: {
             initUrlBindingStreams: () => {},
             unSubscribe: () => {},
           }}
