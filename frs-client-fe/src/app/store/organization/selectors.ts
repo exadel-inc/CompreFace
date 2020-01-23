@@ -7,14 +7,14 @@ export const organizationSelectors = new EntitySelectorsFactory().create<any>('O
 
 export const selectOrganizationState = createFeatureSelector<FromOrganization.OrganizationsState>('Organization');
 
-export const getSelectedOrganizationId = createSelector(
+export const selectCurrentOrganizationId = createSelector(
   selectOrganizationState,
   state => state.selectId
 );
 
 export const selectSelectedOrganization = createSelector(
   organizationSelectors.selectEntities,
-  getSelectedOrganizationId,
+  selectCurrentOrganizationId,
   (organizationCash, selectId) => organizationCash.find(org => org.id === selectId)
 );
 

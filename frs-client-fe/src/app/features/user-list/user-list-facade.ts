@@ -4,7 +4,7 @@ import { AppUser } from 'src/app/data/appUser';
 import { AppState } from 'src/app/store';
 import { Observable, Subscription, combineLatest } from 'rxjs';
 import { Store } from '@ngrx/store';
-import { getSelectedOrganizationId } from 'src/app/store/organization/selectors';
+import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
 import { selectUsers, selectIsPendingUserStore } from 'src/app/store/user/selectors';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import { selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
@@ -25,7 +25,7 @@ export class UserListFacade implements IFacade {
   private selectedOrganizationSubscription: Subscription;
 
   constructor(private store: Store<AppState>, private userService: UserService) {
-    this.selectedOrganization$ = store.select(getSelectedOrganizationId);
+    this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.users$ = store.select(selectUsers);
 
     const allRoles$ = store.select(selectAllRoles);

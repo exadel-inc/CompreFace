@@ -3,7 +3,7 @@ import { IFacade } from 'src/app/core/facade/IFacade';
 import { AppState } from 'src/app/store';
 import { Store } from '@ngrx/store';
 import { selectApplications, selectIsPendingApplicationList } from 'src/app/store/application/selectors';
-import { getSelectedOrganizationId } from 'src/app/store/organization/selectors';
+import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
 import { Observable, Subscription } from 'rxjs';
 import { Application } from 'src/app/data/application';
 import { loadApplicationsEntityAction, createApplicationEntityAction } from 'src/app/store/application/action';
@@ -11,21 +11,21 @@ import { loadApplicationsEntityAction, createApplicationEntityAction } from 'src
 @Injectable()
 export class ApplicationListFacade implements IFacade {
   public applications$: Observable<Application[]>;
-  public selectedOrganization$: Observable<string>;
+  public selectedOrganizationId$: Observable<string>;
   public isLoading$: Observable<boolean>;
 
-  private selectedOrganizationSubscription: Subscription;
+  private selectedOrganizationIdSubscription: Subscription;
   private selectedOrgId: string;
 
   constructor(private store: Store<AppState>) {
     this.applications$ = store.select(selectApplications);
-    this.selectedOrganization$ = store.select(getSelectedOrganizationId);
+    this.selectedOrganizationId$ = store.select(selectCurrentOrganizationId);
 
     this.isLoading$ = store.select(selectIsPendingApplicationList);
   }
 
   public initSubscriptions(): void {
-    this.selectedOrganizationSubscription = this.selectedOrganization$.subscribe(
+    this.selectedOrganizationIdSubscription = this.selectedOrganizationId$.subscribe(
       organizationId => {
         if (organizationId) {
           this.selectedOrgId = organizationId;
@@ -48,7 +48,7 @@ export class ApplicationListFacade implements IFacade {
   }
 
   public unsubscribe(): void {
-    this.selectedOrganizationSubscription.unsubscribe();
+    this.selectedOrganizationIdSubscription.unsubscribe();
   }
 
   public getOrgId():string {

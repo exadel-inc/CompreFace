@@ -1,0 +1,178 @@
+[
+  {
+    "id": 0,
+    "name": "Model 1",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_0",
+    "owner": {
+      "id": "0",
+      "firstName": "Owner 0",
+      "lastName": "lastname owner 0"
+    }
+  },
+  {
+    "id": 1,
+    "name": "Model 2",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_0",
+    "owner": {
+      "id": "0",
+      "firstName": "Owner 0",
+      "lastName": "lastname owner 0"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Model 3",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_0",
+    "owner": {
+      "id": "1",
+      "firstName": "Owner 1",
+      "lastName": "lastname owner 1"
+    }
+  },
+  {
+    "id": 3,
+    "name": "Model 4",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_1",
+    "owner": {
+      "id": "1",
+      "firstName": "Owner 1",
+      "lastName": "lastname owner 1"
+    }
+  },
+  {
+    "id": 4,
+    "name": "Model 5",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_1",
+    "owner": {
+      "id": "2",
+      "firstName": "Owner 2",
+      "lastName": "lastname owner 2"
+    }
+  },
+  {
+    "id": 5,
+    "name": "Model 6",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_2",
+    "owner": {
+      "id": "2",
+      "firstName": "Owner 2",
+      "lastName": "lastname owner 2"
+    }
+  },
+  {
+    "id": 6,
+    "name": "Model 7",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_2",
+    "owner": {
+      "id": "2",
+      "firstName": "Owner 2",
+      "lastName": "lastname owner 2"
+    }
+  },
+  {
+    "id": 7,
+    "name": "Model 8",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_2",
+    "owner": {
+      "id": "2",
+      "firstName": "Owner 2",
+      "lastName": "lastname owner 2"
+    }
+  },
+  {
+    "id": 8,
+    "name": "Model 9",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_3",
+    "owner": {
+      "id": "3",
+      "firstName": "Owner 3",
+      "lastName": "lastname owner 3"
+    }
+  },
+  {
+    "id": 9,
+    "name": "Model 10",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_3",
+    "owner": {
+      "id": "4",
+      "firstName": "Owner 4",
+      "lastName": "lastname owner 4"
+    }
+  },
+  {
+    "id": 10,
+    "name": "Model 11",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_3",
+    "owner": {
+      "id": "4",
+      "firstName": "Owner 4",
+      "lastName": "lastname owner 4"
+    }
+  },
+  {
+    "id": 11,
+    "name": "Model 12",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_3",
+    "owner": {
+      "id": "5",
+      "firstName": "Owner 5",
+      "lastName": "lastname owner 5"
+    }
+  },
+  {
+    "id": 12,
+    "name": "Model 13",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_4",
+    "owner": {
+      "id": "5",
+      "firstName": "Owner 5",
+      "lastName": "lastname owner 5"
+    }
+  },
+  {
+    "id": 13,
+    "name": "Model 14",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_4",
+    "owner": {
+      "id": "6",
+      "firstName": "Owner 6",
+      "lastName": "lastname owner 6"
+    }
+  },
+  {
+    "id": 14,
+    "name": "Model 15",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_5",
+    "owner": {
+      "id": "7",
+      "firstName": "Owner 7",
+      "lastName": "lastname owner 7"
+    }
+  },
+  {
+    "id": 15,
+    "name": "Model 16",
+    "accessLevel": "OWNER/TRAIN/READONLY",
+    "applicationId": "app_6",
+    "owner": {
+      "id": "7",
+      "firstName": "Owner 7",
+      "lastName": "lastname owner 7"
+    }
+  }
+]

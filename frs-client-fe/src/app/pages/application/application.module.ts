@@ -9,7 +9,8 @@ import { ToolBarModule } from "../../features/tool-bar/tool-bar.module";
 import { OrganizationHeaderModule } from "../../features/organization-header/organization-header.module";
 import { ApplicationHeaderModule } from "../../features/application-header/application-header.module";
 import { MatCardModule } from '@angular/material/card';
-import {BreadcrumbsModule} from "../../features/breadcrumbs/breadcrumbs.module";
+import { BreadcrumbsModule } from "../../features/breadcrumbs/breadcrumbs.module";
+import { ModelListModule } from 'src/app/features/model-list/model-list.module';
 
 
 
@@ -19,6 +20,7 @@ import {BreadcrumbsModule} from "../../features/breadcrumbs/breadcrumbs.module";
     CommonModule,
     MatButtonModule,
     ApplicationHeaderModule,
+    ModelListModule,
     RouterModule.forChild([
       { path: '', component: ApplicationComponent, canActivate: [AuthGuard] },
     ]),

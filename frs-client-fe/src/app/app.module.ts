@@ -34,13 +34,16 @@ import { UserListEffect } from './store/user/effects';
 import { UserStoreModule } from './store/user/user.module';
 import { AlertComponent } from './features/alert/alert.component';
 import { RoleStoreModule } from './store/role/role.module';
+import { ModelListModule } from './features/model-list/model-list.module';
+import { ModelStoreModule } from './store/model/model.module';
+import { ModelEffects } from './store/model/effects';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
     CreateDialogComponent,
-    AlertComponent,
+    AlertComponent
   ],
   imports: [
     BrowserModule,
@@ -54,15 +57,17 @@ import { RoleStoreModule } from './store/role/role.module';
     UserTableModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
-    EffectsModule.forRoot([AuthEffects, ApplicationListEffect, UserListEffect]),
+    EffectsModule.forRoot([AuthEffects, ApplicationListEffect, UserListEffect, ModelEffects]),
     EntityDataModule.forRoot(entityConfig),
     OrganizationStoreModule,
     UserInfoStoreModule,
     ApplicationStoreModule,
     UserStoreModule,
     RoleStoreModule,
+    ModelStoreModule,
     ApplicationListModule,
     UserListModule,
+    ModelListModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
