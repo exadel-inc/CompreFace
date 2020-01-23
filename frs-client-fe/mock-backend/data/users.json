@@ -11,7 +11,7 @@
     "organizationId": "ksdfklsn1111111",
     "firstName": "Tony",
     "lastName": "Stark",
-    "accessLevel": "ADMINISTRATOR"
+    "accessLevel": "ADMIN"
   },
   {
     "id": 2,
@@ -32,7 +32,7 @@
     "organizationId": "asdfdasdfdaf222222222222",
     "firstName": "Tony",
     "lastName": "Montana",
-    "accessLevel": "ADMINISTRATOR"
+    "accessLevel": "ADMIN"
   },
   {
     "id": 5,

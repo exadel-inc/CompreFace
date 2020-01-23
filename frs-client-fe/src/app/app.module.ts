@@ -17,7 +17,7 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { ToolBarModule } from "./features/tool-bar/tool-bar.module";
 import { AppSerializer } from "./store/router/reducer";
 import { AuthEffects } from "./store/auth/effects";
-import { ApplicationListEffect } from './store/applicationList/effects';
+import { ApplicationListEffect } from './store/application/effects';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatFormFieldModule } from '@angular/material';
 import { defaultDataServiceConfig, entityConfig } from "./store/ngrx-data";
@@ -27,12 +27,13 @@ import { TableModule } from './features/table/table.module';
 import { UserTableModule } from './features/user-table/user-table.module';
 import { OrganizationStoreModule } from "./store/organization/organization.module";
 import { ApplicationStoreModule } from './store/application/application.module';
-import {UserInfoStoreModule} from "./store/userInfo/user-info.module";
+import { UserInfoStoreModule } from "./store/userInfo/user-info.module";
 import { ApplicationListModule } from './features/application-list/application-list.module';
 import { UserListModule } from './features/user-list/user-list.module';
-import { UserListEffect } from './store/userList/effects';
+import { UserListEffect } from './store/user/effects';
 import { UserStoreModule } from './store/user/user.module';
 import { AlertComponent } from './features/alert/alert.component';
+import { RoleStoreModule } from './store/role/role.module';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { AlertComponent } from './features/alert/alert.component';
     UserInfoStoreModule,
     ApplicationStoreModule,
     UserStoreModule,
+    RoleStoreModule,
     ApplicationListModule,
     UserListModule,
     StoreRouterConnectingModule.forRoot({

@@ -1,6 +1,5 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import {applicationAdapter} from './reducers';
-import * as fromApp from './reducers';
+import { applicationAdapter, AppEntityState } from './reducers';
 import { Application } from 'src/app/data/application';
 import { EntityState } from '@ngrx/entity';
 
@@ -12,7 +11,7 @@ export const selectApplications = createSelector(selectApplicationEntityState, s
 
 export const selectCurrentAppId = createSelector(
   selectApplicationEntityState,
-  fromApp.getSelectedAppId
+  (state: AppEntityState) => state.selectedAppId
 );
 
 export const selectCurrentApp = createSelector(
@@ -21,7 +20,12 @@ export const selectCurrentApp = createSelector(
   (apps, selectedId) => apps.entities ? apps.entities[selectedId] : null
 );
 
-export const SelectUserRollForSelectedApp= createSelector(
+export const selectUserRollForSelectedApp = createSelector(
   selectCurrentApp,
   app => app ? app.role : null
+);
+
+export const selectIsPendingApplicationList = createSelector(
+  selectApplicationEntityState,
+  (state: AppEntityState) => state.isPending
 );

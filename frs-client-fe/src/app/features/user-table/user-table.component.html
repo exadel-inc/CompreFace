@@ -9,9 +9,14 @@
     <th mat-header-cell *matHeaderCellDef> Role </th>
     <td mat-cell *matCellDef="let element">
       <mat-form-field>
-        <mat-select [(value)]="element.accessLevel" (selectionChange)="change(element)">
-          <mat-option *ngFor="let role of availableRoles" value="{{role}}">{{role}}</mat-option>
+        <mat-select *ngIf="(isRoleChangeAllowed(element.accessLevel) | async) else disabledRole" [(value)]="element.accessLevel" (selectionChange)="change(element)">
+          <mat-option *ngFor="let role of (availableRoles$ | async)" value="{{role}}">{{role}}</mat-option>
         </mat-select>
+        <ng-template #disabledRole>
+          <mat-select disabled [(value)]="element.accessLevel">
+            <mat-option value="{{element.accessLevel}}">{{element.accessLevel}}</mat-option>
+          </mat-select>
+        </ng-template>
       </mat-form-field>
     </td>
   </ng-container>

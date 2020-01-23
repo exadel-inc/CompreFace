@@ -65,7 +65,7 @@ describe('ApplicationService', () => {
   });
 
   it('should rename application', () => {
-    service.put({ name: 'new name', organizationId: 'orgId', appId: 'appId'}).subscribe((data: Application) => {
+    service.put('orgId', 'appId', 'new name').subscribe((data: Application) => {
       expect(data.name).toBe('new app');
     });
 

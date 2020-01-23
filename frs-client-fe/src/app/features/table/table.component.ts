@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy,Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface ITableConfig {
@@ -18,9 +18,11 @@ export interface ITableConfig {
 export class TableComponent implements OnInit {
   @Input() isLoading$: Observable<boolean>;
   @Input() set tableConfig(config: ITableConfig) {
-    this.columnsDefinition = config.columns;
-    this.displayedColumns = config.columns.map(column => column.title);
-    this.data = config.data;
+    if (config) {
+      this.columnsDefinition = config.columns;
+      this.displayedColumns = config.columns.map(column => column.title);
+      this.data = config.data;
+    }
   }
 
   @Output() onChange = new EventEmitter<any>();
@@ -34,7 +36,7 @@ export class TableComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 
   public change(element: any): void {
     this.onChange.emit(element);

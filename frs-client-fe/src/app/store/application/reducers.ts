@@ -1,5 +1,12 @@
 import { Application } from 'src/app/data/application';
-import {addApplication, addApplications, setSelectedId, updateApplication} from './action';
+import {
+  addApplicationEntityAction,
+  addApplicationsEntityAction,
+  loadApplicationsEntityAction,
+  setSelectedIdEntityAction,
+  updateApplicationEntityAction,
+  putUpdatedApplicationEntityAction
+} from './action';
 import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 import {ActionReducer, createReducer, on} from "@ngrx/store";
 
@@ -8,46 +15,50 @@ export const applicationAdapter: EntityAdapter<Application> = createEntityAdapte
 export interface AppEntityState extends EntityState<Application> {
   // additional entities state properties
   selectedAppId: string | null;
+  isPending: boolean;
 }
 
 export const initialState: AppEntityState = applicationAdapter.getInitialState({
   // additional entity state properties
   selectedAppId: null,
+  isPending: false
 });
 
 export const ApplicationReducer:ActionReducer<AppEntityState> = createReducer(
   initialState,
-  on(addApplication, (state, { application }) => {
-    return applicationAdapter.addOne(application, state);
+  on(loadApplicationsEntityAction, (state) => ({
+    ...state,
+    isPending: true
+  })),
+  on(addApplicationEntityAction, (state, { application }) => {
+    const newState = {
+      ...state,
+      isPending: false
+    };
+
+    return applicationAdapter.addOne(application, newState);
   }),
-  on(addApplications, (state, { applications }) => {
-    return applicationAdapter.addAll(applications, state);
+  on(addApplicationsEntityAction, (state, { applications }) => {
+    const newState = {
+      ...state,
+      isPending: false
+    };
+
+    return applicationAdapter.addAll(applications, newState);
   }),
-  on(updateApplication, (state, { application }) => {
-    return applicationAdapter.updateOne({ id: application.id, changes: application }, state);
+  on(putUpdatedApplicationEntityAction, (state) => ({
+    ...state,
+    isPending: true
+  })),
+  on(updateApplicationEntityAction, (state, { application }) => {
+    const newState = {
+      ...state,
+      isPending: false
+    };
+
+    return applicationAdapter.updateOne({ id: application.id, changes: application }, newState);
   }),
-  on(setSelectedId, (state, { selectedAppId }) => {
+  on(setSelectedIdEntityAction, (state, { selectedAppId }) => {
     return { ...state, selectedAppId };
   })
 );
-
-export const getSelectedAppId = (state: AppEntityState) => state.selectedAppId;
-
-const {
-  selectIds,
-  selectEntities,
-  selectAll,
-  selectTotal,
-} = applicationAdapter.getSelectors();
-
-// select the array of applications ids
-export const selectAppIds = selectIds;
-
-// select the dictionary of application entities
-export const selectAppEntities = selectEntities;
-
-// select the array of applications
-export const selectAllApps = selectAll;
-
-// select the total application count
-export const selectAppTotal = selectTotal;

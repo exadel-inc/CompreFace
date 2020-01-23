@@ -1,4 +1,4 @@
-import {selectCurrentApp, selectCurrentAppId, SelectUserRollForSelectedApp} from "./selectors";
+import {selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp} from "./selectors";
 import {Application} from "../../data/application";
 
 describe('ApplicationSelectors', () => {
@@ -54,8 +54,8 @@ describe('ApplicationSelectors', () => {
       name: 'name1',
       role: "OWNER"
     };
-    expect(SelectUserRollForSelectedApp.projector(app1)).toBe('ADMIN');
-    expect(SelectUserRollForSelectedApp.projector(app2)).toBe('OWNER');
-    expect(SelectUserRollForSelectedApp.projector(null)).toBeFalsy();
+    expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMIN');
+    expect(selectUserRollForSelectedApp.projector(app2)).toBe('OWNER');
+    expect(selectUserRollForSelectedApp.projector(null)).toBeFalsy();
   });
 });

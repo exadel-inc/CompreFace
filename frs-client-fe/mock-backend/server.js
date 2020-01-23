@@ -50,7 +50,7 @@ app.locals.basedir = path.join(__dirname, 'mock-backend');
 
 app.post('/login', wait(1000), function(req, res) {
   if (req && req.body.username === user.username && req.body.password === user.password) {
-    token = `${user.username}_${user.password}_${+new Date()}`;
+    token = `${user.username}_${user.password}_${user.guid}_${+new Date()}`;
     res.send({ token });
   }
   else {
@@ -123,14 +123,14 @@ app.get('/org/:orgId/apps', auth, wait(), (req, res) => {
 
 app.post('/org/:orgId/app', auth, (req, res) => {
   const organizationId = req.params.orgId;
-  const firstName = req.headers.authorization.split('_')[0];
+  const [firstName, password, id] = req.headers.authorization.split('_');
   const name = req.body.name;
 
   const app = {
     id: mockData.applications.length.toString(),
     name,
     owner: {
-      id: 'uniqUserId',
+      id,
       firstName,
       lastName: 'owner_lastname'
     }
@@ -158,16 +158,27 @@ app.get('/org/:orgId/roles', auth, wait(), (req, res) => {
   res.status(201).json(mockData.users.filter(user => user.organizationId === organizationId));
 });
 
-app.post('/org/:orgId/role', auth, (req, res) => {
+app.put('/org/:orgId/role', auth, (req, res) => {
+  const orgId = req.params.orgId;
   const { id, role } = req.body;
 
   if (id !== undefined && role) {
     const userIndex = mockData.users.findIndex(user => user.id === id);
 
     if (~userIndex) {
-      mockData.users[userIndex].accessLevel = role;
-
-      res.status(201).json(mockData.users[userIndex]);
+      if (role === 'OWNER') {
+        const currentOrganization = mockData.organizations.find(org => org.id === orgId);
+        if (currentOrganization.role === 'OWNER') {
+          mockData.users[userIndex].accessLevel = role;
+          currentOrganization.role = 'ADMIN';
+          res.status(201).json(mockData.users[userIndex]);
+        } else {
+          res.status(403).json({ message: 'forbidden' });
+        }
+      } else {
+        mockData.users[userIndex].accessLevel = role;
+        res.status(201).json(mockData.users[userIndex]);
+      }
     } else {
       res.status(404).json({ message: 'user not found' });
     }
@@ -178,15 +189,15 @@ app.post('/org/:orgId/role', auth, (req, res) => {
 
 app.post('/org/:orgId/invite', auth, (req, res) => {
   const organizationId = req.params.orgId;
-  const { role, userEmail } = req.body;
+  const { userEmail } = req.body;
 
-  if (userEmail && role) {
+  if (userEmail) {
     mockData.users.push({
       id: mockData.users.length,
       organizationId: organizationId,
       firstName: userEmail,
       lastName: userEmail,
-      accessLevel: role
+      accessLevel: 'USER'
     });
 
     res.status(201).json({ message: 'created' });
@@ -194,6 +205,11 @@ app.post('/org/:orgId/invite', auth, (req, res) => {
     res.sendStatus(400);
   }
 });
+
+app.get('/roles', auth, (req, res) => {
+  res.send(mockData.roles);
+});
+
 
 app.get('/user/me', auth, (req, res) => {
   res.send(user);

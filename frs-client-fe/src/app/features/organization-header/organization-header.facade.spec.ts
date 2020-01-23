@@ -8,11 +8,11 @@ import {Router} from "@angular/router";
 import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
 import {of, Subject} from "rxjs";
 import {Organization} from "../../data/organization";
-import {getSelectedOrganizationId, SelectUserRollForSelectedOrganization} from "../../store/organization/selectors";
+import {getSelectedOrganizationId, selectUserRollForSelectedOrganization} from "../../store/organization/selectors";
 import {ROUTERS_URL} from "../../data/routers-url.variable";
 
 
-fdescribe('OrganizationHeaderFacade', () => {
+describe('OrganizationHeaderFacade', () => {
   let mockStore: MockStore<AppState>;
   let mockRoleSelector: MemoizedSelector<AppState, OrganizationsState>;
   let mockOrgIdSelector: MemoizedSelector<AppState, string>;
@@ -55,7 +55,7 @@ fdescribe('OrganizationHeaderFacade', () => {
       });
 
       mockStore = TestBed.get(Store);
-      mockRoleSelector = mockStore.overrideSelector(SelectUserRollForSelectedOrganization, "ADMIN");
+      mockRoleSelector = mockStore.overrideSelector(selectUserRollForSelectedOrganization, "ADMIN");
       mockOrgIdSelector = mockStore.overrideSelector(getSelectedOrganizationId, "org_id");
       facade = TestBed.get<OrganizationHeaderFacade>(OrganizationHeaderFacade);
     }

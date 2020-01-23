@@ -4,7 +4,6 @@ import { Observable } from 'rxjs';
 import { AppUser } from 'src/app/data/appUser';
 import { environment } from '../../../environments/environment';
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -17,10 +16,14 @@ export class UserService {
   }
 
   public updateRole(organizationId: string, id: string, role: string): Observable<any> {
-    return this.http.post<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role });
+    return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role });
   }
 
-  public inviteUser(organizationId: string, role: string, userEmail: string): Observable<{message: string}> {
-    return this.http.post<{message: string}>(`${environment.apiUrl}org/${organizationId}/invite`, { role, userEmail });
+  public inviteUser(organizationId: string, userEmail: string): Observable<{message: string}> {
+    return this.http.post<{message: string}>(`${environment.apiUrl}org/${organizationId}/invite`, { userEmail });
+  }
+
+  public fetchAvailableRoles(): Observable<string[]> {
+    return this.http.get<string[]>(`${environment.apiUrl}roles`);
   }
 }

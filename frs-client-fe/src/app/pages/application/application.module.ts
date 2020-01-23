@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ApplicationComponent } from './application.component';
-import {ApplicationService} from "./application.service";
-import {MatButtonModule} from "@angular/material/button";
-import {RouterModule} from "@angular/router";
-import {AuthGuard} from "../../core/auth/auth.guard";
-import {ToolBarModule} from "../../features/tool-bar/tool-bar.module";
-import {OrganizationHeaderModule} from "../../features/organization-header/organization-header.module";
-import {ApplicationHeaderModule} from "../../features/application-header/application-header.module";
+import { ApplicationPageService } from "./application.service";
+import { MatButtonModule } from "@angular/material/button";
+import { RouterModule } from "@angular/router";
+import { AuthGuard } from "../../core/auth/auth.guard";
+import { ToolBarModule } from "../../features/tool-bar/tool-bar.module";
+import { OrganizationHeaderModule } from "../../features/organization-header/organization-header.module";
+import { ApplicationHeaderModule } from "../../features/application-header/application-header.module";
 import { MatCardModule } from '@angular/material/card';
 import {BreadcrumbsModule} from "../../features/breadcrumbs/breadcrumbs.module";
 
@@ -20,13 +20,13 @@ import {BreadcrumbsModule} from "../../features/breadcrumbs/breadcrumbs.module";
     MatButtonModule,
     ApplicationHeaderModule,
     RouterModule.forChild([
-      {path: '', component: ApplicationComponent, canActivate: [AuthGuard]},
+      { path: '', component: ApplicationComponent, canActivate: [AuthGuard] },
     ]),
     ToolBarModule,
     OrganizationHeaderModule,
     BreadcrumbsModule,
     MatCardModule
   ],
-  providers: [ApplicationService]
+  providers: [ApplicationPageService]
 })
 export class ApplicationModule { }
