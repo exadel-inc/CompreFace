@@ -77,11 +77,11 @@ public class ProxyController {
         String appApiKey = apiKey.substring(0, apiKeyLength);
         String modelApiKey = apiKey.substring(apiKeyLength);
         if (AppModelAccess.READONLY == getAppModelAccessType(appApiKey, modelApiKey)) {
-            readOnlyApiMethods.stream()
-                    .filter(urlMethod -> request.getRequestURI().startsWith(PREFIX + urlMethod.getUrl())
-                            && request.getMethod().equals(urlMethod.getHttpMethod().toString()))
-                    .findFirst()
-                    .orElseThrow(AccessDeniedException::new);
+            if (readOnlyApiMethods.stream()
+                    .noneMatch(urlMethod -> request.getRequestURI().startsWith(PREFIX + urlMethod.getUrl())
+                            && request.getMethod().equals(urlMethod.getHttpMethod().toString()))) {
+                throw new AccessDeniedException();
+            }
         }
         String remoteUrl = baseUrl + request.getRequestURI().replaceFirst(PREFIX, "");
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
