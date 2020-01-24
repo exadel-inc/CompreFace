@@ -8,6 +8,7 @@ public class AppResponseDto {
     private String id;
     private String name;
     private String apiKey;
+    private String role;
     private AppOwnerDto owner;
 
 }

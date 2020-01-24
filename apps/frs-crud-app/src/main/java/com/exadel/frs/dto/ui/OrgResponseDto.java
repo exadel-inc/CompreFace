@@ -7,5 +7,6 @@ public class OrgResponseDto {
 
     private String id;
     private String name;
+    private String role;
 
 }

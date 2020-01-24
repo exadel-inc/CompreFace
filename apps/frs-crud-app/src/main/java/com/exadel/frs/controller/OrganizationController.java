@@ -32,13 +32,13 @@ public class OrganizationController {
     @ApiOperation(value = "Get organization")
     public OrgResponseDto getOrganization(
             @ApiParam(value = "GUID of organization to return", required = true, example = GUID_EXAMPLE) @PathVariable final String guid) {
-        return organizationMapper.toResponseDto(organizationService.getOrganization(guid, SecurityUtils.getPrincipalId()));
+        return organizationMapper.toResponseDto(organizationService.getOrganization(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/orgs")
     @ApiOperation(value = "Get all organizations, the user is a member of")
     public List<OrgResponseDto> getOrganizations() {
-        return organizationMapper.toResponseDto(organizationService.getOrganizations(SecurityUtils.getPrincipalId()));
+        return organizationMapper.toResponseDto(organizationService.getOrganizations(SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -49,7 +49,7 @@ public class OrganizationController {
     })
     public OrgResponseDto createOrganization(
             @ApiParam(value = "Organization object that needs to be created", required = true) @Valid @RequestBody OrgCreateDto orgCreateDto) {
-        return organizationMapper.toResponseDto(organizationService.createOrganization(orgCreateDto, SecurityUtils.getPrincipalId()));
+        return organizationMapper.toResponseDto(organizationService.createOrganization(orgCreateDto, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/org/{guid}")

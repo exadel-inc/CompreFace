@@ -13,7 +13,6 @@ public interface UserOrgRoleMapper {
     @Mapping(source = "user.guid", target = "id")
     @Mapping(source = "user.firstName", target = "firstName")
     @Mapping(source = "user.lastName", target = "lastName")
-    @Mapping(source = "role", target = "accessLevel")
     UserRoleResponseDto toUserRoleResponseDto(UserOrganizationRole userAppRole);
     List<UserRoleResponseDto> toUserRoleResponseDto(List<UserOrganizationRole> userAppRoles);
 

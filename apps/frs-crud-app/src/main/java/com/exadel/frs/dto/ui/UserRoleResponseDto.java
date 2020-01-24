@@ -8,6 +8,6 @@ public class UserRoleResponseDto {
     private String id;
     private String firstName;
     private String lastName;
-    private String accessLevel;
+    private String role;
 
 }
