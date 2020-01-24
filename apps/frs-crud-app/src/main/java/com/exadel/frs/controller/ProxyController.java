@@ -4,6 +4,7 @@ import com.exadel.frs.entity.Model;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.AppOrModelNotFoundException;
+import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -35,21 +36,16 @@ public class ProxyController {
     private static final String X_API_KEY_HEADER = "X-Api-Key";
 
     private final ModelRepository modelRepository;
+    private final AppModelRepository appModelRepository;
 
     @Value("${proxy.baseUrl}")
     private String baseUrl;
 
-    private static final List<UrlMethod> readOnlyApiUrls = List.of(
+    private static final List<UrlMethod> readOnlyApiMethods = List.of(
             new UrlMethod(HttpMethod.GET, "/faces"),
             new UrlMethod(HttpMethod.GET, "/retrain"),
             new UrlMethod(HttpMethod.GET, "/status"),
             new UrlMethod(HttpMethod.POST, "/recognize"));
-
-    private static final List<UrlMethod> trainApiUrls = List.of(
-            new UrlMethod(HttpMethod.POST, "/faces"),
-            new UrlMethod(HttpMethod.POST, "/retrain"),
-            new UrlMethod(HttpMethod.DELETE, "/retrain"),
-            new UrlMethod(HttpMethod.DELETE, "/faces"));
 
     @Data
     @AllArgsConstructor
@@ -58,16 +54,13 @@ public class ProxyController {
         private String url;
     }
 
-    private AppModelAccess getAppModelAccessType(String appGuid, String modelGuid) {
-        Model model = modelRepository.findByGuid(modelGuid)
+    private AppModelAccess getAppModelAccessType(String appApiKey, String modelApiKey) {
+        Model model = modelRepository.findByApiKey(modelApiKey)
                 .orElseThrow(AppOrModelNotFoundException::new);
-        if (appGuid.equals(model.getApp().getGuid())) {
+        if (appApiKey.equals(model.getApp().getApiKey())) {
             return AppModelAccess.TRAIN;
         }
-        return model.getAppModelAccess()
-                .stream()
-                .filter(appModel -> appGuid.equals(appModel.getApp().getGuid()))
-                .findFirst()
+        return appModelRepository.findByAppApiKeyAndModelApiKey(appApiKey, modelApiKey)
                 .orElseThrow(AppOrModelNotFoundException::new)
                 .getAccessType();
     }
@@ -75,16 +68,16 @@ public class ProxyController {
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
     @ApiOperation(value = "Send request to core service")
     public ResponseEntity<String> proxy(
-            @ApiParam(value = "GUID of application and model", required = true) @RequestHeader(X_FRS_API_KEY_HEADER) String apiKey,
+            @ApiParam(value = "Api key of application and model", required = true) @RequestHeader(X_FRS_API_KEY_HEADER) String apiKey,
             @ApiParam(value = "Headers that will be proxied to core service", required = true) @RequestHeader MultiValueMap<String, String> headers,
             @ApiParam(value = "String parameters that will be proxied to core service") @RequestParam(required = false) Map<String, String> params,
             @ApiParam(value = "Files that will be proxied to core service") @RequestParam(required = false) Map<String, MultipartFile> files,
             HttpServletRequest request) {
-        int guidLength = apiKey.length() / 2;
-        String appGuid = apiKey.substring(0, guidLength);
-        String modelGuid = apiKey.substring(guidLength);
-        if (AppModelAccess.READONLY == getAppModelAccessType(appGuid, modelGuid)) {
-            readOnlyApiUrls.stream()
+        int apiKeyLength = apiKey.length() / 2;
+        String appApiKey = apiKey.substring(0, apiKeyLength);
+        String modelApiKey = apiKey.substring(apiKeyLength);
+        if (AppModelAccess.READONLY == getAppModelAccessType(appApiKey, modelApiKey)) {
+            readOnlyApiMethods.stream()
                     .filter(urlMethod -> request.getRequestURI().startsWith(PREFIX + urlMethod.getUrl())
                             && request.getMethod().equals(urlMethod.getHttpMethod().toString()))
                     .findFirst()
@@ -96,13 +89,13 @@ public class ProxyController {
         files.forEach((key, file) -> body.add(key, file.getResource()));
         headers.remove(X_FRS_API_KEY_HEADER);
         headers.add(X_API_KEY_HEADER, apiKey);
-        RestTemplate restTemplate = new RestTemplate();
         try {
-            return restTemplate.exchange(remoteUrl, HttpMethod.resolve(request.getMethod()),
+            return new RestTemplate().exchange(remoteUrl, HttpMethod.resolve(request.getMethod()),
                     new HttpEntity<>(body, headers), String.class);
         } catch (HttpClientErrorException e) {
-            return new ResponseEntity<>(e.getResponseBodyAsString(), e.getStatusCode());
+            return ResponseEntity
+                    .status(e.getStatusCode())
+                    .body(e.getResponseBodyAsString());
         }
     }
-
 }

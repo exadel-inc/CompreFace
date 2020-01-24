@@ -18,11 +18,11 @@ public class UserOrganizationRole {
     @EmbeddedId
     private UserOrganizationRoleId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("userId")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("organizationId")
     private Organization organization;
 

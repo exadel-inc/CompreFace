@@ -18,11 +18,11 @@ public class AppModel {
     @EmbeddedId
     private AppModelId id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("appId")
     private App app;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @MapsId("modelId")
     private Model model;
 

@@ -25,7 +25,7 @@ public class Model {
     private String guid;
     private String apiKey;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private App app;
 
     @ToString.Exclude
