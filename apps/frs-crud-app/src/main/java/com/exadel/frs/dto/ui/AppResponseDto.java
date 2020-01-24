@@ -1,9 +1,11 @@
 package com.exadel.frs.dto.ui;
 
+import com.exadel.frs.system.statistics.IStatistics;
+import com.exadel.frs.system.statistics.ObjectType;
 import lombok.Data;
 
 @Data
-public class AppResponseDto {
+public class AppResponseDto implements IStatistics {
 
     private String id;
     private String name;
@@ -11,4 +13,13 @@ public class AppResponseDto {
     private String role;
     private AppOwnerDto owner;
 
+    @Override
+    public String getGuid() {
+        return id;
+    }
+
+    @Override
+    public ObjectType getObjectType() {
+        return ObjectType.APP;
+    }
 }
