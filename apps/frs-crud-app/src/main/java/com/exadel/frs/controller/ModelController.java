@@ -6,6 +6,7 @@ import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
+import com.exadel.frs.system.statistics.CallStatistics;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -27,6 +28,7 @@ public class ModelController {
     private final ModelService modelService;
     private final MlModelMapper modelMapper;
 
+    @CallStatistics
     @GetMapping("/org/{orgGuid}/app/{appGuid}/model/{guid}")
     @ApiOperation(value = "Get model")
     public ModelResponseDto getModel(
