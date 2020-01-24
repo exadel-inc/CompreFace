@@ -19,7 +19,7 @@ export class ApplicationService {
     return this.http.post<Application>(`${environment.apiUrl}org/${organizationId}/app`, { name })
   }
 
-  public put(organizationId, appId, name): Observable<Application> {
+  public put(organizationId: string, appId: string, name: string): Observable<Application> {
     return this.http.put<Application>(`${environment.apiUrl}org/${organizationId}/app/${appId}`, { name })
   }
 }

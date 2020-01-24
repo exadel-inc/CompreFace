@@ -11,6 +11,7 @@ import { ApplicationHeaderModule } from "../../features/application-header/appli
 import { MatCardModule } from '@angular/material/card';
 import { BreadcrumbsModule } from "../../features/breadcrumbs/breadcrumbs.module";
 import { ModelListModule } from 'src/app/features/model-list/model-list.module';
+import { AppUserListModule } from 'src/app/features/app-user-list/application-user-list.module';
 
 
 
@@ -21,6 +22,7 @@ import { ModelListModule } from 'src/app/features/model-list/model-list.module';
     MatButtonModule,
     ApplicationHeaderModule,
     ModelListModule,
+    AppUserListModule,
     RouterModule.forChild([
       { path: '', component: ApplicationComponent, canActivate: [AuthGuard] },
     ]),

@@ -1,0 +1,69 @@
+[{
+  "id": 0,
+  "applicationId": "app_0",
+  "firstName": "User",
+  "lastName": "Name 0",
+  "accessLevel": "USER"
+},
+{
+  "id": 1,
+  "applicationId": "app_0",
+  "firstName": "User",
+  "lastName": "Name 1",
+  "accessLevel": "USER"
+},
+{
+  "id": 2,
+  "applicationId": "app_0",
+  "firstName": "User",
+  "lastName": "Name 2",
+  "accessLevel": "USER"
+},
+{
+  "id": 3,
+  "applicationId": "app_0",
+  "firstName": "User",
+  "lastName": "Name 3",
+  "accessLevel": "USER"
+},
+{
+  "id": 4,
+  "organizationId": "app_1",
+  "firstName": "User",
+  "lastName": "Name 4",
+  "accessLevel": "USER"
+},{
+  "id": 5,
+  "organizationId": "app_1",
+  "firstName": "User",
+  "lastName": "Name 5",
+  "accessLevel": "USER"
+},
+{
+  "id": 6,
+  "applicationId": "app_2",
+  "firstName": "User",
+  "lastName": "Name 6",
+  "accessLevel": "USER"
+},
+{
+  "id": 7,
+  "applicationId": "app_2",
+  "firstName": "User",
+  "lastName": "Name 7",
+  "accessLevel": "USER"
+},
+{
+  "id": 8,
+  "applicationId": "app_2",
+  "firstName": "User",
+  "lastName": "Name 8",
+  "accessLevel": "USER"
+},
+{
+  "id": 9,
+  "applicationId": "app_2",
+  "firstName": "User",
+  "lastName": "Name 9",
+  "accessLevel": "USER"
+}]
