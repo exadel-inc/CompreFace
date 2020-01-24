@@ -82,7 +82,7 @@ public class AppController {
 
     @GetMapping("/org/{orgGuid}/app/{guid}/assign-roles")
     @ApiOperation(value = "Get application roles, that can be assigned to other users")
-    public List<AppRole> getOrgRolesToAssign(
+    public AppRole[] getOrgRolesToAssign(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
             @ApiParam(value = "GUID of the application", required = true, example = GUID_EXAMPLE) @PathVariable String guid) {
         return appService.getAppRolesToAssign(orgGuid, guid, SecurityUtils.getPrincipalId());
