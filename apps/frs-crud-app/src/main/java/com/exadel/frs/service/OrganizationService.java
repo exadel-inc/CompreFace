@@ -11,9 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -52,6 +50,15 @@ public class OrganizationService {
 
     public List<Organization> getOrganizations(final Long userId) {
         return organizationRepository.findAllByUserOrganizationRoles_Id_UserId(userId);
+    }
+
+    public List<OrganizationRole> getOrgRolesToAssign(final String guid, final Long userId) {
+        Organization organization = getOrganization(guid);
+        UserOrganizationRole role = organization.getUserOrganizationRoleOrThrow(userId);
+        if (OrganizationRole.OWNER.equals(role.getRole())) {
+            return Arrays.asList(OrganizationRole.values());
+        }
+        return Collections.emptyList();
     }
 
     public List<UserOrganizationRole> getOrgUsers(final String guid, final Long userId) {

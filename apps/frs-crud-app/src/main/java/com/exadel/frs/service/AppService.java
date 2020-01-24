@@ -13,9 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -68,6 +66,19 @@ public class AppService {
         }
 
         return appRepository.findAllByOrganizationId(organization.getId());
+    }
+
+    public List<AppRole> getAppRolesToAssign(final String orgGuid, final String appGuid, final Long userId) {
+        final App app = getApp(appGuid);
+        Optional<UserAppRole> userAppRole = app.getUserAppRole(userId);
+        if (userAppRole.isPresent() && AppRole.OWNER.equals(userAppRole.get().getRole())) {
+            return Arrays.asList(AppRole.values());
+        }
+        UserOrganizationRole orgRole = app.getOrganization().getUserOrganizationRoleOrThrow(userId);
+        if (OrganizationRole.USER.equals(orgRole.getRole())) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(AppRole.values());
     }
 
     public List<UserAppRole> getAppUsers(final String searchText, final String orgGuid, final String appGuid, final Long userId) {

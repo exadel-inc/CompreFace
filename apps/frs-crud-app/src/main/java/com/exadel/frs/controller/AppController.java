@@ -1,6 +1,7 @@
 package com.exadel.frs.controller;
 
 import com.exadel.frs.dto.ui.*;
+import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.mapper.UserAppRoleMapper;
@@ -77,6 +78,14 @@ public class AppController {
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
             @ApiParam(value = "GUID of the application that needs to be deleted", required = true, example = GUID_EXAMPLE) @PathVariable String guid) {
         appService.deleteApp(guid, SecurityUtils.getPrincipalId());
+    }
+
+    @GetMapping("/org/{orgGuid}/app/{guid}/assign-roles")
+    @ApiOperation(value = "Get application roles, that can be assigned to other users")
+    public List<AppRole> getOrgRolesToAssign(
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
+            @ApiParam(value = "GUID of the application", required = true, example = GUID_EXAMPLE) @PathVariable String guid) {
+        return appService.getAppRolesToAssign(orgGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/org/{orgGuid}/app/{guid}/roles")

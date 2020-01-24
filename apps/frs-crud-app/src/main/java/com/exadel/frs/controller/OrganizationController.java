@@ -73,6 +73,13 @@ public class OrganizationController {
         return OrganizationRole.values();
     }
 
+    @GetMapping("/org/{guid}/assign-roles")
+    @ApiOperation(value = "Get organization roles, that can be assigned to other users")
+    public List<OrganizationRole> getOrgRolesToAssign(
+            @ApiParam(value = "GUID of the organization", required = true, example = GUID_EXAMPLE) @PathVariable final String guid) {
+        return organizationService.getOrgRolesToAssign(guid, SecurityUtils.getPrincipalId());
+    }
+
     @GetMapping("/org/{guid}/roles")
     @ApiOperation(value = "Get all users of organization")
     public List<UserRoleResponseDto> getOrgUsers(
