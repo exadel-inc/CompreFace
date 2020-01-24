@@ -15,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/admin/user")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 

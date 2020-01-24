@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/org/{orgGuid}")
 @RequiredArgsConstructor
 public class AppController {
 
@@ -30,7 +30,7 @@ public class AppController {
     private final UserAppRoleMapper userAppRoleMapper;
 
     @CallStatistics
-    @GetMapping("/org/{orgGuid}/app/{guid}")
+    @GetMapping("/app/{guid}")
     @ApiOperation(value = "Get application")
     public AppResponseDto getApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
@@ -38,7 +38,7 @@ public class AppController {
         return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
-    @GetMapping("/org/{orgGuid}/apps")
+    @GetMapping("/apps")
     @ApiOperation(value = "Get all applications in organization")
     public List<AppResponseDto> getApps(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid) {
@@ -46,7 +46,7 @@ public class AppController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/org/{orgGuid}/app")
+    @PostMapping("/app")
     @ApiOperation(value = "Create application")
     @ApiResponses({
             @ApiResponse(code = 400, message = "Application name is required")
@@ -57,7 +57,7 @@ public class AppController {
         return appMapper.toResponseDto(appService.createApp(appCreateDto, orgGuid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/org/{orgGuid}/app/{guid}")
+    @PutMapping("/app/{guid}")
     @ApiOperation(value = "Update application")
     public AppResponseDto updateApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
@@ -66,7 +66,7 @@ public class AppController {
         return appMapper.toResponseDto(appService.updateApp(appUpdateDto, guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/org/{orgGuid}/app/{guid}/apikey")
+    @PutMapping("/app/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for application")
     public void regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
@@ -74,7 +74,7 @@ public class AppController {
         appService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
     }
 
-    @DeleteMapping("/org/{orgGuid}/app/{guid}")
+    @DeleteMapping("/app/{guid}")
     @ApiOperation(value = "Delete application")
     public void deleteApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
@@ -82,7 +82,7 @@ public class AppController {
         appService.deleteApp(guid, SecurityUtils.getPrincipalId());
     }
 
-    @GetMapping("/org/{orgGuid}/app/{guid}/assign-roles")
+    @GetMapping("/app/{guid}/assign-roles")
     @ApiOperation(value = "Get application roles, that can be assigned to other users")
     public AppRole[] getOrgRolesToAssign(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
@@ -90,7 +90,7 @@ public class AppController {
         return appService.getAppRolesToAssign(orgGuid, guid, SecurityUtils.getPrincipalId());
     }
 
-    @GetMapping("/org/{orgGuid}/app/{guid}/roles")
+    @GetMapping("/app/{guid}/roles")
     @ApiOperation(value = "Get users of application")
     public List<UserRoleResponseDto> getAppUsers(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
@@ -100,7 +100,7 @@ public class AppController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/org/{orgGuid}/app/{guid}/invite")
+    @PostMapping("/app/{guid}/invite")
     @ApiOperation(value = "Invite user to application")
     public UserRoleResponseDto inviteUser(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,
@@ -109,7 +109,7 @@ public class AppController {
         return userAppRoleMapper.toUserRoleResponseDto(appService.inviteUser(userInviteDto, orgGuid, guid, SecurityUtils.getPrincipalId()));
     }
 
-    @PutMapping("/org/{orgGuid}/app/{guid}/role")
+    @PutMapping("/app/{guid}/role")
     @ApiOperation(value = "Update user application role")
     public void updateUserAppRole(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable String orgGuid,

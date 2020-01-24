@@ -19,7 +19,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/org/{orgGuid}/app/{appGuid}")
 @RequiredArgsConstructor
 public class ModelController {
 
@@ -29,7 +29,7 @@ public class ModelController {
     private final MlModelMapper modelMapper;
 
     @CallStatistics
-    @GetMapping("/org/{orgGuid}/app/{appGuid}/model/{guid}")
+    @GetMapping("/model/{guid}")
     @ApiOperation(value = "Get model")
     public ModelResponseDto getModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable final String orgGuid,
@@ -38,7 +38,7 @@ public class ModelController {
         return modelMapper.toResponseDto(modelService.getModel(guid, SecurityUtils.getPrincipalId()), appGuid);
     }
 
-    @GetMapping("/org/{orgGuid}/app/{appGuid}/models")
+    @GetMapping("/models")
     @ApiOperation(value = "Get all models in application")
     public List<ModelResponseDto> getModels(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable final String orgGuid,
@@ -47,7 +47,7 @@ public class ModelController {
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/org/{orgGuid}/app/{appGuid}/model")
+    @PostMapping("/model")
     @ApiOperation(value = "Create model")
     @ApiResponses({
             @ApiResponse(code = 400, message = "Model name is required | Application access type to model is not correct")
@@ -59,7 +59,7 @@ public class ModelController {
         return modelMapper.toResponseDto(modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()), appGuid);
     }
 
-    @PutMapping("/org/{orgGuid}/app/{appGuid}/model/{guid}")
+    @PutMapping("/model/{guid}")
     @ApiOperation(value = "Update model data")
     @ApiResponses({
             @ApiResponse(code = 400, message = "Application access type to model is not correct")
@@ -72,7 +72,7 @@ public class ModelController {
         modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
     }
 
-    @PutMapping("/org/{orgGuid}/app/{appGuid}/model/{guid}/apikey")
+    @PutMapping("/model/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for model")
     public void regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable final String orgGuid,
@@ -81,7 +81,7 @@ public class ModelController {
         modelService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
     }
 
-    @DeleteMapping("/org/{orgGuid}/app/{appGuid}/model/{guid}")
+    @DeleteMapping("/model/{guid}")
     @ApiOperation(value = "Delete model")
     public void deleteModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE) @PathVariable final String orgGuid,
