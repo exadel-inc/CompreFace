@@ -8,7 +8,7 @@ Run `ng serve` for a dev server. Navigate to `http://localhost:4201/`. The app w
 
 ## Mock API server 
 
-Run `mock-server` for API server. Server host  `http://localhost:3000/`. The app will automatically reload if you change server.js file. \
+Run `mock-server` for API server. Server host:  `http://localhost:3000/`. The app will automatically reload if you change server.js file. \
 JSON files are used for creating data storage in `mock-backend/data` folder. Server uses ExpressJs framework and nodemon. \
 API is described in confluence: https://confluence.exadel.com/pages/viewpage.action?spaceKey=KC&title=FRS+REST+API
 
@@ -35,7 +35,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 #Project structure and architecture
 
 ###Folder structure
-`styles:` folder with sass variables \
+`styles:` folder with sass common styles \
 `core` folder with Global framework-based services \
 `data` global models, enums, classes, interfaces (user model, permissions, roles ect. NO Dto's data inside!!!!). Don't based on specific framework/plugin \
 `feature/containers` Feature specific smart/container components. Communicates with store through facade. Styles less.\
@@ -43,10 +43,11 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 `pages/` Page specific router modules (home, 404, login ect.) with component which are responsible for page layout and composition of features
  
 `store` Store folder. index.ts contains union store and reducers\
-`store/action` Store actions. Can be handled by effect and/or reducer. Can be called in facade.\
-`store/effects` Actions handler which needs to produce some side effect(API call, etc.) and then call facade method if needed.\
-`store/facade` ... ?\
-`store/reducer` Actions handler which directly changes store data. Pure function.\
-
-###NgRx
+`store/featureName` Store for one feature. 
+`store/featureName/module` Feature store encapsulated into feature module and declared `StoreModule.forFeature('Feature', FeatureReducer)` 
+`store/featureName/actions` Store actions. Can be handled by effect and/or reducer. Can be called in facade.\
+`store/featureName/effects` Actions handler which needs to produce some side effect(API call, etc.) and then call facade method if needed.\
+`store/featureName/selectors` Selectors for feature state
+`store/featureName/reducers` Actions handler which directly changes store data. Pure function.\
+`store/featureName/feature-entitys.service.ts` service for access for entities https://ngrx.io/guide/data/entity-services
  
