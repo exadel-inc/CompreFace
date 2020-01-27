@@ -6,13 +6,15 @@ const organizations = require('./data/organization.json');
 const users = require('./data/users.json');
 const roles = require('./data/roles.json');
 const models = require('./data/models.json');
+const appUsers = require('./data/appUsers.json');
 
 const mockData = {
   applications,
   organizations,
   users,
   roles,
-  models
+  models,
+  appUsers
 };
 
 const app = express();
@@ -160,7 +162,7 @@ app.get('/org/:orgId/roles', auth, wait(), (req, res) => {
   res.status(201).json(mockData.users.filter(user => user.organizationId === organizationId));
 });
 
-app.put('/org/:orgId/role', auth, (req, res) => {
+app.put('/org/:orgId/role', auth, wait(), (req, res) => {
   const orgId = req.params.orgId;
   const { id, role } = req.body;
 
@@ -217,15 +219,14 @@ app.get('/user/me', auth, (req, res) => {
   res.send(user);
 });
 
-//http://localhost:3000/org/asdfdasdfdaf222222222222/app/app_4/models
-app.get('/org/:orgId/app/:appId/models', auth, (req, res) => {
+app.get('/org/:orgId/app/:appId/models', auth, wait(), (req, res) => {
   const appId = req.params.appId;
   const models = mockData.models.filter(model => model.applicationId === appId);
 
   res.send(models);
 });
 
-app.post('/org/:orgId/app/:appId/model', auth, (req, res) => {
+app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
   const { name } = req.body;
   const { appId, orgId } = req.params;
 
@@ -246,6 +247,38 @@ app.post('/org/:orgId/app/:appId/model', auth, (req, res) => {
     res.status(201).send(newModel);
   } else {
     res.status(404).json({ message: 'Organization or Application wasnt found' });
+  }
+});
+
+app.get('/org/:orgId/app/:appId/roles', auth, wait(), (req, res) => {
+  const { appId } = req.params;
+  const appUsers = mockData.appUsers.filter(appUser => appUser.applicationId === appId);
+
+  res.send(appUsers);
+});
+
+app.put('/org/:orgId/app/:appId/role', auth, wait(), (req, res) => {
+  const { id, role } = req.body;
+  const { appId } = req.params;
+  const appUsers = mockData.appUsers.filter(appUser => appUser.applicationId === appId);
+  const user = appUsers.find(appUser => appUser.id === id);
+
+  if (user) {
+    if (role === 'OWNER') {
+      const currentApplication = mockData.applications.find(app => app.id === appId);
+      if (currentApplication.role === 'OWNER') {
+        user.accessLevel = role;
+        currentApplication.role = 'ADMIN';
+        res.status(200).json(user);
+      } else {
+        res.status(403).json({ message: 'forbidden' });
+      }
+    } else {
+      user.accessLevel = role;
+      res.status(200).json(user);
+    }
+  } else {
+    res.status(404).json({ message: 'user not found' });
   }
 });
 

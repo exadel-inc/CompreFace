@@ -1,0 +1,30 @@
+@import 'media.sass'
+
+.mat-card
+  min-height: 650px
+  height: calc(100vh - 80px)
+  display: flex
+  flex-direction: row
+
+  .header-conatiner
+    width: 100%
+
+  +mobile
+    height: auto
+
+  app-application-header
+    margin-bottom: 40px
+
+.grid-container
+  grid-template-columns: 0.8fr 0.8fr
+  grid-gap: 2rem
+  flex-grow: 1
+
+  app-model-list, application-user-list
+    display: flex
+    flex-direction: column
+    justify-content: space-between
+
+@include mobile
+  .grid-container
+    grid-template-columns: 1fr
