@@ -1,6 +1,5 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { ModelEntityState, modelAdapter } from './reducers';
-import { Observable } from 'rxjs';
 
 const { selectAll } = modelAdapter.getSelectors();
 

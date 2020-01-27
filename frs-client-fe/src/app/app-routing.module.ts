@@ -11,6 +11,9 @@ const routes: Routes = [
   { path: 'application', component: MainLayoutComponent, children: [
       {path: '', loadChildren: './pages/application/application.module#ApplicationModule'}
     ]},
+  { path: 'model', component: MainLayoutComponent, children: [
+      {path: '', loadChildren: './pages/model/model.module#ModelModule'}
+    ]},
   { path: 'login', loadChildren: './pages/login/login.module#LoginModule'},
   { path: 'sign-up', loadChildren: './pages/sign-up/sign-up.module#SignUpModule'},
   { path: '**', redirectTo: '/' }
