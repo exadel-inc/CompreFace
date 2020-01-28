@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
+
 @RestController
 @RequiredArgsConstructor
 public class OrganizationController {
-
-    private static final String GUID_EXAMPLE = "3913717b-a40b-4d6f-acc4-a861aa612651";
-
     private final OrganizationService organizationService;
     private final OrganizationMapper organizationMapper;
     private final UserOrgRoleMapper userOrgRoleMapper;
