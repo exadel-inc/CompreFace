@@ -33,7 +33,6 @@ export class ModelPageService {
     this.modelId = this.route.snapshot.queryParams.model;
 
     if (this.appId && this.orgId && this.modelId) {
-      console.log(this.appId, this.orgId, this.modelId);
       this.store.dispatch(setSelectedIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(new SetSelectedId({ selectId: this.orgId }));
       this.store.dispatch(setSelectedIdModelEntityAction({ selectedId: this.modelId }));

@@ -45,7 +45,6 @@ export class ModelListComponent implements OnInit, OnDestroy {
         model: model.id,
       }
     });
-    console.log(`model ${model.name} was clicked`);
   }
 
   public onCreateNewModel(): void {
