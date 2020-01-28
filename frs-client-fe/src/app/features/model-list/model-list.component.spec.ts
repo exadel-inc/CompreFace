@@ -6,6 +6,7 @@ import { ModelListFacade } from './model-list-facade';
 import { of } from 'rxjs';
 
 import { ModelListComponent } from './model-list.component';
+import {Router} from "@angular/router";
 
 describe('ModelListComponent', () => {
   let component: ModelListComponent;
@@ -33,7 +34,9 @@ describe('ModelListComponent', () => {
           isLoading$: of([{}]),
           unsubscribe(){}
         }
-      }]
+      },
+        {provide: Router}
+      ]
     })
     .compileComponents();
   }));

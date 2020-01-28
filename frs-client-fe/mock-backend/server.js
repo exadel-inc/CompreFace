@@ -282,6 +282,12 @@ app.put('/org/:orgId/app/:appId/role', auth, wait(), (req, res) => {
   }
 });
 
+app.get('/org/:orgId/app/:appId/models/:modelId', auth, wait(), (req, res) => {
+  const modelId = req.params.modelId;
+  const models = mockData.models.filter(model => model.id === modelId);
+  res.send(models);
+});
+
 app.listen(3000, function() {
   console.log('Listening on port 3000!');
 });
