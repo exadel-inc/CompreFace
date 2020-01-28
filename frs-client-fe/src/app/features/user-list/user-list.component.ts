@@ -50,9 +50,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   private openEmailNotification(email: string): void {
-    if (!email) {
-      return;
-    }
+    if (!email) return;
 
     this.dialog.open(AlertComponent, {
       data: {

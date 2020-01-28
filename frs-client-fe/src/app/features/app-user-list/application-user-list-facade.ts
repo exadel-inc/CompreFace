@@ -5,18 +5,20 @@ import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/s
 import { loadAppUserEntityAction, putUpdatedAppUserRoleEntityAction } from 'src/app/store/app-user/actions';
 import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { AppState } from 'src/app/store';
-import { Observable, combineLatest, Subscription } from 'rxjs';
+import {Observable, combineLatest, Subscription, Subject} from 'rxjs';
 import { AppUser } from 'src/app/data/appUser';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
-import { map } from 'rxjs/operators';
+import {map, tap} from 'rxjs/operators';
 import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
 import { LoadRolesEntityAction } from 'src/app/store/role/actions';
+import {User} from "../../data/user";
 
 @Injectable()
 export class ApplicationUserListFacade implements IFacade {
   public isLoading$: Observable<boolean>;
   public appUsers$: Observable<AppUser[]>;
   public availableRoles$: Observable<string[]>;
+  public availableUsers$: Observable<User[]>;
 
   private selectedApplicationId: string;
   private selectedApplicationIdSubscription: Subscription;
@@ -90,6 +92,12 @@ export class ApplicationUserListFacade implements IFacade {
         accessLevel
       }
     }));
+  }
+
+  public inviteUser(userEmail: string): Observable<any> {
+    return new Subject();
+    // return this.userService.inviteUser(this.selectedOrganization, userEmail)
+    //   .pipe(tap(() => this.loadUsers()));
   }
 
   public unsubscribe(): void {
