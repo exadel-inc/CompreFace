@@ -17,8 +17,8 @@ export class ModelListFacade implements IFacade {
   public selectedApplication$: Observable<string>;
 
   private currentArgsAndApplicationSubscription: Subscription;
-  private selectedOrganizationId: string;
-  private selectedApplicationId: string;
+  public selectedOrganizationId: string;
+  public selectedApplicationId: string;
 
   constructor(private store: Store<AppState>) {
     this.models$ = store.select(selectModels);

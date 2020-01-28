@@ -5,6 +5,8 @@ import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dia
 import { MatDialog } from '@angular/material';
 import { ITableConfig } from 'src/app/features/table/table.component';
 import { ModelListFacade } from './model-list-facade';
+import {ROUTERS_URL} from "../../data/routers-url.variable";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-model-list',
@@ -17,7 +19,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   public errorMessage: string;
   public tableConfig$: Observable<ITableConfig>;
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog) {
+  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router) {
     this.modelListFacade.initSubscriptions();
   }
 
@@ -36,7 +38,13 @@ export class ModelListComponent implements OnInit, OnDestroy {
   }
 
   public onClick(model): void {
-    console.log(`model ${model.name} was clicked`);
+    this.router.navigate([ROUTERS_URL.MODEL], {
+      queryParams: {
+        org: this.modelListFacade.selectedOrganizationId,
+        app: this.modelListFacade.selectedApplicationId,
+        model: model.id,
+      }
+    });
   }
 
   public onCreateNewModel(): void {
