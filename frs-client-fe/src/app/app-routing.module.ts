@@ -14,10 +14,11 @@ const routes: Routes = [
   { path: 'login', loadChildren: './pages/login/login.module#LoginModule'},
   { path: 'sign-up', loadChildren: './pages/sign-up/sign-up.module#SignUpModule'},
   { path: '**', redirectTo: '/' }
-  ];
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
+
 export class AppRoutingModule { }

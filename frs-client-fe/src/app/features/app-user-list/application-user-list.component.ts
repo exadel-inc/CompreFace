@@ -19,7 +19,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   public isLoading$: Observable<boolean>;
   public availableRoles$: Observable<string[]>;
   public errorMessage: string;
-  public availableUsers$: Observable<User[]>;
+  public availableEmails$: Observable<string[]>;
 
   constructor(private appUserListFacade: ApplicationUserListFacade, public dialog: MatDialog) {
     appUserListFacade.initSubscriptions();
@@ -27,6 +27,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading$ = this.appUserListFacade.isLoading$;
+    this.availableEmails$ = this.appUserListFacade.availableEmails$;
 
     this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(map((users: AppUser[]) => {
       return {

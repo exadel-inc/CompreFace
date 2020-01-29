@@ -138,5 +138,8 @@
       }
     }
   },
-  "defaultProject": "frs-client-fe"
+  "defaultProject": "frs-client-fe",
+  "cli": {
+    "defaultCollection": "@ngrx/schematics"
+  }
 }

@@ -3,4 +3,4 @@
   <app-spinner [isVisible$]="isLoading$"></app-spinner>
   <app-user-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" [availableRoles$]="availableRoles$" (onChange)="onChange($event)"></app-user-table>
 </div>
-<app-invite-user (onChange)="onInviteUser($event)" [options]="availableUsers$"></app-invite-user>
+<app-invite-user *ngIf="availableEmails$ | async as availableEmails" (onChange)="onInviteUser($event)" [options]="availableEmails"></app-invite-user>
