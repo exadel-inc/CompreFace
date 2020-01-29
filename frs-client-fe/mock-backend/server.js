@@ -88,8 +88,8 @@ app.get('/organizations', auth, function (req, res) {
 app.post('/organization', auth, function (req, res) {
   const org = {
     name: req.body.name,
-    id: req.body.name+'_guid',
-    userOrganizationRoles: [{role: "OWNER", userId: "guid_0"}]
+    id: req.body.name + '_guid',
+    role: 'OWNER'
   };
   mockData.organizations.push(org);
   res.send(org);
