@@ -10,6 +10,11 @@ produces:
 security:
   - ApiKeyAuth: []
 parameters:
+  - in: formData
+    name: file
+    type: file
+    required: 'true'
+    description: 'Image of a face (accepted formats: jpeg, png).'
   - $ref: '#/components/parameters/FaceNameParameter'
   - $ref: '#/components/parameters/RetrainParameter'
   - $ref: '#/components/parameters/DetProbThresholdParameter'
