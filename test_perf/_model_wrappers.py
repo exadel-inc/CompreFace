@@ -41,9 +41,10 @@ class EfrsLocal(ModelWrapperBase):
             cropped_img = crop_one_face(img).img
         except NoFaceFoundError as e:
             logging.warning(f"Failed to add face example. Skipping. {str(e)}")
-            return
+            return 1
         self._cropped_images.append(cropped_img)
         self._names.append(name)
+        return 0
 
     def train(self):
         embeddings = calculate_embeddings(self._cropped_images)
@@ -75,6 +76,8 @@ class EfrsRestApi(ModelWrapperBase):
                       files={'file': numpy_to_jpg_file(img)})
         if response.status_code != 201:
             logging.warning(f"Failed to add face example. Skipping. {str(response.content)}")
+            return 1
+        return 0
 
     def train(self):
         requests.post(f"{self._host}/retrain", headers={'X-Api-Key': self._api_key})

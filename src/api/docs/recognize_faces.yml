@@ -15,15 +15,9 @@ parameters:
   - in: formData
     name: limits
     description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
-    required: 'false'
     type: integer
     default: 0
-  - in: path
-    name: det_prob_threshold
-    description: 'The minimal percent confidence that found face is actually a face.'
-    required: 'false'
-    type: float
-    default: 0.5
+  - $ref: '#/components/parameters/DetProbThresholdParameter'
 security:
   - ApiKeyAuth: []
 responses:

@@ -160,4 +160,6 @@ fabric.properties
 
 .idea/**
 
+.vscode/**
+
 data/**
