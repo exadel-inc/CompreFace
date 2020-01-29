@@ -221,7 +221,7 @@ app.get('/user/me', auth, (req, res) => {
 
 app.get('/org/:orgId/app/:appId/models', auth, wait(), (req, res) => {
   const appId = req.params.appId;
-  const models = mockData.models.filter(model => model.applicationId === appId);
+  const models = mockData.models.filter(model => ~model.applicationId.indexOf(appId));
 
   res.send(models);
 });
@@ -239,7 +239,7 @@ app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
         firstName
       },
       accessLevel: 'OWNER',
-      applicationId: appId
+      applicationId: [appId]
     };
 
     mockData.models.push(newModel);
@@ -286,6 +286,14 @@ app.get('/org/:orgId/app/:appId/models/:modelId', auth, wait(), (req, res) => {
   const modelId = req.params.modelId;
   const models = mockData.models.filter(model => model.id === modelId);
   res.send(models);
+});
+
+app.get('/org/:orgId/app/:appId/models/:modelId/apps', auth, wait(), (req, res) => {
+  const modelId = req.params.modelId;
+  const model = mockData.models.find(model => model.id === modelId);
+  const applications = mockData.applications.filter(app => ~model.applicationId.indexOf(app.appId));
+
+  res.send(applications);
 });
 
 app.listen(3000, function() {

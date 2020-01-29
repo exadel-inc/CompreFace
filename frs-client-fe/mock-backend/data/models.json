@@ -3,7 +3,7 @@
     "id": 0,
     "name": "Model 1",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_0",
+    "applicationId": ["app_0", "app_1"],
     "owner": {
       "id": "0",
       "firstName": "Owner 0",
@@ -14,7 +14,7 @@
     "id": 1,
     "name": "Model 2",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_0",
+    "applicationId": ["app_0", "app_1"],
     "owner": {
       "id": "0",
       "firstName": "Owner 0",
@@ -25,7 +25,7 @@
     "id": 2,
     "name": "Model 3",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_0",
+    "applicationId": ["app_0", "app_1", "app_2"],
     "owner": {
       "id": "1",
       "firstName": "Owner 1",
@@ -47,7 +47,7 @@
     "id": 4,
     "name": "Model 5",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_1",
+    "applicationId": ["app_0", "app_1", "app_2", "app_3"],
     "owner": {
       "id": "2",
       "firstName": "Owner 2",
@@ -58,7 +58,7 @@
     "id": 5,
     "name": "Model 6",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_2",
+    "applicationId": ["app_0", "app_1", "app_2", "app_3"],
     "owner": {
       "id": "2",
       "firstName": "Owner 2",
@@ -80,7 +80,7 @@
     "id": 7,
     "name": "Model 8",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_2",
+    "applicationId": ["app_0", "app_1", "app_2", "app_3", "app_4", "app_5", "app_6"],
     "owner": {
       "id": "2",
       "firstName": "Owner 2",
@@ -91,7 +91,7 @@
     "id": 8,
     "name": "Model 9",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_3",
+    "applicationId": ["app_0", "app_1", "app_2", "app_3", "app_4", "app_5", "app_6"],
     "owner": {
       "id": "3",
       "firstName": "Owner 3",
@@ -102,7 +102,7 @@
     "id": 9,
     "name": "Model 10",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_3",
+    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7"],
     "owner": {
       "id": "4",
       "firstName": "Owner 4",
@@ -113,7 +113,7 @@
     "id": 10,
     "name": "Model 11",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_3",
+    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7"],
     "owner": {
       "id": "4",
       "firstName": "Owner 4",
@@ -124,7 +124,7 @@
     "id": 11,
     "name": "Model 12",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_3",
+    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7", "app_8", "app_9"],
     "owner": {
       "id": "5",
       "firstName": "Owner 5",
@@ -135,7 +135,7 @@
     "id": 12,
     "name": "Model 13",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_4",
+    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7", "app_8", "app_9"],
     "owner": {
       "id": "5",
       "firstName": "Owner 5",
@@ -146,7 +146,7 @@
     "id": 13,
     "name": "Model 14",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_4",
+    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7", "app_8", "app_9"],
     "owner": {
       "id": "6",
       "firstName": "Owner 6",
@@ -157,7 +157,7 @@
     "id": 14,
     "name": "Model 15",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_5",
+    "applicationId": ["app_4", "app_5", "app_6", "app_7", "app_8", "app_9", "app_10"],
     "owner": {
       "id": "7",
       "firstName": "Owner 7",
@@ -168,7 +168,7 @@
     "id": 15,
     "name": "Model 16",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_6",
+    "applicationId": ["app_4", "app_5", "app_6", "app_7", "app_8", "app_9", "app_10"],
     "owner": {
       "id": "7",
       "firstName": "Owner 7",
