@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
-import {Observable} from "rxjs";
-import {map, startWith} from "rxjs/operators";
+import {combineLatest, Observable} from "rxjs";
+import {map,startWith} from "rxjs/operators";
 
 @Component({
   selector: 'app-invite-user',
@@ -12,9 +12,8 @@ import {map, startWith} from "rxjs/operators";
 })
 export class InviteUserComponent implements OnInit {
   public form: FormGroup;
-  public control = new FormControl();
-  @Input() options: string[];
-  filteredOptions: Observable<string[]>;
+  @Input() options$: Observable<string[]>;
+  filteredOptions$: Observable<string[]>;
   @Output() onChange = new EventEmitter<string>();
 
   constructor() { }
@@ -24,10 +23,14 @@ export class InviteUserComponent implements OnInit {
       email: new FormControl(null, [Validators.pattern(EMAIL_REGEXP_PATTERN)])
     });
 
-    this.filteredOptions = this.control.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filter(value))
-    );
+    if (this.options$) {
+      this.filteredOptions$ = combineLatest(
+        this.options$,
+        this.form.controls.email.valueChanges.pipe(startWith(''))
+      ).pipe(
+        map(([options, value]) => this.filter(options, value)),
+      );
+    }
   }
 
   public onClick(): void {
@@ -37,9 +40,9 @@ export class InviteUserComponent implements OnInit {
     }
   }
 
-  private filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.options ? this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0) : [""];
+  private filter(options: string[], value: string): string[] {
+    console.log(options, value);
+    const filterValue = value ? value.toLowerCase(): "";
+    return options ? options.filter(option => option.toLowerCase().indexOf(filterValue) === 0) : [""];
   }
 }

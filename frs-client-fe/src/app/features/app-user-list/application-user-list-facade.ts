@@ -13,6 +13,7 @@ import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors'
 import {LoadRolesEntityAction} from 'src/app/store/role/actions';
 import {selectUsers} from "../../store/user/selectors";
 import {LoadUsersEntityAction} from "../../store/user/action";
+import {AppUserService} from "../../core/app-user/app-user.service";
 
 @Injectable()
 export class ApplicationUserListFacade implements IFacade {
@@ -25,7 +26,7 @@ export class ApplicationUserListFacade implements IFacade {
   private selectedOrganizationId: string;
   private sub: Subscription;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
     this.availableEmails$ = store.select(selectUsers).pipe(map(data => data.map(user => user.email)));
     const allRoles$ = store.select(selectAllRoles);
@@ -58,7 +59,6 @@ export class ApplicationUserListFacade implements IFacade {
       .pipe(
         map(observResults => !(!observResults[0] && !observResults[1])
         ));
-
   }
 
   public initSubscriptions(): void {
@@ -97,9 +97,13 @@ export class ApplicationUserListFacade implements IFacade {
   }
 
   public inviteUser(email: string): Observable<any> {
-    return new Subject();
-    // return this.userService.inviteUser(this.selectedOrganization, userEmail)
-    //   .pipe(tap(() => this.loadUsers()));
+    return this.userService.inviteUser(this.selectedOrganizationId, this.selectedApplicationId, email)
+      .pipe(tap(() =>
+        this.store.dispatch(loadAppUserEntityAction({
+          organizationId: this.selectedOrganizationId,
+          applicationId: this.selectedApplicationId
+        }))
+      ));
   }
 
   public unsubscribe(): void {
