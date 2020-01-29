@@ -15,4 +15,4 @@ if __name__ == '__main__':
     init_runtime()
     debug_app = init_app()
     debug_app.config.from_mapping(SECRET_KEY='dev')
-    debug_app.run(host='0.0.0.0', port=5001, debug=True, use_debugger=False, use_reloader=False)
+    debug_app.run(host='0.0.0.0', debug=True, use_debugger=False, use_reloader=False)
