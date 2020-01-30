@@ -288,12 +288,16 @@ app.get('/org/:orgId/app/:appId/models/:modelId', auth, wait(), (req, res) => {
   res.send(models);
 });
 
-app.get('/org/:orgId/app/:appId/models/:modelId/apps', auth, wait(), (req, res) => {
+app.get('/org/:orgId/app/:appId/model/:modelId/apps', auth, wait(), (req, res) => {
   const modelId = req.params.modelId;
   const model = mockData.models.find(model => model.id === modelId);
-  const applications = mockData.applications.filter(app => ~model.applicationId.indexOf(app.appId));
 
-  res.send(applications);
+  if (model) {
+    const applications = mockData.applications.filter(app => ~model.applicationId.indexOf(app.id));
+    res.send(applications);
+  } else {
+    res.status(404).send({message: 'model wasnt found'});
+  }
 });
 
 app.listen(3000, function() {

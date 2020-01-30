@@ -25,8 +25,6 @@ export class ModelListFacade implements IFacade {
     this.isLoading$ = store.select(selectIsPending);
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.selectedApplication$ = store.select(selectCurrentAppId);
-
-    this.store.subscribe(str => console.log(str));
   }
 
   public initSubscriptions(): void {

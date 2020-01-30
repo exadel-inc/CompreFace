@@ -40,7 +40,6 @@ import { ModelEffects } from './store/model/effects';
 import { AppUserStoreModule } from './store/app-user/app-user.module';
 import { AppUserListModule } from './features/app-user-list/application-user-list.module';
 import { AppUserEffects } from './store/app-user/effects';
-import { ModelsRelationListComponent } from './features/models-relation-list/models-relation-list.component';
 import { ModelRelationStoreModule } from './store/model-relation/model-relation.module';
 import { ModelRelationEffects } from './store/model-relation/effects';
 
@@ -49,8 +48,7 @@ import { ModelRelationEffects } from './store/model-relation/effects';
     AppComponent,
     MainLayoutComponent,
     CreateDialogComponent,
-    AlertComponent,
-    ModelsRelationListComponent
+    AlertComponent
   ],
   imports: [
     BrowserModule,

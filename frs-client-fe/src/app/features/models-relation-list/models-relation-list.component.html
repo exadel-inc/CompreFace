@@ -1,1 +1,5 @@
-<p>models-relation-list works!</p>
+<div class="user-list">
+  <h2>List of available users</h2>
+  <app-spinner [isVisible$]="isLoading$"></app-spinner>
+  <app-user-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" [availableRoles$]="availableRoles$" (onChange)="onChange($event)"></app-user-table>
+</div>
