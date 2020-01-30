@@ -5,6 +5,8 @@ import { AppUser } from 'src/app/data/appUser';
 import { map } from 'rxjs/operators';
 import { ITableConfig } from '../table/table.component';
 import { MatDialog } from '@angular/material';
+import {AlertComponent} from "../alert/alert.component";
+import {User} from "../../data/user";
 
 @Component({
   selector: 'application-user-list',
@@ -12,11 +14,12 @@ import { MatDialog } from '@angular/material';
   styleUrls: ['./application-user-list.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ApplicationUserListComponent implements OnInit {
+export class ApplicationUserListComponent implements OnInit, OnDestroy {
   public tableConfig$: Observable<ITableConfig>;
   public isLoading$: Observable<boolean>;
   public availableRoles$: Observable<string[]>;
   public errorMessage: string;
+  public availableEmails$: Observable<string[]>;
 
   constructor(private appUserListFacade: ApplicationUserListFacade, public dialog: MatDialog) {
     appUserListFacade.initSubscriptions();
@@ -24,6 +27,7 @@ export class ApplicationUserListComponent implements OnInit {
 
   ngOnInit() {
     this.isLoading$ = this.appUserListFacade.isLoading$;
+    this.availableEmails$ = this.appUserListFacade.availableEmails$;
 
     this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(map((users: AppUser[]) => {
       return {
@@ -41,5 +45,22 @@ export class ApplicationUserListComponent implements OnInit {
 
   public ngOnDestroy(): void {
     this.appUserListFacade.unsubscribe();
+  }
+
+  public onInviteUser(email: string): void {
+    this.appUserListFacade.inviteUser(email)
+      .subscribe(() => this.openEmailNotification(email));
+  }
+
+  private openEmailNotification(email: string): void {
+    if (!email) return;
+
+    this.dialog.open(AlertComponent, {
+      data: {
+        type: 'info',
+        message: `Invitation was sent to ${email}`
+      },
+      minWidth: 300
+    });
   }
 }

@@ -88,8 +88,8 @@ app.get('/organizations', auth, function (req, res) {
 app.post('/organization', auth, function (req, res) {
   const org = {
     name: req.body.name,
-    id: req.body.name+'_guid',
-    userOrganizationRoles: [{role: "OWNER", userId: "guid_0"}]
+    id: req.body.name + '_guid',
+    role: 'OWNER'
   };
   mockData.organizations.push(org);
   res.send(org);
@@ -210,6 +210,25 @@ app.post('/org/:orgId/invite', auth, (req, res) => {
   }
 });
 
+app.post('/org/:orgId/app/:appId/invite', auth, (req, res) => {
+  const appId = req.params.appId;
+  const { userEmail } = req.body;
+
+  if (userEmail) {
+    mockData.appUsers.push({
+      id: mockData.appUsers.length,
+      applicationId: appId,
+      firstName: userEmail,
+      lastName: userEmail,
+      accessLevel: 'USER'
+    });
+
+    res.status(201).json({ message: 'created' });
+  } else {
+    res.sendStatus(400);
+  }
+});
+
 app.get('/roles', auth, (req, res) => {
   res.send(mockData.roles);
 });
@@ -253,7 +272,6 @@ app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
 app.get('/org/:orgId/app/:appId/roles', auth, wait(), (req, res) => {
   const { appId } = req.params;
   const appUsers = mockData.appUsers.filter(appUser => appUser.applicationId === appId);
-
   res.send(appUsers);
 });
 
