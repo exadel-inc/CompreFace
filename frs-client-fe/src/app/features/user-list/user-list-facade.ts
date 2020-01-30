@@ -87,7 +87,6 @@ export class UserListFacade implements IFacade {
   }
 
   public inviteUser(userEmail: string): Observable<any> {
-    // todo why call by service ?
     return this.userService.inviteUser(this.selectedOrganization, userEmail)
       .pipe(tap(() => this.loadUsers()));
   }
