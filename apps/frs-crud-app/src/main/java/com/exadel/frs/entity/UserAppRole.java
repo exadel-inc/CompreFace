@@ -35,5 +35,4 @@ public class UserAppRole {
         this.role = role;
         this.id = new UserAppRoleId(user.getId(), app.getId());
     }
-
 }

@@ -52,5 +52,4 @@ public class Organization {
         userOrganizationRoles.add(userOrganizationRole);
         user.getUserOrganizationRoles().add(userOrganizationRole);
     }
-
 }

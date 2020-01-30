@@ -35,5 +35,4 @@ public class AppModel {
         this.accessType = accessType;
         this.id = new AppModelId(app.getId(), model.getId());
     }
-
 }

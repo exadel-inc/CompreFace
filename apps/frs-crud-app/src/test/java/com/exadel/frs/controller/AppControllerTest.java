@@ -13,13 +13,17 @@ import com.exadel.frs.security.JwtTokenFilter;
 import com.exadel.frs.security.JwtTokenFilterConfigurer;
 import com.exadel.frs.security.JwtTokenProvider;
 import com.exadel.frs.service.AppService;
+import com.exadel.frs.system.security.JwtAuthenticationFilter;
+import com.exadel.frs.system.security.config.AuthServerConfig;
+import com.exadel.frs.system.security.config.ResourceServerConfig;
+import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -28,13 +32,17 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AppController.class)
+@WebMvcTest(value = AppController.class,
+        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
+                classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class})
+)
 @Import(value = {JwtTokenFilter.class, JwtTokenFilterConfigurer.class})
 @MockBeans({@MockBean(AppMapper.class), @MockBean(UserAppRoleMapper.class), @MockBean(JwtTokenProvider.class)})
 class AppControllerTest {
@@ -48,11 +56,17 @@ class AppControllerTest {
 
     @MockBean
     private AppService appService;
+    @MockBean
+    private AppMapper appMapper;
 
     @Autowired
     private MockMvc mockMvc;
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    private static User buildDefaultUser() {
+        return User.builder().username(USERNAME).id(USER_ID).build();
+    }
 
     @Test
     public void shouldReturnMessageAndCodeWhenAppNotFoundExceptionThrown() throws Exception {
@@ -84,7 +98,8 @@ class AppControllerTest {
 
         doThrow(expectedException).when(appService).createApp(any(), eq(ORG_GUID), eq(USER_ID));
 
-        MockHttpServletRequestBuilder request = post("/org/" + ORG_GUID + "/app")
+        MockHttpServletRequestBuilder request = post("/apps/")
+                .with(csrf())
                 .with(user(buildDefaultUser()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(App.builder().id(APP_ID).build()));

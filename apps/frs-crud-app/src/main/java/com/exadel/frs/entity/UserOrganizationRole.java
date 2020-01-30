@@ -35,5 +35,4 @@ public class UserOrganizationRole {
         this.role = role;
         this.id = new UserOrganizationRoleId(user.getId(), organization.getId());
     }
-
 }
