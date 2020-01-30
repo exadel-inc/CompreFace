@@ -18,4 +18,8 @@ export class AppUserService {
   public update(organizationId: string, applicationId: string, id: string, role: string):  Observable<AppUser> {
     return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/role`, { id, role });
   }
+
+  public inviteUser(organizationId: string, applicationId: string, userEmail: string): Observable<{message: string}> {
+    return this.http.post<{message: string}>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/invite`, { userEmail });
+  }
 }

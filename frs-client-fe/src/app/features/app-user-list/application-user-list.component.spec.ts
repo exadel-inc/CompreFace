@@ -5,9 +5,9 @@ import { SpinnerModule } from '../spinner/spinner.module';
 import { UserTableModule } from '../user-table/user-table.module';
 import { ApplicationUserListFacade } from './application-user-list-facade';
 import { of } from 'rxjs';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { MatFormFieldModule, MatInputModule, MatDialog } from '@angular/material';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatDialog } from '@angular/material';
+import {InviteUserModule} from "../invite-user/invite-user.module";
+import {NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('ApplicationUserListComponent', () => {
   let component: ApplicationUserListComponent;
@@ -16,7 +16,12 @@ describe('ApplicationUserListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ApplicationUserListComponent ],
-      imports: [SpinnerModule, UserTableModule, ReactiveFormsModule, FormsModule, MatFormFieldModule, MatInputModule, NoopAnimationsModule],
+      imports: [
+        SpinnerModule,
+        UserTableModule,
+        InviteUserModule,
+        NoopAnimationsModule
+      ],
       providers: [{
         provide: MatDialog,
         useValue: {}
