@@ -38,19 +38,6 @@ spring:
     open-in-view: true
     generate-ddl: false
 
-logging:
-  level:
-    com:
-      exadel:
-        frs: TRACE
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
-
 security:
   signing-key: MaYzkSjmkzPC57L
   encoding-strength: 256
@@ -76,3 +63,13 @@ logging:
   level:
     web: DEBUG
     org.springframework.web: DEBUG
+    com:
+      exadel:
+        frs: TRACE
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE

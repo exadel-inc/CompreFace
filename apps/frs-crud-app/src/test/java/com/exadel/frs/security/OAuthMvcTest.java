@@ -84,9 +84,9 @@ public class OAuthMvcTest {
                 .contentType("application/json")
                 .content(employeeString)
                 .accept("application/json"))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
-        var accessToken = obtainAccessToken("test1", "test1");
+        var accessToken = obtainAccessToken("test1@email.com", "test1");
         mockMvc.perform(get("/user/me")
                 .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk());

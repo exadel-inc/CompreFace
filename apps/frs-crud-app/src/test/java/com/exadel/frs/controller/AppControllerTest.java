@@ -9,9 +9,6 @@ import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.handler.ExceptionCode;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.mapper.UserAppRoleMapper;
-import com.exadel.frs.security.JwtTokenFilter;
-import com.exadel.frs.security.JwtTokenFilterConfigurer;
-import com.exadel.frs.security.JwtTokenProvider;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.system.security.JwtAuthenticationFilter;
 import com.exadel.frs.system.security.config.AuthServerConfig;
@@ -22,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
@@ -43,8 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class})
 )
-@Import(value = {JwtTokenFilter.class, JwtTokenFilterConfigurer.class})
-@MockBeans({@MockBean(AppMapper.class), @MockBean(UserAppRoleMapper.class), @MockBean(JwtTokenProvider.class)})
+@MockBeans({@MockBean(AppMapper.class), @MockBean(UserAppRoleMapper.class)})
 class AppControllerTest {
 
     private static final long APP_ID = 1L;
@@ -56,8 +53,6 @@ class AppControllerTest {
 
     @MockBean
     private AppService appService;
-    @MockBean
-    private AppMapper appMapper;
 
     @Autowired
     private MockMvc mockMvc;
@@ -65,7 +60,7 @@ class AppControllerTest {
     private ObjectMapper mapper = new ObjectMapper();
 
     private static User buildDefaultUser() {
-        return User.builder().username(USERNAME).id(USER_ID).build();
+        return User.builder().email(USERNAME).id(USER_ID).build();
     }
 
     @Test
@@ -98,7 +93,7 @@ class AppControllerTest {
 
         doThrow(expectedException).when(appService).createApp(any(), eq(ORG_GUID), eq(USER_ID));
 
-        MockHttpServletRequestBuilder request = post("/apps/")
+        MockHttpServletRequestBuilder request = post("/org/" + ORG_GUID + "/app")
                 .with(csrf())
                 .with(user(buildDefaultUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -108,10 +103,6 @@ class AppControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
-    }
-
-    private static User buildDefaultUser() {
-        return User.builder().email(USERNAME).id(USER_ID).build();
     }
 
     private ExceptionResponseDto buildExceptionResponse(final BasicException ex) {

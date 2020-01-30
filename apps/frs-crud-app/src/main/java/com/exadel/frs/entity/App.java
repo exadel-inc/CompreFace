@@ -43,6 +43,13 @@ public class App {
     @OneToMany(mappedBy = "app")
     private List<Model> models = new ArrayList<>();
 
+    public Optional<UserAppRole> getOwner() {
+        return userAppRoles
+                .stream()
+                .filter(userAppRole -> AppRole.OWNER.equals(userAppRole.getRole()))
+                .findFirst();
+    }
+
     public Optional<UserAppRole> getUserAppRole(Long userId) {
         return userAppRoles
                 .stream()
