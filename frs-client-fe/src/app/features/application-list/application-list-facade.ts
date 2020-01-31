@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IFacade } from 'src/app/core/facade/IFacade';
+import { IFacade } from 'src/app/data/facade/IFacade';
 import { AppState } from 'src/app/store';
 import { Store } from '@ngrx/store';
 import { selectApplications, selectIsPendingApplicationList } from 'src/app/store/application/selectors';

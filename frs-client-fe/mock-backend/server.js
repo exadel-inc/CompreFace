@@ -52,7 +52,7 @@ let token = '';
 
 app.locals.basedir = path.join(__dirname, 'mock-backend');
 
-app.post('/login', wait(1000), function(req, res) {
+app.post('/oauth/token', wait(1000), function(req, res) {
   if (req && req.body.username === user.username && req.body.password === user.password) {
     token = `${user.username}_${user.password}_${user.guid}_${+new Date()}`;
     res.send({ token });
@@ -62,7 +62,7 @@ app.post('/login', wait(1000), function(req, res) {
   }
 });
 
-app.post('/client/register', function(req, res) {
+app.post('/user/register', function(req, res) {
   if (req && req.body.username && req.body.password && req.body.email) {
 
     // if user already exists:
@@ -76,7 +76,7 @@ app.post('/client/register', function(req, res) {
   }
 });
 
-app.get('/organizations', auth, function (req, res) {
+app.get('/orgs', auth, function (req, res) {
   const id = req.query.id;
   if (id) {
     res.send(mockData.organizations.filter(item => item.id === id))
@@ -85,7 +85,7 @@ app.get('/organizations', auth, function (req, res) {
   }
 });
 
-app.post('/organization', auth, function (req, res) {
+app.post('/org', auth, function (req, res) {
   const org = {
     name: req.body.name,
     id: req.body.name + '_guid',
@@ -95,13 +95,13 @@ app.post('/organization', auth, function (req, res) {
   res.send(org);
 });
 
-app.post('/organization/:id', auth, function (req, res) {
+app.post('/org/:id', auth, function (req, res) {
   const organization = req.body;
   mockData.organizations.push(organization);
   res.send(organization);
 });
 
-app.put('/organization/:id', auth, function (req, res) {
+app.put('/org/:id', auth, function (req, res) {
   const newData = req.body;
   const id = req.params.id;
   let organization = mockData.organizations.find(item => item.id === id);

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { Observable, Subscription } from "rxjs";
 import { AppState } from "../../store";
-import { IFacade } from "../../core/facade/IFacade";
+import { IFacade } from "../../data/facade/IFacade";
 import {
   selectCurrentApp,
   selectCurrentAppId,
