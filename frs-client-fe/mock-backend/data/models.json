@@ -3,7 +3,16 @@
     "id": "model_1",
     "name": "Model 1",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_0", "app_1"],
+    "applicationId": [
+      {
+        "id": "app_0",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_1",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "0",
       "firstName": "Owner 0",
@@ -14,7 +23,16 @@
     "id": "model_2",
     "name": "Model 2",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_0", "app_1"],
+    "applicationId": [
+      {
+        "id": "app_0",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_1",
+        "shareMode": "TRAIN"
+      }
+    ],
     "owner": {
       "id": "0",
       "firstName": "Owner 0",
@@ -25,7 +43,20 @@
     "id": "model_3",
     "name": "Model 3",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_0", "app_1", "app_2"],
+    "applicationId": [
+      {
+        "id": "app_0",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_1",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_2",
+        "shareMode": "TRAIN"
+      }
+    ],
     "owner": {
       "id": "1",
       "firstName": "Owner 1",
@@ -36,7 +67,12 @@
     "id": "model_4",
     "name": "Model 4",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_1",
+    "applicationId": [
+      {
+        "id": "app_1",
+        "shareMode": "OWNER"
+      }
+    ],
     "owner": {
       "id": "1",
       "firstName": "Owner 1",
@@ -47,7 +83,24 @@
     "id": "model_5",
     "name": "Model 5",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_0", "app_1", "app_2", "app_3"],
+    "applicationId": [
+      {
+        "id": "app_0",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_1",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_2",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_3",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "2",
       "firstName": "Owner 2",
@@ -58,7 +111,24 @@
     "id": "model_6",
     "name": "Model 6",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_0", "app_1", "app_2", "app_3"],
+    "applicationId": [
+      {
+        "id": "app_0",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_1",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_2",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_3",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "2",
       "firstName": "Owner 2",
@@ -69,7 +139,12 @@
     "id": "model_7",
     "name": "Model 7",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": "app_2",
+    "applicationId": [
+      {
+        "id": "app_2",
+        "shareMode": "TRAIN"
+      }
+    ],
     "owner": {
       "id": "2",
       "firstName": "Owner 2",
@@ -80,7 +155,36 @@
     "id": "model_8",
     "name": "Model 8",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_0", "app_1", "app_2", "app_3", "app_4", "app_5", "app_6"],
+    "applicationId": [
+      {
+        "id": "app_0",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_1",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_2",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_3",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_4",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "2",
       "firstName": "Owner 2",
@@ -91,7 +195,36 @@
     "id": "model_9",
     "name": "Model 9",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_0", "app_1", "app_2", "app_3", "app_4", "app_5", "app_6"],
+    "applicationId": [
+      {
+        "id": "app_0",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_1",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_2",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_3",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_4",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "OWNER"
+      }
+    ],
     "owner": {
       "id": "3",
       "firstName": "Owner 3",
@@ -102,7 +235,28 @@
     "id": "model_10",
     "name": "Model 10",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7"],
+    "applicationId": [
+      {
+        "id": "app_3",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_4",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_7",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "4",
       "firstName": "Owner 4",
@@ -113,7 +267,28 @@
     "id": "model_11",
     "name": "Model 11",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7"],
+    "applicationId": [
+      {
+        "id": "app_3",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_4",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_7",
+        "shareMode": "TRAIN"
+      }
+    ],
     "owner": {
       "id": "4",
       "firstName": "Owner 4",
@@ -124,7 +299,36 @@
     "id": "model_12",
     "name": "Model 12",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7", "app_8", "app_9"],
+    "applicationId": [
+      {
+        "id": "app_3",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_4",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_7",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_8",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_9",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "5",
       "firstName": "Owner 5",
@@ -135,7 +339,36 @@
     "id": "model_13",
     "name": "Model 13",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7", "app_8", "app_9"],
+    "applicationId": [
+      {
+        "id": "app_3",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_4",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_7",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_8",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_9",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "5",
       "firstName": "Owner 5",
@@ -146,7 +379,36 @@
     "id": "model_14",
     "name": "Model 14",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_3", "app_4", "app_5", "app_6", "app_7", "app_8", "app_9"],
+    "applicationId": [
+      {
+        "id": "app_3",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_4",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_7",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_8",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_9",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "6",
       "firstName": "Owner 6",
@@ -157,7 +419,36 @@
     "id": "model_15",
     "name": "Model 15",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_4", "app_5", "app_6", "app_7", "app_8", "app_9", "app_10"],
+    "applicationId": [
+      {
+        "id": "app_4",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_7",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_8",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_9",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_10",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "7",
       "firstName": "Owner 7",
@@ -168,7 +459,36 @@
     "id": "model_16",
     "name": "Model 16",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": ["app_4", "app_5", "app_6", "app_7", "app_8", "app_9", "app_10"],
+    "applicationId": [
+      {
+        "id": "app_4",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_5",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_6",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_7",
+        "shareMode": "OWNER"
+      },
+      {
+        "id": "app_8",
+        "shareMode": "READONLY"
+      },
+      {
+        "id": "app_9",
+        "shareMode": "TRAIN"
+      },
+      {
+        "id": "app_10",
+        "shareMode": "READONLY"
+      }
+    ],
     "owner": {
       "id": "7",
       "firstName": "Owner 7",

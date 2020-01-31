@@ -1,6 +1,5 @@
 import { Application } from './application';
 
-export interface ModelRelation {
-  id: string;
-  applications: Application[];
+export interface ModelRelation extends Application {
+  shareMode: string;
 }

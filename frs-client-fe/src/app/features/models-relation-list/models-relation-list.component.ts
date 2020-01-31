@@ -28,7 +28,12 @@ export class ModelsRelationListComponent implements OnInit, OnDestroy {
 
     this.tableConfig$ = this.modelRelationListFacade.applications$.pipe(map((users: Application[]) => {
       return {
-          columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
+          columns: [
+            { title: 'name', property: 'username' },
+            { title: 'owner', property: 'owner' },
+            { title: 'role', property: 'owner'},
+            { title: 'deleteAccess', property: 'role' }
+          ],
           data: users
         }
     }));

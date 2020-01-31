@@ -1,13 +1,13 @@
 import { ActionReducer, createReducer, on } from '@ngrx/store';
 import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import { Application } from 'src/app/data/application';
+import { ModelRelation } from 'src/app/data/modelRelation';
 import { loadModelRelation, addModelRelation, putUpdatedModelRelation, updateModelRelation } from './actions';
 
-export interface ModelRelationEntityState extends EntityState<Application> {
+export interface ModelRelationEntityState extends EntityState<ModelRelation> {
   isPending: boolean;
 }
 
-export const modelRelationEntityAdapter: EntityAdapter<Application> = createEntityAdapter<Application>();
+export const modelRelationEntityAdapter: EntityAdapter<ModelRelation> = createEntityAdapter<ModelRelation>();
 
 const initalState = modelRelationEntityAdapter.getInitialState({
   isPending: false

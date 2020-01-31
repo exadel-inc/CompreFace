@@ -42,6 +42,7 @@ import { AppUserListModule } from './features/app-user-list/application-user-lis
 import { AppUserEffects } from './store/app-user/effects';
 import { ModelRelationStoreModule } from './store/model-relation/model-relation.module';
 import { ModelRelationEffects } from './store/model-relation/effects';
+import { ModelRelationTableModule } from './features/model-relation-table/model-relation-table.module';
 
 @NgModule({
   declarations: [
@@ -76,6 +77,7 @@ import { ModelRelationEffects } from './store/model-relation/effects';
     UserListModule,
     ModelListModule,
     AppUserListModule,
+    ModelRelationTableModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),

@@ -76,7 +76,7 @@ app.post('/client/register', function(req, res) {
   }
 });
 
-app.get('/organizations', auth, function (req, res) {
+app.get('/organizations', auth, function(req, res) {
   const id = req.query.id;
   if (id) {
     res.send(mockData.organizations.filter(item => item.id === id))
@@ -85,23 +85,23 @@ app.get('/organizations', auth, function (req, res) {
   }
 });
 
-app.post('/organization', auth, function (req, res) {
+app.post('/organization', auth, function(req, res) {
   const org = {
     name: req.body.name,
-    id: req.body.name+'_guid',
-    userOrganizationRoles: [{role: "OWNER", userId: "guid_0"}]
+    id: req.body.name + '_guid',
+    userOrganizationRoles: [{ role: "OWNER", userId: "guid_0" }]
   };
   mockData.organizations.push(org);
   res.send(org);
 });
 
-app.post('/organization/:id', auth, function (req, res) {
+app.post('/organization/:id', auth, function(req, res) {
   const organization = req.body;
   mockData.organizations.push(organization);
   res.send(organization);
 });
 
-app.put('/organization/:id', auth, function (req, res) {
+app.put('/organization/:id', auth, function(req, res) {
   const newData = req.body;
   const id = req.params.id;
   let organization = mockData.organizations.find(item => item.id === id);
@@ -221,7 +221,7 @@ app.get('/user/me', auth, (req, res) => {
 
 app.get('/org/:orgId/app/:appId/models', auth, wait(), (req, res) => {
   const appId = req.params.appId;
-  const models = mockData.models.filter(model => ~model.applicationId.indexOf(appId));
+  const models = mockData.models.filter(model => model.applicationId.find(rel => rel.id === appId));
 
   res.send(models);
 });
@@ -293,10 +293,23 @@ app.get('/org/:orgId/app/:appId/model/:modelId/apps', auth, wait(), (req, res) =
   const model = mockData.models.find(model => model.id === modelId);
 
   if (model) {
-    const applications = mockData.applications.filter(app => ~model.applicationId.indexOf(app.id));
-    res.send(applications);
+    const applications = mockData.applications
+      .map(
+        app => {
+          const relation = model.applicationId.find(rel => rel.id === app.id);
+          let res = null;
+
+          if (relation) {
+            res = { ...app, shareMode: relation.shareMode };
+          }
+
+          return res;
+        })
+      .filter(Boolean);
+
+      res.send(applications);
   } else {
-    res.status(404).send({message: 'model wasnt found'});
+    res.status(404).send({ message: 'model wasnt found' });
   }
 });
 
