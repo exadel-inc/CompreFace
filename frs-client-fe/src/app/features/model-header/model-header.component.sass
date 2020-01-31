@@ -1,0 +1,28 @@
+@import 'media.sass'
+
+.grid-container
+  grid-template-columns: 1fr 1fr
+  align-items: center
+  grid-gap: 2rem
+
+.model-header_left-coll
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+
+.model-header_right-coll
+  text-align: right
+
+.mat-raised-button
+  margin: 15px 0
+
+@include mobile
+  .model-header_left-coll
+    flex-direction: column
+
+  .grid-container
+    grid-template-columns: 1fr
+
+@include tablet-portrait
+  .grid-container
+    grid-template-columns: 1fr

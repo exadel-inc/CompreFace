@@ -6,10 +6,9 @@ import { AuthGuard } from "../../core/auth/auth.guard";
 import { ToolBarModule } from "../../features/tool-bar/tool-bar.module";
 import { MatCardModule } from '@angular/material/card';
 import { BreadcrumbsModule } from "../../features/breadcrumbs/breadcrumbs.module";
-import {ModelPageService} from "./model.service";
-import {ModelComponent} from "./model.component";
-
-
+import { ModelHeaderModule } from "../../features/model-header/model-header.module";
+import { ModelPageService } from "./model.service";
+import { ModelComponent } from "./model.component";
 
 @NgModule({
   declarations: [ModelComponent],
@@ -21,6 +20,7 @@ import {ModelComponent} from "./model.component";
     ]),
     ToolBarModule,
     BreadcrumbsModule,
+    ModelHeaderModule,
     MatCardModule
   ],
   providers: [ModelPageService]

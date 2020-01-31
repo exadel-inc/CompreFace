@@ -2,6 +2,7 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 import {Organization} from "../../data/organization";
 import {Observable} from "rxjs";
 import {Application} from "../../data/application";
+import {Model} from "../../data/model";
 
 @Component({
   selector: 'app-entity-title',
@@ -13,7 +14,7 @@ export class EntityTitleComponent implements OnInit {
   editing = false;
   newName: string;
   selectedId: string;
-  @Input() options: [Organization | Application];
+  @Input() options: [Organization | Application | Model];
   @Input() renameDisable: boolean;
   @Input() selectId$: Observable<any>;
   @Input() entityName: string;
@@ -22,6 +23,7 @@ export class EntityTitleComponent implements OnInit {
 
   ngOnInit() {
     this.selectId$.subscribe(e => this.selectedId = e);
+    debugger;
   }
 
   set selected(value) {

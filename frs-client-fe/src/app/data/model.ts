@@ -8,4 +8,6 @@ export interface Model {
     firstName: string,
     lastName: string
   }
+  role: string
+  modelId: string;
 }

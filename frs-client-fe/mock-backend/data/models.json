@@ -8,7 +8,8 @@
       "id": "0",
       "firstName": "Owner 0",
       "lastName": "lastname owner 0"
-    }
+    },
+    "role": "USER"
   },
   {
     "id": 1,
@@ -19,7 +20,8 @@
       "id": "0",
       "firstName": "Owner 0",
       "lastName": "lastname owner 0"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 2,
@@ -30,7 +32,8 @@
       "id": "1",
       "firstName": "Owner 1",
       "lastName": "lastname owner 1"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 3,
@@ -41,7 +44,8 @@
       "id": "1",
       "firstName": "Owner 1",
       "lastName": "lastname owner 1"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 4,
@@ -52,7 +56,8 @@
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 5,
@@ -63,7 +68,8 @@
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 6,
@@ -74,7 +80,8 @@
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 7,
@@ -85,7 +92,8 @@
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 8,
@@ -96,7 +104,8 @@
       "id": "3",
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 9,
@@ -107,7 +116,8 @@
       "id": "4",
       "firstName": "Owner 4",
       "lastName": "lastname owner 4"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 10,
@@ -118,7 +128,8 @@
       "id": "4",
       "firstName": "Owner 4",
       "lastName": "lastname owner 4"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 11,
@@ -129,7 +140,8 @@
       "id": "5",
       "firstName": "Owner 5",
       "lastName": "lastname owner 5"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 12,
@@ -140,7 +152,8 @@
       "id": "5",
       "firstName": "Owner 5",
       "lastName": "lastname owner 5"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 13,
@@ -151,7 +164,8 @@
       "id": "6",
       "firstName": "Owner 6",
       "lastName": "lastname owner 6"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 14,
@@ -162,7 +176,8 @@
       "id": "7",
       "firstName": "Owner 7",
       "lastName": "lastname owner 7"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": 15,
@@ -173,6 +188,7 @@
       "id": "7",
       "firstName": "Owner 7",
       "lastName": "lastname owner 7"
-    }
+    },
+    "role": "OWNER"
   }
 ]

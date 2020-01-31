@@ -1,0 +1,22 @@
+<div class="model-header grid-container">
+  <div class="model-header_left-coll">
+    <div *ngIf="model$ | async as model">
+      <app-entity-title
+        [entityName]="'Model'"
+        [selectId$]="selectedId$"
+        [options]="[model]"
+        (selectIdChange)="selectModel($event)"
+        [renameDisable]="true"
+        (rename)="rename($event)"></app-entity-title>
+    </div>
+    <button mat-raised-button
+            type="submit"
+            color="primary"
+            (click)="createNew()"
+    >Create New Model
+    </button>
+  </div>
+  <div class="model-header_right-coll" *ngIf="userRole$ | async as userRole">
+    <div class="your_role">Your role: {{userRole}}</div>
+  </div>
+</div>
