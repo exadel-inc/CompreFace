@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {IFacade} from 'src/app/core/facade/IFacade';
+import {IFacade} from 'src/app/data/facade/IFacade';
 import {Store} from '@ngrx/store';
 import {selectAppUserIsPending, selectAppUsers} from 'src/app/store/app-user/selectors';
 import {loadAppUserEntityAction, putUpdatedAppUserRoleEntityAction} from 'src/app/store/app-user/actions';
