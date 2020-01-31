@@ -1,8 +1,7 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {Model} from "../../data/model";
-import {ModelHeaderFacade} from "./model-header.facade";
-import {Observable} from "rxjs";
-import {MatDialog} from "@angular/material/dialog";
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Model } from "../../data/model";
+import { ModelHeaderFacade } from "./model-header.facade";
+import { Observable } from "rxjs";
 
 @Component({
   selector: 'app-model-header',

@@ -23,7 +23,6 @@ export class EntityTitleComponent implements OnInit {
 
   ngOnInit() {
     this.selectId$.subscribe(e => this.selectedId = e);
-    debugger;
   }
 
   set selected(value) {
