@@ -8,7 +8,7 @@ export const environment: Environment = {
   production: false,
   // local mock server:
   apiUrl: 'http://localhost:3000/'
-  // apiUrl: 'https://msqv501.exadel.by/admin'
+  // apiUrl: 'http://qa.frs.exadel.by:8080/'
 };
 
 /*

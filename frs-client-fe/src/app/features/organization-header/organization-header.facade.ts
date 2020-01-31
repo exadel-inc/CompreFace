@@ -8,7 +8,7 @@ import { AppState } from "../../store";
 import { SetSelectedId } from "../../store/organization/action";
 import { ROUTERS_URL } from "../../data/routers-url.variable";
 import { Router } from "@angular/router";
-import { IFacade } from "../../core/facade/IFacade";
+import { IFacade } from "../../data/facade/IFacade";
 
 @Injectable()
 export class OrganizationHeaderFacade implements IFacade {

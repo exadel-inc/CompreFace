@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IFacade } from 'src/app/core/facade/IFacade';
+import { IFacade } from 'src/app/data/facade/IFacade';
 import { Store } from '@ngrx/store';
 import { selectModels, selectIsPending } from 'src/app/store/model/selectors';
 import { Observable, combineLatest, Subscription } from 'rxjs';
