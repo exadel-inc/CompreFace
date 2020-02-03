@@ -18,6 +18,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   public isLoading$: Observable<boolean>;
   public availableRoles$: Observable<string[]>;
   public errorMessage: string;
+  public search = '';
 
   constructor(private userListFacade: UserListFacade, public dialog: MatDialog) {
     userListFacade.initSubscriptions();
