@@ -3,6 +3,7 @@
   "applicationId": "app_0",
   "firstName": "User",
   "lastName": "Name 0",
+  "email": "email@name_0.com",
   "accessLevel": "USER"
 },
 {
@@ -10,6 +11,7 @@
   "applicationId": "app_0",
   "firstName": "User",
   "lastName": "Name 1",
+  "email": "email@name_1.com",
   "accessLevel": "USER"
 },
 {
@@ -17,6 +19,7 @@
   "applicationId": "app_0",
   "firstName": "User",
   "lastName": "Name 2",
+  "email": "email@name_2.com",
   "accessLevel": "USER"
 },
 {
@@ -24,6 +27,7 @@
   "applicationId": "app_0",
   "firstName": "User",
   "lastName": "Name 3",
+  "email": "email@name_3.com",
   "accessLevel": "USER"
 },
 {
@@ -31,12 +35,14 @@
   "organizationId": "app_1",
   "firstName": "User",
   "lastName": "Name 4",
+  "email": "email@name_4.com",
   "accessLevel": "USER"
 },{
   "id": 5,
   "organizationId": "app_1",
   "firstName": "User",
   "lastName": "Name 5",
+  "email": "email@name_5.com",
   "accessLevel": "USER"
 },
 {
@@ -44,6 +50,7 @@
   "applicationId": "app_2",
   "firstName": "User",
   "lastName": "Name 6",
+  "email": "email@name_6.com",
   "accessLevel": "USER"
 },
 {
@@ -51,6 +58,7 @@
   "applicationId": "app_2",
   "firstName": "User",
   "lastName": "Name 7",
+  "email": "email@name_7.com",
   "accessLevel": "USER"
 },
 {
@@ -58,6 +66,7 @@
   "applicationId": "app_2",
   "firstName": "User",
   "lastName": "Name 8",
+  "email": "email@name_8.com",
   "accessLevel": "USER"
 },
 {
@@ -65,5 +74,6 @@
   "applicationId": "app_2",
   "firstName": "User",
   "lastName": "Name 9",
+  "email": "email@name_9.com",
   "accessLevel": "USER"
 }]
