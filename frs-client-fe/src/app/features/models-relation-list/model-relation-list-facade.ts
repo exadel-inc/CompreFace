@@ -24,7 +24,7 @@ export class ModelRelationListFacade implements IFacade {
   constructor(private store: Store<AppState>) {
     this.isLoading$ = this.store.select(selectIsPendingModelrelations);
     this.applications$ = this.store.select(selectModelRelations);
-    this.availableRoles$ = of(['READ', 'TRAIN', 'NONE']);
+    this.availableRoles$ = of(['OWNER', 'TRAIN', 'READONLY', 'NONE']);
   }
 
   public initSubscriptions(): void {
@@ -51,13 +51,13 @@ export class ModelRelationListFacade implements IFacade {
     }));
   }
 
-  public updateUserRole(id: string, role: string): void {
+  public updateUserRole(id: string, shareMode: string): void {
     this.store.dispatch(putUpdatedModelRelation({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedAppId,
       modelId: this.selectedModelId,
       id: id,
-      role: role
+      shareMode: shareMode
     }));
   }
 

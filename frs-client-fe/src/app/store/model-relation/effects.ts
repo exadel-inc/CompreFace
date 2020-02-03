@@ -23,7 +23,7 @@ export class ModelRelationEffects {
   updateModelRelatuionRole = this.actions.pipe(
     ofType(putUpdatedModelRelation),
     switchMap(action => forkJoin([
-      this.modelRelationService.update(action.organizationId, action.applicationId, action.modelId, action.id, action.role),
+      this.modelRelationService.update(action.organizationId, action.applicationId, action.modelId, action.id, action.shareMode),
       of(action)
     ])),
     map(([application, { organizationId, applicationId, modelId }]) =>

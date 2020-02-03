@@ -15,7 +15,7 @@ export class ModelRelationService {
     return this.http.get<ModelRelation[]>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}/apps`);
   }
 
-  public update(organizationId: string, applicationId: string, modelId: string, id: string, role: string): Observable<ModelRelation> {
-    return this.http.put<ModelRelation>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}/app`, { id, role });
+  public update(organizationId: string, applicationId: string, modelId: string, id: string, shareMode: string): Observable<ModelRelation> {
+    return this.http.put<ModelRelation>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}/app`, { id, shareMode });
   }
 }

@@ -9,6 +9,6 @@ export const putUpdatedModelRelation = createAction('[Model Relation/API] Put Up
   applicationId: string;
   modelId: string;
   id: string;
-  role: string;
+  shareMode: string;
 }>());
 export const updateModelRelation = createAction('[Model Relation/API] Update Model Relation', props<{ application: ModelRelation }>());

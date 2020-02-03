@@ -7,6 +7,7 @@ import { ITableConfig } from '../table/table.component';
 import { MatDialog } from '@angular/material';
 import { AlertComponent } from '../alert/alert.component';
 import { Application } from 'src/app/data/application';
+import { ModelRelation } from 'src/app/data/modelRelation';
 
 @Component({
   selector: 'app-models-relation-list',
@@ -31,7 +32,7 @@ export class ModelsRelationListComponent implements OnInit, OnDestroy {
           columns: [
             { title: 'name', property: 'username' },
             { title: 'owner', property: 'owner' },
-            { title: 'role', property: 'owner'},
+            { title: 'shareMode', property: 'shareMode'},
             { title: 'deleteAccess', property: 'role' }
           ],
           data: users
@@ -41,8 +42,8 @@ export class ModelsRelationListComponent implements OnInit, OnDestroy {
     this.availableRoles$ = this.modelRelationListFacade.availableRoles$;
   }
 
-  public onChange(user: AppUser): void {
-    this.modelRelationListFacade.updateUserRole(user.id, user.accessLevel);
+  public onChange(relation: ModelRelation): void {
+    this.modelRelationListFacade.updateUserRole(relation.id, relation.shareMode);
   }
 
   ngOnDestroy() {

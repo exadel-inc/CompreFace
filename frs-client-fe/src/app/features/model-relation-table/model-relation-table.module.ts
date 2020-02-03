@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ModelRelationTableComponent } from './model-relation-table.component';
-import { MatTableModule, MatFormFieldModule, MatSelectModule } from '@angular/material';
+import { MatTableModule, MatFormFieldModule, MatSelectModule, MatButtonModule } from '@angular/material';
 import { CommonModule } from '@angular/common';
 
 @NgModule({
@@ -12,7 +12,8 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     MatFormFieldModule,
     MatTableModule,
-    MatSelectModule
+    MatSelectModule,
+    MatButtonModule
   ]
 })
 export class ModelRelationTableModule { }

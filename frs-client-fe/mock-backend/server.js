@@ -313,6 +313,28 @@ app.get('/org/:orgId/app/:appId/model/:modelId/apps', auth, wait(), (req, res) =
   }
 });
 
+app.put('/org/:orgId/app/:appId/model/:modelId/app', auth, wait(), (req, res) => {
+  const modelId = req.params.modelId;
+  const relationId = req.body.id;
+  const shareMode = req.body.shareMode;
+  const model = mockData.models.find(model => model.id === modelId);
+  let relation = null;
+
+  if (model) {
+    relation = model.applicationId.find(rel => rel.id === relationId);
+
+    if(relation) {
+      relation.shareMode = shareMode;
+    }
+  }
+
+  if (relation) {
+    res.send(relation);
+  } else {
+    res.status(404).send({ message: 'relation wasnt found' });
+  }
+});
+
 app.listen(3000, function() {
   console.log('Listening on port 3000!');
 });

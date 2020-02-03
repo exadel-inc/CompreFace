@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { TableComponent, ITableConfig } from '../table/table.component';
+import { TableComponent } from '../table/table.component';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ModelRelation } from 'src/app/data/modelRelation';
 
 @Component({
   selector: 'app-model-relation-table',
@@ -11,5 +13,14 @@ export class ModelRelationTableComponent extends TableComponent implements OnIni
   @Input() availableRoles$: Observable<string[]>;
 
   ngOnInit() {
+  }
+
+  public isRoleChangeAllowed(shareMode: string): Observable<boolean> {
+    return this.availableRoles$.pipe(map(availableRoles => !!~availableRoles.indexOf(shareMode)));
+  }
+
+  public onDelete(relation: ModelRelation): void {
+    relation.shareMode = 'NONE';
+    this.onChange.emit(relation);
   }
 }
