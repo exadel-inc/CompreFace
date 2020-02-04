@@ -3,15 +3,19 @@ import { TestBed } from '@angular/core/testing';
 import { ModelService } from './model.service';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { environment } from "../../../environments/environment";
+import { Model } from 'src/app/data/model';
 
 describe('ModelService', () => {
   let httpMock: HttpTestingController;
-  const mockModels = [
+  const mockModels: Model[] = [
     {
       "id": '0',
       "name": "Model 1",
       "accessLevel": "OWNER/TRAIN/READONLY",
-      "applicationId": "app_0",
+      "relations": [{
+        "id": "app_0",
+        "shareMode": "NONE"
+      }],
       "owner": {
         "id": "0",
         "firstName": "Owner 0",
@@ -22,7 +26,10 @@ describe('ModelService', () => {
       "id": '1',
       "name": "Model 2",
       "accessLevel": "OWNER/TRAIN/READONLY",
-      "applicationId": "app_0",
+      "relations": [{
+        "id": "app_0",
+        "shareMode": "NONE"
+      }],
       "owner": {
         "id": "0",
         "firstName": "Owner 0",
@@ -58,7 +65,7 @@ describe('ModelService', () => {
     const service: ModelService = TestBed.get(ModelService);
     service.create('0', 'app_0', 'new model').subscribe(data => {
       expect(data.name).toEqual('new model');
-      expect(data.applicationId).toEqual('app_0');
+      expect(data.relations[0].id).toEqual('app_0');
     });
     const req = httpMock.expectOne(`${environment.apiUrl}org/0/app/app_0/model`);
     expect(req.request.method).toBe('POST');
@@ -66,7 +73,10 @@ describe('ModelService', () => {
       "id": '2',
       "name": "new model",
       "accessLevel": "OWNER/TRAIN/READONLY",
-      "applicationId": "app_0",
+      "relations": [{
+        "id": "app_0",
+        "shareMode": "NONE"
+      }],
       "owner": {
         "id": "0",
         "firstName": "Owner 0",

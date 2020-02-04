@@ -6,3 +6,4 @@ const { selectAll } = modelAdapter.getSelectors();
 export const selectModelState = createFeatureSelector<ModelEntityState>('model');
 export const selectModels = createSelector(selectModelState, selectAll);
 export const selectIsPending = createSelector(selectModelState, (state) => state.isPending);
+export const selectCurrentModelId = createSelector(selectModelState, (state) => state.selectedId);

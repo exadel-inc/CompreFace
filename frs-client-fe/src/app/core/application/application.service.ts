@@ -16,10 +16,10 @@ export class ApplicationService {
   }
 
   public create(organizationId: string, name: string): Observable<Application> {
-    return this.http.post<Application>(`${environment.apiUrl}org/${organizationId}/app`, { name })
+    return this.http.post<Application>(`${environment.apiUrl}org/${organizationId}/app`, { name });
   }
 
   public put(organizationId: string, appId: string, name: string): Observable<Application> {
-    return this.http.put<Application>(`${environment.apiUrl}org/${organizationId}/app/${appId}`, { name })
+    return this.http.put<Application>(`${environment.apiUrl}org/${organizationId}/app/${appId}`, { name });
   }
 }

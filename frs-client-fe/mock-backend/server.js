@@ -240,7 +240,7 @@ app.get('/user/me', auth, (req, res) => {
 
 app.get('/org/:orgId/app/:appId/models', auth, wait(), (req, res) => {
   const appId = req.params.appId;
-  const models = mockData.models.filter(model => model.applicationId === appId);
+  const models = mockData.models.filter(model => model.relations.find(rel => rel.id === appId));
 
   res.send(models);
 });
@@ -258,7 +258,7 @@ app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
         firstName
       },
       accessLevel: 'OWNER',
-      applicationId: appId
+      relations: [appId]
     };
 
     mockData.models.push(newModel);
@@ -304,6 +304,53 @@ app.get('/org/:orgId/app/:appId/models/:modelId', auth, wait(), (req, res) => {
   const modelId = req.params.modelId;
   const models = mockData.models.filter(model => model.id === modelId);
   res.send(models);
+});
+
+app.get('/org/:orgId/app/:appId/model/:modelId/apps', auth, wait(), (req, res) => {
+  const modelId = req.params.modelId;
+  const model = mockData.models.find(model => model.id === modelId);
+
+  if (model) {
+    const applications = mockData.applications
+      .map(
+        app => {
+          const relation = model.relations.find(rel => rel.id === app.id);
+          let res = null;
+
+          if (relation) {
+            res = { ...app, shareMode: relation.shareMode };
+          }
+
+          return res;
+        })
+      .filter(Boolean);
+
+      res.send(applications);
+  } else {
+    res.status(404).send({ message: 'model wasnt found' });
+  }
+});
+
+app.put('/org/:orgId/app/:appId/model/:modelId/app', auth, wait(), (req, res) => {
+  const modelId = req.params.modelId;
+  const relationId = req.body.id;
+  const shareMode = req.body.shareMode;
+  const model = mockData.models.find(model => model.id === modelId);
+  let relation = null;
+
+  if (model) {
+    relation = model.relations.find(rel => rel.id === relationId);
+
+    if(relation) {
+      relation.shareMode = shareMode;
+    }
+  }
+
+  if (relation) {
+    res.send(relation);
+  } else {
+    res.status(404).send({ message: 'relation wasnt found' });
+  }
 });
 
 app.listen(3000, function() {

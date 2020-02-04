@@ -40,6 +40,9 @@ import { ModelEffects } from './store/model/effects';
 import { AppUserStoreModule } from './store/app-user/app-user.module';
 import { AppUserListModule } from './features/app-user-list/application-user-list.module';
 import { AppUserEffects } from './store/app-user/effects';
+import { ModelRelationStoreModule } from './store/model-relation/model-relation.module';
+import { ModelRelationEffects } from './store/model-relation/effects';
+import { ModelRelationTableModule } from './features/model-relation-table/model-relation-table.module';
 
 @NgModule({
   declarations: [
@@ -60,7 +63,7 @@ import { AppUserEffects } from './store/app-user/effects';
     UserTableModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
-    EffectsModule.forRoot([AuthEffects, ApplicationListEffect, UserListEffect, ModelEffects, AppUserEffects]),
+    EffectsModule.forRoot([AuthEffects, ApplicationListEffect, UserListEffect, ModelEffects, AppUserEffects, ModelRelationEffects]),
     EntityDataModule.forRoot(entityConfig),
     OrganizationStoreModule,
     UserInfoStoreModule,
@@ -69,10 +72,12 @@ import { AppUserEffects } from './store/app-user/effects';
     RoleStoreModule,
     ModelStoreModule,
     AppUserStoreModule,
+    ModelRelationStoreModule,
     ApplicationListModule,
     UserListModule,
     ModelListModule,
     AppUserListModule,
+    ModelRelationTableModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
