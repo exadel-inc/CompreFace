@@ -1,11 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
 import { ModelRelationListFacade } from './model-relation-list-facade';
 import { Observable } from 'rxjs';
-import { AppUser } from 'src/app/data/appUser';
 import { map } from 'rxjs/operators';
 import { ITableConfig } from '../table/table.component';
-import { MatDialog } from '@angular/material';
-import { AlertComponent } from '../alert/alert.component';
 import { Application } from 'src/app/data/application';
 import { ModelRelation } from 'src/app/data/modelRelation';
 
