@@ -9,7 +9,7 @@ import { BreadcrumbsModule } from "../../features/breadcrumbs/breadcrumbs.module
 import { ModelHeaderModule } from "../../features/model-header/model-header.module";
 import { ModelPageService } from "./model.service";
 import { ModelComponent } from "./model.component";
-
+import { ModelRelationListModule } from 'src/app/features/models-relation-list/models-relation-list.model';
 @NgModule({
   declarations: [ModelComponent],
   imports: [
@@ -21,7 +21,8 @@ import { ModelComponent } from "./model.component";
     ToolBarModule,
     BreadcrumbsModule,
     ModelHeaderModule,
-    MatCardModule
+    MatCardModule,
+    ModelRelationListModule
   ],
   providers: [ModelPageService]
 })

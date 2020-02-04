@@ -8,6 +8,9 @@ import { UserListFacade } from './user-list-facade';
 import { of } from 'rxjs';
 import {InviteUserModule} from "../invite-user/invite-user.module";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {FormsModule} from "@angular/forms";
+import {UserTablePipeModule} from "../../ui/search-pipe/user-table-filter.module";
+import {MatInputModule} from "@angular/material/input";
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -19,7 +22,10 @@ describe('UserListComponent', () => {
         SpinnerModule,
         UserTableModule,
         InviteUserModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        FormsModule,
+        UserTablePipeModule,
+        MatInputModule
       ],
       declarations: [UserListComponent],
       providers: [
