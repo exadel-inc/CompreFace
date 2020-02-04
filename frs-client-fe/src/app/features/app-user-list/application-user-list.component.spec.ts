@@ -8,6 +8,9 @@ import { of } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import {InviteUserModule} from "../invite-user/invite-user.module";
 import {NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {FormsModule} from "@angular/forms";
+import {UserTablePipeModule} from "../../ui/search-pipe/user-table-filter.module";
+import {MatInputModule} from "@angular/material/input";
 
 describe('ApplicationUserListComponent', () => {
   let component: ApplicationUserListComponent;
@@ -20,7 +23,10 @@ describe('ApplicationUserListComponent', () => {
         SpinnerModule,
         UserTableModule,
         InviteUserModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        FormsModule,
+        UserTablePipeModule,
+        MatInputModule
       ],
       providers: [{
         provide: MatDialog,

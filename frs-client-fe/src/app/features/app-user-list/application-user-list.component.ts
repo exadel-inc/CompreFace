@@ -6,7 +6,6 @@ import { map } from 'rxjs/operators';
 import { ITableConfig } from '../table/table.component';
 import { MatDialog } from '@angular/material';
 import {AlertComponent} from "../alert/alert.component";
-import {User} from "../../data/user";
 
 @Component({
   selector: 'application-user-list',
@@ -20,6 +19,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   public availableRoles$: Observable<string[]>;
   public errorMessage: string;
   public availableEmails$: Observable<string[]>;
+  public search = '';
 
   constructor(private appUserListFacade: ApplicationUserListFacade, public dialog: MatDialog) {
     appUserListFacade.initSubscriptions();
