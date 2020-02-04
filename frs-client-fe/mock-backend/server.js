@@ -240,7 +240,7 @@ app.get('/user/me', auth, (req, res) => {
 
 app.get('/org/:orgId/app/:appId/models', auth, wait(), (req, res) => {
   const appId = req.params.appId;
-  const models = mockData.models.filter(model => model.applicationId.find(rel => rel.id === appId));
+  const models = mockData.models.filter(model => model.relations.find(rel => rel.id === appId));
 
   res.send(models);
 });
@@ -258,7 +258,7 @@ app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
         firstName
       },
       accessLevel: 'OWNER',
-      applicationId: [appId]
+      relations: [appId]
     };
 
     mockData.models.push(newModel);
@@ -314,7 +314,7 @@ app.get('/org/:orgId/app/:appId/model/:modelId/apps', auth, wait(), (req, res) =
     const applications = mockData.applications
       .map(
         app => {
-          const relation = model.applicationId.find(rel => rel.id === app.id);
+          const relation = model.relations.find(rel => rel.id === app.id);
           let res = null;
 
           if (relation) {
@@ -339,7 +339,7 @@ app.put('/org/:orgId/app/:appId/model/:modelId/app', auth, wait(), (req, res) =>
   let relation = null;
 
   if (model) {
-    relation = model.applicationId.find(rel => rel.id === relationId);
+    relation = model.relations.find(rel => rel.id === relationId);
 
     if(relation) {
       relation.shareMode = shareMode;

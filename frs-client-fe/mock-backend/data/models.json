@@ -3,7 +3,7 @@
     "id": "model_1",
     "name": "Model 1",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_0",
         "shareMode": "READONLY"
@@ -23,7 +23,7 @@
     "id": "model_2",
     "name": "Model 2",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_0",
         "shareMode": "TRAIN"
@@ -43,7 +43,7 @@
     "id": "model_3",
     "name": "Model 3",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_0",
         "shareMode": "READONLY"
@@ -67,7 +67,7 @@
     "id": "model_4",
     "name": "Model 4",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_1",
         "shareMode": "OWNER"
@@ -83,7 +83,7 @@
     "id": "model_5",
     "name": "Model 5",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_0",
         "shareMode": "READONLY"
@@ -111,7 +111,7 @@
     "id": "model_6",
     "name": "Model 6",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_0",
         "shareMode": "OWNER"
@@ -139,7 +139,7 @@
     "id": "model_7",
     "name": "Model 7",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_2",
         "shareMode": "TRAIN"
@@ -155,7 +155,7 @@
     "id": "model_8",
     "name": "Model 8",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_0",
         "shareMode": "READONLY"
@@ -195,7 +195,7 @@
     "id": "model_9",
     "name": "Model 9",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_0",
         "shareMode": "READONLY"
@@ -235,7 +235,7 @@
     "id": "model_10",
     "name": "Model 10",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_3",
         "shareMode": "TRAIN"
@@ -267,7 +267,7 @@
     "id": "model_11",
     "name": "Model 11",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_3",
         "shareMode": "READONLY"
@@ -299,7 +299,7 @@
     "id": "model_12",
     "name": "Model 12",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_3",
         "shareMode": "TRAIN"
@@ -339,7 +339,7 @@
     "id": "model_13",
     "name": "Model 13",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_3",
         "shareMode": "TRAIN"
@@ -379,7 +379,7 @@
     "id": "model_14",
     "name": "Model 14",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_3",
         "shareMode": "TRAIN"
@@ -419,7 +419,7 @@
     "id": "model_15",
     "name": "Model 15",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_4",
         "shareMode": "READONLY"
@@ -459,7 +459,7 @@
     "id": "model_16",
     "name": "Model 16",
     "accessLevel": "OWNER/TRAIN/READONLY",
-    "applicationId": [
+    "relations": [
       {
         "id": "app_4",
         "shareMode": "READONLY"

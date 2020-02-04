@@ -12,7 +12,7 @@ describe('ModelService', () => {
       "id": '0',
       "name": "Model 1",
       "accessLevel": "OWNER/TRAIN/READONLY",
-      "applicationId": [{
+      "relations": [{
         "id": "app_0",
         "shareMode": "NONE"
       }],
@@ -26,7 +26,7 @@ describe('ModelService', () => {
       "id": '1',
       "name": "Model 2",
       "accessLevel": "OWNER/TRAIN/READONLY",
-      "applicationId": [{
+      "relations": [{
         "id": "app_0",
         "shareMode": "NONE"
       }],
@@ -65,7 +65,7 @@ describe('ModelService', () => {
     const service: ModelService = TestBed.get(ModelService);
     service.create('0', 'app_0', 'new model').subscribe(data => {
       expect(data.name).toEqual('new model');
-      expect(data.applicationId[0].id).toEqual('app_0');
+      expect(data.relations[0].id).toEqual('app_0');
     });
     const req = httpMock.expectOne(`${environment.apiUrl}org/0/app/app_0/model`);
     expect(req.request.method).toBe('POST');
@@ -73,7 +73,7 @@ describe('ModelService', () => {
       "id": '2',
       "name": "new model",
       "accessLevel": "OWNER/TRAIN/READONLY",
-      "applicationId": [{
+      "relations": [{
         "id": "app_0",
         "shareMode": "NONE"
       }],

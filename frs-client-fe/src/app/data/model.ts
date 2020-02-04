@@ -2,7 +2,7 @@ export interface Model {
   id: string,
   name: string,
   accessLevel: string,
-  applicationId: {
+  relations: {
     id: string,
     shareMode: string
   }[],
