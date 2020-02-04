@@ -12,6 +12,7 @@ import {
 import { Model } from "../../data/model";
 import { putUpdatedModelEntityAction } from "../../store/model/actions";
 import { selectCurrentOrganizationId } from "../../store/organization/selectors";
+import {selectCurrentAppId} from "../../store/application/selectors";
 
 @Injectable()
 export class ModelHeaderFacade implements IFacade {
@@ -21,7 +22,9 @@ export class ModelHeaderFacade implements IFacade {
   public userRole$: Observable<string | null>;
   public model$: Observable<Model>;
   orgId: string;
+  appId: string;
   orgIdSub: Subscription;
+  appIdSub: Subscription;
   modelIdSub: Subscription;
 
   constructor(private store: Store<AppState>) {
@@ -33,15 +36,22 @@ export class ModelHeaderFacade implements IFacade {
 
   initSubscriptions() {
     this.orgIdSub = this.store.select(selectCurrentOrganizationId).subscribe(orgId => this.orgId = orgId);
+    this.appIdSub = this.store.select(selectCurrentAppId).subscribe(appId => this.appId = appId);
     this.modelIdSub = this.selectedId$.subscribe(selectedId => this.selectedId = selectedId);
   }
 
   unsubscribe() {
     this.orgIdSub.unsubscribe();
     this.modelIdSub.unsubscribe();
+    this.appIdSub.unsubscribe();
   }
 
   rename(name: string) {
-    this.store.dispatch(putUpdatedModelEntityAction({ name, id: this.selectedId, applicationId: this.orgId }));
+    this.store.dispatch(putUpdatedModelEntityAction({
+      name,
+      organizationId: this.orgId,
+      applicationId: this.appId,
+      modelId: this.selectedId
+    }));
   }
 }

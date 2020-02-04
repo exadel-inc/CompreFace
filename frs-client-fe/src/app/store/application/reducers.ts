@@ -26,39 +26,10 @@ export const initialState: AppEntityState = applicationAdapter.getInitialState({
 
 export const ApplicationReducer:ActionReducer<AppEntityState> = createReducer(
   initialState,
-  on(loadApplicationsEntityAction, (state) => ({
-    ...state,
-    isPending: true
-  })),
-  on(addApplicationEntityAction, (state, { application }) => {
-    const newState = {
-      ...state,
-      isPending: false
-    };
-
-    return applicationAdapter.addOne(application, newState);
-  }),
-  on(addApplicationsEntityAction, (state, { applications }) => {
-    const newState = {
-      ...state,
-      isPending: false
-    };
-
-    return applicationAdapter.addAll(applications, newState);
-  }),
-  on(putUpdatedApplicationEntityAction, (state) => ({
-    ...state,
-    isPending: true
-  })),
-  on(updateApplicationEntityAction, (state, { application }) => {
-    const newState = {
-      ...state,
-      isPending: false
-    };
-
-    return applicationAdapter.updateOne({ id: application.id, changes: application }, newState);
-  }),
-  on(setSelectedIdEntityAction, (state, { selectedAppId }) => {
-    return { ...state, selectedAppId };
-  })
+  on(loadApplicationsEntityAction, (state) => ({...state, isPending: true})),
+  on(addApplicationEntityAction, (state, { application }) => applicationAdapter.addOne(application, {...state, isPending: false})),
+  on(addApplicationsEntityAction, (state, { applications }) => applicationAdapter.addAll(applications, {...state, isPending: false})),
+  on(putUpdatedApplicationEntityAction, (state) => ({...state, isPending: true})),
+  on(updateApplicationEntityAction, (state, { application }) => applicationAdapter.updateOne({ id: application.id, changes: application }, {...state, isPending: false})),
+  on(setSelectedIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
 );

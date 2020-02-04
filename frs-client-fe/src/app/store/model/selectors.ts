@@ -4,7 +4,7 @@ import { Model } from 'src/app/data/model';
 import { EntityState } from '@ngrx/entity';
 
 export const selectModelEntityState = createFeatureSelector<EntityState<Model>>('model');
-const { selectEntities, selectIds, selectAll } = modelAdapter.getSelectors();
+const { selectEntities, selectAll } = modelAdapter.getSelectors();
 
 export const selectModelById = (id: string) => createSelector(selectModelEntityState, selectEntities, modelsDictionary => modelsDictionary[id]);
 export const selectModels = createSelector(selectModelEntityState, selectAll);
@@ -29,4 +29,3 @@ export const selectIsPending = createSelector(
   selectModelEntityState,
   (state: ModelEntityState) => state.isPending
 );
-export const selectCurrentModelId = createSelector(selectModelState, (state) => state.selectedId);
