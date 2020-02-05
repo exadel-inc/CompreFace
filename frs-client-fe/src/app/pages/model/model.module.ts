@@ -10,13 +10,14 @@ import { ModelHeaderModule } from "../../features/model-header/model-header.modu
 import { ModelPageService } from "./model.service";
 import { ModelComponent } from "./model.component";
 import { ModelRelationListModule } from 'src/app/features/models-relation-list/models-relation-list.model';
+
 @NgModule({
   declarations: [ModelComponent],
   imports: [
     CommonModule,
     MatButtonModule,
     RouterModule.forChild([
-      { path: '', component: ModelComponent, canActivate: [AuthGuard] },
+      { path: '', data: {routeName: 'model'}, component: ModelComponent, canActivate: [AuthGuard] },
     ]),
     ToolBarModule,
     BreadcrumbsModule,
