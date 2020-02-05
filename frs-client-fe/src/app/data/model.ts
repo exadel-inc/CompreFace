@@ -12,5 +12,4 @@ export interface Model {
     lastName: string
   }
   role: string
-  modelId: string;
 }

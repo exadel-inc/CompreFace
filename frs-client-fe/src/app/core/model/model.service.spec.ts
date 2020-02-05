@@ -20,7 +20,8 @@ describe('ModelService', () => {
         "id": "0",
         "firstName": "Owner 0",
         "lastName": "lastname owner 0"
-      }
+      },
+      "role": 'USER'
     },
     {
       "id": '1',
@@ -34,7 +35,8 @@ describe('ModelService', () => {
         "id": "0",
         "firstName": "Owner 0",
         "lastName": "lastname owner 0"
-      }
+      },
+      "role": 'USER'
     }
   ];
 
