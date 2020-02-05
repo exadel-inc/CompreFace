@@ -20,7 +20,6 @@ export class ModelService {
   }
 
   public update(organizationId: string, applicationId: string, modelId: string, name: string): Observable<Model> {
-    console.log();
     return this.http.put<Model>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}`, { name });
   }
 }

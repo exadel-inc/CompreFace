@@ -25,7 +25,7 @@ export const selectUserRollForSelectedModel = createSelector(
   model => model ? model.role : null
 );
 
-export const selectIsPending = createSelector(
+export const selectPendingModel = createSelector(
   selectModelEntityState,
   (state: ModelEntityState) => state.isPending
 );

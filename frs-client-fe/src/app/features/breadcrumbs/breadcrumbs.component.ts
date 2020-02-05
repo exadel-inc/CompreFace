@@ -18,7 +18,7 @@ export class BreadcrumbsComponent implements OnInit {
   public routeModel$: Observable<string>;
   public ROUTERS_URL = ROUTERS_URL;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade, private route: ActivatedRoute,) {
+  constructor(private breadcrumbsFacade: BreadcrumbsFacade, private route: ActivatedRoute) {
     this.org$ = breadcrumbsFacade.org$;
     this.app$ = breadcrumbsFacade.app$;
     this.routeModel$ = route.data.pipe(

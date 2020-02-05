@@ -270,10 +270,8 @@ app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
 });
 
 app.put('/org/:orgId/app/:appId/model/:modeId', auth, wait(), (req, res) => {
-  // const { name } = req.body;
-  const { appId, orgId, modeId } = req.params;
+  const { modeId } = req.params;
   const newData = req.body;
-  console.log('newData', newData);
 
   let model = mockData.models.find(model => model.id === modeId);
   model.name = newData.name;

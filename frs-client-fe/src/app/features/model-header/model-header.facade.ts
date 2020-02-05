@@ -7,7 +7,7 @@ import {
   selectCurrentModel,
   selectCurrentModelId,
   selectUserRollForSelectedModel,
-  selectIsPending
+  selectPendingModel
 } from "../../store/model/selectors";
 import { Model } from "../../data/model";
 import { putUpdatedModelEntityAction } from "../../store/model/actions";
@@ -31,7 +31,7 @@ export class ModelHeaderFacade implements IFacade {
     this.model$ = this.store.select(selectCurrentModel);
     this.userRole$ = this.store.select(selectUserRollForSelectedModel);
     this.selectedId$ = this.store.select(selectCurrentModelId);
-    this.loading$ = this.store.select(selectIsPending);
+    this.loading$ = this.store.select(selectPendingModel);
   }
 
   initSubscriptions() {
