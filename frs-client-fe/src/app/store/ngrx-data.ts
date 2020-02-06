@@ -8,7 +8,7 @@ export const defaultDataServiceConfig: DefaultDataServiceConfig = {
     // Case matters. Match the case of the entity name.
     Organization: {
       // You must specify the root as part of the resource URL.
-      entityResourceUrl: environment.apiUrl + 'org',
+      entityResourceUrl: environment.apiUrl + 'org/',
       collectionResourceUrl: environment.apiUrl + 'orgs'
     }
   },
