@@ -6,6 +6,7 @@ import { AuthGuard } from "../../core/auth/auth.guard";
 import { ToolBarModule } from "../../features/tool-bar/tool-bar.module";
 import { MatCardModule } from '@angular/material/card';
 import { BreadcrumbsModule } from "../../features/breadcrumbs/breadcrumbs.module";
+import { ModelHeaderModule } from "../../features/model-header/model-header.module";
 import { ModelPageService } from "./model.service";
 import { ModelComponent } from "./model.component";
 import { ModelRelationListModule } from 'src/app/features/models-relation-list/models-relation-list.model';
@@ -16,10 +17,11 @@ import { ModelRelationListModule } from 'src/app/features/models-relation-list/m
     CommonModule,
     MatButtonModule,
     RouterModule.forChild([
-      { path: '', component: ModelComponent, canActivate: [AuthGuard] },
+      { path: '', data: {routeName: 'model'}, component: ModelComponent, canActivate: [AuthGuard] },
     ]),
     ToolBarModule,
     BreadcrumbsModule,
+    ModelHeaderModule,
     MatCardModule,
     ModelRelationListModule
   ],

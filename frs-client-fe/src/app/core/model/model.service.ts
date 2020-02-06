@@ -18,4 +18,8 @@ export class ModelService {
   public create(organizationId: string, applicationId: string, name: string): Observable<Model> {
     return this.http.post<Model>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/model`, { name });
   }
+
+  public update(organizationId: string, applicationId: string, modelId: string, name: string): Observable<Model> {
+    return this.http.put<Model>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}`, { name });
+  }
 }

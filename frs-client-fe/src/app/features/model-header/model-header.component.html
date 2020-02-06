@@ -1,0 +1,15 @@
+<div class="model-header grid-container">
+  <div class="model-header_left-coll">
+    <div *ngIf="model$ | async as model">
+      <app-entity-title
+        [entityName]="'Model'"
+        [selectId$]="selectedId$"
+        [options]="[model]"
+        [renameDisable]="false"
+        (rename)="rename($event)"></app-entity-title>
+    </div>
+  </div>
+  <div class="model-header_right-coll" *ngIf="userRole$ | async as userRole">
+    <div class="your_role">Your role: {{userRole}}</div>
+  </div>
+</div>

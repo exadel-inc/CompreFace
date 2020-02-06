@@ -53,8 +53,8 @@ export class ModelPageService {
 
   fetchApps() {
     this.store.dispatch(loadModelsEntityAction({
-      organizationId: this.appId,
-      applicationId: this.orgId
+      organizationId: this.orgId,
+      applicationId: this.appId
     }));
     this.store.dispatch(loadApplicationsEntityAction({ organizationId: this.orgId }));
     this.store.dispatch(new GetUserInfo());

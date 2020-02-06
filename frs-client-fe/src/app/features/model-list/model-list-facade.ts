@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IFacade } from 'src/app/data/facade/IFacade';
 import { Store } from '@ngrx/store';
-import { selectModels, selectIsPending } from 'src/app/store/model/selectors';
+import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Model } from 'src/app/data/model';
 import { AppState } from 'src/app/store';
@@ -22,7 +22,7 @@ export class ModelListFacade implements IFacade {
 
   constructor(private store: Store<AppState>) {
     this.models$ = store.select(selectModels);
-    this.isLoading$ = store.select(selectIsPending);
+    this.isLoading$ = store.select(selectPendingModel);
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.selectedApplication$ = store.select(selectCurrentAppId);
   }

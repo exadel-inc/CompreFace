@@ -17,7 +17,8 @@
       "id": "0",
       "firstName": "Owner 0",
       "lastName": "lastname owner 0"
-    }
+    },
+    "role": "USER"
   },
   {
     "id": "model_2",
@@ -37,7 +38,8 @@
       "id": "0",
       "firstName": "Owner 0",
       "lastName": "lastname owner 0"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_3",
@@ -61,7 +63,8 @@
       "id": "1",
       "firstName": "Owner 1",
       "lastName": "lastname owner 1"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_4",
@@ -77,7 +80,8 @@
       "id": "1",
       "firstName": "Owner 1",
       "lastName": "lastname owner 1"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_5",
@@ -105,7 +109,8 @@
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_6",
@@ -133,7 +138,8 @@
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_7",
@@ -149,7 +155,8 @@
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_8",
@@ -189,7 +196,8 @@
       "id": "2",
       "firstName": "Owner 2",
       "lastName": "lastname owner 2"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_9",
@@ -229,7 +237,8 @@
       "id": "3",
       "firstName": "Owner 3",
       "lastName": "lastname owner 3"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_10",
@@ -261,7 +270,8 @@
       "id": "4",
       "firstName": "Owner 4",
       "lastName": "lastname owner 4"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_11",
@@ -293,7 +303,8 @@
       "id": "4",
       "firstName": "Owner 4",
       "lastName": "lastname owner 4"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_12",
@@ -333,7 +344,8 @@
       "id": "5",
       "firstName": "Owner 5",
       "lastName": "lastname owner 5"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_13",
@@ -373,7 +385,8 @@
       "id": "5",
       "firstName": "Owner 5",
       "lastName": "lastname owner 5"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_14",
@@ -413,7 +426,8 @@
       "id": "6",
       "firstName": "Owner 6",
       "lastName": "lastname owner 6"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_15",
@@ -453,7 +467,8 @@
       "id": "7",
       "firstName": "Owner 7",
       "lastName": "lastname owner 7"
-    }
+    },
+    "role": "OWNER"
   },
   {
     "id": "model_16",
@@ -493,6 +508,7 @@
       "id": "7",
       "firstName": "Owner 7",
       "lastName": "lastname owner 7"
-    }
+    },
+    "role": "OWNER"
   }
 ]

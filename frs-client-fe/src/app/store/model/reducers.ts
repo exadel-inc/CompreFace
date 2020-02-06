@@ -5,7 +5,9 @@ import {
   loadModelsEntityAction,
   addModelsEntityAction,
   createModelEntityAction,
-  setSelectedIdModelEntityAction
+  setSelectedIdModelEntityAction,
+  updatedModelEntityAction,
+  putUpdatedModelEntityAction
 } from './actions';
 
 export interface ModelEntityState extends EntityState<Model> {
@@ -13,7 +15,7 @@ export interface ModelEntityState extends EntityState<Model> {
   selectedId: string;
 }
 
-export const modelAdapter: EntityAdapter<Model> = createEntityAdapter<Model>()
+export const modelAdapter: EntityAdapter<Model> = createEntityAdapter<Model>();
 
 const initialState: ModelEntityState = modelAdapter.getInitialState({
   isPending: false,
@@ -22,26 +24,10 @@ const initialState: ModelEntityState = modelAdapter.getInitialState({
 
 export const modelReducer: ActionReducer<ModelEntityState> = createReducer(
   initialState,
-
-  on(loadModelsEntityAction, (state) => ({
-    ...state,
-    isPending: true
-  })),
-
-  on(addModelsEntityAction, (state, { models }) => {
-    const newState = {
-      ...state,
-      isPending: false
-    };
-    return modelAdapter.addAll(models, newState);
-  }),
-
-  on(createModelEntityAction, (state) => ({
-    ...state,
-    isPending: true
-  })),
-
-  on(setSelectedIdModelEntityAction, (state, { selectedId }) => {
-    return { ...state, selectedId };
-  })
+  on(loadModelsEntityAction, (state) => ({...state, isPending: true})),
+  on(addModelsEntityAction, (state, { models }) => modelAdapter.addAll(models, {...state, isPending: false})),
+  on(createModelEntityAction, (state) => ({...state, isPending: true})),
+  on(setSelectedIdModelEntityAction, (state, { selectedId }) => ({ ...state, selectedId })),
+  on(putUpdatedModelEntityAction, (state) => ({...state, isPending: true})),
+  on(updatedModelEntityAction, (state, { model }) => modelAdapter.updateOne({ id: model.id, changes: model }, { ...state, isPending: false}))
 );

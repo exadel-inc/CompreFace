@@ -4,6 +4,7 @@ import { BreadcrumbsComponent } from './breadcrumbs.component';
 import {CommonModule} from "@angular/common";
 import {BreadcrumbsFacade} from "./breadcrumbs.facade";
 import {RouterModule} from "@angular/router";
+import {RouterTestingModule} from "@angular/router/testing";
 
 describe('BreadcrumbsComponent', () => {
   let component: BreadcrumbsComponent;
@@ -20,7 +21,8 @@ describe('BreadcrumbsComponent', () => {
         ],
       imports: [
         CommonModule,
-        RouterModule
+        RouterModule,
+        RouterTestingModule
       ]
     })
     .compileComponents();

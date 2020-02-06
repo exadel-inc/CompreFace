@@ -1,9 +1,31 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { ModelEntityState, modelAdapter } from './reducers';
+import { modelAdapter, ModelEntityState } from './reducers';
+import { Model } from 'src/app/data/model';
+import { EntityState } from '@ngrx/entity';
 
-const { selectAll } = modelAdapter.getSelectors();
+export const selectModelEntityState = createFeatureSelector<EntityState<Model>>('model');
+const { selectEntities, selectAll } = modelAdapter.getSelectors();
 
-export const selectModelState = createFeatureSelector<ModelEntityState>('model');
-export const selectModels = createSelector(selectModelState, selectAll);
-export const selectIsPending = createSelector(selectModelState, (state) => state.isPending);
-export const selectCurrentModelId = createSelector(selectModelState, (state) => state.selectedId);
+export const selectModelById = (id: string) => createSelector(selectModelEntityState, selectEntities, modelsDictionary => modelsDictionary[id]);
+export const selectModels = createSelector(selectModelEntityState, selectAll);
+
+export const selectCurrentModelId = createSelector(
+  selectModelEntityState,
+  (state: ModelEntityState) => state.selectedId
+);
+
+export const selectCurrentModel = createSelector(
+  selectModelEntityState,
+  selectCurrentModelId,
+  (models, selectedId) => models.entities ? models.entities[selectedId] : null
+);
+
+export const selectUserRollForSelectedModel = createSelector(
+  selectCurrentModel,
+  model => model ? model.role : null
+);
+
+export const selectPendingModel = createSelector(
+  selectModelEntityState,
+  (state: ModelEntityState) => state.isPending
+);
