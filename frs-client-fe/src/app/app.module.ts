@@ -17,7 +17,6 @@ import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { ToolBarModule } from "./features/tool-bar/tool-bar.module";
 import { AppSerializer } from "./store/router/reducer";
 import { AuthEffects } from "./store/auth/effects";
-import { ApplicationListEffect } from './store/application/effects';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { MatFormFieldModule } from '@angular/material';
 import { defaultDataServiceConfig, entityConfig } from "./store/ngrx-data";
@@ -30,18 +29,14 @@ import { ApplicationStoreModule } from './store/application/application.module';
 import { UserInfoStoreModule } from "./store/userInfo/user-info.module";
 import { ApplicationListModule } from './features/application-list/application-list.module';
 import { UserListModule } from './features/user-list/user-list.module';
-import { UserListEffect } from './store/user/effects';
 import { UserStoreModule } from './store/user/user.module';
 import { AlertComponent } from './features/alert/alert.component';
 import { RoleStoreModule } from './store/role/role.module';
 import { ModelListModule } from './features/model-list/model-list.module';
 import { ModelStoreModule } from './store/model/model.module';
-import { ModelEffects } from './store/model/effects';
 import { AppUserStoreModule } from './store/app-user/app-user.module';
 import { AppUserListModule } from './features/app-user-list/application-user-list.module';
-import { AppUserEffects } from './store/app-user/effects';
 import { ModelRelationStoreModule } from './store/model-relation/model-relation.module';
-import { ModelRelationEffects } from './store/model-relation/effects';
 import { ModelRelationTableModule } from './features/model-relation-table/model-relation-table.module';
 
 @NgModule({
@@ -63,7 +58,7 @@ import { ModelRelationTableModule } from './features/model-relation-table/model-
     UserTableModule,
     HttpClientModule,
     StoreModule.forRoot(sharedReducers),
-    EffectsModule.forRoot([AuthEffects, ApplicationListEffect, UserListEffect, ModelEffects, AppUserEffects, ModelRelationEffects]),
+    EffectsModule.forRoot([AuthEffects]),
     EntityDataModule.forRoot(entityConfig),
     OrganizationStoreModule,
     UserInfoStoreModule,

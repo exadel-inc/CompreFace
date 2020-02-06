@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { StoreModule } from '@ngrx/store';
 import { modelReducer } from './reducers';
+import { ModelEffects } from "./effects";
+import { EffectsModule } from "@ngrx/effects";
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
+    EffectsModule.forFeature([ModelEffects]),
     StoreModule.forFeature('model', modelReducer)
   ]
 })
