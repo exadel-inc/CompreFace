@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import { StoreModule } from '@ngrx/store';
-import { modelReducer } from './reducers';
-import { ModelEffects } from "./effects";
-import { EffectsModule } from "@ngrx/effects";
+import {NgModule} from '@angular/core';
+import {StoreModule} from '@ngrx/store';
+import {modelReducer} from './reducers';
+import {ModelEffects} from './effects';
+import {EffectsModule} from '@ngrx/effects';
 
 @NgModule({
   declarations: [],

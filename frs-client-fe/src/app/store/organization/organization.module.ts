@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import {StoreModule} from "@ngrx/store";
-import {OrganizationReducer} from "./reducers";
-import {OrganizationEnService} from "./organization-entitys.service";
+import {NgModule} from '@angular/core';
+import {StoreModule} from '@ngrx/store';
+import {OrganizationReducer} from './reducers';
+import {OrganizationEnService} from './organization-entitys.service';
 
 @NgModule({
   declarations: [],
@@ -10,4 +10,5 @@ import {OrganizationEnService} from "./organization-entitys.service";
   ],
   providers: [OrganizationEnService]
 })
-export class OrganizationStoreModule { }
+export class OrganizationStoreModule {
+}

@@ -1,8 +1,8 @@
-import { NgModule } from '@angular/core';
-import {StoreModule} from "@ngrx/store";
-import {UserInfoReducer} from "./reducers";
-import {EffectsModule} from "@ngrx/effects";
-import {UserInfoEffect} from "./effects";
+import {NgModule} from '@angular/core';
+import {StoreModule} from '@ngrx/store';
+import {UserInfoReducer} from './reducers';
+import {EffectsModule} from '@ngrx/effects';
+import {UserInfoEffect} from './effects';
 
 @NgModule({
   declarations: [],
@@ -11,4 +11,5 @@ import {UserInfoEffect} from "./effects";
     StoreModule.forFeature('userInfo', UserInfoReducer),
   ],
 })
-export class UserInfoStoreModule { }
+export class UserInfoStoreModule {
+}
