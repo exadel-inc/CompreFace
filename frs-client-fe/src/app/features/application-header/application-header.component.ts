@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {Application} from "../../data/application";
-import {ApplicationHeaderFacade} from "./application-header.facade";
-import {Observable} from "rxjs";
+import {Application} from '../../data/application';
+import {ApplicationHeaderFacade} from './application-header.facade';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-application-header',
@@ -31,6 +31,6 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   }
 
   rename(name) {
-    this.applicationHeaderFacade.rename(name)
+    this.applicationHeaderFacade.rename(name);
   }
 }

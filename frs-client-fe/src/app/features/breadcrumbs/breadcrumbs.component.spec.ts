@@ -1,10 +1,9 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { BreadcrumbsComponent } from './breadcrumbs.component';
-import {CommonModule} from "@angular/common";
-import {BreadcrumbsFacade} from "./breadcrumbs.facade";
-import {RouterModule} from "@angular/router";
-import {RouterTestingModule} from "@angular/router/testing";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {BreadcrumbsComponent} from './breadcrumbs.component';
+import {CommonModule} from '@angular/common';
+import {BreadcrumbsFacade} from './breadcrumbs.facade';
+import {RouterModule} from '@angular/router';
+import {RouterTestingModule} from '@angular/router/testing';
 
 describe('BreadcrumbsComponent', () => {
   let component: BreadcrumbsComponent;

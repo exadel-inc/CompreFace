@@ -1,7 +1,6 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
-
-import { AppUserService } from './app-user.service';
+import {TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {AppUserService} from './app-user.service';
 
 describe('AppUserService', () => {
   let service: AppUserService;

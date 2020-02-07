@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {Organization} from "../../data/organization";
-import {OrganizationHeaderFacade} from "./organization-header.facade";
-import {Observable} from "rxjs";
-import {CreateDialogComponent} from "../create-dialog/create-dialog.component";
-import {MatDialog} from "@angular/material/dialog";
+import {Organization} from '../../data/organization';
+import {OrganizationHeaderFacade} from './organization-header.facade';
+import {Observable} from 'rxjs';
+import {CreateDialogComponent} from '../create-dialog/create-dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-organization-header',

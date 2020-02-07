@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {BreadcrumbsFacade} from "./breadcrumbs.facade";
-import {Observable} from "rxjs";
-import {Organization} from "../../data/organization";
-import { ROUTERS_URL } from "../../data/routers-url.variable";
-import {Application} from "../../data/application";
-import {ActivatedRoute} from "@angular/router";
-import {filter, map} from "rxjs/operators";
+import {Component, OnInit} from '@angular/core';
+import {BreadcrumbsFacade} from './breadcrumbs.facade';
+import {Observable} from 'rxjs';
+import {Organization} from '../../data/organization';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {Application} from '../../data/application';
+import {ActivatedRoute} from '@angular/router';
+import {filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-breadcrumbs',

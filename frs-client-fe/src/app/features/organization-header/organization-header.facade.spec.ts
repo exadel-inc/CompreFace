@@ -1,15 +1,15 @@
-import { MockStore, provideMockStore } from "@ngrx/store/testing";
-import { TestBed } from "@angular/core/testing";
-import { OrganizationHeaderFacade } from "./organization-header.facade";
-import { MemoizedSelector, Store } from "@ngrx/store";
-import { AppState } from "../../store";
-import { OrganizationsState } from "../../store/organization/reducers";
-import { Router } from "@angular/router";
-import { OrganizationEnService } from "../../store/organization/organization-entitys.service";
-import { of } from "rxjs";
-import { Organization } from "../../data/organization";
-import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from "../../store/organization/selectors";
-import { ROUTERS_URL } from "../../data/routers-url.variable";
+import {MockStore, provideMockStore} from '@ngrx/store/testing';
+import {TestBed} from '@angular/core/testing';
+import {OrganizationHeaderFacade} from './organization-header.facade';
+import {MemoizedSelector, Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {OrganizationsState} from '../../store/organization/reducers';
+import {Router} from '@angular/router';
+import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
+import {of} from 'rxjs';
+import {Organization} from '../../data/organization';
+import {selectCurrentOrganizationId, selectUserRollForSelectedOrganization} from '../../store/organization/selectors';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
 
 
 describe('OrganizationHeaderFacade', () => {
@@ -21,17 +21,16 @@ describe('OrganizationHeaderFacade', () => {
   beforeEach(() => {
     const orgs: Organization[] = [
       {
-        "id": "ksdfklsn1111111",
-        "name": "Exadel Organization",
-        "role": "OWNER"
+        id: 'ksdfklsn1111111',
+        name: 'Exadel Organization',
+        role: 'OWNER'
       },
       {
-        "id": "asdfdasdfdaf222222222222",
-        "name": "home Organization",
-        "role": "ADMIN"
+        id: 'asdfdasdfdaf222222222222',
+        name: 'home Organization',
+        role: 'ADMIN'
       }
-    ]
-      ;
+    ];
     TestBed.configureTestingModule({
       providers: [
         OrganizationHeaderFacade,
@@ -55,8 +54,8 @@ describe('OrganizationHeaderFacade', () => {
     });
 
     mockStore = TestBed.get(Store);
-    mockRoleSelector = mockStore.overrideSelector(selectUserRollForSelectedOrganization, "ADMIN");
-    mockOrgIdSelector = mockStore.overrideSelector(selectCurrentOrganizationId, "org_id");
+      mockRoleSelector = mockStore.overrideSelector(selectUserRollForSelectedOrganization, 'ADMIN');
+      mockOrgIdSelector = mockStore.overrideSelector(selectCurrentOrganizationId, 'org_id');
     facade = TestBed.get<OrganizationHeaderFacade>(OrganizationHeaderFacade);
   }
   );

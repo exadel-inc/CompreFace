@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { IFacade } from 'src/app/data/facade/IFacade';
-import { Store } from '@ngrx/store';
-import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
-import { Observable, combineLatest, Subscription } from 'rxjs';
-import { Model } from 'src/app/data/model';
-import { AppState } from 'src/app/store';
-import { loadModelsEntityAction, createModelEntityAction } from 'src/app/store/model/actions';
-import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
-import { selectCurrentAppId } from 'src/app/store/application/selectors';
+import {Injectable} from '@angular/core';
+import {IFacade} from 'src/app/data/facade/IFacade';
+import {Store} from '@ngrx/store';
+import {selectModels, selectPendingModel} from 'src/app/store/model/selectors';
+import {Observable, combineLatest, Subscription} from 'rxjs';
+import {Model} from 'src/app/data/model';
+import {AppState} from 'src/app/store';
+import {loadModelsEntityAction, createModelEntityAction} from 'src/app/store/model/actions';
+import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
+import {selectCurrentAppId} from 'src/app/store/application/selectors';
 
 @Injectable()
 export class ModelListFacade implements IFacade {

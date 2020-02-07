@@ -5,7 +5,7 @@ import { AppUser } from 'src/app/data/appUser';
 import { map } from 'rxjs/operators';
 import { ITableConfig } from '../table/table.component';
 import { MatDialog } from '@angular/material';
-import {AlertComponent} from "../alert/alert.component";
+import {AlertComponent} from '../alert/alert.component';
 
 @Component({
   selector: 'application-user-list',
@@ -33,7 +33,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
       return {
           columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
           data: users
-        }
+      };
     }));
 
     this.availableRoles$ = this.appUserListFacade.availableRoles$;
@@ -53,7 +53,9 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   }
 
   private openEmailNotification(email: string): void {
-    if (!email) return;
+    if (!email) {
+      return;
+    }
 
     this.dialog.open(AlertComponent, {
       data: {

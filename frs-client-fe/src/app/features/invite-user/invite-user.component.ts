@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, OnInit, Output, EventEmitter, Input} from '@angular/core';
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
-import {combineLatest, Observable} from "rxjs";
-import {map,startWith} from "rxjs/operators";
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
+import {combineLatest, Observable} from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 @Component({
   selector: 'app-invite-user',

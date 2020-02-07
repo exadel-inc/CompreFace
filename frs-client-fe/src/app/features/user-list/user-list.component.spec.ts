@@ -1,16 +1,16 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
-import { UserTableModule } from 'src/app/features/user-table/user-table.module';
-import { InviteUserComponent } from 'src/app/features/invite-user/invite-user.component';
-import { UserListComponent } from './user-list.component';
-import { MatDialog} from '@angular/material';
-import { UserListFacade } from './user-list-facade';
-import { of } from 'rxjs';
-import {InviteUserModule} from "../invite-user/invite-user.module";
-import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {FormsModule} from "@angular/forms";
-import {UserTablePipeModule} from "../../ui/search-pipe/user-table-filter.module";
-import {MatInputModule} from "@angular/material/input";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
+import {UserTableModule} from 'src/app/features/user-table/user-table.module';
+import {InviteUserComponent} from 'src/app/features/invite-user/invite-user.component';
+import {UserListComponent} from './user-list.component';
+import {MatDialog} from '@angular/material';
+import {UserListFacade} from './user-list-facade';
+import {of} from 'rxjs';
+import {InviteUserModule} from '../invite-user/invite-user.module';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule} from '@angular/forms';
+import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
+import {MatInputModule} from '@angular/material/input';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;

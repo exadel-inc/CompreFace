@@ -21,36 +21,17 @@ const initialState: AppUserEntityState = userAdapter.getInitialState({
 
 export const AppUserReducer: ActionReducer<AppUserEntityState> = createReducer(
   initialState,
-  on(LoadUsersEntityAction, (state) => ({
-    ...state,
-    isPending: true
-  })),
-  on(SetPending, (state, { isPending }) => ({
-    ...state,
-    isPending
-  })),
+  on(LoadUsersEntityAction, (state) => ({...state, isPending: true})),
+  on(SetPending, (state, {isPending}) => ({...state, isPending})),
   on(AddUsersEntityAction, (state, { users }) => {
-    const newState = {
-      ...state,
-      isPending: false
-    };
-
-    return userAdapter.addAll(users, newState);
+    return userAdapter.addAll(users, {...state, isPending: false});
   }),
-  on(PutUpdatedUserRoleEntityAction, (state) => ({
-    ...state,
-    isPending: true
-  })),
+  on(PutUpdatedUserRoleEntityAction, (state) => ({...state, isPending: true})),
   on(UpdateUserRoleEntityAction, (state, { user }) => {
-    const newState = {
-      ...state,
-      isPending: false
-    };
-
     return userAdapter.updateOne({
       id: user.id,
       changes: {
         accessLevel: user.accessLevel
       }
-    }, newState)
+    }, {...state, isPending: false});
   }));

@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { TableComponent } from '../table/table.component';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {Component, OnInit, Input, ChangeDetectionStrategy} from '@angular/core';
+import {TableComponent} from '../table/table.component';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-table',

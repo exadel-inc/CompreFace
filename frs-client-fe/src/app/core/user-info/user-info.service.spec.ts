@@ -1,19 +1,19 @@
 import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {environment} from "../../../environments/environment";
-import {UserInfoService} from "./user-info.service";
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {environment} from '../../../environments/environment';
+import {UserInfoService} from './user-info.service';
 
 describe('UserInfoService', () => {
   let service: UserInfoService;
   let httpMock: HttpTestingController;
 
   const mockData = {
-    "email": "email",
-    "username": "username",
-    "password": "password",
-    "firstName": "string",
-    "guid": "guid_0",
-    "lastName": "string"
+    email: 'email',
+    username: 'username',
+    password: 'password',
+    firstName: 'string',
+    guid: 'guid_0',
+    lastName: 'string'
   };
 
   beforeEach(() => {

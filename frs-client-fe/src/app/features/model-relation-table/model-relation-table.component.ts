@@ -1,7 +1,7 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { TableComponent } from '../table/table.component';
-import { Observable } from 'rxjs';
-import { ModelRelation } from 'src/app/data/modelRelation';
+import {Component, Input, ChangeDetectionStrategy} from '@angular/core';
+import {TableComponent} from '../table/table.component';
+import {Observable} from 'rxjs';
+import {ModelRelation} from 'src/app/data/modelRelation';
 
 @Component({
   selector: 'app-model-relation-table',

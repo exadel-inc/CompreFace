@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { ModelRelationListFacade } from './model-relation-list-facade';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ITableConfig } from '../table/table.component';
-import { Application } from 'src/app/data/application';
-import { ModelRelation } from 'src/app/data/modelRelation';
+import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
+import {ModelRelationListFacade} from './model-relation-list-facade';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {ITableConfig} from '../table/table.component';
+import {Application} from 'src/app/data/application';
+import {ModelRelation} from 'src/app/data/modelRelation';
 
 @Component({
   selector: 'app-models-relation-list',

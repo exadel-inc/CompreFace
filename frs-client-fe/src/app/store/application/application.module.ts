@@ -1,13 +1,15 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { StoreModule } from "@ngrx/store";
-import { ApplicationReducer } from "./reducers";
+import {NgModule} from '@angular/core';
+import {StoreModule} from '@ngrx/store';
+import {ApplicationReducer} from './reducers';
+import {EffectsModule} from '@ngrx/effects';
+import {ApplicationListEffect} from './effects';
 
 @NgModule({
   declarations: [],
   imports: [
-    CommonModule,
+    EffectsModule.forFeature([ApplicationListEffect]),
     StoreModule.forFeature('application', ApplicationReducer)
   ]
 })
-export class ApplicationStoreModule { }
+export class ApplicationStoreModule {
+}

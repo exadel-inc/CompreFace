@@ -1,5 +1,5 @@
 import { EntityMetadataMap, EntityDataModuleConfig, DefaultDataServiceConfig } from '@ngrx/data';
-import {environment} from "../../environments/environment";
+import {environment} from '../../environments/environment';
 
 export const defaultDataServiceConfig: DefaultDataServiceConfig = {
   // root: environment.apiUrl,

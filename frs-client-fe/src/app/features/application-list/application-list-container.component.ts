@@ -1,12 +1,12 @@
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
-import { MatDialog } from '@angular/material';
-import { ITableConfig } from 'src/app/features/table/table.component';
-import { ApplicationListFacade } from './application-list-facade';
-import { ROUTERS_URL } from "../../data/routers-url.variable";
-import { Router } from "@angular/router";
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
+import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialog.component';
+import {MatDialog} from '@angular/material';
+import {ITableConfig} from 'src/app/features/table/table.component';
+import {ApplicationListFacade} from './application-list-facade';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'application-list-container',
@@ -30,9 +30,9 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       .pipe(
         map(apps => {
           return ({
-            columns: [{ title: 'Title', property: 'name' }, { title: 'Owner name', property: 'owner' }],
-            data: apps.map(app => ({ id: app.id, name: app.name, owner: app.owner.firstName }))
-          })
+            columns: [{title: 'Title', property: 'name'}, {title: 'Owner name', property: 'owner'}],
+            data: apps.map(app => ({id: app.id, name: app.name, owner: app.owner.firstName}))
+          });
         })
       );
   }

@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Organization} from "../../data/organization";
-import {Observable} from "rxjs";
-import {Application} from "../../data/application";
-import {Model} from "../../data/model";
+import {Organization} from '../../data/organization';
+import {Observable} from 'rxjs';
+import {Application} from '../../data/application';
+import {Model} from '../../data/model';
 
 @Component({
   selector: 'app-entity-title',

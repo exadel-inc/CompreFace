@@ -17,5 +17,5 @@ export class SetSelectedId implements Action {
 
 export type OrganizationActions =
   | GetSelectedId
-  | SetSelectedId
+  | SetSelectedId;
 

@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
-import { Observable } from 'rxjs';
+import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Input, Output} from '@angular/core';
+import {Observable} from 'rxjs';
 
 export interface ITableConfig {
   columns: {
