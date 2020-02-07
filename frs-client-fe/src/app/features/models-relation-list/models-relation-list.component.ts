@@ -33,7 +33,7 @@ export class ModelsRelationListComponent implements OnInit, OnDestroy {
             { title: 'deleteAccess', property: 'role' }
           ],
           data: users
-        }
+      };
     }));
 
     this.availableRoles$ = this.modelRelationListFacade.availableRoles$;

@@ -12,7 +12,7 @@ export class AuthInit {
       if (this.auth.isTokenValid(token)) {
         this.store.dispatch(new UpdateUserInfo({
           isAuthenticated: true,
-          username: username
+          username
         }));
       }
     }

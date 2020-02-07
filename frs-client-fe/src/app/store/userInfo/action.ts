@@ -1,5 +1,5 @@
 import {Action} from '@ngrx/store';
-import {User} from "../../data/user";
+import {User} from '../../data/user';
 
 export enum UserInfoActionTypes {
   UPDATE_USER_INFO = '[User] Login Success',
@@ -48,4 +48,4 @@ export type UserInfoActions =
   | UpdateUserAuthorization
   | GetUserInfo
   | GetUserInfoSuccess
-  | GetUserInfoFail
+  | GetUserInfoFail;

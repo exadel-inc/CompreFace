@@ -1,16 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ApplicationUserListComponent } from './application-user-list.component';
-import { SpinnerModule } from '../spinner/spinner.module';
-import { UserTableModule } from '../user-table/user-table.module';
-import { ApplicationUserListFacade } from './application-user-list-facade';
-import { of } from 'rxjs';
-import { MatDialog } from '@angular/material';
-import {InviteUserModule} from "../invite-user/invite-user.module";
-import {NoopAnimationsModule} from "@angular/platform-browser/animations";
-import {FormsModule} from "@angular/forms";
-import {UserTablePipeModule} from "../../ui/search-pipe/user-table-filter.module";
-import {MatInputModule} from "@angular/material/input";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ApplicationUserListComponent} from './application-user-list.component';
+import {SpinnerModule} from '../spinner/spinner.module';
+import {UserTableModule} from '../user-table/user-table.module';
+import {ApplicationUserListFacade} from './application-user-list-facade';
+import {of} from 'rxjs';
+import {MatDialog} from '@angular/material';
+import {InviteUserModule} from '../invite-user/invite-user.module';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule} from '@angular/forms';
+import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
+import {MatInputModule} from '@angular/material/input';
 
 describe('ApplicationUserListComponent', () => {
   let component: ApplicationUserListComponent;
@@ -31,7 +30,7 @@ describe('ApplicationUserListComponent', () => {
       providers: [{
         provide: MatDialog,
         useValue: {}
-      },{
+      }, {
         provide: ApplicationUserListFacade,
         useValue: {
           initSubscriptions: () => of([{}]),
@@ -44,7 +43,8 @@ describe('ApplicationUserListComponent', () => {
           }]),
           selectedOrganization$: of([{}]),
           isLoading$: of([{}]),
-          unsubscribe(){}
+          unsubscribe() {
+          }
         }
       }]
     })

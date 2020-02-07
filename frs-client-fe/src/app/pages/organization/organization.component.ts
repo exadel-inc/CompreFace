@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {OrganizationService} from "./organization.service";
+import {OrganizationService} from './organization.service';
 
 @Component({
   selector: 'app-organization',

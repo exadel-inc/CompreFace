@@ -1,14 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/store';
-import { selectModelRelations, selectIsPendingModelrelations } from 'src/app/store/model-relation/selectors';
-import { Observable, Subscription, combineLatest, of } from 'rxjs';
-import { Application } from 'src/app/data/application';
-import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
-import { selectCurrentAppId } from 'src/app/store/application/selectors';
-import { selectCurrentModelId } from 'src/app/store/model/selectors';
-import { loadModelRelation, putUpdatedModelRelation } from 'src/app/store/model-relation/actions';
-import { IFacade } from 'src/app/data/facade/IFacade';
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {AppState} from 'src/app/store';
+import {selectModelRelations, selectIsPendingModelrelations} from 'src/app/store/model-relation/selectors';
+import {Observable, Subscription, combineLatest, of} from 'rxjs';
+import {Application} from 'src/app/data/application';
+import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
+import {selectCurrentAppId} from 'src/app/store/application/selectors';
+import {selectCurrentModelId} from 'src/app/store/model/selectors';
+import {loadModelRelation, putUpdatedModelRelation} from 'src/app/store/model-relation/actions';
+import {IFacade} from 'src/app/data/facade/IFacade';
 
 @Injectable()
 export class ModelRelationListFacade implements IFacade {
@@ -56,8 +56,8 @@ export class ModelRelationListFacade implements IFacade {
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedAppId,
       modelId: this.selectedModelId,
-      id: id,
-      shareMode: shareMode
+      id,
+      shareMode
     }));
   }
 

@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, of } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Observable, of} from 'rxjs';
 import {switchMap, catchError} from 'rxjs/operators';
 import {
   GetUserInfoFail, GetUserInfoSuccess, UserInfoActionTypes
 } from './action';
-import {UserInfoService} from "../../core/user-info/user-info.service";
+import {UserInfoService} from '../../core/user-info/user-info.service';
 
 @Injectable()
 export class UserInfoEffect {
@@ -19,7 +19,7 @@ export class UserInfoEffect {
       return this.userInfoService.get().pipe(
         switchMap(user => [new GetUserInfoSuccess(user)]),
         catchError(e => of(new GetUserInfoFail({ errorMessage: e })))
-      )
+      );
     })
-  )
+  );
 }

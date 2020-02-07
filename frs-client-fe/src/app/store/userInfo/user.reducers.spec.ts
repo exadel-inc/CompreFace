@@ -1,5 +1,5 @@
-import { UpdateUserAuthorization, ResetUserInfo, UpdateUserInfo } from "./action";
-import { UserInfoReducer } from "./reducers";
+import {UpdateUserAuthorization, ResetUserInfo, UpdateUserInfo} from './action';
+import {UserInfoReducer} from './reducers';
 
 
 describe('UserInfoReducer', () => {

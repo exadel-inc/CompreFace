@@ -1,5 +1,5 @@
-import { createAction, props } from '@ngrx/store';
-import { Role } from 'src/app/data/role';
+import {createAction, props} from '@ngrx/store';
+import {Role} from 'src/app/data/role';
 
 
 export const SetPendingRoleEntityAction = createAction('[Role/API] Set Pending', props<{isPending: boolean}>());

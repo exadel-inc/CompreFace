@@ -25,11 +25,12 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   stateSubscription: Subscription;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
-    if (formGroup.get('password').value === formGroup.get('confirmPassword').value)
+    if (formGroup.get('password').value === formGroup.get('confirmPassword').value) {
       return null;
-    else
+    } else {
       return { passwordMismatch: true };
-  };
+    }
+  }
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);

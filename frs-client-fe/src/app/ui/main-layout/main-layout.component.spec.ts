@@ -1,7 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MainLayoutComponent } from './main-layout.component';
-import {NO_ERRORS_SCHEMA} from "@angular/core";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {MainLayoutComponent} from './main-layout.component';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 
 describe('MainLayoutComponent', () => {
   let component: MainLayoutComponent;

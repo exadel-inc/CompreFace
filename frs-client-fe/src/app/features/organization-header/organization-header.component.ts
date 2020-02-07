@@ -27,27 +27,27 @@ export class OrganizationHeaderComponent implements OnInit {
   }
 
   createNew() {
-      const dialog = this.dialog.open(CreateDialogComponent, {
-        data: {
-          entityType: 'organization',
-          name: ''
-        }
-      });
+    const dialog = this.dialog.open(CreateDialogComponent, {
+      data: {
+        entityType: 'organization',
+        name: ''
+      }
+    });
 
     dialog.afterClosed().subscribe(res => {
       if (res) {
         this.organizationHeaderFacade.add({
           name: res
-        })
+        });
       }
     });
   }
 
   selectOrganization(id) {
-    this.organizationHeaderFacade.select(id)
+    this.organizationHeaderFacade.select(id);
   }
 
   rename(name) {
-    this.organizationHeaderFacade.rename(name)
+    this.organizationHeaderFacade.rename(name);
   }
 }

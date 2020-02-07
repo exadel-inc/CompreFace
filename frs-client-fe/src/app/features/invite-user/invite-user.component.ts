@@ -41,7 +41,7 @@ export class InviteUserComponent implements OnInit {
   }
 
   private filter(options: string[], value: string): string[] {
-    const filterValue = value ? value.toLowerCase(): "";
-    return options ? options.filter(option => option.toLowerCase().indexOf(filterValue) === 0) : [""];
+    const filterValue = value ? value.toLowerCase() : '';
+    return options ? options.filter(option => option.toLowerCase().indexOf(filterValue) === 0) : [''];
   }
 }

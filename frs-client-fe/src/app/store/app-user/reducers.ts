@@ -1,6 +1,6 @@
-import { createReducer, on } from '@ngrx/store';
-import { EntityState, createEntityAdapter } from '@ngrx/entity';
-import { AppUser } from 'src/app/data/appUser';
+import {createReducer, on} from '@ngrx/store';
+import {EntityState, createEntityAdapter} from '@ngrx/entity';
+import {AppUser} from 'src/app/data/appUser';
 import {
   loadAppUserEntityAction,
   addAppUserEntityAction,

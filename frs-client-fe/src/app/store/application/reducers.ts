@@ -1,4 +1,4 @@
-import { Application } from 'src/app/data/application';
+import {Application} from 'src/app/data/application';
 import {
   addApplicationEntityAction,
   addApplicationsEntityAction,
@@ -7,8 +7,8 @@ import {
   updateApplicationEntityAction,
   putUpdatedApplicationEntityAction
 } from './action';
-import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
-import {ActionReducer, createReducer, on} from "@ngrx/store";
+import {EntityState, createEntityAdapter, EntityAdapter} from '@ngrx/entity';
+import {ActionReducer, createReducer, on} from '@ngrx/store';
 
 export const applicationAdapter: EntityAdapter<Application> = createEntityAdapter<Application>();
 
@@ -24,12 +24,15 @@ export const initialState: AppEntityState = applicationAdapter.getInitialState({
   isPending: false
 });
 
-export const ApplicationReducer:ActionReducer<AppEntityState> = createReducer(
+export const ApplicationReducer: ActionReducer<AppEntityState> = createReducer(
   initialState,
   on(loadApplicationsEntityAction, (state) => ({...state, isPending: true})),
   on(addApplicationEntityAction, (state, { application }) => applicationAdapter.addOne(application, {...state, isPending: false})),
   on(addApplicationsEntityAction, (state, { applications }) => applicationAdapter.addAll(applications, {...state, isPending: false})),
   on(putUpdatedApplicationEntityAction, (state) => ({...state, isPending: true})),
-  on(updateApplicationEntityAction, (state, { application }) => applicationAdapter.updateOne({ id: application.id, changes: application }, {...state, isPending: false})),
+  on(updateApplicationEntityAction, (state, {application}) => applicationAdapter.updateOne(
+    {id: application.id, changes: application},
+    {...state, isPending: false}
+  )),
   on(setSelectedIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
 );

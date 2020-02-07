@@ -17,7 +17,6 @@ describe('AppUserService', () => {
   });
 
   it('should be created', () => {
-    const service: AppUserService = TestBed.get(AppUserService);
     expect(service).toBeTruthy();
   });
 });

@@ -39,7 +39,7 @@ export function UserInfoReducer(state = initialState, action: UserInfoActions): 
       return {
         ...state,
         ...action.payload,
-      }
+      };
     }
 
     default:

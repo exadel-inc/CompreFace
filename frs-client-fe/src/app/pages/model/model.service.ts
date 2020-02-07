@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Subscription } from "rxjs";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../store";
-import { loadApplicationsEntityAction } from "../../store/application/action";
-import { ROUTERS_URL } from "../../data/routers-url.variable";
-import {filter, take} from "rxjs/operators";
-import { setSelectedIdEntityAction } from "../../store/application/action";
-import { GetUserInfo } from "../../store/userInfo/action";
-import { SetSelectedId } from "../../store/organization/action";
-import { OrganizationEnService } from "../../store/organization/organization-entitys.service";
-import {loadModelsEntityAction, setSelectedIdModelEntityAction} from "../../store/model/actions";
-import {selectModels} from "../../store/model/selectors";
+import {Injectable} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {loadApplicationsEntityAction} from '../../store/application/action';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {filter, take} from 'rxjs/operators';
+import {setSelectedIdEntityAction} from '../../store/application/action';
+import {GetUserInfo} from '../../store/userInfo/action';
+import {SetSelectedId} from '../../store/organization/action';
+import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
+import {loadModelsEntityAction, setSelectedIdModelEntityAction} from '../../store/model/actions';
+import {selectModels} from '../../store/model/selectors';
 
 @Injectable()
 export class ModelPageService {
@@ -41,14 +41,16 @@ export class ModelPageService {
         take(1)
       ).subscribe(() => {
         this.fetchApps();
-      })
+      });
     } else {
       this.router.navigate([ROUTERS_URL.ORGANIZATION]);
     }
   }
 
   unSubscribe() {
-    if (this.modelSub) this.modelSub.unsubscribe();
+    if (this.modelSub) {
+      this.modelSub.unsubscribe();
+    }
   }
 
   fetchApps() {

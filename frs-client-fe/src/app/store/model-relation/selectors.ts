@@ -1,5 +1,5 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { modelRelationEntityAdapter, ModelRelationEntityState } from './reducers';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {modelRelationEntityAdapter, ModelRelationEntityState} from './reducers';
 
 const { selectAll } = modelRelationEntityAdapter.getSelectors();
 const selectModelRelationEntityState = createFeatureSelector<ModelRelationEntityState>('model-relation');

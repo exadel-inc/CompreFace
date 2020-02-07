@@ -1,10 +1,10 @@
-import {UserTableFilterPipe} from "./user-table-filter.pipe";
-import {of} from "rxjs";
+import {UserTableFilterPipe} from './user-table-filter.pipe';
+import {of} from 'rxjs';
 
 describe('User table Pipe', () => {
   let pipe: UserTableFilterPipe;
-  let tableData = {
-    data:[
+  const tableData = {
+    data: [
       {
         firstName: 'Tom',
         lastName: 'Sem'
@@ -29,7 +29,7 @@ describe('User table Pipe', () => {
       expect(e.data[0].lastName).toBe(tableData.data[0].lastName);
       expect(e.data[1].firstName).toBe(tableData.data[1].firstName);
       expect(e.data[1].lastName).toBe(tableData.data[1].lastName);
-      done()
+      done();
     });
   });
 
@@ -39,7 +39,7 @@ describe('User table Pipe', () => {
       expect(e.data.length).toBe(1);
       expect(e.data[0].firstName).toBe(tableData.data[0].firstName);
       expect(e.data[0].lastName).toBe(tableData.data[0].lastName);
-      done()
+      done();
     });
   });
 
@@ -47,7 +47,7 @@ describe('User table Pipe', () => {
     const tableData$ = of({...tableData});
     pipe.transform(tableData$, 'Toa').subscribe(e => {
       expect(e.data.length).toBe(0);
-      done()
+      done();
     });
-  })
+  });
 });

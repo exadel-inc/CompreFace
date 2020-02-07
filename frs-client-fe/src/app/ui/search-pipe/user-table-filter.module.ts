@@ -1,5 +1,5 @@
-import {NgModule} from "@angular/core";
-import {UserTableFilterPipe} from "./user-table-filter.pipe";
+import {NgModule} from '@angular/core';
+import {UserTableFilterPipe} from './user-table-filter.pipe';
 
 @NgModule({
   declarations: [UserTableFilterPipe],
