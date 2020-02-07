@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { UserTableComponent } from './user-table.component';
-import { MatTableModule, MatFormFieldModule, MatSelectModule } from '@angular/material';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {UserTableComponent} from './user-table.component';
+import {MatTableModule, MatFormFieldModule, MatSelectModule} from '@angular/material';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
   declarations: [UserTableComponent],

@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { UserListFacade } from './user-list-facade';
-import { Observable } from 'rxjs';
-import { AppUser } from 'src/app/data/appUser';
-import { map } from 'rxjs/operators';
-import { ITableConfig } from '../table/table.component';
-import { MatDialog } from '@angular/material';
-import { AlertComponent } from '../alert/alert.component';
+import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
+import {UserListFacade} from './user-list-facade';
+import {Observable} from 'rxjs';
+import {AppUser} from 'src/app/data/appUser';
+import {map} from 'rxjs/operators';
+import {ITableConfig} from '../table/table.component';
+import {MatDialog} from '@angular/material';
+import {AlertComponent} from '../alert/alert.component';
 
 @Component({
   selector: 'user-list-container',

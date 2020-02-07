@@ -1,12 +1,12 @@
-import { Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
-import {User} from "../../data/user";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../store";
-import {Observable, Subscription} from "rxjs";
-import { ROUTERS_URL } from "../../data/routers-url.variable";
-import { LogIn } from "../../store/auth/action";
-import { selectAuthState } from "../../store/auth/selectors";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {User} from '../../data/user';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {Observable, Subscription} from 'rxjs';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {LogIn} from '../../store/auth/action';
+import {selectAuthState} from '../../store/auth/selectors';
 
 @Component({
   selector: 'app-login-form',

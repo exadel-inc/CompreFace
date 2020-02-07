@@ -1,12 +1,11 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog } from '@angular/material';
-import { SpinnerModule } from '../spinner/spinner.module';
-import { TableModule } from '../table/table.module';
-import { ModelListFacade } from './model-list-facade';
-import { of } from 'rxjs';
-
-import { ModelListComponent } from './model-list.component';
-import {Router} from "@angular/router";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatDialog} from '@angular/material';
+import {SpinnerModule} from '../spinner/spinner.module';
+import {TableModule} from '../table/table.module';
+import {ModelListFacade} from './model-list-facade';
+import {of} from 'rxjs';
+import {ModelListComponent} from './model-list.component';
+import {Router} from '@angular/router';
 
 describe('ModelListComponent', () => {
   let component: ModelListComponent;
@@ -32,7 +31,8 @@ describe('ModelListComponent', () => {
           }]),
           selectedOrganization$: of([{}]),
           isLoading$: of([{}]),
-          unsubscribe(){}
+          unsubscribe() {
+          }
         }
       },
         {provide: Router}

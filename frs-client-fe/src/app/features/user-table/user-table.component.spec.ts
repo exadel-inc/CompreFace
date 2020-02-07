@@ -1,7 +1,6 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatTableModule, MatSelectModule } from '@angular/material';
-
-import { UserTableComponent } from './user-table.component';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {MatTableModule, MatSelectModule} from '@angular/material';
+import {UserTableComponent} from './user-table.component';
 
 describe('UserTableComponent', () => {
   let component: UserTableComponent;

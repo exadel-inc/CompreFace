@@ -5,15 +5,15 @@ import {selectAppUserIsPending, selectAppUsers} from 'src/app/store/app-user/sel
 import {loadAppUserEntityAction, putUpdatedAppUserRoleEntityAction} from 'src/app/store/app-user/actions';
 import {selectCurrentAppId, selectUserRollForSelectedApp} from 'src/app/store/application/selectors';
 import {AppState} from 'src/app/store';
-import {Observable, combineLatest, Subscription, Subject, zip} from 'rxjs';
+import {Observable, combineLatest, Subscription, zip} from 'rxjs';
 import {AppUser} from 'src/app/data/appUser';
 import {selectAllRoles, selectIsPendingRoleStore} from 'src/app/store/role/selectors';
 import {map, tap} from 'rxjs/operators';
 import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
 import {LoadRolesEntityAction} from 'src/app/store/role/actions';
-import {selectUsers} from "../../store/user/selectors";
-import {LoadUsersEntityAction} from "../../store/user/action";
-import {AppUserService} from "../../core/app-user/app-user.service";
+import {selectUsers} from '../../store/user/selectors';
+import {LoadUsersEntityAction} from '../../store/user/action';
+import {AppUserService} from '../../core/app-user/app-user.service';
 
 @Injectable()
 export class ApplicationUserListFacade implements IFacade {
@@ -71,7 +71,7 @@ export class ApplicationUserListFacade implements IFacade {
         this.selectedOrganizationId = orgId;
         this.loadData();
       }
-    })
+    });
   }
 
   public loadData(): void {

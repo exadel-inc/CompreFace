@@ -1,12 +1,12 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { EntityTitleComponent } from './entity-title.component';
-import {CommonModule} from "@angular/common";
-import {MatInputModule} from "@angular/material/input";
-import {FormsModule} from "@angular/forms";
-import {MatButtonModule} from "@angular/material/button";
-import {MatIconModule} from "@angular/material/icon";
-import {MatSelectModule} from "@angular/material/select";
-import {Subject} from "rxjs";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {EntityTitleComponent} from './entity-title.component';
+import {CommonModule} from '@angular/common';
+import {MatInputModule} from '@angular/material/input';
+import {FormsModule} from '@angular/forms';
+import {MatButtonModule} from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
+import {Subject} from 'rxjs';
 
 describe('EntityTitleComponent', () => {
   let component: EntityTitleComponent;

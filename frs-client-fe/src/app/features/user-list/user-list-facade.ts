@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { IFacade } from 'src/app/data/facade/IFacade';
-import { AppUser } from 'src/app/data/appUser';
-import { AppState } from 'src/app/store';
-import { Observable, Subscription, combineLatest } from 'rxjs';
-import { Store } from '@ngrx/store';
-import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
-import { selectUsers, selectIsPendingUserStore } from 'src/app/store/user/selectors';
-import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
-import { selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
-import { map, tap } from 'rxjs/operators';
-import { LoadUsersEntityAction, PutUpdatedUserRoleEntityAction } from 'src/app/store/user/action';
-import { LoadRolesEntityAction } from 'src/app/store/role/actions';
-import { UserService } from 'src/app/core/user/user.service';
+import {Injectable} from '@angular/core';
+import {IFacade} from 'src/app/data/facade/IFacade';
+import {AppUser} from 'src/app/data/appUser';
+import {AppState} from 'src/app/store';
+import {Observable, Subscription, combineLatest} from 'rxjs';
+import {Store} from '@ngrx/store';
+import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
+import {selectUsers, selectIsPendingUserStore} from 'src/app/store/user/selectors';
+import {selectAllRoles, selectIsPendingRoleStore} from 'src/app/store/role/selectors';
+import {selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
+import {map, tap} from 'rxjs/operators';
+import {LoadUsersEntityAction, PutUpdatedUserRoleEntityAction} from 'src/app/store/user/action';
+import {LoadRolesEntityAction} from 'src/app/store/role/actions';
+import {UserService} from 'src/app/core/user/user.service';
 
 @Injectable()
 export class UserListFacade implements IFacade {

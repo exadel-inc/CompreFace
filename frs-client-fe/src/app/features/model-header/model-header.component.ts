@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Model } from "../../data/model";
-import { ModelHeaderFacade } from "./model-header.facade";
-import { Observable } from "rxjs";
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {Model} from '../../data/model';
+import {ModelHeaderFacade} from './model-header.facade';
+import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-model-header',
@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
   styleUrls: ['./model-header.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ModelHeaderComponent implements OnInit {
+export class ModelHeaderComponent implements OnInit, OnDestroy {
   public model$: Observable<Model>;
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
@@ -30,6 +30,6 @@ export class ModelHeaderComponent implements OnInit {
   }
 
   rename(name) {
-    this.modelHeaderFacade.rename(name)
+    this.modelHeaderFacade.rename(name);
   }
 }

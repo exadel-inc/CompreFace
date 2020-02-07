@@ -1,17 +1,17 @@
-import { Injectable } from '@angular/core';
-import { Store } from "@ngrx/store";
-import { Observable, Subscription } from "rxjs";
-import { AppState } from "../../store";
-import { IFacade } from "../../data/facade/IFacade";
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Observable, Subscription} from 'rxjs';
+import {AppState} from '../../store';
+import {IFacade} from '../../data/facade/IFacade';
 import {
   selectCurrentApp,
   selectCurrentAppId,
   selectUserRollForSelectedApp,
   selectIsPendingApplicationList
-} from "../../store/application/selectors";
-import { Application } from "../../data/application";
-import { putUpdatedApplicationEntityAction } from "../../store/application/action";
-import { selectCurrentOrganizationId } from "../../store/organization/selectors";
+} from '../../store/application/selectors';
+import {Application} from '../../data/application';
+import {putUpdatedApplicationEntityAction} from '../../store/application/action';
+import {selectCurrentOrganizationId} from '../../store/organization/selectors';
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {

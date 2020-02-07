@@ -1,13 +1,13 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from "@angular/forms";
-import {User} from "../../data/user";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../store";
-import {Observable, Subscription} from "rxjs";
-import { ROUTERS_URL } from "../../data/routers-url.variable";
-import { SignUp } from "../../store/auth/action";
-import { selectAuthState } from "../../store/auth/selectors";
-import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
+import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
+import {User} from '../../data/user';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {Observable, Subscription} from 'rxjs';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {SignUp} from '../../store/auth/action';
+import {selectAuthState} from '../../store/auth/selectors';
+import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
 
 @Component({
   selector: 'app-sign-up-form',
