@@ -1,7 +1,7 @@
-import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/store';
-import { AuthService } from './auth.service';
-import { UpdateUserInfo } from '../../store/userInfo/action';
+import {Store} from '@ngrx/store';
+import {AppState} from 'src/app/store';
+import {AuthService} from './auth.service';
+import {UpdateUserInfo} from '../../store/userInfo/action';
 
 export class AuthInit {
   constructor(private store: Store<AppState>, private auth: AuthService) {

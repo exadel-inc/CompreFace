@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { Observable, BehaviorSubject } from "rxjs";
-import { environment } from "../../../environments/environment";
-import { API_URL } from "../../data/api.variables";
-import { User } from "../../data/user";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable, BehaviorSubject} from 'rxjs';
+import {environment} from '../../../environments/environment';
+import {API_URL} from '../../data/api.variables';
+import {User} from '../../data/user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  public token$: BehaviorSubject<string>
+  public token$: BehaviorSubject<string>;
 
   constructor(private http: HttpClient) {
     this.token$ = new BehaviorSubject<string>(localStorage.getItem('token'));
@@ -39,12 +39,12 @@ export class AuthService {
     return this.http.post<User>(url, { email, password, username });
   }
 
-  // todo: for feature
   logOut(token: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.LOGOUT}`;
     return this.http.post(url, { token });
   }
 
+  // todo: for feature
   isTokenValid(token: string): boolean {
     return true;
   }

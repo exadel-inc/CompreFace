@@ -1,12 +1,12 @@
-import { TestBed } from '@angular/core/testing';
-import { AuthGuard, LoginGuard } from './auth.guard';
-import { Router } from "@angular/router";
-import { ROUTERS_URL } from "../../data/routers-url.variable";
-import { Store, MemoizedSelector } from '@ngrx/store';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { AppState } from 'src/app/store';
-import { selectUserInfoState } from '../../store/userInfo/selectors';
-import { UserInfoState } from 'src/app/store/userInfo/reducers';
+import {TestBed} from '@angular/core/testing';
+import {AuthGuard, LoginGuard} from './auth.guard';
+import {Router} from '@angular/router';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {Store, MemoizedSelector} from '@ngrx/store';
+import {provideMockStore, MockStore} from '@ngrx/store/testing';
+import {AppState} from 'src/app/store';
+import {selectUserInfoState} from '../../store/userInfo/selectors';
+import {UserInfoState} from 'src/app/store/userInfo/reducers';
 
 describe('Auth Guard', () => {
   let guard: AuthGuard;

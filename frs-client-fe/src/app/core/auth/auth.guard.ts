@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Router, CanActivate } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { ROUTERS_URL } from "../../data/routers-url.variable";
-import { AppState } from 'src/app/store';
-import { selectUserInfoState } from '../../store/userInfo/selectors';
-import { Observable } from 'rxjs';
-import { take, map } from 'rxjs/operators';
-import { UserInfoState } from 'src/app/store/userInfo/reducers';
+import {Injectable} from '@angular/core';
+import {Router, CanActivate} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {AppState} from 'src/app/store';
+import {selectUserInfoState} from '../../store/userInfo/selectors';
+import {Observable} from 'rxjs';
+import {take, map} from 'rxjs/operators';
+import {UserInfoState} from 'src/app/store/userInfo/reducers';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

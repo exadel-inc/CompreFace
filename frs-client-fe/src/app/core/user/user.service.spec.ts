@@ -1,9 +1,8 @@
-import { TestBed } from '@angular/core/testing';
-import { UserService } from './user.service';
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-
-import {environment} from "../../../environments/environment";
-import {AppUser} from "../../data/appUser";
+import {TestBed} from '@angular/core/testing';
+import {UserService} from './user.service';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {environment} from '../../../environments/environment';
+import {AppUser} from '../../data/appUser';
 
 describe('UserService', () => {
   let service: UserService;
@@ -27,16 +26,16 @@ describe('UserService', () => {
   it('should return set of users', () => {
     const mock = [{
       id: 0,
-      organizationId: "ksdfklsn1111111",
-      firstName: "John",
-      lastName: "Malkovich",
-      accessLevel: "USER"
+      organizationId: 'ksdfklsn1111111',
+      firstName: 'John',
+      lastName: 'Malkovich',
+      accessLevel: 'USER'
     }, {
       id: 1,
-      organizationId: "ksdfklsn1111111",
-      firstName: "Tony",
-      lastName: "Stark",
-      accessLevel: "ADMINISTRATOR"
+      organizationId: 'ksdfklsn1111111',
+      firstName: 'Tony',
+      lastName: 'Stark',
+      accessLevel: 'ADMINISTRATOR'
     }];
 
     service.getAll('organizationId').subscribe((data: AppUser[]) => {
@@ -56,10 +55,10 @@ describe('UserService', () => {
   it('should update user role', () => {
     const mock = {
       id: 'userId',
-      organizationId: "ksdfklsn1111111",
-      firstName: "John",
-      lastName: "Malkovich",
-      accessLevel: "USER"
+      organizationId: 'ksdfklsn1111111',
+      firstName: 'John',
+      lastName: 'Malkovich',
+      accessLevel: 'USER'
     };
 
     service.updateRole('organizationId', 'userId', 'USER').subscribe((data: AppUser) => {

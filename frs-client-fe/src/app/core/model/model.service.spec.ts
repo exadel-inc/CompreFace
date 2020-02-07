@@ -1,42 +1,41 @@
-import { TestBed } from '@angular/core/testing';
-
-import { ModelService } from './model.service';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { environment } from "../../../environments/environment";
-import { Model } from 'src/app/data/model';
+import {TestBed} from '@angular/core/testing';
+import {ModelService} from './model.service';
+import {HttpTestingController, HttpClientTestingModule} from '@angular/common/http/testing';
+import {environment} from '../../../environments/environment';
+import {Model} from 'src/app/data/model';
 
 describe('ModelService', () => {
   let httpMock: HttpTestingController;
   const mockModels: Model[] = [
     {
-      "id": '0',
-      "name": "Model 1",
-      "accessLevel": "OWNER/TRAIN/READONLY",
-      "relations": [{
-        "id": "app_0",
-        "shareMode": "NONE"
+      id: '0',
+      name: 'Model 1',
+      accessLevel: 'OWNER/TRAIN/READONLY',
+      relations: [{
+        id: 'app_0',
+        shareMode: 'NONE'
       }],
-      "owner": {
-        "id": "0",
-        "firstName": "Owner 0",
-        "lastName": "lastname owner 0"
+      owner: {
+        id: '0',
+        firstName: 'Owner 0',
+        lastName: 'lastname owner 0'
       },
-      "role": 'USER'
+      role: 'USER'
     },
     {
-      "id": '1',
-      "name": "Model 2",
-      "accessLevel": "OWNER/TRAIN/READONLY",
-      "relations": [{
-        "id": "app_0",
-        "shareMode": "NONE"
+      id: '1',
+      name: 'Model 2',
+      accessLevel: 'OWNER/TRAIN/READONLY',
+      relations: [{
+        id: 'app_0',
+        shareMode: 'NONE'
       }],
-      "owner": {
-        "id": "0",
-        "firstName": "Owner 0",
-        "lastName": "lastname owner 0"
+      owner: {
+        id: '0',
+        firstName: 'Owner 0',
+        lastName: 'lastname owner 0'
       },
-      "role": 'USER'
+      role: 'USER'
     }
   ];
 
@@ -72,17 +71,17 @@ describe('ModelService', () => {
     const req = httpMock.expectOne(`${environment.apiUrl}org/0/app/app_0/model`);
     expect(req.request.method).toBe('POST');
     req.flush({
-      "id": '2',
-      "name": "new model",
-      "accessLevel": "OWNER/TRAIN/READONLY",
-      "relations": [{
-        "id": "app_0",
-        "shareMode": "NONE"
+      id: '2',
+      name: 'new model',
+      accessLevel: 'OWNER/TRAIN/READONLY',
+      relations: [{
+        id: 'app_0',
+        shareMode: 'NONE'
       }],
-      "owner": {
-        "id": "0",
-        "firstName": "Owner 0",
-        "lastName": "lastname owner 0"
+      owner: {
+        id: '0',
+        firstName: 'Owner 0',
+        lastName: 'lastname owner 0'
       }
     });
   })

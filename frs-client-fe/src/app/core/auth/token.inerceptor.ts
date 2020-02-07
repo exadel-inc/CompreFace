@@ -1,12 +1,12 @@
-import { Injectable, Injector } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from './auth.service';
-import { Observable } from "rxjs";
-import { Router } from "@angular/router";
-import { catchError } from "rxjs/operators";
-import { Store } from '@ngrx/store';
-import { AppState } from 'src/app/store';
-import { UpdateUserAuthorization } from '../../store/userInfo/action';
+import {Injectable, Injector} from '@angular/core';
+import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
+import {AuthService} from './auth.service';
+import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
+import {catchError} from 'rxjs/operators';
+import {Store} from '@ngrx/store';
+import {AppState} from 'src/app/store';
+import {UpdateUserAuthorization} from '../../store/userInfo/action';
 
 
 @Injectable()
@@ -23,7 +23,7 @@ export class TokenInterceptor implements HttpInterceptor {
     if (token) {
       request = request.clone({
         setHeaders: {
-          'Authorization': token,
+          Authorization: token,
         }
       });
     }
