@@ -1,7 +1,7 @@
 import {createSelector, createFeatureSelector} from '@ngrx/store';
 import * as FromOrganization from './reducers';
-import {Organization} from "../../data/organization";
-import {EntitySelectorsFactory} from "@ngrx/data";
+import {Organization} from '../../data/organization';
+import {EntitySelectorsFactory} from '@ngrx/data';
 
 export const organizationSelectors = new EntitySelectorsFactory().create<any>('Organization');
 

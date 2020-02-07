@@ -1,39 +1,30 @@
-import {selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp} from "./selectors";
-import {Application} from "../../data/application";
+import {selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp} from './selectors';
+import {Application} from '../../data/application';
 
 describe('ApplicationSelectors', () => {
 
   it('selectCurrentAppId', () => {
     expect(selectCurrentAppId.projector({selectedAppId: 'someId'})).toBe('someId');
   });
-
-
   it('selectCurrentApp', () => {
-  interface appsInterface {
-    entities: Array<Application>;
-  }
-    const apps: appsInterface = {
+    interface AppsInterface {
+      entities: Array<Application>;
+    }
+
+    const apps: AppsInterface = {
       entities: [
-          {
-            id: "1",
-            name: 'name1',
-            owner: {
-              firstName: '',
-              lastName: '',
-              id: ''
-            },
-            role: "",
-            organizationId: ''
+        {
+          id: '1',
+          name: 'name1',
+          owner: {firstName: '', lastName: '', id: ''},
+          role: '',
+          organizationId: ''
       },
       {
         id: '2',
         name: 'name2',
-        owner: {
-          firstName: '',
-          lastName: '',
-          id: ''
-        },
-        role: "",
+        owner: {firstName: '', lastName: '', id: ''},
+        role: '',
         organizationId: ''
       }
     ]};
@@ -46,13 +37,13 @@ describe('ApplicationSelectors', () => {
     const app1 = {
       id: 2,
       name: 'name1',
-      role: "ADMIN"
+      role: 'ADMIN'
     };
 
     const app2 = {
       id: 2,
       name: 'name1',
-      role: "OWNER"
+      role: 'OWNER'
     };
     expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMIN');
     expect(selectUserRollForSelectedApp.projector(app2)).toBe('OWNER');

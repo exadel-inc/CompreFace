@@ -1,5 +1,5 @@
-import { createReducer, on, ActionReducer } from '@ngrx/store';
-import { AppUser } from 'src/app/data/appUser';
+import {createReducer, on, ActionReducer} from '@ngrx/store';
+import {AppUser} from 'src/app/data/appUser';
 import {
   SetPending,
   AddUsersEntityAction,

@@ -1,7 +1,10 @@
-import { createAction, props } from '@ngrx/store';
-import { AppUser } from 'src/app/data/appUser';
+import {createAction, props} from '@ngrx/store';
+import {AppUser} from 'src/app/data/appUser';
 
-export const loadAppUserEntityAction = createAction('[App-User/API] Load App Users', props<{ organizationId: string, applicationId: string }>());
+export const loadAppUserEntityAction = createAction('[App-User/API] Load App Users', props<{
+  organizationId: string,
+  applicationId: string
+}>());
 export const addAppUserEntityAction = createAction('[App-User/API] Add App Users', props<{ users: AppUser[] }>());
 export const putUpdatedAppUserRoleEntityAction = createAction(
   '[App-User/API] Put Updated App User',

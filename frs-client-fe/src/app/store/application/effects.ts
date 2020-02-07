@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { switchMap, map } from 'rxjs/operators';
-import { ApplicationService } from 'src/app/core/application/application.service';
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {switchMap, map} from 'rxjs/operators';
+import {ApplicationService} from 'src/app/core/application/application.service';
 import {
   addApplicationEntityAction,
   addApplicationsEntityAction,
@@ -9,7 +9,7 @@ import {
   updateApplicationEntityAction,
   putUpdatedApplicationEntityAction,
   loadApplicationsEntityAction
-} from "./action";
+} from './action';
 
 @Injectable()
 export class ApplicationListEffect {
@@ -38,5 +38,5 @@ export class ApplicationListEffect {
       action.name
     )),
     map((app) => updateApplicationEntityAction({ application: app }))
-  )
+  );
 }

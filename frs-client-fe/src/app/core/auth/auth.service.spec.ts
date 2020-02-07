@@ -30,7 +30,7 @@ describe('AuthService', () => {
       password: 'password'
     };
 
-    const dummyToken = "Some token";
+    const dummyToken = 'Some token';
 
     service.logIn(dummyUser.username, dummyUser.password).subscribe(token => {
       expect(token).toEqual(dummyToken);
@@ -48,7 +48,7 @@ describe('AuthService', () => {
       email: 'q@q.com'
     };
 
-    const dummyToken = "Some token";
+    const dummyToken = 'Some token';
 
     service.signUp(dummyUser.username, dummyUser.password, dummyUser.email).subscribe(token => {
       expect(token).toEqual(dummyToken);

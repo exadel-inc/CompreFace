@@ -1,5 +1,5 @@
-import {LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess} from "./action";
-import {initialState, AuthReducer} from "./reducers";
+import {LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess} from './action';
+import {initialState, AuthReducer} from './reducers';
 
 
 describe('AuthReducer', () => {

@@ -1,7 +1,7 @@
-import {OrganizationActions, OrganizationActionTypes} from "./action";
+import {OrganizationActions, OrganizationActionTypes} from './action';
 
 export interface OrganizationsState {
-  selectId: string | null
+  selectId: string | null;
 }
 
 const initialOrganizationState: OrganizationsState = {

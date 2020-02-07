@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { ModelService } from 'src/app/core/model/model.service';
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {ModelService} from 'src/app/core/model/model.service';
 import {
   loadModelsEntityAction,
   addModelsEntityAction,
@@ -8,9 +8,9 @@ import {
   updatedModelEntityAction,
   putUpdatedModelEntityAction
 } from './actions';
-import { switchMap, map } from 'rxjs/operators';
-import { forkJoin, of } from 'rxjs';
-import {Model} from "../../data/model";
+import {switchMap, map} from 'rxjs/operators';
+import {forkJoin, of} from 'rxjs';
+import {Model} from '../../data/model';
 
 @Injectable()
 export class ModelEffects {
@@ -40,6 +40,6 @@ export class ModelEffects {
   updateModel = this.actions.pipe(
     ofType(putUpdatedModelEntityAction),
     switchMap(action => this.modelService.update(action.organizationId, action.applicationId, action.modelId, action.name)),
-    map((model: Model) => updatedModelEntityAction({ model: model }))
+    map((model: Model) => updatedModelEntityAction({model}))
   );
 }

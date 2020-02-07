@@ -1,5 +1,5 @@
-import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { RoleEntityState } from './reducers';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {RoleEntityState} from './reducers';
 
 export const selectRoleState = createFeatureSelector<RoleEntityState>('role');
 export const selectAllRoles = createSelector(

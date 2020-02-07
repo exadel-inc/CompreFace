@@ -1,4 +1,4 @@
-import {AuthActions, AuthActionTypes} from "./action";
+import {AuthActions, AuthActionTypes} from './action';
 
 export interface AuthState {
   errorMessage: string | null;

@@ -1,12 +1,12 @@
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, of as observableOf } from 'rxjs';
-import { AuthService } from "../../core/auth/auth.service";
-import { AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess, LogIn, SignUp } from "./action";
-import { UpdateUserInfo, ResetUserInfo } from '../userInfo/action';
-import { catchError, map, switchMap, tap } from "rxjs/operators";
-import { Router } from "@angular/router";
-import { ROUTERS_URL } from "../../data/routers-url.variable";
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {Observable, of as observableOf} from 'rxjs';
+import {AuthService} from '../../core/auth/auth.service';
+import {AuthActionTypes, LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess, LogIn, SignUp} from './action';
+import {UpdateUserInfo, ResetUserInfo} from '../userInfo/action';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
 
 @Injectable()
 export class AuthEffects {
@@ -21,7 +21,6 @@ export class AuthEffects {
       return this.authService.logIn(payload.username, payload.password).pipe(
         switchMap(res => {
           this.authService.updateToken(res.token);
-
           return [
             new LogInSuccess(),
             new UpdateUserInfo(
@@ -34,8 +33,7 @@ export class AuthEffects {
         catchError(error =>
           observableOf(new LogInFailure({ error }))
         )
-      )
-
+      );
     }));
 
   // Listen for the 'LogInSuccess' action
@@ -63,7 +61,7 @@ export class AuthEffects {
         catchError(error =>
           observableOf(new SignUpFailure({ error }))
         )
-      )
+      );
     }));
 
   @Effect({ dispatch: false })
@@ -85,7 +83,6 @@ export class AuthEffects {
     map(() => {
       this.authService.removeToken();
       this.router.navigateByUrl(ROUTERS_URL.LOGIN);
-
       return new ResetUserInfo();
     })
   );

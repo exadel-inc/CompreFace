@@ -52,6 +52,6 @@ export class ErrorInterceptor implements HttpInterceptor {
 
         return Observable.throw(response);
       })
-    )
+    );
   }
 }
