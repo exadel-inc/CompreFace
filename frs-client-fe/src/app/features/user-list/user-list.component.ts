@@ -31,7 +31,7 @@ export class UserListComponent implements OnInit, OnDestroy {
       return {
           columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
           data: users
-        }
+      };
     }));
 
     this.availableRoles$ = this.userListFacade.availableRoles$;
@@ -51,7 +51,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   private openEmailNotification(email: string): void {
-    if (!email) return;
+    if (!email) {
+      return;
+    }
 
     this.dialog.open(AlertComponent, {
       data: {

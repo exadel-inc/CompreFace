@@ -1,7 +1,7 @@
 import {Injectable, Injector} from '@angular/core';
 import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
 import {AuthService} from './auth.service';
-import {Observable} from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
 import {catchError} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
@@ -50,7 +50,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.router.navigateByUrl('/login');
         }
 
-        return Observable.throw(response);
+        return throwError(response);
       })
     );
   }

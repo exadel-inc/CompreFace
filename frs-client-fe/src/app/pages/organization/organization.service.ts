@@ -70,10 +70,10 @@ export class OrganizationService {
       this.setFirstOrganization$
     ).subscribe(selectedId => {
       this.router.navigate([ROUTERS_URL.ORGANIZATION, selectedId])
-    })
+    });
   }
 
-  unSubscribe () {
+  unSubscribe() {
     this.setSelectedIdSubscription.unsubscribe();
     this.redirectSubscription.unsubscribe();
     // clear selected Id for Organization

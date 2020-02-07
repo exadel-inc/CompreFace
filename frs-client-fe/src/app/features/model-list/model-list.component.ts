@@ -32,7 +32,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
           return ({
             columns: [{ title: 'Title', property: 'name' }, { title: 'Owner name', property: 'owner' }],
             data: models.map(model => ({ id: model.id, name: model.name, owner: model.owner.firstName }))
-          })
+          });
         })
       );
   }

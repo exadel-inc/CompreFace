@@ -1,15 +1,15 @@
 export interface Model {
-  id: string,
-  name: string,
-  accessLevel: string,
+  id: string;
+  name: string;
+  accessLevel: string;
   relations: {
-    id: string,
-    shareMode: string
-  }[],
+    id: string;
+    shareMode: string;
+  }[];
   owner: {
-    id: string,
-    firstName: string,
-    lastName: string
-  }
-  role: string
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  role: string;
 }

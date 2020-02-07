@@ -51,7 +51,7 @@ export class ApplicationListFacade implements IFacade {
     this.selectedOrganizationIdSubscription.unsubscribe();
   }
 
-  public getOrgId():string {
+  public getOrgId(): string {
     return this.selectedOrgId;
   }
 }

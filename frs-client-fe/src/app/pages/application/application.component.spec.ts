@@ -1,7 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { ApplicationComponent } from './application.component';
-import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
-import { ApplicationPageService } from "./application.service";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ApplicationComponent} from './application.component';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {ApplicationPageService} from './application.service';
 
 describe('ApplicationComponent', () => {
   let component: ApplicationComponent;

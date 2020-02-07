@@ -44,7 +44,9 @@ export class ApplicationPageService {
   }
 
   unSubscribe() {
-    if (this.appsSub) this.appsSub.unsubscribe();
+    if (this.appsSub) {
+      this.appsSub.unsubscribe();
+    }
   }
 
   fetchApps() {

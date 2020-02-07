@@ -84,5 +84,5 @@ describe('ModelService', () => {
         lastName: 'lastname owner 0'
       }
     });
-  })
+  });
 });

@@ -31,7 +31,8 @@ describe('ApplicationListComponent', () => {
           }]),
           selectedOrganization$: of([{}]),
           isLoading$: of([{}]),
-          unsubscribe(){}
+          unsubscribe() {
+          }
         }
       }, {
         provide: Router,

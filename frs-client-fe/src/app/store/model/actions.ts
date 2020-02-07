@@ -2,10 +2,10 @@ import {createAction, props} from '@ngrx/store';
 import {Model} from 'src/app/data/model';
 
 interface IUpdate {
-  name: string,
-  applicationId: string,
-  organizationId: string,
-  modelId: string
+  name: string;
+  applicationId: string;
+  organizationId: string;
+  modelId: string;
 }
 
 interface ICreate {

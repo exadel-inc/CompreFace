@@ -44,10 +44,10 @@ export class OrganizationHeaderFacade implements IFacade {
   }
 
   add(org) {
-    this.organizationEnService.add(org).subscribe(org => {
-      if (org) {
-        this.store.dispatch(new SetSelectedId({ selectId: org.id }));
-        this.router.navigate([ROUTERS_URL.ORGANIZATION, org.id]);
+    this.organizationEnService.add(org).subscribe(responce => {
+      if (responce) {
+        this.store.dispatch(new SetSelectedId({selectId: responce.id}));
+        this.router.navigate([ROUTERS_URL.ORGANIZATION, responce.id]);
       }
     });
   }

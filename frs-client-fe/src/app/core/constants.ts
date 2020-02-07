@@ -1,1 +1,1 @@
-export const EMAIL_REGEXP_PATTERN: string = '\\S+@\\S+\\.\\S+';
+export const EMAIL_REGEXP_PATTERN = '\\S+@\\S+\\.\\S+';
