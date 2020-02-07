@@ -1,16 +1,16 @@
-import { Injectable } from '@angular/core';
-import { Subscription } from "rxjs";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Store } from "@ngrx/store";
-import { AppState } from "../../store";
-import { selectApplications } from "../../store/application/selectors";
-import { loadApplicationsEntityAction } from "../../store/application/action";
-import { ROUTERS_URL } from "../../data/routers-url.variable";
-import {filter, take} from "rxjs/operators";
-import { setSelectedIdEntityAction } from "../../store/application/action";
-import { GetUserInfo } from "../../store/userInfo/action";
-import { SetSelectedId } from "../../store/organization/action";
-import { OrganizationEnService } from "../../store/organization/organization-entitys.service";
+import {Injectable} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {selectApplications} from '../../store/application/selectors';
+import {loadApplicationsEntityAction} from '../../store/application/action';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {filter, take} from 'rxjs/operators';
+import {setSelectedIdEntityAction} from '../../store/application/action';
+import {GetUserInfo} from '../../store/userInfo/action';
+import {SetSelectedId} from '../../store/organization/action';
+import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
 
 @Injectable()
 export class ApplicationPageService {
@@ -37,7 +37,7 @@ export class ApplicationPageService {
         take(1)
       ).subscribe(() => {
         this.fetchApps();
-      })
+      });
     } else {
       this.router.navigate([ROUTERS_URL.ORGANIZATION]);
     }

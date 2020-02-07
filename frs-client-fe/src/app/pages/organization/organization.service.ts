@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {selectCurrentOrganizationId} from "../../store/organization/selectors";
-import {combineLatest, merge, Observable, Subscription} from "rxjs";
-import {ROUTERS_URL} from "../../data/routers-url.variable";
-import {SetSelectedId} from "../../store/organization/action";
-import {Organization} from "../../data/organization";
-import {ActivatedRoute, Router} from "@angular/router";
-import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
-import {Store} from "@ngrx/store";
-import {AppState} from "../../store";
-import {SelectRouterIdParam} from "../../store/router/selectors";
-import {filter, map} from "rxjs/operators";
-import {GetUserInfo} from "../../store/userInfo/action";
+import {selectCurrentOrganizationId} from '../../store/organization/selectors';
+import {combineLatest, merge, Observable, Subscription} from 'rxjs';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {SetSelectedId} from '../../store/organization/action';
+import {Organization} from '../../data/organization';
+import {ActivatedRoute, Router} from '@angular/router';
+import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {SelectRouterIdParam} from '../../store/router/selectors';
+import {filter, map} from 'rxjs/operators';
+import {GetUserInfo} from '../../store/userInfo/action';
 
 @Injectable()
 export class OrganizationService {

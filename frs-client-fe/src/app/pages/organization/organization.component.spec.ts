@@ -1,7 +1,7 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { OrganizationComponent } from './organization.component';
-import {CUSTOM_ELEMENTS_SCHEMA} from "@angular/core";
-import {OrganizationService} from "./organization.service";
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {OrganizationComponent} from './organization.component';
+import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {OrganizationService} from './organization.service';
 
 describe('OrganizationComponent', () => {
   let component: OrganizationComponent;

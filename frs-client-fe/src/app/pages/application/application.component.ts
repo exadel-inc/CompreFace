@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ApplicationPageService } from "./application.service";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ApplicationPageService} from './application.service';
 
 @Component({
   selector: 'app-application',
