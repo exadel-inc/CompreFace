@@ -54,8 +54,8 @@ describe('OrganizationHeaderFacade', () => {
     });
 
     mockStore = TestBed.get(Store);
-      mockRoleSelector = mockStore.overrideSelector(selectUserRollForSelectedOrganization, 'ADMIN');
-      mockOrgIdSelector = mockStore.overrideSelector(selectCurrentOrganizationId, 'org_id');
+    mockRoleSelector = mockStore.overrideSelector(selectUserRollForSelectedOrganization, 'ADMIN');
+    mockOrgIdSelector = mockStore.overrideSelector(selectCurrentOrganizationId, 'org_id');
     facade = TestBed.get<OrganizationHeaderFacade>(OrganizationHeaderFacade);
   }
   );

@@ -23,7 +23,7 @@ export class OrganizationHeaderComponent implements OnInit {
   ngOnInit() {
     this.organizations$ = this.organizationHeaderFacade.organization$;
     this.userRole$ = this.organizationHeaderFacade.userRole$;
-    this.selectedId$ = this.organizationHeaderFacade.selectedId$
+    this.selectedId$ = this.organizationHeaderFacade.selectedId$;
   }
 
   createNew() {

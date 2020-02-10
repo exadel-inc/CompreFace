@@ -1,7 +1,7 @@
 <div class="model-list">
   <h2>List of models for current application</h2>
   <app-spinner [isVisible$]="isLoading$"></app-spinner>
-  <app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (onChange)="onClick($event)"></app-table>
+  <app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (changeRow)="onClick($event)"></app-table>
 </div>
 <div class="add-model-button-container">
   <button mat-raised-button

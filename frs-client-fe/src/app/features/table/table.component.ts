@@ -25,7 +25,7 @@ export class TableComponent implements OnInit {
     }
   }
 
-  @Output() onChange = new EventEmitter<any>();
+  @Output() changeRow = new EventEmitter<any>();
 
   public columnsDefinition: {
     title: string;
@@ -39,6 +39,6 @@ export class TableComponent implements OnInit {
   ngOnInit() { }
 
   public change(element: any): void {
-    this.onChange.emit(element);
+    this.changeRow.emit(element);
   }
 }

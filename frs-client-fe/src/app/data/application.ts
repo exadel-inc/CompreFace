@@ -6,6 +6,6 @@ export interface Application {
     firstName: string,
     lastName: string
   };
-  role: string
+  role: string;
   organizationId: string;
 }
