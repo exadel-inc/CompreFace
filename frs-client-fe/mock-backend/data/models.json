@@ -1,6 +1,7 @@
 [
   {
     "id": "model_1",
+    "apiKey":"api key 32dsfgd",
     "name": "Model 1",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -22,6 +23,7 @@
   },
   {
     "id": "model_2",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 2",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -43,6 +45,7 @@
   },
   {
     "id": "model_3",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 3",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -68,6 +71,7 @@
   },
   {
     "id": "model_4",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 4",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -85,6 +89,7 @@
   },
   {
     "id": "model_5",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 5",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -114,6 +119,7 @@
   },
   {
     "id": "model_6",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 6",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -143,6 +149,7 @@
   },
   {
     "id": "model_7",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 7",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -160,6 +167,7 @@
   },
   {
     "id": "model_8",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 8",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -201,6 +209,7 @@
   },
   {
     "id": "model_9",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 9",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -242,6 +251,7 @@
   },
   {
     "id": "model_10",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 10",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -275,6 +285,7 @@
   },
   {
     "id": "model_11",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 11",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [
@@ -308,6 +319,7 @@
   },
   {
     "id": "model_12",
+    "apiKey": "api key 32dsfgd",
     "name": "Model 12",
     "accessLevel": "OWNER/TRAIN/READONLY",
     "relations": [

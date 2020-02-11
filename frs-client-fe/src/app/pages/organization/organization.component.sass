@@ -1,21 +1,25 @@
 @import 'media.sass'
 
+:host
+  display: block
+  height: calc( 100% - 80px)
+
 .mat-card
   min-height: 650px
-  height: calc(100vh - 80px)
   display: flex
-  flex-direction: row
+  height: 100%
+  flex-direction: column
 
   +mobile
     height: auto
 
   app-organization-header
     margin-bottom: 40px
+    width: 100%
 
 .grid-container
-  grid-template-columns: 0.8fr 0.8fr
-  grid-gap: 2rem
   flex-grow: 1
+  display: flex
 
   app-application-list-container, app-user-list-container
     display: flex
@@ -24,4 +28,3 @@
 
 @include mobile
   .grid-container
-    grid-template-columns: 1fr

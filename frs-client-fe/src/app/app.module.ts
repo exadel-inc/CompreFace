@@ -38,12 +38,14 @@ import {AppUserStoreModule} from './store/app-user/app-user.module';
 import {AppUserListModule} from './features/app-user-list/application-user-list.module';
 import {ModelRelationStoreModule} from './store/model-relation/model-relation.module';
 import {ModelRelationTableModule} from './features/model-relation-table/model-relation-table.module';
+import {EditDialogComponent} from './features/edit-dialog/edit-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
     CreateDialogComponent,
+    EditDialogComponent,
     AlertComponent
   ],
   imports: [
@@ -97,7 +99,7 @@ import {ModelRelationTableModule} from './features/model-relation-table/model-re
     {provide: RouterStateSerializer, useClass: AppSerializer},
   ],
   bootstrap: [AppComponent],
-  entryComponents: [CreateDialogComponent, AlertComponent]
+  entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent]
 })
 export class AppModule {
 }

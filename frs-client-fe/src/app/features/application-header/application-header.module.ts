@@ -6,6 +6,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {EntityTitleModule} from '../entity-title/entity-title.module';
 import {ApplicationHeaderFacade} from './application-header.facade';
 import {SpinnerModule} from '../spinner/spinner.module';
+import {MatCardModule} from '@angular/material';
 
 @NgModule({
   declarations: [ApplicationHeaderComponent],
@@ -17,7 +18,8 @@ import {SpinnerModule} from '../spinner/spinner.module';
     RouterModule,
     MatButtonModule,
     SpinnerModule,
-    EntityTitleModule
+    EntityTitleModule,
+    MatCardModule
   ],
   providers: [ApplicationHeaderFacade],
 })
