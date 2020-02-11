@@ -4,6 +4,7 @@ import {OrganizationHeaderFacade} from './organization-header.facade';
 import {Observable} from 'rxjs';
 import {CreateDialogComponent} from '../create-dialog/create-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
+import {EditDialogComponent} from '../edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-organization-header',
@@ -21,9 +22,9 @@ export class OrganizationHeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.organizations$ = this.organizationHeaderFacade.organization$;
+    this.organizations$ = this.organizationHeaderFacade.organizations$;
     this.userRole$ = this.organizationHeaderFacade.userRole$;
-    this.selectedId$ = this.organizationHeaderFacade.selectedId$
+    this.selectedId$ = this.organizationHeaderFacade.selectedId$;
   }
 
   createNew() {
@@ -35,11 +36,25 @@ export class OrganizationHeaderComponent implements OnInit {
     });
 
     dialog.afterClosed().subscribe(res => {
-      if (res) {
-        this.organizationHeaderFacade.add({
-          name: res
-        });
+      if (res) { this.organizationHeaderFacade.add({ name: res }); }
+    });
+  }
+
+  edit() {
+    let currentName = '';
+    this.organizationHeaderFacade.organizationName$.subscribe(name => {
+      currentName = name;
+    });
+    const dialog = this.dialog.open(EditDialogComponent, {
+      data: {
+        entityType: 'organization',
+        entityName: currentName,
+        name: ''
       }
+    });
+
+    dialog.afterClosed().subscribe(res => {
+      if (res) { this.organizationHeaderFacade.rename(res); }
     });
   }
 

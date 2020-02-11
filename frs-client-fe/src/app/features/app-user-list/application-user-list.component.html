@@ -1,6 +1,6 @@
 <div class="app-user-list">
   <h2>List of available users</h2>
-  <app-spinner [isVisible$]="isLoading$"></app-spinner>
+  <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <mat-form-field class="search">
     <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search">
   </mat-form-field>

@@ -1,17 +1,19 @@
 @import 'media.sass'
 
 .grid-container
-  grid-template-columns: 1fr 1fr
-  align-items: center
-  grid-gap: 2rem
+  display: flex
+  justify-content: space-between
+
+.button-wrapper
+  display: flex
+  justify-content: space-between
 
 .organization-header_left-coll
-  display: flex
-  flex-direction: row
-  justify-content: space-between
+  width: 49%
 
 .organization-header_right-coll
   text-align: right
+  width: 49%
 
 .mat-raised-button
   margin: 15px 0

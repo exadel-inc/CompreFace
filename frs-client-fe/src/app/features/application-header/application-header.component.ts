@@ -1,7 +1,10 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Application} from '../../data/application';
 import {ApplicationHeaderFacade} from './application-header.facade';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
+import {EditDialogComponent} from '../edit-dialog/edit-dialog.component';
+import {MatDialog} from '@angular/material';
+import {filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-application-header',
@@ -12,11 +15,13 @@ import {Observable} from 'rxjs';
 
 export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   public app$: Observable<Application>;
+  public appKey: string;
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
   public loading$: Observable<boolean>;
+  private appKeyS: Subscription;
 
-  constructor(private applicationHeaderFacade: ApplicationHeaderFacade) {}
+  constructor(private applicationHeaderFacade: ApplicationHeaderFacade, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.applicationHeaderFacade.initSubscriptions();
@@ -24,13 +29,42 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
     this.userRole$ = this.applicationHeaderFacade.userRole$;
     this.selectedId$ = this.applicationHeaderFacade.selectedId$;
     this.loading$ = this.applicationHeaderFacade.loading$;
+    this.appKeyS = this.app$.pipe(
+      filter(app => !!app),
+      map(app => app.apiKey),
+    ).subscribe(apiKey => this.appKey = apiKey);
   }
 
   ngOnDestroy(): void {
     this.applicationHeaderFacade.unsubscribe();
+    this.appKeyS.unsubscribe();
   }
 
-  rename(name) {
-    this.applicationHeaderFacade.rename(name);
+  rename() {
+    let currentName = '';
+    this.app$.pipe(
+      map(app => app.name)
+    ).subscribe(name => {
+      currentName = name;
+    });
+    const dialog = this.dialog.open(EditDialogComponent, {
+      data: {
+        entityType: 'application',
+        entityName: currentName,
+        name: ''
+      }
+    });
+
+    dialog.afterClosed().subscribe(res => {
+      if (res) { this.applicationHeaderFacade.rename(res); }
+    });
+  }
+
+  copy() {
+    const input = document.createElement('input');
+    input.setAttribute('value', this.appKey );
+    document.body.appendChild(input);
+    input.select();
+    document.body.removeChild(input);
   }
 }

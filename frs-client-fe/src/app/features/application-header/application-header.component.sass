@@ -1,10 +1,22 @@
 .application-header
   display: flex
+  justify-content: space-between
+
+  .title
+    font-size: 24px
+    margin-bottom: 10px
+
+  .name-wrapper,
+  .api-key-wrapper
+    display: flex
+    align-items: center
+    justify-content: space-between
 
   &_left-coll
-    flex-grow: 1
+    width: 49%
 
   &_right-coll
+    width: 49%
     display: flex
     align-items: center
     justify-content: flex-end

@@ -1,17 +1,20 @@
 <div class="application-header">
-  <app-spinner [isVisible$]="loading$"></app-spinner>
-  <div class="application-header_left-coll">
+  <app-spinner *ngIf="loading$ | async"></app-spinner>
+  <mat-card class="application-header_left-coll">
     <div *ngIf="app$ | async as app">
-      <app-entity-title
-        [entityName]="'Application'"
-        [selectId$]="selectedId$"
-        [options]="[app]"
-        [renameDisable]="false"
-        (rename)="rename($event)"></app-entity-title>
+      <div class="title">Application</div>
+      <div class="name-wrapper">
+        <div class="name-item">{{app.name}}</div>
+        <button mat-button type="submit" color="primary" (click)="rename()">EDIT</button>
+      </div>
+      <div class="api-key-wrapper">
+        <div class="api-key-item">{{app.apiKey}}</div>
+        <button mat-button type="submit" color="primary" (click)="copy()">COPY</button>
+      </div>
     </div>
-  </div>
+  </mat-card>
 
-  <div class="application-header_right-coll" *ngIf="userRole$ | async as userRole">
+  <mat-card class="application-header_right-coll" *ngIf="userRole$ | async as userRole">
     <div class="your_role">Your role: {{userRole}}</div>
-  </div>
+  </mat-card>
 </div>

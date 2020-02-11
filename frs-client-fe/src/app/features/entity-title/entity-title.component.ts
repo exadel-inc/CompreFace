@@ -11,15 +11,12 @@ import {Model} from '../../data/model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntityTitleComponent implements OnInit {
-  editing = false;
   newName: string;
   selectedId: string;
   @Input() options: [Organization | Application | Model];
-  @Input() renameDisable: boolean;
   @Input() selectId$: Observable<any>;
   @Input() entityName: string;
   @Output() selectIdChange = new EventEmitter();
-  @Output() rename = new EventEmitter();
 
   ngOnInit() {
     this.selectId$.subscribe(e => this.selectedId = e);
@@ -32,20 +29,5 @@ export class EntityTitleComponent implements OnInit {
 
   get selected() {
     return this.selectedId;
-  }
-
-  discard() {
-    this.editing = false;
-  }
-
-  apply() {
-    this.rename.emit(this.newName);
-
-    this.editing = false;
-  }
-
-  edit() {
-    this.editing = true;
-    this.newName = this.options.find(option => option.id === this.selectedId).name;
   }
 }
