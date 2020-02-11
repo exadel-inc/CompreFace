@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {selectCurrentOrganizationId} from '../../store/organization/selectors';
 import {combineLatest, merge, Observable, Subscription} from 'rxjs';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {SetSelectedId} from '../../store/organization/action';
+import {setSelectedId} from '../../store/organization/action';
 import {Organization} from '../../data/organization';
 import {ActivatedRoute, Router} from '@angular/router';
 import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
@@ -10,7 +10,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {SelectRouterIdParam} from '../../store/router/selectors';
 import {filter, map} from 'rxjs/operators';
-import {GetUserInfo} from '../../store/userInfo/action';
+import {getUserInfo} from '../../store/userInfo/action';
 
 @Injectable()
 export class OrganizationService {
@@ -32,7 +32,7 @@ export class OrganizationService {
 
   initUrlBindingStreams() {
     this.organizationEnService.getAll();
-    this.store.dispatch(new GetUserInfo());
+    this.store.dispatch(getUserInfo());
 
     this.organization$ = this.organizationEnService.entities$;
     this.selectedId$ = this.store.select(selectCurrentOrganizationId);
@@ -62,7 +62,7 @@ export class OrganizationService {
     );
 
     this.setSelectedIdSubscription = this.setInitialValueFromUrl$.subscribe(routerId => {
-      this.store.dispatch(new SetSelectedId({selectId: routerId}));
+      this.store.dispatch(setSelectedId({selectId: routerId}));
     });
 
     this.redirectSubscription = merge(
@@ -77,7 +77,7 @@ export class OrganizationService {
     this.setSelectedIdSubscription.unsubscribe();
     this.redirectSubscription.unsubscribe();
     // clear selected Id for Organization
-    this.store.dispatch(new SetSelectedId({selectId: null}));
+    this.store.dispatch(setSelectedId({selectId: null}));
   }
 
   isValidId([selectedId, data, routerId]) {

@@ -9,7 +9,7 @@ import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
 import {Organization} from '../../data/organization';
 import {AppState} from '../../store';
-import {SetSelectedId} from '../../store/organization/action';
+import {setSelectedId} from '../../store/organization/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {Router} from '@angular/router';
 import {IFacade} from '../../data/facade/IFacade';
@@ -44,7 +44,7 @@ export class OrganizationHeaderFacade implements IFacade {
   }
 
   select(id: string) {
-    this.store.dispatch(new SetSelectedId({ selectId: id }));
+    this.store.dispatch(setSelectedId({ selectId: id }));
     this.router.navigate([ROUTERS_URL.ORGANIZATION, id]);
   }
 
@@ -55,7 +55,7 @@ export class OrganizationHeaderFacade implements IFacade {
   add(org) {
     this.organizationEnService.add(org).subscribe(responce => {
       if (responce) {
-        this.store.dispatch(new SetSelectedId({selectId: responce.id}));
+        this.store.dispatch(setSelectedId({selectId: responce.id}));
         this.router.navigate([ROUTERS_URL.ORGANIZATION, responce.id]);
       }
     });

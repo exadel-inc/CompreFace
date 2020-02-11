@@ -1,4 +1,4 @@
-import {UpdateUserAuthorization, ResetUserInfo, UpdateUserInfo} from './action';
+import {updateUserAuthorization, resetUserInfo, updateUserInfo} from './action';
 import {UserInfoReducer} from './reducers';
 
 
@@ -10,7 +10,7 @@ describe('UserInfoReducer', () => {
 
   describe('UpdateUserAuthorization action', () => {
     it('should set isAuthenticated to true', () => {
-      const action = new UpdateUserAuthorization(true);
+      const action = updateUserAuthorization({ value: true });
       const state = UserInfoReducer(initialState, action);
 
       expect(state.isAuthenticated).toBeTruthy();
@@ -19,7 +19,7 @@ describe('UserInfoReducer', () => {
 
   describe('ResetUserInfo action', () => {
     it('should should reset state to initial values', () => {
-      const action = new ResetUserInfo();
+      const action = resetUserInfo();
       const state = UserInfoReducer({
         isAuthenticated: true,
         username: 'testUser'
@@ -32,7 +32,7 @@ describe('UserInfoReducer', () => {
 
   describe('UpdateUserInfo action', () => {
     it('should update user info according to payload', () => {
-      const action = new UpdateUserInfo({
+      const action = updateUserInfo({
         username: 'myTestUser2',
         isAuthenticated: true
       });
