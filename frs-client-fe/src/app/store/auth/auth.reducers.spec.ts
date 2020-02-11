@@ -1,4 +1,9 @@
-import {LogInSuccess, LogInFailure, SignUpFailure, SignUpSuccess} from './action';
+import {
+  logInSuccess,
+  logInFailure,
+  signUpFailure,
+  signUpSuccess
+} from './action';
 import {initialState, AuthReducer} from './reducers';
 
 
@@ -6,7 +11,7 @@ describe('AuthReducer', () => {
 
   describe('LOGIN_SUCCESS action', () => {
     it('should set isAuthenticated to true, and loading false', () => {
-      const action = new LogInSuccess();
+      const action = logInSuccess();
       const state = AuthReducer(initialState, action);
 
       expect(state.errorMessage).toBe(null);
@@ -16,7 +21,7 @@ describe('AuthReducer', () => {
 
   describe('LOGIN_FAILURE action', () => {
     it('should set errorMessage to value, and loading false', () => {
-      const action = new LogInFailure({});
+      const action = logInFailure();
       const state = AuthReducer(initialState, action);
 
       expect(state.errorMessage).toBe('Incorrect email and/or password.');
@@ -26,7 +31,7 @@ describe('AuthReducer', () => {
 
   describe('SIGNUP_SUCCESS action', () => {
     it('should set successMessage to value, and loading false', () => {
-      const action = new SignUpSuccess();
+      const action = signUpSuccess();
       const state = AuthReducer(initialState, action);
 
       expect(state.successMessage).toBe('You have created new account, please login into your account');
@@ -38,7 +43,7 @@ describe('AuthReducer', () => {
 
   describe('SIGNUP_FAILURE action', () => {
     it('should set errorMessage to value, and loading false', () => {
-      const action = new SignUpFailure({});
+      const action = signUpFailure();
       const state = AuthReducer(initialState, action);
 
       expect(state.errorMessage).toBe('That email is already in use.');

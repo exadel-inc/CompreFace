@@ -13,6 +13,6 @@ export class AppComponent {
   title = 'frs-client-fe';
 
   constructor(auth: AuthService, store: Store<AppState>) {
-    new AuthInit(store, auth);
+    (new AuthInit(store, auth)).init();
   }
 }
