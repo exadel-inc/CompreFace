@@ -13,6 +13,6 @@ export class UserTableComponent extends TableComponent implements OnInit {
   @Input() availableRoles$: Observable<string[]>;
 
   public isRoleChangeAllowed(userRole: string): Observable<boolean> {
-    return this.availableRoles$.pipe(map(availableRoles => !!~availableRoles.indexOf(userRole)));
+    return this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
   }
 }

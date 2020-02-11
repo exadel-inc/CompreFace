@@ -9,7 +9,7 @@ import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {Router} from '@angular/router';
 
 @Component({
-  selector: 'application-list-container',
+  selector: 'app-application-list-container',
   templateUrl: './application-list-container.component.html',
   styleUrls: ['./application-list-container.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush

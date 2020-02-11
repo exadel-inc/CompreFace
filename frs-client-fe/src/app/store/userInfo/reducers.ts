@@ -14,7 +14,7 @@ export const initialState: UserInfoState = {
 
 
 export function UserInfoReducer(state = initialState, action: UserInfoActions): UserInfoState {
-  switch(action.type) {
+  switch (action.type) {
     case UserInfoActionTypes.UPDATE_USER_INFO: {
       return {
         ...state,
@@ -32,7 +32,7 @@ export function UserInfoReducer(state = initialState, action: UserInfoActions): 
       return {
         ...state,
         isAuthenticated: action.payload
-      }
+      };
     }
 
     case UserInfoActionTypes.GET_USER_INFO_SUCCESS: {
