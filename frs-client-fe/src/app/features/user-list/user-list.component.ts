@@ -8,7 +8,7 @@ import {MatDialog} from '@angular/material';
 import {AlertComponent} from '../alert/alert.component';
 
 @Component({
-  selector: 'user-list-container',
+  selector: 'app-user-list-container',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush

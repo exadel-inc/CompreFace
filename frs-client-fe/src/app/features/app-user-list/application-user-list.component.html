@@ -4,7 +4,9 @@
   <mat-form-field class="search">
     <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search">
   </mat-form-field>
-  <app-user-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | userTableFilter:search | async" [availableRoles$]="availableRoles$" (onChange)="onChange($event)"></app-user-table>
+  <app-user-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | userTableFilter:search | async"
+                  [availableRoles$]="availableRoles$"
+                  (changeRow)="onChange($event)"></app-user-table>
 </div>
-<app-invite-user (onChange)="onInviteUser($event)" [options$]="availableEmails$"></app-invite-user>
+<app-invite-user (email)="onInviteUser($event)" [options$]="availableEmails$"></app-invite-user>
 

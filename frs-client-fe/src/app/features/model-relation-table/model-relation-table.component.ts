@@ -14,6 +14,6 @@ export class ModelRelationTableComponent extends TableComponent {
 
   public onDelete(relation: ModelRelation): void {
     relation.shareMode = 'NONE';
-    this.onChange.emit(relation);
+    this.changeRow.emit(relation);
   }
 }

@@ -42,7 +42,7 @@ export class UserListFacade implements IFacade {
             const [allRoles, userRole] = observResult;
             const roleIndex = allRoles.indexOf(userRole);
 
-            if (~roleIndex) {
+            if (roleIndex !== -1) {
               res = allRoles.slice(roleIndex);
             }
 
