@@ -5,11 +5,12 @@ import {ApplicationListFacade} from './application-list-facade';
 import {TableModule} from '../table/table.module';
 import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
 import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [ApplicationListComponent],
   exports: [ApplicationListComponent],
   providers: [ApplicationListFacade],
-  imports: [CommonModule, TableModule, SpinnerModule, MatButtonModule]
+  imports: [CommonModule, TableModule, SpinnerModule, MatButtonModule, MatCardModule]
 })
 export class ApplicationListModule {}

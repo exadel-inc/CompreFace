@@ -1,5 +1,5 @@
-<div class="user-list">
-  <h2>List of available users</h2>
+<mat-card class="user-list">
+  <h2>Users</h2>
   <mat-form-field class="search">
     <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search">
   </mat-form-field>
@@ -7,5 +7,5 @@
   <app-user-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | userTableFilter:search | async"
                   [availableRoles$]="availableRoles$"
                   (changeRow)="onChange($event)"></app-user-table>
-</div>
-<app-invite-user (email)="onInviteUser($event)"></app-invite-user>
+  <app-invite-user (email)="onInviteUser($event)"></app-invite-user>
+</mat-card >

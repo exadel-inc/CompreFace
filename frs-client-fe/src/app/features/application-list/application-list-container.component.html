@@ -1,11 +1,10 @@
-<div class="application-list">
-  <h2>List of application for current organization</h2>
+<mat-card class="application-list">
+  <h2>Applications</h2>
   <app-spinner [isVisible$]="isLoading$"></app-spinner>
   <app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (changeRow)="onClick($event)"></app-table>
-</div>
-<div class="add-application-button-container">
-  <button mat-raised-button
-          class="btn-block"
-          color="primary"
-          (click)="onCreateNewApp()">Create new application</button>
-</div>
+    <button mat-button
+            color="primary"
+            (click)="onCreateNewApp()">
+            CREATE
+    </button>
+</mat-card>
