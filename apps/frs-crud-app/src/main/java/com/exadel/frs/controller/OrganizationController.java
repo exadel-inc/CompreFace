@@ -52,6 +52,9 @@ public class OrganizationController {
 
     @PutMapping("/org/{guid}")
     @ApiOperation(value = "Update organization name")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Organization name is required")
+    })
     public void updateOrganization(
             @ApiParam(value = "GUID of organization that needs to be updated", required = true, example = GUID_EXAMPLE) @PathVariable final String guid,
             @ApiParam(value = "Organization data", required = true) @Valid @RequestBody OrgUpdateDto orgUpdateDto) {

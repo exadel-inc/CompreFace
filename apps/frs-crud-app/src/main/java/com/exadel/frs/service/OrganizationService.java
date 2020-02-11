@@ -71,7 +71,7 @@ public class OrganizationService {
 
     public Organization createOrganization(final OrgCreateDto orgCreateDto, final Long userId) {
         if (StringUtils.isEmpty(orgCreateDto.getName())) {
-            throw new EmptyRequiredFieldException("name");
+            throw new FieldRequiredException("Organization name");
         }
         verifyNameIsUnique(orgCreateDto.getName());
         Organization organization = Organization.builder()
@@ -83,6 +83,9 @@ public class OrganizationService {
     }
 
     public void updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
+        if (StringUtils.isEmpty(orgUpdateDto.getName())) {
+            throw new FieldRequiredException("Organization name");
+        }
         Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         if (!StringUtils.isEmpty(orgUpdateDto.getName()) && !organizationFromRepo.getName().equals(orgUpdateDto.getName())) {
