@@ -1,14 +1,13 @@
-import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
-import {UserListFacade} from './user-list-facade';
-import {Observable} from 'rxjs';
-import {AppUser} from 'src/app/data/appUser';
-import {map} from 'rxjs/operators';
-import {ITableConfig} from '../table/table.component';
-import {MatDialog} from '@angular/material';
-import {AlertComponent} from '../alert/alert.component';
+import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
+import { UserListFacade } from './user-list-facade';
+import { Observable } from 'rxjs';
+import { AppUser } from 'src/app/data/appUser';
+import { map } from 'rxjs/operators';
+import { ITableConfig } from '../table/table.component';
+import { SnackBarService } from '../snackbar/snackbar.service';
 
 @Component({
-  selector: 'user-list-container',
+  selector: 'app-user-list-container',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.sass'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -20,7 +19,10 @@ export class UserListComponent implements OnInit, OnDestroy {
   public errorMessage: string;
   public search = '';
 
-  constructor(private userListFacade: UserListFacade, public dialog: MatDialog) {
+  constructor(
+    private userListFacade: UserListFacade,
+    private snackBarService: SnackBarService
+  ) {
     userListFacade.initSubscriptions();
   }
 
@@ -55,12 +57,6 @@ export class UserListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.dialog.open(AlertComponent, {
-      data: {
-        type: 'info',
-        message: `Invitation was sent to ${email}`
-      },
-      minWidth: 300
-    });
+    this.snackBarService.openInfo(void 0, void 0, `Invitation was sent to ${email}`);
   }
 }

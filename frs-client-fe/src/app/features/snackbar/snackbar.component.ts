@@ -6,7 +6,7 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material';
     styleUrls: ['./snackbar.component.sass'],
     templateUrl: './snackbar.component.html'
 })
-export class AppSnackBar {
+export class AppSnackBarComponent {
     public type: string;
     public message: string;
 

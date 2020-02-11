@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
-import { AppSnackBar } from './snackbar.component';
+import { AppSnackBarComponent } from './snackbar.component';
 
 const messageMap = {
     'default-info': 'DEFAULT INFO MESSAGE',
@@ -13,7 +13,7 @@ const messageMap = {
 export class SnackBarService {
     constructor(private snackBar: MatSnackBar) { }
 
-    public openInfo(messageCode: string, duration: number = 200000, message?: string): void {
+    public openInfo(messageCode: string, duration: number = 2000, message?: string): void {
         const data = {
             message: '',
             type: 'info'
@@ -34,7 +34,7 @@ export class SnackBarService {
     }
 
     private openSnackBar(data, duration): void {
-        this.snackBar.openFromComponent(AppSnackBar, {
+        this.snackBar.openFromComponent(AppSnackBarComponent, {
             duration,
             data,
             verticalPosition: 'top',
