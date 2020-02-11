@@ -13,7 +13,7 @@ import {setSelectedId} from '../../store/organization/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {Router} from '@angular/router';
 import {IFacade} from '../../data/facade/IFacade';
-import {map} from 'rxjs/operators';
+import {filter, map} from 'rxjs/operators';
 
 @Injectable()
 export class OrganizationHeaderFacade implements IFacade {
@@ -29,6 +29,7 @@ export class OrganizationHeaderFacade implements IFacade {
     this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
     this.selectedId$ = this.store.select(selectCurrentOrganizationId);
     this.organizationName$ = this.store.select(selectSelectedOrganization).pipe(
+      filter(org => !!org),
       map(org => org.name)
     );
   }
