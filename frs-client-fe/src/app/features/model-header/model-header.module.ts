@@ -5,6 +5,7 @@ import {RouterModule} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {EntityTitleModule} from '../entity-title/entity-title.module';
 import {ModelHeaderFacade} from './model-header.facade';
+import {MatCardModule} from '@angular/material';
 
 @NgModule({
   declarations: [ModelHeaderComponent],
@@ -15,7 +16,8 @@ import {ModelHeaderFacade} from './model-header.facade';
     CommonModule,
     RouterModule,
     MatButtonModule,
-    EntityTitleModule
+    EntityTitleModule,
+    MatCardModule
   ],
   providers: [ModelHeaderFacade],
 })

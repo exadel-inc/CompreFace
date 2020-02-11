@@ -2,6 +2,8 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {Model} from '../../data/model';
 import {ModelHeaderFacade} from './model-header.facade';
 import {Observable} from 'rxjs';
+import {ApplicationHeaderFacade} from '../application-header/application-header.facade';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-model-header',
@@ -14,8 +16,9 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
   public loading$: Observable<boolean>;
+  public apiKey: string;
 
-  constructor(private modelHeaderFacade: ModelHeaderFacade, ) {}
+  constructor(private modelHeaderFacade: ModelHeaderFacade, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.modelHeaderFacade.initSubscriptions();
@@ -29,7 +32,15 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
     this.modelHeaderFacade.unsubscribe();
   }
 
-  rename(name) {
-    this.modelHeaderFacade.rename(name);
+  rename() {
+    // this.modelHeaderFacade.rename(name);
+  }
+
+  copy() {
+    const input = document.createElement('input');
+    input.setAttribute('value', this.apiKey);
+    document.body.appendChild(input);
+    input.select();
+    document.body.removeChild(input);
   }
 }

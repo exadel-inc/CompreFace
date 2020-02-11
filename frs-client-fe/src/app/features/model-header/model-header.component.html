@@ -1,15 +1,16 @@
-<div class="model-header grid-container">
-  <div class="model-header_left-coll">
-    <div *ngIf="model$ | async as model">
-      <app-entity-title
-        [entityName]="'Model'"
-        [selectId$]="selectedId$"
-        [options]="[model]"
-        [renameDisable]="false"
-        (rename)="rename($event)"></app-entity-title>
+<div class="model-header">
+  <mat-card class="model-header_left-coll" *ngIf="model$ | async as model">
+    <div class="title">Model</div>
+    <div class="name-wrapper">
+      <div class="name-item">{{model.name}}</div>
+      <button mat-button type="submit" color="primary" (click)="rename()">EDIT</button>
     </div>
-  </div>
-  <div class="model-header_right-coll" *ngIf="userRole$ | async as userRole">
+    <div class="api-key-wrapper">
+      <div class="api-key-item">{{model.apiKey}}</div>
+      <button mat-button type="submit" color="primary" (click)="copy()">COPY</button>
+    </div>
+  </mat-card>
+  <mat-card class="model-header_right-coll" *ngIf="userRole$ | async as userRole">
     <div class="your_role">Your role: {{userRole}}</div>
-  </div>
+  </mat-card>
 </div>
