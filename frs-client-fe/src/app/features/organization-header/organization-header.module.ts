@@ -5,6 +5,8 @@ import {RouterModule} from '@angular/router';
 import {MatButtonModule} from '@angular/material/button';
 import {EntityTitleModule} from '../entity-title/entity-title.module';
 import {OrganizationHeaderFacade} from './organization-header.facade';
+import {MatCardModule} from '@angular/material';
+import {SpinnerModule} from '../spinner/spinner.module';
 
 @NgModule({
   declarations: [OrganizationHeaderComponent],
@@ -15,6 +17,8 @@ import {OrganizationHeaderFacade} from './organization-header.facade';
     CommonModule,
     RouterModule,
     MatButtonModule,
+    MatCardModule,
+    SpinnerModule,
     EntityTitleModule
   ],
   providers: [OrganizationHeaderFacade],

@@ -4,9 +4,9 @@
   min-height: 650px
   height: calc(100vh - 80px)
   display: flex
-  flex-direction: row
+  flex-direction: column
 
-  .header-conatiner
+  .header-container
     width: 100%
 
   +mobile
@@ -16,15 +16,14 @@
     margin-bottom: 40px
 
 .grid-container
-  grid-template-columns: 0.8fr 0.8fr
-  grid-gap: 2rem
   flex-grow: 1
+  display: flex
 
   app-model-list, app-application-user-list
+    width: 50%
     display: flex
     flex-direction: column
     justify-content: space-between
 
 @include mobile
   .grid-container
-    grid-template-columns: 1fr

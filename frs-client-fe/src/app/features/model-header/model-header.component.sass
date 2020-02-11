@@ -1,28 +1,31 @@
 @import 'media.sass'
 
-.grid-container
-  grid-template-columns: 1fr 1fr
-  align-items: center
-  grid-gap: 2rem
+.model-header
+  display: flex
+  justify-content: space-between
+
+  .title
+    font-size: 24px
+    margin-bottom: 10px
+
+  .name-wrapper,
+  .api-key-wrapper
+    display: flex
+    align-items: center
+    justify-content: space-between
 
 .model-header_left-coll
-  display: flex
-  flex-direction: row
-  justify-content: space-between
+  width: 49%
 
 .model-header_right-coll
   text-align: right
-
-.mat-raised-button
-  margin: 15px 0
+  width: 49%
 
 @include mobile
   .model-header_left-coll
     flex-direction: column
 
   .grid-container
-    grid-template-columns: 1fr
 
 @include tablet-portrait
   .grid-container
-    grid-template-columns: 1fr

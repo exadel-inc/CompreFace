@@ -8,4 +8,5 @@ export interface Application {
   };
   role: string;
   organizationId: string;
+  apiKey?: string;
 }

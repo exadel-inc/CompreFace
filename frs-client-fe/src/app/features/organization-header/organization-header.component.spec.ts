@@ -7,6 +7,7 @@ import {EntityTitleModule} from '../entity-title/entity-title.module';
 import {Subject} from 'rxjs';
 import {OrganizationHeaderFacade} from './organization-header.facade';
 import {MatDialog} from '@angular/material/dialog';
+import {MatCardModule} from '@angular/material';
 
 describe('OrganizationHeaderComponent', () => {
   let component: OrganizationHeaderComponent;
@@ -38,6 +39,7 @@ describe('OrganizationHeaderComponent', () => {
         RouterModule,
         MatButtonModule,
         EntityTitleModule,
+        MatCardModule
       ]
     })
     .compileComponents();

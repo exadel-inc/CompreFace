@@ -3,7 +3,7 @@
   <mat-form-field class="search">
     <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search">
   </mat-form-field>
-  <app-spinner [isVisible$]="isLoading$"></app-spinner>
+  <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-user-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | userTableFilter:search | async"
                   [availableRoles$]="availableRoles$"
                   (changeRow)="onChange($event)"></app-user-table>
