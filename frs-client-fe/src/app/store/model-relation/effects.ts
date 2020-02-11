@@ -32,5 +32,5 @@ export class ModelRelationEffects {
         applicationId,
         modelId
       }))
-  )
+  );
 }

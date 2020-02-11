@@ -69,7 +69,7 @@ export class OrganizationService {
       this.redirectToOrganization$,
       this.setFirstOrganization$
     ).subscribe(selectedId => {
-      this.router.navigate([ROUTERS_URL.ORGANIZATION, selectedId])
+      this.router.navigate([ROUTERS_URL.ORGANIZATION, selectedId]);
     });
   }
 

@@ -14,7 +14,7 @@ export class InviteUserComponent implements OnInit {
   public form: FormGroup;
   @Input() options$: Observable<string[]>;
   filteredOptions$: Observable<string[]>;
-  @Output() onChange = new EventEmitter<string>();
+  @Output() email = new EventEmitter<string>();
 
   constructor() { }
 
@@ -35,7 +35,7 @@ export class InviteUserComponent implements OnInit {
 
   public onClick(): void {
     if (this.form.valid && this.form.value.email && this.form.value.email.length) {
-      this.onChange.emit(this.form.value.email);
+      this.email.emit(this.form.value.email);
       this.form.reset();
     }
   }
