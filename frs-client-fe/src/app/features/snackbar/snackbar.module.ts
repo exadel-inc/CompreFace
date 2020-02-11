@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { AppSnackBarComponent } from './snackbar.component';
-import { MatSnackBarModule } from '@angular/material'
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {AppSnackBarComponent} from './snackbar.component';
+import {MatSnackBarModule} from '@angular/material';
+import {CommonModule} from '@angular/common';
 
 @NgModule({
     declarations: [AppSnackBarComponent],

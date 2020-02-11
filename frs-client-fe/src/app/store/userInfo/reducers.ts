@@ -14,16 +14,7 @@ export const initialState: UserInfoState = {
 };
 
 export const UserInfoReducer = createReducer(initialState,
-  on(updateUserInfo, (state, action) => ({
-    ...state,
-    ...action
-  })),
+  on(updateUserInfo, (state, action) => ({...state, ...action})),
   on(resetUserInfo, () => ({...initialState})),
-  on(updateUserAuthorization, (state, action) => ({
-    ...state,
-    isAuthenticated: action.value
-  })),
-  on(getUserInfoSuccess, (state, action) => ({
-    ...state,
-    ...action.user
-  })));
+  on(updateUserAuthorization, (state, action) => ({...state, isAuthenticated: action.value})),
+  on(getUserInfoSuccess, (state, action) => ({...state, ...action.user})));

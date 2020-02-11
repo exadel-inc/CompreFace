@@ -37,9 +37,7 @@ export class AuthEffects {
               })
           ];
         }),
-        catchError(error =>
-          observableOf(logInFailure())
-        )
+        catchError(() => observableOf(logInFailure()))
       );
     }));
 
@@ -64,9 +62,7 @@ export class AuthEffects {
     switchMap(payload => {
       return this.authService.signUp(payload.username, payload.password, payload.email).pipe(
         map(() => signUpSuccess()),
-        catchError(error =>
-          observableOf(signUpFailure())
-        )
+        catchError(() => observableOf(signUpFailure()))
       );
     }));
 
