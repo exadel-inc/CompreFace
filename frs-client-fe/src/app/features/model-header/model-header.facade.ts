@@ -13,6 +13,7 @@ import {Model} from '../../data/model';
 import {putUpdatedModelEntityAction} from '../../store/model/actions';
 import {selectCurrentOrganizationId} from '../../store/organization/selectors';
 import {selectCurrentAppId} from '../../store/application/selectors';
+import {filter, map} from 'rxjs/operators';
 
 @Injectable()
 export class ModelHeaderFacade implements IFacade {
@@ -21,6 +22,7 @@ export class ModelHeaderFacade implements IFacade {
   loading$: Observable<boolean>;
   public userRole$: Observable<string | null>;
   public model$: Observable<Model>;
+  public modelName$: Observable<string>;
   orgId: string;
   appId: string;
   orgIdSub: Subscription;
@@ -29,6 +31,10 @@ export class ModelHeaderFacade implements IFacade {
 
   constructor(private store: Store<AppState>) {
     this.model$ = this.store.select(selectCurrentModel);
+    this.modelName$ = this.model$.pipe(
+      filter(model => !!model),
+      map(model => model.name),
+    );
     this.userRole$ = this.store.select(selectUserRollForSelectedModel);
     this.selectedId$ = this.store.select(selectCurrentModelId);
     this.loading$ = this.store.select(selectPendingModel);

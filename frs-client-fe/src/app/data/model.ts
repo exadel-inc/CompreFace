@@ -12,5 +12,5 @@ export interface Model {
     lastName: string;
   };
   role: string;
-  apiKet?: string;
+  apiKey?: string;
 }

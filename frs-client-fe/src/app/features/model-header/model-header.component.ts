@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {Model} from '../../data/model';
 import {ModelHeaderFacade} from './model-header.facade';
-import {Observable} from 'rxjs';
-import {ApplicationHeaderFacade} from '../application-header/application-header.facade';
+import {Observable, Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material';
+import {EditDialogComponent} from '../edit-dialog/edit-dialog.component';
+import {filter, map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-model-header',
@@ -16,6 +17,7 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
   public loading$: Observable<boolean>;
+  public apiKeyS: Subscription;
   public apiKey: string;
 
   constructor(private modelHeaderFacade: ModelHeaderFacade, public dialog: MatDialog) {}
@@ -26,14 +28,33 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
     this.userRole$ = this.modelHeaderFacade.userRole$;
     this.selectedId$ = this.modelHeaderFacade.selectedId$;
     this.loading$ = this.modelHeaderFacade.loading$;
+    this.apiKeyS = this.model$.pipe(
+      filter(app => !!app),
+      map(app => app.apiKey),
+    ).subscribe(apiKey => this.apiKey = apiKey);
   }
 
   ngOnDestroy(): void {
     this.modelHeaderFacade.unsubscribe();
+    this.apiKeyS.unsubscribe();
   }
 
   rename() {
-    // this.modelHeaderFacade.rename(name);
+    let currentName = '';
+    this.modelHeaderFacade.modelName$.subscribe(name => {
+      currentName = name;
+    });
+    const dialog = this.dialog.open(EditDialogComponent, {
+      data: {
+        entityType: 'model',
+        entityName: currentName,
+        name: ''
+      }
+    });
+
+    dialog.afterClosed().subscribe(res => {
+      if (res) { this.modelHeaderFacade.rename(res); }
+    });
   }
 
   copy() {
@@ -41,6 +62,7 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
     input.setAttribute('value', this.apiKey);
     document.body.appendChild(input);
     input.select();
+    document.execCommand('copy');
     document.body.removeChild(input);
   }
 }

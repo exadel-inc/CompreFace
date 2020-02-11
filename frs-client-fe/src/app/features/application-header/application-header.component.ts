@@ -15,11 +15,11 @@ import {filter, map} from 'rxjs/operators';
 
 export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   public app$: Observable<Application>;
-  public appKey: string;
+  public apiKey: string;
   public userRole$: Observable<string | null>;
   public selectedId$: Observable<any>;
   public loading$: Observable<boolean>;
-  private appKeyS: Subscription;
+  private apiKeyS: Subscription;
 
   constructor(private applicationHeaderFacade: ApplicationHeaderFacade, public dialog: MatDialog) {}
 
@@ -29,15 +29,15 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
     this.userRole$ = this.applicationHeaderFacade.userRole$;
     this.selectedId$ = this.applicationHeaderFacade.selectedId$;
     this.loading$ = this.applicationHeaderFacade.loading$;
-    this.appKeyS = this.app$.pipe(
+    this.apiKeyS = this.app$.pipe(
       filter(app => !!app),
       map(app => app.apiKey),
-    ).subscribe(apiKey => this.appKey = apiKey);
+    ).subscribe(apiKey => this.apiKey = apiKey);
   }
 
   ngOnDestroy(): void {
     this.applicationHeaderFacade.unsubscribe();
-    this.appKeyS.unsubscribe();
+    this.apiKeyS.unsubscribe();
   }
 
   rename() {
@@ -62,9 +62,10 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
 
   copy() {
     const input = document.createElement('input');
-    input.setAttribute('value', this.appKey );
+    input.setAttribute('value', this.apiKey );
     document.body.appendChild(input);
     input.select();
+    document.execCommand('copy');
     document.body.removeChild(input);
   }
 }

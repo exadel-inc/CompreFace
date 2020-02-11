@@ -1,5 +1,6 @@
 <div class="model-header">
-  <mat-card class="model-header_left-coll" *ngIf="model$ | async as model">
+  <app-spinner *ngIf="loading$ | async"></app-spinner>
+  <mat-card  class="model-header_left-coll" *ngIf="!(loading$ | async) && (model$ | async) as model">
     <div class="title">Model</div>
     <div class="name-wrapper">
       <div class="name-item">{{model.name}}</div>
