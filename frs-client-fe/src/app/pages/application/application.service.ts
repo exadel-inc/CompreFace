@@ -8,8 +8,8 @@ import {loadApplicationsEntityAction} from '../../store/application/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {filter, take} from 'rxjs/operators';
 import {setSelectedIdEntityAction} from '../../store/application/action';
-import {GetUserInfo} from '../../store/userInfo/action';
-import {SetSelectedId} from '../../store/organization/action';
+import {getUserInfo} from '../../store/userInfo/action';
+import {setSelectedId} from '../../store/organization/action';
 import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
 
 @Injectable()
@@ -31,7 +31,7 @@ export class ApplicationPageService {
 
     if (this.appId && this.orgId) {
       this.store.dispatch(setSelectedIdEntityAction({ selectedAppId: this.appId }));
-      this.store.dispatch(new SetSelectedId({ selectId: this.orgId }));
+      this.store.dispatch(setSelectedId({ selectId: this.orgId }));
       this.appsSub = this.store.select(selectApplications).pipe(
         filter(apps => !apps.length),
         take(1)
@@ -51,7 +51,7 @@ export class ApplicationPageService {
 
   fetchApps() {
     this.store.dispatch(loadApplicationsEntityAction({ organizationId: this.orgId }));
-    this.store.dispatch(new GetUserInfo());
+    this.store.dispatch(getUserInfo());
     this.organizationEnService.getAll();
   }
 }
