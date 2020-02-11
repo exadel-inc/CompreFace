@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AppState} from '../../store';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
-import {LogOut} from '../../store/auth/action';
+import {logOut} from '../../store/auth/action';
 import {selectAuthState} from '../../store/auth/selectors';
 
 @Component({
@@ -27,7 +27,7 @@ export class ToolBarComponent implements OnInit {
   }
 
   logout() {
-    this.store.dispatch(new LogOut);
+    this.store.dispatch(logOut());
   }
 
 }

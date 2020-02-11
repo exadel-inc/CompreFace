@@ -1,0 +1,32 @@
+@import 'media.sass'
+@import 'colors.sass'
+
+.message
+    font-family: 'Roboto'
+    color: $white
+
+    &.info
+        background-color: $green
+    &.error
+        background-color: $red
+
+::ng-deep .app-snackbar-panel
+    position: fixed
+    background-color: $green
+    margin-top: 60px
+
+@include mobile
+  ::ng-deep .app-snackbar-panel
+    right: calc((100vw - 540px) / 2)
+
+@include tablet-portrait
+  ::ng-deep .app-snackbar-panel
+    right: calc((100vw - 720px) / 2)
+
+@include tablet-landscape
+  ::ng-deep .app-snackbar-panel
+    right: calc((100vw - 960px) / 2)
+
+@include desktop
+  ::ng-deep .app-snackbar-panel
+    right: calc((100vw - 1140px) / 2)

@@ -7,6 +7,7 @@ import {ITableConfig} from 'src/app/features/table/table.component';
 import {ApplicationListFacade} from './application-list-facade';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {Router} from '@angular/router';
+import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 @Component({
   selector: 'application-list-container',
@@ -19,7 +20,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
   public errorMessage: string;
   public tableConfig$: Observable<ITableConfig>;
 
-  constructor(private applicationFacade: ApplicationListFacade, public dialog: MatDialog, private router: Router) {
+  constructor(private applicationFacade: ApplicationListFacade, public dialog: MatDialog, private router: Router, private snackBarService: SnackBarService) {
     this.applicationFacade.initSubscriptions();
   }
 
@@ -47,20 +48,22 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
   }
 
   public onCreateNewApp(): void {
-    const dialog = this.dialog.open(CreateDialogComponent, {
-      width: '300px',
-      data: {
-        entityType: 'application',
-        name: ''
-      }
-    });
+    // const dialog = this.dialog.open(CreateDialogComponent, {
+    //   width: '300px',
+    //   data: {
+    //     entityType: 'application',
+    //     name: ''
+    //   }
+    // });
 
-    const dialogSubscription = dialog.afterClosed().subscribe(name => {
-      if (name) {
-        this.applicationFacade.createApplication(name);
-        dialogSubscription.unsubscribe();
-      }
-    });
+    // const dialogSubscription = dialog.afterClosed().subscribe(name => {
+    //   if (name) {
+    //     this.applicationFacade.createApplication(name);
+    //     dialogSubscription.unsubscribe();
+    //   }
+    // });
+
+    this.snackBarService.openInfo('default-info');
   }
 
   ngOnDestroy(): void {
