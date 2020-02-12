@@ -45,7 +45,8 @@ let user = {
   password: "password",
   firstName: "string",
   guid: "guid_0",
-  lastName: "string"
+  lastName: "string",
+  avatar: './assets/img/avatar.jpg'
 };
 
 let token = '';

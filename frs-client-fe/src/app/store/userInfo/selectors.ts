@@ -7,3 +7,8 @@ export const selectUserId = createSelector(
   selectUserInfoState,
   (userInfo) => userInfo.guid
 );
+
+export const selectUserAvatar = createSelector(
+  selectUserInfoState,
+  (userInfo) => userInfo.avatar
+);

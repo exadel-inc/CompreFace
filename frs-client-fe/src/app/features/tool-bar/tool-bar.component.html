@@ -1,10 +1,18 @@
-
 <mat-toolbar>
   <mat-toolbar-row class="container">
     <img src="assets/img/logo.jpeg" alt="">
-    <span>
-      <button mat-flat-button>User Name</button>
-      <button mat-flat-button (click)="logout()">Logout</button>
+    <span class="avatar-wrapper">
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <img [src]="userAvatarInfo$ | async"/>
+      </button>
     </span>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>
+        <span>User Name</span>
+      </button>
+      <button mat-menu-item (click)="logout()">
+        <span>Logout</span>
+      </button>
+    </mat-menu>
   </mat-toolbar-row>
 </mat-toolbar>
