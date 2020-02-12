@@ -48,6 +48,7 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
       currentName = name;
     });
     const dialog = this.dialog.open(EditDialogComponent, {
+      width: '300px',
       data: {
         entityType: 'application',
         entityName: currentName,
