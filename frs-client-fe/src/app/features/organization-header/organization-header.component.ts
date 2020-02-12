@@ -29,6 +29,7 @@ export class OrganizationHeaderComponent implements OnInit {
 
   createNew() {
     const dialog = this.dialog.open(CreateDialogComponent, {
+      width: '300px',
       data: {
         entityType: 'organization',
         name: ''

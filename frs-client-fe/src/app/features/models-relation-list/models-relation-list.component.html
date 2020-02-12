@@ -1,5 +1,5 @@
 <div class="relation-list">
-  <h2>List of related applications</h2>
+  <h3>Related Applications</h3>
   <app-spinner  *ngIf="isLoading$ | async"></app-spinner>
   <app-model-relation-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async"
                             [availableRoles$]="availableRoles$"

@@ -1,6 +1,8 @@
 <h3>Applications</h3>
 <app-spinner *ngIf="isLoading$ | async"></app-spinner>
 <app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (changeRow)="onClick($event)"></app-table>
-<button mat-button color="primary" (click)="onCreateNewApp()">
-  CREATE
-</button>
+<div class="button-container">
+  <button mat-button color="primary" (click)="onCreateNewApp()">
+    CREATE
+  </button>
+</div>
