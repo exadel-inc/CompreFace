@@ -1,7 +1,9 @@
-<h3>Models</h3>
-<app-spinner *ngIf="isLoading$ | async">></app-spinner>
-<app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (changeRow)="onClick($event)"></app-table>
+<div class="model-list">
+  <h3>Models</h3>
+  <app-spinner *ngIf="isLoading$ | async">></app-spinner>
+  <app-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (changeRow)="onClick($event)"></app-table>
 
-<div class="add-model-button-container">
-  <button mat-button color="primary" (click)="onCreateNewModel()">CREATE</button>
+  <div class="add-model-button-container">
+    <button mat-button color="primary" (click)="onCreateNewModel()">CREATE</button>
+  </div>
 </div>

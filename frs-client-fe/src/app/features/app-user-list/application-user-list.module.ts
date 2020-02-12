@@ -8,6 +8,7 @@ import {InviteUserModule} from '../invite-user/invite-user.module';
 import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
 import {MatInputModule} from '@angular/material/input';
 import {FormsModule} from '@angular/forms';
+import {SnackBarModule} from 'src/app/features/snackbar/snackbar.module';
 
 @NgModule({
   declarations: [ApplicationUserListComponent],
@@ -20,7 +21,8 @@ import {FormsModule} from '@angular/forms';
     InviteUserModule,
     FormsModule,
     UserTablePipeModule,
-    MatInputModule
+    MatInputModule,
+    SnackBarModule
   ]
 })
 export class AppUserListModule {}
