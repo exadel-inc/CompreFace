@@ -6,6 +6,8 @@ import {MatButtonModule} from '@angular/material/button';
 import {EntityTitleModule} from '../entity-title/entity-title.module';
 import {ApplicationHeaderFacade} from './application-header.facade';
 import {SpinnerModule} from '../spinner/spinner.module';
+import {MatCardModule, MatDialog} from '@angular/material';
+import {Subject} from 'rxjs';
 
 describe('ApplicationHeaderComponent', () => {
   let component: ApplicationHeaderComponent;
@@ -21,15 +23,18 @@ describe('ApplicationHeaderComponent', () => {
             rename: () => {},
             initSubscriptions: () => {},
             unsubscribe: () => {},
+            app$: new Subject(),
           }
         },
+        {provide: MatDialog, useValue: {}}
       ],
       imports: [
         CommonModule,
         RouterModule,
         MatButtonModule,
+        SpinnerModule,
         EntityTitleModule,
-        SpinnerModule
+        MatCardModule,
       ]
     })
     .compileComponents();

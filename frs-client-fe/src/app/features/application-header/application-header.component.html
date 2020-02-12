@@ -2,7 +2,7 @@
   <app-spinner *ngIf="loading$ | async"></app-spinner>
   <mat-card class="application-header_left-coll">
     <div *ngIf="app$ | async as app">
-      <div class="title">Application</div>
+      <h3 class="title">Application</h3>
       <div class="name-wrapper">
         <div class="name-item">{{app.name}}</div>
         <button mat-button type="submit" color="primary" (click)="rename()">EDIT</button>

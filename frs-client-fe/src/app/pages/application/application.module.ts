@@ -12,8 +12,8 @@ import {MatCardModule} from '@angular/material/card';
 import {BreadcrumbsModule} from '../../features/breadcrumbs/breadcrumbs.module';
 import {ModelListModule} from 'src/app/features/model-list/model-list.module';
 import {AppUserListModule} from 'src/app/features/app-user-list/application-user-list.module';
-
-
+import {FooterModule} from '../../features/footer/footer.module';
+import {ApplicationListModule} from '../../features/application-list/application-list.module';
 
 @NgModule({
   declarations: [ApplicationComponent],
@@ -23,6 +23,8 @@ import {AppUserListModule} from 'src/app/features/app-user-list/application-user
     ApplicationHeaderModule,
     ModelListModule,
     AppUserListModule,
+    FooterModule,
+    ApplicationListModule,
     RouterModule.forChild([
       { path: '', component: ApplicationComponent, canActivate: [AuthGuard] },
     ]),

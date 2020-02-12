@@ -11,7 +11,8 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
 import {MatInputModule} from '@angular/material/input';
-import {SnackBarModule} from 'src/app/features/snackbar/snackbar.module';
+import {CommonModule} from '@angular/common';
+import {SnackBarService} from '../snackbar/snackbar.service';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -20,19 +21,19 @@ describe('UserListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [
-        SpinnerModule,
-        UserTableModule,
-        InviteUserModule,
         NoopAnimationsModule,
+        CommonModule,
+        UserTableModule,
+        SpinnerModule,
+        InviteUserModule,
         FormsModule,
         UserTablePipeModule,
-        MatInputModule,
-        SnackBarModule
+        MatInputModule
       ],
       declarations: [UserListComponent],
       providers: [
         {
-          provide: MatDialog,
+          provide: SnackBarService,
           useValue: {}
         }, {
           provide: UserListFacade,

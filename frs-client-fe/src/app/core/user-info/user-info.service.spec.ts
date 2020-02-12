@@ -2,18 +2,20 @@ import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {environment} from '../../../environments/environment';
 import {UserInfoService} from './user-info.service';
+import {User} from '../../data/user';
 
 describe('UserInfoService', () => {
   let service: UserInfoService;
   let httpMock: HttpTestingController;
 
-  const mockData = {
+  const mockData: User = {
     email: 'email',
     username: 'username',
     password: 'password',
     firstName: 'string',
     guid: 'guid_0',
-    lastName: 'string'
+    lastName: 'string',
+    avatar: 'avatar.png'
   };
 
   beforeEach(() => {

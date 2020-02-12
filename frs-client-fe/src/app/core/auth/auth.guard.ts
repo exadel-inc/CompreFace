@@ -32,14 +32,14 @@ export class AuthGuard implements CanActivate {
 
 @Injectable()
 export class LoginGuard implements CanActivate {
-  private userInfo: Observable<UserInfoState>;
+  private userInfo$: Observable<UserInfoState>;
 
   constructor(public router: Router, private store: Store<AppState>) {
-    this.userInfo = this.store.select(selectUserInfoState);
+    this.userInfo$ = this.store.select(selectUserInfoState);
   }
 
   canActivate(): Observable<boolean> {
-    return this.userInfo.pipe(
+    return this.userInfo$.pipe(
       take(1),
       map((state: UserInfoState) => {
         if (state.isAuthenticated) {

@@ -1,7 +1,6 @@
 import {TestBed} from '@angular/core/testing';
 import {AuthService} from './auth.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {User} from '../../data/user';
 import {environment} from '../../../environments/environment';
 import {API_URL} from '../../data/api.variables';
 
@@ -25,7 +24,7 @@ describe('AuthService', () => {
   });
 
   it('be able to logIn', () => {
-    const dummyUser: User = {
+    const dummyUser = {
       username: 'username',
       password: 'password'
     };
@@ -42,7 +41,7 @@ describe('AuthService', () => {
   });
 
   it('be able to signUp', () => {
-    const dummyUser: User = {
+    const dummyUser = {
       username: 'username',
       password: 'password',
       email: 'q@q.com'

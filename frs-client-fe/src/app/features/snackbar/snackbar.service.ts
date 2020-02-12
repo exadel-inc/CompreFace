@@ -13,7 +13,7 @@ const messageMap = {
 export class SnackBarService {
     constructor(private snackBar: MatSnackBar) { }
 
-    public openInfo(messageCode: string, duration: number = 200000, message?: string): void {
+    public openInfo(messageCode: string, duration: number = 3000, message?: string): void {
         const data = {
             message: '',
             type: 'info'
