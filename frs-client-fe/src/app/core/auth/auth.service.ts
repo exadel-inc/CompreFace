@@ -3,7 +3,6 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {API_URL} from '../../data/api.variables';
-import {User} from '../../data/user';
 
 @Injectable({
   providedIn: 'root'
