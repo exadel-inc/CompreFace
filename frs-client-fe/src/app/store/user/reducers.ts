@@ -34,4 +34,5 @@ export const AppUserReducer: ActionReducer<AppUserEntityState> = createReducer(
         accessLevel: user.accessLevel
       }
     }, {...state, isPending: false});
-  }));
+  })
+);

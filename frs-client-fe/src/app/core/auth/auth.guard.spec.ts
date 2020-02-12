@@ -27,8 +27,14 @@ describe('Auth Guard', () => {
 
     mockStore = TestBed.get(Store);
     mockUsernameSelector = mockStore.overrideSelector(selectUserInfoState, {
+      avatar: '',
+      email: '',
+      firstName: '',
+      guid: '',
+      lastName: '',
+      password: '',
       isAuthenticated: true,
-      username: 'username'
+      username: `username`
     });
     guard = TestBed.get<AuthGuard>(AuthGuard);
     guard.router.navigateByUrl = jasmine.createSpy();
@@ -43,6 +49,12 @@ describe('Auth Guard', () => {
 
   it('should return true if the user state is logged in', () => {
     mockUsernameSelector.setResult({
+      avatar: '',
+      email: '',
+      firstName: '',
+      guid: '',
+      lastName: '',
+      password: '',
       isAuthenticated: false,
       username: 'username'
     });
@@ -73,6 +85,12 @@ describe('Login Guard', () => {
 
     mockStore = TestBed.get(Store);
     mockUsernameSelector = mockStore.overrideSelector(selectUserInfoState, {
+      avatar: '',
+      email: '',
+      firstName: '',
+      guid: '',
+      lastName: '',
+      password: '',
       isAuthenticated: false,
       username: 'username'
     });
@@ -89,6 +107,12 @@ describe('Login Guard', () => {
 
   it('should return false if the user state is logged in', () => {
     mockUsernameSelector.setResult({
+      avatar: '',
+      email: '',
+      firstName: '',
+      guid: '',
+      lastName: '',
+      password: '',
       isAuthenticated: true,
       username: 'username'
     });

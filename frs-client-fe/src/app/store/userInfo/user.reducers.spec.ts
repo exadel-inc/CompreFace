@@ -5,7 +5,13 @@ import {UserInfoReducer} from './reducers';
 describe('UserInfoReducer', () => {
   const initialState = {
     isAuthenticated: false,
-    username: null
+    username: null,
+    avatar: '',
+    email: '',
+    firstName: '',
+    guid: '',
+    lastName: '',
+    password: ''
   };
 
   describe('UpdateUserAuthorization action', () => {
@@ -22,7 +28,13 @@ describe('UserInfoReducer', () => {
       const action = resetUserInfo();
       const state = UserInfoReducer({
         isAuthenticated: true,
-        username: 'testUser'
+        username: 'testUser',
+        avatar: '',
+        email: '',
+        firstName: '',
+        guid: '',
+        lastName: '',
+        password: ''
       }, action);
 
       expect(state.username).toBeNull();
