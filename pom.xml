@@ -29,6 +29,7 @@
     <docker.image.prefix>frs</docker.image.prefix>
     <smile.version>1.5.3</smile.version>
     <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
+    <config.typesafe.version>1.4.0</config.typesafe.version>
   </properties>
 
   <dependencyManagement>
@@ -74,6 +75,11 @@
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt</artifactId>
         <version>${io.jsonwebtoken.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.typesafe</groupId>
+        <artifactId>config</artifactId>
+        <version>${config.typesafe.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
