@@ -11,6 +11,6 @@ import { SnackBarModule } from 'src/app/features/snackbar/snackbar.module';
   declarations: [ApplicationListComponent],
   exports: [ApplicationListComponent],
   providers: [ApplicationListFacade],
-  imports: [CommonModule, TableModule, SpinnerModule, MatButtonModule, SnackBarModule]
+  imports: [CommonModule, TableModule, SpinnerModule, MatButtonModule]
 })
 export class ApplicationListModule {}
