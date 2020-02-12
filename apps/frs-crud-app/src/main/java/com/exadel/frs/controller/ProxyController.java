@@ -1,6 +1,7 @@
 package com.exadel.frs.controller;
 
-import com.exadel.frs.entity.Model;
+import static com.exadel.frs.enums.AppModelAccess.READONLY;
+import static com.exadel.frs.enums.AppModelAccess.TRAIN;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.AppOrModelNotFoundException;
@@ -10,23 +11,25 @@ import com.exadel.frs.validation.ImageExtensionValidator;
 import com.google.common.collect.ImmutableList;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.List;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping(ProxyController.PREFIX)
@@ -43,45 +46,60 @@ public class ProxyController {
     @Value("${proxy.baseUrl}")
     private String baseUrl;
 
-    private static final List<UrlMethod> readOnlyApiMethods = List.of(
+    private static final List<UrlMethod> readOnlyApiMethods = ImmutableList.of(
             new UrlMethod(HttpMethod.GET, "/faces"),
             new UrlMethod(HttpMethod.GET, "/retrain"),
             new UrlMethod(HttpMethod.GET, "/status"),
-            new UrlMethod(HttpMethod.POST, "/recognize"));
+            new UrlMethod(HttpMethod.POST, "/recognize")
+    );
 
-    @Data
-    @AllArgsConstructor
+    @lombok.Value
     private static class UrlMethod {
+
         private HttpMethod httpMethod;
         private String url;
     }
 
-    private AppModelAccess getAppModelAccessType(String appApiKey, String modelApiKey) {
-        Model model = modelRepository.findByApiKey(modelApiKey)
-                .orElseThrow(AppOrModelNotFoundException::new);
+    private AppModelAccess getAppModelAccessType(final String appApiKey, final String modelApiKey) {
+        val model = modelRepository.findByApiKey(modelApiKey)
+                                     .orElseThrow(AppOrModelNotFoundException::new);
         if (appApiKey.equals(model.getApp().getApiKey())) {
-            return AppModelAccess.TRAIN;
+            return TRAIN;
         }
+
         return appModelRepository.findByAppApiKeyAndModelApiKey(appApiKey, modelApiKey)
-                .orElseThrow(AppOrModelNotFoundException::new)
-                .getAccessType();
+                                 .orElseThrow(AppOrModelNotFoundException::new)
+                                 .getAccessType();
     }
 
     @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
     @ApiOperation(value = "Send request to core service")
     public ResponseEntity<String> proxy(
-            @ApiParam(value = "Api key of application and model", required = true) @RequestHeader(X_FRS_API_KEY_HEADER) String apiKey,
-            @ApiParam(value = "Headers that will be proxied to core service", required = true) @RequestHeader MultiValueMap<String, String> headers,
-            @ApiParam(value = "String parameters that will be proxied to core service") @RequestParam(required = false) Map<String, String> params,
-            @ApiParam(value = "Files that will be proxied to core service") @RequestParam(required = false) Map<String, MultipartFile> files,
-            HttpServletRequest request) {
-        int apiKeyLength = apiKey.length() / 2;
-        String appApiKey = apiKey.substring(0, apiKeyLength);
-        String modelApiKey = apiKey.substring(apiKeyLength);
-        if (AppModelAccess.READONLY == getAppModelAccessType(appApiKey, modelApiKey)) {
+            @ApiParam(value = "Api key of application and model", required = true)
+            @RequestHeader(X_FRS_API_KEY_HEADER)
+            final String apiKey,
+            @ApiParam(value = "Headers that will be proxied to core service", required = true)
+            @RequestHeader
+            final MultiValueMap<String, String> headers,
+            @ApiParam(value = "String parameters that will be proxied to core service")
+            @RequestParam(required = false)
+            final Map<String, String> params,
+            @ApiParam(value = "Files that will be proxied to core service")
+            @RequestParam(required = false)
+            final Map<String, MultipartFile> files,
+            final HttpServletRequest request
+    ) {
+        val apiKeyLength = apiKey.length() / 2;
+        val appApiKey = apiKey.substring(0, apiKeyLength);
+        val modelApiKey = apiKey.substring(apiKeyLength);
+
+        if (READONLY == getAppModelAccessType(appApiKey, modelApiKey)) {
             if (readOnlyApiMethods.stream()
-                    .noneMatch(urlMethod -> request.getRequestURI().startsWith(PREFIX + urlMethod.getUrl())
-                            && request.getMethod().equals(urlMethod.getHttpMethod().toString()))) {
+                                  .noneMatch(urlMethod ->
+                                          request.getRequestURI().startsWith(PREFIX + urlMethod.getUrl()) &&
+                                                  request.getMethod().equals(urlMethod.getHttpMethod().toString())
+                                  )
+            ) {
                 throw new AccessDeniedException();
             }
         }
@@ -95,9 +113,14 @@ public class ProxyController {
         files.forEach((key, file) -> body.add(key, file.getResource()));
         headers.remove(X_FRS_API_KEY_HEADER);
         headers.add(X_API_KEY_HEADER, apiKey);
+
         try {
-            return new RestTemplate().exchange(remoteUrl, HttpMethod.resolve(request.getMethod()),
-                    new HttpEntity<>(body, headers), String.class);
+            return new RestTemplate().exchange(
+                    remoteUrl,
+                    HttpMethod.resolve(request.getMethod()),
+                    new HttpEntity<>(body, headers),
+                    String.class
+            );
         } catch (HttpClientErrorException e) {
             return ResponseEntity
                     .status(e.getStatusCode())
