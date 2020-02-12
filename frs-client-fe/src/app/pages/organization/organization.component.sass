@@ -8,7 +8,6 @@
 .mat-card
   min-height: 650px
   display: flex
-  height: 100%
   flex-direction: column
 
   +mobile
@@ -19,13 +18,12 @@
     width: 100%
 
 .grid-container
-  flex-grow: 1
   display: flex
+  justify-content: space-between
+  mat-card
+    width: 49%
 
   app-application-list-container, app-user-list-container
     display: flex
     flex-direction: column
     justify-content: space-between
-
-@include mobile
-  .grid-container

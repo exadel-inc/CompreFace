@@ -8,6 +8,7 @@ import {InviteUserModule} from '../invite-user/invite-user.module';
 import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
+import {MatCardModule} from '@angular/material/card';
 
 @NgModule({
   declarations: [UserListComponent],
@@ -20,7 +21,8 @@ import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module
     InviteUserModule,
     FormsModule,
     UserTablePipeModule,
-    MatInputModule
+    MatInputModule,
+    MatCardModule
   ]
 })
 export class UserListModule {}

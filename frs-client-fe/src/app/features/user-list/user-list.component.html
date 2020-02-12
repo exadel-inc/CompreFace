@@ -1,11 +1,12 @@
 <div class="user-list">
-  <h2>List of available users</h2>
-  <mat-form-field class="search">
-    <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search">
-  </mat-form-field>
+  <div class="table-header-container">
+    <h3>Users</h3>
+    <mat-form-field class="search">
+      <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search">
+    </mat-form-field>
+  </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-user-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | userTableFilter:search | async"
-                  [availableRoles$]="availableRoles$"
-                  (changeRow)="onChange($event)"></app-user-table>
+    [availableRoles$]="availableRoles$" (changeRow)="onChange($event)"></app-user-table>
+  <app-invite-user (email)="onInviteUser($event)"></app-invite-user>
 </div>
-<app-invite-user (email)="onInviteUser($event)"></app-invite-user>

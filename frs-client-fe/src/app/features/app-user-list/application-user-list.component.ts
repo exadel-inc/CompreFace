@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { ApplicationUserListFacade } from './application-user-list-facade';
-import { Observable } from 'rxjs';
-import { AppUser } from 'src/app/data/appUser';
-import { map } from 'rxjs/operators';
-import { ITableConfig } from '../table/table.component';
-import { MatDialog } from '@angular/material';
-import {AlertComponent} from '../alert/alert.component';
+import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
+import {ApplicationUserListFacade} from './application-user-list-facade';
+import {Observable} from 'rxjs';
+import {AppUser} from 'src/app/data/appUser';
+import {map} from 'rxjs/operators';
+import {ITableConfig} from '../table/table.component';
+import {MatDialog} from '@angular/material';
+import {SnackBarService} from '../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-application-user-list',
@@ -21,7 +21,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   public availableEmails$: Observable<string[]>;
   public search = '';
 
-  constructor(private appUserListFacade: ApplicationUserListFacade, public dialog: MatDialog) {
+  constructor(private appUserListFacade: ApplicationUserListFacade, public dialog: MatDialog, private snackBarService: SnackBarService) {
     appUserListFacade.initSubscriptions();
   }
 
@@ -57,12 +57,6 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.dialog.open(AlertComponent, {
-      data: {
-        type: 'info',
-        message: `Invitation was sent to ${email}`
-      },
-      minWidth: 300
-    });
+    this.snackBarService.openInfo(void 0, void 0, `Invitation was sent to ${email}`);
   }
 }

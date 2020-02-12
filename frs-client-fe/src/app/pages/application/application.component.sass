@@ -10,21 +10,19 @@
   .header-container
     width: 100%
 
-  +mobile
+    +mobile
     height: auto
 
   app-application-header
     margin-bottom: 40px
 
 .grid-container
-  flex-grow: 1
   display: flex
+  justify-content: space-between
+  mat-card
+    width: 49%
 
   app-model-list, app-application-user-list
-    width: 50%
     display: flex
     flex-direction: column
     justify-content: space-between
-
-@include mobile
-  .grid-container

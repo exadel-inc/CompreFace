@@ -1,6 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {ModelRelationTableComponent} from './model-relation-table.component';
 import {MatFormFieldModule, MatTableModule, MatSelectModule, MatButtonModule} from '@angular/material';
+import {MatIconModule} from '@angular/material/icon';
 
 describe('ModelRelationTableComponent', () => {
   let component: ModelRelationTableComponent;
@@ -13,7 +14,8 @@ describe('ModelRelationTableComponent', () => {
         MatFormFieldModule,
         MatTableModule,
         MatSelectModule,
-        MatButtonModule
+        MatButtonModule,
+        MatIconModule
       ]})
     .compileComponents();
   }));
