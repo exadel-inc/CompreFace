@@ -6,6 +6,8 @@ import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.AppOrModelNotFoundException;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
+import com.exadel.frs.validation.ImageExtensionValidator;
+import com.google.common.collect.ImmutableList;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
@@ -83,8 +85,12 @@ public class ProxyController {
                 throw new AccessDeniedException();
             }
         }
-        String remoteUrl = baseUrl + request.getRequestURI().replaceFirst(PREFIX, "");
-        MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+
+        new ImageExtensionValidator().validate(files.values());
+
+        val remoteUrl = baseUrl + request.getRequestURI().replaceFirst(PREFIX, "");
+        val body = new LinkedMultiValueMap<String, Object>();
+
         params.forEach(body::add);
         files.forEach((key, file) -> body.add(key, file.getResource()));
         headers.remove(X_FRS_API_KEY_HEADER);
