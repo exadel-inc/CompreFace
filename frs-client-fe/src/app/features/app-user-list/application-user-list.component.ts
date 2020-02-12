@@ -1,12 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { ApplicationUserListFacade } from './application-user-list-facade';
-import { Observable } from 'rxjs';
-import { AppUser } from 'src/app/data/appUser';
-import { map } from 'rxjs/operators';
-import { ITableConfig } from '../table/table.component';
-import { MatDialog } from '@angular/material';
-import {AlertComponent} from '../alert/alert.component';
-import { SnackBarService } from '../snackbar/snackbar.service';
+import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
+import {ApplicationUserListFacade} from './application-user-list-facade';
+import {Observable} from 'rxjs';
+import {AppUser} from 'src/app/data/appUser';
+import {map} from 'rxjs/operators';
+import {ITableConfig} from '../table/table.component';
+import {MatDialog} from '@angular/material';
+import {SnackBarService} from '../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-application-user-list',

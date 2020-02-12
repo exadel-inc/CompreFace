@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {ModelRelationTableComponent} from './model-relation-table.component';
 import {MatTableModule, MatFormFieldModule, MatSelectModule, MatButtonModule} from '@angular/material';
 import {CommonModule} from '@angular/common';
-import {MatIconModule} from '@angular/material/icon'
+import {MatIconModule} from '@angular/material/icon';
 
 @NgModule({
   declarations: [ModelRelationTableComponent],

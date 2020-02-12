@@ -10,6 +10,7 @@ import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
 import {MatInputModule} from '@angular/material/input';
+import {SnackBarModule} from 'src/app/features/snackbar/snackbar.module';
 
 describe('ApplicationUserListComponent', () => {
   let component: ApplicationUserListComponent;
@@ -25,7 +26,8 @@ describe('ApplicationUserListComponent', () => {
         NoopAnimationsModule,
         FormsModule,
         UserTablePipeModule,
-        MatInputModule
+        MatInputModule,
+        SnackBarModule
       ],
       providers: [{
         provide: MatDialog,
