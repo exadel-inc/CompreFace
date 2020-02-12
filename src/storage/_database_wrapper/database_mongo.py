@@ -10,7 +10,7 @@ from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PO
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.dto.face import Face, FaceEmbedding
 from src.storage.exceptions import FaceHasNoEmbeddingSavedError, NoTrainedEmbeddingClassifierFoundError
-
+import logging
 
 class DatabaseMongo(DatabaseBase):
     def __init__(self):
@@ -63,9 +63,14 @@ class DatabaseMongo(DatabaseBase):
     def remove_face(self, api_key, face_name):
 
         img_query = self._faces_collection.find(filter={"api_key": api_key, "face_name": face_name}, projection={"raw_img_fs_id"})
-        img = img_query.distinct("raw_img_fs_id")[0]
         face_query = self._faces_collection.find(filter={"api_key": api_key, "face_name": face_name}, projection={"face_img_fs_id"})
-        face = face_query.distinct("face_img_fs_id")[0]
+        img_distinct = img_query.distinct("raw_img_fs_id")
+        face_distinct = face_query.distinct("face_img_fs_id")
+        if len(img_distinct) == 0 and len(face_distinct) == 0:
+            logging.debug(f'File with filename {face_name} is not found in the database')
+            return
+        img = img_distinct[0]
+        face = face_distinct[0]
         self._faces_collection.delete_many({'face_name': face_name, 'api_key': api_key})
         self._faces_fs.delete(img)
         self._faces_fs.delete(face)
