@@ -1,20 +1,25 @@
-import { createReducer, on } from '@ngrx/store';
+import {ActionReducer, createReducer, on} from '@ngrx/store';
 import {updateUserInfo, resetUserInfo, updateUserAuthorization, getUserInfoSuccess} from './action';
+import {User} from '../../data/user';
 
-export interface UserInfoState {
-  guid?: string;
+export interface UserInfoState extends User {
   isAuthenticated: boolean;
-  username: string;
 }
 
 export const initialState: UserInfoState = {
   isAuthenticated: false,
   username: null,
-  guid: null
+  guid: null,
+  email: null,
+  password: null,
+  firstName: null,
+  lastName: null,
+  avatar: null
 };
 
-export const UserInfoReducer = createReducer(initialState,
+export const UserInfoReducer: ActionReducer<UserInfoState>  = createReducer(initialState,
   on(updateUserInfo, (state, action) => ({...state, ...action})),
   on(resetUserInfo, () => ({...initialState})),
   on(updateUserAuthorization, (state, action) => ({...state, isAuthenticated: action.value})),
-  on(getUserInfoSuccess, (state, action) => ({...state, ...action.user})));
+  on(getUserInfoSuccess, (state, action) => ({...state, ...action.user})),
+);

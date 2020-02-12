@@ -25,7 +25,7 @@ describe('AuthService', () => {
   });
 
   it('be able to logIn', () => {
-    const dummyUser: User = {
+    const dummyUser = {
       username: 'username',
       password: 'password'
     };
@@ -42,7 +42,7 @@ describe('AuthService', () => {
   });
 
   it('be able to signUp', () => {
-    const dummyUser: User = {
+    const dummyUser = {
       username: 'username',
       password: 'password',
       email: 'q@q.com'

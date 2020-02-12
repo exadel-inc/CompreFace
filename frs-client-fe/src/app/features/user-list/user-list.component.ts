@@ -19,10 +19,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   public errorMessage: string;
   public search = '';
 
-  constructor(
-    private userListFacade: UserListFacade,
-    private snackBarService: SnackBarService
-  ) {
+  constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService) {
     userListFacade.initSubscriptions();
   }
 

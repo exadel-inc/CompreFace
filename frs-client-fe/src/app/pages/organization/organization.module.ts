@@ -28,7 +28,7 @@ import {MatCardModule} from '@angular/material/card';
     ]),
     ToolBarModule,
     OrganizationHeaderModule,
-    MatCardModule
+    MatCardModule,
   ],
   providers: [OrganizationService],
   exports: [RouterModule]
