@@ -1,4 +1,4 @@
-<div *ngIf="org$ | async as org" class="breadcrumbs">
+<mat-card *ngIf="org$ | async as org" class="breadcrumbs">
   <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.ORGANIZATION, org.id]">{{org.name}}</a>
   <div class="separator"> / </div>
   <a class="breadcrumbs-link" *ngIf="(routeModel$ | async) && ( app$ | async) as app"
@@ -9,5 +9,5 @@
   <div class="breadcrumbs-link" *ngIf="!(routeModel$ | async) && (app$ | async)"> Application</div>
   <div class="separator"> / </div>
   <div class="breadcrumbs-link" *ngIf="(routeModel$ | async)"> Model</div>
-</div>
+</mat-card>
 
