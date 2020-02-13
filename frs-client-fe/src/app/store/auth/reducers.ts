@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import {createReducer, on, Action} from '@ngrx/store';
 import {
   logInSuccess,
   logInFailure,
@@ -19,29 +19,30 @@ export const initialState: AuthState = {
   isLoading: false
 };
 
-export const AuthReducer = createReducer(initialState,
-  on(logInSuccess, (state) => ({
-    ...state,
-    errorMessage: null,
-    isLoading: false
-  })),
-  on(logInFailure, (state) => ({
-    ...state,
-    errorMessage: 'Incorrect email and/or password.',
-    isLoading: false
-  })),
-  on(signUpSuccess, (state) => ({
-    ...state,
-    errorMessage: null,
-    successMessage: 'You have created new account, please login into your account',
-    isLoading: false
-  })),
-  on(signUpFailure, (state) => ({
-    ...state,
-        errorMessage: 'That email is already in use.',
-        successMessage: null,
-        isLoading: false
-  })),
-  on(logOut, () => ({...initialState}))
-);
-
+export function AuthReducer(authState: AuthState, action: Action) {
+  return createReducer(initialState,
+    on(logInSuccess, (state) => ({
+      ...state,
+      errorMessage: null,
+      isLoading: false
+    })),
+    on(logInFailure, (state) => ({
+      ...state,
+      errorMessage: 'Incorrect email and/or password.',
+      isLoading: false
+    })),
+    on(signUpSuccess, (state) => ({
+      ...state,
+      errorMessage: null,
+      successMessage: 'You have created new account, please login into your account',
+      isLoading: false
+    })),
+    on(signUpFailure, (state) => ({
+      ...state,
+      errorMessage: 'That email is already in use.',
+      successMessage: null,
+      isLoading: false
+    })),
+    on(logOut, () => ({ ...initialState }))
+  )(authState, action);
+}

@@ -1,4 +1,4 @@
-import {createReducer, on, ActionReducer} from '@ngrx/store';
+import {createReducer, on, Action} from '@ngrx/store';
 import {AppUser} from 'src/app/data/appUser';
 import {
   SetPending,
@@ -8,7 +8,7 @@ import {
   PutUpdatedUserRoleEntityAction
 } from './action';
 
-import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
+import {EntityState, createEntityAdapter, EntityAdapter} from '@ngrx/entity';
 
 export interface AppUserEntityState extends EntityState<AppUser> {
   isPending: boolean;
@@ -19,20 +19,22 @@ const initialState: AppUserEntityState = userAdapter.getInitialState({
   isPending: false
 });
 
-export const AppUserReducer: ActionReducer<AppUserEntityState> = createReducer(
-  initialState,
-  on(LoadUsersEntityAction, (state) => ({...state, isPending: true})),
-  on(SetPending, (state, {isPending}) => ({...state, isPending})),
-  on(AddUsersEntityAction, (state, { users }) => {
-    return userAdapter.addAll(users, {...state, isPending: false});
-  }),
-  on(PutUpdatedUserRoleEntityAction, (state) => ({...state, isPending: true})),
-  on(UpdateUserRoleEntityAction, (state, { user }) => {
-    return userAdapter.updateOne({
-      id: user.id,
-      changes: {
-        accessLevel: user.accessLevel
-      }
-    }, {...state, isPending: false});
-  })
-);
+export function AppUserReducer(appUserState: AppUserEntityState, action: Action) {
+  return createReducer(
+    initialState,
+    on(LoadUsersEntityAction, (state) => ({...state, isPending: true})),
+    on(SetPending, (state, {isPending}) => ({...state, isPending})),
+    on(AddUsersEntityAction, (state, {users}) => {
+      return userAdapter.addAll(users, {...state, isPending: false});
+    }),
+    on(PutUpdatedUserRoleEntityAction, (state) => ({...state, isPending: true})),
+    on(UpdateUserRoleEntityAction, (state, {user}) => {
+      return userAdapter.updateOne({
+        id: user.id,
+        changes: {
+          accessLevel: user.accessLevel
+        }
+      }, {...state, isPending: false});
+    })
+  )(appUserState, action);
+}

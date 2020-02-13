@@ -1,4 +1,4 @@
-import {ActionReducer, createReducer, on} from '@ngrx/store';
+import {createReducer, on, Action} from '@ngrx/store';
 import {EntityState, EntityAdapter, createEntityAdapter} from '@ngrx/entity';
 import {Model} from 'src/app/data/model';
 import {
@@ -22,15 +22,17 @@ const initialState: ModelEntityState = modelAdapter.getInitialState({
   selectedId: null
 });
 
-export const modelReducer: ActionReducer<ModelEntityState> = createReducer(
-  initialState,
-  on(loadModelsEntityAction, (state) => ({...state, isPending: true})),
-  on(addModelsEntityAction, (state, { models }) => modelAdapter.addAll(models, {...state, isPending: false})),
-  on(createModelEntityAction, (state) => ({...state, isPending: true})),
-  on(setSelectedIdModelEntityAction, (state, { selectedId }) => ({ ...state, selectedId })),
-  on(putUpdatedModelEntityAction, (state) => ({...state, isPending: true})),
-  on(updatedModelEntityAction, (state, {model}) => modelAdapter.updateOne(
-    {id: model.id, changes: model},
-    {...state, isPending: false}
-  )),
-);
+export function modelReducer(modelState: ModelEntityState, action: Action) {
+  return createReducer(
+    initialState,
+    on(loadModelsEntityAction, (state) => ({ ...state, isPending: true })),
+    on(addModelsEntityAction, (state, { models }) => modelAdapter.addAll(models, { ...state, isPending: false })),
+    on(createModelEntityAction, (state) => ({ ...state, isPending: true })),
+    on(setSelectedIdModelEntityAction, (state, { selectedId }) => ({ ...state, selectedId })),
+    on(putUpdatedModelEntityAction, (state) => ({ ...state, isPending: true })),
+    on(updatedModelEntityAction, (state, { model }) => modelAdapter.updateOne(
+      { id: model.id, changes: model },
+      { ...state, isPending: false }
+    )),
+  )(modelState, action);
+}
