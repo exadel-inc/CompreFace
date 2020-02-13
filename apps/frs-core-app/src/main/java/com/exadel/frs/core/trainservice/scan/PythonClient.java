@@ -1,0 +1,14 @@
+package com.exadel.frs.core.trainservice.scan;
+
+import feign.Headers;
+import feign.Param;
+import feign.RequestLine;
+import org.springframework.web.multipart.MultipartFile;
+
+public interface PythonClient {
+    @RequestLine("POST /scan_faces")
+    @Headers("Content-Type: multipart/form-data")
+    ScanResponse scanFaces(@Param(value = "file") MultipartFile photo,
+                           @Param(value = "limit") Integer limit,
+                           @Param(value = "threshold_c") Double thresholdC);
+}
