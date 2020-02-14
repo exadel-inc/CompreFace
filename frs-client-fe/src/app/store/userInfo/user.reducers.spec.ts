@@ -5,7 +5,6 @@ import {UserInfoReducer} from './reducers';
 describe('UserInfoReducer', () => {
   const initialState = {
     isAuthenticated: false,
-    username: null,
     avatar: '',
     email: '',
     firstName: '',
@@ -28,7 +27,6 @@ describe('UserInfoReducer', () => {
       const action = resetUserInfo();
       const state = UserInfoReducer({
         isAuthenticated: true,
-        username: 'testUser',
         avatar: '',
         email: '',
         firstName: '',
@@ -37,7 +35,7 @@ describe('UserInfoReducer', () => {
         password: ''
       }, action);
 
-      expect(state.username).toBeNull();
+      expect(state.firstName).toBeNull();
       expect(state.isAuthenticated).toBeFalsy();
     });
   });
@@ -45,13 +43,13 @@ describe('UserInfoReducer', () => {
   describe('UpdateUserInfo action', () => {
     it('should update user info according to payload', () => {
       const action = updateUserInfo({
-        username: 'myTestUser2',
+        firstName: 'myTestUser2',
         isAuthenticated: true
       });
       const state = UserInfoReducer(initialState, action);
 
       expect(state.isAuthenticated).toBeTruthy();
-      expect(state.username).toBe('myTestUser2');
+      expect(state.firstName).toBe('myTestUser2');
     });
   });
 });

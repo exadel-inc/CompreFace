@@ -10,7 +10,6 @@ describe('UserInfoService', () => {
 
   const mockData: User = {
     email: 'email',
-    username: 'username',
     password: 'password',
     firstName: 'string',
     guid: 'guid_0',

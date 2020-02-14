@@ -34,7 +34,6 @@ describe('Auth Guard', () => {
       lastName: '',
       password: '',
       isAuthenticated: true,
-      username: `username`
     });
     guard = TestBed.get<AuthGuard>(AuthGuard);
     guard.router.navigateByUrl = jasmine.createSpy();
@@ -56,7 +55,6 @@ describe('Auth Guard', () => {
       lastName: '',
       password: '',
       isAuthenticated: false,
-      username: 'username'
     });
     guard.canActivate().subscribe(value => {
       expect(value).toBeFalsy();
@@ -92,7 +90,6 @@ describe('Login Guard', () => {
       lastName: '',
       password: '',
       isAuthenticated: false,
-      username: 'username'
     });
     guard = TestBed.get<LoginGuard>(LoginGuard);
     guard.router.navigateByUrl = jasmine.createSpy();
@@ -114,7 +111,6 @@ describe('Login Guard', () => {
       lastName: '',
       password: '',
       isAuthenticated: true,
-      username: 'username'
     });
     guard.canActivate().subscribe(value => {
       expect(value).toBeFalsy();

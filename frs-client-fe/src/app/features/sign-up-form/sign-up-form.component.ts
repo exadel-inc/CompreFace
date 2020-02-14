@@ -8,6 +8,7 @@ import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {signUp} from '../../store/auth/action';
 import {selectAuthState} from '../../store/auth/selectors';
 import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
+import {SignUp} from '../../data/sign-up';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -17,7 +18,6 @@ import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
 export class SignUpFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
-  EMAIL_REGEX = '\\S+@\\S+\\.\\S+';
   getState: Observable<any>;
   errorMessage: string | null;
   isLoading = false;
@@ -30,7 +30,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
     } else {
       return { passwordMismatch: true };
     }
-  }
+  };
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);
@@ -38,7 +38,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.form = new FormGroup({
-      username: new FormControl(),
+      firstName: new FormControl(),
       email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
       password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
       confirmPassword: new FormControl(null, [
@@ -59,10 +59,11 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     this.user = this.form.value;
-    const payload = {
+    const payload: SignUp = {
       email: this.user.email,
       password: this.user.password,
-      username: this.user.username
+      firstName: this.user.firstName,
+      lastName: this.user.firstName
     };
     this.isLoading = true;
     this.store.dispatch(signUp(payload));

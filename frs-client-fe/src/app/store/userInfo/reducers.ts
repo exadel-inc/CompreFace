@@ -8,7 +8,6 @@ export interface UserInfoState extends User {
 
 export const initialState: UserInfoState = {
   isAuthenticated: false,
-  username: null,
   guid: null,
   email: null,
   password: null,

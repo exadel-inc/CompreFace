@@ -29,7 +29,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.form = new FormGroup({
-      username: new FormControl(),
+      email: new FormControl(),
       password: new FormControl(),
     });
 
@@ -47,7 +47,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.user = this.form.value;
     const payload = {
-      username: this.user.username,
+      email: this.user.email,
       password: this.user.password
     };
     this.isLoading = true;
