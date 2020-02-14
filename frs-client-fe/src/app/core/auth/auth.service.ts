@@ -40,7 +40,7 @@ export class AuthService {
     formData.append('username', form.get('email').value);
     formData.append('password',  form.get('password').value);
     formData.append('grant_type', form.get('grant_type').value);
-    return this.http.post(url, formData, { headers: { Authorization: `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=` } });
+    return this.http.post(url, formData, { headers: { Authorization: environment.basicToken } });
   }
 
   signUp(firstName: string, password: string, email: string, lastName: string): Observable<any> {
