@@ -4,4 +4,5 @@ export enum ROUTERS_URL {
   APPLICATION= '/application',
   MODEL= '/model',
   SIGN_UP= '/sign-up',
+  FORGOT_PASSWORD= '/forgot-password',
 }

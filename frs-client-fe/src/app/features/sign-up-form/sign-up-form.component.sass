@@ -1,5 +1,14 @@
 @import "colors.sass"
 
+.logo
+  margin-bottom: 40px
+  margin-top: -50px
+  text-align: center
+
+.mat-card-header
+  // workaround: mat-card-header-text can not be selected (
+  margin-left: -16px
+
 .sign-up
   &-full-width
     width: 100%
@@ -10,3 +19,7 @@
   color: $white
   padding: 10px
   margin-bottom: 10px
+
+.mat-card-actions
+  display: flex
+  justify-content: space-between

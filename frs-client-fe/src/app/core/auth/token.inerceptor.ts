@@ -7,6 +7,7 @@ import {catchError} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {AppState} from 'src/app/store';
 import {updateUserAuthorization} from '../../store/userInfo/action';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
 
 
 @Injectable()
@@ -47,7 +48,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (response instanceof HttpErrorResponse && response.status === 401) {
           this.authService.removeToken();
           this.store.dispatch(updateUserAuthorization({ value: false }));
-          this.router.navigateByUrl('/login');
+          this.router.navigateByUrl(ROUTERS_URL.LOGIN);
         }
 
         return throwError(response);

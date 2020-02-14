@@ -8,13 +8,13 @@ export class AuthInit {
 
   public init(): void {
     const token: string = this.auth.getToken();
-    const username: string = localStorage.getItem('username');
+    const firstName: string = localStorage.getItem('firstName');
 
     if (token) {
       if (this.auth.isTokenValid(token)) {
         this.store.dispatch(updateUserInfo({
           isAuthenticated: true,
-          username
+          firstName
         }));
       }
     }

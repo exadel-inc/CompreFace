@@ -25,13 +25,13 @@ describe('AuthService', () => {
 
   it('be able to logIn', () => {
     const dummyUser = {
-      username: 'username',
+      firstName: 'firstName',
       password: 'password'
     };
 
     const dummyToken = 'Some token';
 
-    service.logIn(dummyUser.username, dummyUser.password).subscribe(token => {
+    service.logIn(dummyUser.firstName, dummyUser.password).subscribe(token => {
       expect(token).toEqual(dummyToken);
     });
 
@@ -42,14 +42,15 @@ describe('AuthService', () => {
 
   it('be able to signUp', () => {
     const dummyUser = {
-      username: 'username',
+      firstName: 'firstName',
       password: 'password',
+      lastName: 'lastName',
       email: 'q@q.com'
     };
 
     const dummyToken = 'Some token';
 
-    service.signUp(dummyUser.username, dummyUser.password, dummyUser.email).subscribe(token => {
+    service.signUp(dummyUser.firstName, dummyUser.password, dummyUser.email, dummyUser.lastName).subscribe(token => {
       expect(token).toEqual(dummyToken);
     });
 

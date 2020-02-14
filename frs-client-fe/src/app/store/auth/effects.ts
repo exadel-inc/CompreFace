@@ -25,7 +25,7 @@ export class AuthEffects {
   LogIn = this.actions.pipe(
     ofType(logIn),
     switchMap(action => {
-      return this.authService.logIn(action.username, action.password).pipe(
+      return this.authService.logIn(action.email, action.password).pipe(
         switchMap(res => {
           this.authService.updateToken(res.access_token);
           return [
@@ -33,7 +33,7 @@ export class AuthEffects {
             updateUserInfo(
               {
                 isAuthenticated: true,
-                username: action.username
+                firstName: res.firstName
               })
           ];
         }),
@@ -60,7 +60,7 @@ export class AuthEffects {
   SignUp: Observable<any> = this.actions.pipe(
     ofType(signUp),
     switchMap(payload => {
-      return this.authService.signUp(payload.username, payload.password, payload.email).pipe(
+      return this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName).pipe(
         map(() => signUpSuccess()),
         catchError(() => observableOf(signUpFailure()))
       );
