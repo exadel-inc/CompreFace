@@ -114,7 +114,7 @@ class OrganizationServiceTest {
     @Test
     void failCreateOrganizationEmptyRequiredField() {
         OrgCreateDto orgCreateDto = OrgCreateDto.builder().name("").build();
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> organizationService.createOrganization(orgCreateDto, null));
+        Assertions.assertThrows(FieldRequiredException.class, () -> organizationService.createOrganization(orgCreateDto, null));
     }
 
     @Test
