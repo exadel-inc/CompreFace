@@ -39,6 +39,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.form = new FormGroup({
       firstName: new FormControl(),
+      lastName: new FormControl(),
       email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
       password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
       confirmPassword: new FormControl(null, [
@@ -63,7 +64,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
       email: this.user.email,
       password: this.user.password,
       firstName: this.user.firstName,
-      lastName: this.user.firstName
+      lastName: this.user.lastName
     };
     this.isLoading = true;
     this.store.dispatch(signUp(payload));

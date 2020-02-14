@@ -13,8 +13,12 @@
     </div>
     <form class="sign-up-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
       <mat-form-field class="sign-up-full-width">
-        <mat-error>User name is required</mat-error>
+        <mat-error>First name is required</mat-error>
         <input matInput placeholder="First Name" formControlName="firstName" name="firstName" required>
+      </mat-form-field>
+      <mat-form-field class="sign-up-full-width">
+        <mat-error>Lats name is required</mat-error>
+        <input matInput placeholder="Last Name" formControlName="lastName" name="lastName" required>
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
         <mat-error>Email should have correct format</mat-error>
