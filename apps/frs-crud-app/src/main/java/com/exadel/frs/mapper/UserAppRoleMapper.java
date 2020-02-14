@@ -10,7 +10,7 @@ import java.util.List;
 @Mapper
 public interface UserAppRoleMapper {
 
-    @Mapping(source = "user.guid", target = "id")
+    @Mapping(source = "user.guid", target = "userId")
     @Mapping(source = "user.firstName", target = "firstName")
     @Mapping(source = "user.lastName", target = "lastName")
     UserRoleResponseDto toUserRoleResponseDto(UserAppRole userAppRole);
