@@ -1,3 +1,6 @@
+<div class="logo">
+  <img src="assets/img/logo.jpeg" alt="">
+</div>
 <mat-card class="sign-up-card">
   <mat-card-header>
     <mat-card-title>Sign up</mat-card-title>
@@ -10,8 +13,12 @@
     </div>
     <form class="sign-up-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
       <mat-form-field class="sign-up-full-width">
-        <mat-error>User name is required</mat-error>
-        <input matInput placeholder="Username" formControlName="username" name="username" required>
+        <mat-error>First name is required</mat-error>
+        <input matInput placeholder="First Name" formControlName="firstName" name="firstName" required>
+      </mat-form-field>
+      <mat-form-field class="sign-up-full-width">
+        <mat-error>Lats name is required</mat-error>
+        <input matInput placeholder="Last Name" formControlName="lastName" name="lastName" required>
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
         <mat-error>Email should have correct format</mat-error>
@@ -29,12 +36,12 @@
       </mat-form-field>
       <mat-error *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">Passwords don't match</mat-error>
     </form>
-    <a [routerLink]="[ROUTERS_URL.LOGIN]">login</a>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button type="submit"
+    <button mat-button color="primary" [routerLink]="[ROUTERS_URL.LOGIN]">LOGIN</button>
+    <button mat-button type="submit"
             form="signUpForm"
             color="primary"
-            [disabled]="form.invalid  || isLoading">Sign up</button>
+            [disabled]="form.invalid  || isLoading">SIGN UP</button>
   </mat-card-actions>
 </mat-card>

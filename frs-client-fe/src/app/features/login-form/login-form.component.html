@@ -1,3 +1,6 @@
+<div class="logo">
+  <img src="assets/img/logo.jpeg" alt="">
+</div>
 <mat-card class="login-card">
   <mat-card-header>
     <mat-card-title>Login</mat-card-title>
@@ -15,22 +18,24 @@
     </div>
     <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
       <mat-form-field class="login-full-width">
-        <input matInput placeholder="Username" formControlName="username" name="username" required>
+        <input matInput placeholder="Email" formControlName="email" name="email" required>
       </mat-form-field>
 
       <mat-form-field class="login-full-width">
         <input matInput placeholder="Password" formControlName="password" type="password" name="password" required>
       </mat-form-field>
-
     </form>
-
-    <a [routerLink]="[ROUTERS_URL.SIGN_UP]">sign-up</a>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-raised-button
+    <button mat-button color="primary" [routerLink]="[ROUTERS_URL.SIGN_UP]">SIGN UP</button>
+    <button mat-button
             type="submit"
             color="primary"
             form="loginForm"
-            [disabled]="form.invalid || isLoading">Login</button>
+            [disabled]="form.invalid || isLoading">LOGIN</button>
   </mat-card-actions>
+  <div class="forgot-password">
+    Forgot password?
+    <a [routerLink]="[ROUTERS_URL.FORGOT_PASSWORD]" >Click here</a>
+  </div>
 </mat-card>

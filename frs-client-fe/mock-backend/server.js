@@ -41,11 +41,10 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 // user with some login:
 let user = {
   email: "email",
-  username: "username",
   password: "password",
-  firstName: "string",
+  firstName: "some firstName",
   guid: "guid_0",
-  lastName: "string",
+  lastName: "some lastName",
   avatar: './assets/img/avatar.jpg'
 };
 
@@ -54,8 +53,8 @@ let token = '';
 app.locals.basedir = path.join(__dirname, 'mock-backend');
 
 app.post('/oauth/token', wait(1000), function(req, res) {
-  if (req && req.body.username === user.username && req.body.password === user.password) {
-    token = `${user.username}_${user.password}_${user.guid}_${+new Date()}`;
+  if (req && req.body.email === user.email && req.body.password === user.password) {
+    token = `${user.email}_${user.password}_${user.guid}_${+new Date()}`;
     res.send({ token });
   }
   else {
@@ -64,10 +63,10 @@ app.post('/oauth/token', wait(1000), function(req, res) {
 });
 
 app.post('/user/register', function(req, res) {
-  if (req && req.body.username && req.body.password && req.body.email) {
+  if (req && req.body.firstName && req.body.password && req.body.email) {
 
     // if user already exists:
-    if (req.body.username === user.username) return res.sendStatus(400);
+    if (req.body.email === user.email) return res.sendStatus(400);
 
     user = { ...user, ...req.body };
     res.status(201).send({ message: 'Created' });

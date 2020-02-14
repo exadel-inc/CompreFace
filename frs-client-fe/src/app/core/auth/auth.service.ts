@@ -28,14 +28,14 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-  logIn(username: string, password: string): Observable<any> {
+  logIn(email: string, password: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.LOGIN}`;
-    return this.http.post(url, { username, password });
+    return this.http.post(url, { email, password });
   }
 
-  signUp(username: string, password: string, email: string): Observable<any> {
+  signUp(firstName: string, password: string, email: string, lasName: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.REGISTER}`;
-    return this.http.post(url, { email, password, username });
+    return this.http.post(url, { email, password, firstName, lasName });
   }
 
   logOut(token: string): Observable<any> {
