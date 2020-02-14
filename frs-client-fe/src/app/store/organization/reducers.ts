@@ -1,4 +1,4 @@
-import {createReducer, on, Action} from '@ngrx/store';
+import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
 import {setSelectedId} from './action';
 
 export interface OrganizationsState {
@@ -9,8 +9,10 @@ const initialOrganizationState: OrganizationsState = {
   selectId: null
 };
 
+const reducer: ActionReducer<OrganizationsState> = createReducer(initialOrganizationState,
+  on(setSelectedId, (state, { selectId }) => ({ ...state, selectId }))
+);
+
 export function OrganizationReducer(organizationsState: OrganizationsState, action: Action) {
-  return createReducer(initialOrganizationState,
-    on(setSelectedId, (state, { selectId }) => ({ ...state, selectId }))
-  )(organizationsState, action);
+  return reducer(organizationsState, action);
 }

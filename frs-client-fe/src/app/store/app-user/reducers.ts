@@ -1,4 +1,4 @@
-import {createReducer, on, Action} from '@ngrx/store';
+import { ActionReducer, createReducer, on, Action} from '@ngrx/store';
 import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {AppUser} from 'src/app/data/appUser';
 import {
@@ -18,23 +18,26 @@ const initialState: AppUserEntityState = appUserAdapter.getInitialState({
   isPending: false
 });
 
+const reducer: ActionReducer<AppUserEntityState> = createReducer(
+  initialState,
+  on(loadAppUserEntityAction, (state) => ({ ...state, isPending: true })),
+  on(addAppUserEntityAction, (state, { users }) => {
+    const newState = { ...state, isPending: false };
+    return appUserAdapter.addAll(users, newState);
+  }),
+  on(putUpdatedAppUserRoleEntityAction, (state) => ({ ...state, isPending: true })),
+  on(updateUserRoleEntityAction, (state, { user }) => {
+    const newState = { ...state, isPending: false };
+    return appUserAdapter.updateOne({
+      id: user.id,
+      changes: {
+        accessLevel: user.accessLevel
+      }
+    }, newState);
+  })
+);
+
+
 export function appUserReducer(appUserState: AppUserEntityState, action: Action) {
-  return createReducer(
-    initialState,
-    on(loadAppUserEntityAction, (state) => ({ ...state, isPending: true })),
-    on(addAppUserEntityAction, (state, { users }) => {
-      const newState = { ...state, isPending: false };
-      return appUserAdapter.addAll(users, newState);
-    }),
-    on(putUpdatedAppUserRoleEntityAction, (state) => ({ ...state, isPending: true })),
-    on(updateUserRoleEntityAction, (state, { user }) => {
-      const newState = { ...state, isPending: false };
-      return appUserAdapter.updateOne({
-        id: user.id,
-        changes: {
-          accessLevel: user.accessLevel
-        }
-      }, newState);
-    })
-  )(appUserState, action);
+  return reducer(appUserState, action);
 }
