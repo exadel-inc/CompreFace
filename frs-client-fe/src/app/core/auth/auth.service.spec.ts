@@ -3,6 +3,7 @@ import {AuthService} from './auth.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {environment} from '../../../environments/environment';
 import {API_URL} from '../../data/api.variables';
+import {FormBuilder} from '@angular/forms';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -13,7 +14,7 @@ describe('AuthService', () => {
     localStorage.setItem('token', 'some token');
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AuthService]
+      providers: [AuthService, FormBuilder]
     });
     service = TestBed.get(AuthService);
     httpMock = TestBed.get(HttpTestingController);
@@ -66,7 +67,7 @@ describe('AuthService', () => {
   it('be able to update token', () => {
     expect(service.getToken()).toEqual('some token');
     service.updateToken('token the second value');
-    expect(service.getToken()).toEqual('token the second value');
+    expect(service.getToken()).toEqual('Bearer token the second value');
   });
 
   it('be able to remove token', () => {

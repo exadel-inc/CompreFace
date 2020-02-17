@@ -7,7 +7,7 @@ import {
   LoadUsersEntityAction,
   PutUpdatedUserRoleEntityAction
 } from 'src/app/store/user/action';
-import {switchMap, map} from 'rxjs/operators';
+import {switchMap, map, catchError} from 'rxjs/operators';
 import {AppUser} from 'src/app/data/appUser';
 import {FetchRolesEntityAction, LoadRolesEntityAction} from 'src/app/store/role/actions';
 import {forkJoin, of} from 'rxjs';
@@ -51,6 +51,8 @@ export class UserListEffect {
     .pipe(
       ofType(LoadRolesEntityAction),
       switchMap(() => this.userService.fetchAvailableRoles()),
+      // workaround until backend doesnt support available roles call
+      catchError(x => of(['OWNER', 'ADMIN', 'USER'])),
       map((rolesArray) => FetchRolesEntityAction({role: {id: 0, accessLevels: rolesArray}}))
     );
 }

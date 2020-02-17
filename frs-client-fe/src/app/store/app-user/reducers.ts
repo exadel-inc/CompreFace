@@ -1,4 +1,4 @@
-import {createReducer, on} from '@ngrx/store';
+import { ActionReducer, createReducer, on, Action} from '@ngrx/store';
 import {EntityState, createEntityAdapter} from '@ngrx/entity';
 import {AppUser} from 'src/app/data/appUser';
 import {
@@ -18,7 +18,7 @@ const initialState: AppUserEntityState = appUserAdapter.getInitialState({
   isPending: false
 });
 
-export const appUserReducer = createReducer(
+const reducer: ActionReducer<AppUserEntityState> = createReducer(
   initialState,
   on(loadAppUserEntityAction, (state) => ({ ...state, isPending: true })),
   on(addAppUserEntityAction, (state, { users }) => {
@@ -36,3 +36,8 @@ export const appUserReducer = createReducer(
     }, newState);
   })
 );
+
+
+export function appUserReducer(appUserState: AppUserEntityState, action: Action) {
+  return reducer(appUserState, action);
+}

@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
 import {
   logInSuccess,
   logInFailure,
@@ -19,7 +19,7 @@ export const initialState: AuthState = {
   isLoading: false
 };
 
-export const AuthReducer = createReducer(initialState,
+const reducer: ActionReducer<AuthState> = createReducer(initialState,
   on(logInSuccess, (state) => ({
     ...state,
     errorMessage: null,
@@ -38,10 +38,13 @@ export const AuthReducer = createReducer(initialState,
   })),
   on(signUpFailure, (state) => ({
     ...state,
-        errorMessage: 'That email is already in use.',
-        successMessage: null,
-        isLoading: false
+    errorMessage: 'That email is already in use.',
+    successMessage: null,
+    isLoading: false
   })),
-  on(logOut, () => ({...initialState}))
+  on(logOut, () => ({ ...initialState }))
 );
 
+export function AuthReducer(authState: AuthState, action: Action) {
+  return reducer(authState, action);
+}
