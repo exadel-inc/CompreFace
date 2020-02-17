@@ -5,7 +5,7 @@ import {HttpClient} from '@angular/common/http';
 import {Store} from '@ngrx/store';
 import {provideMockStore, MockStore} from '@ngrx/store/testing';
 import {AppState} from 'src/app/store';
-
+import {FormBuilder} from '@angular/forms';
 
 describe('AppComponent', () => {
   let mockStore: MockStore<AppState>;
@@ -16,7 +16,9 @@ describe('AppComponent', () => {
       {
         provide: HttpClient,
         useValue: {}
-      }],
+      },
+      FormBuilder
+    ],
       imports: [
         RouterTestingModule
       ],
