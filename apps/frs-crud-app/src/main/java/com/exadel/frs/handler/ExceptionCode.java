@@ -9,7 +9,7 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 @Getter
 public enum ExceptionCode {
-    ACCESS_DENIED(1, FORBIDDEN),
+    APP_ACCESS_DENIED(1, FORBIDDEN),
     APP_NOT_FOUND(2, NOT_FOUND),
     APP_OR_MODEL_NOT_FOUND_OR_PERMISSION_ISSUE(3, NOT_FOUND),
     EMAIL_ALREADY_REGISTERED(4, BAD_REQUEST),
