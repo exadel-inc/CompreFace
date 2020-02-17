@@ -32,6 +32,7 @@ public class Face {
     private String apiKey;
 
     @Data
+    @Accessors(chain = true)
     public static class Embedding {
 
         private List<Double> embedding;
