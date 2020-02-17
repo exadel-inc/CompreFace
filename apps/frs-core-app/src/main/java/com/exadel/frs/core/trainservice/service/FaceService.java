@@ -6,6 +6,7 @@ import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -39,6 +40,18 @@ public class FaceService {
                 .collect(Collectors.toList()), (l1, l2) -> Stream
                 .concat(l1.stream(), l2.stream())
                 .collect(Collectors.toList())));
+  }
+
+  public Map<String, List<String>> findAllFaceNamesByApiKey(String appKey){
+    List<Face> faces = facesRepository.findByApiKey(appKey);
+    List<String> faceNames = faces.stream()
+            .map(Face::getFaceName)
+            .collect(Collectors.toList());
+
+    Map<String, List<String>> response = new HashMap();
+    response.put("names", faceNames);
+
+    return response;
   }
 
 }

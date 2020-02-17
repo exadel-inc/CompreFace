@@ -9,7 +9,7 @@ import java.util.List;
 
 
 @Data
-@Document(collection = "faces")
+@Document(collection = "FACES")
 public class Face {
 
   @Id

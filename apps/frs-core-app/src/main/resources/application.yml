@@ -13,8 +13,8 @@ spring:
       indent-output: true
   data:
     mongodb:
-      uri: ${MONGO_URL:mongodb://msqv355.exadel.by:27017}
-      database: recognition
+      uri: ${MONGO_URL:mongodb://localhost:27017}
+      database: efrs_db
 
 ---
 
