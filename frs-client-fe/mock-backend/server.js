@@ -7,6 +7,7 @@ const users = require('./data/users.json');
 const roles = require('./data/roles.json');
 const models = require('./data/models.json');
 const appUsers = require('./data/appUsers.json');
+const formidable = require('formidable');
 
 const mockData = {
   applications,
@@ -48,18 +49,24 @@ let user = {
   avatar: './assets/img/avatar.jpg'
 };
 
-let token = '';
+let access_token = '';
 
 app.locals.basedir = path.join(__dirname, 'mock-backend');
 
 app.post('/oauth/token', wait(1000), function(req, res) {
-  if (req && req.body.email === user.email && req.body.password === user.password) {
-    token = `${user.email}_${user.password}_${user.guid}_${+new Date()}`;
-    res.send({ token });
-  }
-  else {
-    res.sendStatus(401);
-  }
+  // console.log('req.body.username', req.body, 'user.email', user.email, req.body.username === user.email);
+  // console.log('req.body.password', req.body, 'user.password', user.password, req.body.password === user.password);
+  const form = formidable.IncomingForm();
+
+  form.parse(req, (err, fields) => {
+    if (req && fields.username === user.email && fields.password === user.password) {
+      access_token = `${user.email}_${user.password}_${user.guid}_${+new Date()}`;
+      res.send({ access_token });
+    }
+    else {
+      res.sendStatus(401);
+    }
+  })
 });
 
 app.post('/user/register', function(req, res) {
@@ -127,7 +134,7 @@ app.get('/org/:orgId/apps', auth, wait(), (req, res) => {
 
 app.post('/org/:orgId/app', auth, (req, res) => {
   const organizationId = req.params.orgId;
-  const [firstName, password, id] = req.headers.authorization.split('_');
+  const [firstName, password, id] = req.headers.authorization.replace('Bearer ', '').split('_');
   const name = req.body.name;
 
   const app = {
@@ -191,7 +198,7 @@ app.put('/org/:orgId/role', auth, wait(), (req, res) => {
   }
 });
 
-app.post('/org/:orgId/invite', auth, (req, res) => {
+app.put('/org/:orgId/invite', auth, (req, res) => {
   const organizationId = req.params.orgId;
   const { userEmail } = req.body;
 
@@ -210,7 +217,7 @@ app.post('/org/:orgId/invite', auth, (req, res) => {
   }
 });
 
-app.post('/org/:orgId/app/:appId/invite', auth, (req, res) => {
+app.put('/org/:orgId/app/:appId/invite', auth, (req, res) => {
   const appId = req.params.appId;
   const { userEmail } = req.body;
 
@@ -250,7 +257,7 @@ app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
   const { appId, orgId } = req.params;
 
   if (isModelAccessAllowed(appId, orgId)) {
-    const [firstName, password, id] = req.headers.authorization.split('_');
+    const [firstName, password, id] = req.headers.authorization.replace('Bearer ', '').split('_');
     const newModel = {
       id: mockData.models.length,
       name,
@@ -258,7 +265,10 @@ app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
         firstName
       },
       accessLevel: 'OWNER',
-      relations: [appId]
+      relations: [{
+        id: appId,
+        shareMode: "READONLY"
+      }]
     };
 
     mockData.models.push(newModel);
@@ -374,7 +384,7 @@ function isModelAccessAllowed(appId, orgId) {
 }
 
 function auth(req, res, next) {
-  if (req && req.headers.authorization === token)
+  if (req && req.headers.authorization === `Bearer ${access_token}`)
     return next();
   else
     return res.sendStatus(401);

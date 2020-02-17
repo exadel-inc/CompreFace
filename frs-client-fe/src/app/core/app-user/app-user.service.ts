@@ -20,6 +20,6 @@ export class AppUserService {
   }
 
   public inviteUser(organizationId: string, applicationId: string, userEmail: string): Observable<{message: string}> {
-    return this.http.post<{message: string}>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/invite`, { userEmail });
+    return this.http.put<{message: string}>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/invite`, { userEmail });
   }
 }
