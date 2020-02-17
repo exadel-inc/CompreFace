@@ -67,6 +67,22 @@
                   "maximumError": "10kb"
                 }
               ]
+            },
+            "qa": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.qa.ts"
+                }
+              ]
+            },
+            "dev": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.dev.ts"
+                }
+              ]
             }
           }
         },
@@ -78,6 +94,12 @@
           "configurations": {
             "production": {
               "browserTarget": "frs-client-fe:build:production"
+            },
+            "dev": {
+              "browserTarget": "frs-client-fe:build:dev"
+            },
+            "qa": {
+              "browserTarget": "frs-client-fe:build:qa"
             }
           }
         },
