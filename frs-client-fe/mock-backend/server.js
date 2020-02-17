@@ -54,8 +54,6 @@ let access_token = '';
 app.locals.basedir = path.join(__dirname, 'mock-backend');
 
 app.post('/oauth/token', wait(1000), function(req, res) {
-  // console.log('req.body.username', req.body, 'user.email', user.email, req.body.username === user.email);
-  // console.log('req.body.password', req.body, 'user.password', user.password, req.body.password === user.password);
   const form = formidable.IncomingForm();
 
   form.parse(req, (err, fields) => {
