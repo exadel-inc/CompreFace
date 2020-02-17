@@ -102,7 +102,7 @@ public class AppController {
 
     @PutMapping("/app/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for application")
-    public void regenerateApiKey(
+    public AppResponseDto regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -111,6 +111,8 @@ public class AppController {
             final String guid
     ) {
         appService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
+
+        return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/app/{guid}")
