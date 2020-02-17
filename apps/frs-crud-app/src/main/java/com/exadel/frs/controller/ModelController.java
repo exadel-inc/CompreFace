@@ -118,7 +118,7 @@ public class ModelController {
 
     @PutMapping("/model/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for model")
-    public void regenerateApiKey(
+    public ModelResponseDto regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -130,6 +130,8 @@ public class ModelController {
             final String guid
     ) {
         modelService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
+
+        return modelMapper.toResponseDto(modelService.getModel(guid, SecurityUtils.getPrincipalId()), appGuid);
     }
 
     @DeleteMapping("/model/{guid}")
