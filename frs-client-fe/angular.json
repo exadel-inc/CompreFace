@@ -83,6 +83,14 @@
                   "with": "src/environments/environment.dev.ts"
                 }
               ]
+            },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ]
             }
           }
         },
@@ -100,6 +108,9 @@
             },
             "qa": {
               "browserTarget": "frs-client-fe:build:qa"
+            },
+            "local": {
+              "browserTarget": "frs-client-fe:build:local"
             }
           }
         },
