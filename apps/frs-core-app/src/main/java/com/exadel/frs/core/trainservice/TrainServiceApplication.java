@@ -10,8 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 @EnableAsync
 public class TrainServiceApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(TrainServiceApplication.class, args);
-  }
-
+    public static void main(String[] args) {
+        SpringApplication.run(TrainServiceApplication.class, args);
+    }
 }
