@@ -4,6 +4,7 @@ import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
+import com.exadel.frs.entity.Model;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
@@ -98,7 +99,7 @@ public class ModelController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Application access type to model is not correct")
     })
-    public void updateModel(
+    public ModelResponseDto updateModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -113,7 +114,8 @@ public class ModelController {
             @RequestBody
             final ModelUpdateDto modelUpdateDto
     ) {
-        modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
+        Model updatedModel = modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
+        return modelMapper.toResponseDto(updatedModel, appGuid);
     }
 
     @PutMapping("/model/{guid}/apikey")

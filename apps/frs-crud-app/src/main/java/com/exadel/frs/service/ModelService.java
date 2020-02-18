@@ -89,14 +89,14 @@ public class ModelService {
         return modelRepository.save(model);
     }
 
-    public void updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
+    public Model updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
         if (!StringUtils.isEmpty(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
             verifyNameIsUnique(modelUpdateDto.getName(), repoModel.getApp().getId());
             repoModel.setName(modelUpdateDto.getName());
         }
-        modelRepository.save(repoModel);
+        return modelRepository.save(repoModel);
     }
 
     public void regenerateApiKey(final String guid, final Long userId) {

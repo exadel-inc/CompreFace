@@ -82,7 +82,7 @@ public class OrganizationService {
         return organizationRepository.save(organization);
     }
 
-    public void updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
+    public Organization updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
         if (StringUtils.isEmpty(orgUpdateDto.getName())) {
             throw new FieldRequiredException("Organization name");
         }
@@ -92,7 +92,7 @@ public class OrganizationService {
             verifyNameIsUnique(orgUpdateDto.getName());
             organizationFromRepo.setName(orgUpdateDto.getName());
         }
-        organizationRepository.save(organizationFromRepo);
+        return organizationRepository.save(organizationFromRepo);
     }
 
     public void updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {

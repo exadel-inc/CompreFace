@@ -8,6 +8,7 @@ import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRemoveDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.entity.Organization;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.OrganizationMapper;
@@ -83,7 +84,7 @@ public class OrganizationController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Organization name is required")
     })
-    public void updateOrganization(
+    public OrgResponseDto updateOrganization(
             @ApiParam(value = "GUID of organization that needs to be updated", required = true, example = GUID_EXAMPLE)
             @PathVariable final String guid,
             @ApiParam(value = "Organization data", required = true)
@@ -91,7 +92,8 @@ public class OrganizationController {
             @RequestBody
             final OrgUpdateDto orgUpdateDto
     ) {
-        organizationService.updateOrganization(orgUpdateDto, guid, SecurityUtils.getPrincipalId());
+        Organization updatedOrganization = organizationService.updateOrganization(orgUpdateDto, guid, SecurityUtils.getPrincipalId());
+        return organizationMapper.toResponseDto(updatedOrganization, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/org/{guid}")
