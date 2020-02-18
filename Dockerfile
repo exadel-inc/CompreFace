@@ -5,7 +5,7 @@ ARG DIR=/srv
 ARG IS_DEV_ENV=false
 
 
-ENV UWSGI_MAX_LIFETIME 1600
+ENV UWSGI_MAX_LIFETIME 3600
 ENV UWSGI_MEMORY_REPORT true
 ENV UWSGI_MAX_REQUESTS 10000
 ENV UWSGI_RELOAD_ON_RSS 2500
@@ -35,8 +35,6 @@ RUN mkdir $DIR/mongo_data
 RUN $DIR/install-dependencies.sh $IS_DEV_ENV
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
-## Expose port for uWSGI
-EXPOSE 3000
 
 ## Entrypoint
 WORKDIR $DIR

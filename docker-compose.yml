@@ -1,14 +1,6 @@
 version: '3'
 services:
-  nginx:
-    container_name: nginx
-    image: "nginx:1.17.4"
-    ports:
-      - "5001:5000"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-    depends_on:
-      - ml
+
   ml:
     container_name: ml
     build: .
@@ -19,6 +11,8 @@ services:
       - UWSGI_RELOAD_ON_RSS=2500
       - UWSGI_WORKER_RELOAD_MERCY=60
       - UWSGI_LIMIT_AS=3072
+    ports:
+          - "5001:5000"
     depends_on:
       - mongo
   mongo:
