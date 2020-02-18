@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+import static com.exadel.frs.core.trainservice.controller.FaceController.X_FRS_API_KEY_HEADER;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -40,7 +41,7 @@ class FaceControllerTest {
 
         String expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
 
-        mockMvc.perform(get("/faces").header("x-frs-api-key", APP_GUID))
+        mockMvc.perform(get("/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
                 .andExpect(status().isOk())
                 .andExpect(content().json(expectedContent));
     }
