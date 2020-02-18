@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ModelAlreadyLockedException extends RuntimeException {
-
-    private String message;
+  private String message;
 }

@@ -6,6 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class RetrainResponse {
-
-    private String status;
+  private String status;
 }
