@@ -43,7 +43,7 @@ class ResponseExceptionHandlerTest {
 
         ExceptionResponseDto expectedResponseDto = ExceptionResponseDto.builder()
                 .code(ExceptionCode.UNDEFINED.getCode())
-                .message(ex.getMessage()).build();
+                .message("Something went wrong, please try again").build();
 
         assertThat(response.getBody(), is(equalTo(expectedResponseDto)));
     }
