@@ -77,7 +77,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnMessageAndCodeWhenUnexpectedExceptionThrown() throws Exception {
-        final Exception expectedException = new NullPointerException("test");
+        final Exception expectedException = new NullPointerException("Something went wrong, please try again");
 
         when(appService.getApps(ORG_GUID, USER_ID)).thenThrow(expectedException);
 
