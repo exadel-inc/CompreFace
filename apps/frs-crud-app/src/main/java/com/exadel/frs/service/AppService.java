@@ -142,6 +142,7 @@ public class AppService {
     }
 
     public App updateApp(final AppUpdateDto appUpdateDto, final String appGuid, final Long userId) {
+        verifyNewNameForApplication(appUpdateDto.getName());
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
         if (!StringUtils.isEmpty(appUpdateDto.getName()) && !repoApp.getName().equals(appUpdateDto.getName())) {
@@ -181,4 +182,10 @@ public class AppService {
         appRepository.deleteById(repoApp.getId());
     }
 
+
+    private void verifyNewNameForApplication(String name) {
+        if (StringUtils.isEmpty(name)) {
+            throw new FieldRequiredException("Application name");
+        }
+    }
 }

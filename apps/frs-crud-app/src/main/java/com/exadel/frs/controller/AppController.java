@@ -7,6 +7,7 @@ import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.entity.App;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
@@ -85,6 +86,9 @@ public class AppController {
 
     @PutMapping("/app/{guid}")
     @ApiOperation(value = "Update application")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Application name is required")
+    })
     public AppResponseDto updateApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
@@ -97,7 +101,9 @@ public class AppController {
             @RequestBody
             final AppUpdateDto appUpdateDto
     ) {
-        return appMapper.toResponseDto(appService.updateApp(appUpdateDto, guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
+        Long userId = SecurityUtils.getPrincipalId();
+        App updatedApplication = appService.updateApp(appUpdateDto, guid, userId);
+        return appMapper.toResponseDto(updatedApplication, userId);
     }
 
     @PutMapping("/app/{guid}/apikey")

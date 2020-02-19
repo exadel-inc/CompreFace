@@ -90,6 +90,7 @@ public class ModelService {
     }
 
     public void updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
+        verifyNameIsNotEmpty(modelUpdateDto.getName());
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
         if (!StringUtils.isEmpty(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
@@ -112,4 +113,10 @@ public class ModelService {
         modelRepository.deleteById(model.getId());
     }
 
+
+    private void verifyNameIsNotEmpty(String newNameForModel) {
+        if (StringUtils.isEmpty(newNameForModel)) {
+            throw new FieldRequiredException("Model name");
+        }
+    }
 }

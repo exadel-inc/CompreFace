@@ -96,7 +96,8 @@ public class ModelController {
     @PutMapping("/model/{guid}")
     @ApiOperation(value = "Update model data")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application access type to model is not correct")
+            @ApiResponse(code = 400, message = "Application access type to model is not correct"),
+            @ApiResponse(code = 400, message = "Model name is required")
     })
     public void updateModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
