@@ -1,6 +1,5 @@
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.helpers.SecurityUtils.getPrincipalId;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
@@ -50,7 +49,7 @@ public class ModelController {
             final String guid
     ) {
         return modelMapper.toResponseDto(
-                modelService.getModel(guid, getPrincipalId()),
+                modelService.getModel(guid, SecurityUtils.getPrincipalId()),
                 appGuid
         );
     }
@@ -66,7 +65,7 @@ public class ModelController {
             final String appGuid
     ) {
         return modelMapper.toResponseDto(
-                modelService.getModels(appGuid, getPrincipalId()),
+                modelService.getModels(appGuid, SecurityUtils.getPrincipalId()),
                 appGuid
         );
     }
@@ -89,7 +88,7 @@ public class ModelController {
             @RequestBody
             final ModelCreateDto modelCreateDto) {
         return modelMapper.toResponseDto(
-                modelService.createModel(modelCreateDto, orgGuid, appGuid, getPrincipalId()),
+                modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()),
                 appGuid
         );
     }
@@ -114,7 +113,7 @@ public class ModelController {
             @RequestBody
             final ModelUpdateDto modelUpdateDto
     ) {
-        modelService.updateModel(modelUpdateDto, guid, getPrincipalId());
+        modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/model/{guid}/apikey")
@@ -130,9 +129,9 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        modelService.regenerateApiKey(guid, getPrincipalId());
+        modelService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
 
-        return modelMapper.toResponseDto(modelService.getModel(guid, getPrincipalId()), appGuid);
+        return modelMapper.toResponseDto(modelService.getModel(guid, SecurityUtils.getPrincipalId()), appGuid);
     }
 
     @DeleteMapping("/model/{guid}")
@@ -148,6 +147,6 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        modelService.deleteModel(guid, getPrincipalId());
+        modelService.deleteModel(guid, SecurityUtils.getPrincipalId());
     }
 }

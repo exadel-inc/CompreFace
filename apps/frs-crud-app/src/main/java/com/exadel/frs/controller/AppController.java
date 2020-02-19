@@ -1,6 +1,5 @@
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.helpers.SecurityUtils.getPrincipalId;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;
@@ -9,6 +8,7 @@ import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.enums.AppRole;
+import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.mapper.UserAppRoleMapper;
 import com.exadel.frs.service.AppService;
@@ -52,7 +52,7 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        return appMapper.toResponseDto(appService.getApp(guid, getPrincipalId()), getPrincipalId());
+        return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/apps")
@@ -62,7 +62,7 @@ public class AppController {
             @PathVariable
             final String orgGuid
     ) {
-        return appMapper.toResponseDto(appService.getApps(orgGuid, getPrincipalId()), getPrincipalId());
+        return appMapper.toResponseDto(appService.getApps(orgGuid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -80,7 +80,7 @@ public class AppController {
             @RequestBody
             final AppCreateDto appCreateDto
     ) {
-        return appMapper.toResponseDto(appService.createApp(appCreateDto, orgGuid, getPrincipalId()), getPrincipalId());
+        return appMapper.toResponseDto(appService.createApp(appCreateDto, orgGuid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/app/{guid}")
@@ -97,7 +97,7 @@ public class AppController {
             @RequestBody
             final AppUpdateDto appUpdateDto
     ) {
-        return appMapper.toResponseDto(appService.updateApp(appUpdateDto, guid, getPrincipalId()), getPrincipalId());
+        return appMapper.toResponseDto(appService.updateApp(appUpdateDto, guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/app/{guid}/apikey")
@@ -110,9 +110,9 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        appService.regenerateApiKey(guid, getPrincipalId());
+        appService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
 
-        return appMapper.toResponseDto(appService.getApp(guid, getPrincipalId()), getPrincipalId());
+        return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/app/{guid}")
@@ -125,7 +125,7 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        appService.deleteApp(guid, getPrincipalId());
+        appService.deleteApp(guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/app/{guid}/assign-roles")
@@ -138,7 +138,7 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        return appService.getAppRolesToAssign(orgGuid, guid, getPrincipalId());
+        return appService.getAppRolesToAssign(orgGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/app/{guid}/roles")
@@ -154,7 +154,7 @@ public class AppController {
             @RequestParam(required = false)
             final String search
     ) {
-        return userAppRoleMapper.toUserRoleResponseDto(appService.getAppUsers(search, orgGuid, guid, getPrincipalId()));
+        return userAppRoleMapper.toUserRoleResponseDto(appService.getAppUsers(search, orgGuid, guid, SecurityUtils.getPrincipalId()));
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -172,7 +172,7 @@ public class AppController {
             @RequestBody
             final UserInviteDto userInviteDto
     ) {
-        return userAppRoleMapper.toUserRoleResponseDto(appService.inviteUser(userInviteDto, orgGuid, guid, getPrincipalId()));
+        return userAppRoleMapper.toUserRoleResponseDto(appService.inviteUser(userInviteDto, orgGuid, guid, SecurityUtils.getPrincipalId()));
     }
 
     @PutMapping("/app/{guid}/role")
@@ -189,6 +189,6 @@ public class AppController {
             @RequestBody
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
-        appService.updateUserAppRole(userRoleUpdateDto, guid, getPrincipalId());
+        appService.updateUserAppRole(userRoleUpdateDto, guid, SecurityUtils.getPrincipalId());
     }
 }
