@@ -14,7 +14,6 @@ import {startWith, map} from 'rxjs/operators';
 export class InviteDialogComponent implements OnInit {
   public availableRoles: string[];
   public form: FormGroup;
-  public selectedRole: string;
   public users: string[];
   public filteredOptions$: Observable<string[]>;
 

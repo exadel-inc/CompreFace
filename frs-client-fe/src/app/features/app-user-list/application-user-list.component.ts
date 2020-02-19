@@ -56,7 +56,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.availableRolesSubscription.unsubscribe();
   }
 
-  public onInviteUser(email: string): void {
+  public onInviteUser(): void {
     const dialog = this.dialog.open(InviteDialogComponent, {
       data: {
         availableRoles: this.availableRoles,
