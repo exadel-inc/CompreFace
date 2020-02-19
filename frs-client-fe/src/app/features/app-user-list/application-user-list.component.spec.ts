@@ -45,6 +45,7 @@ describe('ApplicationUserListComponent', () => {
           }]),
           selectedOrganization$: of([{}]),
           isLoading$: of([{}]),
+          availableRoles$: of([{}]),
           unsubscribe() {
           }
         }

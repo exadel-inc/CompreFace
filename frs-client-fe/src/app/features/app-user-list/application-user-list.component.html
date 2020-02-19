@@ -2,7 +2,7 @@
   <div class="table-header-container">
     <h3>Users</h3>
     <form>
-      <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search">
+      <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search" [ngModelOptions]="{standalone: true}">
       <i class="material-icons">
         search
       </i>

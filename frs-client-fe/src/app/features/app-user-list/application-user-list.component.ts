@@ -57,8 +57,6 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   }
 
   public onInviteUser(email: string): void {
-    // this.appUserListFacade.inviteUser(email)
-    //   .subscribe(() => this.openEmailNotification(email));
     const dialog = this.dialog.open(InviteDialogComponent, {
       data: {
         availableRoles: this.availableRoles,
