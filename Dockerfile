@@ -5,12 +5,6 @@ ARG DIR=/srv
 ARG IS_DEV_ENV=false
 
 
-ENV UWSGI_MAX_LIFETIME 3600
-ENV UWSGI_MEMORY_REPORT true
-ENV UWSGI_MAX_REQUESTS 10000
-ENV UWSGI_RELOAD_ON_RSS 2500
-ENV UWSGI_WORKER_RELOAD_MERCY 60
-ENV UWSGI_LIMIT_AS 3072
 
 
 ## Copy sources
@@ -39,4 +33,4 @@ RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 ## Entrypoint
 WORKDIR $DIR
 RUN ln -s $DIR /var/tmp/efrs_rootdir
-ENTRYPOINT ["/var/tmp/efrs_rootdir/docker-entrypoint.sh", "--UWSGI_MAX_LIFETIME", "${UWSGI_MAX_LIFETIME}", "--UWSGI_MEMORY_REPORT", "--UWSGI_MAX_REQUESTS", "${UWSGI_MAX_REQUESTS}", "--UWSGI_RELOAD_ON_RSS", "${UWSGI_RELOAD_ON_RSS}", "--UWSGI_WORKER_RELOAD_MERCY", "${UWSGI_WORKER_RELOAD_MERCY}", "--UWSGI_LIMIT_AS", "${UWSGI_LIMIT_AS}"]
+ENTRYPOINT ["/var/tmp/efrs_rootdir/docker-entrypoint.sh"]

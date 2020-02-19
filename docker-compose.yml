@@ -4,13 +4,6 @@ services:
   ml:
     container_name: ml
     build: .
-    environment:
-      - UWSGI_MAX_LIFETIME=3600
-      - UWSGI_MEMORY_REPORT=true
-      - UWSGI_MAX_REQUESTS=10000
-      - UWSGI_RELOAD_ON_RSS=2500
-      - UWSGI_WORKER_RELOAD_MERCY=60
-      - UWSGI_LIMIT_AS=3072
     ports:
           - "5001:5000"
     depends_on:
