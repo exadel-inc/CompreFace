@@ -96,8 +96,8 @@ export class ApplicationUserListFacade implements IFacade {
     }));
   }
 
-  public inviteUser(email: string): Observable<any> {
-    return this.userService.inviteUser(this.selectedOrganizationId, this.selectedApplicationId, email)
+  public inviteUser(email: string, role: string): Observable<any> {
+    return this.userService.inviteUser(this.selectedOrganizationId, this.selectedApplicationId, email, role)
       .pipe(tap(() =>
         this.store.dispatch(loadAppUserEntityAction({
           organizationId: this.selectedOrganizationId,

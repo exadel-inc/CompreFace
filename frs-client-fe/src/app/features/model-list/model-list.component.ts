@@ -30,8 +30,8 @@ export class ModelListComponent implements OnInit, OnDestroy {
       .pipe(
         map(models => {
           return ({
-            columns: [{ title: 'Title', property: 'name' }, { title: 'Owner name', property: 'owner' }],
-            data: models.map(model => ({ id: model.id, name: model.name, owner: model.owner.firstName }))
+            columns: [{ title: 'Name', property: 'name' }],
+            data: models.map(model => ({ id: model.id, name: model.name}))
           });
         })
       );

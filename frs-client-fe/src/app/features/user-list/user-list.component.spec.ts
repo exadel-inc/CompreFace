@@ -3,7 +3,6 @@ import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
 import {UserTableModule} from 'src/app/features/user-table/user-table.module';
 import {InviteUserComponent} from 'src/app/features/invite-user/invite-user.component';
 import {UserListComponent} from './user-list.component';
-import {MatDialog} from '@angular/material';
 import {UserListFacade} from './user-list-facade';
 import {of} from 'rxjs';
 import {InviteUserModule} from '../invite-user/invite-user.module';
@@ -13,6 +12,9 @@ import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module
 import {MatInputModule} from '@angular/material/input';
 import {CommonModule} from '@angular/common';
 import {SnackBarService} from '../snackbar/snackbar.service';
+import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
+import {MatDialogModule} from '@angular/material';
+
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -28,7 +30,9 @@ describe('UserListComponent', () => {
         InviteUserModule,
         FormsModule,
         UserTablePipeModule,
-        MatInputModule
+        MatInputModule,
+        MatDialogModule,
+        InviteDialogModule
       ],
       declarations: [UserListComponent],
       providers: [
@@ -48,6 +52,7 @@ describe('UserListComponent', () => {
             }]),
             selectedOrganization$: of([{}]),
             isLoading$: of([{}]),
+            availableRoles$: of([{}]),
             unsubscribe() { }
           }
         }],

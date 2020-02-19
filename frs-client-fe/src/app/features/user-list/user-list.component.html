@@ -1,12 +1,19 @@
 <div class="user-list">
   <div class="table-header-container">
     <h3>Users</h3>
-    <mat-form-field class="search">
-      <input matInput type="text" class="search-input" [(ngModel)]="search" placeholder="search">
-    </mat-form-field>
+    <form>
+      <input matInput type="text" class="search-input" [(ngModel)]="search" [ngModelOptions]="{standalone: true}"
+        placeholder="Search User">
+      <i class="material-icons">
+        search
+      </i>
+    </form>
   </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
-  <app-user-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | userTableFilter:search | async"
-    [availableRoles$]="availableRoles$" (changeRow)="onChange($event)"></app-user-table>
-  <app-invite-user (email)="onInviteUser($event)"></app-invite-user>
+  <app-user-table class="app-table" [isLoading$]="isLoading$"
+    [tableConfig]="tableConfig$ | userTableFilter:search | async" [availableRoles$]="availableRoles$"
+    (changeRow)="onChange($event)"></app-user-table>
+  <div class="button-container">
+    <button mat-button color="primary" (click)="onInviteUser();">INVITE</button>
+  </div>
 </div>

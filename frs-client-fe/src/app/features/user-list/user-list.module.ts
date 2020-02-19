@@ -9,11 +9,14 @@ import {FormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
 import {MatCardModule} from '@angular/material/card';
+import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
+import {MatDialogModule, MatButtonModule} from '@angular/material';
+import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
 
 @NgModule({
   declarations: [UserListComponent],
   exports: [UserListComponent],
-  providers: [UserListFacade],
+  providers: [UserListFacade, ],
   imports: [
     CommonModule,
     UserTableModule,
@@ -22,7 +25,11 @@ import {MatCardModule} from '@angular/material/card';
     FormsModule,
     UserTablePipeModule,
     MatInputModule,
-    MatCardModule
-  ]
+    MatCardModule,
+    MatDialogModule,
+    InviteDialogModule,
+    MatButtonModule
+  ],
+  entryComponents: [InviteDialogComponent]
 })
 export class UserListModule {}

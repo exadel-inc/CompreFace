@@ -1,7 +1,8 @@
 <div class="relation-list">
   <h3>Related Applications</h3>
   <app-spinner  *ngIf="isLoading$ | async"></app-spinner>
-  <app-model-relation-table [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async"
+  <app-model-relation-table class="app-table"
+                            [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async"
                             [availableRoles$]="availableRoles$"
                             (changeRow)="onChange($event)"></app-model-relation-table>
 </div>
