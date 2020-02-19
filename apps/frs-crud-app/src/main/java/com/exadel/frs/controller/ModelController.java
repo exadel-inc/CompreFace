@@ -1,5 +1,6 @@
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.helpers.SecurityUtils.getPrincipalId;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
@@ -49,7 +50,7 @@ public class ModelController {
             final String guid
     ) {
         return modelMapper.toResponseDto(
-                modelService.getModel(guid, SecurityUtils.getPrincipalId()),
+                modelService.getModel(guid, getPrincipalId()),
                 appGuid
         );
     }
@@ -65,7 +66,7 @@ public class ModelController {
             final String appGuid
     ) {
         return modelMapper.toResponseDto(
-                modelService.getModels(appGuid, SecurityUtils.getPrincipalId()),
+                modelService.getModels(appGuid, getPrincipalId()),
                 appGuid
         );
     }
@@ -88,7 +89,7 @@ public class ModelController {
             @RequestBody
             final ModelCreateDto modelCreateDto) {
         return modelMapper.toResponseDto(
-                modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()),
+                modelService.createModel(modelCreateDto, orgGuid, appGuid, getPrincipalId()),
                 appGuid
         );
     }
@@ -113,12 +114,12 @@ public class ModelController {
             @RequestBody
             final ModelUpdateDto modelUpdateDto
     ) {
-        modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
+        modelService.updateModel(modelUpdateDto, guid, getPrincipalId());
     }
 
     @PutMapping("/model/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for model")
-    public void regenerateApiKey(
+    public ModelResponseDto regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -129,7 +130,9 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        modelService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
+        modelService.regenerateApiKey(guid, getPrincipalId());
+
+        return modelMapper.toResponseDto(modelService.getModel(guid, getPrincipalId()), appGuid);
     }
 
     @DeleteMapping("/model/{guid}")
@@ -145,6 +148,6 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        modelService.deleteModel(guid, SecurityUtils.getPrincipalId());
+        modelService.deleteModel(guid, getPrincipalId());
     }
 }
