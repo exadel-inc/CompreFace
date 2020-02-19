@@ -11,12 +11,14 @@ import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.*;
 import com.exadel.frs.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -92,10 +94,11 @@ public class ModelService {
     public Model updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        if (!StringUtils.isEmpty(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
+        if (isNotBlank(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
             verifyNameIsUnique(modelUpdateDto.getName(), repoModel.getApp().getId());
             repoModel.setName(modelUpdateDto.getName());
         }
+
         return modelRepository.save(repoModel);
     }
 

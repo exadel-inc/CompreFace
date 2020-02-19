@@ -4,7 +4,6 @@ import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
-import com.exadel.frs.entity.Model;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
@@ -114,7 +113,8 @@ public class ModelController {
             @RequestBody
             final ModelUpdateDto modelUpdateDto
     ) {
-        Model updatedModel = modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
+        var updatedModel = modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
+
         return modelMapper.toResponseDto(updatedModel, appGuid);
     }
 

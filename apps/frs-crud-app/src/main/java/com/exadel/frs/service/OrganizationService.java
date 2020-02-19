@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Service
 @RequiredArgsConstructor
 public class OrganizationService {
@@ -83,15 +85,17 @@ public class OrganizationService {
     }
 
     public Organization updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
-        if (StringUtils.isEmpty(orgUpdateDto.getName())) {
+        if (isBlank(orgUpdateDto.getName())) {
             throw new FieldRequiredException("Organization name");
         }
         Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
-        if (!StringUtils.isEmpty(orgUpdateDto.getName()) && !organizationFromRepo.getName().equals(orgUpdateDto.getName())) {
+        boolean isNewName = !organizationFromRepo.getName().equals(orgUpdateDto.getName());
+        if (isNewName) {
             verifyNameIsUnique(orgUpdateDto.getName());
             organizationFromRepo.setName(orgUpdateDto.getName());
         }
+
         return organizationRepository.save(organizationFromRepo);
     }
 
