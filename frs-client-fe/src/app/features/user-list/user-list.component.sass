@@ -1,3 +1,5 @@
+@import 'media.sass'
+
 .user-list
   position: relative
 
@@ -5,19 +7,41 @@ app-spinner
   position: absolute
   left: 40%
 
+.button-container
+  display: flex
+  flex-direction: column
+  align-items: flex-end
+
 .table-header-container
   display: flex
   flex-direction: row
   justify-content: space-between
 
-  .search
-    max-width: 400px
-    width: 100%
-    // TODO: fix workaround below
-    .mat-form-field-wrapper
-      padding-top: 0
-app-user-table
-  min-height: 510px
+  form
+    width: 80%
+    height: 35px
 
-mat-form-field
-  margin-top: -25px
+    input
+      padding: 5px 30px 5px 5px
+      background-color: #EEEEEE
+      max-width: 385px
+    i
+      position: absolute
+      right: 10px
+      top: 2px
+
+@include tablet-landscape
+  .table-header-container form input
+    max-width: 310px
+
+@include tablet-portrait
+  .table-header-container form input
+    max-width: 220px
+
+@include mobile
+  .table-header-container form
+    width: 75%
+    input
+      max-width: 150px
+    i
+      right: -5px

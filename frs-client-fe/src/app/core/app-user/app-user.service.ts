@@ -19,7 +19,7 @@ export class AppUserService {
     return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/role`, { id, role });
   }
 
-  public inviteUser(organizationId: string, applicationId: string, userEmail: string): Observable<{message: string}> {
-    return this.http.put<{message: string}>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/invite`, { userEmail });
+  public inviteUser(organizationId: string, applicationId: string, userEmail: string, role: string): Observable<{message: string}> {
+    return this.http.put<{message: string}>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/invite`, { userEmail, role });
   }
 }

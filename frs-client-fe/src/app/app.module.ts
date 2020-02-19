@@ -16,7 +16,6 @@ import {EditDialogComponent} from './features/edit-dialog/edit-dialog.component'
 import {FooterModule} from './features/footer/footer.module';
 import {SnackBarModule} from './features/snackbar/snackbar.module';
 import {AppStoreModule} from './store/app-store.module';
-
 @NgModule({
   declarations: [
     AppComponent,

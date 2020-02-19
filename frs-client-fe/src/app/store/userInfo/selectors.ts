@@ -10,5 +10,5 @@ export const selectUserId = createSelector(
 
 export const selectUserAvatar = createSelector(
   selectUserInfoState,
-  (userInfo) => userInfo.avatar
+  (userInfo) => userInfo.avatar || 'assets/img/avatar.jpg'
 );

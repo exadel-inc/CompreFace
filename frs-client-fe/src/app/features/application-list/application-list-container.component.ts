@@ -30,7 +30,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
       .pipe(
         map(apps => {
           return ({
-            columns: [{title: 'Title', property: 'name'}, {title: 'Owner name', property: 'owner'}],
+            columns: [{title: 'Name', property: 'name'}, {title: 'Owner', property: 'owner'}],
             data: apps.map(app => ({id: app.id, name: app.name, owner: app.owner.firstName}))
           });
         })

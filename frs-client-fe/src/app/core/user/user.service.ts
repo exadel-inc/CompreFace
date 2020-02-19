@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {AppUser} from 'src/app/data/appUser';
 import {environment} from '../../../environments/environment';
 
@@ -19,11 +19,17 @@ export class UserService {
     return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role });
   }
 
-  public inviteUser(organizationId: string, userEmail: string): Observable<{message: string}> {
-    return this.http.put<{message: string}>(`${environment.apiUrl}org/${organizationId}/invite`, { userEmail });
+  public inviteUser(organizationId: string, userEmail: string, role: string): Observable<{message: string}> {
+    return this.http.put<{message: string}>(`${environment.apiUrl}org/${organizationId}/invite`, { userEmail, role });
   }
 
   public fetchAvailableRoles(): Observable<string[]> {
-    return this.http.get<string[]>(`${environment.apiUrl}roles`);
+    // return this.http.get<string[]>(`${environment.apiUrl}roles`);
+    // temporarary workaround to prevent cors related issues
+    return of([
+      'OWNER',
+      'ADMIN',
+      'USER'
+    ]);
   }
 }

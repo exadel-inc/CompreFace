@@ -1,10 +1,12 @@
 import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
 import {UserListFacade} from './user-list-facade';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {AppUser} from 'src/app/data/appUser';
 import {map} from 'rxjs/operators';
 import {ITableConfig} from '../table/table.component';
 import {SnackBarService} from '../snackbar/snackbar.service';
+import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
+import {MatDialog} from '@angular/material';
 
 @Component({
   selector: 'app-user-list-container',
@@ -15,11 +17,13 @@ import {SnackBarService} from '../snackbar/snackbar.service';
 export class UserListComponent implements OnInit, OnDestroy {
   public tableConfig$: Observable<ITableConfig>;
   public isLoading$: Observable<boolean>;
+  public availableRoles: string[];
   public availableRoles$: Observable<string[]>;
   public errorMessage: string;
   public search = '';
+  public availableRolesSubscription: Subscription;
 
-  constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService) {
+  constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog) {
     userListFacade.initSubscriptions();
   }
 
@@ -34,19 +38,31 @@ export class UserListComponent implements OnInit, OnDestroy {
     }));
 
     this.availableRoles$ = this.userListFacade.availableRoles$;
+    this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
   }
 
   public onChange(user: AppUser): void {
     this.userListFacade.updateUserRole(user.id, user.accessLevel);
   }
 
-  public onInviteUser(email: string): void {
-    this.userListFacade.inviteUser(email)
-      .subscribe(() => this.openEmailNotification(email));
+  public onInviteUser(): void {
+    const dialog = this.dialog.open(InviteDialogComponent, {
+      data: {
+        availableRoles: this.availableRoles
+      }
+    });
+
+    const dialogSubscription = dialog.afterClosed().subscribe(({userEmail, role}) => {
+      if (userEmail && role) {
+        this.userListFacade.inviteUser(userEmail, role).subscribe(() => this.openEmailNotification(userEmail));
+        dialogSubscription.unsubscribe();
+      }
+    });
   }
 
   public ngOnDestroy(): void {
     this.userListFacade.unsubscribe();
+    this.availableRolesSubscription.unsubscribe();
   }
 
   private openEmailNotification(email: string): void {
