@@ -12,5 +12,4 @@ public interface FacesRepository extends MongoRepository<Face, String> {
     List<Face> findByApiKey(String appKey);
 
     List<Face> deleteByApiKeyAndFaceName(String apiKey, String faceName);
-
 }

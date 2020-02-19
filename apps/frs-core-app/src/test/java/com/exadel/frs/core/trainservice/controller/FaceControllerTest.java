@@ -1,6 +1,5 @@
 package com.exadel.frs.core.trainservice.controller;
 
-import com.exadel.frs.core.trainservice.domain.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -24,22 +22,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 public class FaceControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
-    private final String APP_GUID = "app_guid_for_test";
-    private ObjectMapper mapper = new ObjectMapper();
+
+    private final static String APP_GUID = "app_guid_for_test";
+
+    @Autowired
+    private ObjectMapper mapper;
+
     @MockBean
     private FacesRepository facesRepository;
 
     @Test
     public void shouldReturnResponseAsExpected() throws Exception {
-        List<Face> faces = Arrays.asList(makeFace("A", APP_GUID), makeFace("B", APP_GUID));
+        var faces = List.of(makeFace("A", APP_GUID), makeFace("B", APP_GUID));
         doReturn(faces)
                 .when(facesRepository)
                 .findByApiKey(APP_GUID);
 
-
-        String expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
+        var expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
 
         mockMvc.perform(get("/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
                 .andExpect(status().isOk())
