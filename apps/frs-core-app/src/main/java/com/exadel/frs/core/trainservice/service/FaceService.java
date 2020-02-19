@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -29,8 +28,7 @@ public class FaceService {
 
         return all.stream()
                 .collect(toMap(Face::getFaceName,
-                        face -> face.getEmbeddings()
-                                .stream()
+                        face -> face.getEmbeddings().stream()
                                 .map(Embedding::getEmbedding)
                                 .collect(toList()), (l1, l2) -> Stream
                                 .concat(l1.stream(), l2.stream())
@@ -43,8 +41,7 @@ public class FaceService {
 
         return all.stream()
                 .collect(toMap(Face::getFaceName,
-                        face -> face.getEmbeddings()
-                                .stream()
+                        face -> face.getEmbeddings().stream()
                                 .map(Embedding::getEmbedding)
                                 .collect(toList()), (l1, l2) -> Stream
                                 .concat(l1.stream(), l2.stream())
@@ -58,10 +55,7 @@ public class FaceService {
                 .map(Face::getFaceName)
                 .collect(toList());
 
-        var response = new HashMap<String, List<String>>();
-        response.put("names", faceNames);
-
-        return response;
+        return Map.of("names", faceNames);
     }
 
     public void deleteFaceByNameAndTrainModelIfRequired(String faceName, final String appKey, final String modelGuid, String retrain) {
@@ -69,8 +63,8 @@ public class FaceService {
         handleModelTraining(appKey, modelGuid, retrain);
     }
 
-    private void handleModelTraining(final String appKey, final String modelGuid, String retrain) {
-        switch (RetrainOption.valueOf(retrain.toUpperCase())) {
+    private void handleModelTraining(final String appKey, final String modelGuid, final String retrain) {
+        switch (RetrainOption.from(retrain.toUpperCase())) {
             case YES:
                 abortCurrentTrainingIfExists(appKey, modelGuid);
                 beginNewTraining(appKey, modelGuid);

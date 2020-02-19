@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.repository;
 
 import com.exadel.frs.core.trainservice.domain.Face;
+import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Arrays;
 import java.util.List;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
@@ -61,8 +62,8 @@ public class FacesRepositoryTest {
 
     @Test
     public void findNamesForApiGuid() {
-        final var expected = Arrays.asList("A", "C");
-        final var actual = facesRepository.findByApiKey(APP_GUID).stream()
+        val expected = Arrays.asList("A", "C");
+        val actual = facesRepository.findByApiKey(APP_GUID).stream()
                                                         .map(Face::getFaceName)
                                                         .collect(toList());
 
