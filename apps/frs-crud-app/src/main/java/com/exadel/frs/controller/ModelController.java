@@ -42,14 +42,11 @@ public class ModelController {
     @ApiOperation(value = "Get model")
     public ModelResponseDto getModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
+            @PathVariable final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String appGuid,
+            @PathVariable final String appGuid,
             @ApiParam(value = "GUID of model to return", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String guid
+            @PathVariable final String guid
     ) {
         return modelMapper.toResponseDto(
                 modelService.getModel(guid, SecurityUtils.getPrincipalId()),
@@ -61,11 +58,9 @@ public class ModelController {
     @ApiOperation(value = "Get all models in application")
     public List<ModelResponseDto> getModels(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
+            @PathVariable final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String appGuid
+            @PathVariable final String appGuid
     ) {
         return modelMapper.toResponseDto(
                 modelService.getModels(appGuid, SecurityUtils.getPrincipalId()),
@@ -81,15 +76,12 @@ public class ModelController {
     })
     public ModelResponseDto createModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
+            @PathVariable final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String appGuid,
+            @PathVariable final String appGuid,
             @ApiParam(value = "Model object that needs to be created", required = true)
             @Valid
-            @RequestBody
-            final ModelCreateDto modelCreateDto) {
+            @RequestBody final ModelCreateDto modelCreateDto) {
         return modelMapper.toResponseDto(
                 modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()), appGuid
         );
@@ -102,18 +94,14 @@ public class ModelController {
     })
     public void updateModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
+            @PathVariable final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String appGuid,
+            @PathVariable final String appGuid,
             @ApiParam(value = "GUID of model that needs to be updated", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String guid,
+            @PathVariable final String guid,
             @ApiParam(value = "Model data", required = true)
             @Valid
-            @RequestBody
-            final ModelUpdateDto modelUpdateDto
+            @RequestBody final ModelUpdateDto modelUpdateDto
     ) {
         modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
     }
@@ -122,14 +110,11 @@ public class ModelController {
     @ApiOperation(value = "Generate new api-key for model")
     public ModelResponseDto regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
+            @PathVariable final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String appGuid,
+            @PathVariable final String appGuid,
             @ApiParam(value = "GUID of the model which GUID needs to be regenerated", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String guid
+            @PathVariable final String guid
     ) {
         modelService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
 
@@ -140,14 +125,11 @@ public class ModelController {
     @ApiOperation(value = "Delete model")
     public void deleteModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
+            @PathVariable final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String appGuid,
+            @PathVariable final String appGuid,
             @ApiParam(value = "GUID of the model that needs to be deleted", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String guid
+            @PathVariable final String guid
     ) {
         modelService.deleteModel(guid, SecurityUtils.getPrincipalId());
     }
