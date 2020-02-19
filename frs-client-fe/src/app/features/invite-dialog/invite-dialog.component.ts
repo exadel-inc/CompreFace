@@ -34,7 +34,7 @@ export class InviteDialogComponent implements OnInit {
     if (this.data.options$) {
       this.filteredOptions$ = combineLatest(
         this.data.options$,
-        this.form.controls.email.valueChanges.pipe(startWith(''))
+        this.form.controls.userEmail.valueChanges.pipe(startWith(''))
       ).pipe(
         map(([options, value]) => this.filter(options as string[], value)),
       );
@@ -42,7 +42,7 @@ export class InviteDialogComponent implements OnInit {
   }
 
   public onCancelClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close({});
   }
 
   public onInviteClick(): void {
@@ -55,6 +55,6 @@ export class InviteDialogComponent implements OnInit {
 
   private filter(options: string[], value: string): string[] {
     const filterValue = value ? value.toLowerCase() : '';
-    return options ? options.filter(option => option.toLowerCase().indexOf(filterValue) === 0) : [''];
+    return options ? options.filter(option => option && option.toLowerCase().indexOf(filterValue) === 0) : [''];
   }
 }
