@@ -1,6 +1,6 @@
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.helpers.SecurityUtils.*;
+import static com.exadel.frs.helpers.SecurityUtils.getPrincipalId;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;

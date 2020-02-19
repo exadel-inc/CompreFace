@@ -1,10 +1,11 @@
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.helpers.SecurityUtils.*;
+import static com.exadel.frs.helpers.SecurityUtils.getPrincipalId;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
+import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.statistics.CallStatistics;
