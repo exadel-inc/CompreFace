@@ -12,15 +12,16 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 @Slf4j
-public class ResponseExceptionHandler
-    extends ResponseEntityExceptionHandler {
+public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
-  @ExceptionHandler(value
-      = {ModelAlreadyLockedException.class})
-  protected ResponseEntity<Object> handleModelAlreadyLocked(
-      RuntimeException ex, WebRequest request) {
-    ModelAlreadyLockedException modelAlreadyLockedException = (ModelAlreadyLockedException) ex;
-    return ResponseEntity.status(HttpStatus.LOCKED)
-        .body(new RetrainResponse(modelAlreadyLockedException.getMessage()));
-  }
+    @ExceptionHandler(value = {ModelAlreadyLockedException.class})
+    protected ResponseEntity<Object> handleModelAlreadyLocked(
+            final RuntimeException ex,
+            final WebRequest request
+    ) {
+        var modelAlreadyLockedException = (ModelAlreadyLockedException) ex;
+
+        return ResponseEntity.status(HttpStatus.LOCKED)
+                             .body(new RetrainResponse(modelAlreadyLockedException.getMessage()));
+    }
 }
