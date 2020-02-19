@@ -91,8 +91,7 @@ public class ModelController {
             @RequestBody
             final ModelCreateDto modelCreateDto) {
         return modelMapper.toResponseDto(
-                modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()),
-                appGuid
+                modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()), appGuid
         );
     }
 
