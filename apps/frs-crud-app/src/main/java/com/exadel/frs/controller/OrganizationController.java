@@ -1,6 +1,12 @@
 package com.exadel.frs.controller;
 
-import com.exadel.frs.dto.ui.*;
+import com.exadel.frs.dto.ui.OrgCreateDto;
+import com.exadel.frs.dto.ui.OrgResponseDto;
+import com.exadel.frs.dto.ui.OrgUpdateDto;
+import com.exadel.frs.dto.ui.UserInviteDto;
+import com.exadel.frs.dto.ui.UserRemoveDto;
+import com.exadel.frs.dto.ui.UserRoleResponseDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.mapper.OrganizationMapper;
 import com.exadel.frs.mapper.UserOrgRoleMapper;
@@ -11,7 +17,14 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
