@@ -1,6 +1,7 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
+
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
@@ -17,8 +18,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
 import java.util.List;
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -102,7 +105,7 @@ public class AppController {
 
     @PutMapping("/app/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for application")
-    public void regenerateApiKey(
+    public AppResponseDto regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -111,6 +114,8 @@ public class AppController {
             final String guid
     ) {
         appService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
+
+        return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/app/{guid}")
