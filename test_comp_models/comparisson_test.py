@@ -64,18 +64,18 @@ def create_folds():
            seventh_fold, eight_fold, nine_fold, ten_fold
 
 
-def calculate_accuracy(dataset: Dataset, model_1: ModelWrapperBase, model_2: ModelWrapperBase):
-    len_trainset = len(dataset.train)
-    undetected_1 = model_1.train(dataset.train)
-    undetected_2 = model_2.train(dataset.train)
+def calculate_accuracy(dataset_train, dataset_test, model_1: ModelWrapperBase, model_2: ModelWrapperBase):
+    len_trainset = len(dataset_train)
+    undetected_1 = model_1.train(dataset_train)
+    undetected_2 = model_2.train(dataset_train)
     detected_1 = len_trainset - undetected_1
     detected_2 = len_trainset - undetected_2
     detected_ratio_1 = detected_1 / len_trainset * 100
     detected_ratio_2 = detected_2 / len_trainset * 100
 
-    len_testset = len(dataset.test)
-    recognized_1 = model_1.predict(dataset.test)
-    recognized_2 = model_2.predict(dataset.test)
+    len_testset = len(dataset_test)
+    recognized_1 = model_1.predict(dataset_test)
+    recognized_2 = model_2.predict(dataset_test)
     recognized_ratio_1 = recognized_1 / detected_1
     recognized_ratio_2 = recognized_2 / detected_2
 
@@ -105,16 +105,15 @@ if __name__ == '__main__':
     list_recognized_1 = []
     list_recognized_2 = []
     for experiment in range(len(folds)):
-        train_set = []
+        train_set = {}
         for fold in range(len(folds)):
             if fold == experiment:
                 test_set = folds[fold]
             else:
-                train_set.append(folds[fold])
-        dataset = Dataset(train=train_set, test=test_set)
+                train_set.update(folds[fold])
         print("fold #" + str(experiment))
 
-        recognized_1, detected_1, recognized_2, detected_2 = calculate_accuracy(dataset, model_1, model_2)
+        recognized_1, detected_1, recognized_2, detected_2 = calculate_accuracy(train_set, test_set, model_1, model_2)
         list_recognized_1.append(recognized_1)
         list_recognized_2.append(recognized_2)
 
