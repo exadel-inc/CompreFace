@@ -26,16 +26,16 @@ def create_folds():
     people_file = open(CUR_DIR / "people.txt", "rt")
 
     lines = people_file.readlines()
-    first_fold = []
-    second_fold = []
-    third_fold = []
-    forth_fold = []
-    fifth_fold = []
-    six_fold = []
-    seventh_fold = []
-    eight_fold = []
-    nine_fold = []
-    ten_fold = []
+    first_fold = {}
+    second_fold = {}
+    third_fold = {}
+    forth_fold = {}
+    fifth_fold = {}
+    six_fold = {}
+    seventh_fold = {}
+    eight_fold = {}
+    nine_fold = {}
+    ten_fold = {}
 
     list_of_folds = [first_fold, second_fold, third_fold, forth_fold, fifth_fold, six_fold, seventh_fold, eight_fold,
                      nine_fold, ten_fold]
@@ -57,8 +57,8 @@ def create_folds():
             elif len(current[1].strip()) == 4:
                 pic = str(current[0]) + "_" + str(current[1].strip()) + ".jpg"
             img = CUR_DIR / "lfw" / current[0] / pic
-            fold.append(Datarows(List[Tuple[current[0], imread(img)]]))
-            # fold[current[0]] = imread(img)
+
+            fold[current[0]] = imread(img)
 
     return first_fold, second_fold, third_fold, forth_fold, fifth_fold, six_fold, \
            seventh_fold, eight_fold, nine_fold, ten_fold
@@ -93,10 +93,12 @@ if __name__ == '__main__':
     args = parse_args()
     if args.host:
         model_1 = EfrsRestApi_2018(args.host)
-        model_2 = EfrsRestApi_Insightlib(args.host)
+        model_2 = EfrsRestApi_2018(args.host)
+        #model_2 = EfrsRestApi_Insightlib(args.host)
     else:
         model_1 = EfrsLocal_2018
-        model_2 = EfrsLocal_InsightLib
+        model_2 = EfrsLocal_2018
+        #model_2 = EfrsLocal_InsightLib
 
     fold_1, fold_2, fold_3, fold_4, fold_5, fold_6, fold_7, fold_8, fold_9, fold_10 = create_folds()
     folds = [fold_1, fold_2, fold_3, fold_4, fold_5, fold_6, fold_7, fold_8, fold_9, fold_10]
@@ -110,7 +112,7 @@ if __name__ == '__main__':
             else:
                 train_set.append(folds[fold])
         dataset = Dataset(train=train_set, test=test_set)
-        print("fold #" + experiment)
+        print("fold #" + str(experiment))
 
         recognized_1, detected_1, recognized_2, detected_2 = calculate_accuracy(dataset, model_1, model_2)
         list_recognized_1.append(recognized_1)
@@ -130,4 +132,10 @@ if __name__ == '__main__':
 
     standard_deviation_1 = math.sqrt(numerator_1 / 100)
     standard_deviation_2 = math.sqrt(numerator_2 / 100)
+
+
+    print(f"-------------")
+    print(f"Model #1 result: {mean_1} +- {standard_deviation_1}\n")
+    print(f"Model #2 result: {mean_2} +- {standard_deviation_2}\n")
+
 
