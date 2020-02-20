@@ -49,7 +49,15 @@ mat-card
 app-table, app-user-table, app-model-list
   overflow-y: auto
   display: block
-  min-height: 525px
+  min-height: 300px
+  max-height: 600px
+  margin-bottom: 50px
+
+  @media (min-height: 951px) and ( max-height: 1050px )
+    max-height: 500px
+
+  @media ( max-height: 950px )
+    max-height: 350px
 
   +tablet
     min-height: 290px
@@ -89,3 +97,8 @@ app-table, app-user-table, app-model-list
 .app-page
   height: auto
   margin-bottom: 60px
+
+  .card-single-action-container
+    position: fixed
+    bottom: 5px
+    right: 5px

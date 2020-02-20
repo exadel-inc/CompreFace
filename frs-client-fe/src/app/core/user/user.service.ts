@@ -28,7 +28,7 @@ export class UserService {
     // temporarary workaround to prevent cors related issues
     return of([
       'OWNER',
-      'ADMIN',
+      'ADMINISTRATOR',
       'USER'
     ]);
   }
