@@ -60,7 +60,8 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(InviteDialogComponent, {
       data: {
         availableRoles: this.availableRoles,
-        options$: this.availableEmails$
+        options$: this.availableEmails$,
+        actionType: 'add'
       }
     });
 

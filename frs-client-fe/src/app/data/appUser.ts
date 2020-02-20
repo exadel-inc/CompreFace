@@ -1,7 +1,8 @@
 export interface AppUser {
   id: string;
+  userId: string;
   firstName: string;
   lastName: string;
-  accessLevel: string;
+  role: string;
   email?: string;
 }
