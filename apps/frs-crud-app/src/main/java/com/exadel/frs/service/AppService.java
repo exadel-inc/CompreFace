@@ -21,6 +21,7 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
@@ -158,8 +160,8 @@ public class AppService {
         verifyNewNameForApplication(appUpdateDto.getName());
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        boolean isNewNameDifferentFromOldOne = !repoApp.getName().equals(appUpdateDto.getName());
-        if (isNewNameDifferentFromOldOne) {
+        val isSameName = repoApp.getName().equals(appUpdateDto.getName());
+        if (isNotTrue(isSameName)) {
             verifyNameIsUnique(appUpdateDto.getName(), repoApp.getOrganization().getId());
             repoApp.setName(appUpdateDto.getName());
         }
