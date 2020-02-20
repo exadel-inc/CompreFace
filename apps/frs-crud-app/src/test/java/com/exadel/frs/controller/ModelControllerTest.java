@@ -9,6 +9,7 @@ import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -30,8 +31,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = ModelController.class,
-        excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}))
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
+        )
+)
 @MockBeans({@MockBean(MlModelMapper.class)})
 class ModelControllerTest {
 
@@ -48,17 +52,16 @@ class ModelControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     @Test
     void shouldReturnMessageAndCodeWhenModelNameIsMissing() throws Exception {
         doCallRealMethod().when(modelService).updateModel(any(), any(), any());
-        String expectedContent = mapper.writeValueAsString(buildExceptionResponse(new FieldRequiredException("Model name")));
-        var bodyWithEmptyName = new ModelUpdateDto();
+        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new FieldRequiredException("Model name")));
+        val bodyWithEmptyName = new ModelUpdateDto();
         bodyWithEmptyName.setName("");
 
-        var bodyWithNoName = new ModelUpdateDto();
+        val bodyWithNoName = new ModelUpdateDto();
 
-        var updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildDefaultUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -70,6 +73,5 @@ class ModelControllerTest {
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithNoName)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
-
     }
 }

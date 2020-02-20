@@ -6,8 +6,10 @@ import com.exadel.frs.exception.BasicException;
 import com.exadel.frs.handler.ExceptionCode;
 
 public class TestUtils {
+
     public static final long USER_ID = 3L;
     public static final String USERNAME = "test";
+
     public static ExceptionResponseDto buildExceptionResponse(final BasicException ex) {
         return ExceptionResponseDto.builder()
                 .code(ex.getExceptionCode().getCode())

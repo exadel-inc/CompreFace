@@ -14,6 +14,7 @@ import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,13 +26,20 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import static com.exadel.frs.utils.TestUtils.*;
+import static com.exadel.frs.utils.TestUtils.USER_ID;
+import static com.exadel.frs.utils.TestUtils.buildDefaultUser;
+import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
+import static com.exadel.frs.utils.TestUtils.buildUndefinedExceptionResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,7 +51,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AppControllerTest {
 
     private static final long APP_ID = 1L;
-    private static final long USER_ID = 3L;
     private static final String APP_GUID = "app-guid";
     private static final String ORG_GUID = "org-guid";
 
@@ -91,7 +98,7 @@ class AppControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(App.builder().id(APP_ID).build()));
 
-        String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
+        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
@@ -102,11 +109,11 @@ class AppControllerTest {
         doCallRealMethod().when(appService).updateApp(any(), any(), any());
         String expectedContent = mapper.writeValueAsString(buildExceptionResponse(new FieldRequiredException("Application name")));
 
-        var bodyWithEmptyName = new AppUpdateDto();
+        val bodyWithEmptyName = new AppUpdateDto();
         bodyWithEmptyName.setName("");
-        var bodyWithNoName = new AppUpdateDto();
+        val bodyWithNoName = new AppUpdateDto();
 
-        var updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID)
+        val updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID)
                 .with(csrf())
                 .with(user(buildDefaultUser()))
                 .contentType(MediaType.APPLICATION_JSON);

@@ -7,7 +7,6 @@ import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.App;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
@@ -21,6 +20,7 @@ import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,8 +101,9 @@ public class AppController {
             @RequestBody
             final AppUpdateDto appUpdateDto
     ) {
-        Long userId = SecurityUtils.getPrincipalId();
-        App updatedApplication = appService.updateApp(appUpdateDto, guid, userId);
+        val userId = SecurityUtils.getPrincipalId();
+        val updatedApplication = appService.updateApp(appUpdateDto, guid, userId);
+
         return appMapper.toResponseDto(updatedApplication, userId);
     }
 
