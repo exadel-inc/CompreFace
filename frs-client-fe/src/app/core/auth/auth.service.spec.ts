@@ -66,7 +66,7 @@ describe('AuthService', () => {
 
   it('be able to update token', () => {
     expect(service.getToken()).toEqual('some token');
-    service.updateToken('token the second value');
+    service.updateTokens('token the second value');
     expect(service.getToken()).toEqual('Bearer token the second value');
   });
 

@@ -41,7 +41,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 
 // user with some login:
 let user = {
-  email: "email",
+  email: "q@q.com",
   password: "password",
   firstName: "some firstName",
   guid: "guid_0",
@@ -49,17 +49,28 @@ let user = {
   avatar: './assets/img/avatar.jpg'
 };
 
+let timeStamp = 0;
+const refreshTokenTime = 1 * 8 * 1000; // minute sec ms
+
 let access_token = '';
+let refresh_token = '';
 
 app.locals.basedir = path.join(__dirname, 'mock-backend');
 
 app.post('/oauth/token', wait(1000), function(req, res) {
+  timeStamp = +new Date();
+  console.log(timeStamp);
   const form = formidable.IncomingForm();
 
   form.parse(req, (err, fields) => {
-    if (req && fields.username === user.email && fields.password === user.password) {
+    if (req && fields.username === user.email && fields.password === user.password && fields.grant_type === 'password') {
       access_token = `${user.email}_${user.password}_${user.guid}_${+new Date()}`;
-      res.send({ access_token });
+      refresh_token = `refresh_${user.email}_${user.password}_${user.guid}_${+new Date()}`;
+      res.send({ access_token, refresh_token });
+    } else if (req && fields.refresh_token && fields.grant_type === 'refresh_token') {
+      access_token = `${user.email}_${user.password}_${user.guid}_${+new Date()}`;
+      refresh_token = `refresh_${user.email}_${user.password}_${user.guid}_${+new Date()}`;
+      res.send({ access_token, refresh_token });
     }
     else {
       res.sendStatus(401);
@@ -382,10 +393,14 @@ function isModelAccessAllowed(appId, orgId) {
 }
 
 function auth(req, res, next) {
-  if (req && req.headers.authorization === `Bearer ${access_token}`)
-    return next();
-  else
-    return res.sendStatus(401);
+  if (req && req.headers.authorization === `Bearer ${access_token}`){
+    if((+new Date() - refreshTokenTime) > timeStamp) {
+      return res.status(401).send({message: 'Error during authentication'});
+    } else {
+      return next();
+    }
+  }
+  return res.sendStatus(401);
 }
 
 function wait(time = 1000) {

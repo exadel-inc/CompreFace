@@ -27,7 +27,7 @@ export class AuthEffects {
     switchMap(action => {
       return this.authService.logIn(action.email, action.password).pipe(
         switchMap(res => {
-          this.authService.updateToken(res.access_token);
+          this.authService.updateTokens(res.access_token, res.refresh_token);
           return [
             logInSuccess(),
             updateUserInfo(

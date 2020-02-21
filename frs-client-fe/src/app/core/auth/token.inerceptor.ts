@@ -3,11 +3,13 @@ import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse}
 import {AuthService} from './auth.service';
 import {Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import {catchError} from 'rxjs/operators';
+import {catchError, flatMap} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {AppState} from 'src/app/store';
 import {updateUserAuthorization} from '../../store/userInfo/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {environment} from '../../../environments/environment';
+import {API_URL} from '../../data/api.variables';
 
 
 @Injectable()
@@ -20,7 +22,6 @@ export class TokenInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
-
     if (token) {
       request = request.clone({
         setHeaders: {
@@ -44,11 +45,16 @@ export class ErrorInterceptor implements HttpInterceptor {
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
     return next.handle(request).pipe(
-      catchError((response: any) => {
+      catchError((response: any): Observable<HttpEvent<any>> => {
         if (response instanceof HttpErrorResponse && response.status === 401) {
-          this.authService.removeToken();
-          this.store.dispatch(updateUserAuthorization({ value: false }));
-          this.router.navigateByUrl(ROUTERS_URL.LOGIN);
+          if (response.error.message === 'Error during authentication') {
+            console.log('refreshToken run');
+            return this.authService.refreshToken(request, next);
+          } else {
+            this.authService.removeToken();
+            this.store.dispatch(updateUserAuthorization({value: false}));
+            this.router.navigateByUrl(ROUTERS_URL.LOGIN);
+          }
         }
 
         return throwError(response);
