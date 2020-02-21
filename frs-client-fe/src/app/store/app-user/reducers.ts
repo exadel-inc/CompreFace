@@ -31,7 +31,7 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
     return appUserAdapter.updateOne({
       id: user.id,
       changes: {
-        accessLevel: user.accessLevel
+        role: user.role
       }
     }, newState);
   })

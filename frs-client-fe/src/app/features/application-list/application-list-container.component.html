@@ -2,7 +2,7 @@
   <h3>Applications</h3>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-table class="app-table" [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (changeRow)="onClick($event)"></app-table>
-  <div class="button-container">
+  <div class="card-single-action-container">
     <button mat-button color="primary" (click)="onCreateNewApp()">
       CREATE
     </button>

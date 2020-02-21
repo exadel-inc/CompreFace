@@ -36,13 +36,13 @@ export class UserListEffect {
       switchMap((action) => forkJoin([this.userService.updateRole(
         action.organizationId,
         action.user.id,
-        action.user.accessLevel
+        action.user.role
       ), of(action.organizationId)])),
       switchMap(res => {
         const [user, organizationId] = res;
         this.organizationEnService.getAll();
 
-        return [UpdateUserRoleEntityAction({user}), LoadUsersEntityAction({organizationId})];
+        return [LoadUsersEntityAction({organizationId})];
       })
     );
 

@@ -29,12 +29,11 @@ export class AppUserEffects {
       action.organizationId,
       action.applicationId,
       action.user.id,
-      action.user.accessLevel
+      action.user.role
     ), of(action)])),
     switchMap(observableResult => {
       const [user, action] = observableResult;
       return [
-        updateUserRoleEntityAction({ user }),
         loadAppUserEntityAction({ ...action }),
         loadApplicationsEntityAction({ organizationId: action.organizationId })
       ];
