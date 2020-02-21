@@ -27,7 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static com.exadel.frs.utils.TestUtils.USER_ID;
-import static com.exadel.frs.utils.TestUtils.buildDefaultUser;
+import static com.exadel.frs.utils.TestUtils.buildUser;
 import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
 import static com.exadel.frs.utils.TestUtils.buildUndefinedExceptionResponse;
 import static org.mockito.ArgumentMatchers.any;
@@ -69,7 +69,7 @@ class AppControllerTest {
         when(appService.getApp(APP_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
-        mockMvc.perform(get("/org/" + ORG_GUID + "/app/" + APP_GUID).with(user(buildDefaultUser())))
+        mockMvc.perform(get("/org/" + ORG_GUID + "/app/" + APP_GUID).with(user(buildUser())))
                 .andExpect(status().isNotFound())
                 .andExpect(content().string(expectedContent));
     }
@@ -81,7 +81,7 @@ class AppControllerTest {
         when(appService.getApps(ORG_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildUndefinedExceptionResponse(expectedException));
-        mockMvc.perform(get("/org/" + ORG_GUID + "/apps").with(user(buildDefaultUser())))
+        mockMvc.perform(get("/org/" + ORG_GUID + "/apps").with(user(buildUser())))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
     }
@@ -94,7 +94,7 @@ class AppControllerTest {
 
         MockHttpServletRequestBuilder request = post("/org/" + ORG_GUID + "/app")
                 .with(csrf())
-                .with(user(buildDefaultUser()))
+                .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(App.builder().id(APP_ID).build()));
 
@@ -115,7 +115,7 @@ class AppControllerTest {
 
         val updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID)
                 .with(csrf())
-                .with(user(buildDefaultUser()))
+                .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))

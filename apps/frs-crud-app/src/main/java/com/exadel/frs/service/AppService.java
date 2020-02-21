@@ -199,7 +199,7 @@ public class AppService {
         appRepository.deleteById(repoApp.getId());
     }
 
-    private void verifyNewNameForApplication(String name) {
+    private void verifyNewNameForApplication(final String name) {
         if (isBlank(name)) {
             throw new FieldRequiredException("Application name");
         }

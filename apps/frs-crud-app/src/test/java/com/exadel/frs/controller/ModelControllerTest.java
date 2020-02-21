@@ -20,7 +20,7 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.exadel.frs.utils.TestUtils.buildDefaultUser;
+import static com.exadel.frs.utils.TestUtils.buildUser;
 import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
@@ -63,7 +63,7 @@ class ModelControllerTest {
 
         val updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
-                .with(user(buildDefaultUser()))
+                .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))

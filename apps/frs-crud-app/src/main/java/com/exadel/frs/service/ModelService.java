@@ -113,8 +113,7 @@ public class ModelService {
         modelRepository.deleteById(model.getId());
     }
 
-
-    private void verifyNameIsNotEmpty(String newNameForModel) {
+    private void verifyNameIsNotEmpty(final String newNameForModel) {
         if (StringUtils.isEmpty(newNameForModel)) {
             throw new FieldRequiredException("Model name");
         }

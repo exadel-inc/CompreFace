@@ -5,10 +5,11 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.BasicException;
 import com.exadel.frs.handler.ExceptionCode;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+
 public class TestUtils {
 
     public static final long USER_ID = 3L;
-    public static final String USERNAME = "test";
 
     public static ExceptionResponseDto buildExceptionResponse(final BasicException ex) {
         return ExceptionResponseDto.builder()
@@ -24,7 +25,12 @@ public class TestUtils {
                 .build();
     }
 
-    public static User buildDefaultUser() {
-        return User.builder().email(USERNAME).id(USER_ID).build();
+    public static User buildUser() {
+        return User.builder()
+                .id(USER_ID)
+                .firstName(randomAlphabetic(10))
+                .lastName(randomAlphabetic(10))
+                .email(randomAlphabetic(10) + "@" + randomAlphabetic(5) + ".com")
+                .build();
     }
 }
