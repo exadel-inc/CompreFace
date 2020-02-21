@@ -5,10 +5,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.exadel.frs.validation.EmailValidator.isInvalid;
+import static com.exadel.frs.validation.EmailValidator.isValid;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class EmailValidatorTest {
+
     private static List<String> VALID_EMAILS;
     private static List<String> INVALID_EMAILS;
 
@@ -47,14 +49,30 @@ class EmailValidatorTest {
     }
 
     @Test
-    void validEmailsPassValidation() {
-        VALID_EMAILS.forEach(email -> assertTrue(EmailValidator.isValid(email)));
-        VALID_EMAILS.forEach(email -> assertFalse(EmailValidator.isInvalid(email)));
+    void validEmailsAreValid() {
+        assertThat(VALID_EMAILS).allSatisfy(
+                email -> assertThat(isValid(email)).isTrue()
+        );
     }
 
     @Test
-    void invalidEmailsFailValidation() {
-        INVALID_EMAILS.forEach(email -> assertFalse(EmailValidator.isValid(email)));
-        INVALID_EMAILS.forEach(email -> assertTrue(EmailValidator.isInvalid(email)));
+    void invalidEmailsAreNotValid() {
+        assertThat(INVALID_EMAILS).allSatisfy(
+                email -> assertThat(isValid(email)).isFalse()
+        );
+    }
+
+    @Test
+    void invalidEmailsAreInvalid() {
+        assertThat(INVALID_EMAILS).allSatisfy(
+                email -> assertThat(isInvalid(email)).isTrue()
+        );
+    }
+
+    @Test
+    void validEmailsAreNotInvalid() {
+        assertThat(VALID_EMAILS).allSatisfy(
+                email -> assertThat(isInvalid(email)).isFalse()
+        );
     }
 }
