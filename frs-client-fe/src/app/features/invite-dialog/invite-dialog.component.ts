@@ -16,6 +16,7 @@ export class InviteDialogComponent implements OnInit {
   public form: FormGroup;
   public users: string[];
   public filteredOptions$: Observable<string[]>;
+  public actionType: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -23,6 +24,7 @@ export class InviteDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.availableRoles = this.data.availableRoles;
+    this.actionType = this.data.actionType || 'invite';
   }
 
   ngOnInit() {

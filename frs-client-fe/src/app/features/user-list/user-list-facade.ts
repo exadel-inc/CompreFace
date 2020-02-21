@@ -76,12 +76,12 @@ export class UserListFacade implements IFacade {
     }));
   }
 
-  public updateUserRole(id: string, accessLevel: string): void {
+  public updateUserRole(id: string, role: string): void {
     this.store.dispatch(PutUpdatedUserRoleEntityAction({
       organizationId: this.selectedOrganization,
       user: {
         id,
-        accessLevel
+        role
       }
     }));
   }

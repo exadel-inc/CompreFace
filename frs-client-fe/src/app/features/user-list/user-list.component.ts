@@ -42,7 +42,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   public onChange(user: AppUser): void {
-    this.userListFacade.updateUserRole(user.id, user.accessLevel);
+    this.userListFacade.updateUserRole(user.id, user.role);
   }
 
   public onInviteUser(): void {

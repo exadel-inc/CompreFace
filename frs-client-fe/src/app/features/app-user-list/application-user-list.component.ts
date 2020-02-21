@@ -48,7 +48,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   }
 
   public onChange(user: AppUser): void {
-    this.appUserListFacade.updateUserRole(user.id, user.accessLevel);
+    this.appUserListFacade.updateUserRole(user.id, user.role);
   }
 
   public ngOnDestroy(): void {
@@ -60,7 +60,8 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(InviteDialogComponent, {
       data: {
         availableRoles: this.availableRoles,
-        options$: this.availableEmails$
+        options$: this.availableEmails$,
+        actionType: 'add'
       }
     });
 

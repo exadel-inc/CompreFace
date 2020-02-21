@@ -28,20 +28,20 @@ describe('UserService', () => {
       organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
-      accessLevel: 'USER'
+      role: 'USER'
     }, {
       id: 1,
       organizationId: 'ksdfklsn1111111',
       firstName: 'Tony',
       lastName: 'Stark',
-      accessLevel: 'ADMINISTRATOR'
+      role: 'ADMINISTRATOR'
     }];
 
     service.getAll('organizationId').subscribe((data: AppUser[]) => {
-      expect(data[0].accessLevel).toBe(mock[0].accessLevel);
+      expect(data[0].role).toBe(mock[0].role);
       expect(data[0].firstName).toBe(mock[0].firstName);
       expect(data[0].lastName).toBe(mock[0].lastName);
-      expect(data[1].accessLevel).toBe(mock[1].accessLevel);
+      expect(data[1].role).toBe(mock[1].role);
       expect(data[1].firstName).toBe(mock[1].firstName);
       expect(data[1].lastName).toBe(mock[1].lastName);
     });
@@ -57,11 +57,11 @@ describe('UserService', () => {
       organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
-      accessLevel: 'USER'
+      role: 'USER'
     };
 
     service.updateRole('organizationId', 'userId', 'USER').subscribe((data: AppUser) => {
-      expect(data.accessLevel).toBe(mock.accessLevel);
+      expect(data.role).toBe(mock.role);
       expect(data.firstName).toBe(mock.firstName);
       expect(data.lastName).toBe(mock.lastName);
     });
