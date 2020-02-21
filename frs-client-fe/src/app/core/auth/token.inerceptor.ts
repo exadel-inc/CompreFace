@@ -3,14 +3,11 @@ import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse}
 import {AuthService} from './auth.service';
 import {Observable, throwError} from 'rxjs';
 import {Router} from '@angular/router';
-import {catchError, flatMap} from 'rxjs/operators';
+import {catchError} from 'rxjs/operators';
 import {Store} from '@ngrx/store';
 import {AppState} from 'src/app/store';
 import {updateUserAuthorization} from '../../store/userInfo/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {environment} from '../../../environments/environment';
-import {API_URL} from '../../data/api.variables';
-
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {

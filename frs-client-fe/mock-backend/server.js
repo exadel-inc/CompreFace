@@ -59,15 +59,18 @@ app.locals.basedir = path.join(__dirname, 'mock-backend');
 
 app.post('/oauth/token', wait(1000), function(req, res) {
   timeStamp = +new Date();
-  console.log(timeStamp);
+  // console.log(timeStamp);
   const form = formidable.IncomingForm();
 
   form.parse(req, (err, fields) => {
     if (req && fields.username === user.email && fields.password === user.password && fields.grant_type === 'password') {
+
       access_token = `${user.email}_${user.password}_${user.guid}_${+new Date()}`;
       refresh_token = `refresh_${user.email}_${user.password}_${user.guid}_${+new Date()}`;
       res.send({ access_token, refresh_token });
+
     } else if (req && fields.refresh_token && fields.grant_type === 'refresh_token') {
+
       access_token = `${user.email}_${user.password}_${user.guid}_${+new Date()}`;
       refresh_token = `refresh_${user.email}_${user.password}_${user.guid}_${+new Date()}`;
       res.send({ access_token, refresh_token });
@@ -400,7 +403,7 @@ function auth(req, res, next) {
       return next();
     }
   }
-  return res.sendStatus(401);
+  return res.status(401).send({message: 'Invalid basic authentication token'});
 }
 
 function wait(time = 1000) {

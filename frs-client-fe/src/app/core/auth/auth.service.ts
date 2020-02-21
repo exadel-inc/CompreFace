@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpEvent, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpEvent} from '@angular/common/http';
 import {Observable, BehaviorSubject} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {API_URL} from '../../data/api.variables';
 import {FormBuilder} from '@angular/forms';
-import {catchError, flatMap, tap} from 'rxjs/operators';
+import {flatMap, switchMap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -72,30 +72,22 @@ export class AuthService {
     formData.append('refresh_token', form.get('refresh_token').value);
 
     return this.http.post(url, formData, { headers: { Authorization: environment.basicToken } }).pipe(
-      tap(e => console.log(e)),
       flatMap(
         (data: any): Observable<HttpEvent<any>> => {
-          console.log(data);
           if (data.access_token && data.refresh_token) {
             this.updateTokens(data.access_token, data.refresh_token);
-            console.log(data);
             req = req.clone({
               setHeaders: {
-                Authorization: data.access_token,
+                Authorization: 'Bearer ' + data.access_token,
               }
             });
             console.log('req', req);
-            return next.handle(req).catchError(e => console.log(e));
+            return next.handle(req);
           } else {
             // Logout from account
           }
         }
       )
     );
-  }
-
-  // todo: for feature
-  isTokenValid(token: string): boolean {
-    return true;
   }
 }
