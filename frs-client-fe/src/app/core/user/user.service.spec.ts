@@ -57,11 +57,11 @@ describe('UserService', () => {
       organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
-      accessLevel: 'USER'
+      role: 'USER'
     };
 
     service.updateRole('organizationId', 'userId', 'USER').subscribe((data: AppUser) => {
-      expect(data.role).toBe(mock.accessLevel);
+      expect(data.role).toBe(mock.role);
       expect(data.firstName).toBe(mock.firstName);
       expect(data.lastName).toBe(mock.lastName);
     });
