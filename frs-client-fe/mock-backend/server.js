@@ -50,7 +50,7 @@ let user = {
 };
 
 let timeStamp = 0;
-const refreshTokenTime = 1 * 8 * 1000; // minute sec ms
+const refreshTokenTime = 1 * 10 * 1000; // minute sec ms
 
 let access_token = '';
 let refresh_token = '';
@@ -59,7 +59,6 @@ app.locals.basedir = path.join(__dirname, 'mock-backend');
 
 app.post('/oauth/token', wait(1000), function(req, res) {
   timeStamp = +new Date();
-  // console.log(timeStamp);
   const form = formidable.IncomingForm();
 
   form.parse(req, (err, fields) => {

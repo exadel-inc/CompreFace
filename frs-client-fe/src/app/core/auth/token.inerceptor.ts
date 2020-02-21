@@ -2,12 +2,7 @@ import {Injectable, Injector} from '@angular/core';
 import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
 import {AuthService} from './auth.service';
 import {Observable, throwError} from 'rxjs';
-import {Router} from '@angular/router';
 import {catchError} from 'rxjs/operators';
-import {Store} from '@ngrx/store';
-import {AppState} from 'src/app/store';
-import {updateUserAuthorization} from '../../store/userInfo/action';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -35,7 +30,7 @@ export class TokenInterceptor implements HttpInterceptor {
 export class ErrorInterceptor implements HttpInterceptor {
   private authService: AuthService;
 
-  constructor(private router: Router, private injector: Injector, private store: Store<AppState>) {
+  constructor(private injector: Injector) {
     this.authService = this.injector.get(AuthService);
   }
 
@@ -46,11 +41,9 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (response instanceof HttpErrorResponse && response.status === 401) {
           if (response.error.message === 'Error during authentication') {
             console.log('refreshToken run');
-            return this.authService.refreshToken(request, next);
+            return this.authService.refreshToken(request);
           } else {
-            this.authService.removeToken();
-            this.store.dispatch(updateUserAuthorization({value: false}));
-            this.router.navigateByUrl(ROUTERS_URL.LOGIN);
+            this.authService.logOut();
           }
         }
 

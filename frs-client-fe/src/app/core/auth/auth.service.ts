@@ -1,18 +1,24 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpEvent} from '@angular/common/http';
-import {Observable, BehaviorSubject} from 'rxjs';
+import {Injectable,} from '@angular/core';
+import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
+import {Observable, BehaviorSubject, Subscriber} from 'rxjs';
 import {environment} from '../../../environments/environment';
 import {API_URL} from '../../data/api.variables';
 import {FormBuilder} from '@angular/forms';
-import {flatMap, switchMap} from 'rxjs/operators';
+import {updateUserAuthorization} from '../../store/userInfo/action';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {Store} from '@ngrx/store';
+import {AppState} from '../../store';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   public token$: BehaviorSubject<string>;
+  refreshInProgress: boolean;
+  requests = [];
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router, ) {
     this.token$ = new BehaviorSubject<string>(localStorage.getItem('token'));
   }
 
@@ -45,49 +51,80 @@ export class AuthService {
     });
     const formData = new FormData();
     formData.append('username', form.get('email').value);
-    formData.append('password',  form.get('password').value);
+    formData.append('password', form.get('password').value);
     formData.append('grant_type', form.get('grant_type').value);
-    return this.http.post(url, formData, { headers: { Authorization: environment.basicToken } });
+    return this.http.post(url, formData, {headers: {Authorization: environment.basicToken}});
   }
 
   signUp(firstName: string, password: string, email: string, lastName: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.REGISTER}`;
-    return this.http.post(url, { email, password, firstName, lastName });
+    return this.http.post(url, {email, password, firstName, lastName});
   }
 
-  logOut(token: string): Observable<any> {
-    const url = `${environment.apiUrl}${API_URL.LOGOUT}`;
-    return this.http.post(url, {token});
+  logOut() {
+    this.removeToken();
+    this.store.dispatch(updateUserAuthorization({value: false}));
+    this.router.navigateByUrl(ROUTERS_URL.LOGIN);
   }
 
-  refreshToken(req, next): Observable<HttpEvent<any>> {
-    const url = `${environment.apiUrl}${API_URL.REFRESH_TOKEN}`;
-
-    const form = this.formBuilder.group({
-      grant_type: 'refresh_token',
-      refresh_token: this.getRefreshToken()
+  refreshToken(req) {
+    return new Observable<HttpEvent<any>>((subscriber) => {
+      this.handleUnauthorizedError(subscriber, req);
     });
-    const formData = new FormData();
-    formData.append('grant_type', form.get('grant_type').value);
-    formData.append('refresh_token', form.get('refresh_token').value);
+  }
 
-    return this.http.post(url, formData, { headers: { Authorization: environment.basicToken } }).pipe(
-      flatMap(
-        (data: any): Observable<HttpEvent<any>> => {
-          if (data.access_token && data.refresh_token) {
-            this.updateTokens(data.access_token, data.refresh_token);
-            req = req.clone({
-              setHeaders: {
-                Authorization: 'Bearer ' + data.access_token,
-              }
-            });
-            console.log('req', req);
-            return next.handle(req);
-          } else {
-            // Logout from account
-          }
+  private handleUnauthorizedError(subscriber: Subscriber<any>, request: HttpRequest<any>) {
+    this.requests.push({subscriber, failedRequest: request});
+    if (!this.refreshInProgress) {
+      this.refreshInProgress = true;
+      const url = `${environment.apiUrl}${API_URL.REFRESH_TOKEN}`;
+
+      const form = this.formBuilder.group({
+        grant_type: 'refresh_token',
+        refresh_token: this.getRefreshToken()
+      });
+      const formData = new FormData();
+      formData.append('grant_type', form.get('grant_type').value);
+      formData.append('refresh_token', form.get('refresh_token').value);
+
+      this.http.post(url, formData, { headers: { Authorization: environment.basicToken } })
+        .subscribe((authHeader: any) =>
+            this.repeatFailedRequests(authHeader),
+          () => {
+            this.logOut();
+            this.refreshInProgress = false;
+            console.log('logout');
+          });
+    }
+  }
+
+  private repeatFailedRequests(authHeader) {
+    this.updateTokens(authHeader.access_token, authHeader.refresh_token);
+    this.refreshInProgress = false;
+
+    this.requests.forEach((c) => {
+      this.repeatRequest(c.failedRequest, c.subscriber);
+    });
+    this.requests = [];
+  }
+
+  private repeatRequest(requestWithNewToken: HttpRequest<any>, subscriber: Subscriber<any>) {
+    this.http.request(requestWithNewToken).subscribe((res) => {
+        subscriber.next(res);
+      },
+      (err) => {
+        if (err.status === 401) {
+          this.logOut();
         }
-      )
-    );
+        subscriber.error(err);
+      },
+      () => {
+        subscriber.complete();
+      });
+  }
+
+  // todo: for feature
+  isTokenValid(token: string): boolean {
+    return true;
   }
 }
