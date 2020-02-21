@@ -48,7 +48,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   }
 
   public onChange(user: AppUser): void {
-    this.appUserListFacade.updateUserRole(user.id, user.accessLevel);
+    this.appUserListFacade.updateUserRole(user.id, user.role);
   }
 
   public ngOnDestroy(): void {

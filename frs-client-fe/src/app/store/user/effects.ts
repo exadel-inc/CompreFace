@@ -42,7 +42,7 @@ export class UserListEffect {
         const [user, organizationId] = res;
         this.organizationEnService.getAll();
 
-        return [UpdateUserRoleEntityAction({user}), LoadUsersEntityAction({organizationId})];
+        return [LoadUsersEntityAction({organizationId})];
       })
     );
 

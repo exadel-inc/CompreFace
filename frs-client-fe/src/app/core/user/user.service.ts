@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {AppUser} from 'src/app/data/appUser';
 import {environment} from '../../../environments/environment';
-import {map} from 'rxjs/operators';
+import {map, catchError} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -19,7 +19,8 @@ export class UserService {
   }
 
   public updateRole(organizationId: string, id: string, role: string): Observable<any> {
-    return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role });
+    // temporary workaround to fix cors errors
+    return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role }, {withCredentials: false});
   }
 
   public inviteUser(organizationId: string, userEmail: string, role: string): Observable<{message: string}> {
