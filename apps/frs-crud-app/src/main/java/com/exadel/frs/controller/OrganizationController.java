@@ -20,6 +20,7 @@ import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -150,7 +151,7 @@ public class OrganizationController {
 
     @PutMapping("/org/{guid}/role")
     @ApiOperation(value = "Update user organization role")
-    public void updateUserOrgRole(
+    public UserRoleResponseDto updateUserOrgRole(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable final String guid,
             @ApiParam(value = "User role data", required = true)
@@ -158,7 +159,10 @@ public class OrganizationController {
             @RequestBody
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
-        organizationService.updateUserOrgRole(userRoleUpdateDto, guid, SecurityUtils.getPrincipalId());
+        final Long admin = SecurityUtils.getPrincipalId();
+        val updatedUserOrgRole = organizationService.updateUserOrgRole(userRoleUpdateDto, guid, admin);
+
+        return userOrgRoleMapper.toUserRoleResponseDto(updatedUserOrgRole);
     }
 
     @PutMapping("/org/{guid}/remove")

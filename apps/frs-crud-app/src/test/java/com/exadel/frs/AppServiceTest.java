@@ -317,7 +317,7 @@ class AppServiceTest {
     @MethodSource("writeRoles")
     void failUpdateAppSelfRoleChange(OrganizationRole organizationRole) {
         UserRoleUpdateDto userRoleUpdateDto = UserRoleUpdateDto.builder()
-                .id("userGuid")
+                .userId("userGuid")
                 .role(AppRole.USER.toString())
                 .build();
         User user = user(USER_ID);

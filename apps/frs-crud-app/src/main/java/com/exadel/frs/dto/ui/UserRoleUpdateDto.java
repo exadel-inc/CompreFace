@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserRoleUpdateDto {
 
-    private String id;
+    private String userId;
     private String role;
 
 }
