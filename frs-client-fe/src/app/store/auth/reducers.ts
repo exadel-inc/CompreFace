@@ -4,7 +4,7 @@ import {
   logInFailure,
   signUpSuccess,
   signUpFailure,
-  logOut
+  logOut, resetErrorMessage
 } from './action';
 
 export interface AuthState {
@@ -41,6 +41,10 @@ const reducer: ActionReducer<AuthState> = createReducer(initialState,
     errorMessage: 'That email is already in use.',
     successMessage: null,
     isLoading: false
+  })),
+  on(resetErrorMessage, (state) => ({
+    ...state,
+    errorMessage: null,
   })),
   on(logOut, () => ({ ...initialState }))
 );

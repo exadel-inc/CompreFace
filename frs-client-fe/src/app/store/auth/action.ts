@@ -8,3 +8,4 @@ export const signUp = createAction('[Auth] Sign up', props<SignUp>());
 export const signUpFailure = createAction('[Auth] Sign up Failure');
 export const signUpSuccess = createAction('[Auth] Sign up Success');
 export const logOut = createAction('[Auth] Logout');
+export const resetErrorMessage = createAction('[Auth] Reset Error Message');
