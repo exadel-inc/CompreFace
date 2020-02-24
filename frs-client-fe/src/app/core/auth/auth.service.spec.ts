@@ -4,6 +4,8 @@ import {HttpClientTestingModule, HttpTestingController} from '@angular/common/ht
 import {environment} from '../../../environments/environment';
 import {API_URL} from '../../data/api.variables';
 import {FormBuilder} from '@angular/forms';
+import {Router} from '@angular/router';
+import {provideMockStore} from '@ngrx/store/testing';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -14,7 +16,14 @@ describe('AuthService', () => {
     localStorage.setItem('token', 'some token');
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AuthService, FormBuilder]
+      providers: [
+        AuthService,
+        FormBuilder,
+        provideMockStore(),
+      {
+        provide: Router,
+        useValue: { navigateByUrl: () => { } }
+      }]
     });
     service = TestBed.get(AuthService);
     httpMock = TestBed.get(HttpTestingController);
@@ -66,7 +75,7 @@ describe('AuthService', () => {
 
   it('be able to update token', () => {
     expect(service.getToken()).toEqual('some token');
-    service.updateToken('token the second value');
+    service.updateTokens('token the second value', 'refreshToken value');
     expect(service.getToken()).toEqual('Bearer token the second value');
   });
 
