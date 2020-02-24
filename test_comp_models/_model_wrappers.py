@@ -36,8 +36,8 @@ class EfrsLocal_2018(ModelWrapperBase):
     def train(self, dataset):
 
         undetected = 0
-        for img in dataset:
-            name = dataset[img]
+        for name in dataset:
+            img = dataset[name]
             try:
                 cropped_img = crop_one_face(img).img
                 self._cropped_images.append(cropped_img)
@@ -52,8 +52,8 @@ class EfrsLocal_2018(ModelWrapperBase):
 
     def predict(self, dataset):
         recognised = 0
-        for img in dataset:
-            name = dataset[img]
+        for name in dataset:
+            img = dataset[name]
             try:
                 predictions = predict_from_image_with_classifier(img=img, classifier=self._classifier, limit=1)
                 predicted_name = predictions[0].face_name
@@ -62,6 +62,7 @@ class EfrsLocal_2018(ModelWrapperBase):
                 predicted_name = ""
             if predicted_name == name:
                 recognised += 1
+
         return recognised
 
 
@@ -87,8 +88,8 @@ class EfrsRestApi_2018(ModelWrapperBase):
 
     def train(self, dataset):
         undetected = 0
-        for img in dataset:
-            name = dataset[img]
+        for name in dataset:
+            img = dataset[name]
             response = requests.post(f"{self._host}/faces/{name}?retrain=no",
                                      headers={'X-Api-Key': self._api_key},
                                      files={'file': numpy_to_jpg_file(img)})
@@ -106,8 +107,8 @@ class EfrsRestApi_2018(ModelWrapperBase):
 
     def predict(self, dataset):
         recognized = 0
-        for img in dataset:
-            name = dataset[img]
+        for name in dataset:
+            img = dataset[name]
             response = requests.post(f"{self._host}/recognize",
                                      headers={'X-Api-Key': self._api_key},
                                      files={'file': numpy_to_jpg_file(img)})
