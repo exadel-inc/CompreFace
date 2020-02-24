@@ -40,7 +40,6 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((response: any): Observable<HttpEvent<any>> => {
         if (response instanceof HttpErrorResponse && response.status === 401) {
           if (response.error.message === 'Error during authentication') {
-            console.log('refreshToken run');
             return this.authService.refreshToken(request);
           } else {
             this.authService.logOut();

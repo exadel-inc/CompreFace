@@ -18,7 +18,7 @@ export class AuthService {
   refreshInProgress: boolean;
   requests = [];
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router, ) {
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {
     this.token$ = new BehaviorSubject<string>(localStorage.getItem('token'));
   }
 
@@ -93,7 +93,6 @@ export class AuthService {
           () => {
             this.logOut();
             this.refreshInProgress = false;
-            console.log('logout');
           });
     }
   }
