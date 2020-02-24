@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Observable, Subscription} from 'rxjs';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {signUp} from '../../store/auth/action';
+import {resetErrorMessage, signUp} from '../../store/auth/action';
 import {selectAuthState} from '../../store/auth/selectors';
 import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
 import {SignUp} from '../../data/sign-up';
@@ -55,6 +55,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.store.dispatch(resetErrorMessage());
     this.stateSubscription.unsubscribe();
   }
 

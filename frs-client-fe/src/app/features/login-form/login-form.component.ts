@@ -5,7 +5,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Observable, Subscription} from 'rxjs';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {logIn} from '../../store/auth/action';
+import {logIn, resetErrorMessage} from '../../store/auth/action';
 import {selectAuthState} from '../../store/auth/selectors';
 
 @Component({
@@ -41,6 +41,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.store.dispatch(resetErrorMessage());
     this.stateSubscription.unsubscribe();
   }
 
