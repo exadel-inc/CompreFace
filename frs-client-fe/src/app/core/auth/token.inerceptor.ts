@@ -39,7 +39,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((response: any): Observable<HttpEvent<any>> => {
         if (response instanceof HttpErrorResponse && response.status === 401) {
-          if (response.error.message === 'Error during authentication') {
+          if (response.error.error_description && response.error.error_description.includes('Access token expired:')) {
             return this.authService.refreshToken(request);
           } else {
             this.authService.logOut();

@@ -397,12 +397,12 @@ function isModelAccessAllowed(appId, orgId) {
 function auth(req, res, next) {
   if (req && req.headers.authorization === `Bearer ${access_token}`){
     if((+new Date() - refreshTokenTime) > timeStamp) {
-      return res.status(401).send({message: 'Error during authentication'});
+      return res.status(401).send({error_description: 'Access token expired: some_token_value'});
     } else {
       return next();
     }
   }
-  return res.status(401).send({message: 'Invalid basic authentication token'});
+  return res.status(401).send({error_description: 'Bad credentials'});
 }
 
 function wait(time = 1000) {
