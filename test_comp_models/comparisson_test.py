@@ -86,13 +86,13 @@ def calculate_accuracy(dataset_train, dataset_test, create_model_1):
     len_testset = len(dataset_test)
     recognized_1 = model_1.predict(dataset_test)
     #recognized_2 = model_2.predict(dataset_test)
-    recognized_ratio_1 = recognized_1 / detected_1
+    recognized_ratio_1 = recognized_1 / len_testset
     #recognized_ratio_2 = recognized_2 / detected_2
 
-    print("Model #1 detection " + str(detected_1) + "/" + str(len_trainset) + "(" + str(detected_ratio_1) + "%")
+    print("Model #1 detection " + str(detected_1) + "/" + str(len_trainset) + "(" + str(detected_ratio_1) + "%)")
     #print("Model #2 detection " + detected_2 + "/" + len_trainset + "(" + detected_ratio_2 + "%")
 
-    print("Model #1 recognition " + str(recognized_1) + "/" + str(detected_1) + "(" + str(recognized_ratio_1) + "%)")
+    print("Model #1 recognition " + str(recognized_1) + "/" + str(len_testset) + "(" + str(recognized_ratio_1) + "%)")
     #print("Model #2 detection " + recognized_2 + "/" + detected_2 + "(" + recognized_ratio_2 + "%)")
 
     return recognized_ratio_1, detected_1 #, recognized_ratio_2, detected_2
