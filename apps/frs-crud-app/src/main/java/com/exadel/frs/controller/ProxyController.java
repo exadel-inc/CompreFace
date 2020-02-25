@@ -104,7 +104,6 @@ public class ProxyController {
                                 request.getMethod().equals(urlMethod.getHttpMethod().toString())
                 );
 
-
         if (appHasOnlyReadAccessToModel && isNotTrue(isReadOnlyRequest)) {
             throw new AccessDeniedException();
         }
