@@ -180,7 +180,7 @@ class OrganizationServiceTest {
     @MethodSource("writeRoles")
     void failUpdateOrganizationSelfRoleChange(OrganizationRole organizationRole) {
         UserRoleUpdateDto userRoleUpdateDto = UserRoleUpdateDto.builder()
-                .id("userGuid")
+                .userId("userGuid")
                 .role(OrganizationRole.USER.toString())
                 .build();
         Long userId = 1L;

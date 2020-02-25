@@ -95,11 +95,11 @@ public class OrganizationService {
         organizationRepository.save(organizationFromRepo);
     }
 
-    public void updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
+    public UserOrganizationRole updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
         Organization organization = getOrganization(guid);
         verifyUserHasWritePrivileges(adminId, organization);
 
-        User user = userService.getUserByGuid(userRoleUpdateDto.getId());
+        User user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
             throw new SelfRoleChangeException();
         }
@@ -111,6 +111,8 @@ public class OrganizationService {
         userOrganizationRole.setRole(newOrgRole);
 
         organizationRepository.save(organization);
+
+        return userOrganizationRole;
     }
 
     public UserOrganizationRole inviteUser(final UserInviteDto userInviteDto, final String guid, final Long adminId) {

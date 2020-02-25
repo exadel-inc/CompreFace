@@ -155,7 +155,7 @@ public class AppService {
         App app = getApp(guid);
         verifyUserHasWritePrivileges(adminId, app.getOrganization());
 
-        User user = userService.getUserByGuid(userRoleUpdateDto.getId());
+        User user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
             throw new SelfRoleChangeException();
         }
