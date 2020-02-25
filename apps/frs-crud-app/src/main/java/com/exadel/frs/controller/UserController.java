@@ -39,7 +39,8 @@ public class UserController {
     @PostMapping("/register")
     @ApiOperation(value = "Register new user")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Such username or email already registered | One or more of required fields are empty")
+            @ApiResponse(code = 400, message = "Such username or email already registered | One or more of required fields are empty"),
+            @ApiResponse(code = 400, message = "Incorrect email format")
     })
     public UserResponseDto createUser(
             @ApiParam(value = "User object that needs to be created", required = true)
