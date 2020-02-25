@@ -13,7 +13,7 @@ import {setSelectedId} from '../../store/organization/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {Router} from '@angular/router';
 import {IFacade} from '../../data/facade/IFacade';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take} from 'rxjs/operators';
 
 @Injectable()
 export class OrganizationHeaderFacade implements IFacade {
@@ -57,13 +57,13 @@ export class OrganizationHeaderFacade implements IFacade {
     this.organizationEnService.delete(this.selectedId);
 
     let orgId = '';
-    const orgIdSub = this.organizations$.pipe(
+    this.organizations$.pipe(
+      take(1),
       map(org => org[0].id),
     ).subscribe(id => orgId = id);
 
     this.store.dispatch(setSelectedId({ selectId: orgId }));
     this.router.navigate([ROUTERS_URL.ORGANIZATION, orgId]);
-    orgIdSub.unsubscribe();
   }
 
   add(org) {
