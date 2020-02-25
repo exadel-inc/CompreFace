@@ -1,0 +1,13 @@
+<h1 mat-dialog-title>Delete {{data.entityType}}</h1>
+<div mat-dialog-content>
+  Organization {{data.entityName}} and all related data will be deleted.
+  <br>
+  <br>
+  Are you sure?
+  <br>
+  <br>
+</div>
+<div mat-dialog-actions>
+  <button class="button-cancel" mat-button (click)="onCancelClick()">CANCEL</button>
+  <button class="button-create" mat-button [mat-dialog-close]="true" cdkFocusInitial>YES</button>
+</div>

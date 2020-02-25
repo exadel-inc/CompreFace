@@ -5,6 +5,7 @@ import {Observable} from 'rxjs';
 import {CreateDialogComponent} from '../create-dialog/create-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {EditDialogComponent} from '../edit-dialog/edit-dialog.component';
+import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-organization-header',
@@ -69,6 +70,22 @@ export class OrganizationHeaderComponent implements OnInit {
   }
 
   delete() {
-    this.organizationHeaderFacade.delete();
+    let currentName = '';
+    this.organizationHeaderFacade.organizationName$.subscribe(name => {
+      currentName = name;
+    });
+
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      width: '400px',
+      data: {
+        entityType: 'organization',
+        entityName: currentName,
+        name: ''
+      }
+    });
+
+    dialog.afterClosed().subscribe(res => {
+      if (res) { this.organizationHeaderFacade.delete(); }
+    });
   }
 }
