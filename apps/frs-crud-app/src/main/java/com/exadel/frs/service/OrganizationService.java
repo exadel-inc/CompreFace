@@ -1,13 +1,24 @@
 package com.exadel.frs.service;
 
-import com.exadel.frs.dto.ui.*;
+import com.exadel.frs.dto.ui.OrgCreateDto;
+import com.exadel.frs.dto.ui.OrgUpdateDto;
+import com.exadel.frs.dto.ui.UserInviteDto;
+import com.exadel.frs.dto.ui.UserRemoveDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
+import com.exadel.frs.exception.FieldRequiredException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.OrganizationNotFoundException;
+import com.exadel.frs.exception.SelfRemoveException;
+import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.exception.UserAlreadyInOrganizationException;
 import com.exadel.frs.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -90,7 +101,7 @@ public class OrganizationService {
         }
         Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
-        boolean isNewName = !organizationFromRepo.getName().equals(orgUpdateDto.getName());
+        val isNewName = !organizationFromRepo.getName().equals(orgUpdateDto.getName());
         if (isNewName) {
             verifyNameIsUnique(orgUpdateDto.getName());
             organizationFromRepo.setName(orgUpdateDto.getName());

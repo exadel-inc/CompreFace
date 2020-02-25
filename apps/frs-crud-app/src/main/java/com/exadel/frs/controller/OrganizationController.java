@@ -8,6 +8,7 @@ import com.exadel.frs.dto.ui.UserRemoveDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.enums.OrganizationRole;
+import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.OrganizationMapper;
 import com.exadel.frs.mapper.UserOrgRoleMapper;
 import com.exadel.frs.service.OrganizationService;
@@ -29,7 +30,6 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.exadel.frs.helpers.SecurityUtils.getPrincipalId;
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 
 @RestController
@@ -48,8 +48,8 @@ public class OrganizationController {
             final String guid
     ) {
         return organizationMapper.toResponseDto(
-                organizationService.getOrganization(guid, getPrincipalId()),
-                getPrincipalId()
+                organizationService.getOrganization(guid, SecurityUtils.getPrincipalId()),
+                SecurityUtils.getPrincipalId()
         );
     }
 
@@ -57,8 +57,8 @@ public class OrganizationController {
     @ApiOperation(value = "Get all organizations, the user is a member of")
     public List<OrgResponseDto> getOrganizations() {
         return organizationMapper.toResponseDto(
-                organizationService.getOrganizations(getPrincipalId()),
-                getPrincipalId()
+                organizationService.getOrganizations(SecurityUtils.getPrincipalId()),
+                SecurityUtils.getPrincipalId()
         );
     }
 
@@ -75,8 +75,8 @@ public class OrganizationController {
             final OrgCreateDto orgCreateDto
     ) {
         return organizationMapper.toResponseDto(
-                organizationService.createOrganization(orgCreateDto, getPrincipalId()),
-                getPrincipalId()
+                organizationService.createOrganization(orgCreateDto, SecurityUtils.getPrincipalId()),
+                SecurityUtils.getPrincipalId()
         );
     }
 
@@ -93,9 +93,9 @@ public class OrganizationController {
             @RequestBody
             final OrgUpdateDto orgUpdateDto
     ) {
-        var updatedOrganization = organizationService.updateOrganization(orgUpdateDto, guid, getPrincipalId());
+        var updatedOrganization = organizationService.updateOrganization(orgUpdateDto, guid, SecurityUtils.getPrincipalId());
 
-        return organizationMapper.toResponseDto(updatedOrganization, getPrincipalId());
+        return organizationMapper.toResponseDto(updatedOrganization, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/org/{guid}")
@@ -105,7 +105,7 @@ public class OrganizationController {
             @PathVariable
             final String guid
     ) {
-        organizationService.deleteOrganization(guid, getPrincipalId());
+        organizationService.deleteOrganization(guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/org/roles")
@@ -121,7 +121,7 @@ public class OrganizationController {
             @PathVariable
             final String guid
     ) {
-        return organizationService.getOrgRolesToAssign(guid, getPrincipalId());
+        return organizationService.getOrgRolesToAssign(guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/org/{guid}/roles")
@@ -132,7 +132,7 @@ public class OrganizationController {
             final String guid
     ) {
         return userOrgRoleMapper.toUserRoleResponseDto(
-                organizationService.getOrgUsers(guid, getPrincipalId())
+                organizationService.getOrgUsers(guid, SecurityUtils.getPrincipalId())
         );
     }
 
@@ -148,7 +148,7 @@ public class OrganizationController {
             final UserInviteDto userInviteDto
     ) {
         return userOrgRoleMapper.toUserRoleResponseDto(
-                organizationService.inviteUser(userInviteDto, guid, getPrincipalId())
+                organizationService.inviteUser(userInviteDto, guid, SecurityUtils.getPrincipalId())
         );
     }
 
@@ -162,7 +162,7 @@ public class OrganizationController {
             @RequestBody
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
-        organizationService.updateUserOrgRole(userRoleUpdateDto, guid, getPrincipalId());
+        organizationService.updateUserOrgRole(userRoleUpdateDto, guid, SecurityUtils.getPrincipalId());
     }
 
     @PutMapping("/org/{guid}/remove")
@@ -175,6 +175,6 @@ public class OrganizationController {
             @RequestBody
             final UserRemoveDto userRemoveDto
     ) {
-        organizationService.removeUserFromOrganization(userRemoveDto, guid, getPrincipalId());
+        organizationService.removeUserFromOrganization(userRemoveDto, guid, SecurityUtils.getPrincipalId());
     }
 }
