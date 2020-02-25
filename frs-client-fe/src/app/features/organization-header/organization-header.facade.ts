@@ -53,6 +53,19 @@ export class OrganizationHeaderFacade implements IFacade {
     this.organizationEnService.update({name, id: this.selectedId});
   }
 
+  delete() {
+    this.organizationEnService.delete(this.selectedId);
+
+    let orgId = '';
+    const orgIdSub = this.organizations$.pipe(
+      map(org => org[0].id),
+    ).subscribe(id => orgId = id);
+
+    this.store.dispatch(setSelectedId({ selectId: orgId }));
+    this.router.navigate([ROUTERS_URL.ORGANIZATION, orgId]);
+    orgIdSub.unsubscribe();
+  }
+
   add(org) {
     this.organizationEnService.add(org).subscribe(responce => {
       if (responce) {

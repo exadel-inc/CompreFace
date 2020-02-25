@@ -67,4 +67,8 @@ export class OrganizationHeaderComponent implements OnInit {
   rename(name) {
     this.organizationHeaderFacade.rename(name);
   }
+
+  delete() {
+    this.organizationHeaderFacade.delete();
+  }
 }

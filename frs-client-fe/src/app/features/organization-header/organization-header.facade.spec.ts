@@ -47,7 +47,8 @@ describe('OrganizationHeaderFacade', () => {
           useValue: {
             entities$: of(orgs),
             update: jasmine.createSpy(),
-            add: jasmine.createSpy().and.returnValue({ subscribe: () => { } })
+            add: jasmine.createSpy().and.returnValue({ subscribe: () => { } }),
+            delete: jasmine.createSpy().and.returnValue({ subscribe: () => { } })
           }
         }
       ],
@@ -78,5 +79,12 @@ describe('OrganizationHeaderFacade', () => {
     facade.add({ name: 'new name' });
     expect(facade.organizationEnService.add).toHaveBeenCalledTimes(1);
     expect(facade.organizationEnService.add).toHaveBeenCalledWith({ name: 'new name' });
+  });
+
+  it('should call delete organization', () => {
+    expect(facade.organizationEnService.delete).toHaveBeenCalledTimes(0);
+    facade.delete();
+    expect(facade.organizationEnService.delete).toHaveBeenCalledTimes(1);
+    expect(facade.router.navigate).toHaveBeenCalledTimes(1);
   });
 });
