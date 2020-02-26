@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/co
 import {UserListFacade} from './user-list-facade';
 import {Observable, Subscription} from 'rxjs';
 import {AppUser} from 'src/app/data/appUser';
-import {map, switchMap} from 'rxjs/operators';
+import {map, switchMap, take} from 'rxjs/operators';
 import {ITableConfig} from '../table/table.component';
 import {SnackBarService} from '../snackbar/snackbar.service';
 import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
@@ -49,6 +49,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   public onDelete(user: AppUser): void {
     this.userListFacade.selectedOrganizationName$
       .pipe(
+        take(1),
         switchMap((name: string) => {
           return this.dialog.open(DeleteDialogComponent, {
             width: '400px',
