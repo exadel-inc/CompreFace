@@ -1,6 +1,7 @@
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {MatTableModule, MatSelectModule} from '@angular/material';
 import {UserTableComponent} from './user-table.component';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 
 describe('UserTableComponent', () => {
   let component: UserTableComponent;
@@ -9,7 +10,8 @@ describe('UserTableComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MatTableModule, MatSelectModule],
-      declarations: [ UserTableComponent ]
+      declarations: [ UserTableComponent ],
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   }));
