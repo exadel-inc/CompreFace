@@ -8,8 +8,9 @@
         (selectIdChange)="selectOrganization($event)">
       </app-entity-title>
     </div>
-    <div class="button-wrapper">
-      <button mat-button type="submit" color="primary" (click)="edit()">EDIT</button>
+    <div class="button-wrapper" *ngIf="userRole$ | async as userRole">
+      <button class="edit_button" mat-button type="submit" color="primary" (click)="edit()">EDIT</button>
+      <button *ngIf="userRole === 'OWNER'" mat-button type="submit" color="primary" (click)="delete()">DELETE</button>
       <button mat-button type="submit" color="primary" (click)="createNew()">CREATE</button>
     </div>
   </mat-card>

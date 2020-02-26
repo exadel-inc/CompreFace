@@ -16,13 +16,15 @@ import {EditDialogComponent} from './features/edit-dialog/edit-dialog.component'
 import {FooterModule} from './features/footer/footer.module';
 import {SnackBarModule} from './features/snackbar/snackbar.module';
 import {AppStoreModule} from './store/app-store.module';
+import {DeleteDialogComponent} from './features/delete-dialog/delete-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
     MainLayoutComponent,
     CreateDialogComponent,
     EditDialogComponent,
-    AlertComponent
+    AlertComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -52,7 +54,7 @@ import {AppStoreModule} from './store/app-store.module';
     }
   ],
   bootstrap: [AppComponent],
-  entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent]
+  entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent, DeleteDialogComponent]
 })
 export class AppModule {
 }

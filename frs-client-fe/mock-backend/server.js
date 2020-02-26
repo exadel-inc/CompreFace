@@ -50,7 +50,7 @@ let user = {
 };
 
 let timeStamp = 0;
-const refreshTokenTime = 1 * 10 * 1000; // minute sec ms
+const refreshTokenTime = 1 * 60 * 1000; // minute sec ms
 
 let access_token = '';
 let refresh_token = '';
@@ -125,6 +125,12 @@ app.put('/org/:id', auth, function (req, res) {
   let organization = mockData.organizations.find(item => item.id === id);
   organization.name = newData.name;
   res.send(organization);
+});
+
+app.delete('/org/:id', auth, function (req, res) {
+  const id = req.params.id;
+  mockData.organizations= mockData.organizations.filter(item => item.id !== id);
+  res.status(200).send({});
 });
 
 app.get('/org/:orgId/apps', auth, wait(), (req, res) => {
