@@ -70,7 +70,7 @@ public class AppController {
     @PostMapping("/app")
     @ApiOperation(value = "Create application")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application name is required")
+            @ApiResponse(code = 400, message = "Field name cannot be empty")
     })
     public AppResponseDto createApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
@@ -87,7 +87,7 @@ public class AppController {
     @PutMapping("/app/{guid}")
     @ApiOperation(value = "Update application")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application name is required")
+            @ApiResponse(code = 400, message = "Field name cannot be empty")
     })
     public AppResponseDto updateApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)

@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.springframework.util.StringUtils.*;
+
 @Service
 @RequiredArgsConstructor
 public class ModelService {
@@ -73,7 +75,7 @@ public class ModelService {
     public Model createModel(final ModelCreateDto modelCreateDto, final String orgGuid, final String appGuid, final Long userId) {
         App app = appService.getApp(appGuid);
         verifyUserHasWritePrivileges(userId, app);
-        if (StringUtils.isEmpty(modelCreateDto.getName())) {
+        if (isEmpty(modelCreateDto.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
         if (!app.getOrganization().getGuid().equals(orgGuid)) {
@@ -93,7 +95,7 @@ public class ModelService {
         verifyNameIsNotEmpty(modelUpdateDto.getName());
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        if (!StringUtils.isEmpty(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
+        if (!isEmpty(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
             verifyNameIsUnique(modelUpdateDto.getName(), repoModel.getApp().getId());
             repoModel.setName(modelUpdateDto.getName());
         }
@@ -114,8 +116,8 @@ public class ModelService {
     }
 
     private void verifyNameIsNotEmpty(final String newNameForModel) {
-        if (StringUtils.isEmpty(newNameForModel)) {
-            throw new FieldRequiredException("Model name");
+        if (isEmpty(newNameForModel)) {
+            throw new EmptyRequiredFieldException("name");
         }
     }
 }

@@ -74,7 +74,7 @@ public class ModelController {
     @PostMapping("/model")
     @ApiOperation(value = "Create model")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Model name is required | Application access type to model is not correct")
+            @ApiResponse(code = 400, message = "Field name cannot be empty | Application access type to model is not correct")
     })
     public ModelResponseDto createModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
@@ -96,8 +96,7 @@ public class ModelController {
     @PutMapping("/model/{guid}")
     @ApiOperation(value = "Update model data")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application access type to model is not correct"),
-            @ApiResponse(code = 400, message = "Model name is required")
+            @ApiResponse(code = 400, message = "Field name cannot be empty | Application access type to model is not correct")
     })
     public void updateModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)

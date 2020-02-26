@@ -14,7 +14,6 @@ import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.FieldRequiredException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRoleChangeException;
@@ -201,7 +200,7 @@ public class AppService {
 
     private void verifyNewNameForApplication(final String name) {
         if (isBlank(name)) {
-            throw new FieldRequiredException("Application name");
+            throw new EmptyRequiredFieldException("name");
         }
     }
 }

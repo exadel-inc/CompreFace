@@ -1,7 +1,7 @@
 package com.exadel.frs.controller;
 
 import com.exadel.frs.dto.ui.ModelUpdateDto;
-import com.exadel.frs.exception.FieldRequiredException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.security.JwtAuthenticationFilter;
@@ -55,7 +55,7 @@ class ModelControllerTest {
     @Test
     void shouldReturnMessageAndCodeWhenModelNameIsMissing() throws Exception {
         doCallRealMethod().when(modelService).updateModel(any(), any(), any());
-        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new FieldRequiredException("Model name")));
+        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("name")));
         val bodyWithEmptyName = new ModelUpdateDto();
         bodyWithEmptyName.setName("");
 

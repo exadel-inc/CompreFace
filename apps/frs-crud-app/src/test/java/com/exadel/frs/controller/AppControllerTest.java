@@ -5,7 +5,6 @@ import com.exadel.frs.entity.App;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.BasicException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.FieldRequiredException;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.mapper.UserAppRoleMapper;
 import com.exadel.frs.service.AppService;
@@ -24,7 +23,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
 import static com.exadel.frs.utils.TestUtils.USER_ID;
 import static com.exadel.frs.utils.TestUtils.buildUser;
@@ -92,7 +90,7 @@ class AppControllerTest {
 
         doThrow(expectedException).when(appService).createApp(any(), eq(ORG_GUID), eq(USER_ID));
 
-        MockHttpServletRequestBuilder request = post("/org/" + ORG_GUID + "/app")
+        val request = post("/org/" + ORG_GUID + "/app")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -107,7 +105,7 @@ class AppControllerTest {
     @Test
     public void shouldReturn400AndErrorMessageWhenRenameAppToEmpty() throws Exception {
         doCallRealMethod().when(appService).updateApp(any(), any(), any());
-        String expectedContent = mapper.writeValueAsString(buildExceptionResponse(new FieldRequiredException("Application name")));
+        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("name")));
 
         val bodyWithEmptyName = new AppUpdateDto();
         bodyWithEmptyName.setName("");
