@@ -2,12 +2,7 @@ package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 
-import com.exadel.frs.dto.ui.AppCreateDto;
-import com.exadel.frs.dto.ui.AppResponseDto;
-import com.exadel.frs.dto.ui.AppUpdateDto;
-import com.exadel.frs.dto.ui.UserInviteDto;
-import com.exadel.frs.dto.ui.UserRoleResponseDto;
-import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.dto.ui.*;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
@@ -20,6 +15,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import java.util.List;
+import java.util.UUID;
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
@@ -193,5 +189,20 @@ public class AppController {
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
         appService.updateUserAppRole(userRoleUpdateDto, guid, SecurityUtils.getPrincipalId());
+    }
+
+    @GetMapping("/app/{guid}/model/request")
+    @ApiOperation("Request for the model to be shared.")
+    public ModelShareResponseDto modelShareRequest(
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String orgGuid,
+            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String guid
+    ) {
+        UUID requestId = appService.generateUuidToRequestModelShare(guid);
+
+        return ModelShareResponseDto.builder().modelRequestUuid(requestId).build();
     }
 }

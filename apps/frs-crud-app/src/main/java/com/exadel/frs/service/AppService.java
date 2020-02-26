@@ -8,8 +8,11 @@ import com.exadel.frs.entity.*;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.*;
+import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.repository.ModelShareRequestRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -25,6 +28,7 @@ public class AppService {
     private final AppRepository appRepository;
     private final OrganizationService organizationService;
     private final UserService userService;
+    private final ModelShareRequestRepository modelShareRequestRepository;
 
     public App getApp(final String appGuid) {
         return appRepository.findByGuid(appGuid)
@@ -181,4 +185,13 @@ public class AppService {
         appRepository.deleteById(repoApp.getId());
     }
 
+    public UUID generateUuidToRequestModelShare(String appGuid) {
+        final App repoApp = getApp(appGuid);
+        verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), repoApp.getOrganization());
+        val requestId = UUID.randomUUID();
+        val id = ModelShareRequestId.builder().appId(repoApp.getId()).requestId(requestId).build();
+        val shareRequest = ModelShareRequest.builder().app(repoApp).id(id).build();
+        modelShareRequestRepository.save(shareRequest);
+        return requestId;
+    }
 }
