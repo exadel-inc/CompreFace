@@ -14,9 +14,5 @@ export class DeleteDialogComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  onCancelClick(): void {
-    this.dialogRef.close();
-  }
-
   ngOnInit(): void {}
 }

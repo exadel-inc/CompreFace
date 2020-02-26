@@ -7,7 +7,7 @@ import {Store} from '@ngrx/store';
 import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
 import {selectUsers, selectIsPendingUserStore} from 'src/app/store/user/selectors';
 import {selectAllRoles, selectIsPendingRoleStore} from 'src/app/store/role/selectors';
-import {selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
+import {selectUserRollForSelectedOrganization, selectSelectedOrganization} from 'src/app/store/organization/selectors';
 import {map, tap} from 'rxjs/operators';
 import {LoadUsersEntityAction, PutUpdatedUserRoleEntityAction, DeleteUserFromOrganization} from 'src/app/store/user/action';
 import {LoadRolesEntityAction} from 'src/app/store/role/actions';
@@ -16,6 +16,7 @@ import {UserService} from 'src/app/core/user/user.service';
 @Injectable()
 export class UserListFacade implements IFacade {
   public selectedOrganization$: Observable<string>;
+  public selectedOrganizationName$: Observable<string>;
   public users$: Observable<AppUser[]>;
   public availableRoles$: Observable<string[]>;
   public isLoading$: Observable<boolean>;
@@ -26,6 +27,7 @@ export class UserListFacade implements IFacade {
 
   constructor(private store: Store<AppState>, private userService: UserService) {
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
+    this.selectedOrganizationName$ = store.select(selectSelectedOrganization).pipe(map(org => org.name));
     this.users$ = store.select(selectUsers);
 
     const allRoles$ = store.select(selectAllRoles);

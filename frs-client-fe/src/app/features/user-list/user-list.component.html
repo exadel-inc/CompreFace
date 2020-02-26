@@ -10,7 +10,7 @@
     </form>
   </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
-  <app-user-table 
+  <app-user-table
     class="app-table"
     [isLoading$]="isLoading$"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
