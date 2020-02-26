@@ -1,19 +1,32 @@
 package com.exadel.frs.service;
 
-import com.exadel.frs.dto.ui.*;
+import com.exadel.frs.dto.ui.OrgCreateDto;
+import com.exadel.frs.dto.ui.OrgUpdateDto;
+import com.exadel.frs.dto.ui.UserInviteDto;
+import com.exadel.frs.dto.ui.UserRemoveDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
+import com.exadel.frs.exception.FieldRequiredException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.OrganizationNotFoundException;
+import com.exadel.frs.exception.SelfRemoveException;
+import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.exception.UserAlreadyInOrganizationException;
 import com.exadel.frs.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -82,24 +95,26 @@ public class OrganizationService {
         return organizationRepository.save(organization);
     }
 
-    public void updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
-        if (StringUtils.isEmpty(orgUpdateDto.getName())) {
+    public Organization updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
+        if (isBlank(orgUpdateDto.getName())) {
             throw new FieldRequiredException("Organization name");
         }
         Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
-        if (!StringUtils.isEmpty(orgUpdateDto.getName()) && !organizationFromRepo.getName().equals(orgUpdateDto.getName())) {
+        val isNewName = !organizationFromRepo.getName().equals(orgUpdateDto.getName());
+        if (isNewName) {
             verifyNameIsUnique(orgUpdateDto.getName());
             organizationFromRepo.setName(orgUpdateDto.getName());
         }
-        organizationRepository.save(organizationFromRepo);
+
+        return organizationRepository.save(organizationFromRepo);
     }
 
-    public void updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
+    public UserOrganizationRole updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
         Organization organization = getOrganization(guid);
         verifyUserHasWritePrivileges(adminId, organization);
 
-        User user = userService.getUserByGuid(userRoleUpdateDto.getId());
+        User user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
             throw new SelfRoleChangeException();
         }
@@ -111,6 +126,8 @@ public class OrganizationService {
         userOrganizationRole.setRole(newOrgRole);
 
         organizationRepository.save(organization);
+
+        return userOrganizationRole;
     }
 
     public UserOrganizationRole inviteUser(final UserInviteDto userInviteDto, final String guid, final Long adminId) {

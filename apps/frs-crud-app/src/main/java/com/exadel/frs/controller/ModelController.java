@@ -1,6 +1,7 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
+
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -12,8 +13,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
 import java.util.List;
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -88,8 +91,7 @@ public class ModelController {
             @RequestBody
             final ModelCreateDto modelCreateDto) {
         return modelMapper.toResponseDto(
-                modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()),
-                appGuid
+                modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()), appGuid
         );
     }
 
@@ -98,7 +100,7 @@ public class ModelController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Field name cannot be empty | Application access type to model is not correct")
     })
-    public void updateModel(
+    public ModelResponseDto updateModel(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -113,12 +115,14 @@ public class ModelController {
             @RequestBody
             final ModelUpdateDto modelUpdateDto
     ) {
-        modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
+        var updatedModel = modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
+
+        return modelMapper.toResponseDto(updatedModel, appGuid);
     }
 
     @PutMapping("/model/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for model")
-    public void regenerateApiKey(
+    public ModelResponseDto regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -130,6 +134,8 @@ public class ModelController {
             final String guid
     ) {
         modelService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
+
+        return modelMapper.toResponseDto(modelService.getModel(guid, SecurityUtils.getPrincipalId()), appGuid);
     }
 
     @DeleteMapping("/model/{guid}")
