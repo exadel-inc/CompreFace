@@ -2,11 +2,12 @@ import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/co
 import {UserListFacade} from './user-list-facade';
 import {Observable, Subscription} from 'rxjs';
 import {AppUser} from 'src/app/data/appUser';
-import {map} from 'rxjs/operators';
+import {map, switchMap, take} from 'rxjs/operators';
 import {ITableConfig} from '../table/table.component';
 import {SnackBarService} from '../snackbar/snackbar.service';
 import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
 import {MatDialog} from '@angular/material';
+import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-user-list-container',
@@ -32,7 +33,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       return {
-          columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
+          columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }, {title: 'delete', property: 'delete'}],
           data: users
       };
     }));
@@ -43,6 +44,28 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   public onChange(user: AppUser): void {
     this.userListFacade.updateUserRole(user.id, user.role);
+  }
+
+  public onDelete(user: AppUser): void {
+    this.userListFacade.selectedOrganizationName$
+      .pipe(
+        take(1),
+        switchMap((name: string) => {
+          return this.dialog.open(DeleteDialogComponent, {
+            width: '400px',
+            data: {
+              entityType: 'User',
+              entityName: `${user.firstName} ${user.lastName}`,
+              organizationName: name
+            }
+          }).afterClosed();
+        })
+      )
+      .subscribe(res => {
+        if (res) {
+          this.userListFacade.deleteUser(user.userId);
+        }
+      });
   }
 
   public onInviteUser(): void {

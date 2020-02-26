@@ -3,7 +3,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {AppUser} from 'src/app/data/appUser';
 import {environment} from '../../../environments/environment';
-import {map, catchError} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -25,6 +25,10 @@ export class UserService {
 
   public inviteUser(organizationId: string, userEmail: string, role: string): Observable<{message: string}> {
     return this.http.put<{message: string}>(`${environment.apiUrl}org/${organizationId}/invite`, { userEmail, role });
+  }
+
+  public delete(organizationId: string, userId: string): Observable<any> {
+    return this.http.put(`${environment.apiUrl}org/${organizationId}/remove`, {userId});
   }
 
   public fetchAvailableRoles(): Observable<string[]> {

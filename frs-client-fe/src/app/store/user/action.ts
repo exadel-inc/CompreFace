@@ -9,3 +9,4 @@ export const PutUpdatedUserRoleEntityAction = createAction(
   props<{ organizationId: string; user: { id: string, role: string } }>()
 );
 export const UpdateUserRoleEntityAction = createAction('[User/API] Update Role', props<{ user: AppUser }>());
+export const DeleteUserFromOrganization = createAction('[User/API] Delete User', props<{ userId: string; organizationId: string }>());

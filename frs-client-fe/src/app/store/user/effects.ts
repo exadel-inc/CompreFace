@@ -5,7 +5,8 @@ import {
   AddUsersEntityAction,
   UpdateUserRoleEntityAction,
   LoadUsersEntityAction,
-  PutUpdatedUserRoleEntityAction
+  PutUpdatedUserRoleEntityAction,
+  DeleteUserFromOrganization
 } from 'src/app/store/user/action';
 import {switchMap, map, catchError} from 'rxjs/operators';
 import {AppUser} from 'src/app/data/appUser';
@@ -45,6 +46,17 @@ export class UserListEffect {
         return [LoadUsersEntityAction({organizationId})];
       })
     );
+
+  @Effect()
+  DeleteUserFromOrganization =
+      this.actions.pipe(
+        ofType(DeleteUserFromOrganization),
+        switchMap(action => forkJoin([
+          this.userService.delete(action.organizationId, action.userId),
+          of(action.organizationId)
+        ])),
+        map(([deleteResult, organizationId]) => LoadUsersEntityAction({organizationId}))
+      );
 
   @Effect()
   FetchAvailableRoles = this.actions

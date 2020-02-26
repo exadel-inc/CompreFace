@@ -215,6 +215,20 @@ app.put('/org/:orgId/role', auth, wait(), (req, res) => {
   }
 });
 
+app.put('/org/:orgId/remove', auth, wait(), (req, res) => {
+  const organizationId = req.params.orgId;
+  const userId = req.body.userId;
+
+  const user = mockData.users.find(user => user.organizationId === organizationId && userId === user.id);
+
+  if(user) {
+    user.organizationId = null;
+    res.status(200).json(user);
+  } else {
+    res.sendStatus(404);
+  }
+}); 
+
 app.put('/org/:orgId/invite', auth, (req, res) => {
   const organizationId = req.params.orgId;
   const { userEmail } = req.body;

@@ -1,9 +1,14 @@
 <h1 mat-dialog-title>Delete {{data.entityType}}</h1>
 <div mat-dialog-content>
-  <p>Organization {{data.entityName}} and all related data will be deleted.</p>
-  <p>Are you sure?</p>
+  <ng-container [ngSwitch]="data.entityType.toLowerCase()">
+    <ng-container *ngSwitchCase="'organization'">
+      <p>Organization {{data.entityName}} and all related data will be deleted.</p>
+      <p>Are you sure?</p>
+    </ng-container>
+    <ng-container *ngSwitchCase="'user'"><p>Are you sure you want remove user {{data.entityName}} from {{data.organizationName}}?</p></ng-container>
+  </ng-container>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-button (click)="onCancelClick()">CANCEL</button>
+  <button class="button-cancel" mat-button [mat-dialog-close]="false">CANCEL</button>
   <button class="button-create" mat-button [mat-dialog-close]="true" cdkFocusInitial>YES</button>
 </div>

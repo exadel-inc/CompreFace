@@ -18,6 +18,13 @@
           </mat-select>
         </ng-template>
       </mat-form-field>
+  </td>
+  </ng-container>
+
+  <ng-container matColumnDef="delete">
+    <th mat-header-cell *matHeaderCellDef> </th>
+    <td mat-cell *matCellDef="let element" >
+      <mat-icon (click)="delete(element)" title="remove user">delete_outline</mat-icon>
     </td>
   </ng-container>
 
