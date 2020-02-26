@@ -1,46 +1,52 @@
 [
   {
     "id": 0,
+    "userId": 0,
     "organizationId": "ksdfklsn1111111",
     "firstName": "John",
     "email": "email@ohn.com",
     "lastName": "Malkovich",
-    "accessLevel": "USER"
+    "role": "USER"
   },
   {
     "id": 1,
+    "userId": 1,
     "organizationId": "ksdfklsn1111111",
     "firstName": "Tony",
     "email": "email@ony.com",
     "lastName": "Stark",
-    "accessLevel": "ADMIN"
+    "role": "ADMIN"
   },
   {
     "id": 2,
+    "userId": 2,
     "organizationId": "ksdfklsn1111111",
     "firstName": "User",
     "email": "email@ser.com",
     "lastName": "Role",
-    "accessLevel": "USER"
+    "role": "USER"
   },
   {
     "id": 3,
+    "userId": 3,
     "organizationId": "asdfdasdfdaf222222222222",
     "firstName": "John",
     "email": "email@ohn.com",
     "lastName": "Doe",
-    "accessLevel": "USER"
+    "role": "USER"
   },
   {
     "id": 4,
+    "userId": 4,
     "organizationId": "asdfdasdfdaf222222222222",
     "firstName": "Tony",
     "email": "email@ony.com",
     "lastName": "Montana",
-    "accessLevel": "ADMIN"
+    "role": "ADMIN"
   },
   {
     "id": 5,
+    "userId": 5,
     "organizationId": "asdfdasdfdaf222222222222",
     "firstName": "Tommy",
     "email": "email@ommy.com",

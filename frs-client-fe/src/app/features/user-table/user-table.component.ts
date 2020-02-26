@@ -2,6 +2,7 @@ import {Component, OnInit, Input, ChangeDetectionStrategy, Output, EventEmitter}
 import {TableComponent} from '../table/table.component';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {AppUser} from 'src/app/data/appUser';
 
 
 @Component({
@@ -12,13 +13,13 @@ import {map} from 'rxjs/operators';
 })
 export class UserTableComponent extends TableComponent implements OnInit {
   @Input() availableRoles$: Observable<string[]>;
-  @Output() deleteUser = new EventEmitter<boolean>();
+  @Output() deleteUser = new EventEmitter<AppUser>();
 
   public isRoleChangeAllowed(userRole: string): Observable<boolean> {
     return this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
   }
 
-  public delete(user): void {
+  public delete(user: AppUser): void {
     this.deleteUser.emit(user);
   }
 }
