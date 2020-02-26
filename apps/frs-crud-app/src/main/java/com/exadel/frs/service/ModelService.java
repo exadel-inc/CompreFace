@@ -8,15 +8,21 @@ import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
+import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.ModelNotFoundException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -89,14 +95,15 @@ public class ModelService {
         return modelRepository.save(model);
     }
 
-    public void updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
+    public Model updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        if (!StringUtils.isEmpty(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
+        if (isNotBlank(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
             verifyNameIsUnique(modelUpdateDto.getName(), repoModel.getApp().getId());
             repoModel.setName(modelUpdateDto.getName());
         }
-        modelRepository.save(repoModel);
+
+        return modelRepository.save(repoModel);
     }
 
     public void regenerateApiKey(final String guid, final Long userId) {
