@@ -4,6 +4,9 @@ FROM jjanzic/docker-python3-opencv
 ARG DIR=/srv
 ARG IS_DEV_ENV=false
 
+
+
+
 ## Copy sources
 RUN mkdir -p $DIR
 COPY src $DIR/src
@@ -26,8 +29,6 @@ RUN mkdir $DIR/mongo_data
 RUN $DIR/install-dependencies.sh $IS_DEV_ENV
 RUN pip3 --no-cache-dir install -r $DIR/requirements.txt
 
-## Expose port for uWSGI
-EXPOSE 3000
 
 ## Entrypoint
 WORKDIR $DIR
