@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {UserTableComponent} from './user-table.component';
-import {MatTableModule, MatFormFieldModule, MatSelectModule} from '@angular/material';
+import {MatTableModule, MatFormFieldModule, MatSelectModule,  MatIconModule} from '@angular/material';
 import {CommonModule} from '@angular/common';
 
 @NgModule({
@@ -12,7 +12,8 @@ import {CommonModule} from '@angular/common';
     CommonModule,
     MatFormFieldModule,
     MatTableModule,
-    MatSelectModule
+    MatSelectModule,
+    MatIconModule
   ]
 })
 export class UserTableModule { }
