@@ -9,7 +9,7 @@ import {selectUsers, selectIsPendingUserStore} from 'src/app/store/user/selector
 import {selectAllRoles, selectIsPendingRoleStore} from 'src/app/store/role/selectors';
 import {selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
 import {map, tap} from 'rxjs/operators';
-import {LoadUsersEntityAction, PutUpdatedUserRoleEntityAction} from 'src/app/store/user/action';
+import {LoadUsersEntityAction, PutUpdatedUserRoleEntityAction, DeleteUserFromOrganization} from 'src/app/store/user/action';
 import {LoadRolesEntityAction} from 'src/app/store/role/actions';
 import {UserService} from 'src/app/core/user/user.service';
 
@@ -84,6 +84,13 @@ export class UserListFacade implements IFacade {
         role
       }
     }));
+  }
+
+  public deleteUser(userId: string): void {
+    this.store.dispatch(DeleteUserFromOrganization({
+      organizationId: this.selectedOrganization,
+      userId
+    }))
   }
 
   public inviteUser(userEmail: string, role: string): Observable<any> {

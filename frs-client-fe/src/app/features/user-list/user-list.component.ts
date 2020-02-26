@@ -32,7 +32,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       return {
-          columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
+          columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }, {title: 'delete', property: 'delete'}],
           data: users
       };
     }));
@@ -43,6 +43,10 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   public onChange(user: AppUser): void {
     this.userListFacade.updateUserRole(user.id, user.role);
+  }
+
+  public onDelete(user: AppUser): void {
+    this.userListFacade.deleteUser(user.userId);
   }
 
   public onInviteUser(): void {
