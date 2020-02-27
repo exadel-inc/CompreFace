@@ -1,6 +1,5 @@
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.OrgCreateDto;
 import com.exadel.frs.dto.ui.OrgResponseDto;
 import com.exadel.frs.dto.ui.OrgUpdateDto;
@@ -17,8 +16,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.List;
-import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -30,6 +27,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+import java.util.List;
+
+import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 
 @RestController
 @RequiredArgsConstructor
@@ -84,7 +86,7 @@ public class OrganizationController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Organization name is required")
     })
-    public void updateOrganization(
+    public OrgResponseDto updateOrganization(
             @ApiParam(value = "GUID of organization that needs to be updated", required = true, example = GUID_EXAMPLE)
             @PathVariable final String guid,
             @ApiParam(value = "Organization data", required = true)
@@ -92,7 +94,9 @@ public class OrganizationController {
             @RequestBody
             final OrgUpdateDto orgUpdateDto
     ) {
-        organizationService.updateOrganization(orgUpdateDto, guid, SecurityUtils.getPrincipalId());
+        var updatedOrganization = organizationService.updateOrganization(orgUpdateDto, guid, SecurityUtils.getPrincipalId());
+
+        return organizationMapper.toResponseDto(updatedOrganization, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/org/{guid}")

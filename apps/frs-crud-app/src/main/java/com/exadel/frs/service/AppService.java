@@ -33,6 +33,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Service
 @RequiredArgsConstructor
 public class AppService {
@@ -158,12 +161,15 @@ public class AppService {
     }
 
     public App updateApp(final AppUpdateDto appUpdateDto, final String appGuid, final Long userId) {
+        verifyNewNameForApplication(appUpdateDto.getName());
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        if (!StringUtils.isEmpty(appUpdateDto.getName()) && !repoApp.getName().equals(appUpdateDto.getName())) {
+        val isSameName = repoApp.getName().equals(appUpdateDto.getName());
+        if (isNotTrue(isSameName)) {
             verifyNameIsUnique(appUpdateDto.getName(), repoApp.getOrganization().getId());
             repoApp.setName(appUpdateDto.getName());
         }
+
         return appRepository.save(repoApp);
     }
 
@@ -208,5 +214,10 @@ public class AppService {
         modelShareRequestRepository.save(shareRequest);
 
         return requestId;
+    }
+    private void verifyNewNameForApplication(final String name) {
+        if (isBlank(name)) {
+            throw new EmptyRequiredFieldException("name");
+        }
     }
 }
