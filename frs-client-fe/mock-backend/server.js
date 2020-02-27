@@ -95,12 +95,7 @@ app.post('/user/register', function(req, res) {
 });
 
 app.get('/orgs', auth, function (req, res) {
-  const id = req.query.id;
-  if (id) {
-    res.send(mockData.organizations.filter(item => item.id === id))
-  } else {
-    res.send(mockData.organizations);
-  }
+  res.send(mockData.organizations);
 });
 
 app.post('/org', auth, function (req, res) {
@@ -227,7 +222,7 @@ app.put('/org/:orgId/remove', auth, wait(), (req, res) => {
   } else {
     res.sendStatus(404);
   }
-}); 
+});
 
 app.put('/org/:orgId/invite', auth, (req, res) => {
   const organizationId = req.params.orgId;
