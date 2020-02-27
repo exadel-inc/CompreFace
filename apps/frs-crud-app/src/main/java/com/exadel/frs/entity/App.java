@@ -43,6 +43,11 @@ public class App {
     @OneToMany(mappedBy = "app")
     private List<Model> models = new ArrayList<>();
 
+    @ToString.Exclude
+    @Builder.Default
+    @OneToMany(mappedBy = "app")
+    private List<ModelShareRequest> modelShareRequests = new ArrayList<>();
+
     public Optional<UserAppRole> getOwner() {
         return userAppRoles
                 .stream()
