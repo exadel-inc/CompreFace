@@ -31,7 +31,7 @@ export class OrganizationService {
   ) {}
 
   initUrlBindingStreams() {
-    this.organizationEnService.getAll();
+    this.organizationEnService.load();
     this.store.dispatch(getUserInfo());
 
     this.organization$ = this.organizationEnService.entities$;
