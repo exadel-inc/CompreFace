@@ -4,10 +4,22 @@ import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.*;
+import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.ModelShareRequest;
+import com.exadel.frs.entity.ModelShareRequestId;
+import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
+import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
+import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
+import com.exadel.frs.exception.AppNotFoundException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
@@ -185,13 +197,16 @@ public class AppService {
         appRepository.deleteById(repoApp.getId());
     }
 
-    public UUID generateUuidToRequestModelShare(String appGuid) {
+    public UUID generateUuidToRequestModelShare(final String appGuid) {
         final App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), repoApp.getOrganization());
+
         val requestId = UUID.randomUUID();
         val id = ModelShareRequestId.builder().appId(repoApp.getId()).requestId(requestId).build();
         val shareRequest = ModelShareRequest.builder().app(repoApp).id(id).build();
+
         modelShareRequestRepository.save(shareRequest);
+
         return requestId;
     }
 }

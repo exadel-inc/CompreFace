@@ -2,7 +2,13 @@ package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 
-import com.exadel.frs.dto.ui.*;
+import com.exadel.frs.dto.ui.AppCreateDto;
+import com.exadel.frs.dto.ui.AppResponseDto;
+import com.exadel.frs.dto.ui.AppUpdateDto;
+import com.exadel.frs.dto.ui.ModelShareResponseDto;
+import com.exadel.frs.dto.ui.UserInviteDto;
+import com.exadel.frs.dto.ui.UserRoleResponseDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
@@ -15,10 +21,10 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 import java.util.List;
-import java.util.UUID;
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -201,8 +207,11 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        UUID requestId = appService.generateUuidToRequestModelShare(guid);
+        val requestId = appService.generateUuidToRequestModelShare(guid);
 
-        return ModelShareResponseDto.builder().modelRequestUuid(requestId).build();
+        return ModelShareResponseDto
+                                .builder()
+                                .modelRequestUuid(requestId)
+                                .build();
     }
 }
