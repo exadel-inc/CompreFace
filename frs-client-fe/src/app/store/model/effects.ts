@@ -6,7 +6,9 @@ import {
   addModelsEntityAction,
   createModelEntityAction,
   updatedModelEntityAction,
-  putUpdatedModelEntityAction
+  putUpdatedModelEntityAction,
+  deletedModelEntityAction,
+  setSelectedIdModelEntityAction
 } from './actions';
 import {switchMap, map} from 'rxjs/operators';
 import {forkJoin, of} from 'rxjs';
@@ -41,5 +43,12 @@ export class ModelEffects {
     ofType(putUpdatedModelEntityAction),
     switchMap(action => this.modelService.update(action.organizationId, action.applicationId, action.modelId, action.name)),
     map((model: Model) => updatedModelEntityAction({model}))
+  );
+
+  @Effect()
+  deleteModel = this.actions.pipe(
+    ofType(deletedModelEntityAction),
+    switchMap(action => this.modelService.delete(action.organizationId, action.applicationId, action.modelId)),
+    map(() => setSelectedIdModelEntityAction({selectedId: null}))
   );
 }

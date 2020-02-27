@@ -26,7 +26,7 @@ export const selectCurrentModel = createSelector(
 
 export const selectUserRollForSelectedModel = createSelector(
   selectCurrentModel,
-  model => model ? model.role : null
+  model => model ? model.accessLevel : null
 );
 
 export const selectPendingModel = createSelector(

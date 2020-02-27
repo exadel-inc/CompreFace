@@ -4,7 +4,8 @@ import {ModelHeaderFacade} from './model-header.facade';
 import {Observable, Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material';
 import {EditDialogComponent} from '../edit-dialog/edit-dialog.component';
-import {filter, map} from 'rxjs/operators';
+import {filter, map, take, switchMap} from 'rxjs/operators';
+import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-model-header',
@@ -22,7 +23,7 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
 
   constructor(private modelHeaderFacade: ModelHeaderFacade, public dialog: MatDialog) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.modelHeaderFacade.initSubscriptions();
     this.model$ = this.modelHeaderFacade.model$;
     this.userRole$ = this.modelHeaderFacade.userRole$;
@@ -34,12 +35,12 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
     ).subscribe(apiKey => this.apiKey = apiKey);
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.modelHeaderFacade.unsubscribe();
     this.apiKeyS.unsubscribe();
   }
 
-  rename() {
+  public rename(): void {
     let currentName = '';
     this.modelHeaderFacade.modelName$.subscribe(name => {
       currentName = name;
@@ -58,7 +59,26 @@ export class ModelHeaderComponent implements OnInit, OnDestroy {
     });
   }
 
-  copy() {
+  public delete(): void {
+    this.modelHeaderFacade.modelName$
+      .pipe(
+        take(1),
+        switchMap(currentName => {
+          return this.dialog.open(DeleteDialogComponent, {
+            width: '400px',
+            data: {
+              entityType: 'Model',
+              entityName: currentName
+            }
+          }).afterClosed();
+        })
+      )
+      .subscribe(res => {
+        if (res) { this.modelHeaderFacade.delete(); }
+      });
+  }
+
+  public copy(): void {
     const input = document.createElement('input');
     input.setAttribute('value', this.apiKey);
     document.body.appendChild(input);

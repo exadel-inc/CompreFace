@@ -6,6 +6,7 @@ import {CreateDialogComponent} from '../create-dialog/create-dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {EditDialogComponent} from '../edit-dialog/edit-dialog.component';
 import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
+import {take, switchMap} from 'rxjs/operators';
 
 @Component({
   selector: 'app-organization-header',
@@ -22,13 +23,13 @@ export class OrganizationHeaderComponent implements OnInit {
     organizationHeaderFacade.initSubscriptions();
   }
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.organizations$ = this.organizationHeaderFacade.organizations$;
     this.userRole$ = this.organizationHeaderFacade.userRole$;
     this.selectedId$ = this.organizationHeaderFacade.selectedId$;
   }
 
-  createNew() {
+  public createNew(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
@@ -42,7 +43,7 @@ export class OrganizationHeaderComponent implements OnInit {
     });
   }
 
-  edit() {
+  public edit(): void {
     let currentName = '';
     this.organizationHeaderFacade.organizationName$.subscribe(name => {
       currentName = name;
@@ -61,31 +62,30 @@ export class OrganizationHeaderComponent implements OnInit {
     });
   }
 
-  selectOrganization(id) {
+  public selectOrganization(id): void {
     this.organizationHeaderFacade.select(id);
   }
 
-  rename(name) {
+  public rename(name): void {
     this.organizationHeaderFacade.rename(name);
   }
 
-  delete() {
-    let currentName = '';
-    this.organizationHeaderFacade.organizationName$.subscribe(name => {
-      currentName = name;
-    });
-
-    const dialog = this.dialog.open(DeleteDialogComponent, {
-      width: '400px',
-      data: {
-        entityType: 'organization',
-        entityName: currentName,
-        name: ''
-      }
-    });
-
-    dialog.afterClosed().subscribe(res => {
-      if (res) { this.organizationHeaderFacade.delete(); }
-    });
+  public delete(): void {
+    this.organizationHeaderFacade.organizationName$
+      .pipe(
+        take(1),
+        switchMap(currentName => {
+          return this.dialog.open(DeleteDialogComponent, {
+            width: '400px',
+            data: {
+              entityType: 'organization',
+              entityName: currentName
+            }
+          }).afterClosed();
+        })
+      )
+      .subscribe(res => {
+        if (res) { this.organizationHeaderFacade.delete(); }
+      });
   }
 }
