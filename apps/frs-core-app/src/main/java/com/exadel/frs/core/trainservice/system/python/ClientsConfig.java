@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.scan;
+package com.exadel.frs.core.trainservice.system.python;
 
 import feign.Feign;
 import feign.Logger;
