@@ -227,7 +227,7 @@ app.put('/org/:orgId/remove', auth, wait(), (req, res) => {
   } else {
     res.sendStatus(404);
   }
-}); 
+});
 
 app.put('/org/:orgId/invite', auth, (req, res) => {
   const organizationId = req.params.orgId;
@@ -290,7 +290,7 @@ app.post('/org/:orgId/app/:appId/model', auth, wait(), (req, res) => {
   if (isModelAccessAllowed(appId, orgId)) {
     const [firstName, password, id] = req.headers.authorization.replace('Bearer ', '').split('_');
     const newModel = {
-      id: mockData.models.length,
+      id: `model_${mockData.models.length}`,
       name,
       owner: {
         firstName
@@ -317,6 +317,13 @@ app.put('/org/:orgId/app/:appId/model/:modeId', auth, wait(), (req, res) => {
   let model = mockData.models.find(model => model.id === modeId);
   model.name = newData.name;
   res.send(model);
+});
+
+app.delete('/org/:orgId/app/:appId/model/:modeId', auth, wait(), (req, res) => {
+  const { modeId } = req.params;
+
+  mockData.models = mockData.models.filter(model => model.id !== modeId);
+  res.send({});
 });
 
 app.get('/org/:orgId/app/:appId/roles', auth, wait(), (req, res) => {

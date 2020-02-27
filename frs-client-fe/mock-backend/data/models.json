@@ -3,7 +3,7 @@
     "id": "model_1",
     "apiKey":"api key 32dsfgd",
     "name": "Model 1",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_0",
@@ -25,7 +25,7 @@
     "id": "model_2",
     "apiKey": "api key 32dsfgd",
     "name": "Model 2",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "TRAIN",
     "relations": [
       {
         "id": "app_0",
@@ -47,7 +47,7 @@
     "id": "model_3",
     "apiKey": "api key 32dsfgd",
     "name": "Model 3",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_0",
@@ -73,7 +73,7 @@
     "id": "model_4",
     "apiKey": "api key 32dsfgd",
     "name": "Model 4",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_1",
@@ -91,7 +91,7 @@
     "id": "model_5",
     "apiKey": "api key 32dsfgd",
     "name": "Model 5",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "READONLY",
     "relations": [
       {
         "id": "app_0",
@@ -121,7 +121,7 @@
     "id": "model_6",
     "apiKey": "api key 32dsfgd",
     "name": "Model 6",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_0",
@@ -151,7 +151,7 @@
     "id": "model_7",
     "apiKey": "api key 32dsfgd",
     "name": "Model 7",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "TRAIN",
     "relations": [
       {
         "id": "app_2",
@@ -169,7 +169,7 @@
     "id": "model_8",
     "apiKey": "api key 32dsfgd",
     "name": "Model 8",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "READONLY",
     "relations": [
       {
         "id": "app_0",
@@ -211,7 +211,7 @@
     "id": "model_9",
     "apiKey": "api key 32dsfgd",
     "name": "Model 9",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "READONLY",
     "relations": [
       {
         "id": "app_0",
@@ -253,7 +253,7 @@
     "id": "model_10",
     "apiKey": "api key 32dsfgd",
     "name": "Model 10",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_3",
@@ -287,7 +287,7 @@
     "id": "model_11",
     "apiKey": "api key 32dsfgd",
     "name": "Model 11",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_3",
@@ -321,7 +321,7 @@
     "id": "model_12",
     "apiKey": "api key 32dsfgd",
     "name": "Model 12",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_3",
@@ -362,7 +362,7 @@
   {
     "id": "model_13",
     "name": "Model 13",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_3",
@@ -403,7 +403,7 @@
   {
     "id": "model_14",
     "name": "Model 14",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_3",
@@ -444,7 +444,7 @@
   {
     "id": "model_15",
     "name": "Model 15",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_4",
@@ -485,7 +485,7 @@
   {
     "id": "model_16",
     "name": "Model 16",
-    "accessLevel": "OWNER/TRAIN/READONLY",
+    "accessLevel": "OWNER",
     "relations": [
       {
         "id": "app_4",
