@@ -23,6 +23,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,7 +73,7 @@ public class AppController {
     @PostMapping("/app")
     @ApiOperation(value = "Create application")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application name is required")
+            @ApiResponse(code = 400, message = "Field name cannot be empty")
     })
     public AppResponseDto createApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
@@ -88,6 +89,9 @@ public class AppController {
 
     @PutMapping("/app/{guid}")
     @ApiOperation(value = "Update application")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Field name cannot be empty")
+    })
     public AppResponseDto updateApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
@@ -100,7 +104,10 @@ public class AppController {
             @RequestBody
             final AppUpdateDto appUpdateDto
     ) {
-        return appMapper.toResponseDto(appService.updateApp(appUpdateDto, guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
+        val userId = SecurityUtils.getPrincipalId();
+        val updatedApplication = appService.updateApp(appUpdateDto, guid, userId);
+
+        return appMapper.toResponseDto(updatedApplication, userId);
     }
 
     @PutMapping("/app/{guid}/apikey")

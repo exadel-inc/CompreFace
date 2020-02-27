@@ -4,12 +4,23 @@ import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.*;
+import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
+import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
+import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
+import com.exadel.frs.exception.AppNotFoundException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.repository.AppRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -17,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -142,12 +156,15 @@ public class AppService {
     }
 
     public App updateApp(final AppUpdateDto appUpdateDto, final String appGuid, final Long userId) {
+        verifyNewNameForApplication(appUpdateDto.getName());
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        if (!StringUtils.isEmpty(appUpdateDto.getName()) && !repoApp.getName().equals(appUpdateDto.getName())) {
+        val isSameName = repoApp.getName().equals(appUpdateDto.getName());
+        if (isNotTrue(isSameName)) {
             verifyNameIsUnique(appUpdateDto.getName(), repoApp.getOrganization().getId());
             repoApp.setName(appUpdateDto.getName());
         }
+
         return appRepository.save(repoApp);
     }
 
@@ -181,4 +198,9 @@ public class AppService {
         appRepository.deleteById(repoApp.getId());
     }
 
+    private void verifyNewNameForApplication(final String name) {
+        if (isBlank(name)) {
+            throw new EmptyRequiredFieldException("name");
+        }
+    }
 }

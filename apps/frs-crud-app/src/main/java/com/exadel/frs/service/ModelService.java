@@ -15,12 +15,13 @@ import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.springframework.util.StringUtils.*;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -79,7 +80,7 @@ public class ModelService {
     public Model createModel(final ModelCreateDto modelCreateDto, final String orgGuid, final String appGuid, final Long userId) {
         App app = appService.getApp(appGuid);
         verifyUserHasWritePrivileges(userId, app);
-        if (StringUtils.isEmpty(modelCreateDto.getName())) {
+        if (isEmpty(modelCreateDto.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
         if (!app.getOrganization().getGuid().equals(orgGuid)) {
@@ -96,9 +97,10 @@ public class ModelService {
     }
 
     public Model updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
+        verifyNameIsNotEmpty(modelUpdateDto.getName());
         Model repoModel = getModel(modelGuid);
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        if (isNotBlank(modelUpdateDto.getName()) && !repoModel.getName().equals(modelUpdateDto.getName())) {
+        if (!repoModel.getName().equals(modelUpdateDto.getName())) {
             verifyNameIsUnique(modelUpdateDto.getName(), repoModel.getApp().getId());
             repoModel.setName(modelUpdateDto.getName());
         }
@@ -119,4 +121,9 @@ public class ModelService {
         modelRepository.deleteById(model.getId());
     }
 
+    private void verifyNameIsNotEmpty(final String newNameForModel) {
+        if (isEmpty(newNameForModel)) {
+            throw new EmptyRequiredFieldException("name");
+        }
+    }
 }
