@@ -110,7 +110,7 @@ public class ProxyController {
 
         new ImageExtensionValidator().validate(files.values());
 
-        val remoteUrl = baseUrl + request.getRequestURI();
+        val remoteUrl = baseUrl + request.getRequestURI().replaceFirst(PREFIX + "/v1", "");
         val body = new LinkedMultiValueMap<String, Object>();
 
         params.forEach(body::add);
