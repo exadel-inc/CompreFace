@@ -25,7 +25,10 @@ const initialState: ModelEntityState = modelAdapter.getInitialState({
 const reducer: ActionReducer<ModelEntityState> = createReducer(
   initialState,
   on(loadModelsEntityAction, (state) => ({ ...state, isPending: true })),
-  on(addModelsEntityAction, (state, { models }) => modelAdapter.addAll(models, { ...state, isPending: false })),
+  on(addModelsEntityAction, (state, { models }) => {
+    const newModel = modelAdapter.removeAll(state);
+    return modelAdapter.addAll(models, { ...newModel, isPending: false })
+  }),
   on(createModelEntityAction, (state) => ({ ...state, isPending: true })),
   on(setSelectedIdModelEntityAction, (state, { selectedId }) => ({ ...state, selectedId })),
   on(putUpdatedModelEntityAction, (state) => ({ ...state, isPending: true })),

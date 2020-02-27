@@ -22,4 +22,8 @@ export class ModelService {
   public update(organizationId: string, applicationId: string, modelId: string, name: string): Observable<Model> {
     return this.http.put<Model>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}`, { name });
   }
+
+  public delete(organizationId: string, applicationId: string, modelId: string): Observable<Model> {
+    return this.http.delete<Model>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}`);
+  }
 }
