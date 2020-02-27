@@ -204,17 +204,27 @@ public class AppService {
     }
 
     public UUID generateUuidToRequestModelShare(final String appGuid) {
-        final App repoApp = getApp(appGuid);
+        val repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), repoApp.getOrganization());
 
         val requestId = UUID.randomUUID();
-        val id = ModelShareRequestId.builder().appId(repoApp.getId()).requestId(requestId).build();
-        val shareRequest = ModelShareRequest.builder().app(repoApp).id(id).build();
+        val id = ModelShareRequestId
+                            .builder()
+                            .appId(repoApp.getId())
+                            .requestId(requestId)
+                            .build();
+
+        val shareRequest = ModelShareRequest
+                                    .builder()
+                                    .app(repoApp)
+                                    .id(id)
+                                    .build();
 
         modelShareRequestRepository.save(shareRequest);
 
         return requestId;
     }
+
     private void verifyNewNameForApplication(final String name) {
         if (isBlank(name)) {
             throw new EmptyRequiredFieldException("name");
