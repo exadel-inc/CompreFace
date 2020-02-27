@@ -4,8 +4,8 @@
     <h3 class="title">Model</h3>
     <div class="name-wrapper">
       <div class="name-item">{{model.name}}</div>
-      <button mat-button type="submit" color="primary" (click)="rename()">EDIT</button>
       <button *ngIf="(userRole$ | async) === 'OWNER'" mat-button type="submit" color="primary" (click)="delete()">DELETE</button>
+      <button mat-button type="submit" color="primary" (click)="rename()">EDIT</button>
     </div>
     <div class="api-key-wrapper">
       <div class="api-key-item">API-KEY: {{model.apiKey}}</div>
