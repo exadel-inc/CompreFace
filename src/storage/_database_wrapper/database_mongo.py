@@ -11,6 +11,7 @@ from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.dto.face import Face, FaceEmbedding
 from src.storage.exceptions import FaceHasNoEmbeddingSavedError, NoTrainedEmbeddingClassifierFoundError
 import logging
+from src.face_recognition.calc_embedding.calculator import calculate_embedding
 
 class DatabaseMongo(DatabaseBase):
     def __init__(self):
@@ -40,10 +41,10 @@ class DatabaseMongo(DatabaseBase):
         return self._faces_collection.find({"api_key": api_key})
 
     @staticmethod
-    def _document_to_embedding(document, calculator_version):
+    def _document_to_embedding(document, calculator_version, face_img):
         found_embeddings = [emb for emb in document['embeddings'] if emb['calculator_version'] == calculator_version]
         if not found_embeddings:
-            raise FaceHasNoEmbeddingSavedError
+            return calculate_embedding(face_img)
 
         found_embedding = found_embeddings[0]
         return Embedding(array=np.asarray(found_embedding['array']),
@@ -51,12 +52,22 @@ class DatabaseMongo(DatabaseBase):
 
     def get_faces(self, api_key, calculator_version):
         def document_to_face(document):
+            raw_img = deserialize(self._faces_fs.get(document['raw_img_fs_id']).read()),
+            face_img = deserialize(self._faces_fs.get(document['face_img_fs_id']).read())
+            embedding = self._document_to_embedding(document, calculator_version, face_img)
+            emb_dict = {"array": embedding.array.tolist(), "calculator_version": embedding.calculator_version}
+            embeddings = document['embeddings']
+            if emb_dict not in embeddings:
+                face_query = self._faces_collection.find_one_and_update(
+                    filter={"api_key": api_key, "face_name": document['face_name']},
+                    update={'$push': {"embeddings": emb_dict}})
             return Face(
                 name=document['face_name'],
-                embedding=self._document_to_embedding(document, calculator_version),
-                raw_img=deserialize(self._faces_fs.get(document['raw_img_fs_id']).read()),
-                face_img=deserialize(self._faces_fs.get(document['face_img_fs_id']).read())
+                embedding=embedding,
+                raw_img=raw_img,
+                face_img=face_img
             )
+
 
         return [document_to_face(document) for document in self._get_faces_iterator(api_key)]
 
@@ -81,9 +92,17 @@ class DatabaseMongo(DatabaseBase):
 
     def get_face_embeddings(self, api_key, calculator_version):
         def document_to_face_embedding(document):
+            face_img = deserialize(self._faces_fs.get(document['face_img_fs_id']).read())
+            embedding = self._document_to_embedding(document, calculator_version, face_img)
+            emb_dict = {"array": embedding.array.tolist(), "calculator_version": embedding.calculator_version}
+            embeddings = document['embeddings']
+            if emb_dict not in embeddings:
+                face_query = self._faces_collection.find_one_and_update(
+                    filter={"api_key": api_key, "face_name": document['face_name']},
+                    update={'$push': {"embeddings": emb_dict}})
             return FaceEmbedding(
                 name=document['face_name'],
-                embedding=self._document_to_embedding(document, calculator_version)
+                embedding=embedding
             )
 
         return [document_to_face_embedding(document) for document in self._get_faces_iterator(api_key)]
