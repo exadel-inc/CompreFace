@@ -2,12 +2,14 @@ package com.exadel.frs.core.trainservice.domain;
 
 import java.util.List;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "FACES")
+@Accessors(chain = true)
 public class Face {
 
     @Id
@@ -28,11 +30,13 @@ public class Face {
     private String apiKey;
 
     @Data
+    @Accessors(chain = true)
     public static class Embedding {
 
+        @Field("array")
         private List<Double> embedding;
 
-        @Field("model_name")
-        private String modelName;
+        @Field("calculator_version")
+        private String calculatorVersion;
     }
 }
