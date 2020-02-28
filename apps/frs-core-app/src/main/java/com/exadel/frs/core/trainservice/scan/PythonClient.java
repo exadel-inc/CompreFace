@@ -9,6 +9,6 @@ public interface PythonClient {
     @RequestLine("POST /scan_faces")
     @Headers("Content-Type: multipart/form-data")
     ScanResponse scanFaces(@Param(value = "file") MultipartFile photo,
-                           @Param(value = "limit") Integer limit,
+                           @Param(value = "limit") Integer faceLimit,
                            @Param(value = "threshold_c") Double thresholdC);
 }

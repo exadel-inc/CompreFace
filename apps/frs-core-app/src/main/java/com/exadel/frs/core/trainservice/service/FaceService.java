@@ -18,9 +18,9 @@ public class FaceService {
     private final FacesRepository facesRepository;
 
     public Map<String, List<List<Double>>> findAllFaceEmbeddings() {
-        var all = facesRepository.findAll();
+        var faces = facesRepository.findAll();
 
-        return all.stream()
+        return faces.stream()
                   .collect(toMap(Face::getFaceName,
                           face -> face.getEmbeddings()
                                       .stream()
@@ -32,9 +32,9 @@ public class FaceService {
     }
 
     public Map<String, List<List<Double>>> findAllFaceEmbeddingsByAppKey(final String appKey) {
-        var all = facesRepository.findByApiKey(appKey);
+        var faces = facesRepository.findByApiKey(appKey);
 
-        return all.stream()
+        return faces.stream()
                   .collect(toMap(Face::getFaceName,
                           face -> face.getEmbeddings()
                                       .stream()

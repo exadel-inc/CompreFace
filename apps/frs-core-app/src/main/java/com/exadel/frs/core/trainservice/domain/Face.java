@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
-@Document(collection = "faces")
+@Document(collection = "FACES")
 @Accessors(chain = true)
 public class Face {
 
@@ -33,9 +33,10 @@ public class Face {
     @Accessors(chain = true)
     public static class Embedding {
 
+        @Field("array")
         private List<Double> embedding;
 
-        @Field("model_name")
-        private String modelName;
+        @Field("calculator_version")
+        private String calculatorVersion;
     }
 }

@@ -8,7 +8,9 @@ import java.util.List;
 
 @Data
 public class ScanResponse {
+
     @JsonProperty(value = "calculator_version")
     private String calculatorVersion;
+
     private List<ScanResult> result = new ArrayList<>();
 }
