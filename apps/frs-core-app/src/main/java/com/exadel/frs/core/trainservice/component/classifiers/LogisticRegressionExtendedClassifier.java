@@ -17,7 +17,6 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
     @Override
     public void train(final double[][] x, final int[] y, final Map<Integer, String> labelMap) {
         this.labelMap = labelMap;
-
         var trainer = new Trainer();
         trainer.setMaxNumIteration(50);
         trainer.setTolerance(0.005);

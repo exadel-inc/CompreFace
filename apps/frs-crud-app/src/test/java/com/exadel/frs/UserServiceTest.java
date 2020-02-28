@@ -5,10 +5,11 @@ import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
-import org.junit.jupiter.api.Assertions;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
@@ -17,8 +18,13 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class UserServiceTest {
 
@@ -49,13 +55,13 @@ class UserServiceTest {
 
         when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(UserDoesNotExistException.class, () -> userService.getUser(userId));
+        assertThrows(UserDoesNotExistException.class, () -> userService.getUser(userId));
     }
 
     @Test
     void successCreateUser() {
         UserCreateDto userCreateDto = UserCreateDto.builder()
-                .email("email")
+                .email("email@example.com")
                 .password("password")
                 .firstName("firstName")
                 .lastName("lastName")
@@ -69,13 +75,13 @@ class UserServiceTest {
     @Test
     void failCreateUserEmptyPassword() {
         UserCreateDto userCreateDto = UserCreateDto.builder()
-                .email("email")
+                .email("email@example.com")
                 .password("")
                 .firstName("firstName")
                 .lastName("lastName")
                 .build();
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userCreateDto));
+        assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userCreateDto));
     }
 
     @Test
@@ -87,13 +93,13 @@ class UserServiceTest {
                 .lastName("lastName")
                 .build();
 
-        Assertions.assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userCreateDto));
+        assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userCreateDto));
     }
 
     @Test
     void failCreateUserDuplicateEmail() {
         UserCreateDto userCreateDto = UserCreateDto.builder()
-                .email("email")
+                .email("email@example.com")
                 .password("password")
                 .firstName("firstName")
                 .lastName("lastName")
@@ -101,7 +107,7 @@ class UserServiceTest {
 
         when(userRepositoryMock.existsByEmail(anyString())).thenReturn(true);
 
-        Assertions.assertThrows(EmailAlreadyRegisteredException.class, () -> userService.createUser(userCreateDto));
+        assertThrows(EmailAlreadyRegisteredException.class, () -> userService.createUser(userCreateDto));
     }
 
     @Test
@@ -142,4 +148,39 @@ class UserServiceTest {
         verify(userRepositoryMock).deleteById(anyLong());
     }
 
+    @Test
+    void cannotCreateNewUserWithIncorrectEmail() {
+        val userWithIncorrectEmial = UserCreateDto.builder()
+                .email("wrong_email")
+                .password("password")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
+
+        assertThrows(InvalidEmailException.class, () -> userService.createUser(userWithIncorrectEmial));
+    }
+
+    @Test
+    void cannotCreateNewUserWithoutFirstName() {
+        val userWithoutFirstName = UserCreateDto.builder()
+                .email("email@example.com")
+                .password("password")
+                .firstName(null)
+                .lastName("lastName")
+                .build();
+
+        assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userWithoutFirstName));
+    }
+
+    @Test
+    void cannotCreateNewUserWithoutLastName() {
+        val userWithoutFirstName = UserCreateDto.builder()
+                .email("email@example.com")
+                .password("password")
+                .firstName("firstName")
+                .lastName(null)
+                .build();
+
+        assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userWithoutFirstName));
+    }
 }

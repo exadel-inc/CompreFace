@@ -5,6 +5,7 @@ import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.UUID;
+
+import static com.exadel.frs.validation.EmailValidator.isInvalid;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
 @RequiredArgsConstructor
@@ -37,15 +41,7 @@ public class UserService {
     }
 
     public User createUser(final UserCreateDto userCreateDto) {
-        if (StringUtils.isEmpty(userCreateDto.getEmail())) {
-            throw new EmptyRequiredFieldException("email");
-        }
-        if (StringUtils.isEmpty(userCreateDto.getPassword())) {
-            throw new EmptyRequiredFieldException("password");
-        }
-        if (userRepository.existsByEmail(userCreateDto.getEmail())) {
-            throw new EmailAlreadyRegisteredException();
-        }
+        validateUserCreateDto(userCreateDto);
         User user = User.builder()
                 .email(userCreateDto.getEmail())
                 .firstName(userCreateDto.getFirstName())
@@ -58,6 +54,32 @@ public class UserService {
                 .enabled(true)
                 .build();
         return userRepository.save(user);
+    }
+
+    private void validateUserCreateDto(UserCreateDto userCreateDto) {
+        if (isBlank(userCreateDto.getEmail())) {
+            throw new EmptyRequiredFieldException("email");
+        }
+
+        if (isInvalid(userCreateDto.getEmail())) {
+            throw new InvalidEmailException();
+        }
+
+        if (isBlank(userCreateDto.getPassword())) {
+            throw new EmptyRequiredFieldException("password");
+        }
+
+        if (isBlank(userCreateDto.getFirstName())) {
+            throw new EmptyRequiredFieldException("first name");
+        }
+
+        if (isBlank(userCreateDto.getLastName())) {
+            throw new EmptyRequiredFieldException("last name");
+        }
+
+        if (userRepository.existsByEmail(userCreateDto.getEmail())) {
+            throw new EmailAlreadyRegisteredException();
+        }
     }
 
     public void updateUser(final UserUpdateDto userUpdateDto, final Long userId) {

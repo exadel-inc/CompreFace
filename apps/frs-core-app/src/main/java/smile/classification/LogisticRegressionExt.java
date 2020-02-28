@@ -50,6 +50,7 @@ public class LogisticRegressionExt {
     /**
      * Trainer for logistic regression.
      */
+
     public LogisticRegressionExt(double[][] x, int[] y, double lambda, double tol, int maxIter) {
         if (x.length != y.length) {
             throw new IllegalArgumentException(

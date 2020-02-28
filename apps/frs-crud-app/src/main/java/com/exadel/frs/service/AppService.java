@@ -4,12 +4,27 @@ import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.*;
+import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.ModelShareRequest;
+import com.exadel.frs.entity.ModelShareRequestId;
+import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
+import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
+import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
+import com.exadel.frs.exception.AppNotFoundException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
+import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.repository.ModelShareRequestRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -18,6 +33,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+
 @Service
 @RequiredArgsConstructor
 public class AppService {
@@ -25,6 +43,7 @@ public class AppService {
     private final AppRepository appRepository;
     private final OrganizationService organizationService;
     private final UserService userService;
+    private final ModelShareRequestRepository modelShareRequestRepository;
 
     public App getApp(final String appGuid) {
         return appRepository.findByGuid(appGuid)
@@ -142,12 +161,15 @@ public class AppService {
     }
 
     public App updateApp(final AppUpdateDto appUpdateDto, final String appGuid, final Long userId) {
+        verifyNewNameForApplication(appUpdateDto.getName());
         App repoApp = getApp(appGuid);
         verifyUserHasWritePrivileges(userId, repoApp.getOrganization());
-        if (!StringUtils.isEmpty(appUpdateDto.getName()) && !repoApp.getName().equals(appUpdateDto.getName())) {
+        val isSameName = repoApp.getName().equals(appUpdateDto.getName());
+        if (isNotTrue(isSameName)) {
             verifyNameIsUnique(appUpdateDto.getName(), repoApp.getOrganization().getId());
             repoApp.setName(appUpdateDto.getName());
         }
+
         return appRepository.save(repoApp);
     }
 
@@ -155,7 +177,7 @@ public class AppService {
         App app = getApp(guid);
         verifyUserHasWritePrivileges(adminId, app.getOrganization());
 
-        User user = userService.getUserByGuid(userRoleUpdateDto.getId());
+        User user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
             throw new SelfRoleChangeException();
         }
@@ -181,4 +203,31 @@ public class AppService {
         appRepository.deleteById(repoApp.getId());
     }
 
+    public UUID generateUuidToRequestModelShare(final String appGuid) {
+        val repoApp = getApp(appGuid);
+        verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), repoApp.getOrganization());
+
+        val requestId = UUID.randomUUID();
+        val id = ModelShareRequestId
+                            .builder()
+                            .appId(repoApp.getId())
+                            .requestId(requestId)
+                            .build();
+
+        val shareRequest = ModelShareRequest
+                                    .builder()
+                                    .app(repoApp)
+                                    .id(id)
+                                    .build();
+
+        modelShareRequestRepository.save(shareRequest);
+
+        return requestId;
+    }
+
+    private void verifyNewNameForApplication(final String name) {
+        if (isBlank(name)) {
+            throw new EmptyRequiredFieldException("name");
+        }
+    }
 }

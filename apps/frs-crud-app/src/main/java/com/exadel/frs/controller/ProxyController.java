@@ -2,6 +2,8 @@ package com.exadel.frs.controller;
 
 import static com.exadel.frs.enums.AppModelAccess.READONLY;
 import static com.exadel.frs.enums.AppModelAccess.TRAIN;
+import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
+
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.AppOrModelNotFoundException;
@@ -11,9 +13,11 @@ import com.exadel.frs.validation.ImageExtensionValidator;
 import com.google.common.collect.ImmutableList;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
@@ -72,9 +76,9 @@ public class ProxyController {
                                  .getAccessType();
     }
 
-    @RequestMapping(value = "/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
+    @RequestMapping(value = "/v1/**", method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
     @ApiOperation(value = "Send request to core service")
-    public ResponseEntity<String> proxy(
+    public ResponseEntity<String> proxyV1(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey,
@@ -93,20 +97,20 @@ public class ProxyController {
         val appApiKey = apiKey.substring(0, apiKeyLength);
         val modelApiKey = apiKey.substring(apiKeyLength);
 
-        if (READONLY == getAppModelAccessType(appApiKey, modelApiKey)) {
-            if (readOnlyApiMethods.stream()
-                                  .noneMatch(urlMethod ->
-                                          request.getRequestURI().startsWith(PREFIX + urlMethod.getUrl()) &&
-                                                  request.getMethod().equals(urlMethod.getHttpMethod().toString())
-                                  )
-            ) {
-                throw new AccessDeniedException();
-            }
+        val appHasOnlyReadAccessToModel = READONLY == getAppModelAccessType(appApiKey, modelApiKey);
+        val isReadOnlyRequest = readOnlyApiMethods.stream()
+                .anyMatch(urlMethod ->
+                        request.getRequestURI().startsWith(PREFIX + "/v1" + urlMethod.getUrl()) &&
+                                request.getMethod().equals(urlMethod.getHttpMethod().toString())
+                );
+
+        if (appHasOnlyReadAccessToModel && isNotTrue(isReadOnlyRequest)) {
+            throw new AccessDeniedException();
         }
 
         new ImageExtensionValidator().validate(files.values());
 
-        val remoteUrl = baseUrl + request.getRequestURI().replaceFirst(PREFIX, "");
+        val remoteUrl = baseUrl + request.getRequestURI().replaceFirst(PREFIX + "/v1", "");
         val body = new LinkedMultiValueMap<String, Object>();
 
         params.forEach(body::add);

@@ -1,9 +1,11 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
+
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
+import com.exadel.frs.dto.ui.ModelShareResponseDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
@@ -17,9 +19,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+
 import java.util.List;
 import javax.validation.Valid;
+
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -69,7 +74,7 @@ public class AppController {
     @PostMapping("/app")
     @ApiOperation(value = "Create application")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Application name is required")
+            @ApiResponse(code = 400, message = "Field name cannot be empty")
     })
     public AppResponseDto createApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
@@ -85,6 +90,9 @@ public class AppController {
 
     @PutMapping("/app/{guid}")
     @ApiOperation(value = "Update application")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Field name cannot be empty")
+    })
     public AppResponseDto updateApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
@@ -97,12 +105,15 @@ public class AppController {
             @RequestBody
             final AppUpdateDto appUpdateDto
     ) {
-        return appMapper.toResponseDto(appService.updateApp(appUpdateDto, guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
+        val userId = SecurityUtils.getPrincipalId();
+        val updatedApplication = appService.updateApp(appUpdateDto, guid, userId);
+
+        return appMapper.toResponseDto(updatedApplication, userId);
     }
 
     @PutMapping("/app/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for application")
-    public void regenerateApiKey(
+    public AppResponseDto regenerateApiKey(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -111,6 +122,8 @@ public class AppController {
             final String guid
     ) {
         appService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
+
+        return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/app/{guid}")
@@ -188,5 +201,23 @@ public class AppController {
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
         appService.updateUserAppRole(userRoleUpdateDto, guid, SecurityUtils.getPrincipalId());
+    }
+
+    @GetMapping("/app/{guid}/model/request")
+    @ApiOperation("Request for the model to be shared.")
+    public ModelShareResponseDto modelShareRequest(
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String orgGuid,
+            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String guid
+    ) {
+        val requestId = appService.generateUuidToRequestModelShare(guid);
+
+        return ModelShareResponseDto
+                                .builder()
+                                .modelRequestUuid(requestId)
+                                .build();
     }
 }

@@ -10,8 +10,15 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
+import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
+import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
@@ -44,12 +51,14 @@ class AppServiceTest {
     private OrganizationService organizationServiceMock;
     private UserService userServiceMock;
     private AppService appService;
+    private ModelShareRequestRepository modelShareRequestRepository;
 
     AppServiceTest() {
         appRepositoryMock = mock(AppRepository.class);
         organizationServiceMock = mock(OrganizationService.class);
         userServiceMock = mock(UserService.class);
-        appService = new AppService(appRepositoryMock, organizationServiceMock, userServiceMock);
+        modelShareRequestRepository = mock(ModelShareRequestRepository.class);
+        appService = new AppService(appRepositoryMock, organizationServiceMock, userServiceMock, modelShareRequestRepository);
     }
 
     private User user(Long id) {
@@ -317,7 +326,7 @@ class AppServiceTest {
     @MethodSource("writeRoles")
     void failUpdateAppSelfRoleChange(OrganizationRole organizationRole) {
         UserRoleUpdateDto userRoleUpdateDto = UserRoleUpdateDto.builder()
-                .id("userGuid")
+                .userId("userGuid")
                 .role(AppRole.USER.toString())
                 .build();
         User user = user(USER_ID);
