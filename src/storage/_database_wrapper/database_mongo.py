@@ -116,6 +116,8 @@ class DatabaseMongo(DatabaseBase):
 
     def delete_embedding_classifiers(self, api_key):
         face_query = self._classifiers_collection.find(filter={"api_key": api_key}, projection = {"classifier_fs_id"})
+        if len(face_query.distinct("classifier_fs_id")) == 0:
+            return
         face = face_query.distinct("classifier_fs_id")[0]
         self._classifiers_collection.delete_many({'api_key': api_key})
         self._classifiers_fs.delete(face)
