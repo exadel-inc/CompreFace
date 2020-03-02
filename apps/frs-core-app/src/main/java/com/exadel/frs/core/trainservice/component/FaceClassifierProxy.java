@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
 import lombok.Setter;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -44,14 +45,14 @@ public class FaceClassifierProxy {
         try {
             Thread.currentThread().setName(appKey + modelId);
             var faceId = 0;
-            var x = new ArrayList<double[]>();
-            var y = new ArrayList<Integer>();
-            var labelMap = new HashMap<Integer, String>();
+            val x = new ArrayList<double[]>();
+            val y = new ArrayList<Integer>();
+            val labelMap = new HashMap<Integer, String>();
 
-            for (var faceName : faceNameEmbeddings.keySet()) {
+            for (val faceName : faceNameEmbeddings.keySet()) {
                 labelMap.put(faceId, faceName);
-                var lists = faceNameEmbeddings.get(faceName);
-                for (var list : lists) {
+                val lists = faceNameEmbeddings.get(faceName);
+                for (val list : lists) {
                     x.add(list.stream().mapToDouble(d -> d).toArray());
                     y.add(faceId);
                 }
@@ -68,12 +69,15 @@ public class FaceClassifierProxy {
         }
     }
 
-    public void trainSync(Map<String, List<List<Double>>> faceNameEmbeddings, String appKey,
-                          String modelId) {
+    public void trainSync(
+            final Map<String, List<List<Double>>> faceNameEmbeddings,
+            final String appKey,
+            final String modelId
+    ) {
         this.train(faceNameEmbeddings, appKey, modelId);
     }
 
-    public Pair<Integer, String> predict(double[] x) {
+    public Pair<Integer, String> predict(final double[] x) {
         return classifier.predict(x);
     }
 
