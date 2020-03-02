@@ -1,17 +1,19 @@
 package com.exadel.frs.core.trainservice.controller;
 
+import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
+import static org.springframework.http.HttpStatus.LOCKED;
+import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.scan.FacePrediction;
 import com.exadel.frs.core.trainservice.scan.PythonClient;
-import java.io.IOException;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,27 +22,36 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class RecognizeController {
 
+    private static final String X_FRS_API_KEY_HEADER = "x-frs-api-key";
+
     private final FaceClassifierStorage storage;
     private final PythonClient client;
 
-    @RequestMapping(value = "/recognize", method = RequestMethod.POST)
+    @RequestMapping(value = "/recognize", method = POST)
     public ResponseEntity recognize(
-            @RequestHeader("apikey")
+            @ApiParam(value = "Api key of application and model", required = true)
+            @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey,
-            @RequestHeader("modelid")
-            final String modelId,
+            @ApiParam(value = "Image for recognizing", required = true)
             @RequestParam
-            final MultipartFile file
+            final MultipartFile file,
+            @ApiParam(value = "Maximum number of faces to be recognized")
+            @RequestParam(required = false)
+            final Integer limit
     ) {
-        var lock = storage.isLocked(apiKey, modelId);
+        val apiKeyLength = apiKey.length() / 2;
+        val appApiKey = apiKey.substring(0, apiKeyLength);
+        val modelApiKey = apiKey.substring(apiKeyLength);
+
+        val lock = storage.isLocked(apiKey, modelApiKey);
         if (lock) {
-            return ResponseEntity.status(HttpStatus.LOCKED)
+            return ResponseEntity.status(LOCKED)
                                  .body(new RetrainResponse("Model is locked now, try later"));
         }
 
-        val classifier = storage.getFaceClassifier(apiKey, modelId);
+        val classifier = storage.getFaceClassifier(appApiKey, modelApiKey);
 
-        val scanResponse = client.scanFaces(file, 1, 0.5D);
+        val scanResponse = client.scanFaces(file, defaultIfNull(limit, 1), 0.5D);
         val scanResult = scanResponse.getResult().get(0);
 
         val prediction = classifier.predict(
