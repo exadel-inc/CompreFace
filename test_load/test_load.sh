@@ -12,7 +12,7 @@ Options:
 " "$(basename "$0")"
 }
 
-HOST='http://localhost:5010'
+HOST='http://localhost:5001'
 
 while getopts 'h:' flag; do
   case "${flag}" in
