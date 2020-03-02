@@ -9,6 +9,7 @@ import com.exadel.frs.core.trainservice.enums.RetrainOption;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +20,15 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class FaceService {
+
     @Autowired
     private final FaceClassifierStorage storage;
     private final FacesRepository facesRepository;
 
     public Map<String, List<List<Double>>> findAllFaceEmbeddings() {
-        var all = facesRepository.findAll();
+        val faces = facesRepository.findAll();
 
-        return all.stream()
+        return faces.stream()
                 .collect(toMap(Face::getFaceName,
                         face -> face.getEmbeddings().stream()
                                 .map(Embedding::getEmbedding)
@@ -37,9 +39,9 @@ public class FaceService {
     }
 
     public Map<String, List<List<Double>>> findAllFaceEmbeddingsByAppKey(final String appKey) {
-        var all = facesRepository.findByApiKey(appKey);
+        val faces = facesRepository.findByApiKey(appKey);
 
-        return all.stream()
+        return faces.stream()
                 .collect(toMap(Face::getFaceName,
                         face -> face.getEmbeddings().stream()
                                 .map(Embedding::getEmbedding)
