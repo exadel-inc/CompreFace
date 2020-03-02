@@ -2,7 +2,7 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.springframework.http.HttpStatus.LOCKED;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.scan.FacePrediction;
@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +27,7 @@ public class RecognizeController {
     private final FaceClassifierStorage storage;
     private final PythonClient client;
 
-    @RequestMapping(value = "/recognize", method = POST)
+    @PostMapping(value = "/recognize")
     public ResponseEntity recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
