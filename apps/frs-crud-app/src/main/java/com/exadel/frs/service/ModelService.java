@@ -4,6 +4,7 @@ import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserAppRole;
@@ -16,16 +17,19 @@ import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.helpers.SecurityUtils;
+import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.exadel.frs.enums.AppModelAccess.READONLY;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
@@ -35,6 +39,7 @@ public class ModelService {
     private final ModelRepository modelRepository;
     private final AppService appService;
     private final ModelShareRequestRepository modelShareRequestRepository;
+    private final AppModelRepository appModelRepository;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -131,7 +136,8 @@ public class ModelService {
         }
     }
 
-    public void share(final ModelShareDto modelShare, final String modelGuid) {
+    @Transactional
+    public App share(final ModelShareDto modelShare, final String modelGuid) {
         verifyShareRequest(modelShare);
         val modelBeingShared = getModel(modelGuid);
         verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), modelBeingShared.getApp());
@@ -140,10 +146,13 @@ public class ModelService {
         if (modelShareRequest == null) {
             throw new ModelShareRequestNotFoundException(modelShare.getRequestId());
         }
+        val appFromRequest = modelShareRequest.getApp();
 
-        //TODO app_model
-        //TODO remove request
-        //return app
+
+        appModelRepository.save(new AppModel(appFromRequest, modelBeingShared, READONLY));
+        modelShareRequestRepository.delete(modelShareRequest);
+
+        return appFromRequest;
     }
 
     private void verifyShareRequest(ModelShareDto modelShare) {

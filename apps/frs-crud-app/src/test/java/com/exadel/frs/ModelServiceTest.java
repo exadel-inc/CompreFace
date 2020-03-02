@@ -12,6 +12,7 @@ import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
@@ -46,12 +47,14 @@ class ModelServiceTest {
     private ModelRepository modelRepositoryMock;
     private ModelService modelService;
     private ModelShareRequestRepository modelShareRequestRepository;
+    private AppModelRepository appModelRepository;
 
     ModelServiceTest() {
         modelRepositoryMock = mock(ModelRepository.class);
         appServiceMock = mock(AppService.class);
         modelShareRequestRepository = mock(ModelShareRequestRepository.class);
-        modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository);
+        appModelRepository = mock(AppModelRepository.class);
+        modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository, appModelRepository);
     }
 
     private User user(Long id) {
