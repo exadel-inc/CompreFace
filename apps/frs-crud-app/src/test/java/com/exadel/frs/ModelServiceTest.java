@@ -13,6 +13,7 @@ import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.repository.ModelRepository;
+import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import org.junit.jupiter.api.Assertions;
@@ -44,11 +45,13 @@ class ModelServiceTest {
     private AppService appServiceMock;
     private ModelRepository modelRepositoryMock;
     private ModelService modelService;
+    private ModelShareRequestRepository modelShareRequestRepository;
 
     ModelServiceTest() {
         modelRepositoryMock = mock(ModelRepository.class);
         appServiceMock = mock(AppService.class);
-        modelService = new ModelService(modelRepositoryMock, appServiceMock);
+        modelShareRequestRepository = mock(ModelShareRequestRepository.class);
+        modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository);
     }
 
     private User user(Long id) {
@@ -256,7 +259,7 @@ class ModelServiceTest {
         verify(modelRepositoryMock).save(varArgs.capture());
 
         assertThat(varArgs.getValue().getName(), is(modelCreateDto.getName()));
-        assertThat(varArgs.getValue().getGuid(), not(isEmptyOrNullString()));
+        assertThat(varArgs.getValue().getGuid(), not(emptyOrNullString()));
     }
 
     @ParameterizedTest

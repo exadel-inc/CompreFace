@@ -1,5 +1,6 @@
 package com.exadel.frs.controller;
 
+import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.mapper.MlModelMapper;
@@ -26,6 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -71,6 +73,24 @@ class ModelControllerTest {
                 .andExpect(content().string(expectedContent));
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithNoName)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    void shareModelShouldReturnErrorMessageWhenRequestIdIsMissing() throws Exception {
+        doCallRealMethod().when(modelService).share(any(), any());
+        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("requestId")));
+
+        val url = "/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/share";
+        val requestToShareModel = post(url)
+                                    .with(csrf())
+                                    .with(user(buildUser()))
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .content(mapper.writeValueAsString(new ModelShareDto()));
+
+
+        mockMvc.perform(requestToShareModel)
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
     }

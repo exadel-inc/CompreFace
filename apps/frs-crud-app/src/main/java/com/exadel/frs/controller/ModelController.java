@@ -4,6 +4,7 @@ import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
+import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
@@ -152,5 +153,24 @@ public class ModelController {
             final String guid
     ) {
         modelService.deleteModel(guid, SecurityUtils.getPrincipalId());
+    }
+
+    @PostMapping("/model/{guid}/share")
+    @ApiOperation("Sharing model with another application")
+    public void shareModel(
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String orgGuid,
+            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String appGuid,
+            @ApiParam(value = "GUID of the model being shared", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String guid,
+            @ApiParam(value = "GUID from model share request", required = true)
+            @RequestBody
+            final ModelShareDto modelShare
+            ) {
+        modelService.share(modelShare, guid);
     }
 }
