@@ -4,4 +4,4 @@ services:
     container_name: ml
     build: .
     ports:
-      - "5001:5000"
+      - "3000:3000"

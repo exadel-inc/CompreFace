@@ -3,13 +3,13 @@ Usage:
 python -m pytest test_e2e.py [--host <HOST:PORT>] [--drop-db]
 
 Arguments:
-    --host <HOST:PORT>      Run E2E against this host, default value: http://localhost:5001
+    --host <HOST:PORT>      Run E2E against this host, default value: http://localhost:3000
     --drop-db               Drop and reinitialize database before E2E test
 
 Instructions:
 1. Start the Face Recognition Service
 2. Run command, for example
-python -m pytest test_e2e.py --host http://localhost:5001
+python -m pytest test_e2e.py --host http://localhost:3000
 """
 
 import os

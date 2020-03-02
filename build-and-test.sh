@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
-BUILD_SERVER_DEFAULT_HOST='http://10.130.66.131:5001'
-DEV_ENV_DEFAULT_HOST='http://localhost:5001'
+BUILD_SERVER_DEFAULT_HOST='http://10.130.66.131:3000'
+DEV_ENV_DEFAULT_HOST='http://localhost:3000'
 
 ## Parse arguments
 print_usage() {
@@ -12,7 +12,7 @@ Usage: ./%s [-d] [-e] [-h <HOST:PORT>]
 Options:
     -d      Run with settings for a local development environment (instead of a build server)
     -e      Use already built docker containers (don't rebuild)
-    -h      Specify host by which the started container can be accessed, for example: -h http://localhost:5001
+    -h      Specify host by which the started container can be accessed, for example: -h http://localhost:3000
 " "$(basename "$0")"
 }
 
