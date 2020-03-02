@@ -8,7 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
-@Document(collection = "FACES")
+@Document(collection = "faces")
 @Accessors(chain = true)
 public class Face {
 
