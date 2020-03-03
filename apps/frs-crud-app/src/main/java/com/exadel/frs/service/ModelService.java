@@ -148,14 +148,13 @@ public class ModelService {
         }
         val appFromRequest = modelShareRequest.getApp();
 
-
         appModelRepository.save(new AppModel(appFromRequest, modelBeingShared, READONLY));
         modelShareRequestRepository.delete(modelShareRequest);
 
         return appFromRequest;
     }
 
-    private void verifyShareRequest(ModelShareDto modelShare) {
+    private void verifyShareRequest(final ModelShareDto modelShare) {
         if (modelShare.getRequestId() == null) {
             throw new EmptyRequiredFieldException("requestId");
         }
