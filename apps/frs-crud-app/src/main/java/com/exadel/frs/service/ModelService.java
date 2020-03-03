@@ -1,8 +1,10 @@
 package com.exadel.frs.service;
 
 import com.exadel.frs.dto.ui.ModelCreateDto;
+import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserAppRole;
@@ -12,18 +14,23 @@ import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelNotFoundException;
+import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.helpers.SecurityUtils;
+import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
+import com.exadel.frs.repository.ModelShareRequestRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.springframework.util.StringUtils.*;
-
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static com.exadel.frs.enums.AppModelAccess.READONLY;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +38,8 @@ public class ModelService {
 
     private final ModelRepository modelRepository;
     private final AppService appService;
+    private final ModelShareRequestRepository modelShareRequestRepository;
+    private final AppModelRepository appModelRepository;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -124,6 +133,30 @@ public class ModelService {
     private void verifyNameIsNotEmpty(final String newNameForModel) {
         if (isEmpty(newNameForModel)) {
             throw new EmptyRequiredFieldException("name");
+        }
+    }
+
+    @Transactional
+    public App share(final ModelShareDto modelShare, final String modelGuid) {
+        verifyShareRequest(modelShare);
+        val modelBeingShared = getModel(modelGuid);
+        verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), modelBeingShared.getApp());
+
+        val modelShareRequest = modelShareRequestRepository.findModelShareRequestByRequestId(modelShare.getRequestId());
+        if (modelShareRequest == null) {
+            throw new ModelShareRequestNotFoundException(modelShare.getRequestId());
+        }
+        val appFromRequest = modelShareRequest.getApp();
+
+        appModelRepository.save(new AppModel(appFromRequest, modelBeingShared, READONLY));
+        modelShareRequestRepository.delete(modelShareRequest);
+
+        return appFromRequest;
+    }
+
+    private void verifyShareRequest(final ModelShareDto modelShare) {
+        if (modelShare.getRequestId() == null) {
+            throw new EmptyRequiredFieldException("requestId");
         }
     }
 }
