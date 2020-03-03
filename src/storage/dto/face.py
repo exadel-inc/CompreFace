@@ -2,9 +2,12 @@ import attr
 import numpy as np
 from numpy.core.multiarray import ndarray
 
-from src.face_recognition.calc_embedding.calculator import calculate_embedding
-from src.face_recognition.crop_faces.crop_faces import crop_one_face
-from src.face_recognition.dto.embedding import Embedding
+from src.scan_faces._embedder.embedder import calculate_embedding
+from src.scan_faces.dto.embedding import Embedding
+
+calculate_embedding
+crop_one_face
+Embedding
 
 
 @attr.s(auto_attribs=True, frozen=True)
@@ -14,7 +17,7 @@ class _FaceBase:
 
 @attr.s(auto_attribs=True, frozen=True)
 class FaceEmbedding(_FaceBase):
-    """
+    """s
     >>> FaceEmbedding('name', ...) == FaceEmbedding('name', ...)
     True
     >>> FaceEmbedding('name2', ...) == FaceEmbedding('name', ...)

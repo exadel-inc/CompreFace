@@ -4,9 +4,9 @@ import pytest
 from mock import Mock
 from numpy import int32, float64
 
-from src.face_recognition.dto.bounding_box import BoundingBox
-from src.face_recognition.dto.face_prediction import FacePrediction
-from src.pyutils.pytest_utils import one
+from src.classify_faces.dto import BoundingBox
+from src.classify_faces.dto.face_prediction import FacePrediction
+from src._pyutils.pytest_utils import one
 
 
 def test__when_recognize_endpoint_is_requested__then_returns_predictions(client, mocker):

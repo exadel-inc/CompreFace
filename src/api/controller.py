@@ -8,14 +8,14 @@ from flasgger import Swagger
 from flask import jsonify, Response, Flask
 from flask.json import JSONEncoder
 
+from src._pyutils.convertible_to_dict import ConvertibleToDict
 from src.api.constants import API_KEY_HEADER, GetParameter
 from src.api.endpoint_decorators import needs_authentication, needs_attached_file, needs_retrain
 from src.api.exceptions import BadRequestException
 from src.api.parse_request_arg import parse_request_bool_arg
 from src.api.training_task_manager import start_training, is_training, abort_training
-from src.face_recognition.classify_embedding.predict import predict_from_image_with_api_key
-from src.face_recognition.crop_faces.constants import FaceLimitConstant, DEFAULT_THRESHOLD_C
-from src.pyutils.convertible_to_dict import ConvertibleToDict
+from src.classify_faces.predict import predict_from_image_with_api_key
+from src.scan_faces import FaceLimitConstant, DEFAULT_THRESHOLD_C
 from src.storage.dto.face import Face
 from src.storage.storage import get_storage
 

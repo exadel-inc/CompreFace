@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from src.face_recognition.dto.embedding import Embedding
+from src.classify_faces.dto import Embedding
 from src.storage.dto.face import Face, FaceEmbedding
 from src.storage.storage import Storage
 from src.storage.test.conftest import STORAGES
