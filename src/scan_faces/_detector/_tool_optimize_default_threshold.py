@@ -6,14 +6,13 @@ from pathlib import Path
 
 import imageio
 
-from main import ROOT_DIR
-from src import pyutils
-from src.scan_faces._detect_faces._lib.align import detect_face
-from src.scan_faces._detect_faces.constants import SCALE_FACTOR, FACE_MIN_SIZE
-from src.scan_faces._detect_faces.detect_faces import _face_detection_nets, _preprocess_img
+from src import _pyutils
+from src.scan_faces._detector._lib.align import detect_face
+from src.scan_faces._detector.constants import SCALE_FACTOR, FACE_MIN_SIZE
+from src.scan_faces._detector.detector import _face_detection_nets, _preprocess_img
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-IMG_DIR = ROOT_DIR / 'test_files'
+IMG_DIR = CURRENT_DIR / '_files'
 
 EXPERIMENT_SIZE = 3000
 
@@ -103,7 +102,7 @@ def calc_score_for_image(img, threshold, nose_locations) -> CalcResult:
     return calc_score_for_bounding_boxes(bounding_boxes, nose_locations)
 
 
-@pyutils.cached
+@_pyutils.cached
 def open_image(img_filepath):
     img = imageio.imread(img_filepath)
     img = _preprocess_img(img)

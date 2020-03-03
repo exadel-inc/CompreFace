@@ -48,13 +48,13 @@ if [ "$IS_DEV_ENV" = 'false' ]; then
   apt update && apt install dos2unix python3.7 python3-pip -y
   ln -sf python3.7 /usr/bin/python
 fi
-python -m pip install -r requirements-build.txt
+python -m pip install -r requirements-test.txt
 
 ## Set Current Dir to the script's dir
 cd "${0%/*}"
 
 ## Build and run docker containers
-dos2unix ./* # File pre-processing (CRLF endings in certain files cause `docker-compose up` to crash)
+dos2unix ./* # File pre-processing (CRLF endings in certain _files cause `docker-compose up` to crash)
 if [ "$USE_EXISTING_CONTAINERS" = 'false' ]; then
   docker-compose build --build-arg IS_DEV_ENV="$IS_DEV_ENV"
 fi
@@ -76,9 +76,9 @@ docker exec ml python3 -m pytest -m integration src
 ## Run E2E tests from outside the container
 if [ "$USE_EXISTING_CONTAINERS" = 'true' ]; then
   # If we're reusing database containers, drop and recreate the databases
-  python -m pytest -ra --verbose test_e2e/test_e2e.py --host "$HOST" --drop-db
+  python -m pytest -ra --verbose test/e2e/e2e.py --host "$HOST" --drop-db
 else
-  python -m pytest -ra --verbose test_e2e/test_e2e.py --host "$HOST"
+  python -m pytest -ra --verbose test/e2e/e2e.py --host "$HOST"
 fi
 
 ## Freeze versions and dependencies in requirements.txt

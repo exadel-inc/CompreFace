@@ -1,7 +1,7 @@
 from numpy.core.multiarray import ndarray
 from skimage import transform
 
-from src.scan_faces._calc_embedding.constants import IMAGE_SIZE
+from src.scan_faces._embedder.constants import IMAGE_SIZE
 from src.scan_faces.dto.bounding_box import BoundingBox
 
 

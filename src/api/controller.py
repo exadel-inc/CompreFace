@@ -10,7 +10,7 @@ from flask.json import JSONEncoder
 
 from src.api.endpoint_decorators import needs_attached_file
 from src.api.exceptions import BadRequestException
-from src.pyutils import ConvertibleToDict
+from src._pyutils import ConvertibleToDict
 from src.scan_faces import scan_faces, CALCULATOR_VERSION, DEFAULT_THRESHOLD_C, FaceLimitConstant
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))

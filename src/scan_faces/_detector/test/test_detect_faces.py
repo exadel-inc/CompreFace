@@ -6,15 +6,12 @@ import imageio
 import pytest
 from numpy.core.multiarray import ndarray
 
-from main import ROOT_DIR
-from src.pyutils.raises import raises
-from src.scan_faces._detect_faces.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
-from src.scan_faces._detect_faces.test._img_utils import boxes_are_almost_the_same
+from src._pyutils.raises import raises
+from src.scan_faces import IMG_DIR
+from src.scan_faces._detector.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
+from src.scan_faces._detector.test._img_utils import boxes_are_almost_the_same
 from src.scan_faces.scan_faces import detect_faces
 
-CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-
-IMG_DIR = ROOT_DIR / 'test_files'
 
 
 @pytest.fixture(scope='module')

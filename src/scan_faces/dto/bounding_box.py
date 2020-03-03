@@ -1,6 +1,6 @@
 import attr
 
-from src.pyutils.convertible_to_dict import ConvertibleToDict
+from src._pyutils.convertible_to_dict import ConvertibleToDict
 
 
 @attr.s(auto_attribs=True, frozen=True)

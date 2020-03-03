@@ -1,6 +1,6 @@
 """
 Usage:
-python -m pytest test_e2e.py [--host <HOST:PORT>] [--drop-db]
+python -m pytest e2e.py [--host <HOST:PORT>] [--drop-db]
 
 Arguments:
     --host <HOST:PORT>      Run E2E against this host, default value: http://localhost:3000
@@ -9,7 +9,7 @@ Arguments:
 Instructions:
 1. Start the Face Recognition Service
 2. Run command, for example
-python -m pytest test_e2e.py --host http://localhost:3000
+python -m pytest e2e.py --host http://localhost:3000
 """
 
 import os
@@ -18,11 +18,10 @@ from pathlib import Path
 import pytest
 import requests
 
-from main import ROOT_DIR
-from test_e2e.constants import EXPECTED_EMBEDDING
+from test.e2e.constants import EXPECTED_EMBEDDING
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-IMG_DIR = ROOT_DIR / 'test_files'
+IMG_DIR = CURRENT_DIR / '_files'
 TRAINING_TIMEOUT_S = 60
 
 
@@ -31,14 +30,14 @@ def host(request):
     return request.config.getoption('host')
 
 
-def after_previous_gen():
+def _after_previous_gen():
     order_no = 1
     while True:
         yield order_no
         order_no += 1
 
 
-after_previous = after_previous_gen()
+after_previous = _after_previous_gen()
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -70,21 +69,6 @@ def test__when_client_tries_to_scan_an_image_without_faces__then_returns_400_no_
     assert res.json()['message'] == "No face is found in the given image"
 
 
-@pytest.mark.run(order=next(after_previous))
-def test__when_client_requests_to_scan_face__then_correct_box_and_embedding_returned(host):
-    files = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
-
-    res = requests.post(f"{host}/scan_faces", files=files)
-
-    assert res.status_code == 200, res.content
-    assert res.json()['calculator_version'] == "v20180402"
-    assert len(res.json()['result']) == 1
-    result_item = res.json()['result'][0]
-    assert _boxes_are_the_same(result_item['box'], {'x_max': 284, 'x_min': 146, 'y_max': 373, 'y_min': 193})
-    assert _embeddings_are_the_same(result_item['embedding'], EXPECTED_EMBEDDING)
-    assert result_item['box']['probability'] > 0.9
-
-
 def _embeddings_are_the_same(embedding1, embedding2):
     threshold = 0.01
     for i in range(len(embedding1)):
@@ -102,3 +86,18 @@ def _boxes_are_the_same(box1, box2):
             and value_is_the_same('x_min')
             and value_is_the_same('y_max')
             and value_is_the_same('y_min'))
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_client_requests_to_scan_face__then_correct_box_and_embedding_returned(host):
+    files = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
+
+    res = requests.post(f"{host}/scan_faces", files=files)
+
+    assert res.status_code == 200, res.content
+    assert res.json()['calculator_version'] == "v20180402"
+    assert len(res.json()['result']) == 1
+    result_item = res.json()['result'][0]
+    assert _boxes_are_the_same(result_item['box'], {'x_max': 284, 'x_min': 146, 'y_max': 373, 'y_min': 193})
+    assert _embeddings_are_the_same(result_item['embedding'], EXPECTED_EMBEDDING)
+    assert result_item['box']['probability'] > 0.9
