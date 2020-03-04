@@ -13,11 +13,14 @@ import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRemoveException;
 import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.OrganizationRepository;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import liquibase.integration.spring.SpringLiquibase;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,6 +45,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -372,6 +376,7 @@ class OrganizationServiceTest {
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.deleteOrganization(ORGANISATION_GUID, userId));
     }
 
+    @DisplayName("Test organization delete")
     @ExtendWith(SpringExtension.class)
     @DataJpaTest
     @Nested
@@ -381,13 +386,22 @@ class OrganizationServiceTest {
         @Autowired
         private OrganizationRepository repository;
         @Autowired
+        private AppRepository appRepository;
+        @Autowired
+        private ModelRepository modelRepository;
+        @Autowired
         private OrganizationService service;
         private final String ORG_GUID = "d098a11e-c4e4-4f56-86b2-85ab3bc83044";
+        private final Long ORG_ID = 1_000_001L;
+        private final Long OTHER_ORG_ID = 1_000_002L;
+        private final Long APP1_ID = 2_000_001L;
+        private final Long APP2_ID = 2_000_002L;
+        private final Long OTHER_APP_ID = 2_000_003L;
         private final Long USER_ID = 25L;
 
 
         @Test
-        @Sql("init_remove_org_test.sql")
+        @Sql("/init_remove_org_test.sql")
         public void removesExpectedOrganization() {
             assertEquals(2, repository.findAll().size());
             assertNotNull(repository.findByGuid(ORG_GUID));
@@ -400,9 +414,58 @@ class OrganizationServiceTest {
 
 
         @Test
-        @Sql("init_remove_org_test.sql")
-        public void test() {
-            assertEquals(2, repository.findAll().size());
+        @Sql("/init_remove_org_test.sql")
+        public void removesChildApps() {
+            assertEquals(3, appRepository.findAll().size());
+            assertEquals(2, appRepository.findAllByOrganizationId(ORG_ID).size());
+
+            service.deleteOrganization(ORG_GUID, USER_ID);
+
+            assertTrue(appRepository.findAllByOrganizationId(ORG_ID).isEmpty());
+        }
+
+        @Test
+        @Sql("/init_remove_org_test.sql")
+        public void unrelatedAppsAreNotAffected() {
+            assertEquals(1, appRepository.findAllByOrganizationId(OTHER_ORG_ID).size());
+
+            service.deleteOrganization(ORG_GUID, USER_ID);
+
+            assertEquals(1, appRepository.findAllByOrganizationId(OTHER_ORG_ID).size());
+        }
+
+        @Test
+        @Sql("/init_remove_org_test.sql")
+        @DisplayName("Models that owned by the organization are also deleted.")
+        public void removesModelsThatBelongToOrganization() {
+            assertEquals(3, modelRepository.findAll()
+                                                    .stream()
+                                                    .filter(m -> List.of(APP1_ID, APP2_ID).contains(m.getApp().getId()) )
+                                                    .count());
+
+            service.deleteOrganization(ORG_GUID, USER_ID);
+
+            assertEquals(0, modelRepository.findAll()
+                    .stream()
+                    .filter(m -> List.of(APP1_ID, APP2_ID).contains(m.getApp().getId()) )
+                    .count());
+        }
+
+        @Test
+        @Sql("/init_remove_org_test.sql")
+        @DisplayName("Models that don't belong to organization are not deleted even if they are shared with its apps")
+        public void otherModelsAreNotAffected() {
+            assertEquals(2, modelRepository.findAll()
+                    .stream()
+                    .filter(m -> List.of(OTHER_APP_ID).contains(m.getApp().getId()) )
+                    .count());
+
+            service.deleteOrganization(ORG_GUID, USER_ID);
+
+            assertEquals(2, modelRepository.findAll()
+                    .stream()
+                    .filter(m -> List.of(OTHER_APP_ID).contains(m.getApp().getId()) )
+                    .count());
         }
     }
 }
