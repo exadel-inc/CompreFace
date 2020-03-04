@@ -22,6 +22,7 @@ import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -162,9 +163,17 @@ public class OrganizationService {
         organizationRepository.save(organization);
     }
 
+    @Transactional
     public void deleteOrganization(final String guid, final Long userId) {
         Organization organization = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organization);
+        //TODO delete from user_organization_role
+        //TODO delete from app_model
+        //TODO delete from model_share_request
+        //TODO delete from user_app_role
+        //TODO delete from model
+        //TODO delete model from mongodb
+        //TODO delete from app
         organizationRepository.deleteById(organization.getId());
     }
 

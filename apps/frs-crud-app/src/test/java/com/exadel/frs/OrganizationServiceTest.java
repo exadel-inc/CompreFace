@@ -1,19 +1,38 @@
 package com.exadel.frs;
 
-import com.exadel.frs.dto.ui.*;
+import com.exadel.frs.dto.ui.OrgCreateDto;
+import com.exadel.frs.dto.ui.OrgUpdateDto;
+import com.exadel.frs.dto.ui.UserInviteDto;
+import com.exadel.frs.dto.ui.UserRemoveDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.*;
+import com.exadel.frs.exception.FieldRequiredException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.SelfRemoveException;
+import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.repository.OrganizationRepository;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
+import liquibase.integration.spring.SpringLiquibase;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +40,9 @@ import java.util.stream.Stream;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
@@ -350,4 +372,37 @@ class OrganizationServiceTest {
         Assertions.assertThrows(InsufficientPrivilegesException.class, () -> organizationService.deleteOrganization(ORGANISATION_GUID, userId));
     }
 
+    @ExtendWith(SpringExtension.class)
+    @DataJpaTest
+    @Nested
+    @MockBeans({@MockBean(SpringLiquibase.class), @MockBean(PasswordEncoder.class)})
+    @Import({OrganizationService.class, UserService.class})
+    public class RemoveOrganizationTest {
+        @Autowired
+        private OrganizationRepository repository;
+        @Autowired
+        private OrganizationService service;
+        private final String ORG_GUID = "d098a11e-c4e4-4f56-86b2-85ab3bc83044";
+        private final Long USER_ID = 25L;
+
+
+        @Test
+        @Sql("init_remove_org_test.sql")
+        public void removesExpectedOrganization() {
+            assertEquals(2, repository.findAll().size());
+            assertNotNull(repository.findByGuid(ORG_GUID));
+
+            service.deleteOrganization(ORG_GUID, USER_ID);
+
+            assertEquals(1, repository.findAll().size());
+            assertTrue(repository.findByGuid(ORG_GUID).isEmpty());
+        }
+
+
+        @Test
+        @Sql("init_remove_org_test.sql")
+        public void test() {
+            assertEquals(2, repository.findAll().size());
+        }
+    }
 }

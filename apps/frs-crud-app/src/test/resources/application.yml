@@ -31,12 +31,12 @@ spring:
         jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
         format_sql: true
     hibernate:
-      ddl-auto: update
-    show_sql: true
-    database: postgresql
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
+      ddl-auto: create
+    show_sql: false
+    database: h2
+    database-platform: org.hibernate.dialect.H2Dialect
     open-in-view: true
-    generate-ddl: false
+    generate-ddl: true
   liquibase:
     enabled: false
 
