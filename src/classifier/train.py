@@ -6,7 +6,7 @@ from numpy.core.multiarray import ndarray
 from sklearn.linear_model import LogisticRegression
 
 from src.facescanner.dto.embedding import Embedding
-from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
+from src.storage.constants import CALCULATOR_VERSION
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.storage import get_storage
 
@@ -36,7 +36,7 @@ def get_trained_classifier(embeddings: List[Embedding], names: List[str]) -> Emb
 def train_and_save_model(api_key):
     # Load FaceEmbedding DTOs from DB
     storage = get_storage(api_key)
-    faces = storage.get_face_embeddings(EMBEDDING_CALCULATOR_MODEL_FILENAME)
+    faces = storage.get_face_embeddings(CALCULATOR_VERSION)
     unique_faces = list(toolz.unique(faces, lambda e: e.name))
     if len(unique_faces) <= 1:
         logging.warning("Not enough training data, model hasn't been created. Deleting existing models, if any.")
