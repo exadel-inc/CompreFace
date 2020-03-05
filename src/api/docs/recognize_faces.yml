@@ -34,16 +34,16 @@ responses:
               box:
                 type: object
                 properties:
-                  xmax:
+                  x_max:
                     type: integer
                     example: 10
-                  xmin:
+                  x_min:
                     type: integer
                     example: 40
-                  ymax:
+                  y_max:
                     type: integer
                     example: 50
-                  ymin:
+                  y_min:
                     type: integer
                     example: 60
               face_name:

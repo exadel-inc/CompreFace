@@ -5,7 +5,7 @@ import toolz as toolz
 from numpy.core.multiarray import ndarray
 from sklearn.linear_model import LogisticRegression
 
-from src.scan_faces.dto.embedding import Embedding
+from src.facescanner.dto.embedding import Embedding
 from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.storage import get_storage

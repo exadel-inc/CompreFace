@@ -8,13 +8,11 @@ import tensorflow as tf
 from tensorflow.python.platform import gfile
 
 from src import _pyutils
-from src.scan_faces._embedder._face_crop import crop_image
-from src.scan_faces._embedder.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
-from src.scan_faces.dto.bounding_box import BoundingBox
-from src.scan_faces.dto.embedding import Embedding
+from src.facescanner._embedder.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME, CALCULATOR_VERSION
+from src.facescanner.dto.cropped_img import CroppedImg
+from src.facescanner.dto.embedding import Embedding
 
 BATCH_SIZE = 25
-
 
 Calculator = namedtuple('Calculator', 'graph sess')
 
@@ -56,9 +54,10 @@ def calculate_embeddings(cropped_images):
         emb_array[start_index:end_index, :] = calculator.sess.run(embeddings, feed_dict=feed_dict)
 
     # Return embeddings
-    return [emb.tolist() for emb in emb_array]
+    return [Embedding(array=emb, calculator_version=CALCULATOR_VERSION) for emb in emb_array]
 
 
-def calculate_embedding(image: np.ndarray, box: BoundingBox) -> Embedding:
-    cropped_image = crop_image(image, box)
-    return calculate_embeddings([cropped_image])[0]
+def calculate_embedding(image: CroppedImg) -> Embedding:
+    embs = calculate_embeddings([image])
+    assert len(embs) == 1
+    return embs[0]

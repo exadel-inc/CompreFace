@@ -22,17 +22,16 @@ import requests
 from toolz import itertoolz
 
 from init_mongo_db import init_mongo_db
-from main import ROOT_DIR
 from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-IMG_DIR = ROOT_DIR / '_files'
+IMG_DIR = CURRENT_DIR / '_files'
 TRAINING_TIMEOUT_S = 60
 
 
 def _wait_until_training_is_complete(host):
     for _ in range(TRAINING_TIMEOUT_S):
-        time.sleep(1)
+        time.sleep(5)
         res = requests.get(f"{host}/retrain", headers={'X-Api-Key': 'test-api-key'})
         if res.status_code == HTTPStatus.OK:
             return

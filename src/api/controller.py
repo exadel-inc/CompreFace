@@ -14,8 +14,9 @@ from src.api.endpoint_decorators import needs_authentication, needs_attached_fil
 from src.api.exceptions import BadRequestException
 from src.api.parse_request_arg import parse_request_bool_arg
 from src.api.training_task_manager import start_training, is_training, abort_training
-from src.classify_faces.predict import predict_from_image_with_api_key
-from src.scan_faces import FaceLimitConstant, DEFAULT_THRESHOLD_C
+from src.classifier.predict import predict_from_image_with_api_key
+from src.facescanner._detector.constants import FaceLimitConstant, DEFAULT_THRESHOLD_C
+from src.facescanner.facescanner import scan_faces, scan_face
 from src.storage.dto.face import Face
 from src.storage.storage import get_storage
 
@@ -62,8 +63,8 @@ def create_app():
         detection_threshold_c = float(request.values.get('det_prob_threshold', DEFAULT_THRESHOLD_C))
         img = imageio.imread(file)
 
-        face = Face.from_image(face_name, img, detection_threshold_c)
-        get_storage(api_key).add_face(face)
+        face = scan_face(img, detection_threshold_c=detection_threshold_c)
+        get_storage(api_key).add_face(Face(name=face_name, raw_img=img, face_img=face.img, embedding=face.embedding))
 
         return Response(status=HTTPStatus.CREATED)
 

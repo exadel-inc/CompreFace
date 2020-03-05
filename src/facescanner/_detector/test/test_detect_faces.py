@@ -7,18 +7,20 @@ import pytest
 from numpy.core.multiarray import ndarray
 
 from src._pyutils.raises import raises
-from src.scan_faces import IMG_DIR
-from src.scan_faces._detector.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
-from src.scan_faces._detector.test._img_utils import boxes_are_almost_the_same
-from src.scan_faces.scan_faces import detect_faces
+from src.facescanner._detector.detector import _preprocess_img
+from src.facescanner._detector.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
+from src.facescanner._detector.test._img_utils import boxes_are_almost_the_same
+from src.facescanner.facescanner import scan_faces
 
+CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+IMG_DIR = CURRENT_DIR / '..' / '_files'
 
 
 @pytest.fixture(scope='module')
 def detected_faces_result_5faces():
     im = imageio.imread(IMG_DIR / 'five-faces.jpg')
 
-    detected_faces = detect_faces(im)
+    detected_faces = scan_faces(im)
 
     return detected_faces
 
@@ -28,7 +30,7 @@ def test_integration__when_called_with_less_than_2dimensional_image__then_raises
     im = ndarray(shape=(10,))
 
     def act():
-        detect_faces(im)
+        scan_faces(im)
 
     assert raises(IncorrectImageDimensionsError, act)
 
@@ -38,7 +40,7 @@ def test_integration__when_called_with_no_faces__then_raises_error():
     im = imageio.imread(IMG_DIR / 'no-faces.jpg')
 
     def act():
-        detect_faces(im)
+        scan_faces(im)
 
     assert raises(NoFaceFoundError, act)
 
@@ -48,7 +50,7 @@ def test_integration__when_called_with_one_face__then_detects_one_face():
     im = imageio.imread(IMG_DIR / 'one-face.jpg')
     check_box = [85, 108, 261, 330, 0.9999908208847046]
 
-    detected_faces = detect_faces(im)
+    detected_faces = scan_faces(im)
 
     assert len(detected_faces) == 1
     face = detected_faces[0].box
@@ -59,7 +61,7 @@ def test_integration__when_called_with_one_face__then_detects_one_face():
 def test_integration__given_limit_2__when_called_with_multiple_faces__then_detects_2_items():
     im = imageio.imread(IMG_DIR / 'five-faces.jpg')
 
-    detected_faces = detect_faces(im, face_limit=2)
+    detected_faces = scan_faces(im, face_limit=2)
 
     assert len(detected_faces) == 2
 
@@ -81,11 +83,11 @@ def test_integration__when_called_with_multiple_faces__then_detects_correct_amou
 
 
 @pytest.mark.integration
-def test_test_if_the_same_number_of_faces_png_vs_jpg():
-    img_png = imageio.imread(IMG_DIR / 'eight-faces.png')
-    img_jpg = imageio.imread(IMG_DIR / 'eight-faces.jpg')
+def test_if_the_same_number_of_faces_png_vs_jpg():
+    img_png = _preprocess_img(imageio.imread(IMG_DIR / 'eight-faces.png'))
+    img_jpg = _preprocess_img(imageio.imread(IMG_DIR / 'eight-faces.jpg'))
 
-    detected_faces_jpg = detect_faces(img_jpg)
-    detected_faces_png = detect_faces(img_png)
+    detected_faces_png = scan_faces(img_png)
+    detected_faces_jpg = scan_faces(img_jpg)
 
     assert len(detected_faces_png) == len(detected_faces_jpg)

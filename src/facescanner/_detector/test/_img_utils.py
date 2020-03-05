@@ -11,10 +11,10 @@ def images_are_almost_the_same(img1: Image, img2: Image):
 
 
 def boxes_are_almost_the_same(box1, box2):
-    xmin1, xmax1, ymin1, ymax1, probabitity1 = box1
-    xmin2, xmax2, ymin2, ymax2, probabitity2 = box2
-    return abs(xmax1 - xmax2) <= DIFFERENCE_THRESHOLD and abs(xmin1 - xmin2) <= DIFFERENCE_THRESHOLD and \
-           abs(ymax1 - ymax2) <= DIFFERENCE_THRESHOLD and abs(ymin1 - ymin2) <= DIFFERENCE_THRESHOLD
+    x_min1, x_max1, y_min1, y_max1, probabitity1 = box1
+    x_min2, x_max2, y_min2, y_max2, probabitity2 = box2
+    return abs(x_max1 - x_max2) <= DIFFERENCE_THRESHOLD and abs(x_min1 - x_min2) <= DIFFERENCE_THRESHOLD and \
+           abs(y_max1 - y_max2) <= DIFFERENCE_THRESHOLD and abs(y_min1 - y_min2) <= DIFFERENCE_THRESHOLD
 
 
 def ndarray_to_img(ndarray) -> Image:

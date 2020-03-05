@@ -1,16 +1,18 @@
+import logging
+
 import gridfs
 import numpy as np
 from pymongo import MongoClient
 
-from src.classify_faces.dto import Embedding
 from src._pyutils.serialization import deserialize, serialize
+from src.facescanner.dto.embedding import Embedding
 from src.storage._database_wrapper.database_base import DatabaseBase
 from src.storage._database_wrapper.mongo_fileio import save_file_to_mongo, get_file_from_mongo
 from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT, CollectionName
-from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.dto.face import Face, FaceEmbedding
+from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.exceptions import FaceHasNoEmbeddingSavedError, NoTrainedEmbeddingClassifierFoundError
-import logging
+
 
 class DatabaseMongo(DatabaseBase):
     def __init__(self):
@@ -62,8 +64,10 @@ class DatabaseMongo(DatabaseBase):
 
     def remove_face(self, api_key, face_name):
 
-        img_query = self._faces_collection.find(filter={"api_key": api_key, "face_name": face_name}, projection={"raw_img_fs_id"})
-        face_query = self._faces_collection.find(filter={"api_key": api_key, "face_name": face_name}, projection={"face_img_fs_id"})
+        img_query = self._faces_collection.find(filter={"api_key": api_key, "face_name": face_name},
+                                                projection={"raw_img_fs_id"})
+        face_query = self._faces_collection.find(filter={"api_key": api_key, "face_name": face_name},
+                                                 projection={"face_img_fs_id"})
         img_distinct = img_query.distinct("raw_img_fs_id")
         face_distinct = face_query.distinct("face_img_fs_id")
         if len(img_distinct) == 0 and len(face_distinct) == 0:
@@ -115,7 +119,7 @@ class DatabaseMongo(DatabaseBase):
         return EmbeddingClassifier(version, model, class_2_face_name, embedding_calculator_version)
 
     def delete_embedding_classifiers(self, api_key):
-        face_query = self._classifiers_collection.find(filter={"api_key": api_key}, projection = {"classifier_fs_id"})
+        face_query = self._classifiers_collection.find(filter={"api_key": api_key}, projection={"classifier_fs_id"})
         if len(face_query.distinct("classifier_fs_id")) == 0:
             return
         face = face_query.distinct("classifier_fs_id")[0]

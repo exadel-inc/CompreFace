@@ -7,13 +7,13 @@ from http import HTTPStatus
 
 import requests
 
-from src.face_recognition.calc_embedding.calculator import calculate_embeddings
-from src.classify_faces.predict import predict_from_image_with_classifier
-from src.face_recognition.classify_embedding import get_trained_classifier
-from src.face_recognition.crop_faces.crop_faces import crop_one_face
-from src.face_recognition.crop_faces.exceptions import NoFaceFoundError
 from src._pyutils.serialization import numpy_to_jpg_file
-from test.test_perf.dto import Image, Name
+from src.classifier.predict import predict_from_image_with_classifier
+from src.classifier.train import get_trained_classifier
+from src.facescanner._detector.exceptions import NoFaceFoundError
+from src.facescanner._embedder.embedder import calculate_embeddings
+from src.facescanner._embedder.face_crop import crop_image
+from test.accuracy.dto import Name, Image
 
 
 class ModelWrapperBase(ABC):
@@ -38,7 +38,7 @@ class EfrsLocal(ModelWrapperBase):
 
     def add_face_example(self, img: Image, name: Name):
         try:
-            cropped_img = crop_one_face(img).img
+            cropped_img = crop_image(img)
         except NoFaceFoundError as e:
             logging.warning(f"Failed to add face example. Skipping. {str(e)}")
             return 1
@@ -72,8 +72,8 @@ class EfrsRestApi(ModelWrapperBase):
 
     def add_face_example(self, img: Image, name: Name):
         response = requests.post(f"{self._host}/faces/{name}?retrain=no",
-                      headers={'X-Api-Key': self._api_key},
-                      files={'file': numpy_to_jpg_file(img)})
+                                 headers={'X-Api-Key': self._api_key},
+                                 files={'file': numpy_to_jpg_file(img)})
         if response.status_code != 201:
             logging.warning(f"Failed to add face example. Skipping. {str(response.content)}")
             return 1

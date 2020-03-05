@@ -1,10 +1,11 @@
+import logging
+
 import gridfs
 from pymongo import MongoClient
 
 from src import _pyutils
 from src._pyutils.raises import raises
-from src.init_runtime import init_runtime
-from src.scan_faces._embedder.embedder import MODEL_PATH
+from src.facescanner._embedder.embedder import MODEL_PATH
 from src.storage import get_file_from_mongo, save_file_to_mongo
 from src.storage.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME, MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT, \
     CollectionName
@@ -50,5 +51,5 @@ def init_mongo_db():
 
 
 if __name__ == '__main__':
-    init_runtime()
+    logging.basicConfig(level=logging.DEBUG)
     init_mongo_db()

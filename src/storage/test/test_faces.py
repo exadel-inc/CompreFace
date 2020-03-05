@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from src.classify_faces.dto import Embedding
+from src.facescanner.dto.embedding import Embedding
 from src.storage.dto.face import Face, FaceEmbedding
 from src.storage.storage import Storage
 from src.storage.test.conftest import STORAGES
@@ -110,7 +110,7 @@ def test_integration__given_saved_faces__when_getting_faces_with_different_api_k
                                                    raw_img=np.zeros(shape=(15, 15, 3)),
                                                    face_img=np.zeros(shape=(5, 5, 3)),
                                                    embedding=Embedding(array=np.zeros(shape=(16,)),
-                                                                       calculator_version='v1')))
+                                                                         calculator_version='v1')))
 
     returned_faces = storage.with_key('api-key-002').get_faces(calculator_version='v1')
 

@@ -4,10 +4,10 @@ from pathlib import Path
 import joblib
 import pytest
 
-from src.classify_faces.predict import predict_from_embedding
-from src.classify_faces.train import get_trained_model
-from src.classify_faces.dto import BoundingBox
-from src.classify_faces.dto import Embedding
+from src.classifier.predict import predict_from_embedding
+from src.classifier.train import get_trained_model
+from src.facescanner.dto.bounding_box import BoundingBox
+from src.facescanner.dto.embedding import Embedding
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
@@ -29,6 +29,6 @@ def test_integration__given_2_faces_in_db__when_asked_to_recognize_known_face__t
     embedding_classifier = EmbeddingClassifier(model=model, version=version,
                                                class_2_face_name={0: 'Person A', 1: 'Person B'},
                                                embedding_calculator_version='test-version')
-    face_prediction = predict_from_embedding(embedding_classifier, person_a_emb_2, BoundingBox(0, 0, 0, 0), 0.9)
+    face_prediction = predict_from_embedding(embedding_classifier, person_a_emb_2, BoundingBox(0, 0, 0, 0, 0.9))
 
     assert face_prediction.face_name == 'Person A'

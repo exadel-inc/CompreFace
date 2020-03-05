@@ -4,7 +4,7 @@ from toolz import valfilter
 
 from src import _pyutils
 from src.api.exceptions import ClassifierIsAlreadyTrainingError
-from src.classify_faces.train import train_and_save_model
+from src.classifier.train import train_and_save_model
 
 _api_key_2_train_process = {}
 

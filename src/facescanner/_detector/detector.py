@@ -6,13 +6,12 @@ import tensorflow as tf
 from numpy.core._multiarray_umath import ndarray
 
 from src import _pyutils
-from src.scan_faces._detector._lib import facenet
-from src.scan_faces._detector._lib.align import detect_face
-from src.scan_faces._detector.constants import SCALE_FACTOR, DEFAULT_THRESHOLD_A, DEFAULT_THRESHOLD_B, \
-    FACE_MIN_SIZE, BOX_MARGIN, FaceLimitConstant, DEFAULT_THRESHOLD_C
-from src.scan_faces._detector.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
-from src.scan_faces.dto.bounding_box import BoundingBox
-from src.scan_faces.dto.face import DetectedFace
+from src.facescanner._detector._lib import facenet
+from src.facescanner._detector._lib.align import detect_face
+from src.facescanner._detector.constants import SCALE_FACTOR, DEFAULT_THRESHOLD_A, DEFAULT_THRESHOLD_B, \
+    DEFAULT_THRESHOLD_C, FaceLimitConstant, BOX_MARGIN, FACE_MIN_SIZE
+from src.facescanner._detector.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
+from src.facescanner.dto.bounding_box import BoundingBox
 
 FaceDetectionNets = namedtuple('FaceDetectionNets', 'pnet rnet onet')
 
@@ -32,15 +31,15 @@ def _preprocess_img(img: ndarray):
     return img
 
 
-def detect_faces(img, face_limit=FaceLimitConstant.NO_LIMIT, detection_threshold_c=DEFAULT_THRESHOLD_C) -> List[
-    DetectedFace]:
+def find_face_bounding_boxes(img, face_limit=FaceLimitConstant.NO_LIMIT, detection_threshold_c=DEFAULT_THRESHOLD_C) \
+        -> List[BoundingBox]:
     img = _preprocess_img(img)
     fdn = _face_detection_nets()
     detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
                                                  [DEFAULT_THRESHOLD_A, DEFAULT_THRESHOLD_B, detection_threshold_c],
                                                  SCALE_FACTOR)
     img_size = np.asarray(img.shape)[0:2]
-    detected_faces = []
+    bounding_boxes = []
     for result_item in detect_face_result[0]:
         result_item = np.squeeze(result_item)
         margin = BOX_MARGIN / 2
@@ -51,10 +50,10 @@ def detect_faces(img, face_limit=FaceLimitConstant.NO_LIMIT, detection_threshold
             y_max=int(np.minimum(result_item[3] + margin, img_size[0])),
             probability=result_item[4]
         )
-        detected_faces.append(DetectedFace(box=bounding_box))
+        bounding_boxes.append(bounding_box)
 
-    if len(detected_faces) < 1:
+    if len(bounding_boxes) < 1:
         raise NoFaceFoundError("No face is found in the given image")
     if face_limit:
-        return detected_faces[:face_limit]
-    return detected_faces
+        return bounding_boxes[:face_limit]
+    return bounding_boxes

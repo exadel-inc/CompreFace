@@ -7,9 +7,9 @@ from pathlib import Path
 import imageio
 
 from src import _pyutils
-from src.scan_faces._detector._lib.align import detect_face
-from src.scan_faces._detector.constants import SCALE_FACTOR, FACE_MIN_SIZE
-from src.scan_faces._detector.detector import _face_detection_nets, _preprocess_img
+from src.facescanner._detector._lib.align import detect_face
+from src.facescanner._detector.constants import SCALE_FACTOR, FACE_MIN_SIZE
+from src.facescanner._detector.detector import _face_detection_nets, _preprocess_img
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 IMG_DIR = CURRENT_DIR / '_files'
@@ -48,13 +48,13 @@ CalcResult = namedtuple('Score', 'points_outside_one_box boxes_with_not_one_poin
 
 
 def point_inside_bounding_box(bounding_box, point) -> bool:
-    xmin = int(bounding_box[0])
-    ymin = int(bounding_box[1])
-    xmax = int(bounding_box[2])
-    ymax = int(bounding_box[3])
+    x_min = int(bounding_box[0])
+    y_min = int(bounding_box[1])
+    x_max = int(bounding_box[2])
+    y_max = int(bounding_box[3])
     point_x = point[0]
     point_y = point[1]
-    return xmin <= point_x <= xmax and ymin <= point_y <= ymax
+    return x_min <= point_x <= x_max and y_min <= point_y <= y_max
 
 
 def filter_only_noses_with_max_one_bounding_box(bounding_boxes, nose_locations):
