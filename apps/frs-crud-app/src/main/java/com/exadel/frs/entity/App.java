@@ -1,12 +1,27 @@
 package com.exadel.frs.entity;
 
+import static com.exadel.frs.enums.AppRole.OWNER;
 import com.exadel.frs.enums.AppRole;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.val;
 
 @Entity
 @Table
@@ -51,7 +66,7 @@ public class App {
     public Optional<UserAppRole> getOwner() {
         return userAppRoles
                 .stream()
-                .filter(userAppRole -> AppRole.OWNER.equals(userAppRole.getRole()))
+                .filter(userAppRole -> OWNER.equals(userAppRole.getRole()))
                 .findFirst();
     }
 
@@ -66,5 +81,17 @@ public class App {
         UserAppRole userAppRole = new UserAppRole(user, this, role);
         userAppRoles.add(userAppRole);
         user.getUserAppRoles().add(userAppRole);
+    }
+
+    public void deleteUserAppRole(final Long userId) {
+        val optional = userAppRoles.stream()
+                                   .filter(userApp -> userApp.getUser().getId().equals(userId))
+                                   .findFirst();
+
+        if (optional.isPresent()) {
+            val userAppRole = optional.get();
+            userAppRole.getUser().getUserAppRoles().remove(userAppRole);
+            userAppRoles.remove(userAppRole);
+        }
     }
 }

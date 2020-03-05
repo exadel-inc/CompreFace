@@ -1,5 +1,11 @@
 package com.exadel.frs.service;
 
+import static com.exadel.frs.enums.AppRole.ADMINISTRATOR;
+import static com.exadel.frs.enums.AppRole.OWNER;
+import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
@@ -23,18 +29,13 @@ import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -77,6 +78,7 @@ public class AppService {
     public App getApp(final String appGuid, final Long userId) {
         App repoApp = getApp(appGuid);
         verifyUserHasReadPrivileges(userId, repoApp);
+
         return repoApp;
     }
 
@@ -93,13 +95,14 @@ public class AppService {
     public AppRole[] getAppRolesToAssign(final String orgGuid, final String appGuid, final Long userId) {
         final App app = getApp(appGuid);
         Optional<UserAppRole> userAppRole = app.getUserAppRole(userId);
-        if (userAppRole.isPresent() && AppRole.OWNER.equals(userAppRole.get().getRole())) {
+        if (userAppRole.isPresent() && OWNER.equals(userAppRole.get().getRole())) {
             return AppRole.values();
         }
         UserOrganizationRole orgRole = app.getOrganization().getUserOrganizationRoleOrThrow(userId);
         if (OrganizationRole.USER.equals(orgRole.getRole())) {
             return new AppRole[0];
         }
+
         return AppRole.values();
     }
 
@@ -109,7 +112,7 @@ public class AppService {
         if (!app.getOrganization().getGuid().equals(orgGuid)) {
             throw new AppDoesNotBelongToOrgException(appGuid, orgGuid);
         }
-        if (!StringUtils.isEmpty(searchText)) {
+        if (isNotEmpty(searchText)) {
             List<UserAppRole> result = new ArrayList<>();
             app.getUserAppRoles().forEach(userAppRole -> {
                 String searchTextLowerCase = searchText.toLowerCase();
@@ -119,8 +122,10 @@ public class AppService {
                     result.add(userAppRole);
                 }
             });
+
             return result;
         }
+
         return app.getUserAppRoles();
     }
 
@@ -140,15 +145,17 @@ public class AppService {
 
         app.addUserAppRole(user, AppRole.valueOf(userInviteDto.getRole()));
         final App savedApp = appRepository.save(app);
+
         return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
 
     public App createApp(final AppCreateDto appCreateDto, final String organizationGuid, final Long userId) {
         Organization organization = organizationService.getOrganization(organizationGuid);
         verifyUserHasWritePrivileges(userId, organization);
-        if (StringUtils.isEmpty(appCreateDto.getName())) {
+        if (isEmpty(appCreateDto.getName())) {
             throw new EmptyRequiredFieldException("name");
         }
+
         verifyNameIsUnique(appCreateDto.getName(), organization.getId());
         App app = App.builder()
                 .name(appCreateDto.getName())
@@ -156,7 +163,8 @@ public class AppService {
                 .guid(UUID.randomUUID().toString())
                 .apiKey(UUID.randomUUID().toString())
                 .build();
-        app.addUserAppRole(userService.getUser(userId), AppRole.OWNER);
+        app.addUserAppRole(userService.getUser(userId), OWNER);
+
         return appRepository.save(app);
     }
 
@@ -183,10 +191,18 @@ public class AppService {
         }
         UserAppRole userAppRole = app.getUserAppRole(user.getId()).orElseThrow();
         AppRole newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
-        if (AppRole.OWNER.equals(newAppRole)) {
-            app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(AppRole.ADMINISTRATOR));
+        if (OWNER.equals(newAppRole)) {
+            app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(ADMINISTRATOR));
         }
         userAppRole.setRole(newAppRole);
+        appRepository.save(app);
+    }
+
+    public void deleteUserFromApp(final Long userId, final String guid, final Long adminId) {
+        val app = getApp(guid);
+        verifyUserHasWritePrivileges(adminId, app.getOrganization());
+
+        app.deleteUserAppRole(userId);
         appRepository.save(app);
     }
 
