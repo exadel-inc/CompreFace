@@ -167,15 +167,6 @@ public class OrganizationService {
     public void deleteOrganization(final String guid, final Long userId) {
         Organization organization = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organization);
-        //TODO delete from user_organization_role
-
-        //TODO delete from app_model
-        //TODO delete from model_share_request
-
-        //TODO delete from user_app_role
-
-        //TODO delete model from mongodb
         organizationRepository.deleteById(organization.getId());
     }
-
 }
