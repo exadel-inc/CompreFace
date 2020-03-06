@@ -13,6 +13,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
@@ -100,4 +102,12 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
+    public List<User> autocomplete(String query) {
+        if (isBlank(query))
+            return new ArrayList<>();
+
+        query += "%";
+
+        return userRepository.autocomplete(query);
+    }
 }

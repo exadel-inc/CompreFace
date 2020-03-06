@@ -1,5 +1,6 @@
 package com.exadel.frs.controller;
 
+import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
@@ -11,6 +12,7 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -67,5 +70,19 @@ public class UserController {
     @ApiOperation(value = "Delete user")
     public void deleteUser() {
         userService.deleteUser(SecurityUtils.getPrincipalId());
+    }
+
+    @GetMapping("/autocomplete")
+    @ApiOperation(value = "User autocomplete by (email, first name or last name)")
+    public UserAutocompleteDto autocomplete(@RequestParam final String query) {
+
+        val results =  userMapper.toResponseDto(userService.autocomplete(query));
+
+        return UserAutocompleteDto
+                    .builder()
+                    .length(results.size())
+                    .query(query)
+                    .results(results)
+                    .build();
     }
 }
