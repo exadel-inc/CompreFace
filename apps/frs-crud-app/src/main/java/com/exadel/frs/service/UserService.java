@@ -9,6 +9,7 @@ import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -102,12 +103,13 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public List<User> autocomplete(String query) {
-        if (isBlank(query))
+    public List<User> autocomplete(final String query) {
+        if (isBlank(query)) {
             return new ArrayList<>();
+        }
 
-        query += "%";
+        val hqlParameter = query + "%";
 
-        return userRepository.autocomplete(query);
+        return userRepository.autocomplete(hqlParameter);
     }
 }
