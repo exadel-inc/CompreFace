@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.component;
+package com.exadel.frs.core.trainservice.repository;
 
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
@@ -15,11 +15,14 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import java.util.stream.Collectors;
 
 @Component
 @Setter
 @Scope(value = "prototype")
 public class FaceClassifierProxy {
+
+    public static final String CLASSIFIER_IMPLEMENTATION_BEAN_NAME = "logisticRegressionExtendedClassifier";
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -28,8 +31,6 @@ public class FaceClassifierProxy {
     private FaceClassifierStorage storage;
 
     private FaceClassifier classifier;
-
-    public static final String CLASSIFIER_IMPLEMENTATION_BEAN_NAME = "logisticRegressionExtendedClassifier";
 
     @PostConstruct
     public void postConstruct() {
@@ -51,7 +52,9 @@ public class FaceClassifierProxy {
 
             for (val faceName : faceNameEmbeddings.keySet()) {
                 labelMap.put(faceId, faceName);
-                val lists = faceNameEmbeddings.get(faceName);
+                val lists = faceNameEmbeddings.get(faceName).stream()
+                                              .filter(list -> !CollectionUtils.isEmpty(list))
+                                              .collect(Collectors.toList());
                 for (val list : lists) {
                     x.add(list.stream().mapToDouble(d -> d).toArray());
                     y.add(faceId);
