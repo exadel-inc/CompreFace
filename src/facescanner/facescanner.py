@@ -11,9 +11,6 @@ from src.facescanner._embedder.face_crop import crop_image
 from src.facescanner.dto.scanned_face import ScannedFace
 
 
-# from src.facescanner_insightface.facescanner import scan_faces as scan_faces_insightface
-
-
 def _preprocess_img(img: ndarray):
     if img.ndim < 2:
         raise IncorrectImageDimensionsError("Unable to align image, it has only one dimension")
@@ -32,9 +29,6 @@ def scan_faces(img: ndarray,
         embedding = calculate_embedding(cropped_img)
         scanned_faces.append(ScannedFace(img=cropped_img, embedding=embedding, box=box))
     return scanned_faces
-
-
-# scan_faces = scan_faces_insightface
 
 
 def scan_face(img: ndarray, detection_threshold_c: float = DEFAULT_THRESHOLD_C) -> ScannedFace:
