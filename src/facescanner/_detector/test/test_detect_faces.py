@@ -7,10 +7,9 @@ import pytest
 from numpy.core.multiarray import ndarray
 
 from src._pyutils.raises import raises
-from src.facescanner._detector.detector import _preprocess_img
 from src.facescanner._detector.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
 from src.facescanner._detector.test._img_utils import boxes_are_almost_the_same
-from src.facescanner.facescanner import scan_faces
+from src.facescanner.facescanner import scan_faces, _preprocess_img
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 IMG_DIR = CURRENT_DIR / '..' / '_files'

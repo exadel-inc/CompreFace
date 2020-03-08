@@ -23,7 +23,7 @@ def test_integration__when_calculating_embeddings_of_two_images_with_the_same_fa
     person_a_face_embedding1 = calculate_embedding(person_a_im1)
     person_a_face_embedding2 = calculate_embedding(person_a_im2)
 
-    assert embeddings_are_the_same(person_a_face_embedding1, person_a_face_embedding2)
+    assert embeddings_are_the_same(person_a_face_embedding1.array, person_a_face_embedding2.array)
 
 
 @pytest.mark.integration
@@ -34,4 +34,4 @@ def test_integration__when_calculating_embeddings_of_two_images_with_different_f
     person_a_face_embedding = calculate_embedding(person_a_im)
     person_b_face_embedding = calculate_embedding(person_b_im)
 
-    assert not embeddings_are_the_same(person_a_face_embedding, person_b_face_embedding)
+    assert not embeddings_are_the_same(person_a_face_embedding.array, person_b_face_embedding.array)

@@ -26,9 +26,8 @@ def predict_from_image_with_classifier(img, limit: FaceLimit, classifier: Embedd
                                        detection_threshold_c: float = DEFAULT_THRESHOLD_C) -> List[FacePrediction]:
     cropped_faces = scan_faces(img, limit, detection_threshold_c)
     cropped_images = [face.img for face in cropped_faces]
-    embeddings = [Embedding(array=emb, calculator_version=CALCULATOR_VERSION)
-                  for emb in calculate_embeddings(cropped_images)]
-    return [predict_from_embedding(classifier, embedding, face.box, face.is_face_prob)
+    embeddings = calculate_embeddings(cropped_images)
+    return [predict_from_embedding(classifier, embedding, face.box)
             for face, embedding in zip(cropped_faces, embeddings)]
 
 

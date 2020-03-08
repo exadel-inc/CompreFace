@@ -89,7 +89,6 @@ def test__given_client_has_no_api_key__when_client_uploads_a_face_example__then_
     files = {'file': open(IMG_DIR / 'e2e-personA-img1.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", files=files)
-    _wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
 
@@ -99,7 +98,6 @@ def test__when_client_uploads_a_face_example_without_faces__then_returns_400_no_
     files = {'file': open(IMG_DIR / 'landscape.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'test-api-key'}, files=files)
-    _wait_until_training_is_complete(host)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "No face is found in the given image"

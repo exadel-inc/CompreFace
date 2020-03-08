@@ -3,15 +3,14 @@ from typing import List
 
 import numpy as np
 import tensorflow as tf
-from numpy.core._multiarray_umath import ndarray
 
 from src import _pyutils
-from src.facescanner._detector._lib import facenet
 from src.facescanner._detector._lib.align import detect_face
 from src.facescanner._detector.constants import SCALE_FACTOR, DEFAULT_THRESHOLD_A, DEFAULT_THRESHOLD_B, \
     DEFAULT_THRESHOLD_C, FaceLimitConstant, BOX_MARGIN, FACE_MIN_SIZE
-from src.facescanner._detector.exceptions import NoFaceFoundError, IncorrectImageDimensionsError
+from src.facescanner._detector.exceptions import NoFaceFoundError
 from src.facescanner.dto.bounding_box import BoundingBox
+
 
 FaceDetectionNets = namedtuple('FaceDetectionNets', 'pnet rnet onet')
 
@@ -23,17 +22,8 @@ def _face_detection_nets():
         return FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
 
 
-def _preprocess_img(img: ndarray):
-    if img.ndim < 2:
-        raise IncorrectImageDimensionsError("Unable to align image, it has only one dimension")
-    img = facenet.to_rgb(img) if img.ndim == 2 else img
-    img = img[:, :, 0:3]
-    return img
-
-
 def find_face_bounding_boxes(img, face_limit=FaceLimitConstant.NO_LIMIT, detection_threshold_c=DEFAULT_THRESHOLD_C) \
         -> List[BoundingBox]:
-    img = _preprocess_img(img)
     fdn = _face_detection_nets()
     detect_face_result = detect_face.detect_face(img, FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
                                                  [DEFAULT_THRESHOLD_A, DEFAULT_THRESHOLD_B, detection_threshold_c],
