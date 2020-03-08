@@ -4,15 +4,16 @@ import gridfs
 import numpy as np
 from pymongo import MongoClient
 
-from src.face_recognition.dto.embedding import Embedding
-from src.pyutils.serialization import deserialize, serialize
+from src._pyutils.serialization import deserialize, serialize
+from src.facescanner._embedder.embedder import calculate_embedding
+from src.facescanner.dto.embedding import Embedding
 from src.storage._database_wrapper.database_base import DatabaseBase
 from src.storage._database_wrapper.mongo_fileio import save_file_to_mongo, get_file_from_mongo
 from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT, CollectionName
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.dto.face import Face, FaceEmbedding
-from src.storage.exceptions import FaceHasNoEmbeddingSavedError, NoTrainedEmbeddingClassifierFoundError
-import logging
+from src.storage.exceptions import NoTrainedEmbeddingClassifierFoundError
+
 
 class DatabaseMongo(DatabaseBase):
     def __init__(self):
@@ -59,7 +60,7 @@ class DatabaseMongo(DatabaseBase):
             emb_dict = {"array": embedding.array.tolist(), "calculator_version": embedding.calculator_version}
             embeddings = document['embeddings']
             if emb_dict not in embeddings:
-                face_query = self._faces_collection.find_one_and_update(
+                self._faces_collection.find_one_and_update(
                     filter={"api_key": api_key, "face_name": document['face_name']},
                     update={'$push': {"embeddings": emb_dict}})
             return Face(
@@ -68,7 +69,6 @@ class DatabaseMongo(DatabaseBase):
                 raw_img=raw_img,
                 face_img=face_img
             )
-
 
         return [document_to_face(document) for document in self._get_faces_iterator(api_key)]
 
