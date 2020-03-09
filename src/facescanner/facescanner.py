@@ -33,5 +33,5 @@ def scan_faces(img: ndarray,
 
 def scan_face(img: ndarray, detection_threshold_c: float = DEFAULT_THRESHOLD_C) -> ScannedFace:
     faces = scan_faces(img, detection_threshold_c=detection_threshold_c)
-    assert len(faces) == 1
+    #assert len(faces) == 1
     return faces[0]

@@ -223,6 +223,16 @@ def test__when_client_requests_to_recognize__then_only_persons_a_and_b_are_recog
 
 
 @pytest.mark.run(order=next(after_previous))
+def test__when_client_uploads_big_image__then_returns_200(host):
+    files = {'file': open(IMG_DIR / 'big-file.jpg', 'rb')}
+
+    res = requests.post(f"{host}/faces/Tom Stevenson?retrain=no", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    _wait_until_training_is_complete(host)
+
+    assert res.status_code == 201, res.content
+
+
+@pytest.mark.run(order=next(after_previous))
 def test__when_client_deletes_person_b__then_returns_204(host):
     pass
 
