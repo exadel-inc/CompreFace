@@ -1,5 +1,21 @@
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.utils.TestUtils.USER_ID;
+import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
+import static com.exadel.frs.utils.TestUtils.buildUndefinedExceptionResponse;
+import static com.exadel.frs.utils.TestUtils.buildUser;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.exception.AppNotFoundException;
@@ -24,23 +40,6 @@ import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.exadel.frs.utils.TestUtils.USER_ID;
-import static com.exadel.frs.utils.TestUtils.buildUser;
-import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
-import static com.exadel.frs.utils.TestUtils.buildUndefinedExceptionResponse;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @WebMvcTest(value = AppController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class})
@@ -64,7 +63,7 @@ class AppControllerTest {
     public void shouldReturnMessageAndCodeWhenAppNotFoundExceptionThrown() throws Exception {
         final BasicException expectedException = new AppNotFoundException(APP_GUID);
 
-        when(appService.getApp(APP_GUID, USER_ID)).thenThrow(expectedException);
+        when(appService.getApp(ORG_GUID, APP_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
         mockMvc.perform(get("/org/" + ORG_GUID + "/app/" + APP_GUID).with(user(buildUser())))
@@ -104,7 +103,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturn400AndErrorMessageWhenRenameAppToEmpty() throws Exception {
-        doCallRealMethod().when(appService).updateApp(any(), any(), any());
+        doCallRealMethod().when(appService).updateApp(any(), any(), any(), any());
         val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("name")));
 
         val bodyWithEmptyName = new AppUpdateDto();

@@ -1,7 +1,6 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
-
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
@@ -19,10 +18,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-
 import java.util.List;
 import javax.validation.Valid;
-
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -57,7 +54,9 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
+        return appMapper.toResponseDto(
+                appService.getApp(orgGuid, guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId()
+        );
     }
 
     @GetMapping("/apps")
@@ -106,7 +105,7 @@ public class AppController {
             final AppUpdateDto appUpdateDto
     ) {
         val userId = SecurityUtils.getPrincipalId();
-        val updatedApplication = appService.updateApp(appUpdateDto, guid, userId);
+        val updatedApplication = appService.updateApp(appUpdateDto, orgGuid, guid, userId);
 
         return appMapper.toResponseDto(updatedApplication, userId);
     }
@@ -121,9 +120,9 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        appService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
+        appService.regenerateApiKey(orgGuid, guid, SecurityUtils.getPrincipalId());
 
-        return appMapper.toResponseDto(appService.getApp(guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
+        return appMapper.toResponseDto(appService.getApp(orgGuid, guid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/app/{guid}")
@@ -136,7 +135,7 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        appService.deleteApp(guid, SecurityUtils.getPrincipalId());
+        appService.deleteApp(orgGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/app/{guid}/assign-roles")
@@ -200,7 +199,7 @@ public class AppController {
             @RequestBody
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
-        appService.updateUserAppRole(userRoleUpdateDto, guid, SecurityUtils.getPrincipalId());
+        appService.updateUserAppRole(userRoleUpdateDto, orgGuid,  guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/app/{guid}/model/request")
@@ -213,7 +212,7 @@ public class AppController {
             @PathVariable
             final String guid
     ) {
-        val requestId = appService.generateUuidToRequestModelShare(guid);
+        val requestId = appService.generateUuidToRequestModelShare(orgGuid, guid);
 
         return ModelShareResponseDto
                                 .builder()
@@ -224,12 +223,15 @@ public class AppController {
     @DeleteMapping("/app/{guid}/delete-user")
     @ApiOperation(value = "Delete user from application")
     public void deleteUserApp(
+            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String orgGuid,
             @ApiParam(value = "User ID for deleting from organization", required = true)
             final Long userId,
             @ApiParam(value = "GUID of the application that needs to be deleted", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String guid
     ) {
-        appService.deleteUserFromApp(userId, guid, SecurityUtils.getPrincipalId());
+        appService.deleteUserFromApp(userId, orgGuid, guid, SecurityUtils.getPrincipalId());
     }
 }

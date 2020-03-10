@@ -1,5 +1,8 @@
 package com.exadel.frs.service;
 
+import static com.exadel.frs.enums.AppModelAccess.READONLY;
+import static com.exadel.frs.enums.OrganizationRole.USER;
+import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -20,17 +23,13 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static com.exadel.frs.enums.AppModelAccess.READONLY;
-import static org.springframework.util.StringUtils.isEmpty;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +51,7 @@ public class ModelService {
 
     private void verifyUserHasReadPrivileges(final Long userId, final App app) {
         OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
-        if (OrganizationRole.USER == organizationRole) {
+        if (USER == organizationRole) {
             app.getUserAppRole(userId)
                     .orElseThrow(() -> new InsufficientPrivilegesException(userId));
         }
@@ -60,7 +59,7 @@ public class ModelService {
 
     private void verifyUserHasWritePrivileges(final Long userId, final App app) {
         OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
-        if (OrganizationRole.USER == organizationRole) {
+        if (USER == organizationRole) {
             Optional<UserAppRole> userAppRole = app.getUserAppRole(userId);
             if (userAppRole.isEmpty() || AppRole.USER == userAppRole.get().getRole()) {
                 throw new InsufficientPrivilegesException(userId);
@@ -77,6 +76,7 @@ public class ModelService {
     public Model getModel(final String modelGuid, final Long userId) {
         Model model = getModel(modelGuid);
         verifyUserHasReadPrivileges(userId, model.getApp());
+
         return model;
     }
 
@@ -102,6 +102,7 @@ public class ModelService {
                 .apiKey(UUID.randomUUID().toString())
                 .app(app)
                 .build();
+
         return modelRepository.save(model);
     }
 
