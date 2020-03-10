@@ -3,7 +3,6 @@ package com.exadel.frs.core.trainservice.controller;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
-import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.scan.FacePrediction;
 import com.exadel.frs.core.trainservice.scan.PythonClient;
