@@ -4,31 +4,32 @@ import pytest
 from mock import Mock
 from numpy import int32, float64
 
-from src.face_recognition.dto.bounding_box import BoundingBox
-from src.face_recognition.dto.face_prediction import FacePrediction
-from src.pyutils.pytest_utils import one
+from src.facescanner.dto.bounding_box import BoundingBox
+
+from src.classifier.dto.face_prediction import FacePrediction
+from src._pyutils.pytest_utils import one
 
 
 def test__when_recognize_endpoint_is_requested__then_returns_predictions(client, mocker):
     expected_result = [
-        {'box': {"xmin": 50, "ymin": 60, "xmax": 70, "ymax": 80}, 'face_name': 'Joe Bloggs',
-         'probability': 0.9, 'is_face_prob': 0.9},
-        {'box': {"xmin": 10, "ymin": 20, "xmax": 30, "ymax": 40}, 'face_name': 'Fred Bloggs',
-         'probability': 0.85, 'is_face_prob': 0.9},
-        {'box': {"xmin": 15, "ymin": 25, "xmax": 35, "ymax": 45}, 'face_name': 'John Smith',
-         'probability': 0.91, 'is_face_prob': 0.9},
-        {'box': {"xmin": 35, "ymin": 36, "xmax": 39, "ymax": 40}, 'face_name': 'Igor Shaw',
-         'probability': 0.89, 'is_face_prob': 0.9}
+        {'box': {"x_min": 50, "y_min": 60, "x_max": 70, "y_max": 80, 'probability':0.9}, 'face_name': 'Joe Bloggs',
+         'probability': 0.9},
+        {'box': {"x_min": 10, "y_min": 20, "x_max": 30, "y_max": 40, 'probability':0.9}, 'face_name': 'Fred Bloggs',
+         'probability': 0.85},
+        {'box': {"x_min": 15, "y_min": 25, "x_max": 35, "y_max": 45, 'probability':0.9}, 'face_name': 'John Smith',
+         'probability': 0.91},
+        {'box': {"x_min": 35, "y_min": 36, "x_max": 39, "y_max": 40, 'probability':0.9}, 'face_name': 'Igor Shaw',
+         'probability': 0.89}
     ]
     ret_val = [
-        FacePrediction(box=BoundingBox(xmin=int32(50), ymin=int32(60), xmax=int32(70), ymax=int32(80)),
-                       face_name='Joe Bloggs', probability=float64(0.9), is_face_prob=float64(0.9)),
-        FacePrediction(box=BoundingBox(xmin=int32(10), ymin=int32(20), xmax=int32(30), ymax=int32(40)),
-                       face_name='Fred Bloggs', probability=float64(0.85), is_face_prob=float64(0.9)),
-        FacePrediction(box=BoundingBox(xmin=int32(15), ymin=int32(25), xmax=int32(35), ymax=int32(45)),
-                       face_name='John Smith', probability=float64(0.91), is_face_prob=float64(0.9)),
-        FacePrediction(box=BoundingBox(xmin=int32(35), ymin=int32(36), xmax=int32(39), ymax=int32(40)),
-                       face_name='Igor Shaw', probability=float64(0.89), is_face_prob=float64(0.9))
+        FacePrediction(box=BoundingBox(x_min=int32(50), y_min=int32(60), x_max=int32(70), y_max=int32(80), probability=float64(0.9)),
+                       face_name='Joe Bloggs', probability=float64(0.9)),
+        FacePrediction(box=BoundingBox(x_min=int32(10), y_min=int32(20), x_max=int32(30), y_max=int32(40), probability=float64(0.9)),
+                       face_name='Fred Bloggs', probability=float64(0.85)),
+        FacePrediction(box=BoundingBox(x_min=int32(15), y_min=int32(25), x_max=int32(35), y_max=int32(45), probability=float64(0.9)),
+                       face_name='John Smith', probability=float64(0.91)),
+        FacePrediction(box=BoundingBox(x_min=int32(35), y_min=int32(36), x_max=int32(39), y_max=int32(40), probability=float64(0.9)),
+                       face_name='Igor Shaw', probability=float64(0.89))
     ]
     img = object()
     imread_mock = mocker.patch('src.api.controller.imageio.imread', return_value=img)

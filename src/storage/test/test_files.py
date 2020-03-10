@@ -1,6 +1,6 @@
 import pytest
 
-from src.pyutils.raises import raises
+from src._pyutils.raises import raises
 from src.storage.exceptions import NoFileFoundInDatabaseError
 from src.storage.storage import Storage
 from src.storage.test.conftest import STORAGES

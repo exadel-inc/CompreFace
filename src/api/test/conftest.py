@@ -5,7 +5,7 @@ import pytest
 
 from src.api.constants import API_KEY_HEADER
 from src.api.controller import create_app
-from src.pyutils.pytest_utils import pass_through_decorator
+from src._pyutils.pytest_utils import pass_through_decorator
 
 
 def needs_authentication(f):

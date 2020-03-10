@@ -1,7 +1,7 @@
 import pytest
 from sklearn.linear_model import LogisticRegression
 
-from src.pyutils.raises import raises
+from src._pyutils.raises import raises
 from src.storage.dto.embedding_classifier import EmbeddingClassifier
 from src.storage.exceptions import NoTrainedEmbeddingClassifierFoundError
 from src.storage.storage import Storage

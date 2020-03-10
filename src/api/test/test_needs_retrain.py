@@ -3,7 +3,7 @@ from http import HTTPStatus
 import pytest
 
 from src.api.endpoint_decorators import needs_retrain
-from src.pyutils.pytest_utils import Expando
+from src._pyutils.pytest_utils import Expando
 
 
 @pytest.fixture
