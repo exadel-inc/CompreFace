@@ -223,6 +223,7 @@ def test__when_client_requests_to_recognize__then_only_persons_a_and_b_are_recog
 
 
 @pytest.mark.run(order=next(after_previous))
+@pytest.mark.skip('EFRS-249')
 def test__when_client_uploads_big_image__then_returns_200(host):
     files = {'file': open(IMG_DIR / 'big-file.jpg', 'rb')}
 
