@@ -1,3 +1,3 @@
-from ._calc_embedding.constants import *
-from ._detect_faces.constants import *
+from ._embedder.constants import *
+from ._detector.constants import *
 from .scan_faces import scan_faces

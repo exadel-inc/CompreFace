@@ -7,10 +7,9 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.python.platform import gfile
 
-from main import ROOT_DIR
-from src import pyutils
-from src.scan_faces._calc_embedding._face_crop import crop_image
-from src.scan_faces._calc_embedding.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
+from src import _pyutils
+from src.scan_faces._embedder._face_crop import crop_image
+from src.scan_faces._embedder.constants import EMBEDDING_CALCULATOR_MODEL_FILENAME
 from src.scan_faces.dto.bounding_box import BoundingBox
 from src.scan_faces.dto.embedding import Embedding
 
@@ -20,7 +19,7 @@ BATCH_SIZE = 25
 Calculator = namedtuple('Calculator', 'graph sess')
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
-MODEL_PATH = ROOT_DIR / 'models' / EMBEDDING_CALCULATOR_MODEL_FILENAME
+MODEL_PATH = CURRENT_DIR / '_model' / EMBEDDING_CALCULATOR_MODEL_FILENAME
 
 
 def _get_model():
@@ -28,7 +27,7 @@ def _get_model():
         return f.read()
 
 
-@pyutils.run_once
+@_pyutils.run_once
 def _calculator() -> Calculator:
     with tf.Graph().as_default() as graph:
         graph_def = tf.GraphDef()

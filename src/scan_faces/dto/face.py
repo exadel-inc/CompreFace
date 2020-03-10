@@ -1,6 +1,6 @@
 import attr
 
-from src.pyutils.convertible_to_dict import ConvertibleToDict
+from src._pyutils.convertible_to_dict import ConvertibleToDict
 from src.scan_faces.dto.bounding_box import BoundingBox
 from src.scan_faces.dto.embedding import Embedding
 

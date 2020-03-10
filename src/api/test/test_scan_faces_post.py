@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from src.scan_faces.dto.cropped_face import ScannedFace, BoundingBox
+from src.scan_faces.dto.face import ScannedFace, BoundingBox
 
 FILE_BYTES = b''
 

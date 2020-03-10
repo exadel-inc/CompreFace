@@ -1,4 +1,6 @@
+import os
 from enum import IntEnum
+from pathlib import Path
 from typing import Union
 
 FACE_MIN_SIZE = 20
@@ -20,3 +22,6 @@ class FaceLimitConstant(IntEnum):
 
 
 FaceLimit = Union[FaceLimitConstant, int]  # Class for type hinting
+CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
+IMG_DIR = CURRENT_DIR / '_files'
+

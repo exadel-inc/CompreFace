@@ -8,11 +8,11 @@ Tests concurrency handling for the service.
 
 Usage: ./%s [-h <HOST:PORT>]
 Options:
-    -h      Specify host of the started app, for example: -h http://localhost:5001
+    -h      Specify host of the started app, for example: -h http://localhost:3000
 " "$(basename "$0")"
 }
 
-HOST='http://localhost:5001'
+HOST='http://localhost:3000'
 
 while getopts 'h:' flag; do
   case "${flag}" in
