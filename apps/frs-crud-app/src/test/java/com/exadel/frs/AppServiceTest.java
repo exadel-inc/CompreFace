@@ -3,6 +3,7 @@ package com.exadel.frs;
 import static com.exadel.frs.enums.AppRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.USER;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -125,6 +126,27 @@ class AppServiceTest {
 
         assertThrows(UserDoesNotBelongToOrganization.class, () ->
                 appService.getApp(ORGANISATION_GUID, APPLICATION_GUID, USER_ID)
+        );
+    }
+
+    @Test
+    void failGetAppWithUnknownOrgGuid() {
+        val user = user(USER_ID);
+
+        val organization = organization();
+        organization.addUserOrganizationRole(user, USER);
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+        app.addUserAppRole(user, AppRole.USER);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        assertThrows(AppDoesNotBelongToOrgException.class, () ->
+                appService.getApp(randomAlphabetic(10), APPLICATION_GUID, USER_ID)
         );
     }
 
@@ -744,6 +766,7 @@ class AppServiceTest {
 
         val organization = organization();
         organization.addUserOrganizationRole(admin, organizationRole);
+        organization.addUserOrganizationRole(user, USER);
 
         val app = App.builder()
                      .id(APPLICATION_ID)

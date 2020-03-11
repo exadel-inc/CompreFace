@@ -54,8 +54,7 @@ public class AppService {
     }
 
     private void verifyUserHasReadPrivileges(final Long userId, final App app) {
-        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
-        if (USER == organizationRole) {
+        if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
             app.getUserAppRole(userId)
                     .orElseThrow(() -> new InsufficientPrivilegesException(userId));
         }
@@ -89,7 +88,7 @@ public class AppService {
     }
 
     public List<App> getApps(final String organizationGuid, final Long userId) {
-        final Organization organization = organizationService.getOrganization(organizationGuid);
+        val organization = organizationService.getOrganization(organizationGuid);
 
         if (USER == getUserOrganizationRole(organization, userId)) {
             return appRepository.findAllByOrganizationIdAndUserAppRoles_Id_UserId(organization.getId(), userId);
@@ -99,9 +98,7 @@ public class AppService {
     }
 
     public AppRole[] getAppRolesToAssign(final String orgGuid, final String appGuid, final Long userId) {
-        val app = getApp(appGuid);
-
-        verifyOrganizationHasTheApp(orgGuid, app);
+        val app = getApp(orgGuid, appGuid, userId);
 
         val userAppRole = app.getUserAppRole(userId);
         if (userAppRole.isPresent() && OWNER == userAppRole.get().getRole()) {
@@ -117,10 +114,7 @@ public class AppService {
     }
 
     public List<UserAppRole> getAppUsers(final String searchText, final String orgGuid, final String appGuid, final Long userId) {
-        val app = getApp(appGuid);
-
-        verifyUserHasReadPrivileges(userId, app);
-        verifyOrganizationHasTheApp(orgGuid, app);
+        val app = getApp(orgGuid, appGuid, userId);
 
         if (isNotEmpty(searchText)) {
             val result = new ArrayList<UserAppRole>();
@@ -145,10 +139,9 @@ public class AppService {
             final String appGuid,
             final Long userId
     ) {
-        val app = getApp(appGuid);
+        val app = getApp(orgGuid, appGuid, userId);
 
         verifyUserHasWritePrivileges(userId, app.getOrganization());
-        verifyOrganizationHasTheApp(orgGuid, app);
 
         val user = userService.getUser(userInviteDto.getUserEmail());
         val userOrganizationRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
@@ -185,11 +178,10 @@ public class AppService {
     }
 
     public App updateApp(final AppUpdateDto appUpdateDto, final String orgGuid, final String appGuid, final Long userId) {
-        val app = getApp(appGuid);
+        val app = getApp(orgGuid, appGuid, userId);
 
         verifyNewNameForApplication(appUpdateDto.getName());
         verifyUserHasWritePrivileges(userId, app.getOrganization());
-        verifyOrganizationHasTheApp(orgGuid, app);
 
         val isSameName = app.getName().equals(appUpdateDto.getName());
         if (isNotTrue(isSameName)) {
@@ -201,10 +193,9 @@ public class AppService {
     }
 
     public void updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String orgGuid, final String guid, final Long adminId) {
-        val app = getApp(guid);
+        val app = getApp(orgGuid, guid, adminId);
 
         verifyUserHasWritePrivileges(adminId, app.getOrganization());
-        verifyOrganizationHasTheApp(orgGuid, app);
 
         val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
@@ -223,7 +214,7 @@ public class AppService {
     }
 
     public void deleteUserFromApp(final Long userId, final String orgGuid, final String guid, final Long adminId) {
-        val app = getApp(guid);
+        val app = getApp(orgGuid, guid, userId);
 
         verifyUserHasWritePrivileges(adminId, app.getOrganization());
 
@@ -233,10 +224,9 @@ public class AppService {
     }
 
     public void regenerateApiKey(final String orgGuid, final String guid, final Long userId) {
-        val app = getApp(guid);
+        val app = getApp(orgGuid, guid, userId);
 
         verifyUserHasWritePrivileges(userId, app.getOrganization());
-        verifyOrganizationHasTheApp(orgGuid, app);
 
         app.setApiKey(UUID.randomUUID().toString());
 
@@ -244,10 +234,9 @@ public class AppService {
     }
 
     public void deleteApp(final String orgGuid, final String guid, final Long userId) {
-        val app = getApp(guid);
+        val app = getApp(orgGuid, guid, userId);
 
         verifyUserHasWritePrivileges(userId, app.getOrganization());
-        verifyOrganizationHasTheApp(orgGuid, app);
 
         appRepository.deleteById(app.getId());
     }
