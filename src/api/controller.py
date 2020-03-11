@@ -19,6 +19,7 @@ from src.facescanner._detector.constants import FaceLimitConstant, DEFAULT_THRES
 from src.facescanner.facescanner import scan_faces, scan_face
 from src.storage.dto.face import Face
 from src.storage.storage import get_storage
+from PIL import ImageFile
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 DOCS_DIR = CURRENT_DIR / 'docs'
@@ -61,6 +62,8 @@ def create_app():
         file = request.files['file']
         api_key = request.headers[API_KEY_HEADER]
         detection_threshold_c = float(request.values.get('det_prob_threshold', DEFAULT_THRESHOLD_C))
+
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
         img = imageio.imread(file)
 
         face = scan_face(img, detection_threshold_c=detection_threshold_c)
