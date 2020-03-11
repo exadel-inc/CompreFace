@@ -55,10 +55,7 @@ class Face(FaceEmbedding):
 
 
     def __hash__(self):
-        return (hash(self.name)
-                ^ hash(self.embedding)
-                ^ hash(self.raw_img.data.tobytes())
-                ^ hash(self.face_img.data.tobytes()))
+        return (hash(self.name)) # TODO
 
     def __eq__(self, other):
         if not isinstance(other, Face):
