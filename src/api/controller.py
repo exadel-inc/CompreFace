@@ -129,6 +129,7 @@ def create_app():
         api_key = request.headers[API_KEY_HEADER]
         file = request.files['file']
 
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
         img = imageio.imread(file)
         face_predictions = predict_from_image_with_api_key(img, limit, api_key, detection_threshold_c)
 
