@@ -10,5 +10,4 @@ public class AppDoesNotBelongToOrgException extends BasicException {
     public AppDoesNotBelongToOrgException(String appGuid, String orgGuid) {
         super(APP_DOES_NOT_BELONG_TO_ORG, format(MESSAGE, appGuid, orgGuid));
     }
-
 }

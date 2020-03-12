@@ -56,7 +56,7 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnMessageAndCodeWhenModelNameIsMissing() throws Exception {
-        doCallRealMethod().when(modelService).updateModel(any(), any(), any());
+        doCallRealMethod().when(modelService).updateModel(any(), any(), any(), any(), any());
         val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("name")));
         val bodyWithEmptyName = new ModelUpdateDto();
         bodyWithEmptyName.setName("");
@@ -79,7 +79,7 @@ class ModelControllerTest {
 
     @Test
     void shareModelShouldReturnErrorMessageWhenRequestIdIsMissing() throws Exception {
-        doCallRealMethod().when(modelService).share(any(), any());
+        doCallRealMethod().when(modelService).share(any(), any(), any(), any());
         val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("requestId")));
 
         val url = "/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/share";

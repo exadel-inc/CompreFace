@@ -87,8 +87,8 @@ public class AppService {
         return app;
     }
 
-    public List<App> getApps(final String organizationGuid, final Long userId) {
-        val organization = organizationService.getOrganization(organizationGuid);
+    public List<App> getApps(final String orgGuid, final Long userId) {
+        val organization = organizationService.getOrganization(orgGuid);
 
         if (USER == getUserOrganizationRole(organization, userId)) {
             return appRepository.findAllByOrganizationIdAndUserAppRoles_Id_UserId(organization.getId(), userId);
