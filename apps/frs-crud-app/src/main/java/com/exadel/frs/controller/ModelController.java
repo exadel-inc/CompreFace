@@ -53,7 +53,7 @@ public class ModelController {
             final String guid
     ) {
         return modelMapper.toResponseDto(
-                modelService.getModel(guid, SecurityUtils.getPrincipalId()),
+                modelService.getModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId()),
                 appGuid
         );
     }
@@ -116,7 +116,7 @@ public class ModelController {
             @RequestBody
             final ModelUpdateDto modelUpdateDto
     ) {
-        var updatedModel = modelService.updateModel(modelUpdateDto, guid, SecurityUtils.getPrincipalId());
+        var updatedModel = modelService.updateModel(modelUpdateDto, orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
 
         return modelMapper.toResponseDto(updatedModel, appGuid);
     }
@@ -134,9 +134,9 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        modelService.regenerateApiKey(guid, SecurityUtils.getPrincipalId());
+        modelService.regenerateApiKey(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
 
-        return modelMapper.toResponseDto(modelService.getModel(guid, SecurityUtils.getPrincipalId()), appGuid);
+        return modelMapper.toResponseDto(modelService.getModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId()), appGuid);
     }
 
     @DeleteMapping("/model/{guid}")
@@ -152,7 +152,7 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        modelService.deleteModel(guid, SecurityUtils.getPrincipalId());
+        modelService.deleteModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @PostMapping("/model/{guid}/share")
@@ -171,6 +171,6 @@ public class ModelController {
             @RequestBody
             final ModelShareDto modelShare
             ) {
-        modelService.share(modelShare, guid);
+        modelService.share(modelShare, orgGuid, appGuid, guid);
     }
 }

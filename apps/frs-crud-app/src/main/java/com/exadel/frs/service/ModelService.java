@@ -2,6 +2,7 @@ package com.exadel.frs.service;
 
 import static com.exadel.frs.enums.AppModelAccess.READONLY;
 import static com.exadel.frs.enums.OrganizationRole.USER;
+import static java.util.UUID.randomUUID;
 import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
@@ -10,12 +11,12 @@ import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
-import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
@@ -24,8 +25,6 @@ import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -50,17 +49,15 @@ public class ModelService {
     }
 
     private void verifyUserHasReadPrivileges(final Long userId, final App app) {
-        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
-        if (USER == organizationRole) {
+        if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
             app.getUserAppRole(userId)
                     .orElseThrow(() -> new InsufficientPrivilegesException(userId));
         }
     }
 
     private void verifyUserHasWritePrivileges(final Long userId, final App app) {
-        OrganizationRole organizationRole = getUserOrganizationRole(app.getOrganization(), userId);
-        if (USER == organizationRole) {
-            Optional<UserAppRole> userAppRole = app.getUserAppRole(userId);
+        if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
+            val userAppRole = app.getUserAppRole(userId);
             if (userAppRole.isEmpty() || AppRole.USER == userAppRole.get().getRole()) {
                 throw new InsufficientPrivilegesException(userId);
             }
@@ -73,62 +70,10 @@ public class ModelService {
         }
     }
 
-    public Model getModel(final String modelGuid, final Long userId) {
-        Model model = getModel(modelGuid);
-        verifyUserHasReadPrivileges(userId, model.getApp());
-
-        return model;
-    }
-
-    public List<Model> getModels(final String appGuid, final Long userId) {
-        App app = appService.getApp(appGuid);
-        verifyUserHasReadPrivileges(userId, app);
-        return modelRepository.findAllByAppId(app.getId());
-    }
-
-    public Model createModel(final ModelCreateDto modelCreateDto, final String orgGuid, final String appGuid, final Long userId) {
-        App app = appService.getApp(appGuid);
-        verifyUserHasWritePrivileges(userId, app);
-        if (isEmpty(modelCreateDto.getName())) {
-            throw new EmptyRequiredFieldException("name");
-        }
+    private void verifyOrganizationHasTheApp(final String orgGuid, final App app) {
         if (!app.getOrganization().getGuid().equals(orgGuid)) {
-            throw new AppDoesNotBelongToOrgException(appGuid, orgGuid);
+            throw new AppDoesNotBelongToOrgException(app.getGuid(), orgGuid);
         }
-        verifyNameIsUnique(modelCreateDto.getName(), app.getId());
-        Model model = Model.builder()
-                .name(modelCreateDto.getName())
-                .guid(UUID.randomUUID().toString())
-                .apiKey(UUID.randomUUID().toString())
-                .app(app)
-                .build();
-
-        return modelRepository.save(model);
-    }
-
-    public Model updateModel(final ModelUpdateDto modelUpdateDto, final String modelGuid, final Long userId) {
-        verifyNameIsNotEmpty(modelUpdateDto.getName());
-        Model repoModel = getModel(modelGuid);
-        verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        if (!repoModel.getName().equals(modelUpdateDto.getName())) {
-            verifyNameIsUnique(modelUpdateDto.getName(), repoModel.getApp().getId());
-            repoModel.setName(modelUpdateDto.getName());
-        }
-
-        return modelRepository.save(repoModel);
-    }
-
-    public void regenerateApiKey(final String guid, final Long userId) {
-        Model repoModel = getModel(guid);
-        verifyUserHasWritePrivileges(userId, repoModel.getApp());
-        repoModel.setApiKey(UUID.randomUUID().toString());
-        modelRepository.save(repoModel);
-    }
-
-    public void deleteModel(final String guid, final Long userId) {
-        Model model = getModel(guid);
-        verifyUserHasWritePrivileges(userId, model.getApp());
-        modelRepository.deleteById(model.getId());
     }
 
     private void verifyNameIsNotEmpty(final String newNameForModel) {
@@ -137,10 +82,104 @@ public class ModelService {
         }
     }
 
+    private void verifyAppHasTheModel(final String appGuid, final Model model) {
+        if (!model.getApp().getGuid().equals(appGuid)) {
+            throw new ModelDoesNotBelongToAppException(model.getGuid(), appGuid);
+        }
+    }
+
+    public Model getModel(final String orgGuid, final String appGuid, final String modelGuid, final Long userId) {
+        val model = getModel(modelGuid);
+
+        verifyUserHasReadPrivileges(userId, model.getApp());
+        verifyOrganizationHasTheApp(orgGuid, model.getApp());
+        verifyAppHasTheModel(appGuid, model);
+
+        return model;
+    }
+
+    public List<Model> getModels(final String appGuid, final Long userId) {
+        val app = appService.getApp(appGuid);
+
+        verifyUserHasReadPrivileges(userId, app);
+
+        return modelRepository.findAllByAppId(app.getId());
+    }
+
+    public Model createModel(final ModelCreateDto modelCreateDto, final String orgGuid, final String appGuid, final Long userId) {
+        val app = appService.getApp(appGuid);
+
+        verifyUserHasWritePrivileges(userId, app);
+
+        if (isEmpty(modelCreateDto.getName())) {
+            throw new EmptyRequiredFieldException("name");
+        }
+        if (!app.getOrganization().getGuid().equals(orgGuid)) {
+            throw new AppDoesNotBelongToOrgException(appGuid, orgGuid);
+        }
+
+        verifyNameIsUnique(modelCreateDto.getName(), app.getId());
+
+        val model = Model.builder()
+                .name(modelCreateDto.getName())
+                .guid(randomUUID().toString())
+                .apiKey(randomUUID().toString())
+                .app(app)
+                .build();
+
+        return modelRepository.save(model);
+    }
+
+    public Model updateModel(
+            final ModelUpdateDto modelUpdateDto,
+            final String orgGuid,
+            final String appGuid,
+            final String modelGuid,
+            final Long userId
+    ) {
+        verifyNameIsNotEmpty(modelUpdateDto.getName());
+
+        val model = getModel(orgGuid, appGuid, modelGuid, userId);
+
+        verifyUserHasWritePrivileges(userId, model.getApp());
+
+        if (!model.getName().equals(modelUpdateDto.getName())) {
+            verifyNameIsUnique(modelUpdateDto.getName(), model.getApp().getId());
+            model.setName(modelUpdateDto.getName());
+        }
+
+        return modelRepository.save(model);
+    }
+
+    public void regenerateApiKey(final String orgGuid, final String appGuid, final String guid, final Long userId) {
+        val repoModel = getModel(orgGuid, appGuid, guid, userId);
+
+        verifyUserHasWritePrivileges(userId, repoModel.getApp());
+
+        repoModel.setApiKey(randomUUID().toString());
+
+        modelRepository.save(repoModel);
+    }
+
+    public void deleteModel(final String orgGuid, final String appGuid, final String guid, final Long userId) {
+        val model = getModel(orgGuid, appGuid, guid, userId);
+
+        verifyUserHasWritePrivileges(userId, model.getApp());
+
+        modelRepository.deleteById(model.getId());
+    }
+
     @Transactional
-    public App share(final ModelShareDto modelShare, final String modelGuid) {
+    public App share(
+            final ModelShareDto modelShare,
+            final String orgGuid,
+            final String appGuid,
+            final String modelGuid
+    ) {
         verifyShareRequest(modelShare);
-        val modelBeingShared = getModel(modelGuid);
+
+        val modelBeingShared = getModel(orgGuid, appGuid, modelGuid, SecurityUtils.getPrincipalId());
+
         verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), modelBeingShared.getApp());
 
         val modelShareRequest = modelShareRequestRepository.findModelShareRequestByRequestId(modelShare.getRequestId());

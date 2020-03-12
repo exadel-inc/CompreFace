@@ -1,5 +1,6 @@
 package com.exadel.frs;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
@@ -22,6 +23,7 @@ import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
@@ -61,13 +63,13 @@ class ModelServiceTest {
         modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository, appModelRepository);
     }
 
-    private User user(Long id) {
+    private User user(final Long id) {
         return User.builder()
                 .id(id)
                 .build();
     }
 
-    private Organization organization(Long id) {
+    private Organization organization(final Long id) {
         return Organization.builder()
                 .id(id)
                 .guid(ORGANIZATION_GUID)
@@ -104,7 +106,7 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        val result = modelService.getModel(MODEL_GUID, USER_ID);
+        val result = modelService.getModel(MODEL_GUID);
 
         assertThat(result.getGuid(), is(MODEL_GUID));
     }
@@ -119,6 +121,7 @@ class ModelServiceTest {
 
         val app = App.builder()
                 .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
         app.addUserAppRole(user, AppRole.USER);
@@ -131,10 +134,38 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        val result = modelService.getModel(MODEL_GUID, USER_ID);
+        val result = modelService.getModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         assertThat(result.getId(), is(MODEL_ID));
         assertThat(result.getGuid(), is(MODEL_GUID));
+    }
+
+    @ParameterizedTest
+    @MethodSource("readRoles")
+    void failGetModelWithUnknownAppGuid(OrganizationRole organizationRole) {
+        val user = user(USER_ID);
+
+        val organization = organization(ORGANIZATION_ID);
+        organization.addUserOrganizationRole(user, organizationRole);
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+        app.addUserAppRole(user, AppRole.USER);
+
+        val model = Model.builder()
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .app(app)
+                         .build();
+
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
+
+        assertThrows(ModelDoesNotBelongToAppException.class, () ->
+                modelService.getModel(ORGANIZATION_GUID, randomAlphabetic(10), MODEL_GUID, USER_ID)
+        );
     }
 
     @ParameterizedTest
@@ -158,7 +189,9 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        assertThrows(InsufficientPrivilegesException.class, () -> modelService.getModel(MODEL_GUID, USER_ID));
+        assertThrows(InsufficientPrivilegesException.class, () ->
+                modelService.getModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
+        );
     }
 
     @ParameterizedTest
@@ -289,7 +322,9 @@ class ModelServiceTest {
         when(appServiceMock.getApp(anyString())).thenReturn(app);
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
-        assertThrows(NameIsNotUniqueException.class, () -> modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID));
+        assertThrows(NameIsNotUniqueException.class, () ->
+                modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID)
+        );
     }
 
     @ParameterizedTest
@@ -311,7 +346,9 @@ class ModelServiceTest {
 
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        assertThrows(InsufficientPrivilegesException.class, () -> modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID));
+        assertThrows(InsufficientPrivilegesException.class, () ->
+                modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID)
+        );
     }
 
     @ParameterizedTest
@@ -333,7 +370,9 @@ class ModelServiceTest {
 
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        assertThrows(EmptyRequiredFieldException.class, () -> modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID));
+        assertThrows(EmptyRequiredFieldException.class, () ->
+                modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID)
+        );
     }
 
     @ParameterizedTest
@@ -364,7 +403,7 @@ class ModelServiceTest {
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        modelService.updateModel(modelUpdateDto, MODEL_GUID, USER_ID);
+        modelService.updateModel(modelUpdateDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).save(any(Model.class));
 
@@ -399,7 +438,9 @@ class ModelServiceTest {
         when(appServiceMock.getApp(anyString())).thenReturn(app);
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
-        assertThrows(NameIsNotUniqueException.class, () -> modelService.updateModel(modelUpdateDto, MODEL_GUID, USER_ID));
+        assertThrows(NameIsNotUniqueException.class, () ->
+                modelService.updateModel(modelUpdateDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
+        );
     }
 
     @ParameterizedTest
@@ -428,7 +469,9 @@ class ModelServiceTest {
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
-        assertThrows(InsufficientPrivilegesException.class, () -> modelService.updateModel(modelUpdateDto, MODEL_GUID, USER_ID));
+        assertThrows(InsufficientPrivilegesException.class, () ->
+                modelService.updateModel(modelUpdateDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
+        );
     }
 
     @ParameterizedTest
@@ -441,6 +484,7 @@ class ModelServiceTest {
 
         val app = App.builder()
                 .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
@@ -452,7 +496,7 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        modelService.regenerateApiKey(MODEL_GUID, USER_ID);
+        modelService.regenerateApiKey(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         assertThat(model.getGuid(), not("guid"));
     }
@@ -478,7 +522,9 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        assertThrows(InsufficientPrivilegesException.class, () -> modelService.regenerateApiKey(MODEL_GUID, USER_ID));
+        assertThrows(InsufficientPrivilegesException.class, () ->
+                modelService.regenerateApiKey(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
+        );
     }
 
     @ParameterizedTest
@@ -491,6 +537,7 @@ class ModelServiceTest {
 
         val app = App.builder()
                 .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
                 .organization(organization)
                 .build();
 
@@ -502,7 +549,7 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        modelService.deleteModel(MODEL_GUID, USER_ID);
+        modelService.deleteModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).deleteById(anyLong());
     }
@@ -528,7 +575,9 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-        assertThrows(InsufficientPrivilegesException.class, () -> modelService.deleteModel(MODEL_GUID, USER_ID));
+        assertThrows(InsufficientPrivilegesException.class, () ->
+                modelService.deleteModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
+        );
     }
 
 }
