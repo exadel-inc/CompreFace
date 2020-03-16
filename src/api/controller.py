@@ -16,7 +16,7 @@ from src.api.parse_request_arg import parse_request_bool_arg
 from src.api.training_task_manager import start_training, is_training, abort_training
 from src.classifier.predict import predict_from_image_with_api_key
 from src.facescanner._detector.constants import FaceLimitConstant, DEFAULT_THRESHOLD_C
-from src.facescanner.facescanner import scan_faces, scan_face
+from src.facescanner.facescanner import scan_face
 from src.storage.dto.face import Face
 from src.storage.storage import get_storage
 from PIL import ImageFile
@@ -142,6 +142,9 @@ def create_app():
 
     @app.errorhandler(Exception)
     def handle_runtime_error(e):
+        if e.code != HTTPStatus.INTERNAL_SERVER_ERROR:
+            logging.warning(f'Response {e.code}: {str(e)}', exc_info=True)
+            return jsonify(message=str(e)), e.code
         logging.critical(f'Response 500: {str(e)}', exc_info=True)
         return jsonify(message=str(e)), HTTPStatus.INTERNAL_SERVER_ERROR
 
