@@ -11,5 +11,4 @@ export class MainLayoutComponent implements OnInit {
 
   ngOnInit() {
   }
-
 }
