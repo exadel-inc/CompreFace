@@ -142,11 +142,12 @@ def create_app():
 
     @app.errorhandler(Exception)
     def handle_runtime_error(e):
-        if e.code != HTTPStatus.INTERNAL_SERVER_ERROR:
+        try:
             logging.warning(f'Response {e.code}: {str(e)}', exc_info=True)
             return jsonify(message=str(e)), e.code
-        logging.critical(f'Response 500: {str(e)}', exc_info=True)
-        return jsonify(message=str(e)), HTTPStatus.INTERNAL_SERVER_ERROR
+        except:
+            logging.critical(f'Response 500: {str(e)}', exc_info=True)
+            return jsonify(message=str(e)), HTTPStatus.INTERNAL_SERVER_ERROR
 
     @app.after_request
     def disable_caching(response):
