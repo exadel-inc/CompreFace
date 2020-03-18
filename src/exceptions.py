@@ -1,17 +1,33 @@
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, Locked, InternalServerError
 
 
 class NoFileAttachedError(BadRequest):
-    description = 'No file is attached'
+    description = "No file is attached"
 
 
 class NoFileSelectedError(BadRequest):
-    description = 'No file is selected'
+    description = "No file is selected"
 
 
 class NoFaceFoundError(BadRequest):
-    description = 'No faces found in the given image'
+    description = "No faces found in the given image"
 
 
 class OneDimensionalImageIsGivenError(BadRequest):
-    description = 'Given image has only one dimension'
+    description = "Given image has only one dimension"
+
+
+class MoreThanOneFaceFoundError(BadRequest):
+    description = "Found more than one face in the given image"
+
+
+class ClassifierIsAlreadyTrainingError(Locked):
+    description = "Classifier training is already in progress"
+
+
+class NoTrainedEmbeddingClassifierFound(BadRequest):
+    description = "No classifier model is yet trained, please train a classifier first"
+
+
+class NoFileFoundInDatabaseError(InternalServerError):
+    description = 'File is not found in the database'

@@ -159,5 +159,5 @@ fabric.properties
 .idea/httpRequests
 
 # Custom filters
-.idea/**
-.vscode/**
+.idea/
+.vscode/
