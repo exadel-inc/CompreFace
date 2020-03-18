@@ -11,7 +11,7 @@ from flask.json import JSONEncoder
 from src._pyutils.convertible_to_dict import ConvertibleToDict
 from src.api.constants import API_KEY_HEADER, GetParameter
 from src.api.endpoint_decorators import needs_authentication, needs_attached_file, needs_retrain
-from src.api.exceptions import BadRequestException
+from src.api.exceptions import BadRequestException, IncorrectFormatException
 from src.api.parse_request_arg import parse_request_bool_arg
 from src.api.training_task_manager import start_training, is_training, abort_training
 from src.classifier.predict import predict_from_image_with_api_key
@@ -63,8 +63,11 @@ def create_app():
         api_key = request.headers[API_KEY_HEADER]
         detection_threshold_c = float(request.values.get('det_prob_threshold', DEFAULT_THRESHOLD_C))
 
-        ImageFile.LOAD_TRUNCATED_IMAGES = True
-        img = imageio.imread(file)
+        try:
+            ImageFile.LOAD_TRUNCATED_IMAGES = True
+            img = imageio.imread(file)
+        except:
+            raise IncorrectFormatException
 
         face = scan_face(img, detection_threshold_c=detection_threshold_c)
         get_storage(api_key).add_face(Face(name=face_name, raw_img=img, face_img=face.img, embedding=face.embedding))
@@ -129,8 +132,11 @@ def create_app():
         api_key = request.headers[API_KEY_HEADER]
         file = request.files['file']
 
-        ImageFile.LOAD_TRUNCATED_IMAGES = True
-        img = imageio.imread(file)
+        try:
+            ImageFile.LOAD_TRUNCATED_IMAGES = True
+            img = imageio.imread(file)
+        except:
+            raise IncorrectFormatException
         face_predictions = predict_from_image_with_api_key(img, limit, api_key, detection_threshold_c)
 
         return jsonify(result=face_predictions)

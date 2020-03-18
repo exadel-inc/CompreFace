@@ -34,3 +34,8 @@ class NoFileSelectedError(BadRequestException):
 class ClassifierIsAlreadyTrainingError(BadRequestException):
     http_status = HTTPStatus.LOCKED
     message = 'Classifier training is already in progress'
+
+
+class IncorrectFormatException(BadRequestException):
+    http_status = HTTPStatus.BAD_REQUEST
+    message = 'Image has incorrect format or broken'
