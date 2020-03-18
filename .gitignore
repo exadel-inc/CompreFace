@@ -84,7 +84,7 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
-src/.env
+shared_src/.env
 .venv
 env/
 venv/
@@ -158,8 +158,6 @@ fabric.properties
 # Editor-based Rest Client
 .idea/httpRequests
 
+# Custom filters
 .idea/**
-
 .vscode/**
-
-data/**
