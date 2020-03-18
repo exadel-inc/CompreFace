@@ -1,5 +1,5 @@
-from src.api.exceptions import BadRequestException
+from src.shared.api.exceptions import BadRequestException
 
 
-class IncorrectUsageError(BadRequestException):
+class InvalidInputError(BadRequestException):
     pass

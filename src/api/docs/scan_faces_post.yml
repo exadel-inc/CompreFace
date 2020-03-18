@@ -1,7 +1,7 @@
 tags:
   - 'EFRS Core'
 summary: 'Scan faces in the given image and return their embeddings.'
-description: 'Returns the probability of face detection, the embedding array, and the embedding calculator version. Embeddings calculated by calculators with different versions should not be used together in the same model. Embedding array size may be different for different calculators.'
+description: 'Returns the probability of face detection, the embedding array, and the embedding calculator version. Embeddings calculated by calculators with different versions should not be used together in the same models. Embedding array size may be different for different calculators.'
 operationId: scanFacesPost
 consumes:
   - multipart/form-data

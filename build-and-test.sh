@@ -48,7 +48,7 @@ if [ "$IS_DEV_ENV" = 'false' ]; then
   apt update && apt install dos2unix python3.7 python3-pip -y
   ln -sf python3.7 /usr/bin/python
 fi
-python -m pip install -r requirements-test.txt
+python -m pip install -r requirements-build.txt
 
 ## Set Current Dir to the script's dir
 cd "${0%/*}"
@@ -70,15 +70,15 @@ else
 fi
 
 ## Run tests from inside the container
-docker exec ml python3 -m pytest -m "not integration" src
-docker exec ml python3 -m pytest -m integration src
+docker exec ml python3 -m pytest -m "not integration"
+docker exec ml python3 -m pytest -m integration
 
 ## Run E2E tests from outside the container
 if [ "$USE_EXISTING_CONTAINERS" = 'true' ]; then
   # If we're reusing database containers, drop and recreate the databases
-  python -m pytest -ra --verbose test/e2e/e2e.py --host "$HOST" --drop-db
+  python -m pytest -ra --verbose ./test/e2e/ --host "$HOST" --drop-db
 else
-  python -m pytest -ra --verbose test/e2e/e2e.py --host "$HOST"
+  python -m pytest -ra --verbose ./test/e2e/ --host "$HOST"
 fi
 
 ## Freeze versions and dependencies in requirements.txt

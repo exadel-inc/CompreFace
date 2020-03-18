@@ -1,0 +1,3 @@
+[submodule "src/shared/extlib/insightface"]
+	path = src/shared/extlib/insightface
+	url = https://github.com/deepinsight/insightface

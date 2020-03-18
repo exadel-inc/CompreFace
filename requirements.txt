@@ -31,6 +31,7 @@ MarkupSafe==1.1.1
 matplotlib==3.1.0
 mistune==0.8.4
 mock==3.0.5
+mongomock==3.18.0
 more-itertools==7.2.0
 mpmath==1.1.0
 networkx==2.3
@@ -43,6 +44,7 @@ Pillow==6.0.0
 pluggy==0.13.0
 protobuf==3.8.0
 py==1.8.0
+pymongo==3.8.0
 pyparsing==2.4.0
 pyrsistent==0.15.2
 pytest==5.2.1
@@ -71,3 +73,5 @@ uWSGI==2.0.18
 wcwidth==0.1.7
 Werkzeug==0.15.4
 zipp==0.6.0
+pylama
+mxnet-mkl
