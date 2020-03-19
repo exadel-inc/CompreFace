@@ -227,6 +227,7 @@ public class AppController {
             @PathVariable
             final String orgGuid,
             @ApiParam(value = "User ID for deleting from organization", required = true)
+            @RequestParam
             final Long userId,
             @ApiParam(value = "GUID of the application that needs to be deleted", required = true, example = GUID_EXAMPLE)
             @PathVariable
