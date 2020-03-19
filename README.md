@@ -12,4 +12,4 @@
 ---
 
 ##### Where to find more commands
-Run `make` with one of the targets available in `./Makefile`.
+Run `$ make [TARGET]` with one of the targets available in `./Makefile`.
