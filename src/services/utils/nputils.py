@@ -5,12 +5,11 @@ import numpy as np
 from skimage import transform
 
 from src.dto.bounding_box import BoundingBox
-
-
 from src.exceptions import OneDimensionalImageIsGivenError
 
 Array1D = np.array
 Array3D = np.array
+
 
 def crop_img(img: Array3D, box: BoundingBox) -> Array3D:
     return img[box.y_min:box.y_max, box.x_min:box.x_max, :]

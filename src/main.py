@@ -24,4 +24,3 @@ if __name__ == '__main__':
     app = create_app(endpoints, DOCS_DIR)
     app.config.from_mapping(SECRET_KEY='dev')
     app.run(host='0.0.0.0', port=3000, debug=True, use_debugger=False, use_reloader=False)
-

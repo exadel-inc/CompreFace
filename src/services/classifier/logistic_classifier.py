@@ -1,15 +1,11 @@
 from typing import Dict, List
 
 import attr
-import joblib
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from src.dto.face_prediction import NamePrediction
 from src.services.utils.nputils import Array1D
-from src.services.utils.pyutils import get_dir
-
-
 
 
 @attr.s(auto_attribs=True, frozen=True)

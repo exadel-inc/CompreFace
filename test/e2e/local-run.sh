@@ -1,6 +1,6 @@
 #!/bin/bash
 if [ $# -eq 0 ]; then
- exit 1
+  exit 1
 fi
 
 (

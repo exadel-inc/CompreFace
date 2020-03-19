@@ -7,15 +7,13 @@ import tensorflow as tf
 from tensorflow.python.platform import gfile
 
 from src.dto.bounding_box import BoundingBox
-from src.services.facescan.backend.facescan_backend import FacescanBackend
-from src.services.facescan.backend.facenet.extlib.align import detect_face
 from src.exceptions import NoFaceFoundError
+from src.services.facescan.backend.facenet.extlib.align import detect_face
+from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.facescan.constants import NO_LIMIT
 from src.services.facescan.scanned_face import ScannedFace
-
 from src.services.utils.nputils import squish_img, crop_img, Array3D
 from src.services.utils.pyutils import get_dir
-
 
 CURRENT_DIR = get_dir(__file__)
 _EmbeddingCalculator = namedtuple('Calculator', 'graph sess')

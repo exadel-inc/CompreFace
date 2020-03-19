@@ -18,10 +18,9 @@ from pathlib import Path
 
 import pytest
 import requests
-from toolz import itertoolz
-
 from init_mongo_db import init_mongo_db
 from src.storage.constants import MONGO_EFRS_DATABASE_NAME, MONGO_HOST, MONGO_PORT
+from toolz import itertoolz
 
 CURRENT_DIR = Path(os.path.dirname(os.path.realpath(__file__)))
 IMG_DIR = CURRENT_DIR / '_files'
