@@ -1,6 +1,5 @@
 import os
 
-from src.services.classifier.classifier_manager import TrainingTaskManager, train_and_save_classifier
 from src.services.utils.pyutils import run_once
 
 
@@ -20,4 +19,5 @@ def get_storage():
 
 @run_once
 def get_training_task_manager():
+    from src.services.classifier.classifier_manager import TrainingTaskManager, train_and_save_classifier
     return TrainingTaskManager(train_and_save_classifier)
