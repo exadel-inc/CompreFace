@@ -47,4 +47,15 @@ public class FaceController {
 
         faceService.deleteFaceByNameAndTrainModelIfRequired(faceNameEncoded, appKey, modelGuid, retrain);
     }
+
+    @DeleteMapping
+    public int deleteFacesByModel(
+            @RequestHeader(name = X_FRS_API_KEY_HEADER)
+            final String apiKey
+    ) {
+        val modelGuid = apiKey.substring(apiKey.length() / 2);
+        val deletedFaces = faceService.deleteFacesByApiKey(modelGuid);
+
+        return deletedFaces.size();
+    }
 }

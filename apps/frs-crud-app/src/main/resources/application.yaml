@@ -6,8 +6,7 @@ app:
     oauth2:
       clients:
         COMMON:
-#          access-token-validity: ${COMMON_ACCESS_TOKEN_VALIDITY:3600}
-          access-token-validity: 3600    #60 min
+          access-token-validity: ${COMMON_ACCESS_TOKEN_VALIDITY:2400}
           authorities: ROLE_APP_LOGIN
           authorized-grant-types: password,refresh_token
           client-id: CommonClientId

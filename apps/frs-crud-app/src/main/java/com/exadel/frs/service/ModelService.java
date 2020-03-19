@@ -21,6 +21,7 @@ import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.helpers.SecurityUtils;
+import com.exadel.frs.http.CoreDeleteFacesClient;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
@@ -38,6 +39,7 @@ public class ModelService {
     private final AppService appService;
     private final ModelShareRequestRepository modelShareRequestRepository;
     private final AppModelRepository appModelRepository;
+    private final CoreDeleteFacesClient facesClient;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -161,11 +163,13 @@ public class ModelService {
         modelRepository.save(repoModel);
     }
 
+    @Transactional
     public void deleteModel(final String orgGuid, final String appGuid, final String guid, final Long userId) {
         val model = getModel(orgGuid, appGuid, guid, userId);
 
         verifyUserHasWritePrivileges(userId, model.getApp());
 
+        facesClient.deleteFaces(appGuid + guid);
         modelRepository.deleteById(model.getId());
     }
 

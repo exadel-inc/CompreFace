@@ -26,7 +26,7 @@ public class TrainController {
     ) {
         storage.lock(appkey, modelId);
         storage.getFaceClassifier(appkey, modelId)
-               .train(faceService.findAllFaceEmbeddingsByAppKey(appkey), appkey, modelId);
+               .train(faceService.findAllFaceEmbeddingsByApiKey(appkey), appkey, modelId);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                              .body(new RetrainResponse("Retraining has just been started (this one already exists)"));

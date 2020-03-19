@@ -12,3 +12,11 @@ Content-Disposition: form-data; name="limit"
 
 1
 ###
+
+
+DELETE http://localhost:8081/faces
+Content-Type: application/json
+x-frs-api-key: some_api_key
+
+
+###

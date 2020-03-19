@@ -1,23 +1,24 @@
 package com.exadel.frs.core.trainservice.controller;
 
+import static com.exadel.frs.core.trainservice.controller.FaceController.X_FRS_API_KEY_HEADER;
+import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.core.trainservice.domain.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
+import java.util.Map;
+import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.List;
-import java.util.Map;
-
-import static com.exadel.frs.core.trainservice.controller.FaceController.X_FRS_API_KEY_HEADER;
-import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
-import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -35,7 +36,7 @@ public class FaceControllerTest {
     private FacesRepository facesRepository;
 
     @Test
-    public void shouldReturnResponseAsExpected() throws Exception {
+    public void findAllShouldReturnResponseAsExpected() throws Exception {
         var faces = List.of(makeFace("A", APP_GUID), makeFace("B", APP_GUID));
         doReturn(faces)
                 .when(facesRepository)
@@ -49,8 +50,26 @@ public class FaceControllerTest {
     }
 
     @Test
-    public void shouldReturnBadRequestWhenAppGuidIsMIssing() throws Exception {
+    public void findAllShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
         mockMvc.perform(get("/faces"))
-                .andExpect(status().isBadRequest());
+               .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteFacesShouldReturnResponseAsExpected() throws Exception {
+        val response = List.of(new Face(), new Face(), new Face());
+        doReturn(response)
+                .when(facesRepository)
+                .deleteFacesByApiKey(APP_GUID.substring(APP_GUID.length() / 2));
+
+        mockMvc.perform(delete("/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
+               .andExpect(status().isOk())
+               .andExpect(content().string(String.valueOf(response.size())));
+    }
+
+    @Test
+    public void deleteFacesShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
+        mockMvc.perform(delete("/faces"))
+               .andExpect(status().isBadRequest());
     }
 }

@@ -6,6 +6,7 @@ import feign.RequestLine;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface PythonClient {
+
     @RequestLine("POST /scan_faces")
     @Headers("Content-Type: multipart/form-data")
     ScanResponse scanFaces(@Param(value = "file") MultipartFile photo,

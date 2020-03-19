@@ -90,7 +90,8 @@ public class ModelController {
             @ApiParam(value = "Model object that needs to be created", required = true)
             @Valid
             @RequestBody
-            final ModelCreateDto modelCreateDto) {
+            final ModelCreateDto modelCreateDto
+    ) {
         return modelMapper.toResponseDto(
                 modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()), appGuid
         );
@@ -152,7 +153,7 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        modelService.deleteModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
+            modelService.deleteModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @PostMapping("/model/{guid}/share")

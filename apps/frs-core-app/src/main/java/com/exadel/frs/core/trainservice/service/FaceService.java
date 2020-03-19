@@ -10,7 +10,6 @@ import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class FaceService {
 
-    @Autowired
     private final FaceClassifierStorage storage;
     private final FacesRepository facesRepository;
 
@@ -38,8 +36,8 @@ public class FaceService {
                 ));
     }
 
-    public Map<String, List<List<Double>>> findAllFaceEmbeddingsByAppKey(final String appKey) {
-        val faces = facesRepository.findByApiKey(appKey);
+    public Map<String, List<List<Double>>> findAllFaceEmbeddingsByApiKey(final String apiKey) {
+        val faces = facesRepository.findByApiKey(apiKey);
 
         return faces.stream()
                 .collect(toMap(Face::getFaceName,
@@ -51,8 +49,8 @@ public class FaceService {
                 ));
     }
 
-    public Map<String, List<String>> findAllFaceNamesByApiKey(final String appKey) {
-        var faces = facesRepository.findByApiKey(appKey);
+    public Map<String, List<String>> findAllFaceNamesByApiKey(final String apiKey) {
+        var faces = facesRepository.findByApiKey(apiKey);
         var faceNames = faces.stream()
                 .map(Face::getFaceName)
                 .collect(toList());
@@ -60,9 +58,18 @@ public class FaceService {
         return Map.of("names", faceNames);
     }
 
-    public void deleteFaceByNameAndTrainModelIfRequired(String faceName, final String appKey, final String modelGuid, String retrain) {
+    public void deleteFaceByNameAndTrainModelIfRequired(
+            final String faceName,
+            final String appKey,
+            final String modelGuid,
+            final String retrain
+    ) {
         facesRepository.deleteByApiKeyAndFaceName(appKey, faceName);
         handleModelTraining(appKey, modelGuid, retrain);
+    }
+
+    public List<Face> deleteFacesByApiKey(final String modelGuid) {
+            return facesRepository.deleteFacesByApiKey(modelGuid);
     }
 
     private void handleModelTraining(final String appKey, final String modelGuid, final String retrain) {
@@ -81,7 +88,7 @@ public class FaceService {
     private void beginNewTraining(final String appKey, final String modelGuid) {
         storage.lock(appKey, modelGuid);
         storage.getFaceClassifier(appKey, modelGuid)
-                .train(findAllFaceEmbeddingsByAppKey(appKey), appKey, modelGuid);
+                .train(findAllFaceEmbeddingsByApiKey(appKey), appKey, modelGuid);
     }
 
     private void abortCurrentTrainingIfExists(final String appKey, final String modelGuid) {

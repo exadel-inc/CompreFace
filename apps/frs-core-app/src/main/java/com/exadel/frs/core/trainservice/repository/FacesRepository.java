@@ -9,7 +9,9 @@ import java.util.List;
 @Repository
 public interface FacesRepository extends MongoRepository<Face, String> {
 
-    List<Face> findByApiKey(String appKey);
+    List<Face> findByApiKey(String apiKey);
 
     List<Face> deleteByApiKeyAndFaceName(String apiKey, String faceName);
+
+    List<Face> deleteFacesByApiKey(String apiKey);
 }

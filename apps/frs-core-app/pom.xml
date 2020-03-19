@@ -94,22 +94,18 @@
     <dependency>
       <groupId>io.github.openfeign</groupId>
       <artifactId>feign-core</artifactId>
-      <version>10.7.4</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.form</groupId>
       <artifactId>feign-form</artifactId>
-      <version>3.8.0</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign</groupId>
       <artifactId>feign-jackson</artifactId>
-      <version>10.7.4</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.form</groupId>
       <artifactId>feign-form-spring</artifactId>
-      <version>3.8.0</version>
     </dependency>
     <dependency>
       <groupId>io.springfox</groupId>
@@ -118,7 +114,6 @@
     <dependency>
       <groupId>io.springfox</groupId>
       <artifactId>springfox-swagger-ui</artifactId>
-      <version>${swagger.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>

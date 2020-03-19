@@ -11,6 +11,7 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -25,6 +26,7 @@ import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.http.CoreDeleteFacesClient;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
@@ -54,13 +56,15 @@ class ModelServiceTest {
     private ModelService modelService;
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
+    private CoreDeleteFacesClient facesClient;
 
     ModelServiceTest() {
         modelRepositoryMock = mock(ModelRepository.class);
         appServiceMock = mock(AppService.class);
         modelShareRequestRepository = mock(ModelShareRequestRepository.class);
         appModelRepository = mock(AppModelRepository.class);
-        modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository, appModelRepository);
+        facesClient = mock(CoreDeleteFacesClient.class);
+        modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository, appModelRepository, facesClient);
     }
 
     private User user(final Long id) {
@@ -551,7 +555,10 @@ class ModelServiceTest {
 
         modelService.deleteModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
+        verify(facesClient).deleteFaces(anyString());
+        verify(modelRepositoryMock).findByGuid(anyString());
         verify(modelRepositoryMock).deleteById(anyLong());
+        verifyNoMoreInteractions(facesClient, modelRepositoryMock);
     }
 
     @ParameterizedTest
@@ -578,6 +585,8 @@ class ModelServiceTest {
         assertThrows(InsufficientPrivilegesException.class, () ->
                 modelService.deleteModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
         );
-    }
 
+        verify(modelRepositoryMock).findByGuid(anyString());
+        verifyNoMoreInteractions(facesClient, modelRepositoryMock);
+    }
 }
