@@ -12,4 +12,4 @@
 ---
 
 ##### Where to find more commands
-You can run sub-steps by running `make` on one of the targets available in `./Makefile`.
+Run `make` with one of the targets available in `./Makefile`.
