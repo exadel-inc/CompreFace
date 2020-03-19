@@ -10,7 +10,7 @@ from src.runtime import get_storage, get_scanner
 from src.services.classifier.logistic_classifier import LogisticClassifier
 
 
-def train_and_save_classifier(api_key):
+def train_and_save_classifier(api_key: str) -> None:
     emb_calc_version = get_scanner().ID
     faces = get_storage().get_face_embeddings(api_key, emb_calc_version)
     unique_faces = list(toolz.unique(faces, lambda e: e.name))
