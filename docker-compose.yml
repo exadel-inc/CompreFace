@@ -3,8 +3,8 @@ services:
   e2e:
     container_name: e2e
     build: ./e2e
-#    depends_on:
-#      - ml
+    depends_on:
+      - ml
   ml:
     container_name: ml
     build: ./ml

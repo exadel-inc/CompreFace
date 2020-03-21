@@ -5,11 +5,11 @@ default: lint test
 
 # Build and run newest version
 run:
-	docker-compose up ml
+	docker-compose up --build ml
 
 # Build containers and run tests against them
 test:
-	docker-compose build
+	docker-compose up --build --abort-on-container-exit e2e
 
 # Run tests and checks on the local machine
 local: local-setup local-test-unit local-test-integration local-test-e2e lint
@@ -21,8 +21,8 @@ local-setup:
 	python -m pip install -e ./ml/src/services/facescan/backend/insightface/extlib/insightface/python-package
 
 # Start service locally in debug mode
-local-run: local-run.ml.pid
-local-run.ml.pid:
+local-run: ml/local-run.ml.pid
+ml/local-run.ml.pid:
 	$(CURDIR)/ml/local-run.sh
 
 # Run unit tests
@@ -36,7 +36,7 @@ local-test-integration:
 # Run e2e tests
 local-test-e2e: local-run
 	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:3000
-	kill -9 $$(cat $(CURDIR)/ml.pid)
+	kill -9 $$(cat $(CURDIR)/ml/local-run.ml.pid)
 
 # Run lint checks
 lint:
