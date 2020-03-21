@@ -16,6 +16,7 @@ def _init():
 
 def wsgi_app():
     _init()
+    logging.debug("Creating new app for WSGI")
     return create_app(endpoints, DOCS_DIR)
 
 
