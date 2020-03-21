@@ -1,4 +1,5 @@
 #!/bin/bash -xe
+cd "${0%/*}" || exit 1 # Set Current Dir to the script's dir
 
 BUILD_SERVER_DEFAULT_HOST='http://10.130.66.131:3000'
 DEV_ENV_DEFAULT_HOST='http://localhost:3000'

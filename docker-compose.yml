@@ -3,8 +3,8 @@ services:
   e2e:
     container_name: e2e
     build: ./e2e
-    depends_on:
-      - ml
+#    depends_on:
+#      - ml
   ml:
     container_name: ml
     build: ./ml
@@ -18,4 +18,4 @@ services:
     ports:
       - "27117:27017"
     volumes:
-      - ./mongo_data:/data
+      - ./tmp/mongo_data:/data
