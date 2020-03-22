@@ -20,11 +20,9 @@ You can combine steps 1 and 2: `$ make build up`
 
 ##### With Docker
 
-Builds containers, run tests inside, [freezes pip requirements](#adding-requirements):
-
-`$ make` 
+Builds containers, run tests inside, [freezes pip requirements](#adding-requirements): `$ make` 
  
-Use `$ make docker` if you don't want to overwrite `requirements.txt`. 
+Alternatively, use `$ make docker` if you don't want to overwrite `requirements.txt`. 
 
 ##### In development environment, container-less
 
