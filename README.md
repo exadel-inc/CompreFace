@@ -24,7 +24,7 @@ Builds containers, run tests inside, [freezes pip requirements](#adding-requirem
 
 `$ make` 
  
-If you don't want to auto-update `requirements.txt`, use `$ make docker` (more info below). 
+Use `$ make docker` if you don't want to overwrite `requirements.txt`. 
 
 ##### In development environment, container-less
 
