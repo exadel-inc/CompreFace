@@ -20,7 +20,11 @@ You can combine steps 1 and 2: `$ make build up`
 
 ##### With Docker
 
-Build containers and run tests inside: `$ make`
+Builds containers, run tests inside, [freezes pip requirements](#adding-requirements):
+
+`$ make` 
+ 
+If you don't want to auto-update `requirements.txt`, use `$ make docker` (more info below). 
 
 ##### In development environment, container-less
 
@@ -34,6 +38,9 @@ Build containers and run tests inside: `$ make`
 ---
 
 ### Miscellaneous
+
+##### <a name="adding-requirements"></a> Adding packages to requirements.txt
+Just add the new package name at the end of the `requirements.txt` file and its' version will be automatically freezed on the successful run of `$ make`.
 
 ##### Notes for Windows users
 - Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/*`.

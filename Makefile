@@ -1,4 +1,4 @@
-.PHONY: build up down setup run stop default local unit i9n e2e lint
+.PHONY: build up down setup run stop docker default local unit i9n e2e lint
 .DEFAULT_GOAL := default
 
 build:
@@ -22,8 +22,12 @@ ml/run.pid:
 stop: ml/run.pid
 	$(CURDIR)/ml/run.sh stop
 
-default:
-	docker-compose up --build --abort-on-container-exit e2e
+docker:
+	docker-compose up --build --abort-on-container-exit e2e -e DO_TESTS=true
+
+default: docker
+	docker exec ml python3 -m pip freeze >$(CURDIR)/ml/requirements.txt
+	docker exec e2e python3 -m pip freeze >$(CURDIR)/e2e/requirements.txt
 
 local: unit i9n e2e lint
 
@@ -31,7 +35,7 @@ unit:
 	python -m pytest -m "not integration" $(CURDIR)/ml/src
 
 i9n:
-	python -m pytest -m "integration" $(CURDIR)/ml/src
+	python -m pytest -m integration $(CURDIR)/ml/src
 
 e2e: run
 	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:3000 \

@@ -7,4 +7,5 @@ if [ -z "$HOST" ]; then
   exit 1
 fi
 
-python -m pytest -ra --verbose ./src/e2e.py --host "$HOST"
+python3 -m pip --no-cache-dir install -r requirements.txt
+python3 -m pytest -ra --verbose ./src/e2e.py --host "$HOST"

@@ -21,5 +21,13 @@ RUN apt-get update
 RUN apt-get install -y mongodb-org-tools mongodb-org-shell python-pymongo
 RUN mkdir mongo_data
 
+## Run tests
+ARG DO_TESTS=false
+RUN if [ "$DO_TESTS" = true ] ; then \
+        docker exec ml python3 -m pytest /srv/src && \
+        docker exec ml python3 -m pylama --options /srv/pylama.ini /srv/src; \
+    fi
+
+
 ## Entrypoint
 ENTRYPOINT ["/srv/docker-entrypoint.sh"]
