@@ -1,7 +1,0 @@
-requests
-pytest
-pytest-ordering
-pymongo
-strenum
-pylama
-toolz

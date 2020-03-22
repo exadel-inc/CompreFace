@@ -1,3 +1,4 @@
+import logging
 from enum import auto
 
 import gridfs
@@ -24,13 +25,19 @@ class CollectionName(StrEnum):
 
 class MongoStorage:
     def __init__(self, mongo_host: str, mongo_port: int):
-        self._mongo_client = MongoClient(host=mongo_host, port=mongo_port)
+        self._mongo_host = mongo_host
+        self._mongo_port = mongo_port
+        self._mongo_client = MongoClient(host=self._mongo_host, port=self._mongo_port)
         db = self._mongo_client[MONGO_EFRS_DATABASE_NAME]
         self._faces_collection = db[CollectionName.FACES]
         self._faces_fs = gridfs.GridFS(db, CollectionName.FACES)
         self._classifiers_collection = db[CollectionName.CLASSIFIERS]
         self._classifiers_fs = gridfs.GridFS(db, CollectionName.CLASSIFIERS)
         self._files_fs = gridfs.GridFS(db, CollectionName.FILES)
+
+    def check_connection(self):
+        logging.debug(f"Mongo database connection: '{self._mongo_host}:{self._mongo_port}'")
+        self._mongo_client.server_info()
 
     def add_face(self, api_key: str, face: Face, emb_calc_version: str):
         self._faces_collection.insert_one({

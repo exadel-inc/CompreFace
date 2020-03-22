@@ -17,17 +17,18 @@ def _wait_for_200(url, timeout_s):
         try:
             assert requests.get(url, headers={'X-Api-Key': 'test-api-key'}).status_code == HTTPStatus.OK
         except (ConnectionError, AssertionError):
-            time.sleep(1)
             elapsed_s += 1
             if elapsed_s > timeout_s:
                 raise Exception(f"Waiting to get 200 from '{url}' has reached a timeout ({timeout_s}s)")
             elif elapsed_s % 10 == 0:
                 print(f'\nWaiting >{elapsed_s}s ...')
+            time.sleep(1)
             continue
         return
 
 
 def _wait_until_training_completes(host):
+    time.sleep(2)
     _wait_for_200(f"{host}/retrain", timeout_s=TRAINING_TIMEOUT_S)
 
 

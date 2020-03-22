@@ -12,12 +12,14 @@ from src.endpoints import endpoints
 from src.services.flaskext.disable_caching import disable_caching
 from src.services.flaskext.error_handling import add_error_handling
 from src.services.flaskext.json_encoding import add_json_encoding
+from src.singletons import get_storage
 
 
 def init_runtime():
     assert sys.version_info >= (3, 7)
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     logging.basicConfig(level=logging.DEBUG)
+    get_storage().check_connection()
 
 
 def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[Path, None] = None):

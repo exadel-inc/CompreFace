@@ -1,5 +1,4 @@
-import os
-
+from src.constants import MONGO_HOST, MONGO_PORT
 from src.services.utils.pyutils import run_once
 
 
@@ -12,9 +11,7 @@ def get_scanner():
 @run_once
 def get_storage():
     from src.services.storage.mongo_storage import MongoStorage
-    mongo_host = os.environ.get('MONGO_HOST', 'mongo')
-    mongo_port = int(os.environ.get('MONGO_PORT', '27017'))
-    return MongoStorage(mongo_host, mongo_port)
+    return MongoStorage(MONGO_HOST, MONGO_PORT)
 
 
 @run_once

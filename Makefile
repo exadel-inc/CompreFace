@@ -1,5 +1,5 @@
-.PHONY: build up down setup run stop docker default local unit i9n e2e lint
-.DEFAULT_GOAL := default
+.PHONY: build up down setup run stop docker local unit i9n e2e lint
+.DEFAULT_GOAL := docker
 
 build:
 	docker-compose build ml
@@ -8,26 +8,20 @@ up:
 	docker-compose up ml
 
 down:
-	docker-compose down ml
+	docker-compose down
 
 setup:
-	python -m pip install -r ./e2e/requirements.txt
 	python -m pip install -r ./ml/requirements.txt
 	python -m pip install -e ./ml/srcext/insightface/python-package
 
-run: ml/run.pid
-ml/run.pid:
+run:
 	$(CURDIR)/ml/run.sh start
 
-stop: ml/run.pid
+stop:
 	$(CURDIR)/ml/run.sh stop
 
 docker:
-	DO_RUN_TESTS=true docker-compose up --build --abort-on-container-exit e2e
-
-default: docker
-	docker exec ml python3 -m pip freeze >$(CURDIR)/ml/requirements.txt
-	docker exec e2e python3 -m pip freeze >$(CURDIR)/e2e/requirements.txt
+	DO_RUN_TESTS=true docker-compose up --build --abort-on-container-exit
 
 local: unit i9n e2e lint
 
