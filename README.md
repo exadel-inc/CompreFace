@@ -1,21 +1,40 @@
-##### How to start the service
+### Starting the service
 
-1. Installs dependencies: `$ make local-setup`
-2. Starts app in debug mode: `$ make local-run`
+##### With Docker
+
+1. Build the container: `$ make build`
+2. Start it: `$ make up`
+3. Stop it: `$ make down`
+
+You can combine steps 1 and 2: `$ make build up`
+
+##### In development environment, container-less
+
+1. Setup dependencies: `$ make setup`
+2. Start main app in debug mode: `$ make run`
+3. Stop it: `$ make stop`
 
 ---
 
-##### How to run the tests
-- Builds containers and run tests in them: `$ make`
-- Runs tests locally (without containers): `$ make local`
+### Testing the service
+
+##### With Docker
+
+Build containers and run tests inside: `$ make`
+
+##### In development environment, container-less
+
+1. Setup dependencies: `$ make setup`
+2. Run all tests: `$ make local`
+   - Unit tests: `$ make unit`
+   - Integration tests:` $ make i9n`
+   - End-to-end tests: `$ make e2e`
+   - Lint check: `$ make lint`
 
 ---
 
-##### Where to find more commands
-Run `$ make [TARGET]` with one of the targets available in `./Makefile`.
-
----
+### Miscellaneous
 
 ##### Notes for Windows users
-- Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/*` and/or `> git config core.autocrlf false`.
-- uWSGI does not support Windows, workaround is having it removed from `requirements.txt` temporarily while running `make` with local targets.
+- Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/*`.
+- uWSGI does not support Windows, workaround is removing it from `ml/requirements.txt` before running `$ make setup` and adding it back afterwards.

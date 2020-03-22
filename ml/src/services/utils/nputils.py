@@ -4,8 +4,8 @@ import imageio
 import numpy as np
 from skimage import transform
 
-from src.dto.bounding_box import BoundingBox
-from src.exceptions import OneDimensionalImageIsGivenError
+from src.exceptions import OneDimensionalImageIsGivenError, ImageReadLibraryError
+from src.services.dto.bounding_box import BoundingBox
 
 Array1D = np.array
 Array3D = np.array
@@ -28,7 +28,10 @@ def _grayscale_to_rgb(img):
 
 
 def read_img(file) -> Array3D:
-    img = imageio.imread(file)
+    try:
+        img = imageio.imread(file)
+    except Exception as e:
+        raise ImageReadLibraryError from e
 
     if img.ndim < 2:
         raise OneDimensionalImageIsGivenError

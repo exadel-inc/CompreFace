@@ -4,16 +4,18 @@ import attr
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 
-from src.dto.face_prediction import NamePrediction
+from src.services.dto.face_prediction import NamePrediction
 from src.services.utils.nputils import Array1D
 
 
 @attr.s(auto_attribs=True, frozen=True)
 class LogisticClassifier:
+    CURRENT_VERSION = "LogisticClassifier_v0"
+
     model: LogisticRegression
     class_2_face_name: Dict[int, str]
     emb_calc_version: str
-    version: str = "LogisticClassifier_v0"
+    version: str = CURRENT_VERSION
 
     @classmethod
     def train(cls, embeddings: List[Array1D], names: List[str], emb_calc_version: str):

@@ -1,61 +1,47 @@
 import logging
-from http import HTTPStatus
-from json import JSONEncoder
+import sys
 from pathlib import Path
 from typing import Union, Callable
 
-import numpy as np
+from PIL import ImageFile
 from flasgger import Swagger
-from flask import Flask, jsonify
-from werkzeug.exceptions import HTTPException
+from flask import Flask
+
+from src.docs import DOCS_DIR
+from src.endpoints import endpoints
+from src.services.flaskext.disable_caching import disable_caching
+from src.services.flaskext.error_handling import add_error_handling
+from src.services.flaskext.json_encoding import add_json_encoding
+
+
+def init_runtime():
+    assert sys.version_info >= (3, 7)
+    ImageFile.LOAD_TRUNCATED_IMAGES = True
+    logging.basicConfig(level=logging.DEBUG)
 
 
 def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[Path, None] = None):
-    app = Flask(__name__)
+    app = Flask('frs-core-ml')
     app.url_map.strict_slashes = False
-
-    class AppJSONEncoder(JSONEncoder):
-        def default(self, obj):
-            if isinstance(obj, JSONEncodable):
-                return obj.to_json()
-            if isinstance(obj, np.ndarray):
-                return obj.tolist()
-            return super().default(obj)
-
-    app.json_encoder = AppJSONEncoder
-
-    @app.after_request
-    def _disable_caching(response):
-        response.cache_control.max_age = 0
-        response.cache_control.no_cache = True
-        response.cache_control.no_store = True
-        response.cache_control.must_revalidate = True
-        response.cache_control.proxy_revalidate = True
-        return response
-
+    add_error_handling(app)
+    add_json_encoding(app)
+    app.after_request(disable_caching)
     if docs_dir:
         app.config['SWAGGER'] = dict(title='EFRS - Swagger UI', doc_dir=str(docs_dir))
         Swagger(app, template_file=str(docs_dir / 'template.yml'))
-
-    @app.errorhandler(HTTPException)
-    def handle_http_exception(e: HTTPException):
-        logging.warning(str(e), exc_info=True)
-        return jsonify(message=str(e)), e.code
-
-    @app.errorhandler(Exception)
-    def handle_exception(e):
-        msg = f"{e.__class__.__name__}{f': {str(e)}' if str(e) else ''}"
-        logging.critical(msg, exc_info=True)
-        return jsonify(message=msg), HTTPStatus.INTERNAL_SERVER_ERROR
-
     if add_endpoints_fun:
         add_endpoints_fun(app)
-
     return app
 
 
-class JSONEncodable:
-    def to_json(self):
-        if hasattr(self, 'dto'):
-            return self.dto.to_json()
-        return self.__dict__
+def wsgi_app():
+    init_runtime()
+    logging.debug("Creating new app for WSGI")
+    return create_app(endpoints, DOCS_DIR)
+
+
+if __name__ == '__main__':
+    init_runtime()
+    app = create_app(endpoints, DOCS_DIR)
+    app.config.from_mapping(SECRET_KEY='dev')
+    app.run(host='0.0.0.0', port=3000, debug=True, use_debugger=False, use_reloader=False)

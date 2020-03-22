@@ -1,0 +1,18 @@
+import logging
+from http import HTTPStatus
+
+from flask import jsonify
+from werkzeug.exceptions import HTTPException
+
+
+def add_error_handling(app):
+    @app.errorhandler(HTTPException)
+    def handle_http_exception(e: HTTPException):
+        logging.warning(str(e), exc_info=True)
+        return jsonify(message=str(e)), e.code
+
+    @app.errorhandler(Exception)
+    def handle_exception(e):
+        msg = f"{e.__class__.__name__}{f': {str(e)}' if str(e) else ''}"
+        logging.critical(msg, exc_info=True)
+        return jsonify(message=msg), HTTPStatus.INTERNAL_SERVER_ERROR

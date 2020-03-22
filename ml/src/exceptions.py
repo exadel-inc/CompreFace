@@ -1,4 +1,8 @@
-from werkzeug.exceptions import BadRequest, Locked, InternalServerError
+from werkzeug.exceptions import BadRequest, Locked, InternalServerError, Unauthorized
+
+
+class APIKeyNotSpecifiedError(Unauthorized):
+    message = 'No API Key is given'
 
 
 class NoFileAttachedError(BadRequest):
@@ -10,7 +14,7 @@ class NoFileSelectedError(BadRequest):
 
 
 class NoFaceFoundError(BadRequest):
-    description = "No faces found in the given image"
+    description = "No face is found in the given image"
 
 
 class OneDimensionalImageIsGivenError(BadRequest):
@@ -31,3 +35,11 @@ class NoTrainedEmbeddingClassifierFound(BadRequest):
 
 class NoFileFoundInDatabaseError(InternalServerError):
     description = 'File is not found in the database'
+
+
+class InvalidRequestArgumentValueError(BadRequest):
+    description = 'Invalid request argument value is given'
+
+
+class ImageReadLibraryError(BadRequest):
+    description = 'Image has incorrect format or is broken'

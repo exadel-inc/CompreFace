@@ -5,6 +5,7 @@ WORKDIR /srv
 COPY src src
 COPY requirements.txt .
 COPY pytest.ini .
+COPY pylama.ini .
 COPY docker-entrypoint.sh .
 COPY wait-for-it.sh .
 COPY uwsgi.ini .

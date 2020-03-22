@@ -6,11 +6,12 @@ from sklearn.linear_model import LogisticRegression
 from strenum import StrEnum
 
 from src.exceptions import NoTrainedEmbeddingClassifierFound
-from src.runtime import get_scanner
 from src.services.classifier.logistic_classifier import LogisticClassifier
+from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.storage.face import Face, FaceNameEmbedding
 from src.services.storage.mongo_fileio import save_file_to_mongo, get_file_from_mongo
 from src.services.utils.pyutils import serialize, deserialize
+from src.singletons import get_scanner
 
 MONGO_EFRS_DATABASE_NAME = "efrs_db"
 
@@ -51,7 +52,7 @@ class MongoStorage:
         if found_embeddings:
             return found_embeddings[0]['array']
 
-        scanner = get_scanner()
+        scanner: FacescanBackend = get_scanner()
         assert scanner.ID == emb_calc_version
         embedding = scanner.scan_one(raw_img).embedding
         self._faces_collection.find_one_and_update(
@@ -95,6 +96,7 @@ class MongoStorage:
         return face_embeddings
 
     def save_embedding_classifier(self, api_key: str, embedding_classifier: LogisticClassifier):
+        self.delete_embedding_classifiers(api_key)
         self._classifiers_collection.update({
             'version': embedding_classifier.version,
             'embedding_calculator_version': embedding_classifier.emb_calc_version,

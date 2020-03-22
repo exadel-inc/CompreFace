@@ -6,8 +6,8 @@ from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.facescan.backend.insightface.insightface import InsightFace
 from src.services.facescan.scanner import ALL_BACKENDS
 from src.services.facescan.test._scanner_cache import get_scanner
+from src.services.sample_images import IMG_DIR
 from src.services.utils.pyutils import first_and_only
-from test.sample_images import IMG_DIR
 
 DIFFERENCE_THRESHOLD = {
     InsightFace: 400,

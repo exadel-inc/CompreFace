@@ -1,6 +1,6 @@
-from src.app import JSONEncodable
-from src.dto.bounding_box import BoundingBox
-from src.dto.scanned_face_dto import ScannedFaceDTO
+from src.services.dto.bounding_box import BoundingBox
+from src.services.dto.json_encodable import JSONEncodable
+from src.services.dto.scanned_face_dto import ScannedFaceDTO
 from src.services.utils.nputils import Array1D, Array3D, crop_img
 
 
@@ -17,5 +17,6 @@ class ScannedFace(JSONEncodable):
             self._face_img = crop_img(self.img, self.box)
         return self._face_img
 
+    @property
     def dto(self):
         return ScannedFaceDTO(self.box, self.embedding)

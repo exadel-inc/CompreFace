@@ -6,8 +6,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.python.platform import gfile
 
-from src.dto.bounding_box import BoundingBox
 from src.exceptions import NoFaceFoundError
+from src.services.dto.bounding_box import BoundingBox
 from src.services.facescan.backend.facenet.extlib.align import detect_face
 from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.facescan.constants import NO_LIMIT

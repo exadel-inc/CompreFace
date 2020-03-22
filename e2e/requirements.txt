@@ -4,3 +4,4 @@ pytest-ordering
 pymongo
 strenum
 pylama
+toolz
