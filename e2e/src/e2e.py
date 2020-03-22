@@ -17,12 +17,12 @@ def _wait_for_200(url, timeout_s):
         try:
             assert requests.get(url, headers={'X-Api-Key': 'test-api-key'}).status_code == HTTPStatus.OK
         except (ConnectionError, AssertionError):
+            time.sleep(1)
             elapsed_s += 1
             if elapsed_s > timeout_s:
                 raise Exception(f"Waiting to get 200 from '{url}' has reached a timeout ({timeout_s}s)")
             elif elapsed_s % 10 == 0:
                 print(f'\nWaiting >{elapsed_s}s ...')
-            time.sleep(1)
             continue
         return
 
@@ -66,7 +66,7 @@ def test__when_opening_apidocs__then_returns_200(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_no_api_key__when_uploading_face__then_returns_401_unauthorized(host):
+def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized(host):
     files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", files=files)
@@ -75,7 +75,7 @@ def test__given_no_api_key__when_uploading_face__then_returns_401_unauthorized(h
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_img_with_no_faces__when_uploading_face__then_returns_400_no_face_found(host):
+def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_found(host):
     files = {'file': open(IMG_DIR / 'no-faces.jpg', 'rb')}
 
     res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'test-api-key'}, files=files)
@@ -85,7 +85,7 @@ def test__given_img_with_no_faces__when_uploading_face__then_returns_400_no_face
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_uploading_three_images__then_returns_201_for_each(host):
+def test__when_adding_three_faces__then_returns_201_for_each(host):
     files_a = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
     files_b = {'file': open(IMG_DIR / 'personB-img1.jpg', 'rb')}
     files_c = {'file': open(IMG_DIR / 'personC-img1.jpg', 'rb')}
@@ -104,7 +104,17 @@ def test__when_uploading_three_images__then_returns_201_for_each(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_recognizing_face_A__then_returns_face_A_name(host):
+def test__given_multiple_face_img__when_adding_face__then_returns_400_only_one_face_allowed(host):
+    files = {'file': open(IMG_DIR / 'five-faces.jpg', 'rb')}
+
+    res = requests.post(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'test-api-key'}, files=files)
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "400 Bad Request: Found more than one face in the given image"
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_recognizing_faces__then_returns_face_A_name(host):
     files = {'file': open(IMG_DIR / 'personA-img2.jpg', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
@@ -116,7 +126,7 @@ def test__when_recognizing_face_A__then_returns_face_A_name(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_five_face_img__when_recognizing_image__then_returns_five_distinct_results(host):
+def test__given_five_face_img__when_recognizing_faces__then_returns_five_distinct_results(host):
     file = {'file': open(IMG_DIR / 'five-faces.jpg', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
@@ -129,13 +139,12 @@ def test__given_five_face_img__when_recognizing_image__then_returns_five_distinc
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_getting_names__then_returns_three_names(host):
+def test__when_getting_names__then_returns_correct_names(host):
     pass
 
     res = requests.get(f"{host}/faces", headers={'X-Api-Key': 'test-api-key'})
 
     result = res.json()['names']
-    assert len(result) == 3
     assert set(result) == {'Marie Curie', 'Stephen Hawking', 'Paul Walker'}
 
 
@@ -160,7 +169,7 @@ def test__when_deleting_face__then_returns_204(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_recognizing_face__then_only_faces_A_and_B_are_recognized(host):
+def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized(host):
     files_a = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
     files_b = {'file': open(IMG_DIR / 'personB-img1.jpg', 'rb')}
     files_c = {'file': open(IMG_DIR / 'personC-img1.jpg', 'rb')}
@@ -191,7 +200,7 @@ def test__when_deleting_face_B__then_returns_204(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_recognizing_face__then_returns_400_no_classifier_trained(host):
+def test__when_recognizing_faces__then_returns_400_no_classifier_trained(host):
     files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
 
     res = requests.post(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)

@@ -7,7 +7,10 @@ services:
       - ml
   ml:
     container_name: ml
-    build: ./ml
+    build:
+      context: ./ml
+      args:
+        - DO_RUN_TESTS=${DO_RUN_TESTS:-false}
     ports:
       - "3000:3000"
     depends_on:

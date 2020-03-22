@@ -1,3 +1,3 @@
-[submodule "src/services/facescan/backend/insightface/extlib/insightface"]
-	path = src/services/facescan/backend/insightface/extlib/insightface
+[submodule "ml/srcext/insightface"]
+	path = ml/srcext/insightface
 	url = https://github.com/deepinsight/insightface

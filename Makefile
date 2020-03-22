@@ -13,7 +13,7 @@ down:
 setup:
 	python -m pip install -r ./e2e/requirements.txt
 	python -m pip install -r ./ml/requirements.txt
-	python -m pip install -e ./ml/src/services/facescan/backend/insightface/extlib/insightface/python-package
+	python -m pip install -e ./ml/srcext/insightface/python-package
 
 run: ml/run.pid
 ml/run.pid:
@@ -23,7 +23,7 @@ stop: ml/run.pid
 	$(CURDIR)/ml/run.sh stop
 
 docker:
-	docker-compose up --build --abort-on-container-exit e2e -e DO_TESTS=true
+	DO_RUN_TESTS=true docker-compose up --build --abort-on-container-exit e2e
 
 default: docker
 	docker exec ml python3 -m pip freeze >$(CURDIR)/ml/requirements.txt
@@ -35,7 +35,7 @@ unit:
 	python -m pytest -m "not integration" $(CURDIR)/ml/src
 
 i9n:
-	python -m pytest -m integration $(CURDIR)/ml/src
+	python -m pytest -m integration $(CURDIR)/ml/src1
 
 e2e: run
 	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:3000 \
