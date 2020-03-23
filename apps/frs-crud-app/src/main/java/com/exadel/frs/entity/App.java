@@ -83,9 +83,9 @@ public class App {
         user.getUserAppRoles().add(userAppRole);
     }
 
-    public void deleteUserAppRole(final Long userId) {
+    public void deleteUserAppRole(final String userGuid) {
         val optional = userAppRoles.stream()
-                                   .filter(userApp -> userApp.getUser().getId().equals(userId))
+                                   .filter(userApp -> userApp.getUser().getGuid().equals(userGuid))
                                    .findFirst();
 
         if (optional.isPresent()) {

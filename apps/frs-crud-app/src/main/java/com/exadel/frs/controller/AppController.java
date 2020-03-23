@@ -220,18 +220,19 @@ public class AppController {
                                 .build();
     }
 
-    @DeleteMapping("/app/{guid}/delete-user")
+    @DeleteMapping("/app/{guid}/user/{userGuid}")
     @ApiOperation(value = "Delete user from application")
     public void deleteUserApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
-            @ApiParam(value = "User ID for deleting from organization", required = true)
-            final Long userId,
             @ApiParam(value = "GUID of the application that needs to be deleted", required = true, example = GUID_EXAMPLE)
             @PathVariable
-            final String guid
+            final String guid,
+            @ApiParam(value = "User guid for deleting from organization", required = true)
+            @PathVariable
+            final String userGuid
     ) {
-        appService.deleteUserFromApp(userId, orgGuid, guid, SecurityUtils.getPrincipalId());
+        appService.deleteUserFromApp(userGuid, orgGuid, guid, SecurityUtils.getPrincipalId());
     }
 }

@@ -760,9 +760,11 @@ class AppServiceTest {
     @ParameterizedTest
     @MethodSource("writeRoles")
     void deleteUserFromApp(final OrganizationRole organizationRole) {
+        val userGuid = randomAlphabetic(36);
         val userId = nextLong();
         val admin = user(USER_ID);
         val user = user(userId);
+        user.setGuid(userGuid);
 
         val organization = organization();
         organization.addUserOrganizationRole(admin, organizationRole);
@@ -777,16 +779,17 @@ class AppServiceTest {
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(appRepositoryMock.save(any())).thenReturn(app);
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
 
         assertThat(app.getUserAppRoles()).hasSize(1);
         assertThat(app.getUserAppRoles()).allSatisfy(
                 userAppRole -> {
-                    userAppRole.getUser().getId().equals(userId);
+                    userAppRole.getUser().getGuid().equals(userGuid);
                     user.getUserAppRoles().contains(userAppRole);
                 }
         );
 
-        appService.deleteUserFromApp(userId, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+        appService.deleteUserFromApp(userGuid, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
 
         assertThat(app.getUserAppRoles()).isEmpty();
         assertThat(user.getUserAppRoles()).isEmpty();
