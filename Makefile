@@ -13,6 +13,7 @@ down:
 setup:
 	python -m pip install -r ./ml/requirements.txt
 	python -m pip install -e ./ml/srcext/insightface/python-package
+	chmod +x ml/run.sh e2e/run-e2e-test.sh
 
 run:
 	$(CURDIR)/ml/run.sh start
@@ -29,7 +30,7 @@ unit:
 	python -m pytest -m "not integration" $(CURDIR)/ml/src
 
 i9n:
-	python -m pytest -m integration $(CURDIR)/ml/src1
+	python -m pytest -m integration $(CURDIR)/ml/src
 
 e2e: run
 	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:3000 \

@@ -1,8 +1,10 @@
 import numpy as np
+import pytest
 
-from src.exceptions import OneDimensionalImageIsGivenError
+from src.exceptions import OneDimensionalImageIsGivenError, ImageReadLibraryError
 from src.services.utils.nputils import read_img
 from src.services.utils.pytestutils import raises
+from src.services.utils.test.sample_images import IMG_DIR
 
 
 def test__given_1d_img__when_read__then_raises_error(mocker):
@@ -36,3 +38,13 @@ def test__given_rgba_img__when_read__then_returns_rgb_img(mocker):
 
     expected_img = np.ones(shape=(10, 10, 3))
     assert (actual_img == expected_img).all()
+
+
+@pytest.mark.parametrize('file', ['empty.png', 'corrupted.png'])
+def test__given_corrupted_img__when_read__then_raises_exception(file):
+    pass
+
+    def act():
+        read_img(IMG_DIR / file)
+
+    assert raises(ImageReadLibraryError, act)

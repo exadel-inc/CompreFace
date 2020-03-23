@@ -6,7 +6,7 @@ UNDEFINED = '__UNDEFINED__'
 
 
 def parse_request_bool_arg(name: str, default: bool, request: Request) -> bool:
-    param_value = request.args.get(name, UNDEFINED).upper()
+    param_value = request.args.get(name.lower(), UNDEFINED).upper()
     if param_value == UNDEFINED:
         return default
     if param_value in ('TRUE', '1'):
@@ -19,7 +19,7 @@ def parse_request_bool_arg(name: str, default: bool, request: Request) -> bool:
 
 def parse_request_string_arg(name: str, default, allowed_values, request: Request) -> str:
     name = name.lower()
-    param_value = request.args.get(name, UNDEFINED).upper()
+    param_value = request.args.get(name.lower(), UNDEFINED).upper()
     if param_value == UNDEFINED:
         return default
 

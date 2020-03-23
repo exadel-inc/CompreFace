@@ -2,6 +2,7 @@ from typing import Tuple
 
 import imageio
 import numpy as np
+from PIL.ImageFile import ImageFile
 from skimage import transform
 
 from src.exceptions import OneDimensionalImageIsGivenError, ImageReadLibraryError
@@ -29,8 +30,9 @@ def _grayscale_to_rgb(img):
 
 def read_img(file) -> Array3D:
     try:
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
         img = imageio.imread(file)
-    except Exception as e:
+    except (ValueError, SyntaxError) as e:
         raise ImageReadLibraryError from e
 
     if img.ndim < 2:

@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 from typing import Union, Callable
 
-from PIL import ImageFile
 from flasgger import Swagger
 from flask import Flask
 
@@ -17,7 +16,6 @@ from src.singletons import get_storage
 
 def init_runtime():
     assert sys.version_info >= (3, 7)
-    ImageFile.LOAD_TRUNCATED_IMAGES = True
     logging.basicConfig(level=logging.DEBUG)
     get_storage().check_connection()
 

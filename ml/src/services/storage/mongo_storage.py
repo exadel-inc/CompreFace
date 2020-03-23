@@ -103,7 +103,6 @@ class MongoStorage:
         return face_embeddings
 
     def save_embedding_classifier(self, api_key: str, embedding_classifier: LogisticClassifier):
-        self.delete_embedding_classifiers(api_key)
         self._classifiers_collection.update({
             'version': embedding_classifier.version,
             'embedding_calculator_version': embedding_classifier.emb_calc_version,
