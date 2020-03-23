@@ -4,9 +4,11 @@ from http import HTTPStatus
 from pathlib import Path
 
 import imageio
+from PIL.ImageFile import ImageFile
 from flasgger import Swagger
 from flask import jsonify, Flask
 from flask.json import JSONEncoder
+from werkzeug.exceptions import BadRequest
 
 from src.api.endpoint_decorators import needs_attached_file
 from src.api.exceptions import BadRequestException
@@ -53,7 +55,11 @@ def create_app():
             raise BadRequestException('Threshold value is invalid') from e
         file = request.files['file']
 
-        img = imageio.imread(file)
+        try:
+            ImageFile.LOAD_TRUNCATED_IMAGES = True
+            img = imageio.imread(file)
+        except:
+            raise BadRequest('Incorrect image format')
         scanned_faces = scan_faces(img, face_limit, detection_threshold_c)
 
         return jsonify(result=scanned_faces, calculator_version=CALCULATOR_VERSION)
