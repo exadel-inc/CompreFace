@@ -8,7 +8,7 @@ from PIL.ImageFile import ImageFile
 from flasgger import Swagger
 from flask import jsonify, Flask
 from flask.json import JSONEncoder
-from werkzeug.exceptions import BadRequest
+from werkzeug.exceptions import BadRequest, HTTPException
 
 from src.api.endpoint_decorators import needs_attached_file
 from src.api.exceptions import BadRequestException
@@ -68,6 +68,11 @@ def create_app():
     def handle_api_exception(e: BadRequestException):
         logging.warning(f'Response {e.http_status}: {str(e)}', exc_info=True)
         return jsonify(message=str(e)), e.http_status
+
+    @app.errorhandler(HTTPException)
+    def handle_http_exception(e: HTTPException):
+        logging.warning(f'Response {e.code}: {str(e)}', exc_info=True)
+        return jsonify(message=str(e)), e.code
 
     @app.errorhandler(Exception)
     def handle_runtime_error(e):
