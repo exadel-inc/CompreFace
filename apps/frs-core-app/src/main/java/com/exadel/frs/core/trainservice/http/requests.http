@@ -1,4 +1,4 @@
-POST http://localhost:8081/recognize
+POST http://localhost:8080/recognize
 Content-Type: multipart/form-data; boundary=file
 x-frs-api-key: 3dcd29bc-7f53-4039-a2c2-5554e4517d57
 
@@ -14,7 +14,7 @@ Content-Disposition: form-data; name="limit"
 ###
 
 
-DELETE http://localhost:8081/faces
+DELETE http://localhost:8080/faces
 Content-Type: application/json
 x-frs-api-key: some_api_key
 

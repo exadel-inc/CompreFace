@@ -29,7 +29,5 @@ public class ImageExtensionValidator {
         if (isNotEmpty(wrongFileNames)) {
             throw new FileExtensionException(wrongFileNames);
         }
-
-        return;
     }
 }

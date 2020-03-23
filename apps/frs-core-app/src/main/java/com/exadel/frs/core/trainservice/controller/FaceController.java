@@ -53,8 +53,11 @@ public class FaceController {
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val modelGuid = apiKey.substring(apiKey.length() / 2);
-        val deletedFaces = faceService.deleteFacesByApiKey(modelGuid);
+        val appKeyLength = apiKey.length() / 2;
+        val appApiKey = apiKey.substring(0, appKeyLength);
+        val modelApiKey = apiKey.substring(appKeyLength);
+
+        val deletedFaces = faceService.deleteFacesByApiKey(appApiKey, modelApiKey);
 
         return deletedFaces.size();
     }

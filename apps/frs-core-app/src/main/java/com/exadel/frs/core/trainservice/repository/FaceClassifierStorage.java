@@ -15,4 +15,6 @@ public interface FaceClassifierStorage {
     void unlock(String appKey, String modelId);
 
     boolean isLocked(String appKey, String modelId);
+
+    void removeFaceClassifier(String appKey, String modelId);
 }

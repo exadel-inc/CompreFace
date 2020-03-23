@@ -68,8 +68,9 @@ public class FaceService {
         handleModelTraining(appKey, modelGuid, retrain);
     }
 
-    public List<Face> deleteFacesByApiKey(final String modelGuid) {
-            return facesRepository.deleteFacesByApiKey(modelGuid);
+    public List<Face> deleteFacesByApiKey(final String appKey, final String modelApiKey) {
+        storage.removeFaceClassifier(appKey, modelApiKey);
+        return facesRepository.deleteFacesByApiKey(modelApiKey);
     }
 
     private void handleModelTraining(final String appKey, final String modelGuid, final String retrain) {

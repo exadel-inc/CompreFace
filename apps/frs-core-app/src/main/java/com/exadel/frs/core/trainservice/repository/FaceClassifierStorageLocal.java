@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.PostConstruct;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.util.Pair;
@@ -44,10 +45,10 @@ public class FaceClassifierStorageLocal implements FaceClassifierStorage {
     }
 
     public void unlock(final String appKey, final String modelId) {
-        var lock = locks
+        val lock = locks
                 .getOrDefault(Pair.of(appKey, modelId), new AtomicBoolean(false));
         if (lock.get()) {
-            for (Thread thread : Thread.getAllStackTraces().keySet()) {
+            for (val thread : Thread.getAllStackTraces().keySet()) {
                 if (thread.getName().equals(appKey + modelId)) {
                     thread.interrupt();
                 }
@@ -60,5 +61,11 @@ public class FaceClassifierStorageLocal implements FaceClassifierStorage {
     public boolean isLocked(final String appKey, final String modelId) {
         return locks
                 .getOrDefault(Pair.of(appKey, modelId), new AtomicBoolean(false)).get();
+    }
+
+    @Override
+    public void removeFaceClassifier(final String appKey, final String modelId) {
+        unlock(appKey, modelId);
+        classifierTrainerMap.remove(Pair.of(appKey, modelId));
     }
 }
