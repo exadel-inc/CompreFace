@@ -213,12 +213,12 @@ public class AppService {
         appRepository.save(app);
     }
 
-    public void deleteUserFromApp(final Long userId, final String orgGuid, final String guid, final Long adminId) {
-        val app = getApp(orgGuid, guid, userId);
+    public void deleteUserFromApp(final String userGuid, final String orgGuid, final String guid, final Long adminId) {
+        val app = getApp(orgGuid, guid, adminId);
 
         verifyUserHasWritePrivileges(adminId, app.getOrganization());
 
-        app.deleteUserAppRole(userId);
+        app.deleteUserAppRole(userGuid);
 
         appRepository.save(app);
     }
