@@ -214,7 +214,8 @@ public class AppService {
     }
 
     public void deleteUserFromApp(final String userGuid, final String orgGuid, final String guid, final Long adminId) {
-        val app = getApp(orgGuid, guid, adminId);
+        val userId = userService.getUserByGuid(userGuid).getId();
+        val app = getApp(orgGuid, guid, userId);
 
         verifyUserHasWritePrivileges(adminId, app.getOrganization());
 
