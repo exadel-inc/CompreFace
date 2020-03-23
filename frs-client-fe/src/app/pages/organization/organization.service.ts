@@ -11,6 +11,7 @@ import {AppState} from '../../store';
 import {SelectRouterIdParam} from '../../store/router/selectors';
 import {filter, map} from 'rxjs/operators';
 import {getUserInfo} from '../../store/userInfo/action';
+import {OrganizationUtilsService} from '../../core/organization-utils/organization.service';
 
 @Injectable()
 export class OrganizationService {
@@ -27,8 +28,9 @@ export class OrganizationService {
     private router: Router,
     private route: ActivatedRoute,
     private organizationEnService: OrganizationEnService,
-    private store: Store<AppState>
-  ) {}
+    private store: Store<AppState>,
+    private utils: OrganizationUtilsService
+  ) { }
 
   initUrlBindingStreams() {
     this.organizationEnService.load();
@@ -69,8 +71,13 @@ export class OrganizationService {
       this.redirectToOrganization$,
       this.setFirstOrganization$
     ).subscribe(selectedId => {
+      console.log(selectedId)
       this.router.navigate([ROUTERS_URL.ORGANIZATION, selectedId]);
     });
+  }
+
+  public createOrganization(name: string): Observable<Organization> {
+    return this.utils.create(name);
   }
 
   unSubscribe() {

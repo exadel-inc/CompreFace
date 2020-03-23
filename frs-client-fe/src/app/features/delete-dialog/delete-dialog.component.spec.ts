@@ -1,6 +1,6 @@
 // import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-// import { CreateDialogComponent } from './create-dialog.component';
+// import { CreateDialogComponent } from './create-organisation.dialog.component';
 // import { MatFormField } from '@angular/material';
 
 // describe('CreateDialogComponent', () => {

@@ -1,0 +1,16 @@
+<div class="dialog-form">
+  <span class="title">
+    Create organization
+  </span>
+
+  <div class="body">
+    <mat-form-field>
+      <input matInput placeholder="Organization name" [(ngModel)]="name">
+    </mat-form-field>
+  </div>
+
+  <div class="footer">
+    <button mat-button (click)="close()">CANCEL</button>
+    <button mat-button color="primary" (click)="submit()">CREATE</button>
+  </div>
+</div>

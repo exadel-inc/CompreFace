@@ -12,9 +12,18 @@ import {TableModule} from 'src/app/features/table/table.module';
 import {UserTableModule} from 'src/app/features/user-table/user-table.module';
 import {UserListModule} from 'src/app/features/user-list/user-list.module';
 import {MatCardModule} from '@angular/material/card';
+import {OrganizationCreateComponent} from './organization-create.component';
+import {MatFormFieldModule, MatIconModule, MatInputModule} from '@angular/material';
+import {CreateOrganisationDialogComponent} from './create-organisation.dialog/create-organisation.dialog';
+import {FormsModule} from '@angular/forms';
+import {OrganizationUtilsService} from '../../core/organization-utils/organization.service';
 
 @NgModule({
-  declarations: [OrganizationComponent],
+  declarations: [
+    OrganizationComponent,
+    OrganizationCreateComponent,
+    CreateOrganisationDialogComponent
+  ],
   imports: [
     ApplicationListModule,
     UserListModule,
@@ -22,15 +31,22 @@ import {MatCardModule} from '@angular/material/card';
     UserTableModule,
     CommonModule,
     MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
     RouterModule.forChild([
-      {path: '', component: OrganizationComponent, canActivate: [AuthGuard]},
+      {path: '', component: OrganizationCreateComponent, canActivate: [AuthGuard]},
       {path: ':id', component: OrganizationComponent, canActivate: [AuthGuard]}
     ]),
     ToolBarModule,
     OrganizationHeaderModule,
     MatCardModule,
   ],
-  providers: [OrganizationService],
-  exports: [RouterModule]
+  providers: [OrganizationService, OrganizationUtilsService],
+  exports: [RouterModule],
+  entryComponents: [
+    CreateOrganisationDialogComponent,
+  ]
 })
 export class OrganizationModule { }
