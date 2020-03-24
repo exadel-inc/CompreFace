@@ -1,5 +1,10 @@
+import logging
+
 import pytest
 import requests
+
+CONNECT_TIMEOUT_S = 5
+READ_TIMEOUT_S = 30
 
 
 def pytest_addoption(parser):
@@ -19,22 +24,26 @@ def after_previous_gen():
         order_no += 1
 
 
-def GET(url, *args, **kwargs):
+def _request(method, url, **kwargs):
+    if 'timeout' not in kwargs or kwargs['timeout'] is None:
+        kwargs['timeout'] = (CONNECT_TIMEOUT_S, READ_TIMEOUT_S)
     try:
-        return requests.get(url, *args, **kwargs)
+        return requests.request(method, url, **kwargs)
     except requests.exceptions.ConnectionError as e:
-        raise ConnectionError(f"Could not reach '{url}', {str(e)}") from None
+        logging.error(str(e))
+        raise ConnectionError(e) from None
 
 
-def POST(url, *args, **kwargs):
-    try:
-        return requests.post(url, *args, **kwargs)
-    except requests.exceptions.ConnectionError as e:
-        raise ConnectionError(f"Could not reach '{url}', {str(e)}") from None
+# noinspection PyPep8Naming
+def GET(url, **kwargs):
+    return _request('get', url, **kwargs)
 
 
+# noinspection PyPep8Naming
+def POST(url, **kwargs):
+    return _request('post', url, **kwargs)
+
+
+# noinspection PyPep8Naming
 def DELETE(url, **kwargs):
-    try:
-        return requests.delete(url, **kwargs)
-    except requests.exceptions.ConnectionError as e:
-        raise ConnectionError(f"Could not reach '{url}', {str(e)}") from None
+    return _request('delete', url, **kwargs)

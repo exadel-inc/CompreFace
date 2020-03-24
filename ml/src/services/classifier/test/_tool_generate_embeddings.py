@@ -6,7 +6,7 @@ import joblib
 from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.sample_images import IMG_DIR
 from src.services.utils.pyutils import get_dir
-from src.singletons import get_scanner
+from src.cache import get_scanner
 
 CURRENT_DIR = get_dir(__file__)
 

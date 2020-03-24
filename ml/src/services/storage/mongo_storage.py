@@ -12,7 +12,7 @@ from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.storage.face import Face, FaceNameEmbedding
 from src.services.storage.mongo_fileio import save_file_to_mongo, get_file_from_mongo
 from src.services.utils.pyutils import serialize, deserialize
-from src.singletons import get_scanner
+from src.cache import get_scanner
 
 MONGO_EFRS_DATABASE_NAME = "efrs_db"
 
@@ -59,6 +59,7 @@ class MongoStorage:
         if found_embeddings:
             return found_embeddings[0]['array']
 
+        logging.warning("Embedding was not found for a face in the database, calculating")
         scanner: FacescanBackend = get_scanner()
         assert scanner.ID == emb_calc_version
         embedding = scanner.scan_one(raw_img).embedding
@@ -97,7 +98,7 @@ class MongoStorage:
         face_embeddings = []
         for face_document in self._faces_collection.find({"api_key": api_key}):
             face_name = face_document['face_name']
-            raw_img = deserialize(self._faces_fs.get(face_document['raw_img_fs_id']).read()),
+            raw_img = deserialize(self._faces_fs.get(face_document['raw_img_fs_id']).read())
             embedding = self._get_or_create_embedding(face_document, emb_calc_version, raw_img, api_key, face_name)
             face_embeddings.append(FaceNameEmbedding(name=face_name, embedding=embedding))
         return face_embeddings

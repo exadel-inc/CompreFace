@@ -8,15 +8,17 @@ from flask import Flask
 
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
+from src.logging import init_logging
 from src.services.flaskext.disable_caching import disable_caching
 from src.services.flaskext.error_handling import add_error_handling
 from src.services.flaskext.json_encoding import add_json_encoding
-from src.singletons import get_storage
+from src.cache import get_storage
 
 
 def init_runtime():
     assert sys.version_info >= (3, 7)
-    logging.basicConfig(level=logging.DEBUG)
+    init_logging()
+    logging.critical('d')
     get_storage().check_connection()
 
 

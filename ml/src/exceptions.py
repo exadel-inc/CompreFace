@@ -2,7 +2,7 @@ from werkzeug.exceptions import BadRequest, Locked, InternalServerError, Unautho
 
 
 class APIKeyNotSpecifiedError(Unauthorized):
-    message = 'No API Key is given'
+    description = 'No API Key is given'
 
 
 class NoFileAttachedError(BadRequest):

@@ -1,10 +1,11 @@
+import logging
 from http import HTTPStatus
 
 from flask import Response
 from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
 
-from src.services.classifier.classifier_manager import TrainingTaskManager
+from src.services.async_task_manager.training_task_manager import AsyncTaskManager
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
 from src.services.facescan.backend.facescan_backend import FacescanBackend
@@ -16,7 +17,7 @@ from src.services.flaskext.parse_request_arg import parse_request_bool_arg
 from src.services.storage.face import Face
 from src.services.storage.mongo_storage import MongoStorage
 from src.services.utils.nputils import read_img
-from src.singletons import get_storage, get_scanner, get_training_task_manager
+from src.cache import get_storage, get_scanner, get_training_task_manager
 
 
 def endpoints(app):
@@ -71,7 +72,7 @@ def endpoints(app):
     def retrain_model_status():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-        task_manager: TrainingTaskManager = get_training_task_manager()
+        task_manager: AsyncTaskManager = get_training_task_manager()
 
         it_is_training = task_manager.is_training(api_key)
 
@@ -83,7 +84,7 @@ def endpoints(app):
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
         force_start = parse_request_bool_arg(name=GetParameter.FORCE, default=False, request=request)
-        task_manager: TrainingTaskManager = get_training_task_manager()
+        task_manager: AsyncTaskManager = get_training_task_manager()
 
         task_manager.start_training(api_key, force_start)
 
@@ -94,7 +95,7 @@ def endpoints(app):
     def retrain_model_abort():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-        task_manager: TrainingTaskManager = get_training_task_manager()
+        task_manager: AsyncTaskManager = get_training_task_manager()
 
         task_manager.abort_training(api_key)
 

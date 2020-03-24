@@ -2,21 +2,20 @@ import time
 from http import HTTPStatus
 
 import pytest
-import requests
-from requests.exceptions import ConnectionError
 from toolz import itertoolz
 
 from .conftest import after_previous_gen, POST, DELETE, GET
 from .sample_images import IMG_DIR
 
-TRAINING_TIMEOUT_S = 15
-
 after_previous = after_previous_gen()
+
+AVAILABLE_SERVICE_TIMEOUT_S = 8
+TRAINING_TIMEOUT_S = 30
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_checking_status__then_returns_200(host):
-    _wait_for_200(f"{host}/status", timeout_s=10)
+    _wait_for_available_service(host)
 
     res = GET(f"{host}/status")
 
@@ -27,7 +26,6 @@ def test__when_checking_status__then_returns_200(host):
 @pytest.mark.run(order=next(after_previous))
 def test__when_opening_apidocs__then_returns_200(host):
     pass
-
     res = GET(f"{host}/apidocs")
 
     assert res.status_code == 200, res.status_code
@@ -52,22 +50,15 @@ def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_fo
     assert res.json()['message'] == "400 Bad Request: No face is found in the given image"
 
 
-@pytest.mark.parametrize('file, name',
-                         [
-                             ('personA-img1.jpg', 'Marie Curie'),
-                             ('personB-img1.jpg', 'Stephen Hawking'),
-                             ('personC-img1.jpg', 'Paul Walker'),
-                             # ('personD-img1.jpg', 'Hans Bethe'),
-                             # ('personD-img2.jpg', 'Hans Bethe'),
-                             # ('personD-img3.jpg', 'Hans Bethe'),
-                             # ('personD-img4.jpg', 'Hans Bethe')
-                         ])
+@pytest.mark.parametrize('file, name', [
+    ('personA-img1.jpg', 'Marie Curie'),
+    ('personB-img1.jpg', 'Stephen Hawking'),
+    ('personC-img1.jpg', 'Paul Walker'), ])
 @pytest.mark.run(order=next(after_previous))
 def test__when_adding_face__then_returns_201(host, file, name):
     files = {'file': open(IMG_DIR / file, 'rb')}
 
-    res = POST(f"{host}/faces/{name}?retrain=no",
-               headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST(f"{host}/faces/{name}?retrain=no", headers={'X-Api-Key': 'test-api-key'}, files=files)
 
     assert res.status_code == 201, res.content
 
@@ -92,6 +83,7 @@ def test__given_multiple_face_img__when_adding_face__then_returns_400_only_one_f
     assert res.json()['message'] == "400 Bad Request: Found more than one face in the given image"
 
 
+# noinspection PyPep8Naming
 @pytest.mark.run(order=next(after_previous))
 def test__when_recognizing_faces__then_returns_face_A_name(host):
     files = {'file': open(IMG_DIR / 'personA-img2.jpg', 'rb')}
@@ -147,6 +139,7 @@ def test__when_deleting_face__then_returns_204(host):
     assert res_del.status_code == 204, res_del.content
 
 
+# noinspection PyPep8Naming
 @pytest.mark.run(order=next(after_previous))
 def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized(host):
     files_a = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
@@ -168,6 +161,7 @@ def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized(host):
     assert not (result_c[0]['face_name'] == 'Paul Walker')
 
 
+# noinspection PyPep8Naming
 @pytest.mark.run(order=next(after_previous))
 def test__when_deleting_face_B__then_returns_204(host):
     pass
@@ -189,22 +183,34 @@ def test__when_recognizing_faces__then_returns_400_no_classifier_trained(host):
                                     "please train a classifier first"
 
 
-def _wait_for_200(url, timeout_s):
-    elapsed_s = 0
+def _wait_for_available_service(host):
+    url = f"{host}/status"
+    timeout_s = AVAILABLE_SERVICE_TIMEOUT_S
+    start_time = time.time()
     while True:
         try:
-            assert requests.get(url, headers={'X-Api-Key': 'test-api-key'}).status_code == HTTPStatus.OK
-        except (ConnectionError, AssertionError):
-            elapsed_s += 1
-            if elapsed_s > timeout_s:
-                raise Exception(f"Waiting to get 200 from '{url}' has reached a timeout ({timeout_s}s)")
-            elif elapsed_s % 10 == 0:
-                print(f'\nWaiting >{elapsed_s}s ...')
+            res = GET(url, headers={'X-Api-Key': 'test-api-key'})
+        except ConnectionError as e:
+            if time.time() - start_time > timeout_s:
+                raise Exception(f"Waiting to get 200 from '{url}' has reached a "
+                                f"timeout ({timeout_s}s): {str(e)}") from None
             time.sleep(1)
             continue
-        return
+        assert res.status_code == HTTPStatus.OK, res.content
+        break
 
 
 def _wait_until_training_completes(host):
-    time.sleep(5)
-    _wait_for_200(f"{host}/retrain", timeout_s=TRAINING_TIMEOUT_S)
+    url = f"{host}/retrain"
+    timeout_s = TRAINING_TIMEOUT_S
+    start_time = time.time()
+    while True:
+        res = GET(url, headers={'X-Api-Key': 'test-api-key'})
+        if res.status_code != 202:
+            if time.time() - start_time > timeout_s:
+                raise Exception(f"Waiting to not get 202 from '{url}' has reached a "
+                                f"timeout ({timeout_s}s)") from None
+            time.sleep(1)
+            continue
+        assert res.status_code == HTTPStatus.OK
+        break

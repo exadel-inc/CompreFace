@@ -22,6 +22,25 @@ def run_once(func):
     return decorator
 
 
+def run_once_fork_safe(func):
+    """ Runs the function only once (caches the return value for subsequent runs, until the process is forked) """
+
+    @functools.wraps(func)
+    def decorator(*args, **kwargs):
+        pid = os.getpid()
+        if decorator.has_run and pid == decorator.pid:
+            return decorator.result
+        decorator.has_run = True
+        decorator.result = func(*args, **kwargs)
+        decorator.pid = pid
+        return decorator.result
+
+    decorator.has_run = False
+    decorator.result = None
+    decorator.pid = os.getpid()
+    return decorator
+
+
 def run_first(preceding_func):
     """ Runs some function before running decorated function """
 
