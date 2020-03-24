@@ -43,3 +43,18 @@ class InvalidRequestArgumentValueError(BadRequest):
 
 class ImageReadLibraryError(BadRequest):
     description = 'Image has incorrect format or is broken'
+
+
+class FaceHasNoEmbeddingCalculatedError(InternalServerError):
+    description = 'Saved face has no embedding calculated and saved in the database'
+
+
+class NotEnoughUniqueFacesError(BadRequest):
+    description = 'Not enough unique faces to start training a new classifier model. ' \
+                  'Deleting existing classifiers, if any.'
+    exit_code = 5578
+
+
+EXCEPTIONS_WITH_EXIT_CODES = [NotEnoughUniqueFacesError]
+EXIT_CODES = [e.exit_code for e in EXCEPTIONS_WITH_EXIT_CODES]
+EXIT_CODE_MAP = {e.exit_code: e for e in EXCEPTIONS_WITH_EXIT_CODES}

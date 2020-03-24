@@ -1,4 +1,5 @@
 import logging
+from abc import ABC, abstractmethod
 from enum import Enum, auto
 from multiprocessing import Process
 from typing import Dict, Callable
@@ -15,12 +16,26 @@ class TaskStatus(Enum):
     IDLE_LAST_FAILED = auto()
 
 
-class AsyncTaskManager:
+class TaskManagerBase(ABC):
+    @abstractmethod
+    def get_status(self, api_key) -> TaskStatus:
+        raise NotImplementedError
+
+    @abstractmethod
+    def start_training(self, api_key, force=False):
+        raise NotImplementedError
+
+    @abstractmethod
+    def abort_training(self, api_key):
+        raise NotImplementedError
+
+
+class AsyncTaskManager(TaskManagerBase):
     def __init__(self, task_fun: Callable[[ApiKey], None]):
         self._dict: Dict[ApiKey, 'Process'] = {}
         self._train_fun = task_fun
 
-    def get_status(self, api_key):
+    def get_status(self, api_key) -> TaskStatus:
         if api_key not in self._dict:
             return TaskStatus.IDLE
         process = self._dict[api_key]
@@ -49,3 +64,19 @@ class AsyncTaskManager:
             return
         logging.warning(f"Forcefully aborting async task")
         self._dict[api_key].terminate()
+
+
+class SyncTaskManager(TaskManagerBase):
+    """For debugging purposes"""
+
+    def __init__(self, task_fun: Callable[[ApiKey], None]):
+        self._train_fun = task_fun
+
+    def get_status(self, api_key) -> TaskStatus:
+        return TaskStatus.IDLE
+
+    def start_training(self, api_key, force=False):
+        self._train_fun(api_key)
+
+    def abort_training(self, api_key):
+        pass

@@ -1,24 +1,26 @@
 import logging
 import sys
+from http import HTTPStatus
 from pathlib import Path
 from typing import Union, Callable
 
 from flasgger import Swagger
-from flask import Flask
+from flask import Flask, Response
 
+from src.constants import DO_SHOW_HTTP_RESPONSES_IN_LOGS
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
-from src.logging import init_logging
+from src.loggingext import init_logging
 from src.services.flaskext.disable_caching import disable_caching
 from src.services.flaskext.error_handling import add_error_handling
 from src.services.flaskext.json_encoding import add_json_encoding
 from src.cache import get_storage
+from src.services.flaskext.response_logging import log_http_response
 
 
 def init_runtime():
     assert sys.version_info >= (3, 7)
     init_logging()
-    logging.critical('d')
     get_storage().check_connection()
 
 
@@ -26,6 +28,8 @@ def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[
     app = Flask('frs-core-ml')
     app.url_map.strict_slashes = False
     add_error_handling(app)
+    if DO_SHOW_HTTP_RESPONSES_IN_LOGS:
+        app.after_request(log_http_response)
     add_json_encoding(app)
     app.after_request(disable_caching)
     if docs_dir:

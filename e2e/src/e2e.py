@@ -4,6 +4,7 @@ from http import HTTPStatus
 import pytest
 from toolz import itertoolz
 
+from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB
 from .conftest import after_previous_gen, POST, DELETE, GET
 from .sample_images import IMG_DIR
 
@@ -11,6 +12,17 @@ after_previous = after_previous_gen()
 
 AVAILABLE_SERVICE_TIMEOUT_S = 8
 TRAINING_TIMEOUT_S = 30
+
+
+@pytest.mark.run(order=next(after_previous))
+def test_setup__drop_db():
+    if not DO_DROP_DB:
+        return
+    print(f"Dropping database {MONGO_EFRS_DATABASE_NAME}@{MONGO_HOST}:{MONGO_PORT}...")
+    from pymongo import MongoClient
+    client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
+    client.drop_database(MONGO_EFRS_DATABASE_NAME)
+    print(f"Successfully dropped database {MONGO_EFRS_DATABASE_NAME}@{MONGO_HOST}:{MONGO_PORT}")
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -35,7 +47,7 @@ def test__when_opening_apidocs__then_returns_200(host):
 def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized(host):
     files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
 
-    res = POST(f"{host}/faces/Marie Curie?retrain=no", files=files)
+    res = POST(f"{host}/faces/FAIL?retrain=no", files=files)
 
     assert res.status_code == 401, res.content
 
@@ -44,7 +56,7 @@ def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized(host
 def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_found(host):
     files = {'file': open(IMG_DIR / 'no-faces.jpg', 'rb')}
 
-    res = POST(f"{host}/faces/Marie Curie?retrain=no", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST(f"{host}/faces/FAIL?retrain=no", headers={'X-Api-Key': 'test-api-key'}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: No face is found in the given image"
@@ -68,16 +80,16 @@ def test__when_retraining__then_returns_202(host):
     pass
 
     res = POST(f"{host}/retrain", headers={'X-Api-Key': 'test-api-key'})
-    _wait_until_training_completes(host)
 
     assert res.status_code == 202, res.content
+    _wait_until_training_completes(host)
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_multiple_face_img__when_adding_face__then_returns_400_only_one_face_allowed(host):
     files = {'file': open(IMG_DIR / 'five-faces.jpg', 'rb')}
 
-    res = POST(f"{host}/faces/Marie Curie", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST(f"{host}/faces/FAIL", headers={'X-Api-Key': 'test-api-key'}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: Found more than one face in the given image"
@@ -116,7 +128,7 @@ def test__when_getting_names__then_returns_correct_names(host):
     res = GET(f"{host}/faces", headers={'X-Api-Key': 'test-api-key'})
 
     result = res.json()['names']
-    assert set(result) == {'Marie Curie', 'Stephen Hawking', 'Paul Walker', 'Hans Bethe'}
+    assert set(result) == {'Marie Curie', 'Stephen Hawking', 'Paul Walker'}
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -134,9 +146,9 @@ def test__when_deleting_face__then_returns_204(host):
     pass
 
     res_del = DELETE(f"{host}/faces/Paul Walker", headers={'X-Api-Key': 'test-api-key'})
-    _wait_until_training_completes(host)
 
     assert res_del.status_code == 204, res_del.content
+    _wait_until_training_completes(host)
 
 
 # noinspection PyPep8Naming
@@ -163,20 +175,22 @@ def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized(host):
 
 # noinspection PyPep8Naming
 @pytest.mark.run(order=next(after_previous))
-def test__when_deleting_face_B__then_returns_204(host):
+def test__when_deleting_face_B_with_retraining__then_returns_400(host):
     pass
 
-    res_del = DELETE(f"{host}/faces/Stephen Hawking", headers={'X-Api-Key': 'test-api-key'})
+    res = DELETE(f"{host}/faces/Stephen Hawking?FAIL", headers={'X-Api-Key': 'test-api-key'})
     _wait_until_training_completes(host)
 
-    assert res_del.status_code == 204, res_del.content
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "400 Bad Request: Not enough unique faces to start training a new " \
+                                    "classifier model. Deleting existing classifiers, if any."
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_recognizing_faces__then_returns_400_no_classifier_trained(host):
     files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
 
-    res = POST(f"{host}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST(f"{host}/recognize?FAIL", headers={'X-Api-Key': 'test-api-key'}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: No classifier model is yet trained, " \
@@ -206,11 +220,9 @@ def _wait_until_training_completes(host):
     start_time = time.time()
     while True:
         res = GET(url, headers={'X-Api-Key': 'test-api-key'})
-        if res.status_code != 202:
-            if time.time() - start_time > timeout_s:
-                raise Exception(f"Waiting to not get 202 from '{url}' has reached a "
-                                f"timeout ({timeout_s}s)") from None
-            time.sleep(1)
-            continue
-        assert res.status_code == HTTPStatus.OK
-        break
+        if res.status_code != HTTPStatus.ACCEPTED:
+            assert res.status_code == HTTPStatus.OK
+            break
+        if time.time() - start_time > timeout_s:
+            raise Exception(f"Waiting to not get 202 from '{url}' has reached a timeout ({timeout_s}s)") from None
+        time.sleep(1)
