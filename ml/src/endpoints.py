@@ -55,9 +55,9 @@ def endpoints(app):
 
         return Response(status=HTTPStatus.CREATED)
 
+    @app.route('/faces/<face_name>', methods=['DELETE'])
     @needs_authentication
     @needs_retrain
-    @app.route('/faces/<face_name>', methods=['DELETE'])
     def remove_face(face_name):
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
