@@ -2,16 +2,17 @@ import time
 from http import HTTPStatus
 
 import pytest
+from requests import ReadTimeout
 from toolz import itertoolz
 
-from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB
+from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB, TIMEOUT_MULTIPLIER
 from .conftest import after_previous_gen, POST, DELETE, GET
 from .sample_images import IMG_DIR
 
 after_previous = after_previous_gen()
 
-AVAILABLE_SERVICE_TIMEOUT_S = 8
-TRAINING_TIMEOUT_S = 30
+AVAILABLE_SERVICE_TIMEOUT_S = TIMEOUT_MULTIPLIER * 8
+TRAINING_TIMEOUT_S = TIMEOUT_MULTIPLIER * 30
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -178,7 +179,7 @@ def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized(host):
 def test__when_deleting_face_B_with_retraining__then_returns_400(host):
     pass
 
-    res = DELETE(f"{host}/faces/Stephen Hawking?FAIL", headers={'X-Api-Key': 'test-api-key'})
+    res = DELETE(f"{host}/faces/Stephen Hawking", headers={'X-Api-Key': 'test-api-key'})
     _wait_until_training_completes(host)
 
     assert res.status_code == 400, res.content
@@ -204,7 +205,7 @@ def _wait_for_available_service(host):
     while True:
         try:
             res = GET(url, headers={'X-Api-Key': 'test-api-key'})
-        except ConnectionError as e:
+        except (ConnectionError, ReadTimeout) as e:
             if time.time() - start_time > timeout_s:
                 raise Exception(f"Waiting to get 200 from '{url}' has reached a "
                                 f"timeout ({timeout_s}s): {str(e)}") from None

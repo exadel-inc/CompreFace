@@ -1,6 +1,6 @@
 import functools
 
-from src.services.async_task_manager.async_task_manager import AsyncTaskManager
+from src.services.async_task_manager.async_task_manager import AsyncTaskManager, TaskManagerBase
 from src.services.flaskext.constants import GetParameter, RetrainValue, API_KEY_HEADER
 from src.services.flaskext.parse_request_arg import parse_request_string_arg
 from src.cache import get_training_task_manager
@@ -21,14 +21,15 @@ def needs_retrain(f):
 
         return_val = f(*args, **kwargs)
 
+        task_manager: TaskManagerBase = get_training_task_manager()
         if retrain_value == RetrainValue.NO:
-            return return_val
-        task_manager: AsyncTaskManager = get_training_task_manager()
-        if retrain_value == RetrainValue.YES:
+            pass
+        elif retrain_value == RetrainValue.YES:
             task_manager.start_training(api_key)
         elif retrain_value == RetrainValue.FORCE:
             task_manager.start_training(api_key, force=True)
         else:
             raise ValueError
+        return return_val
 
     return wrapper

@@ -5,7 +5,7 @@ from flask import Response
 from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
 
-from src.services.async_task_manager.async_task_manager import AsyncTaskManager, TaskStatus
+from src.services.async_task_manager.async_task_manager import AsyncTaskManager, TaskStatus, TaskManagerBase
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
 from src.services.facescan.backend.facescan_backend import FacescanBackend
@@ -55,9 +55,9 @@ def endpoints(app):
 
         return Response(status=HTTPStatus.CREATED)
 
-    @app.route('/faces/<face_name>', methods=['DELETE'])
     @needs_authentication
     @needs_retrain
+    @app.route('/faces/<face_name>', methods=['DELETE'])
     def remove_face(face_name):
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
@@ -72,7 +72,7 @@ def endpoints(app):
     def retrain_model_status():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-        task_manager: AsyncTaskManager = get_training_task_manager()
+        task_manager: TaskManagerBase = get_training_task_manager()
 
         training_status = task_manager.get_status(api_key)
         http_status = {TaskStatus.IDLE: HTTPStatus.OK,
@@ -87,7 +87,7 @@ def endpoints(app):
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
         force_start = parse_request_bool_arg(name=GetParameter.FORCE, default=False, request=request)
-        task_manager: AsyncTaskManager = get_training_task_manager()
+        task_manager: TaskManagerBase = get_training_task_manager()
 
         task_manager.start_training(api_key, force_start)
 
@@ -98,7 +98,7 @@ def endpoints(app):
     def retrain_model_abort():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-        task_manager: AsyncTaskManager = get_training_task_manager()
+        task_manager: TaskManagerBase = get_training_task_manager()
 
         task_manager.abort_training(api_key)
 

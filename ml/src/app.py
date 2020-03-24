@@ -15,7 +15,7 @@ from src.services.flaskext.disable_caching import disable_caching
 from src.services.flaskext.error_handling import add_error_handling
 from src.services.flaskext.json_encoding import add_json_encoding
 from src.cache import get_storage
-from src.services.flaskext.response_logging import log_http_response
+from src.services.flaskext.log_response import log_http_response
 
 
 def init_runtime():

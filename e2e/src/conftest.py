@@ -3,8 +3,10 @@ import logging
 import pytest
 import requests
 
-CONNECT_TIMEOUT_S = 5
-READ_TIMEOUT_S = 30
+from .constants import TIMEOUT_MULTIPLIER
+
+CONNECT_TIMEOUT_S = TIMEOUT_MULTIPLIER * 5
+READ_TIMEOUT_S = TIMEOUT_MULTIPLIER * 30
 
 
 def pytest_addoption(parser):
