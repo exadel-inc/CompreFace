@@ -37,7 +37,7 @@ class AsyncTaskManager:
     def start_training(self, api_key, force=False):
         if force:
             self.abort_training(api_key)
-        elif not self.is_training(api_key):
+        elif self.get_status(api_key) == TaskStatus.BUSY:
             raise ClassifierIsAlreadyTrainingError
 
         process = Process(target=self._train_fun, daemon=True, args=(api_key,))
@@ -45,19 +45,7 @@ class AsyncTaskManager:
         self._dict[api_key] = process
 
     def abort_training(self, api_key):
-        if not self.is_training(api_key):
+        if self.get_status(api_key) != TaskStatus.BUSY:
             return
         logging.warning(f"Forcefully aborting async task")
         self._dict[api_key].terminate()
-    #
-    # @property
-    # def dict(self):
-    #     new_dict = {}
-    #     for key in self._dict:
-    #         process = self._dict[key]
-    #         if process.is_alive():
-    #             new_dict[key] = process
-    #         if process.exitcode != 0:
-    #             logger.error('Async process has finished with error')
-    #     self._dict = new_dict
-    #     return self._dict

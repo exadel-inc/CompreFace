@@ -1,6 +1,6 @@
 import functools
 
-from src.services.async_task_manager.training_task_manager import AsyncTaskManager
+from src.services.async_task_manager.async_task_manager import AsyncTaskManager
 from src.services.flaskext.constants import GetParameter, RetrainValue, API_KEY_HEADER
 from src.services.flaskext.parse_request_arg import parse_request_string_arg
 from src.cache import get_training_task_manager

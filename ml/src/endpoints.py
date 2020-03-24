@@ -5,7 +5,7 @@ from flask import Response
 from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
 
-from src.services.async_task_manager.training_task_manager import AsyncTaskManager
+from src.services.async_task_manager.async_task_manager import AsyncTaskManager, TaskStatus
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
 from src.services.facescan.backend.facescan_backend import FacescanBackend
@@ -74,9 +74,12 @@ def endpoints(app):
         api_key = request.headers[API_KEY_HEADER]
         task_manager: AsyncTaskManager = get_training_task_manager()
 
-        it_is_training = task_manager.is_training(api_key)
+        training_status = task_manager.get_status(api_key)
+        http_status = {TaskStatus.IDLE: HTTPStatus.OK,
+                       TaskStatus.BUSY: HTTPStatus.ACCEPTED,
+                       TaskStatus.IDLE_LAST_FAILED: HTTPStatus.INTERNAL_SERVER_ERROR}[training_status]
 
-        return Response(status=HTTPStatus.ACCEPTED if it_is_training else HTTPStatus.OK)
+        return Response(status=http_status)
 
     @app.route('/retrain', methods=['POST'])
     @needs_authentication
