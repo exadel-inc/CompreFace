@@ -1,19 +1,15 @@
 import time
 from http import HTTPStatus
-from typing import Union
 
 import pytest
 from requests import ReadTimeout
 from toolz import itertoolz
 
-from .conftest import after_previous_gen, POST, DELETE, GET
-from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB, TIMEOUT_MULTIPLIER
+from .conftest import after_previous_gen, POST, DELETE, GET, _wait_until_training_completes
+from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB
 from .sample_images import IMG_DIR
 
 after_previous = after_previous_gen()
-
-AVAILABLE_SERVICE_TIMEOUT_S = TIMEOUT_MULTIPLIER * 8
-TRAINING_TIMEOUT_S = TIMEOUT_MULTIPLIER * 30
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -226,35 +222,3 @@ def test__when_recognizing_faces__then_returns_400_no_classifier_trained(host):
     assert res.json()['message'] == "400 Bad Request: No classifier model is yet trained, " \
                                     "please train a classifier first"
 
-
-def _wait_for_available_service(host):
-    url = f"{host}/status"
-    timeout_s = AVAILABLE_SERVICE_TIMEOUT_S
-    start_time = time.time()
-    while True:
-        try:
-            res = GET(url, headers={'X-Api-Key': 'test-api-key'})
-        except (ConnectionError, ReadTimeout) as e:
-            if time.time() - start_time > timeout_s:
-                raise Exception(f"Waiting to get 200 from '{url}' has reached a "
-                                f"timeout ({timeout_s}s): {str(e)}") from None
-            time.sleep(1)
-            continue
-        assert res.status_code == HTTPStatus.OK, res.content
-        break
-
-
-def _wait_until_training_completes(host, expected_code: Union[HTTPStatus, None] = HTTPStatus.OK):
-    time.sleep(2)
-    url = f"{host}/retrain"
-    timeout_s = TRAINING_TIMEOUT_S
-    start_time = time.time()
-    while True:
-        res = GET(url, headers={'X-Api-Key': 'test-api-key'})
-        if res.status_code != HTTPStatus.ACCEPTED:
-            if expected_code:
-                assert res.status_code == expected_code
-            break
-        if time.time() - start_time > timeout_s:
-            raise Exception(f"Waiting to not get 202 from '{url}' has reached a timeout ({timeout_s}s)") from None
-        time.sleep(1)

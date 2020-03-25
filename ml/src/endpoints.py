@@ -22,12 +22,12 @@ from src.services.utils.nputils import read_img
 
 def endpoints(app):
     @app.route('/status')
-    def get_status():
+    def status_get():
         return jsonify(status="OK")
 
     @app.route('/faces')
     @needs_authentication
-    def list_faces():
+    def faces_get():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
 
@@ -40,7 +40,7 @@ def endpoints(app):
     @needs_authentication
     @needs_attached_file
     @needs_retrain
-    def add_face(face_name):
+    def faces_name_post(face_name):
         from flask import request
         img = read_img(request.files['file'])
         api_key = request.headers[API_KEY_HEADER]
@@ -58,7 +58,7 @@ def endpoints(app):
     @app.route('/faces/<face_name>', methods=['DELETE'])
     @needs_authentication
     @needs_retrain
-    def remove_face(face_name):
+    def faces_name_delete(face_name):
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
         storage: MongoStorage = get_storage()
@@ -69,7 +69,7 @@ def endpoints(app):
 
     @app.route('/retrain', methods=['GET'])
     @needs_authentication
-    def retrain_model_status():
+    def retrain_get():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
         task_manager: TaskManagerBase = get_training_task_manager()
@@ -83,7 +83,7 @@ def endpoints(app):
 
     @app.route('/retrain', methods=['POST'])
     @needs_authentication
-    def retrain_model_start():
+    def retrain_post():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
         force_start = parse_request_bool_arg(name=GetParameter.FORCE, default=False, request=request)
@@ -96,7 +96,7 @@ def endpoints(app):
 
     @app.route('/retrain', methods=['DELETE'])
     @needs_authentication
-    def retrain_model_abort():
+    def retrain_delete():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
         task_manager: TaskManagerBase = get_training_task_manager()
@@ -108,18 +108,18 @@ def endpoints(app):
     @app.route('/recognize', methods=['POST'])
     @needs_authentication
     @needs_attached_file
-    def recognize_faces():
+    def recognize_post():
         from flask import request
         img = read_img(request.files['file'])
         detection_threshold_c = _get_detection_threshold_c(request)
-        return_limit = _get_return_limit(request)
+        face_limit = _get_face_limit(request)
         scanner: FacescanBackend = get_scanner()
         storage: MongoStorage = get_storage()
         api_key = request.headers[API_KEY_HEADER]
         classifier = storage.get_embedding_classifier(api_key, LogisticClassifier.CURRENT_VERSION, scanner.ID)
 
         predictions = []
-        for face in scanner.scan(img, return_limit, detection_threshold_c):
+        for face in scanner.scan(img, face_limit, detection_threshold_c):
             prediction = classifier.predict(face.embedding, scanner.ID)
             face_prediction = FacePrediction(prediction.face_name, prediction.probability, face.box)
             predictions.append(face_prediction)
@@ -132,7 +132,7 @@ def _get_detection_threshold_c(request):
     return float(detection_threshold_c) if detection_threshold_c is not None else None
 
 
-def _get_return_limit(request):
+def _get_face_limit(request):
     limit = request.values.get(ARG.LIMIT)
     if limit is None:
         return limit

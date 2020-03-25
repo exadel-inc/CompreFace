@@ -15,7 +15,7 @@ class FacescanBackend(ABC):
 
     @abstractmethod
     def scan(self, img: Array3D,
-             return_limit: int = NO_LIMIT,
+             face_limit: int = NO_LIMIT,
              detection_threshold: float = None) -> List[ScannedFace]:
         raise NotImplementedError
 

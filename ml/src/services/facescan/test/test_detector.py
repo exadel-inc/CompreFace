@@ -49,6 +49,6 @@ def test__given_5face_img_limit3__when_scanned__then_returns_3_results(backend):
     scanner: FacescanBackend = get_scanner(backend)
     img = imageio.imread(IMG_DIR / 'five-faces.jpg')
 
-    faces = scanner.scan(img, return_limit=3)
+    faces = scanner.scan(img, face_limit=3)
 
     assert len(faces) == 3
