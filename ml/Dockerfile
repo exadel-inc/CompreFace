@@ -31,5 +31,5 @@ RUN if [ "$DO_RUN_TESTS" = true ] ; then \
     fi
 
 ## Runtime
-RUN ./wait-for-it.sh mongo:27017
+#RUN ./wait-for-it.sh mongo:27017
 CMD ["uwsgi", "--ini", "uwsgi.ini"]
