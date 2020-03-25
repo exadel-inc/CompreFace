@@ -46,6 +46,17 @@ def test__when_opening_apidocs__then_returns_200(host):
 
 
 @pytest.mark.run(order=next(after_previous))
+def test__when_retraining__then_returns_400(host):
+    pass
+
+    res = POST(f"{host}/retrain", headers={'X-Api-Key': 'test-api-key'})
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "400 Bad Request: Not enough unique faces to start training a " \
+                                    "new classifier model. Deleting existing classifiers, if any."
+
+
+@pytest.mark.run(order=next(after_previous))
 def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized(host):
     files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
 

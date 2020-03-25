@@ -1,12 +1,12 @@
 import logging
 import sys
-from http import HTTPStatus
 from pathlib import Path
 from typing import Union, Callable
 
 from flasgger import Swagger
-from flask import Flask, Response
+from flask import Flask
 
+from src.cache import get_storage
 from src.constants import DO_SHOW_HTTP_RESPONSES_IN_LOGS
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
@@ -14,7 +14,6 @@ from src.loggingext import init_logging
 from src.services.flaskext.disable_caching import disable_caching
 from src.services.flaskext.error_handling import add_error_handling
 from src.services.flaskext.json_encoding import add_json_encoding
-from src.cache import get_storage
 from src.services.flaskext.log_response import log_http_response
 
 

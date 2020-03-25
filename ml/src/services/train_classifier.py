@@ -2,12 +2,12 @@ import logging
 
 import toolz
 
+from src.cache import get_scanner, get_storage
 from src.exceptions import NotEnoughUniqueFacesError
 from src.loggingext import init_logging
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.storage.mongo_storage import MongoStorage
-from src.cache import get_scanner, get_storage
 
 
 def get_faces(storage: MongoStorage, api_key: str, emb_calc_version: str):
