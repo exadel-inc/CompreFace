@@ -1,4 +1,4 @@
-.PHONY: build up down setup start stop docker local unit i9n e2e lint
+.PHONY: build up down setup start stop docker local unit i9n e2e lint all
 .DEFAULT_GOAL := docker
 
 build:
@@ -39,3 +39,5 @@ e2e: start
 
 lint:
 	python -m pylama --options $(CURDIR)/ml/pylama.ini $(CURDIR)/ml/src
+
+all: local docker
