@@ -27,12 +27,14 @@ def test__when_opened_apidocs__then_returns_200(host):
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_no_api_key__when_scanning__then_returns_401_unauthorized(host):
-    files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
+def test__given_no_file__when_scanning__then_returns_400_bad_request(host):
+    pass
 
-    res = POST(f"{host}/scan_faces", files=files)
+    res = POST(f"{host}/scan_faces", headers={'X-Api-Key': 'test-api-key'})
 
-    assert res.status_code == 401, res.content
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "400 Bad Request: No file is attached"
+
 
 
 @pytest.mark.run(order=next(after_previous))
