@@ -46,7 +46,7 @@ def test__given_img_with_no_faces__when_scanning__then_returns_400_bad_request(h
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_img_with_face__when_scanning__then_returns_200_with_results(host, file, name):
+def test__given_img_with_face__when_scanning__then_returns_200_with_results(host):
     files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
 
     res = POST(f"{host}/scan_faces", files=files)
