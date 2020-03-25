@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
-  description: 'Service for face recognition. Upload images with faces of known people, then upload a new image, and the service will recognize faces in it. All operations are applied only for faces associated with the specified API key. Recognition is not performed if the model is trained on only one face.'
-  version: 0.1-snapshot
-  title: 'Exadel Face Recognition Service'
+  version: v1
+  title: 'Exadel Face Recognition Service — frs-core'
+  description: 'Exadel Face Recognition Service is a service for face recognition. Upload images with faces of known people, then upload a new image, and the service will recognize faces in it.'
 tags:
   - name: 'Face Database'
   - name: 'Face Recognition ML Model'
@@ -32,17 +32,9 @@ components:
     DetProbThresholdParameter:
       name: det_prob_threshold
       in: path
-      description: 'The minimal percent confidence that found face is actually a face.'
+      description: 'The minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.'
       type: float
   responses:
-    BadRequestResponse:
-      description: 'Bad request is provided'
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example: 'Detailed information about the error'
     ClassifierIsAlreadyTrainingErrorResponse:
       description: 'Classifier is already training. Use parameters to force start training.'
       schema:
@@ -51,14 +43,13 @@ components:
           message:
             type: string
             example: 'Detailed information about the error'
-    InternalServerErrorResponse:
-      description: 'Internal error has occurred'
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example: 'Detailed information about the error'
+definitions:
+  ErrorResponseBody:
+    type: "object"
+    properties:
+      message:
+        type: "string"
+        description: "Service returns a message along with 4xx and 5xx error responses"
 externalDocs:
-  description: 'More documentation is available in Confluence'
-  url: 'https://confluence.exadel.com/display/KC/Exadel+Face+Recognition+Service'
+  description: 'EFRS Confluence Space'
+  url: 'https://confluence.exadel.com/display/EFRS'

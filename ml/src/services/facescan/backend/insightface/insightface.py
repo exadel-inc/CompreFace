@@ -23,8 +23,9 @@ class InsightFace(FacescanBackend):
 
     def scan(self, img: Array3D,
              return_limit: int = NO_LIMIT,
-             facenet_detection_threshold_c: float = None) -> List[ScannedFace]:
-        assert facenet_detection_threshold_c is None
+             detection_threshold: float = None) -> List[ScannedFace]:
+        if detection_threshold:
+            raise NotImplementedError('Detection threshold support is not yet implemented')
 
         self._model.prepare(ctx_id=self._CTX_ID_CPU, nms=self._NMS)
 

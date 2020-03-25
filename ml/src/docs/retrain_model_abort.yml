@@ -10,7 +10,3 @@ security:
 responses:
   '204':
     description: 'Retraining is ensured to be stopped.'
-  '400':
-    $ref: '#/components/responses/BadRequestResponse'
-  '500':
-    $ref: '#/components/responses/InternalServerErrorResponse'

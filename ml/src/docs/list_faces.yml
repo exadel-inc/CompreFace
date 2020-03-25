@@ -18,7 +18,3 @@ responses:
           example:
             - 'Albert Einstein'
             - 'Richard Feynman'
-  '400':
-    $ref: '#/components/responses/BadRequestResponse'
-  '500':
-    $ref: '#/components/responses/InternalServerErrorResponse'

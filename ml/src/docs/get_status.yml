@@ -11,8 +11,6 @@ responses:
     schema:
       type: object
       properties:
-        message:
+        status:
           type: string
           example: OK
-  '500':
-    $ref: '#/components/responses/InternalServerErrorResponse'

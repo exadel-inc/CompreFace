@@ -11,9 +11,9 @@ parameters:
     name: file
     type: file
     required: 'true'
-    description: 'Image of a group of unknown people (accepted formats: jpeg, png).'
+    description: 'Image of a group of unknown people'
   - in: formData
-    name: limits
+    name: limit
     description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
     type: integer
     default: 0
@@ -46,6 +46,10 @@ responses:
                   y_min:
                     type: integer
                     example: 60
+                  probability:
+                    type: number
+                    format: float
+                    example: '0.99'
               face_name:
                 type: string
                 example: 'Paul Dirac'
@@ -53,11 +57,4 @@ responses:
                 type: number
                 format: float
                 example: '0.95'
-              is_face_prob:
-                type: number
-                format: float
-                example: '0.99'
-  '400':
-    $ref: '#/components/responses/BadRequestResponse'
-  '500':
-    $ref: '#/components/responses/InternalServerErrorResponse'
+

@@ -13,9 +13,5 @@ security:
 responses:
   '204':
     description: "Example images were deleted (or no items to be deleted were found)."
-  '400':
-    $ref: '#/components/responses/BadRequestResponse'
   '423':
     $ref: '#/components/responses/ClassifierIsAlreadyTrainingErrorResponse'
-  '500':
-    $ref: '#/components/responses/InternalServerErrorResponse'

@@ -16,12 +16,12 @@ class FacescanBackend(ABC):
     @abstractmethod
     def scan(self, img: Array3D,
              return_limit: int = NO_LIMIT,
-             facenet_detection_threshold_c: float = None) -> List[ScannedFace]:
+             detection_threshold: float = None) -> List[ScannedFace]:
         raise NotImplementedError
 
     def scan_one(self, img: Array3D,
-                 facenet_detection_threshold_c: float = None) -> ScannedFace:
-        results = self.scan(img=img, facenet_detection_threshold_c=facenet_detection_threshold_c)
+                 detection_threshold: float = None) -> ScannedFace:
+        results = self.scan(img=img, detection_threshold=detection_threshold)
         if len(results) > 1:
             raise MoreThanOneFaceFoundError
         return results[0]

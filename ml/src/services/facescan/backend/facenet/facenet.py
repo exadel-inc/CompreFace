@@ -101,9 +101,9 @@ class Facenet2017(FacescanBackend):
 
     def scan(self, img: Array3D,
              return_limit: int = NO_LIMIT,
-             facenet_detection_threshold_c: float = None) -> List[ScannedFace]:
+             detection_threshold: float = None) -> List[ScannedFace]:
         assert self.EMBEDDING_MODEL_PATH
-        detection_threshold_c = facenet_detection_threshold_c or self.DEFAULT_THRESHOLD_C
+        detection_threshold_c = detection_threshold or self.DEFAULT_THRESHOLD_C
         scanned_faces = []
         for box in self._find_face_bounding_boxes(img, return_limit, detection_threshold_c):
             cropped_img = crop_img(img, box)

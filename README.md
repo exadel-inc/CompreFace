@@ -1,3 +1,8 @@
+# Documentation
+- Face Recognition System 
+- frs-core
+
+
 # Starting the service
 
 ### With Docker

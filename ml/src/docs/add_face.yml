@@ -14,16 +14,12 @@ parameters:
     name: file
     type: file
     required: 'true'
-    description: 'Image of a face (accepted formats: jpeg, png).'
+    description: 'Image of a face'
   - $ref: '#/components/parameters/FaceNameParameter'
   - $ref: '#/components/parameters/RetrainParameter'
   - $ref: '#/components/parameters/DetProbThresholdParameter'
 responses:
   '201':
     description: 'Face example is saved.'
-  '400':
-    $ref: '#/components/responses/BadRequestResponse'
   '423':
     $ref: '#/components/responses/ClassifierIsAlreadyTrainingErrorResponse'
-  '500':
-    $ref: '#/components/responses/InternalServerErrorResponse'
