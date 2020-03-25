@@ -6,6 +6,5 @@ ALL_BACKENDS = [Facenet2018, InsightFace]
 
 class Scanner:
     """ Increases package usability """
-    Facenet2017 = NotImplemented
     Facenet2018 = Facenet2018
     InsightFace = InsightFace

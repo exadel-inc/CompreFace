@@ -20,8 +20,8 @@ _EmbeddingCalculator = namedtuple('Calculator', 'graph sess')
 _FaceDetectionNets = namedtuple('FaceDetectionNets', 'pnet rnet onet')
 
 
-class Facenet2017(FacescanBackend):
-    ID = 'Facenet_v2017'
+class Facenet2018(FacescanBackend):
+    ID = 'Facenet_v2018'
     BATCH_SIZE = 25
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
@@ -30,7 +30,7 @@ class Facenet2017(FacescanBackend):
     DEFAULT_THRESHOLD_B = 0.7059968943
     DEFAULT_THRESHOLD_C = 0.5506904359
     IMAGE_SIZE = 160
-    EMBEDDING_MODEL_PATH = CURRENT_DIR / 'model' / 'embedding_calc_model_20170512.pb'
+    EMBEDDING_MODEL_PATH = CURRENT_DIR / 'model' / 'embedding_calc_model_20180402.pb'
 
     def __init__(self):
         super().__init__()
@@ -112,8 +112,3 @@ class Facenet2017(FacescanBackend):
             scanned_face = ScannedFace(embedding=embedding, box=box, img=img, face_img=cropped_img)
             scanned_faces.append(scanned_face)
         return scanned_faces
-
-
-class Facenet2018(Facenet2017):
-    ID = 'Facenet_v2018'
-    EMBEDDING_MODEL_PATH = CURRENT_DIR / 'model' / 'embedding_calc_model_20180402.pb'
