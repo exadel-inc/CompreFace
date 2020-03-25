@@ -1,8 +1,8 @@
 swagger: '2.0'
 info:
   version: v1
-  title: 'Exadel Face Recognition Service — frs-core'
-  description: 'Exadel Face Recognition Service is a service for face recognition. Upload images with faces of known people, then upload a new image, and the service will recognize faces in it.'
+  title: 'Python Core Service — frs-core'
+  description: 'This is a component of Exadel Face Recognition Service. EFRS is a service for face recognition: upload images with faces of known people, then upload a new image, and the service will recognize faces in it.'
 tags:
   - name: 'Face Database'
   - name: 'Face Recognition ML Model'
