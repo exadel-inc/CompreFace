@@ -1,12 +1,12 @@
 # External documentation
-About *EFRS*:<br>
-- [*EFRS* Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
-- [*EFRS* Page on KC Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
-- [*EFRS* API Contract - Confluence](https://confluence.exadel.com/display/KC/FRS+REST+API)<br>
+About EFRS:<br>
+- [EFRS Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
+- [EFRS Page on KC Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
+- [EFRS API Contract - Confluence](https://confluence.exadel.com/display/KC/FRS+REST+API)<br>
 
-About *frs-core*:<br>
-- [Confluence page on *Python Core Service*](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
-- *frs-core* API Contract:
+About frs-core:<br>
+- [Confluence page on Python Core Service](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
+- frs-core API Contract:
   - [Swagger UI - localhost](http://localhost:3000/apidocs) (service must be started locally first)<br>
   - [Swagger UI - UAT]( https://uat.frs.exadel.by/apidocs) 
 
