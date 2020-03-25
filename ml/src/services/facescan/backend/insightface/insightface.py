@@ -22,7 +22,7 @@ class InsightFace(FacescanBackend):
         self._NMS = 0.4
 
     def scan(self, img: Array3D,
-             return_limit: int = NO_LIMIT,
+             face_limit: int = NO_LIMIT,
              detection_threshold: float = None) -> List[ScannedFace]:
         if detection_threshold:
             raise NotImplementedError('Detection threshold support is not yet implemented')
@@ -44,6 +44,6 @@ class InsightFace(FacescanBackend):
 
         if len(scanned_faces) == 0:
             raise NoFaceFoundError
-        if return_limit:
-            return scanned_faces[:return_limit]
+        if face_limit:
+            return scanned_faces[:face_limit]
         return scanned_faces

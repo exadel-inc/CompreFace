@@ -13,12 +13,3 @@ services:
         - DO_RUN_TESTS=${DO_RUN_TESTS:-false}
     ports:
       - "3000:3000"
-    depends_on:
-      - mongo
-  mongo:
-    container_name: mongo
-    image: "mongo:4.0.4-xenial"
-    ports:
-      - "27117:27017"
-    volumes:
-      - ./tmp/mongo_data:/data

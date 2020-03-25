@@ -52,7 +52,7 @@ class Facenet2018(FacescanBackend):
             sess = tf.Session()
             return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
 
-    def _find_face_bounding_boxes(self, img, return_limit, facenet_detection_threshold_c=None) \
+    def _find_face_bounding_boxes(self, img, face_limit, facenet_detection_threshold_c=None) \
             -> List[BoundingBox]:
         facenet_detection_threshold_c = facenet_detection_threshold_c or self.DEFAULT_THRESHOLD_C
         fdn = self._face_detection_nets
@@ -75,8 +75,8 @@ class Facenet2018(FacescanBackend):
 
         if len(bounding_boxes) == 0:
             raise NoFaceFoundError
-        if return_limit:
-            return bounding_boxes[:return_limit]
+        if face_limit:
+            return bounding_boxes[:face_limit]
         return bounding_boxes
 
     def _calculate_embeddings(self, cropped_images):
@@ -100,12 +100,12 @@ class Facenet2018(FacescanBackend):
         return emb_array
 
     def scan(self, img: Array3D,
-             return_limit: int = NO_LIMIT,
+             face_limit: int = NO_LIMIT,
              detection_threshold: float = None) -> List[ScannedFace]:
         assert self.EMBEDDING_MODEL_PATH
         detection_threshold_c = detection_threshold or self.DEFAULT_THRESHOLD_C
         scanned_faces = []
-        for box in self._find_face_bounding_boxes(img, return_limit, detection_threshold_c):
+        for box in self._find_face_bounding_boxes(img, face_limit, detection_threshold_c):
             cropped_img = crop_img(img, box)
             squished_img = squish_img(cropped_img, (self.IMAGE_SIZE, self.IMAGE_SIZE))
             embedding = self._calculate_embeddings([squished_img])[0]
