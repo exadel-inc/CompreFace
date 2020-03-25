@@ -1,4 +1,4 @@
-.PHONY: build up down setup run stop docker local unit i9n e2e lint
+.PHONY: build up down setup start stop docker local unit i9n e2e lint
 .DEFAULT_GOAL := docker
 
 build:
@@ -15,7 +15,7 @@ setup:
 	python -m pip install -e ./ml/srcext/insightface/python-package
 	chmod +x ml/run.sh e2e/run-e2e-test.sh
 
-run:
+start:
 	$(CURDIR)/ml/run.sh start
 
 stop:
@@ -32,7 +32,7 @@ unit:
 i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
-e2e: run
+e2e: start
 	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:3000 \
 		&& $(CURDIR)/ml/run.sh stop \
 		|| ($(CURDIR)/ml/run.sh stop; exit 1)

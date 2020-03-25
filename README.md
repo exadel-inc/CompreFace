@@ -23,7 +23,7 @@ You can combine steps 1 and 2: `$ make build up`
 ### In development environment, container-less
 
 1. Setup dependencies: `$ make setup`
-2. Start main app in debug mode: `$ make run`
+2. Start main app in debug mode: `$ make start`
 3. Stop it: `$ make stop`
 
 # Testing the service

@@ -19,6 +19,6 @@ def get_storage():
 
 @run_once
 def get_training_task_manager():
-    from src.services.async_task_manager.async_task_manager import SyncTaskManager
-    from src.services.train_classifier import train_and_save_classifier
-    return SyncTaskManager(train_and_save_classifier)
+    from src.services.async_task_manager.async_task_manager import AsyncTaskManager
+    from src.services.train_classifier import train_and_save_classifier_async_task
+    return AsyncTaskManager(train_and_save_classifier_async_task)

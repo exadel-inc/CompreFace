@@ -1,12 +1,13 @@
 import time
 from http import HTTPStatus
+from typing import Union
 
 import pytest
 from requests import ReadTimeout
 from toolz import itertoolz
 
-from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB, TIMEOUT_MULTIPLIER
 from .conftest import after_previous_gen, POST, DELETE, GET
+from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB, TIMEOUT_MULTIPLIER
 from .sample_images import IMG_DIR
 
 after_previous = after_previous_gen()
@@ -172,19 +173,36 @@ def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized(host):
     assert res_c.status_code == 200, res_a.content
     result_c = res_c.json()['result']
     assert not (result_c[0]['face_name'] == 'Paul Walker')
+    _wait_until_training_completes(f"{host}/retrain", expected_code=None)
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_getting_training_status__then_returns_200(host):
+    pass
+
+    res = GET(f"{host}/retrain", headers={'X-Api-Key': 'test-api-key'})
+
+    assert res.status_code == 200, res.content
 
 
 # noinspection PyPep8Naming
 @pytest.mark.run(order=next(after_previous))
-def test__when_deleting_face_B_with_retraining__then_returns_400(host):
+def test__when_deleting_face_B_with_retraining__then_returns_204(host):
     pass
 
     res = DELETE(f"{host}/faces/Stephen Hawking", headers={'X-Api-Key': 'test-api-key'})
-    _wait_until_training_completes(host)
 
-    assert res.status_code == 400, res.content
-    assert res.json()['message'] == "400 Bad Request: Not enough unique faces to start training a new " \
-                                    "classifier model. Deleting existing classifiers, if any."
+    assert res.status_code == 204, res.content
+    _wait_until_training_completes(f"{host}/retrain", expected_code=None)
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__when_getting_training_status__then_returns_500(host):
+    pass
+
+    res = GET(f"{host}/retrain", headers={'X-Api-Key': 'test-api-key'})
+
+    assert res.status_code == 500, res.content
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -215,14 +233,16 @@ def _wait_for_available_service(host):
         break
 
 
-def _wait_until_training_completes(host):
+def _wait_until_training_completes(host, expected_code: Union[HTTPStatus, None] = HTTPStatus.OK):
+    time.sleep(2)
     url = f"{host}/retrain"
     timeout_s = TRAINING_TIMEOUT_S
     start_time = time.time()
     while True:
         res = GET(url, headers={'X-Api-Key': 'test-api-key'})
         if res.status_code != HTTPStatus.ACCEPTED:
-            assert res.status_code == HTTPStatus.OK
+            if expected_code:
+                assert res.status_code == expected_code
             break
         if time.time() - start_time > timeout_s:
             raise Exception(f"Waiting to not get 202 from '{url}' has reached a timeout ({timeout_s}s)") from None
