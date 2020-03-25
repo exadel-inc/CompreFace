@@ -151,5 +151,3 @@ def _get_return_limit(request):
 def _check_if_enough_faces_to_train(api_key):
     """Raises an error if there's not"""
     get_faces(get_storage(), api_key, get_scanner().ID)
-    a = 3
-    g = 5
