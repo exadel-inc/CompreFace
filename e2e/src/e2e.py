@@ -36,7 +36,6 @@ def test__given_no_file__when_scanning__then_returns_400_bad_request(host):
     assert res.json()['message'] == "400 Bad Request: No file is attached"
 
 
-
 @pytest.mark.run(order=next(after_previous))
 def test__given_img_with_no_faces__when_scanning__then_returns_400_bad_request(host):
     files = {'file': open(IMG_DIR / 'no-faces.jpg', 'rb')}
