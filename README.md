@@ -1,7 +1,7 @@
 # External documentation
 About EFRS:<br>
 - [EFRS Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
-- [EFRS Page on KC Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
+- [EFRS Page in KC Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
 - [EFRS API Contract - Confluence](https://confluence.exadel.com/display/KC/FRS+REST+API)<br>
 
 About frs-core:<br>
