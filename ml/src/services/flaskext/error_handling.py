@@ -21,4 +21,4 @@ def add_error_handling(app):
         logging.critical(msg, exc_info=DO_SHOW_STACKTRACE_IN_LOGS)
         from flask import request
         request._logged = True
-        return msg, HTTPStatus.INTERNAL_SERVER_ERROR
+        return jsonify(message=msg), HTTPStatus.INTERNAL_SERVER_ERROR
