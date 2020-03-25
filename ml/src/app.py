@@ -6,7 +6,6 @@ from typing import Union, Callable
 from flasgger import Swagger
 from flask import Flask
 
-from src.cache import get_storage
 from src.constants import DO_SHOW_HTTP_RESPONSES_IN_LOGS
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
@@ -20,7 +19,6 @@ from src.services.flaskext.log_response import log_http_response
 def init_runtime():
     assert sys.version_info >= (3, 7)
     init_logging()
-    get_storage().check_connection()
 
 
 def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[Path, None] = None):

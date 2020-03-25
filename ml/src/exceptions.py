@@ -1,4 +1,4 @@
-from werkzeug.exceptions import BadRequest, Locked, InternalServerError, Unauthorized
+from werkzeug.exceptions import BadRequest, Unauthorized
 
 
 class APIKeyNotSpecifiedError(Unauthorized):
@@ -31,4 +31,3 @@ class InvalidRequestArgumentValueError(BadRequest):
 
 class ImageReadLibraryError(BadRequest):
     description = 'Image has incorrect format or is broken'
-
