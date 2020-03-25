@@ -7,13 +7,14 @@ COPY srcext srcext
 COPY requirements.txt .
 COPY pytest.ini .
 COPY pylama.ini .
-COPY docker-entrypoint.sh .
 COPY uwsgi.ini .
 
 ## Prepare environment
-RUN chmod +x docker-entrypoint.sh
 RUN python3 -m pip --no-cache-dir install -r requirements.txt
 RUN python3 -m pip --no-cache-dir install -e srcext/insightface/python-package
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+ENV PYTHONUNBUFFERED=0
 
 ## Run tests
 ARG DO_RUN_TESTS
@@ -22,5 +23,5 @@ RUN if [ "$DO_RUN_TESTS" = true ] ; then \
     python3 -m pylama --options /srv/pylama.ini /srv/src; \
     fi
 
-## Entrypoint
-ENTRYPOINT ["/srv/docker-entrypoint.sh"]
+## Runtime
+CMD ["uwsgi", "--ini", "uwsgi.ini"]
