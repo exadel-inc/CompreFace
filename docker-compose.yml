@@ -1,0 +1,24 @@
+version: '3'
+services:
+  e2e:
+    container_name: e2e
+    build: ./e2e
+    depends_on:
+      - ml
+  ml:
+    container_name: ml
+    build:
+      context: ./ml
+      args:
+        - DO_RUN_TESTS=${DO_RUN_TESTS:-false}
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+  mongo:
+    container_name: mongo
+    image: "mongo:4.0.4-xenial"
+    ports:
+      - "27117:27017"
+    volumes:
+      - ./tmp/mongo_data:/data
