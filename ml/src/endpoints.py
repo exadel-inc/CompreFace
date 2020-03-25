@@ -1,11 +1,11 @@
-import logging
 from http import HTTPStatus
 
 from flask import Response
 from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
 
-from src.services.async_task_manager.async_task_manager import AsyncTaskManager, TaskStatus, TaskManagerBase
+from src.cache import get_storage, get_scanner, get_training_task_manager
+from src.services.async_task_manager.async_task_manager import TaskStatus, TaskManagerBase
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
 from src.services.facescan.backend.facescan_backend import FacescanBackend
@@ -16,8 +16,8 @@ from src.services.flaskext.file_attachments import needs_attached_file
 from src.services.flaskext.parse_request_arg import parse_request_bool_arg
 from src.services.storage.face import Face
 from src.services.storage.mongo_storage import MongoStorage
+from src.services.train_classifier import get_faces
 from src.services.utils.nputils import read_img
-from src.cache import get_storage, get_scanner, get_training_task_manager
 
 
 def endpoints(app):
@@ -89,6 +89,7 @@ def endpoints(app):
         force_start = parse_request_bool_arg(name=GetParameter.FORCE, default=False, request=request)
         task_manager: TaskManagerBase = get_training_task_manager()
 
+        _check_if_enough_faces_to_train(api_key)
         task_manager.start_training(api_key, force_start)
 
         return Response(status=HTTPStatus.ACCEPTED)
@@ -145,3 +146,8 @@ def _get_return_limit(request):
         raise BadRequest('Limit value is invalid (limit >= 0)')
 
     return limit
+
+
+def _check_if_enough_faces_to_train(api_key):
+    """Raises an error if there's not"""
+    get_faces(get_storage(), api_key, get_scanner().ID)

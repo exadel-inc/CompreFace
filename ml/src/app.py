@@ -33,7 +33,7 @@ def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[
     add_json_encoding(app)
     app.after_request(disable_caching)
     if docs_dir:
-        app.config['SWAGGER'] = dict(title='EFRS - Swagger UI', doc_dir=str(docs_dir))
+        app.config['SWAGGER'] = dict(title='Swagger UI', doc_dir=str(docs_dir))
         Swagger(app, template_file=str(docs_dir / 'template.yml'))
     if add_endpoints_fun:
         add_endpoints_fun(app)
