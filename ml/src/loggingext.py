@@ -1,7 +1,7 @@
 import logging
 import warnings
 
-from tensorflow.python.util import deprecation
+from tensorflow.python.util import deprecation as tensorflow_deprecation
 from yaml import YAMLLoadWarning
 
 from src.services.flaskext.logging_context import RequestContextLogFilter
@@ -33,7 +33,5 @@ def init_logging():
                         handlers=[stream_handler])
     logging.getLogger('PIL').setLevel(logging.INFO)
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
-    # tensorflow.compat.v1.logging.set_verbosity(tensorflow.compat.v1.logging.ERROR)
-    # logging.getLogger('tensorflow').setLevel(logging.ERROR)
-    deprecation._PRINT_DEPRECATION_WARNINGS = False
+    tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     warnings.filterwarnings("ignore", category=YAMLLoadWarning)
