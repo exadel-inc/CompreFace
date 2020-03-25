@@ -1,11 +1,7 @@
-import time
-from http import HTTPStatus
-
 import pytest
-from requests import ReadTimeout
 from toolz import itertoolz
 
-from .conftest import after_previous_gen, POST, DELETE, GET, _wait_until_training_completes
+from .conftest import after_previous_gen, POST, DELETE, GET, _wait_until_training_completes, _wait_for_available_service
 from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB
 from .sample_images import IMG_DIR
 
@@ -221,4 +217,3 @@ def test__when_recognizing_faces__then_returns_400_no_classifier_trained(host):
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: No classifier model is yet trained, " \
                                     "please train a classifier first"
-
