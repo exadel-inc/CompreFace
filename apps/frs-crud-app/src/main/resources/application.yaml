@@ -42,6 +42,17 @@ spring:
     database: postgresql
     open-in-view: true
     generate-ddl: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${FRS_GMAIL}
+    password: ${FRS_GMAIL_PWD}
+    properties.mail.smtp:
+      auth: true
+      connectiontimeout: 60000
+      writetimeout: 60000
+      starttls:
+        enable: true
 
 security:
   signing-key: MaYzkSjmkzPC57L
