@@ -1,12 +1,12 @@
 version: '3'
 services:
   e2e:
-    container_name: e2e
+    container_name: e2e${ID}
     build: ./e2e
     depends_on:
       - ml
   ml:
-    container_name: ml
+    container_name: ml${ID}
     build:
       context: ./ml
       args:
