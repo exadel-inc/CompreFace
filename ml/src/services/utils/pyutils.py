@@ -74,7 +74,7 @@ def cached(func):
 
 def first_and_only(lst):
     length_lst = len(lst)
-    assert length_lst == 1, f"Item count is1 '{length_lst}' instead of '1'"
+    assert length_lst == 1, f"Item count is '{length_lst}' instead of '1'"
     return lst[0]
 
 
