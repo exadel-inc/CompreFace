@@ -43,6 +43,11 @@ Builds containers, run tests inside: `$ make`
 
 # Miscellaneous
 
+### Make arguments
+Make supports these arguments (let's use `$ make up` as an example):
+- `$ make up ID=2` - Helps solve container name collisions (appends the ID at the end, so that container `ml` becomes `ml2`)
+- `$ make up PORT=8080 DB_PORT=6650` - Sets the exposed port for the service and the database
+
 ### Notes for Windows users
 - Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/*`.
 - uWSGI does not support Windows, workaround is removing it from `ml/requirements.txt` before running `$ make setup` and adding it back afterwards.
