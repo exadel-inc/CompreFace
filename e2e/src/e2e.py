@@ -18,7 +18,8 @@ def test_setup__drop_db():
     print(f"Dropping database {MONGO_EFRS_DATABASE_NAME}@{MONGO_HOST}:{MONGO_PORT}...")
     from pymongo import MongoClient
     client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)
-    client.drop_database(MONGO_EFRS_DATABASE_NAME)
+    if MONGO_EFRS_DATABASE_NAME in client.list_database_names():
+        client.drop_database(MONGO_EFRS_DATABASE_NAME)
     print(f"Successfully dropped database {MONGO_EFRS_DATABASE_NAME}@{MONGO_HOST}:{MONGO_PORT}")
 
 
