@@ -3,6 +3,9 @@ services:
   e2e:
     container_name: e2e
     build: ./e2e
+    environment:
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
     depends_on:
       - ml
   ml:
@@ -13,6 +16,9 @@ services:
         - DO_RUN_TESTS=${DO_RUN_TESTS:-false}
     ports:
       - "3000:3000"
+    environment:
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
     depends_on:
       - mongo
   mongo:

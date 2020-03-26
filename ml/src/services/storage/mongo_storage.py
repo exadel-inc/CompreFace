@@ -1,17 +1,22 @@
 import logging
+import time
 from enum import auto
 
 import gridfs
 from pymongo import MongoClient
+from pymongo.errors import ServerSelectionTimeoutError
 from sklearn.linear_model import LogisticRegression
 from strenum import StrEnum
 
 from src.constants import MONGO_EFRS_DATABASE_NAME
-from src.exceptions import NoTrainedEmbeddingClassifierFound, FaceHasNoEmbeddingCalculatedError
+from src.exceptions import NoTrainedEmbeddingClassifierFound, FaceHasNoEmbeddingCalculatedError, \
+    CouldNotConnectToDatabase
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.storage.face import Face, FaceNameEmbedding
 from src.services.storage.mongo_fileio import save_file_to_mongo, get_file_from_mongo
 from src.services.utils.pyutils import serialize, deserialize
+
+WAIT_FOR_CONNECTION_TIMEOUT_S = 60
 
 
 class CollectionName(StrEnum):
@@ -32,9 +37,20 @@ class MongoStorage:
         self._classifiers_fs = gridfs.GridFS(db, CollectionName.CLASSIFIERS)
         self._files_fs = gridfs.GridFS(db, CollectionName.FILES)
 
-    def check_connection(self):
-        logging.debug(f"Mongo database connection: '{self._mongo_host}:{self._mongo_port}'")
-        self._mongo_client.server_info()
+    def wait_for_connection(self):
+        start_time = time.time()
+        tried_once = False
+        while True:
+            try:
+                self._mongo_client.server_info()
+                break
+            except ServerSelectionTimeoutError as e:
+                if time.time() - start_time > WAIT_FOR_CONNECTION_TIMEOUT_S:
+                    raise CouldNotConnectToDatabase from e
+                if not tried_once:
+                    logging.debug(f"Waiting for database connection at '{self._mongo_host}:{self._mongo_port}'")
+                    tried_once = True
+                time.sleep(1)
 
     def add_face(self, api_key: str, face: Face, emb_calc_version: str):
         self._faces_collection.insert_one({

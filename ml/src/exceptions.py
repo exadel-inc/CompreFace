@@ -49,6 +49,10 @@ class FaceHasNoEmbeddingCalculatedError(InternalServerError):
     description = 'Saved face has no embedding calculated and saved in the database'
 
 
+class CouldNotConnectToDatabase(InternalServerError):
+    description = 'Could not establish connection to the database'
+
+
 class NotEnoughUniqueFacesError(BadRequest):
     description = 'Not enough unique faces to start training a new classifier model. ' \
                   'Deleting existing classifiers, if any.'

@@ -10,8 +10,11 @@ after_previous = after_previous_gen()
 
 @pytest.mark.run(order=next(after_previous))
 def test_setup__drop_db():
-    if not DO_DROP_DB:
-        return
+    print({
+        'MONGO_HOST': MONGO_HOST,
+        'MONGO_PORT': MONGO_PORT,
+        'MONGO_EFRS_DATABASE_NAME': MONGO_EFRS_DATABASE_NAME,
+    })
     print(f"Dropping database {MONGO_EFRS_DATABASE_NAME}@{MONGO_HOST}:{MONGO_PORT}...")
     from pymongo import MongoClient
     client = MongoClient(host=MONGO_HOST, port=MONGO_PORT)

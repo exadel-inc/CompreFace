@@ -7,7 +7,8 @@ from flasgger import Swagger
 from flask import Flask
 
 from src.cache import get_storage
-from src.constants import DO_SHOW_HTTP_RESPONSES_IN_LOGS
+from src.constants import DO_SHOW_HTTP_RESPONSES_IN_LOGS, DO_SHOW_STACKTRACE_IN_LOGS, MONGO_EFRS_DATABASE_NAME, \
+    MONGO_PORT, MONGO_HOST
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
 from src.loggingext import init_logging
@@ -20,15 +21,19 @@ from src.services.flaskext.log_response import log_http_response
 def init_runtime():
     assert sys.version_info >= (3, 7)
     init_logging()
-    get_storage().check_connection()
+    logging.debug({
+        'MONGO_HOST': MONGO_HOST,
+        'MONGO_PORT': MONGO_PORT,
+        'MONGO_EFRS_DATABASE_NAME': MONGO_EFRS_DATABASE_NAME
+    })
+    get_storage().wait_for_connection()
 
 
 def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[Path, None] = None):
     app = Flask('frs-core-ml')
     app.url_map.strict_slashes = False
     add_error_handling(app)
-    if DO_SHOW_HTTP_RESPONSES_IN_LOGS:
-        app.after_request(log_http_response)
+    app.after_request(log_http_response)
     add_json_encoding(app)
     app.after_request(disable_caching)
     if docs_dir:
