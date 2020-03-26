@@ -1,6 +1,8 @@
 package com.exadel.frs.entity;
 
 import static java.util.Collections.emptyList;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -37,6 +39,8 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String guid;
+    private String registrationToken;
+    private Timestamp regTime;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
