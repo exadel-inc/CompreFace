@@ -1,11 +1,13 @@
 .PHONY: build up down setup start stop docker local unit i9n e2e lint all
 .DEFAULT_GOAL := docker
+PORT = 3000
+DB_PORT = 27017
 
 build:
-	docker-compose build ml
+	PORT=$(PORT) DB_PORT=$(DB_PORT) docker-compose build ml
 
 up:
-	docker-compose up ml
+	PORT=$(PORT) DB_PORT=$(DB_PORT) docker-compose up ml
 
 down:
 	docker-compose down
@@ -16,13 +18,13 @@ setup:
 	chmod +x ml/run.sh e2e/run-e2e-test.sh
 
 start:
-	$(CURDIR)/ml/run.sh start
+	$(CURDIR)/ml/run.sh start $(PORT)
 
 stop:
 	$(CURDIR)/ml/run.sh stop
 
 docker:
-	DO_RUN_TESTS=true docker-compose up --build --abort-on-container-exit
+	DO_RUN_TESTS=true PORT=$(PORT) DB_PORT=$(DB_PORT) docker-compose up --build --abort-on-container-exit
 
 local: unit i9n e2e lint
 
@@ -33,7 +35,7 @@ i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
 e2e: start
-	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:3000 \
+	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:$(PORT) \
 		&& $(CURDIR)/ml/run.sh stop \
 		|| ($(CURDIR)/ml/run.sh stop; exit 1)
 

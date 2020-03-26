@@ -2,7 +2,7 @@ import pytest
 from toolz import itertoolz
 
 from .conftest import after_previous_gen, POST, DELETE, GET, _wait_until_training_completes, _wait_for_available_service
-from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME, DO_DROP_DB
+from .constants import MONGO_HOST, MONGO_PORT, MONGO_EFRS_DATABASE_NAME
 from .sample_images import IMG_DIR
 
 after_previous = after_previous_gen()

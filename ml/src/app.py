@@ -7,8 +7,7 @@ from flasgger import Swagger
 from flask import Flask
 
 from src.cache import get_storage
-from src.constants import DO_SHOW_HTTP_RESPONSES_IN_LOGS, DO_SHOW_STACKTRACE_IN_LOGS, MONGO_EFRS_DATABASE_NAME, \
-    MONGO_PORT, MONGO_HOST
+from src.constants import MONGO_EFRS_DATABASE_NAME, MONGO_PORT, MONGO_HOST
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
 from src.loggingext import init_logging
@@ -54,6 +53,6 @@ if __name__ == '__main__':
     init_runtime()
     app = create_app(endpoints, DOCS_DIR)
     app.config.from_mapping(SECRET_KEY='dev')
-    port = 3000
+    port = sys.argv[1] if len(sys.argv) > 1 else 3000
     logging.info(f'Listening for incoming connections on port {port}')
     app.run(host='0.0.0.0', port=port, debug=True, use_debugger=False, use_reloader=False)
