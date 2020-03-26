@@ -44,11 +44,11 @@ def endpoints(app):
         from flask import request
         img = read_img(request.files['file'])
         api_key = request.headers[API_KEY_HEADER]
-        detection_threshold_c = _get_detection_threshold_c(request)
+        detection_threshold = _get_detection_threshold(request)
         scanner: FacescanBackend = get_scanner()
         storage: MongoStorage = get_storage()
 
-        face = scanner.scan_one(img, detection_threshold_c)
+        face = scanner.scan_one(img, detection_threshold)
         storage.add_face(api_key,
                          Face(name=face_name, raw_img=img, face_img=face.img, embedding=face.embedding),
                          emb_calc_version=scanner.ID)
@@ -111,7 +111,7 @@ def endpoints(app):
     def recognize_post():
         from flask import request
         img = read_img(request.files['file'])
-        detection_threshold_c = _get_detection_threshold_c(request)
+        detection_threshold = _get_detection_threshold(request)
         face_limit = _get_face_limit(request)
         scanner: FacescanBackend = get_scanner()
         storage: MongoStorage = get_storage()
@@ -119,7 +119,7 @@ def endpoints(app):
         classifier = storage.get_embedding_classifier(api_key, LogisticClassifier.CURRENT_VERSION, scanner.ID)
 
         predictions = []
-        for face in scanner.scan(img, face_limit, detection_threshold_c):
+        for face in scanner.scan(img, face_limit, detection_threshold):
             prediction = classifier.predict(face.embedding, scanner.ID)
             face_prediction = FacePrediction(prediction.face_name, prediction.probability, face.box)
             predictions.append(face_prediction)
@@ -127,9 +127,9 @@ def endpoints(app):
         return jsonify(result=predictions)
 
 
-def _get_detection_threshold_c(request):
-    detection_threshold_c = request.values.get(ARG.DET_PROB_THRESHOLD)
-    return float(detection_threshold_c) if detection_threshold_c is not None else None
+def _get_detection_threshold(request):
+    detection_threshold = request.values.get(ARG.DET_PROB_THRESHOLD)
+    return float(detection_threshold) if detection_threshold is not None else None
 
 
 def _get_face_limit(request):

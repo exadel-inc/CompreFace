@@ -30,8 +30,8 @@ def run_once_fork_safe(func):
         pid = os.getpid()
         if decorator.has_run and pid == decorator.pid:
             return decorator.result
-        decorator.has_run = True
         decorator.result = func(*args, **kwargs)
+        decorator.has_run = True
         decorator.pid = pid
         return decorator.result
 
