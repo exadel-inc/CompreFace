@@ -1,15 +1,15 @@
 version: '3'
 services:
   e2e:
-    container_name: e2e
+    container_name: e2e${ID}
     build: ./e2e
     environment:
-      - MONGO_HOST=mongo
+      - MONGO_HOST=mongo${ID}
       - MONGO_PORT=27017
     depends_on:
       - ml
   ml:
-    container_name: ml
+    container_name: ml${ID}
     build:
       context: ./ml
       args:
@@ -17,12 +17,12 @@ services:
     ports:
       - ${PORT:-3000}:3000
     environment:
-      - MONGO_HOST=mongo
+      - MONGO_HOST=mongo${ID}
       - MONGO_PORT=27017
     depends_on:
       - mongo
   mongo:
-    container_name: mongo
+    container_name: mongo${ID}
     image: "mongo:4.0.4-xenial"
     ports:
       - ${DB_PORT:-27117}:27017
