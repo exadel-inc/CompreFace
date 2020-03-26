@@ -6,7 +6,6 @@ from typing import Union, Callable
 from flasgger import Swagger
 from flask import Flask
 
-from src.constants import DO_SHOW_HTTP_RESPONSES_IN_LOGS
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
 from src.loggingext import init_logging
@@ -25,8 +24,7 @@ def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[
     app = Flask('frs-core-ml')
     app.url_map.strict_slashes = False
     add_error_handling(app)
-    if DO_SHOW_HTTP_RESPONSES_IN_LOGS:
-        app.after_request(log_http_response)
+    app.after_request(log_http_response)
     add_json_encoding(app)
     app.after_request(disable_caching)
     if docs_dir:
