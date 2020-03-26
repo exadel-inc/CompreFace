@@ -89,3 +89,7 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+registration:
+  token:
+    expires: 3600000

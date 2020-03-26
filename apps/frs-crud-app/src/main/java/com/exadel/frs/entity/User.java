@@ -1,6 +1,8 @@
 package com.exadel.frs.entity;
 
 import static java.util.Collections.emptyList;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -16,6 +18,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -37,6 +40,9 @@ public class User implements UserDetails {
     private String firstName;
     private String lastName;
     private String guid;
+    private String registrationToken;
+    @CreationTimestamp
+    private LocalDateTime regTime;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;

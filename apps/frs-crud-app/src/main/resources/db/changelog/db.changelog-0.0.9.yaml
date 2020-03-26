@@ -1,0 +1,15 @@
+databaseChangeLog:
+  - changeSet:
+      id: registration-token
+      author: Valijon Sobirov
+      changes:
+        #user registration token
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: registration_token
+                  type: varchar(36)
+              - column:
+                  name: reg_time
+                  type: timestamp

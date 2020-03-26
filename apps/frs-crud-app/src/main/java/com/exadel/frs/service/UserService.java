@@ -10,10 +10,16 @@ import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,11 +28,14 @@ import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
+@EnableScheduling
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    @Autowired
+    private Environment env;
 
     public User getUser(final Long id) {
         return userRepository.findById(id)
@@ -54,7 +63,8 @@ public class UserService {
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
-                .enabled(true)
+                .enabled(true)//TODO make it false when EFRS-330 is complete
+                .registrationToken(UUID.randomUUID().toString())
                 .build();
         return userRepository.save(user);
     }
@@ -111,5 +121,16 @@ public class UserService {
         val hqlParameter = query + "%";
 
         return userRepository.autocomplete(hqlParameter);
+    }
+
+    @Scheduled(fixedDelayString = "${registration.token.expires}")
+    @Transactional
+    public void removeExpiredRegistrationTokens() {
+        int registrationExpireTime = env.getProperty("registration.token.expires", Integer.class) / 1000;
+        val seconds = LocalDateTime
+                                    .now()
+                                    .minusSeconds(registrationExpireTime);
+
+        userRepository.deleteByEnabledFalseAndRegTimeBefore(seconds);
     }
 }
