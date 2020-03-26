@@ -1,13 +1,13 @@
 .PHONY: build up down setup start stop docker local unit i9n e2e lint all
 .DEFAULT_GOAL := docker
 PORT = 3000
-DB_PORT = 27017
+ID =
 
 build:
-	PORT=$(PORT) DB_PORT=$(DB_PORT) docker-compose build ml
+	PORT=$(PORT) ID=$(ID) docker-compose build ml
 
 up:
-	PORT=$(PORT) DB_PORT=$(DB_PORT) docker-compose up ml
+	PORT=$(PORT) ID=$(ID) docker-compose up ml
 
 down:
 	docker-compose down
@@ -24,7 +24,7 @@ stop:
 	$(CURDIR)/ml/run.sh stop
 
 docker:
-	DO_RUN_TESTS=true PORT=$(PORT) DB_PORT=$(DB_PORT) docker-compose up --build --abort-on-container-exit
+	DO_RUN_TESTS=true PORT=$(PORT) ID=$(ID) docker-compose up --build --abort-on-container-exit
 
 local: unit i9n e2e lint
 
