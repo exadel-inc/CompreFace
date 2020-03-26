@@ -13,8 +13,8 @@ def run_once(func):
     def decorator(*args, **kwargs):
         if decorator.has_run:
             return decorator.result
-        decorator.has_run = True
         decorator.result = func(*args, **kwargs)
+        decorator.has_run = True
         return decorator.result
 
     decorator.has_run = False

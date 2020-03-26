@@ -18,16 +18,16 @@ def endpoints(app):
         from flask import request
         img = read_img(request.files['file'])
         face_limit = _get_face_limit(request)
-        detection_threshold_c = _get_detection_threshold_c(request)
+        detection_threshold = _get_detection_threshold(request)
 
-        scanned_faces = get_scanner().scan(img, face_limit, detection_threshold_c)
+        scanned_faces = get_scanner().scan(img, face_limit, detection_threshold)
 
         return jsonify(calculator_version=get_scanner().ID, result=scanned_faces)
 
 
-def _get_detection_threshold_c(request):
-    detection_threshold_c = request.values.get(ARG.DET_PROB_THRESHOLD)
-    return float(detection_threshold_c) if detection_threshold_c is not None else None
+def _get_detection_threshold(request):
+    detection_threshold = request.values.get(ARG.DET_PROB_THRESHOLD)
+    return float(detection_threshold) if detection_threshold is not None else None
 
 
 def _get_face_limit(request):
