@@ -7,11 +7,9 @@ COPY srcext srcext
 COPY requirements.txt .
 COPY pytest.ini .
 COPY pylama.ini .
-COPY wait-for-it.sh .
 COPY uwsgi.ini .
 
 ## Prepare environment
-RUN chmod +x wait-for-it.sh
 RUN python3 -m pip --no-cache-dir install -r requirements.txt
 RUN python3 -m pip --no-cache-dir install -e srcext/insightface/python-package
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
