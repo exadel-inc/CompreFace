@@ -45,6 +45,6 @@ if __name__ == '__main__':
     init_runtime()
     app = create_app(endpoints, DOCS_DIR)
     app.config.from_mapping(SECRET_KEY='dev')
-    port = 3000
+    port = sys.argv[1] if len(sys.argv) > 1 else 3000
     logging.info(f'Listening for incoming connections on port {port}')
     app.run(host='0.0.0.0', port=port, debug=True, use_debugger=False, use_reloader=False)
