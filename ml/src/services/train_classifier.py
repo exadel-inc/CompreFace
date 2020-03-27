@@ -32,7 +32,3 @@ def train_and_save_classifier(api_key: str) -> None:
     storage.save_embedding_classifier(api_key, classifier)
     logging.debug("Classifier trained and saved")
 
-
-def train_and_save_classifier_async_task(api_key: str) -> None:
-    init_logging()
-    train_and_save_classifier(api_key)

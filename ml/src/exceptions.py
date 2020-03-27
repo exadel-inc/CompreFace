@@ -29,7 +29,7 @@ class ClassifierIsAlreadyTrainingError(Locked):
     description = "Classifier training is already in progress"
 
 
-class NoTrainedEmbeddingClassifierFound(BadRequest):
+class NoTrainedEmbeddingClassifierFoundError(BadRequest):
     description = "No classifier model is yet trained, please train a classifier first"
 
 

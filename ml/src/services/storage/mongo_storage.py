@@ -3,13 +3,14 @@ import time
 from enum import auto
 
 import gridfs
+import numpy as np
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
 from sklearn.linear_model import LogisticRegression
 from strenum import StrEnum
 
 from src.constants import MONGO_EFRS_DATABASE_NAME
-from src.exceptions import NoTrainedEmbeddingClassifierFound, FaceHasNoEmbeddingCalculatedError, \
+from src.exceptions import NoTrainedEmbeddingClassifierFoundError, FaceHasNoEmbeddingCalculatedError, \
     CouldNotConnectToDatabase
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.storage.face import Face, FaceNameEmbedding
@@ -72,13 +73,13 @@ class MongoStorage:
                             emb['calculator_version'] == emb_calc_version]
         if not found_embeddings:
             raise FaceHasNoEmbeddingCalculatedError
-        return found_embeddings[0]['array']
+        return np.array(found_embeddings[0]['array'])
 
     def get_faces(self, api_key: str, emb_calc_version: str):
         faces = []
         for face_document in self._faces_collection.find({"api_key": api_key}):
             face_name = face_document['face_name']
-            raw_img = deserialize(self._faces_fs.get(face_document['raw_img_fs_id']).read()),
+            raw_img = deserialize(self._faces_fs.get(face_document['raw_img_fs_id']).read())
             face_img = deserialize(self._faces_fs.get(face_document['face_img_fs_id']).read())
             embedding = self._get_embedding(face_document, emb_calc_version)
             faces.append(Face(name=face_name, embedding=embedding, raw_img=raw_img, face_img=face_img))
@@ -109,16 +110,30 @@ class MongoStorage:
         return face_embeddings
 
     def save_embedding_classifier(self, api_key: str, embedding_classifier: LogisticClassifier):
+        version = embedding_classifier.version
+        calc_version = embedding_classifier.emb_calc_version
+        class_2_face_name = {str(k): v for k, v in embedding_classifier.class_2_face_name.items()}
+        serialized_classifier = serialize(embedding_classifier.model)
+        new_classifier_fs_id = self._classifiers_fs.put(serialized_classifier)
+
+        document = self._classifiers_collection.find_one({
+            'version': version,
+            'embedding_calculator_version': calc_version,
+            "api_key": api_key
+        })
+        if document is not None:
+            self._classifiers_fs.delete(document['classifier_fs_id'])
+
         self._classifiers_collection.update({
-            'version': embedding_classifier.version,
-            'embedding_calculator_version': embedding_classifier.emb_calc_version,
+            'version': version,
+            'embedding_calculator_version': calc_version,
             "api_key": api_key
         }, {
-            'version': embedding_classifier.version,
-            'embedding_calculator_version': embedding_classifier.emb_calc_version,
+            'version': version,
+            'embedding_calculator_version': calc_version,
             "api_key": api_key,
-            "class_2_face_name": {str(k): v for k, v in embedding_classifier.class_2_face_name.items()},
-            "classifier_fs_id": self._classifiers_fs.put(serialize(embedding_classifier.model))
+            "class_2_face_name": class_2_face_name,
+            "classifier_fs_id": new_classifier_fs_id,
         }, upsert=True)
 
     def get_embedding_classifier(self, api_key, version, emb_calc_version):
@@ -128,7 +143,7 @@ class MongoStorage:
             "api_key": api_key
         })
         if document is None:
-            raise NoTrainedEmbeddingClassifierFound
+            raise NoTrainedEmbeddingClassifierFoundError
 
         # noinspection PyTypeChecker
         model: LogisticRegression = deserialize(self._classifiers_fs.get(document['classifier_fs_id']).read())
@@ -140,9 +155,6 @@ class MongoStorage:
         for classifier_file in face_query.distinct("classifier_fs_id"):
             self._classifiers_fs.delete(classifier_file)
         self._classifiers_collection.delete_many({'api_key': api_key})
-
-    def get_api_keys(self):
-        return self._faces_collection.find(projection=["api_key"]).distinct("api_key")
 
     def save_file(self, filename, bytes_data):
         save_file_to_mongo(self._files_fs, filename, bytes_data)

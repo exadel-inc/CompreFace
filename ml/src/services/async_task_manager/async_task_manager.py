@@ -5,8 +5,9 @@ from multiprocessing import Process
 from typing import Dict, Callable
 
 from src.exceptions import ClassifierIsAlreadyTrainingError
+from src.loggingext import init_logging
+from src.services.utils.pyutils import run_first
 
-# noinspection PyPep8Naming
 ApiKey = str
 
 
@@ -16,7 +17,7 @@ class TaskStatus(Enum):
     IDLE_LAST_FAILED = auto()
 
 
-class TaskManagerBase(ABC):
+class TrainingTaskManagerBase(ABC):
     @abstractmethod
     def get_status(self, api_key) -> TaskStatus:
         raise NotImplementedError
@@ -30,7 +31,7 @@ class TaskManagerBase(ABC):
         raise NotImplementedError
 
 
-class AsyncTaskManager(TaskManagerBase):
+class AsyncTaskManager(TrainingTaskManagerBase):
     def __init__(self, task_fun: Callable[[ApiKey], None]):
         self._dict: Dict[ApiKey, 'Process'] = {}
         self._train_fun = task_fun
@@ -46,6 +47,7 @@ class AsyncTaskManager(TaskManagerBase):
         if process.exitcode != 0:
             return TaskStatus.IDLE_LAST_FAILED
 
+        self._dict[api_key].close()
         del self._dict[api_key]
         return TaskStatus.IDLE
 
@@ -55,7 +57,8 @@ class AsyncTaskManager(TaskManagerBase):
         elif self.get_status(api_key) == TaskStatus.BUSY:
             raise ClassifierIsAlreadyTrainingError
 
-        process = Process(target=self._train_fun, daemon=True, args=(api_key,))
+        target = run_first(init_logging)(self._train_fun)
+        process = Process(target=target, daemon=True, args=(api_key,))
         process.start()
         self._dict[api_key] = process
 
@@ -66,8 +69,8 @@ class AsyncTaskManager(TaskManagerBase):
         self._dict[api_key].terminate()
 
 
-class SyncTaskManager(TaskManagerBase):
-    """For debugging purposes"""
+class SyncTaskManager(TrainingTaskManagerBase):
+    """Helper class for debugging purposes"""
 
     def __init__(self, task_fun: Callable[[ApiKey], None]):
         self._train_fun = task_fun

@@ -5,14 +5,14 @@ from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
 
 from src.cache import get_storage, get_scanner, get_training_task_manager
-from src.services.async_task_manager.async_task_manager import TaskStatus, TaskManagerBase
+from src.services.async_task_manager.async_task_manager import TaskStatus, TrainingTaskManagerBase
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
 from src.services.facescan.backend.facescan_backend import FacescanBackend
-from src.services.flaskext.authentication import needs_authentication
-from src.services.flaskext.auto_retraining import needs_retrain
+from src.services.flaskext.needs_authentication import needs_authentication
+from src.services.flaskext.needs_retrain import needs_retrain
 from src.services.flaskext.constants import API_KEY_HEADER, GetParameter, ARG
-from src.services.flaskext.file_attachments import needs_attached_file
+from src.services.flaskext.needs_attached_file import needs_attached_file
 from src.services.flaskext.parse_request_arg import parse_request_bool_arg
 from src.services.storage.face import Face
 from src.services.storage.mongo_storage import MongoStorage
@@ -72,7 +72,7 @@ def endpoints(app):
     def retrain_get():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-        task_manager: TaskManagerBase = get_training_task_manager()
+        task_manager: TrainingTaskManagerBase = get_training_task_manager()
 
         training_status = task_manager.get_status(api_key)
         http_status = {TaskStatus.IDLE: HTTPStatus.OK,
@@ -87,7 +87,7 @@ def endpoints(app):
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
         force_start = parse_request_bool_arg(name=GetParameter.FORCE, default=False, request=request)
-        task_manager: TaskManagerBase = get_training_task_manager()
+        task_manager: TrainingTaskManagerBase = get_training_task_manager()
 
         _check_if_enough_faces_to_train(api_key)
         task_manager.start_training(api_key, force_start)
@@ -99,7 +99,7 @@ def endpoints(app):
     def retrain_delete():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-        task_manager: TaskManagerBase = get_training_task_manager()
+        task_manager: TrainingTaskManagerBase = get_training_task_manager()
 
         task_manager.abort_training(api_key)
 

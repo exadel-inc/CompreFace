@@ -23,24 +23,15 @@ def test__given_no_faces_img__when_scanned__then_raises_error(backend):
 
 @pytest.mark.integration
 @pytest.mark.parametrize('backend', ALL_BACKENDS)
-def test__given_5face_jpg_img__when_scanned__then_returns_5_results(backend):
+@pytest.mark.parametrize('filename', ['five-faces.png', 'five-faces.jpg'])
+def test__given_5face_jpg_img__when_scanned__then_returns_5_correct_bounding_boxes(backend, filename):
     scanner: FacescanBackend = get_scanner(backend)
-    img = imageio.imread(IMG_DIR / 'five-faces.jpg')
+    img = imageio.imread(IMG_DIR / filename)[:, :, 0:3]
 
     faces = scanner.scan(img)
 
     assert len(faces) == 5
-
-
-@pytest.mark.integration
-@pytest.mark.parametrize('backend', ALL_BACKENDS)
-def test__given_5face_png_img__when_scanned__then_returns_5_results(backend):
-    scanner: FacescanBackend = get_scanner(backend)
-    img = imageio.imread(IMG_DIR / 'five-faces.png')[:, :, 0:3]
-
-    faces = scanner.scan(img)
-
-    assert len(faces) == 5
+    # TODO TASK-1
 
 
 @pytest.mark.integration

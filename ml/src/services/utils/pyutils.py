@@ -94,3 +94,7 @@ def deserialize(bytes_data: bytes) -> object:
     bytes_container = BytesIO(bytes_data)
     obj = joblib.load(bytes_container)
     return obj
+
+
+class Expando:
+    pass
