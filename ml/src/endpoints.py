@@ -3,7 +3,7 @@ from werkzeug.exceptions import BadRequest
 
 from src.cache import get_scanner
 from src.services.flaskext.constants import ARG
-from src.services.flaskext.file_attachments import needs_attached_file
+from src.services.flaskext.needs_attached_file import needs_attached_file
 from src.services.utils.nputils import read_img
 
 
