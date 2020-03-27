@@ -15,6 +15,7 @@ RUN python3 -m pip --no-cache-dir install -e srcext/insightface/python-package
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV PYTHONUNBUFFERED=0
+ENV JOBLIB_MULTIPROCESSING=0
 
 ## Run tests
 ARG DO_RUN_TESTS
