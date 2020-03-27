@@ -9,10 +9,10 @@ from src.services.async_task_manager.async_task_manager import TaskStatus, Train
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
 from src.services.facescan.backend.facescan_backend import FacescanBackend
-from src.services.flaskext.needs_authentication import needs_authentication
-from src.services.flaskext.needs_retrain import needs_retrain
 from src.services.flaskext.constants import API_KEY_HEADER, GetParameter, ARG
 from src.services.flaskext.needs_attached_file import needs_attached_file
+from src.services.flaskext.needs_authentication import needs_authentication
+from src.services.flaskext.needs_retrain import needs_retrain
 from src.services.flaskext.parse_request_arg import parse_request_bool_arg
 from src.services.storage.face import Face
 from src.services.storage.mongo_storage import MongoStorage

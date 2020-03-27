@@ -3,7 +3,6 @@ from http import HTTPStatus
 import pytest
 
 from src.exceptions import NoFileAttachedError, NoFileSelectedError
-from src.services.flaskext.constants import API_KEY_HEADER
 from src.services.flaskext.needs_attached_file import needs_attached_file
 
 FILE_BYTES = b''

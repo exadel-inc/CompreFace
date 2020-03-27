@@ -4,7 +4,6 @@ import toolz
 
 from src.cache import get_scanner, get_storage
 from src.exceptions import NotEnoughUniqueFacesError
-from src.loggingext import init_logging
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.storage.mongo_storage import MongoStorage
@@ -31,4 +30,3 @@ def train_and_save_classifier(api_key: str) -> None:
     classifier = LogisticClassifier.train(embeddings, names, emb_calc_version)
     storage.save_embedding_classifier(api_key, classifier)
     logging.debug("Classifier trained and saved")
-
