@@ -9,9 +9,9 @@ from tensorflow.python.platform import gfile
 
 from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
+from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.facescan.constants import NO_LIMIT
-from src.services.dto.scanned_face import ScannedFace
 from src.services.utils.nputils import squish_img, crop_img, Array3D
 from src.services.utils.pyutils import get_dir
 

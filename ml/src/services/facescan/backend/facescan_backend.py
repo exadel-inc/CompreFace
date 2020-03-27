@@ -2,8 +2,8 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from src.exceptions import MoreThanOneFaceFoundError
-from src.services.facescan.constants import NO_LIMIT
 from src.services.dto.scanned_face import ScannedFace
+from src.services.facescan.constants import NO_LIMIT
 from src.services.utils.nputils import Array3D
 
 
