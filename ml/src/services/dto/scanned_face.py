@@ -27,3 +27,4 @@ class ScannedFace(JSONEncodable):
     @property
     def dto(self):
         return ScannedFaceDTO(self.box, self.embedding)
+

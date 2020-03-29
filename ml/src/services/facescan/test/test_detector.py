@@ -5,7 +5,7 @@ from src.exceptions import NoFaceFoundError
 from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.facescan.scanner import ALL_BACKENDS
 from src.services.facescan.test._scanner_cache import get_scanner
-from src.services.sample_images import IMG_DIR
+from src.services.test.sample_images import IMG_DIR
 from src.services.utils.pytestutils import raises
 
 

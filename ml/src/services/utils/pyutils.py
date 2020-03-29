@@ -4,6 +4,7 @@ from io import BytesIO
 from pathlib import Path
 
 import joblib
+import numpy
 
 
 def run_once(func):
@@ -73,9 +74,24 @@ def cached(func):
 
 
 def first_and_only(lst):
+    lst = tuple(lst)
     length_lst = len(lst)
     assert length_lst == 1, f"Item count is '{length_lst}' instead of '1'"
     return lst[0]
+
+
+def equals(a, b):
+    if isinstance(a, numpy.ndarray) and isinstance(b, numpy.ndarray):
+        return (a == b).all()
+    return a == b
+
+
+def first_like_all(lst):
+    lst = tuple(lst)
+    first = lst[0]
+    for k in lst:
+        assert equals(first, k)
+    return first
 
 
 def get_dir(filepath):
