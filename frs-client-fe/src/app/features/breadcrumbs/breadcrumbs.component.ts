@@ -6,6 +6,7 @@ import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {Application} from '../../data/application';
 import {ActivatedRoute} from '@angular/router';
 import {filter, map} from 'rxjs/operators';
+import {Model} from '../../data/model';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -15,12 +16,15 @@ import {filter, map} from 'rxjs/operators';
 export class BreadcrumbsComponent implements OnInit {
   public org$: Observable<Organization>;
   public app$: Observable<Application>;
+  public model$: Observable<Model>;
   public routeModel$: Observable<string>;
   public ROUTERS_URL = ROUTERS_URL;
 
   constructor(private breadcrumbsFacade: BreadcrumbsFacade, private route: ActivatedRoute) {
     this.org$ = breadcrumbsFacade.org$;
     this.app$ = breadcrumbsFacade.app$;
+    this.model$ = breadcrumbsFacade.model$;
+
     this.routeModel$ = route.data.pipe(
       map(data => data.routeName),
       filter(routeName => routeName === 'model')

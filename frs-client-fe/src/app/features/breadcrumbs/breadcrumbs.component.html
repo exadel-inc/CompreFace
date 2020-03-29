@@ -4,10 +4,10 @@
   <a class="breadcrumbs-link" *ngIf="(routeModel$ | async) && ( app$ | async) as app"
      [routerLink]="[ROUTERS_URL.APPLICATION]"
      [queryParams]="{ org: org.id, app: app.id}">
-      Application: {{app.name}}
+      {{app.name}}
   </a>
-  <div class="breadcrumbs-link" *ngIf="!(routeModel$ | async) && (app$ | async)"> Application</div>
+  <div class="breadcrumbs-link" *ngIf="!(routeModel$ | async) && (app$ | async) as app">{{app.name}}</div>
   <div class="separator"> / </div>
-  <div class="breadcrumbs-link" *ngIf="(routeModel$ | async)"> Model</div>
+  <div class="breadcrumbs-link" *ngIf="(routeModel$ | async) && (model$ | async) as model">{{model.name}}</div>
 </mat-card>
 
