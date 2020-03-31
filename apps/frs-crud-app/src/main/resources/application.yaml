@@ -43,16 +43,19 @@ spring:
     open-in-view: true
     generate-ddl: false
   mail:
-    host: smtp.gmail.com
-    port: 587
-    username: ${FRS_GMAIL}
-    password: ${FRS_GMAIL_PWD}
-    properties.mail.smtp:
-      auth: true
-      connectiontimeout: 60000
-      writetimeout: 60000
-      starttls:
-        enable: true
+    sender: ${FRS_EMAIL:frs@msqv500.exadel.by}
+    host: ${POSTFIX_HOST:msqv500.exadel.by}
+    port: 25
+    test-connection: true
+    properties.mail:
+      debug: true
+      smtp:
+        connectiontimeout: 12000
+        writetimeout: 12000
+        starttls:
+          enable: true
+        ssl:
+          trust: ${POSTFIX_HOST:msqv500.exadel.by}
 
 security:
   signing-key: MaYzkSjmkzPC57L
