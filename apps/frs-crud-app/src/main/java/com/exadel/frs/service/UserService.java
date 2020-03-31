@@ -66,7 +66,7 @@ public class UserService {
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
-                .enabled(false)
+                .enabled(true)//TODO make it false when EFRS-330 is complete
                 .registrationToken(UUID.randomUUID().toString())
                 .build();
 

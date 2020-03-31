@@ -13,6 +13,7 @@ import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRemoveException;
 import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelRepository;
@@ -385,7 +386,7 @@ class OrganizationServiceTest {
     @ExtendWith(SpringExtension.class)
     @DataJpaTest
     @Nested
-    @MockBeans({@MockBean(SpringLiquibase.class), @MockBean(PasswordEncoder.class)})
+    @MockBeans({@MockBean(SpringLiquibase.class), @MockBean(PasswordEncoder.class), @MockBean(EmailSender.class)})
     @Import({OrganizationService.class, UserService.class})
     public class RemoveOrganizationTest {
 

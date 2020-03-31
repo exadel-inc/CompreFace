@@ -72,6 +72,7 @@ class UserServiceTest {
 
         userService.createUser(userCreateDto);
 
+        verify(emailSenderMock).sendMail(anyString(), anyString(), anyString());
         verify(userRepositoryMock).save(any(User.class));
     }
 

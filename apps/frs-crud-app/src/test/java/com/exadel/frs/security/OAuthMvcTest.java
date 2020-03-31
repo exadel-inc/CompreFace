@@ -1,12 +1,14 @@
 package com.exadel.frs.security;
 
 import com.exadel.frs.FrsApplication;
+import com.exadel.frs.helpers.EmailSender;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -35,6 +37,9 @@ public class OAuthMvcTest {
 
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
+
+    @MockBean
+    private EmailSender emailSender;
 
     private MockMvc mockMvc;
 
