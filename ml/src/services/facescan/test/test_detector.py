@@ -84,3 +84,14 @@ def test__given_5face_img_limit3__when_scanned__then_returns_3_results(backend):
     faces = scanner.scan(img, face_limit=3)
 
     assert len(faces) == 3
+
+@pytest.mark.integration
+@pytest.mark.parametrize('backend', ALL_BACKENDS)
+def test__given_threshold_set_to_1__when_detecting__then_returns_no_faces(backend):
+    scanner: FacescanBackend = get_scanner(backend)
+    img = imageio.imread(IMG_DIR / 'five-faces.jpg')
+
+    def act():
+        scanner.scan(img, detection_threshold=1)
+
+    assert raises(NoFaceFoundError, act)
