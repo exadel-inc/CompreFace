@@ -11,9 +11,7 @@ About frs-core:<br>
   - [Swagger UI - UAT]( https://uat.frs.exadel.by/apidocs) 
 
 # Starting the service
-
 ### With Docker
-
 1. Build the container: `$ make build`
 2. Start it: `$ make up`
 3. Stop it: `$ make down`
@@ -21,19 +19,15 @@ About frs-core:<br>
 You can combine steps 1 and 2: `$ make build up`
 
 ### In development environment, container-less
-
 1. Setup dependencies: `$ make setup`
 2. Start main app in debug mode: `$ make start`
 3. Stop it: `$ make stop`
 
 # Testing the service
-
 ### With Docker
-
 Builds containers, run tests inside: `$ make` 
 
 ### In development environment, container-less
-
 1. Setup dependencies: `$ make setup`
 2. Run all tests: `$ make local`
    - Unit tests: `$ make unit`
@@ -42,11 +36,13 @@ Builds containers, run tests inside: `$ make`
    - Lint check: `$ make lint`
 
 # Miscellaneous
-
 ### Make arguments
 Make supports these arguments (let's use `$ make up` as an example):
 - `$ make up ID=2` - Helps solve container name collisions (appends the ID at the end, so that container `ml` becomes `ml2`)
 - `$ make up PORT=8080` - Sets the exposed port for the service
+
+### Additional make targets
+Check `Makefile` for more make targets that are not mentioned in this README. These are mainly tools for local development (not used as part of the CI/CD tests).
 
 ### Notes for Windows users
 - Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/*`.

@@ -1,4 +1,4 @@
-.PHONY: build up down setup start stop docker local unit i9n e2e lint all
+.PHONY: build up down setup start stop docker local unit i9n e2e lint all oom extended
 .DEFAULT_GOAL := docker
 PORT = 3000
 ID =
@@ -43,3 +43,11 @@ lint:
 	python -m pylama --options $(CURDIR)/ml/pylama.ini $(CURDIR)/ml/src
 
 all: local docker
+
+oom:
+	$(CURDIR)/tools/test_oom/run.sh
+
+extended: all oom
+
+x:
+	print $(abspath $(lastword $(MAKEFILE_LIST)))
