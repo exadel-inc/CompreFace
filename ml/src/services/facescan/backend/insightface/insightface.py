@@ -24,12 +24,10 @@ class InsightFace(FacescanBackend):
     def scan(self, img: Array3D,
              face_limit: int = NO_LIMIT,
              detection_threshold: float = None) -> List[ScannedFace]:
-        if detection_threshold:
-            raise NotImplementedError('Detection threshold support is not yet implemented')
 
         self._model.prepare(ctx_id=self._CTX_ID_CPU, nms=self._NMS)
 
-        results = self._model.get(img)
+        results = self._model.get(img, det_thresh=detection_threshold)
         scanned_faces = []
         for result in results:
             bbox = result.bbox.astype(np.int).flatten()
