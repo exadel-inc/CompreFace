@@ -4,7 +4,7 @@ server:
 environment:
   servers:
     FRS_CORE:
-      url: ${CORE_URL:http://localhost:8080}
+      url: ${CORE_URL:http://localhost:8082}
 
 app:
   security:
