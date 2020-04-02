@@ -75,9 +75,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    private void sendRegistrationTokenToUser(User user) {
+    private void sendRegistrationTokenToUser(final User user) {
         val message = "Please, confirm your registration clicking the link below:\n"
-                        + "https://dev.frs.exadel.by/admin/user/registration/confirm?token="
+                        + "https://"
+                        + env.getProperty("host.frs")
+                        + "/admin/user/registration/confirm?token="
                         + user.getRegistrationToken();
 
         val subject = "Exadel FRS Registration";

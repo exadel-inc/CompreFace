@@ -1,8 +1,10 @@
 package com.exadel.frs.helpers;
 
+import com.exadel.frs.exception.UnreachableEmailException;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,11 @@ public class EmailSender {
         msg.setSubject(subject);
         msg.setText(message);
 
-        javaMailSender.send(msg);
+        try {
+            javaMailSender.send(msg);
+        } catch (MailException e) {
+            throw new UnreachableEmailException(to);
+        }
     }
 
 }
