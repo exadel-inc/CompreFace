@@ -3,13 +3,12 @@ import random
 from collections import namedtuple
 
 import imageio
-
+from src.services.sample_images import IMG_DIR
 
 from src.cache import get_storage, get_scanner
 from src.services.facescan.backend.facenet.facenet import Facenet2018
 from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.facescan.scanner import ALL_BACKENDS
-from src.services.sample_images import IMG_DIR
 from src.services.storage.mongo_storage import MongoStorage
 from src.services.utils.pyutils import get_dir
 
@@ -106,7 +105,6 @@ def calc_score_for_image(img, threshold, nose_locations, backend) -> CalcResult:
     return calc_score_for_bounding_boxes(bounding_boxes, nose_locations)
 
 
-
 Score = namedtuple('Score', 'errors boxes_with_not_one_point points_outside_one_box')
 ThresholdScore = namedtuple('ThresholdScore', 'threshold score')
 
@@ -155,18 +153,18 @@ if __name__ == "__main__":
                         continue
 
         total_score_facenet = Score(errors=sum(score.boxes_with_not_one_point + score.points_outside_one_box
-                                       for score in scores_facenet),
-                            boxes_with_not_one_point=sum(score.boxes_with_not_one_point
-                                                         for score in scores_facenet),
-                            points_outside_one_box=sum(score.points_outside_one_box
-                                                       for score in scores_facenet))
+                                               for score in scores_facenet),
+                                    boxes_with_not_one_point=sum(score.boxes_with_not_one_point
+                                                                 for score in scores_facenet),
+                                    points_outside_one_box=sum(score.points_outside_one_box
+                                                               for score in scores_facenet))
 
         total_score_insightface = Score(errors=sum(score.boxes_with_not_one_point + score.points_outside_one_box
-                                               for score in scores_insightface),
-                                    boxes_with_not_one_point=sum(score.boxes_with_not_one_point
-                                                                 for score in scores_insightface),
-                                    points_outside_one_box=sum(score.points_outside_one_box
-                                                               for score in scores_insightface))
+                                                   for score in scores_insightface),
+                                        boxes_with_not_one_point=sum(score.boxes_with_not_one_point
+                                                                     for score in scores_insightface),
+                                        points_outside_one_box=sum(score.points_outside_one_box
+                                                                   for score in scores_insightface))
 
         threshold_score_facenet = ThresholdScore(threshold, total_score_facenet)
         print(f'Facenet: ')
@@ -177,7 +175,6 @@ if __name__ == "__main__":
 
         if i % 50 == 0:
             save_state()
-
 
         threshold_score_insightface = ThresholdScore(threshold, total_score_insightface)
         print(f'Insightface: ')

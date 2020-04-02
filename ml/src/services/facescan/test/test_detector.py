@@ -2,13 +2,13 @@ from typing import List
 
 import imageio
 import pytest
+from src.services.sample_images import IMG_DIR
 
 from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
 from src.services.facescan.backend.facescan_backend import FacescanBackend
 from src.services.facescan.scanner import ALL_BACKENDS
 from src.services.facescan.test._scanner_cache import get_scanner
-from src.services.sample_images import IMG_DIR
 from src.services.utils.pytestutils import raises
 
 
@@ -62,7 +62,7 @@ def test__given_no_faces_img__when_scanned__then_raises_error(backend):
 @pytest.mark.parametrize('filename', ['five-faces.png', 'five-faces.jpg'])
 @pytest.mark.parametrize('boxes',
                          [[[544, 222, 661, 361], [421, 236, 530, 369], [161, 36, 266, 160], [342, 160, 437, 268],
-                          [243, 174, 352, 309]]])
+                           [243, 174, 352, 309]]])
 def test__given_5face_jpg_img__when_scanned__then_returns_5_correct_bounding_boxes(backend, filename, boxes):
     scanner: FacescanBackend = get_scanner(backend)
     img = imageio.imread(IMG_DIR / filename)[:, :, 0:3]
@@ -84,6 +84,7 @@ def test__given_5face_img_limit3__when_scanned__then_returns_3_results(backend):
     faces = scanner.scan(img, face_limit=3)
 
     assert len(faces) == 3
+
 
 @pytest.mark.integration
 @pytest.mark.parametrize('backend', ALL_BACKENDS)
