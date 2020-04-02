@@ -25,6 +25,14 @@ def endpoints(app):
     def status_get():
         return jsonify(status="OK")
 
+    @app.route('/test-read-img', methods=['POST'])
+    @needs_attached_file
+    def test_read_img():
+        from flask import request
+        file = request.files['file']
+        img = read_img(file)
+        return jsonify(image_size=str(img.shape))
+
     @app.route('/faces')
     @needs_authentication
     def faces_get():
