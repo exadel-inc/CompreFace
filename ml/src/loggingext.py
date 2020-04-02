@@ -1,4 +1,5 @@
 import logging
+import os
 import warnings
 
 from tensorflow.python.util import deprecation as tensorflow_deprecation
@@ -31,7 +32,9 @@ def init_logging():
                         format=log_format,
                         datefmt='%Y-%m-%d %H:%M:%S',
                         handlers=[stream_handler])
+
     logging.getLogger('PIL').setLevel(logging.INFO)
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
-    tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     warnings.filterwarnings("ignore", category=YAMLLoadWarning)
+    tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'

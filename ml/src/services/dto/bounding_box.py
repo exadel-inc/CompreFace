@@ -32,3 +32,7 @@ class BoundingBox(JSONEncodable):
     def check_probability(self, attribute, value):
         if not (0 <= value <= 1):
             raise ValueError("'probability' must be between 0 and 1")
+
+    @property
+    def xy(self):
+        return (self.x_min, self.y_min), (self.x_max, self.y_max)
