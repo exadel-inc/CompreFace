@@ -12,9 +12,9 @@ for backend in "${backends[@]}"; do
       EXIT_CODE=$?
       MSG=$(identify -ping -format "%f $mem_limit %G %[size] ($backend)\n" $IMG_DIR/$image_name)
       if [ $EXIT_CODE -eq 0 ]; then
-        printf "[   OK   ] %s\n" "$MSG"
+        printf "==========[   OK   ] %s\n" "$MSG"
       else
-        printf "[FAIL %3s] %s%s\n" "$EXIT_CODE" "$MSG" "$OUTPUT"
+        printf "==========[FAIL %3s] %s%s\n" "$EXIT_CODE" "$MSG" "$OUTPUT"
       fi
     done
   done

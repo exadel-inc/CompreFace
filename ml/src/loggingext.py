@@ -35,6 +35,6 @@ def init_logging():
 
     logging.getLogger('PIL').setLevel(logging.INFO)
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
+    warnings.filterwarnings("ignore", category=YAMLLoadWarning)
     tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
-    warnings.filterwarnings("ignore", category=YAMLLoadWarning)
