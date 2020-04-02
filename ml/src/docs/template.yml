@@ -31,8 +31,8 @@ components:
       type: string
     DetProbThresholdParameter:
       name: det_prob_threshold
-      in: path
-      description: 'The minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.'
+      in: formData
+      description: 'The minimum required confidence that a found face is actually a face. Decrease this value if faces are not detected. Valid values are in the range (0;1).'
       type: float
   responses:
     ClassifierIsAlreadyTrainingErrorResponse:
