@@ -43,6 +43,14 @@ def create_app():
     def get_status():
         return jsonify(status="OK")
 
+    @app.route('/test-read-img', methods=['POST'])
+    @needs_attached_file
+    def test_read_img():
+        from flask import request
+        file = request.files['file']
+        img = imageio.imread(file)
+        return jsonify(image_size=str(img.shape))
+
     @app.route('/faces')
     @needs_authentication
     def list_faces():
