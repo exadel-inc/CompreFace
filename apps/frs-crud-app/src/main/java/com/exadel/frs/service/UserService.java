@@ -36,8 +36,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final EmailSender emailSender;
-    @Autowired
+
     private Environment env;
+
+    @Autowired
+    public void setEnv(Environment env) {
+        this.env = env;
+    }
 
     public User getUser(final Long id) {
         return userRepository.findById(id)

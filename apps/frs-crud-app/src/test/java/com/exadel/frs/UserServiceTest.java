@@ -12,6 +12,7 @@ import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.util.Optional;
@@ -37,6 +38,7 @@ class UserServiceTest {
         userRepositoryMock = mock(UserRepository.class);
         emailSenderMock = mock(EmailSender.class);
         userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder(), emailSenderMock);
+        userService.setEnv(new MockEnvironment());
     }
 
     @Test
