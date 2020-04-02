@@ -1,3 +1,7 @@
+.idea/
+.vscode/
+tmp/
+
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
 # Byte-compiled / optimized / DLL files
@@ -84,7 +88,7 @@ celerybeat-schedule
 *.sage.py
 
 # Environments
-src/.env
+shared_src/.env
 .venv
 env/
 venv/
@@ -157,9 +161,3 @@ fabric.properties
 
 # Editor-based Rest Client
 .idea/httpRequests
-
-.idea/**
-
-.vscode/**
-
-data/**

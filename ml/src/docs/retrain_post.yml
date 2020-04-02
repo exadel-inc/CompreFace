@@ -1,0 +1,22 @@
+tags:
+  - 'Face Recognition ML Model'
+summary: 'Retrain face model.'
+parameters:
+  - in: path
+    name: force
+    schema:
+      type: string
+      default: false
+    required: false
+    description: Abort currently running training tasks, before starting
+description: 'Will return error if there are not enough faces to train on. The model should be retrained if updates to the face database were done with the `retrain` flag set to `false`.'
+operationId: retrainModelStart
+produces:
+  - ""
+security:
+  - ApiKeyAuth: []
+responses:
+  '202':
+    description: 'Model training has been started.'
+  '423':
+    $ref: '#/components/responses/ClassifierIsAlreadyTrainingErrorResponse'

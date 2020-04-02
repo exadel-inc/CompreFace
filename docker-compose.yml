@@ -1,18 +1,30 @@
 version: '3'
 services:
+  e2e:
+    container_name: e2e${ID}
+    build: ./e2e
+    environment:
+      - MONGO_HOST=mongo${ID}
+      - MONGO_PORT=27017
+    depends_on:
+      - ml
   ml:
-    container_name: ml
-    build: .
+    container_name: ml${ID}
+    build:
+      context: ./ml
+      args:
+        - DO_RUN_TESTS=${DO_RUN_TESTS:-false}
     ports:
-      - "3000:3000"
+      - ${PORT:-3000}:3000
+    environment:
+      - MONGO_HOST=mongo${ID}
+      - MONGO_PORT=27017
     depends_on:
       - mongo
-    #mem_reservation: 6g
-    #mem_limit: 6g
   mongo:
-    container_name: mongo
+    container_name: mongo${ID}
     image: "mongo:4.0.4-xenial"
     ports:
-      - "27117:27017"
+      - ${DB_PORT:-27117}:27017
     volumes:
-      - ./mongo_data:/data
+      - ./tmp/mongo_data:/data

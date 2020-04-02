@@ -1,0 +1,3 @@
+[submodule "ml/srcext/insightface"]
+	path = ml/srcext/insightface
+	url = https://github.com/deepinsight/insightface
