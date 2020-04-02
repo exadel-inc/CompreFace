@@ -8,3 +8,6 @@ class Scanner:
     """ Increases package usability """
     Facenet2018 = Facenet2018
     InsightFace = InsightFace
+
+
+Scanners = {backend.ID: backend for backend in ALL_BACKENDS}

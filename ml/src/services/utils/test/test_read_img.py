@@ -4,7 +4,9 @@ import pytest
 from src.exceptions import OneDimensionalImageIsGivenError, ImageReadLibraryError
 from src.services.utils.nputils import read_img
 from src.services.utils.pytestutils import raises
-from src.services.utils.test.sample_images import IMG_DIR
+from src.services.utils.pyutils import get_dir
+
+CURRENT_DIR = get_dir(__file__)
 
 
 def test__given_1d_img__when_read__then_raises_error(mocker):
@@ -40,11 +42,12 @@ def test__given_rgba_img__when_read__then_returns_rgb_img(mocker):
     assert (actual_img == expected_img).all()
 
 
-@pytest.mark.parametrize('file', ['empty.png', 'corrupted.png'])
+@pytest.mark.parametrize('file', ['test_read_img.empty.png',
+                                  'test_read_img.corrupted.png'])
 def test__given_corrupted_img__when_read__then_raises_exception(file):
     pass
 
     def act():
-        read_img(IMG_DIR / file)
+        read_img(CURRENT_DIR / file)
 
     assert raises(ImageReadLibraryError, act)
