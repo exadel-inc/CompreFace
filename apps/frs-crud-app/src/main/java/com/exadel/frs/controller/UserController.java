@@ -44,13 +44,12 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Such username or email already registered | One or more of required fields are empty | Incorrect email format")
     })
-    public UserResponseDto createUser(
+    public void createUser(
             @ApiParam(value = "User object that needs to be created", required = true)
             @RequestBody
             final UserCreateDto userCreateDto
     ) {
-        //TODO make it void when EFRS-330 is complete
-        return userMapper.toResponseDto(userService.createUser(userCreateDto));
+        userService.createUser(userCreateDto);
     }
 
     @PutMapping("/update")

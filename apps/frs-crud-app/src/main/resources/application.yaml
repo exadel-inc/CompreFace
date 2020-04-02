@@ -73,6 +73,7 @@ swagger:
     version: 0.0.2-SNAPSHOT
 
 host:
+  frs: ${FRS_CRUD_HOST:dev.frs.exadel.by}
   full:
     dns:
       auth:

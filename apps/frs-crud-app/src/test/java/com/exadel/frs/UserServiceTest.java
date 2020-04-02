@@ -7,10 +7,12 @@ import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.UserDoesNotExistException;
+import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 import java.util.Optional;
@@ -30,10 +32,13 @@ class UserServiceTest {
 
     private UserRepository userRepositoryMock;
     private UserService userService;
+    private EmailSender emailSenderMock;
 
     UserServiceTest() {
         userRepositoryMock = mock(UserRepository.class);
-        userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder());
+        emailSenderMock = mock(EmailSender.class);
+        userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder(), emailSenderMock);
+        userService.setEnv(new MockEnvironment());
     }
 
     @Test
@@ -69,6 +74,7 @@ class UserServiceTest {
 
         userService.createUser(userCreateDto);
 
+        verify(emailSenderMock).sendMail(anyString(), anyString(), anyString());
         verify(userRepositoryMock).save(any(User.class));
     }
 

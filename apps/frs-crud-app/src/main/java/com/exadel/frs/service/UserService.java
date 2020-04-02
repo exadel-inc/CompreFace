@@ -7,6 +7,7 @@ import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.UserDoesNotExistException;
+import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -34,8 +35,14 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    @Autowired
+    private final EmailSender emailSender;
+
     private Environment env;
+
+    @Autowired
+    public void setEnv(Environment env) {
+        this.env = env;
+    }
 
     public User getUser(final Long id) {
         return userRepository.findById(id)
@@ -52,6 +59,7 @@ public class UserService {
                 .orElseThrow(() -> new UserDoesNotExistException(guid));
     }
 
+    @Transactional
     public User createUser(final UserCreateDto userCreateDto) {
         validateUserCreateDto(userCreateDto);
         User user = User.builder()
@@ -66,7 +74,21 @@ public class UserService {
                 .enabled(true)//TODO make it false when EFRS-330 is complete
                 .registrationToken(UUID.randomUUID().toString())
                 .build();
+
+        sendRegistrationTokenToUser(user);
+
         return userRepository.save(user);
+    }
+
+    private void sendRegistrationTokenToUser(final User user) {
+        val message = "Please, confirm your registration clicking the link below:\n"
+                        + "https://"
+                        + env.getProperty("host.frs")
+                        + "/admin/user/registration/confirm?token="
+                        + user.getRegistrationToken();
+
+        val subject = "Exadel FRS Registration";
+        emailSender.sendMail(user.getEmail(), subject, message);
     }
 
     private void validateUserCreateDto(UserCreateDto userCreateDto) {
