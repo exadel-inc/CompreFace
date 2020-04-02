@@ -105,10 +105,12 @@ class Facenet2018(FacescanBackend):
         assert self.EMBEDDING_MODEL_PATH
         detection_threshold_c = detection_threshold or self.DEFAULT_THRESHOLD_C
         scanned_faces = []
+        # here component goes
         for box in self._find_face_bounding_boxes(img, face_limit, detection_threshold_c):
             cropped_img = crop_img(img, box)
             squished_img = squish_img(cropped_img, (self.IMAGE_SIZE, self.IMAGE_SIZE))
             embedding = self._calculate_embeddings([squished_img])[0]
-            scanned_face = ScannedFace(embedding=embedding, box=box, img=img, face_img=cropped_img)
+            # upscale box here
+            scanned_face = ScannedFace(embedding=embedding, box=box, img=img)
             scanned_faces.append(scanned_face)
         return scanned_faces
