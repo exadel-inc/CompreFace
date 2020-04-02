@@ -13,7 +13,7 @@ from src.services.utils.nputils import Array3D
 
 
 class InsightFace(FacescanBackend):
-    ID = 'InsightFace_v0'
+    ID = 'InsightFace'
 
     def __init__(self):
         super().__init__()

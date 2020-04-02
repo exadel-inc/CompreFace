@@ -21,7 +21,7 @@ _FaceDetectionNets = namedtuple('FaceDetectionNets', 'pnet rnet onet')
 
 
 class Facenet2018(FacescanBackend):
-    ID = 'Facenet_v2018'
+    ID = 'Facenet2018'
     BATCH_SIZE = 25
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
