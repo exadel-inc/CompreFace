@@ -38,3 +38,4 @@ def init_logging():
     warnings.filterwarnings("ignore", category=YAMLLoadWarning)
     tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+    os.environ['MXNET_SUBGRAPH_VERBOSE'] = '0'
