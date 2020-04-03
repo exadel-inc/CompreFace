@@ -6,9 +6,8 @@ from sample_images import IMG_DIR
 
 from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
-from src.services.facescan.backend.facescan_backend import FacescanBackend
-from src.services.facescan.scanner import ALL_BACKENDS
-from src.services.facescan.test._scanner_cache import get_scanner
+from src.services.facescan.scanner.facescanner import FaceScanner, ALL_SCANNERS
+from src.services.facescan.scanner.test._scanner_cache import get_scanner
 from src.services.utils.pytestutils import raises
 
 
@@ -46,9 +45,9 @@ def check_box_in_boxes(boxes: List[List],
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize('backend', ALL_BACKENDS)
-def test__given_no_faces_img__when_scanned__then_raises_error(backend):
-    scanner: FacescanBackend = get_scanner(backend)
+@pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
+def test__given_no_faces_img__when_scanned__then_raises_error(scanner_cls):
+    scanner: FaceScanner = get_scanner(scanner_cls)
     img = imageio.imread(IMG_DIR / 'no-faces.jpg')
 
     def act():
@@ -58,13 +57,13 @@ def test__given_no_faces_img__when_scanned__then_raises_error(backend):
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize('backend', ALL_BACKENDS)
+@pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
 @pytest.mark.parametrize('filename', ['five-faces.png', 'five-faces.jpg'])
 @pytest.mark.parametrize('boxes',
                          [[[544, 222, 661, 361], [421, 236, 530, 369], [161, 36, 266, 160], [342, 160, 437, 268],
                            [243, 174, 352, 309]]])
-def test__given_5face_jpg_img__when_scanned__then_returns_5_correct_bounding_boxes(backend, filename, boxes):
-    scanner: FacescanBackend = get_scanner(backend)
+def test__given_5face_jpg_img__when_scanned__then_returns_5_correct_bounding_boxes(scanner_cls, filename, boxes):
+    scanner: FaceScanner = get_scanner(scanner_cls)
     img = imageio.imread(IMG_DIR / filename)[:, :, 0:3]
 
     faces = scanner.scan(img)
@@ -76,9 +75,9 @@ def test__given_5face_jpg_img__when_scanned__then_returns_5_correct_bounding_box
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize('backend', ALL_BACKENDS)
-def test__given_5face_img_limit3__when_scanned__then_returns_3_results(backend):
-    scanner: FacescanBackend = get_scanner(backend)
+@pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
+def test__given_5face_img_limit3__when_scanned__then_returns_3_results(scanner_cls):
+    scanner: FaceScanner = get_scanner(scanner_cls)
     img = imageio.imread(IMG_DIR / 'five-faces.jpg')
 
     faces = scanner.scan(img, face_limit=3)
@@ -87,9 +86,9 @@ def test__given_5face_img_limit3__when_scanned__then_returns_3_results(backend):
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize('backend', ALL_BACKENDS)
-def test__given_threshold_set_to_1__when_detecting__then_returns_no_faces(backend):
-    scanner: FacescanBackend = get_scanner(backend)
+@pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
+def test__given_threshold_set_to_1__when_detecting__then_returns_no_faces(scanner_cls):
+    scanner: FaceScanner = get_scanner(scanner_cls)
     img = imageio.imread(IMG_DIR / 'five-faces.jpg')
 
     def act():

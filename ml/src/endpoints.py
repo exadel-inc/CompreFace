@@ -8,7 +8,7 @@ from src.cache import get_storage, get_scanner, get_training_task_manager
 from src.services.async_task_manager.async_task_manager import TaskStatus, TrainingTaskManagerBase
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
-from src.services.facescan.backend.facescan_backend import FacescanBackend
+from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.flaskext.constants import API_KEY_HEADER, GetParameter, ARG
 from src.services.flaskext.needs_attached_file import needs_attached_file
 from src.services.flaskext.needs_authentication import needs_authentication
@@ -17,7 +17,7 @@ from src.services.flaskext.parse_request_arg import parse_request_bool_arg
 from src.services.storage.face import Face
 from src.services.storage.mongo_storage import MongoStorage
 from src.services.train_classifier import get_faces
-from src.services.utils.nputils import read_img
+from src.services.imgtools.read_img import read_img
 
 
 def endpoints(app):
@@ -53,7 +53,7 @@ def endpoints(app):
         img = read_img(request.files['file'])
         api_key = request.headers[API_KEY_HEADER]
         detection_threshold = _get_detection_threshold(request)
-        scanner: FacescanBackend = get_scanner()
+        scanner: FaceScanner = get_scanner()
         storage: MongoStorage = get_storage()
 
         face = scanner.scan_one(img, detection_threshold)
@@ -121,7 +121,7 @@ def endpoints(app):
         img = read_img(request.files['file'])
         detection_threshold = _get_detection_threshold(request)
         face_limit = _get_face_limit(request)
-        scanner: FacescanBackend = get_scanner()
+        scanner: FaceScanner = get_scanner()
         storage: MongoStorage = get_storage()
         api_key = request.headers[API_KEY_HEADER]
         classifier = storage.get_embedding_classifier(api_key, LogisticClassifier.CURRENT_VERSION, scanner.ID)

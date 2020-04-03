@@ -1,35 +1,39 @@
+from collections import namedtuple
+
 import cv2
 
 from src.services.dto.bounding_box import BoundingBox
-from src.services.utils.nputils import Array3D
+from src.services.imgtools.types import Array3D
 
 
 class ImgScaler:
+    def __init__(self, img_length_limit: int):
+        self._img_length_limit = img_length_limit
+        self._downscaled_img_called = False
+        self._img_downscale_ratio = False
 
-    def __init__(self, size: int):
-        self._size = size
-        self._downscale_ratio = 0
+    def downscale_img(self, img: Array3D, interpolation=cv2.INTER_AREA) -> Array3D:
+        assert not self._downscaled_img_called
+        self._downscaled_img_called = True
+        width, height = img.shape[:2]
+        if width <= self._img_length_limit and height <= self._img_length_limit:
+            return img
 
-    def downscale_img(self, img: Array3D) -> Array3D:
-        h, w, c = img.shape
-        bigger_dimension = h if h >= w else w
-        smaller_dimension = w if w < h else h
-
-        # only change the dimensions if they are larger than the expected size
-        if bigger_dimension > self._size:
-            self._downscale_ratio = bigger_dimension / self._size
-            new_smaller_dimension = int(smaller_dimension / self._downscale_ratio)
-
-            resized = cv2.resize(img, dsize=(new_smaller_dimension, self._size)) if h >= w else cv2.resize(img, dsize=(
-                self._size, new_smaller_dimension))
-            return resized
+        if width >= height:
+            self._img_downscale_ratio = self._img_length_limit / width
+            new_width, new_height = round(width * self._img_downscale_ratio), height
+        else:
+            self._img_downscale_ratio = self._img_length_limit / height
+            new_width, new_height = width, round(height * self._img_downscale_ratio)
+        return cv2.resize(img, dsize=(new_width, new_height), interpolation=interpolation)
 
     def upscale_box(self, box: BoundingBox) -> BoundingBox:
-        if self._downscale_ratio != 0:
-            new_x_min = int(box.x_min * self._downscale_ratio)
-            new_x_max = int(box.x_max * self._downscale_ratio)
-            new_y_mix = int(box.y_min * self._downscale_ratio)
-            new_y_max = int(box.y_max * self._downscale_ratio)
-            box = BoundingBox(x_max=new_x_max, x_min=new_x_min, y_max=new_y_max, y_min=new_y_mix,
-                              probability=box.probability)
-        return box
+        assert self._downscaled_img_called
+        if not self._img_downscale_ratio:
+            return box
+        box_upscale_ratio = 1 / self._img_downscale_ratio
+        return BoundingBox(x_max=round(box.x_max * box_upscale_ratio),
+                           x_min=round(box.x_min * box_upscale_ratio),
+                           y_max=round(box.y_max * box_upscale_ratio),
+                           y_min=round(box.y_min * box_upscale_ratio),
+                           probability=box.probability)

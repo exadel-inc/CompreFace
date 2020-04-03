@@ -8,9 +8,9 @@ from PIL import Image, ImageFont, ImageDraw
 from sample_images import IMG_DIR
 from src.loggingext import init_logging
 from src.services.dto.scanned_face import ScannedFace
-from src.services.facescan.backend.facescan_backend import FacescanBackend
-from src.services.facescan.scanner import Scanners
-from src.services.utils.nputils import read_img
+from src.services.facescan.scanner.facescanner import FaceScanner
+from src.services.facescan.scanner.facescanners import Scanners
+from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import first_like_all
 
 BOX_WIDTH = 3
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     scanner_id = sys.argv[1]  # e.g. 'Facenet2018'
     img_name = sys.argv[2]  # e.g. 'five-faces.jpg'
     img = read_img(IMG_DIR / img_name)
-    scanner: FacescanBackend = Scanners[scanner_id]()
+    scanner: FaceScanner = Scanners[scanner_id]()
     faces = scanner.scan(img)
     print_scanned_faces(faces)
     # show_scanned_faces(faces)

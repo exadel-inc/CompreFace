@@ -4,7 +4,7 @@ import pytest
 
 from src.services.async_task_manager.async_task_manager import TrainingTaskManagerBase, TaskStatus
 from src.services.flaskext.needs_retrain import needs_retrain
-from src.services.utils.pyutils import Expando
+from src.services.utils.pytestutils import Expando
 
 pytest.x = Expando()
 

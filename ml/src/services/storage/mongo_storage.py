@@ -15,7 +15,7 @@ from src.exceptions import NoTrainedEmbeddingClassifierFoundError, FaceHasNoEmbe
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.storage.face import Face, FaceNameEmbedding
 from src.services.storage.mongo_fileio import save_file_to_mongo, get_file_from_mongo
-from src.services.utils.pyutils import serialize, deserialize
+from src.services.storage._serialization import serialize, deserialize
 
 WAIT_FOR_CONNECTION_TIMEOUT_S = 60
 

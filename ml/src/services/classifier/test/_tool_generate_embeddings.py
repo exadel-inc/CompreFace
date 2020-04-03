@@ -2,10 +2,10 @@ import logging
 
 import imageio
 import joblib
-from src.services.sample_images import IMG_DIR
 
+from sample_images import IMG_DIR
 from src.cache import get_scanner
-from src.services.facescan.backend.facescan_backend import FacescanBackend
+from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.utils.pyutils import get_dir
 
 CURRENT_DIR = get_dir(__file__)
@@ -13,7 +13,7 @@ CURRENT_DIR = get_dir(__file__)
 
 def generate_embedding_from_img(filename):
     img = imageio.imread(IMG_DIR / f'{filename}.jpg')
-    scanner: FacescanBackend = get_scanner()
+    scanner: FaceScanner = get_scanner()
     embedding = scanner.scan_one(img).embedding
     joblib.dump(embedding, CURRENT_DIR / f'{filename}.embedding.joblib')
 

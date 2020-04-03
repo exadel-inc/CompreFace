@@ -1,6 +1,6 @@
 import attr
 
-from src.services.utils.nputils import Array1D, Array3D
+from src.services.imgtools.types import Array1D, Array3D
 
 
 @attr.s(auto_attribs=True, frozen=True, cmp=False)

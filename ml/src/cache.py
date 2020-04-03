@@ -7,8 +7,8 @@ from src.services.utils.pyutils import run_once, run_once_fork_safe
 
 @run_once
 def get_scanner():
-    from src.services.facescan.scanner import Scanner
-    return Scanner.Facenet2018()
+    from src.services.facescan.scanner.facescanners import FaceScanners
+    return FaceScanners.Facenet2018()
 
 
 @run_once_fork_safe  # Because PyMongo is not fork-safe

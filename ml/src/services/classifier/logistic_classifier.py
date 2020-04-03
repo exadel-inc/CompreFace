@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression
 
 from src.services.dto.face_prediction import NamePrediction
-from src.services.utils.nputils import Array1D
+from src.services.imgtools.types import Array1D
 
 
 @attr.s(auto_attribs=True, frozen=True)

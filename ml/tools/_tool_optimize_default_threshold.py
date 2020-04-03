@@ -6,9 +6,8 @@ import imageio
 from sample_images import IMG_DIR
 
 from src.cache import get_storage, get_scanner
-from src.services.facescan.backend.facenet.facenet import Facenet2018
-from src.services.facescan.backend.facescan_backend import FacescanBackend
-from src.services.facescan.scanner import ALL_BACKENDS
+from src.services.facescan.scanner.facenet.facenet import Facenet2018
+from src.services.facescan.scanner.facescanner import FaceScanner, ALL_SCANNERS
 from src.services.storage.mongo_storage import MongoStorage
 from src.services.utils.pyutils import get_dir
 
@@ -98,7 +97,7 @@ def calc_score_for_bounding_boxes(bounding_boxes, points) -> CalcResult:
 
 
 def calc_score_for_image(img, threshold, nose_locations, backend) -> CalcResult:
-    scanner: FacescanBackend = get_scanner(backend)
+    scanner: FaceScanner = get_scanner(backend)
     storage: MongoStorage = get_storage()
     detect_face_result = scanner.scan(img, detection_threshold=threshold)
     bounding_boxes = list(detect_face_result[0][:, 0:4])
@@ -127,7 +126,7 @@ if __name__ == "__main__":
         scores_insightface = []
         for img_filepath, nose_locations in DATASET.items():
             img = imageio.imread(img_filepath)
-            for backend in ALL_BACKENDS:
+            for backend in ALL_SCANNERS:
                 score = []
                 while True:
                     try:

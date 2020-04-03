@@ -15,3 +15,7 @@ def raises(e: Type[Exception], callable_: Callable):
         return True
     else:
         return False
+
+
+class Expando:
+    pass

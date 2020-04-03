@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from src.exceptions import OneDimensionalImageIsGivenError, ImageReadLibraryError
-from src.services.utils.nputils import read_img
+from src.services.imgtools.read_img import read_img
 from src.services.utils.pytestutils import raises
 from src.services.utils.pyutils import get_dir
 
