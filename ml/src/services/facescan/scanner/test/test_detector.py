@@ -4,7 +4,8 @@ import pytest
 from sample_images import IMG_DIR
 from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
-from src.services.facescan.scanner.facescanner import FaceScanner, ALL_SCANNERS
+from src.services.facescan.scanner.facescanner import FaceScanner
+from src.services.facescan.scanner.facescanners import ALL_SCANNERS
 from src.services.facescan.scanner.test._scanner_cache import get_scanner
 from src.services.utils.pytestutils import raises
 
@@ -23,7 +24,7 @@ def test__given_no_faces_img__when_scanned__then_raises_error(scanner_cls):
 
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
-@pytest.mark.parametrize('filename', ['five-faces.png', 'five-faces.jpg', 'five-faces.webp'])
+@pytest.mark.parametrize('filename', ['five-faces.png', 'five-faces.jpg'])
 def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes(scanner_cls, filename):
     correct_boxes = [BoundingBox(544, 222, 661, 361, 1),
                      BoundingBox(421, 236, 530, 369, 1),

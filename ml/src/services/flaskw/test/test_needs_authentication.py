@@ -3,8 +3,8 @@ from http import HTTPStatus
 import pytest
 
 from src.exceptions import APIKeyNotSpecifiedError
-from src.services.flaskext.constants import API_KEY_HEADER
-from src.services.flaskext.needs_authentication import needs_authentication
+from src.services.flaskw.constants import API_KEY_HEADER
+from src.services.flaskw.needs_authentication import needs_authentication
 
 
 @pytest.fixture

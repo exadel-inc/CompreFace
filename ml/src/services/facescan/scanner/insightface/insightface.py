@@ -24,12 +24,14 @@ class InsightFace(FaceScanner):
         self._NMS = 0.4
 
     def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None) -> List[ScannedFace]:
-        if detection_threshold is not None:
-            assert 0 <= detection_threshold <= 1
         self._model.prepare(ctx_id=self._CTX_ID_CPU, nms=self._NMS)
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         downscaled_img = scaler.downscale_img(img)
-        results = self._model.get(downscaled_img, det_thresh=detection_threshold)
+        if detection_threshold is not None:
+            assert 0 <= detection_threshold <= 1
+            results = self._model.get(downscaled_img, det_thresh=detection_threshold)
+        else:
+            results = self._model.get(downscaled_img)
         scanned_faces = []
         for result in results:
             downscaled_box_array = result.bbox.astype(np.int).flatten()

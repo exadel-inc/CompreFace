@@ -15,16 +15,13 @@ class ImgScaler:
     def downscale_img(self, img: Array3D, interpolation=cv2.INTER_AREA) -> Array3D:
         assert not self._downscaled_img_called
         self._downscaled_img_called = True
-        width, height = img.shape[:2]
+        height, width = img.shape[:2]
         if width <= self._img_length_limit and height <= self._img_length_limit:
             return img
 
-        if width >= height:
-            self._img_downscale_ratio = self._img_length_limit / width
-            new_width, new_height = round(width * self._img_downscale_ratio), height
-        else:
-            self._img_downscale_ratio = self._img_length_limit / height
-            new_width, new_height = width, round(height * self._img_downscale_ratio)
+        self._img_downscale_ratio = self._img_length_limit / (width if width >= height else height)
+        new_width = round(width * self._img_downscale_ratio)
+        new_height = round(height * self._img_downscale_ratio)
         return cv2.resize(img, dsize=(new_width, new_height), interpolation=interpolation)
 
     def upscale_box(self, box: BoundingBox) -> BoundingBox:

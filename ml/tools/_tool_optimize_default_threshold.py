@@ -7,7 +7,8 @@ from sample_images import IMG_DIR
 
 from src.cache import get_storage, get_scanner
 from src.services.facescan.scanner.facenet.facenet import Facenet2018
-from src.services.facescan.scanner.facescanner import FaceScanner, ALL_SCANNERS
+from src.services.facescan.scanner.facescanner import FaceScanner
+from src.services.facescan.scanner.facescanners import ALL_SCANNERS
 from src.services.storage.mongo_storage import MongoStorage
 from src.services.utils.pyutils import get_dir
 

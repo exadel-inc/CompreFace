@@ -1,7 +1,7 @@
 import functools
 
 from src.exceptions import APIKeyNotSpecifiedError
-from src.services.flaskext.constants import API_KEY_HEADER
+from src.services.flaskw.constants import API_KEY_HEADER
 
 
 def needs_authentication(f):

@@ -3,12 +3,8 @@ from typing import List
 
 from src.exceptions import MoreThanOneFaceFoundError
 from src.services.dto.scanned_face import ScannedFace
-from src.services.facescan.scanner.facenet.facenet import Facenet2018
-from src.services.facescan.scanner.insightface.insightface import InsightFace
 from src.services.facescan.scanner.constants import NO_LIMIT
 from src.services.imgtools.types import Array3D
-
-ALL_SCANNERS = [Facenet2018, InsightFace]
 
 
 class FaceScanner(ABC):

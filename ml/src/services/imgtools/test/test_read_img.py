@@ -11,7 +11,7 @@ CURRENT_DIR = get_dir(__file__)
 
 def test__given_1d_img__when_read__then_raises_error(mocker):
     array = np.ones(shape=(10,))
-    imageio = mocker.patch('src.services.utils.nputils.imageio')
+    imageio = mocker.patch('src.services.imgtools.read_img.imageio')
     imageio.imread.return_value = array
 
     def act():
@@ -22,7 +22,7 @@ def test__given_1d_img__when_read__then_raises_error(mocker):
 
 def test__given_grayscale_2d_img__when_read__then_returns_rgb_img(mocker):
     array = np.ones(shape=(10, 10))
-    imageio = mocker.patch('src.services.utils.nputils.imageio')
+    imageio = mocker.patch('src.services.imgtools.read_img.imageio')
     imageio.imread.return_value = array
 
     actual_img = read_img('some-image.jpg')
@@ -33,7 +33,7 @@ def test__given_grayscale_2d_img__when_read__then_returns_rgb_img(mocker):
 
 def test__given_rgba_img__when_read__then_returns_rgb_img(mocker):
     array = np.ones(shape=(10, 10, 4))
-    imageio = mocker.patch('src.services.utils.nputils.imageio')
+    imageio = mocker.patch('src.services.imgtools.read_img.imageio')
     imageio.imread.return_value = array
 
     actual_img = read_img('some-image.jpg')

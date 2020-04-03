@@ -3,7 +3,7 @@ from http import HTTPStatus
 import pytest
 
 from src.services.async_task_manager.async_task_manager import TrainingTaskManagerBase, TaskStatus
-from src.services.flaskext.needs_retrain import needs_retrain
+from src.services.flaskw.needs_retrain import needs_retrain
 from src.services.utils.pytestutils import Expando
 
 pytest.x = Expando()
@@ -12,7 +12,7 @@ pytest.x = Expando()
 @pytest.fixture
 def task_manager(mocker):
     task_manager = TrainingTaskManagerMock()
-    mocker.patch('src.services.flaskext.needs_retrain.get_training_task_manager', return_value=task_manager)
+    mocker.patch('src.services.flaskw.needs_retrain.get_training_task_manager', return_value=task_manager)
     return task_manager
 
 

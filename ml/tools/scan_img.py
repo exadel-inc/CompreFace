@@ -6,7 +6,7 @@ from typing import List
 from PIL import Image, ImageFont, ImageDraw
 
 from sample_images import IMG_DIR
-from src.loggingext import init_logging
+from src.loggingw import init_logging
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.facescanners import Scanners

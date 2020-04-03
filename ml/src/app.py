@@ -10,11 +10,11 @@ from src.cache import get_storage
 from src.constants import ENV
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
-from src.loggingext import init_logging
-from src.services.flaskext.disable_caching import disable_caching
-from src.services.flaskext.error_handling import add_error_handling
-from src.services.flaskext.json_encoding import add_json_encoding
-from src.services.flaskext.log_response import log_http_response
+from src.loggingw import init_logging
+from src.services.flaskw.disable_caching import disable_caching
+from src.services.flaskw.error_handling import add_error_handling
+from src.services.flaskw.json_encoding import add_json_encoding
+from src.services.flaskw.log_response import log_http_response
 
 
 def init_runtime():

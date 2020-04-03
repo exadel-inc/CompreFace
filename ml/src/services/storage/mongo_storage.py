@@ -9,13 +9,13 @@ from pymongo.errors import ServerSelectionTimeoutError
 from sklearn.linear_model import LogisticRegression
 from strenum import StrEnum
 
-from src.constants import MONGO_EFRS_DATABASE_NAME
+from src.constants import ENV
 from src.exceptions import NoTrainedEmbeddingClassifierFoundError, FaceHasNoEmbeddingCalculatedError, \
     CouldNotConnectToDatabase
 from src.services.classifier.logistic_classifier import LogisticClassifier
+from src.services.storage._serialization import serialize, deserialize
 from src.services.storage.face import Face, FaceNameEmbedding
 from src.services.storage.mongo_fileio import save_file_to_mongo, get_file_from_mongo
-from src.services.storage._serialization import serialize, deserialize
 
 WAIT_FOR_CONNECTION_TIMEOUT_S = 60
 
@@ -31,7 +31,7 @@ class MongoStorage:
         self._mongo_host = mongo_host
         self._mongo_port = mongo_port
         self._mongo_client = MongoClient(host=self._mongo_host, port=self._mongo_port)
-        db = self._mongo_client[MONGO_EFRS_DATABASE_NAME]
+        db = self._mongo_client[ENV.MONGO_EFRS_DATABASE_NAME]
         self._faces_collection = db[CollectionName.FACES]
         self._faces_fs = gridfs.GridFS(db, CollectionName.FACES)
         self._classifiers_collection = db[CollectionName.CLASSIFIERS]

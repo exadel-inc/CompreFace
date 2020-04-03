@@ -1,6 +1,6 @@
 import logging
 
-from src.services.flaskext.constants import API_KEY_HEADER
+from src.services.flaskw.constants import API_KEY_HEADER
 
 
 class RequestContextLogFilter(logging.Filter):

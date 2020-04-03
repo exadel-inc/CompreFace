@@ -5,7 +5,7 @@ from multiprocessing import Process
 from typing import Dict, Callable
 
 from src.exceptions import ClassifierIsAlreadyTrainingError
-from src.loggingext import init_logging
+from src.loggingw import init_logging
 from src.services.utils.pyutils import run_first
 
 ApiKey = str
