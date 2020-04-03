@@ -1,14 +1,20 @@
-.PHONY: build up down setup start stop docker local unit i9n e2e lint all
-.DEFAULT_GOAL := docker
 PORT = 3000
 DB_PORT = 27017
 ID =
 
+.PHONY: build up down setup start stop docker local unit i9n e2e lint all oom extended
+local: unit i9n e2e lint
+all: local docker
+extended: all oom
+.DEFAULT_GOAL := docker
+
 build:
-	PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) docker-compose build ml
+	PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
+		docker-compose build ml
 
 up:
-	PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) docker-compose up ml
+	PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
+		docker-compose up ml
 
 down:
 	docker-compose down
@@ -25,9 +31,8 @@ stop:
 	$(CURDIR)/ml/run.sh stop
 
 docker:
-	DO_RUN_TESTS=true PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) docker-compose up --build --abort-on-container-exit
-
-local: unit i9n e2e lint
+	DO_RUN_TESTS=true PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
+		docker-compose up --build --abort-on-container-exit
 
 unit:
 	python -m pytest -m "not integration" $(CURDIR)/ml/src
@@ -43,4 +48,5 @@ e2e: start
 lint:
 	python -m pylama --options $(CURDIR)/ml/pylama.ini $(CURDIR)/ml/src
 
-all: local docker
+oom:
+	ID=$(ID) $(CURDIR)/tools/test_oom/run.sh $(CURDIR)/ml/sample_images
