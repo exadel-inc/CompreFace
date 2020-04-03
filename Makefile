@@ -1,4 +1,4 @@
-PORT = 3000
+ML_PORT = 3000
 DB_PORT = 27017
 ID =
 
@@ -9,11 +9,11 @@ extended: all oom
 .DEFAULT_GOAL := docker
 
 build:
-	PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
+	ML_PORT=$(ML_PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
 		docker-compose build ml
 
 up:
-	PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
+	ML_PORT=$(ML_PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
 		docker-compose up ml
 
 down:
@@ -31,7 +31,7 @@ stop:
 	$(CURDIR)/ml/run.sh stop
 
 docker:
-	DO_RUN_TESTS=true PORT=$(PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
+	DO_RUN_TESTS=true ML_PORT=$(ML_PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
 		docker-compose up --build --abort-on-container-exit
 
 unit:
@@ -41,8 +41,8 @@ i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
 e2e: start
-	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:$(PORT) \
-		&& $(CURDIR)/ml/run.sh stop \
+	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:$(ML_PORT) \
+		&& ML_PORT=$(ML_PORT) $(CURDIR)/ml/run.sh stop \
 		|| ($(CURDIR)/ml/run.sh stop; exit 1)
 
 lint:

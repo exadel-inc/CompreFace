@@ -1,7 +1,7 @@
 """
 This file should contain all objects that are cached in-memory between requests
 """
-from src.constants import MONGO_HOST, MONGO_PORT
+from src.constants import ENV
 from src.services.utils.pyutils import run_once, run_once_fork_safe
 
 
@@ -14,7 +14,7 @@ def get_scanner():
 @run_once_fork_safe  # Because PyMongo is not fork-safe
 def get_storage():
     from src.services.storage.mongo_storage import MongoStorage
-    return MongoStorage(MONGO_HOST, MONGO_PORT)
+    return MongoStorage(ENV.MONGO_HOST, ENV.MONGO_PORT)
 
 
 @run_once
