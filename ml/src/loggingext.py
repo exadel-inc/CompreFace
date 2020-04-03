@@ -32,8 +32,10 @@ def init_logging():
                         format=log_format,
                         datefmt='%Y-%m-%d %H:%M:%S',
                         handlers=[stream_handler])
+
     logging.getLogger('PIL').setLevel(logging.INFO)
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
-    tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     warnings.filterwarnings("ignore", category=YAMLLoadWarning)
+    tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
+    os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['MXNET_SUBGRAPH_VERBOSE'] = '0'
