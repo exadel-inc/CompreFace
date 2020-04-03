@@ -9,12 +9,12 @@ from src.services.utils.nputils import read_img
 
 def endpoints(app):
     @app.route('/status')
-    def get_status():
+    def status_get():
         return jsonify(status="OK")
 
     @app.route('/test-read-img', methods=['POST'])
     @needs_attached_file
-    def test_read_img():
+    def test_read_img_post():
         from flask import request
         file = request.files['file']
         img = read_img(file)
