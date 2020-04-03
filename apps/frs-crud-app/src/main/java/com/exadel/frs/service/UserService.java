@@ -6,6 +6,7 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InvalidEmailException;
+import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
@@ -71,13 +72,18 @@ public class UserService {
                 .accountNonExpired(true)
                 .accountNonLocked(true)
                 .credentialsNonExpired(true)
-                .enabled(true)//TODO make it false when EFRS-330 is complete
-                .registrationToken(UUID.randomUUID().toString())
+                .enabled(false)
+                .registrationToken(generateRegistrationToken())
                 .build();
 
         sendRegistrationTokenToUser(user);
 
         return userRepository.save(user);
+    }
+
+    public String generateRegistrationToken() {
+
+        return UUID.randomUUID().toString();
     }
 
     private void sendRegistrationTokenToUser(final User user) {
@@ -154,5 +160,15 @@ public class UserService {
                                     .minusSeconds(registrationExpireTime);
 
         userRepository.deleteByEnabledFalseAndRegTimeBefore(seconds);
+    }
+
+    public void confirmRegistration(final String token) {
+        val user = userRepository.findByRegistrationToken(token)
+                                .orElseThrow(RegistrationTokenExpiredException::new);
+
+        user.setEnabled(true);
+        user.setRegistrationToken(null);
+
+        userRepository.save(user);
     }
 }

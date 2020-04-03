@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> autocomplete(String q);
 
     int deleteByEnabledFalseAndRegTimeBefore(LocalDateTime time);
+
+    Optional<User> findByRegistrationToken(String token);
 }

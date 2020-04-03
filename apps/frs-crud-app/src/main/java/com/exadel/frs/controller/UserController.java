@@ -13,6 +13,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +26,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -31,6 +36,13 @@ public class UserController {
 
     private final UserService userService;
     private final UserMapper userMapper;
+
+    private Environment env;
+
+    @Autowired
+    public void setEnv(Environment env) {
+        this.env = env;
+    }
 
     @GetMapping("/me")
     @ApiOperation(value = "Get information about user, that logged in")
@@ -83,5 +95,19 @@ public class UserController {
                     .query(query)
                     .results(results)
                     .build();
+    }
+
+    @GetMapping("/registration/confirm")
+    @ApiOperation("Confirm user registration token")
+    public void confirmRegistration(@RequestParam final String token, final HttpServletResponse response) throws IOException {
+
+        userService.confirmRegistration(token);
+        redirectToHomePage(response);
+    }
+
+    private void redirectToHomePage(final HttpServletResponse response) throws IOException {
+        response.setStatus(HttpStatus.FOUND.value());
+        val url = "https://" + env.getProperty("host.frs");
+        response.sendRedirect(url);
     }
 }

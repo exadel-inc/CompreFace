@@ -2,6 +2,7 @@ package com.exadel.frs.security;
 
 import com.exadel.frs.FrsApplication;
 import com.exadel.frs.helpers.EmailSender;
+import com.exadel.frs.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,6 +22,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.util.UUID;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,6 +37,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = FrsApplication.class)
 public class OAuthMvcTest {
 
+    private String registrationToken = UUID.randomUUID().toString();
+
     @Autowired
     private WebApplicationContext wac;
 
@@ -41,12 +48,16 @@ public class OAuthMvcTest {
     @MockBean
     private EmailSender emailSender;
 
+    @SpyBean
+    private UserService userService;
+
     private MockMvc mockMvc;
 
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                 .addFilter(springSecurityFilterChain).build();
+        when(userService.generateRegistrationToken()).thenReturn(registrationToken);
     }
 
     private String obtainAccessToken(String username, String password) throws Exception {
@@ -91,9 +102,14 @@ public class OAuthMvcTest {
                 .accept("application/json"))
                 .andExpect(status().isCreated());
 
+        confirmRegistration();
         var accessToken = obtainAccessToken("test1@email.com", "test1");
         mockMvc.perform(get("/user/me")
                 .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk());
+    }
+
+    private void confirmRegistration() {
+        userService.confirmRegistration(registrationToken);
     }
 }
