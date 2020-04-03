@@ -1,4 +1,5 @@
 import logging
+import os
 import warnings
 
 from tensorflow.python.util import deprecation as tensorflow_deprecation
@@ -35,3 +36,4 @@ def init_logging():
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
     tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     warnings.filterwarnings("ignore", category=YAMLLoadWarning)
+    os.environ['MXNET_SUBGRAPH_VERBOSE'] = '0'
