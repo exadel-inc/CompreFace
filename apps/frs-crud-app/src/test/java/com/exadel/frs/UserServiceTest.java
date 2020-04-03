@@ -6,12 +6,15 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InvalidEmailException;
+import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
 import lombok.val;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.springframework.mock.env.MockEnvironment;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
@@ -20,7 +23,11 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -29,6 +36,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class UserServiceTest {
+    private final String EXPIRED_TOKEN = "expired_token";
 
     private UserRepository userRepositoryMock;
     private UserService userService;
@@ -188,5 +196,32 @@ class UserServiceTest {
                 .build();
 
         assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userWithoutFirstName));
+    }
+
+    @Test
+    void confirmRegistrationReturns403WhenTokenIsExpired() {
+
+        final Executable confirmRegistration = () -> userService.confirmRegistration(EXPIRED_TOKEN);
+
+        Assertions.assertThrows(RegistrationTokenExpiredException.class, confirmRegistration);
+    }
+
+    @Test
+    void confirmRegistrationEnablesUserAndRemovesTokenWhenSuccess() {
+        when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
+        UserCreateDto userCreateDto = UserCreateDto.builder()
+                .email("email@example.com")
+                .password("password")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
+
+        val createdUser = userService.createUser(userCreateDto);
+        assertFalse(createdUser.isEnabled());
+
+        when(userRepositoryMock.findByRegistrationToken(createdUser.getRegistrationToken())).thenReturn(Optional.of(createdUser));
+        userService.confirmRegistration(createdUser.getRegistrationToken());
+        assertTrue(createdUser.isEnabled());
+        assertNull(createdUser.getRegistrationToken());
     }
 }
