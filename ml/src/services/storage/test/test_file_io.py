@@ -12,7 +12,7 @@ def test__given_no_saved_file__when_getting_file__then_raises_error(storage: Mon
     assert raises(NoFileFoundInDatabaseError, act)
 
 
-def test_given_saved_file__when_getting_file__then_returns_file(storage: MongoStorage):
+def test__given_saved_file__when_getting_file__then_returns_file(storage: MongoStorage):
     storage.save_file('filename.bin', b'hello')
 
     bytes_data = storage.get_file('filename.bin')

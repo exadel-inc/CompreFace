@@ -36,8 +36,9 @@ def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes(s
 
     faces = scanner.scan(img)
 
+    tolerance = 20
     for face in faces:
-        assert face.box.similar_to_any(correct_boxes)
+        assert face.box.similar_to_any(correct_boxes, tolerance)
 
 
 @pytest.mark.integration

@@ -84,24 +84,23 @@ class Facenet2018(FaceScanner):
 
     def _calculate_embeddings(self, cropped_images):
         """Run forward pass to calculate embeddings"""
-        images_placeholder = self._embedding_calculator.graph.get_tensor_by_name("input:0")
-        embeddings = self._embedding_calculator.graph.get_tensor_by_name("embeddings:0")
-        phase_train_placeholder = self._embedding_calculator.graph.get_tensor_by_name("phase_train:0")
-        embedding_size = embeddings.get_shape()[1]
+        graph_images_placeholder = self._embedding_calculator.graph.get_tensor_by_name("input:0")
+        graph_embeddings = self._embedding_calculator.graph.get_tensor_by_name("embeddings:0")
+        graph_phase_train_placeholder = self._embedding_calculator.graph.get_tensor_by_name("phase_train:0")
+        embedding_size = graph_embeddings.get_shape()[1]
         image_count = len(cropped_images)
         batches_per_epoch = int(math.ceil(1.0 * image_count / self.BATCH_SIZE))
         embeddings = np.zeros((image_count, embedding_size))
         for i in range(batches_per_epoch):
             start_index = i * self.BATCH_SIZE
             end_index = min((i + 1) * self.BATCH_SIZE, image_count)
-            feed_dict = {images_placeholder: cropped_images, phase_train_placeholder: False}
-            embeddings[start_index:end_index, :] = self._embedding_calculator.sess.run(embeddings, feed_dict=feed_dict)
+            feed_dict = {graph_images_placeholder: cropped_images, graph_phase_train_placeholder: False}
+            embeddings[start_index:end_index, :] = self._embedding_calculator.sess.run(graph_embeddings, feed_dict=feed_dict)
         return embeddings
 
     def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None) -> List[ScannedFace]:
-        if detection_threshold is not None:
-            assert 0 <= detection_threshold <= 1
-        detection_threshold_c = detection_threshold or self.DEFAULT_THRESHOLD_C
+        detection_threshold_c = self.DEFAULT_THRESHOLD_C if detection_threshold is None else detection_threshold
+        assert 0 <= detection_threshold_c <= 1
         scanned_faces = []
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         downscaled_img = scaler.downscale_img(img)

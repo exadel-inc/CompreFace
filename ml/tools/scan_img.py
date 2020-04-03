@@ -9,7 +9,7 @@ from sample_images import IMG_DIR
 from src.loggingw import init_logging
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.scanner.facescanner import FaceScanner
-from src.services.facescan.scanner.facescanners import Scanners
+from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import first_like_all
 
@@ -51,7 +51,7 @@ if __name__ == '__main__':
     scanner_id = sys.argv[1]  # e.g. 'Facenet2018'
     img_name = sys.argv[2]  # e.g. 'five-faces.jpg'
     img = read_img(IMG_DIR / img_name)
-    scanner: FaceScanner = Scanners[scanner_id]()
+    scanner: FaceScanner = id_2_face_scanner_cls[scanner_id]()
     faces = scanner.scan(img)
     print_scanned_faces(faces)
     # show_scanned_faces(faces)
