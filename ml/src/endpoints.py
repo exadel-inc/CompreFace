@@ -27,7 +27,7 @@ def endpoints(app):
 
     @app.route('/test-read-img', methods=['POST'])
     @needs_attached_file
-    def test_read_img():
+    def test_read_img_post():
         from flask import request
         file = request.files['file']
         img = read_img(file)
