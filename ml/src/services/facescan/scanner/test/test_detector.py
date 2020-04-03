@@ -1,47 +1,12 @@
-from typing import List
-
 import imageio
 import pytest
-from sample_images import IMG_DIR
 
+from sample_images import IMG_DIR
 from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
 from src.services.facescan.scanner.facescanner import FaceScanner, ALL_SCANNERS
 from src.services.facescan.scanner.test._scanner_cache import get_scanner
 from src.services.utils.pytestutils import raises
-
-
-def bounding_box_inside_box(bounding_box, box) -> bool:
-    x_min_bound = bounding_box[0]
-    y_min_bound = bounding_box[1]
-    x_max_bound = bounding_box[2]
-    y_max_bound = bounding_box[3]
-
-    x_min_start = box[0] + 10
-    x_min_end = box[0] - 10
-    y_min_start = box[1] + 10
-    y_min_end = box[1] - 10
-    x_max_start = box[2] + 10
-    x_max_end = box[2] - 10
-    y_max_start = box[3] + 10
-    y_max_end = box[3] - 10
-
-    if not x_min_end < x_min_bound < x_min_start or not y_min_end < y_min_bound < y_min_start \
-            or not x_max_end < x_max_bound < x_max_start or not y_max_end < y_max_bound < y_max_start:
-        return True
-    return True
-
-
-def parse_box(box: BoundingBox):
-    return [box.x_min, box.y_min, box.x_max, box.y_max]
-
-
-def check_box_in_boxes(boxes: List[List],
-                       box: List[int]):  # this checks if the given box is inside any given sample boxes
-    for expected_box in boxes:
-        if bounding_box_inside_box(box, expected_box):
-            return True
-    return False
 
 
 @pytest.mark.integration
@@ -58,20 +23,20 @@ def test__given_no_faces_img__when_scanned__then_raises_error(scanner_cls):
 
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
-@pytest.mark.parametrize('filename', ['five-faces.png', 'five-faces.jpg'])
-@pytest.mark.parametrize('boxes',
-                         [[[544, 222, 661, 361], [421, 236, 530, 369], [161, 36, 266, 160], [342, 160, 437, 268],
-                           [243, 174, 352, 309]]])
-def test__given_5face_jpg_img__when_scanned__then_returns_5_correct_bounding_boxes(scanner_cls, filename, boxes):
+@pytest.mark.parametrize('filename', ['five-faces.png', 'five-faces.jpg', 'five-faces.webp'])
+def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes(scanner_cls, filename):
+    correct_boxes = [BoundingBox(544, 222, 661, 361, 1),
+                     BoundingBox(421, 236, 530, 369, 1),
+                     BoundingBox(161, 36, 266, 160, 1),
+                     BoundingBox(342, 160, 437, 268, 1),
+                     BoundingBox(243, 174, 352, 309, 1)]
     scanner: FaceScanner = get_scanner(scanner_cls)
     img = imageio.imread(IMG_DIR / filename)[:, :, 0:3]
 
     faces = scanner.scan(img)
 
-    assert len(faces) == 5
     for face in faces:
-        box = parse_box(face.box)
-        assert check_box_in_boxes(boxes, box)
+        assert face.box.similar_to_any(correct_boxes)
 
 
 @pytest.mark.integration

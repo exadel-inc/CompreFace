@@ -36,3 +36,33 @@ class BoundingBox(JSONEncodable):
     @property
     def xy(self):
         return (self.x_min, self.y_min), (self.x_max, self.y_max)
+
+    def similar(self, other: BoundingBox, tolerance: int):
+        """
+        >>> BoundingBox(100,100,100,100,1).similar(BoundingBox(100,100,100,100,1),5)
+        True
+        >>> BoundingBox(100,100,100,100,1).similar(BoundingBox(100,100,100,95,1),5)
+        True
+        >>> BoundingBox(100,100,100,100,1).similar(BoundingBox(100,100,100,105,1),5)
+        True
+        >>> BoundingBox(100,100,100,100,1).similar(BoundingBox(100,100,100,94,1),5)
+        False
+        >>> BoundingBox(100,100,100,100,1).similar(BoundingBox(100,100,100,106,1),5)
+        False
+        """
+        return (abs(self.x_min - other.x_min) <= tolerance
+                and abs(self.y_min - other.y_min) <= tolerance
+                and abs(self.x_max - other.x_max) <= tolerance
+                and abs(self.y_max - other.y_max) <= tolerance)
+
+    def similar_to_any(self, others: List[BoundingBox], tolerance: int):
+        """
+        >>> BoundingBox(100,100,100,100,1).similar_to_any([BoundingBox(100,100,100,105,1),BoundingBox(100,100,100,106,1)],5)
+        True
+        >>> BoundingBox(100,100,100,100,1).similar_to_any([BoundingBox(100,100,100,106,1),BoundingBox(100,100,100,106,1)],5)
+        False
+        """
+        for other in others:
+            if self.similar(other, tolerance):
+                return True
+        return False

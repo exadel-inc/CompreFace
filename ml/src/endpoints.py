@@ -14,10 +14,10 @@ from src.services.flaskext.needs_attached_file import needs_attached_file
 from src.services.flaskext.needs_authentication import needs_authentication
 from src.services.flaskext.needs_retrain import needs_retrain
 from src.services.flaskext.parse_request_arg import parse_request_bool_arg
+from src.services.imgtools.read_img import read_img
 from src.services.storage.face import Face
 from src.services.storage.mongo_storage import MongoStorage
 from src.services.train_classifier import get_faces
-from src.services.imgtools.read_img import read_img
 
 
 def endpoints(app):
@@ -28,6 +28,7 @@ def endpoints(app):
     @app.route('/test-read-img', methods=['POST'])
     @needs_attached_file
     def test_read_img_post():
+        """ Temporary endpoint for debugging purposes """
         from flask import request
         file = request.files['file']
         img = read_img(file)
@@ -136,8 +137,13 @@ def endpoints(app):
 
 
 def _get_detection_threshold(request):
-    detection_threshold = request.values.get(ARG.DET_PROB_THRESHOLD)
-    return float(detection_threshold) if detection_threshold is not None else None
+    detection_threshold_val = request.values.get(ARG.DET_PROB_THRESHOLD)
+    if detection_threshold_val is None:
+        return None
+    detection_threshold = float(detection_threshold_val)
+    if not (0 <= detection_threshold <= 1):
+        raise BadRequest('Detection threshold incorrect (0 <= detection_threshold <= 1)')
+    return detection_threshold
 
 
 def _get_face_limit(request):

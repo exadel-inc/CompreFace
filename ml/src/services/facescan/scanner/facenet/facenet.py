@@ -99,7 +99,8 @@ class Facenet2018(FaceScanner):
         return embeddings
 
     def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None) -> List[ScannedFace]:
-        assert self.EMBEDDING_MODEL_PATH
+        if detection_threshold is not None:
+            assert 0 <= detection_threshold <= 1
         detection_threshold_c = detection_threshold or self.DEFAULT_THRESHOLD_C
         scanned_faces = []
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
