@@ -3,7 +3,7 @@ import random
 from collections import namedtuple
 
 import imageio
-from src.services.sample_images import IMG_DIR
+from sample_images import IMG_DIR
 
 from src.cache import get_storage, get_scanner
 from src.services.facescan.backend.facenet.facenet import Facenet2018

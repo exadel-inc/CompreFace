@@ -2,7 +2,7 @@ from typing import List
 
 import imageio
 import pytest
-from src.services.sample_images import IMG_DIR
+from sample_images import IMG_DIR
 
 from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
