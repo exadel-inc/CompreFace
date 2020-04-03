@@ -12,4 +12,4 @@ services:
       args:
         - DO_RUN_TESTS=${DO_RUN_TESTS:-false}
     ports:
-      - ${PORT:-3000}:3000
+      - ${ML_PORT:-3000}:${ML_PORT:-3000}

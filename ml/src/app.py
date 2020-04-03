@@ -5,7 +5,7 @@ from typing import Union, Callable
 
 from flasgger import Swagger
 from flask import Flask
-
+from src.constants import ENV
 from src.docs import DOCS_DIR
 from src.endpoints import endpoints
 from src.loggingext import init_logging
@@ -18,6 +18,7 @@ from src.services.flaskext.log_response import log_http_response
 def init_runtime():
     assert sys.version_info >= (3, 7)
     init_logging()
+    logging.debug(ENV.dict())
 
 
 def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[Path, None] = None):
@@ -45,6 +46,4 @@ if __name__ == '__main__':
     init_runtime()
     app = create_app(endpoints, DOCS_DIR)
     app.config.from_mapping(SECRET_KEY='dev')
-    port = sys.argv[1] if len(sys.argv) > 1 else 3000
-    logging.info(f'Listening for incoming connections on port {port}')
-    app.run(host='0.0.0.0', port=port, debug=True, use_debugger=False, use_reloader=False)
+    app.run(host='0.0.0.0', port=ENV.ML_PORT, debug=True, use_debugger=False, use_reloader=False)
