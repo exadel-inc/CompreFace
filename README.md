@@ -32,7 +32,7 @@ Builds containers, run tests inside: `$ make`
 2. Run all tests: `$ make local`
    - Unit tests: `$ make unit`
    - Integration tests:` $ make i9n`
-   - End-to-end tests: `$ make e2e`
+   - End-to-end tests: `$ make e2e_local`
    - Lint check: `$ make lint`
 
 # Miscellaneous

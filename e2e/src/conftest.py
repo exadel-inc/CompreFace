@@ -2,6 +2,7 @@ import logging
 import time
 from http import HTTPStatus
 
+import pytest
 import requests
 from requests import ReadTimeout
 
@@ -66,8 +67,8 @@ def _wait_for_available_service(ml_url):
             res = GET(url)
         except (ConnectionError, ReadTimeout) as e:
             if time.time() - start_time > timeout_s:
-                raise Exception(f"Waiting to get 200 from '{url}' has reached a "
-                                f"timeout ({timeout_s}s): {str(e)}") from None
+                pytest.exit(f"Waiting to get 200 from '{url}' has reached a "
+                            f"timeout ({timeout_s}s): {str(e)}", returncode=1)
             time.sleep(1)
             continue
         assert res.status_code == HTTPStatus.OK, res.content

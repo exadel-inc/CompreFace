@@ -12,7 +12,7 @@ ML = ENV.ML_URL
 
 
 @pytest.mark.run(order=next(after_previous))
-def test_setup__drop_db():
+def test_init():
     print(ENV.__str__())
 
     client = MongoClient(host=ENV.MONGO_HOST, port=ENV.MONGO_PORT)
@@ -22,10 +22,12 @@ def test_setup__drop_db():
     else:
         print("Database drop: Skipped")
 
+    _wait_for_available_service(ML)
+
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_checking_status__then_returns_200():
-    _wait_for_available_service(ML)
+    pass
 
     res = GET(f"{ML}/status")
 
@@ -36,7 +38,7 @@ def test__when_checking_status__then_returns_200():
 @pytest.mark.run(order=next(after_previous))
 def test__when_opening_apidocs__then_returns_200():
     pass
-    
+
     res = GET(f"{ML}/apidocs")
 
     assert res.status_code == 200, res.status_code

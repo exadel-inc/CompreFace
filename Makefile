@@ -1,11 +1,13 @@
 ML_HOST ?=
 ML_PORT ?=
+ML_URL ?= http://localhost:3000
 MONGO_HOST ?= localhost
 MONGO_PORT ?=
 ID ?=
 
-.PHONY: build up down setup start stop docker local unit i9n e2e lint all oom extended
-local: unit i9n e2e lint
+.PHONY: build up down setup start stop docker local unit i9n e2e _start_for_e2e e2e_local lint all oom
+e2e_local: _start_for_e2e e2e
+local: unit i9n e2e_local lint
 all: local docker
 extended: all oom
 .DEFAULT_GOAL := docker
@@ -37,6 +39,7 @@ start:
 	MONGO_HOST=$(MONGO_HOST) \
 	MONGO_PORT=$(MONGO_PORT) \
 	MONGO_DBNAME=efrs_tmp_db$(ID) \
+	FLASK_ENV=development \
 	$(CURDIR)/ml/run.sh start
 
 stop:
@@ -57,8 +60,13 @@ unit:
 i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
-e2e: start
-	ML_URL=http://localhost:$(ML_PORT) \
+_start_for_e2e: start
+	timeout 10s bash -c "until [ -f $(CURDIR)/ml/run.pid ]; do sleep 1; done"
+	sleep 5s
+	test -f $(CURDIR)/ml/run.pid
+
+e2e:
+	ML_URL=$(ML_URL) \
 	MONGO_HOST=$(MONGO_HOST) \
 	MONGO_PORT=$(MONGO_PORT) \
 	MONGO_DBNAME=efrs_tmp_db$(ID) \
