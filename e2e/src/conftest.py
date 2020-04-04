@@ -40,9 +40,9 @@ def DELETE(url, **kwargs):
     return _request('delete', url, **kwargs)
 
 
-def _wait_until_training_completes(host, check_result=True):
+def _wait_until_training_completes(ml_url, check_result=True):
     time.sleep(2)
-    url = f"{host}/retrain"
+    url = f"{ml_url}/retrain"
     timeout_s = ENV.TRAINING_TIMEOUT_S
     start_time = time.time()
     while True:
@@ -57,13 +57,13 @@ def _wait_until_training_completes(host, check_result=True):
         time.sleep(1)
 
 
-def _wait_for_available_service(host):
-    url = f"{host}/status"
+def _wait_for_available_service(ml_url):
+    url = f"{ml_url}/status"
     timeout_s = ENV.AVAILABLE_SERVICE_TIMEOUT_S
     start_time = time.time()
     while True:
         try:
-            res = GET(url, headers={'X-Api-Key': 'test-api-key'})
+            res = GET(url)
         except (ConnectionError, ReadTimeout) as e:
             if time.time() - start_time > timeout_s:
                 raise Exception(f"Waiting to get 200 from '{url}' has reached a "
