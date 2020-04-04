@@ -1,30 +1,30 @@
+import types
 from http import HTTPStatus
 
 import pytest
 
 from src.services.async_task_manager.async_task_manager import TrainingTaskManagerBase, TaskStatus
-from src.services.flaskw.needs_retrain import needs_retrain
-from src.services.utils.pytestutils import Expando
+from src.services.flask_.needs_retrain import needs_retrain
 
-pytest.x = Expando()
+pytest.ENV = types.SimpleNamespace()
 
 
 @pytest.fixture
 def task_manager(mocker):
     task_manager = TrainingTaskManagerMock()
-    mocker.patch('src.services.flaskw.needs_retrain.get_training_task_manager', return_value=task_manager)
+    mocker.patch('src.services.flask_.needs_retrain.get_training_task_manager', return_value=task_manager)
     return task_manager
 
 
 @pytest.fixture
 def client_with_retrain_endpoint(app):
-    pytest.x.ENDPOINT_EXECUTED = False
-    pytest.x.ENDPOINT_EXECUTED_BEFORE_TRAINING = False
+    pytest.ENV.ENDPOINT_EXECUTED = False
+    pytest.ENV.ENDPOINT_EXECUTED_BEFORE_TRAINING = False
 
     @app.route('/endpoint', methods=['POST'])
     @needs_retrain
     def endpoint():
-        pytest.x.ENDPOINT_EXECUTED = True
+        pytest.ENV.ENDPOINT_EXECUTED = True
         return 'success-body', HTTPStatus.OK
 
     return app.test_client()
@@ -32,8 +32,8 @@ def client_with_retrain_endpoint(app):
 
 @pytest.fixture
 def client_with_retrain_endpoint_error(app):
-    pytest.x.ENDPOINT_EXECUTED = False
-    pytest.x.ENDPOINT_EXECUTED_BEFORE_TRAINING = False
+    pytest.ENV.ENDPOINT_EXECUTED = False
+    pytest.ENV.ENDPOINT_EXECUTED_BEFORE_TRAINING = False
 
     @app.route('/endpoint', methods=['POST'])
     @needs_retrain
@@ -77,7 +77,7 @@ def test__when_requesting__then_starts_retraining_only_after_endpoint_function(
 
     assert res.status_code == HTTPStatus.OK, res.json
     assert res.data.decode() == 'success-body'
-    assert pytest.x.ENDPOINT_EXECUTED_BEFORE_TRAINING
+    assert pytest.ENV.ENDPOINT_EXECUTED_BEFORE_TRAINING
 
 
 def test__given_retrain_decorator_raises_error__requesting__then_does_not_call_endpoint_function(
@@ -88,7 +88,7 @@ def test__given_retrain_decorator_raises_error__requesting__then_does_not_call_e
 
     assert res.status_code == HTTPStatus.BAD_REQUEST, res.json
     assert res.json['message'] == "400 Bad Request: 'retrain' parameter accepts only 'YES, NO, FORCE' values"
-    assert not pytest.x.ENDPOINT_EXECUTED
+    assert not pytest.ENV.ENDPOINT_EXECUTED
 
 
 def test__given_endpoint_raises_error__when_requesting__then_skips_retraining(
@@ -111,7 +111,7 @@ class TrainingTaskManagerMock(TrainingTaskManagerBase):
         return self.status
 
     def start_training(self, api_key, force=False):
-        pytest.x.ENDPOINT_EXECUTED_BEFORE_TRAINING = pytest.x.ENDPOINT_EXECUTED
+        pytest.ENV.ENDPOINT_EXECUTED_BEFORE_TRAINING = pytest.ENV.ENDPOINT_EXECUTED
         self.started_training_str = 'force' if force else 'yes'
 
     def abort_training(self, api_key):

@@ -4,6 +4,8 @@ ML_URL ?= http://localhost:3000
 MONGO_HOST ?= localhost
 MONGO_PORT ?=
 ID ?=
+API_KEY ?=
+DROP_DB ?=
 
 .PHONY: setup start stop build up down local unit i9n e2e_local _start_for_e2e e2e lint docker oom
 .DEFAULT_GOAL := docker
@@ -71,6 +73,8 @@ e2e:
 	MONGO_HOST=$(MONGO_HOST) \
 	MONGO_PORT=$(MONGO_PORT) \
 	MONGO_DBNAME=efrs_tmp_db$(ID) \
+	API_KEY=$(API_KEY) \
+	DROP_DB=$(DROP_DB) \
 	$(CURDIR)/e2e/run-e2e-test.sh \
 		&& $(CURDIR)/ml/run.sh stop \
 		|| ($(CURDIR)/ml/run.sh stop; exit 1

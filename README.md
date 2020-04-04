@@ -35,7 +35,11 @@ Builds containers, run tests inside: `$ make`
    - End-to-end tests: `$ make e2e_local`
    - Lint check: `$ make lint`
 
-### External service with e2e
+### End-to-end tests against a remote host
+
+Use `$ make e2e`, for example:
+
+`$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
 
 # Miscellaneous
 ### Make arguments

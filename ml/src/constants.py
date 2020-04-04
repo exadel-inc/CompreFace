@@ -2,11 +2,15 @@ import json
 import os
 
 
+def _get_env(name: str, default: str) -> str:
+    return os.environ.get(name, '') or default
+
+
 class ENV:
-    ML_PORT = int(os.environ.get('ML_PORT', '') or '3000')
-    MONGO_HOST = os.environ.get('MONGO_HOST', '') or 'mongo'
-    MONGO_PORT = int(os.environ.get('MONGO_PORT', '') or '27017')
-    MONGO_DBNAME = os.environ.get('MONGO_DBNAME', '') or 'efrs_db'
+    ML_PORT = int(_get_env('ML_PORT', '3000'))
+    MONGO_HOST = _get_env('MONGO_HOST', 'mongo')
+    MONGO_PORT = int(_get_env('MONGO_PORT', '27017'))
+    MONGO_DBNAME = _get_env('MONGO_DBNAME', 'efrs_db')
 
     @classmethod
     def __str__(cls):

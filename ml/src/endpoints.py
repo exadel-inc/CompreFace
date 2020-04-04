@@ -9,11 +9,11 @@ from src.services.async_task_manager.async_task_manager import TaskStatus, Train
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
 from src.services.facescan.scanner.facescanner import FaceScanner
-from src.services.flaskw.constants import API_KEY_HEADER, GetParameter, ARG
-from src.services.flaskw.needs_attached_file import needs_attached_file
-from src.services.flaskw.needs_api_key import needs_api_key
-from src.services.flaskw.needs_retrain import needs_retrain
-from src.services.flaskw.parse_request_arg import parse_request_bool_arg
+from src.services.flask_.constants import API_KEY_HEADER, GetParameter, ARG
+from src.services.flask_.needs_api_key import needs_api_key
+from src.services.flask_.needs_attached_file import needs_attached_file
+from src.services.flask_.needs_retrain import needs_retrain
+from src.services.flask_.parse_request_arg import parse_request_bool_arg
 from src.services.imgtools.read_img import read_img
 from src.services.storage.face import Face
 from src.services.storage.mongo_storage import MongoStorage

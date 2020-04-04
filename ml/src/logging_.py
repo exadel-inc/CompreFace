@@ -5,7 +5,7 @@ import warnings
 from tensorflow.python.util import deprecation as tensorflow_deprecation
 from yaml import YAMLLoadWarning
 
-from src.services.flaskw.logging_context import RequestContextLogFilter
+from src.services.flask_.logging_context import RequestContextLogFilter
 
 
 class MainLogFilter(logging.Filter):

@@ -4,7 +4,7 @@ import toolz
 
 from src.cache import get_scanner, get_storage
 from src.exceptions import NotEnoughUniqueFacesError
-from src.loggingw import init_logging
+from src.logging_ import init_logging
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.storage.mongo_storage import MongoStorage

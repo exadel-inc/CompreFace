@@ -1,8 +1,8 @@
 import pytest
-from pymongo import MongoClient
 from toolz import itertoolz
 
-from .conftest import after_previous_gen, POST, DELETE, GET, _wait_until_training_completes, _wait_for_available_service
+from .conftest import (after_previous_gen, POST_ml, DELETE_ml, GET_ml, wait_until_training_is_completed,
+                       wait_until_ml_is_available, drop_db)
 from .constants import ENV
 from .sample_images import IMG_DIR
 
@@ -14,22 +14,16 @@ ML = ENV.ML_URL
 @pytest.mark.run(order=next(after_previous))
 def test_init():
     print(ENV.__str__())
-
-    client = MongoClient(host=ENV.MONGO_HOST, port=ENV.MONGO_PORT)
-    if ENV.MONGO_DBNAME in client.list_database_names() and 'tmp' in ENV.MONGO_DBNAME:
-        client.drop_database(ENV.MONGO_DBNAME)
-        print(f"Database drop: Successful")
-    else:
-        print("Database drop: Skipped")
-
-    _wait_for_available_service(ML)
+    if ENV.DROP_DB:
+        drop_db()
+    wait_until_ml_is_available()
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_checking_status__then_returns_200():
     pass
 
-    res = GET(f"{ML}/status")
+    res = GET_ml("/status")
 
     assert res.status_code == 200, res.content
     assert res.json()['status'] == 'OK'
@@ -39,7 +33,7 @@ def test__when_checking_status__then_returns_200():
 def test__when_opening_apidocs__then_returns_200():
     pass
 
-    res = GET(f"{ML}/apidocs")
+    res = GET_ml("/apidocs")
 
     assert res.status_code == 200, res.status_code
 
@@ -48,7 +42,7 @@ def test__when_opening_apidocs__then_returns_200():
 def test__when_retraining__then_returns_400():
     pass
 
-    res = POST(f"{ML}/retrain", headers={'X-Api-Key': 'test-api-key'})
+    res = POST_ml("/retrain", headers={'X-Api-Key': ENV.API_KEY})
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: Not enough unique faces to start training a " \
@@ -59,7 +53,7 @@ def test__when_retraining__then_returns_400():
 def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized():
     files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
 
-    res = POST(f"{ML}/faces/FAIL?retrain=no", files=files)
+    res = POST_ml("/faces/FAIL?retrain=no", files=files)
 
     assert res.status_code == 401, res.content
 
@@ -68,7 +62,7 @@ def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized():
 def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_found():
     files = {'file': open(IMG_DIR / 'no-faces.jpg', 'rb')}
 
-    res = POST(f"{ML}/faces/FAIL?retrain=no", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST_ml("/faces/FAIL?retrain=no", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: No face is found in the given image"
@@ -82,7 +76,7 @@ def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_fo
 def test__when_adding_face__then_returns_201(file, name):
     files = {'file': open(IMG_DIR / file, 'rb')}
 
-    res = POST(f"{ML}/faces/{name}?retrain=no", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST_ml("/faces/{name}?retrain=no", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 201, res.content
 
@@ -91,17 +85,17 @@ def test__when_adding_face__then_returns_201(file, name):
 def test__when_retraining__then_returns_202():
     pass
 
-    res = POST(f"{ML}/retrain", headers={'X-Api-Key': 'test-api-key'})
+    res = POST_ml("/retrain", headers={'X-Api-Key': ENV.API_KEY})
 
     assert res.status_code == 202, res.content
-    _wait_until_training_completes(ML)
+    wait_until_training_is_completed(ENV.API_KEY)
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_multiple_face_img__when_adding_face__then_returns_400_only_one_face_allowed():
     files = {'file': open(IMG_DIR / 'five-faces.jpg', 'rb')}
 
-    res = POST(f"{ML}/faces/FAIL", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST_ml("/faces/FAIL", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: Found more than one face in the given image"
@@ -112,7 +106,7 @@ def test__given_multiple_face_img__when_adding_face__then_returns_400_only_one_f
 def test__when_recognizing_faces__then_returns_face_A_name():
     files = {'file': open(IMG_DIR / 'personA-img2.jpg', 'rb')}
 
-    res = POST(f"{ML}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 200, res.content
     result = res.json()['result']
@@ -124,7 +118,7 @@ def test__when_recognizing_faces__then_returns_face_A_name():
 def test__given_five_face_img__when_recognizing_faces__then_returns_five_distinct_results():
     file = {'file': open(IMG_DIR / 'five-faces.jpg', 'rb')}
 
-    res = POST(f"{ML}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=file)
+    res = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=file)
 
     assert res.status_code == 200, res.content
     result_items = res.json()['result']
@@ -137,7 +131,7 @@ def test__given_five_face_img__when_recognizing_faces__then_returns_five_distinc
 def test__when_getting_names__then_returns_correct_names():
     pass
 
-    res = GET(f"{ML}/faces", headers={'X-Api-Key': 'test-api-key'})
+    res = GET_ml("/faces", headers={'X-Api-Key': ENV.API_KEY})
 
     result = res.json()['names']
     assert set(result) == {'Marie Curie', 'Stephen Hawking', 'Paul Walker'}
@@ -147,7 +141,7 @@ def test__when_getting_names__then_returns_correct_names():
 def test__given_other_api_key__when_getting_names__then_returns_no_names():
     pass
 
-    res = GET(f"{ML}/faces", headers={'X-Api-Key': 'different-api-key'})
+    res = GET_ml("/faces", headers={'X-Api-Key': f'{ENV.API_KEY}-different'})
 
     result = res.json()['names']
     assert len(result) == 0
@@ -157,10 +151,10 @@ def test__given_other_api_key__when_getting_names__then_returns_no_names():
 def test__when_deleting_face__then_returns_204():
     pass
 
-    res_del = DELETE(f"{ML}/faces/Paul Walker", headers={'X-Api-Key': 'test-api-key'})
+    res_del = DELETE_ml("/faces/Paul Walker", headers={'X-Api-Key': ENV.API_KEY})
 
     assert res_del.status_code == 204, res_del.content
-    _wait_until_training_completes(ML)
+    wait_until_training_is_completed(ENV.API_KEY)
 
 
 # noinspection PyPep8Naming
@@ -170,9 +164,9 @@ def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized():
     files_b = {'file': open(IMG_DIR / 'personB-img1.jpg', 'rb')}
     files_c = {'file': open(IMG_DIR / 'personC-img1.jpg', 'rb')}
 
-    res_a = POST(f"{ML}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files_a)
-    res_b = POST(f"{ML}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files_b)
-    res_c = POST(f"{ML}/recognize", headers={'X-Api-Key': 'test-api-key'}, files=files_c)
+    res_a = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files_a)
+    res_b = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files_b)
+    res_c = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files_c)
 
     assert res_a.status_code == 200, res_a.content
     result_a = res_a.json()['result']
@@ -183,14 +177,14 @@ def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized():
     assert res_c.status_code == 200, res_a.content
     result_c = res_c.json()['result']
     assert not (result_c[0]['face_name'] == 'Paul Walker')
-    _wait_until_training_completes(ML, check_response=False)
+    wait_until_training_is_completed(ENV.API_KEY, check_response=False)
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_getting_training_status__then_returns_200():
     pass
 
-    res = GET(f"{ML}/retrain", headers={'X-Api-Key': 'test-api-key'})
+    res = GET_ml("/retrain", headers={'X-Api-Key': ENV.API_KEY})
 
     assert res.status_code == 200, res.content
 
@@ -200,17 +194,17 @@ def test__when_getting_training_status__then_returns_200():
 def test__when_deleting_face_B_with_retraining__then_returns_204():
     pass
 
-    res = DELETE(f"{ML}/faces/Stephen Hawking", headers={'X-Api-Key': 'test-api-key'})
+    res = DELETE_ml("/faces/Stephen Hawking", headers={'X-Api-Key': ENV.API_KEY})
 
     assert res.status_code == 204, res.content
-    _wait_until_training_completes(ML, check_response=False)
+    wait_until_training_is_completed(ENV.API_KEY, check_response=False)
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_getting_training_status__then_returns_last_status_equals_error():
     pass
 
-    res = GET(f"{ML}/retrain", headers={'X-Api-Key': 'test-api-key'})
+    res = GET_ml("/retrain", headers={'X-Api-Key': ENV.API_KEY})
 
     assert res.status_code == 200, res.content
     assert res.json()['last_status'] == 'ERROR'
@@ -220,7 +214,7 @@ def test__when_getting_training_status__then_returns_last_status_equals_error():
 def test__when_recognizing_faces__then_returns_400_no_classifier_trained():
     files = {'file': open(IMG_DIR / 'personA-img1.jpg', 'rb')}
 
-    res = POST(f"{ML}/recognize?FAIL", headers={'X-Api-Key': 'test-api-key'}, files=files)
+    res = POST_ml("/recognize?FAIL", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: No classifier model is yet trained, " \

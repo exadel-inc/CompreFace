@@ -3,7 +3,7 @@ from http import HTTPStatus
 import pytest
 
 from src.exceptions import NoFileAttachedError, NoFileSelectedError
-from src.services.flaskw.needs_attached_file import needs_attached_file
+from src.services.flask_.needs_attached_file import needs_attached_file
 
 FILE_BYTES = b''
 
