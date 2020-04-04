@@ -11,7 +11,7 @@ from src.services.dto.face_prediction import FacePrediction
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.flaskw.constants import API_KEY_HEADER, GetParameter, ARG
 from src.services.flaskw.needs_attached_file import needs_attached_file
-from src.services.flaskw.needs_authentication import needs_authentication
+from src.services.flaskw.needs_api_key import needs_api_key
 from src.services.flaskw.needs_retrain import needs_retrain
 from src.services.flaskw.parse_request_arg import parse_request_bool_arg
 from src.services.imgtools.read_img import read_img
@@ -35,7 +35,7 @@ def endpoints(app):
         return jsonify(image_size=str(img.shape))
 
     @app.route('/faces')
-    @needs_authentication
+    @needs_api_key
     def faces_get():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
@@ -46,7 +46,7 @@ def endpoints(app):
         return jsonify(names=face_names)
 
     @app.route('/faces/<face_name>', methods=['POST'])
-    @needs_authentication
+    @needs_api_key
     @needs_attached_file
     @needs_retrain
     def faces_name_post(face_name):
@@ -65,7 +65,7 @@ def endpoints(app):
         return Response(status=HTTPStatus.CREATED)
 
     @app.route('/faces/<face_name>', methods=['DELETE'])
-    @needs_authentication
+    @needs_api_key
     @needs_retrain
     def faces_name_delete(face_name):
         from flask import request
@@ -77,7 +77,7 @@ def endpoints(app):
         return Response(status=HTTPStatus.NO_CONTENT)
 
     @app.route('/retrain', methods=['GET'])
-    @needs_authentication
+    @needs_api_key
     def retrain_get():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
@@ -92,7 +92,7 @@ def endpoints(app):
                                     TaskStatus.IDLE_LAST_ERROR: 'ERROR'}[training_status]), HTTPStatus.OK
 
     @app.route('/retrain', methods=['POST'])
-    @needs_authentication
+    @needs_api_key
     def retrain_post():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
@@ -105,7 +105,7 @@ def endpoints(app):
         return Response(status=HTTPStatus.ACCEPTED)
 
     @app.route('/retrain', methods=['DELETE'])
-    @needs_authentication
+    @needs_api_key
     def retrain_delete():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
@@ -116,7 +116,7 @@ def endpoints(app):
         return Response(status=HTTPStatus.NO_CONTENT)
 
     @app.route('/recognize', methods=['POST'])
-    @needs_authentication
+    @needs_api_key
     @needs_attached_file
     def recognize_post():
         from flask import request

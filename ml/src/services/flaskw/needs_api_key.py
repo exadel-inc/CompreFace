@@ -4,7 +4,7 @@ from src.exceptions import APIKeyNotSpecifiedError
 from src.services.flaskw.constants import API_KEY_HEADER
 
 
-def needs_authentication(f):
+def needs_api_key(f):
     @functools.wraps(f)
     def wrapper(*args, **kwargs):
         from flask import request

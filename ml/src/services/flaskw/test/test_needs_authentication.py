@@ -4,13 +4,13 @@ import pytest
 
 from src.exceptions import APIKeyNotSpecifiedError
 from src.services.flaskw.constants import API_KEY_HEADER
-from src.services.flaskw.needs_authentication import needs_authentication
+from src.services.flaskw.needs_api_key import needs_api_key
 
 
 @pytest.fixture
 def client_with_locked_endpoint(app):
     @app.route('/endpoint')
-    @needs_authentication
+    @needs_api_key
     def endpoint():
         return 'success-body', HTTPStatus.OK
 
