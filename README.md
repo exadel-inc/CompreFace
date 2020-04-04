@@ -35,6 +35,8 @@ Builds containers, run tests inside: `$ make`
    - End-to-end tests: `$ make e2e_local`
    - Lint check: `$ make lint`
 
+### External service with e2e
+
 # Miscellaneous
 ### Make arguments
 Make supports these arguments (let's use `$ make up` as an example):
