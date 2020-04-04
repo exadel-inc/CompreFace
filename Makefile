@@ -5,7 +5,7 @@ MONGO_HOST ?= localhost
 MONGO_PORT ?=
 ID ?=
 
-.PHONY: e2e_local local build up down setup start stop docker  unit i9n _start_for_e2e e2e  lint oom
+.PHONY: setup start stop build up down local unit i9n e2e_local _start_for_e2e e2e lint docker oom
 .DEFAULT_GOAL := docker
 
 ####################
