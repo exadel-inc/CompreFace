@@ -40,7 +40,7 @@ def DELETE(url, **kwargs):
     return _request('delete', url, **kwargs)
 
 
-def _wait_until_training_completes(ml_url, check_result=True):
+def _wait_until_training_completes(ml_url, check_response=True):
     time.sleep(2)
     url = f"{ml_url}/retrain"
     timeout_s = ENV.TRAINING_TIMEOUT_S
@@ -48,7 +48,7 @@ def _wait_until_training_completes(ml_url, check_result=True):
     while True:
         res = GET(url, headers={'X-Api-Key': 'test-api-key'})
         if res.status_code != HTTPStatus.ACCEPTED:
-            if check_result:
+            if check_response:
                 assert res.status_code == HTTPStatus.OK
                 assert res.json()['last_status'] == 'OK', res.content
             break

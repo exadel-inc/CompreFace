@@ -181,7 +181,7 @@ def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized():
     assert res_c.status_code == 200, res_a.content
     result_c = res_c.json()['result']
     assert not (result_c[0]['face_name'] == 'Paul Walker')
-    _wait_until_training_completes(ML, check_result=False)
+    _wait_until_training_completes(ML, check_response=False)
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -201,7 +201,7 @@ def test__when_deleting_face_B_with_retraining__then_returns_204():
     res = DELETE(f"{ML}/faces/Stephen Hawking", headers={'X-Api-Key': 'test-api-key'})
 
     assert res.status_code == 204, res.content
-    _wait_until_training_completes(ML, check_result=False)
+    _wait_until_training_completes(ML, check_response=False)
 
 
 @pytest.mark.run(order=next(after_previous))
