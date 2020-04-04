@@ -94,5 +94,3 @@ def first_like_all(lst):
 
 def get_dir(filepath):
     return Path(os.path.dirname(os.path.realpath(filepath)))
-
-

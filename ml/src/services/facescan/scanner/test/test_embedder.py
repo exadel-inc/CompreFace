@@ -1,7 +1,7 @@
 import imageio
 import pytest
-from sample_images import IMG_DIR
 
+from sample_images import IMG_DIR
 from src.services.facescan.scanner.facenet.facenet import Facenet2018
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.facescanners import ALL_SCANNERS

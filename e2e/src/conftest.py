@@ -1,26 +1,11 @@
 import logging
 import time
 from http import HTTPStatus
-from typing import Union
 
-import pytest
 import requests
 from requests import ReadTimeout
 
-CONNECT_TIMEOUT_S = 5
-READ_TIMEOUT_S = 30
-AVAILABLE_SERVICE_TIMEOUT_S = 8
-TRAINING_TIMEOUT_S = 30
-
-
-def pytest_addoption(parser):
-    # Run E2E against this host, default value: http://localhost:3000
-    parser.addoption('--host', action='store', dest='host', default='http://localhost:3000')
-
-
-@pytest.fixture
-def host(request):
-    return request.config.getoption('host')
+from .constants import ENV
 
 
 def after_previous_gen():
@@ -32,7 +17,7 @@ def after_previous_gen():
 
 def _request(method, url, **kwargs):
     if 'timeout' not in kwargs or kwargs['timeout'] is None:
-        kwargs['timeout'] = (CONNECT_TIMEOUT_S, READ_TIMEOUT_S)
+        kwargs['timeout'] = (ENV.CONNECT_TIMEOUT_S, ENV.READ_TIMEOUT_S)
     try:
         return requests.request(method, url, **kwargs)
     except requests.exceptions.ConnectionError as e:
@@ -55,16 +40,17 @@ def DELETE(url, **kwargs):
     return _request('delete', url, **kwargs)
 
 
-def _wait_until_training_completes(host, expected_code: Union[HTTPStatus, None] = HTTPStatus.OK):
+def _wait_until_training_completes(host, check_result=True):
     time.sleep(2)
     url = f"{host}/retrain"
-    timeout_s = TRAINING_TIMEOUT_S
+    timeout_s = ENV.TRAINING_TIMEOUT_S
     start_time = time.time()
     while True:
         res = GET(url, headers={'X-Api-Key': 'test-api-key'})
         if res.status_code != HTTPStatus.ACCEPTED:
-            if expected_code:
-                assert res.status_code == expected_code
+            if check_result:
+                assert res.status_code == HTTPStatus.OK
+                assert res.json()['last_status'] == 'OK', res.content
             break
         if time.time() - start_time > timeout_s:
             raise Exception(f"Waiting to not get 202 from '{url}' has reached a timeout ({timeout_s}s)") from None
@@ -73,7 +59,7 @@ def _wait_until_training_completes(host, expected_code: Union[HTTPStatus, None] 
 
 def _wait_for_available_service(host):
     url = f"{host}/status"
-    timeout_s = AVAILABLE_SERVICE_TIMEOUT_S
+    timeout_s = ENV.AVAILABLE_SERVICE_TIMEOUT_S
     start_time = time.time()
     while True:
         try:

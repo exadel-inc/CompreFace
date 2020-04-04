@@ -11,10 +11,10 @@ from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
-from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.constants import NO_LIMIT
-from src.services.imgtools.types import Array3D
+from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.imgtools.proc_img import crop_img, squish_img
+from src.services.imgtools.types import Array3D
 from src.services.utils.pyutils import get_dir
 
 CURRENT_DIR = get_dir(__file__)
@@ -95,7 +95,8 @@ class Facenet2018(FaceScanner):
             start_index = i * self.BATCH_SIZE
             end_index = min((i + 1) * self.BATCH_SIZE, image_count)
             feed_dict = {graph_images_placeholder: cropped_images, graph_phase_train_placeholder: False}
-            embeddings[start_index:end_index, :] = self._embedding_calculator.sess.run(graph_embeddings, feed_dict=feed_dict)
+            embeddings[start_index:end_index, :] = self._embedding_calculator.sess.run(graph_embeddings,
+                                                                                       feed_dict=feed_dict)
         return embeddings
 
     def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None) -> List[ScannedFace]:

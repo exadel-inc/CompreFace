@@ -20,7 +20,7 @@ from src.services.flaskw.log_response import log_http_response
 def init_runtime():
     assert sys.version_info >= (3, 7)
     init_logging()
-    logging.debug(ENV.dict())
+    logging.debug(ENV.__str__())
     get_storage().wait_for_connection()
 
 

@@ -84,11 +84,12 @@ def endpoints(app):
         task_manager: TrainingTaskManagerBase = get_training_task_manager()
 
         training_status = task_manager.get_status(api_key)
-        http_status = {TaskStatus.IDLE: HTTPStatus.OK,
-                       TaskStatus.BUSY: HTTPStatus.ACCEPTED,
-                       TaskStatus.IDLE_LAST_FAILED: HTTPStatus.INTERNAL_SERVER_ERROR}[training_status]
 
-        return Response(status=http_status)
+        if training_status == TaskStatus.BUSY:
+            return Response(status=HTTPStatus.ACCEPTED)
+        return jsonify(last_status={TaskStatus.IDLE_LAST_NONE: 'NONE',
+                                    TaskStatus.IDLE_LAST_OK: 'OK',
+                                    TaskStatus.IDLE_LAST_ERROR: 'ERROR'}[training_status]), HTTPStatus.OK
 
     @app.route('/retrain', methods=['POST'])
     @needs_authentication

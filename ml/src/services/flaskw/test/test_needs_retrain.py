@@ -103,7 +103,7 @@ def test__given_endpoint_raises_error__when_requesting__then_skips_retraining(
 
 class TrainingTaskManagerMock(TrainingTaskManagerBase):
     def __init__(self):
-        self.status = TaskStatus.IDLE
+        self.status = TaskStatus.IDLE_LAST_NONE
         self.started_training_str = 'no'
         self.aborted_training = False
 

@@ -12,7 +12,8 @@ class MainLogFilter(logging.Filter):
     def filter(self, record):
         if not hasattr(record, 'request'):
             record.request = ''
-        record.column1 = f'{record.name}  {record.module}'
+        name = f'{record.name} ' if record.name != 'root' else ''
+        record.column1 = f'{name}{record.module}'
         record.column2 = f'[{record.levelname}]'
         return True
 
@@ -21,12 +22,15 @@ def init_logging():
     stream_handler = logging.StreamHandler()
     stream_handler.addFilter(RequestContextLogFilter())
     stream_handler.addFilter(MainLogFilter())
-    log_format = (
-        '%(asctime)s %(column1)-25s %(column2)10s'
-        ' %(message)s'
-        '%(request)s'
-        ' [%(processName)s %(process)s %(threadName)s %(thread)d]'
-        ' [%(pathname)s:%(lineno)d]')
+    # log_format = (
+    #     '%(asctime)s %(column1)-25s %(column2)10s'
+    #     ' %(message)s'
+    #     '%(request)s'
+    #     ' [%(processName)s %(process)s %(threadName)s %(thread)d]'
+    #     ' [%(pathname)s:%(lineno)d]'
+    # )
+    log_format = '%(column2)-10s %(message)s%(request)s' \
+                 ' [%(processName)s %(threadName)s] [%(column1)s]'
     # noinspection PyArgumentList
     logging.basicConfig(level=logging.DEBUG,
                         format=log_format,

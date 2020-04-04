@@ -13,8 +13,9 @@ ApiKey = str
 
 class TaskStatus(Enum):
     BUSY = auto()
-    IDLE = auto()
-    IDLE_LAST_FAILED = auto()
+    IDLE_LAST_NONE = auto()
+    IDLE_LAST_OK = auto()
+    IDLE_LAST_ERROR = auto()
 
 
 class TrainingTaskManagerBase(ABC):
@@ -38,18 +39,16 @@ class AsyncTaskManager(TrainingTaskManagerBase):
 
     def get_status(self, api_key) -> TaskStatus:
         if api_key not in self._dict:
-            return TaskStatus.IDLE
+            return TaskStatus.IDLE_LAST_NONE
         process = self._dict[api_key]
 
         if process.is_alive():
             return TaskStatus.BUSY
 
         if process.exitcode != 0:
-            return TaskStatus.IDLE_LAST_FAILED
+            return TaskStatus.IDLE_LAST_ERROR
 
-        self._dict[api_key].close()
-        del self._dict[api_key]
-        return TaskStatus.IDLE
+        return TaskStatus.IDLE_LAST_OK
 
     def start_training(self, api_key, force=False):
         if force:

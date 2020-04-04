@@ -1,5 +1,3 @@
-from collections import namedtuple
-
 import cv2
 
 from src.services.dto.bounding_box import BoundingBox

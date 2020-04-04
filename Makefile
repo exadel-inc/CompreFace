@@ -1,6 +1,8 @@
-ML_PORT = 3000
-DB_PORT = 27017
-ID =
+ML_HOST ?=
+ML_PORT ?=
+MONGO_HOST ?= localhost
+MONGO_PORT ?=
+ID ?=
 
 .PHONY: build up down setup start stop docker local unit i9n e2e lint all oom extended
 local: unit i9n e2e lint
@@ -9,12 +11,18 @@ extended: all oom
 .DEFAULT_GOAL := docker
 
 build:
-	ML_PORT=$(ML_PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
-		docker-compose build ml
+	ML_PORT=$(ML_PORT) \
+	MONGO_PORT=$(MONGO_PORT) \
+	ID=$(ID) \
+	COMPOSE_PROJECT_NAME=frs-core \
+	docker-compose build ml
 
 up:
-	ML_PORT=$(ML_PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
-		docker-compose up ml
+	ML_PORT=$(ML_PORT) \
+	MONGO_PORT=$(MONGO_PORT) \
+	ID=$(ID) \
+	COMPOSE_PROJECT_NAME=frs-core \
+	docker-compose up ml
 
 down:
 	docker-compose down
@@ -25,14 +33,23 @@ setup:
 	chmod +x ml/run.sh e2e/run-e2e-test.sh
 
 start:
-	$(CURDIR)/ml/run.sh start $(PORT)
+	ML_PORT=$(ML_PORT) \
+	MONGO_HOST=$(MONGO_HOST) \
+	MONGO_PORT=$(MONGO_PORT) \
+	MONGO_DBNAME=efrs_tmp_db$(ID) \
+	$(CURDIR)/ml/run.sh start
 
 stop:
 	$(CURDIR)/ml/run.sh stop
 
 docker:
-	DO_RUN_TESTS=true ML_PORT=$(ML_PORT) DB_PORT=$(DB_PORT) ID=$(ID) COMPOSE_PROJECT_NAME=frs-core \
-		docker-compose up --build --abort-on-container-exit
+	ML_PORT=$(ML_PORT) \
+	MONGO_PORT=$(MONGO_PORT) \
+	ID=$(ID) \
+	COMPOSE_PROJECT_NAME=frs-core \
+	DO_RUN_TESTS=true \
+	MONGO_DBNAME=efrs_tmp_db \
+	docker-compose up --build --abort-on-container-exit
 
 unit:
 	python -m pytest -m "not integration" $(CURDIR)/ml/src
@@ -41,12 +58,17 @@ i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
 e2e: start
-	$(CURDIR)/e2e/run-e2e-test.sh http://localhost:$(ML_PORT) \
-		&& ML_PORT=$(ML_PORT) $(CURDIR)/ml/run.sh stop \
+	ML_URL=http://localhost:$(ML_PORT) \
+	MONGO_HOST=$(MONGO_HOST) \
+	MONGO_PORT=$(MONGO_PORT) \
+	MONGO_DBNAME=efrs_tmp_db$(ID) \
+	$(CURDIR)/e2e/run-e2e-test.sh \
+		&& $(CURDIR)/ml/run.sh stop \
 		|| ($(CURDIR)/ml/run.sh stop; exit 1)
 
 lint:
 	python -m pylama --options $(CURDIR)/ml/pylama.ini $(CURDIR)/ml/src
 
 oom:
-	ID=$(ID) $(CURDIR)/tools/test_oom/run.sh $(CURDIR)/ml/sample_images
+	ID=$(ID) \
+	$(CURDIR)/tools/test_oom/run.sh $(CURDIR)/ml/sample_images

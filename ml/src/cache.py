@@ -17,8 +17,8 @@ def get_storage():
     return MongoStorage(ENV.MONGO_HOST, ENV.MONGO_PORT)
 
 
-@run_once
+@run_once_fork_safe  # General precaution against multiprocessing issues
 def get_training_task_manager():
     from src.services.async_task_manager.async_task_manager import AsyncTaskManager
-    from src.services.train_classifier import train_and_save_classifier
-    return AsyncTaskManager(train_and_save_classifier)
+    from src.services.train_classifier import train_and_save_classifier_async
+    return AsyncTaskManager(train_and_save_classifier_async)

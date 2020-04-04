@@ -2,8 +2,8 @@ import attr
 
 from src.services.dto.bounding_box import BoundingBox
 from src.services.dto.json_encodable import JSONEncodable
-from src.services.imgtools.types import Array1D, Array3D
 from src.services.imgtools.proc_img import crop_img
+from src.services.imgtools.types import Array1D, Array3D
 
 
 @attr.s(auto_attribs=True, frozen=True)
