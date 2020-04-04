@@ -1,3 +1,4 @@
+import logging
 import math
 from collections import namedtuple
 from typing import List
@@ -32,7 +33,7 @@ class Facenet2018(FaceScanner):
     DEFAULT_THRESHOLD_B = 0.7059968943
     DEFAULT_THRESHOLD_C = 0.5506904359
     IMAGE_SIZE = 160
-    IMG_LENGTH_LIMIT = 1000
+    IMG_LENGTH_LIMIT = 500
     EMBEDDING_MODEL_PATH = CURRENT_DIR / 'model' / 'embedding_calc_model_20180402.pb'
 
     def __init__(self):
@@ -67,14 +68,15 @@ class Facenet2018(FaceScanner):
         for result_item in detect_face_result[0]:
             result_item = np.squeeze(result_item)
             margin = self.BOX_MARGIN / 2
-            bounding_box = BoundingBox(
+            box = BoundingBox(
                 x_min=int(np.maximum(result_item[0] - margin, 0)),
                 y_min=int(np.maximum(result_item[1] - margin, 0)),
                 x_max=int(np.minimum(result_item[2] + margin, img_size[1])),
                 y_max=int(np.minimum(result_item[3] + margin, img_size[0])),
                 probability=result_item[4]
             )
-            bounding_boxes.append(bounding_box)
+            logging.debug(f"[Scanned face] {box}")
+            bounding_boxes.append(box)
 
         if len(bounding_boxes) == 0:
             raise NoFaceFoundError

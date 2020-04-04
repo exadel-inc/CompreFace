@@ -1,4 +1,3 @@
-import imageio
 import pytest
 
 from sample_images import IMG_DIR
@@ -7,6 +6,7 @@ from src.services.dto.bounding_box import BoundingBox
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.facescanners import ALL_SCANNERS
 from src.services.facescan.scanner.test._scanner_cache import get_scanner
+from src.services.imgtools.read_img import read_img
 from src.services.utils.pytestutils import raises
 
 
@@ -14,7 +14,7 @@ from src.services.utils.pytestutils import raises
 @pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
 def test__given_no_faces_img__when_scanned__then_raises_error(scanner_cls):
     scanner: FaceScanner = get_scanner(scanner_cls)
-    img = imageio.imread(IMG_DIR / 'no-faces.jpg')
+    img = read_img(IMG_DIR / 'no-faces.jpg')
 
     def act():
         scanner.scan(img)
@@ -32,7 +32,7 @@ def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes(s
                      BoundingBox(342, 160, 437, 268, 1),
                      BoundingBox(243, 174, 352, 309, 1)]
     scanner: FaceScanner = get_scanner(scanner_cls)
-    img = imageio.imread(IMG_DIR / filename)[:, :, 0:3]
+    img = read_img(IMG_DIR / filename)
 
     faces = scanner.scan(img)
 
@@ -45,7 +45,7 @@ def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes(s
 @pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
 def test__given_5face_img_limit3__when_scanned__then_returns_3_results(scanner_cls):
     scanner: FaceScanner = get_scanner(scanner_cls)
-    img = imageio.imread(IMG_DIR / 'five-faces.jpg')
+    img = read_img(IMG_DIR / 'five-faces.jpg')
 
     faces = scanner.scan(img, face_limit=3)
 
@@ -56,7 +56,7 @@ def test__given_5face_img_limit3__when_scanned__then_returns_3_results(scanner_c
 @pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
 def test__given_threshold_set_to_1__when_detecting__then_returns_no_faces(scanner_cls):
     scanner: FaceScanner = get_scanner(scanner_cls)
-    img = imageio.imread(IMG_DIR / 'five-faces.jpg')
+    img = read_img(IMG_DIR / 'five-faces.jpg')
 
     def act():
         scanner.scan(img, detection_threshold=1)

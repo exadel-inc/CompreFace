@@ -2,7 +2,6 @@ import pickle
 import random
 from collections import namedtuple
 
-import imageio
 
 from sample_images import IMG_DIR
 from src.cache import get_storage, get_scanner
@@ -126,7 +125,7 @@ if __name__ == "__main__":
         scores_facenet = []
         scores_insightface = []
         for img_filepath, nose_locations in DATASET.items():
-            img = imageio.imread(img_filepath)
+            img = read_img(img_filepath)
             for backend in ALL_SCANNERS:
                 score = []
                 while True:

@@ -94,3 +94,23 @@ def first_like_all(lst):
 
 def get_dir(filepath):
     return Path(os.path.dirname(os.path.realpath(filepath)))
+
+
+class FilteredStream(object):
+    def __init__(self, strings_to_filter, stream):
+        self.stream = stream
+        self.strings_to_filter = strings_to_filter
+
+    def __getattr__(self, attr_name):
+        return getattr(self.stream, attr_name)
+
+    def write(self, data):
+        for string in self.strings_to_filter:
+            if string in data:
+                return
+        self.stream.write('XXX')
+        self.stream.write(data)
+        self.stream.flush()
+
+    def flush(self):
+        self.stream.flush()

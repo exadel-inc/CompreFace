@@ -6,6 +6,9 @@ MONGO_PORT ?=
 ID ?=
 API_KEY ?=
 DROP_DB ?=
+SCANNERS ?=
+IMAGE_NAMES ?=
+MEM_LIMITS ?=
 
 .PHONY: setup start stop build up down local unit i9n e2e_local _start_for_e2e e2e lint docker oom
 .DEFAULT_GOAL := docker
@@ -101,4 +104,7 @@ docker:
 
 oom:
 	ID=$(ID) \
+	SCANNERS=$(SCANNERS) \
+	IMAGE_NAMES=$(IMAGE_NAMES) \
+	MEM_LIMITS=$(MEM_LIMITS) \
 	$(CURDIR)/tools/test_oom/run.sh $(CURDIR)/ml/sample_images

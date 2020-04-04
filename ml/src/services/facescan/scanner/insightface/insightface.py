@@ -15,7 +15,7 @@ from src.services.imgtools.types import Array3D
 
 class InsightFace(FaceScanner):
     ID = 'InsightFace'
-    IMG_LENGTH_LIMIT = 1000
+    IMG_LENGTH_LIMIT = 500
 
     def __init__(self):
         super().__init__()
@@ -40,10 +40,7 @@ class InsightFace(FaceScanner):
                                                  x_max=downscaled_box_array[2],
                                                  y_max=downscaled_box_array[3],
                                                  probability=result.det_score))
-            logging.debug("[Found face] "
-                          f"Age: {result.age}, "
-                          f"Gender: {'Male' if result.gender else 'Female'}, "
-                          f"BBox: {box}")
+            logging.debug(f"[Scanned face] Age: {result.age}, Gender: {'Male' if result.gender else 'Female'}, {box}")
             scanned_faces.append(ScannedFace(box=box, embedding=result.embedding, img=img))
 
         if len(scanned_faces) == 0:

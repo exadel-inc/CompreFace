@@ -1,11 +1,13 @@
 import logging
 import os
+import sys
 import warnings
 
 from tensorflow.python.util import deprecation as tensorflow_deprecation
 from yaml import YAMLLoadWarning
 
 from src.services.flask_.logging_context import RequestContextLogFilter
+from src.services.utils.pyutils import FilteredStream
 
 
 class MainLogFilter(logging.Filter):
@@ -19,6 +21,7 @@ class MainLogFilter(logging.Filter):
 
 
 def init_logging():
+    print("INITLOGGING")
     stream_handler = logging.StreamHandler()
     stream_handler.addFilter(RequestContextLogFilter())
     stream_handler.addFilter(MainLogFilter())
@@ -43,3 +46,17 @@ def init_logging():
     tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['MXNET_SUBGRAPH_VERBOSE'] = '0'
+    strings_to_filter = [
+        'src/nnvm/legacy_json_util.cc:209: Loading symbol saved by previous version v1.3.0. Attempting to upgrade...',
+        'src/nnvm/legacy_json_util.cc:217: Symbol successfully upgraded!',
+        'asdfasdfasdf',
+        'nnvm',
+        'saved',
+        'upgraded'
+    ]
+    sys.stdout = FilteredStream(strings_to_filter, sys.stdout)
+    sys.stderr = FilteredStream(strings_to_filter, sys.stderr)
+    print('LLLLLLLL')
+    logging.error('asdfasdfasdf1')
+    #print('asdfasdfasdf2')
+    print('TTTTTTTTTTT')
