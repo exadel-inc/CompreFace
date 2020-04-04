@@ -75,7 +75,7 @@ class Facenet2018(FaceScanner):
                 y_max=int(np.minimum(result_item[3] + margin, img_size[0])),
                 probability=result_item[4]
             )
-            logging.debug(f"[Scanned face] {box}")
+            logging.debug(f"Found: {box}")
             bounding_boxes.append(box)
 
         if len(bounding_boxes) == 0:

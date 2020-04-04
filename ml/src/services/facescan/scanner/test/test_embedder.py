@@ -1,4 +1,3 @@
-import imageio
 import pytest
 
 from sample_images import IMG_DIR

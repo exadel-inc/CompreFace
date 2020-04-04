@@ -25,14 +25,29 @@ def endpoints(app):
     def status_get():
         return jsonify(status="OK")
 
-    @app.route('/test-read-img', methods=['POST'])
+    @app.route('/read_img', methods=['POST'])
     @needs_attached_file
-    def test_read_img_post():
+    def read_img_post():
         """ Temporary endpoint for debugging purposes """
         from flask import request
         file = request.files['file']
+
         img = read_img(file)
+
         return jsonify(image_size=str(img.shape))
+
+    @app.route('/scan_faces', methods=['POST'])
+    @needs_attached_file
+    def scan_faces_post():
+        """ Temporary endpoint for debugging purposes """
+        from flask import request
+        img = read_img(request.files['file'])
+        face_limit = _get_face_limit(request)
+        detection_threshold = _get_detection_threshold(request)
+
+        scanned_faces = get_scanner().scan(img, face_limit, detection_threshold)
+
+        return jsonify(calculator_version=get_scanner().ID, result=scanned_faces)
 
     @app.route('/faces')
     @needs_api_key

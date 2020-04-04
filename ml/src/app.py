@@ -28,7 +28,8 @@ def create_app(add_endpoints_fun: Union[Callable, None] = None, docs_dir: Union[
     app = Flask('frs-core-ml')
     app.url_map.strict_slashes = False
     add_error_handling(app)
-    app.after_request(log_http_response)
+    if ENV.IS_DEV_ENV:
+        app.after_request(log_http_response)
     add_json_encoding(app)
     app.after_request(disable_caching)
     if docs_dir:

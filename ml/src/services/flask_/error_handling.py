@@ -4,7 +4,9 @@ from http import HTTPStatus
 from flask import jsonify
 from werkzeug.exceptions import HTTPException
 
-DO_SHOW_STACKTRACE_IN_LOGS = False
+from src.constants import ENV
+
+DO_SHOW_STACKTRACE_IN_LOGS = not ENV.IS_DEV_ENV
 
 
 def add_error_handling(app):

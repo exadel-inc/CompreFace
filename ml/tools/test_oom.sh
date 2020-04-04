@@ -8,13 +8,13 @@ MEM_LIMITS=${MEM_LIMITS:-1g 2g 3g 4g 5g 6g 7g 8g}
 for scanner in ${SCANNERS/,/ }; do
   for image_name in ${IMAGE_NAMES/,/ }; do
     for mem_limit in ${MEM_LIMITS/,/ }; do
-      OUTPUT=$(docker run --memory=$mem_limit --memory-swap=$mem_limit "frs-core_ml${ID}" python -m tools.scan_img "$scanner" "$image_name" 2>&1)
+      OUTPUT=$(docker run --memory=$mem_limit --memory-swap=$mem_limit "frs-core_ml${ID}" python -m tools.scan_faces "$scanner" "$image_name" 2>&1)
       EXIT_CODE=$?
       MSG=$(identify -ping -format "%f $mem_limit %G %[size] ($scanner)\n" $IMG_DIR/$image_name)
       if [ $EXIT_CODE -eq 0 ]; then
         printf "[   OK   ] %s\n" "$MSG"
       else
-        printf "[FAIL %3s] %s%s\n" "$EXIT_CODE" "$MSG" "$OUTPUT"
+        printf "[FAIL %-3s] %s\n%s\n" "$EXIT_CODE" "$MSG" "$OUTPUT"
       fi
     done
   done

@@ -40,7 +40,7 @@ class InsightFace(FaceScanner):
                                                  x_max=downscaled_box_array[2],
                                                  y_max=downscaled_box_array[3],
                                                  probability=result.det_score))
-            logging.debug(f"[Scanned face] Age: {result.age}, Gender: {'Male' if result.gender else 'Female'}, {box}")
+            logging.debug(f"Found: Age({result.age}) Gender({'Male' if result.gender else 'Female'}) {box}")
             scanned_faces.append(ScannedFace(box=box, embedding=result.embedding, img=img))
 
         if len(scanned_faces) == 0:

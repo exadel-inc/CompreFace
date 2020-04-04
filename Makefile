@@ -1,33 +1,25 @@
-ML_HOST ?=
-ML_PORT ?=
+.PHONY: setup start stop build up down local unit i9n e2e_local _start_before_e2e e2e lint docker oom
+.DEFAULT_GOAL := docker
+
 ML_URL ?= http://localhost:3000
 MONGO_HOST ?= localhost
-MONGO_PORT ?=
-ID ?=
-API_KEY ?=
-DROP_DB ?=
-SCANNERS ?=
-IMAGE_NAMES ?=
-MEM_LIMITS ?=
-
-.PHONY: setup start stop build up down local unit i9n e2e_local _start_for_e2e e2e lint docker oom
-.DEFAULT_GOAL := docker
+FLASK_ENV ?= development
 
 ####################
 ### RUNNING LOCAL
 ####################
 
 setup:
-	python -m pip install -r ./ml/requirements.txt
-	python -m pip install -e ./ml/srcext/insightface/python-package
-	chmod +x ml/run.sh e2e/run-e2e-test.sh
+	chmod +x $(CURDIR)/ml/run.sh $(CURDIR)/e2e/run-e2e-test.sh $(CURDIR)/ml/tools/test_oom.sh
+	python -m pip install -r $(CURDIR)/ml/requirements.txt
+	python -m pip install -e $(CURDIR)/ml/srcext/insightface/python-
 
 start:
 	ML_PORT=$(ML_PORT) \
 	MONGO_HOST=$(MONGO_HOST) \
 	MONGO_PORT=$(MONGO_PORT) \
 	MONGO_DBNAME=efrs_tmp_db$(ID) \
-	FLASK_ENV=development \
+	FLASK_ENV=$(FLASK_ENV) \
 	$(CURDIR)/ml/run.sh start
 
 stop:
@@ -52,6 +44,10 @@ up:
 	docker-compose up ml
 
 down:
+	ML_PORT=$(ML_PORT) \
+	MONGO_PORT=$(MONGO_PORT) \
+	ID=$(ID) \
+	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose down
 
 ####################
@@ -65,8 +61,8 @@ unit:
 i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
-e2e_local: _start_for_e2e e2e
-_start_for_e2e: start
+e2e_local: _start_before_e2e e2e
+_start_before_e2e: start
 	timeout 10s bash -c "until [ -f $(CURDIR)/ml/run.pid ]; do sleep 1; done"
 	sleep 5s
 	test -f $(CURDIR)/ml/run.pid
@@ -107,4 +103,9 @@ oom:
 	SCANNERS=$(SCANNERS) \
 	IMAGE_NAMES=$(IMAGE_NAMES) \
 	MEM_LIMITS=$(MEM_LIMITS) \
-	$(CURDIR)/tools/test_oom/run.sh $(CURDIR)/ml/sample_images
+	$(CURDIR)/ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
+
+scan:
+	SCANNER=$(SCANNER) \
+	IMAGE_NAME=$(IMAGE_NAME) \
+	python -m ml.tools.show_scanned_faces $$SCANNER $$IMAGE_NAME

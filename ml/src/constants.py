@@ -11,6 +11,7 @@ class ENV:
     MONGO_HOST = _get_env('MONGO_HOST', 'mongo')
     MONGO_PORT = int(_get_env('MONGO_PORT', '27017'))
     MONGO_DBNAME = _get_env('MONGO_DBNAME', 'efrs_db')
+    IS_DEV_ENV = _get_env('FLASK_ENV', 'efrs_db') == 'development'
 
     @classmethod
     def __str__(cls):
