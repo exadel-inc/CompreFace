@@ -2,13 +2,13 @@
 IMG_DIR=$1
 
 SCANNERS=${SCANNERS:-Facenet2018}
-IMAGE_NAMES=${IMAGE_NAMES:-00.x5.jpg 01.A.jpg 02.A.jpg 03.A.jpg 04.A.jpg 05.A.jpg 06.A.jpg}
+IMG_NAMES=${IMG_NAMES:-00.x5.jpg 01.A.jpg 02.A.jpg 03.A.jpg 04.A.jpg 05.A.jpg 06.A.jpg}
 MEM_LIMITS=${MEM_LIMITS:-1g 2g 3g 4g 6g 8g}
 IMG_LENGTH_LIMITS=${IMG_LENGTH_LIMITS:-1000 99999}
 SHOW_OUTPUT=${SHOW_OUTPUT:-true}
 
 for scanner in ${SCANNERS/,/ }; do
-  for image_name in ${IMAGE_NAMES/,/ }; do
+  for image_name in ${IMG_NAMES/,/ }; do
     for mem_limit in ${MEM_LIMITS/,/ }; do
       for img_length_limit in ${IMG_LENGTH_LIMITS/,/ }; do
         # Run test

@@ -1,5 +1,3 @@
-import sys
-
 from sample_images import IMG_DIR
 from src.logging_ import init_runtime
 from src.services.dto.scanned_face import ScannedFace
@@ -17,10 +15,9 @@ def scan_faces(scanner_id, img_name):
 
 if __name__ == '__main__':
     init_runtime()
+    scanner_id = get_env('SCANNER')
+    image_name = get_env('IMG_NAME')
     do_show_img = get_env('SHOW_IMG', 'false').lower() in ('true', '1')
-    scanner_id = sys.argv[1]  # e.g. 'Facenet2018'
-    img_name = sys.argv[2]  # e.g. '00.x5.jpg'
-    scanned_faces = scan_faces(scanner_id, img_name)
+    scanned_faces = scan_faces(scanner_id, image_name)
     if do_show_img:
         ScannedFace.show(scanned_faces)
-

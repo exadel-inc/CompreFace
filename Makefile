@@ -113,7 +113,7 @@ stats_setup.touch:
 oom:
 	ID=$(ID) \
 	SCANNERS=$(SCANNERS) \
-	IMAGE_NAMES=$(IMAGE_NAMES) \
+	IMG_NAMES=$(IMG_NAMES) \
 	MEM_LIMITS=$(MEM_LIMITS) \
 	IMG_LENGTH_LIMITS=$(IMG_LENGTH_LIMITS) \
 	SHOW_OUTPUT=$(SHOW_OUTPUT) \
@@ -121,7 +121,7 @@ oom:
 
 scan:
 	SCANNER=$(SCANNER) \
-	IMAGE_NAME=$(IMAGE_NAME) \
+	IMG_NAME=$(IMG_NAME) \
 	SHOW_IMG=$(SHOW_IMG) \
 	python -m ml.tools.scan_faces
 

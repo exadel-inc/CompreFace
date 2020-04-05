@@ -1,5 +1,7 @@
 from collections import namedtuple
 
+from src.services.utils.pyutils import sort_coordinates
+
 Row = namedtuple('Row', 'image_name noses')
 
 SAMPLE_IMAGES = [
@@ -9,9 +11,9 @@ SAMPLE_IMAGES = [
     Row('03.A.jpg', [(3210, 1382)]),
     Row('04.A.jpg', [(1312, 1969)]),
     Row('05.A.jpg', [(2092, 2871)]),
-    Row('06.A.jpg', [(1618, 1978)]),
+    Row('06.A.jpg', [(1864, 3041)]),
     Row('07.B.jpg', [(210, 292)]),
-    Row('08.B.jpg', [(287, 281)]),
+    Row('08.B.jpg', [(225, 256)]),
     Row('09.C.jpg', [(166, 236)]),
     Row('10.x2.jpg', [(354, 232), (505, 258)]),
     Row('11.x3.jpg', [(295, 266), (484, 245), (385, 216)]),
@@ -23,3 +25,4 @@ SAMPLE_IMAGES = [
                       (691, 201)])
 ]
 
+name_2_annotation = {r.image_name: sort_coordinates(r.noses) for r in SAMPLE_IMAGES}
