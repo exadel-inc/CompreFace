@@ -25,8 +25,8 @@ def embeddings_are_equal(embedding1, embedding2, difference_threshold):
 @pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
 def test__given_same_face_images__when_scanned__then_returns_same_embeddings(scanner_cls):
     scanner: FaceScanner = get_scanner(scanner_cls)
-    img1 = read_img(IMG_DIR / 'personA-img1.jpg')
-    img2 = read_img(IMG_DIR / 'personA-img2.jpg')
+    img1 = read_img(IMG_DIR / '07.B.jpg')
+    img2 = read_img(IMG_DIR / '08.B.jpg')
 
     emb1 = first_and_only(scanner.scan(img1)).embedding
     emb2 = first_and_only(scanner.scan(img2)).embedding
@@ -38,8 +38,8 @@ def test__given_same_face_images__when_scanned__then_returns_same_embeddings(sca
 @pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
 def test__given_diff_face_images__when_scanned__then_returns_diff_embeddings(scanner_cls):
     scanner: FaceScanner = get_scanner(scanner_cls)
-    img1 = read_img(IMG_DIR / 'personA-img1.jpg')
-    img2 = read_img(IMG_DIR / 'personB-img1.jpg')
+    img1 = read_img(IMG_DIR / '07.B.jpg')
+    img2 = read_img(IMG_DIR / '09.C.jpg')
 
     emb1 = first_and_only(scanner.scan(img1)).embedding
     emb2 = first_and_only(scanner.scan(img2)).embedding

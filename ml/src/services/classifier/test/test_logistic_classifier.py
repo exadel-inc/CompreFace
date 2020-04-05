@@ -13,9 +13,9 @@ def load_embedding(name):
 
 @pytest.mark.integration
 def test__given_2_embeddings__when_trained__then_correctly_classifies_3rd_embedding():
-    embedding_a = load_embedding('personA-img1')
-    embedding_b = load_embedding('personB-img1')
-    new_embedding = load_embedding('personA-img2')
+    embedding_a = load_embedding('01.A')
+    embedding_b = load_embedding('02.A')
+    new_embedding = load_embedding('07.B')
     embeddings = [embedding_a, embedding_b]
     names = ['Person A', 'Person B']
     emb_calc_version = 'cached_joblib'

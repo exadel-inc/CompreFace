@@ -25,7 +25,7 @@ You can combine steps 1 and 2: `$ make build up`
 
 # Testing the service
 ### With Docker
-Builds containers, run tests inside: `$ make` 
+Builds containers, run tests inside: `$ make docker` 
 
 ### In development environment, container-less
 1. Setup dependencies: `$ make setup`

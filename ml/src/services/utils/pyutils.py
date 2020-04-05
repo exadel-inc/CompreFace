@@ -94,3 +94,7 @@ def first_like_all(lst):
 
 def get_dir(filepath):
     return Path(os.path.dirname(os.path.realpath(filepath)))
+
+
+def get_env(name: str, default: str) -> str:
+    return os.environ.get(name, '') or default

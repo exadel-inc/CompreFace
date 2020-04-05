@@ -21,7 +21,7 @@ def _request(method, endpoint, **kwargs):
     if 'timeout' not in kwargs or kwargs['timeout'] is None:
         kwargs['timeout'] = (ENV.CONNECT_TIMEOUT_S, ENV.READ_TIMEOUT_S)
     try:
-        return requests.request(f"{ENV.ML_URL}{method}", endpoint, **kwargs)
+        return requests.request(method, f"{ENV.ML_URL}{endpoint}", **kwargs)
     except requests.exceptions.ConnectionError as e:
         logging.error(str(e))
         raise ConnectionError(e) from None

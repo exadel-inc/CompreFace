@@ -1,13 +1,15 @@
-.PHONY: setup start stop build up down local unit i9n e2e_local _start_before_e2e e2e lint docker oom
-.DEFAULT_GOAL := docker
+.PHONY: default setup start stop build up down local unit i9n e2e_local _start_before_e2e e2e lint docker oom scan accerr stats
+.DEFAULT_GOAL := default
+default: lint unit docker
 
-ML_URL ?= http://localhost:3000
+ML_PORT ?= 3000
+ML_URL ?= http://localhost:$(ML_PORT)
 MONGO_HOST ?= localhost
 FLASK_ENV ?= development
 
-####################
+###################
 ### RUNNING LOCAL
-####################
+###################
 
 setup:
 	chmod +x $(CURDIR)/ml/run.sh $(CURDIR)/e2e/run-e2e-test.sh $(CURDIR)/ml/tools/test_oom.sh
@@ -54,10 +56,10 @@ down:
 	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose down
 
-####################
+#################
 ### TESTS LOCAL
 local: unit i9n e2e_local lint
-####################
+#################
 
 unit:
 	python -m pytest -m "not integration" $(CURDIR)/ml/src
@@ -80,14 +82,14 @@ e2e:
 	DROP_DB=$(DROP_DB) \
 	$(CURDIR)/e2e/run-e2e-test.sh \
 		&& $(CURDIR)/ml/run.sh stop \
-		|| ($(CURDIR)/ml/run.sh stop; exit 1
+		|| ($(CURDIR)/ml/run.sh stop; exit 1)
 
 lint:
 	python -m pylama --options $(CURDIR)/ml/pylama.ini $(CURDIR)/ml/src
 
-####################
+##################
 ### TESTS DOCKER
-####################
+##################
 
 docker:
 	ML_PORT=$(ML_PORT) \
@@ -99,9 +101,9 @@ docker:
 	MONGO_DBNAME=efrs_tmp_db \
 	docker-compose up --build --abort-on-container-exit
 
-####################
+#####################
 ### DEVELOPER TOOLS
-####################
+#####################
 
 oom:
 	ID=$(ID) \
@@ -115,4 +117,13 @@ oom:
 scan:
 	SCANNER=$(SCANNER) \
 	IMAGE_NAME=$(IMAGE_NAME) \
-	python -m ml.tools.show_scanned_faces $$SCANNER $$IMAGE_NAME
+	python -m ml.tools.show_scanned_faces
+
+accerr:
+	SCANNER=$(SCANNERS) \
+	python -m ml.tools.show_accuracy_errors
+
+stats: stats_setup.touch
+	tokei --exclude srcext/
+stats_setup.touch:
+	conda install -c conda-forge tokei && touch $(CURDIR)/stats_setup.touch

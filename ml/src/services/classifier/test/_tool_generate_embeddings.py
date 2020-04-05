@@ -20,6 +20,6 @@ def generate_embedding_from_img(filename):
 
 if __name__ == '__main__':
     logging.basicConfig(level=logging.DEBUG)
-    generate_embedding_from_img('personA-img1')
-    generate_embedding_from_img('personA-img2')
-    generate_embedding_from_img('personB-img1')
+    generate_embedding_from_img('01.A')
+    generate_embedding_from_img('02.A')
+    generate_embedding_from_img('07.B')

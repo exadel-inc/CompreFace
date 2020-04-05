@@ -8,5 +8,5 @@ class FaceScanners:
     InsightFace = InsightFace
 
 
-ALL_SCANNERS = [Facenet2018, InsightFace]
+ALL_SCANNERS = [Facenet2018]
 id_2_face_scanner_cls = {backend.ID: backend for backend in ALL_SCANNERS}

@@ -1,6 +1,7 @@
 .idea/
 .vscode/
 tmp/
+stats_setup.touch
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

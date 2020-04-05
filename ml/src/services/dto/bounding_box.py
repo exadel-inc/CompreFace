@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple
 
 import attr
 
@@ -68,3 +68,13 @@ class BoundingBox(JSONEncodable):
             if self.similar(other, tolerance):
                 return True
         return False
+
+    def is_point_inside(self, xy: Tuple[int, int]):
+        """
+        >>> BoundingBox(100,700,150,750,1).is_point_inside((125,725))
+        True
+        >>> BoundingBox(100,700,150,750,1).is_point_inside((5,5))
+        False
+        """
+        x, y = xy
+        return self.x_min <= x <= self.x_max and self.y_min <= y <= self.y_max

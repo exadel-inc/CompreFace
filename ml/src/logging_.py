@@ -19,14 +19,14 @@ class MainLogFilter(logging.Filter):
         return True
 
 
-def init_logging():
+def init_logging(level=logging.DEBUG):
     stream_handler = logging.StreamHandler()
     stream_handler.addFilter(RequestContextLogFilter())
     stream_handler.addFilter(MainLogFilter())
     log_format = ('%(levelname)-8s%(asctime)s  |  %(message)s  |  %(request)s%(module)s'
                   ' %(processName)s %(process)s %(threadName)s %(thread)d')
     # noinspection PyArgumentList
-    logging.basicConfig(level=logging.DEBUG,
+    logging.basicConfig(level=level,
                         format=log_format,
                         datefmt='%Y-%m-%d %H:%M:%S',
                         handlers=[stream_handler])

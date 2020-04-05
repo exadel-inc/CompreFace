@@ -23,7 +23,6 @@ class ImgScaler:
         new_width = round(width * self._img_downscale_ratio)
         new_height = round(height * self._img_downscale_ratio)
         logging.debug(f'Resizing {width}x{height} to {new_width}x{new_height}')
-        print(f'Resizing {width}x{height} to {new_width}x{new_height}')
         return cv2.resize(img, dsize=(new_width, new_height), interpolation=interpolation)
 
     def upscale_box(self, box: BoundingBox) -> BoundingBox:
