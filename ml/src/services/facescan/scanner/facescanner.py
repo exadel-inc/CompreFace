@@ -16,7 +16,8 @@ class FaceScanner(ABC):
     @abstractmethod
     def scan(self, img: Array3D,
              face_limit: int = NO_LIMIT,
-             detection_threshold: float = None) -> List[ScannedFace]:
+             detection_threshold: float = None,
+             allow_no_found_faces: bool = False) -> List[ScannedFace]:
         raise NotImplementedError
 
     def scan_one(self, img: Array3D,

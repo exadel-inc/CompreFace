@@ -20,6 +20,7 @@ from src.services.imgtools.types import Array3D
 from src.services.utils.pyutils import get_dir
 
 CURRENT_DIR = get_dir(__file__)
+logger = logging.getLogger(__name__)
 _EmbeddingCalculator = namedtuple('Calculator', 'graph sess')
 _FaceDetectionNets = namedtuple('FaceDetectionNets', 'pnet rnet onet')
 
@@ -41,6 +42,9 @@ class Facenet2018(FaceScanner):
         super().__init__()
         self._embedding_calculator = self._get_embedding_calculator()
         self._face_detection_nets = self._get_face_detection_nets()
+        self.threshold_a = self.DEFAULT_THRESHOLD_A
+        self.threshold_b = self.DEFAULT_THRESHOLD_B
+        self.threshold_c = self.DEFAULT_THRESHOLD_C
 
     def _get_embedding_calculator(self):
         with tf.Graph().as_default() as graph:
@@ -57,13 +61,13 @@ class Facenet2018(FaceScanner):
             sess = tf.Session()
             return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
 
-    def _find_face_bounding_boxes(self, img, face_limit, facenet_detection_threshold_c=None) \
+    def _find_face_bounding_boxes(self, img, face_limit, facenet_detection_threshold_c, allow_no_found_faces) \
             -> List[BoundingBox]:
-        facenet_detection_threshold_c = facenet_detection_threshold_c or self.DEFAULT_THRESHOLD_C
+        threshold_c = facenet_detection_threshold_c or self.threshold_c
         fdn = self._face_detection_nets
         detect_face_result = detect_face.detect_face(img, self.FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
-                                                     [self.DEFAULT_THRESHOLD_A, self.DEFAULT_THRESHOLD_B,
-                                                      facenet_detection_threshold_c], self.SCALE_FACTOR)
+                                                     [self.threshold_a, self.threshold_b, threshold_c],
+                                                     self.SCALE_FACTOR)
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
         for result_item in detect_face_result[0]:
@@ -76,9 +80,9 @@ class Facenet2018(FaceScanner):
                 y_max=int(np.minimum(result_item[3] + margin, img_size[0])),
                 probability=result_item[4]
             )
-            logging.debug(f"Found: {box}")
+            logger.debug(f"Found: {box}")
             bounding_boxes.append(box)
-        if len(bounding_boxes) == 0:
+        if not allow_no_found_faces and len(bounding_boxes) == 0:
             raise NoFaceFoundError
         if face_limit:
             return bounding_boxes[:face_limit]
@@ -101,13 +105,15 @@ class Facenet2018(FaceScanner):
                                                                                        feed_dict=feed_dict)
         return embeddings
 
-    def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None) -> List[ScannedFace]:
+    def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None,
+             allow_no_found_faces: bool = False) -> List[ScannedFace]:
         detection_threshold_c = self.DEFAULT_THRESHOLD_C if detection_threshold is None else detection_threshold
         assert 0 <= detection_threshold_c <= 1
         scanned_faces = []
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         downscaled_img = scaler.downscale_img(img)
-        for downscaled_box in self._find_face_bounding_boxes(downscaled_img, face_limit, detection_threshold_c):
+        for downscaled_box in self._find_face_bounding_boxes(downscaled_img, face_limit, detection_threshold_c,
+                                                             allow_no_found_faces):
             box = scaler.upscale_box(downscaled_box)
             cropped_img = crop_img(img, box)
             squished_img = squish_img(cropped_img, (self.IMAGE_SIZE, self.IMAGE_SIZE))

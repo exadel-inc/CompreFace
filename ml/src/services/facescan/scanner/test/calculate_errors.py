@@ -9,6 +9,8 @@ from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.imgtools.read_img import read_img
 
+logger = logging.getLogger(__name__)
+
 
 def _calculate_errors(boxes: List[BoundingBox], noses: List[Tuple[int, int]]):
     """
@@ -34,11 +36,11 @@ def calculate_errors(scanner: FaceScanner, dataset: List[Row], show_images_with_
     total_errors = 0
     for row in dataset:
         img = read_img(IMG_DIR / row.image_name)
-        scanned_faces = scanner.scan(img)
+        scanned_faces = scanner.scan(img, allow_no_found_faces=True)
         boxes = [face.box for face in scanned_faces]
         errors = _calculate_errors(boxes, row.noses)
         if errors:
-            logging.warning(f"Found {errors} error(s) in {row.image_name} for {scanner.ID}")
+            logger.info(f"Found {errors} error(s) in {row.image_name} for {scanner.ID}")
             if show_images_with_errors:
                 ScannedFace.show(scanned_faces)
             total_errors += errors

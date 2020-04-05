@@ -14,8 +14,10 @@ class MainLogFilter(logging.Filter):
     def filter(self, record):
         if not hasattr(record, 'request'):
             record.request = ''
-        logger_name = f"{record.name} " if record.name != 'root' else ""
-        record.module = f"{logger_name}{record.module}"
+        logger_name = '' if record.name == 'root' else record.name
+        module = '' if record.name.endswith(record.module) else f'{record.module}.py'
+        space = ' ' if logger_name and module else ''
+        record.module = f"{logger_name}{space}{module}"
         return True
 
 

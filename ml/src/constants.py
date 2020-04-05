@@ -9,7 +9,7 @@ class ENV:
     MONGO_PORT = int(get_env('MONGO_PORT', '27017'))
     MONGO_DBNAME = get_env('MONGO_DBNAME', 'efrs_db')
     IS_DEV_ENV = get_env('FLASK_ENV', '') == 'development'
-    IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '1000'))
+    IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
     @classmethod
     def __str__(cls):

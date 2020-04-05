@@ -15,6 +15,7 @@ def split(arr_str):
 if __name__ == '__main__':
     for scanner_id in split(get_env('SCANNERS', 'Facenet2018')):
         init_logging(level=logging.INFO)
+        do_show_img = get_env('SHOW_IMG', 'false').lower() in ('true', '1')
         scanner = id_2_face_scanner_cls[scanner_id]()
-        errors = calculate_errors(scanner, dataset=SAMPLE_IMAGES, show_images_with_errors=True)
+        errors = calculate_errors(scanner, dataset=SAMPLE_IMAGES, show_images_with_errors=do_show_img)
         logging.info(f"Found {errors} total error(s) for {scanner.ID}")

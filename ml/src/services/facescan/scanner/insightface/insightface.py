@@ -24,7 +24,8 @@ class InsightFace(FaceScanner):
         self._CTX_ID_CPU = -1
         self._NMS = 0.4
 
-    def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None) -> List[ScannedFace]:
+    def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None,
+             allow_no_found_faces: bool = False) -> List[ScannedFace]:
         self._model.prepare(ctx_id=self._CTX_ID_CPU, nms=self._NMS)
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         downscaled_img = scaler.downscale_img(img)
@@ -43,7 +44,7 @@ class InsightFace(FaceScanner):
                                                  probability=result.det_score))
             logging.debug(f"Found: Age({result.age}) Gender({'Male' if result.gender else 'Female'}) {box}")
             scanned_faces.append(ScannedFace(box=box, embedding=result.embedding, img=img))
-        if len(scanned_faces) == 0:
+        if not allow_no_found_faces and len(scanned_faces) == 0:
             raise NoFaceFoundError
         if face_limit:
             return scanned_faces[:face_limit]

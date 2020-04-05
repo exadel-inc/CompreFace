@@ -1,4 +1,4 @@
-.PHONY: default setup start stop build up down local unit i9n e2e_local _start_before_e2e e2e lint docker oom scan accerr stats
+.PHONY: default setup start stop build up down local unit i9n e2e_local _start_before_e2e e2e lint docker oom scan err stats opt
 .DEFAULT_GOAL := default
 default: lint unit docker
 
@@ -105,6 +105,11 @@ docker:
 ### DEVELOPER TOOLS
 #####################
 
+stats: stats_setup.touch
+	tokei --exclude srcext/
+stats_setup.touch:
+	conda install -c conda-forge tokei && touch $(CURDIR)/stats_setup.touch
+
 oom:
 	ID=$(ID) \
 	SCANNERS=$(SCANNERS) \
@@ -117,13 +122,13 @@ oom:
 scan:
 	SCANNER=$(SCANNER) \
 	IMAGE_NAME=$(IMAGE_NAME) \
-	python -m ml.tools.show_scanned_faces
+	SHOW_IMG=$(SHOW_IMG) \
+	python -m ml.tools.scan_faces
 
-accerr:
+err:
 	SCANNER=$(SCANNERS) \
-	python -m ml.tools.show_accuracy_errors
+	SHOW_IMG=$(SHOW_IMG) \
+	python -m ml.tools.calculate_errors
 
-stats: stats_setup.touch
-	tokei --exclude srcext/
-stats_setup.touch:
-	conda install -c conda-forge tokei && touch $(CURDIR)/stats_setup.touch
+opt:
+	python -m ml.tools.optimize_face_det_constants.py
