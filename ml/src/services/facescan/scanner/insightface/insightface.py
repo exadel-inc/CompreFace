@@ -4,6 +4,7 @@ from typing import List
 import insightface
 import numpy as np
 
+from src.constants import ENV
 from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
 from src.services.dto.scanned_face import ScannedFace
@@ -15,7 +16,7 @@ from src.services.imgtools.types import Array3D
 
 class InsightFace(FaceScanner):
     ID = 'InsightFace'
-    IMG_LENGTH_LIMIT = 500
+    IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
 
     def __init__(self):
         super().__init__()
@@ -42,7 +43,6 @@ class InsightFace(FaceScanner):
                                                  probability=result.det_score))
             logging.debug(f"Found: Age({result.age}) Gender({'Male' if result.gender else 'Female'}) {box}")
             scanned_faces.append(ScannedFace(box=box, embedding=result.embedding, img=img))
-
         if len(scanned_faces) == 0:
             raise NoFaceFoundError
         if face_limit:

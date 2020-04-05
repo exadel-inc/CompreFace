@@ -19,6 +19,7 @@ start:
 	MONGO_HOST=$(MONGO_HOST) \
 	MONGO_PORT=$(MONGO_PORT) \
 	MONGO_DBNAME=efrs_tmp_db$(ID) \
+	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	FLASK_ENV=$(FLASK_ENV) \
 	$(CURDIR)/ml/run.sh start
 
@@ -33,6 +34,7 @@ build:
 	ML_PORT=$(ML_PORT) \
 	MONGO_PORT=$(MONGO_PORT) \
 	ID=$(ID) \
+	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose build ml
 
@@ -40,6 +42,7 @@ up:
 	ML_PORT=$(ML_PORT) \
 	MONGO_PORT=$(MONGO_PORT) \
 	ID=$(ID) \
+	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose up ml
 
@@ -47,6 +50,7 @@ down:
 	ML_PORT=$(ML_PORT) \
 	MONGO_PORT=$(MONGO_PORT) \
 	ID=$(ID) \
+	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose down
 
@@ -90,6 +94,7 @@ docker:
 	MONGO_PORT=$(MONGO_PORT) \
 	ID=$(ID) \
 	COMPOSE_PROJECT_NAME=frs-core \
+	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	DO_RUN_TESTS=true \
 	MONGO_DBNAME=efrs_tmp_db \
 	docker-compose up --build --abort-on-container-exit
@@ -103,6 +108,8 @@ oom:
 	SCANNERS=$(SCANNERS) \
 	IMAGE_NAMES=$(IMAGE_NAMES) \
 	MEM_LIMITS=$(MEM_LIMITS) \
+	IMG_LENGTH_LIMITS=$(IMG_LENGTH_LIMITS) \
+	SHOW_OUTPUT=$(SHOW_OUTPUT) \
 	$(CURDIR)/ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
 
 scan:

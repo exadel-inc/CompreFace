@@ -22,6 +22,7 @@ services:
       - MONGO_HOST=mongo${ID:-}
       - MONGO_PORT=27017
       - MONGO_DBNAME=${MONGO_DBNAME:-}
+      - IMG_LENGTH_LIMIT=${IMG_LENGTH_LIMIT:-}
     depends_on:
       - mongo
   mongo:

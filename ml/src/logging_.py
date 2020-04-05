@@ -1,10 +1,12 @@
 import logging
 import os
+import sys
 import warnings
 
 from tensorflow.python.util import deprecation as tensorflow_deprecation
 from yaml import YAMLLoadWarning
 
+from src.constants import ENV
 from src.services.flask_.logging_context import RequestContextLogFilter
 
 
@@ -34,3 +36,9 @@ def init_logging():
     tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['MXNET_SUBGRAPH_VERBOSE'] = '0'
+
+
+def init_runtime():
+    assert sys.version_info >= (3, 7)
+    init_logging()
+    logging.info(ENV.__str__())

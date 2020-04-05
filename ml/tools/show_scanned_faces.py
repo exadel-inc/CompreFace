@@ -1,11 +1,13 @@
 import colorsys
+import logging
 import random
 import sys
 from typing import List
 
 from PIL import Image, ImageDraw, ImageFont
 
-from src.logging_ import init_logging
+from src.logging_ import init_runtime
+from src.constants import ENV
 from src.services.dto.scanned_face import ScannedFace
 from src.services.utils.pyutils import first_like_all
 from tools.scan_faces import scan_faces
@@ -38,7 +40,8 @@ def show_scanned_faces(scanned_faces: List[ScannedFace]):
 
 
 if __name__ == '__main__':
-    init_logging()
+    init_runtime()
+    logging.info(ENV.__str__())
     scanner_id = sys.argv[1]  # e.g. 'Facenet2018'
     img_name = sys.argv[2]  # e.g. 'five-faces.jpg'
     faces = scan_faces(scanner_id, img_name)

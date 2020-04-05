@@ -8,6 +8,7 @@ import tensorflow as tf
 from srcext.facenet.align import detect_face
 from tensorflow.python.platform import gfile
 
+from src.constants import ENV
 from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
 from src.services.dto.scanned_face import ScannedFace
@@ -33,7 +34,7 @@ class Facenet2018(FaceScanner):
     DEFAULT_THRESHOLD_B = 0.7059968943
     DEFAULT_THRESHOLD_C = 0.5506904359
     IMAGE_SIZE = 160
-    IMG_LENGTH_LIMIT = 500
+    IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
     EMBEDDING_MODEL_PATH = CURRENT_DIR / 'model' / 'embedding_calc_model_20180402.pb'
 
     def __init__(self):
@@ -77,7 +78,6 @@ class Facenet2018(FaceScanner):
             )
             logging.debug(f"Found: {box}")
             bounding_boxes.append(box)
-
         if len(bounding_boxes) == 0:
             raise NoFaceFoundError
         if face_limit:
