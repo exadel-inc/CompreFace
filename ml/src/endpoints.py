@@ -40,7 +40,6 @@ def endpoints(app):
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
     def scan_faces_post():
-        """ Temporary endpoint for debugging purposes """
         from flask import request
         img = read_img(request.files['file'])
         face_limit = _get_face_limit(request)
@@ -149,7 +148,7 @@ def endpoints(app):
             face_prediction = FacePrediction(prediction.face_name, prediction.probability, face.box)
             predictions.append(face_prediction)
 
-        return jsonify(result=predictions[:face_limit])
+        return jsonify(result=_at_least_one_face(predictions[:face_limit]))
 
 
 def _get_det_prob_threshold(request):
@@ -186,6 +185,7 @@ def _check_if_enough_faces_to_train(api_key):
 def _at_least_one_face(result):
     if len(result) == 0:
         raise NoFaceFoundError
+    return result
 
 
 def _get_last_training_status_str(training_status):

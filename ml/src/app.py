@@ -1,8 +1,6 @@
 import logging
-from pathlib import Path
 from typing import Union, Callable
 
-from flasgger import Swagger
 from flask import Flask
 
 from src.cache import get_storage

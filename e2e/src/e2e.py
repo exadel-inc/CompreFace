@@ -49,6 +49,41 @@ def test__when_opening_apidocs__then_returns_200():
 
 
 @pytest.mark.run(order=next(after_previous))
+def test__given_no_file__when_scanning__then_returns_400_bad_request():
+    pass
+
+    res = POST_ml("/scan_faces")
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "400 Bad Request: No file is attached"
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__given_img_with_no_faces__when_scanning__then_returns_400_bad_request():
+    files = {'file': open(IMG_DIR / '017_0.jpg', 'rb')}
+
+    res = POST_ml("/scan_faces", files=files)
+
+    assert res.status_code == 400, res.content
+    assert res.json()['message'] == "400 Bad Request: No face is found in the given image"
+
+
+@pytest.mark.run(order=next(after_previous))
+def test__given_img_with_face__when_scanning__then_returns_200_with_results():
+    files = {'file': open(IMG_DIR / '007_B.jpg', 'rb')}
+
+    res = POST_ml("/scan_faces", files=files)
+
+    assert res.status_code == 200, res.content
+    assert res.json()['calculator_version'] == 'Facenet2018'
+    result = res.json()['result']
+    assert len(result) == 1
+    face = result[0]
+    assert boxes_are_the_same(face['box'], {'x_max': 284, 'x_min': 146, 'y_max': 373, 'y_min': 193})
+    assert embeddings_are_the_same(face['embedding'], EXPECTED_EMBEDDING_FACENET2018)
+
+
+@pytest.mark.run(order=next(after_previous))
 def test__when_retraining__then_returns_400():
     pass
 
@@ -220,38 +255,3 @@ def test__when_recognizing_faces__then_returns_400_no_classifier_trained():
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: No classifier model is yet trained, " \
                                     "please train a classifier first"
-
-
-@pytest.mark.run(order=next(after_previous))
-def test__given_no_file__when_scanning__then_returns_400_bad_request():
-    pass
-
-    res = POST_ml("/scan_faces", headers={'X-Api-Key': 'test-api-key'})
-
-    assert res.status_code == 400, res.content
-    assert res.json()['message'] == "400 Bad Request: No file is attached"
-
-
-@pytest.mark.run(order=next(after_previous))
-def test__given_img_with_no_faces__when_scanning__then_returns_400_bad_request():
-    files = {'file': open(IMG_DIR / 'no-faces.jpg', 'rb')}
-
-    res = POST_ml("/scan_faces", headers={'X-Api-Key': 'test-api-key'}, files=files)
-
-    assert res.status_code == 400, res.content
-    assert res.json()['message'] == "400 Bad Request: No face is found in the given image"
-
-
-@pytest.mark.run(order=next(after_previous))
-def test__given_img_with_face__when_scanning__then_returns_200_with_results():
-    files = {'file': open(IMG_DIR / '007_B.jpg', 'rb')}
-
-    res = POST_ml("/scan_faces", files=files)
-
-    assert res.status_code == 200, res.content
-    assert res.json()['calculator_version'] == 'Facenet2018'
-    result = res.json()['result']
-    assert len(result) == 1
-    face = result[0]
-    assert boxes_are_the_same(face['box'], {'x_max': 284, 'x_min': 146, 'y_max': 373, 'y_min': 193})
-    assert embeddings_are_the_same(face['embedding'], EXPECTED_EMBEDDING_FACENET2018)
