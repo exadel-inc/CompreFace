@@ -32,8 +32,8 @@ RUN if [ "$DO_RUN_TESTS" = true ]; then \
     fi
 
 ## Run smoke test and Cache downloadable dependencies for Scanner backends
-RUN python -m tools.scan_faces Facenet2018 000_5.jpg
-RUN python -m tools.scan_faces InsightFace 000_5.jpg
+RUN SCANNER=Facenet2018 IMG_NAME=000_5.jpg python -m tools.scan_faces
+#RUN SCANNER=InsightFace IMG_NAME=000_5.jpg python -m tools.scan_faces
 
 ## Runtime
 CMD ["uwsgi", "--ini", "uwsgi.ini"]
