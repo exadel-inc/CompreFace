@@ -51,7 +51,7 @@ def test__when_retraining__then_returns_400():
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized():
-    files = {'file': open(IMG_DIR / '01.A.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / '001_A.jpg', 'rb')}
 
     res = POST_ml("/faces/FAIL?retrain=no", files=files)
 
@@ -60,7 +60,7 @@ def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized():
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_found():
-    files = {'file': open(IMG_DIR / 'x0.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / '017_0.jpg', 'rb')}
 
     res = POST_ml("/faces/FAIL?retrain=no", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
@@ -69,9 +69,9 @@ def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_fo
 
 
 @pytest.mark.parametrize('file, name', [
-    ('01.A.jpg', 'Marie Curie'),
-    ('07.B.jpg', 'Stephen Hawking'),
-    ('09.C.jpg', 'Paul Walker'), ])
+    ('001_A.jpg', 'Marie Curie'),
+    ('007_B.jpg', 'Stephen Hawking'),
+    ('009_C.jpg', 'Paul Walker'), ])
 @pytest.mark.run(order=next(after_previous))
 def test__when_adding_face__then_returns_201(file, name):
     files = {'file': open(IMG_DIR / file, 'rb')}
@@ -93,7 +93,7 @@ def test__when_retraining__then_returns_202():
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_multiple_face_img__when_adding_face__then_returns_400_only_one_face_allowed():
-    files = {'file': open(IMG_DIR / '00.x5.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / '000_5.jpg', 'rb')}
 
     res = POST_ml("/faces/FAIL", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
@@ -104,7 +104,7 @@ def test__given_multiple_face_img__when_adding_face__then_returns_400_only_one_f
 # noinspection PyPep8Naming
 @pytest.mark.run(order=next(after_previous))
 def test__when_recognizing_faces__then_returns_face_A_name():
-    files = {'file': open(IMG_DIR / '02.A.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / '002_A.jpg', 'rb')}
 
     res = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
@@ -116,7 +116,7 @@ def test__when_recognizing_faces__then_returns_face_A_name():
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_five_face_img__when_recognizing_faces__then_returns_five_distinct_results():
-    file = {'file': open(IMG_DIR / '00.x5.jpg', 'rb')}
+    file = {'file': open(IMG_DIR / '000_5.jpg', 'rb')}
 
     res = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=file)
 
@@ -160,9 +160,9 @@ def test__when_deleting_face__then_returns_204():
 # noinspection PyPep8Naming
 @pytest.mark.run(order=next(after_previous))
 def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized():
-    files_a = {'file': open(IMG_DIR / '02.A.jpg', 'rb')}
-    files_b = {'file': open(IMG_DIR / '08.B.jpg', 'rb')}
-    files_c = {'file': open(IMG_DIR / '09.C.jpg', 'rb')}
+    files_a = {'file': open(IMG_DIR / '002_A.jpg', 'rb')}
+    files_b = {'file': open(IMG_DIR / '008_B.jpg', 'rb')}
+    files_c = {'file': open(IMG_DIR / '009_C.jpg', 'rb')}
 
     res_a = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files_a)
     res_b = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files_b)
@@ -201,18 +201,18 @@ def test__when_deleting_face_B_with_retraining__then_returns_204():
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_getting_training_status__then_returns_last_status_equals_error():
+def test__when_getting_training_status__then_returns_last_training_status_equals_error():
     pass
 
     res = GET_ml("/retrain", headers={'X-Api-Key': ENV.API_KEY})
 
     assert res.status_code == 200, res.content
-    assert res.json()['last_status'] == 'ERROR'
+    assert res.json()['last_training_status'] == 'ERROR'
 
 
 @pytest.mark.run(order=next(after_previous))
 def test__when_recognizing_faces__then_returns_400_no_classifier_trained():
-    files = {'file': open(IMG_DIR / 'x0.jpg', 'rb')}
+    files = {'file': open(IMG_DIR / '017_0.jpg', 'rb')}
 
     res = POST_ml("/recognize?FAIL", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 

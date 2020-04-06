@@ -28,5 +28,6 @@ def read_img(file) -> Array3D:
     else:
         img = img[:, :, 0:3]
 
-    img.filename = file.name
+    if hasattr(file, 'name'):
+        img.filename = file.name
     return img

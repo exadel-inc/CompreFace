@@ -1,5 +1,4 @@
 import colorsys
-import logging
 import random
 from typing import List
 
@@ -65,7 +64,7 @@ class ScannedFace(JSONEncodable):
         pil_img = Image.fromarray(img, 'RGB')
         draw = ImageDraw.Draw(pil_img)
         sorted_scanned_faces = ScannedFace.sort_by_xy(scanned_faces)
-        noses = name_2_annotation[img.filename]
+        noses = name_2_annotation[img.filename] if hasattr(img, 'filename') else []
         i = 0
         for i, face in enumerate(sorted_scanned_faces):
             color = next(random_bright_color_gen)
@@ -73,13 +72,13 @@ class ScannedFace(JSONEncodable):
             nose = noses[i] if len(noses) > i else None
             if nose:
                 draw_dot(xy=nose, radius=7, color=color)
-            draw.text(text=str(i+1),
+            draw.text(text=str(i + 1),
                       xy=(face.box.x_min, face.box.y_min - font_size),
                       fill=color, font=ImageFont.truetype(font, font_size))
             draw.text(text=f"{face.box.probability:.4f}",
                       xy=(face.box.x_min, face.box.y_min),
                       fill=color, font=ImageFont.truetype(font, font_size))
-        for j in range(i, len(noses)-1):
+        for j in range(i, len(noses) - 1):
             draw_dot(xy=noses[j], radius=30, color=next(random_bright_color_gen))
         pil_img.show()
 

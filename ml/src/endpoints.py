@@ -5,6 +5,7 @@ from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
 
 from src.cache import get_storage, get_scanner, get_training_task_manager
+from src.exceptions import NoFaceFoundError
 from src.services.async_task_manager.async_task_manager import TaskStatus, TrainingTaskManagerBase
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.dto.face_prediction import FacePrediction
@@ -43,11 +44,11 @@ def endpoints(app):
         from flask import request
         img = read_img(request.files['file'])
         face_limit = _get_face_limit(request)
-        detection_threshold = _get_detection_threshold(request)
+        det_prob_threshold = _get_det_prob_threshold(request)
 
-        scanned_faces = get_scanner().scan(img, face_limit, detection_threshold)
+        scanned_faces = get_scanner().scan(img, face_limit, det_prob_threshold)
 
-        return jsonify(calculator_version=get_scanner().ID, result=scanned_faces)
+        return jsonify(calculator_version=get_scanner().ID, result=_at_least_one_face(scanned_faces[:face_limit]))
 
     @app.route('/faces')
     @needs_api_key
@@ -68,11 +69,11 @@ def endpoints(app):
         from flask import request
         img = read_img(request.files['file'])
         api_key = request.headers[API_KEY_HEADER]
-        detection_threshold = _get_detection_threshold(request)
+        det_prob_threshold = _get_det_prob_threshold(request)
         scanner: FaceScanner = get_scanner()
         storage: MongoStorage = get_storage()
 
-        face = scanner.scan_one(img, detection_threshold)
+        face = scanner.scan_one(img, det_prob_threshold)
         storage.add_face(api_key,
                          Face(name=face_name, raw_img=img, face_img=face.img, embedding=face.embedding),
                          emb_calc_version=scanner.ID)
@@ -102,9 +103,7 @@ def endpoints(app):
 
         if training_status == TaskStatus.BUSY:
             return Response(status=HTTPStatus.ACCEPTED)
-        return jsonify(last_status={TaskStatus.IDLE_LAST_NONE: 'NONE',
-                                    TaskStatus.IDLE_LAST_OK: 'OK',
-                                    TaskStatus.IDLE_LAST_ERROR: 'ERROR'}[training_status]), HTTPStatus.OK
+        return jsonify(last_training_status=_get_last_training_status_str(training_status)), HTTPStatus.OK
 
     @app.route('/retrain', methods=['POST'])
     @needs_api_key
@@ -136,7 +135,7 @@ def endpoints(app):
     def recognize_post():
         from flask import request
         img = read_img(request.files['file'])
-        detection_threshold = _get_detection_threshold(request)
+        det_prob_threshold = _get_det_prob_threshold(request)
         face_limit = _get_face_limit(request)
         scanner: FaceScanner = get_scanner()
         storage: MongoStorage = get_storage()
@@ -144,22 +143,22 @@ def endpoints(app):
         classifier = storage.get_embedding_classifier(api_key, LogisticClassifier.CURRENT_VERSION, scanner.ID)
 
         predictions = []
-        for face in scanner.scan(img, face_limit, detection_threshold):
+        for face in scanner.scan(img, det_prob_threshold):
             prediction = classifier.predict(face.embedding, scanner.ID)
             face_prediction = FacePrediction(prediction.face_name, prediction.probability, face.box)
             predictions.append(face_prediction)
 
-        return jsonify(result=predictions)
+        return jsonify(result=predictions[:face_limit])
 
 
-def _get_detection_threshold(request):
-    detection_threshold_val = request.values.get(ARG.DET_PROB_THRESHOLD)
-    if detection_threshold_val is None:
+def _get_det_prob_threshold(request):
+    det_prob_threshold_val = request.values.get(ARG.DET_PROB_THRESHOLD)
+    if det_prob_threshold_val is None:
         return None
-    detection_threshold = float(detection_threshold_val)
-    if not (0 <= detection_threshold <= 1):
-        raise BadRequest('Detection threshold incorrect (0 <= detection_threshold <= 1)')
-    return detection_threshold
+    det_prob_threshold = float(det_prob_threshold_val)
+    if not (0 <= det_prob_threshold <= 1):
+        raise BadRequest('Detection threshold incorrect (0 <= det_prob_threshold <= 1)')
+    return det_prob_threshold
 
 
 def _get_face_limit(request):
@@ -181,3 +180,14 @@ def _get_face_limit(request):
 def _check_if_enough_faces_to_train(api_key):
     """Raises an error if there's not"""
     get_faces(get_storage(), api_key, get_scanner().ID)
+
+
+def _at_least_one_face(result):
+    if len(result) == 0:
+        raise NoFaceFoundError
+
+
+def _get_last_training_status_str(training_status):
+    return {TaskStatus.IDLE_LAST_NONE: 'NONE',
+            TaskStatus.IDLE_LAST_OK: 'OK',
+            TaskStatus.IDLE_LAST_ERROR: 'ERROR'}[training_status]

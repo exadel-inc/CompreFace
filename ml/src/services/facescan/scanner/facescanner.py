@@ -1,9 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import List
 
-from src.exceptions import MoreThanOneFaceFoundError
+from src.exceptions import MoreThanOneFaceFoundError, NoFaceFoundError
 from src.services.dto.scanned_face import ScannedFace
-from src.services.facescan.scanner.constants import NO_LIMIT
 from src.services.imgtools.types import Array3D
 
 
@@ -14,15 +13,14 @@ class FaceScanner(ABC):
         assert self.ID
 
     @abstractmethod
-    def scan(self, img: Array3D,
-             face_limit: int = NO_LIMIT,
-             detection_threshold: float = None,
-             allow_no_found_faces: bool = False) -> List[ScannedFace]:
+    def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
         raise NotImplementedError
 
     def scan_one(self, img: Array3D,
-                 detection_threshold: float = None) -> ScannedFace:
-        results = self.scan(img=img, detection_threshold=detection_threshold)
+                 det_prob_threshold: float = None) -> ScannedFace:
+        results = self.scan(img=img, det_prob_threshold=det_prob_threshold)
         if len(results) > 1:
             raise MoreThanOneFaceFoundError
+        if len(results) == 0:
+            raise NoFaceFoundError
         return results[0]

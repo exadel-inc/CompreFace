@@ -8,7 +8,7 @@ class ENV:
     MONGO_HOST = get_env('MONGO_HOST', 'mongo')
     MONGO_PORT = int(get_env('MONGO_PORT', '27017'))
     MONGO_DBNAME = get_env('MONGO_DBNAME', 'efrs_db')
-    IS_DEV_ENV = get_env('FLASK_ENV', '') == 'development'
+    IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
     IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
     @classmethod

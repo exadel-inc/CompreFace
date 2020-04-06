@@ -8,11 +8,11 @@ security:
   - ApiKeyAuth: []
 responses:
   '200':
-    description: 'Currently not training a classifier and available to start training. Property last_status contains result of last training: (NONE, OK, ERROR). NONE means that recently no training has been started yet.'
+    description: 'Currently not training a classifier and available to start training. Property last_training_status contains result of last training: (NONE, OK, ERROR). NONE means that recently no training has been started yet.'
     schema:
       type: object
       properties:
-        last_status:
+        last_training_status:
           type: string
           example: OK
   '202':

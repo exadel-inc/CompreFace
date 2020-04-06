@@ -36,7 +36,7 @@ def calculate_errors(scanner: FaceScanner, dataset: List[Row], show_images_with_
     total_errors = 0
     for row in dataset:
         img = read_img(IMG_DIR / row.image_name)
-        scanned_faces = scanner.scan(img, allow_no_found_faces=True)
+        scanned_faces = scanner.scan(img)
         boxes = [face.box for face in scanned_faces]
         errors = _calculate_errors(boxes, row.noses)
         if errors:

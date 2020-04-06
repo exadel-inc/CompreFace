@@ -2,6 +2,7 @@
 .vscode/
 tmp/
 stats_setup.touch
+checkpoint.pickle
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template

@@ -5,11 +5,9 @@ import insightface
 import numpy as np
 
 from src.constants import ENV
-from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
-from src.services.facescan.scanner.constants import NO_LIMIT
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.imgtools.types import Array3D
 
@@ -23,17 +21,16 @@ class InsightFace(FaceScanner):
         self._model = insightface.app.FaceAnalysis()
         self._CTX_ID_CPU = -1
         self._NMS = 0.4
+        self.det_prob_threshold = 0.8
 
-    def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None,
-             allow_no_found_faces: bool = False) -> List[ScannedFace]:
+    def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
+        if det_prob_threshold is None:
+            det_prob_threshold = self.det_prob_threshold
+        assert 0 <= det_prob_threshold <= 1
         self._model.prepare(ctx_id=self._CTX_ID_CPU, nms=self._NMS)
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         downscaled_img = scaler.downscale_img(img)
-        if detection_threshold is not None:
-            assert 0 <= detection_threshold <= 1
-            results = self._model.get(downscaled_img, det_thresh=detection_threshold)
-        else:
-            results = self._model.get(downscaled_img)
+        results = self._model.get(downscaled_img, det_thresh=det_prob_threshold)
         scanned_faces = []
         for result in results:
             downscaled_box_array = result.bbox.astype(np.int).flatten()
@@ -42,10 +39,9 @@ class InsightFace(FaceScanner):
                                                  x_max=downscaled_box_array[2],
                                                  y_max=downscaled_box_array[3],
                                                  probability=result.det_score))
+            if box.probability <= det_prob_threshold:
+                logging.debug(f'Box Filtered out because below threshold ({det_prob_threshold}: {box})')
+                continue
             logging.debug(f"Found: Age({result.age}) Gender({'Male' if result.gender else 'Female'}) {box}")
             scanned_faces.append(ScannedFace(box=box, embedding=result.embedding, img=img))
-        if not allow_no_found_faces and len(scanned_faces) == 0:
-            raise NoFaceFoundError
-        if face_limit:
-            return scanned_faces[:face_limit]
         return scanned_faces

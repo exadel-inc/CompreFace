@@ -39,7 +39,7 @@ class BoundingBox(JSONEncodable):
     def xy(self):
         return (self.x_min, self.y_min), (self.x_max, self.y_max)
 
-    def similar(self, other: 'BoundingBox', tolerance: int):
+    def similar(self, other: 'BoundingBox', tolerance: int) -> bool:
         """
         >>> BoundingBox(50,50,100,100,1).similar(BoundingBox(50,50,100,100,1),5)
         True
@@ -57,7 +57,7 @@ class BoundingBox(JSONEncodable):
                 and abs(self.x_max - other.x_max) <= tolerance
                 and abs(self.y_max - other.y_max) <= tolerance)
 
-    def similar_to_any(self, others: List['BoundingBox'], tolerance: int):
+    def similar_to_any(self, others: List['BoundingBox'], tolerance: int) -> bool:
         """
         >>> BoundingBox(50,50,100,100,1).similar_to_any([BoundingBox(50,50,100,105,1),BoundingBox(50,50,100,106,1)],5)
         True
@@ -69,7 +69,7 @@ class BoundingBox(JSONEncodable):
                 return True
         return False
 
-    def is_point_inside(self, xy: Tuple[int, int]):
+    def is_point_inside(self, xy: Tuple[int, int]) -> bool:
         """
         >>> BoundingBox(100,700,150,750,1).is_point_inside((125,725))
         True

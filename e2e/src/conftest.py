@@ -52,7 +52,7 @@ def wait_until_training_is_completed(api_key, check_response=True):
         if res.status_code != HTTPStatus.ACCEPTED:
             if check_response:
                 assert res.status_code == HTTPStatus.OK
-                assert res.json()['last_status'] == 'OK', res.content
+                assert res.json()['last_training_status'] == 'OK', res.content
             break
         if time.time() - start_time > timeout_s:
             raise Exception(f"Waiting to not get 202 from '{endpoint}' has reached a timeout ({timeout_s}s)") from None

@@ -131,4 +131,4 @@ err:
 	python -m ml.tools.calculate_errors
 
 opt:
-	python -m ml.tools.optimize_face_det_constants.py
+	python -m ml.tools.optimize_face_det_constants

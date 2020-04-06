@@ -9,11 +9,9 @@ from srcext.facenet.align import detect_face
 from tensorflow.python.platform import gfile
 
 from src.constants import ENV
-from src.exceptions import NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBox
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
-from src.services.facescan.scanner.constants import NO_LIMIT
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.imgtools.proc_img import crop_img, squish_img
 from src.services.imgtools.types import Array3D
@@ -31,9 +29,6 @@ class Facenet2018(FaceScanner):
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
     BOX_MARGIN = 32
-    DEFAULT_THRESHOLD_A = 0.9436513301
-    DEFAULT_THRESHOLD_B = 0.7059968943
-    DEFAULT_THRESHOLD_C = 0.5506904359
     IMAGE_SIZE = 160
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
     EMBEDDING_MODEL_PATH = CURRENT_DIR / 'model' / 'embedding_calc_model_20180402.pb'
@@ -42,9 +37,10 @@ class Facenet2018(FaceScanner):
         super().__init__()
         self._embedding_calculator = self._get_embedding_calculator()
         self._face_detection_nets = self._get_face_detection_nets()
-        self.threshold_a = self.DEFAULT_THRESHOLD_A
-        self.threshold_b = self.DEFAULT_THRESHOLD_B
-        self.threshold_c = self.DEFAULT_THRESHOLD_C
+        self.det_prob_threshold = 0.65
+        self.det_threshold_a = 0.9436513301
+        self.det_threshold_b = 0.7059968943
+        self.det_threshold_c = 0.5506904359
 
     def _get_embedding_calculator(self):
         with tf.Graph().as_default() as graph:
@@ -61,12 +57,10 @@ class Facenet2018(FaceScanner):
             sess = tf.Session()
             return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
 
-    def _find_face_bounding_boxes(self, img, face_limit, facenet_detection_threshold_c, allow_no_found_faces) \
-            -> List[BoundingBox]:
-        threshold_c = facenet_detection_threshold_c or self.threshold_c
+    def _find_face_bounding_boxes(self, img, det_prob_threshold) -> List[BoundingBox]:
         fdn = self._face_detection_nets
         detect_face_result = detect_face.detect_face(img, self.FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
-                                                     [self.threshold_a, self.threshold_b, threshold_c],
+                                                     [self.det_threshold_a, self.det_threshold_b, self.det_threshold_c],
                                                      self.SCALE_FACTOR)
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
@@ -82,11 +76,14 @@ class Facenet2018(FaceScanner):
             )
             logger.debug(f"Found: {box}")
             bounding_boxes.append(box)
-        if not allow_no_found_faces and len(bounding_boxes) == 0:
-            raise NoFaceFoundError
-        if face_limit:
-            return bounding_boxes[:face_limit]
-        return bounding_boxes
+
+        filtered_bounding_boxes = []
+        for box in bounding_boxes:
+            if box.probability > det_prob_threshold:
+                filtered_bounding_boxes.append(box)
+            else:
+                logging.debug(f'Box filtered out because below threshold ({det_prob_threshold}): {box}')
+        return filtered_bounding_boxes
 
     def _calculate_embeddings(self, cropped_images):
         """Run forward pass to calculate embeddings"""
@@ -105,15 +102,14 @@ class Facenet2018(FaceScanner):
                                                                                        feed_dict=feed_dict)
         return embeddings
 
-    def scan(self, img: Array3D, face_limit: int = NO_LIMIT, detection_threshold: float = None,
-             allow_no_found_faces: bool = False) -> List[ScannedFace]:
-        detection_threshold_c = self.DEFAULT_THRESHOLD_C if detection_threshold is None else detection_threshold
-        assert 0 <= detection_threshold_c <= 1
+    def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
+        if det_prob_threshold is None:
+            det_prob_threshold = self.det_prob_threshold
+        assert 0 <= det_prob_threshold <= 1
         scanned_faces = []
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         downscaled_img = scaler.downscale_img(img)
-        for downscaled_box in self._find_face_bounding_boxes(downscaled_img, face_limit, detection_threshold_c,
-                                                             allow_no_found_faces):
+        for downscaled_box in self._find_face_bounding_boxes(downscaled_img, det_prob_threshold):
             box = scaler.upscale_box(downscaled_box)
             cropped_img = crop_img(img, box)
             squished_img = squish_img(cropped_img, (self.IMAGE_SIZE, self.IMAGE_SIZE))
