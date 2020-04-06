@@ -110,14 +110,9 @@ stats: stats_setup.touch
 stats_setup.touch:
 	conda install -c conda-forge tokei && touch $(CURDIR)/stats_setup.touch
 
-oom:
-	ID=$(ID) \
-	SCANNERS=$(SCANNERS) \
-	IMG_NAMES=$(IMG_NAMES) \
-	MEM_LIMITS=$(MEM_LIMITS) \
-	IMG_LENGTH_LIMITS=$(IMG_LENGTH_LIMITS) \
-	SHOW_OUTPUT=$(SHOW_OUTPUT) \
-	$(CURDIR)/ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
+db:
+	[ ! -z "$(MONGO_PORT)" ] && \
+	docker run -p="$(MONGO_PORT):27017" --name mongodb$(ID) mongo:4.0.4-xenial
 
 scan:
 	SCANNER=$(SCANNER) \
@@ -133,8 +128,15 @@ err:
 opt:
 	python -m ml.tools.optimize_face_det_constants
 
-db:
-	[ ! -z "$(MONGO_PORT)" ] && docker run -p="$(MONGO_PORT):27017" --name mongodb$(ID) mongo:4.0.4-xenial
+oom:
+	ID=$(ID) \
+	SCANNERS=$(SCANNERS) \
+	IMG_NAMES=$(IMG_NAMES) \
+	MEM_LIMITS=$(MEM_LIMITS) \
+	IMG_LENGTH_LIMITS=$(IMG_LENGTH_LIMITS) \
+	SHOW_OUTPUT=$(SHOW_OUTPUT) \
+	$(CURDIR)/ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
 
 up_oom:
-	echo e
+	[ ! -z "$(MEM_LIMIT)" ] && \
+	docker run --network="host" -e MONGO_HOST=$(MONGO_HOST) --memory=$(MEM_LIMIT) --memory-swap=$(MEM_LIMIT) "frs-core_ml${ID}" uwsgi --ini uwsgi.ini
