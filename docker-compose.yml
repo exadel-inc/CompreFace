@@ -26,7 +26,7 @@ services:
     depends_on:
       - mongodb
   mongodb:
-    container_name: mongodb${ID}
+    container_name: mongodb${ID:-}
     image: "mongo:4.0.4-xenial"
     ports:
       - ${MONGO_PORT:-27117}:27017
