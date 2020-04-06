@@ -3,7 +3,7 @@ import numpy as np
 from PIL.ImageFile import ImageFile
 
 from src.exceptions import ImageReadLibraryError, OneDimensionalImageIsGivenError
-from src.services.imgtools.types import Array3D
+from src.services.imgtools.types import Array3D, NPArray
 
 
 def _grayscale_to_rgb(img):
@@ -17,17 +17,18 @@ def _grayscale_to_rgb(img):
 def read_img(file) -> Array3D:
     try:
         ImageFile.LOAD_TRUNCATED_IMAGES = True
-        img = imageio.imread(file)
+        arr = imageio.imread(file)
     except (ValueError, SyntaxError) as e:
         raise ImageReadLibraryError from e
 
-    if img.ndim < 2:
+    if arr.ndim < 2:
         raise OneDimensionalImageIsGivenError
-    elif img.ndim == 2:
-        img = _grayscale_to_rgb(img)
+    elif arr.ndim == 2:
+        arr = _grayscale_to_rgb(arr)
     else:
-        img = img[:, :, 0:3]
+        arr = arr[:, :, 0:3]
 
+    img = arr.view(NPArray)
     if hasattr(file, 'name'):
         img.filename = file.name
     return img
