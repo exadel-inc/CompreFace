@@ -1,4 +1,4 @@
-package com.exadel.frs.http;
+package com.exadel.frs.system.python;
 
 import static com.exadel.frs.system.global.EnvironmentProperties.ServerType.FRS_CORE;
 import com.exadel.frs.system.global.EnvironmentProperties;
@@ -17,7 +17,7 @@ public class ClientsConfig {
     private final EnvironmentProperties properties;
 
     @Bean
-    public CoreDeleteFacesClient getClient() {
+    public CoreDeleteFacesClient getDeleteFacesClient() {
         return Feign.builder()
                     .encoder(new SpringFormEncoder())
                     .decoder(new JacksonDecoder())

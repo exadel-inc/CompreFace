@@ -26,7 +26,7 @@ import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.http.CoreDeleteFacesClient;
+import com.exadel.frs.system.python.CoreDeleteFacesClient;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;

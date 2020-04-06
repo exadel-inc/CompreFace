@@ -21,7 +21,7 @@ import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.http.CoreDeleteFacesClient;
+import com.exadel.frs.system.python.CoreDeleteFacesClient;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;

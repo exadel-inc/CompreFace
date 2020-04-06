@@ -1,4 +1,4 @@
-package com.exadel.frs.http;
+package com.exadel.frs.system.python;
 
 import feign.Headers;
 import feign.Param;
