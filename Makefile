@@ -134,7 +134,7 @@ opt:
 	python -m ml.tools.optimize_face_det_constants
 
 db:
-	[ ! -z "$(MONGO_PORT)" ] && docker run -p="$(MONGO_PORT):27017" --name mongo mongo:4.0.4-xenial
+	[ ! -z "$(MONGO_PORT)" ] && docker run -p="$(MONGO_PORT):27017" --name mongodb$(ID) mongo:4.0.4-xenial
 
 up_oom:
 	echo e
