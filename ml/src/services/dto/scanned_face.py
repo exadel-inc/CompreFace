@@ -64,7 +64,7 @@ class ScannedFace(JSONEncodable):
         pil_img = Image.fromarray(img, 'RGB')
         draw = ImageDraw.Draw(pil_img)
         sorted_scanned_faces = ScannedFace.sort_by_xy(scanned_faces)
-        noses = name_2_annotation[img.filename] if hasattr(img, 'filename') else []
+        noses = name_2_annotation.get(img.filename, []) if hasattr(img, 'filename') else []
         i = 0
         for i, face in enumerate(sorted_scanned_faces):
             color = next(random_bright_color_gen)
