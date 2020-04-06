@@ -259,11 +259,11 @@ class FaceDetector:
                 value['SCALES'] = tuple(scales)
                 self.anchor_cfg[key] = value
 
-        print(self._feat_stride_fpn, self.anchor_cfg)
+        #print(self._feat_stride_fpn, self.anchor_cfg)
         self.use_landmarks = False
         if len(sym)//len(self._feat_stride_fpn)==3:
             self.use_landmarks = True
-        print('use_landmarks', self.use_landmarks)
+        #print('use_landmarks', self.use_landmarks)
         self.fpn_keys = []
 
         for s in self._feat_stride_fpn:
