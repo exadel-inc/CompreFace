@@ -1,10 +1,11 @@
-.PHONY: default setup start stop build up down local unit i9n e2e_local _start_before_e2e e2e lint docker oom scan err stats opt
+.PHONY: default setup start stop build up down local unit i9n e2e_local _start_before_e2e e2e lint docker oom scan err stats opt db
 .DEFAULT_GOAL := default
 default: lint unit docker
 
 ML_PORT ?= 3000
 ML_URL ?= http://localhost:$(ML_PORT)
 MONGO_HOST ?= localhost
+MONGO_PORT ?= 27017
 FLASK_ENV ?= development
 
 ###################
@@ -132,3 +133,9 @@ err:
 
 opt:
 	python -m ml.tools.optimize_face_det_constants
+
+db:
+	docker run -p="$(MONGO_PORT):27017" --name mongo mongo:4.0.4-xenial
+
+up_oom:
+	echo e
