@@ -1,0 +1,60 @@
+tags:
+  - 'Face Recognition ML Model'
+summary: 'Recognize faces from the given image.'
+operationId: recognizeFaces
+consumes:
+  - multipart/form-data
+produces:
+  - application/json
+parameters:
+  - in: formData
+    name: file
+    type: file
+    required: 'true'
+    description: 'Image of a group of unknown people'
+  - in: formData
+    name: limit
+    description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
+    type: integer
+    default: 0
+  - $ref: '#/components/parameters/DetProbThresholdParameter'
+security:
+  - ApiKeyAuth: []
+responses:
+  '200':
+    description: 'Face recognition results'
+    schema:
+      type: object
+      properties:
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              box:
+                type: object
+                properties:
+                  x_max:
+                    type: integer
+                    example: 10
+                  x_min:
+                    type: integer
+                    example: 40
+                  y_max:
+                    type: integer
+                    example: 50
+                  y_min:
+                    type: integer
+                    example: 60
+                  probability:
+                    type: number
+                    format: float
+                    example: '0.99'
+              face_name:
+                type: string
+                example: 'Paul Dirac'
+              probability:
+                type: number
+                format: float
+                example: '0.95'
+

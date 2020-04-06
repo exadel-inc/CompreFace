@@ -15,3 +15,7 @@ def raises(e: Type[Exception], callable_: Callable):
         return True
     else:
         return False
+
+
+def is_sorted(lst):
+    return all(lst[i] >= lst[i + 1] for i in range(len(lst) - 1))

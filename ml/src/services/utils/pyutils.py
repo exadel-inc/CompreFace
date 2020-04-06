@@ -1,9 +1,7 @@
 import functools
 import os
-from io import BytesIO
 from pathlib import Path
 
-import joblib
 import numpy
 
 
@@ -98,19 +96,15 @@ def get_dir(filepath):
     return Path(os.path.dirname(os.path.realpath(filepath)))
 
 
-def serialize(obj: object) -> bytes:
-    bytes_container = BytesIO()
-    joblib.dump(obj, bytes_container)  # Works better with numpy arrays than pickle
-    bytes_container.seek(0)  # update to enable reading
-    bytes_data = bytes_container.read()
-    return bytes_data
+def get_env(name: str, default: str = None) -> str:
+    if default is None:
+        return os.environ[name]
+    return os.environ.get(name, '') or default
 
 
-def deserialize(bytes_data: bytes) -> object:
-    bytes_container = BytesIO(bytes_data)
-    obj = joblib.load(bytes_container)
-    return obj
-
-
-class Expando:
-    pass
+def sort_coordinates(lst):
+    """
+    >>> sort_coordinates([(2,2),(1,2), (1,1), (2,1)])
+    [(1, 1), (1, 2), (2, 1), (2, 2)]
+    """
+    return sorted(lst, key=lambda k: [k[0], k[1]])

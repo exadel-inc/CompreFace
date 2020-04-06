@@ -4,25 +4,10 @@ from http import HTTPStatus
 
 import pytest
 import requests
-from requests import ConnectionError
+from pymongo import MongoClient
 from requests import ReadTimeout
 
-CONNECT_TIMEOUT_S = 5
-READ_TIMEOUT_S = 30
-BBOX_ALLOWED_PX_DIFFERENCE = 10
-EMB_SIMILARITY_THRESHOLD = 0.01
-AVAILABLE_SERVICE_TIMEOUT_S = 8
-TRAINING_TIMEOUT_S = 30
-
-
-def pytest_addoption(parser):
-    # Run E2E against this host, default value: http://localhost:3000
-    parser.addoption('--host', action='store', dest='host', default='http://localhost:3000')
-
-
-@pytest.fixture
-def host(request):
-    return request.config.getoption('host')
+from .constants import ENV
 
 
 def after_previous_gen():
@@ -32,60 +17,86 @@ def after_previous_gen():
         order_no += 1
 
 
-def _request(method, url, **kwargs):
+def _request(method, endpoint, **kwargs):
     if 'timeout' not in kwargs or kwargs['timeout'] is None:
-        kwargs['timeout'] = (CONNECT_TIMEOUT_S, READ_TIMEOUT_S)
+        kwargs['timeout'] = (ENV.CONNECT_TIMEOUT_S, ENV.READ_TIMEOUT_S)
     try:
-        return requests.request(method, url, **kwargs)
+        return requests.request(method, f"{ENV.ML_URL}{endpoint}", **kwargs)
     except requests.exceptions.ConnectionError as e:
         logging.error(str(e))
         raise ConnectionError(e) from None
 
 
 # noinspection PyPep8Naming
-def GET(url, **kwargs):
-    return _request('get', url, **kwargs)
+def GET_ml(endpoint, **kwargs):
+    return _request('get', endpoint, **kwargs)
 
 
 # noinspection PyPep8Naming
-def POST(url, **kwargs):
-    return _request('post', url, **kwargs)
+def POST_ml(endpoint, **kwargs):
+    return _request('post', endpoint, **kwargs)
 
 
 # noinspection PyPep8Naming
-def DELETE(url, **kwargs):
-    return _request('delete', url, **kwargs)
+def DELETE_ml(endpoint, **kwargs):
+    return _request('delete', endpoint, **kwargs)
 
 
-def _embeddings_are_the_same(embedding1, embedding2):
+def wait_until_training_is_completed(api_key, check_response=True):
+    time.sleep(2)
+    endpoint = "/retrain"
+    timeout_s = ENV.TRAINING_TIMEOUT_S
+    start_time = time.time()
+    while True:
+        res = GET_ml(endpoint, headers={'X-Api-Key': api_key})
+        if res.status_code != HTTPStatus.ACCEPTED:
+            if check_response:
+                assert res.status_code == HTTPStatus.OK
+                assert res.json()['last_training_status'] == 'OK', res.content
+            break
+        if time.time() - start_time > timeout_s:
+            raise Exception(f"Waiting to not get 202 from '{endpoint}' has reached a timeout ({timeout_s}s)") from None
+        time.sleep(1)
+
+
+def wait_until_ml_is_available():
+    endpoint = '/status'
+    timeout_s = ENV.AVAILABLE_SERVICE_TIMEOUT_S
+    start_time = time.time()
+    while True:
+        try:
+            res = GET_ml(endpoint)
+        except (ConnectionError, ReadTimeout) as e:
+            if time.time() - start_time > timeout_s:
+                pytest.exit(f"Waiting to get 200 from '{endpoint}' has reached a "
+                            f"timeout ({timeout_s}s): {str(e)}", returncode=1)
+            time.sleep(1)
+            continue
+        assert res.status_code == HTTPStatus.OK, res.content
+        break
+
+
+def drop_db():
+    client = MongoClient(host=ENV.MONGO_HOST, port=ENV.MONGO_PORT)
+    if ENV.MONGO_DBNAME in client.list_database_names() and 'tmp' in ENV.MONGO_DBNAME:
+        client.drop_database(ENV.MONGO_DBNAME)
+        print(f"Database drop: Successful")
+    else:
+        print("Database drop: Skipped")
+
+
+def embeddings_are_the_same(embedding1, embedding2):
     for i in range(len(embedding1)):
-        if (embedding1[i] - embedding2[i]) / embedding2[i] > EMB_SIMILARITY_THRESHOLD:
+        if (embedding1[i] - embedding2[i]) / embedding2[i] > ENV.EMB_SIMILARITY_THRESHOLD:
             return False
     return True
 
 
-def _boxes_are_the_same(box1, box2):
+def boxes_are_the_same(box1, box2):
     def value_is_the_same(key):
-        return abs(box2[key] - box1[key]) <= BBOX_ALLOWED_PX_DIFFERENCE
+        return abs(box2[key] - box1[key]) <= ENV.BBOX_ALLOWED_PX_DIFFERENCE
 
     return (value_is_the_same('x_max')
             and value_is_the_same('x_min')
             and value_is_the_same('y_max')
             and value_is_the_same('y_min'))
-
-
-def _wait_for_available_service(host):
-    url = f"{host}/status"
-    timeout_s = AVAILABLE_SERVICE_TIMEOUT_S
-    start_time = time.time()
-    while True:
-        try:
-            res = GET(url, headers={'X-Api-Key': 'test-api-key'})
-        except (ConnectionError, ReadTimeout) as e:
-            if time.time() - start_time > timeout_s:
-                raise Exception(f"Waiting to get 200 from '{url}' has reached a "
-                                f"timeout ({timeout_s}s): {str(e)}") from None
-            time.sleep(1)
-            continue
-        assert res.status_code == HTTPStatus.OK, res.content
-        break

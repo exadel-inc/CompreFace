@@ -1,0 +1,19 @@
+tags:
+  - 'Face Recognition ML Model'
+summary: 'Get face model retraining availability info and last retraining status'
+operationId: retrainModelStatus
+produces:
+  - application/json
+security:
+  - ApiKeyAuth: []
+responses:
+  '200':
+    description: 'Currently not training a classifier and available to start training. Property last_training_status contains result of last training: (NONE, OK, ERROR). NONE means that recently no training has been started yet.'
+    schema:
+      type: object
+      properties:
+        last_training_status:
+          type: string
+          example: OK
+  '202':
+    description: 'Currently busy training a classifier.'
