@@ -8,7 +8,7 @@ def _get_env(name: str, default: str) -> str:
 
 class ENV:
     ML_URL = _get_env('ML_URL', 'http://localhost:3000')
-    API_KEY = _get_env('API-KEY', 'test-api-key')
+    API_KEY = _get_env('API_KEY', 'test-api-key')
     DROP_DB = _get_env('DROP_DB', 'true').lower() in ('true', '1')
     MONGO_HOST = _get_env('MONGO_HOST', 'mongo')
     MONGO_PORT = int(_get_env('MONGO_PORT', '27017'))

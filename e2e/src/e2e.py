@@ -53,7 +53,7 @@ def test__when_retraining__then_returns_400():
 def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized():
     files = {'file': open(IMG_DIR / '001_A.jpg', 'rb')}
 
-    res = POST_ml("/faces/FAIL?retrain=no", files=files)
+    res = POST_ml("/faces/JoeSmith", files=files)
 
     assert res.status_code == 401, res.content
 
@@ -62,7 +62,7 @@ def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized():
 def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_found():
     files = {'file': open(IMG_DIR / '017_0.jpg', 'rb')}
 
-    res = POST_ml("/faces/FAIL?retrain=no", headers={'X-Api-Key': ENV.API_KEY}, files=files)
+    res = POST_ml("/faces/JoeSmith", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: No face is found in the given image"
@@ -95,7 +95,7 @@ def test__when_retraining__then_returns_202():
 def test__given_multiple_face_img__when_adding_face__then_returns_400_only_one_face_allowed():
     files = {'file': open(IMG_DIR / '000_5.jpg', 'rb')}
 
-    res = POST_ml("/faces/FAIL", headers={'X-Api-Key': ENV.API_KEY}, files=files)
+    res = POST_ml("/faces/JoeSmith", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: Found more than one face in the given image"
@@ -214,7 +214,7 @@ def test__when_getting_training_status__then_returns_last_training_status_equals
 def test__when_recognizing_faces__then_returns_400_no_classifier_trained():
     files = {'file': open(IMG_DIR / '017_0.jpg', 'rb')}
 
-    res = POST_ml("/recognize?FAIL", headers={'X-Api-Key': ENV.API_KEY}, files=files)
+    res = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 400, res.content
     assert res.json()['message'] == "400 Bad Request: No classifier model is yet trained, " \
