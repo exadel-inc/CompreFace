@@ -50,15 +50,6 @@ def test__when_retraining__then_returns_400():
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__given_no_api_key__when_adding_face__then_returns_401_unauthorized():
-    files = {'file': open(IMG_DIR / '001_A.jpg', 'rb')}
-
-    res = POST_ml("/faces/JoeSmith", files=files)
-
-    assert res.status_code == 401, res.content
-
-
-@pytest.mark.run(order=next(after_previous))
 def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_found():
     files = {'file': open(IMG_DIR / '017_0.jpg', 'rb')}
 
