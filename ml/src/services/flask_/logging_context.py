@@ -1,6 +1,5 @@
 import logging
 
-from src.constants import ENV
 from src.services.flask_.constants import API_KEY_HEADER
 
 
@@ -11,8 +10,8 @@ class RequestContextLogFilter(logging.Filter):
             return True
         infix_api_key = f" api_key={request.headers[API_KEY_HEADER]}" if API_KEY_HEADER in request.headers else ""
         record.request = (f' {request.method}'
-                              f' {request.full_path}'
-                              f'{infix_api_key}'
-                              f' {request.remote_addr}'
-                              f' ')
+                          f' {request.full_path}'
+                          f'{infix_api_key}'
+                          f' {request.remote_addr}'
+                          f' ')
         return True

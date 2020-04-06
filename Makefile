@@ -1,11 +1,10 @@
-.PHONY: default setup start stop build up down local unit i9n e2e_local _start_before_e2e e2e lint docker oom scan err stats opt db
+.PHONY: default setup start stop build up down local unit i9n e2e _start_before_e2e e2e_remote lint docker oom scan err stats opt db
 .DEFAULT_GOAL := default
 default: lint unit docker
 
 ML_PORT ?= 3000
 ML_URL ?= http://localhost:$(ML_PORT)
 MONGO_HOST ?= localhost
-MONGO_PORT ?= 27017
 FLASK_ENV ?= development
 
 ###################
@@ -59,7 +58,7 @@ down:
 
 #################
 ### TESTS LOCAL
-local: unit i9n e2e_local lint
+local: unit i9n e2e lint
 #################
 
 unit:
@@ -68,13 +67,13 @@ unit:
 i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
-e2e_local: _start_before_e2e e2e
+e2e: _start_before_e2e e2e_remote
 _start_before_e2e: start
 	timeout 10s bash -c "until [ -f $(CURDIR)/ml/run.pid ]; do sleep 1; done"
 	sleep 5s
 	test -f $(CURDIR)/ml/run.pid
 
-e2e:
+e2e_remote:
 	ML_URL=$(ML_URL) \
 	MONGO_HOST=$(MONGO_HOST) \
 	MONGO_PORT=$(MONGO_PORT) \
@@ -135,7 +134,7 @@ opt:
 	python -m ml.tools.optimize_face_det_constants
 
 db:
-	docker run -p="$(MONGO_PORT):27017" --name mongo mongo:4.0.4-xenial
+	[ ! -z "$(MONGO_PORT)" ] && docker run -p="$(MONGO_PORT):27017" --name mongo mongo:4.0.4-xenial
 
 up_oom:
 	echo e

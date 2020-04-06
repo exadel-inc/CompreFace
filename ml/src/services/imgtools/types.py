@@ -2,7 +2,10 @@ import numpy as np
 
 
 class NPArray(np.ndarray):
-    pass
+    def __new__(cls, array: np.ndarray):
+        if isinstance(array, NPArray):
+            return array
+        return array.view(cls)
 
 
 Array1D = NPArray

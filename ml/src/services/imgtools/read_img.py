@@ -28,7 +28,7 @@ def read_img(file) -> Array3D:
     else:
         arr = arr[:, :, 0:3]
 
-    img = arr.view(NPArray)
+    img = NPArray(arr)
     if hasattr(file, 'name'):
         img.filename = file.name
     return img

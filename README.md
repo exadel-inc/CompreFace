@@ -32,14 +32,14 @@ Builds containers, run tests inside: `$ make docker`
 2. Run all tests: `$ make local`
    - Unit tests: `$ make unit`
    - Integration tests:` $ make i9n`
-   - End-to-end tests: `$ make e2e_local`
+   - End-to-end tests: `$ make e2e`
    - Lint check: `$ make lint`
 
 ### End-to-end tests against a remote host
 
-Use `$ make e2e`, for example:
+Use `$ make e2e_remote`, for example:
 
-`$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
+`$ make e2e_remote ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
 
 # Miscellaneous
 ### Make arguments
