@@ -3,7 +3,7 @@ import pytest
 from sample_images import IMG_DIR
 from src.services.facescan.scanner.facenet.facenet import Facenet2018
 from src.services.facescan.scanner.facescanner import FaceScanner
-from src.services.facescan.scanner.facescanners import ALL_SCANNERS
+from src.services.facescan.scanner.facescanners import TESTED_SCANNERS
 from src.services.facescan.scanner.insightface.insightface import InsightFace
 from src.services.facescan.scanner.test._scanner_cache import get_scanner
 from src.services.imgtools.read_img import read_img
@@ -22,7 +22,7 @@ def embeddings_are_equal(embedding1, embedding2, difference_threshold):
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
+@pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
 def test__given_same_face_images__when_scanned__then_returns_same_embeddings(scanner_cls):
     scanner: FaceScanner = get_scanner(scanner_cls)
     img1 = read_img(IMG_DIR / '007_B.jpg')
@@ -35,7 +35,7 @@ def test__given_same_face_images__when_scanned__then_returns_same_embeddings(sca
 
 
 @pytest.mark.integration
-@pytest.mark.parametrize('scanner_cls', ALL_SCANNERS)
+@pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
 def test__given_diff_face_images__when_scanned__then_returns_diff_embeddings(scanner_cls):
     scanner: FaceScanner = get_scanner(scanner_cls)
     img1 = read_img(IMG_DIR / '007_B.jpg')

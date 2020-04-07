@@ -7,8 +7,8 @@ About EFRS:<br>
 About frs-core:<br>
 - [Confluence page on Python Core Service](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
 - frs-core API Contract:
+  - [Swagger UI - QA Environment](http://qa.frs.exadel.by:3000/apidocs) 
   - [Swagger UI - localhost](http://localhost:3000/apidocs) (service must be started locally first)<br>
-  - [Swagger UI - UAT]( https://uat.frs.exadel.by/apidocs) 
 
 # Starting the service
 ### With Docker
@@ -43,8 +43,8 @@ Use `$ make e2e_remote`, for example:
 
 # Miscellaneous
 ### Make arguments
-Make supports these arguments (let's use `$ make up` as an example):
-- `$ make up ID=2` - Helps solve container name collisions (appends the ID at the end, so that container `ml` becomes `ml2`)
+Most targets support additional arguments. Let's use `$ make up` as an example:
+- `$ make up ID=2` - Helps solve container name collisions (appends the ID at the end, so that container `ml` becomes `ml2`). Useful for building/running/testing different branches at the same time
 - `$ make up PORT=8080 MONGODB_PORT=6650` - Sets the exposed port for the service and the database
 
 ### Additional make targets and arguments

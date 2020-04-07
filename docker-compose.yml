@@ -1,18 +1,18 @@
 version: '3'
 services:
   e2e:
-    container_name: e2e${ID:-}
+    container_name: ${COMPOSE_PROJECT_NAME:-}e2e
     build: ./e2e
     environment:
-      - ML_URL=http://ml${ID:-}:3000
+      - ML_URL=http://ml:3000
       - MONGODB_URI=${MONGODB_URI:-}
-      - MONGODB_HOST=mongodb${ID:-}
+      - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
       - MONGODB_DBNAME=efrs_tmp_db
     depends_on:
       - ml
   ml:
-    container_name: ml${ID:-}
+    container_name: ${COMPOSE_PROJECT_NAME:-}ml
     build:
       context: ./ml
       args:
@@ -21,14 +21,14 @@ services:
       - ${ML_PORT:-3000}:3000
     environment:
       - MONGODB_URI=${MONGODB_URI:-}
-      - MONGODB_HOST=mongodb${ID:-}
+      - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
       - MONGODB_DBNAME=${MONGODB_DBNAME:-}
       - IMG_LENGTH_LIMIT=${IMG_LENGTH_LIMIT:-}
     depends_on:
       - mongodb
   mongodb:
-    container_name: mongodb${ID:-}
+    container_name: ${COMPOSE_PROJECT_NAME:-}mongodb
     image: "mongo:4.0.4-xenial"
     ports:
       - ${MONGODB_PORT:-27117}:27017

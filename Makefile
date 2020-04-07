@@ -1,125 +1,83 @@
-.PHONY: default setup start stop build up down local unit i9n e2e _start_before_e2e e2e_remote lint docker oom scan err stats opt db
+SHELL := /bin/bash
+.PHONY: $(MAKECMDGOALS)
+.EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
-default: lint unit docker
-RANDOM_PORT := $$((20000 + RANDOM % 9999))
-RANDOM_UUID := $$(uuidgen)
 
-ML_PORT ?= 3000
-ML_URL ?= http://localhost:$(ML_PORT)
-MONGODB_HOST ?= localhost
 FLASK_ENV ?= development
+COMPOSE_PROJECT_NAME ?= frs-core-
+MONGODB_HOST ?= localhost
+MONGODB_PORT ?= 27017
 
-###################
-### RUNNING LOCAL
-###################
+############################################
+################ MAIN TEST #################
 
-setup:
-	chmod +x $(CURDIR)/ml/run.sh $(CURDIR)/e2e/run-e2e-test.sh $(CURDIR)/ml/tools/test_oom.sh
-	python -m pip install -r $(CURDIR)/ml/requirements.txt
-	python -m pip install -e $(CURDIR)/ml/srcext/insightface/python-
+default: test/unit test/lint test
 
-start:
-	ML_PORT=$(ML_PORT) \
-	MONGODB_URI=$(MONGODB_URI) \
-	MONGODB_HOST=$(MONGODB_HOST) \
-	MONGODB_PORT=$(MONGODB_PORT) \
-	MONGODB_DBNAME=efrs_tmp_db$(ID) \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	FLASK_ENV=$(FLASK_ENV) \
-	$(CURDIR)/ml/run.sh start
+test:
+	docker-compose up --build --abort-on-container-exit
 
-stop:
-	$(CURDIR)/ml/run.sh stop
-
-####################
-### RUNNING DOCKER
-####################
+############################################
+############# RUNNING IN DOCKER ############
 
 build:
-	ML_PORT=$(ML_PORT) \
-	MONGODB_PORT=$(MONGODB_PORT) \
-	ID=$(ID) \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose build ml
 
 up:
-	ML_PORT=$(ML_PORT) \
-	MONGODB_PORT=$(MONGODB_PORT) \
-	ID=$(ID) \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose up ml
 
 down:
-	ML_PORT=$(ML_PORT) \
-	MONGODB_PORT=$(MONGODB_PORT) \
-	ID=$(ID) \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose down
 
-#################
-### TESTS LOCAL
-local: unit i9n e2e lint
-#################
+############################################
+######## RUNNING IN LOCAL ENVIRONMENT ######
 
-unit:
-	python -m pytest -m "not integration" $(CURDIR)/ml/src
+setup:
+	chmod +x ml/run.sh e2e/run-e2e-test.sh ml/tools/test_oom.sh
+	python -m pip install -r ml/requirements.txt
+	python -m pip install -e ml/srcext/insightface/python-package
 
-i9n:
+start:
+	ml/run.sh start
+
+stop:
+	ml/run.sh stop
+
+############################################
+####### TESTING IN LOCAL ENVIRONMENT #######
+
+test/local: test/unit test/lint test/i9n
+
+test/unit:
+	python -m pytest -m "not integration" ml/src
+
+test/lint:
+	python -m pylama --options ml/pylama.ini ml/src
+
+test/i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
-e2e: _start_before_e2e e2e_remote
-_start_before_e2e: start
+test/e2e: e2e/local
+
+############################################
+############### E2E TESTING ################
+
+e2e:
+	e2e/run-e2e-test.sh
+
+e2e/local: start
 	timeout 10s bash -c "until [ -f $(CURDIR)/ml/run.pid ]; do sleep 1; done"
 	sleep 5s
 	test -f $(CURDIR)/ml/run.pid
+	$(MAKE) e2e && ml/run.sh stop || (ml/run.sh stop; exit 1)
 
-_e2e_remote:
-	$(MAKE) e2e_remote ML_URL=http://qa.frs.exadel.by:3000 DROP_DB=false API_KEY=$(RANDOM_UUID)
-e2e_remote:
-	ML_URL=$(ML_URL) \
-	API_KEY=$(API_KEY) \
-	DROP_DB=$(DROP_DB) \
-	MONGODB_URI=$(MONGODB_URI) \
-	MONGODB_HOST=$(MONGODB_HOST) \
-	MONGODB_PORT=$(MONGODB_PORT) \
-	MONGODB_DBNAME=efrs_tmp_db$(ID) \
-	$(CURDIR)/e2e/run-e2e-test.sh \
-		&& $(CURDIR)/ml/run.sh stop \
-		|| ($(CURDIR)/ml/run.sh stop; exit 1)
+############################################
+############### DEV SCRIPTS ################
 
-lint:
-	python -m pylama --options $(CURDIR)/ml/pylama.ini $(CURDIR)/ml/src
+oom:
+	ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
 
-##################
-### TESTS DOCKER
-##################
-
-docker:
-	ML_PORT=$(ML_PORT) \
-	MONGODB_URI=$(MONGODB_URI) \
-	MONGODB_PORT=$(MONGODB_PORT) \
-	MONGODB_DBNAME=efrs_tmp_db \
-	ID=$(ID) \
-	COMPOSE_PROJECT_NAME=frs-core \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	DO_RUN_TESTS=true \
-	docker-compose up --build --abort-on-container-exit
-
-#####################
-### DEVELOPER TOOLS
-#####################
-
-stats: stats_setup.touch
-	tokei --exclude srcext/
-stats_setup.touch:
-	conda install -c conda-forge tokei && touch $(CURDIR)/stats_setup.touch
-
-db:
-	[ ! -z "$(MONGODB_PORT)" ] && \
-	docker run -p="$(MONGODB_PORT):27017" --name mongodb$(ID) mongo:4.0.4-xenial
+opt:
+	python -m ml.tools.optimize_face_det_constants
 
 scan:
 	SCANNER=$(SCANNER) \
@@ -132,18 +90,21 @@ err:
 	SHOW_IMG=$(SHOW_IMG) \
 	python -m ml.tools.calculate_errors
 
-opt:
-	python -m ml.tools.optimize_face_det_constants
+############################################
+################# HELPERS ##################
 
-oom:
-	ID=$(ID) \
-	SCANNERS=$(SCANNERS) \
-	IMG_NAMES=$(IMG_NAMES) \
-	MEM_LIMITS=$(MEM_LIMITS) \
-	IMG_LENGTH_LIMITS=$(IMG_LENGTH_LIMITS) \
-	SHOW_OUTPUT=$(SHOW_OUTPUT) \
-	$(CURDIR)/ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
+db:
+	docker-compose up -d mongodb
 
-up_oom:
-	[ ! -z "$(MEM_LIMIT)" ] && \
-	docker run --network="host" -e MONGODB_HOST=$(MONGODB_HOST) --memory=$(MEM_LIMIT) --memory-swap=$(MEM_LIMIT) "frs-core_ml${ID}" uwsgi --ini uwsgi.ini
+PORT:
+	@echo $$(while true; do port=$$(( RANDOM % 30000 + 30000 )); echo -ne "\035" | telnet 127.0.0.1 $$port > /dev/null 2>&1; [ $$? -eq 1 ] && echo "$$port" && exit 0; done )
+
+TIMESTAMP:
+	@echo $$(date +'%Y-%m-%d-%H-%M-%S')
+
+############################################
+################### MISC ###################
+
+stats:
+	(which tokei || conda install -y -c conda-forge tokei) && \
+	tokei --exclude srcext/

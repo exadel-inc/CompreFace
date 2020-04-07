@@ -252,5 +252,7 @@ def test__when_recognizing_faces__then_returns_400_no_classifier_trained():
     res = POST_ml("/recognize", headers={'X-Api-Key': ENV.API_KEY}, files=files)
 
     assert res.status_code == 400, res.content
-    assert res.json()['message'] == "400 Bad Request: No classifier model is yet trained, " \
-                                    "please train a classifier first"
+    assert res.json()['message'] == (
+        "No classifier model is yet trained, please train a classifier first. If the problem persists, "
+        "check the amount of unique faces saved, and whether all face embeddings have been migrated to "
+        "version 'Facenet2018'")
