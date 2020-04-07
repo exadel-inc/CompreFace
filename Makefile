@@ -73,13 +73,15 @@ _start_before_e2e: start
 	sleep 5s
 	test -f $(CURDIR)/ml/run.pid
 
+_e2e_remote:
+	$(MAKE) e2e_remote ML_URL=http://qa.frs.exadel.by:3000 DROP_DB=false API_KEY=random164
 e2e_remote:
 	ML_URL=$(ML_URL) \
+	API_KEY=$(API_KEY) \
+	DROP_DB=$(DROP_DB) \
 	MONGO_HOST=$(MONGO_HOST) \
 	MONGO_PORT=$(MONGO_PORT) \
 	MONGO_DBNAME=efrs_tmp_db$(ID) \
-	API_KEY=$(API_KEY) \
-	DROP_DB=$(DROP_DB) \
 	$(CURDIR)/e2e/run-e2e-test.sh \
 		&& $(CURDIR)/ml/run.sh stop \
 		|| ($(CURDIR)/ml/run.sh stop; exit 1)
