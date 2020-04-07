@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.component;
 
 import java.util.Arrays;
+import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import smile.classification.LogisticRegression;
@@ -90,10 +91,10 @@ public class LogisticRegressionExt {
             throw new IllegalArgumentException("Only one class.");
         }
 
-      p = x[0].length;
-      if (k == 2) {
-            var func = getFunction("BinaryObjectiveFunction", new Object[]{x, y, lambda});
-//            BinaryObjectiveFunction func = new BinaryObjectiveFunction(x, y, lambda);
+        p = x[0].length;
+        if (k == 2) {
+            val func = getFunction("BinaryObjectiveFunction", new Object[]{x, y, lambda});
+            //  BinaryObjectiveFunction func = new BinaryObjectiveFunction(x, y, lambda);
 
             w = new double[p + 1];
 
@@ -105,8 +106,8 @@ public class LogisticRegressionExt {
                 L = -Math.min(func, w, tol, maxIter);
             }
         } else {
-          var func = getFunction("MultiClassObjectiveFunction", new Object[]{x, y, k, lambda});
-//      MultiClassObjectiveFunction func = new MultiClassObjectiveFunction(x, y, k, lambda);
+            val func = getFunction("MultiClassObjectiveFunction", new Object[]{x, y, k, lambda});
+            //  MultiClassObjectiveFunction func = new MultiClassObjectiveFunction(x, y, k, lambda);
 
             w = new double[k * (p + 1)];
 
@@ -128,28 +129,30 @@ public class LogisticRegressionExt {
         }
     }
 
-  private DifferentiableMultivariateFunction getFunction(String funcName, Object[] args) {
-    DifferentiableMultivariateFunction func = null;
-    try {
-      //add choice of constructor
-      var constructor = Arrays.stream(LogisticRegression.class.getDeclaredClasses())
-              .filter(innerClass -> innerClass.getSimpleName().equals(funcName))
-              .findFirst()
-              .map(funcClass -> Arrays.stream(funcClass.getDeclaredConstructors())
-                      .findFirst().orElseThrow()
-              )
-              .get();
-      constructor.setAccessible(true);
-      func = (DifferentiableMultivariateFunction) constructor.newInstance(args);
-    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-      e.printStackTrace();
+    private DifferentiableMultivariateFunction getFunction(String funcName, Object[] args) {
+        DifferentiableMultivariateFunction func = null;
+        try {
+            //add choice of constructor
+            val constructor = Arrays.stream(LogisticRegression.class.getDeclaredClasses())
+                                    .filter(innerClass -> innerClass.getSimpleName().equals(funcName))
+                                    .findFirst()
+                                    .map(funcClass ->
+                                            Arrays.stream(funcClass.getDeclaredConstructors())
+                                                  .findFirst()
+                                                  .orElseThrow()
+                                    )
+                                    .get();
+            constructor.setAccessible(true);
+            func = (DifferentiableMultivariateFunction) constructor.newInstance(args);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return func;
     }
-    return func;
-  }
 
-  public int predict(double[] x) {
-    return predict(x, null);
-  }
+    public int predict(double[] x) {
+        return predict(x, null);
+    }
 
     public int predict(double[] x, double[] posteriori) {
         if (x.length != p) {
