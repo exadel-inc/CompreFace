@@ -1,13 +1,13 @@
-package com.exadel.frs.core.trainservice.retrain;
+package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
-import com.exadel.frs.core.trainservice.service.FaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class RetrainServiceImpl implements RetrainService {
+
     private final FaceClassifierStorage storage;
     private final FaceService faceService;
 
@@ -15,7 +15,7 @@ public class RetrainServiceImpl implements RetrainService {
     public void startRetrain(String appKey, String modelId) {
         storage.lock(appKey, modelId);
         storage.getFaceClassifier(appKey, modelId)
-                .train(faceService.findAllFaceEmbeddingsByAppKey(appKey), appKey, modelId);
+               .train(faceService.findAllFaceEmbeddingsByApiKey(appKey), appKey, modelId);
     }
 
     @Override

@@ -4,8 +4,10 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class ScanResult {
 
     private ScanBox box;

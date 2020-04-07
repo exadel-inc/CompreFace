@@ -1,20 +1,18 @@
 package com.exadel.frs.core.trainservice.service;
 
+import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-
 import com.exadel.frs.core.trainservice.domain.Face;
 import com.exadel.frs.core.trainservice.domain.Face.Embedding;
-import com.exadel.frs.core.trainservice.enums.RetrainOption;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -74,7 +72,7 @@ public class FaceService {
     }
 
     private void handleModelTraining(final String appKey, final String modelGuid, final String retrain) {
-        switch (RetrainOption.from(retrain.toUpperCase())) {
+        switch (getTrainingOption(retrain.toUpperCase())) {
             case YES:
                 abortCurrentTrainingIfExists(appKey, modelGuid);
                 beginNewTraining(appKey, modelGuid);

@@ -5,8 +5,10 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 public class ScanResponse {
 
     @JsonProperty(value = "calculator_version")

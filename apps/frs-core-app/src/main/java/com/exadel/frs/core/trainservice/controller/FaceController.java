@@ -1,8 +1,11 @@
 package com.exadel.frs.core.trainservice.controller;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_API_KEY_HEADER;
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.web.util.UriUtils.encode;
 import com.exadel.frs.core.trainservice.service.FaceService;
+import com.exadel.frs.core.trainservice.system.SystemService;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -20,9 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FaceController {
 
-    public static final String X_FRS_API_KEY_HEADER = "x-frs-api-key";
-    public static final String X_API_KEY_HEADER = "X-Api-Key";
     private final FaceService faceService;
+    private final SystemService systemService;
 
     @GetMapping
     public Map<String, List<String>> findAllFaceNamesByApiKey(
@@ -53,11 +55,9 @@ public class FaceController {
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val appKeyLength = apiKey.length() / 2;
-        val appApiKey = apiKey.substring(0, appKeyLength);
-        val modelApiKey = apiKey.substring(appKeyLength);
+        val token = systemService.getTokenParts(apiKey);
 
-        val deletedFaces = faceService.deleteFacesByApiKey(appApiKey, modelApiKey);
+        val deletedFaces = faceService.deleteFacesByApiKey(token.getAppKey(), token.getModelKey());
 
         return deletedFaces.size();
     }

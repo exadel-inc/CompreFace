@@ -5,7 +5,7 @@ import feign.Param;
 import feign.RequestLine;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface PythonClient {
+public interface ScanFacesClient {
 
     @RequestLine("POST /scan_faces")
     @Headers("Content-Type: multipart/form-data")

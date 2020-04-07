@@ -1,11 +1,12 @@
 package com.exadel.frs.core.trainservice.repository;
 
+import static org.springframework.util.CollectionUtils.isEmpty;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import lombok.Setter;
 import lombok.val;
@@ -15,7 +16,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-import java.util.stream.Collectors;
 
 @Component
 @Setter
@@ -53,7 +53,7 @@ public class FaceClassifierProxy {
             for (val faceName : faceNameEmbeddings.keySet()) {
                 labelMap.put(faceId, faceName);
                 val lists = faceNameEmbeddings.get(faceName).stream()
-                                              .filter(list -> !CollectionUtils.isEmpty(list))
+                                              .filter(list -> !isEmpty(list))
                                               .collect(Collectors.toList());
                 for (val list : lists) {
                     x.add(list.stream().mapToDouble(d -> d).toArray());

@@ -1,11 +1,13 @@
 package com.exadel.frs.core.trainservice.controller;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
-import com.exadel.frs.core.trainservice.scan.FacePrediction;
-import com.exadel.frs.core.trainservice.scan.PythonClient;
+import com.exadel.frs.core.trainservice.system.SystemService;
+import com.exadel.frs.core.trainservice.system.python.FacePrediction;
+import com.exadel.frs.core.trainservice.system.python.ScanFacesClient;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -21,10 +23,9 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class RecognizeController {
 
-    private static final String X_FRS_API_KEY_HEADER = "x-frs-api-key";
-
     private final FaceClassifierStorage storage;
-    private final PythonClient client;
+    private final ScanFacesClient client;
+    private final SystemService systemService;
 
     @PostMapping(value = "/recognize")
     public ResponseEntity recognize(
@@ -38,17 +39,15 @@ public class RecognizeController {
             @RequestParam(required = false)
             final Integer limit
     ) {
-        val apiKeyLength = apiKey.length() / 2;
-        val appApiKey = apiKey.substring(0, apiKeyLength);
-        val modelApiKey = apiKey.substring(apiKeyLength);
+        val token = systemService.getTokenParts(apiKey);
 
-        val lock = storage.isLocked(apiKey, modelApiKey);
+        val lock = storage.isLocked(token.getAppKey(), token.getModelKey());
         if (lock) {
             return ResponseEntity.status(LOCKED)
                                  .body(new RetrainResponse("Model is locked now, try later"));
         }
 
-        val classifier = storage.getFaceClassifier(appApiKey, modelApiKey);
+        val classifier = storage.getFaceClassifier(token.getAppKey(), token.getModelKey());
 
         val scanResponse = client.scanFaces(file, defaultIfNull(limit, 1), 0.5D);
         val scanResult = scanResponse.getResult().get(0);

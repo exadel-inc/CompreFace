@@ -1,6 +1,5 @@
-package com.exadel.frs.core.trainservice.scan;
+package com.exadel.frs.core.trainservice.system.python;
 
-import com.exadel.frs.core.trainservice.system.python.ScanBox;
 import lombok.Value;
 
 @Value
