@@ -3,7 +3,7 @@ from toolz import itertoolz
 
 from ._expected_embeddings import EXPECTED_EMBEDDING_FACENET2018
 from .conftest import (after_previous_gen, POST_ml, DELETE_ml, GET_ml, wait_until_training_is_completed,
-                       wait_until_ml_is_available, drop_db, boxes_are_the_same, embeddings_are_the_same)
+                       wait_until_ml_is_available, drop_db_if_needed, boxes_are_the_same, embeddings_are_the_same)
 from .constants import ENV
 from .sample_images import IMG_DIR
 
@@ -15,8 +15,7 @@ ML = ENV.ML_URL
 @pytest.mark.run(order=next(after_previous))
 def test_init():
     print(ENV.__str__())
-    if ENV.DROP_DB:
-        drop_db()
+    drop_db_if_needed()
     wait_until_ml_is_available()
 
 

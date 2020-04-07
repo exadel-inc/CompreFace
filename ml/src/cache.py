@@ -14,7 +14,7 @@ def get_scanner():
 @run_once_fork_safe  # Because PyMongo is not fork-safe
 def get_storage():
     from src.services.storage.mongo_storage import MongoStorage
-    return MongoStorage(ENV.MONGO_HOST, ENV.MONGO_PORT)
+    return MongoStorage(ENV.MONGODB_HOST, ENV.MONGODB_PORT)
 
 
 @run_once_fork_safe  # General precaution against multiprocessing issues

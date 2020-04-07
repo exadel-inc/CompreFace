@@ -32,7 +32,7 @@ class MongoStorage:
         self._mongo_host = mongo_host
         self._mongo_port = mongo_port
         self._mongo_client = MongoClient(host=self._mongo_host, port=self._mongo_port)
-        db = self._mongo_client[ENV.MONGO_DBNAME]
+        db = self._mongo_client[ENV.MONGODB_DBNAME]
         self._faces_collection = db[CollectionName.FACES]
         self._faces_fs = gridfs.GridFS(db, CollectionName.FACES)
         self._classifiers_collection = db[CollectionName.CLASSIFIERS]

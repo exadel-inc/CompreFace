@@ -1,10 +1,12 @@
 .PHONY: default setup start stop build up down local unit i9n e2e _start_before_e2e e2e_remote lint docker oom scan err stats opt db
 .DEFAULT_GOAL := default
 default: lint unit docker
+RANDOM_PORT := $$((20000 + RANDOM % 9999))
+RANDOM_UUID := $$(uuidgen)
 
 ML_PORT ?= 3000
 ML_URL ?= http://localhost:$(ML_PORT)
-MONGO_HOST ?= localhost
+MONGODB_HOST ?= localhost
 FLASK_ENV ?= development
 
 ###################
@@ -18,9 +20,10 @@ setup:
 
 start:
 	ML_PORT=$(ML_PORT) \
-	MONGO_HOST=$(MONGO_HOST) \
-	MONGO_PORT=$(MONGO_PORT) \
-	MONGO_DBNAME=efrs_tmp_db$(ID) \
+	MONGODB_URI=$(MONGODB_URI) \
+	MONGODB_HOST=$(MONGODB_HOST) \
+	MONGODB_PORT=$(MONGODB_PORT) \
+	MONGODB_DBNAME=efrs_tmp_db$(ID) \
 	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	FLASK_ENV=$(FLASK_ENV) \
 	$(CURDIR)/ml/run.sh start
@@ -34,7 +37,7 @@ stop:
 
 build:
 	ML_PORT=$(ML_PORT) \
-	MONGO_PORT=$(MONGO_PORT) \
+	MONGODB_PORT=$(MONGODB_PORT) \
 	ID=$(ID) \
 	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	COMPOSE_PROJECT_NAME=frs-core \
@@ -42,7 +45,7 @@ build:
 
 up:
 	ML_PORT=$(ML_PORT) \
-	MONGO_PORT=$(MONGO_PORT) \
+	MONGODB_PORT=$(MONGODB_PORT) \
 	ID=$(ID) \
 	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	COMPOSE_PROJECT_NAME=frs-core \
@@ -50,7 +53,7 @@ up:
 
 down:
 	ML_PORT=$(ML_PORT) \
-	MONGO_PORT=$(MONGO_PORT) \
+	MONGODB_PORT=$(MONGODB_PORT) \
 	ID=$(ID) \
 	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	COMPOSE_PROJECT_NAME=frs-core \
@@ -74,14 +77,15 @@ _start_before_e2e: start
 	test -f $(CURDIR)/ml/run.pid
 
 _e2e_remote:
-	$(MAKE) e2e_remote ML_URL=http://qa.frs.exadel.by:3000 DROP_DB=false API_KEY=random164
+	$(MAKE) e2e_remote ML_URL=http://qa.frs.exadel.by:3000 DROP_DB=false API_KEY=$(RANDOM_UUID)
 e2e_remote:
 	ML_URL=$(ML_URL) \
 	API_KEY=$(API_KEY) \
 	DROP_DB=$(DROP_DB) \
-	MONGO_HOST=$(MONGO_HOST) \
-	MONGO_PORT=$(MONGO_PORT) \
-	MONGO_DBNAME=efrs_tmp_db$(ID) \
+	MONGODB_URI=$(MONGODB_URI) \
+	MONGODB_HOST=$(MONGODB_HOST) \
+	MONGODB_PORT=$(MONGODB_PORT) \
+	MONGODB_DBNAME=efrs_tmp_db$(ID) \
 	$(CURDIR)/e2e/run-e2e-test.sh \
 		&& $(CURDIR)/ml/run.sh stop \
 		|| ($(CURDIR)/ml/run.sh stop; exit 1)
@@ -95,12 +99,13 @@ lint:
 
 docker:
 	ML_PORT=$(ML_PORT) \
-	MONGO_PORT=$(MONGO_PORT) \
+	MONGODB_URI=$(MONGODB_URI) \
+	MONGODB_PORT=$(MONGODB_PORT) \
+	MONGODB_DBNAME=efrs_tmp_db \
 	ID=$(ID) \
 	COMPOSE_PROJECT_NAME=frs-core \
 	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
 	DO_RUN_TESTS=true \
-	MONGO_DBNAME=efrs_tmp_db \
 	docker-compose up --build --abort-on-container-exit
 
 #####################
@@ -113,8 +118,8 @@ stats_setup.touch:
 	conda install -c conda-forge tokei && touch $(CURDIR)/stats_setup.touch
 
 db:
-	[ ! -z "$(MONGO_PORT)" ] && \
-	docker run -p="$(MONGO_PORT):27017" --name mongodb$(ID) mongo:4.0.4-xenial
+	[ ! -z "$(MONGODB_PORT)" ] && \
+	docker run -p="$(MONGODB_PORT):27017" --name mongodb$(ID) mongo:4.0.4-xenial
 
 scan:
 	SCANNER=$(SCANNER) \
@@ -141,4 +146,4 @@ oom:
 
 up_oom:
 	[ ! -z "$(MEM_LIMIT)" ] && \
-	docker run --network="host" -e MONGO_HOST=$(MONGO_HOST) --memory=$(MEM_LIMIT) --memory-swap=$(MEM_LIMIT) "frs-core_ml${ID}" uwsgi --ini uwsgi.ini
+	docker run --network="host" -e MONGODB_HOST=$(MONGODB_HOST) --memory=$(MEM_LIMIT) --memory-swap=$(MEM_LIMIT) "frs-core_ml${ID}" uwsgi --ini uwsgi.ini

@@ -45,7 +45,7 @@ Use `$ make e2e_remote`, for example:
 ### Make arguments
 Make supports these arguments (let's use `$ make up` as an example):
 - `$ make up ID=2` - Helps solve container name collisions (appends the ID at the end, so that container `ml` becomes `ml2`)
-- `$ make up PORT=8080 MONGO_PORT=6650` - Sets the exposed port for the service and the database
+- `$ make up PORT=8080 MONGODB_PORT=6650` - Sets the exposed port for the service and the database
 
 ### Additional make targets and arguments
 Check `Makefile` for more make targets and arguments that are not mentioned in this README.
