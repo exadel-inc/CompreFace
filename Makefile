@@ -73,16 +73,16 @@ e2e/local: start
 ############################################
 ############### DEV SCRIPTS ################
 
-oom:
+tool/oom:
 	ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
 
-opt:
+tool/opt:
 	python -m ml.tools.optimize_face_det_constants
 
-scan:
+tool/scan:
 	python -m ml.tools.scan_faces
 
-err:
+tool/err:
 	python -m ml.tools.calculate_errors
 
 ############################################
