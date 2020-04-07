@@ -80,14 +80,9 @@ opt:
 	python -m ml.tools.optimize_face_det_constants
 
 scan:
-	SCANNER=$(SCANNER) \
-	IMG_NAME=$(IMG_NAME) \
-	SHOW_IMG=$(SHOW_IMG) \
 	python -m ml.tools.scan_faces
 
 err:
-	SCANNER=$(SCANNERS) \
-	SHOW_IMG=$(SHOW_IMG) \
 	python -m ml.tools.calculate_errors
 
 ############################################
