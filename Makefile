@@ -8,16 +8,16 @@ COMPOSE_PROJECT_NAME ?= frs-core-
 MONGODB_HOST ?= localhost
 MONGODB_PORT ?= 27017
 
-############################################
-################ MAIN TEST #################
+##### MAIN TEST
 
 default: test/unit test/lint test
 
 test:
 	docker-compose up --build --abort-on-container-exit
 
-############################################
-############# RUNNING IN DOCKER ############
+
+
+##### RUNNING IN DOCKER
 
 build:
 	docker-compose build ml
@@ -28,8 +28,9 @@ up:
 down:
 	docker-compose down
 
-############################################
-######## RUNNING IN LOCAL ENVIRONMENT ######
+
+
+##### RUNNING IN LOCAL ENVIRONMENT
 
 setup:
 	chmod +x ml/run.sh e2e/run-e2e-test.sh ml/tools/test_oom.sh
@@ -42,8 +43,9 @@ start:
 stop:
 	ml/run.sh stop
 
-############################################
-####### TESTING IN LOCAL ENVIRONMENT #######
+
+
+#####  TESTING IN LOCAL ENVIRONMENT
 
 test/local: test/unit test/lint test/i9n
 
@@ -58,8 +60,9 @@ test/i9n:
 
 test/e2e: e2e/local
 
-############################################
-############### E2E TESTING ################
+
+
+#####  E2E TESTING
 
 e2e:
 	e2e/run-e2e-test.sh
@@ -70,8 +73,9 @@ e2e/local: start
 	test -f $(CURDIR)/ml/run.pid
 	$(MAKE) e2e && ml/run.sh stop || (ml/run.sh stop; exit 1)
 
-############################################
-############### DEV SCRIPTS ################
+
+
+#####  DEV SCRIPTS
 
 tool/oom:
 	ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
@@ -85,8 +89,9 @@ tool/scan:
 tool/err:
 	python -m ml.tools.calculate_errors
 
-############################################
-################# HELPERS ##################
+
+
+##### HELPERS
 
 db:
 	docker-compose up -d mongodb
@@ -97,8 +102,9 @@ PORT:
 TIMESTAMP:
 	@echo $$(date +'%Y-%m-%d-%H-%M-%S')
 
-############################################
-################### MISC ###################
+
+
+##### MISC
 
 stats:
 	(which tokei || conda install -y -c conda-forge tokei) && \
