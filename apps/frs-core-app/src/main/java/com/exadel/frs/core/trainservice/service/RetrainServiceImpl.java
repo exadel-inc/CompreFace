@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -9,13 +10,13 @@ import org.springframework.stereotype.Service;
 public class RetrainServiceImpl implements RetrainService {
 
     private final FaceClassifierStorage storage;
-    private final FaceService faceService;
+    private final FaceDao faceDao;
 
     @Override
     public void startRetrain(String appKey, String modelId) {
         storage.lock(appKey, modelId);
         storage.getFaceClassifier(appKey, modelId)
-               .train(faceService.findAllFaceEmbeddingsByApiKey(appKey), appKey, modelId);
+               .train(faceDao.findAllFaceEmbeddingsByApiKey(appKey), appKey, modelId);
     }
 
     @Override

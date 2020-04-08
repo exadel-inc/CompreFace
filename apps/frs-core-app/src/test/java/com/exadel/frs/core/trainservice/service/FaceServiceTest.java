@@ -1,14 +1,15 @@
 package com.exadel.frs.core.trainservice.service;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.domain.Face;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.system.SystemService;
+import com.exadel.frs.core.trainservice.system.Token;
+import java.util.HashMap;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,10 +20,13 @@ import org.mockito.Mock;
 class FaceServiceTest {
 
     @Mock
-    private FaceClassifierStorage storage;
+    private FaceDao faceDao;
 
     @Mock
-    private FacesRepository facesRepository;
+    private SystemService systemService;
+
+    @Mock
+    private RetrainService retrainService;
 
     @InjectMocks
     private FaceService faceService;
@@ -33,18 +37,52 @@ class FaceServiceTest {
     }
 
     @Test
-    void deleteFacesByApiKey() {
-        val appKey = randomAlphabetic(10);
-        val modelApiKey = randomAlphabetic(10);
-        val faces = List.of(new Face());
-        when(facesRepository.deleteFacesByApiKey(modelApiKey)).thenReturn(faces);
+    void findAllFaceNames() {
+        val apiKey = "api_key";
+        val faces = new HashMap<String, List<String>>();
 
-        val actual = faceService.deleteFacesByApiKey(appKey, modelApiKey);
+        when(faceDao.findAllFaceNamesByApiKey(apiKey)).thenReturn(faces);
 
+        val actual = faceService.findAllFaceNames(apiKey);
+
+        assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(faces);
 
-        verify(storage).removeFaceClassifier(appKey, modelApiKey);
-        verify(facesRepository).deleteFacesByApiKey(modelApiKey);
-        verifyNoMoreInteractions(storage, facesRepository);
+        verify(faceDao).findAllFaceNamesByApiKey(apiKey);
+        verifyNoMoreInteractions(faceDao);
+    }
+
+    @Test
+    void deleteFaceByName() {
+        val faceName = "face_name";
+        val apiKey = "api_key";
+        val token = new Token(null, null);
+
+        when(systemService.buildToken(apiKey)).thenReturn(token);
+
+        faceService.deleteFaceByName(faceName, apiKey, "NO");
+
+        verify(systemService).buildToken(apiKey);
+        verify(faceDao).deleteFaceByName(faceName, token);
+        verifyNoMoreInteractions(systemService, faceDao);
+    }
+
+    @Test
+    void deleteFacesByModel() {
+        val apiKey = "api_key";
+        val token = new Token(null, null);
+        val faces = List.of(new Face(), new Face(), new Face());
+
+        when(systemService.buildToken(apiKey)).thenReturn(token);
+        when(faceDao.deleteFacesByApiKey(token)).thenReturn(faces);
+
+        val actual = faceService.deleteFacesByModel(apiKey);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual).isEqualTo(faces.size());
+
+        verify(systemService).buildToken(apiKey);
+        verify(faceDao).deleteFacesByApiKey(token);
+        verifyNoMoreInteractions(systemService, faceDao);
     }
 }

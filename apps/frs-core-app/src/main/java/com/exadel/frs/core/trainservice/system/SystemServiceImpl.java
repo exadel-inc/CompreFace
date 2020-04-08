@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service;
 public class SystemServiceImpl implements SystemService {
 
     @Override
-    public Token getTokenParts(final String token) {
-        val appApiKey = token.length() / 2;
+    public Token buildToken(final String apiKey) {
+        val appApiKey = apiKey.length() / 2;
 
         return new Token(
-                token.substring(0, appApiKey),
-                token.substring(appApiKey)
+                apiKey.substring(0, appApiKey),
+                apiKey.substring(appApiKey)
         );
     }
 }

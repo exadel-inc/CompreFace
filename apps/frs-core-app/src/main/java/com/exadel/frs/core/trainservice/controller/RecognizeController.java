@@ -39,15 +39,15 @@ public class RecognizeController {
             @RequestParam(required = false)
             final Integer limit
     ) {
-        val token = systemService.getTokenParts(apiKey);
+        val token = systemService.buildToken(apiKey);
 
-        val lock = storage.isLocked(token.getAppKey(), token.getModelKey());
+        val lock = storage.isLocked(token.getAppApiKey(), token.getModelApiKey());
         if (lock) {
             return ResponseEntity.status(LOCKED)
                                  .body(new RetrainResponse("Model is locked now, try later"));
         }
 
-        val classifier = storage.getFaceClassifier(token.getAppKey(), token.getModelKey());
+        val classifier = storage.getFaceClassifier(token.getAppApiKey(), token.getModelApiKey());
 
         val scanResponse = client.scanFaces(file, defaultIfNull(limit, 1), 0.5D);
         val scanResult = scanResponse.getResult().get(0);

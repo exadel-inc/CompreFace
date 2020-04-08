@@ -48,10 +48,10 @@ public class ScanController {
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey
     ) throws IOException {
-        val token = systemService.getTokenParts(apiKey);
+        val token = systemService.buildToken(apiKey);
 
         getTrainingOption(retrainStatus).run(token, retrainService);
 
-        scanService.scanAndSaveFace(file, faceName, detProbThreshold, token.getModelKey());
+        scanService.scanAndSaveFace(file, faceName, detProbThreshold, token.getModelApiKey());
     }
 }

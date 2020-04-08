@@ -2,7 +2,7 @@ package com.exadel.frs.core.trainservice.component;
 
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierProxy;
-import com.exadel.frs.core.trainservice.service.FaceService;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +22,7 @@ public class FaceClassifierProxyITest {
     private FaceClassifierProxy faceClassifierProxy;
 
     @Autowired
-    private FaceService service;
+    private FaceDao service;
 
     private FaceClassifier faceClassifier;
 

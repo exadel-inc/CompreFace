@@ -1,6 +1,6 @@
 package com.exadel.frs.core.trainservice.repository;
 
-import com.exadel.frs.core.trainservice.service.FaceService;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class FaceClassifierStorageLocalITest {
     private ApplicationContext ac;
 
     @Autowired
-    private FaceService faceService;
+    private FaceDao faceDao;
 
     private static final String APP_KEY = "app";
     private static final String MODEL_ID = "model_id";

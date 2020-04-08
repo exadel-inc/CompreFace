@@ -11,11 +11,11 @@ public enum RetrainOption {
     YES {
         @Override
         public void run(final Token token, final RetrainService retrainService) {
-            if (retrainService.isTraining(token.getAppKey(), token.getModelKey())) {
+            if (retrainService.isTraining(token.getAppApiKey(), token.getModelApiKey())) {
                 throw new ClassifierIsAlreadyTrainingException();
             }
 
-            retrainService.startRetrain(token.getAppKey(), token.getModelKey());
+            retrainService.startRetrain(token.getAppApiKey(), token.getModelApiKey());
         }
     },
     NO {
@@ -27,15 +27,15 @@ public enum RetrainOption {
     FORCE {
         @Override
         public void run(final Token token, final RetrainService retrainService) {
-            retrainService.abortTraining(token.getAppKey(), token.getModelKey());
-            retrainService.startRetrain(token.getAppKey(), token.getModelKey());
+            retrainService.abortTraining(token.getAppApiKey(), token.getModelApiKey());
+            retrainService.startRetrain(token.getAppApiKey(), token.getModelApiKey());
         }
     };
 
     public abstract void run(final Token token, final RetrainService retrainService);
 
-    public static RetrainOption getTrainingOption(String option) {
-        return getIfPresent(RetrainOption.class, firstNonNull(option, ""))
-                .or(NO);
+    public static RetrainOption getTrainingOption(final String option) {
+        return getIfPresent(RetrainOption.class, firstNonNull(option.toUpperCase(), ""))
+                .or(FORCE);
     }
 }

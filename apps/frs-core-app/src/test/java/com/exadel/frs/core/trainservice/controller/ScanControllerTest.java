@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.controller;
 
+import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +33,7 @@ class ScanControllerTest {
         mockMvc.perform(
                 multipart("/faces/save/name")
                         .file(mockFile)
+                        .param("retrain", NO.name())
                         .header(X_FRS_API_KEY_HEADER, APP_GUID)
         ).andExpect(status().isCreated());
     }
