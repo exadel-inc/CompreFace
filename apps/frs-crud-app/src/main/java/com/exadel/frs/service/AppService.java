@@ -160,10 +160,6 @@ public class AppService {
 
         verifyUserHasWritePrivileges(userId, organization);
 
-        if (isEmpty(appCreateDto.getName())) {
-            throw new EmptyRequiredFieldException("name");
-        }
-
         verifyNameIsUnique(appCreateDto.getName(), organization.getId());
 
         val app = App.builder()

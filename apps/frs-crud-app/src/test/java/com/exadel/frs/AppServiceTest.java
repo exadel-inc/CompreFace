@@ -287,21 +287,6 @@ class AppServiceTest {
         assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
     }
 
-    @ParameterizedTest
-    @MethodSource("writeRoles")
-    void failCreateAppEmptyNamefinal(OrganizationRole organizationRole) {
-        val appCreateDto = AppCreateDto.builder().name("").build();
-        val user = user(USER_ID);
-
-        val organization = organization();
-        organization.addUserOrganizationRole(user, organizationRole);
-
-        when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
-        when(userServiceMock.getUser(anyLong())).thenReturn(user);
-
-        assertThrows(EmptyRequiredFieldException.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
-    }
-
     @Test
     void failCreateAppUserDoesNotBelongToOrganization() {
         val appCreateDto = AppCreateDto.builder().name("appName").build();

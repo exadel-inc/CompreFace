@@ -1,5 +1,6 @@
 package com.exadel.frs.controller;
 
+import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
@@ -91,6 +92,28 @@ class ModelControllerTest {
 
 
         mockMvc.perform(requestToShareModel)
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    void shouldReturnErrorMessageWhenNameIsMissingOnCreateNewModel() throws Exception {
+        val expectedContent = "{\"message\":\"Model name cannot be empty\",\"code\":5}";
+        val bodyWithEmptyName = new ModelCreateDto();
+        bodyWithEmptyName.setName("");
+
+        val bodyWithNoName = new ModelCreateDto();
+
+        val createNewModelRequest = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(expectedContent));
+
+        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithNoName)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
     }
