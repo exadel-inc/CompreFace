@@ -1,7 +1,7 @@
 version: '3'
 services:
   e2e:
-    container_name: ${COMPOSE_PROJECT_NAME:-}e2e
+    container_name: ${COMPOSE_PROJECT_NAME:-frs-core}_e2e
     build: ./e2e
     environment:
       - ML_URL=http://ml:3000
@@ -12,7 +12,7 @@ services:
     depends_on:
       - ml
   ml:
-    container_name: ${COMPOSE_PROJECT_NAME:-}ml
+    container_name: ${COMPOSE_PROJECT_NAME:-frs-core}_ml
     build:
       context: ./ml
       args:
@@ -28,7 +28,7 @@ services:
     depends_on:
       - mongodb
   mongodb:
-    container_name: ${COMPOSE_PROJECT_NAME:-}mongodb
+    container_name: ${COMPOSE_PROJECT_NAME:-frs-core}_mongodb
     image: "mongo:4.0.4-xenial"
     ports:
       - ${MONGODB_PORT:-27117}:27017
