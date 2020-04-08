@@ -4,7 +4,7 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := default
 
 FLASK_ENV ?= development
-COMPOSE_PROJECT_NAME ?= frs-core-
+COMPOSE_PROJECT_NAME ?= frs-core_
 MONGODB_HOST ?= localhost
 MONGODB_PORT ?= 27017
 

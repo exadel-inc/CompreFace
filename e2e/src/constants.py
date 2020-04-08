@@ -16,7 +16,9 @@ def _get_env(name: str, default: str) -> str:
 
 
 class ENV:
-    ML_URL = _get_env('ML_URL', 'http://localhost:3000')
+    _ML_HOST = _get_env('ML_HOST', 'localhost')
+    _ML_PORT = int(_get_env('ML_PORT', '3000'))
+    ML_URL = _get_env('ML_URL', f'http://{_ML_HOST}:{_ML_PORT}')
     API_KEY = _get_env('API_KEY', 'test-api-key')
     DROP_DB = _get_env('DROP_DB', 'true').lower() in ('true', '1')
 
