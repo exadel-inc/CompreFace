@@ -16,7 +16,7 @@ FLASK_ENV ?= development
 setup:
 	chmod +x $(CURDIR)/ml/run.sh $(CURDIR)/e2e/run-e2e-test.sh $(CURDIR)/ml/tools/test_oom.sh
 	python -m pip install -r $(CURDIR)/ml/requirements.txt
-	python -m pip install -e $(CURDIR)/ml/srcext/insightface/python-
+	python -m pip install -e $(CURDIR)/ml/srcext/insightface/python-package
 
 start:
 	ML_PORT=$(ML_PORT) \
