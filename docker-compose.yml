@@ -25,6 +25,12 @@ services:
       - MONGODB_PORT=27017
       - MONGODB_DBNAME=${MONGODB_DBNAME:-}
       - IMG_LENGTH_LIMIT=${IMG_LENGTH_LIMIT:-}
+    deploy:
+      resources:
+        limits:
+          memory:
+        reservations:
+          memory:
     depends_on:
       - mongodb
   mongodb:

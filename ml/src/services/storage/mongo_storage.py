@@ -41,17 +41,15 @@ class MongoStorage:
 
     def wait_for_connection(self):
         start_time = time.time()
-        tried_once = False
         while True:
             try:
+                logging.debug(f"Waiting for database connection at '{self._mongodb_host}:{self._mongodb_port}'")
                 self._mongodb.server_info()
                 break
             except ServerSelectionTimeoutError as e:
                 if time.time() - start_time > WAIT_FOR_CONNECTION_TIMEOUT_S:
                     raise CouldNotConnectToDatabase from e
-                if not tried_once:
-                    logging.debug(f"Waiting for database connection at '{self._mongodb_host}:{self._mongodb_port}'")
-                    tried_once = True
+                logging.debug(f"Retrying to get database connection at '{self._mongodb_host}:{self._mongodb_port}'")
                 time.sleep(1)
 
     def add_face(self, api_key: str, face: Face, emb_calc_version: str):
