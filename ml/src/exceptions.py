@@ -2,6 +2,7 @@ from werkzeug.exceptions import BadRequest, Locked, InternalServerError, Unautho
 
 from src.constants import ENV
 
+
 class APIKeyNotSpecifiedError(Unauthorized):
     description = 'No API Key is given'
 
