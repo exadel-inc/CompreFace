@@ -1,10 +1,8 @@
 ![Example output image](./ml/sample_images/readme_example.png)
-
 # frs-core
 This is a component of Exadel Face Recognition Service. EFRS is a service for face recognition: upload images with faces of known people, then upload a new image, and the service will recognize faces in it.
 
 #### External Documentation
-
 - Public page about EFRS - [Exadel Face Recognition Service](https://confluence.exadel.com/display/KC/Exadel+Face+Recognition+Service)
 - EFRS Documentation - [EFRS Confluence Space](https://confluence.exadel.com/display/EFRS/Exadel+FRS+Home)
 - EFRS API Contract - [FRS REST API](https://confluence.exadel.com/display/KC/FRS+REST+API)
@@ -13,32 +11,27 @@ This is a component of Exadel Face Recognition Service. EFRS is a service for fa
     - Swagger UI on QA Environment - [apidocs](http://qa.frs.exadel.by:3000/apidocs), [apidocs2](http://qa.frs.exadel.by:3000/apidocs2)
     - Swagger UI run locally (app must be started) - [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
 
-#### Table of Contents
-- [Test](#starting-the-service)
-
 # Getting Started
 These instructions will get you the project up and running on your local development machine.
 
-#### Run the service locally
+#### Run the service from containers
+1. Up the containers with `$ make up`
+1. You can make requests to the service at `http://localhost:3000` as described in [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
+1. Shut down the service with `$ make down`
 
+Note: Once you'll make changes to the project, you'll need to  run `$ make build` to have them applied on the next run of `$ make up`.
+
+#### Run the service locally
 Run `$ make setup` to install required packages to your system.
 
 1. Have the database running at `localhost:27117`. You can do it with: 
     - `$ make db`, if you have [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) (with `docker-compose`) installed
     - `$ sudo mongod --port 27717`, if you have [mongoDB](https://www.mongodb.com/download-center/community) installed
 1. Start the service in debug mode: `$ make start`
-1. You can make requests to the service at `http://localhost:3000` as described in [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
+1. Service is now available at `http//localhost:3000`
 1. Stop it with `$ make stop`
 
-#### Run from containers
-
-1. Build the containers with `$ make build`
-1. Up the containers with `$ make up`
-1. Service is now available at `http//localhost:3000`
-1. Shut down the service with `$ make down`
-
 #### Run main tests
-
 To check whether the project is in a valid state, run `$ make`.
 
 # Advanced usage
