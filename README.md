@@ -34,10 +34,11 @@ Run `$ make setup` to install required packages to your system.
 #### Run main tests
 To check whether the project is in a valid state, run `$ make`.
 
-# Advanced usage
-##### Valid the into parts
+# Advanced usage examples
+Valid the into parts<br>
 `asdfasdf`
-##### Combine the project into parts
+
+Combine the project into parts<br>
 `asdfasdf`  
 
 ### In development environment, container-less
