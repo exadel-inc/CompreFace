@@ -1,11 +1,11 @@
-package com.exadel.frs.core.trainservice.scan;
+package com.exadel.frs.core.trainservice.system.python;
 
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface PythonClient {
+public interface ScanFacesClient {
 
     @RequestLine("POST /scan_faces")
     @Headers("Content-Type: multipart/form-data")

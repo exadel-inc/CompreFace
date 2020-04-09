@@ -1,9 +1,6 @@
 package com.exadel.frs.core.trainservice.repository;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
-import com.exadel.frs.core.trainservice.component.FaceClassifierProxy;
-import com.exadel.frs.core.trainservice.service.FaceService;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +9,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit.jupiter.EnabledIf;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @Slf4j
@@ -27,7 +27,7 @@ public class FaceClassifierStorageLocalITest {
     private ApplicationContext ac;
 
     @Autowired
-    private FaceService faceService;
+    private FaceDao faceDao;
 
     private static final String APP_KEY = "app";
     private static final String MODEL_ID = "model_id";

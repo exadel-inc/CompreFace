@@ -7,6 +7,11 @@ spring:
 
 ---
 
+environment:
+  servers:
+    PYTHON:
+      url: ${PYTHON_URL:http://localhost:5001}
+
 spring:
   jackson:
     serialization:

@@ -1,11 +1,11 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
+import com.exadel.frs.core.trainservice.component.LogisticRegressionExt;
+import com.exadel.frs.core.trainservice.component.LogisticRegressionExt.Trainer;
 import java.util.Map;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
-import smile.classification.LogisticRegressionExt;
-import smile.classification.LogisticRegressionExt.Trainer;
 
 @Component
 @Scope("prototype")

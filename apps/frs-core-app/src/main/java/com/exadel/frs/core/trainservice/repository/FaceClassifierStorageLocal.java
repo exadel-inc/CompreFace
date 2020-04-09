@@ -1,6 +1,5 @@
 package com.exadel.frs.core.trainservice.repository;
 
-import com.exadel.frs.core.trainservice.component.FaceClassifierProxy;
 import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

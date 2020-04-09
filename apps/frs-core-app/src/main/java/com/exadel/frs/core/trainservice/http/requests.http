@@ -20,3 +20,11 @@ x-frs-api-key: some_api_key
 
 
 ###
+
+
+GET http://localhost:8080/faces/save/facename
+Content-Type: application/json
+
+
+
+###

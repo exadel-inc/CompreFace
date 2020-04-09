@@ -2,7 +2,7 @@ package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
-import com.exadel.frs.core.trainservice.service.FaceService;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ public class TrainController {
 
     private final FaceClassifierStorage storage;
 
-    private final FaceService faceService;
+    private final FaceDao faceDao;
 
     @RequestMapping(value = "/retrain", method = RequestMethod.POST)
     public ResponseEntity train(
@@ -26,7 +26,7 @@ public class TrainController {
     ) {
         storage.lock(appkey, modelId);
         storage.getFaceClassifier(appkey, modelId)
-               .train(faceService.findAllFaceEmbeddingsByApiKey(appkey), appkey, modelId);
+               .train(faceDao.findAllFaceEmbeddingsByApiKey(appkey), appkey, modelId);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED)
                              .body(new RetrainResponse("Retraining has just been started (this one already exists)"));

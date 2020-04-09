@@ -1,7 +1,7 @@
 package com.exadel.frs.core.trainservice.repository;
 
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
-import com.exadel.frs.core.trainservice.service.FaceService;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ public class FaceClassifierStorageLocalThreadKillITest {
     private ApplicationContext applicationContext;
 
     @Autowired
-    private FaceService faceService;
+    private FaceDao faceDao;
 
     private static final String APP_KEY = "app";
     private static final String MODEL_ID = "model_id";
@@ -38,7 +38,7 @@ public class FaceClassifierStorageLocalThreadKillITest {
         faceClassifier.setStorage(storage);
         faceClassifier.setClassifier(new LogisticRegressionExtendedClassifier());
         storage.lock(APP_KEY, MODEL_ID);
-        faceClassifier.train(faceService.findAllFaceEmbeddings(), APP_KEY, MODEL_ID);
+        faceClassifier.train(faceDao.findAllFaceEmbeddings(), APP_KEY, MODEL_ID);
         storage.unlock(APP_KEY, MODEL_ID);
         //Thread.sleep(10000L);
     }

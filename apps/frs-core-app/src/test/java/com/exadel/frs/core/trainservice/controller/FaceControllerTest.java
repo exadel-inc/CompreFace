@@ -1,7 +1,7 @@
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.controller.FaceController.X_FRS_API_KEY_HEADER;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
