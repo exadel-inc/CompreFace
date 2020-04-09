@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -44,14 +45,14 @@ public class FaceControllerTest {
 
         var expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
 
-        mockMvc.perform(get("/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
-                .andExpect(status().isOk())
-                .andExpect(content().json(expectedContent));
+        mockMvc.perform(get(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
+               .andExpect(status().isOk())
+               .andExpect(content().json(expectedContent));
     }
 
     @Test
     public void findAllShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
-        mockMvc.perform(get("/faces"))
+        mockMvc.perform(get(API_V1 + "/faces"))
                .andExpect(status().isBadRequest());
     }
 
@@ -62,14 +63,14 @@ public class FaceControllerTest {
                 .when(facesRepository)
                 .deleteFacesByApiKey(APP_GUID.substring(APP_GUID.length() / 2));
 
-        mockMvc.perform(delete("/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
+        mockMvc.perform(delete(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
                .andExpect(status().isOk())
                .andExpect(content().string(String.valueOf(response.size())));
     }
 
     @Test
     public void deleteFacesShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
-        mockMvc.perform(delete("/faces"))
+        mockMvc.perform(delete(API_V1 + "/faces"))
                .andExpect(status().isBadRequest());
     }
 }

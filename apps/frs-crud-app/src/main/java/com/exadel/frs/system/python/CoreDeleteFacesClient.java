@@ -6,7 +6,7 @@ import feign.RequestLine;
 
 public interface CoreDeleteFacesClient {
 
-    @RequestLine("DELETE /faces")
+    @RequestLine("DELETE /api/v1/faces")
     @Headers("x-frs-api-key: {apiKey}")
     int deleteFaces(@Param("apiKey") final String apiKey);
 }
