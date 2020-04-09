@@ -1,3 +1,5 @@
+![Example output image](./ml/sample_images/readme_example.png)
+
 # frs-core
 This is a component of Exadel Face Recognition Service. EFRS is a service for face recognition: upload images with faces of known people, then upload a new image, and the service will recognize faces in it.
 
@@ -8,8 +10,6 @@ This is a component of Exadel Face Recognition Service. EFRS is a service for fa
 - frs-core API Contract
     - Swagger UI on QA Environment - [apidocs](http://qa.frs.exadel.by:3000/apidocs), [apidocs2](http://qa.frs.exadel.by:3000/apidocs2)
     - Swagger UI run locally (app must be started) - [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
-
-![Algorithm schema](./ml/sample_images/readme_example.png)
 
 ### Table of Contents
 
