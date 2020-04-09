@@ -31,7 +31,7 @@ class ScanControllerTest {
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
 
         mockMvc.perform(
-                multipart("/faces/name")
+                multipart("/face/name")
                         .file(mockFile)
                         .param("retrain", NO.name())
                         .header(X_FRS_API_KEY_HEADER, APP_GUID)

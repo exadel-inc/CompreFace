@@ -27,7 +27,7 @@ public class ScanController {
     private final RetrainService retrainService;
 
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping(value = "/faces/{face_name}")
+    @PostMapping(value = "/face/{face_name}")
     public void scanFaces(
             @ApiParam(value = "A picture with at least one face (accepted formats: jpeg, png).", required = true)
             @RequestParam
