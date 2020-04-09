@@ -24,9 +24,9 @@ Note: Once you'll make changes to the project, you'll need to  run `$ make build
 #### Run the service locally
 Run `$ make setup` to install required packages to your system.
 
-1. Have the database running at `localhost:27117`. You can do it with: 
+1. Have the database running at `localhost:27117`. You can do it with either: 
     - `$ make db`, if you have [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) (with `docker-compose`) installed
-    - `$ sudo mongod --port 27717`, if you have [mongoDB](https://www.mongodb.com/download-center/community) installed
+    - or `$ sudo mongod --port 27717`, if you have [mongoDB](https://www.mongodb.com/download-center/community) installed
 1. Start the service in debug mode: `$ make start`
 1. Service is now available at `http//localhost:3000`
 1. Stop it with `$ make stop`
@@ -35,8 +35,10 @@ Run `$ make setup` to install required packages to your system.
 To check whether the project is in a valid state, run `$ make`.
 
 # Advanced usage
-### With Docker
-Builds containers, run tests inside: `$ make docker` 
+##### Valid the into parts
+`asdfasdf`
+##### Combine the project into parts
+`asdfasdf`  
 
 ### In development environment, container-less
 1. Setup dependencies: `$ make setup`
