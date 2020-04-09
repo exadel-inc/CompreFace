@@ -357,30 +357,6 @@ class ModelServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    void failCreateModelEmptyName(OrganizationRole organizationRole) {
-        val modelCreateDto = ModelCreateDto.builder()
-                .name("")
-                .build();
-        val user = user(USER_ID);
-
-        val organization = organization(ORGANIZATION_ID);
-        organization.addUserOrganizationRole(user, organizationRole);
-
-        val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
-
-        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
-
-        assertThrows(EmptyRequiredFieldException.class, () ->
-                modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("writeRoles")
     void successUpdateModel(OrganizationRole organizationRole) {
         ModelUpdateDto modelUpdateDto = ModelUpdateDto.builder()
                 .name("new_name")

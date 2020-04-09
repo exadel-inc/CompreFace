@@ -8,7 +8,6 @@ import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.FieldRequiredException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRemoveException;
@@ -141,12 +140,6 @@ class OrganizationServiceTest {
         when(organizationRepositoryMock.existsByName(anyString())).thenReturn(true);
 
         Assertions.assertThrows(NameIsNotUniqueException.class, () -> organizationService.createOrganization(orgCreateDto, null));
-    }
-
-    @Test
-    void failCreateOrganizationEmptyRequiredField() {
-        OrgCreateDto orgCreateDto = OrgCreateDto.builder().name("").build();
-        Assertions.assertThrows(FieldRequiredException.class, () -> organizationService.createOrganization(orgCreateDto, null));
     }
 
     @Test

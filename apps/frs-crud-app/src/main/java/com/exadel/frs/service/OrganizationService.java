@@ -20,7 +20,6 @@ import com.exadel.frs.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -84,9 +83,6 @@ public class OrganizationService {
     }
 
     public Organization createOrganization(final OrgCreateDto orgCreateDto, final Long userId) {
-        if (StringUtils.isEmpty(orgCreateDto.getName())) {
-            throw new FieldRequiredException("Organization name");
-        }
         verifyNameIsUnique(orgCreateDto.getName());
         Organization organization = Organization.builder()
                 .name(orgCreateDto.getName())

@@ -113,9 +113,6 @@ public class ModelService {
 
         verifyUserHasWritePrivileges(userId, app);
 
-        if (isEmpty(modelCreateDto.getName())) {
-            throw new EmptyRequiredFieldException("name");
-        }
         if (!app.getOrganization().getGuid().equals(orgGuid)) {
             throw new AppDoesNotBelongToOrgException(appGuid, orgGuid);
         }

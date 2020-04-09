@@ -1,5 +1,6 @@
 package com.exadel.frs.controller;
 
+import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
@@ -25,6 +26,7 @@ import static com.exadel.frs.utils.TestUtils.buildUser;
 import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -66,7 +68,7 @@ class ModelControllerTest {
         val updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
-                .contentType(MediaType.APPLICATION_JSON);
+                .contentType(APPLICATION_JSON);
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
                 .andExpect(status().isBadRequest())
@@ -86,11 +88,33 @@ class ModelControllerTest {
         val requestToShareModel = post(url)
                                     .with(csrf())
                                     .with(user(buildUser()))
-                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .contentType(APPLICATION_JSON)
                                     .content(mapper.writeValueAsString(new ModelShareDto()));
 
 
         mockMvc.perform(requestToShareModel)
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    void shouldReturnErrorMessageWhenNameIsMissingOnCreateNewModel() throws Exception {
+        val expectedContent = "{\"message\":\"Model name cannot be empty\",\"code\":5}";
+        val bodyWithEmptyName = new ModelCreateDto();
+        bodyWithEmptyName.setName("");
+
+        val bodyWithNoName = new ModelCreateDto();
+
+        val createNewModelRequest = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(APPLICATION_JSON);
+
+        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(expectedContent));
+
+        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithNoName)))
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string(expectedContent));
     }
