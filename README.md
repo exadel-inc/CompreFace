@@ -5,10 +5,10 @@ This is a component of Exadel Face Recognition Service. EFRS is a service for fa
 
 #### External Documentation
 
-- Public page about EFRS - [\[Confluence KC\] Exadel Face Recognition Service](https://confluence.exadel.com/display/KC/Exadel+Face+Recognition+Service)
-- EFRS Documentation - [Confluence EFRS](https://confluence.exadel.com/display/EFRS/Exadel+FRS+Home)
-- EFRS API Contract - [\[Confluence KC\] FRS REST API](https://confluence.exadel.com/display/KC/FRS+REST+API)
-- frs-core Documentation - [\[Confluence EFRS\] Python Core Service](https://confluence.exadel.com/display/EFRS/Python+Core+Service)
+- Public page about EFRS - [Exadel Face Recognition Service](https://confluence.exadel.com/display/KC/Exadel+Face+Recognition+Service)
+- EFRS Documentation - [EFRS Confluence Space](https://confluence.exadel.com/display/EFRS/Exadel+FRS+Home)
+- EFRS API Contract - [FRS REST API](https://confluence.exadel.com/display/KC/FRS+REST+API)
+- frs-core Documentation - [Python Core Service](https://confluence.exadel.com/display/EFRS/Python+Core+Service)
 - frs-core API Contract
     - Swagger UI on QA Environment - [apidocs](http://qa.frs.exadel.by:3000/apidocs), [apidocs2](http://qa.frs.exadel.by:3000/apidocs2)
     - Swagger UI run locally (app must be started) - [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
