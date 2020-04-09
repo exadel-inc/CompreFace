@@ -14,7 +14,7 @@ class ImgScaler:
         assert not self._downscaled_img_called
         self._downscaled_img_called = True
         height, width = img.shape[:2]
-        if width <= self._img_length_limit and height <= self._img_length_limit:
+        if width <= self._img_length_limit and height <= self._img_length_limit or not self._img_length_limit:
             return img
 
         self._img_downscale_ratio = self._img_length_limit / (width if width >= height else height)

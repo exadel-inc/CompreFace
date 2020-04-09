@@ -9,4 +9,4 @@ from src.services.storage.mongo_storage import MongoStorage
 def storage(mocker):
     enable_gridfs_integration()
     mocker.patch('src.services.storage.mongo_storage.MongoClient', mongomock.MongoClient)
-    return MongoStorage(host='host', port=1000)
+    return MongoStorage(host='test', port=1000)

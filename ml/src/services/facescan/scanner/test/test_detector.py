@@ -24,16 +24,14 @@ def test__given_no_faces_img__when_scanned__then_returns_no_faces(scanner_cls):
 
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
-@pytest.mark.parametrize('filename', ['000_5.png', '000_5.jpg'])
-def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes_sorted_by_probability(scanner_cls,
-                                                                                                     filename):
+def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes_sorted_by_probability(scanner_cls):
     correct_boxes = [BoundingBox(544, 222, 661, 361, 1),
                      BoundingBox(421, 236, 530, 369, 1),
                      BoundingBox(161, 36, 266, 160, 1),
                      BoundingBox(342, 160, 437, 268, 1),
                      BoundingBox(243, 174, 352, 309, 1)]
     scanner: FaceScanner = get_scanner(scanner_cls)
-    img = read_img(IMG_DIR / filename)
+    img = read_img(IMG_DIR / '000_5.png')
 
     faces = scanner.scan(img)
 
@@ -56,10 +54,10 @@ def test__given_threshold_set_to_1__when_scanned__then_returns_no_faces(scanner_
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
 @pytest.mark.parametrize('row', SAMPLE_IMAGES)
-def test__given_img__when_scanned__then_1_to_1_relationship_between_all_returned_boxes_and_faces(
-        scanner_cls, row):
+def test__given_img__when_scanned__then_1_to_1_relationship_between_all_returned_boxes_and_faces(scanner_cls, row):
     scanner: FaceScanner = get_scanner(scanner_cls)
+    img = read_img(IMG_DIR / row.image_name)
 
-    errors = calculate_errors(scanner, [row])
+    scanned_faces = scanner.scan(img)
 
-    assert errors == 0
+    assert calculate_errors(boxes=[face.box for face in scanned_faces], noses=row.noses) == 0

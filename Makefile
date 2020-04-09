@@ -4,7 +4,7 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := default
 FLASK_ENV ?= development
 MONGODB_HOST ?= localhost
-MONGODB_PORT ?= 27017
+MONGODB_PORT ?= 27117
 
 #####################################
 ##### MAIN TEST
@@ -13,7 +13,7 @@ MONGODB_PORT ?= 27017
 default: test/unit test/lint test
 
 test:
-	docker-compose up --build --abort-on-container-exit
+	MEM_LIMIT=4g docker-compose up --build --abort-on-container-exit
 
 #####################################
 ##### RUNNING IN DOCKER
@@ -74,37 +74,34 @@ e2e/local: start
 	$(MAKE) e2e && ml/run.sh stop || (ml/run.sh stop; exit 1)
 
 #####################################
-#####  DEV SCRIPTS
+##### DEV SCRIPTS
 #####################################
 
-tool/oom:
-	ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
+scan:
+	python -m ml.src.services.facescan.run
 
-tool/opt:
-	python -m ml.tools.optimize_face_det_constants
+optimize:
+	python -m ml.src.services.facescan.optimizer.run
 
-tool/scan:
-	python -m ml.tools.scan_faces
-
-tool/err:
-	python -m ml.tools.calculate_errors
-
-#####################################
-##### HELPERS
-#####################################
-
-db:
-	docker-compose up -d mongodb
-
-PORT:
-	@echo $$(while true; do port=$$(( RANDOM % 30000 + 30000 )); echo -ne "\035" | telnet 127.0.0.1 $$port > /dev/null 2>&1; [ $$? -eq 1 ] && echo "$$port" && exit 0; done )
-
-TIMESTAMP:
-	@echo $$(date +'%Y-%m-%d-%H-%M-%S')
+crash_lab:
+	tools/crash_lab.sh $(CURDIR)/ml/sample_images
 
 #####################################
 ##### MISC
 #####################################
+
+COMPOSE_PROJECT_NAME:
+	@echo frs-core-$$(</dev/urandom tr -dc 'a-zA-Z0-9' | fold -w 5 | head -n 1)
+
+PORT:
+	@echo $$(while true; do port=$$(( RANDOM % 30000 + 30000 )); echo -ne "\035" | telnet 127.0.0.1 \
+		$$port > /dev/null 2>&1; [ $$? -eq 1 ] && echo "$$port" && exit 0; done )
+
+API_KEY:
+	@echo test-$$(date +'%Y-%m-%d-%H-%M-%S-%3N')
+
+db:
+	docker-compose up -d mongodb
 
 stats:
 	(which tokei || conda install -y -c conda-forge tokei) && \

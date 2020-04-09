@@ -9,6 +9,8 @@ from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.storage.mongo_storage import MongoStorage
 
+from src.constants import ENV
+
 
 def get_faces(storage: MongoStorage, api_key: str, emb_calc_version: str):
     faces = storage.get_face_embeddings(api_key, emb_calc_version)
@@ -34,7 +36,7 @@ def train_and_save_classifier(api_key: str) -> None:
 
 
 def train_and_save_classifier_async(api_key: str) -> None:
-    init_logging()
+    init_logging(level=ENV.LOGGING_LEVEL)
     # noinspection PyBroadException
     try:
         return train_and_save_classifier(api_key)

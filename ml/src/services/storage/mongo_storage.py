@@ -41,9 +41,9 @@ class MongoStorage:
 
     def wait_for_connection(self):
         start_time = time.time()
+        logging.debug(f"Waiting for database connection at '{self._mongodb_host}:{self._mongodb_port}'")
         while True:
             try:
-                logging.debug(f"Waiting for database connection at '{self._mongodb_host}:{self._mongodb_port}'")
                 self._mongodb.server_info()
                 break
             except ServerSelectionTimeoutError as e:

@@ -1,4 +1,4 @@
-version: '3'
+version: '2.4'
 services:
   e2e:
     container_name: ${COMPOSE_PROJECT_NAME:-frs-core}_e2e
@@ -25,12 +25,8 @@ services:
       - MONGODB_PORT=27017
       - MONGODB_DBNAME=${MONGODB_DBNAME:-}
       - IMG_LENGTH_LIMIT=${IMG_LENGTH_LIMIT:-}
-    deploy:
-      resources:
-        limits:
-          memory:
-        reservations:
-          memory:
+    mem_limit: ${MEM_LIMIT:-0}
+    memswap_limit: ${MEM_LIMIT:-0}
     depends_on:
       - mongodb
   mongodb:

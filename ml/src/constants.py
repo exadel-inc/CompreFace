@@ -1,11 +1,11 @@
-import json
+import logging
 
 from pymongo import uri_parser
 
-from src.services.utils.pyutils import get_env, first_and_only
+from src.services.utils.pyutils import get_env, first_and_only, Constants
 
 
-class ENV:
+class ENV(Constants):
     ML_PORT = int(get_env('ML_PORT', '3000'))
 
     _MONGODB_HOST = get_env('MONGODB_HOST', 'mongodb')
@@ -20,9 +20,7 @@ class ENV:
     DEFAULT_FACE_SCANNER = get_env('DEFAULT_FACE_SCANNER', 'Facenet2018')
     IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
-    @classmethod
-    def __str__(cls):
-        return json.dumps({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')}, indent=4)
+    LOGGING_LEVEL = logging.DEBUG
 
 
 DO_SHOW_STACKTRACE_IN_LOGS = True
