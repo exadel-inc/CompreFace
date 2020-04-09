@@ -17,13 +17,12 @@ These instructions will get you the project up and running on your local develop
 #### Run the service from containers
 1. Up the containers with `$ make up`
 1. You can make requests to the service at `http://localhost:3000` as described in [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
-1. Shut down the service with `$ make down`
+1. Shut down the service with `$ make down` <br>
 
 Note: Once you'll make changes to the project, you'll need to  run `$ make build` to have them applied on the next run of `$ make up`.
 
 #### Run the service locally
 Run `$ make setup` to install required packages to your system.
-
 1. Have the database running at `localhost:27117`. You can do it with either: 
     - `$ make db`, if you have [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) (with `docker-compose`) installed
     - or `$ sudo mongod --port 27717`, if you have [mongoDB](https://www.mongodb.com/download-center/community) installed
@@ -36,9 +35,10 @@ To check whether the project is in a valid state, run `$ make`.
 
 # Advanced usage examples
 Valid the into parts<br>
-`asdfasdf`
+- `asdfasdf`
 
-Combine the project into parts<br>
+Combine the project into parts
+
 `asdfasdf`  
 
 ### In development environment, container-less
