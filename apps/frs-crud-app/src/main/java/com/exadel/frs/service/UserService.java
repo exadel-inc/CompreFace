@@ -64,7 +64,7 @@ public class UserService {
     public User createUser(final UserCreateDto userCreateDto) {
         validateUserCreateDto(userCreateDto);
         User user = User.builder()
-                .email(userCreateDto.getEmail())
+                .email(userCreateDto.getEmail().toLowerCase())
                 .firstName(userCreateDto.getFirstName())
                 .lastName(userCreateDto.getLastName())
                 .password(encoder.encode(userCreateDto.getPassword()))

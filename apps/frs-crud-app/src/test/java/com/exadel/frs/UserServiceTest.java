@@ -23,6 +23,7 @@ import java.util.Optional;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -223,5 +224,20 @@ class UserServiceTest {
         userService.confirmRegistration(createdUser.getRegistrationToken());
         assertTrue(createdUser.isEnabled());
         assertNull(createdUser.getRegistrationToken());
+    }
+
+    @Test
+    void createsUserWithLowerCaseEmail() {
+        when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
+        val userCreateDto = UserCreateDto.builder()
+                .email("Email@example.COm")
+                .password("password")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
+
+        val createdUser = userService.createUser(userCreateDto);
+
+        assertEquals(userCreateDto.getEmail().toLowerCase(), createdUser.getEmail());
     }
 }
