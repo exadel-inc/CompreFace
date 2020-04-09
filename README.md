@@ -3,6 +3,8 @@
 # frs-core
 This is a component of Exadel Face Recognition Service. EFRS is a service for face recognition: upload images with faces of known people, then upload a new image, and the service will recognize faces in it.
 
+#### External Documentation
+
 - Public page about EFRS - [\[Confluence KC\] Exadel Face Recognition Service](https://confluence.exadel.com/display/KC/Exadel+Face+Recognition+Service)
 - EFRS Documentation - [Confluence EFRS](https://confluence.exadel.com/display/EFRS/Exadel+FRS+Home)
 - EFRS API Contract - [\[Confluence KC\] FRS REST API](https://confluence.exadel.com/display/KC/FRS+REST+API)
@@ -11,7 +13,7 @@ This is a component of Exadel Face Recognition Service. EFRS is a service for fa
     - Swagger UI on QA Environment - [apidocs](http://qa.frs.exadel.by:3000/apidocs), [apidocs2](http://qa.frs.exadel.by:3000/apidocs2)
     - Swagger UI run locally (app must be started) - [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
 
-### Table of Contents
+#### Table of Contents
 
 - [Test](#starting-the-service)
 
