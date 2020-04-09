@@ -35,7 +35,14 @@ public class ResponseExceptionHandler {
         return buildBody(fieldError);
     }
 
-    private ExceptionCode getExceptionCode(FieldError fieldError) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ExceptionResponseDto> handleUndefinedExceptions(final Exception ex) {
+        log.error("Undefined exception occurred", ex);
+
+        return ResponseEntity.status(UNDEFINED.getHttpStatus()).body(buildBody());
+    }
+
+    private ExceptionCode getExceptionCode(final FieldError fieldError) {
         ExceptionCode exceptionCode;
 
         switch (fieldError.getCode()) {
@@ -49,14 +56,7 @@ public class ResponseExceptionHandler {
         return exceptionCode;
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponseDto> handleUndefinedExceptions(final Exception ex) {
-        log.error("Undefined exception occurred", ex);
-
-        return ResponseEntity.status(UNDEFINED.getHttpStatus()).body(buildBody());
-    }
-
-    private ResponseEntity<ExceptionResponseDto> buildBody(FieldError fieldError) {
+    private ResponseEntity<ExceptionResponseDto> buildBody(final FieldError fieldError) {
         val exceptionCode = getExceptionCode(fieldError);
 
         return ResponseEntity
