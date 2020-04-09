@@ -14,23 +14,34 @@ This is a component of Exadel Face Recognition Service. EFRS is a service for fa
     - Swagger UI run locally (app must be started) - [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
 
 #### Table of Contents
-
 - [Test](#starting-the-service)
 
-# Starting the service
-### With Docker
-1. Build the container: `$ make build`
-2. Start it: `$ make up`
-3. Stop it: `$ make down`
+# Getting Started
+These instructions will get you the project up and running on your local development machine.
 
-You can combine steps 1 and 2: `$ make build up`
+#### Run the service locally
 
-### In development environment, container-less
-1. Setup dependencies: `$ make setup`
-2. Start main app in debug mode: `$ make start`
-3. Stop it: `$ make stop`
+Run `$ make setup` to install required packages to your system.
 
-# Testing the service
+1. Have the database running at `localhost:27117`. You can do it with: 
+    - `$ make db`, if you have [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) (with `docker-compose`) installed
+    - `$ sudo mongod --port 27717`, if you have [mongoDB](https://www.mongodb.com/download-center/community) installed
+1. Start the service in debug mode: `$ make start`
+1. You can make requests to the service at `http://localhost:3000` as described in [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
+1. Stop it with `$ make stop`
+
+#### Run from containers
+
+1. Build the containers with `$ make build`
+1. Up the containers with `$ make up`
+1. Service is now available at `http//localhost:3000`
+1. Shut down the service with `$ make down`
+
+#### Run main tests
+
+To check whether the project is in a valid state, run `$ make`.
+
+# Advanced usage
 ### With Docker
 Builds containers, run tests inside: `$ make docker` 
 
