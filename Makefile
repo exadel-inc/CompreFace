@@ -40,7 +40,9 @@ down/all:
 #####################################
 
 setup:
-	chmod +x ml/run.sh e2e/run-e2e-test.sh ml/tools/test_oom.sh
+	chmod +x ml/run.sh
+	chmod +x e2e/run-e2e-test.sh
+	chmod +x tools/crash-lab.sh
 	python -m pip install -r ml/requirements.txt
 	python -m pip install -e ml/srcext/insightface/python-package
 
@@ -87,7 +89,7 @@ e2e/local: start
 #####################################
 
 # Detect faces on given images, with selected scanners, and output the results:
-demo: IMG_NAMES=000_5.jpg
+demo: IMG_NAMES=015_6.jpg
 demo: scan
 scan:
 	python -m ml.src.services.facescan.run
@@ -97,8 +99,8 @@ optimize:
 	python -m ml.src.services.facescan.optimizer.run
 
 # Run experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.:
-crash_lab:
-	tools/crash_lab.sh $(CURDIR)/ml/sample_images
+crash:
+	tools/crash-lab.sh $(CURDIR)/ml/sample_images
 
 #####################################
 ##### MISC

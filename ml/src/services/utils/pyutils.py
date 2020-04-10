@@ -103,6 +103,7 @@ def get_env(name: str, default: str = None) -> str:
         return os.environ[name]
     return os.environ.get(name, '') or default
 
+
 class Constants:
     @classmethod
     def __str__(cls):

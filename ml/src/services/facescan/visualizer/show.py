@@ -51,7 +51,7 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
     font_size_smaller = 15
     radius = 7
     font = "arial"
-    img_length_limit = 700
+    img_length_limit = 1200
     cross_half_length = 20
     error_color = 0xff, 0x44, 0x44
     error_line_width = 3
@@ -67,15 +67,16 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
 
     random_bright_color_gen = _random_bright_color_gen_cls()
     error_boxes = []
-    for i, box in enumerate(boxes):
-        color = next(random_bright_color_gen)
-
+    i = 0
+    for box in boxes:
+        color = error_color
         dot_drawn = False
         if noses:
             # noinspection PyTypeChecker
             idx = distance.cdist([box.center], noses).argmin()
             nose = noses[idx]
             if box.is_point_inside(nose):
+                color = next(random_bright_color_gen)
                 _draw_dot(img_draw, xy=nose, radius=radius, color=color)
                 noses.pop(idx)
                 dot_drawn = True
@@ -83,7 +84,8 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
             error_boxes.append(box)
             continue
 
-        text = str(i + 1)
+        i += 1
+        text = str(i)
         _draw_detection_box(img_draw, box, font_size, font_size_smaller, font, box_line_width, color, text)
 
     for box in error_boxes:
