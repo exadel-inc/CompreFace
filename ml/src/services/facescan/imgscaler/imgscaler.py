@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import cv2
 
 from src.services.dto.bounding_box import BoundingBox
@@ -41,3 +43,9 @@ class ImgScaler:
         if not self._img_scale_coefficient:
             return box
         return self._scale_box(box, self._img_scale_coefficient)
+
+    def downscale_nose(self, nose: Tuple[int, int]) -> Tuple[int, int]:
+        assert self._downscaled_img_called
+        if not self._img_scale_coefficient:
+            return nose
+        return nose[0] * self._img_scale_coefficient, nose[1] * self._img_scale_coefficient
