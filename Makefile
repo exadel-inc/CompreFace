@@ -87,10 +87,10 @@ e2e/local: start
 #####################################
 
 # Detect faces on given images, with selected scanners, and output the results:
+demo: IMG_NAMES=000_5.jpg
+demo: scan
 scan:
 	python -m ml.src.services.facescan.run
-demo:
-	python -m ml.src.services.facescan.run IMG_NAMES=000_5.jpg
 
 # Optimize face detection parameters with a given annotated image dataset:
 optimize:
