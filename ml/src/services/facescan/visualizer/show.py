@@ -38,10 +38,10 @@ def _draw_cross(draw, xy, half_length, color, width):
 def _draw_detection_box(img_draw, box, font_size, font_size_smaller, font, box_line_width, color, text):
     img_draw.rectangle(box.xy, outline=color, width=box_line_width)
     img_draw.text(text=text,
-                  xy=(box.x_min, box.y_min - font_size - 2),
+                  xy=(box.x_min, box.y_min - font_size - 1),
                   fill=color, font=ImageFont.truetype(font, font_size))
     img_draw.text(text=f"{box.probability:.4f}",
-                  xy=(box.x_min, box.y_max + 3),
+                  xy=(box.x_min, box.y_max + 1),
                   fill=color, font=ImageFont.truetype(font, font_size_smaller))
 
 

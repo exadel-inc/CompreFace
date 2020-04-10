@@ -55,7 +55,7 @@ if __name__ == '__main__':
     total_errors = 0
     for img_name in _ENV.IMG_NAMES:
         boxes = [face.box for face in _scan_faces(img_name)]
-        noses = name_2_annotation.get(img_name)
+        noses = None#name_2_annotation.get(img_name)
 
         if noses is not None:
             errors = calculate_errors(boxes, noses)
