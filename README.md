@@ -54,10 +54,10 @@ Select port for starting the service:<br>
 `ML_PORT=3000`
 
 Select database connection. `MONGODB_URI` has higher precedence.<br>
-`MONGODB_HOST=localhost`<br>
-`MONGODB_PORT=27017`<br>
-`MONGODB_DBNAME=efrs_db`<br>
-`MONGODB_URI=mongodb://localhost:27017/efrs_db`<br>
+`MONGODB_HOST=localhost`,
+`MONGODB_PORT=27017`,
+`MONGODB_DBNAME=efrs_db`,
+`MONGODB_URI=mongodb://localhost:27017/efrs_db`
 
 Drop database before E2E tests:<br>
 `DROP_DB=true`
