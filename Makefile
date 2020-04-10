@@ -1,143 +1,134 @@
-.PHONY: default setup start stop build up down local unit i9n e2e _start_before_e2e e2e_remote lint docker oom scan err stats opt db
+SHELL := /bin/bash
+.PHONY: $(MAKECMDGOALS)
+.EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
-default: lint unit docker
-
-ML_PORT ?= 3000
-ML_URL ?= http://localhost:$(ML_PORT)
-MONGO_HOST ?= localhost
 FLASK_ENV ?= development
+ML_PORT ?= 3000
+MONGODB_HOST ?= localhost
+MONGODB_PORT ?= 27117
+MONGODB_DBNAME ?= efrs_tmp_db
+COMPOSE_PROJECT_NAME ?= frs-core
+API_KEY ?= $(shell echo test-$$(date +'%Y-%m-%d-%H-%M-%S-%3N'))
 
-###################
-### RUNNING LOCAL
-###################
+#####################################
+##### MAIN TEST
+#####################################
 
-setup:
-	#chmod +x $(CURDIR)/ml/run.sh $(CURDIR)/e2e/run-e2e-test.sh $(CURDIR)/ml/tools/test_oom.sh
-	#python3 -m pip install -r $(CURDIR)/ml/requirements.txt
-	#python3 -m pip install -e $(CURDIR)/ml/srcext/insightface/python-
-	imageio_download_bin freeimage
+default: test/unit test/lint test
 
-start:
-	ML_PORT=$(ML_PORT) \
-	MONGO_HOST=$(MONGO_HOST) \
-	MONGO_PORT=$(MONGO_PORT) \
-	MONGO_DBNAME=efrs_tmp_db$(ID) \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	FLASK_ENV=$(FLASK_ENV) \
-	$(CURDIR)/ml/run.sh start
+test:
+	MEM_LIMIT=4g docker-compose up --build --abort-on-container-exit
 
-stop:
-	$(CURDIR)/ml/run.sh stop
-
-####################
-### RUNNING DOCKER
-####################
+#####################################
+##### RUNNING IN DOCKER
+#####################################
 
 build:
-	ML_PORT=$(ML_PORT) \
-	MONGO_PORT=$(MONGO_PORT) \
-	ID=$(ID) \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose build ml
 
 up:
-	ML_PORT=$(ML_PORT) \
-	MONGO_PORT=$(MONGO_PORT) \
-	ID=$(ID) \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose up ml
 
 down:
-	ML_PORT=$(ML_PORT) \
-	MONGO_PORT=$(MONGO_PORT) \
-	ID=$(ID) \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	COMPOSE_PROJECT_NAME=frs-core \
 	docker-compose down
 
-#################
-### TESTS LOCAL
-local: unit i9n e2e lint
-#################
+down/all:
+	docker stop $$(docker ps -a -q)
 
-unit:
-	python -m pytest -m "not integration" $(CURDIR)/ml/src
+#####################################
+##### RUNNING IN LOCAL ENVIRONMENT
+#####################################
 
-i9n:
+setup:
+	chmod +x ml/run.sh e2e/run-e2e-test.sh ml/tools/test_oom.sh
+	python -m pip install -r ml/requirements.txt
+	python -m pip install -e ml/srcext/insightface/python-package
+
+start: db
+	ml/run.sh start
+
+stop:
+	ml/run.sh stop
+
+#####################################
+##### TESTING IN LOCAL ENVIRONMENT
+#####################################
+
+test/local: test/unit test/lint test/i9n
+
+test/unit:
+	python -m pytest -m "not integration" ml/src
+
+test/lint:
+	python -m pylama --options ml/pylama.ini ml/src
+
+test/i9n:
 	python -m pytest -m integration $(CURDIR)/ml/src
 
-e2e: _start_before_e2e e2e_remote
-_start_before_e2e: start
-	timeout 10s bash -c "until [ -f $(CURDIR)/ml/run.pid ]; do sleep 1; done"
+test/e2e: e2e/local
+
+#####################################
+##### E2E TESTING
+#####################################
+
+e2e:
+	e2e/run-e2e-test.sh
+
+e2e/extended: scan e2e
+
+e2e/local: start
+	timeout 10s bash -c "until [ -f $(CURDIR)/ml/$(COMPOSE_PROJECT_NAME).pid ]; do sleep 1; done"
 	sleep 5s
-	test -f $(CURDIR)/ml/run.pid
+	test -f $(CURDIR)/ml/$(COMPOSE_PROJECT_NAME).pid
+	$(MAKE) e2e && ml/run.sh stop || (ml/run.sh stop; exit 1)
 
-e2e_remote:
-	ML_URL=$(ML_URL) \
-	MONGO_HOST=$(MONGO_HOST) \
-	MONGO_PORT=$(MONGO_PORT) \
-	MONGO_DBNAME=efrs_tmp_db$(ID) \
-	API_KEY=$(API_KEY) \
-	DROP_DB=$(DROP_DB) \
-	$(CURDIR)/e2e/run-e2e-test.sh \
-		&& $(CURDIR)/ml/run.sh stop \
-		|| ($(CURDIR)/ml/run.sh stop; exit 1)
+#####################################
+##### DEV SCRIPTS
+#####################################
 
-lint:
-	python -m pylama --options $(CURDIR)/ml/pylama.ini $(CURDIR)/ml/src
-
-##################
-### TESTS DOCKER
-##################
-
-docker:
-	ML_PORT=$(ML_PORT) \
-	MONGO_PORT=$(MONGO_PORT) \
-	ID=$(ID) \
-	COMPOSE_PROJECT_NAME=frs-core \
-	IMG_LENGTH_LIMIT=$(IMG_LENGTH_LIMIT) \
-	DO_RUN_TESTS=true \
-	MONGO_DBNAME=efrs_tmp_db \
-	docker-compose up --build --abort-on-container-exit
-
-#####################
-### DEVELOPER TOOLS
-#####################
-
-stats: stats_setup.touch
-	tokei --exclude srcext/
-stats_setup.touch:
-	conda install -c conda-forge tokei && touch $(CURDIR)/stats_setup.touch
-
-db:
-	[ ! -z "$(MONGO_PORT)" ] && \
-	docker run -p="$(MONGO_PORT):27017" --name mongodb$(ID) mongo:4.0.4-xenial
-
+# Detect faces on given images, with selected scanners, and output the results:
 scan:
-	SCANNER=$(SCANNER) \
-	IMG_NAME=$(IMG_NAME) \
-	SHOW_IMG=$(SHOW_IMG) \
-	python -m ml.tools.scan_faces
+	python -m ml.src.services.facescan.run
+demo:
+	python -m ml.src.services.facescan.run IMG_NAMES=000_5.jpg
 
-err:
-	SCANNER=$(SCANNERS) \
-	SHOW_IMG=$(SHOW_IMG) \
-	python -m ml.tools.calculate_errors
+# Optimize face detection parameters with a given annotated image dataset:
+optimize:
+	python -m ml.src.services.facescan.optimizer.run
 
-opt:
-	python -m ml.tools.optimize_face_det_constants
+# Run experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.:
+crash_lab:
+	tools/crash_lab.sh $(CURDIR)/ml/sample_images
 
-oom:
-	ID=$(ID) \
-	SCANNERS=$(SCANNERS) \
-	IMG_NAMES=$(IMG_NAMES) \
-	MEM_LIMITS=$(MEM_LIMITS) \
-	IMG_LENGTH_LIMITS=$(IMG_LENGTH_LIMITS) \
-	SHOW_OUTPUT=$(SHOW_OUTPUT) \
-	$(CURDIR)/ml/tools/test_oom.sh $(CURDIR)/ml/sample_images
+#####################################
+##### MISC
+#####################################
 
-up_oom:
-	[ ! -z "$(MEM_LIMIT)" ] && \
-	docker run --network="host" -e MONGO_HOST=$(MONGO_HOST) --memory=$(MEM_LIMIT) --memory-swap=$(MEM_LIMIT) "frs-core_ml${ID}" uwsgi --ini uwsgi.ini
+# Give random project name
+COMPOSE_PROJECT_NAME:
+	@echo frs-core-$(ML_PORT)-$$(</dev/urandom tr -dc 'a-z0-9' | fold -w 1 | head -n 1)
+
+# Find open port
+PORT:
+	@echo $$(while true; do port=$$(( RANDOM % 30000 + 30000 )); echo -ne "\035" | telnet 127.0.0.1 \
+		$$port > /dev/null 2>&1; [ $$? -eq 1 ] && echo "$$port" && exit 0; done )
+
+# Give unique api_key
+API_KEY:
+	@echo tmp-$(COMPOSE_PROJECT_NAME)-$$(date +'%Y-%m-%d-%H-%M-%S-%3N')
+
+# Give unique mongodb dbname
+MONGODB_DBNAME:
+	@echo $(API_KEY)
+
+# Start database container
+db:
+	@echo -ne "\035" | telnet 127.0.0.1 $(MONGODB_PORT) > /dev/null 2>&1; [ $$? -eq 1 ] && \
+	docker-compose up -d mongodb && \
+	echo "[Database up] SUCCESS! port $(MONGODB_PORT)" || \
+	echo "[Database up] skipped, port $(MONGODB_PORT)"
+
+# Show code stats
+stats:
+	(which tokei || conda install -y -c conda-forge tokei) && \
+	tokei --exclude srcext/

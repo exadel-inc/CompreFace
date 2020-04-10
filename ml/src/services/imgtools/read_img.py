@@ -1,10 +1,9 @@
 import imageio
-import joblib
 import numpy as np
 from PIL.ImageFile import ImageFile
 
 from src.exceptions import ImageReadLibraryError, OneDimensionalImageIsGivenError
-from src.services.imgtools.types import Array3D, NPArray
+from src.services.imgtools.types import Array3D
 
 
 def _grayscale_to_rgb(img):
@@ -29,8 +28,4 @@ def read_img(file) -> Array3D:
     else:
         arr = arr[:, :, 0:3]
 
-    img = NPArray(arr)
-    if hasattr(file, 'name'):
-        img.filename = file.name
-    joblib.dump(img, "dump_array.pkl")
-    return img
+    return arr

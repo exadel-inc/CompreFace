@@ -2,13 +2,12 @@ FROM jjanzic/docker-python3-opencv
 WORKDIR /srv
 
 ## Copy sources
+COPY sample_images sample_images
 COPY src src
 COPY srcext srcext
-COPY sample_images sample_images
-COPY tools tools
-COPY requirements.txt .
-COPY pytest.ini .
 COPY pylama.ini .
+COPY pytest.ini .
+COPY requirements.txt .
 COPY uwsgi.ini .
 
 ## Prepare environment
@@ -33,8 +32,7 @@ RUN if [ "$DO_RUN_TESTS" = true ]; then \
     fi
 
 ## Run smoke test and Cache downloadable dependencies for Scanner backends
-RUN SCANNER=Facenet2018 IMG_NAME=000_5.jpg python -m tools.scan_faces
-#RUN SCANNER=InsightFace IMG_NAME=000_5.jpg python -m tools.scan_faces
+RUN SCANNER=Facenet2018 IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
 
 ## Runtime
 CMD ["uwsgi", "--ini", "uwsgi.ini"]
