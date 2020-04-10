@@ -1,4 +1,5 @@
 import imageio
+import joblib
 import numpy as np
 from PIL.ImageFile import ImageFile
 
@@ -31,4 +32,5 @@ def read_img(file) -> Array3D:
     img = NPArray(arr)
     if hasattr(file, 'name'):
         img.filename = file.name
+    joblib.dump(img, "dump_array.pkl")
     return img
