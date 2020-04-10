@@ -1,6 +1,12 @@
+from typing import Union
+
 import attr
+import numpy as np
 
 from src.services.imgtools.types import Array1D, Array3D
+
+Array1D = Union[Array1D, np.ndarray]
+Array3D = Union[Array3D, np.ndarray]
 
 
 @attr.s(auto_attribs=True, frozen=True, cmp=False)

@@ -31,7 +31,7 @@ def test__given_5face_img__when_scanned__then_returns_5_correct_bounding_boxes_s
                      BoundingBox(342, 160, 437, 268, 1),
                      BoundingBox(243, 174, 352, 309, 1)]
     scanner: FaceScanner = get_scanner(scanner_cls)
-    img = read_img(IMG_DIR / '000_5.png')
+    img = read_img(IMG_DIR / '000_5.jpg')
 
     faces = scanner.scan(img)
 

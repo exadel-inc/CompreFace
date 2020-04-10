@@ -5,6 +5,7 @@ SHELL := /bin/bash
 FLASK_ENV ?= development
 MONGODB_HOST ?= localhost
 MONGODB_PORT ?= 27117
+API_KEY ?= $(shell echo test-$$(date +'%Y-%m-%d-%H-%M-%S-%3N'))
 
 #####################################
 ##### MAIN TEST
@@ -67,6 +68,10 @@ test/e2e: e2e/local
 e2e:
 	e2e/run-e2e-test.sh
 
+e2e/extended:
+	$(MAKE) scan
+	e2e/run-e2e-test.sh
+
 e2e/local: start
 	timeout 10s bash -c "until [ -f $(CURDIR)/ml/run.pid ]; do sleep 1; done"
 	sleep 5s
@@ -80,6 +85,8 @@ e2e/local: start
 # Detect faces on given images, with selected scanners, and output the results:
 scan:
 	python -m ml.src.services.facescan.run
+demo:
+	python -m ml.src.services.facescan.run IMG_NAMES=000_5.jpg
 
 # Optimize face detection parameters with a given annotated image dataset:
 optimize:

@@ -78,11 +78,10 @@ class MongoStorage:
         faces = []
         for face_document in self._faces_collection.find({"api_key": api_key}):
             face_name = face_document['face_name']
+            raw_img = deserialize(self._faces_fs.get(face_document['raw_img_fs_id']).read())
+            face_img = deserialize(self._faces_fs.get(face_document['face_img_fs_id']).read())
+            embedding = self._get_embedding(face_document, emb_calc_version)
             # noinspection PyTypeChecker
-            raw_img = NPArray(deserialize(self._faces_fs.get(face_document['raw_img_fs_id']).read()))
-            # noinspection PyTypeChecker
-            face_img = NPArray(deserialize(self._faces_fs.get(face_document['face_img_fs_id']).read()))
-            embedding = NPArray(self._get_embedding(face_document, emb_calc_version))
             faces.append(Face(name=face_name, embedding=embedding, raw_img=raw_img, face_img=face_img))
         return faces
 
@@ -106,7 +105,7 @@ class MongoStorage:
         face_embeddings = []
         for face_document in self._faces_collection.find({"api_key": api_key}):
             face_name = face_document['face_name']
-            embedding = NPArray(self._get_embedding(face_document, emb_calc_version))
+            embedding = self._get_embedding(face_document, emb_calc_version)
             face_embeddings.append(FaceNameEmbedding(name=face_name, embedding=embedding))
         return face_embeddings
 

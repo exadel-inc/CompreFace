@@ -3,8 +3,9 @@ import logging
 import requests
 
 from sample_images import IMG_DIR
-from sample_images.annotations import name_2_annotation
+from sample_images.annotations import name_2_annotation, SAMPLE_IMAGES
 from src.constants import ENV
+from src.exceptions import NoFaceFoundError
 from src.logging_ import init_runtime
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.scanner.facescanner import FaceScanner
@@ -19,7 +20,7 @@ class _ENV(Constants):
     ML_HOST = get_env('ML_HOST', 'localhost')
     ML_PORT = int(get_env('ML_PORT', '3000'))
     ML_URL = get_env('ML_URL', f'http://{ML_HOST}:{ML_PORT}')
-    IMG_NAMES = Constants.split(get_env('IMG_NAMES', '000_5.jpg'))
+    IMG_NAMES = Constants.split(get_env('IMG_NAMES', ' '.join([i.image_name for i in SAMPLE_IMAGES])))
     SHOW_IMG = get_env('SHOW_IMG', 'true').lower() in ('true', '1')
     SHOW_IMG_ON_ERROR = get_env('SHOW_IMG_ON_ERROR', 'false').lower() in ('true', '1')
 
@@ -27,6 +28,8 @@ class _ENV(Constants):
 def _scan_faces_remote(ml_url, img_name):
     files = {'file': open(IMG_DIR / img_name, 'rb')}
     res = requests.post(f"{ml_url}/scan_faces", files=files)
+    if res.status_code == 400 and res.json()['message'] == NoFaceFoundError.description:
+        return []
     assert res.status_code == 200, res.content
     return [ScannedFace.from_request(r) for r in res.json()['result']]
 

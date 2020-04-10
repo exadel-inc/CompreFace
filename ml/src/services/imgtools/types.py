@@ -8,5 +8,9 @@ class NPArray(np.ndarray):
         return array.view(cls)
 
 
-Array1D = NPArray
-Array3D = NPArray
+class Array1D(NPArray):
+    pass
+
+
+class Array3D(NPArray):
+    pass
