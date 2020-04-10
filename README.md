@@ -33,24 +33,48 @@ Run `$ make setup` to install required packages to your system.
 #### Run main tests
 To check whether the project is in a valid state, run `$ make`.
 
-# Advanced usage examples
-Valid the into parts<br>
-- `asdfasdf`
+# Advanced usage
+Entrypoints to run the application and related development tools are organized as "targets" inside `Makefile` and run with `$ make`.
 
-Combine the project into parts
+### Using `make`
+Run multiple targets one after another:
 
-`asdfasdf`  
+`$ make build up`
 
-### In development environment, container-less
-1. Setup dependencies: `$ make setup`
-2. Run all tests: `$ make local`
-   - Unit tests: `$ make unit`
-   - Integration tests:` $ make i9n`
-   - End-to-end tests: `$ make e2e`
-   - Lint check: `$ make lint`
+Set environment variables for one run:
+
+`$ make start ML_PORT=3001`
+
+Set environment variables for shell session:
+
+`$ export ML_PORT=3001`
+
+Set environment variables to random values for shell session. You'll be able to run multiple instances of the same service (and start multiple tests simultaneously) in different terminals, after running this command in each one first:
+
+`$ . new-make-environment.sh`
+ 
+### Environment variables
+`ML_PORT=3000`<br>
+Port for starting the service.
+
+`ML_URL=http://localhost:3000`<br>
+Port for starting the service.
+
+`MONGODB_HOST=localhost`<br>
+`MONGODB_PORT=27017`<br>
+`MONGODB_DBNAME=efrs_db`<br>
+(or `MONGODB_URI=mongodb://localhost:27017/efrs_db`)<br>
+Database for the service.
+
+
+
+### Targets
+`default`, `test`<br>
+Runs main tests to check whether the project is in a valid state.
+
+
 
 ### End-to-end tests against a remote host
-
 Use `$ make e2e_remote`, for example:
 
 `$ make e2e_remote ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
