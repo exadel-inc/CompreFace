@@ -4,6 +4,7 @@ import requests
 
 from sample_images import IMG_DIR
 from sample_images.annotations import name_2_annotation
+from src.constants import ENV
 from src.logging_ import init_runtime
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.scanner.facescanner import FaceScanner
@@ -18,7 +19,6 @@ class _ENV(Constants):
     ML_HOST = get_env('ML_HOST', 'localhost')
     ML_PORT = int(get_env('ML_PORT', '3000'))
     ML_URL = get_env('ML_URL', f'http://{ML_HOST}:{ML_PORT}')
-    SCANNER = get_env('SCANNER', 'Facenet2018')
     IMG_NAMES = Constants.split(get_env('IMG_NAMES', '000_5.jpg'))
     SHOW_IMG = get_env('SHOW_IMG', 'true').lower() in ('true', '1')
     SHOW_IMG_ON_ERROR = get_env('SHOW_IMG_ON_ERROR', 'false').lower() in ('true', '1')
@@ -41,7 +41,7 @@ def _scan_faces(img_name):
     if _ENV.USE_REMOTE:
         return _scan_faces_remote(_ENV.ML_URL, img_name)
     else:
-        return _scan_faces_local(_ENV.SCANNER, img_name)
+        return _scan_faces_local(ENV.SCANNER, img_name)
 
 
 def _calculate_errors(scanned_faces, img_name):

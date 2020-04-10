@@ -17,10 +17,10 @@ class ENV(Constants):
     MONGODB_HOST, MONGODB_PORT = first_and_only(_MONGODB_URI_PARSED['nodelist'])
     MONGODB_DBNAME = _MONGODB_URI_PARSED['database']
 
-    DEFAULT_FACE_SCANNER = get_env('DEFAULT_FACE_SCANNER', 'Facenet2018')
+    SCANNER = get_env('SCANNER', 'Facenet2018')
     IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
-    LOGGING_LEVEL = logging.DEBUG
+    LOGGING_LEVEL = int(get_env('LOGGING_LEVEL', str(logging.DEBUG)))
 
 
 DO_SHOW_STACKTRACE_IN_LOGS = True

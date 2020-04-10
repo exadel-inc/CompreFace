@@ -11,7 +11,7 @@ from src.services.utils.pyutils import run_once, run_once_fork_safe
 @run_once
 def get_scanner():
     from src.services.facescan.scanner.facescanner import FaceScanner
-    face_scanner_cls: Type[FaceScanner] = id_2_face_scanner_cls[ENV.DEFAULT_FACE_SCANNER]
+    face_scanner_cls: Type[FaceScanner] = id_2_face_scanner_cls[ENV.SCANNER]
     return face_scanner_cls()
 
 

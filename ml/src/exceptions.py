@@ -34,7 +34,7 @@ class ClassifierIsAlreadyTrainingError(Locked):
 class NoTrainedEmbeddingClassifierFoundError(BadRequest):
     description = "No classifier model is yet trained, please train a classifier first. If the problem persists, " \
                   "check the amount of unique faces saved, and whether all face embeddings have been migrated to " \
-                  f"version '{ENV.DEFAULT_FACE_SCANNER}'"
+                  f"version '{ENV.SCANNER}'"
 
 
 class NoFileFoundInDatabaseError(InternalServerError):

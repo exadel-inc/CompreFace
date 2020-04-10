@@ -54,40 +54,83 @@ Set environment variables to random values for shell session. You'll be able to 
 `$ . new-make-environment.sh`
  
 ### Environment variables
-`ML_PORT=3000`<br>
-Port for starting the service.
+Select port for starting the service:
 
-`ML_URL=http://localhost:3000`<br>
-Port for starting the service.
+`ML_PORT=3000`
+
+Select database connection. `MONGODB_URI` has higher precedence.
 
 `MONGODB_HOST=localhost`<br>
 `MONGODB_PORT=27017`<br>
 `MONGODB_DBNAME=efrs_db`<br>
-(or `MONGODB_URI=mongodb://localhost:27017/efrs_db`)<br>
-Database for the service.
+`MONGODB_URI=mongodb://localhost:27017/efrs_db`<br>
 
+Select face scanner backend:
 
+`SCANNER=InsightFace`
+
+Configure image rescaling before face detection:
+
+`IMG_LENGTH_LIMIT=720`
+
+Limit amount of RAM memory available. Disables swap.
+
+`MEM_LIMIT=1024m`
+
+Location of external service:
+
+`ML_URL=http://localhost:3000`
+
+Run tests during build of `ml` container:
+
+`DO_RUN_TESTS=true`
 
 ### Targets
-`default`, `test`<br>
-Runs main tests to check whether the project is in a valid state.
+Runs main tests to check whether the project is in a valid state. Target `default` runs additional short tests first, locally, to fail faster.
 
+`default`, `test`
 
+Build, start, and stop docker containers:
 
-### End-to-end tests against a remote host
-Use `$ make e2e_remote`, for example:
+`build`, `up`, `down`
 
-`$ make e2e_remote ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
+Setup, start, and stop app in local environment:
 
-# Miscellaneous
-### Make arguments
-Most targets support additional arguments. Let's use `$ make up` as an example:
-- `$ make up ID=2` - Helps solve container name collisions (appends the ID at the end, so that container `ml` becomes `ml2`). Useful for building/running/testing different branches at the same time
-- `$ make up PORT=8080 MONGODB_PORT=6650` - Sets the exposed port for the service and the database
+`setup`, `start`, `stop`
 
-### Additional make targets and arguments
-Check `Makefile` for more make targets and arguments that are not mentioned in this README.
+Run tests locally. `test/local` runs the other tests.
 
-### Notes for Windows users
+`test/local`, `test/unit`, `test/lint`, `test/i9n`, `test/e2e`
+
+Run E2E tests locally or against a remote target. `e2e/local` is alias for `test/e2e`.
+
+`e2e`, `e2e/local`<br> 
+(e.g. `$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`)
+
+Detect faces on given images, with selected scanners, and output the results:
+
+`scan`
+
+Optimize face detection parameters with a given annotated image dataset:
+
+`optimize`
+
+Run experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.:
+
+`crash_lab`
+
+Find open ports, give randomized project names, API keys:
+
+`PORT`, `COMPOSE_PROJECT_NAME`, `API_KEY`
+
+Start database container:
+
+`db`
+
+Show code stats:
+
+`stats`
+
+# Development on Windows
 - Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/*`.
 - uWSGI does not support Windows, workaround is removing it from `ml/requirements.txt` before running `$ make setup` and adding it back afterwards.
