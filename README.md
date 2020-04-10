@@ -17,7 +17,7 @@ These instructions will get you the project up and running on your local develop
 #### Run the service from containers
 1. Up the containers with `$ make up`
 1. You can make requests to the service at `http://localhost:3000` as described in [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
-1. Shut down the service with `$ make down` <br>
+1. Shut down the service with `$ make down`
 
 Note: Once you'll make changes to the project, you'll need to  run `$ make build` to have them applied on the next run of `$ make up`.
 
@@ -37,99 +37,35 @@ To check whether the project is in a valid state, run `$ make`.
 Entrypoints to run the application and related development tools are organized as "targets" inside `Makefile` and run with `$ make`.
 
 ### Using `make`
-Run multiple targets one after another:
+Run multiple targets one after another:<br>
+`$ make build up e2e`
 
-`$ make build up`
+Set environment variables (for current run):<br>
+`$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
 
-Set environment variables for one run:
+Set environment variables (for shell session):<br>
+`$ export ML_PORT=3001`<br>
+`$ make start` (will start in port 3001)
 
-`$ make start ML_PORT=3001`
-
-Set environment variables for shell session:
-
-`$ export ML_PORT=3001`
-
-Set environment variables to random values for shell session. You'll be able to run multiple instances of the same service (and start multiple tests simultaneously) in different terminals, after running this command in each one first:
-
+Set environment variables to random values for shell session. You'll be able to run multiple instances of the same service (and start multiple tests simultaneously) in different terminals, after running this command in each one first:<br>
 `$ . new-make-environment.sh`
  
-### Environment variables
-Select port for starting the service:
-
+### Most relevant environment variables
+Select port for starting the service:<br>
 `ML_PORT=3000`
 
-Select database connection. `MONGODB_URI` has higher precedence.
-
+Select database connection. `MONGODB_URI` has higher precedence.<br>
 `MONGODB_HOST=localhost`<br>
 `MONGODB_PORT=27017`<br>
 `MONGODB_DBNAME=efrs_db`<br>
 `MONGODB_URI=mongodb://localhost:27017/efrs_db`<br>
 
-Select face scanner backend:
+Drop database before E2E tests:<br>
+`DROP_DB=true`
 
-`SCANNER=InsightFace`
+### More targets and env variables
 
-Configure image rescaling before face detection:
-
-`IMG_LENGTH_LIMIT=720`
-
-Limit amount of RAM memory available. Disables swap.
-
-`MEM_LIMIT=1024m`
-
-Location of external service:
-
-`ML_URL=http://localhost:3000`
-
-Run tests during build of `ml` container:
-
-`DO_RUN_TESTS=true`
-
-### Targets
-Runs main tests to check whether the project is in a valid state. Target `default` runs additional short tests first, locally, to fail faster.
-
-`default`, `test`
-
-Build, start, and stop docker containers:
-
-`build`, `up`, `down`
-
-Setup, start, and stop app in local environment:
-
-`setup`, `start`, `stop`
-
-Run tests locally. `test/local` runs the other tests.
-
-`test/local`, `test/unit`, `test/lint`, `test/i9n`, `test/e2e`
-
-Run E2E tests locally or against a remote target. `e2e/local` is alias for `test/e2e`.
-
-`e2e`, `e2e/local`<br> 
-(e.g. `$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`)
-
-Detect faces on given images, with selected scanners, and output the results:
-
-`scan`
-
-Optimize face detection parameters with a given annotated image dataset:
-
-`optimize`
-
-Run experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.:
-
-`crash_lab`
-
-Find open ports, give randomized project names, API keys:
-
-`PORT`, `COMPOSE_PROJECT_NAME`, `API_KEY`
-
-Start database container:
-
-`db`
-
-Show code stats:
-
-`stats`
+More information is available inside `Makefile`.
 
 # Development on Windows
 - Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/*`.

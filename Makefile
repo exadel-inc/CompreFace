@@ -77,12 +77,15 @@ e2e/local: start
 ##### DEV SCRIPTS
 #####################################
 
+# Detect faces on given images, with selected scanners, and output the results:
 scan:
 	python -m ml.src.services.facescan.run
 
+# Optimize face detection parameters with a given annotated image dataset:
 optimize:
 	python -m ml.src.services.facescan.optimizer.run
 
+# Run experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.:
 crash_lab:
 	tools/crash_lab.sh $(CURDIR)/ml/sample_images
 
@@ -90,19 +93,24 @@ crash_lab:
 ##### MISC
 #####################################
 
+# Give random project name
 COMPOSE_PROJECT_NAME:
 	@echo frs-core-$$(</dev/urandom tr -dc 'a-zA-Z0-9' | fold -w 5 | head -n 1)
 
+# Find open port
 PORT:
 	@echo $$(while true; do port=$$(( RANDOM % 30000 + 30000 )); echo -ne "\035" | telnet 127.0.0.1 \
 		$$port > /dev/null 2>&1; [ $$? -eq 1 ] && echo "$$port" && exit 0; done )
 
+# Give unique api_key
 API_KEY:
 	@echo test-$$(date +'%Y-%m-%d-%H-%M-%S-%3N')
 
+# Start database container
 db:
 	docker-compose up -d mongodb
 
+# Show code stats
 stats:
 	(which tokei || conda install -y -c conda-forge tokei) && \
 	tokei --exclude srcext/
