@@ -43,9 +43,8 @@ Run multiple targets one after another:<br>
 Set environment variables (for current run):<br>
 `$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
 
-Set environment variables (for shell session):<br>
+Set environment variables (for shell session, future runs):<br>
 `$ export ML_PORT=3001`<br>
-`$ make start` (will start in port 3001)
 
 Set environment variables to random values for shell session. You'll be able to run multiple instances of the same service (and start multiple tests simultaneously) in different terminals, after running this command in each one first:<br>
 `$ . new-make-environment.sh`
