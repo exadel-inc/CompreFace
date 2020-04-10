@@ -3,6 +3,7 @@ package com.exadel.frs.security;
 import com.exadel.frs.FrsApplication;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.service.UserService;
+import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -83,9 +84,35 @@ public class OAuthMvcTest {
     }
 
     @Test
-    public void available_only_with_access_token() throws Exception {
-        var employeeString = "{\n" +
-                "  \"email\": \"test1@email.com\",\n" +
+    public void availableOnlyWithAccessToken() throws Exception {
+        mockMvc.perform(get("/user/me"))
+                .andExpect(status().isUnauthorized());
+
+        createUser("test1@email.com");
+
+        var accessToken = obtainAccessToken("test1@email.com", "test1");
+        mockMvc.perform(get("/user/me")
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void ignoresCaseWhenLogin() throws Exception {
+        mockMvc.perform(get("/user/me"))
+                .andExpect(status().isUnauthorized());
+
+        createUser("user@email.com");
+
+        val accessToken = obtainAccessToken("User@EmaiL.com", "test1");
+
+        mockMvc.perform(get("/user/me")
+                .header("Authorization", "Bearer " + accessToken))
+                .andExpect(status().isOk());
+    }
+
+    private void createUser(String email) throws Exception {
+        val employeeString = "{\n" +
+                "  \"email\": \"" + email + "\",\n" +
                 "  \"firstName\": \"test1\",\n" +
                 "  \"id\": null,\n" +
                 "  \"lastName\": \"test1\",\n" +
@@ -93,8 +120,6 @@ public class OAuthMvcTest {
                 "  \"username\": \"test1\"\n" +
                 "}";
 
-        mockMvc.perform(get("/user/me"))
-                .andExpect(status().isUnauthorized());
 
         mockMvc.perform(post("/user/register")
                 .contentType("application/json")
@@ -103,10 +128,6 @@ public class OAuthMvcTest {
                 .andExpect(status().isCreated());
 
         confirmRegistration();
-        var accessToken = obtainAccessToken("test1@email.com", "test1");
-        mockMvc.perform(get("/user/me")
-                .header("Authorization", "Bearer " + accessToken))
-                .andExpect(status().isOk());
     }
 
     private void confirmRegistration() {
