@@ -19,6 +19,7 @@ RUN echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-
 RUN apt-get update
 RUN apt-get install -y mongodb-org-tools mongodb-org-shell python-pymongo
 RUN mkdir mongo_data
+RUN imageio_download_bin freeimage
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV PYTHONUNBUFFERED=0
