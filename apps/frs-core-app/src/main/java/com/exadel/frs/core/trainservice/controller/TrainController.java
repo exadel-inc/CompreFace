@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.controller;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
@@ -11,7 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("/")
+@RestController
+@RequestMapping(API_V1)
 @RequiredArgsConstructor
 public class TrainController {
 

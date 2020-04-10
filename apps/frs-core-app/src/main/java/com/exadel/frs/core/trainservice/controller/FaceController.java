@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.controller;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import java.util.List;
@@ -13,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/faces")
 @RestController
+@RequestMapping(API_V1 + "/faces")
 @RequiredArgsConstructor
 public class FaceController {
 
