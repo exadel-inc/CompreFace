@@ -74,4 +74,5 @@ if __name__ == '__main__':
             ScannedFace.show(scanned_faces)
 
         total_errors += errors
-    logging.info(f"Found {f'a total of {total_errors}' if total_errors else 'no'} error(s)")
+    if total_errors:
+        logging.error(f"[Annotation check] Found a total of {total_errors} error(s)")

@@ -3,8 +3,11 @@ SHELL := /bin/bash
 .EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
 FLASK_ENV ?= development
+ML_PORT ?= 3000
 MONGODB_HOST ?= localhost
 MONGODB_PORT ?= 27117
+MONGODB_DBNAME ?= efrs_tmp_db
+COMPOSE_PROJECT_NAME ?= frs-core
 API_KEY ?= $(shell echo test-$$(date +'%Y-%m-%d-%H-%M-%S-%3N'))
 
 #####################################
@@ -29,6 +32,9 @@ up:
 down:
 	docker-compose down
 
+down/all:
+	docker stop $$(docker ps -a -q)
+
 #####################################
 ##### RUNNING IN LOCAL ENVIRONMENT
 #####################################
@@ -38,7 +44,7 @@ setup:
 	python -m pip install -r ml/requirements.txt
 	python -m pip install -e ml/srcext/insightface/python-package
 
-start:
+start: db
 	ml/run.sh start
 
 stop:
@@ -68,14 +74,12 @@ test/e2e: e2e/local
 e2e:
 	e2e/run-e2e-test.sh
 
-e2e/extended:
-	$(MAKE) scan
-	e2e/run-e2e-test.sh
+e2e/extended: scan e2e
 
 e2e/local: start
-	timeout 10s bash -c "until [ -f $(CURDIR)/ml/run.pid ]; do sleep 1; done"
+	timeout 10s bash -c "until [ -f $(CURDIR)/ml/$(COMPOSE_PROJECT_NAME).pid ]; do sleep 1; done"
 	sleep 5s
-	test -f $(CURDIR)/ml/run.pid
+	test -f $(CURDIR)/ml/$(COMPOSE_PROJECT_NAME).pid
 	$(MAKE) e2e && ml/run.sh stop || (ml/run.sh stop; exit 1)
 
 #####################################
@@ -102,7 +106,7 @@ crash_lab:
 
 # Give random project name
 COMPOSE_PROJECT_NAME:
-	@echo frs-core-$$(</dev/urandom tr -dc 'a-zA-Z0-9' | fold -w 5 | head -n 1)
+	@echo frs-core-$(ML_PORT)-$$(</dev/urandom tr -dc 'a-z0-9' | fold -w 1 | head -n 1)
 
 # Find open port
 PORT:
@@ -111,11 +115,18 @@ PORT:
 
 # Give unique api_key
 API_KEY:
-	@echo test-$$(date +'%Y-%m-%d-%H-%M-%S-%3N')
+	@echo tmp-$(COMPOSE_PROJECT_NAME)-$$(date +'%Y-%m-%d-%H-%M-%S-%3N')
+
+# Give unique mongodb dbname
+MONGODB_DBNAME:
+	@echo $(API_KEY)
 
 # Start database container
 db:
-	docker-compose up -d mongodb
+	@echo -ne "\035" | telnet 127.0.0.1 $(MONGODB_PORT) > /dev/null 2>&1; [ $$? -eq 1 ] && \
+	docker-compose up -d mongodb && \
+	echo "[Database up] SUCCESS! port $(MONGODB_PORT)" || \
+	echo "[Database up] skipped, port $(MONGODB_PORT)"
 
 # Show code stats
 stats:

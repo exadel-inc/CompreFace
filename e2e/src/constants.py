@@ -15,7 +15,7 @@ def _get_env(name: str, default: str) -> str:
     return os.environ.get(name, '') or default
 
 
-class ENV:
+class ENV_E2E:
     _ML_HOST = _get_env('ML_HOST', 'localhost')
     _ML_PORT = int(_get_env('ML_PORT', '3000'))
     ML_URL = _get_env('ML_URL', f'http://{_ML_HOST}:{_ML_PORT}')

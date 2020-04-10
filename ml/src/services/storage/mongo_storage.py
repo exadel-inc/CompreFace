@@ -13,7 +13,6 @@ from src.constants import ENV
 from src.exceptions import NoTrainedEmbeddingClassifierFoundError, FaceHasNoEmbeddingCalculatedError, \
     CouldNotConnectToDatabase
 from src.services.classifier.logistic_classifier import LogisticClassifier
-from src.services.imgtools.types import NPArray
 from src.services.storage._serialization import serialize, deserialize
 from src.services.storage.face import Face, FaceNameEmbedding
 from src.services.storage.mongo_fileio import save_file_to_mongo, get_file_from_mongo

@@ -6,14 +6,14 @@ import pytest
 import requests
 
 from src import constants
-from src.constants import ENV
+from src.constants import ENV_E2E
 
 
 def _request(method, endpoint, **kwargs):
     if 'timeout' not in kwargs or kwargs['timeout'] is None:
         kwargs['timeout'] = (constants.CONNECT_TIMEOUT_S, constants.READ_TIMEOUT_S)
     try:
-        return requests.request(method, f"{ENV.ML_URL}{endpoint}", **kwargs)
+        return requests.request(method, f"{ENV_E2E.ML_URL}{endpoint}", **kwargs)
     except requests.RequestException as e:
         logging.error(str(e))
         raise ConnectionError(e) from None

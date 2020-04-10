@@ -23,12 +23,11 @@ Note: Once you'll make changes to the project, you'll need to  run `$ make build
 
 #### Run the service locally
 Run `$ make setup` to install required packages to your system.
-1. Have the database running at `localhost:27117`. You can do it with either: 
-    - `$ make db`, if you have [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) (with `docker-compose`) installed
-    - or `$ sudo mongod --port 27717`, if you have [mongoDB](https://www.mongodb.com/download-center/community) installed
 1. Start the service in debug mode: `$ make start`
 1. Service is now available at `http//localhost:3000`
 1. Stop it with `$ make stop`
+
+Note: [mongoDB](https://www.mongodb.com/download-center/community) Database will automatically be instantiated with [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) before `$make start` if it is not already running at port `$MONGODB_PORT` (default: `27017`).
 
 #### Run main tests
 To check whether the project is in a valid state, run `$ make`.
@@ -38,7 +37,7 @@ Entrypoints to run the application and related development tools are organized a
 
 ### Using `make`
 Run multiple targets one after another:<br>
-`$ make build up e2e`
+`$ make db test/e2e`
 
 Set environment variables (for current run):<br>
 `$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`

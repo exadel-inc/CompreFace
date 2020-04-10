@@ -1,4 +1,5 @@
 import colorsys
+import logging
 import random
 from typing import List, Union
 
@@ -42,6 +43,7 @@ class ScannedFace(JSONEncodable):
         box_width = 3
         font_size = 20
         font = "arial"
+        img_length_limit=700
 
         def random_bright_color_gen_cls():
             yield 0x8c, 0x3e, 0xd1
@@ -61,27 +63,34 @@ class ScannedFace(JSONEncodable):
             x, y = xy
             draw.ellipse((x - radius, y - radius, x + radius, y + radius), fill=color, outline=color)
 
-        img = first_like_all(f.img for f in scanned_faces)
+        raw_img = first_like_all(f.img for f in scanned_faces)
+        scaler = ImgScaler(img_length_limit)
+        img = scaler.downscale_img(raw_img)
         pil_img = Image.fromarray(img, 'RGB')
         draw = ImageDraw.Draw(pil_img)
         sorted_scanned_faces = ScannedFace.sort_by_xy(scanned_faces)
-        noses = name_2_annotation.get(img.filename, []) if hasattr(img, 'filename') else []
+        if hasattr(img, 'filename') and img.filename in name_2_annotation:
+            noses = name_2_annotation[img.filename]
+        else:
+            logging.warning('[Annotation check] Annotation for image is not found')
+            noses = []
         i = 0
         for i, face in enumerate(sorted_scanned_faces):
             color = next(random_bright_color_gen)
-            draw.rectangle(face.box.xy, outline=color, width=box_width)
+            box = scaler.downscale_box(face.box)
+            draw.rectangle(box.xy, outline=color, width=box_width)
             nose = noses[i] if len(noses) > i else None
             if nose:
                 draw_dot(xy=nose, radius=7, color=color)
             draw.text(text=str(i + 1),
-                      xy=(face.box.x_min, face.box.y_min - font_size),
+                      xy=(box.x_min, box.y_min - font_size),
                       fill=color, font=ImageFont.truetype(font, font_size))
-            draw.text(text=f"{face.box.probability:.4f}",
-                      xy=(face.box.x_min, face.box.y_min),
+            draw.text(text=f"{box.probability:.4f}",
+                      xy=(box.x_min, box.y_min),
                       fill=color, font=ImageFont.truetype(font, font_size))
         for j in range(i, len(noses) - 1):
             draw_dot(xy=noses[j], radius=30, color=next(random_bright_color_gen))
-        pil_img.show(ImgScaler(img_length_limit=700).downscale_img(img))
+        pil_img.show()
 
     @staticmethod
     def sort_by_xy(scanned_faces: List['ScannedFace']):
