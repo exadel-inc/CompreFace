@@ -1,9 +1,5 @@
 package com.exadel.frs.service;
 
-import static com.exadel.frs.enums.AppModelAccess.READONLY;
-import static com.exadel.frs.enums.OrganizationRole.USER;
-import static java.util.UUID.randomUUID;
-import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -21,15 +17,20 @@ import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.system.python.CoreDeleteFacesClient;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
-import java.util.List;
-import javax.transaction.Transactional;
+import com.exadel.frs.system.python.CoreDeleteFacesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+import static com.exadel.frs.enums.AppModelAccess.READONLY;
+import static com.exadel.frs.enums.OrganizationRole.USER;
+import static java.util.UUID.randomUUID;
 
 @Service
 @RequiredArgsConstructor
@@ -78,11 +79,6 @@ public class ModelService {
         }
     }
 
-    private void verifyNameIsNotEmpty(final String newNameForModel) {
-        if (isEmpty(newNameForModel)) {
-            throw new EmptyRequiredFieldException("name");
-        }
-    }
 
     private void verifyAppHasTheModel(final String appGuid, final Model model) {
         if (!model.getApp().getGuid().equals(appGuid)) {
@@ -136,7 +132,6 @@ public class ModelService {
             final String modelGuid,
             final Long userId
     ) {
-        verifyNameIsNotEmpty(modelUpdateDto.getName());
 
         val model = getModel(orgGuid, appGuid, modelGuid, userId);
 

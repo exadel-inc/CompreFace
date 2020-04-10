@@ -4,8 +4,6 @@ import static com.exadel.frs.enums.AppRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.AppRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
@@ -20,7 +18,6 @@ import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
 import com.exadel.frs.exception.AppNotFoundException;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRoleChangeException;
@@ -176,7 +173,6 @@ public class AppService {
     public App updateApp(final AppUpdateDto appUpdateDto, final String orgGuid, final String appGuid, final Long userId) {
         val app = getApp(orgGuid, appGuid, userId);
 
-        verifyNewNameForApplication(appUpdateDto.getName());
         verifyUserHasWritePrivileges(userId, app.getOrganization());
 
         val isSameName = app.getName().equals(appUpdateDto.getName());
@@ -260,11 +256,5 @@ public class AppService {
         modelShareRequestRepository.save(shareRequest);
 
         return requestId;
-    }
-
-    private void verifyNewNameForApplication(final String name) {
-        if (isBlank(name)) {
-            throw new EmptyRequiredFieldException("name");
-        }
     }
 }

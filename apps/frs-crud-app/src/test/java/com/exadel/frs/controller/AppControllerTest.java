@@ -99,8 +99,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturn400AndErrorMessageWhenRenameAppToEmpty() throws Exception {
-        doCallRealMethod().when(appService).updateApp(any(), any(), any(), any());
-        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("name")));
+        val expectedContent = "{\"message\":\"Application name cannot be empty\",\"code\":5}";
 
         val bodyWithEmptyName = new AppUpdateDto();
         bodyWithEmptyName.setName("");
