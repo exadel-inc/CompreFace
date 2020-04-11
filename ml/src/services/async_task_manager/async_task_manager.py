@@ -5,8 +5,6 @@ from multiprocessing import Process
 from typing import Dict, Callable
 
 from src.exceptions import ClassifierIsAlreadyTrainingError
-from src.logging_ import init_logging
-from src.services.utils.pyutils import run_first
 
 ApiKey = str
 
@@ -56,8 +54,7 @@ class AsyncTaskManager(TrainingTaskManagerBase):
         elif self.get_status(api_key) == TaskStatus.BUSY:
             raise ClassifierIsAlreadyTrainingError
 
-        target = run_first(init_logging)(self._train_fun)
-        process = Process(target=target, daemon=True, args=(api_key,))
+        process = Process(target=self._train_fun, daemon=True, args=(api_key,))
         process.start()
         self._dict[api_key] = process
 

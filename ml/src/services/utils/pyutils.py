@@ -1,5 +1,7 @@
 import functools
+import json
 import os
+import re
 from pathlib import Path
 
 import numpy
@@ -102,9 +104,23 @@ def get_env(name: str, default: str = None) -> str:
     return os.environ.get(name, '') or default
 
 
-def sort_coordinates(lst):
-    """
-    >>> sort_coordinates([(2,2),(1,2), (1,1), (2,1)])
-    [(1, 1), (1, 2), (2, 1), (2, 2)]
-    """
-    return sorted(lst, key=lambda k: [k[0], k[1]])
+class Constants:
+    @classmethod
+    def __str__(cls):
+        return json.dumps({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')}, indent=4)
+
+    @staticmethod
+    def split(arr_str):
+        """
+        >>> Constants.split("One Two")
+        ['One', 'Two']
+        >>> Constants.split("One  Two")
+        ['One', 'Two']
+        >>> Constants.split("One,Two")
+        ['One', 'Two']
+        >>> Constants.split("One, Two")
+        ['One', 'Two']
+        >>> Constants.split(" One Two ")
+        ['One', 'Two']
+        """
+        return [s for s in re.split(r'[,\s]+', arr_str) if s]

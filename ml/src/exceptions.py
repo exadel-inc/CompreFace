@@ -1,5 +1,7 @@
 from werkzeug.exceptions import BadRequest, Locked, InternalServerError, Unauthorized
 
+from src.constants import ENV
+
 
 class APIKeyNotSpecifiedError(Unauthorized):
     description = 'No API Key is given'
@@ -30,29 +32,31 @@ class ClassifierIsAlreadyTrainingError(Locked):
 
 
 class NoTrainedEmbeddingClassifierFoundError(BadRequest):
-    description = "No classifier model is yet trained, please train a classifier first"
+    description = "No classifier model is yet trained, please train a classifier first. If the problem persists, " \
+                  "check the amount of unique faces saved, and whether all face embeddings have been migrated to " \
+                  f"version '{ENV.SCANNER}'"
 
 
 class NoFileFoundInDatabaseError(InternalServerError):
-    description = 'File is not found in the database'
+    description = "File is not found in the database"
 
 
 class InvalidRequestArgumentValueError(BadRequest):
-    description = 'Invalid request argument value is given'
+    description = "Invalid request argument value is given"
 
 
 class ImageReadLibraryError(BadRequest):
-    description = 'Image has incorrect format or is broken'
+    description = "Image has incorrect format or is broken"
 
 
 class FaceHasNoEmbeddingCalculatedError(InternalServerError):
-    description = 'Saved face has no embedding calculated and saved in the database'
+    description = "Saved face has no embedding calculated and saved in the database"
 
 
 class CouldNotConnectToDatabase(InternalServerError):
-    description = 'Could not establish connection to the database'
+    description = "Could not establish connection to the database"
 
 
 class NotEnoughUniqueFacesError(BadRequest):
-    description = 'Not enough unique faces to start training a new classifier model. ' \
-                  'Deleting existing classifiers, if any.'
+    description = "Not enough unique faces to start training a new classifier model. " \
+                  "Deleting existing classifiers, if any."

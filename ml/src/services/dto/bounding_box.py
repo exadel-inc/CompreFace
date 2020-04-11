@@ -39,6 +39,10 @@ class BoundingBox(JSONEncodable):
     def xy(self):
         return (self.x_min, self.y_min), (self.x_max, self.y_max)
 
+    @property
+    def center(self):
+        return (self.x_min + self.x_max) // 2, (self.y_min + self.y_max) // 2
+
     def similar(self, other: 'BoundingBox', tolerance: int) -> bool:
         """
         >>> BoundingBox(50,50,100,100,1).similar(BoundingBox(50,50,100,100,1),5)

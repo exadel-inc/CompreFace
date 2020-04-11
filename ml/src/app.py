@@ -16,7 +16,8 @@ from src.services.flask_.log_response import log_http_response
 
 
 def init_app_runtime():
-    init_runtime()
+    init_runtime(logging_level=ENV.LOGGING_LEVEL)
+    logging.debug(ENV.__str__())
     get_storage().wait_for_connection()
 
 

@@ -1,55 +1,70 @@
-# External documentation
-About EFRS:<br>
-- [EFRS Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
-- [EFRS Page in KC Confluence Space](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
-- [EFRS API Contract - Confluence](https://confluence.exadel.com/display/KC/FRS+REST+API)<br>
+![Example output image](./ml/sample_images/readme_example.png)
+# frs-core
+This is a component of Exadel Face Recognition Service. EFRS is a service for face recognition: upload images with faces of known people, then upload a new image, and the service will recognize faces in it.
 
-About frs-core:<br>
-- [Confluence page on Python Core Service](https://confluence.exadel.com/display/EFRS/Python+Core+Service)<br>
-- frs-core API Contract:
-  - [Swagger UI - localhost](http://localhost:3000/apidocs) (service must be started locally first)<br>
-  - [Swagger UI - UAT]( https://uat.frs.exadel.by/apidocs) 
+#### External Documentation
+- Public page about EFRS - [Exadel Face Recognition Service](https://confluence.exadel.com/display/KC/Exadel+Face+Recognition+Service)
+- EFRS Documentation - [EFRS Confluence Space](https://confluence.exadel.com/display/EFRS/Exadel+FRS+Home)
+- EFRS API Contract - [FRS REST API](https://confluence.exadel.com/display/KC/FRS+REST+API)
+- frs-core Documentation - [Python Core Service](https://confluence.exadel.com/display/EFRS/Python+Core+Service)
+- frs-core API Contract
+    - Swagger UI on QA Environment - [apidocs](http://qa.frs.exadel.by:3000/apidocs), [apidocs2](http://qa.frs.exadel.by:3000/apidocs2)
+    - Swagger UI run locally (app must be started) - [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
 
-# Starting the service
-### With Docker
-1. Build the container: `$ make build`
-2. Start it: `$ make up`
-3. Stop it: `$ make down`
+# Getting Started
+These instructions will get you the project up and running on your local development machine.
 
-You can combine steps 1 and 2: `$ make build up`
+#### Run the service from containers
+1. Up the containers with `$ make up`
+1. You can make requests to the service at `http://localhost:3000` as described in [apidocs](http://localhost:3000/apidocs), [apidocs2](http://localhost:3000/apidocs2)
+1. Shut down the service with `$ make down`
 
-### In development environment, container-less
-1. Setup dependencies: `$ make setup`
-2. Start main app in debug mode: `$ make start`
-3. Stop it: `$ make stop`
+Note: Once you'll make changes to the project, you'll need to  run `$ make build` to have them applied on the next run of `$ make up`.
 
-# Testing the service
-### With Docker
-Builds containers, run tests inside: `$ make docker` 
+#### Run the service locally
+Run `$ make setup` to install required packages to your system.
+1. Start the service in debug mode: `$ make start`
+1. Service is now available at `http//localhost:3000`
+1. Stop it with `$ make stop`
 
-### In development environment, container-less
-1. Setup dependencies: `$ make setup`
-2. Run all tests: `$ make local`
-   - Unit tests: `$ make unit`
-   - Integration tests:` $ make i9n`
-   - End-to-end tests: `$ make e2e`
-   - Lint check: `$ make lint`
+Note: [mongoDB](https://www.mongodb.com/download-center/community) Database will automatically be instantiated with [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) before `$make start` if it is not already running at port `$MONGODB_PORT` (default: `27017`).
 
-### End-to-end tests against a remote host
+#### Run main tests
+To check whether the project is in a valid state, run `$ make`.
 
-Use `$ make e2e_remote`, for example:
+# Advanced usage
+Entrypoints to run the application and related development tools are organized as "targets" inside `Makefile` and run with `$ make`.
 
-`$ make e2e_remote ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
+### Using `make`
+Run multiple targets one after another:<br>
+`$ make db test/e2e`
 
-# Miscellaneous
-### Make arguments
-Make supports these arguments (let's use `$ make up` as an example):
-- `$ make up ID=2` - Helps solve container name collisions (appends the ID at the end, so that container `ml` becomes `ml2`)
-- `$ make up PORT=8080 MONGODB_PORT=6650` - Sets the exposed port for the service and the database
+Set environment variables (for current run):<br>
+`$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
 
-### Additional make targets and arguments
-Check `Makefile` for more make targets and arguments that are not mentioned in this README.
+Set environment variables (for shell session, future runs):<br>
+`$ export ML_PORT=3001`<br>
 
-### Notes for Windows users
-- Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/*`.
+Set environment variables to random values for shell session. You'll be able to run multiple instances of the same service (and start multiple tests simultaneously) in different terminals, after running this command in each one first:<br>
+`$ . new-make-environment.sh`
+ 
+### Most relevant environment variables
+Select port for starting the service:<br>
+`ML_PORT=3000`
+
+Select database connection. `MONGODB_URI` has higher precedence.<br>
+`MONGODB_HOST=localhost`,
+`MONGODB_PORT=27017`,
+`MONGODB_DBNAME=efrs_db`,
+`MONGODB_URI=mongodb://localhost:27017/efrs_db`
+
+Drop database before E2E tests:<br>
+`DROP_DB=true`
+
+### More targets and env variables
+
+More information is available inside `Makefile`.
+
+# Development on Windows
+- Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/* tools/*`.
 - uWSGI does not support Windows, workaround is removing it from `ml/requirements.txt` before running `$ make setup` and adding it back afterwards.

@@ -15,8 +15,10 @@ def _get_env(name: str, default: str) -> str:
     return os.environ.get(name, '') or default
 
 
-class ENV:
-    ML_URL = _get_env('ML_URL', 'http://localhost:3000')
+class ENV_E2E:
+    _ML_HOST = _get_env('ML_HOST', 'localhost')
+    _ML_PORT = int(_get_env('ML_PORT', '3000'))
+    ML_URL = _get_env('ML_URL', f'http://{_ML_HOST}:{_ML_PORT}')
     API_KEY = _get_env('API_KEY', 'test-api-key')
     DROP_DB = _get_env('DROP_DB', 'true').lower() in ('true', '1')
 
@@ -39,5 +41,5 @@ READ_TIMEOUT_S = 30
 AVAILABLE_SERVICE_TIMEOUT_S = 8
 TRAINING_TIMEOUT_S = 30
 
-BBOX_ALLOWED_PX_DIFFERENCE = 10
+BBOX_ALLOWED_PX_DIFFERENCE = 20
 EMB_SIMILARITY_THRESHOLD = 0.01
