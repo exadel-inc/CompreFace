@@ -43,6 +43,7 @@ down/all:
 #####################################
 
 setup:
+	chmod +x ci-test.sh
 	chmod +x ml/run.sh
 	chmod +x e2e/run-e2e-test.sh
 	chmod +x tools/crash-lab.sh
