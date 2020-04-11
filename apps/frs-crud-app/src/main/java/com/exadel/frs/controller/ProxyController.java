@@ -1,23 +1,14 @@
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.enums.AppModelAccess.READONLY;
-import static com.exadel.frs.enums.AppModelAccess.TRAIN;
-import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
-
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.AccessDeniedException;
-import com.exadel.frs.exception.AppOrModelNotFoundException;
+import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.validation.ImageExtensionValidator;
 import com.google.common.collect.ImmutableList;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-
-import java.util.List;
-import java.util.Map;
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,14 +17,18 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
+
+import static com.exadel.frs.enums.AppModelAccess.READONLY;
+import static com.exadel.frs.enums.AppModelAccess.TRAIN;
+import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 
 @RestController
 @RequestMapping(ProxyController.PREFIX)
@@ -66,13 +61,13 @@ public class ProxyController {
 
     private AppModelAccess getAppModelAccessType(final String appApiKey, final String modelApiKey) {
         val model = modelRepository.findByApiKey(modelApiKey)
-                                     .orElseThrow(AppOrModelNotFoundException::new);
+                                   .orElseThrow(() -> new ModelDoesNotBelongToAppException(modelApiKey, appApiKey));
         if (appApiKey.equals(model.getApp().getApiKey())) {
             return TRAIN;
         }
 
         return appModelRepository.findByAppApiKeyAndModelApiKey(appApiKey, modelApiKey)
-                                 .orElseThrow(AppOrModelNotFoundException::new)
+                                 .orElseThrow(() -> new ModelDoesNotBelongToAppException(modelApiKey, appApiKey))
                                  .getAccessType();
     }
 

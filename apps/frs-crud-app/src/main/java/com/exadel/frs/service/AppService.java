@@ -53,13 +53,13 @@ public class AppService {
     private void verifyUserHasReadPrivileges(final Long userId, final App app) {
         if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
             app.getUserAppRole(userId)
-                    .orElseThrow(() -> new InsufficientPrivilegesException(userId));
+                    .orElseThrow(InsufficientPrivilegesException::new);
         }
     }
 
     private void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
         if (USER == getUserOrganizationRole(organization, userId)) {
-            throw new InsufficientPrivilegesException(userId);
+            throw new InsufficientPrivilegesException();
         }
     }
 
