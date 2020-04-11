@@ -54,7 +54,7 @@ public class ModelService {
     private void verifyUserHasReadPrivileges(final Long userId, final App app) {
         if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
             app.getUserAppRole(userId)
-                    .orElseThrow(() -> new InsufficientPrivilegesException(userId));
+                    .orElseThrow(() -> new InsufficientPrivilegesException());
         }
     }
 
@@ -62,7 +62,7 @@ public class ModelService {
         if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
             val userAppRole = app.getUserAppRole(userId);
             if (userAppRole.isEmpty() || AppRole.USER == userAppRole.get().getRole()) {
-                throw new InsufficientPrivilegesException(userId);
+                throw new InsufficientPrivilegesException();
             }
         }
     }

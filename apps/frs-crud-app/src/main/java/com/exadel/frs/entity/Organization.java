@@ -44,7 +44,7 @@ public class Organization {
 
     public UserOrganizationRole getUserOrganizationRoleOrThrow(Long userId) {
         return getUserOrganizationRole(userId)
-                .orElseThrow(() -> new UserDoesNotBelongToOrganization(userId, id));
+                .orElseThrow(UserDoesNotBelongToOrganization::new);
     }
 
     public void addUserOrganizationRole(User user, OrganizationRole role) {

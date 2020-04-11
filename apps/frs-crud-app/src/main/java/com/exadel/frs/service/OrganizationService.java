@@ -47,7 +47,7 @@ public class OrganizationService {
 
     private void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
         if (OrganizationRole.OWNER != organization.getUserOrganizationRoleOrThrow(userId).getRole()) {
-            throw new InsufficientPrivilegesException(userId);
+            throw new InsufficientPrivilegesException();
         }
     }
 

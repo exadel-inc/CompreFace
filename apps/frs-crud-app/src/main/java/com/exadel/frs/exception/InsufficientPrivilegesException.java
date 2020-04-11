@@ -5,10 +5,10 @@ import static java.lang.String.format;
 
 public class InsufficientPrivilegesException extends BasicException {
 
-    public static final String MESSAGE = "User %s does not have permission to do this action";
+    public static final String MESSAGE = "Action not allowed for current user";
 
-    public InsufficientPrivilegesException(final Long userId) {
-        super(INSUFFICIENT_PRIVILEGES, format(MESSAGE, userId));
+    public InsufficientPrivilegesException() {
+        super(INSUFFICIENT_PRIVILEGES, MESSAGE);
     }
 
 }
