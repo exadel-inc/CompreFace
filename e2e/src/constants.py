@@ -26,9 +26,9 @@ class ENV_E2E:
     _MONGODB_PORT = int(_get_env('MONGODB_PORT', '27017'))
     _MONGODB_DBNAME = _get_env('MONGODB_DBNAME', 'efrs_db')
     MONGODB_URI = _get_env('MONGODB_URI', f'mongodb://{_MONGODB_HOST}:{_MONGODB_PORT}/{_MONGODB_DBNAME}')
-    _MONGODB_URI_PARSED = uri_parser.parse_uri(MONGODB_URI)
-    MONGODB_HOST, MONGODB_PORT = _first_and_only(_MONGODB_URI_PARSED['nodelist'])
-    MONGODB_DBNAME = _MONGODB_URI_PARSED['database']
+    _PARSED_MONGODB_URI = uri_parser.parse_uri(MONGODB_URI)
+    MONGODB_HOST, MONGODB_PORT = _first_and_only(_PARSED_MONGODB_URI['nodelist'])
+    MONGODB_DBNAME = _PARSED_MONGODB_URI['database']
 
     @classmethod
     def __str__(cls):
