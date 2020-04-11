@@ -5,6 +5,8 @@ services:
     build: ./e2e
     environment:
       - ML_URL=http://ml:3000
+      - API_KEY=${API_KEY:-}
+      - DROP_DB=${DROP_DB:-}
       - MONGODB_URI=${MONGODB_URI:-}
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
