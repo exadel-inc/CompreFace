@@ -97,3 +97,5 @@ logging:
 registration:
   token:
     expires: 3600000
+    scheduler:
+      period: 300000

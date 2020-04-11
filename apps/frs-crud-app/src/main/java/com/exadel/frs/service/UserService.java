@@ -151,7 +151,7 @@ public class UserService {
         return userRepository.autocomplete(hqlParameter);
     }
 
-    @Scheduled(fixedDelayString = "${registration.token.expires}")
+    @Scheduled(fixedDelayString = "${registration.token.scheduler.period}")
     @Transactional
     public void removeExpiredRegistrationTokens() {
         int registrationExpireTime = env.getProperty("registration.token.expires", Integer.class) / 1000;

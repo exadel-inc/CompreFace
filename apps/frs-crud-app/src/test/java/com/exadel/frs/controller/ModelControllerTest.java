@@ -19,11 +19,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.exadel.frs.utils.TestUtils.buildUser;
 import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
+import static com.exadel.frs.utils.TestUtils.buildUser;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -57,9 +56,8 @@ class ModelControllerTest {
     private MockMvc mockMvc;
 
     @Test
-    void shouldReturnMessageAndCodeWhenModelNameIsMissing() throws Exception {
-        doCallRealMethod().when(modelService).updateModel(any(), any(), any(), any(), any());
-        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("name")));
+    void shouldReturnMessageAndCodeWhenModelNameIsMissingOnUpdate() throws Exception {
+        val expectedContent = "{\"message\":\"Model name cannot be empty\",\"code\":5}";
         val bodyWithEmptyName = new ModelUpdateDto();
         bodyWithEmptyName.setName("");
 
