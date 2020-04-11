@@ -4,7 +4,6 @@ import toolz
 
 from src import constants
 from src.cache import get_scanner, get_storage
-from src.constants import ENV
 from src.exceptions import NotEnoughUniqueFacesError
 from src.logging_ import init_logging
 from src.services.classifier.logistic_classifier import LogisticClassifier
