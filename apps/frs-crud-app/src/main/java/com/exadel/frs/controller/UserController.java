@@ -4,6 +4,8 @@ import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.exception.AccessDeniedException;
+import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.UserService;
@@ -16,15 +18,7 @@ import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -47,7 +41,14 @@ public class UserController {
     @GetMapping("/me")
     @ApiOperation(value = "Get information about user, that logged in")
     public UserResponseDto getUser() {
-        return userMapper.toResponseDto(SecurityUtils.getPrincipal());
+        try {
+            val user = userService.getUser(SecurityUtils.getPrincipalId());
+            return userMapper.toResponseDto(user);
+        } catch (UserDoesNotExistException e){
+            throw new AccessDeniedException();
+        } catch (Exception e){
+            throw e;
+        }
     }
 
     @ResponseStatus(HttpStatus.CREATED)
