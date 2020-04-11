@@ -18,6 +18,7 @@ class ENV(Constants):
     MONGODB_DBNAME = _MONGODB_URI_PARSED['database']
 
     SCANNER = get_env('SCANNER', 'Facenet2018')
+    # SCANNER = get_env('SCANNER', 'InsightFace') # TODO EFRS-435 Uncomment
     IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
     LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
