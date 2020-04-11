@@ -20,7 +20,10 @@ class ENV(Constants):
     SCANNER = get_env('SCANNER', 'Facenet2018')
     IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
-    LOGGING_LEVEL = int(get_env('LOGGING_LEVEL', str(logging.DEBUG)))
+    LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
+    IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
+    DO_LOG_STACKTRACE = get_env('DO_LOG_STACKTRACE', 'true').lower() in ('true', '1')
+    DO_LOG_MULTITASKING_IDS = get_env('DO_LOG_MULTITASKING_IDS', 'false').lower() in ('true', '1')
 
 
-DO_SHOW_STACKTRACE_IN_LOGS = True
+LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]

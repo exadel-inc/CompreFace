@@ -16,11 +16,9 @@ API_KEY ?= test-api-key
 
 default: test/unit test/lint test
 
+test: FLASK_ENV = production
 test:
 	MEM_LIMIT=4g docker-compose up --build --abort-on-container-exit
-
-test/nobuild:
-	MEM_LIMIT=4g docker-compose up --abort-on-container-exit
 
 #####################################
 ##### RUNNING IN DOCKER
@@ -43,12 +41,12 @@ down/all:
 #####################################
 
 setup:
-	chmod +x ci-test.sh
-	chmod +x ml/run.sh
-	chmod +x e2e/run-e2e-test.sh
-	chmod +x tools/crash-lab.sh
+	chmod +x ci-test.sh ml/run.sh e2e/run-e2e-test.sh tools/crash-lab.sh
 	python -m pip install -r ml/requirements.txt
 	python -m pip install -e ml/srcext/insightface/python-package
+
+s:
+	echo $$FLASK_ENV
 
 start: db
 	ml/run.sh start
@@ -131,8 +129,8 @@ MONGODB_DBNAME:
 db:
 	@echo -ne "\035" | telnet 127.0.0.1 $(MONGODB_PORT) > /dev/null 2>&1; [ $$? -eq 1 ] && \
 	docker-compose up -d mongodb && \
-	echo "[Database up] SUCCESS! port $(MONGODB_PORT)" || \
-	echo "[Database up] skipped, port $(MONGODB_PORT)"
+	echo "[Database up] SUCCESS! Started db on port $(MONGODB_PORT)" || \
+	echo "[Database up] skipped, because port $(MONGODB_PORT) is taken"
 
 # Show code stats
 stats:

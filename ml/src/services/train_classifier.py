@@ -2,6 +2,7 @@ import logging
 
 import toolz
 
+from src import constants
 from src.cache import get_scanner, get_storage
 from src.constants import ENV
 from src.exceptions import NotEnoughUniqueFacesError
@@ -35,7 +36,7 @@ def train_and_save_classifier(api_key: str) -> None:
 
 
 def train_and_save_classifier_async(api_key: str) -> None:
-    init_logging(level=ENV.LOGGING_LEVEL)
+    init_logging(level=constants.LOGGING_LEVEL)
     # noinspection PyBroadException
     try:
         return train_and_save_classifier(api_key)
