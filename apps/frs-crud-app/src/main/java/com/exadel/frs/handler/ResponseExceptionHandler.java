@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import static com.exadel.frs.handler.ExceptionCode.EMPTY_REQUIRED_FIELD;
 import static com.exadel.frs.handler.ExceptionCode.UNDEFINED;
 
+
 @ControllerAdvice
 @Slf4j
 public class ResponseExceptionHandler {
@@ -22,8 +23,8 @@ public class ResponseExceptionHandler {
         log.error("Defined exception occurred", ex);
 
         return ResponseEntity
-                     .status(ex.getExceptionCode().getHttpStatus())
-                     .body(buildBody(ex));
+                .status(ex.getExceptionCode().getHttpStatus())
+                .body(buildBody(ex));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -69,15 +70,15 @@ public class ResponseExceptionHandler {
 
     private ExceptionResponseDto buildBody(final BasicException ex) {
         return ExceptionResponseDto.builder()
-                                   .code(ex.getExceptionCode().getCode())
-                                   .message(ex.getMessage())
-                                   .build();
+                .code(ex.getExceptionCode().getCode())
+                .message(ex.getMessage())
+                .build();
     }
 
     private ExceptionResponseDto buildBody() {
         return ExceptionResponseDto.builder()
-                                   .code(UNDEFINED.getCode())
-                                   .message("Something went wrong, please try again")
-                                   .build();
+                .code(UNDEFINED.getCode())
+                .message("Something went wrong, please try again")
+                .build();
     }
 }
