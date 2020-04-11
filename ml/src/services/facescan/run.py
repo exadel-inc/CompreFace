@@ -72,6 +72,6 @@ if __name__ == '__main__':
             img = read_img(IMG_DIR / img_name)
             show_img(img, boxes, noses)
 
-        logging.info('Completed')
+        logging.info(f'Completed: {img_name}')
     if total_errors:
         logging.error(f"[Annotation check] Found a total of {total_errors} error(s)")

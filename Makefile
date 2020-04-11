@@ -8,7 +8,7 @@ MONGODB_HOST ?= localhost
 MONGODB_PORT ?= 27117
 MONGODB_DBNAME ?= efrs_tmp_db
 COMPOSE_PROJECT_NAME ?= frs-core
-API_KEY ?= $(shell echo test-$$(date +'%Y-%m-%d-%H-%M-%S-%3N'))
+API_KEY ?= test-api-key
 
 #####################################
 ##### MAIN TEST
@@ -18,6 +18,9 @@ default: test/unit test/lint test
 
 test:
 	MEM_LIMIT=4g docker-compose up --build --abort-on-container-exit
+
+test/nobuild:
+	MEM_LIMIT=4g docker-compose up --abort-on-container-exit
 
 #####################################
 ##### RUNNING IN DOCKER

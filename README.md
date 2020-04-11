@@ -66,5 +66,5 @@ Drop database before E2E tests:<br>
 More information is available inside `Makefile`.
 
 # Development on Windows
-- Containers may not build/run because of CRLF file endings. To fix, run `$ ``dos2unix * ml/* e2e/* tools/*`.
+- Containers may not build/run because of CRLF file endings. To fix, run `$ dos2unix * ml/* e2e/* tools/*`.
 - uWSGI does not support Windows, workaround is removing it from `ml/requirements.txt` before running `$ make setup` and adding it back afterwards.

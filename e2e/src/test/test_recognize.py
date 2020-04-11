@@ -177,8 +177,8 @@ def test__when_recognizing_faces__then_returns_400_no_classifier_trained():
     res = ml_post("/recognize", headers={'X-Api-Key': ENV_E2E.API_KEY}, files=files)
 
     assert res.status_code == 400, res.content
-    assert res.json()['message'] == (
+    assert res.json()['message'] in [
         "400 Bad Request: "
         "No classifier model is yet trained, please train a classifier first. If the problem persists, "
         "check the amount of unique faces saved, and whether all face embeddings have been migrated to "
-        "version 'Facenet2018'")
+        f"version '{scanner}'" for scanner in ['Facenet2018', 'InsightFace']]
