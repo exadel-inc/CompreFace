@@ -20,13 +20,12 @@ class ENV_E2E:
     _ML_PORT = int(_get_env('ML_PORT', '3000'))
     ML_URL = _get_env('ML_URL', f'http://{_ML_HOST}:{_ML_PORT}')
     API_KEY = _get_env('API_KEY', 'test-api-key')
-    DROP_DB = _get_env('DROP_DB', 'true').lower() in ('true', '1')
 
+    DROP_DB = _get_env('DROP_DB', 'true').lower() in ('true', '1')
     _MONGODB_HOST = _get_env('MONGODB_HOST', 'mongodb')
     _MONGODB_PORT = int(_get_env('MONGODB_PORT', '27017'))
     _MONGODB_DBNAME = _get_env('MONGODB_DBNAME', 'efrs_db')
     MONGODB_URI = _get_env('MONGODB_URI', f'mongodb://{_MONGODB_HOST}:{_MONGODB_PORT}/{_MONGODB_DBNAME}')
-
     _MONGODB_URI_PARSED = uri_parser.parse_uri(MONGODB_URI)
     MONGODB_HOST, MONGODB_PORT = _first_and_only(_MONGODB_URI_PARSED['nodelist'])
     MONGODB_DBNAME = _MONGODB_URI_PARSED['database']
