@@ -1,8 +1,10 @@
+from typing import List
+
 from src import constants
 
 
-def embeddings_are_the_same(embedding1, embedding2):
-    assert embedding1.shape == embedding2.shape
+def embeddings_are_the_same(embedding1: List[float], embedding2: List[float]):
+    assert len(embedding1) == len(embedding2)
     for i in range(len(embedding1)):
         if (embedding1[i] - embedding2[i]) / embedding2[i] > constants.EMB_SIMILARITY_THRESHOLD:
             return False
