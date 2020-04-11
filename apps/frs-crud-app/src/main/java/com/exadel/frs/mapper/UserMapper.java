@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(uses = {UserOrgRoleMapper.class, UserAppRoleMapper.class})
 public interface UserMapper {
 
-    @Mapping(source = "guid", target = "id")
+    @Mapping(source = "guid", target = "userId")
     AppOwnerDto toAppOwnerDto(User entity);
 
     @Mapping(source = "guid", target = "id")
