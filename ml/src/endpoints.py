@@ -26,17 +26,6 @@ def endpoints(app):
     def status_get():
         return jsonify(status="OKi")
 
-    @app.route('/read_img', methods=['POST'])
-    @needs_attached_file
-    def read_img_post():
-        """ Temporary endpoint for debugging purposes """
-        from flask import request
-        file = request.files['file']
-
-        img = read_img(file)
-
-        return jsonify(image_size=str(img.shape))
-
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
     def scan_faces_post():
