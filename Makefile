@@ -11,7 +11,7 @@ COMPOSE_PROJECT_NAME ?= frs-core
 API_KEY ?= test-api-key
 
 #####################################
-##### MAIN TEST
+##### MAIN TESTS
 #####################################
 
 # Run main tests, with faster tests run first
