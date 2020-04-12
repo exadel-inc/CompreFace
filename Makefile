@@ -45,9 +45,6 @@ setup:
 	python -m pip install -r ml/requirements.txt
 	python -m pip install -e ml/srcext/insightface/python-package
 
-s:
-	echo $$FLASK_ENV
-
 start: db
 	ml/run.sh start
 
