@@ -17,5 +17,5 @@ def test_different_formats_processed_are_right(img):
     load_array = CURRENT_DIR / "test_files" / "dump_array.pkl"
     expected_array = joblib.load(load_array)
 
-    assert (actual_array.shape == expected_array.shape)
+    assert actual_array.shape == expected_array.shape
     assert numpy.allclose(actual_array, expected_array, atol=20, rtol=20)
