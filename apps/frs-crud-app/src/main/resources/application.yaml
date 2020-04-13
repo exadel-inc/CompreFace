@@ -4,7 +4,7 @@ server:
 environment:
   servers:
     FRS_CORE:
-      url: ${CORE_URL:http://localhost:8082}
+      url: ${CORE_URL:http://dev.frs.exadel.by:8082}
 
 app:
   security:
