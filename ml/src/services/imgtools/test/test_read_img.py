@@ -57,6 +57,14 @@ def test__given_corrupted_img__when_read__then_raises_exception(file):
     assert raises(ImageReadLibraryError, act)
 
 
+def test__given_truncated_img__when_read__then_does_not_crash():
+    img_path = IMG_DIR / 'truncated.jpg'
+
+    actual_array = read_img(img_path)
+
+    assert actual_array.shape == (225, 225, 3)
+
+
 @pytest.mark.parametrize('extension', ['jpeg', 'png', 'tiff', 'ico', 'gif', 'bmp', 'webp'])
 def test__given_img__when_read__then_returns_correct_numpy_array(extension, expected_array):
     img_path = IMG_DIR / f'einstein.{extension}'

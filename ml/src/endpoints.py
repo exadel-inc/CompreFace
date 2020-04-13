@@ -45,7 +45,7 @@ def endpoints(app):
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
         storage: MongoStorage = get_storage()
-        
+
         face_names = storage.get_face_names(api_key)
 
         return jsonify(names=face_names)

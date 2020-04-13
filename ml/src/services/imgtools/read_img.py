@@ -1,6 +1,5 @@
 import imageio
 import numpy as np
-from PIL.ImageFile import ImageFile
 
 from src.exceptions import ImageReadLibraryError, OneDimensionalImageIsGivenError
 from src.services.imgtools.types import Array3D
@@ -16,7 +15,6 @@ def _grayscale_to_rgb(img):
 
 def read_img(file) -> Array3D:
     try:
-        ImageFile.LOAD_TRUNCATED_IMAGES = True
         arr = imageio.imread(file)
     except (ValueError, SyntaxError) as e:
         raise ImageReadLibraryError from e

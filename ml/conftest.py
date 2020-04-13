@@ -1,1 +1,5 @@
-# Having this file, even when it's empty, seems to help pytest with paths and test discovery
+import logging
+
+from src.logging_ import init_runtime
+
+init_runtime(logging.DEBUG)

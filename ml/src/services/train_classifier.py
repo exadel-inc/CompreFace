@@ -5,7 +5,7 @@ import toolz
 from src import constants
 from src.cache import get_scanner, get_storage
 from src.exceptions import NotEnoughUniqueFacesError
-from src.logging_ import init_logging
+from src.logging_ import init_runtime
 from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.storage.mongo_storage import MongoStorage
@@ -35,7 +35,7 @@ def train_and_save_classifier(api_key: str) -> None:
 
 
 def train_and_save_classifier_async(api_key: str) -> None:
-    init_logging(level=constants.LOGGING_LEVEL)
+    init_runtime(logging_level=constants.LOGGING_LEVEL)
     # noinspection PyBroadException
     try:
         return train_and_save_classifier(api_key)
