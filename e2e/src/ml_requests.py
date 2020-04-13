@@ -61,5 +61,6 @@ def ml_wait_until_ml_is_available():
                             f"timeout ({timeout_s}s): {str(e)}", returncode=1)
             time.sleep(1)
             continue
-        assert res.status_code == HTTPStatus.OK, res.content
+        if res.status_code != HTTPStatus.OK or res.json()['status'] != 'OK':
+            pytest.exit(f"Did not get 200 from '{endpoint}'. Received: {res.status_code}, {res.content}", returncode=1)
         break

@@ -3,6 +3,7 @@ from typing import Union, Callable
 
 from flask import Flask
 
+from src import constants
 from src.cache import get_storage
 from src.constants import ENV
 from src.docs import DOCS_DIR
@@ -16,7 +17,7 @@ from src.services.flask_.log_response import log_http_response
 
 
 def init_app_runtime():
-    init_runtime(logging_level=ENV.LOGGING_LEVEL)
+    init_runtime(logging_level=constants.LOGGING_LEVEL)
     logging.debug(ENV.__str__())
     get_storage().wait_for_connection()
 

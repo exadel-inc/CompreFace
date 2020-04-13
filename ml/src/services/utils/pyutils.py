@@ -104,14 +104,6 @@ def get_env(name: str, default: str = None) -> str:
     return os.environ.get(name, '') or default
 
 
-def sort_coordinates(lst):
-    """
-    >>> sort_coordinates([(2,2),(1,2), (1,1), (2,1)])
-    [(1, 1), (1, 2), (2, 1), (2, 2)]
-    """
-    return sorted(lst, key=lambda k: [k[0], k[1]])
-
-
 class Constants:
     @classmethod
     def __str__(cls):

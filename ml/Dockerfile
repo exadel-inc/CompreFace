@@ -23,6 +23,7 @@ ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV PYTHONUNBUFFERED=0
 ENV JOBLIB_MULTIPROCESSING=0
+ENV HOME=/srv
 
 ## Run tests
 ARG DO_RUN_TESTS
@@ -33,6 +34,7 @@ RUN if [ "$DO_RUN_TESTS" = true ]; then \
 
 ## Run smoke test and Cache downloadable dependencies for Scanner backends
 RUN SCANNER=Facenet2018 IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
+#RUN SCANNER=InsightFace IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run # TODO EFRS-435 Uncomment
 
 ## Runtime
 CMD ["uwsgi", "--ini", "uwsgi.ini"]

@@ -34,9 +34,9 @@ def test__given_img_with_face__when_scanning__then_returns_200_with_results():
 
     assert res.status_code == 200, res.content
     calculator_version = res.json()['calculator_version']
-    assert calculator_version in ('Facenet2018',)
+    assert calculator_version in ('Facenet2018', 'InsightFace')
     result = res.json()['result']
     assert len(result) == 1
     face = result[0]
     assert boxes_are_the_same(face['box'], {'x_max': 284, 'x_min': 146, 'y_max': 373, 'y_min': 193})
-    assert embeddings_are_the_same(face['embedding'], EXPECTED_EMBEDDING[calculator_version])
+    assert embeddings_are_the_same(face['embedding'], EXPECTED_EMBEDDING[calculator_version]), face['embedding']

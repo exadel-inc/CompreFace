@@ -5,6 +5,8 @@ services:
     build: ./e2e
     environment:
       - ML_URL=http://ml:3000
+      - API_KEY=${API_KEY:-}
+      - DROP_DB=${DROP_DB:-}
       - MONGODB_URI=${MONGODB_URI:-}
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
@@ -24,8 +26,10 @@ services:
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
       - MONGODB_DBNAME=${MONGODB_DBNAME:-}
+      - SCANNER=${SCANNER:-}
       - IMG_LENGTH_LIMIT=${IMG_LENGTH_LIMIT:-}
       - LOGGING_LEVEL=${LOGGING_LEVEL:-}
+      - ML_PORT=${ML_PORT:-3000}
     mem_limit: ${MEM_LIMIT:-0}
     memswap_limit: ${MEM_LIMIT:-0}
     depends_on:

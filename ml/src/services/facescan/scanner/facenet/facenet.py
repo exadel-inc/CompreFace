@@ -82,7 +82,7 @@ class Facenet2018(FaceScanner):
             if box.probability > det_prob_threshold:
                 filtered_bounding_boxes.append(box)
             else:
-                logging.debug(f'Box filtered out because below threshold ({det_prob_threshold}): {box}')
+                logger.debug(f'Box filtered out because below threshold ({det_prob_threshold}): {box}')
         return filtered_bounding_boxes
 
     def _calculate_embeddings(self, cropped_images):

@@ -24,18 +24,7 @@ from src.services.train_classifier import get_faces
 def endpoints(app):
     @app.route('/status')
     def status_get():
-        return jsonify(status="OK")
-
-    @app.route('/read_img', methods=['POST'])
-    @needs_attached_file
-    def read_img_post():
-        """ Temporary endpoint for debugging purposes """
-        from flask import request
-        file = request.files['file']
-
-        img = read_img(file)
-
-        return jsonify(image_size=str(img.shape))
+        return jsonify(status='OKi')
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
@@ -55,8 +44,8 @@ def endpoints(app):
     def faces_get():
         from flask import request
         api_key = request.headers[API_KEY_HEADER]
-
         storage: MongoStorage = get_storage()
+        
         face_names = storage.get_face_names(api_key)
 
         return jsonify(names=face_names)
