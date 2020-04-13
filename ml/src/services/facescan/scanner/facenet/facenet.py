@@ -19,8 +19,8 @@ from src.services.utils.pyutils import get_dir
 
 CURRENT_DIR = get_dir(__file__)
 logger = logging.getLogger(__name__)
-_EmbeddingCalculator = namedtuple('Calculator', 'graph sess')
-_FaceDetectionNets = namedtuple('FaceDetectionNets', 'pnet rnet onet')
+_EmbeddingCalculator = namedtuple('_EmbeddingCalculator', 'graph sess')
+_FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')
 
 
 class Facenet2018(FaceScanner):
