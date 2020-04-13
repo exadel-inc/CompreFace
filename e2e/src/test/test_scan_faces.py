@@ -27,6 +27,16 @@ def test__given_img_with_no_faces__when_scanning__then_returns_400_bad_request()
 
 
 @pytest.mark.run(order=next(after_previous))
+@pytest.mark.parametrize('filename', ['truncated.jpg', 'einstein.webp'])
+def test__given_non_standard_img__when_scanning__then_returns_200(filename):
+    files = {'file': open(IMG_DIR / filename, 'rb')}
+
+    res = ml_post("/scan_faces", files=files)
+
+    assert res.status_code == 200 and 'result' in res.json(), res.content
+
+
+@pytest.mark.run(order=next(after_previous))
 def test__given_img_with_face__when_scanning__then_returns_200_with_results():
     files = {'file': open(IMG_DIR / '007_B.jpg', 'rb')}
 
