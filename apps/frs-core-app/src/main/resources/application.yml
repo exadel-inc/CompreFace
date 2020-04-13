@@ -10,7 +10,7 @@ spring:
 environment:
   servers:
     PYTHON:
-      url: ${PYTHON_URL:http://localhost:3000}
+      url: ${PYTHON_URL:http://dev.frs.exadel.by:3000}
 
 spring:
   jackson:
