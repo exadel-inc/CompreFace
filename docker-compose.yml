@@ -18,7 +18,7 @@ services:
     build:
       context: ./ml
       args:
-        - DO_RUN_TESTS=${DO_RUN_TESTS:-false}
+        - SKIP_TESTS=${SKIP_TESTS:-}
     ports:
       - ${ML_PORT:-3000}:3000
     environment:

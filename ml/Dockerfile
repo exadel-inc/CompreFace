@@ -26,15 +26,13 @@ ENV PYTHONUNBUFFERED=0
 ENV JOBLIB_MULTIPROCESSING=0
 
 ## Run tests
-ARG DO_RUN_TESTS
-RUN if [ "$DO_RUN_TESTS" != false ]; then \
-    python -m pytest /srv/src && \
-    python -m pylama --options /srv/pylama.ini /srv/src; \
-    fi
+ARG SKIP_TESTS
+RUN if [ "$SKIP_TESTS" != true ]; then python -m pytest /srv/src; fi
+RUN if [ "$SKIP_TESTS" != true ]; then python -m pylama --options /srv/pylama.ini /srv/src; fi
 
 ## Run smoke test and Cache downloadable dependencies for Scanner backends
 RUN SCANNER=Facenet2018 IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
-RUN SCANNER=InsightFace IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
+# (TODO EFRS-435: add this line ->) RUN SCANNER=InsightFace IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
 
 ## Runtime
 CMD ["uwsgi", "--ini", "uwsgi.ini"]

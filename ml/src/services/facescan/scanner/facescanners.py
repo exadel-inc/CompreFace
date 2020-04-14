@@ -9,5 +9,5 @@ class FaceScanners:
 
 
 ALL_SCANNERS = [Facenet2018, InsightFace]
-TESTED_SCANNERS = [Facenet2018, InsightFace]
+TESTED_SCANNERS = [Facenet2018]  # TODO EFRS-435: Add InsightFace
 id_2_face_scanner_cls = {backend.ID: backend for backend in ALL_SCANNERS}

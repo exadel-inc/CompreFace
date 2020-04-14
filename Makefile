@@ -9,6 +9,7 @@ MONGODB_PORT ?= 27117
 MONGODB_DBNAME ?= efrs_tmp_db
 COMPOSE_PROJECT_NAME ?= frs-core
 API_KEY ?= test-api-key
+SKIP_TESTS ?= true
 
 #####################################
 ##### MAIN TESTS
@@ -18,6 +19,7 @@ API_KEY ?= test-api-key
 default: test/unit test/lint test
 
 # Run main tests
+test: SKIP_TESTS = false
 test: FLASK_ENV = production
 test:
 	MEM_LIMIT=4g docker-compose up --build --abort-on-container-exit
