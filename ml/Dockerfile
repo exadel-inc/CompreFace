@@ -7,10 +7,10 @@ COPY sample_images sample_images
 COPY src src
 COPY srcext srcext
 COPY pylama.ini .
-COPY .sonarqubeignore .
 COPY pytest.ini .
 COPY requirements.txt .
 COPY uwsgi.ini .
+COPY .sonarqubeignore .
 
 ## Prepare environment
 RUN python -m pip --no-cache-dir install -r requirements.txt
