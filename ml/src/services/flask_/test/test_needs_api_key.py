@@ -17,6 +17,10 @@ def client_with_locked_endpoint(app):
     return app.test_client()
 
 
+def test__jenkins():
+    assert False
+
+
 def test__given_no_api_key__when_requesting__then_returns_error(client_with_locked_endpoint):
     pass
 

@@ -24,7 +24,7 @@ from src.services.train_classifier import get_faces
 def endpoints(app):
     @app.route('/status')
     def status_get():
-        return jsonify(status='OKi', _v=1)
+        return jsonify(status='OKi', _v=2)
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
