@@ -8,11 +8,13 @@ from src.services.utils.pytestutils import raises
 
 API_KEY = 'this-is-api-key'
 EMB_VERSION = 'this-is-embedding-calculator-version'
+PERSON_A = 'Robert Oppenheimer'
+PERSON_B = 'Nikola Tesla'
 
 
 @pytest.fixture
 def face1():
-    return Face(name='Robert Oppenheimer',
+    return Face(name=PERSON_A,
                 raw_img=np.zeros(shape=(2, 2, 3)),
                 face_img=np.zeros(shape=(1, 1, 3)),
                 embedding=np.zeros(shape=(16,)))
@@ -20,7 +22,7 @@ def face1():
 
 @pytest.fixture
 def face2():
-    return Face(name='Nikola Tesla',
+    return Face(name=PERSON_B,
                 raw_img=np.ones(shape=(2, 2, 3)),
                 face_img=np.ones(shape=(1, 1, 3)),
                 embedding=np.ones(shape=(16,)))
@@ -49,7 +51,7 @@ def test__given_saved_faces__when_getting_names__then_returns_the_names(
 
     returned_names = storage.get_face_names(API_KEY)
 
-    assert set(returned_names) == {'Robert Oppenheimer', 'Nikola Tesla'}
+    assert set(returned_names) == {PERSON_A, PERSON_B}
 
 
 def test__given_saved_faces__when_getting_face_embeddings__then_returns_the_face_embeddings(
@@ -59,7 +61,7 @@ def test__given_saved_faces__when_getting_face_embeddings__then_returns_the_face
 
     returned_face_embeddings = storage.get_face_embeddings(API_KEY, EMB_VERSION)
 
-    assert set(e.name for e in returned_face_embeddings) == {'Robert Oppenheimer', 'Nikola Tesla'}
+    assert set(e.name for e in returned_face_embeddings) == {PERSON_A, PERSON_B}
     assert set(e.embedding.tostring() for e in returned_face_embeddings) == {np.zeros(shape=(16,)).tostring(),
                                                                              np.ones(shape=(16,)).tostring()}
 
@@ -68,7 +70,7 @@ def test__given_saved_faces__when_deleting_faces__then_faces_are_removed(
         storage: MongoStorage, face1):
     storage.add_face(API_KEY, face1, EMB_VERSION)
 
-    storage.remove_face(API_KEY, 'Robert Oppenheimer')
+    storage.remove_face(API_KEY, PERSON_A)
 
     returned_faces = storage.get_faces(API_KEY, EMB_VERSION)
     assert len(returned_faces) == 0
@@ -78,8 +80,8 @@ def test__given_saved__when_deleting_face_twice__then_does_not_raise_error(
         storage: MongoStorage, face1):
     storage.add_face(API_KEY, face1, EMB_VERSION)
 
-    storage.remove_face(API_KEY, 'Robert Oppenheimer')
-    storage.remove_face(API_KEY, 'Robert Oppenheimer')
+    storage.remove_face(API_KEY, PERSON_A)
+    storage.remove_face(API_KEY, PERSON_A)
 
     returned_faces = storage.get_faces(API_KEY, EMB_VERSION)
     assert len(returned_faces) == 0

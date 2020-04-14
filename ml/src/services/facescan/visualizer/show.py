@@ -35,17 +35,16 @@ def _draw_cross(draw, xy, half_length, color, width):
     draw.line((x + half_length, y - half_length, x - half_length, y + half_length), fill=color, width=width)
 
 
-def _draw_detection_box(img_draw, box, font_size, font_size_smaller, font, box_line_width, color, text):
-    img_draw.rectangle(box.xy, outline=color, width=box_line_width)
-    img_draw.text(text=text,
-                  xy=(box.x_min, box.y_min - font_size - 1),
-                  fill=color, font=ImageFont.truetype(font, font_size))
-    img_draw.text(text=f"{box.probability:.4f}",
-                  xy=(box.x_min, box.y_max + 1),
-                  fill=color, font=ImageFont.truetype(font, font_size_smaller))
-
-
 def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[int, int]] = None):
+    def _draw_detection_box():
+        img_draw.rectangle(box.xy, outline=color, width=box_line_width)
+        img_draw.text(text=text,
+                      xy=(box.x_min, box.y_min - font_size - 1),
+                      fill=color, font=ImageFont.truetype(font, font_size))
+        img_draw.text(text=f"{box.probability:.4f}",
+                      xy=(box.x_min, box.y_max + 1),
+                      fill=color, font=ImageFont.truetype(font, font_size_smaller))
+
     box_line_width = 3
     font_size = 20
     font_size_smaller = 15
@@ -86,12 +85,12 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
 
         i += 1
         text = str(i)
-        _draw_detection_box(img_draw, box, font_size, font_size_smaller, font, box_line_width, color, text)
+        _draw_detection_box()
 
     for box in error_boxes:
         color = error_color
         text = 'Error'
-        _draw_detection_box(img_draw, box, font_size, font_size_smaller, font, box_line_width, color, text)
+        _draw_detection_box()
 
     for nose in noses:
         _draw_cross(img_draw, xy=nose, half_length=cross_half_length, color=error_color, width=error_line_width)

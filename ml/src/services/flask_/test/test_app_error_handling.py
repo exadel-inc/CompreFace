@@ -1,32 +1,34 @@
 from werkzeug.exceptions import NotFound
 
+ENDPOINT = '/endpoint'
+
 
 def test__given_raises_value_error__when_called__then_returns_500(app):
-    @app.route('/endpoint')
+    @app.route(ENDPOINT)
     def endpoint():
         raise ValueError
 
-    res = app.test_client().get('/endpoint')
+    res = app.test_client().get(ENDPOINT)
 
     assert res.status_code == 500
     assert res.json['message'] == 'ValueError'
 
 
 def test__given_raises_value_error_with_msg__when_called__then_returns_500_with_msg(app):
-    @app.route('/endpoint')
+    @app.route(ENDPOINT)
     def endpoint():
         raise ValueError('Detailed server error information')
 
-    res = app.test_client().get('/endpoint')
+    res = app.test_client().get(ENDPOINT)
 
     assert res.status_code == 500
     assert res.json['message'] == 'ValueError: Detailed server error information'
 
 
 def test__given_raises_not_found_error__when_called__then_returns_404(app):
-    pass
+    pass  # NOSONAR
 
-    res = app.test_client().get('/endpoint')
+    res = app.test_client().get(ENDPOINT)
 
     assert res.status_code == 404
     assert res.json['message'] == '404 Not Found: The requested URL was not found on the server. ' \
@@ -35,11 +37,11 @@ def test__given_raises_not_found_error__when_called__then_returns_404(app):
 
 
 def test__given_raises_not_found_error_with_msg__when_called__then_returns_404_with_msg(app):
-    @app.route('/endpoint')
+    @app.route(ENDPOINT)
     def endpoint():
         raise NotFound('Detailed error information')
 
-    res = app.test_client().get('/endpoint')
+    res = app.test_client().get(ENDPOINT)
 
     assert res.status_code == 404
     assert res.json['message'] == '404 Not Found: Detailed error information'
