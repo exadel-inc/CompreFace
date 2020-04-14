@@ -19,7 +19,7 @@ grpcio==1.21.1
 h5py==2.9.0
 idna==2.8
 ImageHash==4.0
-imageio==2.5.0
+imageio==2.8.0
 importlib-metadata==0.23
 itsdangerous==1.1.0
 Jinja2==2.10.1
