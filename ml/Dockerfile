@@ -10,6 +10,7 @@ COPY pylama.ini .
 COPY pytest.ini .
 COPY requirements.txt .
 COPY uwsgi.ini .
+COPY .imageio .imageio
 COPY .sonarqubeignore .
 
 ## Prepare environment
