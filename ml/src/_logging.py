@@ -1,9 +1,7 @@
 import logging
 import os
-import sys
 import warnings
 
-from PIL import ImageFile
 from tensorflow.python.util import deprecation as tensorflow_deprecation
 from yaml import YAMLLoadWarning
 
@@ -31,7 +29,7 @@ class MainLogFilter(logging.Filter):
         return True
 
 
-def _init_logging(level):
+def init_logging(level):
     stream_handler = logging.StreamHandler()
     stream_handler.addFilter(RequestContextLogFilter())
     stream_handler.addFilter(MainLogFilter())
@@ -50,9 +48,3 @@ def _init_logging(level):
     tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['MXNET_SUBGRAPH_VERBOSE'] = '0'
-
-
-def init_runtime(logging_level):
-    assert sys.version_info >= (3, 7)
-    ImageFile.LOAD_TRUNCATED_IMAGES = True
-    _init_logging(logging_level)

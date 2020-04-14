@@ -3,7 +3,7 @@ from collections import namedtuple
 
 from sample_images import IMG_DIR
 from sample_images.annotations import SAMPLE_IMAGES
-from src.logging_ import init_runtime
+from src.init_runtime import init_runtime
 from src.services.facescan.optimizer.random_optimizer import RandomOptimizer
 from src.services.facescan.scanner.facescanners import FaceScanners
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors

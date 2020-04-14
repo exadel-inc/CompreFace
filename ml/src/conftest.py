@@ -1,5 +1,5 @@
 import logging
 
-from src.logging_ import init_runtime
+from src.init_runtime import init_runtime
 
 init_runtime(logging.DEBUG)

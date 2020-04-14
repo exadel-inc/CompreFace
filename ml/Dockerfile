@@ -10,6 +10,7 @@ COPY pylama.ini .
 COPY pytest.ini .
 COPY requirements.txt .
 COPY uwsgi.ini .
+COPY .sonarqubeignore .
 
 ## Prepare environment
 RUN python -m pip --no-cache-dir install -r requirements.txt

@@ -6,7 +6,7 @@ from sample_images import IMG_DIR
 from sample_images.annotations import name_2_annotation, SAMPLE_IMAGES
 from src.constants import ENV
 from src.exceptions import NoFaceFoundError
-from src.logging_ import init_runtime
+from src.init_runtime import init_runtime
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
@@ -75,3 +75,4 @@ if __name__ == '__main__':
         logging.info(f'Completed: {img_name}')
     if total_errors:
         logging.error(f"[Annotation check] Found a total of {total_errors} error(s)")
+        exit(1)

@@ -30,7 +30,16 @@ Run `$ make setup` to install required packages to your system.
 Note: [mongoDB](https://www.mongodb.com/download-center/community) Database will automatically be instantiated with [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) before `$ make start` if it is not already running at port `$MONGODB_PORT` (default: `27017`).
 
 #### Run main tests
+
+##### Locally
 To check whether the project is in a valid state, run `$ make`.
+
+##### Remote environments
+To check whether the project passes E2E tests on a remote deployment environment, run:
+
+- `$ make e2e/dev` (DEV environment)
+- `$ make e2e/qa` (QA environment)
+- `$ make e2e/remote ML_URL=http://example.com:3000` (other server)
 
 # Advanced usage
 Entrypoints to run the application and related development tools are organized as "targets" inside `Makefile` and run with `$ make`.

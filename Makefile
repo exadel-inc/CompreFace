@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: $(MAKECMDGOALS)
+.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats
 .EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
 FLASK_ENV ?= development
@@ -55,7 +55,6 @@ down/all:
 setup:
 	chmod +x ci-test.sh ml/run.sh e2e/run-e2e-test.sh tools/crash-lab.sh
 	python -m pip install -r ml/requirements.txt
-	imageio_download_bin freeimage
 	python -m pip install -e ml/srcext/insightface/python-package
 
 # Run application
@@ -93,11 +92,9 @@ test/e2e: e2e/local
 #####################################
 
 # Runs E2E tests against an already running application
+e2e: API_KEY=$(shell $(MAKE) API_KEY)
 e2e:
 	e2e/run-e2e-test.sh
-
-# Runs E2E and also checks if given host is able to handle scanning all images
-e2e/extended: scan e2e
 
 # Runs E2E after automatically starting db and application automatically
 e2e/local: start
@@ -105,6 +102,22 @@ e2e/local: start
 	sleep 5s
 	test -f $(CURDIR)/ml/$(COMPOSE_PROJECT_NAME).pid
 	$(MAKE) e2e && ml/run.sh stop || (ml/run.sh stop; exit 1)
+
+# Runs E2E and also checks if given host is able to handle scanning all images
+e2e/extended: SHOW_IMG=false
+e2e/extended: e2e scan
+
+# Runs E2E tests against a remote environment
+e2e/remote: DROP_DB=false
+e2e/remote: e2e/extended
+
+# Runs E2E tests against DEV server environment
+e2e/dev: ML_URL=http://10.130.66.129:3000
+e2e/dev: e2e/remote
+
+# Runs E2E tests against QA server environment
+e2e/qa: ML_URL=http://10.130.66.141:3000
+e2e/qa: e2e/remote
 
 #####################################
 ##### DEV SCRIPTS
