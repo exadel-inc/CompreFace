@@ -25,7 +25,7 @@ def test_init():
 
 
 @pytest.mark.run(order=next(after_previous))
-def test_jenkins():
+def test_automated_tests():
     assert not ml_get('/status').json()['_FORCE_FAIL_E2E_TESTS']
 
 
