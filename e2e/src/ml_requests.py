@@ -44,7 +44,7 @@ def ml_wait_until_training_is_completed(api_key, check_response=True):
                 assert res.json()['last_training_status'] == 'OK', res.content
             break
         if time.time() - start_time > timeout_s:
-            raise Exception(f"Waiting to not get 202 from '{endpoint}' has reached a timeout ({timeout_s}s)") from None
+            raise RuntimeError(f"Waiting to not get 202 from '{endpoint}' has reached a timeout ({timeout_s}s)") from None
         time.sleep(1)
 
 
