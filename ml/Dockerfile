@@ -27,7 +27,7 @@ ENV JOBLIB_MULTIPROCESSING=0
 
 ## Run tests
 ARG DO_RUN_TESTS
-RUN if [ "$DO_RUN_TESTS" = true ]; then \
+RUN if [ "$DO_RUN_TESTS" != false ]; then \
     python -m pytest /srv/src && \
     python -m pylama --options /srv/pylama.ini /srv/src; \
     fi
