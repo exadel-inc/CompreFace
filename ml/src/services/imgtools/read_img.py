@@ -15,7 +15,6 @@ def _grayscale_to_rgb(img):
 
 def read_img(file) -> Array3D:
     try:
-        imageio.plugins.freeimage.download() # TODO make this a proper fix
         arr = imageio.imread(file)
     except (ValueError, SyntaxError) as e:
         raise ImageReadLibraryError from e

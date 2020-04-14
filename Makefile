@@ -55,7 +55,6 @@ down/all:
 setup:
 	chmod +x ci-test.sh ml/run.sh e2e/run-e2e-test.sh tools/crash-lab.sh
 	python -m pip install -r ml/requirements.txt
-	imageio_download_bin freeimage
 	python -m pip install -e ml/srcext/insightface/python-package
 
 # Run application
@@ -105,6 +104,12 @@ e2e/local: start
 	sleep 5s
 	test -f $(CURDIR)/ml/$(COMPOSE_PROJECT_NAME).pid
 	$(MAKE) e2e && ml/run.sh stop || (ml/run.sh stop; exit 1)
+
+# Runs E2E tests against DEV server environment
+e2e/dev: ML_URL=http://10.130.66.129:3000
+e2e/dev: API_KEY=$(shell $(MAKE) API_KEY)
+e2e/dev: DROP_DB=false
+e2e/dev: e2e/extended
 
 #####################################
 ##### DEV SCRIPTS

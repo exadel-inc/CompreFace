@@ -9,7 +9,7 @@ from src.constants import ENV
 from src.docs import DOCS_DIR
 from src.docs_ import add_docs
 from src.endpoints import endpoints
-from src.logging_ import init_runtime
+from src.init_runtime import init_runtime
 from src.services.flask_.disable_caching import disable_caching
 from src.services.flask_.error_handling import add_error_handling
 from src.services.flask_.json_encoding import add_json_encoding

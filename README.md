@@ -30,6 +30,11 @@ Run `$ make setup` to install required packages to your system.
 Note: [mongoDB](https://www.mongodb.com/download-center/community) Database will automatically be instantiated with [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) before `$ make start` if it is not already running at port `$MONGODB_PORT` (default: `27017`).
 
 #### Run main tests
+
+##### Locally
+To check whether the project is in a valid state, run `$ make`.
+
+##### DEV environment
 To check whether the project is in a valid state, run `$ make`.
 
 # Advanced usage
