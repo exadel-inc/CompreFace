@@ -14,9 +14,9 @@ class ENV(Constants):
     _MONGODB_PORT = int(get_env('MONGODB_PORT', '27017'))
     _MONGODB_DBNAME = get_env('MONGODB_DBNAME', 'efrs_db')
     MONGODB_URI = get_env('MONGODB_URI', f'mongodb://{_MONGODB_HOST}:{_MONGODB_PORT}/{_MONGODB_DBNAME}')
-    _MONGODB_URI_PARSED = uri_parser.parse_uri(MONGODB_URI)
-    MONGODB_HOST, MONGODB_PORT = first_and_only(_MONGODB_URI_PARSED['nodelist'])
-    MONGODB_DBNAME = _MONGODB_URI_PARSED['database']
+    _MONGODB_PARSED_URI = uri_parser.parse_uri(MONGODB_URI)
+    MONGODB_HOST, MONGODB_PORT = first_and_only(_MONGODB_PARSED_URI['nodelist'])
+    MONGODB_DBNAME = _MONGODB_PARSED_URI['database']
 
     LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
     IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
