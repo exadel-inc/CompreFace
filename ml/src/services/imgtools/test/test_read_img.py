@@ -11,6 +11,7 @@ from src.services.utils.pytestutils import raises
 MOCK = 'mock.jpg'
 IMAGEIO = 'src.services.imgtools.read_img.imageio'
 
+
 @pytest.fixture(scope='module')
 def expected_array():
     return joblib.load(IMG_DIR / 'einstein.joblib')
