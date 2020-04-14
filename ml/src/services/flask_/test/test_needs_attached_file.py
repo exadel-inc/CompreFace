@@ -8,6 +8,7 @@ from src.services.flask_.needs_attached_file import needs_attached_file
 FILE_BYTES = b''
 ENDPOINT = '/endpoint'
 
+
 @pytest.fixture
 def client_with_file_endpoint(app):
     @app.route(ENDPOINT, methods=['POST'])

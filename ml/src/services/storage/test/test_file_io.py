@@ -4,6 +4,7 @@ from src.services.utils.pytestutils import raises
 
 FILENAME = 'filename.bin'
 
+
 def test__given_no_saved_file__when_getting_file__then_raises_error(storage: MongoStorage):
     pass  # NOSONAR
 
