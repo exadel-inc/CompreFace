@@ -5,6 +5,7 @@ from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
 
 from src.cache import get_storage, get_scanner, get_training_task_manager
+from src.constants import ENV
 from src.exceptions import NoFaceFoundError
 from src.services.async_task_manager.async_task_manager import TaskStatus, TrainingTaskManagerBase
 from src.services.classifier.logistic_classifier import LogisticClassifier
@@ -24,7 +25,9 @@ from src.services.train_classifier import get_faces
 def endpoints(app):
     @app.route('/status')
     def status_get():
-        return jsonify(status='OKi', _v=2)
+        return jsonify(status='OK',
+                       _v=5,
+                       _FORCE_FAIL_E2E_TESTS=ENV.FORCE_FAIL_E2E_TESTS)
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file

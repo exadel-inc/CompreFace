@@ -1,6 +1,7 @@
 import pytest
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
+from src.ml_requests import ml_get
 from src.ml_requests import ml_wait_until_ml_is_available
 
 from src.constants import ENV_E2E
@@ -21,6 +22,11 @@ def test_init():
     print(ENV_E2E.__str__())
     drop_db_if_needed()
     ml_wait_until_ml_is_available()
+
+
+@pytest.mark.run(order=next(after_previous))
+def test_jenkins():
+    assert not ml_get('/status').json()['_FORCE_FAIL_E2E_TESTS']
 
 
 def drop_db_if_needed():
