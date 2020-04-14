@@ -7,7 +7,7 @@ from src.services.utils.pyutils import get_env, first_and_only, Constants
 
 class ENV(Constants):
     ML_PORT = int(get_env('ML_PORT', '3000'))
-    SCANNER = get_env('SCANNER', 'Facenet2018')  # TODO EFRS-435: Change default to "InsightFace"
+    SCANNER = get_env('SCANNER', 'InsightFace')
     IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
     _MONGODB_HOST = get_env('MONGODB_HOST', 'mongodb')
@@ -22,8 +22,8 @@ class ENV(Constants):
     IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
     DO_LOG_STACKTRACE = get_env('DO_LOG_STACKTRACE', 'true').lower() in ('true', '1')
     DO_LOG_MULTITASKING_IDS = get_env('DO_LOG_MULTITASKING_IDS', 'false').lower() in ('true', '1')
-    FORCE_FAIL_UNIT_TESTS = get_env('FORCE_FAIL_UNIT_TESTS', 'true').lower() in ('true', '1')
-    FORCE_FAIL_E2E_TESTS = get_env('FORCE_FAIL_E2E_TESTS', 'true').lower() in ('true', '1')
+    FORCE_FAIL_UNIT_TESTS = get_env('FORCE_FAIL_UNIT_TESTS', 'false').lower() in ('true', '1')
+    FORCE_FAIL_E2E_TESTS = get_env('FORCE_FAIL_E2E_TESTS', 'false').lower() in ('true', '1')
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]
