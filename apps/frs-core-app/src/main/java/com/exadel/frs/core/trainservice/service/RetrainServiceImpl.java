@@ -13,10 +13,10 @@ public class RetrainServiceImpl implements RetrainService {
     private final FaceDao faceDao;
 
     @Override
-    public void startRetrain(String appKey, String modelId) {
-        storage.lock(appKey, modelId);
-        storage.getFaceClassifier(appKey, modelId)
-               .train(faceDao.findAllFaceEmbeddingsByApiKey(appKey), appKey, modelId);
+    public void startRetrain(String appKey, String modelKey) {
+        storage.lock(appKey, modelKey);
+        storage.getFaceClassifier(appKey, modelKey)
+               .train(faceDao.findAllFaceEmbeddingsByApiKey(modelKey), appKey, modelKey);
     }
 
     @Override

@@ -19,8 +19,10 @@ public class FaceService {
     private final SystemService systemService;
     private final RetrainService retrainService;
 
-    public Map<String, List<String>> findAllFaceNames(final String appKey) {
-        return faceDao.findAllFaceNamesByApiKey(appKey);
+    public Map<String, List<String>> findAllFaceNames(final String apiKey) {
+        val token = systemService.buildToken(apiKey);
+
+        return faceDao.findAllFaceNamesByApiKey(token.getModelApiKey());
     }
 
     public void deleteFaceByName(

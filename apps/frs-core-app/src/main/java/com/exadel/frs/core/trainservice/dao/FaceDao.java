@@ -34,8 +34,8 @@ public class FaceDao {
                     ));
     }
 
-    public Map<String, List<List<Double>>> findAllFaceEmbeddingsByApiKey(final String apiKey) {
-        val faces = facesRepository.findByApiKey(apiKey);
+    public Map<String, List<List<Double>>> findAllFaceEmbeddingsByApiKey(final String modelApiKey) {
+        val faces = facesRepository.findByApiKey(modelApiKey);
 
         return faces.stream()
                     .collect(toMap(Face::getFaceName,
@@ -47,9 +47,9 @@ public class FaceDao {
                     ));
     }
 
-    public Map<String, List<String>> findAllFaceNamesByApiKey(final String apiKey) {
-        var faces = facesRepository.findByApiKey(apiKey);
-        var faceNames = faces.stream()
+    public Map<String, List<String>> findAllFaceNamesByApiKey(final String modelApiKey) {
+        val faces = facesRepository.findByApiKey(modelApiKey);
+        val faceNames = faces.stream()
                              .map(Face::getFaceName)
                              .collect(toList());
 

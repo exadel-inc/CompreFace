@@ -4,38 +4,33 @@ import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import javax.annotation.PostConstruct;
+import lombok.NonNull;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.util.Pair;
 
 public class FaceClassifierStorageLocal implements FaceClassifierStorage {
 
-    private ApplicationContext context;
-    private Map<Pair<String, String>, FaceClassifierProxy> classifierTrainerMap;
-    private Map<Pair<String, String>, AtomicBoolean> locks;
+    private final Map<Pair<String, String>, FaceClassifierProxy> classifierTrainerMap = new ConcurrentHashMap();
+    private final Map<Pair<String, String>, AtomicBoolean> locks = new ConcurrentHashMap();
     public static final String FACE_CLASSIFIER_PROXY_NAME = "faceClassifierProxy";
 
-    @Autowired
-    public FaceClassifierStorageLocal(ApplicationContext context) {
+    private final ApplicationContext context;
+
+    public FaceClassifierStorageLocal(@NonNull final ApplicationContext context) {
         this.context = context;
     }
 
-    @PostConstruct
-    public void postConstruct() {
-        classifierTrainerMap = new ConcurrentHashMap<>();
-        locks = new ConcurrentHashMap<>();
-    }
-
-    public FaceClassifierProxy getFaceClassifier(final String appKey, final String modelId) {
-        return classifierTrainerMap.computeIfAbsent(Pair.of(appKey, modelId), stringStringPair ->
+    @Override
+    public FaceClassifierProxy getFaceClassifier(final String appKey, final String modelKey) {
+        return classifierTrainerMap.computeIfAbsent(Pair.of(appKey, modelKey), stringStringPair ->
                 (FaceClassifierProxy) context.getBean(FACE_CLASSIFIER_PROXY_NAME));
     }
 
-    public void lock(String appKey, String modelId) {
-        var lock = locks
-                .computeIfAbsent(Pair.of(appKey, modelId), stringStringPair -> new AtomicBoolean(false));
+    @Override
+    public void lock(final String appKey, final String modelKey) {
+        val lock = locks
+                .computeIfAbsent(Pair.of(appKey, modelKey), stringStringPair -> new AtomicBoolean(false));
         if (lock.get()) {
             throw new ModelAlreadyLockedException("Previous retraining has not been finished yet");
         }
@@ -43,12 +38,13 @@ public class FaceClassifierStorageLocal implements FaceClassifierStorage {
         lock.set(true);
     }
 
-    public void unlock(final String appKey, final String modelId) {
+    @Override
+    public void unlock(final String appKey, final String modelKey) {
         val lock = locks
-                .getOrDefault(Pair.of(appKey, modelId), new AtomicBoolean(false));
+                .getOrDefault(Pair.of(appKey, modelKey), new AtomicBoolean(false));
         if (lock.get()) {
             for (val thread : Thread.getAllStackTraces().keySet()) {
-                if (thread.getName().equals(appKey + modelId)) {
+                if (thread.getName().equals(appKey + modelKey)) {
                     thread.interrupt();
                 }
             }
@@ -57,14 +53,15 @@ public class FaceClassifierStorageLocal implements FaceClassifierStorage {
         lock.set(false);
     }
 
-    public boolean isLocked(final String appKey, final String modelId) {
+    @Override
+    public boolean isLocked(final String appKey, final String modelKey) {
         return locks
-                .getOrDefault(Pair.of(appKey, modelId), new AtomicBoolean(false)).get();
+                .getOrDefault(Pair.of(appKey, modelKey), new AtomicBoolean(false)).get();
     }
 
     @Override
-    public void removeFaceClassifier(final String appKey, final String modelId) {
-        unlock(appKey, modelId);
-        classifierTrainerMap.remove(Pair.of(appKey, modelId));
+    public void removeFaceClassifier(final String appKey, final String modelKey) {
+        unlock(appKey, modelKey);
+        classifierTrainerMap.remove(Pair.of(appKey, modelKey));
     }
 }

@@ -41,11 +41,11 @@ public class FaceClassifierProxy {
     public void train(
             final Map<String, List<List<Double>>> faceNameEmbeddings,
             final String appKey,
-            final String modelId
+            final String modelKey
     ) {
         try {
-            Thread.currentThread().setName(appKey + modelId);
-            var faceId = 0;
+            Thread.currentThread().setName(appKey + modelKey);
+            val faceId = 0;
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
             val labelMap = new HashMap<Integer, String>();
@@ -68,16 +68,16 @@ public class FaceClassifierProxy {
                     labelMap
             );
         } finally {
-            storage.unlock(appKey, modelId);
+            storage.unlock(appKey, modelKey);
         }
     }
 
     public void trainSync(
             final Map<String, List<List<Double>>> faceNameEmbeddings,
             final String appKey,
-            final String modelId
+            final String modelKey
     ) {
-        this.train(faceNameEmbeddings, appKey, modelId);
+        this.train(faceNameEmbeddings, appKey, modelKey);
     }
 
     public Pair<Integer, String> predict(final double[] x) {

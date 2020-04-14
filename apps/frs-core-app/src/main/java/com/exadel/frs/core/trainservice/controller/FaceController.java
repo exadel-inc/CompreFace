@@ -24,9 +24,9 @@ public class FaceController {
     @GetMapping
     public Map<String, List<String>> findAllFaceNames(
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
-            final String appKey
+            final String apiKey
     ) {
-        return faceService.findAllFaceNames(appKey);
+        return faceService.findAllFaceNames(apiKey);
     }
 
     @DeleteMapping("/{faceName}")
