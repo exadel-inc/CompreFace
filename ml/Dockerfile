@@ -27,7 +27,8 @@ ENV JOBLIB_MULTIPROCESSING=0
 
 ## Run tests
 ARG SKIP_TESTS
-RUN if [ "$SKIP_TESTS" != true ]; then python -m pytest /srv/src; fi
+ARG FORCE_FAIL_UNIT_TESTS
+RUN if [ "$SKIP_TESTS" != true ]; then FORCE_FAIL_UNIT_TESTS=$FORCE_FAIL_UNIT_TESTS python -m pytest /srv/src; fi
 RUN if [ "$SKIP_TESTS" != true ]; then python -m pylama --options /srv/pylama.ini /srv/src; fi
 
 ## Run smoke test and Cache downloadable dependencies for Scanner backends
