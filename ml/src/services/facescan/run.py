@@ -75,3 +75,4 @@ if __name__ == '__main__':
         logging.info(f'Completed: {img_name}')
     if total_errors:
         logging.error(f"[Annotation check] Found a total of {total_errors} error(s)")
+        exit(1)

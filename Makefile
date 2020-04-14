@@ -92,11 +92,9 @@ test/e2e: e2e/local
 #####################################
 
 # Runs E2E tests against an already running application
+e2e: API_KEY=$(shell $(MAKE) API_KEY)
 e2e:
 	e2e/run-e2e-test.sh
-
-# Runs E2E and also checks if given host is able to handle scanning all images
-e2e/extended: scan e2e
 
 # Runs E2E after automatically starting db and application automatically
 e2e/local: start
@@ -105,11 +103,21 @@ e2e/local: start
 	test -f $(CURDIR)/ml/$(COMPOSE_PROJECT_NAME).pid
 	$(MAKE) e2e && ml/run.sh stop || (ml/run.sh stop; exit 1)
 
+# Runs E2E and also checks if given host is able to handle scanning all images
+e2e/extended: SHOW_IMG=false
+e2e/extended: scan e2e
+
+# Runs E2E tests against a remote environment
+e2e/remote: DROP_DB=false
+e2e/remote: e2e/extended
+
 # Runs E2E tests against DEV server environment
 e2e/dev: ML_URL=http://10.130.66.129:3000
-e2e/dev: API_KEY=$(shell $(MAKE) API_KEY)
-e2e/dev: DROP_DB=false
-e2e/dev: e2e/extended
+e2e/dev: e2e/remote
+
+# Runs E2E tests against QA server environment
+e2e/qa: ML_URL=http://10.130.66.141:3000
+e2e/qa: e2e/remote
 
 #####################################
 ##### DEV SCRIPTS

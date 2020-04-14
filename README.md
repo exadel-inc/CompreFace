@@ -34,8 +34,12 @@ Note: [mongoDB](https://www.mongodb.com/download-center/community) Database will
 ##### Locally
 To check whether the project is in a valid state, run `$ make`.
 
-##### DEV environment
-To check whether the project is in a valid state, run `$ make`.
+##### Remote environments
+To check whether the project passes E2E tests on a remote deployment environment, run:
+
+- `$ make e2e/dev` (DEV environment)
+- `$ make e2e/qa` (QA environment)
+- `$ make e2e/remote ML_URL=http://example.com:3000` (other server)
 
 # Advanced usage
 Entrypoints to run the application and related development tools are organized as "targets" inside `Makefile` and run with `$ make`.
