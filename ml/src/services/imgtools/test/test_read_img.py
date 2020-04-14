@@ -8,6 +8,8 @@ from src.services.imgtools.read_img import read_img
 from src.services.imgtools.test.files import IMG_DIR
 from src.services.utils.pytestutils import raises
 
+MOCK = 'mock.jpg'
+IMAGEIO = 'src.services.imgtools.read_img.imageio'
 
 @pytest.fixture(scope='module')
 def expected_array():
@@ -16,21 +18,21 @@ def expected_array():
 
 def test__given_1d_img__when_read__then_raises_error(mocker):
     array = np.ones(shape=(10,))
-    imageio = mocker.patch('src.services.imgtools.read_img.imageio')
+    imageio = mocker.patch(IMAGEIO)
     imageio.imread.return_value = array
 
     def act():
-        read_img('mock.jpg')
+        read_img(MOCK)
 
     assert raises(OneDimensionalImageIsGivenError, act)
 
 
 def test__given_grayscale_2d_img__when_read__then_returns_rgb_img(mocker):
     array = np.ones(shape=(10, 10))
-    imageio = mocker.patch('src.services.imgtools.read_img.imageio')
+    imageio = mocker.patch(IMAGEIO)
     imageio.imread.return_value = array
 
-    actual_img = read_img('mock.jpg')
+    actual_img = read_img(MOCK)
 
     expected_img = np.ones(shape=(10, 10, 3))
     assert (actual_img == expected_img).all()
@@ -38,10 +40,10 @@ def test__given_grayscale_2d_img__when_read__then_returns_rgb_img(mocker):
 
 def test__given_rgba_img__when_read__then_returns_rgb_img(mocker):
     array = np.ones(shape=(10, 10, 4))
-    imageio = mocker.patch('src.services.imgtools.read_img.imageio')
+    imageio = mocker.patch(IMAGEIO)
     imageio.imread.return_value = array
 
-    actual_img = read_img('mock.jpg')
+    actual_img = read_img(MOCK)
 
     expected_img = np.ones(shape=(10, 10, 3))
     assert (actual_img == expected_img).all()
@@ -49,7 +51,7 @@ def test__given_rgba_img__when_read__then_returns_rgb_img(mocker):
 
 @pytest.mark.parametrize('file', ['empty.png', 'corrupted.png'])
 def test__given_corrupted_img__when_read__then_raises_exception(file):
-    pass
+    pass  # NOSONAR
 
     def act():
         read_img(IMG_DIR / file)

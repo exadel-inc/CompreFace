@@ -4,8 +4,8 @@ from src.services.facescan.scanner.insightface.insightface import InsightFace
 
 class FaceScanners:
     """ Increases package usability """
-    Facenet2018 = Facenet2018
-    InsightFace = InsightFace
+    Facenet2018 = Facenet2018  # NOSONAR
+    InsightFace = InsightFace  # NOSONAR
 
 
 ALL_SCANNERS = [Facenet2018, InsightFace]

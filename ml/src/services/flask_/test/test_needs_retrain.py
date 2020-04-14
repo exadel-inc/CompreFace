@@ -38,7 +38,7 @@ def client_with_retrain_endpoint_error(app):
     @app.route('/endpoint', methods=['POST'])
     @needs_retrain
     def endpoint():
-        raise Exception
+        raise RuntimeError
 
     return app.test_client()
 
@@ -47,7 +47,7 @@ def client_with_retrain_endpoint_error(app):
                          [(None, 'force'), ('yes', 'yes'), ('force', 'force'), ('no', 'no')])
 def test__given_retrain_flag_value__when_requesting__then_starts_or_skips_retraining_depending_on_value(
         client_with_retrain_endpoint, mocker, retrain_arg, retrain_action, task_manager):
-    pass
+    pass  # NOSONAR
 
     endpoint = f'/endpoint?retrain={retrain_arg}' if retrain_arg is not None else '/endpoint'
     res = client_with_retrain_endpoint.post(endpoint, headers={'X-Api-Key': 'test-api-key'})
@@ -60,7 +60,7 @@ def test__given_retrain_flag_value__when_requesting__then_starts_or_skips_retrai
 @pytest.mark.parametrize("retrain_arg", ['', 'unknown_value'])
 def test__given_retrain_flag_empty_or_unknown_value__when_requesting__then_returns_error(
         client_with_retrain_endpoint, mocker, retrain_arg, task_manager):
-    pass
+    pass  # NOSONAR
 
     res = client_with_retrain_endpoint.post(f'/endpoint?retrain={retrain_arg}', headers={'X-Api-Key': 'test-api-key'})
 
@@ -71,7 +71,7 @@ def test__given_retrain_flag_empty_or_unknown_value__when_requesting__then_retur
 
 def test__when_requesting__then_starts_retraining_only_after_endpoint_function(
         client_with_retrain_endpoint, task_manager):
-    pass
+    pass  # NOSONAR
 
     res = client_with_retrain_endpoint.post('/endpoint?retrain=force', headers={'X-Api-Key': 'test-api-key'})
 
@@ -82,7 +82,7 @@ def test__when_requesting__then_starts_retraining_only_after_endpoint_function(
 
 def test__given_retrain_decorator_raises_error__requesting__then_does_not_call_endpoint_function(
         client_with_retrain_endpoint, task_manager):
-    pass
+    pass  # NOSONAR
 
     res = client_with_retrain_endpoint.post('/endpoint?retrain=unknown-value', headers={'X-Api-Key': 'test-api-key'})
 
@@ -93,7 +93,7 @@ def test__given_retrain_decorator_raises_error__requesting__then_does_not_call_e
 
 def test__given_endpoint_raises_error__when_requesting__then_skips_retraining(
         client_with_retrain_endpoint_error, task_manager):
-    pass
+    pass  # NOSONAR
 
     res = client_with_retrain_endpoint_error.post('/endpoint', headers={'X-Api-Key': 'test-api-key'})
 

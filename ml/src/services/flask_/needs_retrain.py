@@ -23,7 +23,7 @@ def needs_retrain(f):
 
         task_manager: TrainingTaskManagerBase = get_training_task_manager()
         if retrain_value == RetrainValue.NO:
-            pass
+            pass  # Skip retraining
         elif retrain_value == RetrainValue.YES:
             task_manager.start_training(api_key)
         elif retrain_value == RetrainValue.FORCE:

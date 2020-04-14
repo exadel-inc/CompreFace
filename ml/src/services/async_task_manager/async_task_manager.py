@@ -78,4 +78,4 @@ class SyncTaskManager(TrainingTaskManagerBase):
         self._train_fun(api_key)
 
     def abort_training(self, api_key):
-        pass
+        pass  # Not tasks are ever running in background, so aborting is not relevant
