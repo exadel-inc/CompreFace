@@ -38,4 +38,5 @@ RUN SCANNER=Facenet2018 IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.service
 RUN SCANNER=InsightFace IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
 
 ## Runtime
+EXPOSE 3000
 CMD ["uwsgi", "--ini", "uwsgi.ini"]
