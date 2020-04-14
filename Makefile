@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: $(MAKECMDGOALS)
+.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats
 .EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
 FLASK_ENV ?= development
@@ -105,7 +105,7 @@ e2e/local: start
 
 # Runs E2E and also checks if given host is able to handle scanning all images
 e2e/extended: SHOW_IMG=false
-e2e/extended: scan e2e
+e2e/extended: e2e scan
 
 # Runs E2E tests against a remote environment
 e2e/remote: DROP_DB=false
