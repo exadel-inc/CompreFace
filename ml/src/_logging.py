@@ -2,6 +2,7 @@ import logging
 import os
 import warnings
 
+import tensorflow as tf
 from tensorflow.python.util import deprecation as tensorflow_deprecation
 from yaml import YAMLLoadWarning
 
@@ -46,5 +47,6 @@ def init_logging(level):
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
     warnings.filterwarnings("ignore", category=YAMLLoadWarning)
     tensorflow_deprecation._PRINT_DEPRECATION_WARNINGS = False
+    tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
     os.environ['MXNET_SUBGRAPH_VERBOSE'] = '0'
