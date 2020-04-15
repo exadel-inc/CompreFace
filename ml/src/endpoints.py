@@ -26,7 +26,7 @@ def endpoints(app):
     @app.route('/status')
     def status_get():
         return jsonify(status='OK',
-                       _v='1.0.0',
+                       _v='1.0.1',
                        _FORCE_FAIL_E2E_TESTS=ENV.FORCE_FAIL_E2E_TESTS)
 
     @app.route('/scan_faces', methods=['POST'])
