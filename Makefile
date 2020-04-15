@@ -20,7 +20,7 @@ FORCE_FAIL_E2E_TESTS ?= false
 default: test/unit test/lint test
 
 # Run main tests
-test: MEM_LIMIT = 20g
+test: MEM_LIMIT = 4g
 test: SKIP_TESTS = false
 test: FLASK_ENV = production
 test:
