@@ -61,7 +61,7 @@ class AsyncTaskManager(TrainingTaskManagerBase):
     def abort_training(self, api_key):
         if self.get_status(api_key) != TaskStatus.BUSY:
             return
-        logging.warning(f"Forcefully aborting async task")
+        logging.warning("Forcefully aborting async task")
         self._dict[api_key].terminate()
 
 

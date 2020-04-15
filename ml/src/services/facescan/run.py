@@ -4,7 +4,7 @@ import requests
 
 from sample_images import IMG_DIR
 from sample_images.annotations import name_2_annotation, SAMPLE_IMAGES
-from src.constants import ENV
+from src.constants import ENV, LOGGING_LEVEL
 from src.exceptions import NoFaceFoundError
 from src.init_runtime import init_runtime
 from src.services.dto.scanned_face import ScannedFace
@@ -19,16 +19,14 @@ from src.services.utils.pyutils import get_env, Constants
 class _ENV(Constants):
     USE_REMOTE = get_env('USE_REMOTE', 'false').lower() in ('true', '1')
     ML_HOST = get_env('ML_HOST', 'localhost')
-    ML_PORT = int(get_env('ML_PORT', '3000'))
+    SCANNER = ENV.SCANNER
+    ML_PORT = ENV.ML_PORT
     ML_URL = get_env('ML_URL', f'http://{ML_HOST}:{ML_PORT}')
     IMG_NAMES = Constants.split(get_env('IMG_NAMES', ' '.join([i.img_name for i in SAMPLE_IMAGES])))
     _SHOW_IMG_VAL = get_env('SHOW_IMG', 'true').lower()
     SHOW_IMG = _SHOW_IMG_VAL in ('true', '1')
     SHOW_IMG_ON_ERROR = _SHOW_IMG_VAL == 'on_error'
-    LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
-
-
-LOGGING_LEVEL = logging._nameToLevel[_ENV.LOGGING_LEVEL_NAME]
+    LOGGING_LEVEL_NAME = ENV.LOGGING_LEVEL_NAME
 
 
 def _scan_faces_remote(ml_url: str, img_name: str):
@@ -50,12 +48,12 @@ def _scan_faces(img_name: str):
     if _ENV.USE_REMOTE:
         return _scan_faces_remote(_ENV.ML_URL, img_name)
     else:
-        return _scan_faces_local(ENV.SCANNER, img_name)
+        return _scan_faces_local(_ENV.SCANNER, img_name)
 
 
 if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
-    logging.info(_ENV.__str__())
+    logging.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
 
     total_errors = 0
     for img_name in _ENV.IMG_NAMES:

@@ -31,7 +31,7 @@ class ENV_E2E:
     MONGODB_DBNAME = _PARSED_MONGODB_URI['database']
 
     @classmethod
-    def __str__(cls):
+    def to_json(cls):
         return json.dumps({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')}, indent=4)
 
 

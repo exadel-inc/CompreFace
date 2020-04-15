@@ -20,8 +20,6 @@ class ENV(Constants):
 
     LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
     IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
-    DO_LOG_STACKTRACE = get_env('DO_LOG_STACKTRACE', 'true').lower() in ('true', '1')
-    DO_LOG_MULTITASKING_IDS = get_env('DO_LOG_MULTITASKING_IDS', 'false').lower() in ('true', '1')
     FORCE_FAIL_E2E_TESTS = get_env('FORCE_FAIL_E2E_TESTS', 'false').lower() in ('true', '1')
 
 

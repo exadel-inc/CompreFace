@@ -10,7 +10,7 @@ from src.constants import ENV
 def add_error_handling(app):
     @app.errorhandler(HTTPException)
     def handle_http_exception(e: HTTPException):
-        logging.warning(str(e), exc_info=ENV.DO_LOG_STACKTRACE)
+        logging.warning(str(e), exc_info=ENV.IS_DEV_ENV)
         from flask import request
         request._logged = True
         return jsonify(message=str(e)), e.code
@@ -18,7 +18,7 @@ def add_error_handling(app):
     @app.errorhandler(Exception)
     def handle_exception(e):
         msg = f"{e.__class__.__name__}{f': {str(e)}' if str(e) else ''}"
-        logging.critical(msg, exc_info=ENV.DO_LOG_STACKTRACE)
+        logging.critical(msg, exc_info=ENV.IS_DEV_ENV)
         from flask import request
         request._logged = True
         return jsonify(message=msg), HTTPStatus.INTERNAL_SERVER_ERROR

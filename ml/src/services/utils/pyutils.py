@@ -106,7 +106,11 @@ def get_env(name: str, default: str = None) -> str:
 
 class Constants:
     @classmethod
-    def __str__(cls):
+    def to_str(cls):
+        return str({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')})
+
+    @classmethod
+    def to_json(cls):
         return json.dumps({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')}, indent=4)
 
     @staticmethod
