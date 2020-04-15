@@ -27,7 +27,7 @@ def endpoints(app):
     @app.route('/status')
     def status_get():
         return jsonify(status='OK',
-                       _v='1.0.1',
+                       _v='1.0.2',
                        _FORCE_FAIL_E2E_TESTS=ENV.FORCE_FAIL_E2E_TESTS,
                        _APP_VERSION_STRING=os.getenv('APP_VERSION_STRING', ''),
                        _BE_VERSION=os.getenv('BE_VERSION', ''))
