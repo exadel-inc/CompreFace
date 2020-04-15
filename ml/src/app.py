@@ -4,11 +4,11 @@ from typing import Union, Callable
 from flask import Flask
 
 from src import constants
+from src._docs import add_docs
+from src._endpoints import endpoints
 from src.cache import get_storage
 from src.constants import ENV
 from src.docs import DOCS_DIR
-from src._docs import add_docs
-from src._endpoints import endpoints
 from src.init_runtime import init_runtime
 from src.services.flask_.disable_caching import disable_caching
 from src.services.flask_.error_handling import add_error_handling
