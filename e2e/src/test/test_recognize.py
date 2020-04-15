@@ -5,6 +5,7 @@ from src.test.init_test import after_previous
 from toolz import itertoolz
 
 from src.constants import ENV_E2E
+from src.services.facescan.scanner.facescanners import ALL_SCANNERS
 
 
 @pytest.mark.run(order=next(after_previous))
@@ -181,4 +182,4 @@ def test__when_recognizing_faces__then_returns_400_no_classifier_trained():
         "400 Bad Request: "
         "No classifier model is yet trained, please train a classifier first. If the problem persists, "
         "check the amount of unique faces saved, and whether all face embeddings have been migrated to "
-        f"version '{scanner}'" for scanner in ['Facenet2018', 'InsightFace']]
+        f"version '{scanner}'" for scanner in ALL_SCANNERS]

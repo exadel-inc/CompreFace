@@ -7,8 +7,8 @@ from src.services.utils.pyutils import get_env, first_and_only, Constants
 
 class ENV(Constants):
     ML_PORT = int(get_env('ML_PORT', '3000'))
-    SCANNER = get_env('SCANNER', 'InsightFace')
-    IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '520'))
+    SCANNER = get_env('SCANNER', 'Facenet2018')
+    IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
     _MONGODB_HOST = get_env('MONGODB_HOST', 'mongodb')
     _MONGODB_PORT = int(get_env('MONGODB_PORT', '27017'))
