@@ -4,8 +4,7 @@ from src.sample_images import IMG_DIR
 from src.test.init_test import after_previous
 from toolz import itertoolz
 
-from src.constants import ENV_E2E
-from src.services.facescan.scanner.facescanners import ALL_SCANNERS
+from src.constants import ENV_E2E, ALL_SCANNERS
 
 
 @pytest.mark.run(order=next(after_previous))

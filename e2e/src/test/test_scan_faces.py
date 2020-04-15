@@ -5,7 +5,7 @@ from src.ml_test_utils import embeddings_are_the_same, boxes_are_the_same
 from src.sample_images import IMG_DIR
 from src.test.init_test import after_previous
 
-from src.services.facescan.scanner.facescanners import ALL_SCANNERS
+from src.constants import ALL_SCANNERS
 
 
 @pytest.mark.run(order=next(after_previous))

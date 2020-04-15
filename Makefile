@@ -115,11 +115,11 @@ e2e/remote: DROP_DB=false
 e2e/remote: e2e/extended
 
 # Runs E2E tests against DEV server environment
-e2e/dev: ML_URL=$DEV_ML_URL
+e2e/dev: ML_URL=$(DEV_ML_URL)
 e2e/dev: e2e/remote
 
 # Runs E2E tests against QA server environment
-e2e/qa: ML_URL=$QA_ML_URL
+e2e/qa: ML_URL=$(QA_ML_URL)
 e2e/qa: e2e/remote
 
 #####################################
