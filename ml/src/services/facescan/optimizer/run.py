@@ -49,7 +49,7 @@ class Facenet2018ThresholdOptimization:
 
 if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
-    logging.debug(_ENV.__str__())
+    logging.info(_ENV.__str__())
     optimizer = RandomOptimizer(Facenet2018ThresholdOptimization(),
                                 arg_count=4,
                                 arg_range=(0, 1),

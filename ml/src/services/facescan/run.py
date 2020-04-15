@@ -34,7 +34,7 @@ LOGGING_LEVEL = logging._nameToLevel[_ENV.LOGGING_LEVEL_NAME]
 def _scan_faces_remote(ml_url: str, img_name: str):
     files = {'file': open(IMG_DIR / img_name, 'rb')}
     res = requests.post(f"{ml_url}/scan_faces", files=files)
-    if res.status_code == 400 and res.json()['message'] == NoFaceFoundError.description:
+    if res.status_code == 400 and NoFaceFoundError.description in res.json()['message']:
         return []
     assert res.status_code == 200, res.content
     return [ScannedFace.from_request(r) for r in res.json()['result']]
@@ -55,7 +55,7 @@ def _scan_faces(img_name: str):
 
 if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
-    logging.debug(_ENV.__str__())
+    logging.info(_ENV.__str__())
 
     total_errors = 0
     for img_name in _ENV.IMG_NAMES:

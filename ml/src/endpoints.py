@@ -186,12 +186,12 @@ def _get_last_training_status_str(training_status):
 
 
 def _get_hidden_fields():
-    app_version_string = os.getenv('APP_VERSION_STRING', '')
-    be_version = os.getenv('BE_VERSION', '')
+    jenkins_build = os.getenv('APP_VERSION_STRING', '')
+    jenkins_be_build = os.getenv('BE_VERSION', '')
     values = {
         '_FORCE_FAIL_E2E_TESTS': ENV.FORCE_FAIL_E2E_TESTS,
-        '_APP_VERSION_STRING': app_version_string
+        '_JENKINS_BUILD': jenkins_build
     }
-    if be_version != app_version_string:
-        values['_BE_VERSION'] = be_version
+    if jenkins_build != jenkins_be_build:
+        values['_JENKINS_BE_BUILD'] = jenkins_be_build
     return values

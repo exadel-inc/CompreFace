@@ -106,7 +106,7 @@ e2e/local: start
 # Runs E2E and also checks if given host is able to handle scanning all images
 e2e/extended: SHOW_IMG=false
 e2e/extended: LOGGING_LEVEL_NAME=info
-e2e/extended: e2e scan
+e2e/extended: e2e scan/remote
 
 # Runs E2E tests against a remote environment
 e2e/remote: DROP_DB=false
@@ -124,11 +124,15 @@ e2e/qa: e2e/remote
 ##### DEV SCRIPTS
 #####################################
 
-# Detects faces on given images, with selected scanners, and output the results
+# Detects faces on given images, with selected scanners, and output the results using local ML service
 demo: IMG_NAMES=015_6.jpg
 demo: scan
 scan:
 	python -m ml.src.services.facescan.run
+
+# Detects faces on given images, with selected scanners, and output the results using remote ML service endpoint
+scan/remote: USE_REMOTE=true
+scan/remote: scan
 
 # Optimizes face detection parameters with a given annotated image dataset
 optimize:
