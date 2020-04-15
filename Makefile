@@ -55,6 +55,7 @@ down/all:
 setup:
 	chmod +x ci-test.sh ml/run.sh e2e/run-e2e-test.sh tools/crash-lab.sh
 	python -m pip install -r ml/requirements.txt
+	imageio_download_bin freeimage
 	python -m pip install -e ml/srcext/insightface/python-package
 
 # Run application
