@@ -9,4 +9,4 @@ ENV HOME=/app/e2e
 RUN chmod +x run-e2e-test.sh \
 && pip install -U requests pytest pytest-ordering pymongo strenum pylama toolz
 
-CMD ["/srv/run-e2e-test.sh"]
+CMD ["./run-e2e-test.sh"]
