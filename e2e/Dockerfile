@@ -1,14 +1,12 @@
 FROM python:3.7
-WORKDIR /srv
-ENV HOME=/srv
 
-## Copy sources
+WORKDIR /app/e2e
 COPY src src
 COPY run-e2e-test.sh .
 
-## Prepare environment
-RUN chmod +x run-e2e-test.sh
-RUN pip install -U requests pytest pytest-ordering pymongo strenum pylama toolz
+ENV HOME=/app/e2e
 
-## Runtime
+RUN chmod +x run-e2e-test.sh \
+&& pip install -U requests pytest pytest-ordering pymongo strenum pylama toolz
+
 CMD ["/srv/run-e2e-test.sh"]

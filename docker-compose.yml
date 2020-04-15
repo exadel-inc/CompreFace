@@ -19,7 +19,6 @@ services:
       context: ./ml
       args:
         - SKIP_TESTS=${SKIP_TESTS:-}
-        - FORCE_FAIL_UNIT_TESTS=${FORCE_FAIL_UNIT_TESTS:-}
     ports:
       - ${ML_PORT:-3000}:3000
     environment:
