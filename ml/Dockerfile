@@ -10,20 +10,14 @@ COPY pylama.ini .
 COPY pytest.ini .
 COPY requirements.txt .
 COPY uwsgi.ini .
-COPY .sonarqubeignore .
 
 ## Prepare environment
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV PYTHONUNBUFFERED=0
 ENV JOBLIB_MULTIPROCESSING=0
-ARG BE_VERSION
-ENV BE_VERSION=$BE_VERSION
-ARG APP_VERSION_STRING
-ENV APP_VERSION_STRING=$APP_VERSION_STRING
 RUN mkdir mongo_data
 RUN python -m pip --no-cache-dir install -r requirements.txt
-RUN imageio_download_bin freeimage
 RUN python -m pip --no-cache-dir install -e srcext/insightface/python-package
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
 RUN echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
@@ -41,5 +35,4 @@ RUN SCANNER=Facenet2018 IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.service
 # (TODO EFRS-435: add this line ->) RUN SCANNER=InsightFace IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
 
 ## Runtime
-EXPOSE 3000
 CMD ["uwsgi", "--ini", "uwsgi.ini"]
