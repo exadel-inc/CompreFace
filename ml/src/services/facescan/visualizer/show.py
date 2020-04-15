@@ -36,15 +36,6 @@ def _draw_cross(draw, xy, half_length, color, width):
 
 
 def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[int, int]] = None):
-    def _draw_detection_box():
-        img_draw.rectangle(box.xy, outline=color, width=box_line_width)
-        img_draw.text(text=text,
-                      xy=(box.x_min, box.y_min - font_size - 1),
-                      fill=color, font=ImageFont.truetype(font, font_size))
-        img_draw.text(text=f"{box.probability:.4f}",
-                      xy=(box.x_min, box.y_max + 1),
-                      fill=color, font=ImageFont.truetype(font, font_size_smaller))
-
     box_line_width = 3
     font_size = 20
     font_size_smaller = 15
@@ -55,6 +46,15 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
     error_color = 0xff, 0x44, 0x44
     error_line_width = 3
 
+    def _draw_detection_box(text, box: BoundingBox, color):
+        img_draw.rectangle(box.xy, outline=color, width=box_line_width)
+        img_draw.text(text=text,
+                      xy=(box.x_min, box.y_min - font_size - 1),
+                      fill=color, font=ImageFont.truetype(font, font_size))
+        img_draw.text(text=f"{box.probability:.4f}",
+                      xy=(box.x_min, box.y_max + 1),
+                      fill=color, font=ImageFont.truetype(font, font_size_smaller))
+
     scaler = ImgScaler(img_length_limit)
     img = scaler.downscale_img(img)
     pil_img = Image.fromarray(img, 'RGB')
@@ -62,7 +62,7 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
     noses_given = noses is not None
     noses = [scaler.downscale_nose(nose) for nose in noses or []]
     boxes = [scaler.downscale_box(box) for box in boxes or []]
-    boxes = sorted(boxes, key=lambda box: list(box.center))
+    boxes = sorted(boxes, key=lambda box: (box.x_min, box.y_min))
 
     random_bright_color_gen = _random_bright_color_gen_cls()
     error_boxes = []
@@ -85,12 +85,14 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
 
         i += 1
         text = str(i)
-        _draw_detection_box()
+        if not noses_given:
+            color = next(random_bright_color_gen)
+        _draw_detection_box(text, box, color)
 
     for box in error_boxes:
         color = error_color
         text = 'Error'
-        _draw_detection_box()
+        _draw_detection_box(text, box, color)
 
     for nose in noses:
         _draw_cross(img_draw, xy=nose, half_length=cross_half_length, color=error_color, width=error_line_width)

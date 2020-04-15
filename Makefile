@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats status/dev status/qa
+.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats status/dev status/qa DEV_ML_URL QA_ML_URL
 .EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
 DEV_ML_URL := http://10.130.66.129:3000
@@ -160,6 +160,12 @@ PORT:
 # Give a unique api_key
 API_KEY:
 	@echo tmp-$(COMPOSE_PROJECT_NAME)-$$(date +'%Y-%m-%d-%H-%M-%S-%3N')
+
+DEV_ML_URL:
+	@echo $(DEV_ML_URL)
+
+QA_ML_URL:
+	@echo $(QA_ML_URL)
 
 # Give a unique mongodb dbname
 MONGODB_DBNAME:
