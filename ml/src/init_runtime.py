@@ -8,9 +8,9 @@ from src._logging import init_logging
 
 
 def _apply_imageio_fixes():
-    if os.environ.get('HOME') == '/root':
-        os.environ['HOME'] = '/srv'
-    imageio.plugins.freeimage.download()
+    if os.environ.get('HOME') == '/root':  # TODO remove
+        os.environ['HOME'] = '/srv'  # TODO remove
+    imageio.plugins.freeimage.download()  # TODO remove
     ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 
