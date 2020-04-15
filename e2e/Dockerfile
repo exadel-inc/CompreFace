@@ -1,5 +1,6 @@
 FROM python:3.7
 WORKDIR /srv
+ENV HOME=/srv
 
 ## Copy sources
 COPY src src

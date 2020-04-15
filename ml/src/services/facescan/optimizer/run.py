@@ -8,12 +8,19 @@ from src.services.facescan.optimizer.random_optimizer import RandomOptimizer
 from src.services.facescan.scanner.facescanners import FaceScanners
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
-from src.services.utils.pyutils import get_dir, cached
+from src.services.utils.pyutils import get_dir, cached, Constants, get_env
 
 CURRENT_DIR = get_dir(__file__)
 Score = namedtuple('Score', 'cost args')
 
 cached_read_img = cached(read_img)
+
+
+class _ENV(Constants):
+    LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
+
+
+LOGGING_LEVEL = logging._nameToLevel[_ENV.LOGGING_LEVEL_NAME]
 
 
 class Facenet2018ThresholdOptimization:
@@ -41,7 +48,8 @@ class Facenet2018ThresholdOptimization:
 
 
 if __name__ == '__main__':
-    init_runtime(logging_level=logging.DEBUG)
+    init_runtime(logging_level=LOGGING_LEVEL)
+    logging.debug(_ENV.__str__())
     optimizer = RandomOptimizer(Facenet2018ThresholdOptimization(),
                                 arg_count=4,
                                 arg_range=(0, 1),

@@ -25,6 +25,10 @@ class _ENV(Constants):
     _SHOW_IMG_VAL = get_env('SHOW_IMG', 'true').lower()
     SHOW_IMG = _SHOW_IMG_VAL in ('true', '1')
     SHOW_IMG_ON_ERROR = _SHOW_IMG_VAL == 'on_error'
+    LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
+
+
+LOGGING_LEVEL = logging._nameToLevel[_ENV.LOGGING_LEVEL_NAME]
 
 
 def _scan_faces_remote(ml_url: str, img_name: str):
@@ -50,7 +54,7 @@ def _scan_faces(img_name: str):
 
 
 if __name__ == '__main__':
-    init_runtime(logging_level=logging.DEBUG)
+    init_runtime(logging_level=LOGGING_LEVEL)
     logging.debug(_ENV.__str__())
 
     total_errors = 0
