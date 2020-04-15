@@ -1,3 +1,4 @@
+import os
 from http import HTTPStatus
 
 from flask import Response
@@ -27,7 +28,9 @@ def endpoints(app):
     def status_get():
         return jsonify(status='OK',
                        _v='1.0.1',
-                       _FORCE_FAIL_E2E_TESTS=ENV.FORCE_FAIL_E2E_TESTS)
+                       _FORCE_FAIL_E2E_TESTS=ENV.FORCE_FAIL_E2E_TESTS,
+                       _APP_VERSION_STRING=os.getenv('APP_VERSION_STRING', ''),
+                       _BE_VERSION=os.getenv('BE_VERSION', ''))
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
