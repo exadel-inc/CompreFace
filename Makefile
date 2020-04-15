@@ -1,7 +1,9 @@
 SHELL := /bin/bash
-.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats
+.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats status/dev status/qa
 .EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
+DEV_ML_URL := http://10.130.66.129:3000
+QA_ML_URL := http://10.130.66.141:3000
 FLASK_ENV ?= development
 ML_PORT ?= 3000
 MONGODB_HOST ?= localhost
@@ -113,11 +115,11 @@ e2e/remote: DROP_DB=false
 e2e/remote: e2e/extended
 
 # Runs E2E tests against DEV server environment
-e2e/dev: ML_URL=http://10.130.66.129:3000
+e2e/dev: ML_URL=$DEV_ML_URL
 e2e/dev: e2e/remote
 
 # Runs E2E tests against QA server environment
-e2e/qa: ML_URL=http://10.130.66.141:3000
+e2e/qa: ML_URL=$QA_ML_URL
 e2e/qa: e2e/remote
 
 #####################################
@@ -172,5 +174,13 @@ db:
 
 # Shows code line stats
 stats:
-	(which tokei || conda install -y -c conda-forge tokei) && \
+	@(which tokei >/dev/null || conda install -y -c conda-forge tokei) && \
 	tokei --exclude srcext/
+
+# Status of DEV deployment environment
+status/dev:
+	@curl $(DEV_ML_URL)/status
+
+# Status of QA deployment environment
+status/qa:
+	@curl $(QA_ML_URL)/status
