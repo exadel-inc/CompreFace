@@ -10,7 +10,6 @@ MONGODB_DBNAME ?= efrs_tmp_db
 COMPOSE_PROJECT_NAME ?= frs-core
 API_KEY ?= test-api-key
 SKIP_TESTS ?= true
-FORCE_FAIL_UNIT_TESTS ?= false
 FORCE_FAIL_E2E_TESTS ?= false
 
 #####################################
