@@ -104,6 +104,14 @@ def get_env(name: str, default: str = None) -> str:
     return os.environ.get(name, '') or default
 
 
+def get_env_bool(name: str, default: bool = False) -> bool:
+    return Constants.str_to_bool(get_env(name, str(default)))
+
+
+def get_env_split(name: str, default: str):
+    return Constants.split(get_env(name, default))
+
+
 class Constants:
     @classmethod
     def to_str(cls):
@@ -112,6 +120,10 @@ class Constants:
     @classmethod
     def to_json(cls):
         return json.dumps({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')}, indent=4)
+
+    @staticmethod
+    def str_to_bool(string: str):
+        return string.lower() in ('true', '1')
 
     @staticmethod
     def split(arr_str):

@@ -8,23 +8,23 @@ from src.constants import ENV, LOGGING_LEVEL
 from src.exceptions import NoFaceFoundError
 from src.init_runtime import init_runtime
 from src.services.dto.scanned_face import ScannedFace
+from src.services.facescan._show import show_img
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
-from src.services.facescan.visualizer.show import show_img
 from src.services.imgtools.read_img import read_img
-from src.services.utils.pyutils import get_env, Constants
+from src.services.utils.pyutils import get_env, Constants, get_env_split, get_env_bool
 
 
 class _ENV(Constants):
-    USE_REMOTE = get_env('USE_REMOTE', 'false').lower() in ('true', '1')
-    ML_HOST = get_env('ML_HOST', 'localhost')
     SCANNER = ENV.SCANNER
+    USE_REMOTE = get_env_bool('USE_REMOTE')
+    ML_HOST = get_env('ML_HOST', 'localhost')
     ML_PORT = ENV.ML_PORT
     ML_URL = get_env('ML_URL', f'http://{ML_HOST}:{ML_PORT}')
-    IMG_NAMES = Constants.split(get_env('IMG_NAMES', ' '.join([i.img_name for i in SAMPLE_IMAGES])))
+    IMG_NAMES = get_env_split('IMG_NAMES', ' '.join([i.img_name for i in SAMPLE_IMAGES]))
     _SHOW_IMG_VAL = get_env('SHOW_IMG', 'true').lower()
-    SHOW_IMG = _SHOW_IMG_VAL in ('true', '1')
+    SHOW_IMG = Constants.str_to_bool(_SHOW_IMG_VAL)
     SHOW_IMG_ON_ERROR = _SHOW_IMG_VAL == 'on_error'
     LOGGING_LEVEL_NAME = ENV.LOGGING_LEVEL_NAME
 

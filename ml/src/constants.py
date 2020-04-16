@@ -2,7 +2,7 @@ import logging
 
 from pymongo import uri_parser
 
-from src.services.utils.pyutils import get_env, first_and_only, Constants
+from src.services.utils.pyutils import get_env, first_and_only, Constants, get_env_bool
 
 
 class ENV(Constants):
@@ -20,7 +20,7 @@ class ENV(Constants):
 
     LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
     IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
-    FORCE_FAIL_E2E_TESTS = get_env('FORCE_FAIL_E2E_TESTS', 'false').lower() in ('true', '1')
+    FORCE_FAIL_E2E_TESTS = get_env_bool('FORCE_FAIL_E2E_TESTS')
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]

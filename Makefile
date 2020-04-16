@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats status/dev status/qa DEV_ML_URL QA_ML_URL
+.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats status/dev status/qa DEV_ML_URL QA_ML_URL compare
 .EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
 DEV_ML_URL := http://10.130.66.129:3000
@@ -136,12 +136,16 @@ scan:
 scan/remote: USE_REMOTE=true
 scan/remote: scan
 
+# Compares accuracy between scanners
+compare: ml/src/services/facescan/compare/tmp
+	python -m ml.src.services.facescan.compare.run
+
 # Optimizes face detection parameters with a given annotated image dataset
 optimize:
 	python -m ml.src.services.facescan.optimizer.run
 
 # Runs experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.:
-crash:
+crash-lab:
 	tools/crash-lab.sh $(CURDIR)/ml/sample_images
 
 #####################################
@@ -191,3 +195,14 @@ status/dev:
 # Status of QA deployment environment
 status/qa:
 	@curl $(QA_ML_URL)/status
+
+#####################################
+##### FILE DEPENDENCIES
+#####################################
+
+ml/src/services/facescan/compare/tmp:
+	mkdir -p ml/src/services/facescan/compare/tmp
+	curl -o ml/src/services/facescan/compare/tmp/lfw.tgz http://vis-www.cs.umass.edu/lfw/lfw.tgz
+	tar zxvf ml/src/services/facescan/compare/tmp/lfw.tgz -C ml/src/services/facescan/compare/tmp/
+	rm ml/src/services/facescan/compare/tmp/lfw.tgz
+	curl -o ml/src/services/facescan/compare/tmp/people.txt http://vis-www.cs.umass.edu/lfw/people.txt

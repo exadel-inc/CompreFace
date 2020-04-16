@@ -5,7 +5,7 @@ from sample_images import IMG_DIR
 from sample_images.annotations import SAMPLE_IMAGES
 from src.constants import ENV, LOGGING_LEVEL
 from src.init_runtime import init_runtime
-from src.services.facescan.optimizer.random_optimizer import RandomOptimizer
+from src.services.facescan.optimize.random_optimizer import RandomOptimizer
 from src.services.facescan.scanner.facescanners import FaceScanners
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
