@@ -158,18 +158,19 @@ PORT:
 		$$port > /dev/null 2>&1; [ $$? -eq 1 ] && echo "$$port" && exit 0; done )
 
 # Give a unique api_key
-API_KEY:
-	@echo tmp-$(COMPOSE_PROJECT_NAME)-$$(date +'%Y-%m-%d-%H-%M-%S-%3N')
+API_KEY: MONGODB_DBNAME
 
+# Print DEV deployment environment URL
 DEV_ML_URL:
 	@echo $(DEV_ML_URL)
 
+# Print QA deployment environment URL
 QA_ML_URL:
 	@echo $(QA_ML_URL)
 
 # Give a unique mongodb dbname
 MONGODB_DBNAME:
-	@echo $(API_KEY)
+	@echo tmp-$(COMPOSE_PROJECT_NAME)-$$(date +'%Y-%m-%d-%H-%M-%S-%3N')
 
 # Starts a database container
 db:
