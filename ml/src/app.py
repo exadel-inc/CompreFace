@@ -4,11 +4,11 @@ from typing import Union, Callable
 from flask import Flask
 
 from src import constants
+from src._docs import add_docs
+from src._endpoints import endpoints
 from src.cache import get_storage
 from src.constants import ENV
 from src.docs import DOCS_DIR
-from src.docs_ import add_docs
-from src.endpoints import endpoints
 from src.init_runtime import init_runtime
 from src.services.flask_.disable_caching import disable_caching
 from src.services.flask_.error_handling import add_error_handling
@@ -18,7 +18,7 @@ from src.services.flask_.log_response import log_http_response
 
 def init_app_runtime():
     init_runtime(logging_level=constants.LOGGING_LEVEL)
-    logging.debug(ENV.__str__())
+    logging.info(ENV.to_json() if ENV.IS_DEV_ENV else ENV.to_str())
     get_storage().wait_for_connection()
 
 

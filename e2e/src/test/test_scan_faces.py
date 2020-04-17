@@ -5,6 +5,8 @@ from src.ml_test_utils import embeddings_are_the_same, boxes_are_the_same
 from src.sample_images import IMG_DIR
 from src.test.init_test import after_previous
 
+from src.constants import ALL_SCANNERS
+
 
 @pytest.mark.run(order=next(after_previous))
 def test__given_no_file__when_scanning__then_returns_400_bad_request():
@@ -44,7 +46,7 @@ def test__given_img_with_face__when_scanning__then_returns_200_with_results():
 
     assert res.status_code == 200, res.content
     calculator_version = res.json()['calculator_version']
-    assert calculator_version in ('Facenet2018', 'InsightFace')
+    assert calculator_version in ALL_SCANNERS
     result = res.json()['result']
     assert len(result) == 1
     face = result[0]

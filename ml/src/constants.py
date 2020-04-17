@@ -1,14 +1,13 @@
 import logging
-import os
 
 from pymongo import uri_parser
 
-from src.services.utils.pyutils import get_env, first_and_only, Constants
+from src.services.utils.pyutils import get_env, first_and_only, Constants, get_env_bool
 
 
 class ENV(Constants):
     ML_PORT = int(get_env('ML_PORT', '3000'))
-    SCANNER = get_env('SCANNER', 'InsightFace')
+    SCANNER = get_env('SCANNER', 'Facenet2018')
     IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
     _MONGODB_HOST = get_env('MONGODB_HOST', 'mongodb')
@@ -21,10 +20,8 @@ class ENV(Constants):
 
     LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
     IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
-    DO_LOG_STACKTRACE = get_env('DO_LOG_STACKTRACE', 'true').lower() in ('true', '1')
-    DO_LOG_MULTITASKING_IDS = get_env('DO_LOG_MULTITASKING_IDS', 'false').lower() in ('true', '1')
-    FORCE_FAIL_E2E_TESTS = get_env('FORCE_FAIL_E2E_TESTS', 'false').lower() in ('true', '1')
-    BUILD_VERSION = os.getenv('APP_VERSION_STRING', 'dev')
+    FORCE_FAIL_E2E_TESTS = get_env_bool('FORCE_FAIL_E2E_TESTS')
+    BUILD_VERSION = get_env('APP_VERSION_STRING', 'dev')
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]

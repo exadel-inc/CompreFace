@@ -53,7 +53,7 @@ def test__given_threshold_set_to_1__when_scanned__then_returns_no_faces(scanner_
 
 @pytest.mark.integration
 @pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
-@pytest.mark.parametrize('row', SAMPLE_IMAGES)
+@pytest.mark.parametrize('row', (k for k in SAMPLE_IMAGES if k.include_to_tests))
 def test__given_img__when_scanned__then_1_to_1_relationship_between_all_returned_boxes_and_faces(scanner_cls, row):
     scanner: FaceScanner = get_scanner(scanner_cls)
     img = read_img(IMG_DIR / row.img_name)

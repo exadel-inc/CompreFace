@@ -34,9 +34,8 @@ RUN python3 -m pip --no-cache-dir install -r requirements.txt \
 ARG SKIP_TESTS
 RUN if [ "$SKIP_TESTS" != true ]; then python -m pytest /app/ml/src; fi
 RUN if [ "$SKIP_TESTS" != true ]; then python -m pylama --options /app/ml/pylama.ini /app/ml/src; fi
-
-RUN SCANNER=Facenet2018 IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
-RUN SCANNER=InsightFace IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run
+RUN if [ "$SKIP_TESTS" = true ]; then SCANNER=Facenet2018 IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run; fi
+RUN if [ "$SKIP_TESTS" = true ]; then SCANNER=InsightFace IMG_NAMES=000_5.jpg SHOW_IMG=false python -m src.services.facescan.run; fi
 
 EXPOSE 3000
 CMD ["uwsgi", "--ini", "uwsgi.ini"]

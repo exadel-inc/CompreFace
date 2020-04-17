@@ -15,6 +15,14 @@ def _get_env(name: str, default: str) -> str:
     return os.environ.get(name, '') or default
 
 
+def _is_jsonable(x):
+    try:
+        json.dumps(x)
+        return True
+    except TypeError:
+        return False
+
+
 class ENV_E2E:
     _ML_HOST = _get_env('ML_HOST', 'localhost')
     _ML_PORT = int(_get_env('ML_PORT', '3000'))
@@ -31,8 +39,9 @@ class ENV_E2E:
     MONGODB_DBNAME = _PARSED_MONGODB_URI['database']
 
     @classmethod
-    def __str__(cls):
-        return json.dumps({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')}, indent=4)
+    def to_json(cls):
+        return json.dumps({key: cls.__dict__[key] for key in cls.__dict__.keys() if
+                           not key.startswith('_') and _is_jsonable(cls.__dict__[key])}, indent=4)
 
 
 CONNECT_TIMEOUT_S = 5
@@ -42,3 +51,4 @@ TRAINING_TIMEOUT_S = 30
 
 BBOX_ALLOWED_PX_DIFFERENCE = 20
 EMB_SIMILARITY_THRESHOLD = 0.01
+ALL_SCANNERS = 'Facenet2018', 'InsightFace'

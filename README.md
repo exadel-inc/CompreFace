@@ -52,7 +52,10 @@ Set environment variables (for current run):<br>
 `$ make e2e ML_URL=http://example.com/api API_KEY=f74a-af5f DROP_DB=false`
 
 Set environment variables (for shell session, future runs):<br>
-`$ export ML_PORT=3001`<br>
+`$ export ML_PORT=3001`
+
+Self-generate values for arguments. For example, this command will scan image using the service deployed in DEV environment, using a random API key:<br>
+`$ make scan IMG_NAMES=image.png ML_URL=$(make DEV_ML_URL) API_KEY=$(make API_KEY) USE_REMOTE=true`
 
 Set environment variables to random values for shell session. You'll be able to run multiple instances of the same service (and start multiple tests simultaneously) in different terminals, after running this command in each one first:<br>
 `$ . new-make-environment.sh`

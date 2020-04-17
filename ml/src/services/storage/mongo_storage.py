@@ -85,13 +85,13 @@ class MongoStorage:
         return faces
 
     def remove_face(self, api_key: str, face_name: str):
-        raw_imgs = self._faces_collection.find(filter={"face_name": face_name, "api_key": api_key},
-                                               projection={"raw_img_fs_id"}).distinct("raw_img_fs_id")
-        for raw_img in raw_imgs:
+        raw_images = self._faces_collection.find(filter={"face_name": face_name, "api_key": api_key},
+                                                 projection={"raw_img_fs_id"}).distinct("raw_img_fs_id")
+        for raw_img in raw_images:
             self._faces_fs.delete(raw_img)
-        face_imgs = self._faces_collection.find(filter={"face_name": face_name, "api_key": api_key},
-                                                projection={"face_img_fs_id"}).distinct("face_img_fs_id")
-        for face_img in face_imgs:
+        face_images = self._faces_collection.find(filter={"face_name": face_name, "api_key": api_key},
+                                                  projection={"face_img_fs_id"}).distinct("face_img_fs_id")
+        for face_img in face_images:
             self._faces_fs.delete(face_img)
 
         self._faces_collection.delete_many({'face_name': face_name, 'api_key': api_key})
