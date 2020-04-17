@@ -11,9 +11,9 @@ import org.springframework.data.util.Pair;
 
 public class FaceClassifierStorageLocal implements FaceClassifierStorage {
 
-    private final Map<Pair<String, String>, FaceClassifierProxy> classifierTrainerMap = new ConcurrentHashMap();
+    private final Map<Pair<String, String>, FaceClassifierAdapter> classifierTrainerMap = new ConcurrentHashMap();
     private final Map<Pair<String, String>, AtomicBoolean> locks = new ConcurrentHashMap();
-    public static final String FACE_CLASSIFIER_PROXY_NAME = "faceClassifierProxy";
+    public static final String FACE_CLASSIFIER_ADAPTER_NAME = "faceClassifierAdapter";
 
     private final ApplicationContext context;
 
@@ -22,9 +22,9 @@ public class FaceClassifierStorageLocal implements FaceClassifierStorage {
     }
 
     @Override
-    public FaceClassifierProxy getFaceClassifier(final String appKey, final String modelKey) {
+    public FaceClassifierAdapter getFaceClassifier(final String appKey, final String modelKey) {
         return classifierTrainerMap.computeIfAbsent(Pair.of(appKey, modelKey), stringStringPair ->
-                (FaceClassifierProxy) context.getBean(FACE_CLASSIFIER_PROXY_NAME));
+                (FaceClassifierAdapter) context.getBean(FACE_CLASSIFIER_ADAPTER_NAME));
     }
 
     @Override

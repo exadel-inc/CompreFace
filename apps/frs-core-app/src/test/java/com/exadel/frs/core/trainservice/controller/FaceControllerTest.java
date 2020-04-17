@@ -29,7 +29,7 @@ public class FaceControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private final static String API_KEY = "api_key_for_test";
+    private final static String API_KEY = "api_key:model_key";
 
     @Autowired
     private ObjectMapper mapper;

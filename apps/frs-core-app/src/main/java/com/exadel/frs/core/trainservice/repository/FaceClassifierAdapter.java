@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.PostConstruct;
+import lombok.NonNull;
 import lombok.Setter;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.util.Pair;
@@ -20,17 +20,21 @@ import org.springframework.stereotype.Component;
 @Component
 @Setter
 @Scope(value = "prototype")
-public class FaceClassifierProxy {
+public class FaceClassifierAdapter {
 
     public static final String CLASSIFIER_IMPLEMENTATION_BEAN_NAME = "logisticRegressionExtendedClassifier";
 
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    @Autowired
-    private FaceClassifierStorage storage;
-
+    private final ApplicationContext applicationContext;
+    private final FaceClassifierStorage storage;
     private FaceClassifier classifier;
+
+    public FaceClassifierAdapter(
+            @NonNull final ApplicationContext applicationContext,
+            @NonNull final FaceClassifierStorage storage
+    ) {
+        this.applicationContext = applicationContext;
+        this.storage = storage;
+    }
 
     @PostConstruct
     public void postConstruct() {
@@ -45,7 +49,7 @@ public class FaceClassifierProxy {
     ) {
         try {
             Thread.currentThread().setName(appKey + modelKey);
-            val faceId = 0;
+            var faceId = 0;
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
             val labelMap = new HashMap<Integer, String>();
