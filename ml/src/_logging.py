@@ -46,7 +46,8 @@ class JSONFormatter(logging.Filter):
             'request': getattr(record, 'request_dict', None),
             'logger': record.name,
             'module': record.module,
-            'traceback': traceback_str if sys.exc_info() != (None, None, None) else None
+            'traceback': traceback_str if sys.exc_info() != (None, None, None) else None,
+            'build_version': ENV.BUILD_VERSION
         })
         return True
 
