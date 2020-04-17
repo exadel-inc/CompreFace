@@ -1,52 +1,84 @@
 package com.exadel.frs.core.trainservice.repository;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
+import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 
 public class FaceClassifierStorageLocalTest {
 
-    private FaceClassifierStorageLocal storage;
-
     @Mock
     private ApplicationContext applicationContext;
 
-    private static final String APP_KEY = "app";
-    private static final String MODEL_ID = "model_id";
+    @InjectMocks
+    private FaceClassifierStorageLocal storage;
+
+    private static final String APP_KEY = "app_key";
+    private static final String MODEL_KEY = "model_key";
 
     @BeforeEach
     public void beforeEach() {
-        storage = new FaceClassifierStorageLocal(applicationContext);
-        storage.postConstruct();
+        initMocks(this);
     }
 
     @Test
     public void lock() {
-        storage.lock(APP_KEY, MODEL_ID);
+        storage.lock(APP_KEY, MODEL_KEY);
 
-        assertThrows(RuntimeException.class, () -> storage.lock(APP_KEY, MODEL_ID));
+        assertThrows(ModelAlreadyLockedException.class, () -> storage.lock(APP_KEY, MODEL_KEY));
     }
 
     @Test
     public void unlock() {
-        storage.lock(APP_KEY, MODEL_ID);
-        storage.unlock(APP_KEY, MODEL_ID);
+        storage.lock(APP_KEY, MODEL_KEY);
+        storage.unlock(APP_KEY, MODEL_KEY);
 
-        assertFalse(storage.isLocked(APP_KEY, MODEL_ID));
+        val actual = storage.isLocked(APP_KEY, MODEL_KEY);
+
+        assertThat(actual).isFalse();
     }
 
     @Test
     public void isLock() {
-        assertFalse(storage.isLocked(APP_KEY, MODEL_ID));
+        assertThat(storage.isLocked(APP_KEY, MODEL_KEY)).isFalse();
 
-        storage.lock(APP_KEY, MODEL_ID);
-        assertTrue(storage.isLocked(APP_KEY, MODEL_ID));
+        storage.lock(APP_KEY, MODEL_KEY);
+        assertThat(storage.isLocked(APP_KEY, MODEL_KEY)).isTrue();
 
-        storage.unlock(APP_KEY, MODEL_ID);
-        assertFalse(storage.isLocked(APP_KEY, MODEL_ID));
+        storage.unlock(APP_KEY, MODEL_KEY);
+        assertThat(storage.isLocked(APP_KEY, MODEL_KEY)).isFalse();
+    }
+
+    @Test
+    public void getFaceClassifier() {
+        val classifier = new FaceClassifierAdapter(
+                mock(ApplicationContext.class),
+                mock(FaceClassifierStorage.class)
+        );
+
+        when(applicationContext.getBean(anyString())).thenReturn(classifier);
+
+        val actual = storage.getFaceClassifier(APP_KEY, MODEL_KEY);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual).isEqualTo(classifier);
+    }
+
+    @Test
+    public void removeFaceClassifier() {
+        storage.lock(APP_KEY, MODEL_KEY);
+        assertThat(storage.isLocked(APP_KEY, MODEL_KEY)).isTrue();
+
+        storage.removeFaceClassifier(APP_KEY, MODEL_KEY);
+        assertThat(storage.isLocked(APP_KEY, MODEL_KEY)).isFalse();
     }
 }

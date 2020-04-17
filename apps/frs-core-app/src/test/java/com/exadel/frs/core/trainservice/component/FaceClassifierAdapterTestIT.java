@@ -1,7 +1,7 @@
 package com.exadel.frs.core.trainservice.component;
 
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierProxy;
+import com.exadel.frs.core.trainservice.repository.FaceClassifierAdapter;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringBootTest
 @Slf4j
 @EnabledIf(expression = "#{environment.acceptsProfiles('integration-test')}")
-public class FaceClassifierProxyITest {
+public class FaceClassifierAdapterTestIT {
 
     @Autowired
-    private FaceClassifierProxy faceClassifierProxy;
+    private FaceClassifierAdapter faceClassifierProxy;
 
     @Autowired
     private FaceDao service;

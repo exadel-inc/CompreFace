@@ -4,16 +4,16 @@ import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
 
 public interface FaceClassifierStorage {
 
-    FaceClassifierProxy getFaceClassifier(String appKey, String modelId);
+    FaceClassifierAdapter getFaceClassifier(final String appKey, final String modelKey);
 
     /**
      * Throws {@link ModelAlreadyLockedException} if model already locked
      */
-    void lock(String appKey, String modelId) throws ModelAlreadyLockedException;
+    void lock(final String appKey, final String modelKey) throws ModelAlreadyLockedException;
 
-    void unlock(String appKey, String modelId);
+    void unlock(final String appKey, final String modelKey);
 
-    boolean isLocked(String appKey, String modelId);
+    boolean isLocked(final String appKey, final String modelKey);
 
-    void removeFaceClassifier(String appKey, String modelId);
+    void removeFaceClassifier(final String appKey, final String modelKey);
 }

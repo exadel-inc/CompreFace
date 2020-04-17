@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RepositoryConfiguration {
 
-  @Bean
-  public FaceClassifierStorage storage(@Autowired ApplicationContext context) {
-    return new FaceClassifierStorageLocal(context);
-  }
+    @Bean
+    public FaceClassifierStorage storage(@Autowired ApplicationContext context) {
+        return new FaceClassifierStorageLocal(context);
+    }
 }

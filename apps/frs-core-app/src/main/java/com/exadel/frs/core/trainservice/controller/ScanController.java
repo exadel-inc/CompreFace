@@ -42,8 +42,8 @@ public class ScanController {
                     "(set this parameter to value \"no\", if operating with a lot of images one after another). " +
                     "Allowed values: \"yes\", \"no\", \"force\". \"Force\" option will abort already running processes of " +
                     "classifier training.")
-            @RequestParam(value = "retrain", required = false)
-            final String retrainStatus,
+            @RequestParam(value = "retrain", required = false, defaultValue = "force")
+            final String retrainOption,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false)
             final Double detProbThreshold,
@@ -53,7 +53,7 @@ public class ScanController {
     ) throws IOException {
         val token = systemService.buildToken(apiKey);
 
-        getTrainingOption(retrainStatus).run(token, retrainService);
+        getTrainingOption(retrainOption).run(token, retrainService);
 
         scanService.scanAndSaveFace(file, faceName, detProbThreshold, token.getModelApiKey());
     }

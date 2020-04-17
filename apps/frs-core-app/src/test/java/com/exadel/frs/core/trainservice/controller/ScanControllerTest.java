@@ -25,7 +25,7 @@ class ScanControllerTest {
     @MockBean
     private ScanService scanService;
 
-    private final static String APP_GUID = "app_guid_for_test";
+    private final static String API_KEY = "api_key:model_key";
 
     @Test
     void scanFaces() throws Exception {
@@ -35,7 +35,7 @@ class ScanControllerTest {
                 multipart(API_V1 + "/faces/name")
                         .file(mockFile)
                         .param("retrain", NO.name())
-                        .header(X_FRS_API_KEY_HEADER, APP_GUID)
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isCreated());
     }
 }
