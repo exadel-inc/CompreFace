@@ -142,7 +142,7 @@ compare: ml/src/services/facescan/compare/tmp
 
 # Optimizes face detection parameters with a given annotated image dataset
 optimize:
-	python -m ml.src.services.facescan.optimizer.run
+	python -m ml.src.services.facescan.optimize.run
 
 # Runs experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.:
 crash-lab:

@@ -1,6 +1,14 @@
 from collections import namedtuple
+from typing import List, Tuple
 
-Row = namedtuple('Row', 'img_name noses')
+import attr
+
+@attr.s(auto_attribs=True, frozen=True)
+class Row:
+    img_name: str
+    noses: List[Tuple[int, int]]
+    include_to_tests: bool = True
+
 
 SAMPLE_IMAGES = [
     Row('000_5.jpg', [(219, 105), (300, 252), (392, 220), (469, 309), (600, 294)]),
@@ -21,7 +29,8 @@ SAMPLE_IMAGES = [
     Row('015_6.jpg', [(164, 229), (269, 269), (352, 282), (453, 269), (557, 263), (635, 250)]),
     Row('016_8.jpg', [(194, 277), (262, 169), (260, 292), (357, 278), (440, 213), (459, 287), (521, 161),
                       (691, 201)]),
-    Row('017_0.jpg', [])
+    Row('017_0.jpg', []),
+    Row('018_2.jpg', [(221, 142), (147, 161)], include_to_tests=False),
+    Row('019_1.jpg', [(324, 179)], include_to_tests=False),
 ]
-
 name_2_annotation = {r.img_name: r.noses for r in SAMPLE_IMAGES}

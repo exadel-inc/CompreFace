@@ -9,7 +9,7 @@ from src.services.facescan.optimize.random_optimizer import RandomOptimizer
 from src.services.facescan.scanner.facescanners import FaceScanners
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
-from src.services.utils.pyutils import get_dir, cached, Constants
+from src.services.utils.pyutils import get_dir, cached, Constants, get_env_split
 
 CURRENT_DIR = get_dir(__file__)
 Score = namedtuple('Score', 'cost args')
@@ -19,13 +19,13 @@ cached_read_img = cached(read_img)
 
 class _ENV(Constants):
     LOGGING_LEVEL_NAME = ENV.LOGGING_LEVEL_NAME
+    IMG_NAMES = get_env_split('IMG_NAMES', ' '.join([i.img_name for i in SAMPLE_IMAGES]))
 
 
 class Facenet2018ThresholdOptimization:
     def __init__(self):
         self.scanner = FaceScanners.Facenet2018()
-        self.dataset = [row for row in SAMPLE_IMAGES if row.img_name == '018_3.png']
-        logging.info(f'dataset: {[r.img_name for r in self.dataset]}')
+        self.dataset = [row for row in SAMPLE_IMAGES if row.img_name in _ENV.IMG_NAMES]
         logging.getLogger('src.services.facescan.scanner.test.calculate_errors').setLevel(logging.WARNING)
         logging.getLogger('src.services.facescan.scanner.facenet.facenet').setLevel(logging.INFO)
 
@@ -51,6 +51,6 @@ if __name__ == '__main__':
     optimizer = RandomOptimizer(Facenet2018ThresholdOptimization(),
                                 arg_count=4,
                                 arg_range=(0, 1),
-                                checkpoint_filename='checkpoint.pickle',
-                                checkpoint_every_s=20)
+                                checkpoint_filename='checkpoint.joblib',
+                                checkpoint_every_s=600)
     optimizer.optimize()
