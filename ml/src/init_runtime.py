@@ -7,7 +7,7 @@ from PIL import ImageFile
 from src._logging import init_logging
 
 
-def _check_jenkins_build_args():
+def _check_ci_build_args():
     app_version_string = os.getenv('APP_VERSION_STRING', '')
     be_version = os.getenv('BE_VERSION', '')
     if app_version_string != be_version:
@@ -18,5 +18,5 @@ def _check_jenkins_build_args():
 def init_runtime(logging_level):
     assert sys.version_info >= (3, 7)
     ImageFile.LOAD_TRUNCATED_IMAGES = True
-    _check_jenkins_build_args()
+    _check_ci_build_args()
     init_logging(logging_level)
