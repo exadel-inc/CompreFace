@@ -1,4 +1,5 @@
 import logging
+import os
 
 from pymongo import uri_parser
 
@@ -23,6 +24,7 @@ class ENV(Constants):
     DO_LOG_STACKTRACE = get_env('DO_LOG_STACKTRACE', 'true').lower() in ('true', '1')
     DO_LOG_MULTITASKING_IDS = get_env('DO_LOG_MULTITASKING_IDS', 'false').lower() in ('true', '1')
     FORCE_FAIL_E2E_TESTS = get_env('FORCE_FAIL_E2E_TESTS', 'false').lower() in ('true', '1')
+    BUILD_VERSION = os.getenv('APP_VERSION_STRING', 'dev')
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]

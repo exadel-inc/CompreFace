@@ -26,7 +26,8 @@ def test_init():
 
 @pytest.mark.run(order=next(after_previous))
 def test_automated_tests():
-    assert not ml_get('/status').json()['_FORCE_FAIL_E2E_TESTS']
+    content = ml_get('/force_fail_e2e_tests').content.decode()
+    assert content == 'false', content
 
 
 def drop_db_if_needed():

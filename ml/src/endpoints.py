@@ -1,4 +1,3 @@
-import os
 from http import HTTPStatus
 
 from flask import Response
@@ -24,9 +23,14 @@ from src.services.train_classifier import get_faces
 
 
 def endpoints(app):
+    # TODO EFRS-451 Temporary endpoint for development (remove once task is done)
+    @app.route('/force_fail_e2e_tests')
+    def force_fail_e2e_tests_get():
+        return str(ENV.FORCE_FAIL_E2E_TESTS).lower()
+
     @app.route('/status')
     def status_get():
-        return jsonify(status='OK', **_get_hidden_fields())
+        return jsonify(status='OK', build_version=ENV.BUILD_VERSION)
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
@@ -183,15 +187,3 @@ def _get_last_training_status_str(training_status):
     return {TaskStatus.IDLE_LAST_NONE: 'NONE',
             TaskStatus.IDLE_LAST_OK: 'OK',
             TaskStatus.IDLE_LAST_ERROR: 'ERROR'}[training_status]
-
-
-def _get_hidden_fields():
-    app_version_string = os.getenv('APP_VERSION_STRING', '')
-    be_version = os.getenv('BE_VERSION', '')
-    values = {
-        '_FORCE_FAIL_E2E_TESTS': ENV.FORCE_FAIL_E2E_TESTS,
-        '_APP_VERSION_STRING': app_version_string
-    }
-    if be_version != app_version_string:
-        values['_BE_VERSION'] = be_version
-    return values
