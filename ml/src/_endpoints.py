@@ -23,7 +23,7 @@ from src.services.train_classifier import get_faces
 
 
 def endpoints(app):
-    # TODO EFRS-451 Temporary endpoint for development (remove once task is done)
+    # TODO EFRS-451 Temporary endpoint for development (remove once the task is done)
     @app.route('/force_fail_e2e_tests')
     def force_fail_e2e_tests_get():
         return str(ENV.FORCE_FAIL_E2E_TESTS).lower()
