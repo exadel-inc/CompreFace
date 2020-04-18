@@ -12,9 +12,9 @@ from src.services.facescan.optimize.results_storage import ResultsStorage
 from src.services.facescan.scanner.facescanners import FaceScanners
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
-from src.services.utils.pyutils import get_dir, cached, Constants, get_env_split
+from src.services.utils.pyutils import get_current_dir, cached, Constants, get_env_split
 
-CURRENT_DIR = get_dir(__file__)
+CURRENT_DIR = get_current_dir(__file__)
 Score = namedtuple('Score', 'cost args')
 
 cached_read_img = cached(read_img)

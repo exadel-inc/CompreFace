@@ -15,9 +15,9 @@ from src.services.facescan.imgscaler.imgscaler import ImgScaler
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.imgtools.proc_img import crop_img, squish_img
 from src.services.imgtools.types import Array3D
-from src.services.utils.pyutils import get_dir
+from src.services.utils.pyutils import get_current_dir
 
-CURRENT_DIR = get_dir(__file__)
+CURRENT_DIR = get_current_dir(__file__)
 logger = logging.getLogger(__name__)
 _EmbeddingCalculator = namedtuple('_EmbeddingCalculator', 'graph sess')
 _FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')

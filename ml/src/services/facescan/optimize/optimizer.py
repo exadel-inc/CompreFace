@@ -3,9 +3,9 @@ import time
 from collections import namedtuple
 
 from src.services.facescan.optimize.results_storage import ResultsStorage
-from src.services.utils.pyutils import get_dir
+from src.services.utils.pyutils import get_current_dir
 
-CURRENT_DIR = get_dir(__file__)
+CURRENT_DIR = get_current_dir(__file__)
 Score = namedtuple('Score', 'cost args')
 
 

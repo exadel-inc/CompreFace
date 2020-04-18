@@ -9,9 +9,9 @@ from src.services.facescan.compare.constants import _ENV
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.imgtools.read_img import read_img
 from src.services.imgtools.types import Array1D
-from src.services.utils.pyutils import get_dir
+from src.services.utils.pyutils import get_current_dir
 
-TMP_DIR = get_dir(__file__) / 'tmp'
+TMP_DIR = get_current_dir(__file__) / 'tmp'
 
 
 @total_ordering

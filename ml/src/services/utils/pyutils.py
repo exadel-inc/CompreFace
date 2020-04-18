@@ -94,8 +94,8 @@ def first_like_all(lst):
     return first
 
 
-def get_dir(filepath):
-    return Path(os.path.dirname(os.path.realpath(filepath)))
+def get_current_dir(__file__):
+    return Path(os.path.dirname(os.path.realpath(__file__)))
 
 
 def get_env(name: str, default: str = None) -> str:
