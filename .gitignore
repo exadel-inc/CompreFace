@@ -1,7 +1,6 @@
 .idea/
 .vscode/
 tmp/
-checkpoint.joblib
 *.pid
 
 # Created by .ignore support plugin (hsz.mobi)

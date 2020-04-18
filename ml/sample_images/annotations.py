@@ -1,7 +1,7 @@
-from collections import namedtuple
 from typing import List, Tuple
 
 import attr
+
 
 @attr.s(auto_attribs=True, frozen=True)
 class Row:

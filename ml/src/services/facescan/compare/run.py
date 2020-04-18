@@ -36,7 +36,7 @@ if __name__ == '__main__':
             tester.train(train_dataset)
             results = tester.test_recognition(test_dataset)
 
-            print(f'{scanner_name}, Fold #{i} {results_to_str(results)}')
+            print(f'{scanner_name}, Fold #{i} {results_to_str(results)}', flush=True)
             results_per_fold.append(results)
         total_results = merge_results(results_per_fold)
-        print(f'Total results for {scanner_name}: {results_to_str(total_results)}')
+        print(f'Total results for {scanner_name}: {results_to_str(total_results)}', flush=True)

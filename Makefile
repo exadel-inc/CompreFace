@@ -54,6 +54,7 @@ down/all:
 
 # Install dependencies and prepare environment
 setup:
+	mkdir -p tmp
 	chmod +x ci-test.sh ml/run.sh e2e/run-e2e-test.sh tools/crash-lab.sh
 	python -m pip install -r ml/requirements.txt
 	imageio_download_bin freeimage
