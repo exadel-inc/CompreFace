@@ -109,6 +109,7 @@ e2e/local: start
 # Runs E2E and also checks if given host is able to handle scanning all images
 e2e/extended: SHOW_IMG=false
 e2e/extended: LOGGING_LEVEL_NAME=info
+e2e/extended: IMG_NAMES={test_images}
 e2e/extended: scan/remote e2e
 
 # Runs E2E tests against a remote environment

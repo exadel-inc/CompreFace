@@ -108,7 +108,7 @@ def get_env_bool(name: str, default: bool = False) -> bool:
     return Constants.str_to_bool(get_env(name, str(default)))
 
 
-def get_env_split(name: str, default: str):
+def get_env_split(name: str, default: str = None):
     return Constants.split(get_env(name, default))
 
 
@@ -140,3 +140,7 @@ class Constants:
         ['One', 'Two']
         """
         return [s for s in re.split(r'[,\s]+', arr_str) if s]
+
+
+def s(count):  # NOSONAR
+    return '' if count == 1 else 's'

@@ -13,7 +13,7 @@ from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
-from src.services.utils.pyutils import get_env, Constants, get_env_split, get_env_bool
+from src.services.utils.pyutils import get_env, Constants, get_env_split, get_env_bool, s
 
 
 class _ENV(Constants):
@@ -22,7 +22,12 @@ class _ENV(Constants):
     ML_HOST = get_env('ML_HOST', 'localhost')
     ML_PORT = ENV.ML_PORT
     ML_URL = get_env('ML_URL', f'http://{ML_HOST}:{ML_PORT}')
-    IMG_NAMES = get_env_split('IMG_NAMES', ' '.join([i.img_name for i in SAMPLE_IMAGES]))
+    if get_env('IMG_NAMES', '') == '':
+        IMG_NAMES = [i.img_name for i in SAMPLE_IMAGES]
+    elif get_env('IMG_NAMES', '') == '{test_images}':
+        IMG_NAMES = [i.img_name for i in SAMPLE_IMAGES if i.include_to_tests]
+    else:
+        IMG_NAMES = get_env_split('IMG_NAMES')
     _SHOW_IMG_VAL = get_env('SHOW_IMG', 'true').lower()
     SHOW_IMG = Constants.str_to_bool(_SHOW_IMG_VAL)
     SHOW_IMG_ON_ERROR = _SHOW_IMG_VAL == 'on_error'
@@ -51,30 +56,35 @@ def _scan_faces(img_name: str):
         return _scan_faces_local(_ENV.SCANNER, img_name)
 
 
+def _calculate_errors(boxes, noses, img_name):
+    error_count = 0
+    if noses is not None:
+        error_count = calculate_errors(boxes, noses)
+        if error_count:
+            logging.error(f"Found {error_count} error{s(error_count)} in '{img_name}'")
+        else:
+            logging.info(f"Found all {len(noses)} face{s(len(noses))} in correct places for '{img_name}'")
+    else:
+        logging.warning(f"Image '{img_name}' is not annotated, skipping")
+    return error_count
+
+
 if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
     logging.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
 
-    total_errors = 0
+    total_error_count = 0
     for img_name in _ENV.IMG_NAMES:
         boxes = [face.box for face in _scan_faces(img_name)]
         noses = name_2_annotation.get(img_name)
 
-        if noses is not None:
-            errors = calculate_errors(boxes, noses)
-        else:
-            logging.warning(f"[Annotation check] Image '{img_name}' is not annotated, skipping")
-            errors = 0
+        error_count = _calculate_errors(boxes, noses, img_name)
+        total_error_count += error_count
 
-        if errors:
-            logging.error(f"[Annotation check] Found '{errors}' error(s) in '{img_name}'")
-            total_errors += errors
-
-        if _ENV.SHOW_IMG or _ENV.SHOW_IMG_ON_ERROR and errors:
+        if _ENV.SHOW_IMG or _ENV.SHOW_IMG_ON_ERROR and error_count:
             img = read_img(IMG_DIR / img_name)
             show_img(img, boxes, noses)
 
-        logging.info(f'Completed: {img_name}')
-    if total_errors:
-        logging.error(f"[Annotation check] Found a total of {total_errors} error(s)")
+    if total_error_count:
+        logging.error(f"Found a total of {total_error_count} error{s(total_error_count)}")
         exit(1)
