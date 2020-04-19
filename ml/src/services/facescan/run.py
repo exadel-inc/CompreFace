@@ -28,10 +28,13 @@ class _ENV(Constants):
         IMG_NAMES = [i.img_name for i in SAMPLE_IMAGES if i.include_to_tests]
     else:
         IMG_NAMES = get_env_split('IMG_NAMES')
-    _SHOW_IMG_VAL = get_env('SHOW_IMG', 'true').lower()
-    SHOW_IMG = Constants.str_to_bool(_SHOW_IMG_VAL)
-    SHOW_IMG_ON_ERROR = _SHOW_IMG_VAL == 'on_error'
+    SHOW_IMG_str = get_env('SHOW_IMG', 'true').lower()
+
     LOGGING_LEVEL_NAME = ENV.LOGGING_LEVEL_NAME
+
+
+SHOW_IMG = Constants.str_to_bool(_ENV.SHOW_IMG_str)
+SHOW_IMG_ON_ERROR = _ENV.SHOW_IMG_str == 'on_error'
 
 
 def _scan_faces_remote(ml_url: str, img_name: str):
@@ -81,7 +84,7 @@ if __name__ == '__main__':
         error_count = _calculate_errors(boxes, noses, img_name)
         total_error_count += error_count
 
-        if _ENV.SHOW_IMG or _ENV.SHOW_IMG_ON_ERROR and error_count:
+        if SHOW_IMG or SHOW_IMG_ON_ERROR and error_count:
             img = read_img(IMG_DIR / img_name)
             show_img(img, boxes, noses)
 
