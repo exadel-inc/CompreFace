@@ -19,6 +19,8 @@ Score = namedtuple('Score', 'cost args')
 
 cached_read_img = cached(read_img)
 
+logger = logging.getLogger(__name__)
+
 
 class _ENV(Constants):
     LOGGING_LEVEL_NAME = ENV.LOGGING_LEVEL_NAME
@@ -63,7 +65,7 @@ def random_thresholds_generator(arg_count):
 
 if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
-    logging.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
+    logger.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
 
     task = Facenet2018ThresholdOptimization()
     threshold_iterators = [

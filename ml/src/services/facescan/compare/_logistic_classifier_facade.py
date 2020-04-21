@@ -8,6 +8,8 @@ from src.services.facescan.compare._dataset import Image
 from src.services.facescan.compare.constants import _ENV
 from src.services.facescan.scanner.facescanner import FaceScanner
 
+logger = logging.getLogger(__name__)
+
 
 class LogisticClassifierFacade:
     def __init__(self, scanner: FaceScanner):
@@ -36,10 +38,10 @@ class LogisticClassifierFacade:
         train_counts['ImagesTotal'] += len(images)
         train_counts['ImagesTrained'] += len(self._trained_names)
         train_counts['NamesTrained'] += len(set(self._trained_names))
-        logging.debug(f'Started training with {len(self._trained_names)} images')
+        logger.debug(f'Started training with {len(self._trained_names)} images')
         self._classifier = LogisticClassifier.train(embeddings, self._trained_names, self._scanner.ID) \
             if not _ENV.DRY_RUN else LogisticClassifierMock()
-        logging.debug('Training complete')
+        logger.debug('Training complete')
 
     def test_recognition(self, images: Set[Image]) -> dict:
         assert self._classifier is not None

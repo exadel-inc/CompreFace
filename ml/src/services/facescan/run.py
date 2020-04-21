@@ -15,6 +15,8 @@ from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_env, Constants, get_env_split, get_env_bool, s
 
+logger = logging.getLogger(__name__)
+
 
 class _ENV(Constants):
     SCANNER = ENV.SCANNER
@@ -64,9 +66,9 @@ def _calculate_errors(boxes, noses, img_name):
     if noses is not None:
         error_count = calculate_errors(boxes, noses)
         if error_count:
-            logging.error(f"Found {error_count} error{s(error_count)} in '{img_name}'")
+            logger.error(f"Found {error_count} error{s(error_count)} in '{img_name}'")
         else:
-            logging.info(f"Found all {len(noses)} face{s(len(noses))} in correct places for '{img_name}'")
+            logger.info(f"Found all {len(noses)} face{s(len(noses))} in correct places for '{img_name}'")
     else:
         logging.warning(f"Image '{img_name}' is not annotated, skipping")
     return error_count
@@ -74,7 +76,7 @@ def _calculate_errors(boxes, noses, img_name):
 
 if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
-    logging.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
+    logger.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
 
     total_error_count = 0
     for img_name in _ENV.IMG_NAMES:
@@ -89,5 +91,5 @@ if __name__ == '__main__':
             show_img(img, boxes, noses)
 
     if total_error_count:
-        logging.error(f"Found a total of {total_error_count} error{s(total_error_count)}")
+        logger.error(f"Found a total of {total_error_count} error{s(total_error_count)}")
         exit(1)

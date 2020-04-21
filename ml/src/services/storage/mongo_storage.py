@@ -18,6 +18,7 @@ from src.services.storage.face import Face, FaceNameEmbedding
 from src.services.storage.mongo_fileio import save_file_to_mongo, get_file_from_mongo
 
 WAIT_FOR_CONNECTION_TIMEOUT_S = 60
+logger = logging.getLogger(__name__)
 
 
 class CollectionName(StrEnum):
@@ -40,7 +41,7 @@ class MongoStorage:
 
     def wait_for_connection(self):
         start_time = time.time()
-        logging.debug(f"Waiting for database connection at '{self._mongodb_host}:{self._mongodb_port}'")
+        logger.debug(f"Waiting for database connection at '{self._mongodb_host}:{self._mongodb_port}'")
         while True:
             try:
                 self._mongodb.server_info()
@@ -48,7 +49,7 @@ class MongoStorage:
             except ServerSelectionTimeoutError as e:
                 if time.time() - start_time > WAIT_FOR_CONNECTION_TIMEOUT_S:
                     raise CouldNotConnectToDatabase from e
-                logging.debug(f"Retrying to get database connection at '{self._mongodb_host}:{self._mongodb_port}'")
+                logger.debug(f"Retrying to get database connection at '{self._mongodb_host}:{self._mongodb_port}'")
                 time.sleep(1)
 
     def add_face(self, api_key: str, face: Face, emb_calc_version: str):

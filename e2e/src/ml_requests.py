@@ -8,6 +8,8 @@ import requests
 from src import constants
 from src.constants import ENV_E2E
 
+logger = logging.getLogger(__name__)
+
 
 def _request(method, endpoint, **kwargs):
     if 'timeout' not in kwargs or kwargs['timeout'] is None:
@@ -15,7 +17,7 @@ def _request(method, endpoint, **kwargs):
     try:
         return requests.request(method, f"{ENV_E2E.ML_URL}{endpoint}", **kwargs)
     except requests.RequestException as e:
-        logging.error(str(e))
+        logger.error(str(e))
         raise ConnectionError(e) from None
 
 

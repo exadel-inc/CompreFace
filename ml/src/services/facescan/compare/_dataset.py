@@ -12,6 +12,7 @@ from src.services.imgtools.types import Array1D
 from src.services.utils.pyutils import get_current_dir
 
 TMP_DIR = get_current_dir(__file__) / 'tmp'
+logger = logging.getLogger(__name__)
 
 
 @total_ordering
@@ -48,7 +49,7 @@ class Image:
         if scanner.ID not in self._embeddings:
             Image._total_embeddings_calculated += 1
             if Image._total_embeddings_calculated % 1 == 0:
-                logging.debug(f"Calculating embedding #{Image._total_embeddings_calculated}: {self.__repr__()}")
+                logger.debug(f"Calculating embedding #{Image._total_embeddings_calculated}: {self.__repr__()}")
             self._embeddings[scanner.ID] = scanner.scan_one(self.array).embedding
         return self._embeddings[scanner.ID]
 
@@ -82,7 +83,8 @@ def get_people_txt_folds(lfw_dataset: Set[Image]) -> List[Set[Image]]:
             fold = []
             images_count = int(next(f))
             for _ in range(images_count):
-                name, number_str = [k.strip() for k in next(f).split(sep='\t')]
+                line = next(f)
+                name, number_str = [k.strip() for k in line.replace('\t', ' ').split()]
                 fold.append(image_dict[(name, int(number_str))])
             folds.append(set(fold))
     return folds

@@ -36,7 +36,7 @@ class ImgScaler:
         assert self._downscaled_img_called
         if not self._img_scale_coefficient:
             return box
-        return self._scale_box(box, 1 / self._img_scale_coefficient)
+        return self._scale_box(box, scale_coefficient=1 / self._img_scale_coefficient)
 
     def upscale_array(self, array):
         assert self._downscaled_img_called
@@ -49,7 +49,7 @@ class ImgScaler:
         assert self._downscaled_img_called
         if not self._img_scale_coefficient:
             return box
-        return self._scale_box(box, self._img_scale_coefficient)
+        return self._scale_box(box, scale_coefficient=self._img_scale_coefficient)
 
     def downscale_nose(self, nose: Tuple[int, int]) -> Tuple[int, int]:
         assert self._downscaled_img_called

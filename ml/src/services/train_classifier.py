@@ -10,6 +10,8 @@ from src.services.classifier.logistic_classifier import LogisticClassifier
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.storage.mongo_storage import MongoStorage
 
+logger = logging.getLogger(__name__)
+
 
 def get_faces(storage: MongoStorage, api_key: str, emb_calc_version: str):
     faces = storage.get_face_embeddings(api_key, emb_calc_version)
@@ -26,12 +28,12 @@ def train_and_save_classifier(api_key: str) -> None:
     storage: MongoStorage = get_storage()
     faces = get_faces(storage, api_key, emb_calc_version)
 
-    logging.debug("Started training classifier")
+    logger.debug("Started training classifier")
     embeddings = [face.embedding for face in faces]
     names = [face.name for face in faces]
     classifier = LogisticClassifier.train(embeddings, names, emb_calc_version)
     storage.save_embedding_classifier(api_key, classifier)
-    logging.debug("Classifier trained and saved")
+    logger.debug("Classifier trained and saved")
 
 
 def train_and_save_classifier_async(api_key: str) -> None:
@@ -40,5 +42,5 @@ def train_and_save_classifier_async(api_key: str) -> None:
     try:
         return train_and_save_classifier(api_key)
     except Exception as e:
-        logging.error(f"Failed to train and save classifier: {str(e)}")
+        logger.error(f"Failed to train and save classifier: {str(e)}")
         exit(1)

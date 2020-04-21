@@ -8,6 +8,8 @@ from src.services.utils.pyutils import get_current_dir
 CURRENT_DIR = get_current_dir(__file__)
 Score = namedtuple('Score', 'cost args')
 
+logger = logging.getLogger(__name__)
+
 
 class Optimizer:
     def __init__(self, task, results_storage: ResultsStorage, checkpoint_every_s):
@@ -16,13 +18,13 @@ class Optimizer:
         self._checkpoint_every_s = checkpoint_every_s
 
     def optimize(self, get_new_args_iterator):
-        logging.info(f"Init cost: {self._task.cost()}")
+        logger.info(f"Init cost: {self._task.cost()}")
         last_checkpoint_s = time.time()
         try:
             for args in get_new_args_iterator:
                 cost = self._task.cost(args)
                 self._results_storage.add_score(Score(cost, args))
-                logging.debug(f"{cost} <- {tuple(args)}")
+                logger.debug(f"{cost} <- {tuple(args)}")
                 if (time.time() - last_checkpoint_s) > self._checkpoint_every_s:
                     self._results_storage.save()
                     last_checkpoint_s = time.time()

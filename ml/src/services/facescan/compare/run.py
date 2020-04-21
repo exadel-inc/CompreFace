@@ -9,6 +9,8 @@ from src.services.facescan.compare.constants import _ENV, LOGGING_LEVEL
 from src.services.facescan.scanner.facescanner import MockScanner
 from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
 
+logger = logging.getLogger(__name__)
+
 
 def _get_scanner(scanner_name):
     if _ENV.DRY_RUN:
@@ -19,7 +21,7 @@ def _get_scanner(scanner_name):
 
 if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
-    logging.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
+    logger.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
     logging.getLogger('src.services.facescan.scanner').setLevel(logging.INFO)
 
     lfw_dataset = get_lfw_dataset()
