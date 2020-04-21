@@ -10,7 +10,8 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development Run
 
-Run starting script: `./scripts/start.sh`
+Run starting script: `./scripts/start.sh` for unix OS
+Run starting script: `.\scripts\startWin.sh` for Win OS
 
 ## Mock API server 
 
