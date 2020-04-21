@@ -1,8 +1,10 @@
 import logging
 from typing import List
 
-import insightface
 import numpy as np
+from insightface.app import FaceAnalysis
+from insightface.model_zoo import model_zoo
+from insightface.utils import face_align
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBox
@@ -16,14 +18,18 @@ logger = logging.getLogger(__name__)
 
 class InsightFace(FaceScanner):
     ID = 'InsightFace'
+    DETECTION_MODEL_NAME = 'retinaface_r50_v1'
+    CALCULATION_MODEL_NAME = 'arcface_r100_v1'
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
 
     def __init__(self):
         super().__init__()
-        self._model = insightface.app.FaceAnalysis()
+        self._detection_model = FaceAnalysis(det_name=self.DETECTION_MODEL_NAME, rec_name=None, ga_name=None)
+        self._calculation_model = model_zoo.get_model(self.CALCULATION_MODEL_NAME)
         self._CTX_ID_CPU = -1
         self._NMS = 0.4
-        self._model.prepare(ctx_id=self._CTX_ID_CPU, nms=self._NMS)
+        self._detection_model.prepare(ctx_id=self._CTX_ID_CPU, nms=self._NMS)
+        self._calculation_model.prepare(ctx_id=self._CTX_ID_CPU)
         self.det_prob_threshold = 0.8
 
     def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
@@ -32,7 +38,7 @@ class InsightFace(FaceScanner):
         assert 0 <= det_prob_threshold <= 1
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         downscaled_img = scaler.downscale_img(img)
-        results = self._model.get(downscaled_img, det_thresh=det_prob_threshold)
+        results = self._detection_model.get(downscaled_img, det_thresh=det_prob_threshold)
         scanned_faces = []
         for result in results:
             downscaled_box_array = result.bbox.astype(np.int).flatten()
@@ -44,6 +50,10 @@ class InsightFace(FaceScanner):
             if box.probability <= det_prob_threshold:
                 logger.debug(f'Box Filtered out because below threshold ({det_prob_threshold}: {box})')
                 continue
-            logger.debug(f"Found: Age({result.age}) Gender({'Male' if result.gender else 'Female'}) {box}")
-            scanned_faces.append(ScannedFace(box=box, embedding=result.embedding, img=img))
+            logger.debug(f"Found: {box}")
+
+            norm_cropped_img = face_align.norm_crop(img, landmark=scaler.upscale_array(result.landmark))
+            embedding = self._calculation_model.get_embedding(norm_cropped_img).flatten()
+
+            scanned_faces.append(ScannedFace(box=box, embedding=embedding, img=img))
         return scanned_faces

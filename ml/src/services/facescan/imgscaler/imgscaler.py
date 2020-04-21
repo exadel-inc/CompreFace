@@ -38,6 +38,10 @@ class ImgScaler:
             return box
         return self._scale_box(box, 1 / self._img_scale_coefficient)
 
+    def upscale_array(self, array):
+        scale_coefficient = 1 / self._img_scale_coefficient
+        return array * scale_coefficient
+
     def downscale_box(self, box: BoundingBox) -> BoundingBox:
         assert self._downscaled_img_called
         if not self._img_scale_coefficient:
