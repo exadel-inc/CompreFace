@@ -46,7 +46,7 @@ let user = {
   firstName: "some firstName",
   guid: "guid_0",
   lastName: "some lastName",
-  avatar: './assets/img/avatar.jpg'
+  avatar: './assets/img/avatar.png'
 };
 
 let timeStamp = 0;
