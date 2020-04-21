@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -30,10 +31,15 @@ public class FaceClassifierStorageLocalThreadKillTestIT {
     }
 
     @Test
-    public void unlock() {
+    public void killThreadWhileTrain() {
         val faceClassifier = storage.getFaceClassifier(APP_KEY, MODEL_KEY);
         storage.lock(APP_KEY, MODEL_KEY);
+
+        assertThat(storage.isLocked(APP_KEY, MODEL_KEY)).isTrue();
+
         faceClassifier.train(faceDao.findAllFaceEmbeddings(), APP_KEY, MODEL_KEY);
         storage.unlock(APP_KEY, MODEL_KEY);
+
+        assertThat(storage.isLocked(APP_KEY, MODEL_KEY)).isFalse();
     }
 }
