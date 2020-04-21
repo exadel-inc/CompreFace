@@ -10,7 +10,7 @@ class ImgScaler:
     def __init__(self, img_length_limit: int):
         self._img_length_limit = img_length_limit
         self._downscaled_img_called = False
-        self._img_scale_coefficient = False
+        self._img_scale_coefficient = None
 
     def downscale_img(self, img: Array3D, interpolation=cv2.INTER_AREA) -> Array3D:
         assert not self._downscaled_img_called
@@ -39,6 +39,9 @@ class ImgScaler:
         return self._scale_box(box, 1 / self._img_scale_coefficient)
 
     def upscale_array(self, array):
+        assert self._downscaled_img_called
+        if not self._img_scale_coefficient:
+            return array
         scale_coefficient = 1 / self._img_scale_coefficient
         return array * scale_coefficient
 
