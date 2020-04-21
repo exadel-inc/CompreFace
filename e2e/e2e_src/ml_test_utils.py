@@ -1,6 +1,6 @@
 from typing import List
 
-from src import constants
+from e2e_src import constants
 
 
 def embeddings_are_the_same(embedding1: List[float], embedding2: List[float]):

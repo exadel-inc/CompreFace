@@ -1,10 +1,10 @@
 import pytest
-from src.ml_requests import ml_wait_until_training_is_completed, ml_get, ml_post, ml_delete
-from src.sample_images import IMG_DIR
-from src.test.init_test import after_previous
 from toolz import itertoolz
 
-from src.constants import ENV_E2E, ALL_SCANNERS
+from e2e_src.constants import ENV_E2E, ALL_SCANNERS
+from e2e_src.ml_requests import ml_wait_until_training_is_completed, ml_get, ml_post, ml_delete
+from e2e_src.sample_images import IMG_DIR
+from e2e_src.test.init_test import after_previous
 
 
 @pytest.mark.run(order=next(after_previous))

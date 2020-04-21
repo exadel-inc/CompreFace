@@ -1,6 +1,6 @@
 from collections import defaultdict, Counter
 
-from src.services.facescan.compare._results import merge_results
+from tools.facescan.benchmark_e2e._results import merge_results
 
 
 def test__when_merging_results__returns_merged_result():

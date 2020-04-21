@@ -2,12 +2,12 @@ import logging
 
 from src.constants import ENV
 from src.init_runtime import init_runtime
-from src.services.facescan.compare._dataset import get_lfw_dataset, get_people_txt_folds
-from src.services.facescan.compare._logistic_classifier_facade import LogisticClassifierFacade
-from src.services.facescan.compare._results import merge_results, results_to_str
-from src.services.facescan.compare.constants import _ENV, LOGGING_LEVEL
 from src.services.facescan.scanner.facescanner import MockScanner
 from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
+from tools.facescan.benchmark_e2e._dataset import get_lfw_dataset, get_people_txt_folds
+from tools.facescan.benchmark_e2e._logistic_classifier_facade import LogisticClassifierFacade
+from tools.facescan.benchmark_e2e._results import merge_results, results_to_str
+from tools.facescan.benchmark_e2e.constants import _ENV, LOGGING_LEVEL
 
 logger = logging.getLogger(__name__)
 

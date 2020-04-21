@@ -5,8 +5,8 @@ from http import HTTPStatus
 import pytest
 import requests
 
-from src import constants
-from src.constants import ENV_E2E
+from e2e_src import constants
+from e2e_src.constants import ENV_E2E
 
 logger = logging.getLogger(__name__)
 

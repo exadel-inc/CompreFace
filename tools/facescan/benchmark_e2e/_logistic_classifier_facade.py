@@ -4,9 +4,9 @@ from typing import Set, Union
 
 from src.exceptions import NoFaceFoundError, MoreThanOneFaceFoundError
 from src.services.classifier.logistic_classifier import LogisticClassifier, LogisticClassifierMock
-from src.services.facescan.compare._dataset import Image
-from src.services.facescan.compare.constants import _ENV
 from src.services.facescan.scanner.facescanner import FaceScanner
+from tools.facescan.benchmark_e2e._dataset import Image
+from tools.facescan.benchmark_e2e.constants import _ENV
 
 logger = logging.getLogger(__name__)
 

@@ -1,7 +1,7 @@
 import pytest
 
-from src.ml_requests import ml_get
-from src.test.init_test import after_previous
+from e2e_src.ml_requests import ml_get
+from e2e_src.test.init_test import after_previous
 
 
 @pytest.mark.run(order=next(after_previous))

@@ -1,11 +1,11 @@
 import pytest
-from src.expected_embedding import EXPECTED_EMBEDDING
-from src.ml_requests import ml_post
-from src.ml_test_utils import embeddings_are_the_same, boxes_are_the_same
-from src.sample_images import IMG_DIR
-from src.test.init_test import after_previous
 
-from src.constants import ALL_SCANNERS
+from e2e_src.constants import ALL_SCANNERS
+from e2e_src.expected_embedding import EXPECTED_EMBEDDING
+from e2e_src.ml_requests import ml_post
+from e2e_src.ml_test_utils import embeddings_are_the_same, boxes_are_the_same
+from e2e_src.sample_images import IMG_DIR
+from e2e_src.test.init_test import after_previous
 
 
 @pytest.mark.run(order=next(after_previous))

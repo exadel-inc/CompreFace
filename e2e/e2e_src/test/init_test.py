@@ -1,10 +1,10 @@
 import pytest
 from pymongo import MongoClient
 from pymongo.errors import ServerSelectionTimeoutError
-from src.ml_requests import ml_get
-from src.ml_requests import ml_wait_until_ml_is_available
 
-from src.constants import ENV_E2E
+from e2e_src.constants import ENV_E2E
+from e2e_src.ml_requests import ml_get
+from e2e_src.ml_requests import ml_wait_until_ml_is_available
 
 
 def after_previous_gen():

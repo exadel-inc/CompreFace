@@ -7,12 +7,12 @@ from sample_images import IMG_DIR
 from sample_images.annotations import SAMPLE_IMAGES
 from src.constants import ENV, LOGGING_LEVEL
 from src.init_runtime import init_runtime
-from src.services.facescan.optimize.optimizer import Optimizer
-from src.services.facescan.optimize.results_storage import ResultsStorage
 from src.services.facescan.scanner.facescanners import FaceScanners
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_current_dir, cached, Constants, get_env_split
+from tools.facescan.optimize.optimizer import Optimizer
+from tools.facescan.optimize.results_storage import ResultsStorage
 
 CURRENT_DIR = get_current_dir(__file__)
 Score = namedtuple('Score', 'cost args')

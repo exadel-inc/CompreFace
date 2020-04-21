@@ -77,15 +77,15 @@ test/local: test/unit test/lint test/i9n
 
 # Run unit tests
 test/unit:
-	python -m pytest -m "not integration" ml/src
+	python -m pytest -m "not integration" ml/src tools
 
 # Run lint checks
 test/lint:
-	python -m pylama --options ml/pylama.ini ml/src
+	python -m pylama --options ml/pylama.ini ml/src tools
 
 # Run integration tests
 test/i9n:
-	python -m pytest -m integration $(CURDIR)/ml/src
+	python -m pytest -m integration ml/src tools
 
 # Run E2E tests (also starts db and application automatically)
 test/e2e: e2e/local
@@ -125,30 +125,30 @@ e2e/qa: ML_URL=$(QA_ML_URL)
 e2e/qa: e2e/remote
 
 #####################################
-##### DEV SCRIPTS
+##### DEV TOOLS
 #####################################
 
 # Detects faces on given images, with selected scanners, and output the results using local ML service
 demo: IMG_NAMES=015_6.jpg
 demo: scan
 scan:
-	python -m ml.src.services.facescan.run
+	python -m tools.facescan.scan.run
 
 # Detects faces on given images, with selected scanners, and output the results using remote ML service endpoint
 scan/remote: USE_REMOTE=true
 scan/remote: scan
 
-# Compares accuracy between scanners
-compare: ml/src/services/facescan/compare/tmp
-	python -m ml.src.services.facescan.compare.run
-
 # Optimizes face detection parameters with a given annotated image dataset
 optimize:
-	python -m ml.src.services.facescan.optimize.run
+	python -m tools.facescan.optimize.run
 
-# Runs experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.:
+# Runs experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.; Intended to test for Out-Of-Memory (OOM) errors
 crash-lab:
 	tools/crash-lab.sh $(CURDIR)/ml/sample_images
+
+# Tests the face scanning system with error statistics at every step of processing
+benchmark/e2e: tools/facescan/benchmark_e2e/tmp
+	python -m tools.facescan.benchmark_e2e.run
 
 #####################################
 ##### MISC
@@ -202,9 +202,9 @@ status/qa:
 ##### FILE DEPENDENCIES
 #####################################
 
-ml/src/services/facescan/compare/tmp:
-	mkdir -p ml/src/services/facescan/compare/tmp
-	curl -o ml/src/services/facescan/compare/tmp/lfw.tgz http://vis-www.cs.umass.edu/lfw/lfw.tgz
-	tar zxvf ml/src/services/facescan/compare/tmp/lfw.tgz -C ml/src/services/facescan/compare/tmp/
-	rm ml/src/services/facescan/compare/tmp/lfw.tgz
-	curl -o ml/src/services/facescan/compare/tmp/people.txt http://vis-www.cs.umass.edu/lfw/people.txt
+tools/facescan/benchmark_e2e/tmp:
+	mkdir -p tools/facescan/benchmark_e2e/tmp
+	curl -o tools/facescan/benchmark_e2e/tmp/lfw.tgz http://vis-www.cs.umass.edu/lfw/lfw.tgz
+	tar zxvf tools/facescan/benchmark_e2e/tmp/lfw.tgz -C tools/facescan/benchmark_e2e/tmp/
+	rm tools/facescan/benchmark_e2e/tmp/lfw.tgz
+	curl -o tools/facescan/benchmark_e2e/tmp/people.txt http://vis-www.cs.umass.edu/lfw/people.txt
