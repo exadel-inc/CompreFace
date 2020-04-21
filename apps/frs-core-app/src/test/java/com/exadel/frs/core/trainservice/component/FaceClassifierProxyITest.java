@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.component;
 
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierProxy;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,17 +23,10 @@ public class FaceClassifierProxyITest {
     @Autowired
     private FaceDao service;
 
-    private FaceClassifier faceClassifier;
-
     public static final double THRESHOLD = 0.95;
 
     private static final String APP_KEY = "app";
     private static final String MODEL_ID = "model_id";
-
-    @BeforeEach
-    public void beforeEach() {
-        faceClassifier = faceClassifierProxy.getClassifier();
-    }
 
     @Test
     public void train() {

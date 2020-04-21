@@ -1,35 +1,41 @@
-package com.exadel.frs.core.trainservice.repository;
+package com.exadel.frs.core.trainservice.component;
 
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
+import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+
 @Component
 @Setter
 @Scope(value = "prototype")
+@RequiredArgsConstructor
 public class FaceClassifierProxy {
 
-    public static final String CLASSIFIER_IMPLEMENTATION_BEAN_NAME = "logisticRegressionExtendedClassifier";
+    public static final String CLASSIFIER_IMPLEMENTATION_BEAN_NAME =
+            StringUtils.uncapitalize(LogisticRegressionExtendedClassifier.class.getSimpleName());
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
-    @Autowired
-    private FaceClassifierStorage storage;
+    private final FaceClassifierManager storage;
 
+    @Getter
     private FaceClassifier classifier;
 
     @PostConstruct
@@ -53,8 +59,8 @@ public class FaceClassifierProxy {
             for (val faceName : faceNameEmbeddings.keySet()) {
                 labelMap.put(faceId, faceName);
                 val lists = faceNameEmbeddings.get(faceName).stream()
-                                              .filter(list -> isNotEmpty(list))
-                                              .collect(toList());
+                        .filter(list -> isNotEmpty(list))
+                        .collect(toList());
                 for (val list : lists) {
                     x.add(list.stream().mapToDouble(d -> d).toArray());
                     y.add(faceId);
@@ -68,7 +74,7 @@ public class FaceClassifierProxy {
                     labelMap
             );
         } finally {
-            storage.unlock(appKey, modelId);
+            storage.saveClassifier(appKey, modelId, this.getClassifier());
         }
     }
 
@@ -82,9 +88,5 @@ public class FaceClassifierProxy {
 
     public Pair<Integer, String> predict(final double[] x) {
         return classifier.predict(x);
-    }
-
-    public FaceClassifier getClassifier() {
-        return classifier;
     }
 }

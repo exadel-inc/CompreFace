@@ -1,21 +1,21 @@
 package com.exadel.frs.core.trainservice.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.domain.Face;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.system.Token;
-import java.util.HashMap;
-import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
+import java.util.HashMap;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 class FaceServiceTest {
 
@@ -24,9 +24,6 @@ class FaceServiceTest {
 
     @Mock
     private SystemService systemService;
-
-    @Mock
-    private RetrainService retrainService;
 
     @InjectMocks
     private FaceService faceService;

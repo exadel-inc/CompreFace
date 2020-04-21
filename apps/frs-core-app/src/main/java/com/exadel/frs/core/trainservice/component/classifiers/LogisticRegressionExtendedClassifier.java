@@ -1,7 +1,8 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
-import com.exadel.frs.core.trainservice.component.LogisticRegressionExt;
-import com.exadel.frs.core.trainservice.component.LogisticRegressionExt.Trainer;
+import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt;
+import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt.Trainer;
+
 import java.util.Map;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.util.Pair;
@@ -37,4 +38,5 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
     public boolean isTrained() {
         return !(logisticRegression == null);
     }
+
 }
