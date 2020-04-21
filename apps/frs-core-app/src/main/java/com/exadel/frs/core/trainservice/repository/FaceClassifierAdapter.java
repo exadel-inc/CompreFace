@@ -1,5 +1,7 @@
 package com.exadel.frs.core.trainservice.repository;
 
+import static java.lang.Thread.currentThread;
+import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
@@ -48,7 +50,11 @@ public class FaceClassifierAdapter {
             final String modelKey
     ) {
         try {
-            Thread.currentThread().setName(appKey + modelKey);
+            currentThread().setName(appKey + modelKey);
+
+            //TODO: remove after testing by QA
+            sleep(10000);
+
             var faceId = 0;
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
@@ -71,6 +77,8 @@ public class FaceClassifierAdapter {
                     y.stream().mapToInt(integer -> integer).toArray(),
                     labelMap
             );
+        } catch (InterruptedException e) {
+
         } finally {
             storage.unlock(appKey, modelKey);
         }

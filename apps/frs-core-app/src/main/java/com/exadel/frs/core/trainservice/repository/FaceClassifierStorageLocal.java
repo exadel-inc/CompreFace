@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.repository;
 
+import static java.lang.Thread.getAllStackTraces;
 import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,11 +44,10 @@ public class FaceClassifierStorageLocal implements FaceClassifierStorage {
         val lock = locks
                 .getOrDefault(Pair.of(appKey, modelKey), new AtomicBoolean(false));
         if (lock.get()) {
-            for (val thread : Thread.getAllStackTraces().keySet()) {
-                if (thread.getName().equals(appKey + modelKey)) {
-                    thread.interrupt();
-                }
-            }
+            getAllStackTraces().keySet().stream()
+                               .filter(thread -> thread.getName().equals(appKey + modelKey))
+                               .findAny()
+                               .ifPresent(thread -> thread.interrupt());
         }
 
         lock.set(false);
