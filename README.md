@@ -41,6 +41,10 @@ To check whether the project passes E2E tests on a remote deployment environment
 - `$ make e2e/qa` (QA environment)
 - `$ make e2e/remote ML_URL=http://example.com:3000` (other server)
 
+#### Scan a demo image
+
+To get the image shown at the top of the README.md, run: `$ make demo`.
+
 # Advanced usage
 Entrypoints to run the application and related development tools are organized as "targets" inside `Makefile` and run with `$ make`.
 
