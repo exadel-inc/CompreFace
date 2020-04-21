@@ -5,9 +5,9 @@ from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from scipy.spatial import distance
 
-from src.services.dto.bounding_box import BoundingBox
-from src.services.facescan.imgscaler.imgscaler import ImgScaler
-from src.services.imgtools.types import Array3D
+from ml.src.services.dto.bounding_box import BoundingBox
+from ml.src.services.facescan.imgscaler.imgscaler import ImgScaler
+from ml.src.services.imgtools.types import Array3D
 
 
 def _random_bright_color_gen_cls():

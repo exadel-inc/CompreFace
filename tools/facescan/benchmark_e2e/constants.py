@@ -1,8 +1,8 @@
 import logging
 
-from src.constants import ENV
-from src.services.facescan.scanner.facescanners import TESTED_SCANNERS
-from src.services.utils.pyutils import Constants, get_env_split, get_env_bool
+from ml.src.constants import ENV
+from ml.src.services.facescan.scanner.facescanners import TESTED_SCANNERS
+from ml.src.services.utils.pyutils import Constants, get_env_split, get_env_bool
 
 
 class _ENV(Constants):

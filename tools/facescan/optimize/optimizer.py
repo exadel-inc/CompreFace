@@ -2,7 +2,7 @@ import logging
 import time
 from collections import namedtuple
 
-from src.services.utils.pyutils import get_current_dir
+from ml.src.services.utils.pyutils import get_current_dir
 from tools.facescan.optimize.results_storage import ResultsStorage
 
 CURRENT_DIR = get_current_dir(__file__)
