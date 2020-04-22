@@ -6,6 +6,7 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API
 import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.system.SystemService;
+import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class ScanController {
     private final ScanService scanService;
     private final SystemService systemService;
     private final RetrainService retrainService;
+    private final ImageExtensionValidator imageValidator;
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/faces/{face_name}")
@@ -53,8 +55,8 @@ public class ScanController {
     ) throws IOException {
         val token = systemService.buildToken(apiKey);
 
-        getTrainingOption(retrainOption).run(token, retrainService);
-
+        imageValidator.validate(file);
         scanService.scanAndSaveFace(file, faceName, detProbThreshold, token.getModelApiKey());
+        getTrainingOption(retrainOption).run(token, retrainService);
     }
 }

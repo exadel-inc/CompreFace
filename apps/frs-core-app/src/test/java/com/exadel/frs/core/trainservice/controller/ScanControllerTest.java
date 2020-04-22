@@ -3,9 +3,13 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.service.ScanService;
+import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,9 @@ class ScanControllerTest {
     @MockBean
     private ScanService scanService;
 
+    @MockBean
+    private ImageExtensionValidator imageValidator;
+
     private final static String API_KEY = "api_key:model_key";
 
     @Test
@@ -37,5 +44,9 @@ class ScanControllerTest {
                         .param("retrain", NO.name())
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isCreated());
+
+        verify(imageValidator).validate(any());
+        verify(scanService).scanAndSaveFace(any(), any(), any(), any());
+        verifyNoMoreInteractions(imageValidator, scanService);
     }
 }

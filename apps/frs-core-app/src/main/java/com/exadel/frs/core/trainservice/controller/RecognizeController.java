@@ -9,6 +9,7 @@ import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.system.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.python.ScanFacesClient;
+import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -29,6 +30,7 @@ public class RecognizeController {
     private final FaceClassifierStorage storage;
     private final ScanFacesClient client;
     private final SystemService systemService;
+    private final ImageExtensionValidator imageValidator;
 
     @PostMapping(value = "/recognize")
     public ResponseEntity recognize(
@@ -49,6 +51,8 @@ public class RecognizeController {
             return ResponseEntity.status(LOCKED)
                                  .body(new RetrainResponse("Model is locked now, try later"));
         }
+
+        imageValidator.validate(file);
 
         val classifier = storage.getFaceClassifier(token.getAppApiKey(), token.getModelApiKey());
 
