@@ -1,4 +1,5 @@
 #!/bin/bash
+cd "${0%/*}" || exit 1  # Set Current Dir to the script's dir
 IMG_DIR=$1
 
 SCANNERS=${SCANNERS:-InsightFace Facenet2018}

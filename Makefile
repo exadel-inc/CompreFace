@@ -56,9 +56,8 @@ down/all:
 setup:
 	mkdir -p tmp
 	chmod +x ci-test.sh ml/run.sh e2e/run-e2e-test.sh ml/tools/crash-lab.sh
-	python -m pip install -r ml/requirements.txt
+	python -m pip install -r ml/requirements.txt -e ml/srcext/insightface/python-package
 	imageio_download_bin freeimage
-	python -m pip install -e ml/srcext/insightface/python-package
 
 # Run application
 start: db
@@ -132,7 +131,7 @@ e2e/qa: e2e/remote
 demo: IMG_NAMES=015_6.jpg
 demo: scan
 scan:
-	python -m ml/tools.facescan.scan.run
+	python -m ml.tools.facescan.scan.run
 
 # Detects faces on given images, with selected scanners, and output the results using remote ML service endpoint
 scan/remote: USE_REMOTE=true
@@ -140,7 +139,7 @@ scan/remote: scan
 
 # Optimizes face detection parameters with a given annotated image dataset
 optimize:
-	python -m ml/tools.facescan.optimize.run
+	python -m ml.tools.facescan.optimize.run
 
 # Runs experiments whether the system will crash with given images, selected face detection scanners, RAM limits, image processing settings, etc.; Intended to test for Out-Of-Memory (OOM) errors
 crash-lab:
@@ -148,7 +147,7 @@ crash-lab:
 
 # Tests the face scanning system with error statistics at every step of processing
 benchmark/e2e: ml/tools/facescan/benchmark_e2e/tmp
-	python -m ml/tools.facescan.benchmark_e2e.run
+	python -m ml.tools.facescan.benchmark_e2e.run
 
 #####################################
 ##### MISC
