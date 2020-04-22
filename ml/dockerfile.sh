@@ -10,8 +10,6 @@ echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/
 apt-get update
 apt-get install -y mongodb-org-tools mongodb-org-shell python-pymongo
 
-mkdir mongo_data
-
 if [ "$SKIP_TESTS" != true ]; then
   python -m pytest /app/ml/src
   python -m pylama --options /app/ml/pylama.ini /app/ml/src
