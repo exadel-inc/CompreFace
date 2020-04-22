@@ -16,6 +16,7 @@ if [ "$SKIP_TESTS" != true ]; then
   python -m pytest /app/ml/src
   python -m pylama --options /app/ml/pylama.ini /app/ml/src
 else
+  # If not using regular tests, at least run use smoke tests. Running scan with InsightFace also triggers the library to cache the models locally for subsequent use.
   export IMG_NAMES=000_5.jpg SHOW_IMG=false
   SCANNER=Facenet2018 \
     python -m tools.facescan.scan.run
