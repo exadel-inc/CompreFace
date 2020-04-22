@@ -147,7 +147,7 @@ crash-lab:
 	ml/tools/crash-lab.sh $(CURDIR)/ml/sample_images
 
 # Tests the face scanning system with error statistics at every step of processing
-benchmark/e2e: ml/ml/tools
+benchmark/e2e: ml/tools/facescan/benchmark_e2e/tmp
 	python -m ml/tools.facescan.benchmark_e2e.run
 
 #####################################
