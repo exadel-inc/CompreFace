@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.domain.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.system.SystemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +29,7 @@ public class FaceControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private final static String APP_GUID = "app_guid_for_test";
+    private final static String API_KEY = "api_key:model_key";
 
     @Autowired
     private ObjectMapper mapper;
@@ -36,16 +37,24 @@ public class FaceControllerTest {
     @MockBean
     private FacesRepository facesRepository;
 
+    @Autowired
+    private SystemService systemService;
+
     @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
-        var faces = List.of(makeFace("A", APP_GUID), makeFace("B", APP_GUID));
+        val token = systemService.buildToken(API_KEY);
+        val faces = List.of(
+                makeFace("A", token.getModelApiKey()),
+                makeFace("B", token.getModelApiKey())
+        );
+
         doReturn(faces)
                 .when(facesRepository)
-                .findByApiKey(APP_GUID);
+                .findByApiKey(token.getModelApiKey());
 
-        var expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
+        val expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
 
-        mockMvc.perform(get(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
+        mockMvc.perform(get(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
                .andExpect(status().isOk())
                .andExpect(content().json(expectedContent));
     }
@@ -61,9 +70,9 @@ public class FaceControllerTest {
         val response = List.of(new Face(), new Face(), new Face());
         doReturn(response)
                 .when(facesRepository)
-                .deleteFacesByApiKey(APP_GUID.substring(APP_GUID.length() / 2));
+                .deleteFacesByApiKey(API_KEY.substring(API_KEY.length() / 2));
 
-        mockMvc.perform(delete(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, APP_GUID))
+        mockMvc.perform(delete(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
                .andExpect(status().isOk())
                .andExpect(content().string(String.valueOf(response.size())));
     }

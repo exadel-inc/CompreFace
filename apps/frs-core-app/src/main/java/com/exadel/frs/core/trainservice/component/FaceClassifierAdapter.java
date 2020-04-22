@@ -26,7 +26,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 @Setter
 @Scope(value = "prototype")
 @RequiredArgsConstructor
-public class FaceClassifierProxy {
+public class FaceClassifierAdapter {
 
     public static final String CLASSIFIER_IMPLEMENTATION_BEAN_NAME =
             StringUtils.uncapitalize(LogisticRegressionExtendedClassifier.class.getSimpleName());

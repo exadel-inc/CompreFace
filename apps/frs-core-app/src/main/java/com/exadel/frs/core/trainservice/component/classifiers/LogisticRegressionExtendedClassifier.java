@@ -4,6 +4,7 @@ import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt;
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt.Trainer;
 
 import java.util.Map;
+import lombok.val;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
@@ -18,7 +19,7 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
     @Override
     public void train(final double[][] x, final int[] y, final Map<Integer, String> labelMap) {
         this.labelMap = labelMap;
-        var trainer = new Trainer();
+        val trainer = new Trainer();
         trainer.setMaxNumIteration(50);
         trainer.setTolerance(0.005);
         this.logisticRegression = trainer.train(x, y);
@@ -27,7 +28,8 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
     @Override
     public Pair<Integer, String> predict(final double[] input) {
         if (isTrained()) {
-            var predict = logisticRegression.predict(input);
+            val predict = logisticRegression.predict(input);
+
             return Pair.of(predict, labelMap.get(predict));
         }
 

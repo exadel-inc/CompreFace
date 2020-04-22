@@ -1,10 +1,9 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.component.FaceClassifierProxy;
+import com.exadel.frs.core.trainservice.component.FaceClassifierAdapter;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
 import com.exadel.frs.core.trainservice.config.MongoTest;
 import com.exadel.frs.core.trainservice.domain.Model;
-import com.exadel.frs.core.trainservice.exception.ClassifierNotTrained;
 import com.exadel.frs.core.trainservice.repository.ModelRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
@@ -26,7 +25,7 @@ public class ModelServiceTest {
 
 
     @BeforeEach
-    public void before(){
+    public void before() {
         modelRepository.deleteAll();
     }
 
@@ -83,7 +82,7 @@ public class ModelServiceTest {
                 .classifier(classifier)
                 .apiKey(UUID.randomUUID().toString())
                 .id(UUID.randomUUID().toString())
-                .classifierName(FaceClassifierProxy.CLASSIFIER_IMPLEMENTATION_BEAN_NAME)
+                .classifierName(FaceClassifierAdapter.CLASSIFIER_IMPLEMENTATION_BEAN_NAME)
                 .build();
         Model save = modelRepository.save(model);
         return save.getId();

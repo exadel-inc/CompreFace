@@ -14,7 +14,7 @@ public interface UserMapper {
     @Mapping(source = "guid", target = "userId")
     AppOwnerDto toAppOwnerDto(User entity);
 
-    @Mapping(source = "guid", target = "id")
+    @Mapping(source = "guid", target = "userId")
     UserResponseDto toResponseDto(User entity);
 
     List<UserResponseDto> toResponseDto(List<User> entities);

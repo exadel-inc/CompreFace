@@ -29,7 +29,7 @@ public class FaceClassifierManager {
 
     public void initNewClassifier(String appKey, String modelId) {
         lockManager.lock(appKey, modelId);
-        FaceClassifierProxy proxy = context.getBean(FaceClassifierProxy.class);
+        FaceClassifierAdapter proxy = context.getBean(FaceClassifierAdapter.class);
         proxy.train(faceDao.findAllFaceEmbeddingsByApiKey(appKey), appKey, modelId);
     }
 

@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.domain.Face;
 import com.exadel.frs.core.trainservice.system.SystemService;
@@ -25,6 +26,12 @@ class FaceServiceTest {
     @Mock
     private SystemService systemService;
 
+    @Mock
+    private RetrainService retrainService;
+
+    @Mock
+    private FaceClassifierManager classifierManager;
+
     @InjectMocks
     private FaceService faceService;
 
@@ -35,17 +42,21 @@ class FaceServiceTest {
 
     @Test
     void findAllFaceNames() {
-        val apiKey = "api_key";
+        val appKey = "appKey";
+        val modelKey = "modelKey";
+        val apiKey = appKey + modelKey;
         val faces = new HashMap<String, List<String>>();
+        val token = new Token(appKey, modelKey);
 
-        when(faceDao.findAllFaceNamesByApiKey(apiKey)).thenReturn(faces);
+        when(systemService.buildToken(apiKey)).thenReturn(token);
+        when(faceDao.findAllFaceNamesByApiKey(token.getModelApiKey())).thenReturn(faces);
 
         val actual = faceService.findAllFaceNames(apiKey);
 
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(faces);
 
-        verify(faceDao).findAllFaceNamesByApiKey(apiKey);
+        verify(faceDao).findAllFaceNamesByApiKey(token.getModelApiKey());
         verifyNoMoreInteractions(faceDao);
     }
 
@@ -72,6 +83,7 @@ class FaceServiceTest {
 
         when(systemService.buildToken(apiKey)).thenReturn(token);
         when(faceDao.deleteFacesByApiKey(token)).thenReturn(faces);
+        doNothing().when(classifierManager).removeFaceClassifier(token.getAppApiKey(),token.getModelApiKey());
 
         val actual = faceService.deleteFacesByModel(apiKey);
 

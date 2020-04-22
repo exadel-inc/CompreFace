@@ -1,9 +1,9 @@
 package com.exadel.frs.core.trainservice.service;
 
+import com.exadel.frs.core.trainservice.component.FaceClassifierAdapter;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.domain.Model;
 import com.exadel.frs.core.trainservice.exception.ClassifierNotTrained;
-import com.exadel.frs.core.trainservice.component.FaceClassifierProxy;
 import com.exadel.frs.core.trainservice.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ public class ModelService {
         Model model = Model.builder()
                 .id(modelId)
                 .classifier(classifier)
-                .classifierName(FaceClassifierProxy.CLASSIFIER_IMPLEMENTATION_BEAN_NAME)
+                .classifierName(FaceClassifierAdapter.CLASSIFIER_IMPLEMENTATION_BEAN_NAME)
                 .build();
         return modelRepository.save(model);
     }

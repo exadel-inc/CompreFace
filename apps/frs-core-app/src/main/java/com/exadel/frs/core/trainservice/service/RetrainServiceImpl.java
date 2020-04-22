@@ -1,6 +1,5 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,7 +16,7 @@ public class RetrainServiceImpl implements RetrainService {
     }
 
     @Override
-    public boolean isTraining(String appKey, String modelId) {
+    public boolean isTrainingRun(String appKey, String modelId) {
         return manager.isTraining(appKey, modelId);
     }
 

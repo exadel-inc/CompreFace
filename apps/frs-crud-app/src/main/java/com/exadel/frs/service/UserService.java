@@ -118,7 +118,7 @@ public class UserService {
             throw new EmptyRequiredFieldException("last name");
         }
 
-        if (userRepository.existsByEmail(userCreateDto.getEmail())) {
+        if (userRepository.existsByEmail(userCreateDto.getEmail().toLowerCase())) {
             throw new EmailAlreadyRegisteredException();
         }
     }
