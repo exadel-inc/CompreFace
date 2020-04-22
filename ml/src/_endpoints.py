@@ -30,7 +30,7 @@ def endpoints(app):
 
     @app.route('/status')
     def status_get():
-        return jsonify(status='OK', build_version=ENV.BUILD_VERSION)
+        return jsonify(status='OK', build_version=ENV.BUILD_VERSION, calculator_version=ENV.SCANNER)
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file

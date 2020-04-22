@@ -17,3 +17,6 @@ responses:
         build_version:
           type: string
           example: build-1.2.684-rc2
+        calculator_version:
+          type: string
+          example: FaceLibrary_v7
