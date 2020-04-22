@@ -14,7 +14,6 @@ mkdir mongo_data
 
 if [ "$SKIP_TESTS" != true ]; then
   python -m pytest /app/ml/src
-  python -m pytest /app/ml/src
   python -m pylama --options /app/ml/pylama.ini /app/ml/src
 else
   export IMG_NAMES=000_5.jpg SHOW_IMG=false
