@@ -3,7 +3,7 @@ import re
 
 import pytest
 
-from ml.src.services.facescan.scanner.facescanners import FaceScanners
+from src.services.facescan.scanner.facescanners import FaceScanners
 from tools.facescan.benchmark_e2e._dataset import Image
 from tools.facescan.benchmark_e2e._logistic_classifier_facade import LogisticClassifierFacade
 

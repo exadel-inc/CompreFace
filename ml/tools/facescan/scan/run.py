@@ -2,17 +2,17 @@ import logging
 
 import requests
 
-from ml.sample_images import IMG_DIR
-from ml.sample_images.annotations import name_2_annotation, SAMPLE_IMAGES
-from ml.src.constants import ENV, LOGGING_LEVEL
-from ml.src.exceptions import NoFaceFoundError
-from ml.src.init_runtime import init_runtime
-from ml.src.services.dto.scanned_face import ScannedFace
-from ml.src.services.facescan.scanner.facescanner import FaceScanner
-from ml.src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
-from ml.src.services.facescan.scanner.test.calculate_errors import calculate_errors
-from ml.src.services.imgtools.read_img import read_img
-from ml.src.services.utils.pyutils import get_env, Constants, get_env_split, get_env_bool, s
+from sample_images import IMG_DIR
+from sample_images.annotations import name_2_annotation, SAMPLE_IMAGES
+from src.constants import ENV, LOGGING_LEVEL
+from src.exceptions import NoFaceFoundError
+from src.init_runtime import init_runtime
+from src.services.dto.scanned_face import ScannedFace
+from src.services.facescan.scanner.facescanner import FaceScanner
+from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
+from src.services.facescan.scanner.test.calculate_errors import calculate_errors
+from src.services.imgtools.read_img import read_img
+from src.services.utils.pyutils import get_env, Constants, get_env_split, get_env_bool, s
 from tools.facescan.scan._show_img import show_img
 
 logger = logging.getLogger(__name__)

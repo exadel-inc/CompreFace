@@ -2,9 +2,9 @@ import logging
 from collections import defaultdict, Counter
 from typing import Set, Union
 
-from ml.src.exceptions import NoFaceFoundError, MoreThanOneFaceFoundError
-from ml.src.services.classifier.logistic_classifier import LogisticClassifier, LogisticClassifierMock
-from ml.src.services.facescan.scanner.facescanner import FaceScanner
+from src.exceptions import NoFaceFoundError, MoreThanOneFaceFoundError
+from src.services.classifier.logistic_classifier import LogisticClassifier, LogisticClassifierMock
+from src.services.facescan.scanner.facescanner import FaceScanner
 from tools.facescan.benchmark_e2e._dataset import Image
 from tools.facescan.benchmark_e2e.constants import _ENV
 

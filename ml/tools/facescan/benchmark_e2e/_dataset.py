@@ -4,11 +4,11 @@ from typing import List, Set
 
 import numpy as np
 
-from ml.sample_images import IMG_DIR
-from ml.src.services.facescan.scanner.facescanner import FaceScanner
-from ml.src.services.imgtools.read_img import read_img
-from ml.src.services.imgtools.types import Array1D
-from ml.src.services.utils.pyutils import get_current_dir
+from sample_images import IMG_DIR
+from src.services.facescan.scanner.facescanner import FaceScanner
+from src.services.imgtools.read_img import read_img
+from src.services.imgtools.types import Array1D
+from src.services.utils.pyutils import get_current_dir
 from tools.facescan.benchmark_e2e.constants import _ENV
 
 TMP_DIR = get_current_dir(__file__) / 'tmp'
