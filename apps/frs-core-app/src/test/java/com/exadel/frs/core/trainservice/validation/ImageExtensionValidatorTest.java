@@ -43,6 +43,19 @@ class ImageExtensionValidatorTest {
     }
 
     @Test
+    public void validateFileUppercaseExtension() {
+        val file = mock(MultipartFile.class);
+        when(file.getOriginalFilename()).thenReturn("IMAGE.JPG");
+        when(imageProperties.getTypes()).thenReturn(List.of("jpg"));
+
+        validator.validate(file);
+
+        verify(file).getOriginalFilename();
+        verify(imageProperties).getTypes();
+        verifyNoMoreInteractions(imageProperties);
+    }
+
+    @Test
     public void validateNull() {
         validator.validate(null);
     }

@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.system.global;
+package com.exadel.frs.system.global;
 
 import java.util.List;
 import javax.validation.constraints.NotNull;

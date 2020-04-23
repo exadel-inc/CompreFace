@@ -41,6 +41,7 @@ public class ProxyController {
 
     private final ModelRepository modelRepository;
     private final AppModelRepository appModelRepository;
+    private final ImageExtensionValidator imageValidator;
 
     @Value("${proxy.baseUrl}")
     private String baseUrl;
@@ -103,7 +104,7 @@ public class ProxyController {
             throw new AccessDeniedException();
         }
 
-        new ImageExtensionValidator().validate(files.values());
+        imageValidator.validate(files.values());
 
         val remoteUrl = baseUrl + request.getRequestURI().replaceFirst(PREFIX + "/v1", "");
         val body = new LinkedMultiValueMap<String, Object>();
