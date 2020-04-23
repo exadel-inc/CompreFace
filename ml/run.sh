@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "${0%/*}" || exit 1  # Set Current Dir to the script's dir
+cd "${0%/*}" || exit 1 # Set Current Dir to the script's dir
 COMMAND=$1
 
 if [[ "$COMMAND" != "stop" && "$COMMAND" != "start" ]]; then
