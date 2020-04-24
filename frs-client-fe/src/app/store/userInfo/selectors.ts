@@ -11,5 +11,5 @@ export const selectUserId = createSelector(
 // TODO: move default avatar to backend response
 export const selectUserAvatar = createSelector(
   selectUserInfoState,
-  (userInfo) => userInfo.avatar || 'assets/img/avatar.jpg'
+  (userInfo) => userInfo.avatar || 'assets/img/avatar.png'
 );
