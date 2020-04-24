@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-model-list',
   templateUrl: './model-list.component.html',
-  styleUrls: ['./model-list.component.sass'],
+  styleUrls: ['./model-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModelListComponent implements OnInit, OnDestroy {

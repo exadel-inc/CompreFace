@@ -1,0 +1,14 @@
+.email-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  .mat-form-field {
+    width: 47%;
+  }
+
+  .mat-raised-button {
+    margin: 15px 0;
+    width: 50%;
+  }
+}

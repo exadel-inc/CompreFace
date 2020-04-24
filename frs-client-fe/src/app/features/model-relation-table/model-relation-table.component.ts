@@ -6,7 +6,7 @@ import {ModelRelation} from 'src/app/data/modelRelation';
 @Component({
   selector: 'app-model-relation-table',
   templateUrl: './model-relation-table.component.html',
-  styleUrls: ['./model-relation-table.component.sass'],
+  styleUrls: ['./model-relation-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModelRelationTableComponent extends TableComponent {

@@ -9,7 +9,7 @@ import {ModelRelation} from 'src/app/data/modelRelation';
 @Component({
   selector: 'app-models-relation-list',
   templateUrl: './models-relation-list.component.html',
-  styleUrls: ['./models-relation-list.component.sass'],
+  styleUrls: ['./models-relation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModelsRelationListComponent implements OnInit, OnDestroy {

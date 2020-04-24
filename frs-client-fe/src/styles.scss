@@ -1,0 +1,158 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'media.scss';
+@import 'colors.scss';
+
+body,
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+
+  h3 {
+    font-weight: 400;
+    margin-top: 0;
+  }
+}
+
+.container {
+  width: 100%;
+  padding-right: 16px;
+  padding-left: 16px;
+  margin-right: auto;
+  margin-left: auto;
+  flex-wrap: wrap;
+}
+
+mat-card {
+  box-sizing: border-box;
+}
+
+.mat-raised-button {
+  &.mat-primary {
+    background-color: $primary;
+
+    &:hover {
+      background-color: $primary-light;
+    }
+  }
+}
+
+.mat-flat-button {
+  &.mat-accent {
+    background-color: $green;
+  }
+
+  &:hover {
+    background-color: lighten($green, 10%);
+  }
+}
+
+.btn-block {
+  width: 100%;
+
+  .mat-table {
+    .mat-row {
+      height: 58px;
+    }
+  }
+}
+
+app-table, app-user-table {
+  overflow-y: auto;
+  display: block;
+  min-height: 300px;
+  max-height: 530px;
+  margin-bottom: 50px;
+
+  @media (min-height: 951px) and (max-height: 1050px) {
+    max-height: 400px
+  }
+
+  @media (max-height: 950px) {
+    max-height: 300px;
+  }
+
+  @include tablet {
+    min-height: 290px;
+    max-height: 297px
+  }
+}
+
+@include mobile {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@include tablet-portrait {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@include tablet-landscape {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@include desktop {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+.app-table {
+  table {
+    width: 100%;
+
+    th, td {
+      border-bottom-color: black
+    }
+
+    th {
+      font-size: 15px;
+      color: black
+
+    }
+
+    .mat-header-cell {
+      width: 50%;
+    }
+
+    .mat-form-field {
+      width: 80%;
+    }
+  }
+}
+
+.app-page {
+  height: auto;
+  margin-bottom: 60px;
+
+  .card-single-action-container {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+  }
+}
+
+.mat-form-field-type-mat-select .mat-form-field-underline {
+  display: none;
+}
+
+.mat-select-arrow {
+  color: black;
+}
+
+.mat-button.mat-primary,
+.mat-icon-button.mat-primary,
+.mat-stroked-button.mat-primary {
+  color: #328AFB;
+}

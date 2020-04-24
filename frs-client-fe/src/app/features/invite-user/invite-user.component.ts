@@ -7,7 +7,7 @@ import {map, startWith} from 'rxjs/operators';
 @Component({
   selector: 'app-invite-user',
   templateUrl: './invite-user.component.html',
-  styleUrls: ['./invite-user.component.sass'],
+  styleUrls: ['./invite-user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InviteUserComponent implements OnInit {

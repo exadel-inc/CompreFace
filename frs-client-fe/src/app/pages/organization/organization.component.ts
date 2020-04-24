@@ -4,7 +4,7 @@ import {OrganizationService} from './organization.service';
 @Component({
   selector: 'app-organization',
   templateUrl: './organization.component.html',
-  styleUrls: ['./organization.component.sass'],
+  styleUrls: ['./organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationComponent implements OnInit, OnDestroy {

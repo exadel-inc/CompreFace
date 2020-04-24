@@ -1,0 +1,15 @@
+@import 'colors.scss';
+
+.mat-form-field {
+  width: 100%
+}
+
+.mat-dialog-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between
+}
+
+.button-create {
+  color: $primary-light
+}

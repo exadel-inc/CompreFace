@@ -11,7 +11,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-application-list-container',
   templateUrl: './application-list-container.component.html',
-  styleUrls: ['./application-list-container.component.sass'],
+  styleUrls: ['./application-list-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationListComponent implements OnInit, OnDestroy {

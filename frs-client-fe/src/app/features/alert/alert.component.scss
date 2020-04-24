@@ -1,0 +1,31 @@
+@import 'colors.scss';
+
+.mat-dialog-title, .mat-dialog-content {
+  text-align: center;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  flex-direction: column
+}
+
+.alert {
+  &-info {
+    background-color: $green;
+    color: $white
+  }
+
+  &-warning {
+    background-color: $pale-gray;
+  }
+
+  &-error {
+    background-color: $red;
+    color: $white
+  }
+}
+
+button {
+  color: $primary-light;
+}
+

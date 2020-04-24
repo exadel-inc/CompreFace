@@ -42,7 +42,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 #Project structure and architecture
 
 ###Folder structure
-`styles:` folder with sass common styles \
+`styles:` folder with scss common styles \
 `core` folder with Global framework-based services \
 `data` global models, enums, classes, interfaces (user model, permissions, roles ect. NO Dto's data inside!!!!). Don't based on specific framework/plugin \
 `feature/containers` Feature specific smart/container components. Communicates with store through facade. Styles less.\

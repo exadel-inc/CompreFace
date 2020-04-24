@@ -8,7 +8,7 @@ import {ROUTERS_URL} from '../../../data/routers-url.variable';
 @Component({
   selector: 'app-create-organisation-dialog',
   templateUrl: './create-organisation.dialog.html',
-  styleUrls: ['./create-organisation.dialog.sass'],
+  styleUrls: ['./create-organisation.dialog.scss'],
 })
 export class CreateOrganisationDialogComponent {
   public name = '';
