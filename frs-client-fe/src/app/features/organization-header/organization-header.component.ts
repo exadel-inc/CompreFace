@@ -11,7 +11,7 @@ import {take, switchMap} from 'rxjs/operators';
 @Component({
   selector: 'app-organization-header',
   templateUrl: './organization-header.component.html',
-  styleUrls: ['./organization-header.component.sass'],
+  styleUrls: ['./organization-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationHeaderComponent implements OnInit {

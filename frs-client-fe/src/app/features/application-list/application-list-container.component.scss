@@ -1,0 +1,10 @@
+@import 'colors.scss';
+
+.application-list {
+  position: relative;
+
+  app-spinner {
+    position: absolute;
+    left: 40%
+  }
+}

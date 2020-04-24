@@ -9,7 +9,7 @@ import {selectUserAvatar} from '../../store/userInfo/selectors';
 @Component({
   selector: 'app-tool-bar',
   templateUrl: './tool-bar.component.html',
-  styleUrls: ['./tool-bar.component.sass']
+  styleUrls: ['./tool-bar.component.scss']
 })
 export class ToolBarComponent implements OnInit {
   getState$: Observable<any>;

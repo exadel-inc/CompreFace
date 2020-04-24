@@ -1,0 +1,14 @@
+.model-list {
+  position: relative;
+
+  app-spinner {
+    position: absolute;
+    left: 40%;
+  }
+}
+
+.add-model-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}

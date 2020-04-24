@@ -6,7 +6,7 @@ import {OrganizationService} from './organization.service';
 @Component({
   selector: 'app-organization-create',
   templateUrl: './organization-create.component.html',
-  styleUrls: ['./organization.component.sass'],
+  styleUrls: ['./organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationCreateComponent implements OnInit, OnDestroy {

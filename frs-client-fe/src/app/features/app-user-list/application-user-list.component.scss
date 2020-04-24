@@ -1,0 +1,35 @@
+.app-user-list {
+  position: relative;
+}
+
+app-spinner {
+  position: absolute;
+  left: 40%;
+}
+
+.table-header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  form {
+    width: 80%;
+    height: 35px;
+  }
+
+  input {
+    padding: 5px 30px 5px 5px;
+    background-color: #EEEEEE;
+    max-width: 385px;
+  }
+
+  i {
+    position: absolute;
+    right: 10px;
+    top: 2px;
+  }
+}
+
+mat-form-field {
+  margin-top: -25px;
+}

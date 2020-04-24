@@ -1,0 +1,39 @@
+@import 'colors.scss';
+@import 'media.scss';
+
+:host{
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+.mat-toolbar{
+  background-color: $primary;
+  color: $white;
+  height: 50px;
+  min-height: 50px
+}
+
+.mat-toolbar-row{
+  justify-content: flex-end
+}
+
+.mat-button-focus-overlay{
+  background: none;
+}
+
+.mat-button{
+  text-decoration: underline;
+
+  &:hover{
+    color: $hovered;
+  }
+
+  @include mobile-portrait {
+    padding: 0;
+    min-width: 55px;
+  }
+}
+
+
+

@@ -8,7 +8,7 @@ import {AppUser} from 'src/app/data/appUser';
 @Component({
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
-  styleUrls: ['./user-table.component.sass'],
+  styleUrls: ['./user-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserTableComponent extends TableComponent implements OnInit {

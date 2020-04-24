@@ -7,7 +7,7 @@ import {Model} from '../../data/model';
 @Component({
   selector: 'app-entity-title',
   templateUrl: './entity-title.component.html',
-  styleUrls: ['./entity-title.component.sass'],
+  styleUrls: ['./entity-title.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EntityTitleComponent implements OnInit {

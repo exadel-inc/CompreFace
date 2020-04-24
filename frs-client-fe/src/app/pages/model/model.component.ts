@@ -4,7 +4,7 @@ import {ModelPageService} from './model.service';
 @Component({
   selector: 'app-model',
   templateUrl: './model.component.html',
-  styleUrls: ['./model.component.sass']
+  styleUrls: ['./model.component.scss']
 })
 export class ModelComponent implements OnInit, OnDestroy {
   constructor(private modelService: ModelPageService) { }

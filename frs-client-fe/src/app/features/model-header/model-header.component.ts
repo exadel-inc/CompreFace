@@ -10,7 +10,7 @@ import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
 @Component({
   selector: 'app-model-header',
   templateUrl: './model-header.component.html',
-  styleUrls: ['./model-header.component.sass'],
+  styleUrls: ['./model-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModelHeaderComponent implements OnInit, OnDestroy {

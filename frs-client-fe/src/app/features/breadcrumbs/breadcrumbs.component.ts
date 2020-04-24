@@ -11,7 +11,7 @@ import {Model} from '../../data/model';
 @Component({
   selector: 'app-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
-  styleUrls: ['./breadcrumbs.component.sass']
+  styleUrls: ['./breadcrumbs.component.scss']
 })
 export class BreadcrumbsComponent implements OnInit {
   public org$: Observable<Organization>;

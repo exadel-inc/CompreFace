@@ -9,7 +9,7 @@ import {filter, map} from 'rxjs/operators';
 @Component({
   selector: 'app-application-header',
   templateUrl: './application-header.component.html',
-  styleUrls: ['./application-header.component.sass'],
+  styleUrls: ['./application-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 

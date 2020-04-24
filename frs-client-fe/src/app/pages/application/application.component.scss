@@ -1,0 +1,36 @@
+@import 'media.scss';
+
+.container {
+  min-height: 650px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
+  .header-container {
+    width: 100%;
+
+    @include mobile {
+      height: auto;
+    }
+  }
+}
+
+app-application-header {
+  margin-bottom: 40px;
+}
+
+.grid-container {
+  display: flex;
+  justify-content: space-between;
+
+  mat-card {
+    width: 49%;
+    transform: perspective(1px)
+  }
+
+  app-model-list, app-application-user-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between
+  }
+}

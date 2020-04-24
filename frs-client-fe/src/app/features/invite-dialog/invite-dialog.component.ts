@@ -1,4 +1,4 @@
-import {Component, OnInit, Inject, Input, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
 import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
 import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
@@ -8,7 +8,7 @@ import {startWith, map} from 'rxjs/operators';
 @Component({
   selector: 'app-invite-dialog',
   templateUrl: './invite-dialog.component.html',
-  styleUrls: ['./invite-dialog.component.sass'],
+  styleUrls: ['./invite-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InviteDialogComponent implements OnInit {

@@ -11,7 +11,7 @@ import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
 @Component({
   selector: 'app-application-user-list',
   templateUrl: './application-user-list.component.html',
-  styleUrls: ['./application-user-list.component.sass'],
+  styleUrls: ['./application-user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationUserListComponent implements OnInit, OnDestroy {

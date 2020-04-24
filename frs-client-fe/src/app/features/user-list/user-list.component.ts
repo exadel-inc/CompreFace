@@ -12,7 +12,7 @@ import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
 @Component({
   selector: 'app-user-list-container',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.sass'],
+  styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserListComponent implements OnInit, OnDestroy {
