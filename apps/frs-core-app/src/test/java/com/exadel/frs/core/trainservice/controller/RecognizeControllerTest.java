@@ -3,12 +3,10 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierAdapter;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
+import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.system.Token;
 import com.exadel.frs.core.trainservice.system.python.ScanBox;
@@ -35,7 +33,7 @@ class RecognizeControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private FaceClassifierStorage storage;
+    private FaceClassifierPredictor predictor;
 
     @MockBean
     private ScanFacesClient client;
@@ -52,7 +50,6 @@ class RecognizeControllerTest {
 
     @Test
     void recognize() throws Exception {
-        val mockAdapter = mock(FaceClassifierAdapter.class);
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
         val scanResponse = new ScanResponse().setResult(
                 List.of(new ScanResult()
@@ -62,10 +59,8 @@ class RecognizeControllerTest {
         );
 
         when(systemService.buildToken(API_KEY)).thenReturn(new Token(APP_KEY, MODEL_KEY));
-        when(storage.isLocked(APP_KEY, MODEL_KEY)).thenReturn(false);
         when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
-        when(storage.getFaceClassifier(APP_KEY, MODEL_KEY)).thenReturn(mockAdapter);
-        when(mockAdapter.predict(any())).thenReturn(Pair.of(1, ""));
+        when(predictor.predict(any(), any(), any())).thenReturn(Pair.of(1, ""));
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognize")
