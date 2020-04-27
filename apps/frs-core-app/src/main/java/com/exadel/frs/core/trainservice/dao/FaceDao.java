@@ -4,7 +4,7 @@ import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 import com.exadel.frs.core.trainservice.domain.Face;
 import com.exadel.frs.core.trainservice.domain.Face.Embedding;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.system.Token;
 import java.util.List;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FaceDao {
 
-    private final FaceClassifierStorage storage;
     private final FacesRepository facesRepository;
 
     public Map<String, List<List<Double>>> findAllFaceEmbeddings() {
@@ -61,8 +60,6 @@ public class FaceDao {
     }
 
     public List<Face> deleteFacesByApiKey(final Token token) {
-        storage.removeFaceClassifier(token.getAppApiKey(), token.getModelApiKey());
-
         return facesRepository.deleteFacesByApiKey(token.getModelApiKey());
     }
 }

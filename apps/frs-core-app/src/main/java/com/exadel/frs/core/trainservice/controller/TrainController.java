@@ -2,15 +2,19 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
+
 import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +30,8 @@ public class TrainController {
 
     private final RetrainService retrainService;
     private final SystemService systemService;
+    private final FaceClassifierManager manager;
+
 
     @PostMapping("/retrain")
     public ResponseEntity train(
@@ -34,6 +40,7 @@ public class TrainController {
             final String apiKey
     ) {
         val token = systemService.buildToken(apiKey);
+        manager.initNewClassifier(token.getAppApiKey(), token.getModelApiKey());
         retrainService.startRetrain(token.getAppApiKey(), token.getModelApiKey());
 
         return ResponseEntity.status(ACCEPTED)

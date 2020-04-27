@@ -1,9 +1,11 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
-import java.util.Map;
 import org.springframework.data.util.Pair;
 
-public interface FaceClassifier {
+import java.io.Serializable;
+import java.util.Map;
+
+public interface FaceClassifier extends Serializable {
 
     void train(double[][] input, int[] output, Map<Integer, String> labelMap);
 
