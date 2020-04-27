@@ -4,6 +4,7 @@ import com.exadel.frs.core.trainservice.converter.BytesToFaceClassifierConverter
 import com.exadel.frs.core.trainservice.converter.FaceClassifierToBytesConverter;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -53,8 +54,9 @@ class MongoConfig extends AbstractMongoClientConfiguration {
 
     @Override
     public MappingMongoConverter mappingMongoConverter() throws Exception {
-        MappingMongoConverter mappingMongoConverter = super.mappingMongoConverter();
+        val mappingMongoConverter = super.mappingMongoConverter();
         mappingMongoConverter.setCustomConversions(mongoCustomConversions());
+
         return mappingMongoConverter;
     }
 

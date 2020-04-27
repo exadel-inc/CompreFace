@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
@@ -42,7 +43,7 @@ public class TrainController {
         manager.initNewClassifier(token.getAppApiKey(), token.getModelApiKey());
         retrainService.startRetrain(token.getAppApiKey(), token.getModelApiKey());
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED)
+        return ResponseEntity.status(ACCEPTED)
                              .body(new RetrainResponse("Retraining has just been started (this one already exists)"));
     }
 

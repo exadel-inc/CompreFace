@@ -1,8 +1,8 @@
 package com.exadel.frs.core.trainservice.component;
 
-import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import com.exadel.frs.core.trainservice.service.ModelService;
+import com.exadel.frs.core.trainservice.dao.ModelDao;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
@@ -11,13 +11,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FaceClassifierPredictor {
 
-    private final ModelService modelService;
+    private final ModelDao modelDao;
     private final ApplicationContext context;
 
-    public Pair<Integer, String> predict(final String appKey, final String modelId, double[] input) {
-        FaceClassifier model = modelService.getModel(modelId);
+    public Pair<Integer, String> predict(final String appKey, final String modelKey, double[] input) {
+        val model = modelDao.getModel(modelKey);
         FaceClassifierAdapter classifierAdapter = context.getBean(FaceClassifierAdapter.class);
         classifierAdapter.setClassifier(model);
+
         return classifierAdapter.predict(input);
     }
 }

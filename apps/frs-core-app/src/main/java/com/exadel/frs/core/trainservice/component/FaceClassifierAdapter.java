@@ -59,8 +59,8 @@ public class FaceClassifierAdapter {
             for (val faceName : faceNameEmbeddings.keySet()) {
                 labelMap.put(faceId, faceName);
                 val lists = faceNameEmbeddings.get(faceName).stream()
-                        .filter(list -> isNotEmpty(list))
-                        .collect(toList());
+                                              .filter(list -> isNotEmpty(list))
+                                              .collect(toList());
                 for (val list : lists) {
                     x.add(list.stream().mapToDouble(d -> d).toArray());
                     y.add(faceId);

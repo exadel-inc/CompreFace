@@ -18,7 +18,7 @@ import java.util.UUID;
 @MongoTest
 @Slf4j
 @EnabledIf(expression = "#{environment.acceptsProfiles('integration-test')}")
-public class ModelServiceTest {
+public class ModelDaoTest {
 
     @Autowired
     private ModelRepository modelRepository;

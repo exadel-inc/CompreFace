@@ -11,17 +11,17 @@ public class RetrainServiceImpl implements RetrainService {
     private final FaceClassifierManager manager;
 
     @Override
-    public void startRetrain(String appKey, String modelId) {
-        manager.initNewClassifier(appKey, modelId);
+    public void startRetrain(final String appKey, final String modelKey) {
+        manager.initNewClassifier(appKey, modelKey);
     }
 
     @Override
-    public boolean isTrainingRun(String appKey, String modelId) {
-        return manager.isTraining(appKey, modelId);
+    public boolean isTrainingRun(final String appKey, final String modelKey) {
+        return manager.isTraining(appKey, modelKey);
     }
 
     @Override
-    public void abortTraining(String appKey, String modelId) {
-        manager.abortClassifierTraining(appKey, modelId);
+    public void abortTraining(final String appKey, final String modelKey) {
+        manager.abortClassifierTraining(appKey, modelKey);
     }
 }

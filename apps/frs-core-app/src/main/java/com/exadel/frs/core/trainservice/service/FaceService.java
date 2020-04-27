@@ -22,7 +22,6 @@ public class FaceService {
     private final RetrainService retrainService;
     private final FaceClassifierManager classifierManager;
 
-
     public Map<String, List<String>> findAllFaceNames(final String apiKey) {
         val token = systemService.buildToken(apiKey);
 
