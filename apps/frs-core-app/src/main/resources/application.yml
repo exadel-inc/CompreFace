@@ -35,3 +35,14 @@ spring:
     livereload:
       enabled: false
 
+image:
+  types:
+    - tif
+    - tiff
+    - jpg
+    - jpeg
+    - png
+    - bmp
+    - ico
+    - gif
+    - webp

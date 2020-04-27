@@ -99,3 +99,15 @@ registration:
     expires: 3600000
     scheduler:
       period: 300000
+
+image:
+  types:
+    - tif
+    - tiff
+    - jpg
+    - jpeg
+    - png
+    - bmp
+    - ico
+    - gif
+    - webp
