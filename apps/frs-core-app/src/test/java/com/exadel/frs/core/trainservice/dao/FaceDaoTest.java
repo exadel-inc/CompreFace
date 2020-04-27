@@ -6,8 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.domain.Face;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.system.Token;
 import java.util.List;
@@ -18,9 +19,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 class FaceDaoTest {
-
-    @Mock
-    private FaceClassifierStorage storage;
 
     @Mock
     private FacesRepository facesRepository;
@@ -43,8 +41,7 @@ class FaceDaoTest {
 
         assertThat(actual).isEqualTo(faces);
 
-        verify(storage).removeFaceClassifier(token.getAppApiKey(), token.getModelApiKey());
         verify(facesRepository).deleteFacesByApiKey(token.getModelApiKey());
-        verifyNoMoreInteractions(storage, facesRepository);
+        verifyNoMoreInteractions(facesRepository);
     }
 }

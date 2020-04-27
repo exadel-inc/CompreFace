@@ -3,6 +3,8 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.web.util.UriUtils.encode;
+
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import java.util.List;
@@ -18,6 +20,7 @@ public class FaceService {
     private final FaceDao faceDao;
     private final SystemService systemService;
     private final RetrainService retrainService;
+    private final FaceClassifierManager classifierManager;
 
     public Map<String, List<String>> findAllFaceNames(final String apiKey) {
         val token = systemService.buildToken(apiKey);
@@ -40,6 +43,7 @@ public class FaceService {
 
     public int deleteFacesByModel(final String apiKey) {
         val token = systemService.buildToken(apiKey);
+        classifierManager.removeFaceClassifier(token.getAppApiKey(), token.getModelApiKey());
         val deletedFaces = faceDao.deleteFacesByApiKey(token);
 
         return deletedFaces.size();

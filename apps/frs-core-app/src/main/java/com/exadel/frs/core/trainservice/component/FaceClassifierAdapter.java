@@ -1,42 +1,42 @@
-package com.exadel.frs.core.trainservice.repository;
+package com.exadel.frs.core.trainservice.component;
 
-import static java.lang.Thread.currentThread;
-import static java.lang.Thread.sleep;
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import javax.annotation.PostConstruct;
-import lombok.NonNull;
+import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.val;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
+
 @Component
 @Setter
 @Scope(value = "prototype")
+@RequiredArgsConstructor
 public class FaceClassifierAdapter {
 
-    public static final String CLASSIFIER_IMPLEMENTATION_BEAN_NAME = "logisticRegressionExtendedClassifier";
+    public static final String CLASSIFIER_IMPLEMENTATION_BEAN_NAME =
+            StringUtils.uncapitalize(LogisticRegressionExtendedClassifier.class.getSimpleName());
 
     private final ApplicationContext applicationContext;
-    private final FaceClassifierStorage storage;
-    private FaceClassifier classifier;
 
-    public FaceClassifierAdapter(
-            @NonNull final ApplicationContext applicationContext,
-            @NonNull final FaceClassifierStorage storage
-    ) {
-        this.applicationContext = applicationContext;
-        this.storage = storage;
-    }
+    private final FaceClassifierManager storage;
+
+    @Getter
+    private FaceClassifier classifier;
 
     @PostConstruct
     public void postConstruct() {
@@ -47,14 +47,10 @@ public class FaceClassifierAdapter {
     public void train(
             final Map<String, List<List<Double>>> faceNameEmbeddings,
             final String appKey,
-            final String modelKey
+            final String modelId
     ) {
         try {
-            currentThread().setName(appKey + modelKey);
-
-            //TODO: remove after testing by QA
-            sleep(10000);
-
+            Thread.currentThread().setName(appKey + modelId);
             var faceId = 0;
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
@@ -77,26 +73,20 @@ public class FaceClassifierAdapter {
                     y.stream().mapToInt(integer -> integer).toArray(),
                     labelMap
             );
-        } catch (InterruptedException e) {
-
         } finally {
-            storage.unlock(appKey, modelKey);
+            storage.saveClassifier(appKey, modelId, this.getClassifier());
         }
     }
 
     public void trainSync(
             final Map<String, List<List<Double>>> faceNameEmbeddings,
             final String appKey,
-            final String modelKey
+            final String modelId
     ) {
-        this.train(faceNameEmbeddings, appKey, modelKey);
+        this.train(faceNameEmbeddings, appKey, modelId);
     }
 
     public Pair<Integer, String> predict(final double[] x) {
         return classifier.predict(x);
-    }
-
-    public FaceClassifier getClassifier() {
-        return classifier;
     }
 }

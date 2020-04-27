@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.repository.FaceClassifierStorage;
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -9,23 +8,20 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RetrainServiceImpl implements RetrainService {
 
-    private final FaceClassifierStorage storage;
-    private final FaceDao faceDao;
+    private final FaceClassifierManager manager;
 
     @Override
     public void startRetrain(final String appKey, final String modelKey) {
-        storage.lock(appKey, modelKey);
-        storage.getFaceClassifier(appKey, modelKey)
-               .train(faceDao.findAllFaceEmbeddingsByApiKey(modelKey), appKey, modelKey);
+        manager.initNewClassifier(appKey, modelKey);
     }
 
     @Override
     public boolean isTrainingRun(final String appKey, final String modelKey) {
-        return storage.isLocked(appKey, modelKey);
+        return manager.isTraining(appKey, modelKey);
     }
 
     @Override
     public void abortTraining(final String appKey, final String modelKey) {
-        storage.unlock(appKey, modelKey);
+        manager.abortClassifierTraining(appKey, modelKey);
     }
 }

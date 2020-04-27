@@ -1,18 +1,15 @@
-package com.exadel.frs.core.trainservice.component;
+package com.exadel.frs.core.trainservice.ml;
 
-import java.util.Arrays;
 import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import smile.classification.LogisticRegression;
 import smile.math.DifferentiableMultivariateFunction;
 import smile.math.Math;
+
+import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 
-public class LogisticRegressionExt {
-
-    private static final long serialVersionUID = 1L;
-    private static final Logger logger = LoggerFactory.getLogger(LogisticRegression.class);
+public class LogisticRegressionExt implements Serializable {
 
     /**
      * The dimension of input space.
