@@ -22,16 +22,15 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.system.python.CoreDeleteFacesClient;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
+import com.exadel.frs.system.python.CoreDeleteFacesClient;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -510,6 +509,8 @@ class ModelServiceTest {
     @ParameterizedTest
     @MethodSource("writeRoles")
     void successDeleteModel(OrganizationRole organizationRole) {
+        val appKey = "app_key";
+        val modelKey = "model_key";
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);
@@ -518,12 +519,14 @@ class ModelServiceTest {
         val app = App.builder()
                 .id(APPLICATION_ID)
                 .guid(APPLICATION_GUID)
+                .apiKey(appKey)
                 .organization(organization)
                 .build();
 
         val model = Model.builder()
                 .id(MODEL_ID)
                 .guid(MODEL_GUID)
+                .apiKey(modelKey)
                 .app(app)
                 .build();
 
@@ -531,7 +534,7 @@ class ModelServiceTest {
 
         modelService.deleteModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
-        verify(facesClient).deleteFaces(anyString());
+        verify(facesClient).deleteFaces(appKey + modelKey);
         verify(modelRepositoryMock).findByGuid(anyString());
         verify(modelRepositoryMock).deleteById(anyLong());
         verifyNoMoreInteractions(facesClient, modelRepositoryMock);

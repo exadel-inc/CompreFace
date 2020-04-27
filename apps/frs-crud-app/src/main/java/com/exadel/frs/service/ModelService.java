@@ -161,7 +161,7 @@ public class ModelService {
 
         verifyUserHasWritePrivileges(userId, model.getApp());
 
-        facesClient.deleteFaces(appGuid + guid);
+        facesClient.deleteFaces(model.getApp().getApiKey() + model.getApiKey());
         modelRepository.deleteById(model.getId());
     }
 
