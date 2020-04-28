@@ -10,6 +10,7 @@ import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import lombok.val;
 import org.junit.jupiter.api.Assertions;
@@ -42,12 +43,15 @@ class UserServiceTest {
     private UserRepository userRepositoryMock;
     private UserService userService;
     private EmailSender emailSenderMock;
+    private OrganizationService organizationServiceMock;
 
     UserServiceTest() {
         userRepositoryMock = mock(UserRepository.class);
         emailSenderMock = mock(EmailSender.class);
         userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder(), emailSenderMock);
         userService.setEnv(new MockEnvironment());
+        organizationServiceMock = mock(OrganizationService.class);
+        userService.setOrganizationService(organizationServiceMock);
     }
 
     @Test
@@ -160,6 +164,7 @@ class UserServiceTest {
 
         userService.deleteUser(userId);
 
+        verify(organizationServiceMock).getOwnedOrganizations(userId);
         verify(userRepositoryMock).deleteById(anyLong());
     }
 

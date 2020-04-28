@@ -2,6 +2,7 @@ package com.exadel.frs.service;
 
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
@@ -25,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -39,10 +41,16 @@ public class UserService {
     private final EmailSender emailSender;
 
     private Environment env;
+    private OrganizationService organizationService;
 
     @Autowired
     public void setEnv(Environment env) {
         this.env = env;
+    }
+
+    @Autowired
+    public void setOrganizationService(OrganizationService organizationService) {
+        this.organizationService = organizationService;
     }
 
     public User getUser(final Long id) {
@@ -137,7 +145,9 @@ public class UserService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void deleteUser(final Long id) {
+        deleteOrganizationsThatBelongToUser(id);
         userRepository.deleteById(id);
     }
 
@@ -170,5 +180,14 @@ public class UserService {
         user.setRegistrationToken(null);
 
         userRepository.save(user);
+    }
+
+    private void deleteOrganizationsThatBelongToUser(Long userId) {
+        val ownedOrgGuids = organizationService.getOwnedOrganizations(userId)
+                .stream()
+                .map(Organization::getGuid)
+                .collect(Collectors.toList());
+
+        ownedOrgGuids.forEach(orgGuid -> organizationService.deleteOrganization(orgGuid, userId));
     }
 }

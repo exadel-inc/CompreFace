@@ -7,6 +7,8 @@ import com.exadel.frs.dto.ui.UserRemoveDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.entity.UserOrganizationRole;
+import com.exadel.frs.entity.UserOrganizationRoleId;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
@@ -66,7 +68,8 @@ class OrganizationServiceTest {
     OrganizationServiceTest() {
         userServiceMock = mock(UserService.class);
         organizationRepositoryMock = mock(OrganizationRepository.class);
-        organizationService = new OrganizationService(organizationRepositoryMock, userServiceMock);
+        organizationService = new OrganizationService(organizationRepositoryMock);
+        organizationService.setUserService(userServiceMock);
     }
 
     private User user(Long id) {
@@ -112,6 +115,52 @@ class OrganizationServiceTest {
         List<Organization> organizations = organizationService.getOrganizations(1L);
 
         assertThat(organizations).hasSize(1);
+    }
+
+    @Test
+    void successGetOwnedOrganizations() {
+        val owner = UserOrganizationRole.builder()
+                                        .id(new UserOrganizationRoleId(1L, 1L))
+                                        .user(User.builder().id(1L).build())
+                                        .role(OrganizationRole.OWNER)
+                                        .build();
+
+        val admin = UserOrganizationRole.builder()
+                                        .id(new UserOrganizationRoleId(1L, 2L))
+                                        .user(User.builder().id(1L).build())
+                                        .role(OrganizationRole.ADMINISTRATOR)
+                                        .build();
+
+        val user = UserOrganizationRole.builder()
+                                        .id(new UserOrganizationRoleId(1L, 3L))
+                                        .user(User.builder().id(1L).build())
+                                        .role(OrganizationRole.USER)
+                                        .build();
+
+        val ownedOrg = Organization.builder()
+                                    .guid(UUID.randomUUID().toString())
+                                    .userOrganizationRoles(List.of(owner))
+                                    .build();
+
+        val notOwnedOrg1 = Organization.builder()
+                                        .guid(UUID.randomUUID().toString())
+                                        .userOrganizationRoles(List.of(admin))
+                                        .build();
+
+        val notOwnedOrg2 = Organization.builder()
+                                        .guid(UUID.randomUUID().toString())
+                                        .userOrganizationRoles(List.of(user))
+                                        .build();
+
+        when(organizationRepositoryMock.findAllByUserOrganizationRoles_Id_UserId(anyLong()))
+                .thenReturn(List.of(ownedOrg, notOwnedOrg1, notOwnedOrg2));
+
+        List<Organization> organizations = organizationService.getOwnedOrganizations(1L);
+
+        assertThat(organizations).hasSize(1);
+        assertThat(organizations).contains(ownedOrg);
+        assertThat(organizations).doesNotContain(notOwnedOrg1);
+        assertThat(organizations).doesNotContain(notOwnedOrg2);
     }
 
     @Test
