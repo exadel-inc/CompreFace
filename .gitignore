@@ -1,6 +1,7 @@
 .vscode/
 tmp/
 *.pid
+.idea/
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Python template
