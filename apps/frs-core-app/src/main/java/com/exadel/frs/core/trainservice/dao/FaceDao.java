@@ -50,6 +50,7 @@ public class FaceDao {
         val faces = facesRepository.findByApiKey(modelApiKey);
         val faceNames = faces.stream()
                              .map(Face::getFaceName)
+                             .distinct()
                              .collect(toList());
 
         return Map.of("names", faceNames);
