@@ -131,7 +131,7 @@ public class OrganizationService {
         Organization organization = getOrganization(guid);
         verifyUserHasWritePrivileges(adminId, organization);
 
-        final User user = userService.getUser(userInviteDto.getUserEmail());
+        final User user = userService.getEnabledUser(userInviteDto.getUserEmail());
         Optional<UserOrganizationRole> userOrganizationRole = organization.getUserOrganizationRole(user.getId());
         if (userOrganizationRole.isPresent()) {
             throw new UserAlreadyInOrganizationException(userInviteDto.getUserEmail(), guid);
