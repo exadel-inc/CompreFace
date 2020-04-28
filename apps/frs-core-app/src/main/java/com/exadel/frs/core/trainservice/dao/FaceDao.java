@@ -56,7 +56,7 @@ public class FaceDao {
     }
 
     public void deleteFaceByName(final String faceName, final Token token) {
-        facesRepository.deleteByApiKeyAndFaceName(token.getAppApiKey(), faceName);
+        facesRepository.deleteByApiKeyAndFaceName(token.getModelApiKey(), faceName);
     }
 
     public List<Face> deleteFacesByApiKey(final Token token) {
