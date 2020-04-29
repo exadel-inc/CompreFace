@@ -5,7 +5,7 @@ from typing import List, Tuple
 from PIL import Image, ImageDraw, ImageFont
 from scipy.spatial import distance
 
-from src.services.dto.bounding_box import BoundingBox
+from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
 from src.services.imgtools.types import Array3D
 
@@ -35,7 +35,7 @@ def _draw_cross(draw, xy, half_length, color, width):
     draw.line((x + half_length, y - half_length, x - half_length, y + half_length), fill=color, width=width)
 
 
-def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[int, int]] = None):
+def show_img(img: Array3D, boxes: List[BoundingBoxDTO] = None, noses: List[Tuple[int, int]] = None):
     box_line_width = 3
     font_size = 20
     font_size_smaller = 15
@@ -46,7 +46,7 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
     error_color = 0xff, 0x44, 0x44
     error_line_width = 3
 
-    def _draw_detection_box(text, box: BoundingBox, color):
+    def _draw_detection_box(text, box: BoundingBoxDTO, color):
         img_draw.rectangle(box.xy, outline=color, width=box_line_width)
         img_draw.text(text=text,
                       xy=(box.x_min, box.y_min - font_size - 1),
@@ -61,7 +61,7 @@ def show_img(img: Array3D, boxes: List[BoundingBox] = None, noses: List[Tuple[in
     img_draw = ImageDraw.Draw(pil_img)
     noses_given = noses is not None
     noses = [scaler.downscale_nose(nose) for nose in noses or []]
-    boxes = [scaler.downscale_box(box) for box in boxes or []]
+    boxes = [box.scaled(scaler.downscale_coefficient) for box in boxes or []]
     boxes = sorted(boxes, key=lambda box: (box.x_min, box.y_min))
 
     random_bright_color_gen = _random_bright_color_gen_cls()

@@ -9,7 +9,7 @@ from srcext.facenet.align import detect_face
 from tensorflow.python.platform import gfile
 
 from src.constants import ENV
-from src.services.dto.bounding_box import BoundingBox
+from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
 from src.services.facescan.scanner.facescanner import FaceScanner
@@ -57,17 +57,23 @@ class Facenet2018(FaceScanner):
             sess = tf.Session()
             return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
 
-    def _find_face_bounding_boxes(self, img, det_prob_threshold) -> List[BoundingBox]:
+    def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
+        if det_prob_threshold is None:
+            det_prob_threshold = self.det_prob_threshold
+        assert 0 <= det_prob_threshold <= 1
+        scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
+        img = scaler.downscale_img(img)
+
         fdn = self._face_detection_nets
-        detect_face_result = detect_face.detect_face(img, self.FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
-                                                     [self.det_threshold_a, self.det_threshold_b, self.det_threshold_c],
-                                                     self.SCALE_FACTOR)
+        detect_face_result = detect_face.detect_face(
+            img, self.FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
+            [self.det_threshold_a, self.det_threshold_b, self.det_threshold_c], self.SCALE_FACTOR)
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
         for result_item in detect_face_result[0]:
             result_item = np.squeeze(result_item)
             margin = self.BOX_MARGIN / 2
-            box = BoundingBox(
+            box = BoundingBoxDTO(
                 x_min=int(np.maximum(result_item[0] - margin, 0)),
                 y_min=int(np.maximum(result_item[1] - margin, 0)),
                 x_max=int(np.minimum(result_item[2] + margin, img_size[1])),
@@ -79,10 +85,11 @@ class Facenet2018(FaceScanner):
 
         filtered_bounding_boxes = []
         for box in bounding_boxes:
-            if box.probability > det_prob_threshold:
-                filtered_bounding_boxes.append(box)
-            else:
+            box = box.scaled(scaler.upscale_coefficient)
+            if box.probability <= det_prob_threshold:
                 logger.debug(f'Box filtered out because below threshold ({det_prob_threshold}): {box}')
+                continue
+            filtered_bounding_boxes.append(box)
         return filtered_bounding_boxes
 
     def _calculate_embeddings(self, cropped_images):
@@ -103,14 +110,8 @@ class Facenet2018(FaceScanner):
         return embeddings
 
     def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
-        if det_prob_threshold is None:
-            det_prob_threshold = self.det_prob_threshold
-        assert 0 <= det_prob_threshold <= 1
         scanned_faces = []
-        scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
-        downscaled_img = scaler.downscale_img(img)
-        for downscaled_box in self._find_face_bounding_boxes(downscaled_img, det_prob_threshold):
-            box = scaler.upscale_box(downscaled_box)
+        for box in self.find_faces(img, det_prob_threshold):
             cropped_img = crop_img(img, box)
             squished_img = squish_img(cropped_img, (self.IMAGE_SIZE, self.IMAGE_SIZE))
             embedding = self._calculate_embeddings([squished_img])[0]

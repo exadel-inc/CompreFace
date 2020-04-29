@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.services.dto.bounding_box import BoundingBox
+from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
 
 
@@ -9,9 +9,9 @@ def test__given_downscaled_image__when_upscaling_box__then_returns_upscaled_box(
     scaler = ImgScaler(img_length_limit=100)
     scaler.downscale_img(img)
 
-    output_box = scaler.upscale_box(BoundingBox(10, 10, 20, 20, 1))
+    output_box = BoundingBoxDTO(10, 10, 20, 20, 1).scaled(scaler.upscale_coefficient)
 
-    assert output_box == BoundingBox(20, 20, 40, 40, 1)
+    assert output_box == BoundingBoxDTO(20, 20, 40, 40, 1)
 
 
 def test__given_not_downscaled_image__when_upscaling_box__then_returns_same_box():
@@ -19,6 +19,6 @@ def test__given_not_downscaled_image__when_upscaling_box__then_returns_same_box(
     scaler = ImgScaler(img_length_limit=100)
     scaler.downscale_img(img)
 
-    output_box = scaler.upscale_box(BoundingBox(10, 10, 20, 20, 1))
+    output_box = BoundingBoxDTO(10, 10, 20, 20, 1).scaled(scaler.upscale_coefficient)
 
-    assert output_box == BoundingBox(10, 10, 20, 20, 1)
+    assert output_box == BoundingBoxDTO(10, 10, 20, 20, 1)

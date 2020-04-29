@@ -7,9 +7,9 @@ from src.services.dto.json_encodable import JSONEncodable
 
 # noinspection PyUnresolvedReferences
 @attr.s(auto_attribs=True, frozen=True)
-class BoundingBox(JSONEncodable):
+class BoundingBoxDTO(JSONEncodable):
     """
-    >>> BoundingBox(x_min=10, x_max=0, y_min=100, y_max=200, probability=0.5)
+    >>> BoundingBoxDTO(x_min=10, x_max=0, y_min=100, y_max=200, probability=0.5)
     Traceback (most recent call last):
     ...
     ValueError: 'x_min' must be smaller than 'x_max'
@@ -43,17 +43,17 @@ class BoundingBox(JSONEncodable):
     def center(self):
         return (self.x_min + self.x_max) // 2, (self.y_min + self.y_max) // 2
 
-    def similar(self, other: 'BoundingBox', tolerance: int) -> bool:
+    def similar(self, other: 'BoundingBoxDTO', tolerance: int) -> bool:
         """
-        >>> BoundingBox(50,50,100,100,1).similar(BoundingBox(50,50,100,100,1),5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar(BoundingBoxDTO(50,50,100,100,1),5)
         True
-        >>> BoundingBox(50,50,100,100,1).similar(BoundingBox(50,50,100,95,1),5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar(BoundingBoxDTO(50,50,100,95,1),5)
         True
-        >>> BoundingBox(50,50,100,100,1).similar(BoundingBox(50,50,100,105,1),5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar(BoundingBoxDTO(50,50,100,105,1),5)
         True
-        >>> BoundingBox(50,50,100,100,1).similar(BoundingBox(50,50,100,94,1),5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar(BoundingBoxDTO(50,50,100,94,1),5)
         False
-        >>> BoundingBox(50,50,100,100,1).similar(BoundingBox(50,50,100,106,1),5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar(BoundingBoxDTO(50,50,100,106,1),5)
         False
         """
         return (abs(self.x_min - other.x_min) <= tolerance
@@ -61,11 +61,11 @@ class BoundingBox(JSONEncodable):
                 and abs(self.x_max - other.x_max) <= tolerance
                 and abs(self.y_max - other.y_max) <= tolerance)
 
-    def similar_to_any(self, others: List['BoundingBox'], tolerance: int) -> bool:
+    def similar_to_any(self, others: List['BoundingBoxDTO'], tolerance: int) -> bool:
         """
-        >>> BoundingBox(50,50,100,100,1).similar_to_any([BoundingBox(50,50,100,105,1),BoundingBox(50,50,100,106,1)],5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar_to_any([BoundingBoxDTO(50,50,100,105,1),BoundingBoxDTO(50,50,100,106,1)],5)
         True
-        >>> BoundingBox(50,50,100,100,1).similar_to_any([BoundingBox(50,50,100,106,1),BoundingBox(50,50,100,106,1)],5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar_to_any([BoundingBoxDTO(50,50,100,106,1),BoundingBoxDTO(50,50,100,106,1)],5)
         False
         """
         for other in others:
@@ -75,10 +75,18 @@ class BoundingBox(JSONEncodable):
 
     def is_point_inside(self, xy: Tuple[int, int]) -> bool:
         """
-        >>> BoundingBox(100,700,150,750,1).is_point_inside((125,725))
+        >>> BoundingBoxDTO(100,700,150,750,1).is_point_inside((125,725))
         True
-        >>> BoundingBox(100,700,150,750,1).is_point_inside((5,5))
+        >>> BoundingBoxDTO(100,700,150,750,1).is_point_inside((5,5))
         False
         """
         x, y = xy
         return self.x_min <= x <= self.x_max and self.y_min <= y <= self.y_max
+
+    def scaled(self, coefficient: float) -> 'BoundingBoxDTO':
+        # noinspection PyTypeChecker
+        return BoundingBoxDTO(x_min=self.x_min * coefficient,
+                              y_min=self.y_min * coefficient,
+                              x_max=self.x_max * coefficient,
+                              y_max=self.y_max * coefficient,
+                              probability=self.probability)

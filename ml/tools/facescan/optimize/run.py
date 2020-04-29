@@ -27,7 +27,7 @@ class _ENV(Constants):
     IMG_NAMES = get_env_split('IMG_NAMES', ' '.join([i.img_name for i in SAMPLE_IMAGES]))
 
 
-class Facenet2018ThresholdOptimization:
+class Facenet2018DetectionThresholdOptimization:
     def __init__(self):
         self.arg_count = 4
         self.scanner = FaceScanners.Facenet2018()
@@ -45,7 +45,7 @@ class Facenet2018ThresholdOptimization:
         total_errors = 0
         for row in self.dataset:
             img = cached_read_img(IMG_DIR / row.img_name)
-            boxes = [face.box for face in self.scanner.scan(img)]
+            boxes = self.scanner.find_faces(img)
             errors = calculate_errors(boxes, row.noses)
             total_errors += errors
         return total_errors
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
     logger.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
 
-    task = Facenet2018ThresholdOptimization()
+    task = Facenet2018DetectionThresholdOptimization()
     threshold_iterators = [
         get_plausible_thresholds_iterator(task.arg_count),
         random_thresholds_generator(task.arg_count)

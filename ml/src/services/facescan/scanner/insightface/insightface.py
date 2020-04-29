@@ -1,19 +1,38 @@
 import logging
-from typing import List
+from typing import List, Tuple
 
+import attr
 import numpy as np
 from insightface.app import FaceAnalysis
 from insightface.model_zoo import model_zoo
 from insightface.utils import face_align
 
 from src.constants import ENV
-from src.services.dto.bounding_box import BoundingBox
+from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.dto.scanned_face import ScannedFace
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.imgtools.types import Array3D
 
 logger = logging.getLogger(__name__)
+
+
+@attr.s(auto_attribs=True, frozen=True)
+class InsightFaceBoundingBox(BoundingBoxDTO):
+    landmark: Tuple[int, ...]
+
+    @property
+    def dto(self):
+        return BoundingBoxDTO(x_min=self.x_min, x_max=self.x_max,
+                              y_min=self.y_min, y_max=self.y_max,
+                              probability=self.probability)
+
+    def scaled(self, coefficient: float) -> 'InsightFaceBoundingBox':
+        # noinspection PyTypeChecker
+        return InsightFaceBoundingBox(x_min=self.x_min * coefficient, x_max=self.x_max * coefficient,
+                                      y_min=self.y_min * coefficient, y_max=self.y_max * coefficient,
+                                      probability=self.probability,
+                                      landmark=self.landmark * coefficient)
 
 
 class InsightFace(FaceScanner):
@@ -33,27 +52,33 @@ class InsightFace(FaceScanner):
         self.det_prob_threshold = 0.8
 
     def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
+        scanned_faces = []
+        for bounding_box in self.find_faces(img, det_prob_threshold):
+            norm_cropped_img = face_align.norm_crop(img, landmark=bounding_box.landmark)
+            embedding = self._calculation_model.get_embedding(norm_cropped_img).flatten()
+            scanned_faces.append(ScannedFace(box=bounding_box, embedding=embedding, img=img))
+        return scanned_faces
+
+    def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[InsightFaceBoundingBox]:
         if det_prob_threshold is None:
             det_prob_threshold = self.det_prob_threshold
         assert 0 <= det_prob_threshold <= 1
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
-        downscaled_img = scaler.downscale_img(img)
-        results = self._detection_model.get(downscaled_img, det_thresh=det_prob_threshold)
-        scanned_faces = []
+        img = scaler.downscale_img(img)
+        results = self._detection_model.get(img, det_thresh=det_prob_threshold)
+        boxes = []
         for result in results:
             downscaled_box_array = result.bbox.astype(np.int).flatten()
-            box = scaler.upscale_box(BoundingBox(x_min=downscaled_box_array[0],
-                                                 y_min=downscaled_box_array[1],
-                                                 x_max=downscaled_box_array[2],
-                                                 y_max=downscaled_box_array[3],
-                                                 probability=result.det_score))
+            downscaled_box = InsightFaceBoundingBox(x_min=downscaled_box_array[0],
+                                                    y_min=downscaled_box_array[1],
+                                                    x_max=downscaled_box_array[2],
+                                                    y_max=downscaled_box_array[3],
+                                                    probability=result.det_score,
+                                                    landmark=result.landmark)
+            box = downscaled_box.scaled(scaler.upscale_coefficient)
             if box.probability <= det_prob_threshold:
                 logger.debug(f'Box Filtered out because below threshold ({det_prob_threshold}: {box})')
                 continue
             logger.debug(f"Found: {box}")
-
-            norm_cropped_img = face_align.norm_crop(img, landmark=scaler.upscale_array(result.landmark))
-            embedding = self._calculation_model.get_embedding(norm_cropped_img).flatten()
-
-            scanned_faces.append(ScannedFace(box=box, embedding=embedding, img=img))
-        return scanned_faces
+            boxes.append(box)
+        return boxes

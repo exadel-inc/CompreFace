@@ -1,6 +1,6 @@
 import attr
 
-from src.services.dto.bounding_box import BoundingBox
+from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.dto.json_encodable import JSONEncodable
 
 
@@ -12,4 +12,4 @@ class NamePrediction(JSONEncodable):
 
 @attr.s(auto_attribs=True, frozen=True)
 class FacePrediction(NamePrediction):
-    box: BoundingBox
+    box: BoundingBoxDTO
