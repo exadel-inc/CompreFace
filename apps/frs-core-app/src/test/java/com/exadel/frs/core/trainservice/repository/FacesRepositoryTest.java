@@ -84,6 +84,15 @@ public class FacesRepositoryTest {
     }
 
     @Test
+    public void countByApiKey() {
+        val expected = facesRepository.findByApiKey(MODEL_KEY);
+        val actual = facesRepository.countByApiKey(MODEL_KEY);
+
+        assertThat(actual).isGreaterThan(0);
+        assertThat(actual).isEqualTo(expected.size());
+    }
+
+    @Test
     public void findFaceIdsIn(){
         val faces = facesRepository.findByIdIn(List.of("Id_A", "Id_B"));
         assertThat(faces).isNotNull();

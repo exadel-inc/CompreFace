@@ -16,7 +16,7 @@ public class FaceClassifierPredictor {
 
     public Pair<Integer, String> predict(final String modelKey, double[] input) {
         val model = modelDao.getModel(modelKey);
-        FaceClassifierAdapter classifierAdapter = context.getBean(FaceClassifierAdapter.class);
+        val classifierAdapter = context.getBean(FaceClassifierAdapter.class);
         classifierAdapter.setClassifier(model);
 
         return classifierAdapter.predict(input);

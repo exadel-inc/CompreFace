@@ -77,4 +77,8 @@ public class FaceDao {
     public List<Face> deleteFacesByApiKey(final Token token) {
         return facesRepository.deleteFacesByApiKey(token.getModelApiKey());
     }
+
+    public int countFacesInModel(final String modelApiKey) {
+        return facesRepository.countByApiKey(modelApiKey);
+    }
 }
