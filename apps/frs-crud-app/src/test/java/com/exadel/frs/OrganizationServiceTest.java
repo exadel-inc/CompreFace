@@ -155,7 +155,7 @@ class OrganizationServiceTest {
         when(organizationRepositoryMock.findAllByUserOrganizationRoles_Id_UserId(anyLong()))
                 .thenReturn(List.of(ownedOrg, notOwnedOrg1, notOwnedOrg2));
 
-        List<Organization> organizations = organizationService.getOwnedOrganizations(1L);
+        val organizations = organizationService.getOwnedOrganizations(1L);
 
         assertThat(organizations).hasSize(1);
         assertThat(organizations).contains(ownedOrg);

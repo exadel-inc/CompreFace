@@ -49,7 +49,7 @@ public class UserService {
     }
 
     @Autowired
-    public void setOrganizationService(OrganizationService organizationService) {
+    public void setOrganizationService(final OrganizationService organizationService) {
         this.organizationService = organizationService;
     }
 
@@ -183,8 +183,7 @@ public class UserService {
     }
 
     private void deleteOrganizationsThatBelongToUser(Long userId) {
-        val ownedOrgGuids = organizationService.getOwnedOrganizations(userId)
-                .stream()
+        val ownedOrgGuids = organizationService.getOwnedOrganizations(userId).stream()
                 .map(Organization::getGuid)
                 .collect(Collectors.toList());
 

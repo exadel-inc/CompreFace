@@ -39,7 +39,7 @@ public class OrganizationService {
     private UserService userService;
 
     @Autowired
-    public void setUserService(UserService userService) {
+    public void setUserService(final UserService userService) {
         this.userService = userService;
     }
 
@@ -76,9 +76,7 @@ public class OrganizationService {
     }
 
     public List<Organization> getOwnedOrganizations(final Long userId) {
-
-        return getOrganizations(userId)
-                .stream()
+        return getOrganizations(userId).stream()
                 .filter(org -> org.getUserOrganizationRoleOrThrow(userId).getRole().equals(OWNER))
                 .collect(Collectors.toList());
     }
@@ -86,7 +84,7 @@ public class OrganizationService {
     public OrganizationRole[] getOrgRolesToAssign(final String guid, final Long userId) {
         Organization organization = getOrganization(guid);
         UserOrganizationRole role = organization.getUserOrganizationRoleOrThrow(userId);
-        if (OWNER.equals(role.getRole())) {
+        if (role.getRole() == OWNER) {
             return OrganizationRole.values();
         }
         return new OrganizationRole[0];
@@ -105,6 +103,7 @@ public class OrganizationService {
                 .guid(UUID.randomUUID().toString())
                 .build();
         organization.addUserOrganizationRole(userService.getUser(userId), OWNER);
+
         return organizationRepository.save(organization);
     }
 
@@ -133,7 +132,7 @@ public class OrganizationService {
         }
         UserOrganizationRole userOrganizationRole = organization.getUserOrganizationRoleOrThrow(user.getId());
         OrganizationRole newOrgRole = OrganizationRole.valueOf(userRoleUpdateDto.getRole());
-        if (OWNER.equals(newOrgRole)) {
+        if (newOrgRole == OWNER) {
             organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
         }
         userOrganizationRole.setRole(newOrgRole);
@@ -153,7 +152,7 @@ public class OrganizationService {
             throw new UserAlreadyInOrganizationException(userInviteDto.getUserEmail(), guid);
         }
         OrganizationRole newOrgRole = OrganizationRole.valueOf(userInviteDto.getRole());
-        if (OWNER.equals(newOrgRole)) {
+        if (newOrgRole == OWNER) {
             organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
         }
         organization.addUserOrganizationRole(user, newOrgRole);
