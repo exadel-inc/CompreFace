@@ -55,6 +55,11 @@ public class UserService {
                 .orElseThrow(() -> new UserDoesNotExistException(email));
     }
 
+    public User getEnabledUserByEmail(final String email) {
+        return userRepository.findByEmailAndEnabledTrue(email)
+                .orElseThrow(() -> new UserDoesNotExistException(email));
+    }
+
     public User getUserByGuid(final String guid) {
         return userRepository.findByGuid(guid)
                 .orElseThrow(() -> new UserDoesNotExistException(guid));

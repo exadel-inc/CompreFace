@@ -245,7 +245,7 @@ class OrganizationServiceTest {
         organization.addUserOrganizationRole(admin, organizationRole);
 
         when(organizationRepositoryMock.findByGuid(ORGANISATION_GUID)).thenReturn(Optional.of(organization));
-        when(userServiceMock.getUser(anyString())).thenReturn(user);
+        when(userServiceMock.getEnabledUserByEmail(anyString())).thenReturn(user);
         when(organizationRepositoryMock.save(organization)).thenReturn(organization);
 
         organizationService.inviteUser(userInviteDto, ORGANISATION_GUID, adminId);
