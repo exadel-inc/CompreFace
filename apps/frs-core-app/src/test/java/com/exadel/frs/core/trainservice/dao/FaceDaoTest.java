@@ -7,8 +7,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
-import com.exadel.frs.core.trainservice.domain.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.system.Token;
 import java.util.List;

@@ -1,15 +1,17 @@
-package com.exadel.frs.core.trainservice.service;
+package com.exadel.frs.core.trainservice.dao;
 
 import com.exadel.frs.core.trainservice.component.FaceClassifierAdapter;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
 import com.exadel.frs.core.trainservice.config.MongoTest;
-import com.exadel.frs.core.trainservice.domain.Model;
+import com.exadel.frs.core.trainservice.entity.Model;
 import com.exadel.frs.core.trainservice.repository.ModelRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.test.context.junit.jupiter.EnabledIf;
 
 import java.util.HashMap;
@@ -24,8 +26,8 @@ public class ModelDaoTest {
     private ModelRepository modelRepository;
 
 
-    @BeforeEach
-    public void before() {
+    @AfterEach
+    public void after() {
         modelRepository.deleteAll();
     }
 
@@ -73,14 +75,13 @@ public class ModelDaoTest {
         y[0] = 1;
         y[1] = 2;
 
-        HashMap<Integer, String> labelMap = new HashMap<>();
-        labelMap.put(1, "firstLabel");
-        labelMap.put(2, "secondLabel");
+        HashMap<Integer, Pair<String, String>> labelMap = new HashMap<>();
+        labelMap.put(1, Pair.of(UUID.randomUUID().toString(), "firstLabel"));
+        labelMap.put(2, Pair.of(UUID.randomUUID().toString(), "secondLabel"));
         LogisticRegressionExtendedClassifier classifier = new LogisticRegressionExtendedClassifier();
         classifier.train(x, y, labelMap);
         Model model = Model.builder()
                 .classifier(classifier)
-                .apiKey(UUID.randomUUID().toString())
                 .id(UUID.randomUUID().toString())
                 .classifierName(FaceClassifierAdapter.CLASSIFIER_IMPLEMENTATION_BEAN_NAME)
                 .build();

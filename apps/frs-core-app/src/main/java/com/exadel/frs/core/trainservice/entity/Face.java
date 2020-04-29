@@ -1,7 +1,10 @@
-package com.exadel.frs.core.trainservice.domain;
+package com.exadel.frs.core.trainservice.entity;
 
 import java.util.List;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -33,6 +36,8 @@ public class Face {
 
     @Data
     @Accessors(chain = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Embedding {
 
         @Field("array")

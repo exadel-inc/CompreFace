@@ -2,22 +2,24 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt;
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt.Trainer;
-
-import java.util.Map;
 import lombok.val;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Scope("prototype")
 public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
-    private Map<Integer, String> labelMap;
+    private Map<Integer, Pair<String, String>> labelMap;
     private LogisticRegressionExt logisticRegression;
 
     @Override
-    public void train(final double[][] x, final int[] y, final Map<Integer, String> labelMap) {
+    public void train(final double[][] x, final int[] y, final Map<Integer, Pair<String, String>> labelMap) {
         this.labelMap = labelMap;
         val trainer = new Trainer();
         trainer.setMaxNumIteration(50);
@@ -30,7 +32,7 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
         if (isTrained()) {
             val predict = logisticRegression.predict(input);
 
-            return Pair.of(predict, labelMap.get(predict));
+            return Pair.of(predict, labelMap.get(predict).getRight());
         }
 
         throw new RuntimeException("Model not trained");
@@ -41,4 +43,10 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
         return !(logisticRegression == null);
     }
 
+    @Override
+    public List<String> getUsedFaceIds() {
+        return labelMap.values().stream()
+                .map(Pair::getLeft)
+                .collect(Collectors.toList());
+    }
 }
