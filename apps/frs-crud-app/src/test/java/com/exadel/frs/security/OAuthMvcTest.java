@@ -2,6 +2,9 @@ package com.exadel.frs.security;
 
 import com.exadel.frs.FrsApplication;
 import com.exadel.frs.helpers.EmailSender;
+import com.exadel.frs.mapper.OrganizationMapper;
+import com.exadel.frs.mapper.UserOrgRoleMapper;
+import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import lombok.val;
 import org.junit.Before;
@@ -11,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
@@ -36,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
 @SpringBootTest(classes = FrsApplication.class)
+@MockBeans({@MockBean(EmailSender.class), @MockBean(OrganizationService.class)})
 public class OAuthMvcTest {
 
     private String registrationToken = UUID.randomUUID().toString();
@@ -45,9 +50,6 @@ public class OAuthMvcTest {
 
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
-
-    @MockBean
-    private EmailSender emailSender;
 
     @SpyBean
     private UserService userService;

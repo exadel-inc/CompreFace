@@ -19,12 +19,15 @@ import com.exadel.frs.exception.UserAlreadyInOrganizationException;
 import com.exadel.frs.repository.OrganizationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 @Service
@@ -32,7 +35,12 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
-    private final UserService userService;
+    private UserService userService;
+
+    @Autowired
+    public void setUserService(final UserService userService) {
+        this.userService = userService;
+    }
 
     public Organization getOrganization(final String organizationGuid) {
         return organizationRepository
@@ -45,7 +53,7 @@ public class OrganizationService {
     }
 
     private void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
-        if (OrganizationRole.OWNER != organization.getUserOrganizationRoleOrThrow(userId).getRole()) {
+        if (OWNER != organization.getUserOrganizationRoleOrThrow(userId).getRole()) {
             throw new InsufficientPrivilegesException();
         }
     }
@@ -66,10 +74,16 @@ public class OrganizationService {
         return organizationRepository.findAllByUserOrganizationRoles_Id_UserId(userId);
     }
 
+    public List<Organization> getOwnedOrganizations(final Long userId) {
+        return getOrganizations(userId).stream()
+                .filter(org -> org.getUserOrganizationRoleOrThrow(userId).getRole().equals(OWNER))
+                .collect(Collectors.toList());
+    }
+
     public OrganizationRole[] getOrgRolesToAssign(final String guid, final Long userId) {
         Organization organization = getOrganization(guid);
         UserOrganizationRole role = organization.getUserOrganizationRoleOrThrow(userId);
-        if (OrganizationRole.OWNER.equals(role.getRole())) {
+        if (role.getRole() == OWNER) {
             return OrganizationRole.values();
         }
         return new OrganizationRole[0];
@@ -87,7 +101,8 @@ public class OrganizationService {
                 .name(orgCreateDto.getName())
                 .guid(UUID.randomUUID().toString())
                 .build();
-        organization.addUserOrganizationRole(userService.getUser(userId), OrganizationRole.OWNER);
+        organization.addUserOrganizationRole(userService.getUser(userId), OWNER);
+
         return organizationRepository.save(organization);
     }
 
@@ -116,7 +131,7 @@ public class OrganizationService {
         }
         UserOrganizationRole userOrganizationRole = organization.getUserOrganizationRoleOrThrow(user.getId());
         OrganizationRole newOrgRole = OrganizationRole.valueOf(userRoleUpdateDto.getRole());
-        if (OrganizationRole.OWNER.equals(newOrgRole)) {
+        if (newOrgRole == OWNER) {
             organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
         }
         userOrganizationRole.setRole(newOrgRole);
@@ -136,7 +151,7 @@ public class OrganizationService {
             throw new UserAlreadyInOrganizationException(userInviteDto.getUserEmail(), guid);
         }
         val newOrgRole = OrganizationRole.valueOf(userInviteDto.getRole());
-        if (OrganizationRole.OWNER.equals(newOrgRole)) {
+        if (newOrgRole == OWNER) {
             organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
         }
         organization.addUserOrganizationRole(user, newOrgRole);
