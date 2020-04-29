@@ -55,7 +55,7 @@ public class UserService {
                 .orElseThrow(() -> new UserDoesNotExistException(email));
     }
 
-    public User getEnabledUser(final String email) {
+    public User getEnabledUserByEmail(final String email) {
         return userRepository.findByEmailAndEnabledTrue(email)
                 .orElseThrow(() -> new UserDoesNotExistException(email));
     }

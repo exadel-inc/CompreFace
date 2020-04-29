@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -128,20 +127,20 @@ public class OrganizationService {
     }
 
     public UserOrganizationRole inviteUser(final UserInviteDto userInviteDto, final String guid, final Long adminId) {
-        Organization organization = getOrganization(guid);
+        val organization = getOrganization(guid);
         verifyUserHasWritePrivileges(adminId, organization);
 
-        final User user = userService.getEnabledUser(userInviteDto.getUserEmail());
-        Optional<UserOrganizationRole> userOrganizationRole = organization.getUserOrganizationRole(user.getId());
+        val user = userService.getEnabledUserByEmail(userInviteDto.getUserEmail());
+        val userOrganizationRole = organization.getUserOrganizationRole(user.getId());
         if (userOrganizationRole.isPresent()) {
             throw new UserAlreadyInOrganizationException(userInviteDto.getUserEmail(), guid);
         }
-        OrganizationRole newOrgRole = OrganizationRole.valueOf(userInviteDto.getRole());
+        val newOrgRole = OrganizationRole.valueOf(userInviteDto.getRole());
         if (OrganizationRole.OWNER.equals(newOrgRole)) {
             organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
         }
         organization.addUserOrganizationRole(user, newOrgRole);
-        final Organization savedOrg = organizationRepository.save(organization);
+        val savedOrg = organizationRepository.save(organization);
         return savedOrg.getUserOrganizationRole(user.getId()).orElseThrow();
     }
 
