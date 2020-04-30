@@ -43,7 +43,7 @@ To check whether the project passes E2E tests on a remote deployment environment
 
 #### Scan a demo image
 
-To get the image shown at the top of the README.md, run: `$ make demo`.
+To get the image shown at the top of the README.md, run: `$ make demo`. It will be saved to `ml/tools/facescan/tmp` folder.
 
 # Advanced usage
 Entrypoints to run the application and related development tools are organized as "targets" inside `Makefile` and run with `$ make`.

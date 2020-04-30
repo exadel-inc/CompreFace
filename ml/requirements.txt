@@ -7,6 +7,7 @@ certifi==2019.9.11
 chardet==3.0.4
 Click==7.0
 colorama==0.4.1
+colour==0.1.5
 cycler==0.10.0
 decorator==4.4.0
 easydict==1.9

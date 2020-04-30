@@ -3,8 +3,10 @@ import json
 import os
 import re
 from pathlib import Path
+from typing import Tuple, List
 
 import numpy
+from scipy.spatial import distance
 
 
 def run_once(func):
@@ -114,12 +116,19 @@ def get_env_split(name: str, default: str = None):
 
 class Constants:
     @classmethod
+    def _get_constants(cls):
+        names = (name for name in dir(cls)
+                 if not name.startswith('_')
+                 and type(getattr(cls, name)).__name__ in ('float', 'int', 'str', 'bool', 'list', 'tuple'))
+        return {key: getattr(cls, key) for key in names}
+
+    @classmethod
     def to_str(cls):
-        return str({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')})
+        return str(cls._get_constants())
 
     @classmethod
     def to_json(cls):
-        return json.dumps({key: cls.__dict__[key] for key in cls.__dict__.keys() if not key.startswith('_')}, indent=4)
+        return json.dumps(cls._get_constants(), indent=4)
 
     @staticmethod
     def str_to_bool(string: str):
@@ -144,3 +153,8 @@ class Constants:
 
 def s(count):  # NOSONAR
     return '' if count == 1 else 's'
+
+
+def get_nearest_point_idx(target_point: Tuple[int, int], points: List[Tuple[int, int]]):
+    # noinspection PyTypeChecker
+    return distance.cdist([target_point], points).argmin()

@@ -9,7 +9,7 @@ from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.imgtools.read_img import read_img
 from src.services.imgtools.types import Array1D
 from src.services.utils.pyutils import get_current_dir
-from tools.facescan.benchmark_e2e.constants import _ENV
+from tools.facescan.constants import ENV_BENCHMARK
 
 TMP_DIR = get_current_dir(__file__) / 'tmp'
 logger = logging.getLogger(__name__)
@@ -42,7 +42,7 @@ class Image:
     @property
     def array(self):
         if self._array is None:
-            self._array = read_img(self._path) if not _ENV.DRY_RUN else np.random.rand(1)
+            self._array = read_img(self._path) if not ENV_BENCHMARK.DRY_RUN else np.random.rand(1)
         return self._array
 
     def embedding(self, scanner: FaceScanner) -> Array1D:
@@ -76,7 +76,7 @@ def get_lfw_dataset() -> Set[Image]:
 def get_people_txt_folds(lfw_dataset: Set[Image]) -> List[Set[Image]]:
     image_dict = {(img.name, img.number): img for img in lfw_dataset}
     folds = []
-    with (TMP_DIR / 'people.txt').open() as f:
+    with (TMP_DIR / 'people.txt').open('r') as f:
         fold_count = int(next(f))
         assert fold_count == 10
         for _ in range(fold_count):
