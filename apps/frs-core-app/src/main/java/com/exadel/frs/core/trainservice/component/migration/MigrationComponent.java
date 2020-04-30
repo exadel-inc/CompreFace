@@ -66,7 +66,7 @@ public class MigrationComponent {
                     continue;
                 } else {
                     GridFSFile one = gridFsOperations.findOne(new Query(Criteria.where("_id").is(face.getFaceImgId())));
-                    if (one == null){
+                    if (one == null) {
                         continue;
                     }
                     GridFsResource fsResource = gridFsOperations.getResource(one);
@@ -79,6 +79,7 @@ public class MigrationComponent {
                             .findFirst().orElseThrow()
                             .getEmbedding();
                     Face.Embedding faceEmbeddings = new Face.Embedding(embeddings, scanResponse.getCalculatorVersion());
+                    face.getEmbeddings().clear();
                     face.getEmbeddings().add(faceEmbeddings);
                     facesRepository.save(face);
                 }
@@ -101,7 +102,7 @@ public class MigrationComponent {
             log.info("Retraining models finished");
 
             log.info("Migration successfully finished");
-        } catch (Exception e){
+        } catch (Exception e) {
             log.info("Migration finished with exception");
             throw e;
         } finally {
