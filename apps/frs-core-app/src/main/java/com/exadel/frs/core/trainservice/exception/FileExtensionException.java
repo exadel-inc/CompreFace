@@ -1,9 +1,10 @@
 package com.exadel.frs.core.trainservice.exception;
 
 import static java.lang.String.format;
-import lombok.Value;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-@Value
+@ResponseStatus(code = BAD_REQUEST)
 public class FileExtensionException extends RuntimeException {
 
     private static final String MESSAGE = "File [%s] has an unavailable extension";
