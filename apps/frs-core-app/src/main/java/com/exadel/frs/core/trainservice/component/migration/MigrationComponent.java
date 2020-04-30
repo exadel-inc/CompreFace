@@ -65,7 +65,7 @@ public class MigrationComponent {
                         .anyMatch(embedding -> migrationCalculatorVersion.equals(embedding.getCalculatorVersion()))) {
                     continue;
                 } else {
-                    GridFSFile one = gridFsOperations.findOne(new Query(Criteria.where("_id").is(face.getFaceImgId())));
+                    GridFSFile one = gridFsOperations.findOne(new Query(Criteria.where("_id").is(face.getRawImgId())));
                     if (one == null) {
                         continue;
                     }
@@ -87,7 +87,6 @@ public class MigrationComponent {
             log.info("Calculating embedding for faces finished");
 
             log.info("Retraining models");
-
             List<Model> models = modelDao.findAll();
             for (val model : models) {
                 List<ObjectId> faces = model.getFaces();
