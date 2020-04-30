@@ -25,7 +25,7 @@ public class FacesRepositoryTest {
     private final static String MODEL_KEY_OTHER = "model_key_other";
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         val faceA = makeFace("A", MODEL_KEY);
         val faceB = makeFace("B", MODEL_KEY_OTHER);
         val faceC = makeFace("C", MODEL_KEY);
