@@ -32,12 +32,27 @@ class FaceDaoTest {
     }
 
     @Test
+    void deleteFaceByName() {
+        val faceName = "faceName";
+        val token = new Token(randomAlphabetic(10), randomAlphabetic(10));
+        val faces = List.of(new Face());
+        when(facesRepository.deleteByApiKeyAndFaceName(token.getModelApiKey(), faceName)).thenReturn(faces);
+
+        val actual = faceDao.deleteFaceByName(faceName, token.getModelApiKey());
+
+        assertThat(actual).isEqualTo(faces);
+
+        verify(facesRepository).deleteByApiKeyAndFaceName(token.getModelApiKey(), faceName);
+        verifyNoMoreInteractions(facesRepository);
+    }
+
+    @Test
     void deleteFacesByApiKey() {
         val token = new Token(randomAlphabetic(10), randomAlphabetic(10));
         val faces = List.of(new Face());
         when(facesRepository.deleteFacesByApiKey(token.getModelApiKey())).thenReturn(faces);
 
-        val actual = faceDao.deleteFacesByApiKey(token);
+        val actual = faceDao.deleteFacesByApiKey(token.getModelApiKey());
 
         assertThat(actual).isEqualTo(faces);
 
