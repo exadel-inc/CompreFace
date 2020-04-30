@@ -5,7 +5,7 @@ from collections import namedtuple
 
 from sample_images import IMG_DIR
 from sample_images.annotations import SAMPLE_IMAGES
-from src.constants import ENV, LOGGING_LEVEL
+from src.constants import ENV_MAIN, LOGGING_LEVEL
 from src.init_runtime import init_runtime
 from src.services.facescan.scanner.facescanners import FaceScanners
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
@@ -22,8 +22,8 @@ cached_read_img = cached(read_img)
 logger = logging.getLogger(__name__)
 
 
-class _ENV(Constants):
-    LOGGING_LEVEL_NAME = ENV.LOGGING_LEVEL_NAME
+class ENV(Constants):
+    LOGGING_LEVEL_NAME = ENV_MAIN.LOGGING_LEVEL_NAME
     IMG_NAMES = get_env_split('IMG_NAMES', ' '.join([i.img_name for i in SAMPLE_IMAGES]))
 
 
@@ -31,7 +31,7 @@ class Facenet2018DetectionThresholdOptimization:
     def __init__(self):
         self.arg_count = 4
         self.scanner = FaceScanners.Facenet2018()
-        self.dataset = [row for row in SAMPLE_IMAGES if row.img_name in _ENV.IMG_NAMES]
+        self.dataset = [row for row in SAMPLE_IMAGES if row.img_name in ENV.IMG_NAMES]
         logging.getLogger('src.services.facescan.scanner.test.calculate_errors').setLevel(logging.WARNING)
         logging.getLogger('src.services.facescan.scanner.facenet.facenet').setLevel(logging.INFO)
 
@@ -65,7 +65,7 @@ def random_thresholds_generator(arg_count):
 
 if __name__ == '__main__':
     init_runtime(logging_level=LOGGING_LEVEL)
-    logger.info(_ENV.to_json() if ENV.IS_DEV_ENV else _ENV.to_str())
+    logger.info(ENV.to_json() if ENV_MAIN.IS_DEV_ENV else ENV.to_str())
 
     task = Facenet2018DetectionThresholdOptimization()
     threshold_iterators = [

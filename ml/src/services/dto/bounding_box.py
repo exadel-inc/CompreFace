@@ -63,9 +63,11 @@ class BoundingBoxDTO(JSONEncodable):
 
     def similar_to_any(self, others: List['BoundingBoxDTO'], tolerance: int) -> bool:
         """
-        >>> BoundingBoxDTO(50,50,100,100,1).similar_to_any([BoundingBoxDTO(50,50,100,105,1),BoundingBoxDTO(50,50,100,106,1)],5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar_to_any([BoundingBoxDTO(50,50,100,105,1),\
+                                                            BoundingBoxDTO(50,50,100,106,1)], 5)
         True
-        >>> BoundingBoxDTO(50,50,100,100,1).similar_to_any([BoundingBoxDTO(50,50,100,106,1),BoundingBoxDTO(50,50,100,106,1)],5)
+        >>> BoundingBoxDTO(50,50,100,100,1).similar_to_any([BoundingBoxDTO(50,50,100,106,1), \
+                                                            BoundingBoxDTO(50,50,100,106,1)], 5)
         False
         """
         for other in others:

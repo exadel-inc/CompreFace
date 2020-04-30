@@ -6,7 +6,7 @@ from src.exceptions import NoFaceFoundError, MoreThanOneFaceFoundError
 from src.services.classifier.logistic_classifier import LogisticClassifier, LogisticClassifierMock
 from src.services.facescan.scanner.facescanner import FaceScanner
 from tools.facescan.benchmark_e2e._dataset import Image
-from tools.facescan.benchmark_e2e.constants import _ENV
+from tools.facescan.benchmark_e2e.constants import ENV
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +40,7 @@ class LogisticClassifierFacade:
         train_counts['NamesTrained'] += len(set(self._trained_names))
         logger.debug(f'Started training with {len(self._trained_names)} images')
         self._classifier = LogisticClassifier.train(embeddings, self._trained_names, self._scanner.ID) \
-            if not _ENV.DRY_RUN else LogisticClassifierMock()
+            if not ENV.DRY_RUN else LogisticClassifierMock()
         logger.debug('Training complete')
 
     def test_recognition(self, images: Set[Image]) -> dict:

@@ -79,6 +79,6 @@ class InsightFace(FaceScanner):
             if box.probability <= det_prob_threshold:
                 logger.debug(f'Box Filtered out because below threshold ({det_prob_threshold}: {box})')
                 continue
-            logger.debug(f"Found: {box}")
+            logger.debug(f"Found: {box.dto}")
             boxes.append(box)
         return boxes

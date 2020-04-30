@@ -53,7 +53,7 @@ down/all:
 #####################################
 
 # Install dependencies and prepare environment
-setup:
+setup: ml/tools/facescan/tmp
 	mkdir -p tmp
 	chmod +x ml/run.sh e2e/run-e2e-test.sh ml/tools/crash-lab.sh
 	python -m pip install -r ml/requirements.txt -e ml/srcext/insightface/python-package
@@ -127,7 +127,7 @@ e2e/qa: e2e/remote
 ##### DEV TOOLS
 #####################################
 
-# Detects faces on given images, with selected scanners, and output the results using local ML service
+# Detects faces on given images, with selected scanners, and output the results using local ML servicef'{img_name}'
 demo: IMG_NAMES=015_6.jpg
 demo: scan
 scan:
@@ -211,6 +211,16 @@ define get_from_remote_tgz
 	tar zxvf $(2)/tmp.tgz -C $(2)
 	rm $(2)/tmp.tgz
 endef
+
+define get_from_remote_zip
+	mkdir -p $(2)
+	curl -o $(2)/tmp.zip $(1)
+	unzip $(2)/tmp.zip -d $(2)
+	rm $(2)/tmp.zip
+endef
+
+ml/tools/facescan/tmp:
+	$(call get_from_remote_zip,https://www.fontsquirrel.com/fonts/download/arimo,ml/tools/facescan/tmp/arimo-font)
 
 ml/tools/facescan/benchmark_e2e/tmp:
 	$(call get_from_remote_tgz,http://vis-www.cs.umass.edu/lfw/lfw.tgz,ml/tools/facescan/benchmark_e2e/tmp)

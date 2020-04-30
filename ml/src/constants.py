@@ -25,3 +25,4 @@ class ENV(Constants):
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]
+ENV_MAIN = ENV
