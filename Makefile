@@ -1,5 +1,5 @@
 SHELL := /bin/bash
-.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats status/dev status/qa DEV_ML_URL QA_ML_URL benchmark/e2e
+.PHONY: default test build up down down/all setup start stop test/local test/unit test/lint test/i9n test/e2e e2e e2e/local e2e/extended e2e/remote e2e/dev e2e/qa demo scan optimize crash COMPOSE_PROJECT_NAME PORT API_KEY MONGODB_DBNAME db stats status/dev status/qa DEV_ML_URL QA_ML_URL benchmark/e2e benchmark/detection
 .EXPORT_ALL_VARIABLES:
 .DEFAULT_GOAL := default
 DEV_ML_URL := http://10.130.66.129:3000
@@ -145,7 +145,11 @@ optimize:
 crash-lab:
 	ml/tools/crash-lab.sh $(CURDIR)/ml/sample_images
 
-# Tests the face scanning system with error statistics at every step of processing
+# Tests the accuracy of face detection
+benchmark/detection: ml/tools/facescan/benchmark_detection/tmp
+	python -m ml.tools.facescan.benchmark_detection.run
+
+# Tests the face recognition system with accuracy error statistics at every step of processing
 benchmark/e2e: ml/tools/facescan/benchmark_e2e/tmp
 	python -m ml.tools.facescan.benchmark_e2e.run
 
@@ -201,9 +205,17 @@ status/qa:
 ##### FILE DEPENDENCIES
 #####################################
 
+define get_from_remote_tgz
+	mkdir -p $(2)
+	curl -o $(2)/tmp.tgz $(1)
+	tar zxvf $(2)/tmp.tgz -C $(2)
+	rm $(2)/tmp.tgz
+endef
+
 ml/tools/facescan/benchmark_e2e/tmp:
-	mkdir -p ml/tools/facescan/benchmark_e2e/tmp
-	curl -o ml/tools/facescan/benchmark_e2e/tmp/lfw.tgz http://vis-www.cs.umass.edu/lfw/lfw.tgz
-	tar zxvf ml/tools/facescan/benchmark_e2e/tmp/lfw.tgz -C ml/tools/facescan/benchmark_e2e/tmp/
-	rm ml/tools/facescan/benchmark_e2e/tmp/lfw.tgz
+	$(call get_from_remote_tgz,http://vis-www.cs.umass.edu/lfw/lfw.tgz,ml/tools/facescan/benchmark_e2e/tmp)
 	curl -o ml/tools/facescan/benchmark_e2e/tmp/people.txt http://vis-www.cs.umass.edu/lfw/people.txt
+
+ml/tools/facescan/benchmark_detection/tmp:
+	$(call get_from_remote_tgz,http://tamaraberg.com/faceDataset/originalPics.tar.gz,ml/tools/facescan/benchmark_detection/tmp/originalPics)
+	$(call get_from_remote_tgz,http://vis-www.cs.umass.edu/fddb/FDDB-folds.tgz,ml/tools/facescan/benchmark_detection/tmp)

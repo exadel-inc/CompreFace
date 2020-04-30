@@ -60,8 +60,8 @@ def show_img(img: Array3D, boxes: List[BoundingBoxDTO] = None, noses: List[Tuple
     pil_img = Image.fromarray(img, 'RGB')
     img_draw = ImageDraw.Draw(pil_img)
     noses_given = noses is not None
-    noses = [scaler.downscale_nose(nose) for nose in noses or []]
-    boxes = [box.scaled(scaler.downscale_coefficient) for box in boxes or []]
+    noses = [scaler.downscale_nose(nose) for nose in noses or ()]
+    boxes = [box.scaled(scaler.downscale_coefficient) for box in boxes or ()]
     boxes = sorted(boxes, key=lambda box: (box.x_min, box.y_min))
 
     random_bright_color_gen = _random_bright_color_gen_cls()
