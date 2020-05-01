@@ -15,7 +15,7 @@ for scanner in ${SCANNERS/,/ }; do
       for img_name in ${IMG_NAMES/,/ }; do
         # Run experiment
         OUTPUT=$(docker run --memory=$mem_limit --memory-swap=$mem_limit -e IMG_LENGTH_LIMIT=$img_length_limit \
-          -e SCANNER=$scanner -e IMG_NAMES=$img_name -e SHOW_IMG=false \
+          -e SCANNER=$scanner -e IMG_NAMES=$img_name -e SAVE_IMG=false \
           ${COMPOSE_PROJECT_NAME}_ml python -m src.services.facescan.run 2>&1)
         EXIT_CODE=$?
 
