@@ -33,7 +33,7 @@ def test__given_img_with_no_faces__when_adding_face__then_returns_400_no_face_fo
     ('007_B.jpg', 'Stephen Hawking'),
     ('009_C.jpg', 'Paul Walker'), ])
 @pytest.mark.run(order=next(after_previous))
-def test__when_adding_face__then_returns_201(file, name):
+def test__when_adding_ABC_faces__then_returns_201_for_each(file, name):
     files = {'file': open(IMG_DIR / file, 'rb')}
 
     res = ml_post(f"/faces/{name}?retrain=no", headers={'X-Api-Key': ENV_E2E.API_KEY}, files=files)
@@ -108,7 +108,7 @@ def test__given_other_api_key__when_getting_names__then_returns_no_names():
 
 
 @pytest.mark.run(order=next(after_previous))
-def test__when_deleting_face__then_returns_204():
+def test__when_deleting_face_C__then_returns_204():
     pass
 
     res_del = ml_delete("/faces/Paul Walker", headers={'X-Api-Key': ENV_E2E.API_KEY})
@@ -119,7 +119,7 @@ def test__when_deleting_face__then_returns_204():
 
 # noinspection PyPep8Naming
 @pytest.mark.run(order=next(after_previous))
-def test__when_recognizing_faces__then_only_faces_A_and_B_are_recognized():
+def test__when_recognizing_ABC_faces__then_only_faces_A_and_B_are_recognized():
     files_a = {'file': open(IMG_DIR / '002_A.jpg', 'rb')}
     files_b = {'file': open(IMG_DIR / '008_B.jpg', 'rb')}
     files_c = {'file': open(IMG_DIR / '009_C.jpg', 'rb')}
