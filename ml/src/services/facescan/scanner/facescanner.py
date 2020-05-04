@@ -17,10 +17,12 @@ class FaceScanner(ABC):
 
     @abstractmethod
     def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
+        """ Find face bounding boxes and calculate embeddings"""
         raise NotImplementedError
 
     @abstractmethod
     def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
+        """ Find face bounding boxes, without calculating embeddings"""
         raise NotImplementedError
 
     def scan_one(self, img: Array3D,
