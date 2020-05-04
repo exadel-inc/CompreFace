@@ -30,7 +30,7 @@ public class FaceClassifierManager {
     public void initNewClassifier(String appKey, String modelId) {
         lockManager.lock(appKey, modelId);
         val proxy = context.getBean(FaceClassifierAdapter.class);
-        proxy.train(faceDao.findAllFaceEmbeddingsByApiKey(appKey), appKey, modelId);
+        proxy.train(faceDao.findAllFaceEmbeddingsByApiKey(modelId), appKey, modelId);
     }
 
     public void abortClassifierTraining(String appKey, String modelId) {
