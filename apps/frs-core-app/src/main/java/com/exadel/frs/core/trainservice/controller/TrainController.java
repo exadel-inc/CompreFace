@@ -40,7 +40,6 @@ public class TrainController {
             final String apiKey
     ) {
         val token = systemService.buildToken(apiKey);
-        manager.initNewClassifier(token.getModelApiKey());
         retrainService.startRetrain(token.getModelApiKey());
 
         return ResponseEntity.status(ACCEPTED)
