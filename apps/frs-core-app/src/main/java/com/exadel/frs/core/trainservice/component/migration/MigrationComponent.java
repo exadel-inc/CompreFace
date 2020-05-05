@@ -11,6 +11,7 @@ import com.exadel.frs.core.trainservice.system.feign.FeignClientFactory;
 import com.exadel.frs.core.trainservice.system.feign.ScanResponse;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import com.mongodb.client.gridfs.model.GridFSFile;
+import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -61,8 +62,11 @@ public class MigrationComponent {
             log.info("Calculating embedding for faces");
             List<Face> all = facesRepository.findAll();
             for (Face face : all) {
-                if (face.getEmbeddings().stream()
-                        .anyMatch(embedding -> migrationCalculatorVersion.equals(embedding.getCalculatorVersion()))) {
+                log.info("Processing facename {} with id {}", face.getFaceName(),face.getId());
+                long count = face.getEmbeddings().stream()
+                        .filter(embedding -> migrationCalculatorVersion.equals(embedding.getCalculatorVersion()))
+                        .count();
+                if (count == face.getEmbeddings().size()){
                     continue;
                 } else {
                     GridFSFile one = gridFsOperations.findOne(new Query(Criteria.where("_id").is(face.getRawImgId())));
@@ -73,7 +77,8 @@ public class MigrationComponent {
                     MultipartFile file = new MultipartFileData(IOUtils.toByteArray(fsResource.getInputStream()),
                             face.getFaceName(), null);
 
-                    ScanResponse scanResponse = migrationServerFeignClient.scanFaces(file, 1, null);
+                    try{
+                        ScanResponse scanResponse = migrationServerFeignClient.scanFaces(file, 1, null);
 
                     List<Double> embeddings = scanResponse.getResult().stream()
                             .findFirst().orElseThrow()
@@ -82,13 +87,19 @@ public class MigrationComponent {
                     face.getEmbeddings().clear();
                     face.getEmbeddings().add(faceEmbeddings);
                     facesRepository.save(face);
+                    } catch (FeignException.InternalServerError | FeignException.BadRequest error) {
+                        log.error("{} during processing facename {} with id {}", error.toString(), face.getFaceName(), face.getId());
+                        face.getEmbeddings().clear();
+                        facesRepository.save(face);
+                    }
                 }
             }
             log.info("Calculating embedding for faces finished");
 
             log.info("Retraining models");
-            List<Model> models = modelDao.findAll();
+            List<Model> models = modelDao.findAllWithoutClassifier();
             for (val model : models) {
+                log.info("Retraining model {}", model.getId());
                 List<ObjectId> faces = model.getFaces();
                 if (faces == null || faces.isEmpty()) {
                     faceManager.initNewClassifier(model.getId());
