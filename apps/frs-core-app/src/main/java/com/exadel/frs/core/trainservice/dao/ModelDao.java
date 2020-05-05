@@ -24,8 +24,8 @@ public class ModelDao {
 
     private final ModelRepository modelRepository;
 
-    public List<Model> findAll(){
-        return modelRepository.findAll();
+    public List<Model> findAllWithoutClassifier(){
+        return modelRepository.findAllWithoutClassifier();
     }
 
     public Model saveModel(final String modelKey, final FaceClassifier classifier, final String calculatorVersion) {

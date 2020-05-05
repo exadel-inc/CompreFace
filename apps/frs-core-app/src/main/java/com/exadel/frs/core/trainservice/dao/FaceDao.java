@@ -42,6 +42,9 @@ public class FaceDao {
     }
 
     private EmbeddingFaceList facesToEmbeddingList(List<Face> faces){
+        if (faces.isEmpty()){
+            return new EmbeddingFaceList();
+        }
         Map<Pair<String, String>, List<List<Double>>> map = faces.stream()
                 .collect(toMap(face -> Pair.of(face.getId(), face.getFaceName()),
                         face -> face.getEmbeddings().stream()

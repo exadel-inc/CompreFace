@@ -5,6 +5,7 @@ import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
