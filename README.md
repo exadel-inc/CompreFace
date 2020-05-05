@@ -8,3 +8,6 @@ To run project via docker(installed Docker required) you need to:
 ## API
 
 To open swagger api view follow http://localhost:8080/swagger-ui.html
+
+## Logger
+In order to run without json logs add local to your profiles
