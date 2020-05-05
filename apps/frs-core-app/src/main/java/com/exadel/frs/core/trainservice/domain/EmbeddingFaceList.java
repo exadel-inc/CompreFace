@@ -6,8 +6,10 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.tuple.Pair;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Data
 @Accessors(chain = true)
@@ -18,5 +20,5 @@ public class EmbeddingFaceList {
     /**
     Pair of id and face name as key and list of embeddings as value
      */
-    Map<Pair<String, String>, List<List<Double>>> faceEmbeddings;
+    Map<Pair<String, String>, List<List<Double>>> faceEmbeddings = new HashMap<>();
 }

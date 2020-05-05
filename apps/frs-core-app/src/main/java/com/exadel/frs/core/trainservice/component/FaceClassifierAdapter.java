@@ -3,9 +3,11 @@ package com.exadel.frs.core.trainservice.component;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
+import com.exadel.frs.core.trainservice.exception.ClassifierNotTrained;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,6 +27,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Component
 @Setter
+@Slf4j
 @Scope(value = "prototype")
 @RequiredArgsConstructor
 public class FaceClassifierAdapter {
@@ -57,6 +60,9 @@ public class FaceClassifierAdapter {
             val labelMap = new HashMap<Integer, Pair<String, String>>();
 
             Map<Pair<String, String>, List<List<Double>>> faceNameEmbeddings = embeddingFaceList.getFaceEmbeddings();
+            if (faceNameEmbeddings.isEmpty()){
+                throw new ClassifierNotTrained();
+            }
             for (val faceNameId : faceNameEmbeddings.keySet()) {
                 labelMap.put(faceId, faceNameId);
                 val lists = faceNameEmbeddings.get(faceNameId).stream()
@@ -74,6 +80,8 @@ public class FaceClassifierAdapter {
                     y.stream().mapToInt(integer -> integer).toArray(),
                     labelMap
             );
+        } catch (ClassifierNotTrained e){
+            log.error("Model {} hasn't enought data to train", modelKey);
         } finally {
             storage.saveClassifier(modelKey, this.getClassifier(), embeddingFaceList.getCalculatorVersion());
         }

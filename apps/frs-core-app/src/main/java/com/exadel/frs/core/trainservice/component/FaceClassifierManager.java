@@ -20,8 +20,11 @@ public class FaceClassifierManager {
     private final ApplicationContext context;
 
     public void saveClassifier(String modelKey, FaceClassifier classifier, String calculatorVersion) {
-        modelDao.saveModel(modelKey, classifier, calculatorVersion);
-        lockManager.unlock(modelKey);
+        try{
+            modelDao.saveModel(modelKey, classifier, calculatorVersion);
+        } finally {
+            lockManager.unlock(modelKey);
+        }
     }
 
     public void removeFaceClassifier(final String modelKey) {

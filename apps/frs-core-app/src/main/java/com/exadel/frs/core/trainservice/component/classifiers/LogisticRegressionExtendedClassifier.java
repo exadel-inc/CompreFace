@@ -45,6 +45,9 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
     @Override
     public List<String> getUsedFaceIds() {
+        if (labelMap == null) {
+            return List.of();
+        }
         return labelMap.values().stream()
                 .map(Pair::getLeft)
                 .collect(Collectors.toList());
