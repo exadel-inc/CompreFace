@@ -7,6 +7,6 @@ COPY run-e2e-test.sh .
 ENV HOME=/app/e2e
 
 RUN chmod +x run-e2e-test.sh \
-&& pip install -U requests pytest pytest-ordering pymongo strenum pylama toolz
+&& pip install -U requests pytest pytest-ordering pymongo strenum pylama toolz joblib imageio
 
 CMD ["./run-e2e-test.sh"]
