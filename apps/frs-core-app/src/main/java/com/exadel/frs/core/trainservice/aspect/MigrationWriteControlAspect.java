@@ -25,7 +25,7 @@ public class MigrationWriteControlAspect {
     private void write(){}
 
     @Around("endpoint() && write()")
-    public Object writeEndpoint(ProceedingJoinPoint pjp) throws Throwable {
+    public Object writeEndpoint(final ProceedingJoinPoint pjp) throws Throwable {
         if (migrationStatusStorage.isMigrating()){
             log.warn("All write endpoints temporary disabled during migration");
             throw new MigrationExecutionException();

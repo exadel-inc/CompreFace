@@ -4,7 +4,6 @@ import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;

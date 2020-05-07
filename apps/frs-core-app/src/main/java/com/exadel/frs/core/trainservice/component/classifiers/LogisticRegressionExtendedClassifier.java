@@ -40,7 +40,7 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
     @Override
     public boolean isTrained() {
-        return !(logisticRegression == null);
+        return logisticRegression != null;
     }
 
     @Override

@@ -6,12 +6,11 @@ import com.exadel.frs.core.trainservice.config.MongoTest;
 import com.exadel.frs.core.trainservice.entity.Model;
 import com.exadel.frs.core.trainservice.repository.ModelRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.test.context.junit.jupiter.EnabledIf;
 
 import java.util.HashMap;
@@ -24,7 +23,6 @@ public class ModelDaoTest {
 
     @Autowired
     private ModelRepository modelRepository;
-
 
     @AfterEach
     public void after() {
