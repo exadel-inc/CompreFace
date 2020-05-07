@@ -13,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Scope("prototype")
 public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
+    static final long serialVersionUID = 8656025859894141908L;
+
     private Map<Integer, String> labelMap;
     private LogisticRegressionExt logisticRegression;
 
