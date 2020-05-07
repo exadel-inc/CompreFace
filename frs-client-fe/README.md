@@ -10,14 +10,17 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development Run
 
-Run starting script: `./scripts/start.sh` for unix OS
-Run starting script: `.\scripts\startWin.sh` for Win OS
+Check access to https://dev.frs.exadel.by. If site is unreachable please connect to your office VPN.
 
-## Mock API server 
+Edit hosts file. Add `127.0.0.1 frs.local`
 
-Run `mock-server` for API server. Server host:  `http://localhost:3000/`. The app will automatically reload if you change server.js file. \
-JSON files are used for creating data storage in `mock-backend/data` folder. Server uses ExpressJs framework and nodemon. \
-API is described in confluence: https://confluence.exadel.com/pages/viewpage.action?spaceKey=KC&title=FRS+REST+API
+Run script to start docker container:
+  * `./scripts/start.sh` for unix OS
+  * `.\scripts\startWin.sh` for Win OS
+
+Run `npm run start` to start application
+
+Go to http://frs.local
 
 ## Code scaffolding
 
