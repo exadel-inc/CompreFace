@@ -1,8 +1,10 @@
 package com.exadel.frs.core.trainservice.handler;
 
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
+import com.exadel.frs.core.trainservice.exception.MigrationExecutionException;
 import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,9 +21,21 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
             final RuntimeException ex,
             final WebRequest request
     ) {
-        var modelAlreadyLockedException = (ModelAlreadyLockedException) ex;
+        val modelAlreadyLockedException = (ModelAlreadyLockedException) ex;
 
         return ResponseEntity.status(HttpStatus.LOCKED)
                              .body(new RetrainResponse(modelAlreadyLockedException.getMessage()));
     }
+
+    @ExceptionHandler(value = {MigrationExecutionException.class})
+    protected ResponseEntity<Object> handleMigrationExecutionException(
+            final RuntimeException ex,
+            final WebRequest request
+    ) {
+        val migrationExecutionException = (MigrationExecutionException) ex;
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new RetrainResponse(migrationExecutionException.getMessage()));
+    }
+
 }

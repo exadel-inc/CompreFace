@@ -47,7 +47,7 @@ host:
   full:
     dns:
       auth:
-        link: http://localhost:${server.port
+        link: http://localhost:${server.port}
 
 logging:
   level:

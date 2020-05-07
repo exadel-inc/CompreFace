@@ -8,6 +8,8 @@ import lombok.val;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Component
 public class FaceClassifierManager {
@@ -17,27 +19,36 @@ public class FaceClassifierManager {
     private final FaceClassifierLockManager lockManager;
     private final ApplicationContext context;
 
-    public void saveClassifier(String appKey, String modelId, FaceClassifier classifier) {
-        modelDao.saveModel(modelId, classifier);
-        lockManager.unlock(appKey, modelId);
+    public void saveClassifier(String modelKey, FaceClassifier classifier, String calculatorVersion) {
+        try{
+            modelDao.saveModel(modelKey, classifier, calculatorVersion);
+        } finally {
+            lockManager.unlock(modelKey);
+        }
     }
 
-    public void removeFaceClassifier(final String appKey, final String modelId) {
-        lockManager.unlock(appKey, modelId);
-        modelDao.deleteModel(modelId);
+    public void removeFaceClassifier(final String modelKey) {
+        lockManager.unlock(modelKey);
+        modelDao.deleteModel(modelKey);
     }
 
-    public void initNewClassifier(String appKey, String modelId) {
-        lockManager.lock(appKey, modelId);
+    public void initNewClassifier(String modelKey, List<String> faces) {
+        lockManager.lock(modelKey);
         val proxy = context.getBean(FaceClassifierAdapter.class);
-        proxy.train(faceDao.findAllFaceEmbeddingsByApiKey(modelId), appKey, modelId);
+        proxy.train(faceDao.findAllFacesIn(faces), modelKey);
     }
 
-    public void abortClassifierTraining(String appKey, String modelId) {
-        lockManager.unlock(appKey, modelId);
+    public void initNewClassifier(String modelKey) {
+        lockManager.lock(modelKey);
+        val proxy = context.getBean(FaceClassifierAdapter.class);
+        proxy.train(faceDao.findAllFaceEmbeddingsByApiKey(modelKey), modelKey);
     }
 
-    public boolean isTraining(String appKey, String modelId) {
-        return lockManager.isLocked(appKey, modelId);
+    public void abortClassifierTraining(String modelKey) {
+        lockManager.unlock(modelKey);
+    }
+
+    public boolean isTraining(String modelKey) {
+        return lockManager.isLocked(modelKey);
     }
 }

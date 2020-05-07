@@ -43,7 +43,7 @@ public class FaceService {
 
     public int deleteFacesByModel(final String apiKey) {
         val token = systemService.buildToken(apiKey);
-        classifierManager.removeFaceClassifier(token.getAppApiKey(), token.getModelApiKey());
+        classifierManager.removeFaceClassifier(token.getModelApiKey());
         val deletedFaces = faceDao.deleteFacesByApiKey(token);
 
         return deletedFaces.size();

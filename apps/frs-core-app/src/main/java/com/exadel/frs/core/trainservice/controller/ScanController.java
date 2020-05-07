@@ -3,6 +3,8 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+
+import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.system.SystemService;
@@ -31,6 +33,7 @@ public class ScanController {
     private final RetrainService retrainService;
     private final ImageExtensionValidator imageValidator;
 
+    @WriteEndpoint
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(value = "/faces/{face_name}")
     public void scanFaces(

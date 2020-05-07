@@ -2,7 +2,7 @@ package com.exadel.frs.core.trainservice.repository;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.exadel.frs.core.trainservice.domain.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.Arrays;
 import java.util.List;
 import lombok.val;
@@ -81,5 +81,12 @@ public class FacesRepositoryTest {
                                     .collect(toList());
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void findFaceIdsIn(){
+        val faces = facesRepository.findByIdIn(List.of("Id_A", "Id_B"));
+        assertThat(faces).isNotNull();
+        assertThat(faces).hasSize(2);
     }
 }

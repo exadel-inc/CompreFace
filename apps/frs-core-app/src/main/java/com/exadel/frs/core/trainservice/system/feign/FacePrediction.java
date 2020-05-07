@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.system.python;
+package com.exadel.frs.core.trainservice.system.feign;
 
 import lombok.Value;
 

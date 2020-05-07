@@ -2,14 +2,17 @@ package com.exadel.frs.core.trainservice.component;
 
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
+import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
+import com.exadel.frs.core.trainservice.exception.ClassifierNotTrained;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +27,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Component
 @Setter
+@Slf4j
 @Scope(value = "prototype")
 @RequiredArgsConstructor
 public class FaceClassifierAdapter {
@@ -45,20 +49,23 @@ public class FaceClassifierAdapter {
 
     @Async
     public void train(
-            final Map<String, List<List<Double>>> faceNameEmbeddings,
-            final String appKey,
-            final String modelId
+            final EmbeddingFaceList embeddingFaceList,
+            final String modelKey
     ) {
         try {
-            Thread.currentThread().setName(appKey + modelId);
+            Thread.currentThread().setName(modelKey);
             var faceId = 0;
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
-            val labelMap = new HashMap<Integer, String>();
+            val labelMap = new HashMap<Integer, Pair<String, String>>();
 
-            for (val faceName : faceNameEmbeddings.keySet()) {
-                labelMap.put(faceId, faceName);
-                val lists = faceNameEmbeddings.get(faceName).stream()
+            Map<Pair<String, String>, List<List<Double>>> faceNameEmbeddings = embeddingFaceList.getFaceEmbeddings();
+            if (faceNameEmbeddings.isEmpty()){
+                throw new ClassifierNotTrained();
+            }
+            for (val faceNameId : faceNameEmbeddings.keySet()) {
+                labelMap.put(faceId, faceNameId);
+                val lists = faceNameEmbeddings.get(faceNameId).stream()
                                               .filter(list -> isNotEmpty(list))
                                               .collect(toList());
                 for (val list : lists) {
@@ -73,20 +80,22 @@ public class FaceClassifierAdapter {
                     y.stream().mapToInt(integer -> integer).toArray(),
                     labelMap
             );
+        } catch (ClassifierNotTrained e){
+            log.error("Model {} hasn't enought data to train", modelKey);
         } finally {
-            storage.saveClassifier(appKey, modelId, this.getClassifier());
+            storage.saveClassifier(modelKey, this.getClassifier(), embeddingFaceList.getCalculatorVersion());
         }
     }
 
     public void trainSync(
-            final Map<String, List<List<Double>>> faceNameEmbeddings,
-            final String appKey,
-            final String modelId
+            final EmbeddingFaceList embeddingFaceList,
+            final String modelKey
     ) {
-        this.train(faceNameEmbeddings, appKey, modelId);
+        this.train(embeddingFaceList, modelKey);
     }
 
     public Pair<Integer, String> predict(final double[] x) {
         return classifier.predict(x);
     }
+
 }

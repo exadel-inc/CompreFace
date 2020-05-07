@@ -5,8 +5,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.test.context.junit.jupiter.EnabledIf;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,20 +26,21 @@ public class FaceClassifierAdapterTestIT {
 
     public static final double THRESHOLD = 0.95;
 
-    private static final String APP_KEY = "app";
-    private static final String MODEL_ID = "model_id";
+    private static final String MODEL_KEY = "model_key";
 
     @Test
     public void train() {
         var allFaceEmbeddings = service.findAllFaceEmbeddings();
-        faceClassifierAdapter.trainSync(allFaceEmbeddings, APP_KEY, MODEL_ID);
+        faceClassifierAdapter.trainSync(allFaceEmbeddings, MODEL_KEY);
         var count1 = 0;
         var count2 = 0;
 
-        for (var faceName : allFaceEmbeddings.keySet()) {
+        Map<Pair<String, String>, List<List<Double>>> embeddings = allFaceEmbeddings.getFaceEmbeddings();
+
+        for (var faceName : embeddings.keySet()) {
             Pair<Integer, String> predict = faceClassifierAdapter
-                    .predict(allFaceEmbeddings.get(faceName).get(0).stream().mapToDouble(d -> d).toArray());
-            if (predict.getSecond().equals(faceName)) {
+                    .predict(embeddings.get(faceName).get(0).stream().mapToDouble(d -> d).toArray());
+            if (predict.getRight().equals(faceName)) {
                 count2++;
             }
             count1++;

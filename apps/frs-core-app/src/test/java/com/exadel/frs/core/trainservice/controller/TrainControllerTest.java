@@ -46,7 +46,7 @@ class TrainControllerTest {
                .andExpect(status().isAccepted());
 
         verify(systemService).buildToken(API_KEY);
-        verify(retrainService).startRetrain(token.getAppApiKey(), token.getModelApiKey());
+        verify(retrainService).startRetrain(token.getModelApiKey());
         verifyNoMoreInteractions(systemService);
     }
 
@@ -54,7 +54,7 @@ class TrainControllerTest {
     void getStatus() throws Exception {
         val token = new Token(APP_KEY, MODEL_KEY);
         when(systemService.buildToken(API_KEY)).thenReturn(token);
-        when(retrainService.isTrainingRun(APP_KEY, MODEL_KEY)).thenReturn(false);
+        when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(false);
 
         mockMvc.perform(get(API_V1 + "/retrain").header(X_FRS_API_KEY_HEADER, API_KEY))
                .andExpect(status().isOk());
