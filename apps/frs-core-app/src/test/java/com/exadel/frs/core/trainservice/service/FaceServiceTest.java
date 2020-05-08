@@ -95,7 +95,7 @@ class FaceServiceTest {
 
         val inOrder = inOrder(systemService, classifierManager, faceDao);
         inOrder.verify(systemService).buildToken(API_KEY);
-        inOrder.verify(classifierManager).removeFaceClassifier(token.getAppApiKey(), token.getModelApiKey());
+        inOrder.verify(classifierManager).removeFaceClassifier(token.getModelApiKey());
         inOrder.verify(faceDao).deleteFacesByApiKey(token.getModelApiKey());
         verifyNoMoreInteractions(systemService, faceDao);
         verifyNoInteractions(retrainService);
