@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
@@ -54,6 +55,9 @@ public class FaceClassifierAdapter {
     ) {
         try {
             Thread.currentThread().setName(modelKey);
+
+            sleep(10_000);
+
             var faceId = 0;
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
@@ -80,7 +84,7 @@ public class FaceClassifierAdapter {
                     y.stream().mapToInt(integer -> integer).toArray(),
                     labelMap
             );
-        } catch (ClassifierNotTrained e){
+        } catch (ClassifierNotTrained | InterruptedException e){
             log.error("Model {} hasn't enought data to train", modelKey);
         } finally {
             storage.saveClassifier(modelKey, this.getClassifier(), embeddingFaceList.getCalculatorVersion());
