@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.domain.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.system.Token;
 import java.util.HashMap;
@@ -86,7 +86,7 @@ class FaceServiceTest {
 
         when(systemService.buildToken(API_KEY)).thenReturn(token);
         when(faceDao.deleteFacesByApiKey(token.getModelApiKey())).thenReturn(faces);
-        doNothing().when(classifierManager).removeFaceClassifier(token.getAppApiKey(), token.getModelApiKey());
+        doNothing().when(classifierManager).removeFaceClassifier(token.getModelApiKey());
 
         val actual = faceService.deleteFacesByModel(API_KEY);
 

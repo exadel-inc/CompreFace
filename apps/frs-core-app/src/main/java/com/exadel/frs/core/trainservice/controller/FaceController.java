@@ -2,6 +2,8 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+
+import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
 
 @RestController
 @RequestMapping(API_V1 + "/faces")
@@ -29,6 +32,7 @@ public class FaceController {
         return faceService.findAllFaceNames(apiKey);
     }
 
+    @WriteEndpoint
     @DeleteMapping("/{faceName}")
     public void deleteFaceByName(
             @PathVariable
@@ -41,6 +45,7 @@ public class FaceController {
         faceService.deleteFaceByName(faceName, apiKey, retrain);
     }
 
+    @WriteEndpoint
     @DeleteMapping
     public int deleteFacesByModel(
             @RequestHeader(name = X_FRS_API_KEY_HEADER)

@@ -7,11 +7,11 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import com.exadel.frs.core.trainservice.domain.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
-import com.exadel.frs.core.trainservice.system.python.ScanFacesClient;
-import com.exadel.frs.core.trainservice.system.python.ScanResponse;
-import com.exadel.frs.core.trainservice.system.python.ScanResult;
+import com.exadel.frs.core.trainservice.system.feign.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.ScanResponse;
+import com.exadel.frs.core.trainservice.system.feign.ScanResult;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -25,7 +25,7 @@ class ScanServiceImplTest {
 
     @Test
     void scanAndSaveFace() throws IOException {
-        val scanFacesClient = mock(ScanFacesClient.class);
+        val scanFacesClient = mock(FacesClient.class);
         val facesRepository = mock(FacesRepository.class);
         val gridFsOperations = mock(GridFsOperations.class);
 

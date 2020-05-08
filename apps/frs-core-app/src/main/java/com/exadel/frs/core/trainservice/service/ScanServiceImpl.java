@@ -1,9 +1,9 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static java.util.stream.Collectors.toList;
-import com.exadel.frs.core.trainservice.domain.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
-import com.exadel.frs.core.trainservice.system.python.ScanFacesClient;
+import com.exadel.frs.core.trainservice.system.feign.FacesClient;
 import java.io.IOException;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ScanServiceImpl implements ScanService {
 
-    private final ScanFacesClient scanFacesClient;
+    private final FacesClient facesClient;
     private final FacesRepository facesRepository;
     private final GridFsOperations gridFsOperations;
 
@@ -27,7 +27,7 @@ public class ScanServiceImpl implements ScanService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        val scanResponse = scanFacesClient.scanFaces(file, 1, detProbThreshold);
+        val scanResponse = facesClient.scanFaces(file, 1, detProbThreshold);
 
         val embedding = scanResponse.getResult().stream()
                                     .findFirst().orElseThrow()

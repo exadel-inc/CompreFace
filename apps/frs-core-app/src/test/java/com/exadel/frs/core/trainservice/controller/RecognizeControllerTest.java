@@ -9,10 +9,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.system.Token;
-import com.exadel.frs.core.trainservice.system.python.ScanBox;
-import com.exadel.frs.core.trainservice.system.python.ScanFacesClient;
-import com.exadel.frs.core.trainservice.system.python.ScanResponse;
-import com.exadel.frs.core.trainservice.system.python.ScanResult;
+import com.exadel.frs.core.trainservice.system.feign.ScanBox;
+import com.exadel.frs.core.trainservice.system.feign.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.ScanResponse;
+import com.exadel.frs.core.trainservice.system.feign.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import java.util.List;
 import lombok.val;
@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,7 +36,7 @@ class RecognizeControllerTest {
     private FaceClassifierPredictor predictor;
 
     @MockBean
-    private ScanFacesClient client;
+    private FacesClient client;
 
     @MockBean
     private SystemService systemService;
@@ -60,7 +60,7 @@ class RecognizeControllerTest {
 
         when(systemService.buildToken(API_KEY)).thenReturn(new Token(APP_KEY, MODEL_KEY));
         when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
-        when(predictor.predict(any(), any(), any())).thenReturn(Pair.of(1, ""));
+        when(predictor.predict(any(), any())).thenReturn(Pair.of(1, ""));
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognize")
