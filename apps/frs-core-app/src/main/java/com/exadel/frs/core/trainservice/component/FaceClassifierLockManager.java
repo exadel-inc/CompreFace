@@ -36,7 +36,7 @@ public class FaceClassifierLockManager {
 
         lock.set(true);
         countDownLatch = new CountDownLatch((int) (countDownLatch.getCount() + 1));
-        log.debug("Model {} locked, models locked : {}", modelKey,  countDownLatch.getCount());
+        log.debug("Model {} locked, models locked : {}", modelKey, countDownLatch.getCount());
     }
 
     public synchronized void unlock(final String modelKey) {
@@ -49,9 +49,10 @@ public class FaceClassifierLockManager {
                 }
             }
         }
+
         lock.set(false);
         countDownLatch.countDown();
-        log.debug("Model {} unlocked, models locked : {}", modelKey,  countDownLatch.getCount());
+        log.debug("Model {} unlocked, models locked : {}", modelKey, countDownLatch.getCount());
     }
 
     public boolean isLocked(final String modelKey) {

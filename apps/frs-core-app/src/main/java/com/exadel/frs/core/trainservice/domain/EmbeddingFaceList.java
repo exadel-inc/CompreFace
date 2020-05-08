@@ -1,19 +1,19 @@
 package com.exadel.frs.core.trainservice.domain;
 
-import lombok.AccessLevel;
+import static lombok.AccessLevel.PRIVATE;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 @Data
 @Accessors(chain = true)
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = PRIVATE)
 public class EmbeddingFaceList {
+
     String calculatorVersion;
 
     /**
