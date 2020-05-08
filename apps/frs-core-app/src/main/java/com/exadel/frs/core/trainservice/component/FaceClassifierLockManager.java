@@ -58,5 +58,4 @@ public class FaceClassifierLockManager {
         return locks
                 .getOrDefault(modelKey, new AtomicBoolean(false)).get();
     }
-
 }

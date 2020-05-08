@@ -66,6 +66,6 @@ class TrainControllerTest {
         when(systemService.buildToken(API_KEY)).thenReturn(token);
 
         mockMvc.perform(delete(API_V1 + "/retrain").header(X_FRS_API_KEY_HEADER, API_KEY))
-               .andExpect(status().isNoContent());
+               .andExpect(status().isAccepted());
     }
 }
