@@ -39,7 +39,7 @@ public class FaceController {
             final String faceName,
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey,
-            @RequestParam(required = false, defaultValue = "force")
+            @RequestParam(name = "retrain", required = false, defaultValue = "force")
             final String retrain
     ) {
         faceService.deleteFaceByName(faceName, apiKey, retrain);
