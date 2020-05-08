@@ -36,7 +36,7 @@ public class FaceService {
         val faceNameEncoded = encode(faceName, UTF_8);
         val token = systemService.buildToken(apiKey);
 
-        faceDao.deleteFaceByName(faceNameEncoded, token);
+        faceDao.deleteFaceByName(faceNameEncoded, token.getModelApiKey());
 
         getTrainingOption(retrain).run(token, retrainService);
     }
@@ -44,7 +44,7 @@ public class FaceService {
     public int deleteFacesByModel(final String apiKey) {
         val token = systemService.buildToken(apiKey);
         classifierManager.removeFaceClassifier(token.getModelApiKey());
-        val deletedFaces = faceDao.deleteFacesByApiKey(token);
+        val deletedFaces = faceDao.deleteFacesByApiKey(token.getModelApiKey());
 
         return deletedFaces.size();
     }

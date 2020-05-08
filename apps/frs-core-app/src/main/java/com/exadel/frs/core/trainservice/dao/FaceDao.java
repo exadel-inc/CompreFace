@@ -70,12 +70,12 @@ public class FaceDao {
         return Map.of("names", faceNames);
     }
 
-    public void deleteFaceByName(final String faceName, final Token token) {
-        facesRepository.deleteByApiKeyAndFaceName(token.getModelApiKey(), faceName);
+    public List<Face> deleteFaceByName(final String faceName, final String modelApiKey) {
+        return facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
     }
 
-    public List<Face> deleteFacesByApiKey(final Token token) {
-        return facesRepository.deleteFacesByApiKey(token.getModelApiKey());
+    public List<Face> deleteFacesByApiKey(final String modelApiKey) {
+        return facesRepository.deleteFacesByApiKey(modelApiKey);
     }
 
     public int countFacesInModel(final String modelApiKey) {
