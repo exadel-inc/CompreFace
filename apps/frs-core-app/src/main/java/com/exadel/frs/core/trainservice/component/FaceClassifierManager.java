@@ -33,7 +33,7 @@ public class FaceClassifierManager {
         modelDao.deleteModel(modelKey);
     }
 
-    public void initNewClassifier(String modelKey, List<String> faces) {
+    public void initNewClassifier(final String modelKey, final List<String> faces) {
         lockManager.lock(modelKey);
         val proxy = context.getBean(FaceClassifierAdapter.class);
         proxy.train(faceDao.findAllFacesIn(faces), modelKey);
@@ -49,11 +49,11 @@ public class FaceClassifierManager {
         proxy.train(faceDao.findAllFaceEmbeddingsByApiKey(modelKey), modelKey);
     }
 
-    public void abortClassifierTraining(String modelKey) {
+    public void abortClassifierTraining(final String modelKey) {
         lockManager.unlock(modelKey);
     }
 
-    public boolean isTraining(String modelKey) {
+    public boolean isTraining(final String modelKey) {
         return lockManager.isLocked(modelKey);
     }
 }
