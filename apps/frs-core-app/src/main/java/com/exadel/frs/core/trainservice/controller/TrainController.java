@@ -1,7 +1,10 @@
 package com.exadel.frs.core.trainservice.controller;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.OK;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.system.SystemService;
@@ -16,12 +19,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
-import static org.springframework.http.HttpStatus.OK;
-
 @RestController
 @RequestMapping(API_V1)
 @RequiredArgsConstructor
@@ -29,8 +26,6 @@ public class TrainController {
 
     private final RetrainService retrainService;
     private final SystemService systemService;
-    private final FaceClassifierManager manager;
-
 
     @WriteEndpoint
     @PostMapping("/retrain")
@@ -43,7 +38,7 @@ public class TrainController {
         retrainService.startRetrain(token.getModelApiKey());
 
         return ResponseEntity.status(ACCEPTED)
-                             .body(new RetrainResponse("Retraining has just been started (this one already exists)"));
+                             .body(new RetrainResponse("Training is started"));
     }
 
     @WriteEndpoint
@@ -75,7 +70,7 @@ public class TrainController {
         val token = systemService.buildToken(apiKey);
         retrainService.abortTraining(token.getModelApiKey());
 
-        return ResponseEntity.status(NO_CONTENT)
+        return ResponseEntity.status(ACCEPTED)
                              .body(new RetrainResponse("Retraining is ensured to be stopped"));
     }
 }
