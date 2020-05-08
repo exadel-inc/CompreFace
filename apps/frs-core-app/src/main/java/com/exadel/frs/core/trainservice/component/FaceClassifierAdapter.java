@@ -1,9 +1,17 @@
 package com.exadel.frs.core.trainservice.component;
 
+import static java.lang.Thread.currentThread;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrained;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -15,16 +23,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static java.lang.Thread.sleep;
-import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 
 @Component
 @Setter
@@ -54,9 +52,7 @@ public class FaceClassifierAdapter {
             final String modelKey
     ) {
         try {
-            Thread.currentThread().setName(modelKey);
-
-            sleep(10_000);
+            currentThread().setName(modelKey);
 
             var faceId = 0;
             val x = new ArrayList<double[]>();
@@ -87,7 +83,7 @@ public class FaceClassifierAdapter {
             );
 
             storage.saveClassifier(modelKey, this.getClassifier(), embeddingFaceList.getCalculatorVersion());
-        } catch (ModelNotTrained | InterruptedException e) {
+        } catch (ModelNotTrained e) {
             log.error("Model {} hasn't enought data to train", modelKey);
         } finally {
             storage.abortClassifierTraining(modelKey);
