@@ -1,9 +1,9 @@
 package com.exadel.frs.core.trainservice.exception;
 
-import org.springframework.http.HttpStatus;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "Model has no faces")
+@ResponseStatus(code = BAD_REQUEST, reason = "Model has no faces")
 public class ModelHasNoFacesException extends RuntimeException {
 
 }

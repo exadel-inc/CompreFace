@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Scope("prototype")
 public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
-    static final long serialVersionUID = -1866949081344084764L;
+    private static final long serialVersionUID = -1866949081344084764L;
 
     private Map<Integer, Pair<String, String>> labelMap;
     private LogisticRegressionExt logisticRegression;

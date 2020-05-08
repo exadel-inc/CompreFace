@@ -3,6 +3,7 @@ package com.exadel.frs.core.trainservice.component;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.exception.ModelHasNoFacesException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.context.ApplicationContext;
@@ -10,8 +11,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class FaceClassifierManager {
 
     private final ModelDao modelDao;
@@ -20,7 +21,7 @@ public class FaceClassifierManager {
     private final ApplicationContext context;
 
     public void saveClassifier(String modelKey, FaceClassifier classifier, String calculatorVersion) {
-        try{
+        try {
             modelDao.saveModel(modelKey, classifier, calculatorVersion);
         } finally {
             lockManager.unlock(modelKey);
@@ -39,6 +40,10 @@ public class FaceClassifierManager {
     }
 
     public void initNewClassifier(String modelKey) {
+        if (faceDao.countFacesInModel(modelKey) < 1) {
+            throw new ModelHasNoFacesException();
+        }
+
         lockManager.lock(modelKey);
         val proxy = context.getBean(FaceClassifierAdapter.class);
         proxy.train(faceDao.findAllFaceEmbeddingsByApiKey(modelKey), modelKey);
