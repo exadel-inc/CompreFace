@@ -48,4 +48,9 @@ public class FaceService {
 
         return deletedFaces.size();
     }
+
+    public void updateModelApiKeyForFaces(String apiKey, String newModelApiKey) {
+        val token = systemService.buildToken(apiKey);
+        faceDao.updateFacesModelKey(token.getModelApiKey(), newModelApiKey);
+    }
 }

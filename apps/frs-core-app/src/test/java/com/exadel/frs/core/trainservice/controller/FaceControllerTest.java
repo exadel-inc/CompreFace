@@ -6,6 +6,7 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.entity.Face;
@@ -14,6 +15,8 @@ import com.exadel.frs.core.trainservice.system.SystemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,5 +84,12 @@ public class FaceControllerTest {
     public void deleteFacesShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
         mockMvc.perform(delete(API_V1 + "/faces"))
                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void updateModelKeySuccess() throws Exception {
+        val newModelKey = UUID.randomUUID().toString();
+        mockMvc.perform(put(API_V1 + "/faces/api-key?new_model_api_key=" + newModelKey).header(X_FRS_API_KEY_HEADER, API_KEY))
+                .andExpect(status().isOk());
     }
 }

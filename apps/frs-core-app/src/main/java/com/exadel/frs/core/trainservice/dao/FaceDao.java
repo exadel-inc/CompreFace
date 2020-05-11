@@ -4,7 +4,6 @@ import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
-import com.exadel.frs.core.trainservice.system.Token;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -80,5 +79,11 @@ public class FaceDao {
 
     public int countFacesInModel(final String modelApiKey) {
         return facesRepository.countByApiKey(modelApiKey);
+    }
+
+    public void updateFacesModelKey(String modelApiKey, String newModelApiKey) {
+        val faces = facesRepository.findByApiKey(modelApiKey);
+        faces.forEach(face -> face.setApiKey(newModelApiKey));
+        facesRepository.saveAll(faces);
     }
 }

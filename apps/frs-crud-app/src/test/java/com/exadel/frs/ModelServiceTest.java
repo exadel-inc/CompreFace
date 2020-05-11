@@ -30,10 +30,12 @@ import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
-import com.exadel.frs.system.python.CoreDeleteFacesClient;
+import com.exadel.frs.system.rest.CoreFacesClient;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
 import lombok.val;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -43,7 +45,9 @@ import org.mockito.ArgumentCaptor;
 class ModelServiceTest {
 
     private static final String MODEL_GUID = "model-guid";
+    private static final String MODEL_API_KEY = "model-KEY";
     private static final String APPLICATION_GUID = "app-guid";
+    private static final String APPLICATION_API_KEY = "app-key";
     private static final String ORGANIZATION_GUID = "org-guid";
     private static final Long USER_ID = 1L;
     private static final Long MODEL_ID = 2L;
@@ -55,14 +59,14 @@ class ModelServiceTest {
     private ModelService modelService;
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
-    private CoreDeleteFacesClient facesClient;
+    private CoreFacesClient facesClient;
 
     ModelServiceTest() {
         modelRepositoryMock = mock(ModelRepository.class);
         appServiceMock = mock(AppService.class);
         modelShareRequestRepository = mock(ModelShareRequestRepository.class);
         appModelRepository = mock(AppModelRepository.class);
-        facesClient = mock(CoreDeleteFacesClient.class);
+        facesClient = mock(CoreFacesClient.class);
         modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository, appModelRepository, facesClient);
     }
 
@@ -455,7 +459,7 @@ class ModelServiceTest {
 
     @ParameterizedTest
     @MethodSource("writeRoles")
-    void successRegenerateGuid(OrganizationRole organizationRole) {
+    void successRegenerateApiKey(OrganizationRole organizationRole) {
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);
@@ -464,25 +468,31 @@ class ModelServiceTest {
         val app = App.builder()
                 .id(APPLICATION_ID)
                 .guid(APPLICATION_GUID)
+                .apiKey(APPLICATION_API_KEY)
                 .organization(organization)
                 .build();
 
         val model = Model.builder()
                 .id(MODEL_ID)
                 .guid(MODEL_GUID)
+                .apiKey(MODEL_API_KEY)
                 .app(app)
                 .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
+//        Request mockRequest = Request.create(Request.HttpMethod.PUT, "", new HashMap<>(), Request.Body.create(new byte[]{}), null);
+
+//        when(facesClient.updateModelKeyForFace(anyString(), anyString())).thenReturn(Response.builder().request(mockRequest).status(200).build());
         modelService.regenerateApiKey(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
-        assertThat(model.getGuid(), not("guid"));
+        verify(facesClient).updateModelKeyForFaces(anyString(), anyString());
+        verify(modelRepositoryMock).save(any());
     }
 
     @ParameterizedTest
     @MethodSource("readRoles")
-    void failRegenerateGuidInsufficientPrivileges(OrganizationRole organizationRole) {
+    void failRegenerateApiKeyInsufficientPrivileges(OrganizationRole organizationRole) {
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);

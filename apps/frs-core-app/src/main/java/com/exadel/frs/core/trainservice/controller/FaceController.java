@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -52,5 +53,15 @@ public class FaceController {
             final String apiKey
     ) {
         return faceService.deleteFacesByModel(apiKey);
+    }
+
+    @PutMapping("/api-key")
+    public void updateModelApiKeyForFaces(
+            @RequestHeader(name = X_FRS_API_KEY_HEADER)
+            final String apiKey,
+            @RequestParam(name = "new_model_api_key")
+            final String newModelApiKey
+    ) {
+        faceService.updateModelApiKeyForFaces(apiKey, newModelApiKey);
     }
 }
