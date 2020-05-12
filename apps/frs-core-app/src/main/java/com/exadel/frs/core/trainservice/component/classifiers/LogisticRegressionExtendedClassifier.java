@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
+import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt;
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt.Trainer;
 import lombok.val;
@@ -37,7 +38,7 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
             return Pair.of(predict, labelMap.get(predict).getRight());
         }
 
-        throw new RuntimeException("Model not trained");
+        throw new ModelNotTrainedException();
     }
 
     @Override

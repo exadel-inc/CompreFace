@@ -6,7 +6,7 @@ import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
-import com.exadel.frs.core.trainservice.exception.ModelNotTrained;
+import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,7 +61,7 @@ public class FaceClassifierAdapter {
 
             Map<Pair<String, String>, List<List<Double>>> faceNameEmbeddings = embeddingFaceList.getFaceEmbeddings();
             if (faceNameEmbeddings.isEmpty()) {
-                throw new ModelNotTrained();
+                throw new ModelNotTrainedException();
             }
 
             for (val faceNameId : faceNameEmbeddings.keySet()) {
@@ -83,7 +83,7 @@ public class FaceClassifierAdapter {
             );
 
             storage.saveClassifier(modelKey, this.getClassifier(), embeddingFaceList.getCalculatorVersion());
-        } catch (ModelNotTrained e) {
+        } catch (ModelNotTrainedException e) {
             log.error("Model {} hasn't enought data to train", modelKey);
         } finally {
             storage.abortClassifierTraining(modelKey);
