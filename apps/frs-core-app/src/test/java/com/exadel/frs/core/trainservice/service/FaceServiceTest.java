@@ -1,5 +1,20 @@
 package com.exadel.frs.core.trainservice.service;
 
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.system.SystemService;
+import com.exadel.frs.core.trainservice.system.Token;
+import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
+
+import java.util.HashMap;
+import java.util.List;
+
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
@@ -9,18 +24,6 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
-import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.system.SystemService;
-import com.exadel.frs.core.trainservice.system.Token;
-import java.util.HashMap;
-import java.util.List;
-import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 
 class FaceServiceTest {
 
@@ -35,6 +38,9 @@ class FaceServiceTest {
 
     @Mock
     private FaceClassifierManager classifierManager;
+
+    @Mock
+    private GridFsOperations gridFsOperations;
 
     @InjectMocks
     private FaceService faceService;
