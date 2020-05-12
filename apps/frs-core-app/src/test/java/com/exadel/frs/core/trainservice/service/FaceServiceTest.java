@@ -10,7 +10,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
 
 import java.util.HashMap;
 import java.util.List;
@@ -38,9 +37,6 @@ class FaceServiceTest {
 
     @Mock
     private FaceClassifierManager classifierManager;
-
-    @Mock
-    private GridFsOperations gridFsOperations;
 
     @InjectMocks
     private FaceService faceService;

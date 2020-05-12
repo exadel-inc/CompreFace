@@ -31,8 +31,10 @@ public class FaceServiceITest {
 
     @Autowired
     private FacesRepository facesRepository;
+
     @Autowired
     private FaceService faceService;
+
     private final static String MODEL_KEY = UUID.randomUUID().toString();
     private final static String APP_KEY = UUID.randomUUID().toString();
     private final static String MODEL_KEY_OTHER = UUID.randomUUID().toString();

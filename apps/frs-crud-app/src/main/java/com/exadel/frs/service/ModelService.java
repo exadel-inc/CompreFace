@@ -158,7 +158,6 @@ public class ModelService {
 
         repoModel.setApiKey(newApiKey);
         modelRepository.save(repoModel);
-
     }
 
     @Transactional

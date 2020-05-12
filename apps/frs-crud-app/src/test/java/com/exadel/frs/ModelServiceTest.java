@@ -466,24 +466,21 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .apiKey(APPLICATION_API_KEY)
-                .organization(organization)
-                .build();
+                        .id(APPLICATION_ID)
+                        .guid(APPLICATION_GUID)
+                        .apiKey(APPLICATION_API_KEY)
+                        .organization(organization)
+                        .build();
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .apiKey(MODEL_API_KEY)
-                .app(app)
-                .build();
+                            .id(MODEL_ID)
+                            .guid(MODEL_GUID)
+                            .apiKey(MODEL_API_KEY)
+                            .app(app)
+                            .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
-//        Request mockRequest = Request.create(Request.HttpMethod.PUT, "", new HashMap<>(), Request.Body.create(new byte[]{}), null);
-
-//        when(facesClient.updateModelKeyForFace(anyString(), anyString())).thenReturn(Response.builder().request(mockRequest).status(200).build());
         modelService.regenerateApiKey(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(facesClient).updateModelKeyForFaces(anyString(), anyString());
