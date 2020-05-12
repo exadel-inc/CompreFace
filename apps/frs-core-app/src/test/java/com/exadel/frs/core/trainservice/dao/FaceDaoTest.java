@@ -3,6 +3,8 @@ package com.exadel.frs.core.trainservice.dao;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -17,11 +19,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.data.mongodb.gridfs.GridFsOperations;
 
 class FaceDaoTest {
 
     @Mock
     private FacesRepository facesRepository;
+
+    @Mock
+    private GridFsOperations gridFsOperations;
 
     @InjectMocks
     private FaceDao faceDao;
@@ -43,6 +49,7 @@ class FaceDaoTest {
         assertThat(actual).isEqualTo(faces);
 
         verify(facesRepository).deleteByApiKeyAndFaceName(token.getModelApiKey(), faceName);
+        verify(gridFsOperations, times(2)).delete(any());
         verifyNoMoreInteractions(facesRepository);
     }
 
@@ -57,6 +64,7 @@ class FaceDaoTest {
         assertThat(actual).isEqualTo(faces);
 
         verify(facesRepository).deleteFacesByApiKey(token.getModelApiKey());
+        verify(gridFsOperations, times(2)).delete(any());
         verifyNoMoreInteractions(facesRepository);
     }
 
