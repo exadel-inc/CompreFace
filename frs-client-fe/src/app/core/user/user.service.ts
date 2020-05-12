@@ -18,9 +18,9 @@ export class UserService {
     );
   }
 
-  public updateRole(organizationId: string, id: string, role: string): Observable<any> {
+  public updateRole(organizationId: string, userId: string, role: string): Observable<any> {
     // temporary workaround to fix cors errors
-    return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { id, role }, {withCredentials: false});
+    return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { userId, role }, {withCredentials: false});
   }
 
   public inviteUser(organizationId: string, userEmail: string, role: string): Observable<{message: string}> {
