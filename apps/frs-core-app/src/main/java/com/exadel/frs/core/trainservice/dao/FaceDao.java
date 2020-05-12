@@ -32,7 +32,7 @@ public class FaceDao {
         return facesToEmbeddingList(faces);
     }
 
-    public EmbeddingFaceList findAllFacesIn(List<String> ids){
+    public EmbeddingFaceList findAllFacesIn(List<String> ids) {
         val faces = facesRepository.findByIdIn(ids);
 
         return facesToEmbeddingList(faces);
@@ -44,8 +44,8 @@ public class FaceDao {
         return facesToEmbeddingList(faces);
     }
 
-    private EmbeddingFaceList facesToEmbeddingList(List<Face> faces){
-        if (faces.isEmpty()){
+    private EmbeddingFaceList facesToEmbeddingList(List<Face> faces) {
+        if (faces.isEmpty()) {
             return new EmbeddingFaceList();
         }
         Map<Pair<String, String>, List<List<Double>>> map = faces.stream()
@@ -76,6 +76,7 @@ public class FaceDao {
     public List<Face> deleteFaceByName(final String faceName, final String modelApiKey) {
         val deletedFaces = facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
         deleteFiles(deletedFaces);
+
         return deletedFaces;
     }
 

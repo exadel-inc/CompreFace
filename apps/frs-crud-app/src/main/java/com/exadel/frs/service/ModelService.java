@@ -157,7 +157,8 @@ public class ModelService {
         facesClient.updateModelKeyForFaces(apiKey, newApiKey);
 
         repoModel.setApiKey(newApiKey);
-        modelRepository.save(repoModel);
+        modelRepository
+                .save(repoModel);
     }
 
     @Transactional

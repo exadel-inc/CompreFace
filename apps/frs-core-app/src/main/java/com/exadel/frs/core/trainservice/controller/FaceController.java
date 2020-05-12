@@ -1,8 +1,5 @@
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import java.util.List;
@@ -16,6 +13,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static com.exadel.frs.core.trainservice.system.global.Constants.NEW_MODEL_KEY_HEADER;
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 
 
 @RestController
@@ -59,7 +60,7 @@ public class FaceController {
     public void updateModelApiKeyForFaces(
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey,
-            @RequestParam(name = "new_model_api_key")
+            @RequestParam(name = NEW_MODEL_KEY_HEADER)
             final String newModelApiKey
     ) {
         faceService.updateModelApiKeyForFaces(apiKey, newModelApiKey);

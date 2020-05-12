@@ -483,8 +483,10 @@ class ModelServiceTest {
 
         modelService.regenerateApiKey(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
+        verify(modelRepositoryMock).findByGuid(MODEL_GUID);
         verify(facesClient).updateModelKeyForFaces(anyString(), anyString());
         verify(modelRepositoryMock).save(any());
+        verifyNoMoreInteractions(facesClient, modelRepositoryMock);
     }
 
     @ParameterizedTest

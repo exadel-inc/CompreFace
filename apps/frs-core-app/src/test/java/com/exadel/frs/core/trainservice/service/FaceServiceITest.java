@@ -47,28 +47,26 @@ public class FaceServiceITest {
 
         facesRepository.saveAll(List.of(faceA, faceB, faceC));
     }
+
     @AfterEach
     public void cleanUp() {
         facesRepository.deleteAll();
     }
 
     public static Face makeFace(final String name, final String modelApiKey) {
-        val face = new Face();
-        face.setFaceName(name);
-        face.setApiKey(modelApiKey);
-        face.setEmbeddings(List.of(
-                new Face.Embedding()
-                        .setEmbedding(List.of(0.0D))
-                        .setCalculatorVersion("1.0")
-                )
-        );
-        face.setFaceImgId(new ObjectId("hex-string-1".getBytes()));
-        face.setRawImgId(new ObjectId("hex-string-2".getBytes()));
-        face.setId("Id_" + name);
-
-        return face;
+        return new Face()
+                        .setFaceName(name)
+                        .setApiKey(modelApiKey)
+                        .setFaceImgId(new ObjectId("hex-string-1".getBytes()))
+                        .setRawImgId(new ObjectId("hex-string-2".getBytes()))
+                        .setId("Id_" + name)
+                        .setEmbeddings(List.of(
+                                new Face.Embedding()
+                                        .setEmbedding(List.of(0.0D))
+                                        .setCalculatorVersion("1.0")
+                                )
+                        );
     }
-
 
     @Test
     public void updateModelKeySuccess() {
