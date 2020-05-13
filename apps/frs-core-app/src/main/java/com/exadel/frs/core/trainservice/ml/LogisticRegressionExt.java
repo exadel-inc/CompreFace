@@ -91,7 +91,6 @@ public class LogisticRegressionExt implements Serializable {
         p = x[0].length;
         if (k == 2) {
             val func = getFunction("BinaryObjectiveFunction", new Object[]{x, y, lambda});
-            //  BinaryObjectiveFunction func = new BinaryObjectiveFunction(x, y, lambda);
 
             w = new double[p + 1];
 
@@ -104,7 +103,6 @@ public class LogisticRegressionExt implements Serializable {
             }
         } else {
             val func = getFunction("MultiClassObjectiveFunction", new Object[]{x, y, k, lambda});
-            //  MultiClassObjectiveFunction func = new MultiClassObjectiveFunction(x, y, k, lambda);
 
             w = new double[k * (p + 1)];
 
@@ -144,6 +142,7 @@ public class LogisticRegressionExt implements Serializable {
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+
         return func;
     }
 
@@ -221,6 +220,12 @@ public class LogisticRegressionExt implements Serializable {
          * The maximum number of BFGS iterations.
          */
         private int maxIter = 500;
+
+        public Trainer(final double lambda, final double tol, final int maxIter) {
+            this.lambda = lambda;
+            this.tol = tol;
+            this.maxIter = maxIter;
+        }
 
         /**
          * Sets the regularization factor. &lambda; &gt; 0 gives a "regularized" estimate of linear

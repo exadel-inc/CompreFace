@@ -1,33 +1,33 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
+import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt;
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt.Trainer;
-import lombok.val;
-import org.springframework.context.annotation.Scope;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import lombok.val;
+import org.apache.commons.lang3.tuple.Pair;
 
-@Component
-@Scope("prototype")
 public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
-    private static final long serialVersionUID = -1866949081344084764L;
+    private static final long serialVersionUID = 1966949081344084764L;
 
-    private Map<Integer, Pair<String, String>> labelMap;
+    private static final double LAMBDA = 0;
+    private static final double TOLERANCE = 0.005;
+    private static final int MAX_ITER = 50;
+
+    private final Trainer trainer = new Trainer(LAMBDA, TOLERANCE, MAX_ITER);
+    private final Map<Integer, Pair<String, String>> labelMap;
     private LogisticRegressionExt logisticRegression;
 
-    @Override
-    public void train(final double[][] x, final int[] y, final Map<Integer, Pair<String, String>> labelMap) {
+    public LogisticRegressionExtendedClassifier(final Map<Integer, Pair<String, String>> labelMap) {
         this.labelMap = labelMap;
-        val trainer = new Trainer();
-        trainer.setMaxNumIteration(50);
-        trainer.setTolerance(0.005);
-        this.logisticRegression = trainer.train(x, y);
+    }
+
+    @Override
+    public void train(final double[][] x, final int[] y) {
+        this.logisticRegression = this.trainer.train(x, y);
     }
 
     @Override
@@ -51,8 +51,9 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
         if (labelMap == null) {
             return List.of();
         }
+
         return labelMap.values().stream()
-                .map(Pair::getLeft)
-                .collect(Collectors.toList());
+                       .map(Pair::getLeft)
+                       .collect(toList());
     }
 }

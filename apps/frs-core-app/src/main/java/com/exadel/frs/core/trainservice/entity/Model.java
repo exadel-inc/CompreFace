@@ -1,17 +1,14 @@
 package com.exadel.frs.core.trainservice.entity;
 
-
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.bson.codecs.pojo.annotations.BsonProperty;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -30,7 +27,4 @@ public class Model {
 
     @Field("calculator_version")
     private String calculatorVersion;
-
-    @Field("classifierName")
-    private String classifierName;
 }
