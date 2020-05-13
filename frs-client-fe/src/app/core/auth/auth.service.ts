@@ -1,14 +1,16 @@
-import {Injectable,} from '@angular/core';
-import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
-import {Observable, BehaviorSubject, Subscriber} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {API_URL} from '../../data/api.variables';
-import {FormBuilder} from '@angular/forms';
-import {updateUserAuthorization} from '../../store/userInfo/action';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store';
-import {Router} from '@angular/router';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
+import { first } from 'rxjs/operators';
+
+import { environment } from '../../../environments/environment';
+import { API_URL } from '../../data/api.variables';
+import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { AppState } from '../../store';
+import { updateUserAuthorization } from '../../store/userInfo/action';
 
 @Injectable({
   providedIn: 'root'
@@ -53,17 +55,17 @@ export class AuthService {
     formData.append('username', form.get('email').value);
     formData.append('password', form.get('password').value);
     formData.append('grant_type', form.get('grant_type').value);
-    return this.http.post(url, formData, {headers: {Authorization: environment.basicToken}, withCredentials: false });
+    return this.http.post(url, formData, { headers: { Authorization: environment.basicToken }, withCredentials: false });
   }
 
   signUp(firstName: string, password: string, email: string, lastName: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.REGISTER}`;
-    return this.http.post(url, {email, password, firstName, lastName});
+    return this.http.post(url, { email, password, firstName, lastName });
   }
 
   logOut() {
     this.removeToken();
-    this.store.dispatch(updateUserAuthorization({value: false}));
+    this.store.dispatch(updateUserAuthorization({ value: false }));
     this.router.navigateByUrl(ROUTERS_URL.LOGIN);
   }
 
@@ -74,7 +76,7 @@ export class AuthService {
   }
 
   private handleUnauthorizedError(subscriber: Subscriber<any>, request: HttpRequest<any>) {
-    this.requests.push({subscriber, failedRequest: request});
+    this.requests.push({ subscriber, failedRequest: request });
     if (!this.refreshInProgress) {
       this.refreshInProgress = true;
       const url = `${environment.apiUrl}${API_URL.REFRESH_TOKEN}`;
@@ -88,8 +90,11 @@ export class AuthService {
       formData.append('refresh_token', form.get('refresh_token').value);
 
       this.http.post(url, formData, { headers: { Authorization: environment.basicToken } })
+        .pipe(
+          first(),
+        )
         .subscribe((authHeader: any) =>
-            this.repeatFailedRequests(authHeader),
+          this.repeatFailedRequests(authHeader),
           () => {
             this.logOut();
             this.refreshInProgress = false;
@@ -109,8 +114,8 @@ export class AuthService {
 
   private repeatRequest(requestWithNewToken: HttpRequest<any>, subscriber: Subscriber<any>) {
     this.http.request(requestWithNewToken).subscribe((res) => {
-        subscriber.next(res);
-      },
+      subscriber.next(res);
+    },
       (err) => {
         if (err.status === 401) {
           this.logOut();
