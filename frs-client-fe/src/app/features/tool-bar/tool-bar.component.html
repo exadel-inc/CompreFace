@@ -1,6 +1,8 @@
 <mat-toolbar>
   <mat-toolbar-row class="container">
-    <img src="assets/img/logo.png" alt="">
+    <a class="logo" [routerLink]="'/'">
+      <img src="assets/img/logo.png" alt="">
+    </a>
     <span class="avatar-wrapper">
       <button mat-icon-button [matMenuTriggerFor]="menu">
         <img [src]="userAvatarInfo$ | async"/>
