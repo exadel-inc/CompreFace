@@ -1,5 +1,7 @@
 package com.exadel.frs.dto.ui;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,8 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserUpdateDto {
 
+    @NotEmpty
     private String firstName;
-    private String lastName;
-    private String password;
 
+    @NotEmpty
+    private String lastName;
+
+    @NotEmpty
+    @Min(8)
+    private String password;
 }
