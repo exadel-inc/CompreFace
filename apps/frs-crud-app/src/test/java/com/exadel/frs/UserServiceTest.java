@@ -1,26 +1,5 @@
 package com.exadel.frs;
 
-import com.exadel.frs.dto.ui.UserCreateDto;
-import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.exception.EmailAlreadyRegisteredException;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.InvalidEmailException;
-import com.exadel.frs.exception.RegistrationTokenExpiredException;
-import com.exadel.frs.exception.UserDoesNotExistException;
-import com.exadel.frs.helpers.EmailSender;
-import com.exadel.frs.repository.UserRepository;
-import com.exadel.frs.service.OrganizationService;
-import com.exadel.frs.service.UserService;
-import lombok.val;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.function.Executable;
-import org.springframework.mock.env.MockEnvironment;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-
-import java.util.Optional;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -36,8 +15,28 @@ import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.entity.User;
+import com.exadel.frs.exception.EmailAlreadyRegisteredException;
+import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InvalidEmailException;
+import com.exadel.frs.exception.RegistrationTokenExpiredException;
+import com.exadel.frs.exception.UserDoesNotExistException;
+import com.exadel.frs.helpers.EmailSender;
+import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.service.OrganizationService;
+import com.exadel.frs.service.UserService;
+import java.util.Optional;
+import lombok.val;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import org.springframework.mock.env.MockEnvironment;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 
 class UserServiceTest {
+
     private final String EXPIRED_TOKEN = "expired_token";
 
     private UserRepository userRepositoryMock;
@@ -48,10 +47,10 @@ class UserServiceTest {
     UserServiceTest() {
         userRepositoryMock = mock(UserRepository.class);
         emailSenderMock = mock(EmailSender.class);
-        userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder(), emailSenderMock);
-        userService.setEnv(new MockEnvironment());
         organizationServiceMock = mock(OrganizationService.class);
-        userService.setOrganizationService(organizationServiceMock);
+        userService = new UserService(userRepositoryMock, PasswordEncoderFactories.createDelegatingPasswordEncoder(),
+                emailSenderMock, new MockEnvironment(), organizationServiceMock
+        );
     }
 
     @Test
@@ -79,11 +78,11 @@ class UserServiceTest {
     @Test
     void successCreateUser() {
         UserCreateDto userCreateDto = UserCreateDto.builder()
-                .email("email@example.com")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                                   .email("email@example.com")
+                                                   .password("password")
+                                                   .firstName("firstName")
+                                                   .lastName("lastName")
+                                                   .build();
 
         userService.createUser(userCreateDto);
 
@@ -94,11 +93,11 @@ class UserServiceTest {
     @Test
     void failCreateUserEmptyPassword() {
         UserCreateDto userCreateDto = UserCreateDto.builder()
-                .email("email@example.com")
-                .password("")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                                   .email("email@example.com")
+                                                   .password("")
+                                                   .firstName("firstName")
+                                                   .lastName("lastName")
+                                                   .build();
 
         assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userCreateDto));
     }
@@ -106,11 +105,11 @@ class UserServiceTest {
     @Test
     void failCreateUserEmptyEmail() {
         UserCreateDto userCreateDto = UserCreateDto.builder()
-                .email("")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                                   .email("")
+                                                   .password("password")
+                                                   .firstName("firstName")
+                                                   .lastName("lastName")
+                                                   .build();
 
         assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userCreateDto));
     }
@@ -118,11 +117,11 @@ class UserServiceTest {
     @Test
     void failCreateUserDuplicateEmail() {
         UserCreateDto userCreateDto = UserCreateDto.builder()
-                .email("email@example.com")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                                   .email("email@example.com")
+                                                   .password("password")
+                                                   .firstName("firstName")
+                                                   .lastName("lastName")
+                                                   .build();
 
         when(userRepositoryMock.existsByEmail(anyString())).thenReturn(true);
 
@@ -134,18 +133,18 @@ class UserServiceTest {
         Long userId = 1L;
 
         User repoUser = User.builder()
-                .id(userId)
-                .email("email")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                            .id(userId)
+                            .email("email")
+                            .password("password")
+                            .firstName("firstName")
+                            .lastName("lastName")
+                            .build();
 
         UserUpdateDto userUpdateDto = UserUpdateDto.builder()
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                                   .password("password")
+                                                   .firstName("firstName")
+                                                   .lastName("lastName")
+                                                   .build();
 
         when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(repoUser));
 
@@ -171,11 +170,11 @@ class UserServiceTest {
     @Test
     void cannotCreateNewUserWithIncorrectEmail() {
         val userWithIncorrectEmial = UserCreateDto.builder()
-                .email("wrong_email")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                                  .email("wrong_email")
+                                                  .password("password")
+                                                  .firstName("firstName")
+                                                  .lastName("lastName")
+                                                  .build();
 
         assertThrows(InvalidEmailException.class, () -> userService.createUser(userWithIncorrectEmial));
     }
@@ -183,11 +182,11 @@ class UserServiceTest {
     @Test
     void cannotCreateNewUserWithoutFirstName() {
         val userWithoutFirstName = UserCreateDto.builder()
-                .email("email@example.com")
-                .password("password")
-                .firstName(null)
-                .lastName("lastName")
-                .build();
+                                                .email("email@example.com")
+                                                .password("password")
+                                                .firstName(null)
+                                                .lastName("lastName")
+                                                .build();
 
         assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userWithoutFirstName));
     }
@@ -195,11 +194,11 @@ class UserServiceTest {
     @Test
     void cannotCreateNewUserWithoutLastName() {
         val userWithoutFirstName = UserCreateDto.builder()
-                .email("email@example.com")
-                .password("password")
-                .firstName("firstName")
-                .lastName(null)
-                .build();
+                                                .email("email@example.com")
+                                                .password("password")
+                                                .firstName("firstName")
+                                                .lastName(null)
+                                                .build();
 
         assertThrows(EmptyRequiredFieldException.class, () -> userService.createUser(userWithoutFirstName));
     }
@@ -216,11 +215,11 @@ class UserServiceTest {
     void confirmRegistrationEnablesUserAndRemovesTokenWhenSuccess() {
         when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
         UserCreateDto userCreateDto = UserCreateDto.builder()
-                .email("email@example.com")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                                   .email("email@example.com")
+                                                   .password("password")
+                                                   .firstName("firstName")
+                                                   .lastName("lastName")
+                                                   .build();
 
         val createdUser = userService.createUser(userCreateDto);
         assertFalse(createdUser.isEnabled());
@@ -235,11 +234,11 @@ class UserServiceTest {
     void createsUserWithLowerCaseEmail() {
         when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
         val userCreateDto = UserCreateDto.builder()
-                .email("Email@example.COm")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                         .email("Email@example.COm")
+                                         .password("password")
+                                         .firstName("firstName")
+                                         .lastName("lastName")
+                                         .build();
 
         val createdUser = userService.createUser(userCreateDto);
 
