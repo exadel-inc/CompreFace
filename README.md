@@ -8,3 +8,8 @@ To run project via docker(installed Docker required) you need to:
 ## API
 
 To open swagger api view follow http://localhost:8080/swagger-ui.html
+
+
+## Code style
+
+For using overall project code style - import team_codestyle.xml file into your IDEA
