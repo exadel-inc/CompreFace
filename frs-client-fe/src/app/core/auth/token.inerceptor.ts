@@ -1,9 +1,9 @@
-import {Injectable, Injector} from '@angular/core';
-import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
-import {AuthService} from './auth.service';
-import {Observable, throwError} from 'rxjs';
-import {catchError} from 'rxjs/operators';
-import {API_URL} from '../../data/api.variables';
+import { Injectable, Injector } from '@angular/core';
+import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
+import { AuthService } from './auth.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { API_URL } from '../../data/api.variables';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
@@ -40,7 +40,7 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((response: any): Observable<HttpEvent<any>> => {
         if (response instanceof HttpErrorResponse && response.status === 401) {
-          if (response.error.error_description && response.error.error_description.includes('Access token expired:')) {
+          if (response.error.error && response.error.error === 'invalid_token') {
             return this.authService.refreshToken(request);
           } else {
             this.authService.logOut();
