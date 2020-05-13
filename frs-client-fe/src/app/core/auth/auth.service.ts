@@ -1,14 +1,16 @@
-import {Injectable,} from '@angular/core';
-import {HttpClient, HttpEvent, HttpRequest} from '@angular/common/http';
-import {Observable, BehaviorSubject, Subscriber} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {API_URL} from '../../data/api.variables';
-import {FormBuilder} from '@angular/forms';
-import {updateUserAuthorization} from '../../store/userInfo/action';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store';
-import {Router} from '@angular/router';
+import { HttpClient, HttpEvent, HttpRequest } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
+import { first } from 'rxjs/operators';
+
+import { environment } from '../../../environments/environment';
+import { API_URL } from '../../data/api.variables';
+import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { AppState } from '../../store';
+import { updateUserAuthorization } from '../../store/userInfo/action';
 
 @Injectable({
   providedIn: 'root'
@@ -88,6 +90,9 @@ export class AuthService {
       formData.append('refresh_token', form.get('refresh_token').value);
 
       this.http.post(url, formData, { headers: { Authorization: environment.basicToken } })
+        .pipe(
+          first(),
+        )
         .subscribe((authHeader: any) =>
             this.repeatFailedRequests(authHeader),
           () => {
