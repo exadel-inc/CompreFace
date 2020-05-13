@@ -4,7 +4,5 @@ import lombok.Value;
 
 @Value
 public class Token {
-
-    private String appApiKey;
     private String modelApiKey;
 }

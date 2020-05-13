@@ -1,10 +1,13 @@
 package com.exadel.frs.core.trainservice.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import com.exadel.frs.core.trainservice.system.SystemServiceImpl;
+import java.util.List;
+import java.util.UUID;
 import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
@@ -17,11 +20,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.List;
-import java.util.UUID;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
@@ -55,17 +53,17 @@ public class FaceServiceITest {
 
     public static Face makeFace(final String name, final String modelApiKey) {
         return new Face()
-                        .setFaceName(name)
-                        .setApiKey(modelApiKey)
-                        .setFaceImgId(new ObjectId("hex-string-1".getBytes()))
-                        .setRawImgId(new ObjectId("hex-string-2".getBytes()))
-                        .setId("Id_" + name)
-                        .setEmbeddings(List.of(
-                                new Face.Embedding()
-                                        .setEmbedding(List.of(0.0D))
-                                        .setCalculatorVersion("1.0")
-                                )
-                        );
+                .setFaceName(name)
+                .setApiKey(modelApiKey)
+                .setFaceImgId(new ObjectId("hex-string-1".getBytes()))
+                .setRawImgId(new ObjectId("hex-string-2".getBytes()))
+                .setId("Id_" + name)
+                .setEmbeddings(List.of(
+                        new Face.Embedding()
+                                .setEmbedding(List.of(0.0D))
+                                .setCalculatorVersion("1.0")
+                        )
+                );
     }
 
     @Test

@@ -33,13 +33,12 @@ class TrainControllerTest {
     @MockBean
     private SystemService systemService;
 
-    private final static String APP_KEY = "app_key";
-    private final static String MODEL_KEY = ":model_key";
-    private final static String API_KEY = APP_KEY + MODEL_KEY;
+    private final static String MODEL_KEY = "model_key";
+    private final static String API_KEY = MODEL_KEY;
 
     @Test
     void train() throws Exception {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         when(systemService.buildToken(API_KEY)).thenReturn(token);
 
         mockMvc.perform(post(API_V1 + "/retrain").header(X_FRS_API_KEY_HEADER, API_KEY))
@@ -52,7 +51,7 @@ class TrainControllerTest {
 
     @Test
     void getStatus() throws Exception {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         when(systemService.buildToken(API_KEY)).thenReturn(token);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(false);
 
@@ -62,7 +61,7 @@ class TrainControllerTest {
 
     @Test
     void abortRetrain() throws Exception {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         when(systemService.buildToken(API_KEY)).thenReturn(token);
 
         mockMvc.perform(delete(API_V1 + "/retrain").header(X_FRS_API_KEY_HEADER, API_KEY))
