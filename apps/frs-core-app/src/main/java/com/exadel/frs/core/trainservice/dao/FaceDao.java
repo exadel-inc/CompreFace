@@ -4,6 +4,7 @@ import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import org.springframework.web.multipart.MultipartFile;
 
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
@@ -48,18 +50,20 @@ public class FaceDao {
         if (faces.isEmpty()) {
             return new EmbeddingFaceList();
         }
-        Map<Pair<String, String>, List<List<Double>>> map = faces.stream()
-                .collect(toMap(face -> Pair.of(face.getId(), face.getFaceName()),
-                        face -> face.getEmbeddings().stream()
-                                .map(Embedding::getEmbedding)
-                                .collect(toList()), (l1, l2) -> Stream
-                                .concat(l1.stream(), l2.stream())
-                                .collect(toList())
-                ));
 
-        EmbeddingFaceList embeddingFaceList = new EmbeddingFaceList();
+        val map = faces.stream()
+                       .collect(toMap(face -> Pair.of(face.getId(), face.getFaceName()),
+                               face -> face.getEmbeddings().stream()
+                                           .map(Embedding::getEmbedding)
+                                           .collect(toList()), (l1, l2) -> Stream
+                                       .concat(l1.stream(), l2.stream())
+                                       .collect(toList())
+                       ));
+
+        val embeddingFaceList = new EmbeddingFaceList();
         embeddingFaceList.setFaceEmbeddings(map);
         embeddingFaceList.setCalculatorVersion(faces.get(0).getEmbeddings().get(0).getCalculatorVersion());
+
         return embeddingFaceList;
     }
 
@@ -105,5 +109,25 @@ public class FaceDao {
             gridFsOperations.delete(deleteOriginalPhoto);
             gridFsOperations.delete(deleteCroppedPhoto);
         });
+    }
+
+    public Face addFile(
+            final List<Embedding> embeddings,
+            final MultipartFile file,
+            final String faceName,
+            final String modelKey
+    ) throws IOException {
+        val faceId = gridFsOperations.store(file.getInputStream(), faceName);
+
+        val face = new Face()
+                .setEmbeddings(embeddings)
+                .setFaceName(faceName)
+                .setApiKey(modelKey)
+                .setFaceImgId(faceId)
+                .setRawImgId(faceId);
+
+        facesRepository.save(face);
+
+        return face;
     }
 }

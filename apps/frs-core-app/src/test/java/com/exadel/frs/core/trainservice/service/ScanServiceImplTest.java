@@ -1,24 +1,19 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.system.feign.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.ScanResponse;
 import com.exadel.frs.core.trainservice.system.feign.ScanResult;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.mock.web.MockMultipartFile;
 
 class ScanServiceImplTest {
@@ -26,37 +21,30 @@ class ScanServiceImplTest {
     @Test
     void scanAndSaveFace() throws IOException {
         val scanFacesClient = mock(FacesClient.class);
-        val facesRepository = mock(FacesRepository.class);
-        val gridFsOperations = mock(GridFsOperations.class);
+        val faceDao = mock(FaceDao.class);
+        val mockFile = new MockMultipartFile("mockFile", "".getBytes());
 
         val scanResult = new ScanResult().setEmbedding(List.of(100500D));
         val scanResponse = new ScanResponse().setResult(List.of(scanResult));
-        val mockFile = new MockMultipartFile("mockFile", "".getBytes());
+        val embeddings = List.of(new Face.Embedding(List.of(100500D), null));
         val faceName = "faceName";
         val modelKey = "modelKey";
         val threshold = 1.0D;
-        val faceId = new ObjectId("507f1f77bcf86cd799439011");
+        val face = new Face();
 
         when(scanFacesClient.scanFaces(mockFile, 1, threshold))
                 .thenReturn(scanResponse);
 
-        when(gridFsOperations.store(any(InputStream.class), anyString())).thenReturn(faceId);
+        when(faceDao.addFile(embeddings, mockFile, faceName, modelKey)).thenReturn(face);
 
-        val actual = new ScanServiceImpl(scanFacesClient, facesRepository, gridFsOperations)
+        val actual = new ScanServiceImpl(scanFacesClient, faceDao)
                 .scanAndSaveFace(mockFile, faceName, threshold, modelKey);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getFaceName()).isEqualTo(faceName);
-        assertThat(actual.getApiKey()).isEqualTo(modelKey);
-        assertThat(actual.getFaceImgId()).isEqualTo(faceId);
-        assertThat(actual.getRawImgId()).isEqualTo(faceId);
-        assertThat(actual.getEmbeddings()).allSatisfy(
-                embedding -> assertThat(embedding.getEmbedding()).isEqualTo(scanResult.getEmbedding())
-        );
+        assertThat(actual).isEqualTo(face);
 
         verify(scanFacesClient).scanFaces(mockFile, 1, threshold);
-        verify(gridFsOperations).store(any(InputStream.class), anyString());
-        verify(facesRepository).save(any(Face.class));
-        verifyNoMoreInteractions(scanFacesClient, gridFsOperations, facesRepository);
+        verify(faceDao).addFile(embeddings, mockFile, faceName, modelKey);
+        verifyNoMoreInteractions(scanFacesClient, faceDao);
     }
 }
