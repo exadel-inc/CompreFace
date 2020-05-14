@@ -1,57 +1,53 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
+
 import { AppSnackBarComponent } from './snackbar.component';
 
 const messageMap = {
-    'default-info': 'DEFAULT INFO MESSAGE',
-    'default-error': 'DEFAULT ERROR MESSAGE'
+  'default-info': 'DEFAULT INFO MESSAGE',
+  'default-error': 'DEFAULT ERROR MESSAGE'
 };
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: 'root'
 })
 export class SnackBarService {
-    constructor(private snackBar: MatSnackBar) {}
+  constructor(private snackBar: MatSnackBar) { }
 
-    public openInfo(messageCode: string, duration: number = 3000, message?: string): void {
-        const data = {
-            message: '',
-            type: 'info'
-        };
+  public openInfo(messageCode: string, duration: number = 3000, message?: string): void {
+    const data = {
+      message: messageCode ? messageMap[messageCode] : message,
+      type: 'info'
+    };
 
-        data.message = messageCode ? messageMap[messageCode] : message;
-        this.openSnackBar(data, duration);
-    }
+    this.openSnackBar(data, duration);
+  }
 
-    public openError(messageCode: string, duration: number = 8000, message?: string): void {
-        const data = {
-            message: '',
-            type: 'error'
-        };
+  public openError(messageCode: string, duration: number = 8000, message?: string): void {
+    const data = {
+      message: messageCode ? messageMap[messageCode] : message,
+      type: 'error'
+    };
 
-        data.message = messageCode ? messageMap[messageCode] : message;
-        this.openSnackBar(data, duration);
-    }
+    this.openSnackBar(data, duration);
+  }
 
-    public openHttpError(message: HttpErrorResponse): void {
-        const data = {
-            message: message.error.message,
-            type: 'error'
-        };
+  public openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
+    const data = {
+      message: message.error.message || message.message,
+      type: 'error'
+    };
 
-        const duration: number = 4000;
+    this.openSnackBar(data, duration);
+  }
 
-        data.message = message.error.message || message.message;
-        this.openSnackBar(data, duration);
-    }
-
-    private openSnackBar(data, duration): void {
-        this.snackBar.openFromComponent(AppSnackBarComponent, {
-            duration,
-            data,
-            verticalPosition: 'top',
-            panelClass: ['app-snackbar-panel', data.type]
-        });
-    }
+  private openSnackBar(data, duration): void {
+    this.snackBar.openFromComponent(AppSnackBarComponent, {
+      duration,
+      data,
+      verticalPosition: 'top',
+      panelClass: ['app-snackbar-panel', data.type]
+    });
+  }
 }

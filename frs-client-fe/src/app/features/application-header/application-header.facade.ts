@@ -10,7 +10,7 @@ import {
   selectIsPendingApplicationList
 } from '../../store/application/selectors';
 import {Application} from '../../data/application';
-import {putUpdatedApplicationEntityAction} from '../../store/application/action';
+import {updateApplication} from '../../store/application/action';
 import {selectCurrentOrganizationId} from '../../store/organization/selectors';
 
 @Injectable()
@@ -42,6 +42,6 @@ export class ApplicationHeaderFacade implements IFacade {
   }
 
   rename(name: string) {
-    this.store.dispatch(putUpdatedApplicationEntityAction({ name, id: this.selectedId, organizationId: this.orgId }));
+    this.store.dispatch(updateApplication({ name, id: this.selectedId, organizationId: this.orgId }));
   }
 }

@@ -3,7 +3,7 @@ import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
-import {loadApplicationsEntityAction} from '../../store/application/action';
+import {loadApplications} from '../../store/application/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {filter, take} from 'rxjs/operators';
 import {setSelectedIdEntityAction} from '../../store/application/action';
@@ -58,7 +58,7 @@ export class ModelPageService {
       organizationId: this.orgId,
       applicationId: this.appId
     }));
-    this.store.dispatch(loadApplicationsEntityAction({ organizationId: this.orgId }));
+    this.store.dispatch(loadApplications({ organizationId: this.orgId }));
     this.store.dispatch(getUserInfo());
     this.organizationEnService.getAll();
   }
