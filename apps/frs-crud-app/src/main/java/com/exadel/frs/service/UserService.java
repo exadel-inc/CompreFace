@@ -136,7 +136,7 @@ public class UserService {
         }
     }
 
-    public void updateUser(final UserUpdateDto userUpdateDto, final Long userId) {
+    public User updateUser(final UserUpdateDto userUpdateDto, final Long userId) {
         User user = getUser(userId);
         if (!StringUtils.isEmpty(userUpdateDto.getFirstName())) {
             user.setFirstName(userUpdateDto.getFirstName());
@@ -147,7 +147,7 @@ public class UserService {
         if (!StringUtils.isEmpty(userUpdateDto.getPassword())) {
             user.setPassword(encoder.encode(userUpdateDto.getPassword()));
         }
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional
