@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {selectApplications} from '../../store/application/selectors';
-import {loadApplicationsEntityAction} from '../../store/application/action';
+import {loadApplications} from '../../store/application/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {filter, take} from 'rxjs/operators';
 import {setSelectedIdEntityAction} from '../../store/application/action';
@@ -50,7 +50,7 @@ export class ApplicationPageService {
   }
 
   fetchApps() {
-    this.store.dispatch(loadApplicationsEntityAction({ organizationId: this.orgId }));
+    this.store.dispatch(loadApplications({ organizationId: this.orgId }));
     this.store.dispatch(getUserInfo());
     this.organizationEnService.getAll();
   }

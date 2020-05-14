@@ -14,3 +14,10 @@ export interface Model {
   role: string;
   apiKey?: string;
 }
+
+export interface ModelUpdate {
+  name: string;
+  applicationId: string;
+  organizationId: string;
+  modelId: string;
+}

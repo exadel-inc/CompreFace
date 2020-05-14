@@ -9,9 +9,6 @@
 
 // todo fix ::ng-deep
 ::ng-deep .app-snackbar-panel {
-  position: fixed;
-  margin-top: 60px;
-
   &.info {
     background-color: $green;
   }
@@ -19,30 +16,4 @@
   &.error {
     background-color: $red;
   }
-}
-
-@include desktop;
-::ng-deep .app-snackbar-panel {
-  right: calc((100vw - 1140px) / 2);
-}
-
-@include tablet-landscape;
-::ng-deep .app-snackbar-panel {
-  right: calc((100vw - 960px) / 2);
-}
-
-@include tablet-portrait;
-::ng-deep .app-snackbar-panel {
-  right: calc((100vw - 720px) / 2);
-  min-width: 230px;
-}
-
-@include mobile;
-::ng-deep .app-snackbar-panel {
-  right: calc((100vw - 540px) / 2);
-  min-width: 200px;
-}
-
-::ng-deep .mat-snack-bar-handset .mat-snack-bar-container {
-  width: 80%;
 }

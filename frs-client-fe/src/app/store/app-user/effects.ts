@@ -6,7 +6,7 @@ import {
   putUpdatedAppUserRoleEntityAction,
   updateUserRoleEntityAction
 } from './actions';
-import { loadApplicationsEntityAction } from 'src/app/store/application/action';
+import { loadApplications } from 'src/app/store/application/action';
 import { switchMap, map } from 'rxjs/operators';
 import { AppUserService } from 'src/app/core/app-user/app-user.service';
 import { forkJoin, of } from 'rxjs';
@@ -35,7 +35,7 @@ export class AppUserEffects {
       const [user, action] = observableResult;
       return [
         loadAppUserEntityAction({ ...action }),
-        loadApplicationsEntityAction({ organizationId: action.organizationId })
+        loadApplications({ organizationId: action.organizationId })
       ];
     })
   );

@@ -6,7 +6,7 @@ import {selectApplications, selectIsPendingApplicationList} from 'src/app/store/
 import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
 import {Observable, Subscription} from 'rxjs';
 import {Application} from 'src/app/data/application';
-import {loadApplicationsEntityAction, createApplicationEntityAction} from 'src/app/store/application/action';
+import {loadApplications, createApplication} from 'src/app/store/application/action';
 
 @Injectable()
 export class ApplicationListFacade implements IFacade {
@@ -37,13 +37,13 @@ export class ApplicationListFacade implements IFacade {
 
   public loadApplications(): void {
     this.store.dispatch(
-      loadApplicationsEntityAction({ organizationId: this.selectedOrgId })
+      loadApplications({ organizationId: this.selectedOrgId })
     );
   }
 
   public createApplication(name: string): void {
     this.store.dispatch(
-      createApplicationEntityAction({ organizationId: this.selectedOrgId, name })
+      createApplication({ organizationId: this.selectedOrgId, name })
     );
   }
 

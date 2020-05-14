@@ -1,8 +1,12 @@
 {
     "folders": [
         {
-            "path": "./",
+            "path": "./frs-client-fe",
             "name": "frs-client-fe"
+        },
+        {
+            "path": "./",
+            "name": "root"
         },
     ],
     "settings": {

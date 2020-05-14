@@ -5,7 +5,7 @@ import {selectModels, selectPendingModel} from 'src/app/store/model/selectors';
 import {Observable, combineLatest, Subscription} from 'rxjs';
 import {Model} from 'src/app/data/model';
 import {AppState} from 'src/app/store';
-import {loadModelsEntityAction, createModelEntityAction} from 'src/app/store/model/actions';
+import {loadModels, createModel} from 'src/app/store/model/actions';
 import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
 import {selectCurrentAppId} from 'src/app/store/application/selectors';
 
@@ -42,14 +42,14 @@ export class ModelListFacade implements IFacade {
   }
 
   public loadModels(): void {
-    this.store.dispatch(loadModelsEntityAction({
+    this.store.dispatch(loadModels({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId
     }));
   }
 
   public createModel(name: string): void {
-    this.store.dispatch(createModelEntityAction({
+    this.store.dispatch(createModel({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId,
       name
