@@ -10,9 +10,3 @@ export interface Application {
   organizationId: string;
   apiKey?: string;
 }
-
-export interface ApplicationUpdateDto {
-  name: string;
-  id: string;
-  organizationId: string;
-}

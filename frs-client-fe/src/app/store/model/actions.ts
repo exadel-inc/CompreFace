@@ -1,29 +1,20 @@
-import {createAction, props} from '@ngrx/store';
-import {Model} from 'src/app/data/model';
+import { createAction, props } from '@ngrx/store';
+import { Model, ModelUpdate } from 'src/app/data/model';
 
-interface IUpdate {
-  name: string;
-  applicationId: string;
-  organizationId: string;
-  modelId: string;
-}
+export const loadModels = createAction('[Model] Load Models', props<{ organizationId: string, applicationId: string }>());
+export const loadModelsSuccess = createAction('[Model] Load Models Success', props<{ models: Model[] }>());
+export const loadModelsFail = createAction('[Model] Load Models Fail', props<{ error: any }>());
 
-interface ICreate {
-  organizationId: string;
-  applicationId: string;
-  name: string;
-}
+export const createModel = createAction('[Model] Create Model', props<Partial<ModelUpdate>>());
+export const createModelSuccess = createAction('[Model] Create Model Success', props<{ model: Model }>());
+export const createModelFail = createAction('[Model] Create Model Fail', props<{ error: any }>());
 
-interface IDelete {
-  applicationId: string;
-  organizationId: string;
-  modelId: string;
-}
+export const updateModel = createAction('[Model] Update Model', props<ModelUpdate>());
+export const updateModelSuccess = createAction('[Model] Update Model Success', props<{ model: Model }>());
+export const updateModelFail = createAction('[Model] Update Model Fail', props<{ error: any }>());
 
-export const loadModelsEntityAction = createAction('[Model/API] Load Models', props<{ organizationId: string, applicationId: string }>());
-export const addModelsEntityAction = createAction('[Model/API] Add Models', props<{ models: Model[] }>());
-export const createModelEntityAction = createAction('[Model/API] Create Model', props<ICreate>());
-export const setSelectedIdModelEntityAction = createAction('[Model/API] Set Id Model', props<{ selectedId: string}>());
-export const putUpdatedModelEntityAction = createAction('[Model/API] Put Updated Model', props<IUpdate>());
-export const updatedModelEntityAction = createAction('[Model/API] Updated Model', props<{ model: Model }>());
-export const deletedModelEntityAction = createAction('[Model/API] Delete Model', props<IDelete>());
+export const deleteModel = createAction('[Model] Delete Model', props<Partial<ModelUpdate>>());
+export const deleteModelSuccess = createAction('[Model] Delete Model Success');
+export const deleteModelFail = createAction('[Model] Delete Model Fail', props<{ error: any }>());
+
+export const setSelectedIdModel = createAction('[Model] Set Id Model', props<{ selectedId: string }>());

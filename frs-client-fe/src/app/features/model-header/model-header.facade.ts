@@ -10,7 +10,7 @@ import {
   selectPendingModel
 } from '../../store/model/selectors';
 import {Model} from '../../data/model';
-import {putUpdatedModelEntityAction, deletedModelEntityAction} from '../../store/model/actions';
+import {updateModel, deleteModel} from '../../store/model/actions';
 import {selectCurrentOrganizationId} from '../../store/organization/selectors';
 import {selectCurrentAppId} from '../../store/application/selectors';
 import {filter, map, takeUntil} from 'rxjs/operators';
@@ -51,7 +51,7 @@ export class ModelHeaderFacade implements IFacade {
   }
 
   public rename(name: string): void {
-    this.store.dispatch(putUpdatedModelEntityAction({
+    this.store.dispatch(updateModel({
       name,
       organizationId: this.orgId,
       applicationId: this.appId,
@@ -67,7 +67,7 @@ export class ModelHeaderFacade implements IFacade {
       () => this.router.navigate([ROUTERS_URL.APPLICATION], {queryParams: {org: this.orgId, app: this.appId}})
     );
 
-    this.store.dispatch(deletedModelEntityAction({
+    this.store.dispatch(deleteModel({
       organizationId: this.orgId,
       applicationId: this.appId,
       modelId: this.selectedId

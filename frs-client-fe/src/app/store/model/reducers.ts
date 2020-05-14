@@ -1,13 +1,20 @@
-import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
-import {EntityState, EntityAdapter, createEntityAdapter} from '@ngrx/entity';
-import {Model} from 'src/app/data/model';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
+import { Model } from 'src/app/data/model';
+
 import {
-  loadModelsEntityAction,
-  addModelsEntityAction,
-  createModelEntityAction,
-  setSelectedIdModelEntityAction,
-  updatedModelEntityAction,
-  putUpdatedModelEntityAction
+  createModel,
+  createModelFail,
+  deleteModel,
+  deleteModelFail,
+  loadModels,
+  loadModelsFail,
+  loadModelsSuccess,
+  setSelectedIdModel,
+  updateModel,
+  updateModelFail,
+  updateModelSuccess,
+  createModelSuccess,
 } from './actions';
 
 export interface ModelEntityState extends EntityState<Model> {
@@ -24,15 +31,12 @@ const initialState: ModelEntityState = modelAdapter.getInitialState({
 
 const reducer: ActionReducer<ModelEntityState> = createReducer(
   initialState,
-  on(loadModelsEntityAction, (state) => ({ ...state, isPending: true })),
-  on(addModelsEntityAction, (state, { models }) => {
-    const newModel = modelAdapter.removeAll(state);
-    return modelAdapter.addAll(models, { ...newModel, isPending: false })
-  }),
-  on(createModelEntityAction, (state) => ({ ...state, isPending: true })),
-  on(setSelectedIdModelEntityAction, (state, { selectedId }) => ({ ...state, selectedId })),
-  on(putUpdatedModelEntityAction, (state) => ({ ...state, isPending: true })),
-  on(updatedModelEntityAction, (state, { model }) => modelAdapter.updateOne(
+  on(loadModels, createModel, updateModel, deleteModel, (state) => ({ ...state, isPending: true })),
+  on(loadModelsFail, createModelFail, updateModelFail, deleteModelFail, (state) => ({ ...state, isPending: false })),
+  on(loadModelsSuccess, (state, { models }) => modelAdapter.addAll(models, { ...state, isPending: false })),
+  on(createModelSuccess, (state, { model }) => modelAdapter.addOne(model, { ...state, isPending: false })),
+  on(setSelectedIdModel, (state, { selectedId }) => ({ ...state, selectedId })),
+  on(updateModelSuccess, (state, { model }) => modelAdapter.updateOne(
     { id: model.id, changes: model },
     { ...state, isPending: false }
   )),

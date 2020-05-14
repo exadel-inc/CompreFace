@@ -53,7 +53,7 @@ export class ApplicationListEffect {
   );
 
   @Effect({ dispatch: false })
-  error$ = this.actions.pipe(
+  showError$ = this.actions.pipe(
     ofType(loadApplicationsFail, createApplicationFail, updateApplicationFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
