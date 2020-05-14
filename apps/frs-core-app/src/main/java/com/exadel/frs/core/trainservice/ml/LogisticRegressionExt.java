@@ -1,5 +1,7 @@
 package com.exadel.frs.core.trainservice.ml;
 
+import static java.lang.String.format;
+import static java.util.Arrays.sort;
 import lombok.val;
 import smile.classification.LogisticRegression;
 import smile.math.DifferentiableMultivariateFunction;
@@ -53,7 +55,7 @@ public class LogisticRegressionExt implements Serializable {
     public LogisticRegressionExt(double[][] x, int[] y, double lambda, double tol, int maxIter) {
         if (x.length != y.length) {
             throw new IllegalArgumentException(
-                    String.format("The sizes of X and Y don't match: %d != %d", x.length, y.length));
+                    format("The sizes of X and Y don't match: %d != %d", x.length, y.length));
         }
 
         if (lambda < 0.0) {
@@ -71,7 +73,7 @@ public class LogisticRegressionExt implements Serializable {
 
         // class label set.
         int[] labels = Math.unique(y);
-        Arrays.sort(labels);
+        sort(labels);
 
         for (int i = 0; i < labels.length; i++) {
             if (labels[i] < 0) {
@@ -153,12 +155,12 @@ public class LogisticRegressionExt implements Serializable {
     public int predict(double[] x, double[] posteriori) {
         if (x.length != p) {
             throw new IllegalArgumentException(
-                    String.format("Invalid input vector size: %d, expected: %d", x.length, p));
+                    format("Invalid input vector size: %d, expected: %d", x.length, p));
         }
 
         if (posteriori != null && posteriori.length != k) {
             throw new IllegalArgumentException(
-                    String.format("Invalid posteriori vector size: %d, expected: %d", posteriori.length, k));
+                    format("Invalid posteriori vector size: %d, expected: %d", posteriori.length, k));
         }
 
         if (k == 2) {

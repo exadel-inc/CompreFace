@@ -19,15 +19,14 @@ class LogisticRegressionExtendedClassifierTestIT {
     void predict() {
         val faceName = "faceName";
         val predictResult = Pair.of(0, faceName);
-        val labelMap = new LogisticRegressionExtendedClassifier(
-                Map.of(0, Pair.of("faceId", faceName))
-        );
+        val labelMap = Map.of(0, Pair.of("faceId", faceName));
+        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
 
-        labelMap.train(xorMatrix, xorResults);
+        classifier.train(xorMatrix, xorResults);
 
-        val actual = labelMap.predict(new double[]{0, 0});
+        val actual = classifier.predict(new double[]{0, 0});
 
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(predictResult);
