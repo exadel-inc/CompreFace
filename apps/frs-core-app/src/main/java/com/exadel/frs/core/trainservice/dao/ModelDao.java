@@ -1,6 +1,5 @@
 package com.exadel.frs.core.trainservice.dao;
 
-import static com.exadel.frs.core.trainservice.component.FaceClassifierAdapter.CLASSIFIER_IMPLEMENTATION_BEAN_NAME;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.entity.Model;
@@ -36,7 +35,6 @@ public class ModelDao {
                          .faces(classifier.getUsedFaceIds().stream()
                                           .map(ObjectId::new)
                                           .collect(toList()))
-                         .classifierName(CLASSIFIER_IMPLEMENTATION_BEAN_NAME)
                          .calculatorVersion(calculatorVersion)
                          .build();
 

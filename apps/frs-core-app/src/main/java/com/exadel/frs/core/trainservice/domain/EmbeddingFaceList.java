@@ -17,7 +17,7 @@ public class EmbeddingFaceList {
     String calculatorVersion;
 
     /**
-    Pair of id and face name as key and list of embeddings as value
+     * Pair of id and face name as key and list of embeddings as value
      */
     Map<Pair<String, String>, List<List<Double>>> faceEmbeddings = new HashMap<>();
 }

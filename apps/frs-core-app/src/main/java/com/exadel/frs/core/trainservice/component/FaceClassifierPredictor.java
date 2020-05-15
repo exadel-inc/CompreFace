@@ -14,11 +14,10 @@ public class FaceClassifierPredictor {
     private final ModelDao modelDao;
     private final ApplicationContext context;
 
-    public Pair<Integer, String> predict(final String modelKey, double[] input) {
+    public Pair<Integer, String> predict(final String modelKey, final double[] input) {
         val model = modelDao.getModel(modelKey);
-        val classifierAdapter = context.getBean(FaceClassifierAdapter.class);
-        classifierAdapter.setClassifier(model);
+        val faceClassifier = context.getBean(FaceClassifierAdapter.class, model);
 
-        return classifierAdapter.predict(input);
+        return faceClassifier.predict(input);
     }
 }

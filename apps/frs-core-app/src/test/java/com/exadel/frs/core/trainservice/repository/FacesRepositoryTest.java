@@ -39,9 +39,9 @@ public class FacesRepositoryTest {
     }
 
     public static Face makeFace(final String name, final String modelApiKey) {
-        val face = new Face();
-        face.setFaceName(name);
-        face.setApiKey(modelApiKey);
+        val face = new Face()
+                .setFaceName(name)
+                .setApiKey(modelApiKey);
         face.setEmbeddings(List.of(
                 new Face.Embedding()
                         .setEmbedding(List.of(0.0D))
@@ -93,7 +93,7 @@ public class FacesRepositoryTest {
     }
 
     @Test
-    public void findFaceIdsIn(){
+    public void findFaceIdsIn() {
         val faces = facesRepository.findByIdIn(List.of("Id_A", "Id_B"));
         assertThat(faces).isNotNull();
         assertThat(faces).hasSize(2);
