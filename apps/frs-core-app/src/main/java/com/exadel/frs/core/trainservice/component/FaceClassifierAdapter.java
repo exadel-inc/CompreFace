@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FaceClassifierAdapter {
 
-    private final FaceClassifierManager storage;
+    private final FaceClassifierManager manager;
     private FaceClassifier classifier;
 
     @Async
@@ -58,17 +58,17 @@ public class FaceClassifierAdapter {
                 faceId++;
             }
 
-            val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+            classifier = new LogisticRegressionExtendedClassifier(labelMap);
             classifier.train(
                     x.toArray(double[][]::new),
                     y.stream().mapToInt(integer -> integer).toArray()
             );
 
-            storage.saveClassifier(modelKey, classifier, embeddingFaceList.getCalculatorVersion());
+            manager.saveClassifier(modelKey, classifier, embeddingFaceList.getCalculatorVersion());
         } catch (ModelNotTrainedException e) {
             log.error("Model {} hasn't enough data to train", modelKey);
         } finally {
-            storage.finishClassifierTraining(modelKey);
+            manager.finishClassifierTraining(modelKey);
         }
     }
 

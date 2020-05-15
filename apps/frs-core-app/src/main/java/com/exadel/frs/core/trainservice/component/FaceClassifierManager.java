@@ -39,7 +39,7 @@ public class FaceClassifierManager {
         faceClassifier.train(faceDao.findAllFacesIn(faces), modelKey);
     }
 
-    public void initNewClassifier(String modelKey) {
+    public void initNewClassifier(final String modelKey) {
         if (faceDao.countFacesInModel(modelKey) < 1) {
             throw new ModelHasNoFacesException();
         }
