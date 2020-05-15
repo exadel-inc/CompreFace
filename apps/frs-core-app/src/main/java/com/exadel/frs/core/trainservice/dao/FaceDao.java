@@ -111,7 +111,7 @@ public class FaceDao {
         });
     }
 
-    public Face addFile(
+    public Face addNewFace(
             final List<Embedding> embeddings,
             final MultipartFile file,
             final String faceName,

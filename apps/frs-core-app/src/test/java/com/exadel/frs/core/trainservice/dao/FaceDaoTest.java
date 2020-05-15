@@ -100,7 +100,7 @@ class FaceDaoTest {
 
         when(gridFsOperations.store(any(InputStream.class), anyString())).thenReturn(faceId);
 
-        val actual = faceDao.addFile(embeddings, mockFile, faceName, modelKey);
+        val actual = faceDao.addNewFace(embeddings, mockFile, faceName, modelKey);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getFaceName()).isEqualTo(faceName);

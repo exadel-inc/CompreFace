@@ -37,6 +37,6 @@ public class ScanServiceImpl implements ScanService {
                         .setCalculatorVersion(scanResponse.getCalculatorVersion())
         ).collect(toList());
 
-        return faceDao.addFile(embeddingToSave, file, faceName, modelKey);
+        return faceDao.addNewFace(embeddingToSave, file, faceName, modelKey);
     }
 }

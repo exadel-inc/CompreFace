@@ -35,7 +35,7 @@ class ScanServiceImplTest {
         when(scanFacesClient.scanFaces(mockFile, 1, threshold))
                 .thenReturn(scanResponse);
 
-        when(faceDao.addFile(embeddings, mockFile, faceName, modelKey)).thenReturn(face);
+        when(faceDao.addNewFace(embeddings, mockFile, faceName, modelKey)).thenReturn(face);
 
         val actual = new ScanServiceImpl(scanFacesClient, faceDao)
                 .scanAndSaveFace(mockFile, faceName, threshold, modelKey);
@@ -44,7 +44,7 @@ class ScanServiceImplTest {
         assertThat(actual).isEqualTo(face);
 
         verify(scanFacesClient).scanFaces(mockFile, 1, threshold);
-        verify(faceDao).addFile(embeddings, mockFile, faceName, modelKey);
+        verify(faceDao).addNewFace(embeddings, mockFile, faceName, modelKey);
         verifyNoMoreInteractions(scanFacesClient, faceDao);
     }
 }
