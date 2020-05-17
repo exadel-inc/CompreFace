@@ -1,8 +1,13 @@
+import io
+import sys
+from contextlib import redirect_stdout
 from http import HTTPStatus
+from unittest.mock import patch
 
 from flask import Response
 from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
+from yolk.cli import Yolk
 
 from src.cache import get_storage, get_scanner, get_training_task_manager
 from src.constants import ENV
@@ -27,6 +32,14 @@ def endpoints(app):
     @app.route('/force_fail_e2e_tests')
     def force_fail_e2e_tests_get():
         return str(ENV.FORCE_FAIL_E2E_TESTS).lower()
+
+    # TODO EFRS-497 Temporary endpoint for development (remove once the task is done)
+    @app.route('/licenses')
+    def licenses_get():
+        with io.StringIO() as output_buffer, redirect_stdout(output_buffer):
+            with patch.object(sys, 'argv', ['', '-l', '-f', 'license,home-page']):
+                Yolk().run()
+            return output_buffer.getvalue().replace('\n', '<br>')
 
     @app.route('/status')
     def status_get():

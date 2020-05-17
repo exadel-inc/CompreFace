@@ -50,6 +50,16 @@ def test__given_serialized_image_object__when_recognizing_faces__then_returns_20
     assert len(res.json()['result']) == 5
 
 
+@pytest.mark.run(order=next(after_previous))
+def test__when_recognizing_licenses__then_returns_200_and_results():
+    pass
+
+    res = ml_get("/licenses")
+
+    assert res.status_code == 200, res.content
+    assert 'License' in res.content.decode()
+
+
 def _serialize(obj):
     bytes_container = BytesIO()
     joblib.dump(obj, bytes_container)

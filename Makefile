@@ -109,7 +109,7 @@ e2e/local: start
 e2e/extended: SAVE_IMG=false
 e2e/extended: LOGGING_LEVEL_NAME=info
 e2e/extended: IMG_NAMES={test_images}
-e2e/extended: scan/remote e2e
+e2e/extended: e2e scan/remote
 
 # Runs E2E tests against a remote environment
 e2e/remote: DROP_DB=false
