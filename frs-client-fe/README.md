@@ -2,13 +2,7 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.19.
 
-## Development Requirements
-
-- Node.js
-- Docker
-- Bash compatible command prompt
-
-## Development Run
+## Local development
 
 Check access to https://dev.frs.exadel.by. If site is unreachable please connect to your office VPN.
 
@@ -51,13 +45,13 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 `feature/containers` Feature specific smart/container components. Communicates with store through facade. Styles less.\
 `feature/compoentns` Feature specific dump/presentational components. Communicates with containers  through Input/Output. Logic less.\
 `pages/` Page specific router modules (home, 404, login ect.) with component which are responsible for page layout and composition of features
- 
+
 `store` Store folder. index.ts contains union store and reducers\
-`store/featureName` Store for one feature. 
-`store/featureName/module` Feature store encapsulated into feature module and declared `StoreModule.forFeature('Feature', FeatureReducer)` 
+`store/featureName` Store for one feature.
+`store/featureName/module` Feature store encapsulated into feature module and declared `StoreModule.forFeature('Feature', FeatureReducer)`
 `store/featureName/actions` Store actions. Can be handled by effect and/or reducer. Can be called in facade.\
 `store/featureName/effects` Actions handler which needs to produce some side effect(API call, etc.) and then call facade method if needed.\
 `store/featureName/selectors` Selectors for feature state
 `store/featureName/reducers` Actions handler which directly changes store data. Pure function.\
 `store/featureName/feature-entitys.service.ts` service for access for entities https://ngrx.io/guide/data/entity-services
- 
+
