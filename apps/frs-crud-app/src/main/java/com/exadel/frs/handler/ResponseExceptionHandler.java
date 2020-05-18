@@ -46,6 +46,7 @@ public class ResponseExceptionHandler {
 
         switch (fieldError.getCode()) {
             case "NotNull":
+            case "NotBlank":
                 basicException = new EmptyRequiredFieldException(fieldError.getField());
                 break;
             default:
