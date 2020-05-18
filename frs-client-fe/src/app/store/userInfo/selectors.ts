@@ -5,7 +5,7 @@ export const selectUserInfoState = createFeatureSelector<UserInfoState>('userInf
 
 export const selectUserId = createSelector(
   selectUserInfoState,
-  (userInfo) => userInfo.guid
+  (userInfo) => userInfo.userId
 );
 
 // TODO: move default avatar to backend response

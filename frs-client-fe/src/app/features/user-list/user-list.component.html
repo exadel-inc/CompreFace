@@ -15,6 +15,7 @@
     [isLoading$]="isLoading$"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
     [availableRoles$]="availableRoles$"
+    [currentUserId]="currentUserId$ | async"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)"
   ></app-user-table>
