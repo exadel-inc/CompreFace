@@ -3,6 +3,7 @@ package com.exadel.frs.handler;
 import static com.exadel.frs.handler.ExceptionCode.UNDEFINED;
 import com.exadel.frs.dto.ExceptionResponseDto;
 import com.exadel.frs.exception.BasicException;
+import com.exadel.frs.exception.ConstraintViolationException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -47,7 +48,11 @@ public class ResponseExceptionHandler {
         switch (fieldError.getCode()) {
             case "NotNull":
             case "NotBlank":
+            case "NotEmpty":
                 basicException = new EmptyRequiredFieldException(fieldError.getField());
+                break;
+            case "Size":
+                basicException = new ConstraintViolationException(fieldError.getField(), fieldError.getDefaultMessage());
                 break;
             default:
                 basicException = new BasicException(UNDEFINED, "");
