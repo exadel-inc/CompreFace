@@ -47,7 +47,7 @@ public class OrganizationControllerTest {
 
     @Test
     void shouldReturnErrorMessageWhenNameIsMissingOnCreateNewModel() throws Exception {
-        val expectedContent = "{\"message\":\"Field name cannot be empty\",\"code\":5}";
+        val expectedContent = "{\"message\":\"Organization name cannot be empty\",\"code\":26}";
         val bodyWithEmptyName = new OrgCreateDto();
         bodyWithEmptyName.setName("");
 

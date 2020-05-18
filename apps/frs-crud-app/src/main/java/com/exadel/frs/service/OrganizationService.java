@@ -107,9 +107,6 @@ public class OrganizationService {
     }
 
     public Organization updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
-        if (isBlank(orgUpdateDto.getName())) {
-            throw new FieldRequiredException("Organization name");
-        }
         Organization organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         val isNewName = !organizationFromRepo.getName().equals(orgUpdateDto.getName());

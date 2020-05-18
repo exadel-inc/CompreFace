@@ -1,6 +1,5 @@
 package com.exadel.frs.dto.ui;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
