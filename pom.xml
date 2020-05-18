@@ -16,7 +16,6 @@
 
   <modules>
     <module>apps</module>
-    <module>modules</module>
   </modules>
 
   <properties>

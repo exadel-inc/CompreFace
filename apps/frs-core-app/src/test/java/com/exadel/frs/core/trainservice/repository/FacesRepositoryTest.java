@@ -40,9 +40,9 @@ public class FacesRepositoryTest {
     }
 
     public static Face makeFace(final String name, final String modelApiKey) {
-        val face = new Face();
-        face.setFaceName(name);
-        face.setApiKey(modelApiKey);
+        val face = new Face()
+                .setFaceName(name)
+                .setApiKey(modelApiKey);
         face.setEmbeddings(List.of(
                 new Face.Embedding()
                         .setEmbedding(List.of(0.0D))

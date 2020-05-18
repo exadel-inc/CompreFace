@@ -35,21 +35,21 @@ public class FaceClassifierManager {
 
     public void initNewClassifier(final String modelKey, final List<String> faces) {
         lockManager.lock(modelKey);
-        val proxy = context.getBean(FaceClassifierAdapter.class);
-        proxy.train(faceDao.findAllFacesIn(faces), modelKey);
+        val faceClassifier = context.getBean(FaceClassifierAdapter.class);
+        faceClassifier.train(faceDao.findAllFacesIn(faces), modelKey);
     }
 
-    public void initNewClassifier(String modelKey) {
+    public void initNewClassifier(final String modelKey) {
         if (faceDao.countFacesInModel(modelKey) < 1) {
             throw new ModelHasNoFacesException();
         }
 
         lockManager.lock(modelKey);
-        val proxy = context.getBean(FaceClassifierAdapter.class);
-        proxy.train(faceDao.findAllFaceEmbeddingsByApiKey(modelKey), modelKey);
+        val faceClassifier = context.getBean(FaceClassifierAdapter.class);
+        faceClassifier.train(faceDao.findAllFaceEmbeddingsByApiKey(modelKey), modelKey);
     }
 
-    public void abortClassifierTraining(final String modelKey) {
+    public void finishClassifierTraining(final String modelKey) {
         lockManager.unlock(modelKey);
     }
 

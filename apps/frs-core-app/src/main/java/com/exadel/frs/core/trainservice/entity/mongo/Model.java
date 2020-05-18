@@ -27,7 +27,4 @@ public class Model {
 
     @Field("calculator_version")
     private String calculatorVersion;
-
-    @Field("classifierName")
-    private String classifierName;
 }
