@@ -4,7 +4,6 @@ import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.dto.ui.UserUpdateResponseDto;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
@@ -77,11 +76,11 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Such username or email already registered")
     })
-    public UserUpdateResponseDto updateUser(
+    public UserResponseDto updateUser(
             @ApiParam(value = "User data that needs to be updated", required = true)
             @RequestBody final UserUpdateDto userUpdateDto
     ) {
-        return userMapper.toUserUpdateResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
+        return userMapper.toResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
     }
 
     @DeleteMapping("/delete")
