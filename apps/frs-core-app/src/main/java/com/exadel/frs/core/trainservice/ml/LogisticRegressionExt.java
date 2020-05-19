@@ -207,7 +207,7 @@ public class LogisticRegressionExt implements Serializable {
         }
     }
 
-    public static class Trainer {
+    public static class Trainer implements Serializable {
 
         /**
          * Regularization factor. &lambda; > 0 gives a "regularized" estimate of linear weights which
