@@ -132,7 +132,7 @@ public class UserService {
         }
     }
 
-    public void updateUser(final UserUpdateDto userUpdateDto, final Long userId) {
+    public User updateUser(final UserUpdateDto userUpdateDto, final Long userId) {
         val user = getUser(userId);
         if (!isEmpty(userUpdateDto.getFirstName())) {
             user.setFirstName(userUpdateDto.getFirstName());
@@ -144,7 +144,7 @@ public class UserService {
             user.setPassword(encoder.encode(userUpdateDto.getPassword()));
         }
 
-        userRepository.save(user);
+        return userRepository.save(user);
     }
 
     @Transactional
