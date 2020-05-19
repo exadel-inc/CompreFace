@@ -34,7 +34,6 @@ public class FaceServiceITest {
     private FaceService faceService;
 
     private final static String MODEL_KEY = UUID.randomUUID().toString();
-    private final static String APP_KEY = UUID.randomUUID().toString();
     private final static String MODEL_KEY_OTHER = UUID.randomUUID().toString();
 
     @BeforeEach
@@ -72,7 +71,7 @@ public class FaceServiceITest {
         assertThat(facesRepository.findByApiKey(MODEL_KEY)).hasSize(2);
         assertThat(facesRepository.findByApiKey(newModelKey)).hasSize(0);
 
-        faceService.updateModelApiKeyForFaces(APP_KEY + MODEL_KEY, newModelKey);
+        faceService.updateModelApiKeyForFaces(MODEL_KEY, newModelKey);
 
         assertThat(facesRepository.findByApiKey(MODEL_KEY)).hasSize(0);
         assertThat(facesRepository.findByApiKey(newModelKey)).hasSize(2);

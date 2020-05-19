@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice.config.repository;
 
 import java.util.HashMap;
 import javax.sql.DataSource;
+import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
@@ -31,9 +32,9 @@ public class DbConfig {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan("com.exadel.frs.core.trainservice.entity.postgres");
-        final HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
+        val vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
-        final HashMap<String, Object> properties = new HashMap<>();
+        val properties = new HashMap<String, Object>();
         properties.put("hibernate.ddl-auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
         properties.put("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect"));
         em.setJpaPropertyMap(properties);
@@ -53,7 +54,7 @@ public class DbConfig {
 
     @Bean(name = "tmPg")
     public PlatformTransactionManager pgTransactionManager(@Qualifier("emPg") LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean) {
-        final JpaTransactionManager transactionManager = new JpaTransactionManager();
+        val transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(localContainerEntityManagerFactoryBean.getObject());
         return transactionManager;
     }

@@ -1,5 +1,7 @@
 package com.exadel.frs.core.trainservice.entity.postgres;
 
+import static javax.persistence.GenerationType.*;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,13 +20,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = {"guid"})
+@EqualsAndHashCode(of = {"apiKey"})
 public class Model {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_id_seq")
+    @GeneratedValue(strategy = SEQUENCE, generator = "model_id_seq")
     @SequenceGenerator(name = "model_id_seq", sequenceName = "model_id_seq", allocationSize = 1)
     private Long id;
     private String name;
-    private String guid;
+
+    @Column(name = "api_key")
+    private String apiKey;
 }

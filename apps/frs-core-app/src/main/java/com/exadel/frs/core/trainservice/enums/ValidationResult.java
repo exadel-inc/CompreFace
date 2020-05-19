@@ -1,6 +1,7 @@
-package com.exadel.frs.core.trainservice.domain.vo;
+package com.exadel.frs.core.trainservice.enums;
 
 public enum ValidationResult {
+
     OK,
     READ_ONLY,
     FORBIDDEN;

@@ -1,6 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.domain.vo.ValidationResult;
+import com.exadel.frs.core.trainservice.enums.ValidationResult;
 import com.exadel.frs.core.trainservice.repository.postgres.ModelRepositoryPg;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,7 @@ public class ModelServicePg {
 
     @Cacheable("modelKeys")
     public ValidationResult validateModelKey(final String modelKey) {
-        if (modelRepositoryPg.findByGuid(modelKey).isPresent()) {
+        if (modelRepositoryPg.findByApiKey(modelKey).isPresent()) {
             return ValidationResult.OK;
         }
         return ValidationResult.FORBIDDEN;

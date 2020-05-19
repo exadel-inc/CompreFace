@@ -10,5 +10,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional("tmPg")
 public interface ModelRepositoryPg extends JpaRepository<Model, Long> {
 
-    Optional<Model> findByGuid(String guid);
+    Optional<Model> findByApiKey(String apiKey);
 }

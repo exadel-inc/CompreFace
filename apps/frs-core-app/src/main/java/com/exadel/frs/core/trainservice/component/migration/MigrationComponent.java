@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.component.migration;
 
+import static java.util.stream.Collectors.*;
 import com.exadel.frs.core.trainservice.component.FaceClassifierLockManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
@@ -71,7 +72,9 @@ public class MigrationComponent {
             } else {
                 faceManager.initNewClassifier(
                         model.getId(),
-                        faces.stream().map(ObjectId::toString).collect(Collectors.toList())
+                        faces.stream()
+                             .map(ObjectId::toString)
+                             .collect(toList())
                 );
             }
         }

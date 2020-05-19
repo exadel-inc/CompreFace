@@ -33,7 +33,6 @@
     <feign-core.version>10.7.4</feign-core.version>
     <commons-lang3.version>3.9</commons-lang3.version>
     <spring-cloud-starter-openfeign.version>2.2.2.RELEASE</spring-cloud-starter-openfeign.version>
-    <frs-crud-domain.version>0.0.1-SNAPSHOT</frs-crud-domain.version>
     <ehcache.version>2.7.2</ehcache.version>
     <javax-cache.version>1.1.1</javax-cache.version>
 
@@ -117,11 +116,6 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${commons-lang3.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.exadel</groupId>
-        <artifactId>frs-crud-domain</artifactId>
-        <version>${frs-crud-domain.version}</version>
       </dependency>
       <dependency>
         <groupId>javax.cache</groupId>
