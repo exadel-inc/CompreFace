@@ -8,6 +8,7 @@ import com.exadel.frs.dto.ui.ModelShareResponseDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
@@ -187,7 +188,7 @@ public class AppController {
 
     @PutMapping("/app/{guid}/role")
     @ApiOperation(value = "Update user application role")
-    public void updateUserAppRole(
+    public UserRoleResponseDto updateUserAppRole(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -199,7 +200,8 @@ public class AppController {
             @RequestBody
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
-        appService.updateUserAppRole(userRoleUpdateDto, orgGuid,  guid, SecurityUtils.getPrincipalId());
+        UserAppRole userAppRole = appService.updateUserAppRole(userRoleUpdateDto, orgGuid, guid, SecurityUtils.getPrincipalId());
+        return userAppRoleMapper.toUserRoleResponseDto(userAppRole);
     }
 
     @GetMapping("/app/{guid}/model/request")

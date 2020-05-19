@@ -184,7 +184,7 @@ public class AppService {
         return appRepository.save(app);
     }
 
-    public void updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String orgGuid, final String guid, final Long adminId) {
+    public UserAppRole updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String orgGuid, final String guid, final Long adminId) {
         val app = getApp(orgGuid, guid, adminId);
 
         verifyUserHasWritePrivileges(adminId, app.getOrganization());
@@ -203,6 +203,7 @@ public class AppService {
         userAppRole.setRole(newAppRole);
 
         appRepository.save(app);
+        return userAppRole;
     }
 
     public void deleteUserFromApp(final String userGuid, final String orgGuid, final String guid, final Long adminId) {
