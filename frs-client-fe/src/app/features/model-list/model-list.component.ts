@@ -1,12 +1,14 @@
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
-import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialog.component';
-import {MatDialog} from '@angular/material';
-import {ITableConfig} from 'src/app/features/table/table.component';
-import {ModelListFacade} from './model-list-facade';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {Router} from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { Model } from 'src/app/data/model';
+import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
+import { ITableConfig } from 'src/app/features/table/table.component';
+
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
+import { ModelListFacade } from './model-list-facade';
 
 @Component({
   selector: 'app-model-list',
@@ -15,51 +17,81 @@ import {Router} from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModelListComponent implements OnInit, OnDestroy {
-  public isLoading$: Observable<boolean>;
-  public errorMessage: string;
-  public tableConfig$: Observable<ITableConfig>;
+  isLoading$: Observable<boolean>;
+  errorMessage: string;
+  tableConfig$: Observable<ITableConfig>;
+  columns = [
+    { title: 'name', property: 'name' },
+    { title: 'apiKey', property: 'apiKey' },
+    { title: 'actions', property: 'id' },
+  ];
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router) {
+  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog) {
     this.modelListFacade.initSubscriptions();
   }
 
   ngOnInit() {
     this.isLoading$ = this.modelListFacade.isLoading$;
-
-    this.tableConfig$ = this.modelListFacade.models$
-      .pipe(
-        map(models => {
-          return ({
-            columns: [{ title: 'Name', property: 'name' }],
-            data: models.map(model => ({ id: model.id, name: model.name}))
-          });
-        })
-      );
+    this.tableConfig$ = this.modelListFacade.models$.pipe(
+      map(models => ({
+        columns: this.columns,
+        data: models,
+      })),
+    );
   }
 
-  public onClick(model): void {
-    this.router.navigate([ROUTERS_URL.MODEL], {
-      queryParams: {
-        org: this.modelListFacade.selectedOrganizationId,
-        app: this.modelListFacade.selectedApplicationId,
-        model: model.id,
+  copyApiKey(apiKey: string) {
+    const input = document.createElement('input');
+    input.setAttribute('value', apiKey);
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+  }
+
+  edit(model: Model) {
+    const dialog = this.dialog.open(EditDialogComponent, {
+      width: '400px',
+      data: {
+        entityType: 'model',
+        entityName: model.name,
+      }
+    });
+
+    dialog.afterClosed().pipe(first()).subscribe(name => {
+      if (name) {
+        this.modelListFacade.renameModel(model.id, name);
       }
     });
   }
 
-  public onCreateNewModel(): void {
+  delete(model: Model) {
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      width: '400px',
+      data: {
+        entityType: 'model',
+        entityName: model.name,
+      }
+    });
+
+    dialog.afterClosed().pipe(first()).subscribe(result => {
+      if (result) {
+        this.modelListFacade.deleteModel(model.id);
+      }
+    });
+  }
+
+  onCreateNewModel(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
         entityType: 'model',
-        name: ''
       }
     });
 
-    const dialogSubscription = dialog.afterClosed().subscribe(name => {
+    dialog.afterClosed().pipe(first()).subscribe(name => {
       if (name) {
         this.modelListFacade.createModel(name);
-        dialogSubscription.unsubscribe();
       }
     });
   }

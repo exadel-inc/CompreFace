@@ -1,24 +1,24 @@
-import {Injectable} from '@angular/core';
-import {IFacade} from 'src/app/data/facade/IFacade';
-import {Store} from '@ngrx/store';
-import {selectModels, selectPendingModel} from 'src/app/store/model/selectors';
-import {Observable, combineLatest, Subscription} from 'rxjs';
-import {Model} from 'src/app/data/model';
-import {AppState} from 'src/app/store';
-import {loadModels, createModel} from 'src/app/store/model/actions';
-import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
-import {selectCurrentAppId} from 'src/app/store/application/selectors';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { IFacade } from 'src/app/data/facade/IFacade';
+import { Model } from 'src/app/data/model';
+import { AppState } from 'src/app/store';
+import { selectCurrentAppId } from 'src/app/store/application/selectors';
+import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
+import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
+import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
 
 @Injectable()
 export class ModelListFacade implements IFacade {
-  public models$: Observable<Model[]>;
-  public isLoading$: Observable<boolean>;
-  public selectedOrganization$: Observable<string>;
-  public selectedApplication$: Observable<string>;
+  models$: Observable<Model[]>;
+  isLoading$: Observable<boolean>;
+  selectedOrganization$: Observable<string>;
+  selectedApplication$: Observable<string>;
 
   private currentArgsAndApplicationSubscription: Subscription;
-  public selectedOrganizationId: string;
-  public selectedApplicationId: string;
+  selectedOrganizationId: string;
+  selectedApplicationId: string;
 
   constructor(private store: Store<AppState>) {
     this.models$ = store.select(selectModels);
@@ -27,7 +27,7 @@ export class ModelListFacade implements IFacade {
     this.selectedApplication$ = store.select(selectCurrentAppId);
   }
 
-  public initSubscriptions(): void {
+  initSubscriptions(): void {
     this.currentArgsAndApplicationSubscription = combineLatest(
       this.selectedOrganization$,
       this.selectedApplication$
@@ -41,14 +41,14 @@ export class ModelListFacade implements IFacade {
     });
   }
 
-  public loadModels(): void {
+  loadModels(): void {
     this.store.dispatch(loadModels({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId
     }));
   }
 
-  public createModel(name: string): void {
+  createModel(name: string): void {
     this.store.dispatch(createModel({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId,
@@ -56,7 +56,24 @@ export class ModelListFacade implements IFacade {
     }));
   }
 
-  public unsubscribe(): void {
+  renameModel(modelId: string, name: string): void {
+    this.store.dispatch(updateModel({
+      organizationId: this.selectedOrganizationId,
+      applicationId: this.selectedApplicationId,
+      modelId,
+      name,
+    }));
+  }
+
+  deleteModel(modelId: string): void {
+    this.store.dispatch(deleteModel({
+      organizationId: this.selectedOrganizationId,
+      applicationId: this.selectedApplicationId,
+      modelId,
+    }));
+  }
+
+  unsubscribe(): void {
     this.currentArgsAndApplicationSubscription.unsubscribe();
   }
 }

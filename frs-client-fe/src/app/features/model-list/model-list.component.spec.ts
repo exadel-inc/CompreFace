@@ -1,11 +1,12 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MatDialog} from '@angular/material';
-import {SpinnerModule} from '../spinner/spinner.module';
-import {TableModule} from '../table/table.module';
-import {ModelListFacade} from './model-list-facade';
-import {of} from 'rxjs';
-import {ModelListComponent} from './model-list.component';
-import {Router} from '@angular/router';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
+import { of } from 'rxjs';
+
+import { ModelTableModule } from '../model-table/model-table.module';
+import { SpinnerModule } from '../spinner/spinner.module';
+import { ModelListFacade } from './model-list-facade';
+import { ModelListComponent } from './model-list.component';
 
 describe('ModelListComponent', () => {
   let component: ModelListComponent;
@@ -14,7 +15,7 @@ describe('ModelListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ModelListComponent],
-      imports: [SpinnerModule, TableModule],
+      imports: [SpinnerModule, ModelTableModule],
       providers: [{
         provide: MatDialog,
         useValue: {}
@@ -35,10 +36,10 @@ describe('ModelListComponent', () => {
           }
         }
       },
-        {provide: Router}
+      { provide: Router }
       ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

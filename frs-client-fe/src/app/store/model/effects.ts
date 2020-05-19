@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ModelService } from 'src/app/core/model/model.service';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
@@ -15,7 +15,6 @@ import {
   loadModels,
   loadModelsFail,
   loadModelsSuccess,
-  setSelectedIdModel,
   updateModel,
   updateModelFail,
   updateModelSuccess,
@@ -59,10 +58,14 @@ export class ModelEffects {
   @Effect()
   deleteModel$ = this.actions.pipe(
     ofType(deleteModel),
-    switchMap(action => this.modelService.delete(action.organizationId, action.applicationId, action.modelId).pipe(
-      switchMap(() => [deleteModelSuccess(), setSelectedIdModel({ selectedId: null })]),
-      catchError(error => of(deleteModelFail({ error }))),
-    )),
+    switchMap(action =>
+      forkJoin(
+        of(action.modelId),
+        this.modelService.delete(action.organizationId, action.applicationId, action.modelId)
+      ).pipe(
+        map(([modelId]) => deleteModelSuccess({ modelId })),
+        catchError(error => of(deleteModelFail({ error }))),
+      )),
   );
 
   @Effect({ dispatch: false })

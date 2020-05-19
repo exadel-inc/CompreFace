@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 4201 --disable-host-check --configuration=local --live-reload false",
+    "start": "ng serve --port 4201 --disable-host-check --configuration=local --hmr",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

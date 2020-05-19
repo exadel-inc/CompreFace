@@ -9,6 +9,7 @@ describe('UserInfoReducer', () => {
     email: '',
     firstName: '',
     guid: '',
+    userId: '',
     lastName: '',
     password: ''
   };
@@ -31,6 +32,7 @@ describe('UserInfoReducer', () => {
         email: '',
         firstName: '',
         guid: '',
+        userId: '',
         lastName: '',
         password: ''
       }, action);
