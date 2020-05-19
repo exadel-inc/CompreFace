@@ -1,22 +1,22 @@
-import {NgModule} from '@angular/core';
-import {sharedReducers} from './index';
-import {EffectsModule} from '@ngrx/effects';
-import {AuthEffects} from './auth/effects';
-import {DefaultDataServiceConfig, EntityDataModule} from '@ngrx/data';
-import {defaultDataServiceConfig, entityConfig} from './ngrx-data';
-import {OrganizationStoreModule} from './organization/organization.module';
-import {UserInfoStoreModule} from './userInfo/user-info.module';
-import {ApplicationStoreModule} from './application/application.module';
-import {UserStoreModule} from './user/user.module';
-import {RoleStoreModule} from './role/role.module';
-import {ModelStoreModule} from './model/model.module';
-import {AppUserStoreModule} from './app-user/app-user.module';
-import {ModelRelationStoreModule} from './model-relation/model-relation.module';
-import {StoreModule} from '@ngrx/store';
-import {RouterStateSerializer, StoreRouterConnectingModule} from '@ngrx/router-store';
-import {AppSerializer} from './router/reducer';
-import {environment} from '../../environments/environment';
-import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import { NgModule } from '@angular/core';
+import { DefaultDataServiceConfig, EntityDataModule } from '@ngrx/data';
+import { EffectsModule } from '@ngrx/effects';
+import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { StoreModule } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+
+import { sharedReducers } from '.';
+import { environment } from '../../environments/environment';
+import { AppUserStoreModule } from './app-user/app-user.module';
+import { ApplicationStoreModule } from './application/application.module';
+import { AuthEffects } from './auth/effects';
+import { ModelStoreModule } from './model/model.module';
+import { defaultDataServiceConfig, entityConfig } from './ngrx-data';
+import { OrganizationStoreModule } from './organization/organization.module';
+import { RoleStoreModule } from './role/role.module';
+import { AppSerializer } from './router/reducer';
+import { UserStoreModule } from './user/user.module';
+import { UserInfoStoreModule } from './userInfo/user-info.module';
 
 @NgModule({
   declarations: [],
@@ -31,17 +31,16 @@ import {StoreDevtoolsModule} from '@ngrx/store-devtools';
     RoleStoreModule,
     ModelStoreModule,
     AppUserStoreModule,
-    ModelRelationStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'
     }),
     !environment.production
-      ? StoreDevtoolsModule.instrument({maxAge: 30})
+      ? StoreDevtoolsModule.instrument({ maxAge: 30 })
       : [],
   ],
   providers: [
-    {provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig},
-    {provide: RouterStateSerializer, useClass: AppSerializer},
+    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig },
+    { provide: RouterStateSerializer, useClass: AppSerializer },
   ]
 })
 export class AppStoreModule { }

@@ -14,7 +14,5 @@ export const updateModelSuccess = createAction('[Model] Update Model Success', p
 export const updateModelFail = createAction('[Model] Update Model Fail', props<{ error: any }>());
 
 export const deleteModel = createAction('[Model] Delete Model', props<Partial<ModelUpdate>>());
-export const deleteModelSuccess = createAction('[Model] Delete Model Success');
+export const deleteModelSuccess = createAction('[Model] Delete Model Success', props<{ modelId: string }>());
 export const deleteModelFail = createAction('[Model] Delete Model Fail', props<{ error: any }>());
-
-export const setSelectedIdModel = createAction('[Model] Set Id Model', props<{ selectedId: string }>());

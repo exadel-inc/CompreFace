@@ -13,6 +13,7 @@ describe('UserInfoService', () => {
     password: 'password',
     firstName: 'string',
     guid: 'guid_0',
+    userId: '1',
     lastName: 'string',
     avatar: 'avatar.png'
   };

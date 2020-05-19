@@ -1,13 +1,5 @@
 <mat-card *ngIf="org$ | async as org" class="breadcrumbs">
   <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.ORGANIZATION, org.id]">{{org.name}}</a>
   <div class="separator"> / </div>
-  <a class="breadcrumbs-link" *ngIf="(routeModel$ | async) && ( app$ | async) as app"
-     [routerLink]="[ROUTERS_URL.APPLICATION]"
-     [queryParams]="{ org: org.id, app: app.id}">
-      {{app.name}}
-  </a>
-  <div class="breadcrumbs-link" *ngIf="!(routeModel$ | async) && (app$ | async) as app">{{app.name}}</div>
-  <div class="separator"> / </div>
-  <div class="breadcrumbs-link" *ngIf="(routeModel$ | async) && (model$ | async) as model">{{model.name}}</div>
+  <div class="breadcrumbs-link" *ngIf="(app$ | async) as app">{{app.name}}</div>
 </mat-card>
-
