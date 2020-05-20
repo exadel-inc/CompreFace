@@ -203,6 +203,7 @@ public class AppService {
         userAppRole.setRole(newAppRole);
 
         appRepository.save(app);
+
         return userAppRole;
     }
 

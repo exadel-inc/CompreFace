@@ -200,7 +200,8 @@ public class AppController {
             @RequestBody
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
-        UserAppRole userAppRole = appService.updateUserAppRole(userRoleUpdateDto, orgGuid, guid, SecurityUtils.getPrincipalId());
+        val userAppRole = appService.updateUserAppRole(userRoleUpdateDto, orgGuid, guid, SecurityUtils.getPrincipalId());
+
         return userAppRoleMapper.toUserRoleResponseDto(userAppRole);
     }
 
