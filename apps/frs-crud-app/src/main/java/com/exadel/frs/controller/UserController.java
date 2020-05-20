@@ -15,6 +15,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,8 @@ public class UserController {
     })
     public UserResponseDto updateUser(
             @ApiParam(value = "User data that needs to be updated", required = true)
-            @RequestBody final UserUpdateDto userUpdateDto
+            @RequestBody
+            @Valid final UserUpdateDto userUpdateDto
     ) {
         return userMapper.toResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
     }

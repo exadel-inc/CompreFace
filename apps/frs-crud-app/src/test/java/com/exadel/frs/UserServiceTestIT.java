@@ -4,6 +4,7 @@ import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.val;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -30,7 +32,8 @@ import static org.mockito.Mockito.when;
 @DisplayName("Tests that use database")
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
-@MockBeans({@MockBean(SpringLiquibase.class), @MockBean(PasswordEncoder.class), @MockBean(EmailSender.class)})
+@MockBeans({@MockBean(SpringLiquibase.class), @MockBean(PasswordEncoder.class), @MockBean(EmailSender.class),
+        @MockBean(OrganizationService.class), @MockBean(Environment.class)})
 @Import({UserService.class})
 public class UserServiceTestIT {
 
