@@ -3,13 +3,17 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.Model;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,6 +43,9 @@ public class FaceControllerTest {
 
     @MockBean
     private FacesRepository facesRepository;
+
+    @MockBean
+    private ModelDao modelDao;
 
     @Autowired
     private SystemService systemService;
@@ -89,7 +96,11 @@ public class FaceControllerTest {
     @Test
     public void updateModelKeySuccess() throws Exception {
         val newModelKey = UUID.randomUUID().toString();
+
+        doReturn(Model.builder().build())
+                .when(modelDao).updateModelApiKey(any(), any());
+
         mockMvc.perform(put(API_V1 + "/faces/api-key?new_model_api_key=" + newModelKey).header(X_FRS_API_KEY_HEADER, API_KEY))
-                .andExpect(status().isOk());
+               .andExpect(status().isOk());
     }
 }
