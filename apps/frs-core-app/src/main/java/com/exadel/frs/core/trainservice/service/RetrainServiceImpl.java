@@ -22,6 +22,6 @@ public class RetrainServiceImpl implements RetrainService {
 
     @Override
     public void abortTraining(final String modelKey) {
-        manager.abortClassifierTraining(modelKey);
+        manager.finishClassifierTraining(modelKey);
     }
 }

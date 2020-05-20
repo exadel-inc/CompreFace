@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.exadel.frs.core.trainservice.component.FaceClassifierAdapter;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
 import com.exadel.frs.core.trainservice.config.MongoTest;
 import com.exadel.frs.core.trainservice.entity.Model;
@@ -83,13 +82,12 @@ public class ModelDaoTest {
         labelMap.put(1, Pair.of(UUID.randomUUID().toString(), "firstLabel"));
         labelMap.put(2, Pair.of(UUID.randomUUID().toString(), "secondLabel"));
 
-        val classifier = new LogisticRegressionExtendedClassifier();
-        classifier.train(x, y, labelMap);
+        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        classifier.train(x, y);
 
         val model = Model.builder()
                          .classifier(classifier)
                          .id(UUID.randomUUID().toString())
-                         .classifierName(FaceClassifierAdapter.CLASSIFIER_IMPLEMENTATION_BEAN_NAME)
                          .build();
 
         return modelRepository.save(model).getId();
