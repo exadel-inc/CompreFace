@@ -3,10 +3,9 @@ package com.exadel.frs.mapper;
 import com.exadel.frs.dto.ui.AppOwnerDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.entity.User;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 @Mapper(uses = {UserOrgRoleMapper.class, UserAppRoleMapper.class})
 public interface UserMapper {

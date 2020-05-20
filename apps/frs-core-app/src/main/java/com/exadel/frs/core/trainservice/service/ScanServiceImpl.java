@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ScanServiceImpl implements ScanService {
 
+    private static final int FACE_LIMIT = 2;
+
     private final FacesClient facesClient;
     private final FaceDao faceDao;
 
@@ -25,7 +27,7 @@ public class ScanServiceImpl implements ScanService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        val scanResponse = facesClient.scanFaces(file, 1, detProbThreshold);
+        val scanResponse = facesClient.scanFaces(file, FACE_LIMIT, detProbThreshold);
 
         val embedding = scanResponse.getResult().stream()
                                     .findFirst().orElseThrow()

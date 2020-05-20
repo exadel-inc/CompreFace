@@ -77,12 +77,12 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Such username or email already registered")
     })
-    public void updateUser(
+    public UserResponseDto updateUser(
             @ApiParam(value = "User data that needs to be updated", required = true)
             @RequestBody
             @Valid final UserUpdateDto userUpdateDto
     ) {
-        userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId());
+        return userMapper.toResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
     }
 
     @DeleteMapping("/delete")
