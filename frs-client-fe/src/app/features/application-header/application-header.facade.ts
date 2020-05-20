@@ -1,25 +1,26 @@
-import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable, Subscription} from 'rxjs';
-import {AppState} from '../../store';
-import {IFacade} from '../../data/facade/IFacade';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription } from 'rxjs';
+
+import { Application } from '../../data/application';
+import { IFacade } from '../../data/facade/IFacade';
+import { AppState } from '../../store';
+import { deleteApplication, updateApplication } from '../../store/application/action';
 import {
   selectCurrentApp,
   selectCurrentAppId,
+  selectIsPendingApplicationList,
   selectUserRollForSelectedApp,
-  selectIsPendingApplicationList
 } from '../../store/application/selectors';
-import {Application} from '../../data/application';
-import {updateApplication} from '../../store/application/action';
-import {selectCurrentOrganizationId} from '../../store/organization/selectors';
+import { selectCurrentOrganizationId } from '../../store/organization/selectors';
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {
   selectedId$: Observable<string | null>;
   selectedId: string | null;
   loading$: Observable<boolean>;
-  public userRole$: Observable<string | null>;
-  public app$: Observable<Application>;
+  userRole$: Observable<string | null>;
+  app$: Observable<Application>;
   orgId: string;
   orgIdSub: Subscription;
   appIdSub: Subscription;
@@ -43,5 +44,9 @@ export class ApplicationHeaderFacade implements IFacade {
 
   rename(name: string) {
     this.store.dispatch(updateApplication({ name, id: this.selectedId, organizationId: this.orgId }));
+  }
+
+  delete() {
+    this.store.dispatch(deleteApplication({ id: this.selectedId, organizationId: this.orgId }));
   }
 }

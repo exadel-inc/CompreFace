@@ -13,5 +13,8 @@ export const updateApplication = createAction('[Application] Update Application'
 export const updateApplicationSuccess = createAction('[Application] Update Application Success', props<{ application: Application }>());
 export const updateApplicationFail = createAction('[Application] Update Application Fail', props<{ error: any }>());
 
-export const setSelectedIdEntityAction = createAction('[Application] Set Selected Id Applications', props<{ selectedAppId }>());
+export const deleteApplication = createAction('[Application] Delete Application', props<Partial<Application>>());
+export const deleteApplicationSuccess = createAction('[Application] Delete Application Success', props<{ id: string }>());
+export const deleteApplicationFail = createAction('[Application] Delete Application Fail', props<{ error: any }>());
 
+export const setSelectedIdEntityAction = createAction('[Application] Set Selected Id Applications', props<{ selectedAppId }>());

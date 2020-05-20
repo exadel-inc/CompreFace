@@ -6,6 +6,9 @@ import {
   createApplication,
   createApplicationFail,
   createApplicationSuccess,
+  deleteApplication,
+  deleteApplicationFail,
+  deleteApplicationSuccess,
   loadApplications,
   loadApplicationsFail,
   loadApplicationsSuccess,
@@ -31,14 +34,16 @@ export const initialState: AppEntityState = applicationAdapter.getInitialState({
 
 const reducer: ActionReducer<AppEntityState> = createReducer(
   initialState,
-  on(loadApplications, createApplication, updateApplication, (state) => ({ ...state, isPending: true })),
-  on(loadApplicationsFail, createApplicationFail, updateApplicationFail, (state) => ({ ...state, isPending: false })),
+  on(loadApplications, createApplication, updateApplication, deleteApplication, (state) => ({ ...state, isPending: true })),
+  on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail,
+    (state) => ({ ...state, isPending: false })),
   on(createApplicationSuccess, (state, { application }) => applicationAdapter.addOne(application, { ...state, isPending: false })),
   on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.addAll(applications, { ...state, isPending: false })),
   on(updateApplicationSuccess, (state, { application }) => applicationAdapter.updateOne(
     { id: application.id, changes: application },
     { ...state, isPending: false }
   )),
+  on(deleteApplicationSuccess, (state, { id }) => applicationAdapter.removeOne(id, { ...state, isPending: false })),
   on(setSelectedIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
 );
 
