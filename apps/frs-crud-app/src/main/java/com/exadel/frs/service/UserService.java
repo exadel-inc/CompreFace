@@ -76,7 +76,9 @@ public class UserService {
 
     @Transactional
     public User createUser(final UserCreateDto userCreateDto) {
+        val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
         validateUserCreateDto(userCreateDto);
+        val isAccountEnabled = isMailServerEnabled ? false : true;
         val user = User.builder()
                        .email(userCreateDto.getEmail().toLowerCase())
                        .firstName(userCreateDto.getFirstName())
@@ -86,11 +88,13 @@ public class UserService {
                        .accountNonExpired(true)
                        .accountNonLocked(true)
                        .credentialsNonExpired(true)
-                       .enabled(false)
+                       .enabled(isAccountEnabled)
                        .registrationToken(generateRegistrationToken())
                        .build();
 
-        sendRegistrationTokenToUser(user);
+        if (isMailServerEnabled) {
+            sendRegistrationTokenToUser(user);
+        }
 
         return userRepository.save(user);
     }
