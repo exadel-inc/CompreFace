@@ -89,10 +89,10 @@ public class UserService {
                        .accountNonLocked(true)
                        .credentialsNonExpired(true)
                        .enabled(isAccountEnabled)
-                       .registrationToken(generateRegistrationToken())
                        .build();
 
         if (isMailServerEnabled) {
+            user.setRegistrationToken(generateRegistrationToken());
             sendRegistrationTokenToUser(user);
         }
 

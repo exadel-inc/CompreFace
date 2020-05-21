@@ -43,6 +43,7 @@ spring:
     open-in-view: true
     generate-ddl: false
   mail:
+    enable: ${ENABLE_EMAIL_SERVER:false}
     sender: ${FRS_EMAIL:frs@msqv500.exadel.by}
     host: ${POSTFIX_HOST:msqv500.exadel.by}
     port: 25
