@@ -10,21 +10,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRoleChangeException;
@@ -35,15 +36,19 @@ import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
+import com.exadel.frs.system.rest.CoreFacesClient;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 
 class AppServiceTest {
 
@@ -53,18 +58,27 @@ class AppServiceTest {
     private static final long ORGANISATION_ID = 2L;
     private static final long USER_ID = 3L;
 
+    @Mock
     private AppRepository appRepositoryMock;
+
+    @Mock
     private OrganizationService organizationServiceMock;
+
+    @Mock
     private UserService userServiceMock;
-    private AppService appService;
+
+    @Mock
     private ModelShareRequestRepository modelShareRequestRepository;
 
-    AppServiceTest() {
-        appRepositoryMock = mock(AppRepository.class);
-        organizationServiceMock = mock(OrganizationService.class);
-        userServiceMock = mock(UserService.class);
-        modelShareRequestRepository = mock(ModelShareRequestRepository.class);
-        appService = new AppService(appRepositoryMock, organizationServiceMock, userServiceMock, modelShareRequestRepository);
+    @Mock
+    private CoreFacesClient coreFacesClient;
+
+    @InjectMocks
+    private AppService appService;
+
+    @BeforeEach
+    void setUp() {
+        initMocks(this);
     }
 
     private User user(final Long id) {
@@ -454,18 +468,24 @@ class AppServiceTest {
         val organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
+        val models = List.of(new Model(), new Model(), new Model());
+
         val app = App.builder()
                      .id(APPLICATION_ID)
                      .name("name")
                      .guid(APPLICATION_GUID)
                      .organization(organization)
+                     .models(models)
                      .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
 
         appService.deleteApp(ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
 
+        verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
         verify(appRepositoryMock).deleteById(anyLong());
+        verify(coreFacesClient, times(models.size())).deleteFaces(anyString());
+        verifyNoMoreInteractions(appRepositoryMock, coreFacesClient);
     }
 
     @ParameterizedTest
