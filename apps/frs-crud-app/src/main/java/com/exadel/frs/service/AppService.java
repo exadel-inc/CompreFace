@@ -257,11 +257,10 @@ public class AppService {
                                     .requestId(requestId)
                                     .build();
 
-        val shareRequest = ModelShareRequest
-                .builder()
-                .app(app)
-                .id(id)
-                .build();
+        val shareRequest = ModelShareRequest.builder()
+                                            .app(app)
+                                            .id(id)
+                                            .build();
 
         modelShareRequestRepository.save(shareRequest);
 
