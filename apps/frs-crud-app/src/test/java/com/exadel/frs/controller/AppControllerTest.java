@@ -90,7 +90,7 @@ class AppControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString(App.builder().id(APP_ID).build()));
 
-        val expectedContent = "{\"message\":\"Application name cannot be empty\",\"code\":5}";
+        val expectedContent = "{\"message\":\"Application name cannot be empty\",\"code\":26}";
 
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest())
@@ -99,7 +99,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturn400AndErrorMessageWhenRenameAppToEmpty() throws Exception {
-        val expectedContent = "{\"message\":\"Application name cannot be empty\",\"code\":5}";
+        val expectedContent = "{\"message\":\"Application name cannot be empty\",\"code\":26}";
 
         val bodyWithEmptyName = new AppUpdateDto();
         bodyWithEmptyName.setName("");
