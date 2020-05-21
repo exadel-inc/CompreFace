@@ -38,6 +38,7 @@ public class DbConfig {
         properties.put("hibernate.ddl-auto", env.getProperty("spring.jpa.hibernate.ddl-auto"));
         properties.put("hibernate.dialect", env.getProperty("spring.jpa.properties.hibernate.dialect"));
         em.setJpaPropertyMap(properties);
+
         return em;
     }
 
@@ -56,6 +57,7 @@ public class DbConfig {
     public PlatformTransactionManager pgTransactionManager(@Qualifier("emPg") LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean) {
         val transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(localContainerEntityManagerFactoryBean.getObject());
+
         return transactionManager;
     }
 }

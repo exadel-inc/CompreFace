@@ -7,9 +7,6 @@ public class SystemServiceImpl implements SystemService {
 
     @Override
     public Token buildToken(final String apiKey) {
-
-        return new Token(
-                apiKey
-        );
+        return new Token(apiKey);
     }
 }

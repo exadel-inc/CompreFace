@@ -41,14 +41,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {BadFormatModelKeyException.class})
     public ResponseEntity<Object> handleBadFormatModelKeyException(final BadFormatModelKeyException e) {
-
         return ResponseEntity.status(BAD_REQUEST)
                              .body(new RetrainResponse(e.getMessage()));
     }
 
     @ExceptionHandler(value = {AccessDeniedException.class})
     public ResponseEntity<Object> handleAccessDeniedException(final AccessDeniedException e) {
-
         return ResponseEntity.status(FORBIDDEN)
                              .body(new RetrainResponse(e.getMessage()));
     }

@@ -1,9 +1,9 @@
 package com.exadel.frs.core.trainservice.filter;
 
+import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
-import com.exadel.frs.core.trainservice.enums.ValidationResult;
 import com.exadel.frs.core.trainservice.exception.AccessDeniedException;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.val;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -53,8 +54,8 @@ public class SecurityValidationFilter implements Filter {
             final ServletResponse servletResponse,
             final FilterChain filterChain
     ) throws IOException, ServletException {
-        var httpRequest = (HttpServletRequest) servletRequest;
-        var httpResponse = (HttpServletResponse) servletResponse;
+        val httpRequest = (HttpServletRequest) servletRequest;
+        val httpResponse = (HttpServletResponse) servletResponse;
 
         Map<String, List<String>> headersMap = Collections
                 .list(httpRequest.getHeaderNames())
@@ -64,20 +65,22 @@ public class SecurityValidationFilter implements Filter {
                         h -> Collections.list(httpRequest.getHeaders(h))
                 ));
 
-        var apikey = headersMap.getOrDefault(X_FRS_API_KEY_HEADER, emptyList());
+        var apiKey = headersMap.getOrDefault(X_FRS_API_KEY_HEADER, emptyList());
 
-        String key = apikey.get(0);
+        val key = apiKey.get(0);
         try {
             UUID.fromString(key);
         } catch (Exception e) {
-            ResponseEntity<Object> objectResponseEntity = handler.handleBadFormatModelKeyException(new BadFormatModelKeyException());
+            val objectResponseEntity = handler.handleBadFormatModelKeyException(new BadFormatModelKeyException());
             buildException(httpResponse, objectResponseEntity);
+
             return;
         }
-        ValidationResult validationResult = modelService.validateModelKey(key);
-        if (validationResult != ValidationResult.OK) {
-            ResponseEntity<Object> objectResponseEntity = handler.handleAccessDeniedException(new AccessDeniedException());
+        val validationResult = modelService.validateModelKey(key);
+        if (validationResult != OK) {
+            val objectResponseEntity = handler.handleAccessDeniedException(new AccessDeniedException());
             buildException(httpResponse, objectResponseEntity);
+
             return;
         }
         filterChain.doFilter(servletRequest, servletResponse);
@@ -89,7 +92,7 @@ public class SecurityValidationFilter implements Filter {
     }
 
     @SneakyThrows
-    private void buildException(HttpServletResponse response, ResponseEntity<?> responseEntity) {
+    private void buildException(final HttpServletResponse response, final ResponseEntity<?> responseEntity) {
         response.setStatus(responseEntity.getStatusCode().value());
         response.getWriter().append(objectMapper.writeValueAsString(responseEntity.getBody()));
         response.getWriter().flush();

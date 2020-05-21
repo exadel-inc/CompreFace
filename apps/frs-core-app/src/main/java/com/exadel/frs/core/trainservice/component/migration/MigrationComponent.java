@@ -1,6 +1,6 @@
 package com.exadel.frs.core.trainservice.component.migration;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.component.FaceClassifierLockManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
@@ -11,7 +11,6 @@ import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import feign.FeignException;
 import java.io.IOException;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
