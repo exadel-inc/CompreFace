@@ -80,21 +80,6 @@ host:
       auth:
         link: ${DNS_URL:http://localhost:${server.port}}
 
-logging:
-  level:
-    web: DEBUG
-    org.springframework.web: DEBUG
-    com:
-      exadel:
-        frs: TRACE
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
-
 registration:
   token:
     expires: 3600000
