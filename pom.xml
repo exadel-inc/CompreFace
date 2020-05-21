@@ -33,6 +33,9 @@
     <feign-core.version>10.7.4</feign-core.version>
     <commons-lang3.version>3.9</commons-lang3.version>
     <spring-cloud-starter-openfeign.version>2.2.2.RELEASE</spring-cloud-starter-openfeign.version>
+    <ehcache.version>2.7.2</ehcache.version>
+    <javax-cache.version>1.1.1</javax-cache.version>
+
   </properties>
 
   <dependencyManagement>
@@ -113,6 +116,16 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-lang3</artifactId>
         <version>${commons-lang3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.cache</groupId>
+        <artifactId>cache-api</artifactId>
+        <version>${javax-cache.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>${ehcache.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

@@ -9,19 +9,32 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
+import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
+import com.exadel.frs.core.trainservice.component.migration.MigrationComponent;
+import com.exadel.frs.core.trainservice.component.migration.MigrationStatusStorage;
+import com.exadel.frs.core.trainservice.config.WebMvcTestContext;
+import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
+import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.system.Token;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {SecurityValidationFilter.class}
+        ))
+@WebMvcTestContext
 class TrainControllerTest {
 
     @Autowired
@@ -33,13 +46,12 @@ class TrainControllerTest {
     @MockBean
     private SystemService systemService;
 
-    private final static String APP_KEY = "app_key";
-    private final static String MODEL_KEY = ":model_key";
-    private final static String API_KEY = APP_KEY + MODEL_KEY;
+    private final static String MODEL_KEY = "model_key";
+    private final static String API_KEY = MODEL_KEY;
 
     @Test
     void train() throws Exception {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         when(systemService.buildToken(API_KEY)).thenReturn(token);
 
         mockMvc.perform(post(API_V1 + "/retrain").header(X_FRS_API_KEY_HEADER, API_KEY))
@@ -52,7 +64,7 @@ class TrainControllerTest {
 
     @Test
     void getStatus() throws Exception {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         when(systemService.buildToken(API_KEY)).thenReturn(token);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(false);
 
@@ -62,7 +74,7 @@ class TrainControllerTest {
 
     @Test
     void abortRetrain() throws Exception {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         when(systemService.buildToken(API_KEY)).thenReturn(token);
 
         mockMvc.perform(delete(API_V1 + "/retrain").header(X_FRS_API_KEY_HEADER, API_KEY))

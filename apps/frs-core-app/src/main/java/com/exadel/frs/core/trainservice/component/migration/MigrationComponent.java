@@ -1,14 +1,16 @@
 package com.exadel.frs.core.trainservice.component.migration;
 
+import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.component.FaceClassifierLockManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
-import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
-import com.exadel.frs.core.trainservice.system.feign.FacesClient;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import com.exadel.frs.core.trainservice.system.feign.FeignClientFactory;
+import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import feign.FeignException;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -20,9 +22,6 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -70,8 +69,12 @@ public class MigrationComponent {
             if (faces == null || faces.isEmpty()) {
                 faceManager.initNewClassifier(model.getId());
             } else {
-                faceManager.initNewClassifier(model.getId(),
-                        faces.stream().map(ObjectId::toString).collect(Collectors.toList()));
+                faceManager.initNewClassifier(
+                        model.getId(),
+                        faces.stream()
+                             .map(ObjectId::toString)
+                             .collect(toList())
+                );
             }
         }
     }
@@ -86,8 +89,8 @@ public class MigrationComponent {
         for (val face : all) {
             log.info("Processing facename {} with id {}", face.getFaceName(), face.getId());
             val count = face.getEmbeddings().stream()
-                    .filter(embedding -> migrationCalculatorVersion.equals(embedding.getCalculatorVersion()))
-                    .count();
+                            .filter(embedding -> migrationCalculatorVersion.equals(embedding.getCalculatorVersion()))
+                            .count();
             if (count == face.getEmbeddings().size()) {
                 continue;
             } else {
@@ -97,14 +100,15 @@ public class MigrationComponent {
                 }
                 val fsResource = gridFsOperations.getResource(one);
                 val file = new MultipartFileData(IOUtils.toByteArray(fsResource.getInputStream()),
-                        face.getFaceName(), null);
+                        face.getFaceName(), null
+                );
 
                 try {
                     val scanResponse = migrationServerFeignClient.scanFaces(file, 1, null);
 
                     val embeddings = scanResponse.getResult().stream()
-                            .findFirst().orElseThrow()
-                            .getEmbedding();
+                                                 .findFirst().orElseThrow()
+                                                 .getEmbedding();
                     val faceEmbeddings = new Face.Embedding(embeddings, scanResponse.getCalculatorVersion());
                     face.getEmbeddings().clear();
                     face.getEmbeddings().add(faceEmbeddings);
@@ -125,5 +129,4 @@ public class MigrationComponent {
             throw new RuntimeException();
         }
     }
-
 }
