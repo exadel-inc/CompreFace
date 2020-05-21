@@ -1,17 +1,23 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApplicationService } from 'src/app/core/application/application.service';
+import { ROUTERS_URL } from 'src/app/data/routers-url.variable';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import {
   createApplication,
   createApplicationFail,
   createApplicationSuccess,
+  deleteApplication,
+  deleteApplicationFail,
+  deleteApplicationSuccess,
   loadApplications,
   loadApplicationsFail,
   loadApplicationsSuccess,
+  setSelectedIdEntityAction,
   updateApplication,
   updateApplicationFail,
   updateApplicationSuccess,
@@ -23,6 +29,7 @@ export class ApplicationListEffect {
     private actions: Actions,
     private applicationService: ApplicationService,
     private snackBarService: SnackBarService,
+    private router: Router,
   ) { }
 
   @Effect()
@@ -52,9 +59,28 @@ export class ApplicationListEffect {
     )),
   );
 
+  @Effect()
+  deleteApplication$ = this.actions.pipe(
+    ofType(deleteApplication),
+    switchMap((app =>
+      this.applicationService.delete(app.organizationId, app.id).pipe(
+        switchMap(() => {
+          this.router.navigate([`${ROUTERS_URL.ORGANIZATION}/${app.organizationId}`]);
+          return [deleteApplicationSuccess({ id: app.id }), setSelectedIdEntityAction({ selectedAppId: null })];
+        }),
+        catchError(error => of(deleteApplicationFail({ error }))),
+      )),
+    )
+  );
+
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(loadApplicationsFail, createApplicationFail, updateApplicationFail),
+    ofType(
+      loadApplicationsFail,
+      createApplicationFail,
+      updateApplicationFail,
+      deleteApplicationFail,
+    ),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
