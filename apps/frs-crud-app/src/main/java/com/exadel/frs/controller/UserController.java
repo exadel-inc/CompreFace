@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.io.IOException;
 
 @RestController
@@ -85,7 +86,8 @@ public class UserController {
     })
     public UserResponseDto updateUser(
             @ApiParam(value = "User data that needs to be updated", required = true)
-            @RequestBody final UserUpdateDto userUpdateDto
+            @RequestBody
+            @Valid final UserUpdateDto userUpdateDto
     ) {
         return userMapper.toResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
     }
