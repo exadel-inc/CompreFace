@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.system.feign;
+package com.exadel.frs.core.trainservice.system.feign.python;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

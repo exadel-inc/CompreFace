@@ -1,5 +1,6 @@
 package com.exadel.frs.dto.ui;
 
+import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,10 +14,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class UserRoleUpdateDto {
 
-    @NotNull
+    @NotBlank(message = "UserId cannot be empty")
     private String userId;
 
-    @NotNull
+    @NotBlank(message = "Role cannot be empty")
     private String role;
-
 }

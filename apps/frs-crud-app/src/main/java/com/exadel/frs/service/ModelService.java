@@ -40,7 +40,7 @@ public class ModelService {
     private final AppService appService;
     private final ModelShareRequestRepository modelShareRequestRepository;
     private final AppModelRepository appModelRepository;
-    private final CoreFacesClient facesClient;
+    private final CoreFacesClient coreFacesClient;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -154,7 +154,7 @@ public class ModelService {
         val newApiKey = randomUUID().toString();
         val apiKey = repoModel.getApp().getApiKey() + repoModel.getApiKey();
 
-        facesClient.updateModelKeyForFaces(apiKey, newApiKey);
+        coreFacesClient.updateModelKeyForFaces(apiKey, newApiKey);
 
         repoModel.setApiKey(newApiKey);
         modelRepository
@@ -167,7 +167,7 @@ public class ModelService {
 
         verifyUserHasWritePrivileges(userId, model.getApp());
 
-        facesClient.deleteFaces(model.getApp().getApiKey() + model.getApiKey());
+        coreFacesClient.deleteFaces(model.getApp().getApiKey() + model.getApiKey());
         modelRepository.deleteById(model.getId());
     }
 

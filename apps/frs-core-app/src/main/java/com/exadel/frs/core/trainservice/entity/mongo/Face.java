@@ -1,7 +1,6 @@
-package com.exadel.frs.core.trainservice.entity;
+package com.exadel.frs.core.trainservice.entity.mongo;
 
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

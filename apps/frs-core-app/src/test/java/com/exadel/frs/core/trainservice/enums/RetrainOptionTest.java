@@ -18,12 +18,11 @@ import org.junit.jupiter.api.Test;
 
 class RetrainOptionTest {
 
-    private static final String APP_KEY = "app_key";
     private static final String MODEL_KEY = "model_key";
 
     @Test
     void runNO() {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
 
         NO.run(token, retrainService);
@@ -33,7 +32,7 @@ class RetrainOptionTest {
 
     @Test
     void runYES() {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(false);
 
@@ -46,7 +45,7 @@ class RetrainOptionTest {
 
     @Test
     void runYESException() {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 
@@ -59,7 +58,7 @@ class RetrainOptionTest {
 
     @Test
     void runFORCE() {
-        val token = new Token(APP_KEY, MODEL_KEY);
+        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 

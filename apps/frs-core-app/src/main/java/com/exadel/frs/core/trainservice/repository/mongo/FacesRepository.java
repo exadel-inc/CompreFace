@@ -1,6 +1,6 @@
-package com.exadel.frs.core.trainservice.repository;
+package com.exadel.frs.core.trainservice.repository.mongo;
 
-import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import java.util.List;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
