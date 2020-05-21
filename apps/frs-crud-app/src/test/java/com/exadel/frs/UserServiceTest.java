@@ -1,13 +1,10 @@
 package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
@@ -82,7 +79,9 @@ class UserServiceTest {
     }
 
     @Test
-    void successCreateUser() {
+    void successCreateUserWhenMailServerEnabled() {
+        when(env.getProperty("spring.mail.enable")).thenReturn("true");
+        when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
         val userCreateDto = UserCreateDto.builder()
                                          .email("email@example.com")
                                          .password("password")
@@ -90,9 +89,28 @@ class UserServiceTest {
                                          .lastName("lastName")
                                          .build();
 
-        userService.createUser(userCreateDto);
+        val createdUser = userService.createUser(userCreateDto);
+        assertFalse(createdUser.isEnabled());
 
         verify(emailSenderMock).sendMail(anyString(), anyString(), anyString());
+        verify(userRepositoryMock).save(any(User.class));
+    }
+
+    @Test
+    void successCreateUserWhenMailServerDisabled() {
+        when(env.getProperty("spring.mail.enable")).thenReturn("false");
+        when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
+        val userCreateDto = UserCreateDto.builder()
+                .email("email@example.com")
+                .password("password")
+                .firstName("firstName")
+                .lastName("lastName")
+                .build();
+
+        val createdUser = userService.createUser(userCreateDto);
+        assertTrue(createdUser.isEnabled());
+
+        verifyNoInteractions(emailSenderMock);
         verify(userRepositoryMock).save(any(User.class));
     }
 
@@ -234,6 +252,7 @@ class UserServiceTest {
     @Test
     void confirmRegistrationEnablesUserAndRemovesTokenWhenSuccess() {
         when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
+        when(env.getProperty("spring.mail.enable")).thenReturn("true");
         val userCreateDto = UserCreateDto.builder()
                                          .email("email@example.com")
                                          .password("password")

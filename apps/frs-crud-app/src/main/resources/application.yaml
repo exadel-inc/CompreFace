@@ -46,7 +46,7 @@ spring:
     sender: ${FRS_EMAIL:frs@msqv500.exadel.by}
     host: ${POSTFIX_HOST:msqv500.exadel.by}
     port: 25
-    test-connection: true
+    test-connection: false
     properties.mail:
       debug: true
       smtp:
@@ -55,7 +55,7 @@ spring:
         starttls:
           enable: true
         ssl:
-          trust: ${POSTFIX_HOST:msqv500.exadel.by}
+          trust: ${POSTFIX_HOST}
 
 security:
   signing-key: MaYzkSjmkzPC57L

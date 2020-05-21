@@ -13,13 +13,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.io.IOException;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +26,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/user")
@@ -58,17 +59,23 @@ public class UserController {
         }
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/register")
     @ApiOperation(value = "Register new user")
     @ApiResponses({
-            @ApiResponse(code = 400, message = "Such username or email already registered | One or more of required fields are empty | Incorrect email format")
+            @ApiResponse(code = 400, message = "Such username or email already registered | One or more of required fields are empty | Incorrect email format"),
+            @ApiResponse(code = 200, message = "200 Means user created, but not confirmed"),
+            @ApiResponse(code = 201, message = "201 means user created and enabled")
     })
-    public void createUser(
+    public ResponseEntity<Void> createUser(
             @ApiParam(value = "User object that needs to be created", required = true)
             @RequestBody final UserCreateDto userCreateDto
     ) {
-        userService.createUser(userCreateDto);
+        val user = userService.createUser(userCreateDto);
+        if (user.isEnabled()) {
+            return new ResponseEntity<>(HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
     }
 
     @PutMapping("/update")
