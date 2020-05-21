@@ -80,17 +80,17 @@ public class UserService {
         validateUserCreateDto(userCreateDto);
         val isAccountEnabled = isMailServerEnabled ? false : true;
         val user = User.builder()
-                .email(userCreateDto.getEmail().toLowerCase())
-                .firstName(userCreateDto.getFirstName())
-                .lastName(userCreateDto.getLastName())
-                .password(encoder.encode(userCreateDto.getPassword()))
-                .guid(UUID.randomUUID().toString())
-                .accountNonExpired(true)
-                .accountNonLocked(true)
-                .credentialsNonExpired(true)
-                .enabled(isAccountEnabled)
-                .registrationToken(generateRegistrationToken())
-                .build();
+                       .email(userCreateDto.getEmail().toLowerCase())
+                       .firstName(userCreateDto.getFirstName())
+                       .lastName(userCreateDto.getLastName())
+                       .password(encoder.encode(userCreateDto.getPassword()))
+                       .guid(UUID.randomUUID().toString())
+                       .accountNonExpired(true)
+                       .accountNonLocked(true)
+                       .credentialsNonExpired(true)
+                       .enabled(isAccountEnabled)
+                       .registrationToken(generateRegistrationToken())
+                       .build();
 
         if (isMailServerEnabled) {
             sendRegistrationTokenToUser(user);
