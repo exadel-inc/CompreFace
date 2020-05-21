@@ -11,3 +11,6 @@ To open swagger api view follow http://localhost:8080/swagger-ui.html
 
 ## Logger
 In order to run without json logs add local to your profiles
+
+## Code style
+For using overall project code style - import team_codestyle.xml file into your IDEA

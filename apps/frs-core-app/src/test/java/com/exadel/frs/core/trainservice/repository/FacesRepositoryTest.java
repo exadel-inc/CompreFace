@@ -2,7 +2,7 @@ package com.exadel.frs.core.trainservice.repository;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.exadel.frs.core.trainservice.domain.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.Arrays;
 import java.util.List;
 import lombok.val;
@@ -25,7 +25,7 @@ public class FacesRepositoryTest {
     private final static String MODEL_KEY_OTHER = "model_key_other";
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         val faceA = makeFace("A", MODEL_KEY);
         val faceB = makeFace("B", MODEL_KEY_OTHER);
         val faceC = makeFace("C", MODEL_KEY);
@@ -39,9 +39,9 @@ public class FacesRepositoryTest {
     }
 
     public static Face makeFace(final String name, final String modelApiKey) {
-        val face = new Face();
-        face.setFaceName(name);
-        face.setApiKey(modelApiKey);
+        val face = new Face()
+                .setFaceName(name)
+                .setApiKey(modelApiKey);
         face.setEmbeddings(List.of(
                 new Face.Embedding()
                         .setEmbedding(List.of(0.0D))
@@ -81,5 +81,21 @@ public class FacesRepositoryTest {
                                     .collect(toList());
 
         assertThat(actual).isEqualTo(expected);
+    }
+
+    @Test
+    public void countByApiKey() {
+        val expected = facesRepository.findByApiKey(MODEL_KEY);
+        val actual = facesRepository.countByApiKey(MODEL_KEY);
+
+        assertThat(actual).isGreaterThan(0);
+        assertThat(actual).isEqualTo(expected.size());
+    }
+
+    @Test
+    public void findFaceIdsIn() {
+        val faces = facesRepository.findByIdIn(List.of("Id_A", "Id_B"));
+        assertThat(faces).isNotNull();
+        assertThat(faces).hasSize(2);
     }
 }

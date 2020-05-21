@@ -14,10 +14,9 @@
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <modules>
-        <module>apps</module>
-        <module>modules</module>
-    </modules>
+  <modules>
+    <module>apps</module>
+  </modules>
 
     <properties>
         <spring.boot.version>2.2.5.RELEASE</spring.boot.version>

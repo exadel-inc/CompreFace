@@ -8,8 +8,8 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.system.SystemService;
-import com.exadel.frs.core.trainservice.system.python.FacePrediction;
-import com.exadel.frs.core.trainservice.system.python.ScanFacesClient;
+import com.exadel.frs.core.trainservice.system.feign.FacePrediction;
+import com.exadel.frs.core.trainservice.system.feign.FacesClient;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class RecognizeController {
 
     private final FaceClassifierManager manager;
     private final FaceClassifierPredictor classifierPredictor;
-    private final ScanFacesClient client;
+    private final FacesClient client;
     private final SystemService systemService;
     private final ImageExtensionValidator imageValidator;
 
@@ -45,7 +45,7 @@ public class RecognizeController {
     ) {
         val token = systemService.buildToken(apiKey);
 
-        val lock = manager.isTraining(token.getAppApiKey(), token.getModelApiKey());
+        val lock = manager.isTraining(token.getModelApiKey());
         if (lock) {
             return ResponseEntity.status(LOCKED)
                                  .body(new RetrainResponse("Model is locked now, try later"));
@@ -57,14 +57,13 @@ public class RecognizeController {
         val scanResult = scanResponse.getResult().get(0);
 
         val prediction = classifierPredictor.predict(
-                token.getAppApiKey(),
                 token.getModelApiKey(),
                 scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
         );
 
         val result = new FacePrediction(
                 scanResult.getBox(),
-                prediction.getSecond(),
+                prediction.getRight(),
                 scanResult.getEmbedding().get(0).floatValue(),
                 scanResult.getBox().getProbability().floatValue()
         );

@@ -13,15 +13,23 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/user")
@@ -44,9 +52,9 @@ public class UserController {
         try {
             val user = userService.getUser(SecurityUtils.getPrincipalId());
             return userMapper.toResponseDto(user);
-        } catch (UserDoesNotExistException e){
+        } catch (UserDoesNotExistException e) {
             throw new AccessDeniedException();
-        } catch (Exception e){
+        } catch (Exception e) {
             throw e;
         }
     }
@@ -59,8 +67,7 @@ public class UserController {
     })
     public void createUser(
             @ApiParam(value = "User object that needs to be created", required = true)
-            @RequestBody
-            final UserCreateDto userCreateDto
+            @RequestBody final UserCreateDto userCreateDto
     ) {
         userService.createUser(userCreateDto);
     }
@@ -70,12 +77,12 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code = 400, message = "Such username or email already registered")
     })
-    public void updateUser(
+    public UserResponseDto updateUser(
             @ApiParam(value = "User data that needs to be updated", required = true)
             @RequestBody
-            final UserUpdateDto userUpdateDto
+            @Valid final UserUpdateDto userUpdateDto
     ) {
-        userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId());
+        return userMapper.toResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
     }
 
     @DeleteMapping("/delete")
@@ -88,14 +95,14 @@ public class UserController {
     @ApiOperation(value = "User autocomplete by (email, first name or last name)")
     public UserAutocompleteDto autocomplete(@RequestParam final String query) {
 
-        val results =  userMapper.toResponseDto(userService.autocomplete(query));
+        val results = userMapper.toResponseDto(userService.autocomplete(query));
 
         return UserAutocompleteDto
-                    .builder()
-                    .length(results.size())
-                    .query(query)
-                    .results(results)
-                    .build();
+                .builder()
+                .length(results.size())
+                .query(query)
+                .results(results)
+                .build();
     }
 
     @GetMapping("/registration/confirm")

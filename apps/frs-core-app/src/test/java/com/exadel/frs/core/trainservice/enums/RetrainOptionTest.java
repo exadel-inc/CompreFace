@@ -35,12 +35,12 @@ class RetrainOptionTest {
     void runYES() {
         val token = new Token(APP_KEY, MODEL_KEY);
         val retrainService = mock(RetrainService.class);
-        when(retrainService.isTrainingRun(APP_KEY, MODEL_KEY)).thenReturn(false);
+        when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(false);
 
         YES.run(token, retrainService);
 
-        verify(retrainService).isTrainingRun(APP_KEY, MODEL_KEY);
-        verify(retrainService).startRetrain(APP_KEY, MODEL_KEY);
+        verify(retrainService).isTrainingRun(MODEL_KEY);
+        verify(retrainService).startRetrain(MODEL_KEY);
         verifyNoMoreInteractions(retrainService);
     }
 
@@ -48,12 +48,12 @@ class RetrainOptionTest {
     void runYESException() {
         val token = new Token(APP_KEY, MODEL_KEY);
         val retrainService = mock(RetrainService.class);
-        when(retrainService.isTrainingRun(APP_KEY, MODEL_KEY)).thenReturn(true);
+        when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 
         assertThrows(ClassifierIsAlreadyTrainingException.class, () ->
                 YES.run(token, retrainService));
 
-        verify(retrainService).isTrainingRun(APP_KEY, MODEL_KEY);
+        verify(retrainService).isTrainingRun(MODEL_KEY);
         verifyNoMoreInteractions(retrainService);
     }
 
@@ -61,12 +61,12 @@ class RetrainOptionTest {
     void runFORCE() {
         val token = new Token(APP_KEY, MODEL_KEY);
         val retrainService = mock(RetrainService.class);
-        when(retrainService.isTrainingRun(APP_KEY, MODEL_KEY)).thenReturn(true);
+        when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 
         FORCE.run(token, retrainService);
 
-        verify(retrainService).abortTraining(APP_KEY, MODEL_KEY);
-        verify(retrainService).startRetrain(APP_KEY, MODEL_KEY);
+        verify(retrainService).abortTraining(MODEL_KEY);
+        verify(retrainService).startRetrain(MODEL_KEY);
         verifyNoMoreInteractions(retrainService);
     }
 

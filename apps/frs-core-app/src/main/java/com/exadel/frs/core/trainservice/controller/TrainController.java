@@ -2,19 +2,15 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.HttpStatus.ACCEPTED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.OK;
+import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
-
 import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,9 +26,8 @@ public class TrainController {
 
     private final RetrainService retrainService;
     private final SystemService systemService;
-    private final FaceClassifierManager manager;
 
-
+    @WriteEndpoint
     @PostMapping("/retrain")
     public ResponseEntity train(
             @ApiParam(value = "Api key of application and model", required = true)
@@ -40,12 +35,13 @@ public class TrainController {
             final String apiKey
     ) {
         val token = systemService.buildToken(apiKey);
-        retrainService.startRetrain(token.getAppApiKey(), token.getModelApiKey());
+        retrainService.startRetrain(token.getModelApiKey());
 
         return ResponseEntity.status(ACCEPTED)
-                             .body(new RetrainResponse("Retraining has just been started (this one already exists)"));
+                             .body(new RetrainResponse("Training is started"));
     }
 
+    @WriteEndpoint
     @GetMapping("/retrain")
     public ResponseEntity getStatus(
             @ApiParam(value = "Api key of application and model", required = true)
@@ -53,7 +49,7 @@ public class TrainController {
             final String apiKey
     ) {
         val token = systemService.buildToken(apiKey);
-        val isRun = retrainService.isTrainingRun(token.getAppApiKey(), token.getModelApiKey());
+        val isRun = retrainService.isTrainingRun(token.getModelApiKey());
 
         if (isRun) {
             return ResponseEntity.status(ACCEPTED)
@@ -64,6 +60,7 @@ public class TrainController {
                              .body(new RetrainResponse("Ready to start training"));
     }
 
+    @WriteEndpoint
     @DeleteMapping(value = "/retrain")
     public ResponseEntity abortRetrain(
             @ApiParam(value = "Api key of application and model", required = true)
@@ -71,9 +68,9 @@ public class TrainController {
             final String apiKey
     ) {
         val token = systemService.buildToken(apiKey);
-        retrainService.abortTraining(token.getAppApiKey(), token.getModelApiKey());
+        retrainService.abortTraining(token.getModelApiKey());
 
-        return ResponseEntity.status(NO_CONTENT)
+        return ResponseEntity.status(ACCEPTED)
                              .body(new RetrainResponse("Retraining is ensured to be stopped"));
     }
 }

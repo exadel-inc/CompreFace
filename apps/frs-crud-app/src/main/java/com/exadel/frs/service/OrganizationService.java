@@ -1,12 +1,14 @@
 package com.exadel.frs.service;
 
+import static com.exadel.frs.enums.OrganizationRole.OWNER;
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import com.exadel.frs.dto.ui.OrgCreateDto;
 import com.exadel.frs.dto.ui.OrgUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRemoveDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
-import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.FieldRequiredException;
@@ -17,30 +19,19 @@ import com.exadel.frs.exception.SelfRemoveException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyInOrganizationException;
 import com.exadel.frs.repository.OrganizationRepository;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static com.exadel.frs.enums.OrganizationRole.OWNER;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import javax.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
-    private UserService userService;
-
-    @Autowired
-    public void setUserService(final UserService userService) {
-        this.userService = userService;
-    }
+    private final UserService userService;
 
     public Organization getOrganization(final String organizationGuid) {
         return organizationRepository
@@ -65,8 +56,9 @@ public class OrganizationService {
     }
 
     public Organization getOrganization(final String guid, final Long userId) {
-        Organization organization = getOrganization(guid);
+        val organization = getOrganization(guid);
         verifyUserHasReadPrivileges(userId, organization);
+
         return organization;
     }
 
@@ -76,43 +68,44 @@ public class OrganizationService {
 
     public List<Organization> getOwnedOrganizations(final Long userId) {
         return getOrganizations(userId).stream()
-                .filter(org -> org.getUserOrganizationRoleOrThrow(userId).getRole().equals(OWNER))
-                .collect(Collectors.toList());
+                                       .filter(org -> org.getUserOrganizationRoleOrThrow(userId).getRole().equals(OWNER))
+                                       .collect(toList());
     }
 
     public OrganizationRole[] getOrgRolesToAssign(final String guid, final Long userId) {
-        Organization organization = getOrganization(guid);
-        UserOrganizationRole role = organization.getUserOrganizationRoleOrThrow(userId);
+        val organization = getOrganization(guid);
+        val role = organization.getUserOrganizationRoleOrThrow(userId);
         if (role.getRole() == OWNER) {
             return OrganizationRole.values();
         }
+
         return new OrganizationRole[0];
     }
 
     public List<UserOrganizationRole> getOrgUsers(final String guid, final Long userId) {
-        final Organization organization = getOrganization(guid);
+        val organization = getOrganization(guid);
         verifyUserHasReadPrivileges(userId, organization);
+
         return organization.getUserOrganizationRoles();
     }
 
     public Organization createOrganization(final OrgCreateDto orgCreateDto, final Long userId) {
         verifyNameIsUnique(orgCreateDto.getName());
-        Organization organization = Organization.builder()
-                .name(orgCreateDto.getName())
-                .guid(UUID.randomUUID().toString())
-                .build();
+        val organization = Organization.builder()
+                                       .name(orgCreateDto.getName())
+                                       .guid(UUID.randomUUID().toString())
+                                       .build();
+
         organization.addUserOrganizationRole(userService.getUser(userId), OWNER);
 
         return organizationRepository.save(organization);
     }
 
     public Organization updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
-        if (isBlank(orgUpdateDto.getName())) {
-            throw new FieldRequiredException("Organization name");
-        }
-        Organization organizationFromRepo = getOrganization(guid);
+        val organizationFromRepo = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organizationFromRepo);
         val isNewName = !organizationFromRepo.getName().equals(orgUpdateDto.getName());
+
         if (isNewName) {
             verifyNameIsUnique(orgUpdateDto.getName());
             organizationFromRepo.setName(orgUpdateDto.getName());
@@ -122,18 +115,20 @@ public class OrganizationService {
     }
 
     public UserOrganizationRole updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
-        Organization organization = getOrganization(guid);
+        val organization = getOrganization(guid);
         verifyUserHasWritePrivileges(adminId, organization);
 
-        User user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
+        val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
             throw new SelfRoleChangeException();
         }
-        UserOrganizationRole userOrganizationRole = organization.getUserOrganizationRoleOrThrow(user.getId());
-        OrganizationRole newOrgRole = OrganizationRole.valueOf(userRoleUpdateDto.getRole());
+
+        val userOrganizationRole = organization.getUserOrganizationRoleOrThrow(user.getId());
+        val newOrgRole = OrganizationRole.valueOf(userRoleUpdateDto.getRole());
         if (newOrgRole == OWNER) {
             organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
         }
+
         userOrganizationRole.setRole(newOrgRole);
 
         organizationRepository.save(organization);
@@ -150,23 +145,27 @@ public class OrganizationService {
         if (userOrganizationRole.isPresent()) {
             throw new UserAlreadyInOrganizationException(userInviteDto.getUserEmail(), guid);
         }
+
         val newOrgRole = OrganizationRole.valueOf(userInviteDto.getRole());
         if (newOrgRole == OWNER) {
             organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
         }
+
         organization.addUserOrganizationRole(user, newOrgRole);
         val savedOrg = organizationRepository.save(organization);
+
         return savedOrg.getUserOrganizationRole(user.getId()).orElseThrow();
     }
 
     public void removeUserFromOrganization(final UserRemoveDto userRemoveDto, final String guid, final Long adminId) {
-        Organization organization = getOrganization(guid);
+        val organization = getOrganization(guid);
         verifyUserHasWritePrivileges(adminId, organization);
 
-        final User user = userService.getUserByGuid(userRemoveDto.getUserId());
+        val user = userService.getUserByGuid(userRemoveDto.getUserId());
         if (user.getId().equals(adminId)) {
             throw new SelfRemoveException();
         }
+
         organization.getUserOrganizationRoles().removeIf(userOrganizationRole ->
                 userOrganizationRole.getId().getUserId().equals(user.getId()));
 
@@ -175,8 +174,9 @@ public class OrganizationService {
 
     @Transactional
     public void deleteOrganization(final String guid, final Long userId) {
-        Organization organization = getOrganization(guid);
+        val organization = getOrganization(guid);
         verifyUserHasWritePrivileges(userId, organization);
+
         organizationRepository.deleteById(organization.getId());
     }
 }

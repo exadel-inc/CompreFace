@@ -1,28 +1,33 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
+import static java.util.stream.Collectors.toList;
+import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt;
 import com.exadel.frs.core.trainservice.ml.LogisticRegressionExt.Trainer;
-
+import java.util.List;
 import java.util.Map;
 import lombok.val;
-import org.springframework.context.annotation.Scope;
-import org.springframework.data.util.Pair;
-import org.springframework.stereotype.Component;
+import org.apache.commons.lang3.tuple.Pair;
 
-@Component
-@Scope("prototype")
 public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
-    private Map<Integer, String> labelMap;
+    private static final long serialVersionUID = 1966949081344084764L;
+
+    private static final double LAMBDA = 0;
+    private static final double TOLERANCE = 0.005;
+    private static final int MAX_ITER = 50;
+
+    private final Trainer trainer = new Trainer(LAMBDA, TOLERANCE, MAX_ITER);
+    private final Map<Integer, Pair<String, String>> labelMap;
     private LogisticRegressionExt logisticRegression;
 
-    @Override
-    public void train(final double[][] x, final int[] y, final Map<Integer, String> labelMap) {
+    public LogisticRegressionExtendedClassifier(final Map<Integer, Pair<String, String>> labelMap) {
         this.labelMap = labelMap;
-        val trainer = new Trainer();
-        trainer.setMaxNumIteration(50);
-        trainer.setTolerance(0.005);
-        this.logisticRegression = trainer.train(x, y);
+    }
+
+    @Override
+    public void train(final double[][] x, final int[] y) {
+        this.logisticRegression = this.trainer.train(x, y);
     }
 
     @Override
@@ -30,15 +35,25 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
         if (isTrained()) {
             val predict = logisticRegression.predict(input);
 
-            return Pair.of(predict, labelMap.get(predict));
+            return Pair.of(predict, labelMap.get(predict).getRight());
         }
 
-        throw new RuntimeException("Model not trained");
+        throw new ModelNotTrainedException();
     }
 
     @Override
     public boolean isTrained() {
-        return !(logisticRegression == null);
+        return logisticRegression != null;
     }
 
+    @Override
+    public List<String> getUsedFaceIds() {
+        if (labelMap == null) {
+            return List.of();
+        }
+
+        return labelMap.values().stream()
+                       .map(Pair::getLeft)
+                       .collect(toList());
+    }
 }

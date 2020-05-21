@@ -14,8 +14,7 @@ public class FaceClassifierLockManagerTest {
 
     private FaceClassifierLockManager lockManager;
 
-    private static final String APP_KEY = "app";
-    private static final String MODEL_ID = "model_id";
+    private static final String MODEL_KEY = "model_key";
 
     @BeforeEach
     public void beforeEach() {
@@ -25,28 +24,28 @@ public class FaceClassifierLockManagerTest {
 
     @Test
     public void lock() {
-        lockManager.lock(APP_KEY, MODEL_ID);
+        lockManager.lock(MODEL_KEY);
 
-        assertThrows(RuntimeException.class, () -> lockManager.lock(APP_KEY, MODEL_ID));
+        assertThrows(RuntimeException.class, () -> lockManager.lock(MODEL_KEY));
     }
 
     @Test
     public void unlock() {
-        lockManager.lock(APP_KEY, MODEL_ID);
-        lockManager.unlock(APP_KEY, MODEL_ID);
+        lockManager.lock(MODEL_KEY);
+        lockManager.unlock(MODEL_KEY);
 
-        assertFalse(lockManager.isLocked(APP_KEY, MODEL_ID));
+        assertFalse(lockManager.isLocked(MODEL_KEY));
     }
 
     @Test
     public void isLock() {
-        assertFalse(lockManager.isLocked(APP_KEY, MODEL_ID));
+        assertFalse(lockManager.isLocked(MODEL_KEY));
 
-        lockManager.lock(APP_KEY, MODEL_ID);
-        assertTrue(lockManager.isLocked(APP_KEY, MODEL_ID));
+        lockManager.lock(MODEL_KEY);
+        assertTrue(lockManager.isLocked(MODEL_KEY));
 
-        lockManager.unlock(APP_KEY, MODEL_ID);
-        assertFalse(lockManager.isLocked(APP_KEY, MODEL_ID));
+        lockManager.unlock(MODEL_KEY);
+        assertFalse(lockManager.isLocked(MODEL_KEY));
     }
 
 }

@@ -4,7 +4,7 @@ import com.exadel.frs.core.trainservice.dao.ModelDao;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.context.ApplicationContext;
-import org.springframework.data.util.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,11 +14,11 @@ public class FaceClassifierPredictor {
     private final ModelDao modelDao;
     private final ApplicationContext context;
 
-    public Pair<Integer, String> predict(final String appKey, final String modelKey, double[] input) {
+    public Pair<Integer, String> predict(final String modelKey, final double[] input) {
         val model = modelDao.getModel(modelKey);
-        FaceClassifierAdapter classifierAdapter = context.getBean(FaceClassifierAdapter.class);
-        classifierAdapter.setClassifier(model);
+        val faceClassifier = context.getBean(FaceClassifierAdapter.class);
+        faceClassifier.setClassifier(model);
 
-        return classifierAdapter.predict(input);
+        return faceClassifier.predict(input);
     }
 }

@@ -20,7 +20,7 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
-import com.exadel.frs.system.python.CoreDeleteFacesClient;
+import com.exadel.frs.system.rest.CoreFacesClient;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -40,7 +40,7 @@ public class ModelService {
     private final AppService appService;
     private final ModelShareRequestRepository modelShareRequestRepository;
     private final AppModelRepository appModelRepository;
-    private final CoreDeleteFacesClient facesClient;
+    private final CoreFacesClient facesClient;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -145,14 +145,20 @@ public class ModelService {
         return modelRepository.save(model);
     }
 
+    @Transactional
     public void regenerateApiKey(final String orgGuid, final String appGuid, final String guid, final Long userId) {
         val repoModel = getModel(orgGuid, appGuid, guid, userId);
 
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
 
-        repoModel.setApiKey(randomUUID().toString());
+        val newApiKey = randomUUID().toString();
+        val apiKey = repoModel.getApp().getApiKey() + repoModel.getApiKey();
 
-        modelRepository.save(repoModel);
+        facesClient.updateModelKeyForFaces(apiKey, newApiKey);
+
+        repoModel.setApiKey(newApiKey);
+        modelRepository
+                .save(repoModel);
     }
 
     @Transactional
