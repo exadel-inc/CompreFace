@@ -3,6 +3,7 @@ package com.exadel.frs.core.trainservice.service;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.system.feign.FacesClient;
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -15,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class ScanServiceImpl implements ScanService {
 
-    private static final int FACE_LIMIT = 2;
+    public static final int MAX_FACES_TO_SAVE = 1;
+    public static final int MAX_FACES_TO_RECOGNIZE = 2;
 
     private final FacesClient facesClient;
     private final FaceDao faceDao;
@@ -27,11 +29,16 @@ public class ScanServiceImpl implements ScanService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        val scanResponse = facesClient.scanFaces(file, FACE_LIMIT, detProbThreshold);
+        val scanResponse = facesClient.scanFaces(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold);
+        val result = scanResponse.getResult();
 
-        val embedding = scanResponse.getResult().stream()
-                                    .findFirst().orElseThrow()
-                                    .getEmbedding();
+        if (result.size() > MAX_FACES_TO_SAVE) {
+            throw new TooManyFacesException();
+        }
+
+        val embedding = result.stream()
+                              .findFirst().orElseThrow()
+                              .getEmbedding();
 
         val embeddingToSave = Stream.of(
                 new Face.Embedding()
