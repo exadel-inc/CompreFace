@@ -1,11 +1,5 @@
 package com.exadel.frs;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
@@ -18,7 +12,6 @@ import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
-import java.util.Optional;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,6 +19,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.AdditionalAnswers.returnsFirstArg;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 class UserServiceTest {
 
@@ -89,8 +96,8 @@ class UserServiceTest {
                                          .lastName("lastName")
                                          .build();
 
-        val createdUser = userService.createUser(userCreateDto);
-        assertFalse(createdUser.isEnabled());
+        val actual = userService.createUser(userCreateDto);
+        assertThat(actual.isEnabled()).isFalse();
 
         verify(emailSenderMock).sendMail(anyString(), anyString(), anyString());
         verify(userRepositoryMock).save(any(User.class));
@@ -107,11 +114,13 @@ class UserServiceTest {
                 .lastName("lastName")
                 .build();
 
-        val createdUser = userService.createUser(userCreateDto);
-        assertTrue(createdUser.isEnabled());
+        val actual = userService.createUser(userCreateDto);
+        assertThat(actual.isEnabled()).isTrue();
 
-        verifyNoInteractions(emailSenderMock);
+        verify(userRepositoryMock).existsByEmail(anyString());
         verify(userRepositoryMock).save(any(User.class));
+        verifyNoMoreInteractions(userRepositoryMock);
+        verifyNoInteractions(emailSenderMock);
     }
 
     @Test
