@@ -1,6 +1,7 @@
 {
   "name": "frs-client-fe",
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4201 --disable-host-check --configuration=local --hmr",
