@@ -2,9 +2,9 @@ package com.exadel.frs.core.trainservice.service;
 
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
-import com.exadel.frs.core.trainservice.system.feign.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import java.io.IOException;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
