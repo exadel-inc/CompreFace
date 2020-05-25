@@ -144,13 +144,19 @@ public class AppService {
         verifyUserHasWritePrivileges(userId, app.getOrganization());
 
         val user = userService.getUser(userInviteDto.getUserEmail());
-        val userOrganizationRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
-        if (USER != userOrganizationRole.getRole() || app.getUserAppRole(user.getId()).isPresent()) {
+        val userOrgRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
+        val userAppRole = app.getUserAppRole(user.getId());
+        if (USER != userOrgRole.getRole() || userAppRole.isPresent()) {
             throw new UserAlreadyHasAccessToAppException(userInviteDto.getUserEmail(), appGuid);
         }
 
-        app.addUserAppRole(user, AppRole.valueOf(userInviteDto.getRole()));
-        final App savedApp = appRepository.save(app);
+        val appRole = AppRole.valueOf(userInviteDto.getRole());
+        if (OWNER == appRole) {
+            app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(ADMINISTRATOR));
+        }
+
+        app.addUserAppRole(user, appRole);
+        val savedApp = appRepository.save(app);
 
         return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
