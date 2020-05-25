@@ -2,7 +2,6 @@ package com.exadel.frs.service;
 
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import com.exadel.frs.dto.ui.OrgCreateDto;
 import com.exadel.frs.dto.ui.OrgUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
@@ -11,7 +10,6 @@ import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.FieldRequiredException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.OrganizationNotFoundException;
