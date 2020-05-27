@@ -16,11 +16,12 @@
   <app-user-table
     class="app-table"
     [isLoading$]="isLoading$"
+    [userRole]="userRole$ | async"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
     [availableRoles$]="availableRoles$"
     (changeRow)="onChange($event)">
   </app-user-table>
-  <div class="card-single-action-container">
-    <button mat-button color="primary" (click)="onInviteUser();">ADD</button>
+  <div class="card-single-action-container" *ngIf="userRole$ | async as userRole">
+    <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onInviteUser();">ADD</button>
   </div>
 </div>

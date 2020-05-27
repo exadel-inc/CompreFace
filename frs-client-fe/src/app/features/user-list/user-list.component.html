@@ -16,10 +16,11 @@
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
     [availableRoles$]="availableRoles$"
     [currentUserId]="currentUserId$ | async"
+    [userRole]="userRole$ | async"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)"
   ></app-user-table>
-  <div class="card-single-action-container">
-    <button mat-button color="primary" (click)="onInviteUser();">INVITE</button>
+  <div class="card-single-action-container" *ngIf="userRole$ | async as userRole">
+    <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onInviteUser();">INVITE</button>
   </div>
 </div>

@@ -18,6 +18,7 @@ import { ModelListFacade } from './model-list-facade';
 })
 export class ModelListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
+  userRole$: Observable<string>;
   errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
   columns = [
@@ -32,6 +33,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading$ = this.modelListFacade.isLoading$;
+    this.userRole$ = this.modelListFacade.userRole$;
     this.tableConfig$ = this.modelListFacade.models$.pipe(
       map(models => ({
         columns: this.columns,

@@ -1,26 +1,28 @@
-import {Injectable} from '@angular/core';
-import {IFacade} from 'src/app/data/facade/IFacade';
-import {Store} from '@ngrx/store';
-import {selectAppUserIsPending, selectAppUsers} from 'src/app/store/app-user/selectors';
-import {loadAppUserEntityAction, putUpdatedAppUserRoleEntityAction} from 'src/app/store/app-user/actions';
-import {selectCurrentAppId, selectUserRollForSelectedApp} from 'src/app/store/application/selectors';
-import {AppState} from 'src/app/store';
-import {Observable, combineLatest, Subscription, zip} from 'rxjs';
-import {AppUser} from 'src/app/data/appUser';
-import {selectAllRoles, selectIsPendingRoleStore} from 'src/app/store/role/selectors';
-import {map, tap} from 'rxjs/operators';
-import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
-import {LoadRolesEntityAction} from 'src/app/store/role/actions';
-import {selectUsers} from '../../store/user/selectors';
-import {LoadUsersEntityAction} from '../../store/user/action';
-import {AppUserService} from '../../core/app-user/app-user.service';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { combineLatest, Observable, Subscription, zip } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { AppUser } from 'src/app/data/appUser';
+import { IFacade } from 'src/app/data/facade/IFacade';
+import { AppState } from 'src/app/store';
+import { loadAppUserEntityAction, putUpdatedAppUserRoleEntityAction } from 'src/app/store/app-user/actions';
+import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/selectors';
+import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
+import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
+import { LoadRolesEntityAction } from 'src/app/store/role/actions';
+import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
+
+import { AppUserService } from '../../core/app-user/app-user.service';
+import { LoadUsersEntityAction } from '../../store/user/action';
+import { selectUsers } from '../../store/user/selectors';
 
 @Injectable()
 export class ApplicationUserListFacade implements IFacade {
-  public isLoading$: Observable<boolean>;
-  public appUsers$: Observable<AppUser[]>;
-  public availableRoles$: Observable<string[]>;
-  public availableEmails$: Observable<string[]>;
+  isLoading$: Observable<boolean>;
+  appUsers$: Observable<AppUser[]>;
+  availableRoles$: Observable<string[]>;
+  availableEmails$: Observable<string[]>;
+  userRole$: Observable<string>;
 
   private selectedApplicationId: string;
   private selectedOrganizationId: string;
@@ -29,12 +31,12 @@ export class ApplicationUserListFacade implements IFacade {
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
     this.availableEmails$ = store.select(selectUsers).pipe(map(data => data.map(user => user.email)));
+    this.userRole$ = store.select(selectUserRollForSelectedApp);
     const allRoles$ = store.select(selectAllRoles);
-    const currentApplicationUserRole$ = store.select(selectUserRollForSelectedApp);
 
     this.availableRoles$ = combineLatest(
       allRoles$,
-      currentApplicationUserRole$
+      this.userRole$
     )
       .pipe(
         map(
@@ -61,7 +63,7 @@ export class ApplicationUserListFacade implements IFacade {
         ));
   }
 
-  public initSubscriptions(): void {
+  initSubscriptions(): void {
     this.sub = zip(
       this.store.select(selectCurrentAppId),
       this.store.select(selectCurrentOrganizationId)
@@ -74,7 +76,7 @@ export class ApplicationUserListFacade implements IFacade {
     });
   }
 
-  public loadData(): void {
+  loadData(): void {
     this.store.dispatch(loadAppUserEntityAction({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId
@@ -85,7 +87,7 @@ export class ApplicationUserListFacade implements IFacade {
     }));
   }
 
-  public updateUserRole(id: string, role: string): void {
+  updateUserRole(id: string, role: string): void {
     this.store.dispatch(putUpdatedAppUserRoleEntityAction({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId,
@@ -96,7 +98,7 @@ export class ApplicationUserListFacade implements IFacade {
     }));
   }
 
-  public inviteUser(email: string, role: string): Observable<any> {
+  inviteUser(email: string, role: string): Observable<any> {
     return this.userService.inviteUser(this.selectedOrganizationId, this.selectedApplicationId, email, role)
       .pipe(tap(() =>
         this.store.dispatch(loadAppUserEntityAction({
@@ -106,7 +108,7 @@ export class ApplicationUserListFacade implements IFacade {
       ));
   }
 
-  public unsubscribe(): void {
+  unsubscribe(): void {
     this.sub.unsubscribe();
   }
 }

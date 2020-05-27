@@ -1,18 +1,19 @@
-import {Injectable} from '@angular/core';
-import {IFacade} from 'src/app/data/facade/IFacade';
-import {AppState} from 'src/app/store';
-import {Store} from '@ngrx/store';
-import {selectApplications, selectIsPendingApplicationList} from 'src/app/store/application/selectors';
-import {selectCurrentOrganizationId} from 'src/app/store/organization/selectors';
-import {Observable, Subscription} from 'rxjs';
-import {Application} from 'src/app/data/application';
-import {loadApplications, createApplication} from 'src/app/store/application/action';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable, Subscription } from 'rxjs';
+import { Application } from 'src/app/data/application';
+import { IFacade } from 'src/app/data/facade/IFacade';
+import { AppState } from 'src/app/store';
+import { createApplication, loadApplications } from 'src/app/store/application/action';
+import { selectApplications, selectIsPendingApplicationList } from 'src/app/store/application/selectors';
+import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
 
 @Injectable()
 export class ApplicationListFacade implements IFacade {
-  public applications$: Observable<Application[]>;
-  public selectedOrganizationId$: Observable<string>;
-  public isLoading$: Observable<boolean>;
+  applications$: Observable<Application[]>;
+  selectedOrganizationId$: Observable<string>;
+  isLoading$: Observable<boolean>;
+  userRole$: Observable<string>;
 
   private selectedOrganizationIdSubscription: Subscription;
   private selectedOrgId: string;
@@ -20,11 +21,12 @@ export class ApplicationListFacade implements IFacade {
   constructor(private store: Store<AppState>) {
     this.applications$ = store.select(selectApplications);
     this.selectedOrganizationId$ = store.select(selectCurrentOrganizationId);
+    this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
 
     this.isLoading$ = store.select(selectIsPendingApplicationList);
   }
 
-  public initSubscriptions(): void {
+  initSubscriptions(): void {
     this.selectedOrganizationIdSubscription = this.selectedOrganizationId$.subscribe(
       organizationId => {
         if (organizationId) {
@@ -35,23 +37,23 @@ export class ApplicationListFacade implements IFacade {
     );
   }
 
-  public loadApplications(): void {
+  loadApplications(): void {
     this.store.dispatch(
       loadApplications({ organizationId: this.selectedOrgId })
     );
   }
 
-  public createApplication(name: string): void {
+  createApplication(name: string): void {
     this.store.dispatch(
       createApplication({ organizationId: this.selectedOrgId, name })
     );
   }
 
-  public unsubscribe(): void {
+  unsubscribe(): void {
     this.selectedOrganizationIdSubscription.unsubscribe();
   }
 
-  public getOrgId(): string {
+  getOrgId(): string {
     return this.selectedOrgId;
   }
 }

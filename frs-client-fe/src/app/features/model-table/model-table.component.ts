@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Model } from 'src/app/data/model';
 
 import { TableComponent } from '../table/table.component';
@@ -10,9 +10,8 @@ import { TableComponent } from '../table/table.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModelTableComponent extends TableComponent {
-
+  @Input() userRole: string;
   @Output() copyApiKey = new EventEmitter<string>();
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
-
 }

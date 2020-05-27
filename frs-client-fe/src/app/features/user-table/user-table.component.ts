@@ -15,10 +15,11 @@ import { TableComponent } from '../table/table.component';
 export class UserTableComponent extends TableComponent implements OnInit {
   @Input() availableRoles$: Observable<string[]>;
   @Input() currentUserId: string;
+  @Input() userRole: string;
   @Output() deleteUser = new EventEmitter<AppUser>();
 
   isRoleChangeAllowed(userRole: string): Observable<boolean> {
-    return this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
+    return this.userRole !== 'USER' && this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
   }
 
   delete(user: AppUser): void {

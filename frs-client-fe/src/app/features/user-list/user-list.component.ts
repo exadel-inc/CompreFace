@@ -22,6 +22,7 @@ import { selectUserId } from 'src/app/store/userInfo/selectors';
 export class UserListComponent implements OnInit, OnDestroy {
   tableConfig$: Observable<ITableConfig>;
   isLoading$: Observable<boolean>;
+  userRole$: Observable<string>;
   availableRoles: string[];
   availableRoles$: Observable<string[]>;
   errorMessage: string;
@@ -35,6 +36,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading$ = this.userListFacade.isLoading$;
+    this.userRole$ = this.userListFacade.userRole$;
 
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       return {
