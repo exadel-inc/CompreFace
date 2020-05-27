@@ -29,6 +29,7 @@ export class UserListFacade implements IFacade {
   availableRoles$: Observable<string[]>;
   isLoading$: Observable<boolean>;
   currentUserId$: Observable<string>;
+  userRole$: Observable<string>;
 
   private selectedOrganization: string;
 
@@ -41,29 +42,28 @@ export class UserListFacade implements IFacade {
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.selectedOrganizationName$ = store.select(selectSelectedOrganization).pipe(map(org => org.name));
     this.users$ = store.select(selectUsers);
+    this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
 
     const allRoles$ = store.select(selectAllRoles);
-    const userRoleInSelectedOrganization$ = store.select(selectUserRollForSelectedOrganization);
 
     this.availableRoles$ = combineLatest(
       allRoles$,
-      userRoleInSelectedOrganization$
-    )
-      .pipe(
-        map(
-          (observResult) => {
-            let res = [];
-            const [allRoles, userRole] = observResult;
-            const roleIndex = allRoles.indexOf(userRole);
+      this.userRole$
+    ).pipe(
+      map(
+        (observResult) => {
+          let res = [];
+          const [allRoles, userRole] = observResult;
+          const roleIndex = allRoles.indexOf(userRole);
 
-            if (roleIndex !== -1) {
-              res = allRoles.slice(roleIndex);
-            }
-
-            return res;
+          if (roleIndex !== -1) {
+            res = allRoles.slice(roleIndex);
           }
-        )
-      );
+
+          return res;
+        }
+      )
+    );
 
     const usersLoading$ = store.select(selectIsPendingUserStore);
     const roleLoading$ = store.select(selectIsPendingRoleStore);

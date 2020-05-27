@@ -1,12 +1,13 @@
-import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
-import {ApplicationUserListFacade} from './application-user-list-facade';
-import {Observable, Subscription} from 'rxjs';
-import {AppUser} from 'src/app/data/appUser';
-import {map} from 'rxjs/operators';
-import {ITableConfig} from '../table/table.component';
-import {MatDialog} from '@angular/material';
-import {SnackBarService} from '../snackbar/snackbar.service';
-import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AppUser } from 'src/app/data/appUser';
+
+import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
+import { SnackBarService } from '../snackbar/snackbar.service';
+import { ITableConfig } from '../table/table.component';
+import { ApplicationUserListFacade } from './application-user-list-facade';
 
 @Component({
   selector: 'app-application-user-list',
@@ -15,18 +16,19 @@ import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationUserListComponent implements OnInit, OnDestroy {
-  public tableConfig$: Observable<ITableConfig>;
-  public isLoading$: Observable<boolean>;
-  public availableRoles$: Observable<string[]>;
-  public errorMessage: string;
-  public availableEmails$: Observable<string[]>;
-  public search = '';
-  public availableRoles: string[];
+  tableConfig$: Observable<ITableConfig>;
+  isLoading$: Observable<boolean>;
+  userRole$: Observable<string>;
+  availableRoles$: Observable<string[]>;
+  errorMessage: string;
+  availableEmails$: Observable<string[]>;
+  search = '';
+  availableRoles: string[];
   private availableRolesSubscription: Subscription;
 
   constructor(
     private appUserListFacade: ApplicationUserListFacade,
-    public dialog: MatDialog,
+    private dialog: MatDialog,
     private snackBarService: SnackBarService
   ) {
     appUserListFacade.initSubscriptions();
@@ -34,12 +36,13 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading$ = this.appUserListFacade.isLoading$;
+    this.userRole$ = this.appUserListFacade.userRole$;
     this.availableEmails$ = this.appUserListFacade.availableEmails$;
 
     this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(map((users: AppUser[]) => {
       return {
-          columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
-          data: users
+        columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
+        data: users
       };
     }));
 
@@ -47,16 +50,16 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
   }
 
-  public onChange(user: AppUser): void {
+  onChange(user: AppUser): void {
     this.appUserListFacade.updateUserRole(user.id, user.role);
   }
 
-  public ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.appUserListFacade.unsubscribe();
     this.availableRolesSubscription.unsubscribe();
   }
 
-  public onInviteUser(): void {
+  onInviteUser(): void {
     const dialog = this.dialog.open(InviteDialogComponent, {
       data: {
         availableRoles: this.availableRoles,
@@ -65,7 +68,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
       }
     });
 
-    const dialogSubscription = dialog.afterClosed().subscribe(({userEmail, role}) => {
+    const dialogSubscription = dialog.afterClosed().subscribe(({ userEmail, role }) => {
       if (userEmail && role) {
         this.appUserListFacade.inviteUser(userEmail, role).subscribe(() => this.openEmailNotification(userEmail));
         dialogSubscription.unsubscribe();

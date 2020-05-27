@@ -4,7 +4,7 @@ import { combineLatest, Observable, Subscription } from 'rxjs';
 import { IFacade } from 'src/app/data/facade/IFacade';
 import { Model } from 'src/app/data/model';
 import { AppState } from 'src/app/store';
-import { selectCurrentAppId } from 'src/app/store/application/selectors';
+import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
 import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
 import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
@@ -13,6 +13,7 @@ import { selectCurrentOrganizationId } from 'src/app/store/organization/selector
 export class ModelListFacade implements IFacade {
   models$: Observable<Model[]>;
   isLoading$: Observable<boolean>;
+  userRole$: Observable<string>;
   selectedOrganization$: Observable<string>;
   selectedApplication$: Observable<string>;
 
@@ -25,6 +26,7 @@ export class ModelListFacade implements IFacade {
     this.isLoading$ = store.select(selectPendingModel);
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.selectedApplication$ = store.select(selectCurrentAppId);
+    this.userRole$ = store.select(selectUserRollForSelectedApp);
   }
 
   initSubscriptions(): void {

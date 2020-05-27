@@ -1,12 +1,13 @@
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
-import {ChangeDetectionStrategy, Component, OnInit, OnDestroy} from '@angular/core';
-import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialog.component';
-import {MatDialog} from '@angular/material';
-import {ITableConfig} from 'src/app/features/table/table.component';
-import {ApplicationListFacade} from './application-list-facade';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {Router} from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
+import { ITableConfig } from 'src/app/features/table/table.component';
+
+import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { ApplicationListFacade } from './application-list-facade';
 
 @Component({
   selector: 'app-application-list-container',
@@ -15,29 +16,31 @@ import {Router} from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationListComponent implements OnInit, OnDestroy {
-  public isLoading$: Observable<boolean>;
-  public errorMessage: string;
-  public tableConfig$: Observable<ITableConfig>;
+  isLoading$: Observable<boolean>;
+  userRole$: Observable<string>;
+  errorMessage: string;
+  tableConfig$: Observable<ITableConfig>;
 
-  constructor(private applicationFacade: ApplicationListFacade, public dialog: MatDialog, private router: Router) {
+  constructor(private applicationFacade: ApplicationListFacade, private dialog: MatDialog, private router: Router) {
     this.applicationFacade.initSubscriptions();
   }
 
   ngOnInit() {
     this.isLoading$ = this.applicationFacade.isLoading$;
+    this.userRole$ = this.applicationFacade.userRole$;
 
     this.tableConfig$ = this.applicationFacade.applications$
       .pipe(
         map(apps => {
           return ({
-            columns: [{title: 'Name', property: 'name'}, {title: 'Owner', property: 'owner'}],
-            data: apps.map(app => ({id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}`}))
+            columns: [{ title: 'Name', property: 'name' }, { title: 'Owner', property: 'owner' }],
+            data: apps.map(app => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` }))
           });
         })
       );
   }
 
-  public onClick(application): void {
+  onClick(application): void {
     this.router.navigate([ROUTERS_URL.APPLICATION], {
       queryParams: {
         org: this.applicationFacade.getOrgId(),
@@ -46,7 +49,7 @@ export class ApplicationListComponent implements OnInit, OnDestroy {
     });
   }
 
-  public onCreateNewApp(): void {
+  onCreateNewApp(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {

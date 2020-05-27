@@ -1,9 +1,10 @@
 <div class="application-list">
   <h3>Applications</h3>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
-  <app-table class="app-table" [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async" (changeRow)="onClick($event)"></app-table>
-  <div class="card-single-action-container">
-    <button mat-button color="primary" (click)="onCreateNewApp()">
+  <app-table class="app-table" [isLoading$]="isLoading$" [tableConfig]="tableConfig$ | async"
+    (changeRow)="onClick($event)"></app-table>
+  <div class="card-single-action-container" *ngIf="userRole$ | async as userRole">
+    <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onCreateNewApp()">
       CREATE
     </button>
   </div>
