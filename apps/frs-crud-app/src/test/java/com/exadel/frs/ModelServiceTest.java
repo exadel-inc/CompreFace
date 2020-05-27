@@ -45,7 +45,7 @@ import org.mockito.ArgumentCaptor;
 class ModelServiceTest {
 
     private static final String MODEL_GUID = "model-guid";
-    private static final String MODEL_API_KEY = "model-KEY";
+    private static final String MODEL_API_KEY = "model-key";
     private static final String APPLICATION_GUID = "app-guid";
     private static final String APPLICATION_API_KEY = "app-key";
     private static final String ORGANIZATION_GUID = "org-guid";
@@ -543,7 +543,7 @@ class ModelServiceTest {
 
         modelService.deleteModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
-        verify(facesClient).deleteFaces(appKey + modelKey);
+        verify(facesClient).deleteFaces(modelKey);
         verify(modelRepositoryMock).findByGuid(anyString());
         verify(modelRepositoryMock).deleteById(anyLong());
         verifyNoMoreInteractions(facesClient, modelRepositoryMock);
