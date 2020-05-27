@@ -245,7 +245,7 @@ public class AppService {
         verifyUserHasWritePrivileges(userId, app.getOrganization());
 
         app.getModels().forEach(model ->
-                coreFacesClient.deleteFaces(app.getApiKey() + model.getApiKey())
+                coreFacesClient.deleteFaces(model.getApiKey())
         );
 
         appRepository.deleteById(app.getId());
