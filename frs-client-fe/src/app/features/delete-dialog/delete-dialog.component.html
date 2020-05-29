@@ -1,7 +1,9 @@
 <h1 mat-dialog-title>Delete {{data.entityType}}</h1>
 <div mat-dialog-content>
   <ng-container [ngSwitch]="data.entityType.toLowerCase()">
-    <ng-container *ngSwitchCase="'user'"><p>Are you sure you want remove user {{data.entityName}} from {{data.organizationName}}?</p></ng-container>
+    <ng-container *ngSwitchCase="'user'">
+      <p>Are you sure you want remove user {{data.entityName}} from {{data.organizationName || data.applicationName}}?</p>
+    </ng-container>
     <ng-container *ngSwitchDefault>
       <p>{{data.entityType}} {{data.entityName}} and all related data will be deleted.</p>
       <p>Are you sure?</p>
