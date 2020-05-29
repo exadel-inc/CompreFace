@@ -37,11 +37,11 @@ public class OrganizationService {
                 .orElseThrow(() -> new OrganizationNotFoundException(organizationGuid));
     }
 
-    private void verifyUserHasReadPrivileges(final Long userId, final Organization organization) {
+    public void verifyUserHasReadPrivileges(final Long userId, final Organization organization) {
         organization.getUserOrganizationRoleOrThrow(userId);
     }
 
-    private void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
+    public void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
         if (OWNER != organization.getUserOrganizationRoleOrThrow(userId).getRole()) {
             throw new InsufficientPrivilegesException();
         }
@@ -63,7 +63,6 @@ public class OrganizationService {
     public List<Organization> getOrganizations(final Long userId) {
         return organizationRepository.findAllByUserOrganizationRoles_Id_UserId(userId);
     }
-
     public List<Organization> getOwnedOrganizations(final Long userId) {
         return getOrganizations(userId).stream()
                                        .filter(org -> org.getUserOrganizationRoleOrThrow(userId).getRole().equals(OWNER))

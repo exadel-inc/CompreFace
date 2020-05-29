@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -309,7 +310,7 @@ class AppServiceTest {
         val organization = organization();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
-        when(userServiceMock.getUser(anyLong())).thenReturn(user);
+        doThrow(UserDoesNotBelongToOrganization.class).when(organizationServiceMock).verifyUserHasWritePrivileges(USER_ID, organization);
 
         assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
     }
@@ -323,7 +324,7 @@ class AppServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
-        when(userServiceMock.getUser(anyLong())).thenReturn(user);
+        doThrow(InsufficientPrivilegesException.class).when(organizationServiceMock).verifyUserHasWritePrivileges(USER_ID, organization);
 
         assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
     }
