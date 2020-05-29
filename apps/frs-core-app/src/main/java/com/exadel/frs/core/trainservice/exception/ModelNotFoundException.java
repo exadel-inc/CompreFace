@@ -4,11 +4,11 @@ import static java.lang.String.format;
 import lombok.Value;
 
 @Value
-public class AccessDeniedException extends RuntimeException {
+public class ModelNotFoundException extends RuntimeException {
 
-    private static final String MESSAGE = "Access denied";
+    private static final String MESSAGE = "Model not found";
 
-    public AccessDeniedException() {
+    public ModelNotFoundException() {
         super(format(MESSAGE));
     }
 }

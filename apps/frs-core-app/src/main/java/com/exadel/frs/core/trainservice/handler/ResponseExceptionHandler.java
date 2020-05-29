@@ -3,8 +3,9 @@ package com.exadel.frs.core.trainservice.handler;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.LOCKED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
-import com.exadel.frs.core.trainservice.exception.AccessDeniedException;
+import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.exception.MigrationExecutionException;
 import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
@@ -45,9 +46,9 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
                              .body(new RetrainResponse(e.getMessage()));
     }
 
-    @ExceptionHandler(value = {AccessDeniedException.class})
-    public ResponseEntity<Object> handleAccessDeniedException(final AccessDeniedException e) {
-        return ResponseEntity.status(FORBIDDEN)
+    @ExceptionHandler(value = {ModelNotFoundException.class})
+    public ResponseEntity<Object> handleNotFoundException(final ModelNotFoundException e) {
+        return ResponseEntity.status(NOT_FOUND)
                              .body(new RetrainResponse(e.getMessage()));
     }
 }

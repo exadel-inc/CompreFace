@@ -4,7 +4,7 @@ import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
-import com.exadel.frs.core.trainservice.exception.AccessDeniedException;
+import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
 import com.exadel.frs.core.trainservice.service.ModelServicePg;
@@ -78,7 +78,7 @@ public class SecurityValidationFilter implements Filter {
         }
         val validationResult = modelService.validateModelKey(key);
         if (validationResult != OK) {
-            val objectResponseEntity = handler.handleAccessDeniedException(new AccessDeniedException());
+            val objectResponseEntity = handler.handleNotFoundException(new ModelNotFoundException());
             buildException(httpResponse, objectResponseEntity);
 
             return;
