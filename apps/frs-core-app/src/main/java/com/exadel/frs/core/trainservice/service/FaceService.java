@@ -42,16 +42,16 @@ public class FaceService {
         getTrainingOption(retrain).run(token, retrainService);
     }
 
-    public int deleteFacesByModel(final String apiKey) {
-        val token = systemService.buildToken(apiKey);
+    public int deleteFacesByModel(final String modelKey) {
+        val token = systemService.buildToken(modelKey);
         classifierManager.removeFaceClassifier(token.getModelApiKey());
         val deletedFaces = faceDao.deleteFacesByApiKey(token.getModelApiKey());
 
         return deletedFaces.size();
     }
 
-    public void updateModelApiKeyForFaces(final String apiKey, final String newModelApiKey) {
-        val token = systemService.buildToken(apiKey);
+    public void updateModelApiKeyForFaces(final String modelKey, final String newModelApiKey) {
+        val token = systemService.buildToken(modelKey);
         faceDao.updateFacesModelKey(token.getModelApiKey(), newModelApiKey);
     }
 }

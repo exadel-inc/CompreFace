@@ -106,21 +106,18 @@ public class UserController {
     @GetMapping("/autocomplete")
     @ApiOperation(value = "User autocomplete by (email, first name or last name)")
     public UserAutocompleteDto autocomplete(@RequestParam final String query) {
-
         val results = userMapper.toResponseDto(userService.autocomplete(query));
 
-        return UserAutocompleteDto
-                .builder()
-                .length(results.size())
-                .query(query)
-                .results(results)
-                .build();
+        return UserAutocompleteDto.builder()
+                                  .length(results.size())
+                                  .query(query)
+                                  .results(results)
+                                  .build();
     }
 
     @GetMapping("/registration/confirm")
     @ApiOperation("Confirm user registration token")
     public void confirmRegistration(@RequestParam final String token, final HttpServletResponse response) throws IOException {
-
         userService.confirmRegistration(token);
         redirectToHomePage(response);
     }

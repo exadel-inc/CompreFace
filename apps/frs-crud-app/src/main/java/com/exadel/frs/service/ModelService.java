@@ -152,13 +152,11 @@ public class ModelService {
         verifyUserHasWritePrivileges(userId, repoModel.getApp());
 
         val newApiKey = randomUUID().toString();
-        val apiKey = repoModel.getApp().getApiKey() + repoModel.getApiKey();
 
-        coreFacesClient.updateModelKeyForFaces(apiKey, newApiKey);
+        coreFacesClient.updateModelKeyForFaces(repoModel.getApiKey(), newApiKey);
 
         repoModel.setApiKey(newApiKey);
-        modelRepository
-                .save(repoModel);
+        modelRepository.save(repoModel);
     }
 
     @Transactional
@@ -167,7 +165,7 @@ public class ModelService {
 
         verifyUserHasWritePrivileges(userId, model.getApp());
 
-        coreFacesClient.deleteFaces(model.getApp().getApiKey() + model.getApiKey());
+        coreFacesClient.deleteFaces(model.getApiKey());
         modelRepository.deleteById(model.getId());
     }
 

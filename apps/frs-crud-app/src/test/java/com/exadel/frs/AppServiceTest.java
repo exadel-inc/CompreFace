@@ -3,6 +3,7 @@ package com.exadel.frs;
 import static com.exadel.frs.enums.AppRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.USER;
+import static java.util.Collections.nCopies;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -468,7 +469,12 @@ class AppServiceTest {
         val organization = organization();
         organization.addUserOrganizationRole(user, organizationRole);
 
-        val models = List.of(new Model(), new Model(), new Model());
+        val models = nCopies(
+                3,
+                Model.builder()
+                     .apiKey("modelKey")
+                     .build()
+        );
 
         val app = App.builder()
                      .id(APPLICATION_ID)

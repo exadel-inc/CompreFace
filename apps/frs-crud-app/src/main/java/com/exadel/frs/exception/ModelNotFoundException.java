@@ -10,5 +10,4 @@ public class ModelNotFoundException extends BasicException {
     public ModelNotFoundException(final String guid) {
         super(MODEL_NOT_FOUND, format(MESSAGE, guid));
     }
-
 }
