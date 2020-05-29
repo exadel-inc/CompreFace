@@ -60,9 +60,15 @@ public class AppService {
         }
     }
 
-    private void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
-        if (USER == getUserOrganizationRole(organization, userId)) {
-            throw new InsufficientPrivilegesException();
+    private void verifyUserHasWritePrivileges(final Long userId, final App app) {
+        if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
+            val role = app.getUserAppRole(userId)
+                          .orElseThrow(InsufficientPrivilegesException::new)
+                          .getRole();
+
+            if (AppRole.USER == role) {
+                throw new InsufficientPrivilegesException();
+            }
         }
     }
 
@@ -141,7 +147,7 @@ public class AppService {
     ) {
         val app = getApp(orgGuid, appGuid, userId);
 
-        verifyUserHasWritePrivileges(userId, app.getOrganization());
+        verifyUserHasWritePrivileges(userId, app);
 
         val user = userService.getUser(userInviteDto.getUserEmail());
         val userOrgRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
@@ -164,7 +170,7 @@ public class AppService {
     public App createApp(final AppCreateDto appCreateDto, final String orgGuid, final Long userId) {
         val organization = organizationService.getOrganization(orgGuid);
 
-        verifyUserHasWritePrivileges(userId, organization);
+        organizationService.verifyUserHasWritePrivileges(userId, organization);
 
         verifyNameIsUnique(appCreateDto.getName(), organization.getId());
 
@@ -183,7 +189,7 @@ public class AppService {
     public App updateApp(final AppUpdateDto appUpdateDto, final String orgGuid, final String appGuid, final Long userId) {
         val app = getApp(orgGuid, appGuid, userId);
 
-        verifyUserHasWritePrivileges(userId, app.getOrganization());
+        verifyUserHasWritePrivileges(userId, app);
 
         val isSameName = app.getName().equals(appUpdateDto.getName());
         if (isNotTrue(isSameName)) {
@@ -197,7 +203,7 @@ public class AppService {
     public UserAppRole updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String orgGuid, final String guid, final Long adminId) {
         val app = getApp(orgGuid, guid, adminId);
 
-        verifyUserHasWritePrivileges(adminId, app.getOrganization());
+        verifyUserHasWritePrivileges(adminId, app);
 
         val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
@@ -221,7 +227,7 @@ public class AppService {
         val userId = userService.getUserByGuid(userGuid).getId();
         val app = getApp(orgGuid, guid, userId);
 
-        verifyUserHasWritePrivileges(adminId, app.getOrganization());
+        verifyUserHasWritePrivileges(adminId, app);
 
         app.deleteUserAppRole(userGuid);
 
@@ -231,7 +237,7 @@ public class AppService {
     public void regenerateApiKey(final String orgGuid, final String guid, final Long userId) {
         val app = getApp(orgGuid, guid, userId);
 
-        verifyUserHasWritePrivileges(userId, app.getOrganization());
+        verifyUserHasWritePrivileges(userId, app);
 
         app.setApiKey(UUID.randomUUID().toString());
 
@@ -242,7 +248,7 @@ public class AppService {
     public void deleteApp(final String orgGuid, final String guid, final Long userId) {
         val app = getApp(orgGuid, guid, userId);
 
-        verifyUserHasWritePrivileges(userId, app.getOrganization());
+        verifyUserHasWritePrivileges(userId, app);
 
         app.getModels().forEach(model ->
                 coreFacesClient.deleteFaces(model.getApiKey())
@@ -254,7 +260,7 @@ public class AppService {
     public UUID generateUuidToRequestModelShare(final String orgGuid, final String appGuid) {
         val app = getApp(appGuid);
 
-        verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), app.getOrganization());
+        verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), app);
         verifyOrganizationHasTheApp(orgGuid, app);
 
         val requestId = UUID.randomUUID();
