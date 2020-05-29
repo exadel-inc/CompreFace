@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.component;
 
 import static java.lang.Thread.currentThread;
-import static java.lang.Thread.sleep;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
@@ -37,8 +36,6 @@ public class FaceClassifierAdapter {
         try {
             currentThread().setName(modelKey);
 
-            sleep(10_000);
-
             var faceId = 0;
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
@@ -68,7 +65,7 @@ public class FaceClassifierAdapter {
             );
 
             manager.saveClassifier(modelKey, classifier, embeddingFaceList.getCalculatorVersion());
-        } catch (ModelNotTrainedException | InterruptedException e) {
+        } catch (ModelNotTrainedException e) {
             log.error("Model {} hasn't enough data to train", modelKey);
         } finally {
             manager.finishClassifierTraining(modelKey);

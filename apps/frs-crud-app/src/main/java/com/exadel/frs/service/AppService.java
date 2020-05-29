@@ -25,9 +25,11 @@ import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
+import com.exadel.frs.system.rest.CoreFacesClient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -40,10 +42,11 @@ public class AppService {
     private final OrganizationService organizationService;
     private final UserService userService;
     private final ModelShareRequestRepository modelShareRequestRepository;
+    private final CoreFacesClient coreFacesClient;
 
     public App getApp(final String appGuid) {
         return appRepository.findByGuid(appGuid)
-                .orElseThrow(() -> new AppNotFoundException(appGuid));
+                            .orElseThrow(() -> new AppNotFoundException(appGuid));
     }
 
     private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {
@@ -53,7 +56,7 @@ public class AppService {
     private void verifyUserHasReadPrivileges(final Long userId, final App app) {
         if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
             app.getUserAppRole(userId)
-                    .orElseThrow(InsufficientPrivilegesException::new);
+               .orElseThrow(InsufficientPrivilegesException::new);
         }
     }
 
@@ -141,13 +144,19 @@ public class AppService {
         verifyUserHasWritePrivileges(userId, app.getOrganization());
 
         val user = userService.getUser(userInviteDto.getUserEmail());
-        val userOrganizationRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
-        if (USER != userOrganizationRole.getRole() || app.getUserAppRole(user.getId()).isPresent()) {
+        val userOrgRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
+        val userAppRole = app.getUserAppRole(user.getId());
+        if (USER != userOrgRole.getRole() || userAppRole.isPresent()) {
             throw new UserAlreadyHasAccessToAppException(userInviteDto.getUserEmail(), appGuid);
         }
 
-        app.addUserAppRole(user, AppRole.valueOf(userInviteDto.getRole()));
-        final App savedApp = appRepository.save(app);
+        val appRole = AppRole.valueOf(userInviteDto.getRole());
+        if (OWNER == appRole) {
+            app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(ADMINISTRATOR));
+        }
+
+        app.addUserAppRole(user, appRole);
+        val savedApp = appRepository.save(app);
 
         return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
@@ -160,11 +169,12 @@ public class AppService {
         verifyNameIsUnique(appCreateDto.getName(), organization.getId());
 
         val app = App.builder()
-                .name(appCreateDto.getName())
-                .organization(organization)
-                .guid(UUID.randomUUID().toString())
-                .apiKey(UUID.randomUUID().toString())
-                .build();
+                     .name(appCreateDto.getName())
+                     .organization(organization)
+                     .guid(UUID.randomUUID().toString())
+                     .apiKey(UUID.randomUUID().toString())
+                     .build();
+
         app.addUserAppRole(userService.getUser(userId), OWNER);
 
         return appRepository.save(app);
@@ -184,7 +194,7 @@ public class AppService {
         return appRepository.save(app);
     }
 
-    public void updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String orgGuid, final String guid, final Long adminId) {
+    public UserAppRole updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String orgGuid, final String guid, final Long adminId) {
         val app = getApp(orgGuid, guid, adminId);
 
         verifyUserHasWritePrivileges(adminId, app.getOrganization());
@@ -203,6 +213,8 @@ public class AppService {
         userAppRole.setRole(newAppRole);
 
         appRepository.save(app);
+
+        return userAppRole;
     }
 
     public void deleteUserFromApp(final String userGuid, final String orgGuid, final String guid, final Long adminId) {
@@ -226,10 +238,15 @@ public class AppService {
         appRepository.save(app);
     }
 
+    @Transactional
     public void deleteApp(final String orgGuid, final String guid, final Long userId) {
         val app = getApp(orgGuid, guid, userId);
 
         verifyUserHasWritePrivileges(userId, app.getOrganization());
+
+        app.getModels().forEach(model ->
+                coreFacesClient.deleteFaces(model.getApiKey())
+        );
 
         appRepository.deleteById(app.getId());
     }
@@ -241,17 +258,15 @@ public class AppService {
         verifyOrganizationHasTheApp(orgGuid, app);
 
         val requestId = UUID.randomUUID();
-        val id = ModelShareRequestId
-                            .builder()
-                            .appId(app.getId())
-                            .requestId(requestId)
-                            .build();
-
-        val shareRequest = ModelShareRequest
-                                    .builder()
-                                    .app(app)
-                                    .id(id)
+        val id = ModelShareRequestId.builder()
+                                    .appId(app.getId())
+                                    .requestId(requestId)
                                     .build();
+
+        val shareRequest = ModelShareRequest.builder()
+                                            .app(app)
+                                            .id(id)
+                                            .build();
 
         modelShareRequestRepository.save(shareRequest);
 

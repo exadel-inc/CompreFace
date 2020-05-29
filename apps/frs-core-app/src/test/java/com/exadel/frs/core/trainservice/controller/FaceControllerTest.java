@@ -4,39 +4,44 @@ import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.ma
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.core.trainservice.config.WebMvcTestContext;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Model;
+import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {SecurityValidationFilter.class}
+        ))
+@WebMvcTestContext
 public class FaceControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
 
-    private final static String API_KEY = "api_key:model_key";
+    private final static String API_KEY = "model_key";
 
     @Autowired
     private ObjectMapper mapper;
@@ -80,7 +85,7 @@ public class FaceControllerTest {
         val response = List.of(new Face(), new Face(), new Face());
         doReturn(response)
                 .when(facesRepository)
-                .deleteFacesByApiKey(API_KEY.substring(API_KEY.length() / 2));
+                .deleteFacesByApiKey(API_KEY);
 
         mockMvc.perform(delete(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
                .andExpect(status().isOk())

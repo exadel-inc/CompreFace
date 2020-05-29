@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.system.feign;
 
 import static com.exadel.frs.core.trainservice.system.global.EnvironmentProperties.ServerType.PYTHON;
+import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.global.EnvironmentProperties;
 import feign.Feign;
 import feign.Logger;

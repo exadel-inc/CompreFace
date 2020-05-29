@@ -43,10 +43,11 @@ spring:
     open-in-view: true
     generate-ddl: false
   mail:
+    enable: ${ENABLE_EMAIL_SERVER:false}
     sender: ${FRS_EMAIL:frs@msqv500.exadel.by}
     host: ${POSTFIX_HOST:msqv500.exadel.by}
     port: 25
-    test-connection: true
+    test-connection: false
     properties.mail:
       debug: true
       smtp:
@@ -55,7 +56,7 @@ spring:
         starttls:
           enable: true
         ssl:
-          trust: ${POSTFIX_HOST:msqv500.exadel.by}
+          trust: ${POSTFIX_HOST}
 
 security:
   signing-key: MaYzkSjmkzPC57L
@@ -78,21 +79,6 @@ host:
     dns:
       auth:
         link: ${DNS_URL:http://localhost:${server.port}}
-
-logging:
-  level:
-    web: DEBUG
-    org.springframework.web: DEBUG
-    com:
-      exadel:
-        frs: TRACE
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
 
 registration:
   token:

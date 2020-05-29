@@ -10,9 +10,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-
-import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import com.exadel.frs.core.trainservice.system.Token;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,7 +44,7 @@ class FaceDaoTest {
     @Test
     void deleteFaceByName() {
         val faceName = "faceName";
-        val token = new Token(randomAlphabetic(10), randomAlphabetic(10));
+        val token = new Token(randomAlphabetic(10));
         val faces = List.of(new Face());
         when(facesRepository.deleteByApiKeyAndFaceName(token.getModelApiKey(), faceName)).thenReturn(faces);
 
@@ -60,7 +59,7 @@ class FaceDaoTest {
 
     @Test
     void deleteFacesByApiKey() {
-        val token = new Token(randomAlphabetic(10), randomAlphabetic(10));
+        val token = new Token(randomAlphabetic(10));
         val faces = List.of(new Face());
         when(facesRepository.deleteFacesByApiKey(token.getModelApiKey())).thenReturn(faces);
 
@@ -75,7 +74,7 @@ class FaceDaoTest {
 
     @Test
     void countFacesInModel() {
-        val token = new Token(randomAlphabetic(10), randomAlphabetic(10));
+        val token = new Token(randomAlphabetic(10));
         val facesCount = nextInt();
 
         when(facesRepository.countByApiKey(token.getModelApiKey())).thenReturn(facesCount);

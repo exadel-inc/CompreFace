@@ -1,10 +1,15 @@
 package com.exadel.frs.core.trainservice.dao;
 
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
-import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.entity.Face.Embedding;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.entity.mongo.Face.Embedding;
+import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -12,14 +17,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
 import org.springframework.web.multipart.MultipartFile;
-
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 
 @Service
 @RequiredArgsConstructor

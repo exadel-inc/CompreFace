@@ -16,6 +16,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.core.env.Environment;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -49,6 +50,9 @@ public class OAuthMvcTest {
     private WebApplicationContext wac;
 
     @Autowired
+    private Environment env;
+
+    @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
     @SpyBean
@@ -59,7 +63,7 @@ public class OAuthMvcTest {
     @Before
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
-                .addFilter(springSecurityFilterChain).build();
+                                      .addFilter(springSecurityFilterChain).build();
         when(userService.generateRegistrationToken()).thenReturn(registrationToken);
     }
 
@@ -76,8 +80,8 @@ public class OAuthMvcTest {
                 .params(params)
                 .with(httpBasic("CommonClientId", "password"))
                 .accept("application/json;charset=UTF-8"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"));
+                         .andExpect(status().isOk())
+                         .andExpect(content().contentType("application/json;charset=UTF-8"));
 
         String resultString = result.andReturn().getResponse().getContentAsString();
 
@@ -88,20 +92,20 @@ public class OAuthMvcTest {
     @Test
     public void availableOnlyWithAccessToken() throws Exception {
         mockMvc.perform(get("/user/me"))
-                .andExpect(status().isUnauthorized());
+               .andExpect(status().isUnauthorized());
 
         createUser("test1@email.com");
 
         var accessToken = obtainAccessToken("test1@email.com", "test1");
         mockMvc.perform(get("/user/me")
                 .header("Authorization", "Bearer " + accessToken))
-                .andExpect(status().isOk());
+               .andExpect(status().isOk());
     }
 
     @Test
     public void ignoresCaseWhenLogin() throws Exception {
         mockMvc.perform(get("/user/me"))
-                .andExpect(status().isUnauthorized());
+               .andExpect(status().isUnauthorized());
 
         createUser("user@email.com");
 
@@ -109,7 +113,7 @@ public class OAuthMvcTest {
 
         mockMvc.perform(get("/user/me")
                 .header("Authorization", "Bearer " + accessToken))
-                .andExpect(status().isOk());
+               .andExpect(status().isOk());
     }
 
     private void createUser(String email) throws Exception {
@@ -122,14 +126,15 @@ public class OAuthMvcTest {
                 "  \"username\": \"test1\"\n" +
                 "}";
 
-
         mockMvc.perform(post("/user/register")
                 .contentType("application/json")
                 .content(employeeString)
                 .accept("application/json"))
-                .andExpect(status().isCreated());
+               .andExpect(status().is2xxSuccessful());
 
-        confirmRegistration();
+        if (Boolean.valueOf(env.getProperty("spring.mail.enable"))) {
+            confirmRegistration();
+        }
     }
 
     private void confirmRegistration() {

@@ -1,6 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 

@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.entity;
+package com.exadel.frs.core.trainservice.entity.mongo;
 
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import java.util.List;

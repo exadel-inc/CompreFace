@@ -187,7 +187,7 @@ public class AppController {
 
     @PutMapping("/app/{guid}/role")
     @ApiOperation(value = "Update user application role")
-    public void updateUserAppRole(
+    public UserRoleResponseDto updateUserAppRole(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String orgGuid,
@@ -199,7 +199,9 @@ public class AppController {
             @RequestBody
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
-        appService.updateUserAppRole(userRoleUpdateDto, orgGuid,  guid, SecurityUtils.getPrincipalId());
+        val userAppRole = appService.updateUserAppRole(userRoleUpdateDto, orgGuid, guid, SecurityUtils.getPrincipalId());
+
+        return userAppRoleMapper.toUserRoleResponseDto(userAppRole);
     }
 
     @GetMapping("/app/{guid}/model/request")
@@ -214,8 +216,7 @@ public class AppController {
     ) {
         val requestId = appService.generateUuidToRequestModelShare(orgGuid, guid);
 
-        return ModelShareResponseDto
-                                .builder()
+        return ModelShareResponseDto.builder()
                                 .modelRequestUuid(requestId)
                                 .build();
     }
