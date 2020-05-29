@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { first, map } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
 
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
@@ -24,6 +25,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   availableEmails$: Observable<string[]>;
   search = '';
   availableRoles: string[];
+  currentUserId$: Observable<string>;
   private availableRolesSubscription: Subscription;
 
   constructor(
@@ -38,10 +40,11 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.appUserListFacade.isLoading$;
     this.userRole$ = this.appUserListFacade.userRole$;
     this.availableEmails$ = this.appUserListFacade.availableEmails$;
+    this.currentUserId$ = this.appUserListFacade.currentUserId$;
 
     this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(map((users: AppUser[]) => {
       return {
-        columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }],
+        columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }, { title: 'delete', property: 'delete' }],
         data: users
       };
     }));
@@ -52,6 +55,23 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
   onChange(user: AppUser): void {
     this.appUserListFacade.updateUserRole(user.id, user.role);
+  }
+
+  onDelete(user: AppUser): void {
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      width: '400px',
+      data: {
+        entityType: 'user',
+        entityName: `${user.firstName} ${user.lastName}`,
+        applicationName: this.appUserListFacade.selectedApplicationName,
+      }
+    });
+
+    dialog.afterClosed().pipe(first()).subscribe(result => {
+      if (result) {
+        this.appUserListFacade.delete(user.userId);
+      }
+    });
   }
 
   ngOnDestroy(): void {

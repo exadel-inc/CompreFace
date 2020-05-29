@@ -5,12 +5,17 @@ import { map, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
 import { IFacade } from 'src/app/data/facade/IFacade';
 import { AppState } from 'src/app/store';
-import { loadAppUserEntityAction, putUpdatedAppUserRoleEntityAction } from 'src/app/store/app-user/actions';
+import {
+  deleteUserFromApplication,
+  loadAppUserEntityAction,
+  putUpdatedAppUserRoleEntityAction,
+} from 'src/app/store/app-user/actions';
 import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/selectors';
-import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
+import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
 import { LoadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
+import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 import { AppUserService } from '../../core/app-user/app-user.service';
 import { LoadUsersEntityAction } from '../../store/user/action';
@@ -23,6 +28,8 @@ export class ApplicationUserListFacade implements IFacade {
   availableRoles$: Observable<string[]>;
   availableEmails$: Observable<string[]>;
   userRole$: Observable<string>;
+  currentUserId$: Observable<string>;
+  selectedApplicationName: string;
 
   private selectedApplicationId: string;
   private selectedOrganizationId: string;
@@ -32,6 +39,7 @@ export class ApplicationUserListFacade implements IFacade {
     this.appUsers$ = store.select(selectAppUsers);
     this.availableEmails$ = store.select(selectUsers).pipe(map(data => data.map(user => user.email)));
     this.userRole$ = store.select(selectUserRollForSelectedApp);
+    this.currentUserId$ = store.select(selectUserId);
     const allRoles$ = store.select(selectAllRoles);
 
     this.availableRoles$ = combineLatest(
@@ -65,11 +73,12 @@ export class ApplicationUserListFacade implements IFacade {
 
   initSubscriptions(): void {
     this.sub = zip(
-      this.store.select(selectCurrentAppId),
+      this.store.select(selectCurrentApp),
       this.store.select(selectCurrentOrganizationId)
-    ).subscribe(([appId, orgId]) => {
-      if (appId && orgId) {
-        this.selectedApplicationId = appId;
+    ).subscribe(([app, orgId]) => {
+      if (app && orgId) {
+        this.selectedApplicationId = app.id;
+        this.selectedApplicationName = app.name;
         this.selectedOrganizationId = orgId;
         this.loadData();
       }
@@ -106,6 +115,14 @@ export class ApplicationUserListFacade implements IFacade {
           applicationId: this.selectedApplicationId
         }))
       ));
+  }
+
+  delete(userId: string) {
+    this.store.dispatch(deleteUserFromApplication({
+      organizationId: this.selectedOrganizationId,
+      applicationId: this.selectedApplicationId,
+      userId,
+    }));
   }
 
   unsubscribe(): void {
