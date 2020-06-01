@@ -10,14 +10,7 @@ echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/
 apt-get update
 apt-get install -y mongodb-org-tools mongodb-org-shell python-pymongo
 
-if [ "$SKIP_TESTS" != true ]; then
-  python -m pytest /app/ml/src
-  python -m pylama --options /app/ml/pylama.ini /app/ml/src
-else
-  # If not using regular tests, at least run use smoke tests. Running scan with InsightFace also triggers the library to cache the models locally for subsequent use.
-  export IMG_NAMES=000_5.jpg SAVE_IMG=false
+
+export IMG_NAMES=000_5.jpg SAVE_IMG=false
   SCANNER=Facenet2018 \
-    python -m tools.facescan.scan.run
-  SCANNER=InsightFace \
-    python -m tools.facescan.scan.run
-fi
+  python -m tools.facescan.scan.run

@@ -15,7 +15,8 @@
     <packaging>pom</packaging>
 
   <modules>
-    <module>apps</module>
+    <module>frs-core-app</module>
+    <module>frs-crud-app</module>
   </modules>
 
   <properties>
