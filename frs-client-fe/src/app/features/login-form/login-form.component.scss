@@ -52,3 +52,8 @@ width: 100%;
     color: $accent;
   }
 }
+
+.error-wrapper {
+  display: flex;
+  justify-content: space-between;
+}

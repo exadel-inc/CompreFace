@@ -181,6 +181,10 @@ app-table, app-user-table, app-model-table {
 }
 
 .mat-form-field {
+  .mat-form-field-label {
+    color: $secondaryText;
+  }
+
   &.mat-form-field-invalid {
     .mat-input-element {
       caret-color: $red;
@@ -204,4 +208,8 @@ app-table, app-user-table, app-model-table {
       color: $accent;
     }
   }
+}
+
+.mat-error {
+  color: $red;
 }
