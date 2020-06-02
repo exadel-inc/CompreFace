@@ -19,7 +19,6 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
   getState: Observable<any>;
-  errorMessage: string | null;
   isLoading = false;
   ROUTERS_URL = ROUTERS_URL;
   stateSubscription: Subscription;
@@ -49,7 +48,6 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
     }, { validators: this.passwordMatchValidator });
 
     this.stateSubscription = this.getState.subscribe((state) => {
-      this.errorMessage = state.errorMessage;
       this.isLoading = state.isLoading;
     });
   }

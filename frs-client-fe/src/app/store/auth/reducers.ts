@@ -27,7 +27,7 @@ const reducer: ActionReducer<AuthState> = createReducer(initialState,
   })),
   on(logInFailure, (state) => ({
     ...state,
-    errorMessage: 'Incorrect email and/or password.',
+    errorMessage: 'E-mail or Password is incorrect.',
     isLoading: false
   })),
   on(signUpSuccess, (state) => ({
@@ -38,7 +38,7 @@ const reducer: ActionReducer<AuthState> = createReducer(initialState,
   })),
   on(signUpFailure, (state) => ({
     ...state,
-    errorMessage: 'That email is already in use.',
+    errorMessage: 'This e-mail is already in use.',
     successMessage: null,
     isLoading: false
   })),

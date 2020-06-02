@@ -17,8 +17,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
   getState: Observable<any>;
-  errorMessage: string | null;
-  successMessage: string | null;
   isLoading = false;
   ROUTERS_URL = ROUTERS_URL;
   stateSubscription: Subscription;
@@ -34,8 +32,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
     });
 
     this.stateSubscription = this.getState.subscribe((state) => {
-      this.errorMessage = state.errorMessage;
-      this.successMessage = state.successMessage;
       this.isLoading = state.isLoading;
     });
   }

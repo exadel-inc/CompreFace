@@ -6,16 +6,6 @@
     <mat-card-title>Login</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div *ngIf="errorMessage">
-      <div class="alert alert-danger" role="alert">
-        {{errorMessage}}
-      </div>
-    </div>
-    <div *ngIf="successMessage">
-      <div class="alert alert-success" role="alert">
-        {{successMessage}}
-      </div>
-    </div>
     <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
       <mat-form-field class="login-full-width">
         <input matInput placeholder="Email" formControlName="email" name="email" required>

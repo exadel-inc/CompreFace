@@ -150,5 +150,58 @@ app-table, app-user-table, app-model-table {
 .mat-button.mat-primary,
 .mat-icon-button.mat-primary,
 .mat-stroked-button.mat-primary {
-  color: #328AFB;
+  color: $accent;
+}
+
+.mat-button.mat-primary[disabled],
+.mat-icon-button.mat-primary[disabled] {
+  color: $disabled;
+}
+
+.mat-form-field-appearance-legacy {
+  .mat-hint,
+  .mat-error {
+    font-size: 12px;
+  }
+
+  .mat-hint,
+  .mat-form-field-label {
+    color: $secondaryText;
+  }
+
+  .mat-form-field-underline {
+    background-color: $disabled;
+  }
+}
+
+.mat-input-element {
+  color: $primaryText !important;
+  font-size: 16px !important;
+  caret-color: $accent;
+}
+
+.mat-form-field {
+  &.mat-form-field-invalid {
+    .mat-input-element {
+      caret-color: $red;
+    }
+
+    .mat-form-field-ripple {
+      background-color: $red;
+    }
+
+    .mat-form-field-label {
+      color: $red;
+    }
+  }
+
+  &.mat-focused {
+    .mat-form-field-ripple {
+      background-color: $accent;
+    }
+
+    .mat-form-field-label {
+      color: $accent;
+    }
+  }
 }
