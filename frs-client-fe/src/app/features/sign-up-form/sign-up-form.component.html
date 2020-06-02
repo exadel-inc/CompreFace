@@ -6,18 +6,13 @@
     <mat-card-title>Sign up</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <div *ngIf="errorMessage">
-      <div class="alert alert-danger" role="alert">
-        {{errorMessage}}
-      </div>
-    </div>
     <form class="sign-up-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
       <mat-form-field class="sign-up-full-width">
         <mat-error>First name is required</mat-error>
         <input matInput placeholder="First Name" formControlName="firstName" name="firstName" required>
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
-        <mat-error>Lats name is required</mat-error>
+        <mat-error>Last name is required</mat-error>
         <input matInput placeholder="Last Name" formControlName="lastName" name="lastName" required>
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
@@ -26,12 +21,12 @@
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
         <mat-hint>Minimum 8 characters</mat-hint>
-        <mat-error>Minimum 8 characters</mat-error>
+        <mat-error>Minimum 8 characters required</mat-error>
         <input matInput placeholder="Password" formControlName="password" type="password" name="password" required>
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
         <mat-hint>Minimum 8 characters</mat-hint>
-        <mat-error>Minimum 8 characters</mat-error>
+        <mat-error>Minimum 8 characters required</mat-error>
         <input matInput placeholder="Confirm password" formControlName="confirmPassword" type="password" name="confirmPassword" required>
       </mat-form-field>
       <mat-error *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">Passwords don't match</mat-error>

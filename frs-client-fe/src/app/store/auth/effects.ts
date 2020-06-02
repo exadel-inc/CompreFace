@@ -1,24 +1,23 @@
-import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
-import {Observable, of as observableOf} from 'rxjs';
-import {AuthService} from '../../core/auth/auth.service';
-import {
-  logInSuccess,
-  logInFailure,
-  signUpFailure,
-  signUpSuccess,
-  logIn,
-  signUp,
-  logOut
-} from './action';
-import {updateUserInfo, resetUserInfo} from '../userInfo/action';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {Router} from '@angular/router';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Observable, of as observableOf } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
+
+import { AuthService } from '../../core/auth/auth.service';
+import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { resetUserInfo, updateUserInfo } from '../userInfo/action';
+import { logIn, logInFailure, logInSuccess, logOut, signUp, signUpFailure, signUpSuccess } from './action';
 
 @Injectable()
 export class AuthEffects {
-  constructor(private actions: Actions, private authService: AuthService, private router: Router) { }
+  constructor(
+    private actions: Actions,
+    private authService: AuthService,
+    private router: Router,
+    private snackBarService: SnackBarService,
+  ) { }
 
   // Listen for the 'LOGIN' action
   @Effect()
@@ -37,7 +36,7 @@ export class AuthEffects {
               })
           ];
         }),
-        catchError(() => observableOf(logInFailure()))
+        catchError(error => observableOf(logInFailure(error)))
       );
     }));
 
@@ -50,10 +49,26 @@ export class AuthEffects {
     })
   );
 
-  // Listen for the 'LogInFailure' action
   @Effect({ dispatch: false })
-  LogInFailure: Observable<any> = this.actions.pipe(
-    ofType(logInFailure)
+  showError$ = this.actions.pipe(
+    ofType(logInFailure, signUpFailure),
+    tap(action => {
+      if (action.error && action.error.error_description === 'Bad credentials') {
+        this.snackBarService.openError(null, 8000, 'E-mail or Password is incorrect.');
+      } else if (action.error && action.error.code === 4) {
+        this.snackBarService.openError(null, 8000, 'This e-mail is already in use.');
+      } else {
+        this.snackBarService.openHttpError(action.error);
+      }
+    })
+  );
+
+  @Effect({ dispatch: false })
+  showSuccess$ = this.actions.pipe(
+    ofType(signUpSuccess),
+    tap(action => {
+      this.snackBarService.openInfo(null, 8000, 'You have created new account, please login into your account');
+    })
   );
 
   @Effect()
@@ -62,7 +77,7 @@ export class AuthEffects {
     switchMap(payload => {
       return this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName).pipe(
         map(() => signUpSuccess()),
-        catchError(() => observableOf(signUpFailure()))
+        catchError(error => observableOf(signUpFailure(error)))
       );
     }));
 
