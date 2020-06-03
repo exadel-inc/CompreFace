@@ -1,24 +1,24 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
-import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.system.SystemService;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Map;
-
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.springframework.web.util.UriUtils.encode;
+import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.system.SystemService;
+import java.util.List;
+import java.util.Map;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class FaceService {
 
     private final FaceDao faceDao;
+    private final ModelDao modelDao;
     private final SystemService systemService;
     private final RetrainService retrainService;
     private final FaceClassifierManager classifierManager;
@@ -50,8 +50,4 @@ public class FaceService {
         return deletedFaces.size();
     }
 
-    public void updateModelApiKeyForFaces(final String modelKey, final String newModelApiKey) {
-        val token = systemService.buildToken(modelKey);
-        faceDao.updateFacesModelKey(token.getModelApiKey(), newModelApiKey);
-    }
 }

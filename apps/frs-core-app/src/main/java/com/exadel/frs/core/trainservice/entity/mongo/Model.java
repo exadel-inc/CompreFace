@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -18,6 +19,10 @@ public class Model {
 
     @Id
     private String id;
+
+    @Field("model_key")
+    @Indexed
+    private String modelKey;
 
     @Field("classifier")
     private FaceClassifier classifier;

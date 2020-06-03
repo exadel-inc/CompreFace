@@ -3,21 +3,19 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
-import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.component.migration.MigrationComponent;
-import com.exadel.frs.core.trainservice.component.migration.MigrationStatusStorage;
 import com.exadel.frs.core.trainservice.config.WebMvcTestContext;
+import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
-import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.system.SystemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -28,7 +26,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -51,6 +48,9 @@ public class FaceControllerTest {
 
     @MockBean
     private FacesRepository facesRepository;
+
+    @MockBean
+    private ModelDao modelDao;
 
     @Autowired
     private SystemService systemService;
@@ -101,7 +101,11 @@ public class FaceControllerTest {
     @Test
     public void updateModelKeySuccess() throws Exception {
         val newModelKey = UUID.randomUUID().toString();
-        mockMvc.perform(put(API_V1 + "/faces/api-key?new_model_api_key=" + newModelKey).header(X_FRS_API_KEY_HEADER, API_KEY))
+
+        doReturn(Model.builder().build())
+                .when(modelDao).updateModelApiKey(any(), any());
+
+        mockMvc.perform(put(API_V1 + "/models/api-key?new_model_api_key=" + newModelKey).header(X_FRS_API_KEY_HEADER, API_KEY))
                .andExpect(status().isOk());
     }
 }

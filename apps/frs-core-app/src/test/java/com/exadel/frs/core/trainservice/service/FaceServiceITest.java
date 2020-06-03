@@ -1,8 +1,12 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import com.exadel.frs.core.trainservice.system.SystemServiceImpl;
@@ -32,6 +36,9 @@ public class FaceServiceITest {
 
     @Autowired
     private FaceService faceService;
+
+    @MockBean
+    private ModelDao modelDao;
 
     private final static String MODEL_KEY = UUID.randomUUID().toString();
     private final static String MODEL_KEY_OTHER = UUID.randomUUID().toString();
@@ -65,15 +72,4 @@ public class FaceServiceITest {
                 );
     }
 
-    @Test
-    public void updateModelKeySuccess() {
-        val newModelKey = UUID.randomUUID().toString();
-        assertThat(facesRepository.findByApiKey(MODEL_KEY)).hasSize(2);
-        assertThat(facesRepository.findByApiKey(newModelKey)).hasSize(0);
-
-        faceService.updateModelApiKeyForFaces(MODEL_KEY, newModelKey);
-
-        assertThat(facesRepository.findByApiKey(MODEL_KEY)).hasSize(0);
-        assertThat(facesRepository.findByApiKey(newModelKey)).hasSize(2);
-    }
 }
