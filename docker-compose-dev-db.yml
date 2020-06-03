@@ -1,22 +1,6 @@
 version: '3.4'
 
 services:
-  frs-postgres-db:
-    image: postgres:11.5
-    container_name: "frs-postgres-db"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=frs
-    ports:
-      - "5433:5432"
-
-  frs-mongo-db:
-    image: mongo:4.0.4-xenial
-    container_name: "frs-mongo-db"
-    ports:
-      - "27018:27017"
-
   frs-admin:
     build:
       dockerfile: Dockerfile
@@ -26,9 +10,8 @@ services:
     ports:
       - "8081:8080"
     environment:
-      - POSTGRES_URL=jdbc:postgresql://frs-postgres-db:5432/frs
+      - POSTGRES_PASSWORD=h9Zn784HdT
     depends_on:
-      - frs-postgres-db
       - frs-api
 
   frs-api:
@@ -40,11 +23,7 @@ services:
     ports:
       - "8082:8080"
     environment:
-      - MONGO_URL=mongodb://frs-mongo-db:27017
       - PYTHON_URL=http://frs-core:3000
-    depends_on:
-      - frs-postgres-db
-      - frs-mongo-db
 
   frs-fe:
     build:
@@ -61,5 +40,5 @@ services:
     build:
       context: embedding-calculator
     environment:
-      - MONGODB_URI=mongodb://frs-mongo-db:27017/efrs_db
+      - MONGODB_URI=mongodb://msqv500.exadel.by:27017
       - ML_PORT=3000

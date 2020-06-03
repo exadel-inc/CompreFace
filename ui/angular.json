@@ -91,6 +91,14 @@
                   "with": "src/environments/environment.local.ts"
                 }
               ]
+            },
+            "docker": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.docker.ts"
+                }
+              ]
             }
           }
         },
