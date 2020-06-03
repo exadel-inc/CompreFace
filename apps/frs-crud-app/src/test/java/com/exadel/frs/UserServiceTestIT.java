@@ -46,8 +46,11 @@ public class UserServiceTestIT {
     @Autowired
     private UserRepository userRepository;
 
+    @SpyBean
+    private Environment environment;
     @Test
     void getEnabledUserByEmailReturnsActiveUser() {
+        when(environment.getProperty("spring.mail.enable")).thenReturn("true");
         createAndEnableUser(ENABLED_USER_EMAIL);
 
         val enabledUser = userService.getEnabledUserByEmail(ENABLED_USER_EMAIL);
@@ -58,6 +61,8 @@ public class UserServiceTestIT {
 
     @Test
     void getEnabledUserByEmailThrowsExceptionIfUserIsDisabled() {
+        when(environment.getProperty("spring.mail.enable")).thenReturn("true");
+
         createUser(DISABLED_USER_EMAIL);
 
         val disabledUser = userRepository.findByEmail(DISABLED_USER_EMAIL).get();
