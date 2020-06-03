@@ -50,8 +50,4 @@ public class FaceService {
         return deletedFaces.size();
     }
 
-    public void updateModelApiKeyForFaces(final String modelKey, final String newModelApiKey) {
-        modelDao.updateModelApiKey(modelKey, newModelApiKey);
-        faceDao.updateFacesModelKey(modelKey, newModelApiKey);
-    }
 }

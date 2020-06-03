@@ -2,10 +2,10 @@ package com.exadel.frs.core.trainservice.dao;
 
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import com.exadel.frs.core.trainservice.entity.Model;
+import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
-import com.exadel.frs.core.trainservice.repository.ModelRepository;
+import com.exadel.frs.core.trainservice.repository.mongo.ModelRepository;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -55,7 +55,9 @@ public class ModelDao {
     }
 
     public FaceClassifier getModel(final String modelKey) {
-        return modelRepository.findFirstByModelKey(modelKey).orElseThrow(ModelNotTrainedException::new).getClassifier();
+        return modelRepository.findById(modelKey)
+                              .orElseThrow(ModelNotTrainedException::new)
+                              .getClassifier();
     }
 
     public void deleteModel(final String modelKey) {

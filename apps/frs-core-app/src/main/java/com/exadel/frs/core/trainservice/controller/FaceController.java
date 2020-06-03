@@ -55,14 +55,4 @@ public class FaceController {
     ) {
         return faceService.deleteFacesByModel(apiKey);
     }
-
-    @PutMapping("/api-key")
-    public void updateModelApiKeyForFaces(
-            @RequestHeader(name = X_FRS_API_KEY_HEADER)
-            final String apiKey,
-            @RequestParam(name = NEW_MODEL_KEY_HEADER)
-            final String newModelApiKey
-    ) {
-        faceService.updateModelApiKeyForFaces(apiKey, newModelApiKey);
-    }
 }

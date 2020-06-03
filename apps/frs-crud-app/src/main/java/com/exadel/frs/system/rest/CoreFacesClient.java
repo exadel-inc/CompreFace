@@ -10,7 +10,7 @@ public interface CoreFacesClient {
     @Headers("x-frs-api-key: {apiKey}")
     int deleteFaces(@Param("apiKey") final String apiKey);
 
-    @RequestLine("PUT /api/v1/faces/api-key?new_model_api_key={newModelKey}")
+    @RequestLine("PUT /api/v1/models/api-key?new_model_api_key={newModelKey}")
     @Headers("x-frs-api-key: {apiKey}")
     void updateModelKeyForFaces(
             @Param("apiKey") final String apiKey,
