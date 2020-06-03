@@ -51,7 +51,7 @@ services:
       context: ui
     container_name: "frs-ui"
     ports:
-      - "8083:80"
+      - "8084:80"
     depends_on:
       - frs-api
       - frs-admin

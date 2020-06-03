@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "ng serve --port 4201 --disable-host-check --configuration=local --hmr",
     "build": "ng build",
+    "build:prod": "ng build --configuration=production",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
