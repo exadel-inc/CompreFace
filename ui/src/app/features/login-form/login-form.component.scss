@@ -1,0 +1,59 @@
+@import "colors.scss";
+
+
+.logo-img {
+width: 100%;
+}
+
+.mat-card-header {
+  // workaround: mat-card-header-text can not be selected (
+  margin-left: -16px;
+}
+
+.login {
+  &-full-width {
+    width: 100%;
+  }
+
+  margin-bottom: 10px;
+}
+
+.alert {
+  color: $white;
+  padding: 10px;
+  margin-bottom: 10px;
+
+  &-danger {
+    background-color: $red;
+  }
+}
+
+.alert {
+  &-success {
+    background-color: $green;
+  }
+}
+
+.mat-card-content {
+  margin-bottom: 0;
+}
+
+.mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  padding-top: 0;
+}
+
+.forgot-password {
+  text-align: center;
+
+  a {
+    color: $accent;
+  }
+}
+
+.error-wrapper {
+  display: flex;
+  justify-content: space-between;
+}

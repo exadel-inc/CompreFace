@@ -1,0 +1,12 @@
+<form class="email-form" [formGroup]="form">
+  <mat-form-field>
+    <input matInput placeholder="email" formControlName="email" name="email" [matAutocomplete]="auto">
+<!--    <input *ngIf="!options" matInput placeholder="email" formControlName="email" name="email">-->
+  </mat-form-field>
+
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{option}}</mat-option>
+  </mat-autocomplete>
+
+  <button mat-button color="primary" (click)="onClick()">INVITE</button>
+</form>

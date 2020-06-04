@@ -1,0 +1,55 @@
+@import 'colors.scss';
+@import 'media.scss';
+
+.mat-toolbar {
+  background-color: $primary;
+  color: $white;
+}
+
+.mat-toolbar-row {
+  justify-content: space-between;
+
+  .logo, .logo img {
+    height: 100%;
+  }
+}
+
+.avatar-wrapper {
+  flex-grow: 1;
+  text-align: right;
+
+  button {
+    width: 50px;
+    height: 50px;
+    overflow: hidden;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.mat-button-focus-overlay {
+  background: none;
+}
+
+.mat-flat-button {
+  box-shadow: none;
+  background: none;
+  text-decoration: underline;
+  color: $basic;
+
+  &:hover {
+    color: $hovered;
+  }
+
+  @include mobile-portrait {
+    padding: 0;
+    min-width: 55px;
+  }
+}
+
+.page-name {
+  text-transform: capitalize;
+}

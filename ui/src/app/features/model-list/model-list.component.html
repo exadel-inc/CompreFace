@@ -1,0 +1,16 @@
+<div class="model-list">
+  <h3>Models</h3>
+  <app-spinner *ngIf="isLoading$ | async">></app-spinner>
+  <app-model-table
+    class="app-table"
+    [isLoading$]="isLoading$"
+    [userRole]="userRole$ | async"
+    [tableConfig]="tableConfig$ | async"
+    (copyApiKey)="copyApiKey($event)"
+    (edit)="edit($event)"
+    (delete)="delete($event)">
+  </app-model-table>
+</div>
+<div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
+  <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onCreateNewModel()">CREATE</button>
+</div>

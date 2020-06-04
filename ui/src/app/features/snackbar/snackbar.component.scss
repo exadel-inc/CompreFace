@@ -1,0 +1,19 @@
+@import 'media.scss';
+@import 'colors.scss';
+
+.message {
+  // todo fix font-family
+  font-family: 'Roboto';
+  color: $white;
+}
+
+// todo fix ::ng-deep
+::ng-deep .app-snackbar-panel {
+  &.info {
+    background-color: $green;
+  }
+
+  &.error {
+    background-color: $red;
+  }
+}

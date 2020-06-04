@@ -29,3 +29,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.DS_Store
+.idea
+package-lock.json

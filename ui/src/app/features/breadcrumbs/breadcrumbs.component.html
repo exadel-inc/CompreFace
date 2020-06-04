@@ -1,0 +1,5 @@
+<mat-card *ngIf="org$ | async as org" class="breadcrumbs">
+  <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.ORGANIZATION, org.id]">{{org.name}}</a>
+  <div class="separator"> / </div>
+  <div class="breadcrumbs-link" *ngIf="(app$ | async) as app">{{app.name}}</div>
+</mat-card>

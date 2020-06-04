@@ -1,0 +1,20 @@
+<div class="organization-header grid-container">
+  <mat-card class="organization-header_left-coll">
+    <div *ngIf="organizations$ | async as organizations">
+      <app-entity-title
+        [entityName]="'Organization'"
+        [selectId$]="selectedId$"
+        [options]="organizations"
+        (selectIdChange)="selectOrganization($event)">
+      </app-entity-title>
+    </div>
+    <div class="button-wrapper" *ngIf="userRole$ | async as userRole">
+      <button *ngIf="userRole !== 'USER'" class="edit_button" mat-button type="submit" color="primary" (click)="edit()">EDIT</button>
+      <button *ngIf="userRole === 'OWNER'" mat-button type="submit" color="primary" (click)="delete()">DELETE</button>
+      <button mat-button type="submit" color="primary" (click)="createNew()">CREATE</button>
+    </div>
+  </mat-card>
+  <mat-card class="organization-header_right-coll" *ngIf="userRole$ | async as userRole">
+    <div class="your_role">Your role: {{userRole}}</div>
+  </mat-card>
+</div>
