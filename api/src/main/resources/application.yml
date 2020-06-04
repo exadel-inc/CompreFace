@@ -1,0 +1,70 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: dev
+
+---
+
+environment:
+  servers:
+    PYTHON:
+      url: ${PYTHON_URL:http://dev.frs.exadel.by:3000}
+
+spring:
+
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
+
+  jackson:
+    serialization:
+      indent-output: true
+  data:
+    mongodb:
+      uri: ${MONGO_URL:mongodb://msqv500.exadel.by:27017}
+      database: efrs_db
+  datasource-pg:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/frs}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:h9Zn784HdT}
+  jpa:
+    properties:
+      hibernate:
+        default_schema: public
+        jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    open-in-view: true
+    generate-ddl: false
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+---
+
+spring:
+  profiles: dev
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
+
+image:
+  types:
+    - tif
+    - tiff
+    - jpg
+    - jpeg
+    - png
+    - bmp
+    - ico
+    - gif
+    - webp

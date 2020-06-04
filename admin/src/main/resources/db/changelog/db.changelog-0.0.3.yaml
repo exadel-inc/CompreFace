@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: changelog-0.0.3.1
+      author: Siarhei Blashuk
+      changes:
+        - addColumn:
+            tableName: app
+            columns:
+              - column:
+                  name: api_key
+                  type: varchar(36)
+
+        - addColumn:
+            tableName: model
+            columns:
+              - column:
+                  name: api_key
+                  type: varchar(36)
+
+  - changeSet:
+      id: changelog-0.0.3.2
+      author: Siarhei Blashuk
+      changes:
+        - sql:
+            comment: Data migration from guid to api_key column for app table
+            sql: UPDATE app SET api_key = guid
+        - sql:
+            comment: Data migration from guid to api_key column for model table
+            sql: UPDATE model SET api_key = guid
+
+  - changeSet:
+      id: changelog-0.0.3.3
+      author: Siarhei Blashuk
+      changes:
+        - addUniqueConstraint:
+            columnNames: api_key
+            constraintName: app_api_key_uindex
+            tableName: app
+
+        - addUniqueConstraint:
+            columnNames: api_key
+            constraintName: model_api_key_uindex
+            tableName: model
+
+

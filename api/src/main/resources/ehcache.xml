@@ -1,0 +1,8 @@
+<config>
+    <cache name="modelKeys"
+           maxEntriesLocalHeap="100000"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="60"
+    />
+</config>
