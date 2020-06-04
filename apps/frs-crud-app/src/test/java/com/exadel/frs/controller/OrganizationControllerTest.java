@@ -59,11 +59,11 @@ public class OrganizationControllerTest {
                 .contentType(MediaType.APPLICATION_JSON);
 
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
 
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithNoName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
     }
 }
