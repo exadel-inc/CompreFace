@@ -1,0 +1,62 @@
+tags:
+  - Core
+summary: 'Scan faces in the given image and return their embeddings.'
+description: 'Returns the probability of face detection, the embedding array, and the embedding calculator version. Embeddings calculated by calculators with different versions should not be used together in the same models. Embedding array size may be different for different calculators.'
+operationId: scanFacesPost
+consumes:
+  - multipart/form-data
+produces:
+  - application/json
+parameters:
+  - in: formData
+    name: file
+    type: file
+    required: 'true'
+    description: 'A picture with at least one face.'
+  - in: formData
+    name: limit
+    description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
+    type: integer
+    default: 0
+  - in: formData
+    name: det_prob_threshold
+    description: 'The minimum required confidence that a found face is actually a face. Decrease this value if faces are not detected. Valid values are in the range (0;1).'
+    type: float
+responses:
+  '200':
+    description: 'Face scan completed'
+    schema:
+      type: object
+      properties:
+        calculator_version:
+          type: string
+          example: 'FaceLibrary_v7'
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              box:
+                type: object
+                properties:
+                  x_min:
+                    type: integer
+                    example: 141
+                  x_max:
+                    type: integer
+                    example: 192
+                  y_min:
+                    type: integer
+                    example: 57
+                  y_max:
+                    type: integer
+                    example: 94
+                  probability:
+                    type: number
+                    format: float
+                    example: 0.9581532
+              embedding:
+                type: array
+                items:
+                  type: float
+                example: [0.181344, 0.752645, 0.678356, 0.456726, 0.245865]

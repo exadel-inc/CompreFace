@@ -1,0 +1,19 @@
+tags:
+  - Core
+summary: 'Get service availability status.'
+description: 'Check whether the service has started and is available.'
+operationId: getStatus
+produces:
+  - application/json
+responses:
+  '200':
+    description: 'Service is available.'
+    schema:
+      type: object
+      properties:
+        status:
+          type: string
+          example: OK
+        build_version:
+          type: string
+          example: build-1.2.684-rc2
