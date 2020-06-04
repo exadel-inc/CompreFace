@@ -5,6 +5,6 @@ COPY . .
 RUN npm install
 RUN npm run build:prod
 ### STAGE 2: Run ###
-FROM nginx:1.17.1-alpine
+FROM nginx:1.19.0
 COPY --from=build /usr/src/app/dist/frs-client-fe /usr/share/nginx/html
-COPY --from=build /usr/src/app/config-local /usr/share/nginx/conf
+COPY --from=build /usr/src/app/config/nginx.conf /etc/nginx/nginx.conf
