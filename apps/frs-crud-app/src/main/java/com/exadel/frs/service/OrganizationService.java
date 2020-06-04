@@ -4,8 +4,6 @@ import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.dto.ui.OrgCreateDto;
 import com.exadel.frs.dto.ui.OrgUpdateDto;
-import com.exadel.frs.dto.ui.UserInviteDto;
-import com.exadel.frs.dto.ui.UserRemoveDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserOrganizationRole;
@@ -13,9 +11,7 @@ import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.OrganizationNotFoundException;
-import com.exadel.frs.exception.SelfRemoveException;
 import com.exadel.frs.exception.SelfRoleChangeException;
-import com.exadel.frs.exception.UserAlreadyInOrganizationException;
 import com.exadel.frs.repository.OrganizationRepository;
 import java.util.List;
 import java.util.UUID;
@@ -131,42 +127,6 @@ public class OrganizationService {
         organizationRepository.save(organization);
 
         return userOrganizationRole;
-    }
-
-    public UserOrganizationRole inviteUser(final UserInviteDto userInviteDto, final String guid, final Long adminId) {
-        val organization = getOrganization(guid);
-        verifyUserHasWritePrivileges(adminId, organization);
-
-        val user = userService.getEnabledUserByEmail(userInviteDto.getUserEmail());
-        val userOrganizationRole = organization.getUserOrganizationRole(user.getId());
-        if (userOrganizationRole.isPresent()) {
-            throw new UserAlreadyInOrganizationException(userInviteDto.getUserEmail(), guid);
-        }
-
-        val newOrgRole = OrganizationRole.valueOf(userInviteDto.getRole());
-        if (newOrgRole == OWNER) {
-            organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
-        }
-
-        organization.addUserOrganizationRole(user, newOrgRole);
-        val savedOrg = organizationRepository.save(organization);
-
-        return savedOrg.getUserOrganizationRole(user.getId()).orElseThrow();
-    }
-
-    public void removeUserFromOrganization(final UserRemoveDto userRemoveDto, final String guid, final Long adminId) {
-        val organization = getOrganization(guid);
-        verifyUserHasWritePrivileges(adminId, organization);
-
-        val user = userService.getUserByGuid(userRemoveDto.getUserId());
-        if (user.getId().equals(adminId)) {
-            throw new SelfRemoveException();
-        }
-
-        organization.getUserOrganizationRoles().removeIf(userOrganizationRole ->
-                userOrganizationRole.getId().getUserId().equals(user.getId()));
-
-        organizationRepository.save(organization);
     }
 
     @Transactional

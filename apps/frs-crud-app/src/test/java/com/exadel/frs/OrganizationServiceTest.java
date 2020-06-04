@@ -13,8 +13,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.dto.ui.OrgCreateDto;
 import com.exadel.frs.dto.ui.OrgUpdateDto;
-import com.exadel.frs.dto.ui.UserInviteDto;
-import com.exadel.frs.dto.ui.UserRemoveDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
@@ -23,7 +21,6 @@ import com.exadel.frs.entity.UserOrganizationRoleId;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.exception.SelfRemoveException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.AppModelRepository;
@@ -296,117 +293,6 @@ class OrganizationServiceTest {
         assertThrows(
                 SelfRoleChangeException.class,
                 () -> organizationService.updateUserOrgRole(userRoleUpdateDto, ORGANIZATION_GUID, USER_ID)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("writeRoles")
-    void successAddToOrganization(OrganizationRole organizationRole) {
-        val userInviteDto = UserInviteDto.builder()
-                                         .userEmail("email")
-                                         .role(USER.toString())
-                                         .build();
-
-        val admin = user(ADMIN_ID);
-        val user = user(USER_ID);
-
-        val organization = Organization.builder().build();
-        organization.addUserOrganizationRole(admin, organizationRole);
-
-        when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
-        when(userServiceMock.getEnabledUserByEmail(anyString())).thenReturn(user);
-        when(organizationRepositoryMock.save(organization)).thenReturn(organization);
-
-        organizationService.inviteUser(userInviteDto, ORGANIZATION_GUID, ADMIN_ID);
-
-        assertThat(organization.getUserOrganizationRoles()).hasSize(2);
-        assertThat(organization.getUserOrganizationRole(USER_ID).get().getRole()).isEqualTo(USER);
-    }
-
-    @ParameterizedTest
-    @MethodSource("readRoles")
-    void failAddToOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
-        val userInviteDto = UserInviteDto.builder()
-                                         .userEmail("email")
-                                         .role(USER.toString())
-                                         .build();
-
-        val user = user(USER_ID);
-
-        val organization = Organization.builder().build();
-        organization.addUserOrganizationRole(user, organizationRole);
-
-        when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
-
-        assertThrows(
-                InsufficientPrivilegesException.class,
-                () -> organizationService.inviteUser(userInviteDto, ORGANIZATION_GUID, USER_ID)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("writeRoles")
-    void successRemoveFromOrganization(OrganizationRole organizationRole) {
-        val userRemoveDto = UserRemoveDto.builder()
-                                         .userId("userGuid")
-                                         .build();
-
-        val admin = user(ADMIN_ID);
-        val user = user(USER_ID);
-
-        val organization = Organization.builder().build();
-        organization.addUserOrganizationRole(admin, organizationRole);
-        organization.addUserOrganizationRole(user, USER);
-
-        val organizationUpdate = Organization.builder().build();
-        organizationUpdate.addUserOrganizationRole(user, USER);
-
-        when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
-        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
-
-        organizationService.removeUserFromOrganization(userRemoveDto, ORGANIZATION_GUID, ADMIN_ID);
-
-        assertThat(organization.getUserOrganizationRoles()).hasSize(1);
-    }
-
-    @ParameterizedTest
-    @MethodSource("readRoles")
-    void failRemoveFromOrganizationInsufficientPrivileges(OrganizationRole organizationRole) {
-        val userRemoveDto = UserRemoveDto.builder()
-                                         .userId("userGuid")
-                                         .build();
-
-        val user = user(USER_ID);
-
-        val organization = Organization.builder().build();
-        organization.addUserOrganizationRole(user, organizationRole);
-
-        when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
-
-        assertThrows(
-                InsufficientPrivilegesException.class,
-                () -> organizationService.removeUserFromOrganization(userRemoveDto, ORGANIZATION_GUID, USER_ID)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("writeRoles")
-    void failRemoveFromOrganizationSelfRemove(OrganizationRole organizationRole) {
-        val userRemoveDto = UserRemoveDto.builder()
-                                         .userId("userGuid")
-                                         .build();
-
-        val admin = user(ADMIN_ID);
-
-        val organization = Organization.builder().build();
-        organization.addUserOrganizationRole(admin, organizationRole);
-
-        when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
-        when(userServiceMock.getUserByGuid(any())).thenReturn(admin);
-
-        assertThrows(
-                SelfRemoveException.class,
-                () -> organizationService.removeUserFromOrganization(userRemoveDto, ORGANIZATION_GUID, ADMIN_ID)
         );
     }
 

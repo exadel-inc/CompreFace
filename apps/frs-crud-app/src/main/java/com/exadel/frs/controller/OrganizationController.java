@@ -1,10 +1,9 @@
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import com.exadel.frs.dto.ui.OrgCreateDto;
 import com.exadel.frs.dto.ui.OrgResponseDto;
 import com.exadel.frs.dto.ui.OrgUpdateDto;
-import com.exadel.frs.dto.ui.UserInviteDto;
-import com.exadel.frs.dto.ui.UserRemoveDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.enums.OrganizationRole;
@@ -16,6 +15,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.List;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -27,11 +28,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.Valid;
-import java.util.List;
-
-import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 
 @RestController
 @RequiredArgsConstructor
@@ -88,7 +84,8 @@ public class OrganizationController {
     })
     public OrgResponseDto updateOrganization(
             @ApiParam(value = "GUID of organization that needs to be updated", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid,
+            @PathVariable
+            final String guid,
             @ApiParam(value = "Organization data", required = true)
             @Valid
             @RequestBody
@@ -137,27 +134,12 @@ public class OrganizationController {
         );
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
-    @PutMapping("/org/{guid}/invite")
-    @ApiOperation(value = "Add users to organization")
-    public UserRoleResponseDto inviteUser(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid,
-            @ApiParam(value = "User invite data", required = true)
-            @Valid
-            @RequestBody
-            final UserInviteDto userInviteDto
-    ) {
-        return userOrgRoleMapper.toUserRoleResponseDto(
-                organizationService.inviteUser(userInviteDto, guid, SecurityUtils.getPrincipalId())
-        );
-    }
-
     @PutMapping("/org/{guid}/role")
     @ApiOperation(value = "Update user organization role")
     public UserRoleResponseDto updateUserOrgRole(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid,
+            @PathVariable
+            final String guid,
             @ApiParam(value = "User role data", required = true)
             @Valid
             @RequestBody
@@ -167,18 +149,5 @@ public class OrganizationController {
         val updatedUserOrgRole = organizationService.updateUserOrgRole(userRoleUpdateDto, guid, admin);
 
         return userOrgRoleMapper.toUserRoleResponseDto(updatedUserOrgRole);
-    }
-
-    @PutMapping("/org/{guid}/remove")
-    @ApiOperation(value = "Remove users from organization")
-    public void removeUsersFromOrganization(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String guid,
-            @ApiParam(value = "User to remove", required = true)
-            @Valid
-            @RequestBody
-            final UserRemoveDto userRemoveDto
-    ) {
-        organizationService.removeUserFromOrganization(userRemoveDto, guid, SecurityUtils.getPrincipalId());
     }
 }
