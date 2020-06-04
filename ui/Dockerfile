@@ -1,8 +1,10 @@
 FROM node:12.7-alpine AS build
 WORKDIR /usr/src/app
+LABEL intermidiate_frs=true
 COPY . .
 RUN npm install
 RUN npm run build:prod
 ### STAGE 2: Run ###
 FROM nginx:1.17.1-alpine
 COPY --from=build /usr/src/app/dist/frs-client-fe /usr/share/nginx/html
+COPY --from=build /usr/src/app/config-local /usr/share/nginx/conf
