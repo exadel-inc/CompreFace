@@ -7,7 +7,6 @@
         <groupId>com.exadel</groupId>
         <artifactId>frs-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../</relativePath>
     </parent>
 
     <artifactId>frs-crud-app</artifactId>
