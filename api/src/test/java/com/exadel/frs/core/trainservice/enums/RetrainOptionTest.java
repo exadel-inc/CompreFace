@@ -28,7 +28,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.core.trainservice.exception.ClassifierIsAlreadyTrainingException;
 import com.exadel.frs.core.trainservice.service.RetrainService;
-import com.exadel.frs.core.trainservice.system.Token;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -38,21 +37,19 @@ class RetrainOptionTest {
 
     @Test
     void runNO() {
-        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
 
-        NO.run(token, retrainService);
+        NO.run(MODEL_KEY, retrainService);
 
         verifyNoInteractions(retrainService);
     }
 
     @Test
     void runYES() {
-        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(false);
 
-        YES.run(token, retrainService);
+        YES.run(MODEL_KEY, retrainService);
 
         verify(retrainService).isTrainingRun(MODEL_KEY);
         verify(retrainService).startRetrain(MODEL_KEY);
@@ -61,12 +58,11 @@ class RetrainOptionTest {
 
     @Test
     void runYESException() {
-        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 
         assertThrows(ClassifierIsAlreadyTrainingException.class, () ->
-                YES.run(token, retrainService));
+                YES.run(MODEL_KEY, retrainService));
 
         verify(retrainService).isTrainingRun(MODEL_KEY);
         verifyNoMoreInteractions(retrainService);
@@ -74,11 +70,10 @@ class RetrainOptionTest {
 
     @Test
     void runFORCE() {
-        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 
-        FORCE.run(token, retrainService);
+        FORCE.run(MODEL_KEY, retrainService);
 
         verify(retrainService).abortTraining(MODEL_KEY);
         verify(retrainService).startRetrain(MODEL_KEY);

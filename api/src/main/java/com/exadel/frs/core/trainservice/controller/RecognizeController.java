@@ -23,7 +23,6 @@ import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
-import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
@@ -47,7 +46,6 @@ public class RecognizeController {
     private final FaceClassifierManager manager;
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesClient client;
-    private final SystemService systemService;
     private final ImageExtensionValidator imageValidator;
 
     @PostMapping(value = "/recognize")
@@ -59,9 +57,8 @@ public class RecognizeController {
             @ApiParam(value = "Maximum number of faces to be recognized")
             @RequestParam(required = false) final Integer limit
     ) {
-        val token = systemService.buildToken(apiKey);
 
-        val lock = manager.isTraining(token.getModelApiKey());
+        val lock = manager.isTraining(apiKey);
         if (lock) {
             return ResponseEntity.status(LOCKED)
                                  .body(new RetrainResponse("Model is locked now, try later"));
@@ -73,7 +70,7 @@ public class RecognizeController {
         val scanResult = scanResponse.getResult().get(0);
 
         val prediction = classifierPredictor.predict(
-                token.getModelApiKey(),
+                apiKey,
                 scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
         );
 

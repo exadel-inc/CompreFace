@@ -23,12 +23,10 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.service.ScanService;
-import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,7 +43,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class ScanController {
 
     private final ScanService scanService;
-    private final SystemService systemService;
     private final RetrainService retrainService;
     private final ImageExtensionValidator imageValidator;
 
@@ -72,10 +69,9 @@ public class ScanController {
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey
     ) throws IOException {
-        val token = systemService.buildToken(apiKey);
 
         imageValidator.validate(file);
-        scanService.scanAndSaveFace(file, faceName, detProbThreshold, token.getModelApiKey());
-        getTrainingOption(retrainOption).run(token, retrainService);
+        scanService.scanAndSaveFace(file, faceName, detProbThreshold, apiKey);
+        getTrainingOption(retrainOption).run(apiKey, retrainService);
     }
 }
