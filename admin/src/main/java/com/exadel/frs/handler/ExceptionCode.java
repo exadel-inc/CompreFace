@@ -1,10 +1,11 @@
 package com.exadel.frs.handler;
 
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
-
-import static org.springframework.http.HttpStatus.*;
 
 @AllArgsConstructor
 @Getter
@@ -21,14 +22,12 @@ public enum ExceptionCode {
     MODEL_NOT_FOUND(10, NOT_FOUND),
     ORGANIZATION_MISMATCH(11, BAD_REQUEST),
     ORGANIZATION_NOT_FOUND(12, NOT_FOUND),
-    SELF_REMOVE(13, BAD_REQUEST),
     SELF_ROLE_CHANGE(14, BAD_REQUEST),
     USER_DOES_NOT_BELONG_TO_ORGANIZATION(15, NOT_FOUND),
     USER_DOES_NOT_EXIST(16, NOT_FOUND),
     NAME_IS_NOT_UNIQUE(17, BAD_REQUEST),
     APP_DOES_NOT_BELONG_TO_ORG(18, BAD_REQUEST),
     USER_ALREADY_HAS_ACCESS_TO_APP(19, BAD_REQUEST),
-    USER_ALREADY_IN_ORG(20, BAD_REQUEST),
     UNAVAILABLE_FILE_EXTENSION(21, BAD_REQUEST),
     INVALID_EMAIL_FORMAT(22, BAD_REQUEST),
     MODEL_SHARE_REQUEST_NOT_FOUND(23, NOT_FOUND),

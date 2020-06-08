@@ -2,8 +2,6 @@ package com.exadel.frs.service;
 
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static java.util.stream.Collectors.toList;
-import com.exadel.frs.dto.ui.OrgCreateDto;
-import com.exadel.frs.dto.ui.OrgUpdateDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserOrganizationRole;
@@ -14,8 +12,6 @@ import com.exadel.frs.exception.OrganizationNotFoundException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.repository.OrganizationRepository;
 import java.util.List;
-import java.util.UUID;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -59,6 +55,7 @@ public class OrganizationService {
     public List<Organization> getOrganizations(final Long userId) {
         return organizationRepository.findAllByUserOrganizationRoles_Id_UserId(userId);
     }
+
     public List<Organization> getOwnedOrganizations(final Long userId) {
         return getOrganizations(userId).stream()
                                        .filter(org -> org.getUserOrganizationRoleOrThrow(userId).getRole().equals(OWNER))
@@ -82,31 +79,6 @@ public class OrganizationService {
         return organization.getUserOrganizationRoles();
     }
 
-    public Organization createOrganization(final OrgCreateDto orgCreateDto, final Long userId) {
-        verifyNameIsUnique(orgCreateDto.getName());
-        val organization = Organization.builder()
-                                       .name(orgCreateDto.getName())
-                                       .guid(UUID.randomUUID().toString())
-                                       .build();
-
-        organization.addUserOrganizationRole(userService.getUser(userId), OWNER);
-
-        return organizationRepository.save(organization);
-    }
-
-    public Organization updateOrganization(final OrgUpdateDto orgUpdateDto, final String guid, final Long userId) {
-        val organizationFromRepo = getOrganization(guid);
-        verifyUserHasWritePrivileges(userId, organizationFromRepo);
-        val isNewName = !organizationFromRepo.getName().equals(orgUpdateDto.getName());
-
-        if (isNewName) {
-            verifyNameIsUnique(orgUpdateDto.getName());
-            organizationFromRepo.setName(orgUpdateDto.getName());
-        }
-
-        return organizationRepository.save(organizationFromRepo);
-    }
-
     public UserOrganizationRole updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
         val organization = getOrganization(guid);
         verifyUserHasWritePrivileges(adminId, organization);
@@ -127,13 +99,5 @@ public class OrganizationService {
         organizationRepository.save(organization);
 
         return userOrganizationRole;
-    }
-
-    @Transactional
-    public void deleteOrganization(final String guid, final Long userId) {
-        val organization = getOrganization(guid);
-        verifyUserHasWritePrivileges(userId, organization);
-
-        organizationRepository.deleteById(organization.getId());
     }
 }
