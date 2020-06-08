@@ -32,7 +32,6 @@ import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
-import com.exadel.frs.core.trainservice.system.SystemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
@@ -57,7 +56,7 @@ public class FaceControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private final static String API_KEY = "model_key";
+    private static final String API_KEY = "model_key";
 
     @Autowired
     private ObjectMapper mapper;
@@ -68,20 +67,17 @@ public class FaceControllerTest {
     @MockBean
     private ModelDao modelDao;
 
-    @Autowired
-    private SystemService systemService;
 
     @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
-        val token = systemService.buildToken(API_KEY);
         val faces = List.of(
-                makeFace("A", token.getModelApiKey()),
-                makeFace("B", token.getModelApiKey())
+                makeFace("A", API_KEY),
+                makeFace("B", API_KEY)
         );
 
         doReturn(faces)
                 .when(facesRepository)
-                .findByApiKey(token.getModelApiKey());
+                .findByApiKey(API_KEY);
 
         val expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
 

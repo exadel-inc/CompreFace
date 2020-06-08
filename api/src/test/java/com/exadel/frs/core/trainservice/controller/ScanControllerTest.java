@@ -24,13 +24,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.exadel.frs.core.trainservice.TrainServiceApplication;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.config.WebMvcTestContext;
 import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
-import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.service.ScanService;
-import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -59,7 +55,7 @@ class ScanControllerTest {
     @MockBean
     private ImageExtensionValidator imageValidator;
 
-    private final static String API_KEY = "api_key:model_key";
+    private static final String API_KEY = "api_key:model_key";
 
     @Test
     void scanFaces() throws Exception {

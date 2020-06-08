@@ -16,23 +16,17 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
-import com.exadel.frs.core.trainservice.system.SystemServiceImpl;
 import java.util.List;
 import java.util.UUID;
 import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -43,7 +37,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
-@Import({FaceService.class, FaceDao.class, SystemServiceImpl.class})
+@Import({FaceService.class, FaceDao.class})
 @MockBeans({@MockBean(RetrainService.class), @MockBean(FaceClassifierManager.class)})
 public class FaceServiceITest {
 
@@ -56,8 +50,8 @@ public class FaceServiceITest {
     @MockBean
     private ModelDao modelDao;
 
-    private final static String MODEL_KEY = UUID.randomUUID().toString();
-    private final static String MODEL_KEY_OTHER = UUID.randomUUID().toString();
+    private static final String MODEL_KEY = UUID.randomUUID().toString();
+    private static final String MODEL_KEY_OTHER = UUID.randomUUID().toString();
 
     @BeforeEach
     void setUp() {

@@ -23,7 +23,6 @@ import static org.springframework.http.HttpStatus.OK;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.service.RetrainService;
-import com.exadel.frs.core.trainservice.system.SystemService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -41,7 +40,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class TrainController {
 
     private final RetrainService retrainService;
-    private final SystemService systemService;
 
     @WriteEndpoint
     @PostMapping("/retrain")
@@ -50,8 +48,7 @@ public class TrainController {
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val token = systemService.buildToken(apiKey);
-        retrainService.startRetrain(token.getModelApiKey());
+        retrainService.startRetrain(apiKey);
 
         return ResponseEntity.status(ACCEPTED)
                              .body(new RetrainResponse("Training is started"));
@@ -64,8 +61,7 @@ public class TrainController {
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val token = systemService.buildToken(apiKey);
-        val isRun = retrainService.isTrainingRun(token.getModelApiKey());
+        val isRun = retrainService.isTrainingRun(apiKey);
 
         if (isRun) {
             return ResponseEntity.status(ACCEPTED)
@@ -83,8 +79,7 @@ public class TrainController {
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val token = systemService.buildToken(apiKey);
-        retrainService.abortTraining(token.getModelApiKey());
+        retrainService.abortTraining(apiKey);
 
         return ResponseEntity.status(ACCEPTED)
                              .body(new RetrainResponse("Retraining is ensured to be stopped"));
