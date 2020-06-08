@@ -71,7 +71,7 @@ public class ScanController {
     ) throws IOException {
 
         imageValidator.validate(file);
-        scanService.scanAndSaveFace(file, faceName, detProbThreshold,apiKey);
+        scanService.scanAndSaveFace(file, faceName, detProbThreshold, apiKey);
         getTrainingOption(retrainOption).run(apiKey, retrainService);
     }
 }
