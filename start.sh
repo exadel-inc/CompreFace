@@ -1,4 +1,4 @@
-git checkout origin/develop
+git checkout develop
 git pull
 cd embedding-calculator
 dos2unix * ml/* e2e/* ml/tools/*
