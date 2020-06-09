@@ -4,7 +4,7 @@ server:
 environment:
   servers:
     FRS_CORE:
-      url: ${CORE_URL:http://frs-api:8000}
+      url: ${CORE_URL:http://frs-api:8080}
 
 app:
   security:
