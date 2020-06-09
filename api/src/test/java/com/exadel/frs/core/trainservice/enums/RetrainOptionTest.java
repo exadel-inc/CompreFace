@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package com.exadel.frs.core.trainservice.enums;
 
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.FORCE;
@@ -12,7 +28,6 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.core.trainservice.exception.ClassifierIsAlreadyTrainingException;
 import com.exadel.frs.core.trainservice.service.RetrainService;
-import com.exadel.frs.core.trainservice.system.Token;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
@@ -22,21 +37,19 @@ class RetrainOptionTest {
 
     @Test
     void runNO() {
-        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
 
-        NO.run(token, retrainService);
+        NO.run(MODEL_KEY, retrainService);
 
         verifyNoInteractions(retrainService);
     }
 
     @Test
     void runYES() {
-        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(false);
 
-        YES.run(token, retrainService);
+        YES.run(MODEL_KEY, retrainService);
 
         verify(retrainService).isTrainingRun(MODEL_KEY);
         verify(retrainService).startRetrain(MODEL_KEY);
@@ -45,12 +58,11 @@ class RetrainOptionTest {
 
     @Test
     void runYESException() {
-        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 
         assertThrows(ClassifierIsAlreadyTrainingException.class, () ->
-                YES.run(token, retrainService));
+                YES.run(MODEL_KEY, retrainService));
 
         verify(retrainService).isTrainingRun(MODEL_KEY);
         verifyNoMoreInteractions(retrainService);
@@ -58,11 +70,10 @@ class RetrainOptionTest {
 
     @Test
     void runFORCE() {
-        val token = new Token(MODEL_KEY);
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 
-        FORCE.run(token, retrainService);
+        FORCE.run(MODEL_KEY, retrainService);
 
         verify(retrainService).abortTraining(MODEL_KEY);
         verify(retrainService).startRetrain(MODEL_KEY);

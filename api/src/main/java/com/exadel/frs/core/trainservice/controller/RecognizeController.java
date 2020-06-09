@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
@@ -7,7 +23,6 @@ import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
-import com.exadel.frs.core.trainservice.system.SystemService;
 import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
@@ -31,7 +46,6 @@ public class RecognizeController {
     private final FaceClassifierManager manager;
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesClient client;
-    private final SystemService systemService;
     private final ImageExtensionValidator imageValidator;
 
     @PostMapping(value = "/recognize")
@@ -43,9 +57,8 @@ public class RecognizeController {
             @ApiParam(value = "Maximum number of faces to be recognized")
             @RequestParam(required = false) final Integer limit
     ) {
-        val token = systemService.buildToken(apiKey);
 
-        val lock = manager.isTraining(token.getModelApiKey());
+        val lock = manager.isTraining(apiKey);
         if (lock) {
             return ResponseEntity.status(LOCKED)
                                  .body(new RetrainResponse("Model is locked now, try later"));
@@ -57,7 +70,7 @@ public class RecognizeController {
         val scanResult = scanResponse.getResult().get(0);
 
         val prediction = classifierPredictor.predict(
-                token.getModelApiKey(),
+                apiKey,
                 scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
         );
 

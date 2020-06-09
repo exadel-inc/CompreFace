@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package com.exadel.frs.core.trainservice.dao;
 
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
@@ -12,7 +28,6 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
-import com.exadel.frs.core.trainservice.system.Token;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -44,46 +59,46 @@ class FaceDaoTest {
     @Test
     void deleteFaceByName() {
         val faceName = "faceName";
-        val token = new Token(randomAlphabetic(10));
+        val apiKey = randomAlphabetic(10);
         val faces = List.of(new Face());
-        when(facesRepository.deleteByApiKeyAndFaceName(token.getModelApiKey(), faceName)).thenReturn(faces);
+        when(facesRepository.deleteByApiKeyAndFaceName(apiKey, faceName)).thenReturn(faces);
 
-        val actual = faceDao.deleteFaceByName(faceName, token.getModelApiKey());
+        val actual = faceDao.deleteFaceByName(faceName, apiKey);
 
         assertThat(actual).isEqualTo(faces);
 
-        verify(facesRepository).deleteByApiKeyAndFaceName(token.getModelApiKey(), faceName);
+        verify(facesRepository).deleteByApiKeyAndFaceName(apiKey, faceName);
         verify(gridFsOperations, times(2)).delete(any());
         verifyNoMoreInteractions(facesRepository);
     }
 
     @Test
     void deleteFacesByApiKey() {
-        val token = new Token(randomAlphabetic(10));
+        val apiKey = randomAlphabetic(10);
         val faces = List.of(new Face());
-        when(facesRepository.deleteFacesByApiKey(token.getModelApiKey())).thenReturn(faces);
+        when(facesRepository.deleteFacesByApiKey(apiKey)).thenReturn(faces);
 
-        val actual = faceDao.deleteFacesByApiKey(token.getModelApiKey());
+        val actual = faceDao.deleteFacesByApiKey(apiKey);
 
         assertThat(actual).isEqualTo(faces);
 
-        verify(facesRepository).deleteFacesByApiKey(token.getModelApiKey());
+        verify(facesRepository).deleteFacesByApiKey(apiKey);
         verify(gridFsOperations, times(2)).delete(any());
         verifyNoMoreInteractions(facesRepository);
     }
 
     @Test
     void countFacesInModel() {
-        val token = new Token(randomAlphabetic(10));
+        val apiKey = randomAlphabetic(10);
         val facesCount = nextInt();
 
-        when(facesRepository.countByApiKey(token.getModelApiKey())).thenReturn(facesCount);
+        when(facesRepository.countByApiKey(apiKey)).thenReturn(facesCount);
 
-        val actual = faceDao.countFacesInModel(token.getModelApiKey());
+        val actual = faceDao.countFacesInModel(apiKey);
 
         assertThat(actual).isEqualTo(facesCount);
 
-        verify(facesRepository).countByApiKey(token.getModelApiKey());
+        verify(facesRepository).countByApiKey(apiKey);
         verifyNoMoreInteractions(facesRepository);
     }
 

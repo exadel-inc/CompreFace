@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
@@ -16,7 +32,6 @@ import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
-import com.exadel.frs.core.trainservice.system.SystemService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +56,7 @@ public class FaceControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private final static String API_KEY = "model_key";
+    private static final String API_KEY = "model_key";
 
     @Autowired
     private ObjectMapper mapper;
@@ -52,20 +67,17 @@ public class FaceControllerTest {
     @MockBean
     private ModelDao modelDao;
 
-    @Autowired
-    private SystemService systemService;
 
     @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
-        val token = systemService.buildToken(API_KEY);
         val faces = List.of(
-                makeFace("A", token.getModelApiKey()),
-                makeFace("B", token.getModelApiKey())
+                makeFace("A", API_KEY),
+                makeFace("B", API_KEY)
         );
 
         doReturn(faces)
                 .when(facesRepository)
-                .findByApiKey(token.getModelApiKey());
+                .findByApiKey(API_KEY);
 
         val expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
 

@@ -1,12 +1,26 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package com.exadel.frs.service;
 
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
@@ -22,7 +36,6 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.NonNull;
 import lombok.val;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,21 +50,17 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final EmailSender emailSender;
     private final Environment env;
-    private final OrganizationService organizationService;
 
     public UserService(
             @NonNull final UserRepository userRepository,
             @NonNull final PasswordEncoder encoder,
             @NonNull final EmailSender emailSender,
-            @NonNull final Environment env,
-            @Lazy
-            @NonNull final OrganizationService organizationService
+            @NonNull final Environment env
     ) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.emailSender = emailSender;
         this.env = env;
-        this.organizationService = organizationService;
     }
 
     public User getUser(final Long id) {
@@ -153,7 +162,6 @@ public class UserService {
 
     @Transactional
     public void deleteUser(final Long id) {
-        deleteOrganizationsThatBelongToUser(id);
         userRepository.deleteById(id);
     }
 
@@ -186,13 +194,5 @@ public class UserService {
         user.setRegistrationToken(null);
 
         userRepository.save(user);
-    }
-
-    private void deleteOrganizationsThatBelongToUser(final Long userId) {
-        val ownedOrgGuids = organizationService.getOwnedOrganizations(userId).stream()
-                                               .map(Organization::getGuid)
-                                               .collect(toList());
-
-        ownedOrgGuids.forEach(orgGuid -> organizationService.deleteOrganization(orgGuid, userId));
     }
 }
