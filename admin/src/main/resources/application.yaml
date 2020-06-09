@@ -4,7 +4,7 @@ server:
 environment:
   servers:
     FRS_CORE:
-      url: ${CORE_URL:http://dev.frs.exadel.by:8082}
+      url: ${CORE_URL:http://frs-core:3000}
 
 app:
   security:
@@ -27,7 +27,7 @@ spring:
       max-request-size: 10MB
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/frs}
+    url: ${POSTGRES_URL:jdbc:postgresql://frs-postgres-db:5432/frs}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
   jpa:
@@ -74,7 +74,7 @@ swagger:
     version: 0.0.2-SNAPSHOT
 
 host:
-  frs: ${FRS_CRUD_HOST:dev.frs.exadel.by}
+  frs: ${FRS_CRUD_HOST:http://frs-crud:8080}
   full:
     dns:
       auth:

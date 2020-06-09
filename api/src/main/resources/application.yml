@@ -10,7 +10,7 @@ spring:
 environment:
   servers:
     PYTHON:
-      url: ${PYTHON_URL:http://dev.frs.exadel.by:3000}
+      url: ${PYTHON_URL:http://frs-core:3000}
 
 spring:
 
@@ -23,13 +23,13 @@ spring:
       indent-output: true
   data:
     mongodb:
-      uri: ${MONGO_URL:mongodb://msqv500.exadel.by:27017}
+      uri: ${MONGO_URL:mongodb://frs-mongo-db:27017}
       database: efrs_db
   datasource-pg:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://localhost:5432/frs}
+    url: ${POSTGRES_URL:jdbc:postgresql://frs-postgres-db:5432/frs}
     username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:h9Zn784HdT}
+    password: ${POSTGRES_PASSWORD:postgres}
   jpa:
     properties:
       hibernate:

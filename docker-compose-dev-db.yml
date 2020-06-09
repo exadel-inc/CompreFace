@@ -24,14 +24,17 @@ services:
     ports:
       - "8082:8080"
     environment:
-      - PYTHON_URL=http://frs-core:3000
+      - POSTGRES_PASSWORD=h9Zn784HdT
+      - POSTGRES_URL=jdbc:postgresql://msqv500.exadel.by:5432/frs
+      - MONGO_URL=mongodb://msqv500.exadel.by:27017
+
 
   frs-fe:
     build:
       context: ui
     container_name: "frs-ui"
     ports:
-      - "8083:80"
+      - "8000:80"
     depends_on:
       - frs-api
       - frs-admin
@@ -41,5 +44,5 @@ services:
     build:
       context: embedding-calculator
     environment:
-      - MONGODB_URI=mongodb://msqv500.exadel.by:27017
+      - MONGODB_URI=mongodb://msqv500.exadel.by:27017/efrs_db
       - ML_PORT=3000
