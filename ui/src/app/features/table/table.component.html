@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<table mat-table *ngIf="!(isLoading$ | async)" [dataSource]="data">
+<table mat-table *ngIf="!isLoading" [dataSource]="data">
   <!-- Position Column -->
   <ng-container *ngFor="let col of columnsDefinition" matColumnDef={{col.title}}>
     <th mat-header-cell *matHeaderCellDef> {{col.title}} </th>

@@ -19,7 +19,7 @@
   <app-spinner *ngIf="isLoading$ | async">></app-spinner>
   <app-model-table
     class="app-table"
-    [isLoading$]="isLoading$"
+    [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
     [tableConfig]="tableConfig$ | async"
     (copyApiKey)="copyApiKey($event)"
