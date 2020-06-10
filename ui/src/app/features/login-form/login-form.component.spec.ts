@@ -13,26 +13,28 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { CommonModule } from '@angular/common';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Store } from '@ngrx/store';
+import { MockStore } from '@ngrx/store/testing';
+import { of } from 'rxjs';
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {LoginFormComponent} from './login-form.component';
-import {Store} from '@ngrx/store';
-import {MockStore} from '@ngrx/store/testing';
-import {of} from 'rxjs';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterTestingModule} from '@angular/router/testing';
-import {MatCardModule} from '@angular/material/card';
-import {MatInputModule} from '@angular/material/input';
-import {MatDialogModule} from '@angular/material/dialog';
+import { LoginFormComponent } from './login-form.component';
+
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
   let fixture: ComponentFixture<LoginFormComponent>;
-  let store: MockStore<{ isAuthenticated: boolean, errorMessage: string,  successMessage: string }>;
-  const initialState = { isAuthenticated: false, errorMessage: 'some error message',  successMessage: 'some success message'};
+  let store: MockStore<{ isAuthenticated: boolean, errorMessage: string, successMessage: string }>;
+  const initialState = { isAuthenticated: false, errorMessage: 'some error message', successMessage: 'some success message' };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -43,7 +45,7 @@ describe('LoginFormComponent', () => {
         {
           provide: Store,
           useValue: {
-            dispatch: () => {},
+            dispatch: () => { },
             select: () => {
               return of(initialState);
             }
@@ -55,6 +57,7 @@ describe('LoginFormComponent', () => {
         MatCardModule,
         MatInputModule,
         MatDialogModule,
+        MatIconModule,
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
@@ -62,7 +65,7 @@ describe('LoginFormComponent', () => {
         RouterTestingModule
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     store = TestBed.get<Store<any>>(Store);
   }));

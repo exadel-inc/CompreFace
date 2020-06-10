@@ -135,7 +135,7 @@ describe('Login Guard', () => {
     guard.canActivate().subscribe(value => {
       expect(value).toBeFalsy();
       expect(guard.router.navigateByUrl).toHaveBeenCalledTimes(1);
-      expect(guard.router.navigateByUrl).toHaveBeenCalledWith(ROUTERS_URL.ORGANIZATION);
+      expect(guard.router.navigateByUrl).toHaveBeenCalledWith(ROUTERS_URL.HOME);
     });
   });
 });
