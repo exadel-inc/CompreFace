@@ -27,6 +27,7 @@ import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserMapper;
+import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -55,6 +56,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
+    private final OrganizationService organizationService;
     private final UserMapper userMapper;
 
     private Environment env;
@@ -91,6 +93,8 @@ public class UserController {
             @RequestBody final UserCreateDto userCreateDto
     ) {
         val user = userService.createUser(userCreateDto);
+        organizationService.addUserToDefaultOrg(user.getEmail());
+
         if (user.isEnabled()) {
             return new ResponseEntity(CREATED);
         } else {

@@ -17,13 +17,13 @@
 package com.exadel.frs.service;
 
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
+import static com.exadel.frs.enums.OrganizationRole.USER;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
-import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.OrganizationNotFoundException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.repository.OrganizationRepository;
@@ -52,12 +52,6 @@ public class OrganizationService {
     public void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
         if (OWNER != organization.getUserOrganizationRoleOrThrow(userId).getRole()) {
             throw new InsufficientPrivilegesException();
-        }
-    }
-
-    private void verifyNameIsUnique(final String name) {
-        if (organizationRepository.existsByName(name)) {
-            throw new NameIsNotUniqueException(name);
         }
     }
 
@@ -115,5 +109,24 @@ public class OrganizationService {
         organizationRepository.save(organization);
 
         return userOrganizationRole;
+    }
+
+    public UserOrganizationRole addUserToDefaultOrg(final String userEmail) {
+        val defaultOrg = getDefaultOrg();
+        val user = userService.getUser(userEmail);
+        if (defaultOrg.getUserOrganizationRoles().isEmpty()) {
+            defaultOrg.addUserOrganizationRole(user, OWNER);
+        } else {
+            defaultOrg.addUserOrganizationRole(user, USER);
+        }
+
+        organizationRepository.save(defaultOrg);
+
+        return defaultOrg.getUserOrganizationRole(user.getId()).orElseThrow();
+    }
+
+    public Organization getDefaultOrg() {
+        // TODO: to use special property for finding default org
+        return organizationRepository.getOne(0L);
     }
 }

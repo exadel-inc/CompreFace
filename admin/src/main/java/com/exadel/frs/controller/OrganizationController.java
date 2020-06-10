@@ -106,7 +106,7 @@ public class OrganizationController {
             @RequestBody
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
-        final Long admin = SecurityUtils.getPrincipalId();
+        val admin = SecurityUtils.getPrincipalId();
         val updatedUserOrgRole = organizationService.updateUserOrgRole(userRoleUpdateDto, guid, admin);
 
         return userOrgRoleMapper.toUserRoleResponseDto(updatedUserOrgRole);

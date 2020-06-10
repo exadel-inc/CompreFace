@@ -26,6 +26,7 @@ import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.exception.ConstraintViolationException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.mapper.UserMapper;
+import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.JwtAuthenticationFilter;
 import com.exadel.frs.system.security.config.AuthServerConfig;
@@ -49,7 +50,11 @@ import org.springframework.test.web.servlet.MockMvc;
                 classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
         )
 )
-@MockBeans({@MockBean(UserMapper.class), @MockBean(UserService.class)})
+@MockBeans({
+        @MockBean(UserMapper.class),
+        @MockBean(UserService.class),
+        @MockBean(OrganizationService.class)
+})
 public class UserControllerTest {
 
     @Autowired
@@ -134,4 +139,3 @@ public class UserControllerTest {
                .andExpect(content().string(expectedContent));
     }
 }
-

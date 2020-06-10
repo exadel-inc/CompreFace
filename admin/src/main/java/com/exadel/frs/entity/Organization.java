@@ -18,12 +18,24 @@ package com.exadel.frs.entity;
 
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
-import lombok.*;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+import lombok.val;
 
 @Entity
 @Table
@@ -64,7 +76,7 @@ public class Organization {
     }
 
     public void addUserOrganizationRole(User user, OrganizationRole role) {
-        UserOrganizationRole userOrganizationRole = new UserOrganizationRole(user, this, role);
+        val userOrganizationRole = new UserOrganizationRole(user, this, role);
         userOrganizationRoles.add(userOrganizationRole);
         user.getUserOrganizationRoles().add(userOrganizationRole);
     }

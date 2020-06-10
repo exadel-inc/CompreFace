@@ -18,10 +18,14 @@ package com.exadel.frs;
 
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
+import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
@@ -200,6 +204,81 @@ class OrganizationServiceTest {
                 SelfRoleChangeException.class,
                 () -> organizationService.updateUserOrgRole(userRoleUpdateDto, ORGANIZATION_GUID, USER_ID)
         );
+    }
+
+    @Test
+    void getDefaultOrg() {
+        val defaultOrg = Organization.builder().build();
+        when(organizationRepositoryMock.getOne(anyLong())).thenReturn(defaultOrg);
+
+        val actual = organizationService.getDefaultOrg();
+
+        assertThat(actual).isNotNull();
+        assertThat(actual).isEqualTo(defaultOrg);
+
+        verify(organizationRepositoryMock).getOne(anyLong());
+        verifyNoMoreInteractions(organizationRepositoryMock);
+        verifyNoInteractions(userServiceMock);
+    }
+
+    @Test
+    void addFirstUserToDefaultOrg() {
+        val email = "email";
+        val user = User.builder()
+                       .id(1L)
+                       .build();
+
+        val defaultOrg = Organization.builder().build();
+
+        when(userServiceMock.getUser(email)).thenReturn(user);
+        when(organizationRepositoryMock.getOne(anyLong())).thenReturn(defaultOrg);
+
+        val actual = organizationService.addUserToDefaultOrg(email);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getUser()).isEqualTo(user);
+        assertThat(actual.getRole()).isEqualTo(OWNER);
+        assertThat(actual.getOrganization()).isEqualTo(defaultOrg);
+
+        verify(userServiceMock).getUser(email);
+        verify(organizationRepositoryMock).getOne(0L);
+        verify(organizationRepositoryMock).save(defaultOrg);
+        verifyNoMoreInteractions(userServiceMock, organizationRepositoryMock);
+    }
+
+    @Test
+    void addSecondUserToDefaultOrg() {
+        val email = "email";
+        val fistUserRole = UserOrganizationRoleId.builder()
+                                                 .userId(0L)
+                                                 .build();
+
+        val firstUser = UserOrganizationRole.builder()
+                                            .id(fistUserRole)
+                                            .build();
+
+        val defaultOrg = Organization.builder()
+                                     .userOrganizationRoles(newArrayList(firstUser))
+                                     .build();
+
+        val secondUser = User.builder()
+                             .id(1L)
+                             .build();
+
+        when(userServiceMock.getUser(email)).thenReturn(secondUser);
+        when(organizationRepositoryMock.getOne(anyLong())).thenReturn(defaultOrg);
+
+        val actual = organizationService.addUserToDefaultOrg(email);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getUser()).isEqualTo(secondUser);
+        assertThat(actual.getRole()).isEqualTo(USER);
+        assertThat(actual.getOrganization()).isEqualTo(defaultOrg);
+
+        verify(userServiceMock).getUser(email);
+        verify(organizationRepositoryMock).getOne(0L);
+        verify(organizationRepositoryMock).save(defaultOrg);
+        verifyNoMoreInteractions(userServiceMock, organizationRepositoryMock);
     }
 
     @DisplayName("Test organization delete")
