@@ -25,5 +25,4 @@ public class UserRoleResponseDto {
     private String firstName;
     private String lastName;
     private String role;
-
 }

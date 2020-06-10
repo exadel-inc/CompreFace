@@ -28,5 +28,4 @@ import lombok.NoArgsConstructor;
 public class UserRemoveDto {
 
     private String userId;
-
 }

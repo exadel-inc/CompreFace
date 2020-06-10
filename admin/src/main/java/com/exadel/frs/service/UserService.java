@@ -17,6 +17,7 @@
 package com.exadel.frs.service;
 
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
+import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.UserCreateDto;
@@ -86,8 +87,10 @@ public class UserService {
     @Transactional
     public User createUser(final UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
+
         validateUserCreateDto(userCreateDto);
-        val isAccountEnabled = isMailServerEnabled ? false : true;
+
+        val isAccountEnabled = isNotTrue(isMailServerEnabled);
         val user = User.builder()
                        .email(userCreateDto.getEmail().toLowerCase())
                        .firstName(userCreateDto.getFirstName())

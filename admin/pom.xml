@@ -13,7 +13,6 @@
     <version>0.0.1-SNAPSHOT</version>
     <description>Service for clients, apps, models handling for face recognition service</description>
 
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>

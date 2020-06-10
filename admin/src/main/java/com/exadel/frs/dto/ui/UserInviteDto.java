@@ -29,5 +29,4 @@ public class UserInviteDto {
 
     private String role;
     private String userEmail;
-
 }

@@ -16,13 +16,12 @@
 
 package com.exadel.frs.entity;
 
+import java.io.Serializable;
+import javax.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Embeddable;
-import java.io.Serializable;
 
 @Embeddable
 @Data
@@ -32,7 +31,5 @@ import java.io.Serializable;
 public class UserOrganizationRoleId implements Serializable {
 
     private Long userId;
-
     private Long organizationId;
-
 }

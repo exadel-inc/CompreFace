@@ -24,5 +24,4 @@ public class AppOwnerDto {
     private String userId;
     private String firstName;
     private String lastName;
-
 }
