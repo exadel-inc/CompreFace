@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<table *ngIf="!(isLoading$ | async)" mat-table [dataSource]="data">
+<table *ngIf="!isLoading" mat-table [dataSource]="data">
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef>Name</th>

@@ -17,3 +17,12 @@
 mat-icon {
   cursor: pointer;
 }
+
+.create-new-message {
+  padding-left: 20px;
+  display: flex;
+
+  mat-icon {
+    padding: 25px 20px 0 0;
+  }
+}
