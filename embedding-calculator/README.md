@@ -1,4 +1,4 @@
-![Example output image](./ml/sample_images/readme_example.png)
+![Example output image](./sample_images/readme_example.png)
 # frs-core
 This is a component of Exadel Face Recognition Service. EFRS is a service for face recognition: upload images with faces of known people, then upload a new image, and the service will recognize faces in it.
 
