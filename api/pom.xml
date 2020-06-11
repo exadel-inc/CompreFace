@@ -157,7 +157,7 @@
     </dependencies>
 
     <properties>
-        <spring-cloud.version>Finchley.SR2</spring-cloud.version>
+        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
     </properties>
 
     <build>
