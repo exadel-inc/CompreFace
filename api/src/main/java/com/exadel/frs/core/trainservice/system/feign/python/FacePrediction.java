@@ -25,5 +25,5 @@ public class FacePrediction {
     ScanBox box;
     @JsonProperty("face_name")
     String faceName;
-    float probability;
+    float similarity;
 }

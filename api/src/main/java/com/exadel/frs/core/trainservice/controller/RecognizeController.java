@@ -29,6 +29,7 @@ import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -87,6 +88,6 @@ public class RecognizeController {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .body(results);
+                             .body(Map.of("result", results));
     }
 }
