@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.config.repository;
 
+import com.zaxxer.hikari.HikariDataSource;
 import java.util.HashMap;
 import javax.sql.DataSource;
 import lombok.val;
@@ -44,7 +45,7 @@ public class DbConfig {
     private Environment env;
 
     @Bean("emPg")
-    public LocalContainerEntityManagerFactoryBean pgEntityManager(@Qualifier("dsPg") DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean pgEntityManager(@Autowired DataSource dataSource) {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan("com.exadel.frs.core.trainservice.entity.postgres");
@@ -59,8 +60,9 @@ public class DbConfig {
     }
 
     @Bean(name = "dsPg")
-    public DataSource pgDataSource(@Autowired DataSourceProperties dataSourceProperties) {
-        return dataSourceProperties.initializeDataSourceBuilder().build();
+    @ConfigurationProperties(prefix = "spring.datasource-pg.hikari")
+    public HikariDataSource pgDataSource(@Autowired DataSourceProperties dataSourceProperties) {
+        return dataSourceProperties.initializeDataSourceBuilder().type(HikariDataSource.class).build();
     }
 
     @Bean

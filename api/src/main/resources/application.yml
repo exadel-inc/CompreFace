@@ -30,6 +30,9 @@ spring:
     url: ${POSTGRES_URL:jdbc:postgresql://frs-postgres-db:5432/frs}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 3
+      minimum-idle: 3
   jpa:
     properties:
       hibernate:

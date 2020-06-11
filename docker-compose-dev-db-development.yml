@@ -9,7 +9,7 @@ services:
     container_name: "frs-admin"
     ports:
       - "8081:8080"
-      - "5005:5005"
+      - "5006:5005"
     environment:
       - POSTGRES_PASSWORD=h9Zn784HdT
       - POSTGRES_URL=jdbc:postgresql://msqv500.exadel.by:5432/frs
@@ -48,3 +48,4 @@ services:
     environment:
       - MONGODB_URI=mongodb://msqv500.exadel.by:27017/efrs_db
       - ML_PORT=3000
+
