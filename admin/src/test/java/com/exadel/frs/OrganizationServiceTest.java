@@ -16,6 +16,7 @@
 
 package com.exadel.frs;
 
+import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
 import static com.google.common.collect.Lists.newArrayList;
@@ -96,7 +97,7 @@ class OrganizationServiceTest {
 
     private static Stream<Arguments> readRoles() {
         return Stream.of(
-                Arguments.of(OrganizationRole.ADMINISTRATOR),
+                Arguments.of(ADMINISTRATOR),
                 Arguments.of(USER)
         );
     }
@@ -143,7 +144,7 @@ class OrganizationServiceTest {
         val admin = UserOrganizationRole.builder()
                                         .id(new UserOrganizationRoleId(1L, 2L))
                                         .user(User.builder().id(1L).build())
-                                        .role(OrganizationRole.ADMINISTRATOR)
+                                        .role(ADMINISTRATOR)
                                         .build();
 
         val user = UserOrganizationRole.builder()
