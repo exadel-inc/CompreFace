@@ -15,8 +15,8 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>admin</module>
         <module>api</module>
+        <module>admin</module>
     </modules>
 
     <properties>
@@ -38,6 +38,13 @@
         <javax-cache.version>1.1.1</javax-cache.version>
         <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+        </dependency>
+    </dependencies>
 
     <dependencyManagement>
         <dependencies>
@@ -132,6 +139,11 @@
                 <groupId>org.ehcache</groupId>
                 <artifactId>ehcache</artifactId>
                 <version>${ehcache.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
