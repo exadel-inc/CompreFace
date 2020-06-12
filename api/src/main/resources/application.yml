@@ -50,15 +50,6 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
----
-
-spring:
-  profiles: dev
-  devtools:
-    restart:
-      enabled: true
-    livereload:
-      enabled: false
 
 image:
   types:
@@ -71,3 +62,12 @@ image:
     - ico
     - gif
     - webp
+---
+
+spring:
+  profiles: dev
+  devtools:
+    restart:
+      enabled: true
+    livereload:
+      enabled: false
