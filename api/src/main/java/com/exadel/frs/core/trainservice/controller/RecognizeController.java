@@ -25,8 +25,11 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
+import java.util.ArrayList;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -66,22 +69,25 @@ public class RecognizeController {
 
         imageValidator.validate(file);
 
-        val scanResponse = client.scanFaces(file, defaultIfNull(limit, 1), 0.5D);
-        val scanResult = scanResponse.getResult().get(0);
+        val scanResponse = client.scanFaces(file, defaultIfNull(limit, 10), 0.5D);
+        val results = new ArrayList<FacePrediction>();
 
-        val prediction = classifierPredictor.predict(
-                apiKey,
-                scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
-        );
+        for (ScanResult scanResult: scanResponse.getResult()) {
+            val prediction = classifierPredictor.predict(
+                    apiKey,
+                    scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
+            );
 
-        val result = new FacePrediction(
-                scanResult.getBox(),
-                prediction.getRight(),
-                scanResult.getEmbedding().get(0).floatValue(),
-                scanResult.getBox().getProbability().floatValue()
-        );
+            val result = new FacePrediction(
+                    scanResult.getBox(),
+                    prediction.getRight(),
+                    scanResult.getBox().getProbability().floatValue()
+            );
+
+            results.add(result);
+        }
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .body(result);
+                             .body(Map.of("result", results));
     }
 }
