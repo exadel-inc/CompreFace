@@ -8,6 +8,8 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=frs
+    ports:
+      - "5433:5432"
 
   frs-mongo-db:
     image: mongo:4.0.4-xenial
