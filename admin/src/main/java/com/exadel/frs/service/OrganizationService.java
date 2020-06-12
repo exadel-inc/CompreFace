@@ -16,6 +16,7 @@
 
 package com.exadel.frs.service;
 
+import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
 import static java.util.stream.Collectors.toList;
@@ -50,7 +51,7 @@ public class OrganizationService {
     }
 
     public void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
-        if (OWNER != organization.getUserOrganizationRoleOrThrow(userId).getRole()) {
+        if (!List.of(OWNER, ADMINISTRATOR).contains(organization.getUserOrganizationRoleOrThrow(userId).getRole())) {
             throw new InsufficientPrivilegesException();
         }
     }

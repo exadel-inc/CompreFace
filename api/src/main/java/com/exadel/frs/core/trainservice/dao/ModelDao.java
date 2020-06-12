@@ -71,7 +71,7 @@ public class ModelDao {
     }
 
     public FaceClassifier getModel(final String modelKey) {
-        return modelRepository.findById(modelKey)
+        return modelRepository.findFirstByModelKey(modelKey)
                               .orElseThrow(ModelNotTrainedException::new)
                               .getClassifier();
     }
