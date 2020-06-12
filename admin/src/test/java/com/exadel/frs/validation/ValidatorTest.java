@@ -41,12 +41,20 @@ public class ValidatorTest {
     @Test
     public void testUserRoleUpdateDto() {
         val actual = validator.validate(UserRoleUpdateDto.builder()
-                .role("test")
-                .userId("test")
-                .build());
+                                                         .role("USER")
+                                                         .userId("test")
+                                                         .build());
 
         Assertions.assertTrue(actual.isEmpty());
     }
 
+    @Test
+    public void cannotAcceptWrongRole() {
+        val actual = validator.validate(UserRoleUpdateDto.builder()
+                                                         .role("WRONG_VALUE")
+                                                         .userId("test")
+                                                         .build());
 
+        Assertions.assertFalse(actual.isEmpty());
+    }
 }

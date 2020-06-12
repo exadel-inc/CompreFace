@@ -25,7 +25,6 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
-import org.springframework.validation.beanvalidation.SpringValidatorAdapter;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -64,6 +63,7 @@ public class ResponseExceptionHandler {
 
         switch (fieldError.getCode()) {
             case "NotBlank":
+            case "ValidEnum":
                 basicException = new ConstraintViolationException(fieldError.getDefaultMessage());
                 break;
             case "NotNull":
