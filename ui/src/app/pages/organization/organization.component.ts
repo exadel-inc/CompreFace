@@ -13,9 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {OrganizationService} from './organization.service';
+import { OrganizationService } from './organization.service';
 
 @Component({
   selector: 'app-organization',
@@ -25,7 +25,7 @@ import {OrganizationService} from './organization.service';
 })
 export class OrganizationComponent implements OnInit, OnDestroy {
 
-  constructor( private organizationService: OrganizationService) {}
+  constructor(private organizationService: OrganizationService) { }
 
   ngOnInit() {
     this.organizationService.initUrlBindingStreams();

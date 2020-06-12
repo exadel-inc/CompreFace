@@ -121,14 +121,7 @@ export class UserListFacade implements IFacade {
     this.store.dispatch(DeleteUserFromOrganization({
       organizationId: this.selectedOrganization,
       userId
-    }))
-  }
-
-  inviteUser(userEmail: string, role: string): Observable<any> {
-    return this.userService.inviteUser(this.selectedOrganization, userEmail, role)
-      .pipe(
-        tap(() => this.loadUsers()),
-      );
+    }));
   }
 
   loadAvailableRoles(): void {

@@ -31,7 +31,7 @@
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-user-table
     class="app-table"
-    [isLoading$]="isLoading$"
+    [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
     [currentUserId]="currentUserId$ | async"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"

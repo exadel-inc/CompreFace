@@ -28,15 +28,14 @@
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-user-table
     class="app-table"
-    [isLoading$]="isLoading$"
+    [isLoading]="isLoading$ | async"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
     [availableRoles$]="availableRoles$"
     [currentUserId]="currentUserId$ | async"
     [userRole]="userRole$ | async"
+    [createHeader]="'Add users to the FRS'"
+    [createMessage]="'You can add other users to the FRS application. They need to register and login to FRS. After registration and login users will appear automatically in the users\' table.'"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)"
   ></app-user-table>
-  <div class="card-single-action-container" *ngIf="userRole$ | async as userRole">
-    <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onInviteUser();">INVITE</button>
-  </div>
 </div>

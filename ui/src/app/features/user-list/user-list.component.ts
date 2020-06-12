@@ -13,21 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Observable, of, Subscription } from 'rxjs';
-import { catchError, filter, map, switchMap, take, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
 
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
-import { selectUserId } from 'src/app/store/userInfo/selectors';
-
 
 @Component({
   selector: 'app-user-list-container',
@@ -41,7 +36,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   userRole$: Observable<string>;
   availableRoles: string[];
   availableRoles$: Observable<string[]>;
-  errorMessage: string;
   search = '';
   availableRolesSubscription: Subscription;
   currentUserId$: Observable<string>;
@@ -94,36 +88,8 @@ export class UserListComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-  onInviteUser(): void {
-    const dialog = this.dialog.open(InviteDialogComponent, {
-      data: {
-        availableRoles: this.availableRoles
-      }
-    });
-
-    let userEmailValue: string = '';
-
-    dialog.afterClosed()
-      .pipe(
-        filter((data: any) => !!data),
-        tap(({ userEmail }) => userEmailValue = userEmail),
-        switchMap(({ userEmail, role }) => this.userListFacade.inviteUser(userEmail, role)),
-        tap(() => this.openEmailNotification(userEmailValue)),
-        catchError((error: HttpErrorResponse) => of(this.snackBarService.openHttpError(error))),
-      )
-      .subscribe()
-  }
-
   ngOnDestroy(): void {
     this.userListFacade.unsubscribe();
     this.availableRolesSubscription.unsubscribe();
-  }
-
-  private openEmailNotification(email: string): void {
-    if (!email) {
-      return;
-    }
-
-    this.snackBarService.openInfo(void 0, void 0, `Invitation was sent to ${email}`);
   }
 }

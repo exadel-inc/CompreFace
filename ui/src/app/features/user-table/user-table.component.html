@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<table *ngIf="!(isLoading$ | async)" mat-table [dataSource]="data">
+<table *ngIf="!isLoading" mat-table [dataSource]="data">
   <!-- Position Column -->
   <ng-container matColumnDef="user">
     <th mat-header-cell *matHeaderCellDef> User </th>
@@ -50,3 +50,11 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+
+<ng-container *ngIf="data.length <= 1 && (createHeader || createMessage)">
+  <h4>{{createHeader}}</h4>
+  <div class="create-new-message">
+    <mat-icon>info</mat-icon>
+    <p>{{createMessage}}</p>
+  </div>
+</ng-container>
