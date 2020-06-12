@@ -13,21 +13,30 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatCardModule, MatIconModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { SnackBarModule } from 'src/app/features/snackbar/snackbar.module';
+import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {ApplicationListComponent} from './application-list-container.component';
-import {ApplicationListFacade} from './application-list-facade';
-import {TableModule} from '../table/table.module';
-import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
-import {MatButtonModule} from '@angular/material/button';
-import {SnackBarModule} from 'src/app/features/snackbar/snackbar.module';
-import {MatCardModule} from '@angular/material';
+import { TableModule } from '../table/table.module';
+import { ApplicationListContainerComponent } from './application-list-container.component';
+import { ApplicationListFacade } from './application-list-facade';
+import { ApplicationListComponent } from './application-list/application-list.component';
 
 @NgModule({
-  declarations: [ApplicationListComponent],
-  exports: [ApplicationListComponent],
+  declarations: [ApplicationListContainerComponent, ApplicationListComponent],
+  exports: [ApplicationListContainerComponent],
   providers: [ApplicationListFacade],
-  imports: [CommonModule, TableModule, SpinnerModule, MatButtonModule, SnackBarModule, MatCardModule]
+  imports: [
+    CommonModule,
+    TableModule,
+    SpinnerModule,
+    MatButtonModule,
+    SnackBarModule,
+    MatCardModule,
+    MatIconModule,
+  ]
 })
 export class ApplicationListModule {}

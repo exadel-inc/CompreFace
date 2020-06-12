@@ -81,7 +81,7 @@ export class ApplicationListEffect {
     switchMap((app =>
       this.applicationService.delete(app.organizationId, app.id).pipe(
         switchMap(() => {
-          this.router.navigate([`${ROUTERS_URL.ORGANIZATION}/${app.organizationId}`]);
+          this.router.navigate([`${ROUTERS_URL.HOME}`]);
           return [deleteApplicationSuccess({ id: app.id }), setSelectedIdEntityAction({ selectedAppId: null })];
         }),
         catchError(error => of(deleteApplicationFail({ error }))),

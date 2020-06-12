@@ -14,8 +14,8 @@
   ~ permissions and limitations under the License.
   -->
 
-<mat-card *ngIf="org$ | async as org" class="breadcrumbs">
-  <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.ORGANIZATION, org.id]">{{org.name}}</a>
+<mat-card *ngIf="app$ | async as app" class="breadcrumbs">
+  <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">Home</a>
   <div class="separator"> / </div>
-  <div class="breadcrumbs-link" *ngIf="(app$ | async) as app">{{app.name}}</div>
+  <div class="breadcrumbs-link">{{app.name}}</div>
 </mat-card>

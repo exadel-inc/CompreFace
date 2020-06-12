@@ -32,6 +32,8 @@ export class UserTableComponent extends TableComponent implements OnInit {
   @Input() availableRoles$: Observable<string[]>;
   @Input() currentUserId: string;
   @Input() userRole: string;
+  @Input() createHeader: string;
+  @Input() createMessage: string;
   @Output() deleteUser = new EventEmitter<AppUser>();
 
   isRoleChangeAllowed(userRole: string): Observable<boolean> {

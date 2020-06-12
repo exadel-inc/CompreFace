@@ -61,7 +61,7 @@ export class AuthEffects {
   LogInSuccess: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
     tap(() => {
-      this.router.navigateByUrl(ROUTERS_URL.ORGANIZATION);
+      this.router.navigateByUrl(ROUTERS_URL.HOME);
     })
   );
 

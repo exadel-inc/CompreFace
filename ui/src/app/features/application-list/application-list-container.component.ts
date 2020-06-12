@@ -27,14 +27,20 @@ import { ApplicationListFacade } from './application-list-facade';
 
 @Component({
   selector: 'app-application-list-container',
-  templateUrl: './application-list-container.component.html',
-  styleUrls: ['./application-list-container.component.scss'],
+  template: `
+    <app-application-list
+      [isLoading]="isLoading$ | async"
+      [userRole]="userRole$ | async"
+      [tableConfig]="tableConfig$ | async"
+      (selectApp)="onClick($event)"
+      (createApp)="onCreateNewApp()">
+    </app-application-list>
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ApplicationListComponent implements OnInit, OnDestroy {
+export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
-  errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
 
   constructor(private applicationFacade: ApplicationListFacade, private dialog: MatDialog, private router: Router) {

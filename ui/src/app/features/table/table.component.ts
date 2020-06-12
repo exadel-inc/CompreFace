@@ -32,7 +32,7 @@ export interface ITableConfig {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableComponent implements OnInit {
-  @Input() isLoading$: Observable<boolean>;
+  @Input() isLoading: boolean;
   @Input() set tableConfig(config: ITableConfig) {
     if (config) {
       this.columnsDefinition = config.columns;
