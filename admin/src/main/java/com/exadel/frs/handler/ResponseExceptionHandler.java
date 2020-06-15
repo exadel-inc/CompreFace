@@ -64,10 +64,11 @@ public class ResponseExceptionHandler {
     public ResponseEntity<ExceptionResponseDto> handle404(final Exception ex) {
         log.error("404 error has occurred", ex);
 
-        final ExceptionResponseDto body = ExceptionResponseDto.builder()
-                                                              .code(UNDEFINED.getCode())
-                                                              .message("No message available")
-                                                              .build();
+        val body = ExceptionResponseDto.builder()
+                                       .code(UNDEFINED.getCode())
+                                       .message("No message available")
+                                       .build();
+
         return ResponseEntity.status(NOT_FOUND).body(body);
     }
 
