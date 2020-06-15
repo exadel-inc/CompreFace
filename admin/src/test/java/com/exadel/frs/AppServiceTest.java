@@ -55,6 +55,7 @@ import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.rest.CoreFacesClient;
+import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -81,6 +82,9 @@ class AppServiceTest {
 
     @Mock
     private OrganizationService organizationServiceMock;
+
+    @Mock
+    private AuthorizationManager authManagerMock;
 
     @Mock
     private UserService userServiceMock;
@@ -326,7 +330,7 @@ class AppServiceTest {
         val organization = organization();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
-        doThrow(UserDoesNotBelongToOrganization.class).when(organizationServiceMock).verifyUserHasWritePrivileges(USER_ID, organization);
+        doThrow(UserDoesNotBelongToOrganization.class).when(authManagerMock).verifyUserHasWritePrivileges(USER_ID, organization);
 
         assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
     }
@@ -340,7 +344,7 @@ class AppServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
-        doThrow(InsufficientPrivilegesException.class).when(organizationServiceMock).verifyUserHasWritePrivileges(USER_ID, organization);
+        doThrow(InsufficientPrivilegesException.class).when(authManagerMock).verifyUserHasWritePrivileges(USER_ID, organization);
 
         assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
     }

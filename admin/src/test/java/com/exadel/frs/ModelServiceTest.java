@@ -47,11 +47,10 @@ import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.rest.CoreFacesClient;
-
+import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import lombok.val;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -76,6 +75,7 @@ class ModelServiceTest {
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
     private CoreFacesClient facesClient;
+    private AuthorizationManager authManager;
 
     ModelServiceTest() {
         modelRepositoryMock = mock(ModelRepository.class);
@@ -83,25 +83,28 @@ class ModelServiceTest {
         modelShareRequestRepository = mock(ModelShareRequestRepository.class);
         appModelRepository = mock(AppModelRepository.class);
         facesClient = mock(CoreFacesClient.class);
-        modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository, appModelRepository, facesClient);
+        authManager = mock(AuthorizationManager.class);
+        modelService = new ModelService(modelRepositoryMock, appServiceMock, modelShareRequestRepository, appModelRepository, facesClient, authManager);
     }
 
     private User user(final Long id) {
         return User.builder()
-                .id(id)
-                .build();
+                   .id(id)
+                   .build();
     }
 
     private Organization organization(final Long id) {
         return Organization.builder()
-                .id(id)
-                .guid(ORGANIZATION_GUID)
-                .build();
+                           .id(id)
+                           .guid(ORGANIZATION_GUID)
+                           .build();
     }
 
     private static Stream<Arguments> writeRoles() {
-        return Stream.of(Arguments.of(OrganizationRole.OWNER),
-                Arguments.of(OrganizationRole.ADMINISTRATOR));
+        return Stream.of(
+                Arguments.of(OrganizationRole.OWNER),
+                Arguments.of(OrganizationRole.ADMINISTRATOR)
+        );
     }
 
     private static Stream<Arguments> readRoles() {
@@ -117,15 +120,15 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .organization(organization)
+                     .build();
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
@@ -143,17 +146,17 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
         app.addUserAppRole(user, AppRole.USER);
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
@@ -200,15 +203,15 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .organization(organization)
+                     .build();
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
@@ -226,15 +229,15 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .organization(organization)
+                     .build();
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
@@ -253,16 +256,16 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
         app.addUserAppRole(user, AppRole.USER);
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
@@ -281,15 +284,15 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
@@ -301,18 +304,18 @@ class ModelServiceTest {
     @MethodSource("writeRoles")
     void successCreateModel(OrganizationRole organizationRole) {
         val modelCreateDto = ModelCreateDto.builder()
-                .name("model-name")
-                .build();
+                                           .name("model-name")
+                                           .build();
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
 
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
@@ -329,18 +332,18 @@ class ModelServiceTest {
     @MethodSource("writeRoles")
     void failCreateModelNameIsNotUnique(OrganizationRole organizationRole) {
         val modelCreateDto = ModelCreateDto.builder()
-                .name("model-name")
-                .build();
+                                           .name("model-name")
+                                           .build();
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
 
         when(appServiceMock.getApp(anyString())).thenReturn(app);
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
@@ -354,18 +357,18 @@ class ModelServiceTest {
     @MethodSource("readRoles")
     void failCreateModelInsufficientPrivileges(OrganizationRole organizationRole) {
         val modelCreateDto = ModelCreateDto.builder()
-                .name("model-name")
-                .build();
+                                           .name("model-name")
+                                           .build();
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
 
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
 
@@ -378,25 +381,25 @@ class ModelServiceTest {
     @MethodSource("writeRoles")
     void successUpdateModel(OrganizationRole organizationRole) {
         ModelUpdateDto modelUpdateDto = ModelUpdateDto.builder()
-                .name("new_name")
-                .build();
+                                                      .name("new_name")
+                                                      .build();
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
 
         val repoModel = Model.builder()
-                .id(MODEL_ID)
-                .name("name")
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                             .id(MODEL_ID)
+                             .name("name")
+                             .guid(MODEL_GUID)
+                             .app(app)
+                             .build();
         repoModel.addAppModelAccess(app, AppModelAccess.READONLY);
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
@@ -413,25 +416,25 @@ class ModelServiceTest {
     @MethodSource("writeRoles")
     void failUpdateModelNameIsNotUnique(OrganizationRole organizationRole) {
         val modelUpdateDto = ModelUpdateDto.builder()
-                .name("new_name")
-                .build();
+                                           .name("new_name")
+                                           .build();
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
 
         val repoModel = Model.builder()
-                .id(MODEL_ID)
-                .name("name")
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                             .id(MODEL_ID)
+                             .name("name")
+                             .guid(MODEL_GUID)
+                             .app(app)
+                             .build();
 
         when(modelRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(anyString())).thenReturn(app);
@@ -446,24 +449,24 @@ class ModelServiceTest {
     @MethodSource("readRoles")
     void failUpdateModelInsufficientPrivileges(OrganizationRole organizationRole) {
         val modelUpdateDto = ModelUpdateDto.builder()
-                .name("new_name")
-                .build();
+                                           .name("new_name")
+                                           .build();
         val user = user(USER_ID);
 
         val organization = organization(ORGANIZATION_ID);
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
 
         val repoModel = Model.builder()
-                .name("name")
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                             .name("name")
+                             .guid(MODEL_GUID)
+                             .app(app)
+                             .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
@@ -482,18 +485,18 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                        .id(APPLICATION_ID)
-                        .guid(APPLICATION_GUID)
-                        .apiKey(APPLICATION_API_KEY)
-                        .organization(organization)
-                        .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .apiKey(APPLICATION_API_KEY)
+                     .organization(organization)
+                     .build();
 
         val model = Model.builder()
-                            .id(MODEL_ID)
-                            .guid(MODEL_GUID)
-                            .apiKey(MODEL_API_KEY)
-                            .app(app)
-                            .build();
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .apiKey(MODEL_API_KEY)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
@@ -514,15 +517,15 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .organization(organization)
+                     .build();
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
@@ -542,18 +545,18 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .guid(APPLICATION_GUID)
-                .apiKey(appKey)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .apiKey(appKey)
+                     .organization(organization)
+                     .build();
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .apiKey(modelKey)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .apiKey(modelKey)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
@@ -574,15 +577,15 @@ class ModelServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         val app = App.builder()
-                .id(APPLICATION_ID)
-                .organization(organization)
-                .build();
+                     .id(APPLICATION_ID)
+                     .organization(organization)
+                     .build();
 
         val model = Model.builder()
-                .id(MODEL_ID)
-                .guid(MODEL_GUID)
-                .app(app)
-                .build();
+                         .id(MODEL_ID)
+                         .guid(MODEL_GUID)
+                         .app(app)
+                         .build();
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
 
