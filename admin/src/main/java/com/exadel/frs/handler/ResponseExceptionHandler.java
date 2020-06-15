@@ -17,6 +17,7 @@
 package com.exadel.frs.handler;
 
 import static com.exadel.frs.handler.ExceptionCode.UNDEFINED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import com.exadel.frs.dto.ExceptionResponseDto;
 import com.exadel.frs.exception.BasicException;
 import com.exadel.frs.exception.ConstraintViolationException;
@@ -25,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -56,6 +58,18 @@ public class ResponseExceptionHandler {
         log.error("Undefined exception occurred", ex);
 
         return ResponseEntity.status(UNDEFINED.getHttpStatus()).body(buildBody());
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ExceptionResponseDto> handle404(final Exception ex) {
+        log.error("404 error has occurred", ex);
+
+        val body = ExceptionResponseDto.builder()
+                                       .code(UNDEFINED.getCode())
+                                       .message("No message available")
+                                       .build();
+
+        return ResponseEntity.status(NOT_FOUND).body(body);
     }
 
     private BasicException getException(final FieldError fieldError) {
