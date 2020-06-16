@@ -16,12 +16,17 @@
 
 package com.exadel.frs.security;
 
+import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.FrsApplication;
 import com.exadel.frs.helpers.EmailSender;
-import com.exadel.frs.mapper.OrganizationMapper;
-import com.exadel.frs.mapper.UserOrgRoleMapper;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
+import java.util.UUID;
 import lombok.val;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,15 +48,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.UUID;
-
-import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ActiveProfiles(profiles = "local-test")
 @RunWith(SpringRunner.class)

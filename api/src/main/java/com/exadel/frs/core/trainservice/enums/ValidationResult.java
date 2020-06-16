@@ -20,5 +20,5 @@ public enum ValidationResult {
 
     OK,
     READ_ONLY,
-    FORBIDDEN;
+    FORBIDDEN
 }

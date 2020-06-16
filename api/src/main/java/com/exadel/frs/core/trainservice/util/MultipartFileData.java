@@ -16,13 +16,12 @@
 
 package com.exadel.frs.core.trainservice.util;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import org.springframework.web.multipart.MultipartFile;
 
 public class MultipartFileData implements MultipartFile {
     private final byte[] content;

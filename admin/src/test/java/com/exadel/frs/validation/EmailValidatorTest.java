@@ -16,14 +16,12 @@
 
 package com.exadel.frs.validation;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static com.exadel.frs.validation.EmailValidator.isValid;
 import static org.assertj.core.api.Assertions.assertThat;
+import java.util.List;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 class EmailValidatorTest {
 

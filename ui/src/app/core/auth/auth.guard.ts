@@ -59,7 +59,7 @@ export class LoginGuard implements CanActivate {
       take(1),
       map((state: UserInfoState) => {
         if (state.isAuthenticated) {
-          this.router.navigateByUrl(ROUTERS_URL.ORGANIZATION);
+          this.router.navigateByUrl(ROUTERS_URL.HOME);
         }
 
         return !state.isAuthenticated;

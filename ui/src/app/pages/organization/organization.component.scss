@@ -23,18 +23,13 @@
 .container {
   height: 100%;
   min-height: 650px;
+  padding-top: 20px;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
 
   @include mobile {
     height: auto;
-  }
-
-  app-organization-header {
-    padding-top: 20px;
-    margin-bottom: 40px;
-    width: 100%;
   }
 }
 

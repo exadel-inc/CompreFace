@@ -20,12 +20,11 @@ import com.exadel.frs.dto.ui.AppResponseDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
+import java.util.List;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
 
 @Mapper(uses = {UserAppRoleMapper.class, MlModelMapper.class, UserMapper.class})
 public interface AppMapper {

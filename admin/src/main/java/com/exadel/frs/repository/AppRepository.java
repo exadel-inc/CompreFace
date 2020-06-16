@@ -17,10 +17,9 @@
 package com.exadel.frs.repository;
 
 import com.exadel.frs.entity.App;
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AppRepository extends JpaRepository<App, Long> {
 

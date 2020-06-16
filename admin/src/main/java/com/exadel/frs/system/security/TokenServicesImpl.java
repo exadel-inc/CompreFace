@@ -16,7 +16,8 @@
 
 package com.exadel.frs.system.security;
 
-
+import java.util.Collection;
+import java.util.UUID;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.common.ExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -24,9 +25,6 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
-
-import java.util.Collection;
-import java.util.UUID;
 
 public class TokenServicesImpl extends DefaultTokenServices {
     private TokenStore tokenStore;

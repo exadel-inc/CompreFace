@@ -26,8 +26,6 @@ import com.exadel.frs.core.trainservice.config.WebMvcTestContext;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
-import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.Test;

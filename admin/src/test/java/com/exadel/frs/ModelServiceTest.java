@@ -47,11 +47,9 @@ import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.rest.CoreFacesClient;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import lombok.val;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

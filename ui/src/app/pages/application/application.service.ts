@@ -55,7 +55,7 @@ export class ApplicationPageService {
         this.fetchApps();
       });
     } else {
-      this.router.navigate([ROUTERS_URL.ORGANIZATION]);
+      this.router.navigate([ROUTERS_URL.HOME]);
     }
   }
 

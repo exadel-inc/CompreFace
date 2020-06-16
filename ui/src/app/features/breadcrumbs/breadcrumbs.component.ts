@@ -13,13 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Application } from '../../data/application';
-import { Organization } from '../../data/organization';
 import { ROUTERS_URL } from '../../data/routers-url.variable';
 import { BreadcrumbsFacade } from './breadcrumbs.facade';
 
@@ -28,17 +25,11 @@ import { BreadcrumbsFacade } from './breadcrumbs.facade';
   templateUrl: './breadcrumbs.component.html',
   styleUrls: ['./breadcrumbs.component.scss']
 })
-export class BreadcrumbsComponent implements OnInit {
-   org$: Observable<Organization>;
-   app$: Observable<Application>;
-   ROUTERS_URL = ROUTERS_URL;
+export class BreadcrumbsComponent {
+  app$: Observable<Application>;
+  ROUTERS_URL = ROUTERS_URL;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade, private route: ActivatedRoute) {
-    this.org$ = breadcrumbsFacade.org$;
+  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
     this.app$ = breadcrumbsFacade.app$;
-  }
-
-  ngOnInit() {
-
   }
 }

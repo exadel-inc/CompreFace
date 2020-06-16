@@ -18,6 +18,7 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.math.RoundingMode.*;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
@@ -25,8 +26,13 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
+import java.util.ArrayList;
+import java.util.Map;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -51,11 +57,14 @@ public class RecognizeController {
     @PostMapping(value = "/recognize")
     public ResponseEntity recognize(
             @ApiParam(value = "Api key of application and model", required = true)
-            @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @RequestHeader(X_FRS_API_KEY_HEADER)
+            final String apiKey,
             @ApiParam(value = "Image for recognizing", required = true)
-            @RequestParam final MultipartFile file,
+            @RequestParam
+            final MultipartFile file,
             @ApiParam(value = "Maximum number of faces to be recognized")
-            @RequestParam(required = false) final Integer limit
+            @RequestParam(required = false)
+            final Integer limit
     ) {
 
         val lock = manager.isTraining(apiKey);
@@ -66,22 +75,28 @@ public class RecognizeController {
 
         imageValidator.validate(file);
 
-        val scanResponse = client.scanFaces(file, defaultIfNull(limit, 1), 0.5D);
-        val scanResult = scanResponse.getResult().get(0);
+        val scanResponse = client.scanFaces(file, defaultIfNull(limit, 10), 0.5D);
+        val results = new ArrayList<FacePrediction>();
 
-        val prediction = classifierPredictor.predict(
-                apiKey,
-                scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
-        );
+        for (ScanResult scanResult: scanResponse.getResult()) {
+            val prediction = classifierPredictor.predict(
+                    apiKey,
+                    scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
+            );
 
-        val result = new FacePrediction(
-                scanResult.getBox(),
-                prediction.getRight(),
-                scanResult.getEmbedding().get(0).floatValue(),
-                scanResult.getBox().getProbability().floatValue()
-        );
+            var pred = BigDecimal.valueOf(prediction.getLeft());
+            pred = pred.setScale(2, HALF_UP);
+
+            val result = new FacePrediction(
+                    scanResult.getBox(),
+                    prediction.getRight(),
+                    pred.floatValue()
+            );
+
+            results.add(result);
+        }
 
         return ResponseEntity.status(HttpStatus.OK)
-                             .body(result);
+                             .body(Map.of("result", results));
     }
 }

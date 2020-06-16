@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,49 +14,24 @@
  * permissions and limitations under the License.
  */
 
-@import 'media.scss';
+package com.exadel.frs.validation;
 
-.grid-container {
-  display: flex;
-  justify-content: space-between;
-}
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import org.apache.commons.lang3.EnumUtils;
 
-.button-wrapper {
-  display: flex;
-  justify-content: space-between;
+public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
 
-  .edit_button {
-    margin-right: auto;
-  }
-}
+    private Class<? extends Enum> enumType;
 
-.organization-header_left-coll {
-  width: 49%;
-}
-
-.organization-header_right-coll {
-  text-align: right;
-  width: 49%;
-}
-
-.mat-raised-button {
-  margin: 15px 0;
-}
-
-@include mobile {
-  .organization-header_left-coll {
-    flex-direction: column;
-  }
-
-
-  .grid-container {
-    grid-template-columns: 1fr;
-  }
-
-
-  @include tablet-portrait {
-    .grid-container {
-      grid-template-columns: 1fr;
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public void initialize(ValidEnum targetEnum) {
+        enumType = targetEnum.targetClassType();
     }
-  }
-}
+
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        return EnumUtils.isValidEnum(enumType, value);
+    }
+} 
