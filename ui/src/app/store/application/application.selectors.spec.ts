@@ -32,14 +32,14 @@ describe('ApplicationSelectors', () => {
         {
           id: '1',
           name: 'name1',
-          owner: {firstName: '', lastName: '', id: ''},
+          owner: {firstName: '', lastName: '', userId: ''},
           role: '',
           organizationId: ''
       },
       {
         id: '2',
         name: 'name2',
-        owner: {firstName: '', lastName: '', id: ''},
+        owner: {firstName: '', lastName: '', userId: ''},
         role: '',
         organizationId: ''
       }

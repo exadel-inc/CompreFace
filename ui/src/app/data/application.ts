@@ -18,7 +18,7 @@ export interface Application {
   id: string;
   name: string;
   owner: {
-    id: string,
+    userId: string,
     firstName: string,
     lastName: string
   };

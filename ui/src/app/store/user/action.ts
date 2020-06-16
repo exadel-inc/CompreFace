@@ -13,9 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {createAction, props} from '@ngrx/store';
-import {AppUser} from 'src/app/data/appUser';
+import { createAction, props } from '@ngrx/store';
+import { AppUser } from 'src/app/data/appUser';
 
 export const SetPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
 export const LoadUsersEntityAction = createAction('[User/API] Load Users', props<{ organizationId: string }>());
@@ -25,4 +24,8 @@ export const PutUpdatedUserRoleEntityAction = createAction(
   props<{ organizationId: string; user: { id: string, role: string } }>()
 );
 export const UpdateUserRoleEntityAction = createAction('[User/API] Update Role', props<{ user: AppUser }>());
-export const DeleteUserFromOrganization = createAction('[User/API] Delete User', props<{ userId: string; organizationId: string }>());
+export const DeleteUser = createAction('[User/API] Delete User', props<{
+  userId: string,
+  organizationId: string,
+  newOwner?: string,
+}>());
