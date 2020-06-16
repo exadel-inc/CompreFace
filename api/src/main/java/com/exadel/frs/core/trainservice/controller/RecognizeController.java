@@ -30,6 +30,8 @@ import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.util.ArrayList;
 import java.util.Map;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
@@ -78,10 +80,13 @@ public class RecognizeController {
                     scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
             );
 
+            var pred = BigDecimal.valueOf(prediction.getLeft());
+            pred = pred.setScale(2, RoundingMode.HALF_UP);
+
             val result = new FacePrediction(
                     scanResult.getBox(),
                     prediction.getRight(),
-                    scanResult.getBox().getProbability().floatValue()
+                    pred.floatValue()
             );
 
             results.add(result);
