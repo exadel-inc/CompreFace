@@ -29,6 +29,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
@@ -63,15 +64,18 @@ public class FaceClassifierAdapter {
             }
 
             for (val faceNameId : faceNameEmbeddings.keySet()) {
-                labelMap.put(faceId, faceNameId);
                 val lists = faceNameEmbeddings.get(faceNameId).stream()
-                                              .filter(list -> isNotEmpty(list))
+                                              .filter(ObjectUtils::isNotEmpty)
                                               .collect(toList());
+
+                if (isNotEmpty(lists)) {
+                    labelMap.put(faceId, faceNameId);
+                }
                 for (val list : lists) {
                     x.add(list.stream().mapToDouble(d -> d).toArray());
                     y.add(faceId);
+                    faceId++;
                 }
-                faceId++;
             }
 
             classifier = new LogisticRegressionExtendedClassifier(labelMap);
@@ -95,7 +99,7 @@ public class FaceClassifierAdapter {
         this.train(embeddingFaceList, modelKey);
     }
 
-    public Pair<Integer, String> predict(final double[] x) {
+    public Pair<Double, String> predict(final double[] x) {
         return classifier.predict(x);
     }
 }

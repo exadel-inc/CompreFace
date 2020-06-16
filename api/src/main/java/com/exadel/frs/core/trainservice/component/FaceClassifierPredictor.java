@@ -30,7 +30,7 @@ public class FaceClassifierPredictor {
     private final ModelDao modelDao;
     private final ApplicationContext context;
 
-    public Pair<Integer, String> predict(final String modelKey, final double[] input) {
+    public Pair<Double, String> predict(final String modelKey, final double[] input) {
         val model = modelDao.getModel(modelKey);
         val faceClassifier = context.getBean(FaceClassifierAdapter.class);
         faceClassifier.setClassifier(model);

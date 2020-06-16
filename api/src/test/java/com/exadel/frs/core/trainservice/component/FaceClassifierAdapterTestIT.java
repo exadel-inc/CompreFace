@@ -16,20 +16,21 @@
 
 package com.exadel.frs.core.trainservice.component;
 
+import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import java.util.List;
-import java.util.Map;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.tuple.Pair;
+import lombok.val;
+import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit.jupiter.EnabledIf;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Slf4j
-@EnabledIf(expression = "#{environment.acceptsProfiles('integration-test')}")
 public class FaceClassifierAdapterTestIT {
 
     @Autowired
@@ -42,26 +43,46 @@ public class FaceClassifierAdapterTestIT {
 
     private static final String MODEL_KEY = "model_key";
 
+    @SneakyThrows
     @Test
+    @Transactional
     public void train() {
-        var allFaceEmbeddings = service.findAllFaceEmbeddings();
+        val date = System.currentTimeMillis();
+        val allFaceEmbeddings = service.findAllFaceEmbeddings();
         faceClassifierAdapter.trainSync(allFaceEmbeddings, MODEL_KEY);
-        var count1 = 0;
-        var count2 = 0;
+        var allPredictions = 0;
+        var truePredictions = 0;
 
-        Map<Pair<String, String>, List<List<Double>>> embeddings = allFaceEmbeddings.getFaceEmbeddings();
+        val embeddings = allFaceEmbeddings.getFaceEmbeddings();
+        var score = 0;
 
-        for (var faceName : embeddings.keySet()) {
-            Pair<Integer, String> predict = faceClassifierAdapter
-                    .predict(embeddings.get(faceName).get(0).stream().mapToDouble(d -> d).toArray());
-            if (predict.getRight().equals(faceName)) {
-                count2++;
+        for (val key : embeddings.keySet()) {
+
+            val faceName = key.getRight();
+
+            val lists = embeddings.get(key).stream()
+                                  .filter(ObjectUtils::isNotEmpty)
+                                  .collect(toList());
+            if (isNotEmpty(lists)) {
+                continue;
             }
-            count1++;
+            for (val el : lists) {
+                val predict = faceClassifierAdapter
+                        .predict(el.stream().mapToDouble(d -> d).toArray());
+                if (predict.getRight().equals(faceName)) {
+                    truePredictions++;
+                }
+                allPredictions++;
+                log.info("{} prob : {}", predict.getRight().equals(faceName) ? "TRUE" : "FALSE", predict.getLeft());
+                if (predict.getRight().equals(faceName)) {
+                    score += predict.getLeft();
+                }
+            }
         }
-        double accuracy = count2 / count1;
-        log.info("Logger accuracy {} ", accuracy);
-
+        double accuracy = (double) truePredictions / allPredictions;
+        log.info("Accuracy {} ", accuracy);
+        log.info("Score {} ", score);
+        log.info("Finished in {} ms", (System.currentTimeMillis() - date));
         assertTrue(accuracy > THRESHOLD);
     }
 }
