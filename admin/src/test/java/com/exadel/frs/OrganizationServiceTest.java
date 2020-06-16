@@ -35,6 +35,7 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.entity.UserOrganizationRoleId;
 import com.exadel.frs.enums.OrganizationRole;
+import com.exadel.frs.exception.OrganizationNotFoundException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.AppRepository;
@@ -210,14 +211,26 @@ class OrganizationServiceTest {
     @Test
     void getDefaultOrg() {
         val defaultOrg = Organization.builder().build();
-        when(organizationRepositoryMock.getOne(anyLong())).thenReturn(defaultOrg);
+        when(organizationRepositoryMock.findFirstByIsDefaultTrue()).thenReturn(Optional.of(defaultOrg));
 
         val actual = organizationService.getDefaultOrg();
 
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(defaultOrg);
 
-        verify(organizationRepositoryMock).getOne(anyLong());
+        verify(organizationRepositoryMock).findFirstByIsDefaultTrue();
+        verifyNoMoreInteractions(organizationRepositoryMock);
+        verifyNoInteractions(userServiceMock);
+    }
+
+    @Test
+    void failGetDefaultOrg() {
+        assertThrows(
+                OrganizationNotFoundException.class,
+                () -> organizationService.getDefaultOrg()
+        );
+
+        verify(organizationRepositoryMock).findFirstByIsDefaultTrue();
         verifyNoMoreInteractions(organizationRepositoryMock);
         verifyNoInteractions(userServiceMock);
     }
@@ -232,7 +245,7 @@ class OrganizationServiceTest {
         val defaultOrg = Organization.builder().build();
 
         when(userServiceMock.getUser(email)).thenReturn(user);
-        when(organizationRepositoryMock.getOne(anyLong())).thenReturn(defaultOrg);
+        when(organizationRepositoryMock.findFirstByIsDefaultTrue()).thenReturn(Optional.of(defaultOrg));
 
         val actual = organizationService.addUserToDefaultOrg(email);
 
@@ -242,7 +255,7 @@ class OrganizationServiceTest {
         assertThat(actual.getOrganization()).isEqualTo(defaultOrg);
 
         verify(userServiceMock).getUser(email);
-        verify(organizationRepositoryMock).getOne(0L);
+        verify(organizationRepositoryMock).findFirstByIsDefaultTrue();
         verify(organizationRepositoryMock).save(defaultOrg);
         verifyNoMoreInteractions(userServiceMock, organizationRepositoryMock);
     }
@@ -267,7 +280,7 @@ class OrganizationServiceTest {
                              .build();
 
         when(userServiceMock.getUser(email)).thenReturn(secondUser);
-        when(organizationRepositoryMock.getOne(anyLong())).thenReturn(defaultOrg);
+        when(organizationRepositoryMock.findFirstByIsDefaultTrue()).thenReturn(Optional.of(defaultOrg));
 
         val actual = organizationService.addUserToDefaultOrg(email);
 
@@ -277,7 +290,7 @@ class OrganizationServiceTest {
         assertThat(actual.getOrganization()).isEqualTo(defaultOrg);
 
         verify(userServiceMock).getUser(email);
-        verify(organizationRepositoryMock).getOne(0L);
+        verify(organizationRepositoryMock).findFirstByIsDefaultTrue();
         verify(organizationRepositoryMock).save(defaultOrg);
         verifyNoMoreInteractions(userServiceMock, organizationRepositoryMock);
     }

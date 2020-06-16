@@ -26,5 +26,4 @@ public class OrganizationNotFoundException extends BasicException {
     public OrganizationNotFoundException(final Object identifier) {
         super(ORGANIZATION_NOT_FOUND, format(MESSAGE, identifier));
     }
-
 }
