@@ -68,7 +68,7 @@ public class FaceClassifierAdapter {
                                               .filter(ObjectUtils::isNotEmpty)
                                               .collect(toList());
 
-                if (!lists.isEmpty()){
+                if (isNotEmpty(lists)) {
                     labelMap.put(faceId, faceNameId);
                 }
                 for (val list : lists) {

@@ -18,6 +18,7 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.math.RoundingMode.*;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
@@ -56,11 +57,14 @@ public class RecognizeController {
     @PostMapping(value = "/recognize")
     public ResponseEntity recognize(
             @ApiParam(value = "Api key of application and model", required = true)
-            @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @RequestHeader(X_FRS_API_KEY_HEADER)
+            final String apiKey,
             @ApiParam(value = "Image for recognizing", required = true)
-            @RequestParam final MultipartFile file,
+            @RequestParam
+            final MultipartFile file,
             @ApiParam(value = "Maximum number of faces to be recognized")
-            @RequestParam(required = false) final Integer limit
+            @RequestParam(required = false)
+            final Integer limit
     ) {
 
         val lock = manager.isTraining(apiKey);
@@ -81,7 +85,7 @@ public class RecognizeController {
             );
 
             var pred = BigDecimal.valueOf(prediction.getLeft());
-            pred = pred.setScale(2, RoundingMode.HALF_UP);
+            pred = pred.setScale(2, HALF_UP);
 
             val result = new FacePrediction(
                     scanResult.getBox(),
