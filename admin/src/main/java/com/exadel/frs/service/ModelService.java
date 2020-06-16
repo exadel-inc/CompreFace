@@ -16,6 +16,9 @@
 
 package com.exadel.frs.service;
 
+import static com.exadel.frs.enums.AppModelAccess.READONLY;
+import static com.exadel.frs.enums.OrganizationRole.USER;
+import static java.util.UUID.randomUUID;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -37,16 +40,11 @@ import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.system.rest.CoreFacesClient;
+import java.util.List;
+import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.List;
-
-import static com.exadel.frs.enums.AppModelAccess.READONLY;
-import static com.exadel.frs.enums.OrganizationRole.USER;
-import static java.util.UUID.randomUUID;
 
 @Service
 @RequiredArgsConstructor

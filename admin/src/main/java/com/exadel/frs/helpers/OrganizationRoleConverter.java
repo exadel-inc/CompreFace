@@ -18,10 +18,9 @@ package com.exadel.frs.helpers;
 
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.IncorrectOrganizationRoleException;
-
+import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.stream.Stream;
 
 @Converter(autoApply = true)
 public class OrganizationRoleConverter implements AttributeConverter<OrganizationRole, String> {

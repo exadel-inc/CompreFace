@@ -16,9 +16,8 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import lombok.Value;
-
 import static java.lang.String.format;
+import lombok.Value;
 
 @Value
 public class MigrationAlreadyExecutingException extends RuntimeException {

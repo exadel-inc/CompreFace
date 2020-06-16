@@ -17,11 +17,10 @@
 package com.exadel.frs.core.trainservice.component.migration;
 
 import com.exadel.frs.core.trainservice.exception.MigrationAlreadyExecutingException;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Component
 @RequiredArgsConstructor

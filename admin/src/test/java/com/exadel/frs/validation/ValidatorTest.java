@@ -17,13 +17,12 @@
 package com.exadel.frs.validation;
 
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import javax.validation.Validator;
 import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import javax.validation.Validator;
 
 @SpringBootTest
 public class ValidatorTest {

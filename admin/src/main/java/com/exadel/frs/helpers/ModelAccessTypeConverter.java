@@ -18,10 +18,9 @@ package com.exadel.frs.helpers;
 
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.IncorrectAccessTypeException;
-
+import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.stream.Stream;
 
 @Converter(autoApply = true)
 public class ModelAccessTypeConverter implements AttributeConverter<AppModelAccess, String> {

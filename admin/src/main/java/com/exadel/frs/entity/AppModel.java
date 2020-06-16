@@ -18,11 +18,16 @@ package com.exadel.frs.entity;
 
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.helpers.ModelAccessTypeConverter;
+import javax.persistence.Convert;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.*;
 
 @Entity
 @Table

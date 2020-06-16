@@ -17,14 +17,13 @@
 package com.exadel.frs.core.trainservice.handler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.LOCKED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
-import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.exception.MigrationExecutionException;
 import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
+import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.ResponseEntity;

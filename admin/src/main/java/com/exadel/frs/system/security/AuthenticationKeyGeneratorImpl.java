@@ -16,14 +16,13 @@
 
 package com.exadel.frs.system.security;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.TreeSet;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.DefaultAuthenticationKeyGenerator;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeSet;
 
 public class AuthenticationKeyGeneratorImpl extends DefaultAuthenticationKeyGenerator {
 

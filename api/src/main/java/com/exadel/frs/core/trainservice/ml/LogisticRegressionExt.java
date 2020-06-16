@@ -18,14 +18,13 @@ package com.exadel.frs.core.trainservice.ml;
 
 import static java.lang.String.format;
 import static java.util.Arrays.sort;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Arrays;
 import lombok.val;
 import smile.classification.LogisticRegression;
 import smile.math.DifferentiableMultivariateFunction;
 import smile.math.Math;
-
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Arrays;
 
 public class LogisticRegressionExt implements Serializable {
 
