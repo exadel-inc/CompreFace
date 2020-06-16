@@ -19,12 +19,11 @@ package com.exadel.frs.mapper;
 import com.exadel.frs.dto.ui.OrgResponseDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserOrganizationRole;
+import java.util.List;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
 
 @Mapper(uses = UserOrgRoleMapper.class)
 public interface OrganizationMapper {

@@ -16,13 +16,12 @@
 
 package com.exadel.frs.system.statistics;
 
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.UUID;
 
 @Aspect
 @Configuration

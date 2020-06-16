@@ -20,12 +20,11 @@ import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.enums.AppModelAccess;
+import java.util.List;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
 
 @Mapper
 public interface MlModelMapper {
