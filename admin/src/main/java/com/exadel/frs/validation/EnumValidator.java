@@ -14,17 +14,24 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
+package com.exadel.frs.validation;
 
-import static java.lang.String.format;
-import lombok.Value;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import org.apache.commons.lang3.EnumUtils;
 
-@Value
-public class MigrationExecutionException extends RuntimeException {
-    private static final String MESSAGE = "Write operations during migration aren't allowed";
+public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
 
-    public MigrationExecutionException() {
-        super(format(MESSAGE));
+    private Class<? extends Enum> enumType;
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public void initialize(ValidEnum targetEnum) {
+        enumType = targetEnum.targetClassType();
     }
 
-}
+    @Override
+    public boolean isValid(String value, ConstraintValidatorContext context) {
+        return EnumUtils.isValidEnum(enumType, value);
+    }
+} 

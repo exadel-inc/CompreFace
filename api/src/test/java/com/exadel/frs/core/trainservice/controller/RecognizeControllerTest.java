@@ -76,7 +76,7 @@ class RecognizeControllerTest {
         );
 
         when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
-        when(predictor.predict(any(), any())).thenReturn(Pair.of(1, ""));
+        when(predictor.predict(any(), any())).thenReturn(Pair.of(1.0, ""));
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognize")

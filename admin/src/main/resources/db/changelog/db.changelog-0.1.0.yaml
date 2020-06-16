@@ -1,0 +1,30 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-default-org
+      author: Vadim Amirov
+      changes:
+        #add property column for default organization
+        - addColumn:
+            tableName: organization
+            columns:
+              - column:
+                  name: isDefault
+                  type: boolean
+                  defaultValueBoolean: false
+
+        #add default organization
+        - insert:
+            tableName: organization
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 0
+              - column:
+                  name: name
+                  value: Default
+              - column:
+                  name: guid
+                  value: 00000000-0000-0000-0000-000000000000
+              - column:
+                  name: isDefault
+                  valueBoolean: true

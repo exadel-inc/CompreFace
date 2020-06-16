@@ -1,7 +1,6 @@
 # Exadel Face Recognition System (Exadel FRS)
 
-[![Build Status](<todo: link to build status>)](<todo: link to build status>) [![GitHub license](<todo: link to license>)](<todo: link to
- license>)) [![GitHub contributors](<todo: link to contributors>)](<todo: link to contributors>))
+[![GitHub license](https://img.shields.io/github/license/pospielov/frs-private)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/pospielov/frs-private)](https://github.com/pospielov/frs-private/graphs/contributors)
 
 [TOC]
 
@@ -32,11 +31,12 @@ FRS is:
 
 ## Getting started
 
-1. Just run command:
-```
+1. install Docker
+1. just run command:
+`
 docker-compose up --build
-```
-2. Open https://localhost/
+`
+1. open http://localhost:8000/
 
 
 
@@ -44,7 +44,7 @@ docker-compose up --build
 
 
 
-![how-it-works](.\infrastructure\how-it-works.jpg)
+![how-it-works](https://github.com/pospielov/frs-private/blob/develop/infrastructure/how-it-works.jpg)
 
 **Finding the face:** we reused base project code for this, for face recognition they use multi-task cascaded convolutional neural networks (MTCNN).
 **Posing and projecting faces:** we reused base project code for this.
@@ -83,7 +83,7 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 
 
 
-![architecture](.\infrastructure\architecture.jpg)
+![architecture](https://github.com/pospielov/frs-private/blob/develop/infrastructure/architecture.jpg)
 
 
 

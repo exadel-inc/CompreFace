@@ -16,7 +16,8 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.enums.ValidationResult.*;
+import static com.exadel.frs.core.trainservice.enums.ValidationResult.FORBIDDEN;
+import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
 import com.exadel.frs.core.trainservice.enums.ValidationResult;
 import com.exadel.frs.core.trainservice.repository.postgres.ModelRepositoryPg;
 import lombok.RequiredArgsConstructor;

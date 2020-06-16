@@ -17,16 +17,15 @@
 package com.exadel.frs.core.trainservice.component;
 
 import com.exadel.frs.core.trainservice.exception.ModelAlreadyLockedException;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.springframework.stereotype.Component;
-
-import javax.annotation.PostConstruct;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
+import javax.annotation.PostConstruct;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import lombok.val;
+import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j

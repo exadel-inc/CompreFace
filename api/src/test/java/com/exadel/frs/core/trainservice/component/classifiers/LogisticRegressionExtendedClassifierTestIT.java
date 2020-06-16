@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.component.classifiers;
 
+import static java.lang.Math.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
@@ -34,8 +35,8 @@ class LogisticRegressionExtendedClassifierTestIT {
     @Test
     void predict() {
         val faceName = "faceName";
-        val predictResult = Pair.of(0, faceName);
-        val labelMap = Map.of(0, Pair.of("faceId", faceName));
+        val predictResult = 1;
+        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
         val classifier = new LogisticRegressionExtendedClassifier(labelMap);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
@@ -45,7 +46,7 @@ class LogisticRegressionExtendedClassifierTestIT {
         val actual = classifier.predict(new double[]{0, 0});
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(predictResult);
+        assertThat(round(actual.getLeft())).isEqualTo(predictResult);
     }
 
     @Test
