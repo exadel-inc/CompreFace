@@ -31,11 +31,12 @@ FRS is:
 
 ## Getting started
 
-1. Just run command:
-```
+1. install Docker
+1. just run command:
+`
 docker-compose up --build
-```
-2. Open https://localhost/
+`
+1. open http://localhost:8000/
 
 
 
