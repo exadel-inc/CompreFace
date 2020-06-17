@@ -8,7 +8,7 @@ databaseChangeLog:
             tableName: organization
             columns:
               - column:
-                  name: isDefault
+                  name: is_default
                   type: boolean
                   defaultValueBoolean: false
 
@@ -26,5 +26,5 @@ databaseChangeLog:
                   name: guid
                   value: 00000000-0000-0000-0000-000000000000
               - column:
-                  name: isDefault
+                  name: is_default
                   valueBoolean: true
