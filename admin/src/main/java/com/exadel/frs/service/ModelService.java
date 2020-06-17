@@ -91,10 +91,7 @@ public class ModelService {
         val app = appService.getApp(appGuid);
 
         authManager.verifyWritePrivilegesToApp(userId, app);
-
-        if (!app.getOrganization().getGuid().equals(orgGuid)) {
-            throw new AppDoesNotBelongToOrgException(appGuid, orgGuid);
-        }
+        authManager.verifyOrganizationHasTheApp(orgGuid, app);
 
         verifyNameIsUnique(modelCreateDto.getName(), app.getId());
 
