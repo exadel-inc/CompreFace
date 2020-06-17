@@ -83,8 +83,11 @@ export class AuthEffects {
   showSuccess$ = this.actions.pipe(
     ofType(signUpSuccess),
     tap(action => {
-      this.snackBarService.openInfo(null, 8000, 'You have created new account, please login into your account');
-    })
+      const message = action.confirmationNeeded
+        ? 'You have created new account, please confirm your email'
+        : 'You have created new account, please login into your account';
+      this.snackBarService.openInfo(null, 8000, message);
+    }),
   );
 
   @Effect()
@@ -92,7 +95,7 @@ export class AuthEffects {
     ofType(signUp),
     switchMap(payload => {
       return this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName).pipe(
-        map(() => signUpSuccess()),
+        map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
         catchError(error => observableOf(signUpFailure(error)))
       );
     }));
