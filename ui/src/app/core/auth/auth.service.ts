@@ -76,7 +76,7 @@ export class AuthService {
 
   signUp(firstName: string, password: string, email: string, lastName: string): Observable<any> {
     const url = `${environment.apiUrl}${API_URL.REGISTER}`;
-    return this.http.post(url, { email, password, firstName, lastName });
+    return this.http.post(url, { email, password, firstName, lastName }, {observe: 'response'});
   }
 
   logOut() {

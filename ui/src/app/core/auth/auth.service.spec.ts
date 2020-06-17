@@ -14,14 +14,14 @@
  * permissions and limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
-import {AuthService} from './auth.service';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {environment} from '../../../environments/environment';
-import {API_URL} from '../../data/api.variables';
-import {FormBuilder} from '@angular/forms';
-import {Router} from '@angular/router';
-import {provideMockStore} from '@ngrx/store/testing';
+import { TestBed } from '@angular/core/testing';
+import { AuthService } from './auth.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { environment } from '../../../environments/environment';
+import { API_URL } from '../../data/api.variables';
+import { FormBuilder } from '@angular/forms';
+import { Router } from '@angular/router';
+import { provideMockStore } from '@ngrx/store/testing';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -36,10 +36,10 @@ describe('AuthService', () => {
         AuthService,
         FormBuilder,
         provideMockStore(),
-      {
-        provide: Router,
-        useValue: { navigateByUrl: () => { } }
-      }]
+        {
+          provide: Router,
+          useValue: { navigateByUrl: () => { } }
+        }]
     });
     service = TestBed.get(AuthService);
     httpMock = TestBed.get(HttpTestingController);
@@ -76,8 +76,8 @@ describe('AuthService', () => {
 
     const dummyToken = 'Some token';
 
-    service.signUp(dummyUser.firstName, dummyUser.password, dummyUser.email, dummyUser.lastName).subscribe(token => {
-      expect(token).toEqual(dummyToken);
+    service.signUp(dummyUser.firstName, dummyUser.password, dummyUser.email, dummyUser.lastName).subscribe(response => {
+      expect(response.status).toEqual(201);
     });
 
     const request = httpMock.expectOne(`${environment.apiUrl}${API_URL.REGISTER}`);
