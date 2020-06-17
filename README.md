@@ -2,7 +2,35 @@
 
 [![GitHub license](https://img.shields.io/github/license/pospielov/frs-private)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/pospielov/frs-private)](https://github.com/pospielov/frs-private/graphs/contributors)
 
-[TOC]
+
+
+ [Exadel Face Recognition System (Exadel FRS)](#exadel-face-recognition-system--exadel-frs-)
+  * [Features](#features)
+  * [Getting started](#getting-started)
+  * [How it works](#how-it-works)
+    + [ML Technologies](#ml-technologies)
+    + [Used ML Papers and Algorithms](#used-ml-papers-and-algorithms)
+  * [Technologies](#technologies)
+    + [Architecture diagram](#architecture-diagram)
+    + [Databases](#databases)
+    + [Platform server](#platform-server)
+    + [API server](#api-server)
+    + [Embedding server](#embedding-server)
+  * [Photo example of recognition](#photo-example-of-recognition)
+  * [Simple tutorial of usage](#simple-tutorial-of-usage)
+  * [Rest API description](#rest-api-description)
+    + [Add an example of the face](#add-an-example-of-the-face)
+    + [Recognize faces from given image](#recognize-faces-from-given-image)
+    + [Retrain face model](#retrain-face-model)
+    + [Retraining status](#retraining-status)
+    + [Abort training](#abort-training)
+    + [Delete all examples of the face by name](#delete-all-examples-of-the-face-by-name)
+    + [List names of all saved faces](#list-names-of-all-saved-faces)
+  * [Use cases and domains](#use-cases-and-domains)
+  * [Contributing](#contributing)
+  * [License info](#license-info)
+
+
 
 It is the solution for face recognition that can be integrated as a standalone
 server. 
@@ -179,7 +207,6 @@ curl  -X POST \
 
 https://localhost:8080/api/v1/recognize[?limit=<limit>]
 ```
-
 
 <model_api_key> - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
 <det_prob_threshold> (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
