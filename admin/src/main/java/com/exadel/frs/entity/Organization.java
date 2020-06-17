@@ -52,6 +52,7 @@ public class Organization {
     private Long id;
     private String name;
     private String guid;
+    private Boolean isDefault;
 
     @ToString.Exclude
     @Builder.Default

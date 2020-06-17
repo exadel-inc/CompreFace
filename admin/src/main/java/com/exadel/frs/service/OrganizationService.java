@@ -127,7 +127,7 @@ public class OrganizationService {
     }
 
     public Organization getDefaultOrg() {
-        // TODO: to use special property for finding default org
-        return organizationRepository.getOne(0L);
+        return organizationRepository.findFirstByIsDefaultTrue()
+                                     .orElseThrow(() -> new OrganizationNotFoundException("Default"));
     }
 }
