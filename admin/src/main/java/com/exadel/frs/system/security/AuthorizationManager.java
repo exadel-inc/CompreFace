@@ -27,6 +27,7 @@ import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
+import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import java.util.List;
 import lombok.val;
 import org.springframework.stereotype.Component;
@@ -34,32 +35,43 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationManager {
 
-    public void verifyUserHasReadPrivileges(final Long userId, final Organization organization) {
-        organization.getUserOrganizationRoleOrThrow(userId);
-    }
-
-    public void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
-        if (!List.of(OWNER, ADMINISTRATOR).contains(organization.getUserOrganizationRoleOrThrow(userId).getRole())) {
+    public void verifyReadPrivilegesToOrg(final Long userId, final Organization organization) {
+        try {
+            organization.getUserOrganizationRoleOrThrow(userId);
+        } catch (UserDoesNotBelongToOrganization e) {
             throw new InsufficientPrivilegesException();
         }
     }
 
-    public void verifyUserHasReadPrivileges(final Long userId, final App app) {
-        if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
-            app.getUserAppRole(userId)
-               .orElseThrow(InsufficientPrivilegesException::new);
+    public void verifyWritePrivilegesToOrg(final Long userId, final Organization organization) {
+        try {
+            val role = organization.getUserOrganizationRoleOrThrow(userId).getRole();
+            if (!List.of(OWNER, ADMINISTRATOR).contains(role)) {
+                throw new InsufficientPrivilegesException();
+            }
+        } catch (UserDoesNotBelongToOrganization e) {
+            throw new InsufficientPrivilegesException();
         }
     }
 
-    public void verifyUserHasWritePrivileges(final Long userId, final App app) {
-        if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
-            val role = app.getUserAppRole(userId)
-                          .orElseThrow(InsufficientPrivilegesException::new)
-                          .getRole();
-
-            if (AppRole.USER == role) {
-                throw new InsufficientPrivilegesException();
+    public void verifyReadPrivilegesToApp(final Long userId, final App app) {
+        try {
+            if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
+                app.getUserAppRole(userId)
+                   .orElseThrow(InsufficientPrivilegesException::new);
             }
+        } catch (UserDoesNotBelongToOrganization e) {
+            throw new InsufficientPrivilegesException();
+        }
+    }
+
+    public void verifyWritePrivilegesToApp(final Long userId, final App app) {
+        val role = app.getUserAppRole(userId)
+                      .orElseThrow(InsufficientPrivilegesException::new)
+                      .getRole();
+
+        if (AppRole.USER == role) {
+            throw new InsufficientPrivilegesException();
         }
     }
 
@@ -78,5 +90,4 @@ public class AuthorizationManager {
     private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {
         return organization.getUserOrganizationRoleOrThrow(userId).getRole();
     }
-
 }

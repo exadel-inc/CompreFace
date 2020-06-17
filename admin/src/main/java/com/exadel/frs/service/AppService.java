@@ -78,7 +78,7 @@ public class AppService {
     public App getApp(final String orgGuid, final String appGuid, final Long userId) {
         val app = getApp(appGuid);
 
-        authManager.verifyUserHasReadPrivileges(userId, app);
+        authManager.verifyReadPrivilegesToApp(userId, app);
         authManager.verifyOrganizationHasTheApp(orgGuid, app);
 
         return app;
@@ -138,7 +138,7 @@ public class AppService {
     ) {
         val app = getApp(orgGuid, appGuid, userId);
 
-        authManager.verifyUserHasWritePrivileges(userId, app);
+        authManager.verifyWritePrivilegesToApp(userId, app);
 
         val user = userService.getUser(userInviteDto.getUserEmail());
         val userOrgRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
@@ -161,7 +161,7 @@ public class AppService {
     public App createApp(final AppCreateDto appCreateDto, final String orgGuid, final Long userId) {
         val organization = organizationService.getOrganization(orgGuid);
 
-        authManager.verifyUserHasWritePrivileges(userId, organization);
+        authManager.verifyWritePrivilegesToOrg(userId, organization);
 
         verifyNameIsUnique(appCreateDto.getName(), organization.getId());
 
@@ -180,7 +180,7 @@ public class AppService {
     public App updateApp(final AppUpdateDto appUpdateDto, final String orgGuid, final String appGuid, final Long userId) {
         val app = getApp(orgGuid, appGuid, userId);
 
-        authManager.verifyUserHasWritePrivileges(userId, app);
+        authManager.verifyWritePrivilegesToApp(userId, app);
 
         val isSameName = app.getName().equals(appUpdateDto.getName());
         if (isNotTrue(isSameName)) {
@@ -194,7 +194,7 @@ public class AppService {
     public UserAppRole updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String orgGuid, final String guid, final Long adminId) {
         val app = getApp(orgGuid, guid, adminId);
 
-        authManager.verifyUserHasWritePrivileges(adminId, app);
+        authManager.verifyWritePrivilegesToApp(adminId, app);
 
         val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
@@ -218,7 +218,7 @@ public class AppService {
         val userId = userService.getUserByGuid(userGuid).getId();
         val app = getApp(orgGuid, guid, userId);
 
-        authManager.verifyUserHasWritePrivileges(adminId, app);
+        authManager.verifyWritePrivilegesToApp(adminId, app);
 
         app.deleteUserAppRole(userGuid);
 
@@ -228,7 +228,7 @@ public class AppService {
     public void regenerateApiKey(final String orgGuid, final String guid, final Long userId) {
         val app = getApp(orgGuid, guid, userId);
 
-        authManager.verifyUserHasWritePrivileges(userId, app);
+        authManager.verifyWritePrivilegesToApp(userId, app);
 
         app.setApiKey(UUID.randomUUID().toString());
 
@@ -239,7 +239,7 @@ public class AppService {
     public void deleteApp(final String orgGuid, final String guid, final Long userId) {
         val app = getApp(orgGuid, guid, userId);
 
-        authManager.verifyUserHasWritePrivileges(userId, app);
+        authManager.verifyWritePrivilegesToApp(userId, app);
 
         app.getModels().forEach(model ->
                 coreFacesClient.deleteFaces(model.getApiKey())
@@ -251,7 +251,7 @@ public class AppService {
     public UUID generateUuidToRequestModelShare(final String orgGuid, final String appGuid) {
         val app = getApp(appGuid);
 
-        authManager.verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), app);
+        authManager.verifyWritePrivilegesToApp(SecurityUtils.getPrincipalId(), app);
         authManager.verifyOrganizationHasTheApp(orgGuid, app);
 
         val requestId = UUID.randomUUID();

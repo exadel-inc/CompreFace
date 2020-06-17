@@ -50,7 +50,7 @@ public class OrganizationService {
 
     public Organization getOrganization(final String guid, final Long userId) {
         val organization = getOrganization(guid);
-        authManager.verifyUserHasReadPrivileges(userId, organization);
+        authManager.verifyReadPrivilegesToOrg(userId, organization);
 
         return organization;
     }
@@ -77,14 +77,14 @@ public class OrganizationService {
 
     public List<UserOrganizationRole> getOrgUsers(final String guid, final Long userId) {
         val organization = getOrganization(guid);
-        authManager.verifyUserHasReadPrivileges(userId, organization);
+        authManager.verifyReadPrivilegesToOrg(userId, organization);
 
         return organization.getUserOrganizationRoles();
     }
 
     public UserOrganizationRole updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
         val organization = getOrganization(guid);
-        authManager.verifyUserHasWritePrivileges(adminId, organization);
+        authManager.verifyWritePrivilegesToOrg(adminId, organization);
 
         val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {

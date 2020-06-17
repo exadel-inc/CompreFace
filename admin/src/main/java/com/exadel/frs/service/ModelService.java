@@ -72,7 +72,7 @@ public class ModelService {
     public Model getModel(final String orgGuid, final String appGuid, final String modelGuid, final Long userId) {
         val model = getModel(modelGuid);
 
-        authManager.verifyUserHasReadPrivileges(userId, model.getApp());
+        authManager.verifyReadPrivilegesToApp(userId, model.getApp());
         authManager.verifyOrganizationHasTheApp(orgGuid, model.getApp());
         authManager.verifyAppHasTheModel(appGuid, model);
 
@@ -82,7 +82,7 @@ public class ModelService {
     public List<Model> getModels(final String appGuid, final Long userId) {
         val app = appService.getApp(appGuid);
 
-        authManager.verifyUserHasReadPrivileges(userId, app);
+        authManager.verifyReadPrivilegesToApp(userId, app);
 
         return modelRepository.findAllByAppId(app.getId());
     }
@@ -90,7 +90,7 @@ public class ModelService {
     public Model createModel(final ModelCreateDto modelCreateDto, final String orgGuid, final String appGuid, final Long userId) {
         val app = appService.getApp(appGuid);
 
-        authManager.verifyUserHasWritePrivileges(userId, app);
+        authManager.verifyWritePrivilegesToApp(userId, app);
 
         if (!app.getOrganization().getGuid().equals(orgGuid)) {
             throw new AppDoesNotBelongToOrgException(appGuid, orgGuid);
@@ -118,7 +118,7 @@ public class ModelService {
 
         val model = getModel(orgGuid, appGuid, modelGuid, userId);
 
-        authManager.verifyUserHasWritePrivileges(userId, model.getApp());
+        authManager.verifyWritePrivilegesToApp(userId, model.getApp());
 
         if (!model.getName().equals(modelUpdateDto.getName())) {
             verifyNameIsUnique(modelUpdateDto.getName(), model.getApp().getId());
@@ -132,7 +132,7 @@ public class ModelService {
     public void regenerateApiKey(final String orgGuid, final String appGuid, final String guid, final Long userId) {
         val repoModel = getModel(orgGuid, appGuid, guid, userId);
 
-        authManager.verifyUserHasWritePrivileges(userId, repoModel.getApp());
+        authManager.verifyWritePrivilegesToApp(userId, repoModel.getApp());
 
         val newApiKey = randomUUID().toString();
 
@@ -146,7 +146,7 @@ public class ModelService {
     public void deleteModel(final String orgGuid, final String appGuid, final String guid, final Long userId) {
         val model = getModel(orgGuid, appGuid, guid, userId);
 
-        authManager.verifyUserHasWritePrivileges(userId, model.getApp());
+        authManager.verifyWritePrivilegesToApp(userId, model.getApp());
 
         coreFacesClient.deleteFaces(model.getApiKey());
         modelRepository.deleteById(model.getId());
@@ -163,7 +163,7 @@ public class ModelService {
 
         val modelBeingShared = getModel(orgGuid, appGuid, modelGuid, SecurityUtils.getPrincipalId());
 
-        authManager.verifyUserHasWritePrivileges(SecurityUtils.getPrincipalId(), modelBeingShared.getApp());
+        authManager.verifyWritePrivilegesToApp(SecurityUtils.getPrincipalId(), modelBeingShared.getApp());
 
         val modelShareRequest = modelShareRequestRepository.findModelShareRequestByRequestId(modelShare.getRequestId());
         if (modelShareRequest == null) {

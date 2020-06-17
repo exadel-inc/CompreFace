@@ -42,6 +42,7 @@ import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.repository.OrganizationRepository;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
+import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -80,6 +81,9 @@ class OrganizationServiceTest {
     @Mock
     private OrganizationRepository organizationRepositoryMock;
 
+    @Mock
+    private AuthorizationManager authManagerMock;
+
     @InjectMocks
     private OrganizationService organizationService;
 
@@ -96,13 +100,12 @@ class OrganizationServiceTest {
 
     private static Stream<Arguments> readRoles() {
         return Stream.of(
-                Arguments.of(OrganizationRole.ADMINISTRATOR),
                 Arguments.of(USER)
         );
     }
 
     private static Stream<Arguments> writeRoles() {
-        return Stream.of(Arguments.of(OWNER));
+        return Stream.of(Arguments.of(OWNER), Arguments.of(OrganizationRole.ADMINISTRATOR));
     }
 
     @ParameterizedTest
@@ -286,7 +289,7 @@ class OrganizationServiceTest {
     @DataJpaTest
     @Nested
     @MockBeans({@MockBean(SpringLiquibase.class), @MockBean(PasswordEncoder.class), @MockBean(EmailSender.class)})
-    @Import({OrganizationService.class, UserService.class})
+    @Import({OrganizationService.class, UserService.class, AuthorizationManager.class})
     public class RemoveOrganizationTest {
 
         @Autowired

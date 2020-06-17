@@ -95,6 +95,9 @@ class AppServiceTest {
     @Mock
     private CoreFacesClient coreFacesClient;
 
+    @Mock
+    private AuthorizationManager authManger;
+
     @InjectMocks
     private AppService appService;
 
@@ -330,7 +333,7 @@ class AppServiceTest {
         val organization = organization();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
-        doThrow(UserDoesNotBelongToOrganization.class).when(authManagerMock).verifyUserHasWritePrivileges(USER_ID, organization);
+        doThrow(UserDoesNotBelongToOrganization.class).when(authManagerMock).verifyWritePrivilegesToOrg(USER_ID, organization);
 
         assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
     }
@@ -344,7 +347,7 @@ class AppServiceTest {
         organization.addUserOrganizationRole(user, organizationRole);
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
-        doThrow(InsufficientPrivilegesException.class).when(authManagerMock).verifyUserHasWritePrivileges(USER_ID, organization);
+        doThrow(InsufficientPrivilegesException.class).when(authManagerMock).verifyWritePrivilegesToOrg(USER_ID, organization);
 
         assertThrows(InsufficientPrivilegesException.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
     }
