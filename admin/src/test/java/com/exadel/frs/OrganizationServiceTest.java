@@ -46,7 +46,6 @@ import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Stream;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,9 +53,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,31 +94,21 @@ class OrganizationServiceTest {
                    .build();
     }
 
-    private static Stream<Arguments> readRoles() {
-        return Stream.of(
-                Arguments.of(USER)
-        );
-    }
-
-    private static Stream<Arguments> writeRoles() {
-        return Stream.of(Arguments.of(OWNER), Arguments.of(OrganizationRole.ADMINISTRATOR));
-    }
-
-    @ParameterizedTest
-    @MethodSource({"readRoles", "writeRoles"})
-    void successGetOrganization(OrganizationRole organizationRole) {
-        val user = user(USER_ID);
+    @Test
+    void successGetOrganization() {
         val organization = Organization.builder()
                                        .id(ORGANIZATION_ID)
                                        .build();
-
-        organization.addUserOrganizationRole(user, organizationRole);
 
         when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
 
         val result = organizationService.getOrganization(ORGANIZATION_GUID, USER_ID);
 
         assertThat(result.getId()).isEqualTo(ORGANIZATION_ID);
+
+        verify(organizationRepositoryMock).findByGuid(ORGANIZATION_GUID);
+        verify(authManagerMock).verifyReadPrivilegesToOrg(USER_ID, organization);
+        verifyNoMoreInteractions(organizationRepositoryMock, authManagerMock);
     }
 
     @Test
@@ -181,9 +167,8 @@ class OrganizationServiceTest {
         assertThat(organizations).doesNotContain(notOwnedOrg2);
     }
 
-    @ParameterizedTest
-    @MethodSource("writeRoles")
-    void failUpdateOrganizationSelfRoleChange(OrganizationRole organizationRole) {
+    @Test
+    void failUpdateOrganizationSelfRoleChange() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
                                                  .userId("userGuid")
                                                  .role(USER.toString())
@@ -195,8 +180,6 @@ class OrganizationServiceTest {
                                        .guid(ORGANIZATION_GUID)
                                        .build();
 
-        organization.addUserOrganizationRole(user, organizationRole);
-
         val organizationUpdate = Organization.builder().build();
         organizationUpdate.addUserOrganizationRole(user, USER);
 
@@ -207,6 +190,11 @@ class OrganizationServiceTest {
                 SelfRoleChangeException.class,
                 () -> organizationService.updateUserOrgRole(userRoleUpdateDto, ORGANIZATION_GUID, USER_ID)
         );
+
+        verify(organizationRepositoryMock).findByGuid(ORGANIZATION_GUID);
+        verify(authManagerMock).verifyWritePrivilegesToOrg(USER_ID, organization);
+        verify(userServiceMock).getUserByGuid(any());
+        verifyNoMoreInteractions(authManagerMock, userServiceMock, organizationRepositoryMock);
     }
 
     @Test
