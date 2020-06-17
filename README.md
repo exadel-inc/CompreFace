@@ -32,16 +32,11 @@
 
 
 
-It is the solution for face recognition that can be integrated as a standalone
-server. 
+It is the solution for face recognition that can be integrated as a standalone server. 
 
-We combined state-of-the-art face 
-recognition library that uses deep neural networks, trained on million faces, to retrieve
-features from faces with our own machine learning algorithm for face recognition. 
+We combined state-of-the-art face recognition library that uses deep neural networks, trained on million faces, to retrieve features from faces with our own machine learning algorithm for face recognition. 
 
-Every user could have several models trained on different subset of people. 
-The key idea is to make solution for faces recognition that anybody could setup and use
-without machine learning knowledge.
+Every user could have several models trained on different subset of people. The key idea is to make solution for faces recognition that anybody could setup and use without machine learning knowledge.
 
 
 
@@ -49,11 +44,11 @@ without machine learning knowledge.
 
 FRS is:
 
-- just one docker command for app start;
-- fast and high accuracy face recognizing;
-- runs fully on-prem (control your data);
-- UI application panel for management;
-- highload support.
+- just one docker command for app start
+- fast and high accuracy face recognizing
+- runs fully on-prem (control your data)
+- UI application panel for management
+- highload support
 
 
 
@@ -84,9 +79,9 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 
 ### ML Technologies
 
-* MTCNN (Multi-task Cascaded Convolutional Networks);
-* logistic Regression;
-* transfer learning.
+* MTCNN (Multi-task Cascaded Convolutional Networks)
+* logistic Regression
+* transfer learning
 
 
 ### Used ML Papers and Algorithms
@@ -117,35 +112,35 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 
 ### Databases
 
-* postgreSQL;
-* mongoDB.
+* postgreSQL
+* mongoDB
 
 
 
 ### Platform server
 
-* java 11;
-* spring boot.
+* java 11
+* spring boot
 
   
 
 ### API server
 
-* java 11;
-* spring boot;
-* haifengl/smile.
+* java 11
+* spring boot
+* haifengl/smile
 
 
 
 ### Embedding server
 
-* python;
-* [faceNet](https://github.com/davidsandberg/facenet);
-* [insightFace](https://github.com/deepinsight/insightface);  
-* tensorFlow;
-* sciPy;
-* numPy;
-* openCV (for images resizing).
+* python
+* [faceNet](https://github.com/davidsandberg/facenet)
+* [insightFace](https://github.com/deepinsight/insightface)
+* tensorFlow
+* sciPy
+* numPy
+* openCV (for images resizing)
 
 
 
@@ -180,11 +175,11 @@ curl  -X POST \
 
 http://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
 ```
-- **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-- **[localfilename]** - jpeg of png image on your local computer.
-- **[face_name]** - name of the person on the image. It could be any string if you need depersonalize images.
-- **[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
-- **[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running
+**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+**[localfilename]** - jpeg of png image on your local computer.
+**[face_name]** - name of the person on the image. It could be any string if you need depersonalize images.
+**[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
+**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running
  processes of classifier training. Default value: force
 
 **Available images extensions:** jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp
@@ -239,10 +234,10 @@ Response body on success:
 ```
 <todo: output format will be changed>
 
-**[face_name]** - name of the person on the image with the biggest probability; 
-**[probability]** - probability that on that image predicted person;
-**[det_probability]** - probability that a found face is a actually a face;
-**[parameters]** - list of parameters of the bounding box for this face.
+**[face_name]** - name of the person on the image with the biggest probability
+**[probability]** - probability that on that image predicted person
+**[det_probability]** - probability that a found face is a actually a face
+**[parameters]** - list of parameters of the bounding box for this face
 
 
 
@@ -331,7 +326,7 @@ https://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
 
 **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
 **[face_name]** - the name of the person, whose records need to be removed from the database, as a string.
-**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running processes of classifier training. Default value : force
+**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running processes of classifier training. Default value : *force*
 
 
 
