@@ -17,7 +17,6 @@
 package com.exadel.frs.entity;
 
 import static java.util.Collections.emptyList;
-
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;

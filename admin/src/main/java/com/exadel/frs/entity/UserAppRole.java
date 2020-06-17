@@ -18,9 +18,18 @@ package com.exadel.frs.entity;
 
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.helpers.AppRoleConverter;
-import lombok.*;
-
-import javax.persistence.*;
+import javax.persistence.Convert;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.MapsId;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table

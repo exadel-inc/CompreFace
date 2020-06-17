@@ -22,6 +22,6 @@ export const logInSuccess = createAction('[Auth] Login Success');
 export const logInFailure = createAction('[Auth] Login Failure', props<{ error: any }>());
 export const signUp = createAction('[Auth] Sign up', props<SignUp>());
 export const signUpFailure = createAction('[Auth] Sign up Failure', props<{ error: any }>());
-export const signUpSuccess = createAction('[Auth] Sign up Success');
+export const signUpSuccess = createAction('[Auth] Sign up Success', props<{ confirmationNeeded: boolean }>());
 export const logOut = createAction('[Auth] Logout');
 export const resetErrorMessage = createAction('[Auth] Reset Error Message');

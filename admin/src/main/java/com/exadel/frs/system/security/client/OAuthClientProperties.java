@@ -16,17 +16,16 @@
 
 package com.exadel.frs.system.security.client;
 
+import java.util.List;
+import java.util.Map;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.List;
-import java.util.Map;
 
 @Configuration
 @ConfigurationProperties(prefix = "app.security.oauth2")

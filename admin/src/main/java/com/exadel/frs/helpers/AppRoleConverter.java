@@ -18,10 +18,9 @@ package com.exadel.frs.helpers;
 
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.exception.IncorrectAppRoleException;
-
+import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
-import java.util.stream.Stream;
 
 @Converter(autoApply = true)
 public class AppRoleConverter implements AttributeConverter<AppRole, String> {

@@ -1,20 +1,42 @@
 # Exadel Face Recognition System (Exadel FRS)
 
-[![Build Status](<todo: link to build status>)](<todo: link to build status>) [![GitHub license](<todo: link to license>)](<todo: link to
- license>)) [![GitHub contributors](<todo: link to contributors>)](<todo: link to contributors>))
+[![GitHub license](https://img.shields.io/github/license/pospielov/frs-private)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/pospielov/frs-private)](https://github.com/pospielov/frs-private/graphs/contributors)
 
-[TOC]
 
-It is the solution for face recognition that can be integrated as a standalone
-server. 
 
-We combined state-of-the-art face 
-recognition library that uses deep neural networks, trained on million faces, to retrieve
-features from faces with our own machine learning algorithm for face recognition. 
+ [Exadel Face Recognition System (Exadel FRS)](#exadel-face-recognition-system--exadel-frs-)
+  * [Features](#features)
+  * [Getting started](#getting-started)
+  * [How it works](#how-it-works)
+    + [ML Technologies](#ml-technologies)
+    + [Used ML Papers and Algorithms](#used-ml-papers-and-algorithms)
+  * [Technologies](#technologies)
+    + [Architecture diagram](#architecture-diagram)
+    + [Databases](#databases)
+    + [Platform server](#platform-server)
+    + [API server](#api-server)
+    + [Embedding server](#embedding-server)
+  * [Photo example of recognition](#photo-example-of-recognition)
+  * [Simple tutorial of usage](#simple-tutorial-of-usage)
+  * [Rest API description](#rest-api-description)
+    + [Add an example of the face](#add-an-example-of-the-face)
+    + [Recognize faces from given image](#recognize-faces-from-given-image)
+    + [Retrain face model](#retrain-face-model)
+    + [Retraining status](#retraining-status)
+    + [Abort training](#abort-training)
+    + [Delete all examples of the face by name](#delete-all-examples-of-the-face-by-name)
+    + [List names of all saved faces](#list-names-of-all-saved-faces)
+  * [Use cases and domains](#use-cases-and-domains)
+  * [Contributing](#contributing)
+  * [License info](#license-info)
 
-Every user could have several models trained on different subset of people. 
-The key idea is to make solution for faces recognition that anybody could setup and use
-without machine learning knowledge.
+
+
+It is the solution for face recognition that can be integrated as a standalone server. 
+
+We combined state-of-the-art face recognition library that uses deep neural networks, trained on million faces, to retrieve features from faces with our own machine learning algorithm for face recognition. 
+
+Every user could have several models trained on different subset of people. The key idea is to make solution for faces recognition that anybody could setup and use without machine learning knowledge.
 
 
 
@@ -22,21 +44,22 @@ without machine learning knowledge.
 
 FRS is:
 
-- just one docker command for app start;
-- fast and high accuracy face recognizing;
-- runs fully on-prem (control your data);
-- UI application panel for management;
-- highload support.
+- just one docker command for app start
+- fast and high accuracy face recognizing
+- runs fully on-prem (control your data)
+- UI application panel for management
+- highload support
 
 
 
 ## Getting started
 
-1. Just run command:
-```
+1. install Docker
+1. just run command:
+`
 docker-compose up --build
-```
-2. Open https://localhost/
+`
+1. open http://localhost:8000/
 
 
 
@@ -44,7 +67,7 @@ docker-compose up --build
 
 
 
-![how-it-works](.\infrastructure\how-it-works.jpg)
+![how-it-works](https://github.com/pospielov/frs-private/blob/develop/infrastructure/how-it-works.jpg)
 
 **Finding the face:** we reused base project code for this, for face recognition they use multi-task cascaded convolutional neural networks (MTCNN).
 **Posing and projecting faces:** we reused base project code for this.
@@ -56,9 +79,9 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 
 ### ML Technologies
 
-* MTCNN (Multi-task Cascaded Convolutional Networks);
-* logistic Regression;
-* transfer learning.
+* MTCNN (Multi-task Cascaded Convolutional Networks)
+* logistic Regression
+* transfer learning
 
 
 ### Used ML Papers and Algorithms
@@ -83,41 +106,41 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 
 
 
-![architecture](.\infrastructure\architecture.jpg)
+![architecture](https://github.com/pospielov/frs-private/blob/develop/infrastructure/architecture.jpg)
 
 
 
 ### Databases
 
-* postgreSQL;
-* mongoDB.
+* postgreSQL
+* mongoDB
 
 
 
 ### Platform server
 
-* java 11;
-* spring boot.
+* java 11
+* spring boot
 
   
 
 ### API server
 
-* java 11;
-* spring boot;
-* haifengl/smile.
+* java 11
+* spring boot
+* haifengl/smile
 
 
 
 ### Embedding server
 
-* python;
-* [faceNet](https://github.com/davidsandberg/facenet);
-* [insightFace](https://github.com/deepinsight/insightface);  
-* tensorFlow;
-* sciPy;
-* numPy;
-* openCV (for images resizing).
+* python
+* [faceNet](https://github.com/davidsandberg/facenet)
+* [insightFace](https://github.com/deepinsight/insightface)
+* tensorFlow
+* sciPy
+* numPy
+* openCV (for images resizing)
 
 
 
@@ -152,12 +175,11 @@ curl  -X POST \
 
 http://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
 ```
-- <model_api_key> - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-- <localfilename> - jpeg of png image on your local computer.
-- <face_name> - name of the person on the image. It could be any string if you need depersonalize images.
-
-- <det_prob_threshold> (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
-- <retrain> - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running
+**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+**[localfilename]** - jpeg of png image on your local computer.
+**[face_name]** - name of the person on the image. It could be any string if you need depersonalize images.
+**[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
+**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running
  processes of classifier training. Default value: force
 
 **Available images extensions:** jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp
@@ -180,11 +202,10 @@ curl  -X POST \
 https://localhost:8080/api/v1/recognize[?limit=<limit>]
 ```
 
-
-<model_api_key> - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-<det_prob_threshold> (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
-<localfilename> - jpeg of png image on your local computer.
-<limit> (optional) - parameter to specify the maximum number of faces to be recognized. Value of 0 represents no limit. Default value: 0. 
+**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+**[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
+**[localfilename]** - jpeg of png image on your local computer.
+**[limit]** (optional) - parameter to specify the maximum number of faces to be recognized. Value of 0 represents no limit. Default value: 0. 
 
 **Available images extensions:** jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp
 
@@ -213,10 +234,10 @@ Response body on success:
 ```
 <todo: output format will be changed>
 
-<face_name> - name of the person on the image with the biggest probability; 
-<probability> - probability that on that image predicted person;
-<det_probability> - probability that a found face is a actually a face;
-<parameters> - list of parameters of the bounding box for this face.
+**[face_name]** - name of the person on the image with the biggest probability
+**[probability]** - probability that on that image predicted person
+**[det_probability]** - probability that a found face is a actually a face
+**[parameters]** - list of parameters of the bounding box for this face
 
 
 
@@ -231,8 +252,7 @@ curl  -X POST \
 https://localhost:8080/api/v1/retrain
 ```
 
-
-<model_api_key> - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
 
 Response body on success:
 ```
@@ -254,7 +274,7 @@ curl  -X GET \
 https://localhost:8080/api/v1/retrain
 ```
 
-<model_api_key> - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
 
 Response body on success:
 ```
@@ -283,9 +303,7 @@ curl  -X DELETE \
 https://localhost:8080/api/v1/retrain
 ```
 
-
-
-<model_api_key> - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key" header)
+**[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key" header)
 
 Response body on success:
 ```
@@ -306,9 +324,9 @@ curl  -X DELETE \
 https://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
 ```
 
-<model_api_key> - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-<face_name> - the name of the person, whose records need to be removed from the database, as a string.
-<retrain> - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running processes of classifier training. Default value : force
+**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+**[face_name]** - the name of the person, whose records need to be removed from the database, as a string.
+**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running processes of classifier training. Default value : *force*
 
 
 
@@ -322,8 +340,7 @@ curl  -X GET \
 https://localhost:8080/api/v1/faces
 ```
 
-
-<model_api_key> - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key" header)
+**[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key" header)
 
 Response body on success:
 ```
@@ -336,7 +353,7 @@ Response body on success:
 }
 ```
 
-<face_name> - name of the person, whose picture was saved for this api key. 
+**[face_name]** - name of the person, whose picture was saved for this api key. 
 
 
 
