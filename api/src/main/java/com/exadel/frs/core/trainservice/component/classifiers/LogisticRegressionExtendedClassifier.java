@@ -28,9 +28,9 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
     private static final long serialVersionUID = 1966949081344084764L;
 
-    private static final double LAMBDA = 0;
-    private static final double TOLERANCE = 0.00001;
-    private static final int MAX_ITER = 25;
+    private static final double LAMBDA = 0.0001;
+    private static final double TOLERANCE = 0.0001;
+    private static final int MAX_ITER = 100;
 
     private final Map<Integer, Pair<String, String>> labelMap;
     private LogisticRegression logisticRegression;

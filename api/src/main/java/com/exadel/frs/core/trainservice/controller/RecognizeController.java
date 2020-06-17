@@ -85,7 +85,11 @@ public class RecognizeController {
             );
 
             var pred = BigDecimal.valueOf(prediction.getLeft());
-            pred = pred.setScale(2, HALF_UP);
+            pred = pred.setScale(5, HALF_UP);
+
+            var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
+            inBoxProb = inBoxProb.setScale(5, HALF_UP);
+            scanResult.getBox().setProbability(inBoxProb.doubleValue());
 
             val result = new FacePrediction(
                     scanResult.getBox(),
