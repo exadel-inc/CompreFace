@@ -16,7 +16,6 @@
 
 package com.exadel.frs.service;
 
-import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
 import static java.util.stream.Collectors.toList;
@@ -24,10 +23,10 @@ import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.OrganizationNotFoundException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.repository.OrganizationRepository;
+import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -39,6 +38,7 @@ public class OrganizationService {
 
     private final OrganizationRepository organizationRepository;
     private final UserService userService;
+    private final AuthorizationManager authManager;
 
     public Organization getOrganization(final String organizationGuid) {
         return organizationRepository
@@ -46,19 +46,11 @@ public class OrganizationService {
                 .orElseThrow(() -> new OrganizationNotFoundException(organizationGuid));
     }
 
-    public void verifyUserHasReadPrivileges(final Long userId, final Organization organization) {
-        organization.getUserOrganizationRoleOrThrow(userId);
-    }
 
-    public void verifyUserHasWritePrivileges(final Long userId, final Organization organization) {
-        if (!List.of(OWNER, ADMINISTRATOR).contains(organization.getUserOrganizationRoleOrThrow(userId).getRole())) {
-            throw new InsufficientPrivilegesException();
-        }
-    }
 
     public Organization getOrganization(final String guid, final Long userId) {
         val organization = getOrganization(guid);
-        verifyUserHasReadPrivileges(userId, organization);
+        authManager.verifyReadPrivilegesToOrg(userId, organization);
 
         return organization;
     }
@@ -85,14 +77,14 @@ public class OrganizationService {
 
     public List<UserOrganizationRole> getOrgUsers(final String guid, final Long userId) {
         val organization = getOrganization(guid);
-        verifyUserHasReadPrivileges(userId, organization);
+        authManager.verifyReadPrivilegesToOrg(userId, organization);
 
         return organization.getUserOrganizationRoles();
     }
 
     public UserOrganizationRole updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
         val organization = getOrganization(guid);
-        verifyUserHasWritePrivileges(adminId, organization);
+        authManager.verifyWritePrivilegesToOrg(adminId, organization);
 
         val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (user.getId().equals(adminId)) {
