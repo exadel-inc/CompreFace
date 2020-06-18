@@ -13,13 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
-import { AppUser } from 'src/app/data/appUser';
-import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
+import { AppUser } from 'src/app/data/appUser';
+
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -28,22 +28,22 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  public getAll(organizationId: string): Observable<AppUser[]> {
+  getAll(organizationId: string): Observable<AppUser[]> {
     return this.http.get<AppUser[]>(`${environment.apiUrl}org/${organizationId}/roles`).pipe(
       map(users => users.map(user => ({ id: user.userId, ...user })))
     );
   }
 
-  public updateRole(organizationId: string, userId: string, role: string): Observable<any> {
+  updateRole(organizationId: string, userId: string, role: string): Observable<any> {
     // temporary workaround to fix cors errors
     return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/role`, { userId, role }, { withCredentials: false });
   }
 
-  public delete(organizationId: string, userId: string): Observable<any> {
-    return this.http.put(`${environment.apiUrl}org/${organizationId}/remove`, { userId });
+  delete(organizationId: string, userId: string, newOwner?: string) {
+    return this.http.delete(`${environment.apiUrl}user/${userId}?replacer=${newOwner}`);
   }
 
-  public fetchAvailableRoles(): Observable<string[]> {
+  fetchAvailableRoles(): Observable<string[]> {
     // return this.http.get<string[]>(`${environment.apiUrl}roles`);
     // temporarary workaround to prevent cors related issues
     return of([

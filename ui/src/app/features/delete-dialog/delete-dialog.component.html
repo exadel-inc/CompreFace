@@ -14,11 +14,36 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>Delete {{data.entityType}}</h1>
+<h1 mat-dialog-title>Delete {{data.entityType === 'system-user' ? 'user' : data.entityType }}</h1>
 <div mat-dialog-content>
   <ng-container [ngSwitch]="data.entityType.toLowerCase()">
     <ng-container *ngSwitchCase="'user'">
-      <p>Are you sure you want remove user {{data.entityName}} from {{data.organizationName || data.applicationName}}?</p>
+      <p>Are you sure you want remove user {{data.entityName}} from {{data.organizationName || data.applicationName}}?
+      </p>
+    </ng-container>
+    <ng-container *ngSwitchCase="'system-user'">
+      <ng-container *ngIf="data.entity.ownerOfApplications.length > 0">
+        <p>The user {{data.entity.firstName}} {{data.entity.lastName}} is an owner of applications:
+          <b>{{data.entity.ownerOfApplications.join(', ')}}</b>.
+        </p>
+        <p>You can delete him anyway. In this case the owner of this applications will be:</p>
+        <mat-radio-group
+          aria-labelledby="delete-radio-group"
+          class="delete-radio-group"
+          [(ngModel)]="data.seletedOption">
+          <mat-radio-button
+            class="delete-radio-button"
+            *ngFor="let option of data.options"
+            [value]="option.value">
+            {{option.name}}
+          </mat-radio-button>
+        </mat-radio-group>
+      </ng-container>
+
+      <ng-container *ngIf="data.entity.ownerOfApplications.length === 0">
+        <p>Are you sure you want remove user {{data.entity.firstName}} {{data.entity.lastName}}?
+        </p>
+      </ng-container>
     </ng-container>
     <ng-container *ngSwitchDefault>
       <p>{{data.entityType}} {{data.entityName}} and all related data will be deleted.</p>

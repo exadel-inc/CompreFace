@@ -39,6 +39,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   search = '';
   availableRolesSubscription: Subscription;
   currentUserId$: Observable<string>;
+  currentUserEmail$: Observable<string>;
+  seletedOption = 'deleter';
+  orgOwnerEmail: string;
 
   constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog) {
     userListFacade.initSubscriptions();
@@ -49,6 +52,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.userRole$ = this.userListFacade.userRole$;
 
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
+      this.orgOwnerEmail = users.filter(user => user.role === 'OWNER').map(user => user.email)[0];
       return {
         columns: [{ title: 'user', property: 'username' }, {
           title: 'role',
@@ -61,6 +65,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.availableRoles$ = this.userListFacade.availableRoles$;
     this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
     this.currentUserId$ = this.userListFacade.currentUserId$;
+    this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
   }
 
   onChange(user: AppUser): void {
@@ -68,22 +73,25 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(user: AppUser): void {
-    this.userListFacade.selectedOrganizationName$
+    this.userListFacade.currentUserEmail$
       .pipe(
         take(1),
-        switchMap((name: string) => {
+        switchMap((email: string) => {
           return this.dialog.open(DeleteDialogComponent, {
             width: '400px',
             data: {
-              entityType: 'User',
-              entityName: `${user.firstName} ${user.lastName}`,
-              organizationName: name
+              entityType: 'system-user',
+              entity: user,
+              options: [
+                { name: email, value: 'deleter' },
+                { name: this.orgOwnerEmail, value: 'owner' },
+              ],
+              seletedOption: this.seletedOption,
             }
           }).afterClosed();
         }),
         filter((isClosed: boolean) => isClosed),
-        tap(() => this.userListFacade.deleteUser(user.userId))
-
+        tap(() => this.userListFacade.deleteUser(user.userId, this.seletedOption)),
       )
       .subscribe();
   }
