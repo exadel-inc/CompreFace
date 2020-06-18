@@ -26,4 +26,6 @@ public interface OrganizationRepository extends JpaRepository<Organization, Long
     Optional<Organization> findByGuid(String guid);
 
     List<Organization> findAllByUserOrganizationRoles_Id_UserId(Long userId);
+
+    Optional<Organization> findFirstByIsDefaultTrue();
 }

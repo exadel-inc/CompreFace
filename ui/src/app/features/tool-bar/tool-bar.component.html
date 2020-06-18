@@ -21,12 +21,12 @@
     </a>
     <span class="avatar-wrapper">
       <button mat-icon-button [matMenuTriggerFor]="menu">
-        <img [src]="userAvatarInfo$ | async"/>
+        <img [src]="userAvatarInfo$ | async" />
       </button>
     </span>
     <mat-menu #menu="matMenu">
       <button mat-menu-item>
-        <span>User Name</span>
+        <span>Account</span>
       </button>
       <button mat-menu-item (click)="logout()">
         <span>Logout</span>

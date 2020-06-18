@@ -47,7 +47,7 @@ describe('AuthReducer', () => {
 
   describe('SIGNUP_SUCCESS action', () => {
     it('should set successMessage to value, and loading false', () => {
-      const action = signUpSuccess();
+      const action = signUpSuccess({confirmationNeeded: false});
       const state = AuthReducer(initialState, action);
 
       expect(state.successMessage).toBe('You have created new account, please login into your account');
