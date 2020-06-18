@@ -19,7 +19,7 @@ package com.exadel.frs.system.security;
 import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
@@ -88,7 +88,6 @@ class AuthorizationManagerTest {
 
         @Test
         void orgUserOrgAdminAndOrgOwnerCanReadOrg() {
-
             authManager.verifyReadPrivilegesToOrg(ORG_USER_ID, organization);
             authManager.verifyReadPrivilegesToOrg(ORG_ADMIN_ID, organization);
             authManager.verifyReadPrivilegesToOrg(ORG_OWNER_ID, organization);
@@ -96,11 +95,9 @@ class AuthorizationManagerTest {
 
         @Test
         void outsideOrgUsersCannotReadOrg() {
-
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyReadPrivilegesToOrg(STRANGE_USER_ID, organization)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyReadPrivilegesToOrg(STRANGE_USER_ID, organization);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
         }
 
         @Test
@@ -111,18 +108,16 @@ class AuthorizationManagerTest {
 
         @Test
         void orgUserCannotWriteOrg() {
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyWritePrivilegesToOrg(ORG_USER_ID, organization)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyWritePrivilegesToOrg(ORG_USER_ID, organization);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
         }
 
         @Test
         void outsideOrgUsersCannotWriteOrg() {
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyWritePrivilegesToOrg(STRANGE_USER_ID, organization)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyWritePrivilegesToOrg(STRANGE_USER_ID, organization);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
         }
     }
 
@@ -131,20 +126,16 @@ class AuthorizationManagerTest {
 
         @Test
         void orgUserNotInvitedToAppCannotReadApp() {
-
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyReadPrivilegesToApp(ORG_USER_ID, application)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyReadPrivilegesToApp(ORG_USER_ID, application);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
         }
 
         @Test
         void outsideOrgUsersCannotReadApp() {
-
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyReadPrivilegesToApp(STRANGE_USER_ID, application)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyReadPrivilegesToApp(STRANGE_USER_ID, application);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
         }
 
         @Test
@@ -168,33 +159,28 @@ class AuthorizationManagerTest {
 
         @Test
         void orgOwnerAndOrgAdminNotInvitedToAppCannotWriteApp() {
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyWritePrivilegesToApp(ORG_ADMIN_ID, application)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyWritePrivilegesToApp(ORG_ADMIN_ID, application);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
 
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyWritePrivilegesToApp(ORG_OWNER_ID, application)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyWritePrivilegesToApp(ORG_OWNER_ID, application);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
         }
 
         @Test
         void appUserCannotWriteApp() {
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyWritePrivilegesToApp(ORG_USER_APP_USER_ID, application)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyWritePrivilegesToApp(ORG_USER_APP_USER_ID, application);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
 
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyWritePrivilegesToApp(ORG_ADMIN_APP_USER_ID, application)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyWritePrivilegesToApp(ORG_ADMIN_APP_USER_ID, application);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
 
-            assertThrows(
-                    InsufficientPrivilegesException.class,
-                    () -> authManager.verifyWritePrivilegesToApp(ORG_OWNER_APP_USER_ID, application)
-            );
+            assertThatThrownBy(() -> {
+                authManager.verifyWritePrivilegesToApp(ORG_OWNER_APP_USER_ID, application);
+            }).isInstanceOf(InsufficientPrivilegesException.class);
         }
 
         @Test
@@ -223,10 +209,9 @@ class AuthorizationManagerTest {
                             .organization(otherOrg)
                             .build();
 
-        assertThrows(
-                AppDoesNotBelongToOrgException.class,
-                () -> authManager.verifyOrganizationHasTheApp(ORG_GUID, strangeApp)
-        );
+        assertThatThrownBy(() -> {
+            authManager.verifyOrganizationHasTheApp(ORG_GUID, strangeApp);
+        }).isInstanceOf(AppDoesNotBelongToOrgException.class);
     }
 
     @Test
@@ -251,10 +236,9 @@ class AuthorizationManagerTest {
                                 .app(otherApp)
                                 .build();
 
-        assertThrows(
-                ModelDoesNotBelongToAppException.class,
-                () -> authManager.verifyAppHasTheModel(APP_GUID, strangeModel)
-        );
+        assertThatThrownBy(() -> {
+            authManager.verifyAppHasTheModel(APP_GUID, strangeModel);
+        }).isInstanceOf(ModelDoesNotBelongToAppException.class);
     }
 
     private List<UserOrganizationRole> orgRoles() {
