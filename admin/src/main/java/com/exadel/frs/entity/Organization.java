@@ -16,6 +16,7 @@
 
 package com.exadel.frs.entity;
 
+import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import java.util.ArrayList;
@@ -80,5 +81,14 @@ public class Organization {
         val userOrganizationRole = new UserOrganizationRole(user, this, role);
         userOrganizationRoles.add(userOrganizationRole);
         user.getUserOrganizationRoles().add(userOrganizationRole);
+    }
+
+    public User getOwner() {
+        return this.getUserOrganizationRoles()
+                   .stream()
+                   .filter(orgRole -> orgRole.getRole() == OWNER)
+                   .findAny()
+                   .orElseThrow(IllegalStateException::new)
+                   .getUser();
     }
 }

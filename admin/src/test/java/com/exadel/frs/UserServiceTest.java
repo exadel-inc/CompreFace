@@ -17,6 +17,7 @@
 package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -32,6 +33,7 @@ import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.IncorrectReplacerException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -41,6 +43,7 @@ import com.exadel.frs.service.UserService;
 import java.util.Optional;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -118,11 +121,11 @@ class UserServiceTest {
         when(env.getProperty("spring.mail.enable")).thenReturn("false");
         when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
         val userCreateDto = UserCreateDto.builder()
-                .email("email@example.com")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                         .email("email@example.com")
+                                         .password("password")
+                                         .firstName("firstName")
+                                         .lastName("lastName")
+                                         .build();
 
         val actual = userService.createUser(userCreateDto);
         assertThat(actual.isEnabled()).isTrue();
@@ -205,13 +208,6 @@ class UserServiceTest {
         assertThat(repoUser.getLastName()).isEqualTo(userUpdateDto.getLastName());
 
         verify(userRepositoryMock).save(any(User.class));
-    }
-
-    @Test
-    void successDeleteUser() {
-        userService.deleteUser(USER_ID);
-
-        verify(userRepositoryMock).deleteById(anyLong());
     }
 
     @Test
@@ -302,5 +298,24 @@ class UserServiceTest {
         val actual = userService.createUser(userCreateDto);
 
         assertThat(actual.getEmail()).isEqualTo(userCreateDto.getEmail().toLowerCase());
+    }
+
+    @Nested
+    public class DeleteUserTest {
+
+        @Test
+        void successDeleteUser() {
+            userService.deleteUser(USER_ID);
+
+            verify(userRepositoryMock).deleteById(anyLong());
+        }
+
+        @Test
+        void orgOwnerCanDeleteHimselfOnlyIfProvidesReplacer() {
+
+            assertThatThrownBy(() -> {
+                userService.deleteUser();
+            }).isInstanceOf(IncorrectReplacerException.class);
+        }
     }
 }

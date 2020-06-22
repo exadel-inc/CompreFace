@@ -30,11 +30,13 @@ import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.transaction.Transactional;
+import javax.validation.constraints.NotNull;
 import lombok.NonNull;
 import lombok.val;
 import org.springframework.core.env.Environment;
@@ -51,17 +53,26 @@ public class UserService {
     private final PasswordEncoder encoder;
     private final EmailSender emailSender;
     private final Environment env;
+    private final OrganizationService orgService;
+    private final AuthorizationManager authManager;
+    private final AppService appService;
 
     public UserService(
             @NonNull final UserRepository userRepository,
             @NonNull final PasswordEncoder encoder,
             @NonNull final EmailSender emailSender,
-            @NonNull final Environment env
+            @NonNull final Environment env,
+            @NotNull final OrganizationService orgService,
+            @NotNull final AuthorizationManager authManager,
+            @NotNull final AppService appService
     ) {
         this.userRepository = userRepository;
         this.encoder = encoder;
         this.emailSender = emailSender;
         this.env = env;
+        this.orgService = orgService;
+        this.authManager = authManager;
+        this.appService = appService;
     }
 
     public User getUser(final Long id) {
@@ -164,8 +175,12 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(final Long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(final String userGuid,
+                           final String replacer,
+                           final User deleter) {
+
+        manageOwnedAppsByUserBeingDeleted(userGuid, replacer, deleter);
+        userRepository.deleteByGuid(userGuid);
     }
 
     public List<User> autocomplete(final String query) {
@@ -197,5 +212,22 @@ public class UserService {
         user.setRegistrationToken(null);
 
         userRepository.save(user);
+    }
+
+    private void manageOwnedAppsByUserBeingDeleted(final String userGuid,
+                                                   final String replacer,
+                                                   final User deleter) {
+
+        val defaultOrg = orgService.getDefaultOrg();
+        val orgOwner = defaultOrg.getOwner();
+        val userBeingDeleted = getUserByGuid(userGuid);
+        val newOwner = new User();
+
+        //TODO check delete authorization
+        //TODO decide replacer
+        //TODO update apps
+
+        appService.passAllOwnedAppsToNewOwnerAndLeave(userBeingDeleted, newOwner);
+
     }
 }

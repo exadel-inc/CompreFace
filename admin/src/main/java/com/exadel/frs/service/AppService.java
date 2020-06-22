@@ -29,6 +29,7 @@ import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.ModelShareRequest;
 import com.exadel.frs.entity.ModelShareRequestId;
 import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
@@ -44,6 +45,7 @@ import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -63,6 +65,18 @@ public class AppService {
     public App getApp(final String appGuid) {
         return appRepository.findByGuid(appGuid)
                             .orElseThrow(() -> new AppNotFoundException(appGuid));
+    }
+
+    @Transactional
+    public void passAllOwnedAppsToNewOwnerAndLeave(final User oldOwner, final User newOwner) {
+        val apps = getOwnedApps(oldOwner.getId());
+
+        apps.forEach(app -> {
+            app.deleteUserAppRole(oldOwner.getGuid());
+            app.deleteUserAppRole(newOwner.getGuid());
+            app.addUserAppRole(newOwner, AppRole.OWNER);
+            appRepository.save(app);
+        });
     }
 
     private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {
@@ -92,6 +106,15 @@ public class AppService {
         }
 
         return appRepository.findAllByOrganizationId(organization.getId());
+    }
+
+    public List<App> getOwnedApps(final long userId) {
+        val defaultOrgGuid = organizationService.getDefaultOrg().getGuid();
+
+        return getApps(defaultOrgGuid, userId)
+                .stream()
+                .filter(app -> app.getUserAppRole(userId).get().getRole() == OWNER)
+                .collect(Collectors.toList());
     }
 
     public AppRole[] getAppRolesToAssign(final String orgGuid, final String appGuid, final Long userId) {

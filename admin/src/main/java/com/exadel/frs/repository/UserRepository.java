@@ -39,4 +39,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int deleteByEnabledFalseAndRegTimeBefore(LocalDateTime time);
 
     Optional<User> findByRegistrationToken(String token);
+
+    void deleteByGuid(String userGuid);
 }

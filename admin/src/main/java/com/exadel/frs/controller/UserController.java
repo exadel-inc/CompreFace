@@ -16,6 +16,7 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
@@ -43,6 +44,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -115,10 +117,18 @@ public class UserController {
         return userMapper.toResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{userGuid}")
     @ApiOperation(value = "Delete user")
-    public void deleteUser() {
-        userService.deleteUser(SecurityUtils.getPrincipalId());
+    public void deleteUser(
+            @ApiParam(value = "GUID of the user being deleted", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String userGuid,
+            @ApiParam(value = "Replacer option to determine next owner of org/apps that the user own", allowableValues = "deleter, owner")
+            @RequestParam
+            final String replacer
+    ) {
+        val deleter = SecurityUtils.getPrincipal();
+        userService.deleteUser(userGuid, replacer, deleter);
     }
 
     @GetMapping("/autocomplete")

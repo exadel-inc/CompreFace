@@ -62,6 +62,7 @@ public class UserServiceTestIT {
 
     @SpyBean
     private Environment environment;
+
     @Test
     void getEnabledUserByEmailReturnsActiveUser() {
         when(environment.getProperty("spring.mail.enable")).thenReturn("true");
