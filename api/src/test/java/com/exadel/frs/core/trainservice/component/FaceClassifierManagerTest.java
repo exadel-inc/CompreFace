@@ -18,12 +18,17 @@ package com.exadel.frs.core.trainservice.component;
 
 import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.Mockito.verify;
+
+import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
@@ -61,12 +66,23 @@ class FaceClassifierManagerTest {
 
     @Test
     void saveClassifier() {
-        //TODO: test
+        FaceClassifier classifier = mock(FaceClassifier.class);
+        assertDoesNotThrow(() -> manager.saveClassifier(MODEL_KEY, classifier, "1.0"));
+
+        val inOrder = inOrder(modelDao, lockManager);
+        inOrder.verify(modelDao).saveModel(MODEL_KEY, classifier, "1.0");
+        inOrder.verify(lockManager).unlock(MODEL_KEY);
+        verifyNoMoreInteractions(modelDao, lockManager);
     }
 
     @Test
     void removeFaceClassifier() {
-        //TODO: test
+        assertDoesNotThrow(() -> manager.removeFaceClassifier(MODEL_KEY));
+
+        val inOrder = inOrder(modelDao, lockManager);
+        inOrder.verify(lockManager).unlock(MODEL_KEY);
+        inOrder.verify(modelDao).deleteModel(MODEL_KEY);
+        verifyNoMoreInteractions(modelDao, lockManager);
     }
 
     @Test
@@ -100,11 +116,19 @@ class FaceClassifierManagerTest {
 
     @Test
     void abortClassifierTraining() {
-        //TODO: test
+        manager.finishClassifierTraining(MODEL_KEY);
+
+        verify(lockManager).unlock(MODEL_KEY);
+        verifyNoMoreInteractions(lockManager);
     }
 
     @Test
     void isTraining() {
-        //TODO: test
+        when(lockManager.isLocked(MODEL_KEY)).thenReturn(true);
+        val actual = manager.isTraining(MODEL_KEY);
+        assertThat(actual).isTrue();
+
+        verify(lockManager).isLocked(MODEL_KEY);
+        verifyNoMoreInteractions(lockManager);
     }
 }

@@ -20,6 +20,8 @@ import static java.lang.Math.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
+
+import java.util.List;
 import java.util.Map;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,7 +31,21 @@ class LogisticRegressionExtendedClassifierTestIT {
 
     @Test
     void train() {
-        //TODO
+        val faceName = "faceName";
+        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
+        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+
+        val xorMatrix1 = new double[][]{{0, 0}, {1, 0}};
+        val xorResults1 = new int[]{0};
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> classifier.train(xorMatrix1, xorResults1));
+
+        val xorMatrix2 = new double[][]{{0, 0}, {1, 0}};
+        val xorResults2 = new int[]{0, 1};
+        classifier.train(xorMatrix2, xorResults2);
+        assertThat(classifier.isTrained()).isTrue();
     }
 
     @Test
@@ -59,11 +75,27 @@ class LogisticRegressionExtendedClassifierTestIT {
 
     @Test
     void isTrained() {
-        //TODO
+        assertThat(new LogisticRegressionExtendedClassifier(null).isTrained()).isFalse();
+
+        val faceName = "faceName";
+        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
+        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val xorMatrix = new double[][]{{0, 0}, {1, 0}};
+        val xorResults = new int[]{0, 1};
+        assertThat(classifier.isTrained()).isFalse();
+
+        classifier.train(xorMatrix, xorResults);
+        assertThat(classifier.isTrained()).isTrue();
     }
 
     @Test
     void getUsedFaceIds() {
-        //TODO
+        assertThat(new LogisticRegressionExtendedClassifier(null).getUsedFaceIds()).isEqualTo(List.of());
+
+        val faceName = "faceName";
+        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
+        assertThat(new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds()).size().isEqualTo(2);
+        assertThat(new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds()).contains("faceId");
+        assertThat(new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds()).contains("faceId1");
     }
 }
