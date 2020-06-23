@@ -17,9 +17,8 @@
 package com.exadel.frs.core.trainservice.component;
 
 import static org.apache.commons.lang3.RandomUtils.nextInt;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -40,7 +39,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 
-class FaceClassifierManagerTest {
+public class FaceClassifierManagerTest {
 
     @Mock
     private ModelDao modelDao;
@@ -66,8 +65,9 @@ class FaceClassifierManagerTest {
 
     @Test
     void saveClassifier() {
-        FaceClassifier classifier = mock(FaceClassifier.class);
-        assertDoesNotThrow(() -> manager.saveClassifier(MODEL_KEY, classifier, "1.0"));
+        val classifier = mock(FaceClassifier.class);
+
+        manager.saveClassifier(MODEL_KEY, classifier, "1.0");
 
         val inOrder = inOrder(modelDao, lockManager);
         inOrder.verify(modelDao).saveModel(MODEL_KEY, classifier, "1.0");
@@ -77,7 +77,7 @@ class FaceClassifierManagerTest {
 
     @Test
     void removeFaceClassifier() {
-        assertDoesNotThrow(() -> manager.removeFaceClassifier(MODEL_KEY));
+        manager.removeFaceClassifier(MODEL_KEY);
 
         val inOrder = inOrder(modelDao, lockManager);
         inOrder.verify(lockManager).unlock(MODEL_KEY);
@@ -111,7 +111,9 @@ class FaceClassifierManagerTest {
     void initNewClassifierIfNoFaces() {
         when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(0);
 
-        assertThrows(ModelHasNoFacesException.class, () -> manager.initNewClassifier(MODEL_KEY));
+        assertThatThrownBy(() -> {
+            manager.initNewClassifier(MODEL_KEY);
+        }).isInstanceOf(ModelHasNoFacesException.class);
     }
 
     @Test
@@ -125,9 +127,10 @@ class FaceClassifierManagerTest {
     @Test
     void isTraining() {
         when(lockManager.isLocked(MODEL_KEY)).thenReturn(true);
-        val actual = manager.isTraining(MODEL_KEY);
-        assertThat(actual).isTrue();
 
+        val actual = manager.isTraining(MODEL_KEY);
+
+        assertThat(actual).isTrue();
         verify(lockManager).isLocked(MODEL_KEY);
         verifyNoMoreInteractions(lockManager);
     }

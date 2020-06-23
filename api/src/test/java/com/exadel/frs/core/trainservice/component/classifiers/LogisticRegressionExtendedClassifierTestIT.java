@@ -16,9 +16,9 @@
 
 package com.exadel.frs.core.trainservice.component.classifiers;
 
-import static java.lang.Math.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static java.lang.Math.round;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 
 import java.util.List;
@@ -27,25 +27,32 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
-class LogisticRegressionExtendedClassifierTestIT {
+public class LogisticRegressionExtendedClassifierTestIT {
 
     @Test
     void train() {
         val faceName = "faceName";
         val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
         val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val xorMatrix = new double[][]{{0, 0}, {1, 0}};
+        val xorResults = new int[]{0, 1};
 
-        val xorMatrix1 = new double[][]{{0, 0}, {1, 0}};
-        val xorResults1 = new int[]{0};
+        classifier.train(xorMatrix, xorResults);
 
-        assertThrows(
-                IllegalArgumentException.class,
-                () -> classifier.train(xorMatrix1, xorResults1));
-
-        val xorMatrix2 = new double[][]{{0, 0}, {1, 0}};
-        val xorResults2 = new int[]{0, 1};
-        classifier.train(xorMatrix2, xorResults2);
         assertThat(classifier.isTrained()).isTrue();
+    }
+
+    @Test
+    void trainFaied() {
+        val faceName = "faceName";
+        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
+        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val xorMatrix = new double[][]{{0, 0}, {1, 0}};
+        val xorResults = new int[]{0};
+
+        assertThatThrownBy(() -> {
+            classifier.train(xorMatrix, xorResults);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
@@ -67,25 +74,29 @@ class LogisticRegressionExtendedClassifierTestIT {
 
     @Test
     void predictThrowsException() {
-        assertThrows(
-                ModelNotTrainedException.class,
-                () -> new LogisticRegressionExtendedClassifier(null).predict(null)
-        );
+        assertThatThrownBy(() -> {
+            new LogisticRegressionExtendedClassifier(null).predict(null);
+        }).isInstanceOf(ModelNotTrainedException.class);
     }
 
     @Test
     void isTrained() {
-        assertThat(new LogisticRegressionExtendedClassifier(null).isTrained()).isFalse();
-
         val faceName = "faceName";
         val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
         val classifier = new LogisticRegressionExtendedClassifier(labelMap);
-        val xorMatrix = new double[][]{{0, 0}, {1, 0}};
-        val xorResults = new int[]{0, 1};
+
         assertThat(classifier.isTrained()).isFalse();
 
+        val xorMatrix = new double[][]{{0, 0}, {1, 0}};
+        val xorResults = new int[]{0, 1};
         classifier.train(xorMatrix, xorResults);
+
         assertThat(classifier.isTrained()).isTrue();
+    }
+
+    @Test
+    void isNotTrained() {
+        assertThat(new LogisticRegressionExtendedClassifier(null).isTrained()).isFalse();
     }
 
     @Test
@@ -94,8 +105,11 @@ class LogisticRegressionExtendedClassifierTestIT {
 
         val faceName = "faceName";
         val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
-        assertThat(new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds()).size().isEqualTo(2);
-        assertThat(new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds()).contains("faceId");
-        assertThat(new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds()).contains("faceId1");
+        
+        val facesIds = new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds();
+
+        assertThat(facesIds).size().isEqualTo(2);
+        assertThat(facesIds).contains("faceId");
+        assertThat(facesIds).contains("faceId1");
     }
 }
