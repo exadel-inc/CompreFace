@@ -16,15 +16,13 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.USER_DOES_NOT_BELONG_TO_ORGANIZATION;
-import static java.lang.String.format;
+import static com.exadel.frs.handler.ExceptionCode.ILLEGAL_REPLACER;
 
-public class UserDoesNotBelongToOrganization extends BasicException {
+public class IllegalReplacerException extends BasicException {
 
-    public static final String MESSAGE = "User doesn't belong to the organization";
+    public static final String MESSAGE = "Illegal replacer value=%s!";
 
-    public UserDoesNotBelongToOrganization() {
-        super(USER_DOES_NOT_BELONG_TO_ORGANIZATION, format(MESSAGE));
+    public IllegalReplacerException(final String replacer) {
+        super(ILLEGAL_REPLACER, String.format(MESSAGE, replacer));
     }
-
 }

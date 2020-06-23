@@ -14,17 +14,25 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.exception;
+package com.exadel.frs.dto.ui;
 
-import static com.exadel.frs.handler.ExceptionCode.USER_DOES_NOT_BELONG_TO_ORGANIZATION;
-import static java.lang.String.format;
+import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
+import java.util.function.BiConsumer;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class UserDoesNotBelongToOrganization extends BasicException {
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserDeleteDto {
 
-    public static final String MESSAGE = "User doesn't belong to the organization";
-
-    public UserDoesNotBelongToOrganization() {
-        super(USER_DOES_NOT_BELONG_TO_ORGANIZATION, format(MESSAGE));
-    }
-
+    private String replacer;
+    private User deleter;
+    private User userToDelete;
+    private Organization defaultOrg;
+    private BiConsumer<User, User> updateAppsConsumer;
 }

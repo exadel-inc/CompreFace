@@ -22,12 +22,14 @@ import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserMapper;
+import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -60,6 +62,7 @@ public class UserController {
     private final UserService userService;
     private final OrganizationService organizationService;
     private final UserMapper userMapper;
+    private final AppService appService;
 
     private Environment env;
 
@@ -85,8 +88,8 @@ public class UserController {
     @ApiOperation(value = "Register new user")
     @ApiResponses({
             @ApiResponse(code = 400, message = "Such username or email already registered | " +
-                                               "One or more of required fields are empty | " +
-                                               "Incorrect email format"),
+                    "One or more of required fields are empty | " +
+                    "Incorrect email format"),
             @ApiResponse(code = 200, message = "200 Means user created, but not confirmed"),
             @ApiResponse(code = 201, message = "201 means user created and enabled")
     })
@@ -121,14 +124,18 @@ public class UserController {
     @ApiOperation(value = "Delete user")
     public void deleteUser(
             @ApiParam(value = "GUID of the user being deleted", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String userGuid,
+            @PathVariable final String userGuid,
             @ApiParam(value = "Replacer option to determine next owner of org/apps that the user own", allowableValues = "deleter, owner")
-            @RequestParam(defaultValue = "deleter")
-            final String replacer
+            @RequestParam(defaultValue = "deleter") final String replacer
     ) {
-        val deleter = SecurityUtils.getPrincipal();
-        userService.deleteUser(userGuid, replacer, deleter);
+        val deleteUserDto = UserDeleteDto.builder()
+                                         .deleter(SecurityUtils.getPrincipal())
+                                         .userToDelete(userService.getUserByGuid(userGuid))
+                                         .replacer(replacer)
+                                         .defaultOrg(organizationService.getDefaultOrg())
+                                         .updateAppsConsumer(appService::passAllOwnedAppsToNewOwnerAndLeave)
+                                         .build();
+        userService.deleteUser(deleteUserDto);
     }
 
     @GetMapping("/autocomplete")

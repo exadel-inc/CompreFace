@@ -19,10 +19,10 @@ package com.exadel.frs.system.security;
 import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
-import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
@@ -88,10 +88,12 @@ public class AuthorizationManager {
         }
     }
 
-    public void verifyCanDeleteUser(final String guidOfUserToBeDeleted,
-                                    final User deleter,
-                                    final Organization defaultOrg) {
-        val isOrgOwnerBeingDeleted = defaultOrg.getOwner().getGuid().equals(guidOfUserToBeDeleted);
+    public void verifyCanDeleteUser(final UserDeleteDto userDeleteDtg) {
+        val defaultOrg = userDeleteDtg.getDefaultOrg();
+        val userToDelete = userDeleteDtg.getUserToDelete();
+        val deleter = userDeleteDtg.getDeleter();
+
+        val isOrgOwnerBeingDeleted = defaultOrg.getOwner().equals(userToDelete);
 
         if (isOrgOwnerBeingDeleted) {
             throw new InsufficientPrivilegesException("Organization owner cannot be removed!");
@@ -100,8 +102,9 @@ public class AuthorizationManager {
         val deleterRole = defaultOrg.getUserOrganizationRole(deleter.getId())
                                     .orElseThrow(InsufficientPrivilegesException::new)
                                     .getRole();
+        val isSelfRemoval = userToDelete.equals(deleter);
 
-        if (deleterRole == USER) {
+        if (deleterRole == USER && !isSelfRemoval) {
             throw new InsufficientPrivilegesException();
         }
     }

@@ -21,11 +21,12 @@ import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.IllegalReplacerException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -37,8 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.transaction.Transactional;
-import javax.validation.constraints.NotNull;
-import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -48,33 +48,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @EnableScheduling
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final EmailSender emailSender;
     private final Environment env;
-    private final OrganizationService orgService;
     private final AuthorizationManager authManager;
-    private final AppService appService;
-
-    public UserService(
-            @NonNull final UserRepository userRepository,
-            @NonNull final PasswordEncoder encoder,
-            @NonNull final EmailSender emailSender,
-            @NonNull final Environment env,
-            @NotNull final OrganizationService orgService,
-            @NotNull final AuthorizationManager authManager,
-            @NotNull final AppService appService
-    ) {
-        this.userRepository = userRepository;
-        this.encoder = encoder;
-        this.emailSender = emailSender;
-        this.env = env;
-        this.orgService = orgService;
-        this.authManager = authManager;
-        this.appService = appService;
-    }
 
     public User getUser(final Long id) {
         return userRepository.findById(id)
@@ -176,12 +157,9 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(final String userGuid,
-                           final String replacer,
-                           final User deleter) {
-
-        manageOwnedAppsByUserBeingDeleted(userGuid, replacer, deleter);
-        userRepository.deleteByGuid(userGuid);
+    public void deleteUser(final UserDeleteDto userDeleteDto) {
+        manageOwnedAppsByUserBeingDeleted(userDeleteDto);
+        userRepository.deleteByGuid(userDeleteDto.getUserToDelete().getGuid());
     }
 
     public List<User> autocomplete(final String query) {
@@ -215,41 +193,41 @@ public class UserService {
         userRepository.save(user);
     }
 
-    private void manageOwnedAppsByUserBeingDeleted(final String userGuid,
-                                                   final String replacer,
-                                                   final User deleter) {
+    private void manageOwnedAppsByUserBeingDeleted(final UserDeleteDto userDeleteDto) {
+        authManager.verifyCanDeleteUser(userDeleteDto);
+        validateReplacer(userDeleteDto.getReplacer());
 
-        val userBeingDeleted = getUserByGuid(userGuid);
-        val defaultOrg = orgService.getDefaultOrg();
-
-        authManager.verifyCanDeleteUser(userGuid, deleter, defaultOrg);
-        validateReplacer(replacer, userGuid, deleter);
-
-        val newOwner = decideNewOwner(replacer, deleter, defaultOrg);
-
-        appService.passAllOwnedAppsToNewOwnerAndLeave(userBeingDeleted, newOwner);
+        updateAppsOwnership(userDeleteDto);
         //TODO cover with test all public methods
     }
 
-    private void validateReplacer(final String replacer,
-                                  final String guidOfUserBeingDeleted,
-                                  final User deleter) {
-        val selfRemoval = guidOfUserBeingDeleted.equals(deleter.getGuid());
+    private void updateAppsOwnership(final UserDeleteDto userDeleteDto) {
+        val newOwner = decideNewOwner(userDeleteDto);
+        val userBeingDeleted = userDeleteDto.getUserToDelete();
+        val updateAppsConsumer = userDeleteDto.getUpdateAppsConsumer();
 
-        if (selfRemoval && replacer.equals("deleter")) {
-            throw new IllegalArgumentException("Invalid replacer option for self removal!");
-        }
+        updateAppsConsumer.accept(userBeingDeleted, newOwner);
+    }
 
+    private void validateReplacer(final String replacer) {
         val validReplacers = List.of("deleter", "owner");
 
         if (!validReplacers.contains(replacer)) {
-            throw new IllegalArgumentException(String.format("Invalid replacer value = %s", replacer));
+            throw new IllegalReplacerException(replacer);
         }
     }
 
-    private User decideNewOwner(final String replacer,
-                                final User deleter,
-                                final Organization defaultOrg) {
+    private User decideNewOwner(final UserDeleteDto userDeleteDto) {
+        val deleter = userDeleteDto.getDeleter();
+        val defaultOrg = userDeleteDto.getDefaultOrg();
+        val userToDelete = userDeleteDto.getUserToDelete();
+        val replacer = userDeleteDto.getReplacer();
+
+        val selfRemoval = userToDelete.equals(deleter);
+
+        if (selfRemoval) {
+            return defaultOrg.getOwner();
+        }
 
         return replacer.equals("deleter") ? deleter : defaultOrg.getOwner();
     }
