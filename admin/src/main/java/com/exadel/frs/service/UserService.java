@@ -22,6 +22,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
@@ -218,16 +219,38 @@ public class UserService {
                                                    final String replacer,
                                                    final User deleter) {
 
-        val defaultOrg = orgService.getDefaultOrg();
-        val orgOwner = defaultOrg.getOwner();
         val userBeingDeleted = getUserByGuid(userGuid);
-        val newOwner = new User();
+        val defaultOrg = orgService.getDefaultOrg();
 
-        //TODO check delete authorization
-        //TODO decide replacer
-        //TODO update apps
+        authManager.verifyCanDeleteUser(userGuid, deleter, defaultOrg);
+        validateReplacer(replacer, userGuid, deleter);
+
+        val newOwner = decideNewOwner(replacer, deleter, defaultOrg);
 
         appService.passAllOwnedAppsToNewOwnerAndLeave(userBeingDeleted, newOwner);
+        //TODO cover with test all public methods
+    }
 
+    private void validateReplacer(final String replacer,
+                                  final String guidOfUserBeingDeleted,
+                                  final User deleter) {
+        val selfRemoval = guidOfUserBeingDeleted.equals(deleter.getGuid());
+
+        if (selfRemoval && replacer.equals("deleter")) {
+            throw new IllegalArgumentException("Invalid replacer option for self removal!");
+        }
+
+        val validReplacers = List.of("deleter", "owner");
+
+        if (!validReplacers.contains(replacer)) {
+            throw new IllegalArgumentException(String.format("Invalid replacer value = %s", replacer));
+        }
+    }
+
+    private User decideNewOwner(final String replacer,
+                                final User deleter,
+                                final Organization defaultOrg) {
+
+        return replacer.equals("deleter") ? deleter : defaultOrg.getOwner();
     }
 }

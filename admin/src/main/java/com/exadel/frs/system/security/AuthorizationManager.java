@@ -22,6 +22,7 @@ import static com.exadel.frs.enums.OrganizationRole.USER;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
@@ -84,6 +85,24 @@ public class AuthorizationManager {
     public void verifyAppHasTheModel(final String appGuid, final Model model) {
         if (!model.getApp().getGuid().equals(appGuid)) {
             throw new ModelDoesNotBelongToAppException(model.getGuid(), appGuid);
+        }
+    }
+
+    public void verifyCanDeleteUser(final String guidOfUserToBeDeleted,
+                                    final User deleter,
+                                    final Organization defaultOrg) {
+        val isOrgOwnerBeingDeleted = defaultOrg.getOwner().getGuid().equals(guidOfUserToBeDeleted);
+
+        if (isOrgOwnerBeingDeleted) {
+            throw new InsufficientPrivilegesException("Organization owner cannot be removed!");
+        }
+
+        val deleterRole = defaultOrg.getUserOrganizationRole(deleter.getId())
+                                    .orElseThrow(InsufficientPrivilegesException::new)
+                                    .getRole();
+
+        if (deleterRole == USER) {
+            throw new InsufficientPrivilegesException();
         }
     }
 

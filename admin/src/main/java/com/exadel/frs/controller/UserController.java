@@ -124,7 +124,7 @@ public class UserController {
             @PathVariable
             final String userGuid,
             @ApiParam(value = "Replacer option to determine next owner of org/apps that the user own", allowableValues = "deleter, owner")
-            @RequestParam
+            @RequestParam(defaultValue = "deleter")
             final String replacer
     ) {
         val deleter = SecurityUtils.getPrincipal();
