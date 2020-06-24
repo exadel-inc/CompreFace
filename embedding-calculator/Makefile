@@ -1,5 +1,6 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := default
+.PHONY := default up
 
 define get_from_remote_tgz
 	mkdir -p $(2)
@@ -16,6 +17,12 @@ define get_from_remote_zip
 endef
 
 default:
+	pytest src tools
+	python -m pylama --options pylama.ini src tools
+	docker build -t embedding-calculator --build-arg SCANNER=Facenet2018,InsightFace .
+
+up:
+	docker run -p3000:3000 embedding-calculator
 
 tools/tmp:
 	$(call get_from_remote_zip,https://www.fontsquirrel.com/fonts/download/arimo,tools/tmp/arimo-font)

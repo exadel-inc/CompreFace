@@ -101,6 +101,11 @@ CRLF file endings may cause this. To fix, run `$ dos2unix *`.
 Package *uWSGI* is not supported on Windows. Workaround is to temporarily delete the line with the package name from `requirements.txt` and install without it.
 
 # Misc
+Check that the component is in valid state: run tests, build container, start it
+```
+$ make
+$ make up
+```
 Get project line counts per file type
 ```
 $ which tokei >/dev/null || conda install -y -c conda-forge tokei && tokei --exclude srcext/

@@ -10,6 +10,6 @@ if [ "$SKIP_TESTS" != true ]; then
 else
   if [[ $SCANNER == *"InsightFace"* ]]; then
     # InsightFace downloads and caches models locally upon first run
-    SCANNER=InsightFace IMG_NAMES=000_5.jpg SAVE_IMG=false python -m tools.scan;
+    SCANNER=InsightFace IMG_NAMES=000_5.jpg SAVE_IMG=false python -m tools.scan
   fi
 fi
