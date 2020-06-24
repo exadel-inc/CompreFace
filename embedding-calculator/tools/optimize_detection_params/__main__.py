@@ -22,7 +22,7 @@ from sample_images import IMG_DIR
 from sample_images.annotations import SAMPLE_IMAGES
 from src.constants import ENV_MAIN, LOGGING_LEVEL
 from src.init_runtime import init_runtime
-from src.services.facescan.scanner.facescanners import FaceScanners
+from src.services.facescan.scanner.facenet.facenet import Facenet2018
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_current_dir, Constants, get_env_split
@@ -45,7 +45,7 @@ class ENV(Constants):
 class Facenet2018DetectionThresholdOptimization:
     def __init__(self):
         self.arg_count = 4
-        self.scanner = FaceScanners.Facenet2018()
+        self.scanner = Facenet2018()
         self.dataset = [row for row in SAMPLE_IMAGES if row.img_name in ENV.IMG_NAMES]
         logging.getLogger('src.services.facescan.scanner.test.calculate_errors').setLevel(logging.WARNING)
         logging.getLogger('src.services.facescan.scanner.facenet.facenet').setLevel(logging.INFO)

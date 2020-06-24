@@ -135,9 +135,11 @@ class Constants:
     @staticmethod
     def split(arr_str):
         """
+        >>> Constants.split("One")
+        ['One']
         >>> Constants.split("One Two")
         ['One', 'Two']
-        >>> Constants.split("One  Two")
+        >>> Constants.split("One  , Two")
         ['One', 'Two']
         >>> Constants.split("One,Two")
         ['One', 'Two']

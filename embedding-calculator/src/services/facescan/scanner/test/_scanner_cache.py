@@ -19,11 +19,9 @@ from src.services.imgtools.read_img import read_img
 @lru_cache(maxsize=None)
 def get_scanner(scanner_cls):
     scanner = scanner_cls()
-    print(scanner_cls.__name__)
 
     @lru_cache(maxsize=None)
     def scan(img_path, *args, **kwargs):
-        print(img_path)
         img = read_img(img_path)
         return scanner.scan_(img, *args, **kwargs)
 
