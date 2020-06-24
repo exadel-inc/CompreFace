@@ -1,5 +1,9 @@
 """Functions for building the face recognition network.
 """
+# Version: 2018-04-10 <br>
+# Link: https://github.com/davidsandberg/facenet/commit/096ed770f163957c1e56efa7feeb194773920f6e
+#
+#
 # MIT License
 # 
 # Copyright (c) 2016 David Sandberg
