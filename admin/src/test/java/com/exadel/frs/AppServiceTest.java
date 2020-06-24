@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -40,7 +41,12 @@ import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.entity.UserAppRoleId;
+import com.exadel.frs.entity.UserOrganizationRole;
+import com.exadel.frs.entity.UserOrganizationRoleId;
 import com.exadel.frs.enums.AppRole;
+import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
@@ -54,6 +60,7 @@ import com.exadel.frs.system.rest.CoreFacesClient;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -98,6 +105,7 @@ class AppServiceTest {
     private User user(final Long id) {
         return User.builder()
                    .id(id)
+                   .guid(UUID.randomUUID().toString())
                    .build();
     }
 
@@ -527,5 +535,67 @@ class AppServiceTest {
         verify(authManagerMock).verifyReadPrivilegesToApp(userId, app);
         verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
         verifyNoMoreInteractions(appRepositoryMock, authManagerMock);
+    }
+
+    @Test
+    void successPassAllOwnedAppsToNewOwnerAndLeave() {
+        val defaultOrg = organization();
+        defaultOrg.setUserOrganizationRoles(List.of(makeRole(1L, USER), makeRole(2L, ADMINISTRATOR)));
+        val app1 = mock(App.class);
+        val app2 = mock(App.class);
+        val apps = List.of(app1, app2);
+
+        val oldOwner = user(1L);
+        val newOwner = user(2L);
+        when(app1.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
+        when(app2.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
+        when(organizationServiceMock.getDefaultOrg()).thenReturn(defaultOrg);
+        when(organizationServiceMock.getOrganization(defaultOrg.getGuid())).thenReturn(defaultOrg);
+        when(appRepositoryMock.findAllByOrganizationIdAndUserAppRoles_Id_UserId(anyLong(), anyLong())).thenReturn(apps);
+
+        appService.passAllOwnedAppsToNewOwnerAndLeave(oldOwner, newOwner);
+
+        verify(app1).deleteUserAppRole(oldOwner.getGuid());
+        verify(app1).deleteUserAppRole(newOwner.getGuid());
+        verify(app1).addUserAppRole(newOwner, OWNER);
+
+        verify(app2).deleteUserAppRole(oldOwner.getGuid());
+        verify(app2).deleteUserAppRole(newOwner.getGuid());
+        verify(app2).addUserAppRole(newOwner, OWNER);
+    }
+
+    @Test
+    void successGetOwnedApps() {
+        val defaultOrg = organization();
+        defaultOrg.setUserOrganizationRoles(List.of(makeRole(USER_ID, USER)));
+
+        val app1 = makeApp(USER_ID, AppRole.OWNER, 1L);
+        val app2 = makeApp(USER_ID, OWNER, 2L);
+        val app3 = makeApp(USER_ID, AppRole.USER, 31L);
+        val app4 = makeApp(USER_ID, AppRole.ADMINISTRATOR, 41L);
+
+        val apps = List.of(app1, app2, app3, app4);
+
+        when(organizationServiceMock.getDefaultOrg()).thenReturn(defaultOrg);
+        when(organizationServiceMock.getOrganization(defaultOrg.getGuid())).thenReturn(defaultOrg);
+        when(appRepositoryMock.findAllByOrganizationIdAndUserAppRoles_Id_UserId(anyLong(), anyLong())).thenReturn(apps);
+
+        val ownedApps = appService.getOwnedApps(USER_ID);
+
+        assertThat(ownedApps).isEqualTo(List.of(app1, app2));
+    }
+
+    private App makeApp(final long userId, final AppRole appRole, final long appId) {
+        return App.builder()
+                  .userAppRoles(List.of(UserAppRole.builder().id(new UserAppRoleId(userId, appId)).role(appRole).build()))
+                  .build();
+    }
+
+    private UserOrganizationRole makeRole(final long userId, final OrganizationRole role) {
+        return UserOrganizationRole.builder()
+                                   .id(UserOrganizationRoleId.builder().userId(userId).build())
+                                   .role(role)
+                                   .user(user(userId))
+                                   .build();
     }
 }
