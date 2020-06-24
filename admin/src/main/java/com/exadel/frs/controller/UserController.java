@@ -135,6 +135,7 @@ public class UserController {
                                          .defaultOrg(organizationService.getDefaultOrg())
                                          .updateAppsConsumer(appService::passAllOwnedAppsToNewOwnerAndLeave)
                                          .build();
+
         userService.deleteUser(deleteUserDto);
     }
 
