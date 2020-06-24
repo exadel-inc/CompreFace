@@ -27,7 +27,7 @@ from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_env, Constants, get_env_split, get_env_bool, s
-from tools.facescan._save_img import save_img
+from tools._save_img import save_img
 
 logger = logging.getLogger(__name__)
 

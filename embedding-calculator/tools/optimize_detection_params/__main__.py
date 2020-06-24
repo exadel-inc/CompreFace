@@ -17,6 +17,9 @@ import logging
 import random
 from collections import namedtuple
 
+from tools.optimize_detection_params.optimizer import Optimizer
+from tools.optimize_detection_params.results_storage import ResultsStorage
+
 from sample_images import IMG_DIR
 from sample_images.annotations import SAMPLE_IMAGES
 from src.constants import ENV_MAIN, LOGGING_LEVEL
@@ -25,8 +28,6 @@ from src.services.facescan.scanner.facescanners import FaceScanners
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_current_dir, cached, Constants, get_env_split
-from tools.facescan.optimize.optimizer import Optimizer
-from tools.facescan.optimize.results_storage import ResultsStorage
 
 CURRENT_DIR = get_current_dir(__file__)
 Score = namedtuple('Score', 'cost args')

@@ -20,7 +20,6 @@ from flask import Flask
 from src import constants
 from src._docs import add_docs
 from src._endpoints import endpoints
-from src.cache import get_storage
 from src.constants import ENV
 from src.docs import DOCS_DIR
 from src.init_runtime import init_runtime
@@ -35,11 +34,10 @@ logger = logging.getLogger(__name__)
 def init_app_runtime():
     init_runtime(logging_level=constants.LOGGING_LEVEL)
     logger.info(ENV.to_json() if ENV.IS_DEV_ENV else ENV.to_str())
-    get_storage().wait_for_connection()
 
 
 def create_app(add_endpoints_fun: Union[Callable, None] = None, do_add_docs: bool = False):
-    app = Flask('frs-core-ml')
+    app = Flask('embedding-calculator')
     app.url_map.strict_slashes = False
     add_error_handling(app)
     app.after_request(log_http_response)
