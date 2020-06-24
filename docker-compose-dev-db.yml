@@ -11,7 +11,7 @@ services:
       - "8081:8080"
     environment:
       - POSTGRES_PASSWORD=h9Zn784HdT
-      - POSTGRES_URL=jdbc:postgresql://msqv500.exadel.by:5432/frs
+      - POSTGRES_URL=jdbc:postgresql://hrkv042.kh.exadel.ua:5432/frs
     depends_on:
       - frs-api
 
@@ -25,8 +25,8 @@ services:
       - "8082:8080"
     environment:
       - POSTGRES_PASSWORD=h9Zn784HdT
-      - POSTGRES_URL=jdbc:postgresql://msqv500.exadel.by:5432/frs
-      - MONGO_URL=mongodb://msqv500.exadel.by:27017
+      - POSTGRES_URL=jdbc:postgresql://hrkv042.kh.exadel.ua:5432/frs
+      - MONGO_URL=mongodb://hrkv042.kh.exadel.ua:27017
 
 
   frs-fe:
@@ -44,5 +44,5 @@ services:
     build:
       context: embedding-calculator
     environment:
-      - MONGODB_URI=mongodb://msqv500.exadel.by:27017/efrs_db
+      - MONGODB_URI=mongodb://hrkv042.kh.exadel.ua:27017/efrs_db
       - ML_PORT=3000

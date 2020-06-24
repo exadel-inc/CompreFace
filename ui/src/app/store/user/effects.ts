@@ -23,7 +23,7 @@ import {
     UpdateUserRoleEntityAction,
     LoadUsersEntityAction,
     PutUpdatedUserRoleEntityAction,
-    DeleteUserFromOrganization
+    DeleteUser
 } from 'src/app/store/user/action';
 import { switchMap, map, catchError, filter, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
@@ -68,11 +68,11 @@ export class UserListEffect {
         );
 
     @Effect()
-    DeleteUserFromOrganization =
+    deleteUser$ =
         this.actions.pipe(
-            ofType(DeleteUserFromOrganization),
+            ofType(DeleteUser),
             switchMap(action => forkJoin([
-                this.userService.delete(action.organizationId, action.userId),
+                this.userService.delete(action.organizationId, action.userId, action.newOwner),
                 of(action.organizationId)
             ]).pipe(
                 catchError((error: HttpErrorResponse) => of(this.snackBarService.openHttpError(error))),

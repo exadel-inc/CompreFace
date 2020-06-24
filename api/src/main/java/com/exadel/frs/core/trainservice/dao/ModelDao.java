@@ -47,8 +47,9 @@ public class ModelDao {
             final FaceClassifier classifier,
             final String calculatorVersion
     ) {
+        val oldModel = modelRepository.findFirstByModelKey(modelKey);
         val model = Model.builder()
-                         .id(UUID.randomUUID().toString())
+                         .id(oldModel.isPresent() ? oldModel.get().getId() : UUID.randomUUID().toString())
                          .modelKey(modelKey)
                          .classifier(classifier)
                          .faces(classifier.getUsedFaceIds().stream()

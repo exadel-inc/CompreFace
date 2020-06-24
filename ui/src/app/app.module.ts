@@ -13,26 +13,29 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { FormBuilder, FormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {FormsModule, FormBuilder} from '@angular/forms';
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {MainLayoutComponent} from './ui/main-layout/main-layout.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {ErrorInterceptor, TokenInterceptor} from './core/auth/token.inerceptor';
-import {AuthGuard, LoginGuard} from './core/auth/auth.guard';
-import {ToolBarModule} from './features/tool-bar/tool-bar.module';
-import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialog.component';
-import {CustomMaterialModule} from './ui/material/material.module';
-import {AlertComponent} from './features/alert/alert.component';
-import {EditDialogComponent} from './features/edit-dialog/edit-dialog.component';
-import {FooterModule} from './features/footer/footer.module';
-import {SnackBarModule} from './features/snackbar/snackbar.module';
-import {AppStoreModule} from './store/app-store.module';
-import {DeleteDialogComponent} from './features/delete-dialog/delete-dialog.component';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AuthGuard, LoginGuard } from './core/auth/auth.guard';
+import { ErrorInterceptor, TokenInterceptor } from './core/auth/token.inerceptor';
+import { AlertComponent } from './features/alert/alert.component';
+import { DeleteDialogComponent } from './features/delete-dialog/delete-dialog.component';
+import { EditDialogComponent } from './features/edit-dialog/edit-dialog.component';
+import { FooterModule } from './features/footer/footer.module';
+import { SnackBarModule } from './features/snackbar/snackbar.module';
+import { ToolBarModule } from './features/tool-bar/tool-bar.module';
+import { AppStoreModule } from './store/app-store.module';
+import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
+import { CustomMaterialModule } from './ui/material/material.module';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -53,6 +56,7 @@ import {DeleteDialogComponent} from './features/delete-dialog/delete-dialog.comp
     AppStoreModule,
     HttpClientModule,
     SnackBarModule,
+    MatRadioModule,
   ],
   providers: [
     AuthGuard,

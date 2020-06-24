@@ -4,45 +4,9 @@ info:
   title: 'Python Core Service — frs-core'
   description: 'This is a component of Exadel Face Recognition Service. EFRS is a service for face recognition: upload images with faces of known people, then upload a new image, and the service will recognize faces in it.'
 tags:
-  - name: 'Face Database'
-  - name: 'Face Recognition ML Model'
-  - name: 'Maintenance'
+  - name: 'Core'
 schemes:
   - http
-securityDefinitions:
-  ApiKeyAuth:
-    type: apiKey
-    in: header
-    name: X-Api-Key
-components:
-  parameters:
-    RetrainParameter:
-      name: retrain
-      in: query
-      description: 'Specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". "Force" option will abort already running processes of classifier training.'
-      required: 'false'
-      type: string
-      default: 'force'
-    FaceNameParameter:
-      name: face_name
-      in: path
-      description: 'Person''s name to whom the face belongs to.'
-      required: 'false'
-      type: string
-    DetProbThresholdParameter:
-      name: det_prob_threshold
-      in: formData
-      description: 'The minimum required confidence that a found face is actually a face. Decrease this value if faces are not detected. Valid values are in the range (0;1).'
-      type: float
-  responses:
-    ClassifierIsAlreadyTrainingErrorResponse:
-      description: 'Classifier is already training. Use parameters to force start training.'
-      schema:
-        type: object
-        properties:
-          message:
-            type: string
-            example: 'Detailed information about the error'
 definitions:
   ErrorResponseBody:
     type: "object"

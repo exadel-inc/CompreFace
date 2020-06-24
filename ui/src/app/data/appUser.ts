@@ -21,4 +21,5 @@ export interface AppUser {
   lastName: string;
   role: string;
   email?: string;
+  ownerOfApplications?: string[];
 }

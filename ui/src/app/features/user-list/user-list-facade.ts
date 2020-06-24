@@ -13,11 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
 import { AppUser } from 'src/app/data/appUser';
 import { IFacade } from 'src/app/data/facade/IFacade';
@@ -30,12 +29,12 @@ import {
 import { LoadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import {
-  DeleteUserFromOrganization,
+  DeleteUser,
   LoadUsersEntityAction,
   PutUpdatedUserRoleEntityAction,
 } from 'src/app/store/user/action';
-import { selectIsPendingUserStore, selectUsers } from 'src/app/store/user/selectors';
-import { selectUserId } from 'src/app/store/userInfo/selectors';
+import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
+import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
 
 @Injectable()
 export class UserListFacade implements IFacade {
@@ -45,6 +44,7 @@ export class UserListFacade implements IFacade {
   availableRoles$: Observable<string[]>;
   isLoading$: Observable<boolean>;
   currentUserId$: Observable<string>;
+  currentUserEmail$: Observable<string>;
   userRole$: Observable<string>;
 
   private selectedOrganization: string;
@@ -57,7 +57,7 @@ export class UserListFacade implements IFacade {
   ) {
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.selectedOrganizationName$ = store.select(selectSelectedOrganization).pipe(map(org => org.name));
-    this.users$ = store.select(selectUsers);
+    this.users$ = store.select(selectUsersWithOwnerApp);
     this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
 
     const allRoles$ = store.select(selectAllRoles);
@@ -84,6 +84,7 @@ export class UserListFacade implements IFacade {
     const usersLoading$ = store.select(selectIsPendingUserStore);
     const roleLoading$ = store.select(selectIsPendingRoleStore);
     this.currentUserId$ = store.select(selectUserId);
+    this.currentUserEmail$ = store.select(selectUserEmail);
 
     this.isLoading$ = combineLatest(usersLoading$, roleLoading$)
       .pipe(map(observResults => !(!observResults[0] && !observResults[1])));
@@ -117,10 +118,11 @@ export class UserListFacade implements IFacade {
     }));
   }
 
-  deleteUser(userId: string): void {
-    this.store.dispatch(DeleteUserFromOrganization({
+  deleteUser(userId: string, newOwner?: string): void {
+    this.store.dispatch(DeleteUser({
       organizationId: this.selectedOrganization,
-      userId
+      userId,
+      newOwner,
     }));
   }
 
