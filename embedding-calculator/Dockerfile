@@ -1,4 +1,4 @@
-# Changes to this file have to be applied to DevOps Dockerfile as well, e.g. https://git.exadel.com/exadel-face-recognition-service/frs-devops/blob/master/Docker/APP-GENERIC-PYTHON-dev2/Dockerfile
+# Changes to this file have to be applied to DevOps Dockerfile as well, e.g. c
 FROM jjanzic/docker-python3-opencv
 
 # <different-from-jenkins>
@@ -15,15 +15,16 @@ COPY dockerfile.sh .
 # </different-from-jenkins>
 
 ARG BE_VERSION
+ENV BE_VERSION=$BE_VERSION
 ARG APP_VERSION_STRING
+ENV APP_VERSION_STRING=$APP_VERSION_STRING
 ARG SKIP_TESTS
+ARG SCANNER=Facenet2018
 ENV HOME=/app/ml
 ENV LC_ALL=C.UTF-8
 ENV LANG=C.UTF-8
 ENV PYTHONUNBUFFERED=0
 ENV JOBLIB_MULTIPROCESSING=0
-ENV BE_VERSION=$BE_VERSION
-ENV APP_VERSION_STRING=$APP_VERSION_STRING
 
 RUN chmod +x dockerfile.sh
 RUN ./dockerfile.sh
