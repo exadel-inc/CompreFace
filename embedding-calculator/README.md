@@ -36,11 +36,15 @@ $ docker build -t embedding-calculator --build-arg SKIP_TESTS=true .
 ### Run tests
 Unit tests
 ```
-$ pytest -m "not integration" src tools
+$ pytest -m "not integration and not performance" src tools
 ```
 Integration tests
 ```
 $ pytest -m integration src tools
+```
+Performance tests
+```
+$ pytest -m performance src tools
 ```
 Lint checks
 ```
