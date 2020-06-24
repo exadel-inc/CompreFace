@@ -17,7 +17,6 @@ import numpy as np
 
 from src.exceptions import ImageReadLibraryError, OneDimensionalImageIsGivenError
 from src.services.imgtools.types import Array3D
-from src.services.storage._serialization import deserialize
 
 
 def _grayscale_to_rgb(img):
@@ -29,16 +28,8 @@ def _grayscale_to_rgb(img):
 
 
 def read_img(file) -> Array3D:
-    img_source = file.read() if hasattr(file, 'read') else file  # TODO EFRS-517 Remove this line
     try:
-        arr = deserialize(img_source)
-        assert isinstance(arr, Array3D)
-        return arr  # TODO EFRS-517 Remove this line
-    except:  # NOQA
-        pass
-
-    try:
-        arr = imageio.imread(img_source)
+        arr = imageio.imread(file)
     except (ValueError, SyntaxError) as e:
         raise ImageReadLibraryError from e
 

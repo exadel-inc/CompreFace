@@ -23,10 +23,10 @@ from src.init_runtime import init_runtime
 from src.services.facescan.scanner.test.calculate_errors import calculate_missed_boxes, calculate_missed_noses
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_current_dir
-from tools.facescan._save_img import save_img
-from tools.facescan.benchmark_detection.constants import ENV
-from tools.facescan.benchmark_detection.simple_stats import SimpleStats
-from tools.facescan.constants import get_scanner
+from tools._save_img import save_img
+from tools.benchmark_detection.constants import ENV
+from tools.benchmark_detection.simple_stats import SimpleStats
+from tools.constants import get_scanner
 
 AnnotatedImg = namedtuple('AnnotatedImg', 'img img_name noses')
 TMP_DIR = get_current_dir(__file__) / 'tmp'
