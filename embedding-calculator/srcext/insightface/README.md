@@ -1,5 +1,4 @@
-Version: 2020.02.21 <br>
-Link: https://github.com/deepinsight/insightface/commit/08265c749a7af6f1d7e9057df55a3eb2b171ddcb
+Version: 2020.02.21
 
 # InsightFace: 2D and 3D Face Analysis Project
 
