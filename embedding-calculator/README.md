@@ -76,7 +76,7 @@ $ python -m tools.optimize_detection_params
 
 ### Windows
 
-##### While building container, crashes at RUN step with error `: invalid option`
+##### While building container, crashes with error `: invalid option`
 
 CRLF file endings may cause this. To fix, run `$ dos2unix *`.
 
