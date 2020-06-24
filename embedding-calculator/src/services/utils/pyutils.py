@@ -73,22 +73,6 @@ def run_first(preceding_func):
     return wrapper_decorator
 
 
-def cached(func):
-    """ Caches the return values for a function with one argument """
-    cache = {}
-
-    @functools.wraps(func)
-    def decorator(arg):
-        if arg in cache:
-            return cache[arg]
-
-        result = func(arg)
-        cache[arg] = result
-        return result
-
-    return decorator
-
-
 def first_and_only(lst):
     lst = tuple(lst)
     length_lst = len(lst)
