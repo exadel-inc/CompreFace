@@ -43,7 +43,7 @@ public class LogisticRegressionExtendedClassifierTestIT {
     }
 
     @Test
-    void trainFaied() {
+    void trainModelWithWrongParamSizeFailed() {
         val faceName = "faceName";
         val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
         val classifier = new LogisticRegressionExtendedClassifier(labelMap);
@@ -73,7 +73,7 @@ public class LogisticRegressionExtendedClassifierTestIT {
     }
 
     @Test
-    void predictThrowsException() {
+    void predictModelNotTrainedException() {
         assertThatThrownBy(() -> {
             new LogisticRegressionExtendedClassifier(null).predict(null);
         }).isInstanceOf(ModelNotTrainedException.class);
@@ -81,6 +81,8 @@ public class LogisticRegressionExtendedClassifierTestIT {
 
     @Test
     void isTrained() {
+        assertThat(new LogisticRegressionExtendedClassifier(null).isTrained()).isFalse();
+
         val faceName = "faceName";
         val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
         val classifier = new LogisticRegressionExtendedClassifier(labelMap);
@@ -89,14 +91,10 @@ public class LogisticRegressionExtendedClassifierTestIT {
 
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
+
         classifier.train(xorMatrix, xorResults);
 
         assertThat(classifier.isTrained()).isTrue();
-    }
-
-    @Test
-    void isNotTrained() {
-        assertThat(new LogisticRegressionExtendedClassifier(null).isTrained()).isFalse();
     }
 
     @Test

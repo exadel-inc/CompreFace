@@ -128,9 +128,8 @@ public class FaceClassifierManagerTest {
     void isTraining() {
         when(lockManager.isLocked(MODEL_KEY)).thenReturn(true);
 
-        val actual = manager.isTraining(MODEL_KEY);
+        assertThat(manager.isTraining(MODEL_KEY)).isTrue();
 
-        assertThat(actual).isTrue();
         verify(lockManager).isLocked(MODEL_KEY);
         verifyNoMoreInteractions(lockManager);
     }
