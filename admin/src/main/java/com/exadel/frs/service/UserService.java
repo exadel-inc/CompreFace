@@ -37,6 +37,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -157,8 +158,9 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(final UserDeleteDto userDeleteDto) {
+    public void deleteUser(final UserDeleteDto userDeleteDto, final Consumer<UserDeleteDto> removeUserFromOrgConsumer) {
         manageOwnedAppsByUserBeingDeleted(userDeleteDto);
+        removeUserFromOrgConsumer.accept(userDeleteDto);
         userRepository.deleteByGuid(userDeleteDto.getUserToDelete().getGuid());
     }
 
@@ -198,7 +200,6 @@ public class UserService {
         validateReplacer(userDeleteDto.getReplacer());
 
         updateAppsOwnership(userDeleteDto);
-        //TODO cover with test all public methods
     }
 
     private void updateAppsOwnership(final UserDeleteDto userDeleteDto) {

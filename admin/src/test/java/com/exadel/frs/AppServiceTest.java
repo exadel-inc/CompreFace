@@ -543,46 +543,39 @@ class AppServiceTest {
         defaultOrg.setUserOrganizationRoles(List.of(makeRole(1L, USER), makeRole(2L, ADMINISTRATOR)));
         val app1 = mock(App.class);
         val app2 = mock(App.class);
-        val apps = List.of(app1, app2);
+        val app3 = mock(App.class);
+        val app4 = mock(App.class);
+        val apps = List.of(app1, app2, app3, app4);
 
         val oldOwner = user(1L);
         val newOwner = user(2L);
         when(app1.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
         when(app2.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
+        when(app3.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(AppRole.ADMINISTRATOR).build()));
+        when(app4.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(AppRole.USER).build()));
         when(organizationServiceMock.getDefaultOrg()).thenReturn(defaultOrg);
         when(organizationServiceMock.getOrganization(defaultOrg.getGuid())).thenReturn(defaultOrg);
         when(appRepositoryMock.findAllByOrganizationIdAndUserAppRoles_Id_UserId(anyLong(), anyLong())).thenReturn(apps);
 
-        appService.passAllOwnedAppsToNewOwnerAndLeave(oldOwner, newOwner);
+        appService.passAllOwnedAppsToNewOwnerAndLeaveAllApps(oldOwner, newOwner);
 
+        verify(app1).getUserAppRole(oldOwner.getId());
         verify(app1).deleteUserAppRole(oldOwner.getGuid());
         verify(app1).deleteUserAppRole(newOwner.getGuid());
         verify(app1).addUserAppRole(newOwner, OWNER);
 
+        verify(app2).getUserAppRole(oldOwner.getId());
         verify(app2).deleteUserAppRole(oldOwner.getGuid());
         verify(app2).deleteUserAppRole(newOwner.getGuid());
         verify(app2).addUserAppRole(newOwner, OWNER);
-    }
 
-    @Test
-    void successGetOwnedApps() {
-        val defaultOrg = organization();
-        defaultOrg.setUserOrganizationRoles(List.of(makeRole(USER_ID, USER)));
+        verify(app3).getUserAppRole(oldOwner.getId());
+        verify(app3).deleteUserAppRole(oldOwner.getGuid());
 
-        val app1 = makeApp(USER_ID, AppRole.OWNER, 1L);
-        val app2 = makeApp(USER_ID, OWNER, 2L);
-        val app3 = makeApp(USER_ID, AppRole.USER, 31L);
-        val app4 = makeApp(USER_ID, AppRole.ADMINISTRATOR, 41L);
+        verify(app4).getUserAppRole(oldOwner.getId());
+        verify(app4).deleteUserAppRole(oldOwner.getGuid());
 
-        val apps = List.of(app1, app2, app3, app4);
-
-        when(organizationServiceMock.getDefaultOrg()).thenReturn(defaultOrg);
-        when(organizationServiceMock.getOrganization(defaultOrg.getGuid())).thenReturn(defaultOrg);
-        when(appRepositoryMock.findAllByOrganizationIdAndUserAppRoles_Id_UserId(anyLong(), anyLong())).thenReturn(apps);
-
-        val ownedApps = appService.getOwnedApps(USER_ID);
-
-        assertThat(ownedApps).isEqualTo(List.of(app1, app2));
+        verifyNoMoreInteractions(app1, app2, app3, app4);
     }
 
     private App makeApp(final long userId, final AppRole appRole, final long appId) {

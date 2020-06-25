@@ -43,11 +43,13 @@ import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.AppService;
+import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -321,6 +323,8 @@ class UserServiceTest {
         final User orgAdmin;
         final User orgUser;
         final BiConsumer<User, User> updateAppsConsumer;
+        final OrganizationService orgServiceMock;
+        final Consumer<UserDeleteDto> deleteUserFromOrgConsumer;
 
         public DeleteUserTest() {
             defaultOrg = mock(Organization.class);
@@ -329,8 +333,11 @@ class UserServiceTest {
             orgUser = makeUser(3L);
             updateAppsConsumer =
                     (oldOwner, newOwner) -> {
-                        appService.passAllOwnedAppsToNewOwnerAndLeave(oldOwner, newOwner);
+                        appService.passAllOwnedAppsToNewOwnerAndLeaveAllApps(oldOwner, newOwner);
                     };
+            orgServiceMock = mock(OrganizationService.class);
+            deleteUserFromOrgConsumer = orgServiceMock::removeUserFromOrganization;
+
             when(defaultOrg.getOwner()).thenReturn(orgOwner);
         }
 
@@ -344,10 +351,11 @@ class UserServiceTest {
                                              .updateAppsConsumer(updateAppsConsumer)
                                              .build();
 
-            userService.deleteUser(deleteUserDto);
+            userService.deleteUser(deleteUserDto, deleteUserFromOrgConsumer);
 
             verify(authManager).verifyCanDeleteUser(deleteUserDto);
-            verify(appService).passAllOwnedAppsToNewOwnerAndLeave(orgUser, orgAdmin);
+            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(orgUser, orgAdmin);
+            verify(orgServiceMock).removeUserFromOrganization(deleteUserDto);
             verify(userRepositoryMock).deleteByGuid(orgUser.getGuid());
         }
 
@@ -361,10 +369,11 @@ class UserServiceTest {
                                              .updateAppsConsumer(updateAppsConsumer)
                                              .build();
 
-            userService.deleteUser(deleteUserDto);
+            userService.deleteUser(deleteUserDto, deleteUserFromOrgConsumer);
 
             verify(authManager).verifyCanDeleteUser(deleteUserDto);
-            verify(appService).passAllOwnedAppsToNewOwnerAndLeave(orgUser, orgOwner);
+            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(orgUser, orgOwner);
+            verify(orgServiceMock).removeUserFromOrganization(deleteUserDto);
             verify(userRepositoryMock).deleteByGuid(orgUser.getGuid());
         }
 
@@ -379,7 +388,7 @@ class UserServiceTest {
                                              .build();
 
             assertThatThrownBy(() -> {
-                userService.deleteUser(deleteUserDto);
+                userService.deleteUser(deleteUserDto, deleteUserFromOrgConsumer);
             }).isInstanceOf(IllegalReplacerException.class)
               .hasMessage(String.format("Illegal replacer value=%s!", "wrong_param"));
         }

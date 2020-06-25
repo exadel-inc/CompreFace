@@ -124,19 +124,21 @@ public class UserController {
     @ApiOperation(value = "Delete user")
     public void deleteUser(
             @ApiParam(value = "GUID of the user being deleted", required = true, example = GUID_EXAMPLE)
-            @PathVariable final String userGuid,
+            @PathVariable
+            final String userGuid,
             @ApiParam(value = "Replacer option to determine next owner of org/apps that the user own", allowableValues = "deleter, owner")
-            @RequestParam(defaultValue = "deleter") final String replacer
+            @RequestParam(defaultValue = "deleter")
+            final String replacer
     ) {
         val deleteUserDto = UserDeleteDto.builder()
                                          .deleter(SecurityUtils.getPrincipal())
                                          .userToDelete(userService.getUserByGuid(userGuid))
                                          .replacer(replacer)
                                          .defaultOrg(organizationService.getDefaultOrg())
-                                         .updateAppsConsumer(appService::passAllOwnedAppsToNewOwnerAndLeave)
+                                         .updateAppsConsumer(appService::passAllOwnedAppsToNewOwnerAndLeaveAllApps)
                                          .build();
 
-        userService.deleteUser(deleteUserDto);
+        userService.deleteUser(deleteUserDto, organizationService::removeUserFromOrganization);
     }
 
     @GetMapping("/autocomplete")
