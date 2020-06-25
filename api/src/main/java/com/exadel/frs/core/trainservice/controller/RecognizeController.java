@@ -18,7 +18,7 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import static java.math.RoundingMode.*;
+import static java.math.RoundingMode.HALF_UP;
 import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
@@ -29,14 +29,15 @@ import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Map;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -47,6 +48,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 @RequestMapping(API_V1)
 @RequiredArgsConstructor
+@Validated
 public class RecognizeController {
 
     private final FaceClassifierManager manager;
@@ -64,6 +66,7 @@ public class RecognizeController {
             final MultipartFile file,
             @ApiParam(value = "Maximum number of faces to be recognized")
             @RequestParam(required = false)
+            @Min(value=1, message = "Limit should be greater than 0")
             final Integer limit
     ) {
 
