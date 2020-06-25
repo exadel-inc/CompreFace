@@ -16,11 +16,10 @@
 
 package com.exadel.frs.core.trainservice.component.classifiers;
 
+import static java.lang.Math.round;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static java.lang.Math.round;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
-
 import java.util.List;
 import java.util.Map;
 import lombok.val;
@@ -103,7 +102,7 @@ public class LogisticRegressionExtendedClassifierTestIT {
 
         val faceName = "faceName";
         val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
-        
+
         val facesIds = new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds();
 
         assertThat(facesIds).size().isEqualTo(2);
