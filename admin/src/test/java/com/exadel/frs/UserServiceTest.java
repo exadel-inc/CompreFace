@@ -34,6 +34,7 @@ import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.IllegalReplacerException;
@@ -344,7 +345,7 @@ class UserServiceTest {
         @Test
         void successDeleteUserWhenDeleterIsReplacer() {
             val deleteUserDto = UserDeleteDto.builder()
-                                             .replacer("deleter")
+                                             .replacer(Replacer.from("deleter"))
                                              .userToDelete(orgUser)
                                              .deleter(orgAdmin)
                                              .defaultOrg(defaultOrg)
@@ -362,7 +363,7 @@ class UserServiceTest {
         @Test
         void successDeleteUserWhenOrgOwnerIsReplacer() {
             val deleteUserDto = UserDeleteDto.builder()
-                                             .replacer("owner")
+                                             .replacer(Replacer.from("owner"))
                                              .userToDelete(orgUser)
                                              .deleter(orgAdmin)
                                              .defaultOrg(defaultOrg)
@@ -379,16 +380,14 @@ class UserServiceTest {
 
         @Test
         void exceptionWhenWrongReplacerParamIsPassed() {
-            val deleteUserDto = UserDeleteDto.builder()
-                                             .replacer("wrong_param")
-                                             .userToDelete(orgUser)
-                                             .deleter(orgAdmin)
-                                             .defaultOrg(defaultOrg)
-                                             .updateAppsConsumer(updateAppsConsumer)
-                                             .build();
-
             assertThatThrownBy(() -> {
-                userService.deleteUser(deleteUserDto, deleteUserFromOrgConsumer);
+                UserDeleteDto.builder()
+                             .replacer(Replacer.from("wrong_param"))
+                             .userToDelete(orgUser)
+                             .deleter(orgAdmin)
+                             .defaultOrg(defaultOrg)
+                             .updateAppsConsumer(updateAppsConsumer)
+                             .build();
             }).isInstanceOf(IllegalReplacerException.class)
               .hasMessage(String.format("Illegal replacer value=%s!", "wrong_param"));
         }

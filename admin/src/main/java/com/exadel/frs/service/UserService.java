@@ -24,9 +24,9 @@ import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.IllegalReplacerException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -197,7 +197,6 @@ public class UserService {
 
     private void manageOwnedAppsByUserBeingDeleted(final UserDeleteDto userDeleteDto) {
         authManager.verifyCanDeleteUser(userDeleteDto);
-        validateReplacer(userDeleteDto.getReplacer());
 
         updateAppsOwnership(userDeleteDto);
     }
@@ -208,14 +207,6 @@ public class UserService {
         val updateAppsConsumer = userDeleteDto.getUpdateAppsConsumer();
 
         updateAppsConsumer.accept(userBeingDeleted, newOwner);
-    }
-
-    private void validateReplacer(final String replacer) {
-        val validReplacers = List.of("deleter", "owner");
-
-        if (!validReplacers.contains(replacer)) {
-            throw new IllegalReplacerException(replacer);
-        }
     }
 
     private User decideNewOwner(final UserDeleteDto userDeleteDto) {
@@ -230,6 +221,6 @@ public class UserService {
             return defaultOrg.getOwner();
         }
 
-        return replacer.equals("deleter") ? deleter : defaultOrg.getOwner();
+        return replacer == Replacer.DELETER ? deleter : defaultOrg.getOwner();
     }
 }

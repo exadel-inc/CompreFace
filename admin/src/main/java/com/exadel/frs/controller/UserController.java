@@ -25,6 +25,7 @@ import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
@@ -133,7 +134,7 @@ public class UserController {
         val deleteUserDto = UserDeleteDto.builder()
                                          .deleter(SecurityUtils.getPrincipal())
                                          .userToDelete(userService.getUserByGuid(userGuid))
-                                         .replacer(replacer)
+                                         .replacer(Replacer.from(replacer))
                                          .defaultOrg(organizationService.getDefaultOrg())
                                          .updateAppsConsumer(appService::passAllOwnedAppsToNewOwnerAndLeaveAllApps)
                                          .build();
