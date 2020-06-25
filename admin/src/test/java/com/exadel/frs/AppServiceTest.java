@@ -549,10 +549,12 @@ class AppServiceTest {
 
         val oldOwner = user(1L);
         val newOwner = user(2L);
+
         when(app1.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
         when(app2.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
         when(app3.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(AppRole.ADMINISTRATOR).build()));
         when(app4.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(AppRole.USER).build()));
+
         when(organizationServiceMock.getDefaultOrg()).thenReturn(defaultOrg);
         when(organizationServiceMock.getOrganization(defaultOrg.getGuid())).thenReturn(defaultOrg);
         when(appRepositoryMock.findAllByOrganizationIdAndUserAppRoles_Id_UserId(anyLong(), anyLong())).thenReturn(apps);
