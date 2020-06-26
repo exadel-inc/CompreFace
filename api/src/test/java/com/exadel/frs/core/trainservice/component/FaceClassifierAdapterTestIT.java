@@ -57,32 +57,37 @@ public class FaceClassifierAdapterTestIT {
         var score = 0;
 
         for (val key : embeddings.keySet()) {
-
             val faceName = key.getRight();
-
             val lists = embeddings.get(key).stream()
                                   .filter(ObjectUtils::isNotEmpty)
                                   .collect(toList());
+
             if (isNotEmpty(lists)) {
                 continue;
             }
+
             for (val el : lists) {
                 val predict = faceClassifierAdapter
                         .predict(el.stream().mapToDouble(d -> d).toArray());
+
                 if (predict.getRight().equals(faceName)) {
                     truePredictions++;
                 }
                 allPredictions++;
+
                 log.info("{} prob : {}", predict.getRight().equals(faceName) ? "TRUE" : "FALSE", predict.getLeft());
+
                 if (predict.getRight().equals(faceName)) {
                     score += predict.getLeft();
                 }
             }
         }
-        double accuracy = (double) truePredictions / allPredictions;
+        val accuracy = (double) truePredictions / allPredictions;
+
         log.info("Accuracy {} ", accuracy);
         log.info("Score {} ", score);
         log.info("Finished in {} ms", (System.currentTimeMillis() - date));
+
         assertTrue(accuracy > THRESHOLD);
     }
 }

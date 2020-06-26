@@ -20,7 +20,7 @@ import static java.lang.Math.round;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
-import java.util.Map;
+import java.util.List;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
@@ -30,8 +30,8 @@ public class LogisticRegressionExtendedClassifierTestIT {
     @Test
     void train() {
         val faceName = "faceName";
-        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
-        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val classifier = new LogisticRegressionExtendedClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
 
@@ -43,8 +43,8 @@ public class LogisticRegressionExtendedClassifierTestIT {
     @Test
     void trainModelWithWrongParamSizeFailed() {
         val faceName = "faceName";
-        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
-        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val classifier = new LogisticRegressionExtendedClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0};
 
@@ -57,8 +57,8 @@ public class LogisticRegressionExtendedClassifierTestIT {
     void predict() {
         val faceName = "faceName";
         val predictResult = 1;
-        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
-        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val classifier = new LogisticRegressionExtendedClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
 
@@ -80,8 +80,8 @@ public class LogisticRegressionExtendedClassifierTestIT {
     @Test
     void isTrained() {
         val faceName = "faceName";
-        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
-        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val classifier = new LogisticRegressionExtendedClassifier(facesList);
 
         assertThat(classifier.isTrained()).isFalse();
 
@@ -96,9 +96,9 @@ public class LogisticRegressionExtendedClassifierTestIT {
     @Test
     void getUsedFaceIds() {
         val faceName = "faceName";
-        val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
+        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
 
-        val facesIds = new LogisticRegressionExtendedClassifier(labelMap).getUsedFaceIds();
+        val facesIds = new LogisticRegressionExtendedClassifier(facesList).getUsedFaceIds();
 
         assertThat(facesIds).size().isEqualTo(2);
         assertThat(facesIds).contains("faceId");

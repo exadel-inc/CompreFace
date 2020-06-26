@@ -24,7 +24,7 @@ import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegression
 import com.exadel.frs.core.trainservice.config.MongoTest;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.repository.mongo.ModelRepository;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -94,11 +94,11 @@ public class ModelDaoTest {
         y[0] = 1;
         y[1] = 2;
 
-        val labelMap = new HashMap<Integer, Pair<String, String>>();
-        labelMap.put(1, Pair.of(UUID.randomUUID().toString(), "firstLabel"));
-        labelMap.put(2, Pair.of(UUID.randomUUID().toString(), "secondLabel"));
+        val facesList = new ArrayList<Pair<String, String>>();
+        facesList.add(Pair.of(UUID.randomUUID().toString(), "firstFaceName"));
+        facesList.add(Pair.of(UUID.randomUUID().toString(), "secondFaceName"));
 
-        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val classifier = new LogisticRegressionExtendedClassifier(facesList);
         classifier.train(x, y);
 
         val model = Model.builder()
