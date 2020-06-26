@@ -19,7 +19,6 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.math.RoundingMode.HALF_UP;
-import static org.apache.commons.lang3.ObjectUtils.defaultIfNull;
 import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
@@ -65,8 +64,8 @@ public class RecognizeController {
             @RequestParam
             final MultipartFile file,
             @ApiParam(value = "Maximum number of faces to be recognized")
-            @RequestParam(required = false)
-            @Min(value=1, message = "Limit should be greater than 0")
+            @RequestParam(defaultValue = "0", required = false)
+            @Min(value = 0, message = "Limit should be equal or greater than 0")
             final Integer limit
     ) {
 
@@ -78,10 +77,10 @@ public class RecognizeController {
 
         imageValidator.validate(file);
 
-        val scanResponse = client.scanFaces(file, defaultIfNull(limit, 10), 0.5D);
+        val scanResponse = client.scanFaces(file, limit, 0.5D);
         val results = new ArrayList<FacePrediction>();
 
-        for (ScanResult scanResult: scanResponse.getResult()) {
+        for (ScanResult scanResult : scanResponse.getResult()) {
             val prediction = classifierPredictor.predict(
                     apiKey,
                     scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
