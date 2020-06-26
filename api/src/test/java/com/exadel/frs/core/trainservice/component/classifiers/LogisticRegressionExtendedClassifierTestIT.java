@@ -20,7 +20,6 @@ import static java.lang.Math.round;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
-import java.util.List;
 import java.util.Map;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
