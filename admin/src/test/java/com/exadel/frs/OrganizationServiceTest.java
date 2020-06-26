@@ -16,6 +16,7 @@
 
 package com.exadel.frs;
 
+import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
 import static com.google.common.collect.Lists.newArrayList;
@@ -28,12 +29,12 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.entity.UserOrganizationRoleId;
-import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.OrganizationNotFoundException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.helpers.EmailSender;
@@ -120,52 +121,6 @@ class OrganizationServiceTest {
         val organizations = organizationService.getOrganizations(1L);
 
         assertThat(organizations).hasSize(1);
-    }
-
-    @Test
-    void successGetOwnedOrganizations() {
-        val owner = UserOrganizationRole.builder()
-                                        .id(new UserOrganizationRoleId(1L, 1L))
-                                        .user(User.builder().id(1L).build())
-                                        .role(OWNER)
-                                        .build();
-
-        val admin = UserOrganizationRole.builder()
-                                        .id(new UserOrganizationRoleId(1L, 2L))
-                                        .user(User.builder().id(1L).build())
-                                        .role(OrganizationRole.ADMINISTRATOR)
-                                        .build();
-
-        val user = UserOrganizationRole.builder()
-                                       .id(new UserOrganizationRoleId(1L, 3L))
-                                       .user(User.builder().id(1L).build())
-                                       .role(USER)
-                                       .build();
-
-        val ownedOrg = Organization.builder()
-                                   .guid(UUID.randomUUID().toString())
-                                   .userOrganizationRoles(List.of(owner))
-                                   .build();
-
-        val notOwnedOrg1 = Organization.builder()
-                                       .guid(UUID.randomUUID().toString())
-                                       .userOrganizationRoles(List.of(admin))
-                                       .build();
-
-        val notOwnedOrg2 = Organization.builder()
-                                       .guid(UUID.randomUUID().toString())
-                                       .userOrganizationRoles(List.of(user))
-                                       .build();
-
-        when(organizationRepositoryMock.findAllByUserOrganizationRoles_Id_UserId(anyLong()))
-                .thenReturn(List.of(ownedOrg, notOwnedOrg1, notOwnedOrg2));
-
-        val organizations = organizationService.getOwnedOrganizations(1L);
-
-        assertThat(organizations).hasSize(1);
-        assertThat(organizations).contains(ownedOrg);
-        assertThat(organizations).doesNotContain(notOwnedOrg1);
-        assertThat(organizations).doesNotContain(notOwnedOrg2);
     }
 
     @Test
@@ -283,6 +238,29 @@ class OrganizationServiceTest {
         verify(organizationRepositoryMock).findFirstByIsDefaultTrue();
         verify(organizationRepositoryMock).save(defaultOrg);
         verifyNoMoreInteractions(userServiceMock, organizationRepositoryMock);
+    }
+
+    @Test
+    void successRemoveFromOrganization() {
+        val userToDelete = user(1L);
+        val deleter = user(2L);
+
+        val organization = Organization.builder().build();
+        organization.addUserOrganizationRole(deleter, ADMINISTRATOR);
+        organization.addUserOrganizationRole(userToDelete, USER);
+
+        val userRemoveDto = UserDeleteDto.builder()
+                                         .userToDelete(userToDelete)
+                                         .deleter(deleter)
+                                         .defaultOrg(organization)
+                                         .build();
+
+        organizationService.removeUserFromOrganization(userRemoveDto);
+
+        assertThat(organization.getUserOrganizationRoles()).hasSize(1);
+
+        verify(organizationRepositoryMock).save(organization);
+        verifyNoMoreInteractions(organizationRepositoryMock);
     }
 
     @DisplayName("Test organization delete")

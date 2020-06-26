@@ -14,22 +14,26 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.enums;
+package com.exadel.frs.dto.ui;
 
+import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.Replacer;
+import java.util.function.BiConsumer;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
+@Data
+@Builder
 @AllArgsConstructor
-public enum AppModelAccess {
+@NoArgsConstructor
+public class UserDeleteDto {
 
-    OWNER("O"),
-    READONLY("R"),
-    TRAIN("T");
-
-    @Getter
-    @Setter
-    private String code;
+    private Replacer replacer;
+    private User deleter;
+    private User userToDelete;
+    private Organization defaultOrg;
+    private BiConsumer<User, User> updateAppsConsumer;
 }

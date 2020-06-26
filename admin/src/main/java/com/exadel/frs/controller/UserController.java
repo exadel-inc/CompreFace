@@ -16,17 +16,21 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
 import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserMapper;
+import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import io.swagger.annotations.ApiOperation;
@@ -43,6 +47,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,6 +63,7 @@ public class UserController {
     private final UserService userService;
     private final OrganizationService organizationService;
     private final UserMapper userMapper;
+    private final AppService appService;
 
     private Environment env;
 
@@ -83,8 +89,8 @@ public class UserController {
     @ApiOperation(value = "Register new user")
     @ApiResponses({
             @ApiResponse(code = 400, message = "Such username or email already registered | " +
-                                               "One or more of required fields are empty | " +
-                                               "Incorrect email format"),
+                    "One or more of required fields are empty | " +
+                    "Incorrect email format"),
             @ApiResponse(code = 200, message = "200 Means user created, but not confirmed"),
             @ApiResponse(code = 201, message = "201 means user created and enabled")
     })
@@ -115,10 +121,25 @@ public class UserController {
         return userMapper.toResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{userGuid}")
     @ApiOperation(value = "Delete user")
-    public void deleteUser() {
-        userService.deleteUser(SecurityUtils.getPrincipalId());
+    public void deleteUser(
+            @ApiParam(value = "GUID of the user being deleted", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String userGuid,
+            @ApiParam(value = "Replacer option to determine next owner of org/apps that the user own", allowableValues = "deleter, owner")
+            @RequestParam(defaultValue = "deleter")
+            final String replacer
+    ) {
+        val deleteUserDto = UserDeleteDto.builder()
+                                         .deleter(SecurityUtils.getPrincipal())
+                                         .userToDelete(userService.getUserByGuid(userGuid))
+                                         .replacer(Replacer.from(replacer))
+                                         .defaultOrg(organizationService.getDefaultOrg())
+                                         .updateAppsConsumer(appService::passAllOwnedAppsToNewOwnerAndLeaveAllApps)
+                                         .build();
+
+        userService.deleteUser(deleteUserDto, organizationService::removeUserFromOrganization);
     }
 
     @GetMapping("/autocomplete")

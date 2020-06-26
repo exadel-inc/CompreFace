@@ -21,8 +21,10 @@ import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InvalidEmailException;
@@ -30,12 +32,14 @@ import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import javax.transaction.Transactional;
-import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -45,24 +49,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @EnableScheduling
+@RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final EmailSender emailSender;
     private final Environment env;
-
-    public UserService(
-            @NonNull final UserRepository userRepository,
-            @NonNull final PasswordEncoder encoder,
-            @NonNull final EmailSender emailSender,
-            @NonNull final Environment env
-    ) {
-        this.userRepository = userRepository;
-        this.encoder = encoder;
-        this.emailSender = emailSender;
-        this.env = env;
-    }
+    private final AuthorizationManager authManager;
 
     public User getUser(final Long id) {
         return userRepository.findById(id)
@@ -164,8 +158,10 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(final Long id) {
-        userRepository.deleteById(id);
+    public void deleteUser(final UserDeleteDto userDeleteDto, final Consumer<UserDeleteDto> removeUserFromOrgConsumer) {
+        manageOwnedAppsByUserBeingDeleted(userDeleteDto);
+        removeUserFromOrgConsumer.accept(userDeleteDto);
+        userRepository.deleteByGuid(userDeleteDto.getUserToDelete().getGuid());
     }
 
     public List<User> autocomplete(final String query) {
@@ -197,5 +193,33 @@ public class UserService {
         user.setRegistrationToken(null);
 
         userRepository.save(user);
+    }
+
+    private void manageOwnedAppsByUserBeingDeleted(final UserDeleteDto userDeleteDto) {
+        authManager.verifyCanDeleteUser(userDeleteDto);
+        updateAppsOwnership(userDeleteDto);
+    }
+
+    private void updateAppsOwnership(final UserDeleteDto userDeleteDto) {
+        val newOwner = decideNewOwner(userDeleteDto);
+        val userBeingDeleted = userDeleteDto.getUserToDelete();
+        val updateAppsConsumer = userDeleteDto.getUpdateAppsConsumer();
+
+        updateAppsConsumer.accept(userBeingDeleted, newOwner);
+    }
+
+    private User decideNewOwner(final UserDeleteDto userDeleteDto) {
+        val deleter = userDeleteDto.getDeleter();
+        val defaultOrg = userDeleteDto.getDefaultOrg();
+        val userToDelete = userDeleteDto.getUserToDelete();
+        val replacer = userDeleteDto.getReplacer();
+
+        val selfRemoval = userToDelete.equals(deleter);
+
+        if (selfRemoval) {
+            return defaultOrg.getOwner();
+        }
+
+        return replacer == Replacer.DELETER ? deleter : defaultOrg.getOwner();
     }
 }

@@ -18,7 +18,7 @@ package com.exadel.frs.service;
 
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
-import static java.util.stream.Collectors.toList;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserOrganizationRole;
@@ -46,8 +46,6 @@ public class OrganizationService {
                 .orElseThrow(() -> new OrganizationNotFoundException(organizationGuid));
     }
 
-
-
     public Organization getOrganization(final String guid, final Long userId) {
         val organization = getOrganization(guid);
         authManager.verifyReadPrivilegesToOrg(userId, organization);
@@ -57,12 +55,6 @@ public class OrganizationService {
 
     public List<Organization> getOrganizations(final Long userId) {
         return organizationRepository.findAllByUserOrganizationRoles_Id_UserId(userId);
-    }
-
-    public List<Organization> getOwnedOrganizations(final Long userId) {
-        return getOrganizations(userId).stream()
-                                       .filter(org -> org.getUserOrganizationRoleOrThrow(userId).getRole().equals(OWNER))
-                                       .collect(toList());
     }
 
     public OrganizationRole[] getOrgRolesToAssign(final String guid, final Long userId) {
@@ -121,5 +113,15 @@ public class OrganizationService {
     public Organization getDefaultOrg() {
         return organizationRepository.findFirstByIsDefaultTrue()
                                      .orElseThrow(() -> new OrganizationNotFoundException("Default"));
+    }
+
+    public void removeUserFromOrganization(final UserDeleteDto userRemoveDto) {
+        val organization = userRemoveDto.getDefaultOrg();
+        val user = userRemoveDto.getUserToDelete();
+
+        organization.getUserOrganizationRoles().removeIf(userOrganizationRole ->
+                userOrganizationRole.getId().getUserId().equals(user.getId()));
+
+        organizationRepository.save(organization);
     }
 }
