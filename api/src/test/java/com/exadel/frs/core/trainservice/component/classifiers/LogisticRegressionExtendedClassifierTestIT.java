@@ -80,8 +80,6 @@ public class LogisticRegressionExtendedClassifierTestIT {
 
     @Test
     void isTrained() {
-        assertThat(new LogisticRegressionExtendedClassifier(null).isTrained()).isFalse();
-
         val faceName = "faceName";
         val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
         val classifier = new LogisticRegressionExtendedClassifier(labelMap);
