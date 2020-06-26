@@ -26,10 +26,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.exadel.frs.core.trainservice.config.IntegrationTest;
+import com.exadel.frs.core.trainservice.config.WebMvcTestContext;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
+import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -38,12 +39,18 @@ import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
 
-@IntegrationTest
-@AutoConfigureMockMvc
+@WebMvcTest(
+        excludeFilters = @ComponentScan.Filter(
+                type = FilterType.ASSIGNABLE_TYPE,
+                classes = {SecurityValidationFilter.class}
+        ))
+@WebMvcTestContext
 public class FaceControllerTest {
 
     @Autowired
@@ -59,6 +66,7 @@ public class FaceControllerTest {
 
     @MockBean
     private ModelDao modelDao;
+
 
     @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
