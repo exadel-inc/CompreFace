@@ -258,6 +258,7 @@ class OrganizationServiceTest {
         organizationService.removeUserFromOrganization(userRemoveDto);
 
         assertThat(organization.getUserOrganizationRoles()).hasSize(1);
+
         verify(organizationRepositoryMock).save(organization);
         verifyNoMoreInteractions(organizationRepositoryMock);
     }

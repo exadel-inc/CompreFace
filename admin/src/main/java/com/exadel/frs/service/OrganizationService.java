@@ -117,7 +117,6 @@ public class OrganizationService {
 
     public void removeUserFromOrganization(final UserDeleteDto userRemoveDto) {
         val organization = userRemoveDto.getDefaultOrg();
-
         val user = userRemoveDto.getUserToDelete();
 
         organization.getUserOrganizationRoles().removeIf(userOrganizationRole ->

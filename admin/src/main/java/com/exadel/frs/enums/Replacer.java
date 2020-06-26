@@ -21,10 +21,11 @@ import lombok.val;
 import org.apache.commons.lang3.EnumUtils;
 
 public enum Replacer {
+
     DELETER,
     OWNER;
 
-    public static Replacer from(String text) {
+    public static Replacer from(final String text) {
         val invalidValue = text == null || !EnumUtils.isValidEnum(Replacer.class, text.toUpperCase());
 
         if (invalidValue) {

@@ -24,6 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public enum AppModelAccess {
+
     OWNER("O"),
     READONLY("R"),
     TRAIN("T");

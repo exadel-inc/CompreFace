@@ -197,7 +197,6 @@ public class UserService {
 
     private void manageOwnedAppsByUserBeingDeleted(final UserDeleteDto userDeleteDto) {
         authManager.verifyCanDeleteUser(userDeleteDto);
-
         updateAppsOwnership(userDeleteDto);
     }
 
