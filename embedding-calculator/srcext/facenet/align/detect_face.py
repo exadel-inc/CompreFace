@@ -1,6 +1,10 @@
 """ Tensorflow implementation of the face detection / alignment algorithm found at
 https://github.com/kpzhang93/MTCNN_face_detection_alignment
 """
+# Version: 2018-04-10 <br>
+# Link: https://github.com/davidsandberg/facenet/commit/096ed770f163957c1e56efa7feeb194773920f6e
+#
+#
 # MIT License
 # 
 # Copyright (c) 2016 David Sandberg

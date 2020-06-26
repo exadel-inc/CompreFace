@@ -11,7 +11,20 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
+from functools import lru_cache
 
-from src.services.utils.pyutils import cached
+from src.services.imgtools.read_img import read_img
 
-get_scanner = cached(lambda scanner_cls: scanner_cls())  # Singleton pattern
+
+@lru_cache(maxsize=None)
+def get_scanner(scanner_cls):
+    scanner = scanner_cls()
+
+    @lru_cache(maxsize=None)
+    def scan(img_path, *args, **kwargs):
+        img = read_img(img_path)
+        return scanner.scan_(img, *args, **kwargs)
+
+    scanner.scan_ = scanner.scan
+    scanner.scan = scan
+    return scanner

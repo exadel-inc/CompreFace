@@ -1,8 +1,9 @@
-Version: 2020.02.21
+Version: 2018-04-10 <br>
+Link: https://github.com/davidsandberg/facenet/commit/096ed770f163957c1e56efa7feeb194773920f6e
 
 MIT License
 
-Copyright (c) 2018 Jiankang Deng and Jia Guo
+Copyright (c) 2016 David Sandberg
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

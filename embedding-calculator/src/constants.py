@@ -14,12 +14,15 @@
 
 import logging
 
-from src.services.utils.pyutils import get_env, Constants
+from src.services.utils.pyutils import get_env, Constants, get_env_split
+
+_DEFAULT_SCANNERS = 'Facenet2018,InsightFace'
 
 
 class ENV(Constants):
     ML_PORT = int(get_env('ML_PORT', '3000'))
-    SCANNER = get_env('SCANNER', 'Facenet2018')
+    SCANNER = get_env_split('SCANNER', _DEFAULT_SCANNERS)[0]
+    SCANNERS = get_env_split('SCANNER', _DEFAULT_SCANNERS)
     IMG_LENGTH_LIMIT = int(get_env('IMG_LENGTH_LIMIT', '640'))
 
     LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()

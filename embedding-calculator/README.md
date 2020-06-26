@@ -23,24 +23,40 @@ $ python -m src.app
 ```
 
 ### Docker
-Builds, tests, and runs a container:
+##### Build
+Builds container (also runs main tests during the build):
 ```
-$ docker build -t embedding-calculator .
-$ docker run -p3000:3000 embedding-calculator
+$ docker build -t embedding-calculator 
 ```
-To skip tests during build use:
+To skip tests during build, use:
 ```
 $ docker build -t embedding-calculator --build-arg SKIP_TESTS=true .
+```
+Build with support for different scanner backends (use comma as separator, e.g. `SCANNER=Facenet2018,InsightFace`):
+```
+$ docker build -t embedding-calculator --build-arg SCANNER=InsightFace .
+```
+##### Run
+```
+$ docker run -p3000:3000 embedding-calculator
+```
+To run with a different scanner backend
+```
+$ docker run -p3000:3000 -e SCANNER=InsightFace embedding-calculator
 ```
 
 ### Run tests
 Unit tests
 ```
-$ pytest -m "not integration" src tools
+$ pytest -m "not integration and not performance" src tools
 ```
 Integration tests
 ```
 $ pytest -m integration src tools
+```
+Performance tests
+```
+$ pytest -m performance src tools
 ```
 Lint checks
 ```
@@ -85,6 +101,11 @@ CRLF file endings may cause this. To fix, run `$ dos2unix *`.
 Package *uWSGI* is not supported on Windows. Workaround is to temporarily delete the line with the package name from `requirements.txt` and install without it.
 
 # Misc
+Check that the component is in valid state: run tests, build container, start it
+```
+$ make
+$ make up
+```
 Get project line counts per file type
 ```
 $ which tokei >/dev/null || conda install -y -c conda-forge tokei && tokei --exclude srcext/

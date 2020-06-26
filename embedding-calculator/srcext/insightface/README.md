@@ -1,3 +1,4 @@
+Version: 2020.02.21
 
 # InsightFace: 2D and 3D Face Analysis Project
 
