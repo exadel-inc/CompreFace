@@ -96,8 +96,6 @@ public class LogisticRegressionExtendedClassifierTestIT {
 
     @Test
     void getUsedFaceIds() {
-        assertThat(new LogisticRegressionExtendedClassifier(null).getUsedFaceIds()).isEqualTo(List.of());
-
         val faceName = "faceName";
         val labelMap = Map.of(0, Pair.of("faceId", faceName), 1, Pair.of("faceId1", faceName));
 
