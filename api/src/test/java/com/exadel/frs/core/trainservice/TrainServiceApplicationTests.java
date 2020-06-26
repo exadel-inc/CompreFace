@@ -16,10 +16,10 @@
 
 package com.exadel.frs.core.trainservice;
 
-import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 
-@IntegrationTest
+@SpringBootTest
 class TrainServiceApplicationTests {
 
     @Test
