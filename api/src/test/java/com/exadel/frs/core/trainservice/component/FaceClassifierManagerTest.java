@@ -17,13 +17,16 @@
 package com.exadel.frs.core.trainservice.component;
 
 import static org.apache.commons.lang3.RandomUtils.nextInt;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
@@ -35,7 +38,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 
-class FaceClassifierManagerTest {
+public class FaceClassifierManagerTest {
 
     @Mock
     private ModelDao modelDao;
@@ -61,12 +64,24 @@ class FaceClassifierManagerTest {
 
     @Test
     void saveClassifier() {
-        //TODO: test
+        val classifier = mock(FaceClassifier.class);
+
+        manager.saveClassifier(MODEL_KEY, classifier, "1.0");
+
+        val inOrder = inOrder(modelDao, lockManager);
+        inOrder.verify(modelDao).saveModel(MODEL_KEY, classifier, "1.0");
+        inOrder.verify(lockManager).unlock(MODEL_KEY);
+        verifyNoMoreInteractions(modelDao, lockManager);
     }
 
     @Test
     void removeFaceClassifier() {
-        //TODO: test
+        manager.removeFaceClassifier(MODEL_KEY);
+
+        val inOrder = inOrder(modelDao, lockManager);
+        inOrder.verify(lockManager).unlock(MODEL_KEY);
+        inOrder.verify(modelDao).deleteModel(MODEL_KEY);
+        verifyNoMoreInteractions(modelDao, lockManager);
     }
 
     @Test
@@ -95,16 +110,26 @@ class FaceClassifierManagerTest {
     void initNewClassifierIfNoFaces() {
         when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(0);
 
-        assertThrows(ModelHasNoFacesException.class, () -> manager.initNewClassifier(MODEL_KEY));
+        assertThatThrownBy(() -> {
+            manager.initNewClassifier(MODEL_KEY);
+        }).isInstanceOf(ModelHasNoFacesException.class);
     }
 
     @Test
     void abortClassifierTraining() {
-        //TODO: test
+        manager.finishClassifierTraining(MODEL_KEY);
+
+        verify(lockManager).unlock(MODEL_KEY);
+        verifyNoMoreInteractions(lockManager);
     }
 
     @Test
     void isTraining() {
-        //TODO: test
+        when(lockManager.isLocked(MODEL_KEY)).thenReturn(true);
+
+        assertThat(manager.isTraining(MODEL_KEY)).isTrue();
+
+        verify(lockManager).isLocked(MODEL_KEY);
+        verifyNoMoreInteractions(lockManager);
     }
 }

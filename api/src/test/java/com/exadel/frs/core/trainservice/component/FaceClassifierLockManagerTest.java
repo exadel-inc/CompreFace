@@ -62,5 +62,4 @@ public class FaceClassifierLockManagerTest {
         lockManager.unlock(MODEL_KEY);
         assertFalse(lockManager.isLocked(MODEL_KEY));
     }
-
 }
