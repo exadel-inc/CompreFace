@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.entity.mongo;
 
-import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -41,7 +41,7 @@ public class Model {
     private String modelKey;
 
     @Field("classifier")
-    private FaceClassifier classifier;
+    private Classifier classifier;
 
     @Field("faces")
     private List<ObjectId> faces;

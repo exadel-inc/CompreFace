@@ -20,10 +20,12 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.core.trainservice.dao.ModelDao;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.ObjectUtils;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -31,13 +33,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @Slf4j
-public class FaceClassifierAdapterTestIT {
+public class ClassifierAdapterTestIT {
 
     @Autowired
     private FaceClassifierAdapter faceClassifierAdapter;
 
     @Autowired
-    private FaceDao service;
+    private ModelDao modelDao;
+
+    @Autowired
+    private FaceDao faceDao;
 
     public static final double THRESHOLD = 0.95;
 
@@ -48,7 +53,7 @@ public class FaceClassifierAdapterTestIT {
     @Transactional
     public void train() {
         val date = System.currentTimeMillis();
-        val allFaceEmbeddings = service.findAllFaceEmbeddings();
+        val allFaceEmbeddings = faceDao.findAllFaceEmbeddings();
         faceClassifierAdapter.trainSync(allFaceEmbeddings, MODEL_KEY);
         var allPredictions = 0;
         var truePredictions = 0;
@@ -57,32 +62,42 @@ public class FaceClassifierAdapterTestIT {
         var score = 0;
 
         for (val key : embeddings.keySet()) {
-
             val faceName = key.getRight();
-
             val lists = embeddings.get(key).stream()
                                   .filter(ObjectUtils::isNotEmpty)
                                   .collect(toList());
+
             if (isNotEmpty(lists)) {
                 continue;
             }
+
             for (val el : lists) {
                 val predict = faceClassifierAdapter
                         .predict(el.stream().mapToDouble(d -> d).toArray());
+
                 if (predict.getRight().equals(faceName)) {
                     truePredictions++;
                 }
                 allPredictions++;
+
                 log.info("{} prob : {}", predict.getRight().equals(faceName) ? "TRUE" : "FALSE", predict.getLeft());
+
                 if (predict.getRight().equals(faceName)) {
                     score += predict.getLeft();
                 }
             }
         }
-        double accuracy = (double) truePredictions / allPredictions;
+        val accuracy = (double) truePredictions / allPredictions;
+
         log.info("Accuracy {} ", accuracy);
         log.info("Score {} ", score);
         log.info("Finished in {} ms", (System.currentTimeMillis() - date));
+
         assertTrue(accuracy > THRESHOLD);
+    }
+
+    @AfterEach
+    void cleanUp() {
+        modelDao.deleteModel(MODEL_KEY);
     }
 }

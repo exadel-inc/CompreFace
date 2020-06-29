@@ -19,12 +19,11 @@ package com.exadel.frs.core.trainservice.component;
 import static java.lang.Thread.currentThread;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
+import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +42,7 @@ import org.springframework.stereotype.Component;
 public class FaceClassifierAdapter {
 
     private final FaceClassifierManager manager;
-    private FaceClassifier classifier;
+    private Classifier classifier;
 
     @Async
     public void train(
@@ -53,32 +52,31 @@ public class FaceClassifierAdapter {
         try {
             currentThread().setName(modelKey);
 
-            var faceId = 0;
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
-            val labelMap = new HashMap<Integer, Pair<String, String>>();
+            val labelMap = new ArrayList<Pair<String, String>>();
 
-            val faceNameEmbeddings = embeddingFaceList.getFaceEmbeddings();
-            if (faceNameEmbeddings.isEmpty()) {
+            val faceNameEmbeddingsMap = embeddingFaceList.getFaceEmbeddings();
+            if (faceNameEmbeddingsMap.isEmpty()) {
                 throw new ModelNotTrainedException();
             }
 
-            for (val faceNameId : faceNameEmbeddings.keySet()) {
-                val lists = faceNameEmbeddings.get(faceNameId).stream()
-                                              .filter(ObjectUtils::isNotEmpty)
-                                              .collect(toList());
+            for (val faceNameId : faceNameEmbeddingsMap.keySet()) {
+                val lists = faceNameEmbeddingsMap.get(faceNameId).stream()
+                                                 .filter(ObjectUtils::isNotEmpty)
+                                                 .collect(toList());
 
                 if (isNotEmpty(lists)) {
-                    labelMap.put(faceId, faceNameId);
-                }
-                for (val list : lists) {
-                    x.add(list.stream().mapToDouble(d -> d).toArray());
-                    y.add(faceId);
-                    faceId++;
+                    labelMap.add(faceNameId);
+
+                    lists.forEach(embeddings -> {
+                        x.add(embeddings.stream().mapToDouble(d -> d).toArray());
+                        y.add(labelMap.indexOf(faceNameId));
+                    });
                 }
             }
 
-            classifier = new LogisticRegressionExtendedClassifier(labelMap);
+            classifier = new LogisticRegressionClassifier(labelMap);
             classifier.train(
                     x.toArray(double[][]::new),
                     y.stream().mapToInt(integer -> integer).toArray()

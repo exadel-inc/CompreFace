@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.List;
 import org.apache.commons.lang3.tuple.Pair;
 
-public interface FaceClassifier extends Serializable {
+public interface Classifier extends Serializable {
 
     void train(double[][] input, int[] output);
 

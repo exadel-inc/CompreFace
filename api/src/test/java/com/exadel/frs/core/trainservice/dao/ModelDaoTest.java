@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.repository.mongo.ModelRepository;
 import java.util.Optional;
@@ -57,7 +57,7 @@ public class ModelDaoTest {
 
     @Test
     void saveModel() {
-        val classifier = mock(FaceClassifier.class);
+        val classifier = mock(Classifier.class);
         val calculator = "1.0";
 
         when(modelRepository.findFirstByModelKey(MODEL_KEY)).thenReturn(Optional.empty());
@@ -77,7 +77,7 @@ public class ModelDaoTest {
 
     @Test
     void updateOldModel() {
-        val classifier = mock(FaceClassifier.class);
+        val classifier = mock(Classifier.class);
         val calculator = "1.0";
         val id = UUID.randomUUID().toString();
         val model = Model.builder()

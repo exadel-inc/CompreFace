@@ -19,24 +19,21 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import java.util.List;
-import java.util.Map;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import smile.classification.LogisticRegression;
 
-public class LogisticRegressionExtendedClassifier implements FaceClassifier {
-
-    private static final long serialVersionUID = 1966949081344084764L;
+public class LogisticRegressionClassifier implements Classifier {
 
     private static final double LAMBDA = 0.0001;
     private static final double TOLERANCE = 0.0001;
     private static final int MAX_ITER = 100;
 
-    private final Map<Integer, Pair<String, String>> labelMap;
+    private final List<Pair<String, String>> faces;
     private LogisticRegression logisticRegression;
 
-    public LogisticRegressionExtendedClassifier(final Map<Integer, Pair<String, String>> labelMap) {
-        this.labelMap = labelMap;
+    public LogisticRegressionClassifier(final List<Pair<String, String>> faces) {
+        this.faces = faces;
     }
 
     @Override
@@ -47,10 +44,10 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
     @Override
     public Pair<Double, String> predict(final double[] input) {
         if (isTrained()) {
-            val probs = new double[labelMap.size()];
+            val probs = new double[faces.size()];
             val predict = logisticRegression.predict(input, probs);
 
-            return Pair.of(probs[predict], labelMap.get(predict).getRight());
+            return Pair.of(probs[predict], faces.get(predict).getRight());
         }
 
         throw new ModelNotTrainedException();
@@ -63,12 +60,12 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
 
     @Override
     public List<String> getUsedFaceIds() {
-        if (labelMap == null) {
+        if (faces == null) {
             return List.of();
         }
 
-        return labelMap.values().stream()
-                       .map(Pair::getLeft)
-                       .collect(toList());
+        return faces.stream()
+                    .map(Pair::getLeft)
+                    .collect(toList());
     }
 }
