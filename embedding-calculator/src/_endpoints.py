@@ -48,13 +48,13 @@ def endpoints(app):
     def scan_faces_post():
         from flask import request
         img = read_img(request.files['file'])
-        face_limit = _get_face_limit(request)
+        limit_faces = _get_limit_faces_fun(request.values.get(ARG.LIMIT))
         scanner: FaceScanner = get_scanner()
         det_prob_threshold = _get_det_prob_threshold(request)
 
         scanned_faces = scanner.scan(img, det_prob_threshold)
 
-        return jsonify(calculator_version=get_scanner().ID, result=_at_least_one_face(scanned_faces[:face_limit]))
+        return jsonify(calculator_version=get_scanner().ID, result=limit_faces(_at_least_one_face(scanned_faces)))
 
 
 def _get_det_prob_threshold(request):
@@ -67,20 +67,31 @@ def _get_det_prob_threshold(request):
     return det_prob_threshold
 
 
-def _get_face_limit(request):
-    limit = request.values.get(ARG.LIMIT)
-    if limit is None:
-        return limit
+def _get_limit_faces_fun(limit_arg: int):
+    """
+    >>> _get_limit_faces_fun(None)([1, 2, 3])
+    [1, 2, 3]
+    >>> _get_limit_faces_fun('')([1, 2, 3])
+    [1, 2, 3]
+    >>> _get_limit_faces_fun(0)([1, 2, 3])
+    [1, 2, 3]
+    >>> _get_limit_faces_fun(1)([1, 2, 3])
+    [1]
+    >>> _get_limit_faces_fun(2)([1, 2, 3])
+    [1, 2]
+    """
+    if limit_arg is None or limit_arg == '':
+        return lambda lst: lst
 
     try:
-        limit = int(limit)
+        limit = int(limit_arg)
     except ValueError as e:
         raise BadRequest('Limit format is invalid (limit >= 0)') from e
 
     if not (limit >= 0):
         raise BadRequest('Limit value is invalid (limit >= 0)')
 
-    return limit
+    return lambda lst: lst[:limit] if limit else lst
 
 
 def _at_least_one_face(result):
