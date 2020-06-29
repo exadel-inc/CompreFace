@@ -63,8 +63,8 @@ public class FaceClassifierAdapter {
 
             for (val faceNameId : faceNameEmbeddingsMap.keySet()) {
                 val lists = faceNameEmbeddingsMap.get(faceNameId).stream()
-                                              .filter(ObjectUtils::isNotEmpty)
-                                              .collect(toList());
+                                                 .filter(ObjectUtils::isNotEmpty)
+                                                 .collect(toList());
 
                 if (isNotEmpty(lists)) {
                     labelMap.add(faceNameId);
