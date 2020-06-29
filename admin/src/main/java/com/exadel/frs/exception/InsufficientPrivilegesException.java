@@ -25,4 +25,8 @@ public class InsufficientPrivilegesException extends BasicException {
     public InsufficientPrivilegesException() {
         super(INSUFFICIENT_PRIVILEGES, MESSAGE);
     }
+
+    public InsufficientPrivilegesException(final String message) {
+        super(INSUFFICIENT_PRIVILEGES, message);
+    }
 }

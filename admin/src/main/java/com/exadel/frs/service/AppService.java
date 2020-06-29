@@ -29,6 +29,7 @@ import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.ModelShareRequest;
 import com.exadel.frs.entity.ModelShareRequestId;
 import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
@@ -63,6 +64,24 @@ public class AppService {
     public App getApp(final String appGuid) {
         return appRepository.findByGuid(appGuid)
                             .orElseThrow(() -> new AppNotFoundException(appGuid));
+    }
+
+    @Transactional
+    public void passAllOwnedAppsToNewOwnerAndLeaveAllApps(final User oldOwner, final User newOwner) {
+        val defaultOrgGuid = organizationService.getDefaultOrg().getGuid();
+        val apps = getApps(defaultOrgGuid, oldOwner.getId());
+
+        apps.forEach(app -> {
+            val isOwnedApp = app.getUserAppRole(oldOwner.getId()).get().getRole() == OWNER;
+            if (isOwnedApp) {
+                app.deleteUserAppRole(oldOwner.getGuid());
+                app.deleteUserAppRole(newOwner.getGuid());
+                app.addUserAppRole(newOwner, AppRole.OWNER);
+            } else {
+                app.deleteUserAppRole(oldOwner.getGuid());
+            }
+            appRepository.save(app);
+        });
     }
 
     private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {

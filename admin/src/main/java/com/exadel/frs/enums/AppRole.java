@@ -24,6 +24,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public enum AppRole {
+
     OWNER("O"),
     ADMINISTRATOR("A"),
     USER("U");

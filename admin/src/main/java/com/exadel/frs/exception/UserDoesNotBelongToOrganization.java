@@ -21,7 +21,7 @@ import static java.lang.String.format;
 
 public class UserDoesNotBelongToOrganization extends BasicException {
 
-    public static final String MESSAGE = "User doesn't have view permission for that organization";
+    public static final String MESSAGE = "User doesn't belong to the organization";
 
     public UserDoesNotBelongToOrganization() {
         super(USER_DOES_NOT_BELONG_TO_ORGANIZATION, format(MESSAGE));

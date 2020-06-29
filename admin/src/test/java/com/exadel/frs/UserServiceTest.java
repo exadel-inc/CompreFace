@@ -17,30 +17,43 @@
 package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.IllegalReplacerException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.service.AppService;
+import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
+import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -63,6 +76,12 @@ class UserServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private AuthorizationManager authManager;
+
+    @Mock
+    private AppService appService;
 
     @InjectMocks
     private UserService userService;
@@ -118,11 +137,11 @@ class UserServiceTest {
         when(env.getProperty("spring.mail.enable")).thenReturn("false");
         when(userRepositoryMock.save(any())).thenAnswer(returnsFirstArg());
         val userCreateDto = UserCreateDto.builder()
-                .email("email@example.com")
-                .password("password")
-                .firstName("firstName")
-                .lastName("lastName")
-                .build();
+                                         .email("email@example.com")
+                                         .password("password")
+                                         .firstName("firstName")
+                                         .lastName("lastName")
+                                         .build();
 
         val actual = userService.createUser(userCreateDto);
         assertThat(actual.isEnabled()).isTrue();
@@ -205,13 +224,6 @@ class UserServiceTest {
         assertThat(repoUser.getLastName()).isEqualTo(userUpdateDto.getLastName());
 
         verify(userRepositoryMock).save(any(User.class));
-    }
-
-    @Test
-    void successDeleteUser() {
-        userService.deleteUser(USER_ID);
-
-        verify(userRepositoryMock).deleteById(anyLong());
     }
 
     @Test
@@ -302,5 +314,89 @@ class UserServiceTest {
         val actual = userService.createUser(userCreateDto);
 
         assertThat(actual.getEmail()).isEqualTo(userCreateDto.getEmail().toLowerCase());
+    }
+
+    @Nested
+    public class DeleteUserTest {
+
+        final Organization defaultOrg;
+        final User orgOwner;
+        final User orgAdmin;
+        final User orgUser;
+        final BiConsumer<User, User> updateAppsConsumer;
+        final OrganizationService orgServiceMock;
+        final Consumer<UserDeleteDto> deleteUserFromOrgConsumer;
+
+        public DeleteUserTest() {
+            defaultOrg = mock(Organization.class);
+            orgOwner = makeUser(1L);
+            orgAdmin = makeUser(2L);
+            orgUser = makeUser(3L);
+            updateAppsConsumer =
+                    (oldOwner, newOwner) -> {
+                        appService.passAllOwnedAppsToNewOwnerAndLeaveAllApps(oldOwner, newOwner);
+                    };
+            orgServiceMock = mock(OrganizationService.class);
+            deleteUserFromOrgConsumer = orgServiceMock::removeUserFromOrganization;
+
+            when(defaultOrg.getOwner()).thenReturn(orgOwner);
+        }
+
+        @Test
+        void successDeleteUserWhenDeleterIsReplacer() {
+            val deleteUserDto = UserDeleteDto.builder()
+                                             .replacer(Replacer.from("deleter"))
+                                             .userToDelete(orgUser)
+                                             .deleter(orgAdmin)
+                                             .defaultOrg(defaultOrg)
+                                             .updateAppsConsumer(updateAppsConsumer)
+                                             .build();
+
+            userService.deleteUser(deleteUserDto, deleteUserFromOrgConsumer);
+
+            verify(authManager).verifyCanDeleteUser(deleteUserDto);
+            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(orgUser, orgAdmin);
+            verify(orgServiceMock).removeUserFromOrganization(deleteUserDto);
+            verify(userRepositoryMock).deleteByGuid(orgUser.getGuid());
+        }
+
+        @Test
+        void successDeleteUserWhenOrgOwnerIsReplacer() {
+            val deleteUserDto = UserDeleteDto.builder()
+                                             .replacer(Replacer.from("owner"))
+                                             .userToDelete(orgUser)
+                                             .deleter(orgAdmin)
+                                             .defaultOrg(defaultOrg)
+                                             .updateAppsConsumer(updateAppsConsumer)
+                                             .build();
+
+            userService.deleteUser(deleteUserDto, deleteUserFromOrgConsumer);
+
+            verify(authManager).verifyCanDeleteUser(deleteUserDto);
+            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(orgUser, orgOwner);
+            verify(orgServiceMock).removeUserFromOrganization(deleteUserDto);
+            verify(userRepositoryMock).deleteByGuid(orgUser.getGuid());
+        }
+
+        @Test
+        void exceptionWhenWrongReplacerParamIsPassed() {
+            assertThatThrownBy(() -> {
+                UserDeleteDto.builder()
+                             .replacer(Replacer.from("wrong_param"))
+                             .userToDelete(orgUser)
+                             .deleter(orgAdmin)
+                             .defaultOrg(defaultOrg)
+                             .updateAppsConsumer(updateAppsConsumer)
+                             .build();
+            }).isInstanceOf(IllegalReplacerException.class)
+              .hasMessage(String.format("Illegal replacer value=%s!", "wrong_param"));
+        }
+
+        private User makeUser(final long orgUserId) {
+            return User.builder()
+                       .id(orgUserId)
+                       .guid(UUID.randomUUID().toString())
+                       .build();
+        }
     }
 }
