@@ -121,7 +121,7 @@ public class UserController {
         return userMapper.toResponseDto(userService.updateUser(userUpdateDto, SecurityUtils.getPrincipalId()));
     }
 
-    @DeleteMapping("/delete/{userGuid}")
+    @DeleteMapping("/{userGuid}")
     @ApiOperation(value = "Delete user")
     public void deleteUser(
             @ApiParam(value = "GUID of the user being deleted", required = true, example = GUID_EXAMPLE)
