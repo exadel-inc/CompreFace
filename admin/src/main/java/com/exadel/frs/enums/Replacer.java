@@ -16,20 +16,22 @@
 
 package com.exadel.frs.enums;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.exadel.frs.exception.IllegalReplacerException;
+import lombok.val;
+import org.apache.commons.lang3.EnumUtils;
 
-@NoArgsConstructor
-@AllArgsConstructor
-public enum AppModelAccess {
+public enum Replacer {
 
-    OWNER("O"),
-    READONLY("R"),
-    TRAIN("T");
+    DELETER,
+    OWNER;
 
-    @Getter
-    @Setter
-    private String code;
+    public static Replacer from(final String text) {
+        val invalidValue = text == null || !EnumUtils.isValidEnum(Replacer.class, text.toUpperCase());
+
+        if (invalidValue) {
+            throw new IllegalReplacerException(text);
+        }
+
+        return Replacer.valueOf(text.toUpperCase());
+    }
 }

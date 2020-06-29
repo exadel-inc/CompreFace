@@ -14,18 +14,15 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static com.exadel.frs.handler.ExceptionCode.ILLEGAL_REPLACER;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserRemoveDto {
+public class IllegalReplacerException extends BasicException {
 
-    private String userId;
+    public static final String MESSAGE = "Illegal replacer value=%s!";
+
+    public IllegalReplacerException(final String replacer) {
+        super(ILLEGAL_REPLACER, String.format(MESSAGE, replacer));
+    }
 }

@@ -20,6 +20,7 @@ import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.Organization;
@@ -191,6 +192,147 @@ class AuthorizationManagerTest {
             authManager.verifyWritePrivilegesToApp(ORG_ADMIN_APP_OWNER_ID, application);
             authManager.verifyWritePrivilegesToApp(ORG_OWNER_APP_ADMIN_ID, application);
             authManager.verifyWritePrivilegesToApp(ORG_OWNER_APP_OWNER_ID, application);
+        }
+    }
+
+    @Nested
+    public class TestDeleteUserPrivileges {
+
+        final Organization defaultOrg;
+        final User orgOwner;
+        final User orgAdmin;
+        final User orgAdmin2;
+        final User orgUser;
+        final User orgUser2;
+
+        public TestDeleteUserPrivileges() {
+            orgOwner = makeUser(ORG_OWNER_ID);
+            orgAdmin = makeUser(ORG_ADMIN_ID);
+            orgAdmin2 = makeUser(ORG_ADMIN_APP_ADMIN_ID);
+            orgUser = makeUser(ORG_USER_ID);
+            orgUser2 = makeUser(ORG_USER_APP_USER_ID);
+
+            val orgOwnerRole = makeRole(orgOwner, OWNER);
+            val orgAdminRole = makeRole(orgAdmin, ADMINISTRATOR);
+            val orgAdmin2Role = makeRole(orgAdmin2, ADMINISTRATOR);
+            val orgUserRole = makeRole(orgUser, USER);
+            val orgUser2Role = makeRole(orgUser2, USER);
+
+            val roles = List.of(orgOwnerRole, orgAdminRole, orgAdmin2Role, orgUserRole, orgUser2Role);
+            defaultOrg = Organization.builder()
+                                     .isDefault(true)
+                                     .userOrganizationRoles(roles)
+                                     .build();
+        }
+
+        @Test
+        void orgOwnerCannotBeDeleted() {
+            val ownerRemovalByAdmin = UserDeleteDto.builder()
+                                                   .defaultOrg(defaultOrg)
+                                                   .deleter(orgAdmin)
+                                                   .userToDelete(orgOwner)
+                                                   .build();
+
+            val ownerRemovalByItself = UserDeleteDto.builder()
+                                                    .defaultOrg(defaultOrg)
+                                                    .deleter(orgOwner)
+                                                    .userToDelete(orgOwner)
+                                                    .build();
+
+            assertThatThrownBy(() -> {
+                authManager.verifyCanDeleteUser(ownerRemovalByAdmin);
+            }).isInstanceOf(InsufficientPrivilegesException.class)
+              .hasMessage("Organization owner cannot be removed!");
+
+            assertThatThrownBy(() -> {
+                authManager.verifyCanDeleteUser(ownerRemovalByItself);
+            }).isInstanceOf(InsufficientPrivilegesException.class)
+              .hasMessage("Organization owner cannot be removed!");
+        }
+
+        @Test
+        void orgAdminCanDeleteItself() {
+            val adminRemovalByItself = UserDeleteDto.builder()
+                                                    .defaultOrg(defaultOrg)
+                                                    .deleter(orgAdmin)
+                                                    .userToDelete(orgAdmin)
+                                                    .build();
+
+            authManager.verifyCanDeleteUser(adminRemovalByItself);
+        }
+
+        @Test
+        void orgAdminCanDeleteOtherAdminOrUsers() {
+            val adminRemovalByOtherAdmin = UserDeleteDto.builder()
+                                                        .defaultOrg(defaultOrg)
+                                                        .deleter(orgAdmin)
+                                                        .userToDelete(orgAdmin2)
+                                                        .build();
+
+            val userRemovalByAdmin = UserDeleteDto.builder()
+                                                  .defaultOrg(defaultOrg)
+                                                  .deleter(orgAdmin)
+                                                  .userToDelete(orgUser)
+                                                  .build();
+
+            authManager.verifyCanDeleteUser(adminRemovalByOtherAdmin);
+            authManager.verifyCanDeleteUser(userRemovalByAdmin);
+        }
+
+        @Test
+        void orgUserCannotDeleteOthers() {
+            val adminRemovalByUser = UserDeleteDto.builder()
+                                                  .defaultOrg(defaultOrg)
+                                                  .deleter(orgUser)
+                                                  .userToDelete(orgAdmin)
+                                                  .build();
+
+            val userRemovalByOtherUser = UserDeleteDto.builder()
+                                                      .defaultOrg(defaultOrg)
+                                                      .deleter(orgUser)
+                                                      .userToDelete(orgUser2)
+                                                      .build();
+
+            assertThatThrownBy(() -> {
+                authManager.verifyCanDeleteUser(adminRemovalByUser);
+            }).isInstanceOf(InsufficientPrivilegesException.class)
+              .hasMessage("Action not allowed for current user");
+
+            assertThatThrownBy(() -> {
+                authManager.verifyCanDeleteUser(userRemovalByOtherUser);
+            }).isInstanceOf(InsufficientPrivilegesException.class)
+              .hasMessage("Action not allowed for current user");
+        }
+
+        @Test
+        void orgUserCanDeleteItself() {
+            val userRemovalByItself = UserDeleteDto.builder()
+                                                   .defaultOrg(defaultOrg)
+                                                   .deleter(orgUser)
+                                                   .userToDelete(orgUser)
+                                                   .build();
+
+            authManager.verifyCanDeleteUser(userRemovalByItself);
+        }
+
+        private User makeUser(final long orgUserId) {
+            return User.builder()
+                       .id(orgUserId)
+                       .guid(UUID.randomUUID().toString())
+                       .build();
+        }
+
+        private UserOrganizationRole makeRole(final User user, OrganizationRole role) {
+            val roleId = UserOrganizationRoleId.builder()
+                                               .userId(user.getId())
+                                               .organizationId(ORG_ID)
+                                               .build();
+
+            return UserOrganizationRole.builder()
+                                       .id(roleId)
+                                       .user(user)
+                                       .role(role)
+                                       .build();
         }
     }
 
