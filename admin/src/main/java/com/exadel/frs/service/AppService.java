@@ -72,15 +72,19 @@ public class AppService {
         val apps = getApps(defaultOrgGuid, oldOwner.getId());
 
         apps.forEach(app -> {
-            val isOwnedApp = app.getUserAppRole(oldOwner.getId()).get().getRole() == OWNER;
-            if (isOwnedApp) {
-                app.deleteUserAppRole(oldOwner.getGuid());
-                app.deleteUserAppRole(newOwner.getGuid());
-                app.addUserAppRole(newOwner, AppRole.OWNER);
-            } else {
-                app.deleteUserAppRole(oldOwner.getGuid());
+            val userAppRole = app.getUserAppRole(oldOwner.getId());
+            if (userAppRole.isPresent()) {
+
+                val isOwnedApp = userAppRole.get().getRole() == OWNER;
+                if (isOwnedApp) {
+                    app.deleteUserAppRole(oldOwner.getGuid());
+                    app.deleteUserAppRole(newOwner.getGuid());
+                    app.addUserAppRole(newOwner, AppRole.OWNER);
+                } else {
+                    app.deleteUserAppRole(oldOwner.getGuid());
+                }
+                appRepository.save(app);
             }
-            appRepository.save(app);
         });
     }
 
