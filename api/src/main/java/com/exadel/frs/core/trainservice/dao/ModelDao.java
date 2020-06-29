@@ -17,7 +17,7 @@
 package com.exadel.frs.core.trainservice.dao;
 
 import static java.util.stream.Collectors.toList;
-import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
@@ -44,17 +44,21 @@ public class ModelDao {
 
     public Model saveModel(
             final String modelKey,
-            final FaceClassifier classifier,
+            final Classifier classifier,
             final String calculatorVersion
     ) {
         val oldModel = modelRepository.findFirstByModelKey(modelKey);
         val model = Model.builder()
-                         .id(oldModel.isPresent() ? oldModel.get().getId() : UUID.randomUUID().toString())
+                         .id(oldModel.isPresent()
+                                 ? oldModel.get().getId()
+                                 : UUID.randomUUID().toString()
+                         )
                          .modelKey(modelKey)
                          .classifier(classifier)
                          .faces(classifier.getUsedFaceIds().stream()
                                           .map(ObjectId::new)
-                                          .collect(toList()))
+                                          .collect(toList())
+                         )
                          .calculatorVersion(calculatorVersion)
                          .build();
 
@@ -71,7 +75,7 @@ public class ModelDao {
         return modelRepository.save(model);
     }
 
-    public FaceClassifier getModel(final String modelKey) {
+    public Classifier getModel(final String modelKey) {
         return modelRepository.findFirstByModelKey(modelKey)
                               .orElseThrow(ModelNotTrainedException::new)
                               .getClassifier();

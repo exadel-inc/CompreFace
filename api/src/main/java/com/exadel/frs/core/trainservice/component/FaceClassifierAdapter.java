@@ -19,8 +19,8 @@ package com.exadel.frs.core.trainservice.component;
 import static java.lang.Thread.currentThread;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
-import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
-import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
+import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import java.util.ArrayList;
@@ -42,7 +42,7 @@ import org.springframework.stereotype.Component;
 public class FaceClassifierAdapter {
 
     private final FaceClassifierManager manager;
-    private FaceClassifier classifier;
+    private Classifier classifier;
 
     @Async
     public void train(
@@ -76,7 +76,7 @@ public class FaceClassifierAdapter {
                 }
             }
 
-            classifier = new LogisticRegressionExtendedClassifier(labelMap);
+            classifier = new LogisticRegressionClassifier(labelMap);
             classifier.train(
                     x.toArray(double[][]::new),
                     y.stream().mapToInt(integer -> integer).toArray()

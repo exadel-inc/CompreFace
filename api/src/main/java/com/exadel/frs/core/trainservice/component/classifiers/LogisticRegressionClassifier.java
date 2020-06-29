@@ -23,9 +23,7 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import smile.classification.LogisticRegression;
 
-public class LogisticRegressionExtendedClassifier implements FaceClassifier {
-
-    private static final long serialVersionUID = 1966949081344084765L;
+public class LogisticRegressionClassifier implements Classifier {
 
     private static final double LAMBDA = 0.0001;
     private static final double TOLERANCE = 0.0001;
@@ -34,7 +32,7 @@ public class LogisticRegressionExtendedClassifier implements FaceClassifier {
     private final List<Pair<String, String>> faces;
     private LogisticRegression logisticRegression;
 
-    public LogisticRegressionExtendedClassifier(final List<Pair<String, String>> faces) {
+    public LogisticRegressionClassifier(final List<Pair<String, String>> faces) {
         this.faces = faces;
     }
 

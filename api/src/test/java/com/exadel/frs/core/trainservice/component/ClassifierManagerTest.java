@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
@@ -38,7 +38,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
 
-public class FaceClassifierManagerTest {
+public class ClassifierManagerTest {
 
     @Mock
     private ModelDao modelDao;
@@ -64,7 +64,7 @@ public class FaceClassifierManagerTest {
 
     @Test
     void saveClassifier() {
-        val classifier = mock(FaceClassifier.class);
+        val classifier = mock(Classifier.class);
 
         manager.saveClassifier(MODEL_KEY, classifier, "1.0");
 

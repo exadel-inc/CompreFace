@@ -25,13 +25,13 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
-public class LogisticRegressionExtendedClassifierTestIT {
+public class LogisticRegressionClassifierTestIT {
 
     @Test
     void train() {
         val faceName = "faceName";
         val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
-        val classifier = new LogisticRegressionExtendedClassifier(facesList);
+        val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
 
@@ -44,7 +44,7 @@ public class LogisticRegressionExtendedClassifierTestIT {
     void trainModelWithWrongParamSizeFailed() {
         val faceName = "faceName";
         val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
-        val classifier = new LogisticRegressionExtendedClassifier(facesList);
+        val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0};
 
@@ -58,7 +58,7 @@ public class LogisticRegressionExtendedClassifierTestIT {
         val faceName = "faceName";
         val predictResult = 1;
         val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
-        val classifier = new LogisticRegressionExtendedClassifier(facesList);
+        val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
 
@@ -73,7 +73,7 @@ public class LogisticRegressionExtendedClassifierTestIT {
     @Test
     void predictModelNotTrainedException() {
         assertThatThrownBy(() -> {
-            new LogisticRegressionExtendedClassifier(null).predict(null);
+            new LogisticRegressionClassifier(null).predict(null);
         }).isInstanceOf(ModelNotTrainedException.class);
     }
 
@@ -81,7 +81,7 @@ public class LogisticRegressionExtendedClassifierTestIT {
     void isTrained() {
         val faceName = "faceName";
         val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
-        val classifier = new LogisticRegressionExtendedClassifier(facesList);
+        val classifier = new LogisticRegressionClassifier(facesList);
 
         assertThat(classifier.isTrained()).isFalse();
 
@@ -98,7 +98,7 @@ public class LogisticRegressionExtendedClassifierTestIT {
         val faceName = "faceName";
         val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
 
-        val facesIds = new LogisticRegressionExtendedClassifier(facesList).getUsedFaceIds();
+        val facesIds = new LogisticRegressionClassifier(facesList).getUsedFaceIds();
 
         assertThat(facesIds).size().isEqualTo(2);
         assertThat(facesIds).contains("faceId");

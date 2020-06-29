@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.converter;
 
-import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 import lombok.SneakyThrows;
@@ -25,10 +25,11 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.data.convert.WritingConverter;
 
 @WritingConverter
-public class FaceClassifierToBytesConverter implements Converter<FaceClassifier, byte[]> {
+public class FaceClassifierToBytesConverter implements Converter<Classifier, byte[]> {
+
     @SneakyThrows
     @Override
-    public byte[] convert(FaceClassifier classifier) {
+    public byte[] convert(final Classifier classifier) {
         try (val baos = new ByteArrayOutputStream();
              val oos = new ObjectOutputStream(baos)
         ) {
