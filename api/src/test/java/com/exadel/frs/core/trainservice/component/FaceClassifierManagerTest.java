@@ -30,7 +30,7 @@ import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
-import com.exadel.frs.core.trainservice.exception.ModelHasNoFacesException;
+import com.exadel.frs.core.trainservice.exception.ModelHasNotEnoughFacesException;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -107,12 +107,12 @@ public class FaceClassifierManagerTest {
     }
 
     @Test
-    void initNewClassifierIfNoFaces() {
-        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(0);
+    void initNewClassifierIfNotEnoughFaces() {
+        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(1);
 
         assertThatThrownBy(() -> {
             manager.initNewClassifier(MODEL_KEY);
-        }).isInstanceOf(ModelHasNoFacesException.class);
+        }).isInstanceOf(ModelHasNotEnoughFacesException.class);
     }
 
     @Test

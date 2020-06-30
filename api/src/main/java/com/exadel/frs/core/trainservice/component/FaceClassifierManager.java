@@ -19,7 +19,7 @@ package com.exadel.frs.core.trainservice.component;
 import com.exadel.frs.core.trainservice.component.classifiers.FaceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
-import com.exadel.frs.core.trainservice.exception.ModelHasNoFacesException;
+import com.exadel.frs.core.trainservice.exception.ModelHasNotEnoughFacesException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -29,6 +29,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class FaceClassifierManager {
+
+    private static final int MIN_FACES_TO_TRAIN = 2;
 
     private final ModelDao modelDao;
     private final FaceDao faceDao;
@@ -55,8 +57,8 @@ public class FaceClassifierManager {
     }
 
     public void initNewClassifier(final String modelKey) {
-        if (faceDao.countFacesInModel(modelKey) < 1) {
-            throw new ModelHasNoFacesException();
+        if (faceDao.countFacesInModel(modelKey) < MIN_FACES_TO_TRAIN) {
+            throw new ModelHasNotEnoughFacesException();
         }
 
         lockManager.lock(modelKey);
