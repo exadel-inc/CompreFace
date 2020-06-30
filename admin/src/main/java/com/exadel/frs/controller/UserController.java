@@ -132,7 +132,7 @@ public class UserController {
             final String replacer
     ) {
         val deleteUserDto = UserDeleteDto.builder()
-                                         .deleter(SecurityUtils.getPrincipal())
+                                         .deleter(userService.getUser(SecurityUtils.getPrincipalId()))
                                          .userToDelete(userService.getUserByGuid(userGuid))
                                          .replacer(Replacer.from(replacer))
                                          .defaultOrg(organizationService.getDefaultOrg())
