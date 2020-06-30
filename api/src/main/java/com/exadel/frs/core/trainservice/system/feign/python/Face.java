@@ -16,12 +16,13 @@
 
 package com.exadel.frs.core.trainservice.system.feign.python;
 
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
 @Value
-public class FacePrediction {
+public class Face {
 
-    ScanBox box;
-    List<Face> faces;
+    @JsonProperty("face_name")
+    String faceName;
+    float similarity;
 }
