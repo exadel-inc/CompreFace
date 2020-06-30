@@ -1,7 +1,6 @@
 spring:
   data:
     mongodb:
-      uri: ${MONGO_URL:mongodb://hrkv042.kh.exadel.ua:27017}
       database: efrs_db
   datasource-pg:
     driver-class-name: org.h2.Driver

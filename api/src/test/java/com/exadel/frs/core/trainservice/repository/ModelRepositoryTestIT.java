@@ -36,7 +36,6 @@ import org.springframework.test.context.junit.jupiter.EnabledIf;
 
 @MongoTest
 @Slf4j
-@EnabledIf(expression = "#{environment.acceptsProfiles('integration-test')}")
 public class ModelRepositoryTestIT {
 
     @Autowired
