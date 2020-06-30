@@ -20,11 +20,11 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionExtendedClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
 import com.exadel.frs.core.trainservice.config.MongoTest;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.repository.mongo.ModelRepository;
-import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -94,11 +94,12 @@ public class ModelRepositoryTestIT {
         y[0] = 1;
         y[1] = 2;
 
-        val labelMap = new HashMap<Integer, Pair<String, String>>();
-        labelMap.put(1, Pair.of(UUID.randomUUID().toString(), "firstLabel"));
-        labelMap.put(2, Pair.of(UUID.randomUUID().toString(), "secondLabel"));
+        val faces = List.of(
+                Pair.of(UUID.randomUUID().toString(), "firstLabel"),
+                Pair.of(UUID.randomUUID().toString(), "secondLabel")
+        );
 
-        val classifier = new LogisticRegressionExtendedClassifier(labelMap);
+        val classifier = new LogisticRegressionClassifier(faces);
         classifier.train(x, y);
 
         val model = Model.builder()
