@@ -1,4 +1,4 @@
-# Changes to this file have to be applied to DevOps Dockerfile as well, e.g. c
+# Changes to this file have to be applied to DevOps Dockerfile as well, e.g. https://git.exadel.com/exadel-face-recognition-service/frs-devops/blob/master/Docker/APP-GENERIC-PYTHON-dev2/Dockerfile
 FROM jjanzic/docker-python3-opencv
 
 # <different-from-jenkins>
