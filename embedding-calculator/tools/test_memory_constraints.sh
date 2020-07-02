@@ -27,7 +27,7 @@ for scanner in ${SCANNERS/,/ }; do
         fi
 
         # Format and print experiment result
-        MSG=$(identify -ping -format "%f ${img_length_limit}px $mem_limit %G %[size] ($scanner)\n" $IMG_DIR/$img_name)
+        MSG=$(identify -ping -format "%f ${img_length_limit}px $mem_limit %G %[size] ($scanner)\n" "$IMG_DIR"/"$img_name")
         if [ $EXIT_CODE -eq 0 ]; then
           printf "[   OK   ] %s\n" "$MSG"
         else
