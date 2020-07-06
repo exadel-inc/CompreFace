@@ -18,7 +18,6 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.IntStream;
 import lombok.SneakyThrows;
@@ -51,6 +50,7 @@ public class LogisticRegressionClassifier implements Classifier {
         if (isTrained()) {
             val probs = new double[faces.size()];
             logisticRegression.predict(input, probs);
+
             return getPredictionList(probs, resultCount);
         }
 
@@ -58,9 +58,10 @@ public class LogisticRegressionClassifier implements Classifier {
     }
 
     @SneakyThrows
-    private List<Pair<Double, String>> getPredictionList(double[] probs, int resultCount) {
+    private List<Pair<Double, String>> getPredictionList(final double[] probs, final int resultCount) {
         val labelsField = FieldUtils.getField(logisticRegression.getClass(), "labels", true);
-        IntSet labels = (IntSet) labelsField.get(logisticRegression);
+        val labels = (IntSet) labelsField.get(logisticRegression);
+
         return IntStream.of(labels.values)
                         .boxed()
                         .map(i -> Pair.of(probs[i], faces.get(i).getRight()))
