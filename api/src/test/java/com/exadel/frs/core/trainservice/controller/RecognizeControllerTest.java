@@ -19,6 +19,7 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -69,7 +70,7 @@ class RecognizeControllerTest {
         );
 
         when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
-        when(predictor.predict(any(), any())).thenReturn(Pair.of(1.0, ""));
+        when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognize")

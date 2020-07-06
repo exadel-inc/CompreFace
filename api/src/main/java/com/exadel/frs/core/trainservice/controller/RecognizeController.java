@@ -23,6 +23,7 @@ import static org.springframework.http.HttpStatus.LOCKED;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
+import com.exadel.frs.core.trainservice.system.feign.python.Face;
 import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
@@ -66,7 +67,11 @@ public class RecognizeController {
             @ApiParam(value = "Maximum number of faces to be recognized")
             @RequestParam(defaultValue = "0", required = false)
             @Min(value = 0, message = "Limit should be equal or greater than 0")
-            final Integer limit
+            final Integer limit,
+            @ApiParam(value = "Maximum number of predictions per faces")
+            @RequestParam(defaultValue = "1", name = "prediction_count", required = false)
+            @Min(value = 1, message = "prediction_count should be equal or greater than 1")
+            final Integer predictionCount
     ) {
 
         val lock = manager.isTraining(apiKey);
@@ -81,13 +86,19 @@ public class RecognizeController {
         val results = new ArrayList<FacePrediction>();
 
         for (ScanResult scanResult : scanResponse.getResult()) {
-            val prediction = classifierPredictor.predict(
+            val predictions = classifierPredictor.predict(
                     apiKey,
-                    scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray()
+                    scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray(),
+                    predictionCount
             );
 
-            var pred = BigDecimal.valueOf(prediction.getLeft());
-            pred = pred.setScale(5, HALF_UP);
+            val faces = new ArrayList<Face>();
+
+            for (val prediction : predictions) {
+                var pred = BigDecimal.valueOf(prediction.getLeft());
+                pred = pred.setScale(5, HALF_UP);
+                faces.add(new Face(prediction.getRight(), pred.floatValue()));
+            }
 
             var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
             inBoxProb = inBoxProb.setScale(5, HALF_UP);
@@ -95,8 +106,7 @@ public class RecognizeController {
 
             val result = new FacePrediction(
                     scanResult.getBox(),
-                    prediction.getRight(),
-                    pred.floatValue()
+                    faces
             );
 
             results.add(result);
