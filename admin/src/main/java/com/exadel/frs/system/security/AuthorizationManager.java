@@ -67,6 +67,14 @@ public class AuthorizationManager {
     }
 
     public void verifyWritePrivilegesToApp(final Long userId, final App app) {
+        val orgRole = app.getOrganization()
+                         .getUserOrganizationRole(userId)
+                         .get()
+                         .getRole();
+
+        if (List.of(OWNER, ADMINISTRATOR).contains(orgRole))
+            return;
+
         val role = app.getUserAppRole(userId)
                       .orElseThrow(InsufficientPrivilegesException::new)
                       .getRole();
