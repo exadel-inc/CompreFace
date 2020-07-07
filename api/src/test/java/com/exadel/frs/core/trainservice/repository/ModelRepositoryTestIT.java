@@ -32,11 +32,9 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit.jupiter.EnabledIf;
 
 @MongoTest
 @Slf4j
-@EnabledIf(expression = "#{environment.acceptsProfiles('integration-test')}")
 public class ModelRepositoryTestIT {
 
     @Autowired

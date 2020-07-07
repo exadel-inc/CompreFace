@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.component;
 
 import com.exadel.frs.core.trainservice.dao.ModelDao;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,11 +31,11 @@ public class FaceClassifierPredictor {
     private final ModelDao modelDao;
     private final ApplicationContext context;
 
-    public Pair<Double, String> predict(final String modelKey, final double[] input) {
+    public List<Pair<Double, String>> predict(final String modelKey, final double[] input, final int resultCount) {
         val model = modelDao.getModel(modelKey);
         val faceClassifier = context.getBean(FaceClassifierAdapter.class);
         faceClassifier.setClassifier(model);
 
-        return faceClassifier.predict(input);
+        return faceClassifier.predict(input, resultCount);
     }
 }

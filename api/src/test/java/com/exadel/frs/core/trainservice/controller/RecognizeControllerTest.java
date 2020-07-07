@@ -19,12 +19,12 @@ package com.exadel.frs.core.trainservice.controller;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.config.WebMvcTestContext;
-import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
+import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanBox;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
@@ -35,19 +35,13 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
-@WebMvcTest(
-        excludeFilters = @ComponentScan.Filter(
-                type = FilterType.ASSIGNABLE_TYPE,
-                classes = {SecurityValidationFilter.class}
-        ))
-@WebMvcTestContext
+@IntegrationTest
+@AutoConfigureMockMvc
 class RecognizeControllerTest {
 
     @Autowired
@@ -76,7 +70,7 @@ class RecognizeControllerTest {
         );
 
         when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
-        when(predictor.predict(any(), any())).thenReturn(Pair.of(1.0, ""));
+        when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognize")

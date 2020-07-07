@@ -16,24 +16,19 @@
 
 package com.exadel.frs.core.trainservice.config;
 
-import com.exadel.frs.core.trainservice.filter.SecurityValidationFilter;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.annotation.AliasFor;
+import org.springframework.test.context.ActiveProfiles;
 
-@Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+@SpringBootTest
+@ActiveProfiles
+public @interface IntegrationTest {
 
-@ComponentScan(basePackages = "com.exadel.frs", excludeFilters = @ComponentScan.Filter(
-        type = FilterType.ASSIGNABLE_TYPE,
-        classes = {SecurityValidationFilter.class}
-))
-@MockBeans({@MockBean(MongoTestConfig.class)})
-public @interface WebMvcTestContext {
-
+    @AliasFor(annotation = ActiveProfiles.class, attribute = "profiles") String[] activeProfiles() default {"integration-test"};
 }

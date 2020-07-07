@@ -64,16 +64,18 @@ public class LogisticRegressionClassifierTestIT {
 
         classifier.train(xorMatrix, xorResults);
 
-        val actual = classifier.predict(new double[]{0, 0});
+        val actual = classifier.predict(new double[]{0, 0}, 1);
 
         assertThat(actual).isNotNull();
-        assertThat(round(actual.getLeft())).isEqualTo(predictResult);
+        assertThat(actual).allSatisfy(prediction -> {
+            assertThat(round(prediction.getLeft())).isEqualTo(predictResult);
+        });
     }
 
     @Test
     void predictModelNotTrainedException() {
         assertThatThrownBy(() -> {
-            new LogisticRegressionClassifier(null).predict(null);
+            new LogisticRegressionClassifier(null).predict(null, 1);
         }).isInstanceOf(ModelNotTrainedException.class);
     }
 

@@ -19,9 +19,13 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import java.util.List;
+import java.util.stream.IntStream;
+import lombok.SneakyThrows;
 import lombok.val;
+import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import smile.classification.LogisticRegression;
+import smile.util.IntSet;
 
 public class LogisticRegressionClassifier implements Classifier {
 
@@ -42,15 +46,28 @@ public class LogisticRegressionClassifier implements Classifier {
     }
 
     @Override
-    public Pair<Double, String> predict(final double[] input) {
+    public List<Pair<Double, String>> predict(final double[] input, int resultCount) {
         if (isTrained()) {
             val probs = new double[faces.size()];
-            val predict = logisticRegression.predict(input, probs);
+            logisticRegression.predict(input, probs);
 
-            return Pair.of(probs[predict], faces.get(predict).getRight());
+            return getPredictionList(probs, resultCount);
         }
 
         throw new ModelNotTrainedException();
+    }
+
+    @SneakyThrows
+    private List<Pair<Double, String>> getPredictionList(final double[] probs, final int resultCount) {
+        val labelsField = FieldUtils.getField(logisticRegression.getClass(), "labels", true);
+        val labels = (IntSet) labelsField.get(logisticRegression);
+
+        return IntStream.of(labels.values)
+                        .boxed()
+                        .map(i -> Pair.of(probs[i], faces.get(i).getRight()))
+                        .sorted((o1, o2) -> o2.getLeft().compareTo(o1.getLeft()))
+                        .limit(resultCount)
+                        .collect(toList());
     }
 
     @Override

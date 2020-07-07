@@ -6,7 +6,7 @@ imageio_download_bin freeimage
 
 if [ "$SKIP_TESTS" != true ]; then
   # Runs unit and integration tests
-  python -m pytest -m "not performance" /app/ml/src
+  python -m pytest -m "not performance" /app/src
 else
   if [[ $SCANNER == *"InsightFace"* ]]; then
     # InsightFace downloads and caches models locally upon first run

@@ -14,12 +14,15 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
+package com.exadel.frs.core.trainservice.system.feign.python;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Value;
 
-@ResponseStatus(code = BAD_REQUEST, reason = "Model has no faces")
-public class ModelHasNoFacesException extends RuntimeException {
+@Value
+public class Face {
 
+    @JsonProperty("face_name")
+    String faceName;
+    float similarity;
 }

@@ -24,7 +24,7 @@ public interface Classifier extends Serializable {
 
     void train(double[][] input, int[] output);
 
-    Pair<Double, String> predict(double[] input);
+    List<Pair<Double, String>> predict(double[] input, int resultCount);
 
     List<String> getUsedFaceIds();
 

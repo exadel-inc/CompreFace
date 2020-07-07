@@ -19,6 +19,7 @@ package com.exadel.frs.system.security;
 import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.entity.App;
@@ -159,28 +160,31 @@ class AuthorizationManagerTest {
         }
 
         @Test
-        void orgOwnerAndOrgAdminNotInvitedToAppCannotWriteApp() {
-            assertThatThrownBy(() -> {
+        void orgOwnerAndOrgAdminNotInvitedToAppCanWriteApp() {
+            assertThatCode(() -> {
                 authManager.verifyWritePrivilegesToApp(ORG_ADMIN_ID, application);
-            }).isInstanceOf(InsufficientPrivilegesException.class);
+            }).doesNotThrowAnyException();
 
-            assertThatThrownBy(() -> {
+            assertThatCode(() -> {
                 authManager.verifyWritePrivilegesToApp(ORG_OWNER_ID, application);
-            }).isInstanceOf(InsufficientPrivilegesException.class);
+            }).doesNotThrowAnyException();
+        }
+
+        @Test
+        void appUserCanWriteAppIfTheyAreOrgWriters() {
+            assertThatCode(() -> {
+                authManager.verifyWritePrivilegesToApp(ORG_ADMIN_APP_USER_ID, application);
+            }).doesNotThrowAnyException();
+
+            assertThatCode(() -> {
+                authManager.verifyWritePrivilegesToApp(ORG_OWNER_APP_USER_ID, application);
+            }).doesNotThrowAnyException();
         }
 
         @Test
         void appUserCannotWriteApp() {
             assertThatThrownBy(() -> {
                 authManager.verifyWritePrivilegesToApp(ORG_USER_APP_USER_ID, application);
-            }).isInstanceOf(InsufficientPrivilegesException.class);
-
-            assertThatThrownBy(() -> {
-                authManager.verifyWritePrivilegesToApp(ORG_ADMIN_APP_USER_ID, application);
-            }).isInstanceOf(InsufficientPrivilegesException.class);
-
-            assertThatThrownBy(() -> {
-                authManager.verifyWritePrivilegesToApp(ORG_OWNER_APP_USER_ID, application);
             }).isInstanceOf(InsufficientPrivilegesException.class);
         }
 

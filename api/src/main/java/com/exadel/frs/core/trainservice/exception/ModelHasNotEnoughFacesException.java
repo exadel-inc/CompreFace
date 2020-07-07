@@ -14,15 +14,12 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice;
+package com.exadel.frs.core.trainservice.exception;
 
-import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import org.junit.jupiter.api.Test;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-@IntegrationTest
-class TrainServiceApplicationTests {
+@ResponseStatus(code = BAD_REQUEST, reason = "Model should contain at least 2 faces")
+public class ModelHasNotEnoughFacesException extends RuntimeException {
 
-    @Test
-    void contextLoads() {
-    }
 }

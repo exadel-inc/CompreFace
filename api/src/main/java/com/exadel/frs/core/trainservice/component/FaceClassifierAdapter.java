@@ -24,6 +24,7 @@ import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegression
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -97,7 +98,7 @@ public class FaceClassifierAdapter {
         this.train(embeddingFaceList, modelKey);
     }
 
-    public Pair<Double, String> predict(final double[] x) {
-        return classifier.predict(x);
+    public List<Pair<Double, String>> predict(final double[] x, final int resultCount) {
+        return classifier.predict(x, resultCount);
     }
 }
