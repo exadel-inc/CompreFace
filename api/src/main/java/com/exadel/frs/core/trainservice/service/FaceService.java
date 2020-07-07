@@ -17,8 +17,6 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.springframework.web.util.UriUtils.encode;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
@@ -47,9 +45,7 @@ public class FaceService {
             final String apiKey,
             final String retrain
     ) {
-        val faceNameEncoded = encode(faceName, UTF_8);
-
-        faceDao.deleteFaceByName(faceNameEncoded, apiKey);
+        faceDao.deleteFaceByName(faceName, apiKey);
 
         getTrainingOption(retrain).run(apiKey, retrainService);
     }
