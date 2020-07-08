@@ -19,11 +19,12 @@ import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { UserService } from 'src/app/core/user/user.service';
 import {
-    AddUsersEntityAction,
-    UpdateUserRoleEntityAction,
-    LoadUsersEntityAction,
-    PutUpdatedUserRoleEntityAction,
-    DeleteUser
+  addUsersEntityAction,
+  loadUsersEntityAction,
+  updateUserRoleAction,
+  deleteUser,
+  updateUserRoleFailAction,
+  updateUserRoleSuccessAction
 } from 'src/app/store/user/action';
 import { switchMap, map, catchError, filter, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
@@ -45,32 +46,25 @@ export class UserListEffect {
     @Effect()
     fetchUserList =
         this.actions.pipe(
-            ofType(LoadUsersEntityAction),
+            ofType(loadUsersEntityAction),
             switchMap((action) => this.userService.getAll(action.organizationId)),
-            map((users: AppUser[]) => AddUsersEntityAction({ users }))
+            map((users: AppUser[]) => addUsersEntityAction({ users }))
         );
+
 
     @Effect()
-    UpdateUserRole =
-        this.actions.pipe(
-            ofType(PutUpdatedUserRoleEntityAction),
-            switchMap((action) => forkJoin([this.userService.updateRole(
-                action.organizationId,
-                action.user.id,
-                action.user.role
-            ), of(action.organizationId)])),
-            switchMap(res => {
-                const [user, organizationId] = res;
-                this.organizationEnService.getAll();
-
-                return [LoadUsersEntityAction({ organizationId })];
-            })
-        );
+    updateUserRole$ = this.actions.pipe(
+     ofType(updateUserRoleAction),
+     switchMap(({ organizationId, user }) =>
+        this.userService.updateRole(organizationId, user.id, user.role).pipe(
+          map(res => (updateUserRoleSuccessAction({user: res}))),
+          catchError((error) => of(updateUserRoleFailAction({ error })))
+        )));
 
     @Effect()
     deleteUser$ =
         this.actions.pipe(
-            ofType(DeleteUser),
+            ofType(deleteUser),
             switchMap(action => forkJoin([
                 this.userService.delete(action.organizationId, action.userId, action.newOwner),
                 of(action.organizationId)
@@ -78,7 +72,7 @@ export class UserListEffect {
                 catchError((error: HttpErrorResponse) => of(this.snackBarService.openHttpError(error))),
             )),
             filter((data: any) => !!data),
-            map(([deleteResult, organizationId]) => LoadUsersEntityAction({ organizationId })),
+            map(([deleteResult, organizationId]) => loadUsersEntityAction({ organizationId })),
         );
 
     @Effect()
@@ -90,4 +84,12 @@ export class UserListEffect {
             catchError(x => of(['OWNER', 'ADMIN', 'USER'])),
             map((rolesArray) => FetchRolesEntityAction({ role: { id: 0, accessLevels: rolesArray } }))
         );
+
+    @Effect({ dispatch: false })
+    showError$ = this.actions.pipe(
+      ofType(updateUserRoleFailAction),
+      tap(action => {
+        this.snackBarService.openHttpError(action.error);
+      })
+    );
 }

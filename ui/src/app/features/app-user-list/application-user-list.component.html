@@ -34,9 +34,9 @@
     [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
     [currentUserId]="currentUserId$ | async"
-    [tableConfig]="tableConfig$ | userTableFilter:search | async"
     [availableRoles$]="availableRoles$"
-    (changeRow)="onChange($event)"
+    [users$]="appUsers$"
+    (changeRole)="onChange($event)"
     (deleteUser)="onDelete($event)">
   </app-user-table>
   <div class="card-single-action-container" *ngIf="userRole$ | async as userRole">

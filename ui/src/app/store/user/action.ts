@@ -16,15 +16,16 @@
 import { createAction, props } from '@ngrx/store';
 import { AppUser } from 'src/app/data/appUser';
 
-export const SetPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
-export const LoadUsersEntityAction = createAction('[User/API] Load Users', props<{ organizationId: string }>());
-export const AddUsersEntityAction = createAction('[User/API] Add Users', props<{ users: AppUser[] }>());
-export const PutUpdatedUserRoleEntityAction = createAction(
+export const setPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
+export const loadUsersEntityAction = createAction('[User/API] Load Users', props<{ organizationId: string }>());
+export const addUsersEntityAction = createAction('[User/API] Add Users', props<{ users: AppUser[] }>());
+export const updateUserRoleAction = createAction(
   '[User/API] Put Updated User Role',
   props<{ organizationId: string; user: { id: string, role: string } }>()
 );
-export const UpdateUserRoleEntityAction = createAction('[User/API] Update Role', props<{ user: AppUser }>());
-export const DeleteUser = createAction('[User/API] Delete User', props<{
+export const updateUserRoleSuccessAction = createAction('[User/API] Update User Role Success', props<{ user: AppUser }>());
+export const updateUserRoleFailAction = createAction('[User/API] Update User Role Failed)', props<{error: any }>());
+export const deleteUser = createAction('[User/API] Delete User', props<{
   userId: string,
   organizationId: string,
   newOwner?: string,

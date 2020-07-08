@@ -31,7 +31,7 @@ import { UserListFacade } from './user-list-facade';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserListComponent implements OnInit, OnDestroy {
-  tableConfig$: Observable<ITableConfig>;
+  users$: Observable<AppUser[]>;
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   availableRoles: string[];
@@ -40,7 +40,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   availableRolesSubscription: Subscription;
   currentUserId$: Observable<string>;
   currentUserEmail$: Observable<string>;
-  seletedOption = 'deleter';
+  selectedOption = 'deleter';
   orgOwnerEmail: string;
 
   constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog) {
@@ -48,20 +48,12 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.users$ = this.userListFacade.users$;
     this.isLoading$ = this.userListFacade.isLoading$;
     this.userRole$ = this.userListFacade.userRole$;
-
-    this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
+    this.users$.pipe(map((users: AppUser[]) => {
       this.orgOwnerEmail = users.filter(user => user.role === 'OWNER').map(user => user.email)[0];
-      return {
-        columns: [{ title: 'user', property: 'username' }, {
-          title: 'role',
-          property: 'role'
-        }, { title: 'delete', property: 'delete' }],
-        data: users
-      };
     }));
-
     this.availableRoles$ = this.userListFacade.availableRoles$;
     this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
     this.currentUserId$ = this.userListFacade.currentUserId$;
@@ -73,7 +65,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   onDelete(user: AppUser): void {
-    this.userListFacade.currentUserEmail$
+    this.currentUserEmail$
       .pipe(
         take(1),
         switchMap((email: string) => {
@@ -86,12 +78,12 @@ export class UserListComponent implements OnInit, OnDestroy {
                 { name: email, value: 'deleter' },
                 { name: this.orgOwnerEmail, value: 'owner' },
               ],
-              seletedOption: this.seletedOption,
+              seletedOption: this.selectedOption,
             }
           }).afterClosed();
         }),
         filter((isClosed: boolean) => isClosed),
-        tap(() => this.userListFacade.deleteUser(user.userId, this.seletedOption)),
+        tap(() => this.userListFacade.deleteUser(user.userId, this.selectedOption)),
       )
       .subscribe();
   }

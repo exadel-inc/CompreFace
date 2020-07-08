@@ -14,47 +14,45 @@
   ~ permissions and limitations under the License.
   -->
 
-<table *ngIf="!isLoading" mat-table [dataSource]="data">
-  <!-- Position Column -->
-  <ng-container matColumnDef="user">
-    <th mat-header-cell *matHeaderCellDef> User </th>
-    <td mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}} </td>
-  </ng-container>
+<form *ngIf="!isLoading" [formGroup]="form" autocomplete="off">
+  <mat-table [dataSource]="dataSource">
 
-  <ng-container matColumnDef="role">
-    <th mat-header-cell *matHeaderCellDef> Role </th>
-    <td mat-cell *matCellDef="let element">
-      <mat-form-field>
-        <mat-select *ngIf="(isRoleChangeAllowed(element.role) | async) else disabledRole" [(value)]="element.role"
-          (selectionChange)="change(element)">
-          <mat-option *ngFor="let role of (availableRoles$ | async)" value="{{role}}">{{role}}</mat-option>
-        </mat-select>
-        <ng-template #disabledRole>
-          <mat-select disabled [(value)]="element.role">
-            <mat-option value="{{element.role}}">{{element.role}}</mat-option>
+    <!--   User name column -->
+    <ng-container matColumnDef="name">
+      <mat-header-cell *matHeaderCellDef> User </mat-header-cell>
+      <mat-cell *matCellDef="let element ">{{element.get('name').value}} {{element.get('lastName').value}}</mat-cell>
+    </ng-container>
+
+    <!-- Role Column -->
+    <ng-container matColumnDef="role">
+      <mat-header-cell *matHeaderCellDef> User Role </mat-header-cell>
+      <mat-cell *matCellDef="let element" [formGroup]="element">
+        <mat-form-field floatLabel="never">
+          <mat-label>{{ element.get('role').value}}</mat-label>
+          <mat-select *ngIf="(isRoleChangeAllowed(element.get('role').value) | async) else disabledRole" (selectionChange)="onChangeRole($event.value, element)">
+            <mat-option *ngFor="let role of availableRoles$ | async" [value]="role">
+              {{role}}
+            </mat-option>
           </mat-select>
-        </ng-template>
-      </mat-form-field>
-    </td>
-  </ng-container>
+          <ng-template #disabledRole>
+            <mat-select disabled [value]="element.role">
+              <mat-option value="{{element.get('role').value}}">{{element.get('role').value}}</mat-option>
+            </mat-select>
+          </ng-template>
+        </mat-form-field>
+      </mat-cell>
+    </ng-container>
 
-  <ng-container matColumnDef="delete">
-    <th mat-header-cell *matHeaderCellDef> </th>
-    <td mat-cell *matCellDef="let element">
-      <mat-icon *ngIf="userRole!=='USER' && element.userId !== this.currentUserId && element.role !== 'OWNER'"
-        (click)="delete(element)" title="remove user">delete_outline</mat-icon>
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="delete">
+      <mat-header-cell *matHeaderCellDef></mat-header-cell>
+      <mat-cell *matCellDef="let element" [formGroup]="element">
+        <mat-icon *ngIf="userRole!=='USER' && element.get('id').value !== this.currentUserId && element.role !== 'OWNER'"
+                  (click)="onDelete($event, element)" title="remove user">delete_outline</mat-icon>
+      </mat-cell>
+    </ng-container>
 
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+</form>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-</table>
-
-<ng-container *ngIf="data.length <= 1 && (createHeader || createMessage)">
-  <h4>{{createHeader}}</h4>
-  <div class="create-new-message">
-    <mat-icon>info</mat-icon>
-    <p>{{createMessage}}</p>
-  </div>
-</ng-container>
