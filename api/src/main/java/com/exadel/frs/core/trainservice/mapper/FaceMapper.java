@@ -14,25 +14,19 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.repository.mongo;
+package com.exadel.frs.core.trainservice.mapper;
 
+import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import java.util.List;
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Repository
-public interface FacesRepository extends MongoRepository<Face, String> {
+@Mapper
+public interface FaceMapper {
 
-    List<Face> findByApiKey(final String modelApiKey);
-
-    List<Face> deleteByApiKeyAndFaceName(final String modelApiKey, final String faceName);
-
-    List<Face> deleteByApiKeyAndId(final String modelApiKey, final String faceId);
-
-    List<Face> deleteFacesByApiKey(final String modelApiKey);
-
-    int countByApiKey(final String modelApiKey);
-
-    List<Face> findByIdIn(List<String> ids);
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "faceName", target = "name")
+    FaceResponseDto toResponseDto(Face face);
+    List<FaceResponseDto> toResponseDto(List<Face> faces);
 }

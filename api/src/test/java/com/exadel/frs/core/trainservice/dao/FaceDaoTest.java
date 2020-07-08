@@ -73,6 +73,22 @@ class FaceDaoTest {
     }
 
     @Test
+    void deleteFaceById() {
+        val faceId = "faceId";
+        val apiKey = randomAlphabetic(10);
+        val faces = List.of(new Face());
+        when(facesRepository.deleteByApiKeyAndId(apiKey, faceId)).thenReturn(faces);
+
+        val actual = faceDao.deleteFaceById(faceId, apiKey);
+
+        assertThat(actual).isEqualTo(faces);
+
+        verify(facesRepository).deleteByApiKeyAndId(apiKey, faceId);
+        verify(gridFsOperations, times(2)).delete(any());
+        verifyNoMoreInteractions(facesRepository);
+    }
+
+    @Test
     void deleteFacesByApiKey() {
         val apiKey = randomAlphabetic(10);
         val faces = List.of(new Face());
