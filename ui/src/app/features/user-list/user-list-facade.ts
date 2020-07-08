@@ -61,25 +61,13 @@ export class UserListFacade implements IFacade {
     this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
 
     const allRoles$ = store.select(selectAllRoles);
-
-    this.availableRoles$ = combineLatest(
-      allRoles$,
-      this.userRole$
-    ).pipe(
-      map(
-        (observResult) => {
-          let res = [];
-          const [allRoles, userRole] = observResult;
-          const roleIndex = allRoles.indexOf(userRole);
-
-          if (roleIndex !== -1) {
-            res = allRoles.slice(roleIndex);
-          }
-
-          return res;
-        }
-      )
+    this.availableRoles$ = combineLatest(allRoles$, this.userRole$).pipe(
+      map(([allRoles, userRole]) => {
+        const roleIndex = allRoles.indexOf(userRole);
+        return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
+      }),
     );
+
 
     const usersLoading$ = store.select(selectIsPendingUserStore);
     const roleLoading$ = store.select(selectIsPendingRoleStore);
