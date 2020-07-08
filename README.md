@@ -357,6 +357,19 @@ Response body on success:
 
 
 
+
+### Delete model and all faces that belong to it
+
+Delete model and everything related to it from MongoDB. Please, note that it has no effect on PostgreSQL data. So deleting model from MongoDB doesn't remove model's record from PostgreSQL. Originally, endpoint was created to reffer from [admin](/admin) modul.
+
+```
+curl  -X DELETE \
+-H "x-frs-api-key: <model_api_key>"
+https://localhost:8080/api/v1/faces
+```
+
+**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+
 ## Use cases and domains
 
 <todo: cases and domains>
