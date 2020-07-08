@@ -34,6 +34,7 @@ services:
   frs-fe:
     build:
       context: ui
+      dockerfile: docker-prod/Dockerfile
     container_name: "frs-ui"
     ports:
       - "8000:80"
