@@ -41,7 +41,6 @@ export class UserTableComponent implements OnInit {
   @Input() userRole: string;
   @Input() currentUserEmail: string;
   @Input() createMessage: string;
-  @Input() createHeader: string;
   @Input() isLoading: boolean;
   @Output() deleteUser = new EventEmitter<any>();
   @Output() changeRole = new EventEmitter<any>();

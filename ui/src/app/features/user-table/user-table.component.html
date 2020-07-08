@@ -55,11 +55,4 @@
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 </form>
-<ng-container *ngIf="users.length <= 1 && (createHeader || createMessage)">
-  <h4>{{createHeader}}</h4>
-  <div class="create-new-message">
-    <mat-icon>info</mat-icon>
-    <p>{{createMessage}}</p>
-  </div>
-</ng-container>
 
