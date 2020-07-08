@@ -33,7 +33,7 @@ import { ApplicationUserListFacade } from './application-user-list-facade';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ApplicationUserListComponent implements OnInit, OnDestroy {
-  tableConfig$: Observable<ITableConfig>;
+  appUsers$: Observable<AppUser[]>;
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   availableRoles$: Observable<string[]>;
@@ -53,18 +53,11 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.appUsers$ = this.appUserListFacade.appUsers$;
     this.isLoading$ = this.appUserListFacade.isLoading$;
     this.userRole$ = this.appUserListFacade.userRole$;
     this.availableEmails$ = this.appUserListFacade.availableEmails$;
     this.currentUserId$ = this.appUserListFacade.currentUserId$;
-
-    this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(map((users: AppUser[]) => {
-      return {
-        columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }, { title: 'delete', property: 'delete' }],
-        data: users
-      };
-    }));
-
     this.availableRoles$ = this.appUserListFacade.availableRoles$;
     this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
   }

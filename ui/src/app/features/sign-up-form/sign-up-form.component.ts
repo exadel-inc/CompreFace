@@ -45,7 +45,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
     } else {
       return { passwordMismatch: true };
     }
-  };
+  }
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);

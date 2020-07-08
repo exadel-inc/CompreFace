@@ -16,20 +16,23 @@
 
 import {NgModule} from '@angular/core';
 import {UserTableComponent} from './user-table.component';
-import {MatTableModule, MatFormFieldModule, MatSelectModule,  MatIconModule} from '@angular/material';
+import { MatTableModule, MatFormFieldModule, MatSelectModule, MatIconModule, MatExpansionModule } from '@angular/material';
 import {CommonModule} from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [UserTableComponent],
+  declarations: [UserTableComponent, UserTableComponent],
   exports: [
-    UserTableComponent
+    UserTableComponent,
   ],
   imports: [
     CommonModule,
     MatFormFieldModule,
     MatTableModule,
     MatSelectModule,
-    MatIconModule
+    MatIconModule,
+    ReactiveFormsModule,
+    MatExpansionModule
   ]
 })
 export class UserTableModule { }

@@ -14,13 +14,12 @@
  * permissions and limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
-import { Actions, Effect, ofType } from '@ngrx/effects';
-import { forkJoin, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { AppUserService } from 'src/app/core/app-user/app-user.service';
-import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
-import { loadApplications } from 'src/app/store/application/action';
+import {Injectable} from '@angular/core';
+import {Actions, Effect, ofType} from '@ngrx/effects';
+import {of} from 'rxjs';
+import {catchError, map, switchMap, tap} from 'rxjs/operators';
+import {AppUserService} from 'src/app/core/app-user/app-user.service';
+import {SnackBarService} from 'src/app/features/snackbar/snackbar.service';
 
 import {
   addAppUserEntityAction,
@@ -28,7 +27,9 @@ import {
   deleteUserFromApplicationFail,
   deleteUserFromApplicationSuccess,
   loadAppUserEntityAction,
-  putUpdatedAppUserRoleEntityAction,
+  updateAppUserRoleAction,
+  updateAppUserRoleFailAction,
+  updateAppUserRoleSuccessAction,
 } from './actions';
 
 @Injectable()
@@ -47,21 +48,13 @@ export class AppUserEffects {
   );
 
   @Effect()
-  updateAppUser = this.actions.pipe(
-    ofType(putUpdatedAppUserRoleEntityAction),
-    switchMap(action => forkJoin([this.appUserService.update(
-      action.organizationId,
-      action.applicationId,
-      action.user.id,
-      action.user.role
-    ), of(action)])),
-    switchMap(observableResult => {
-      const [user, action] = observableResult;
-      return [
-        loadAppUserEntityAction({ ...action }),
-        loadApplications({ organizationId: action.organizationId })
-      ];
-    })
+  updateUserRole$ = this.actions.pipe(
+    ofType(updateAppUserRoleAction),
+    switchMap(({ organizationId, applicationId, user }) =>
+      this.appUserService.update(organizationId, applicationId,  user.id, user.role).pipe(
+        map(res => (updateAppUserRoleSuccessAction({user: res}))),
+        catchError((error) => of(updateAppUserRoleFailAction({ error })))
+      ))
   );
 
   @Effect()
@@ -77,7 +70,7 @@ export class AppUserEffects {
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(deleteUserFromApplicationFail),
+    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
