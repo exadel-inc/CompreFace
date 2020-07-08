@@ -11,10 +11,15 @@ Edit hosts file. Add `127.0.0.1 frs.local`
 Run script to start docker container:
   * `./scripts/start.sh` for unix OS
   * `.\scripts\startWin.sh` for Win OS
+  
+Go to http://localhost:8000/
 
-Run `npm run start` to start application
+#### How to start for UI development:  
+- Run `cd ui`
+- Run `npm install` (only for first time run)
+- Run `npm run start:dev` to start docker container with backend and UI application in live reload mode
 
-Go to http://frs.local
+Go to http://localhost:4200/
 
 ## Code scaffolding
 
