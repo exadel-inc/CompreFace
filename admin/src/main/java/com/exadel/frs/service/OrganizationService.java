@@ -16,6 +16,7 @@
 
 package com.exadel.frs.service;
 
+import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
 import com.exadel.frs.dto.ui.UserDeleteDto;
@@ -60,11 +61,16 @@ public class OrganizationService {
     public OrganizationRole[] getOrgRolesToAssign(final String guid, final Long userId) {
         val organization = getOrganization(guid);
         val role = organization.getUserOrganizationRoleOrThrow(userId);
+        var roles = new OrganizationRole[0];
+
         if (role.getRole() == OWNER) {
-            return OrganizationRole.values();
+            roles = OrganizationRole.values();
+
+        } else if (role.getRole() == ADMINISTRATOR) {
+            roles = new OrganizationRole[]{ADMINISTRATOR, USER};
         }
 
-        return new OrganizationRole[0];
+        return roles;
     }
 
     public List<UserOrganizationRole> getOrgUsers(final String guid, final Long userId) {
