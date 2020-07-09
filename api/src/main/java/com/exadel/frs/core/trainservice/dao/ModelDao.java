@@ -19,7 +19,6 @@ package com.exadel.frs.core.trainservice.dao;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
-import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import com.exadel.frs.core.trainservice.repository.mongo.ModelRepository;
 import java.util.List;
@@ -69,10 +68,13 @@ public class ModelDao {
             final String oldModelKey,
             final String newModelKey
     ) {
-        val model = modelRepository.findFirstByModelKey(oldModelKey).orElseThrow(ModelNotFoundException::new);
-        model.setModelKey(newModelKey);
+        val model = modelRepository.findFirstByModelKey(oldModelKey);
+        model.ifPresent(newModel -> {
+            newModel.setModelKey(newModelKey);
+            modelRepository.save(newModel);
+        });
 
-        return modelRepository.save(model);
+        return model.orElse(null);
     }
 
     public Classifier getModel(final String modelKey) {
