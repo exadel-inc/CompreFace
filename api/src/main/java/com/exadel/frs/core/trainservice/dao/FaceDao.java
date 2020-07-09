@@ -91,11 +91,14 @@ public class FaceDao {
         return deletedFaces;
     }
 
-    public List<Face> deleteFaceById(final String faceId, final String modelApiKey) {
-        val deletedFaces = facesRepository.deleteByApiKeyAndId(modelApiKey, faceId);
-        deleteFiles(deletedFaces);
+    public Face deleteFaceById(final String faceId) {
+        val foundFace = facesRepository.findById(faceId);
+        foundFace.ifPresent(face -> {
+            facesRepository.delete(face);
+            deleteFiles(List.of(face));
+        });
 
-        return deletedFaces;
+        return foundFace.orElse(null);
     }
 
     public List<Face> deleteFacesByApiKey(final String modelApiKey) {

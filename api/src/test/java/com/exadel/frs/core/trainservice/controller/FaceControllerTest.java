@@ -36,6 +36,7 @@ import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -52,9 +53,6 @@ public class FaceControllerTest {
     private MockMvc mockMvc;
 
     private static final String API_KEY = "model_key";
-
-    @Autowired
-    private ObjectMapper mapper;
 
     @MockBean
     private FacesRepository facesRepository;
@@ -97,11 +95,11 @@ public class FaceControllerTest {
     @Test
     public void deleteFacesByIdShouldReturnResponseAsExpected() throws Exception {
         val faceId = "faceId";
-        val response = List.of(new Face(), new Face(), new Face());
+        val response = Optional.of(new Face());
 
         doReturn(response)
                 .when(facesRepository)
-                .deleteByApiKeyAndId(API_KEY, faceId);
+                .findById(faceId);
 
         mockMvc.perform(delete(API_V1 + "/faces/" + faceId)
                 .header(X_FRS_API_KEY_HEADER, API_KEY)
@@ -111,14 +109,14 @@ public class FaceControllerTest {
 
     @Test
     public void deleteFacesByNameShouldReturnResponseAsExpected() throws Exception {
-        val faceId = "faceId";
+        val faceName = "faceName";
         val response = List.of(new Face(), new Face(), new Face());
 
         doReturn(response)
                 .when(facesRepository)
-                .deleteByApiKeyAndId(API_KEY, faceId);
+                .deleteByApiKeyAndFaceName(API_KEY, faceName);
 
-        mockMvc.perform(delete(API_V1 + "/faces/" + faceId)
+        mockMvc.perform(delete(API_V1 + "/faces/name/" + faceName)
                 .header(X_FRS_API_KEY_HEADER, API_KEY)
                 .param("retrain", NO.name())
         ).andExpect(status().isOk());

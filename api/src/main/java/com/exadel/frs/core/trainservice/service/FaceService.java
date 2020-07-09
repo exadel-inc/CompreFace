@@ -51,7 +51,7 @@ public class FaceService {
             final String apiKey,
             final String retrain
     ) {
-        faceDao.deleteFaceById(faceId, apiKey);
+        faceDao.deleteFaceById(faceId);
         getTrainingOption(retrain).run(apiKey, retrainService);
     }
 
