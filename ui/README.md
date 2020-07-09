@@ -2,12 +2,7 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.19.
 
-## Local development
-
-Check access to https://dev.frs.exadel.by. If site is unreachable please connect to your office VPN.
-
-Edit hosts file. Add `127.0.0.1 frs.local`
-
+## Local start all in prod mode
 Run script to start docker container:
   * `./scripts/start.sh` for unix OS
   * `.\scripts\startWin.sh` for Win OS
