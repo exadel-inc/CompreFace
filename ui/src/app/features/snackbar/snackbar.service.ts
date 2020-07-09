@@ -51,7 +51,7 @@ export class SnackBarService {
 
   public openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
     const data = {
-      message: message.error.message || message.message,
+      message: message.message || message.error.message,
       type: 'error'
     };
 
