@@ -16,6 +16,7 @@
 
 package com.exadel.frs.security;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -24,10 +25,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.FrsApplication;
 import com.exadel.frs.helpers.EmailSender;
+import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
 import lombok.val;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +61,8 @@ public class OAuthMvcTest {
 
     private String registrationToken = UUID.randomUUID().toString();
 
+    private String userEmail;
+
     @Autowired
     private WebApplicationContext wac;
 
@@ -67,16 +72,32 @@ public class OAuthMvcTest {
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @SpyBean
     private UserService userService;
 
     private MockMvc mockMvc;
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                                       .addFilter(springSecurityFilterChain).build();
         when(userService.generateRegistrationToken()).thenReturn(registrationToken);
+
+        this.userEmail = randomAlphanumeric(10) + "test@email.com";
+        createUser(userEmail);
+    }
+
+    @After
+    public void clean() {
+        val userOptional = userRepository.findByEmail(userEmail.toLowerCase());
+
+        if (userOptional.isPresent()) {
+            val user = userOptional.get();
+            userRepository.delete(user);
+        }
     }
 
     private String obtainAccessToken(String username, String password) throws Exception {
@@ -106,9 +127,7 @@ public class OAuthMvcTest {
         mockMvc.perform(get("/user/me"))
                .andExpect(status().isUnauthorized());
 
-        createUser("test1@email.com");
-
-        var accessToken = obtainAccessToken("test1@email.com", "test1");
+        var accessToken = obtainAccessToken(userEmail, "test1");
         mockMvc.perform(get("/user/me")
                 .header("Authorization", "Bearer " + accessToken))
                .andExpect(status().isOk());
@@ -119,9 +138,7 @@ public class OAuthMvcTest {
         mockMvc.perform(get("/user/me"))
                .andExpect(status().isUnauthorized());
 
-        createUser("user@email.com");
-
-        val accessToken = obtainAccessToken("User@EmaiL.com", "test1");
+        val accessToken = obtainAccessToken(userEmail.toUpperCase(), "test1");
 
         mockMvc.perform(get("/user/me")
                 .header("Authorization", "Bearer " + accessToken))
@@ -134,8 +151,7 @@ public class OAuthMvcTest {
                 "  \"firstName\": \"test1\",\n" +
                 "  \"id\": null,\n" +
                 "  \"lastName\": \"test1\",\n" +
-                "  \"password\": \"test1\",\n" +
-                "  \"username\": \"test1\"\n" +
+                "  \"password\": \"test1\"\n" +
                 "}";
 
         mockMvc.perform(post("/user/register")
