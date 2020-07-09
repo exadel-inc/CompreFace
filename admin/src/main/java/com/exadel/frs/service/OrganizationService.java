@@ -65,7 +65,6 @@ public class OrganizationService {
 
         if (role.getRole() == OWNER) {
             roles = OrganizationRole.values();
-
         } else if (role.getRole() == ADMINISTRATOR) {
             roles = new OrganizationRole[]{ADMINISTRATOR, USER};
         }
