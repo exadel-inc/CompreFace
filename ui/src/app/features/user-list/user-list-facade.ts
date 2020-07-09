@@ -68,7 +68,6 @@ export class UserListFacade implements IFacade {
       }),
     );
 
-
     const usersLoading$ = store.select(selectIsPendingUserStore);
     const roleLoading$ = store.select(selectIsPendingRoleStore);
     this.currentUserId$ = store.select(selectUserId);
