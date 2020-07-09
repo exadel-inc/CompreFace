@@ -47,9 +47,9 @@ export class UserService {
     // return this.http.get<string[]>(`${environment.apiUrl}roles`);
     // temporarary workaround to prevent cors related issues
     return of([
-      'OWNER',
+      'USER',
       'ADMINISTRATOR',
-      'USER'
+      'OWNER'
     ]);
   }
 }
