@@ -14,11 +14,19 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.global;
+package com.exadel.frs.core.trainservice.dto.ui;
 
-public class Constants {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    public static final String X_FRS_API_KEY_HEADER = "x-frs-api-key";
-    public static final String NEW_MODEL_KEY_HEADER = "new_model_api_key";
-    public static final String API_V1 = "/api/v1";
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class FaceResponseDto {
+
+    private String id;
+    private String name;
 }

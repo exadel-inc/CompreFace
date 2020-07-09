@@ -28,7 +28,6 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
-import java.util.HashMap;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,16 +59,16 @@ class FaceServiceTest {
 
     @Test
     void findAllFaceNames() {
-        val faces = new HashMap<String, List<String>>();
+        val faces = List.<Face>of();
 
-        when(faceDao.findAllFaceNamesByApiKey(API_KEY)).thenReturn(faces);
+        when(faceDao.findAllFacesByApiKey(API_KEY)).thenReturn(faces);
 
-        val actual = faceService.findAllFaceNames(API_KEY);
+        val actual = faceService.findFaces(API_KEY);
 
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(faces);
 
-        verify(faceDao).findAllFaceNamesByApiKey(API_KEY);
+        verify(faceDao).findAllFacesByApiKey(API_KEY);
         verifyNoMoreInteractions(faceDao);
     }
 
@@ -80,6 +79,17 @@ class FaceServiceTest {
         faceService.deleteFaceByName(faceName, API_KEY, NO.name());
 
         verify(faceDao).deleteFaceByName(faceName, API_KEY);
+        verifyNoInteractions(classifierManager);
+    }
+
+    @Test
+    void deleteFaceById() {
+        val faceId = "faceId";
+
+        faceService.deleteFaceById(faceId, API_KEY, NO.name());
+
+        verify(faceDao).deleteFaceById(faceId);
+        verifyNoInteractions(classifierManager);
     }
 
     @Test

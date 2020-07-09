@@ -24,7 +24,6 @@ import com.exadel.frs.core.trainservice.entity.mongo.Face.Embedding;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -81,14 +80,8 @@ public class FaceDao {
         return embeddingFaceList;
     }
 
-    public Map<String, List<String>> findAllFaceNamesByApiKey(final String modelApiKey) {
-        val faces = facesRepository.findByApiKey(modelApiKey);
-        val faceNames = faces.stream()
-                             .map(Face::getFaceName)
-                             .distinct()
-                             .collect(toList());
-
-        return Map.of("names", faceNames);
+    public List<Face> findAllFacesByApiKey(final String modelApiKey) {
+        return facesRepository.findByApiKey(modelApiKey);
     }
 
     public List<Face> deleteFaceByName(final String faceName, final String modelApiKey) {
@@ -96,6 +89,16 @@ public class FaceDao {
         deleteFiles(deletedFaces);
 
         return deletedFaces;
+    }
+
+    public Face deleteFaceById(final String faceId) {
+        val foundFace = facesRepository.findById(faceId);
+        foundFace.ifPresent(face -> {
+            facesRepository.delete(face);
+            deleteFiles(List.of(face));
+        });
+
+        return foundFace.orElse(null);
     }
 
     public List<Face> deleteFacesByApiKey(final String modelApiKey) {
