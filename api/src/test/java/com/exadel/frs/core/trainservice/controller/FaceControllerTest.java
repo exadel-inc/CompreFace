@@ -16,9 +16,11 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
+import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -28,12 +30,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -50,9 +53,6 @@ public class FaceControllerTest {
     private MockMvc mockMvc;
 
     private static final String API_KEY = "model_key";
-
-    @Autowired
-    private ObjectMapper mapper;
 
     @MockBean
     private FacesRepository facesRepository;
@@ -71,7 +71,15 @@ public class FaceControllerTest {
                 .when(facesRepository)
                 .findByApiKey(API_KEY);
 
-        val expectedContent = mapper.writeValueAsString(Map.of("names", new String[]{"A", "B"}));
+        val expectedContent = new ObjectMapper().writeValueAsString(
+                faces.stream()
+                     .map(face -> FaceResponseDto.builder()
+                                                 .id(face.getId())
+                                                 .name(face.getFaceName())
+                                                 .build()
+                     )
+                     .collect(toList())
+        );
 
         mockMvc.perform(get(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
                .andExpect(status().isOk())
@@ -85,7 +93,37 @@ public class FaceControllerTest {
     }
 
     @Test
-    public void deleteFacesShouldReturnResponseAsExpected() throws Exception {
+    public void deleteFacesByIdShouldReturnResponseAsExpected() throws Exception {
+        val faceId = "faceId";
+        val response = Optional.of(new Face());
+
+        doReturn(response)
+                .when(facesRepository)
+                .findById(faceId);
+
+        mockMvc.perform(delete(API_V1 + "/faces/" + faceId)
+                .header(X_FRS_API_KEY_HEADER, API_KEY)
+                .param("retrain", NO.name())
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteFacesByNameShouldReturnResponseAsExpected() throws Exception {
+        val faceName = "faceName";
+        val response = List.of(new Face(), new Face(), new Face());
+
+        doReturn(response)
+                .when(facesRepository)
+                .deleteByApiKeyAndFaceName(API_KEY, faceName);
+
+        mockMvc.perform(delete(API_V1 + "/faces/name/" + faceName)
+                .header(X_FRS_API_KEY_HEADER, API_KEY)
+                .param("retrain", NO.name())
+        ).andExpect(status().isOk());
+    }
+
+    @Test
+    public void deleteFacesByModelShouldReturnResponseAsExpected() throws Exception {
         val response = List.of(new Face(), new Face(), new Face());
         doReturn(response)
                 .when(facesRepository)
@@ -97,7 +135,7 @@ public class FaceControllerTest {
     }
 
     @Test
-    public void deleteFacesShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
+    public void deleteFacesByModelFacesShouldReturnBadRequestWhenApiKeyIsMissing() throws Exception {
         mockMvc.perform(delete(API_V1 + "/faces"))
                .andExpect(status().isBadRequest());
     }

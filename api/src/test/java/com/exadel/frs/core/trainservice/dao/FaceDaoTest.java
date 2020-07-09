@@ -23,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -31,6 +32,7 @@ import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
@@ -70,6 +72,36 @@ class FaceDaoTest {
         verify(facesRepository).deleteByApiKeyAndFaceName(apiKey, faceName);
         verify(gridFsOperations, times(2)).delete(any());
         verifyNoMoreInteractions(facesRepository);
+    }
+
+    @Test
+    void deleteFaceById() {
+        val faceId = "faceId";
+        val face = Optional.of(new Face());
+        when(facesRepository.findById(faceId)).thenReturn(face);
+
+        val actual = faceDao.deleteFaceById(faceId);
+
+        assertThat(actual).isEqualTo(face.get());
+
+        verify(facesRepository).findById(faceId);
+        verify(facesRepository).delete(face.get());
+        verify(gridFsOperations, times(2)).delete(any());
+        verifyNoMoreInteractions(facesRepository);
+    }
+
+    @Test
+    void deleteNonexistentFaceById() {
+        val faceId = "faceId";
+        when(facesRepository.findById(faceId)).thenReturn(Optional.empty());
+
+        val actual = faceDao.deleteFaceById(faceId);
+
+        assertThat(actual).isNull();
+
+        verify(facesRepository).findById(faceId);
+        verifyNoMoreInteractions(facesRepository);
+        verifyNoInteractions(gridFsOperations);
     }
 
     @Test

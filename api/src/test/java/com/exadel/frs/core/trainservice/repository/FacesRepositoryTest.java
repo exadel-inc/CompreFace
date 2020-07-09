@@ -112,6 +112,7 @@ public class FacesRepositoryTest {
     @Test
     public void findFaceIdsIn() {
         val faces = facesRepository.findByIdIn(List.of("Id_A", "Id_B"));
+
         assertThat(faces).isNotNull();
         assertThat(faces).hasSize(2);
     }

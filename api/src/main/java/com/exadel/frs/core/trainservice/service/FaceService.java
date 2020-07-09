@@ -19,9 +19,8 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -31,13 +30,11 @@ import org.springframework.stereotype.Service;
 public class FaceService {
 
     private final FaceDao faceDao;
-    private final ModelDao modelDao;
     private final RetrainService retrainService;
     private final FaceClassifierManager classifierManager;
 
-    public Map<String, List<String>> findAllFaceNames(final String apiKey) {
-
-        return faceDao.findAllFaceNamesByApiKey(apiKey);
+    public List<Face> findFaces(final String apiKey) {
+        return faceDao.findAllFacesByApiKey(apiKey);
     }
 
     public void deleteFaceByName(
@@ -46,7 +43,15 @@ public class FaceService {
             final String retrain
     ) {
         faceDao.deleteFaceByName(faceName, apiKey);
+        getTrainingOption(retrain).run(apiKey, retrainService);
+    }
 
+    public void deleteFaceById(
+            final String faceId,
+            final String apiKey,
+            final String retrain
+    ) {
+        faceDao.deleteFaceById(faceId);
         getTrainingOption(retrain).run(apiKey, retrainService);
     }
 
@@ -56,5 +61,4 @@ public class FaceService {
 
         return deletedFaces.size();
     }
-
 }

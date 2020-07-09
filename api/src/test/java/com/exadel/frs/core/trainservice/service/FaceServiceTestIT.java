@@ -16,17 +16,20 @@
 
 package com.exadel.frs.core.trainservice.service;
 
+import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
+import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import lombok.val;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
@@ -38,17 +41,17 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @DataMongoTest
 @ExtendWith(SpringExtension.class)
 @Import({FaceService.class, FaceDao.class})
-@MockBeans({@MockBean(RetrainService.class), @MockBean(FaceClassifierManager.class)})
-public class FaceServiceITest {
+@MockBeans({
+        @MockBean(RetrainService.class),
+        @MockBean(FaceClassifierManager.class)
+})
+public class FaceServiceTestIT {
 
     @Autowired
     private FacesRepository facesRepository;
 
     @Autowired
     private FaceService faceService;
-
-    @MockBean
-    private ModelDao modelDao;
 
     private static final String MODEL_KEY = UUID.randomUUID().toString();
     private static final String MODEL_KEY_OTHER = UUID.randomUUID().toString();
@@ -60,6 +63,34 @@ public class FaceServiceITest {
         val faceC = makeFace("C", MODEL_KEY);
 
         facesRepository.saveAll(List.of(faceA, faceB, faceC));
+    }
+
+    @Test
+    public void deleteFaceById() {
+        val faces = facesRepository.findAll();
+        val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
+
+        faceService.deleteFaceById(face.getId(), face.getApiKey(), NO.name());
+
+        val actual = facesRepository.findAll();
+
+        assertThat(actual).hasSize(faces.size() - 1);
+        assertThat(actual).doesNotContain(face);
+    }
+
+    @Test
+    public void findFaces() {
+        //todo
+    }
+
+    @Test
+    public void deleteFaceByName() {
+        //todo
+    }
+
+    @Test
+    public void deleteFacesByModel() {
+        //todo
     }
 
     @AfterEach
@@ -81,5 +112,4 @@ public class FaceServiceITest {
                         )
                 );
     }
-
 }

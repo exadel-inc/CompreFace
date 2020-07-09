@@ -14,11 +14,19 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.global;
+package com.exadel.frs.core.trainservice.mapper;
 
-public class Constants {
+import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-    public static final String X_FRS_API_KEY_HEADER = "x-frs-api-key";
-    public static final String NEW_MODEL_KEY_HEADER = "new_model_api_key";
-    public static final String API_V1 = "/api/v1";
+@Mapper
+public interface FaceMapper {
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "faceName", target = "name")
+    FaceResponseDto toResponseDto(Face face);
+    List<FaceResponseDto> toResponseDto(List<Face> faces);
 }
