@@ -1,6 +1,8 @@
 package com.exadel.frs.core.trainservice.filter;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.util.Collections.enumeration;
+import static java.util.Collections.singletonList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,7 +16,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.Collections;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -53,23 +54,18 @@ public class SecurityValidationFilterTest {
         val httpServletResponse = mock(HttpServletResponse.class);
         val filterChain = mock(FilterChain.class);
 
-        when(httpServletRequest.getHeaderNames()).thenReturn(
-                Collections.enumeration(
-                        Collections.singletonList(X_FRS_API_KEY_HEADER)));
-        when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(
-                Collections.enumeration(
-                        Collections.singletonList(SHORT_API_KEY)));
+        when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
+        when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(SHORT_API_KEY)));
         when(httpServletResponse.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-        when(exceptionHandler.handleBadFormatModelKeyException(
-                new BadFormatModelKeyException())).thenReturn(
-                ResponseEntity.status(BAD_REQUEST).body(
-                        new RetrainResponse(
-                                new BadFormatModelKeyException().getMessage())));
+        when(exceptionHandler.handleBadFormatModelKeyException(new BadFormatModelKeyException()))
+                .thenReturn(ResponseEntity.status(BAD_REQUEST)
+                        .body(new RetrainResponse(new BadFormatModelKeyException().getMessage())));
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(httpServletResponse).setStatus(
-                exceptionHandler.handleBadFormatModelKeyException(
-                        new BadFormatModelKeyException()).getStatusCode().value());
+        verify(httpServletResponse).setStatus(exceptionHandler
+                .handleBadFormatModelKeyException(new BadFormatModelKeyException())
+                .getStatusCode()
+                .value());
     }
 }
