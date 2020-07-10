@@ -60,7 +60,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Slf4j
-public class OrganizationServiceTestIT {
+public class OrganizationServiceIntegrationTest {
 
     @DisplayName("Test organization delete")
     @ExtendWith(SpringExtension.class)

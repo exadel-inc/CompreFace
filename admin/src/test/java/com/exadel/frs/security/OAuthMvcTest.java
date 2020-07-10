@@ -30,10 +30,10 @@ import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
 import lombok.val;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,7 +43,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -53,11 +53,11 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 @ActiveProfiles(profiles = "local-test")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @SpringBootTest(classes = FrsApplication.class)
 @MockBeans({@MockBean(EmailSender.class), @MockBean(OrganizationService.class)})
-public class OAuthMvcTest {
+class OAuthMvcTest {
 
     private String registrationToken = UUID.randomUUID().toString();
 
@@ -80,8 +80,8 @@ public class OAuthMvcTest {
 
     private MockMvc mockMvc;
 
-    @Before
-    public void setup() throws Exception {
+    @BeforeEach
+    void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                                       .addFilter(springSecurityFilterChain).build();
         when(userService.generateRegistrationToken()).thenReturn(registrationToken);
@@ -90,8 +90,8 @@ public class OAuthMvcTest {
         createUser(userEmail);
     }
 
-    @After
-    public void clean() {
+    @AfterEach
+    void clean() {
         val userOptional = userRepository.findByEmail(userEmail.toLowerCase());
 
         if (userOptional.isPresent()) {
@@ -123,7 +123,7 @@ public class OAuthMvcTest {
     }
 
     @Test
-    public void availableOnlyWithAccessToken() throws Exception {
+    void availableOnlyWithAccessToken() throws Exception {
         mockMvc.perform(get("/user/me"))
                .andExpect(status().isUnauthorized());
 
@@ -134,7 +134,7 @@ public class OAuthMvcTest {
     }
 
     @Test
-    public void ignoresCaseWhenLogin() throws Exception {
+    void ignoresCaseWhenLogin() throws Exception {
         mockMvc.perform(get("/user/me"))
                .andExpect(status().isUnauthorized());
 
