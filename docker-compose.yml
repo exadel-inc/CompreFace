@@ -4,20 +4,21 @@ services:
   frs-postgres-db:
     image: postgres:11.5
     container_name: "frs-postgres-db"
+    ports:
+      - "6432:5432"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_DB=frs
-    ports:
-      - "5433:5432"
 
   frs-mongo-db:
     image: mongo:4.0.4-xenial
-    container_name: "frs-mongo-db"
     ports:
-      - "27018:27017"
+      - "27517:27017"
+    container_name: "frs-mongo-db"
 
   frs-admin:
+    image: ${registry}frs-admin
     build:
       dockerfile: Dockerfile
       context: .
@@ -25,11 +26,16 @@ services:
     container_name: "frs-admin"
     ports:
       - "8081:8080"
+      - "5006:5005"
+    environment:
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
     depends_on:
       - frs-postgres-db
       - frs-api
 
   frs-api:
+    image: ${registry}frs-api
     build:
       dockerfile: Dockerfile
       context: .
@@ -37,14 +43,22 @@ services:
     container_name: "frs-api"
     ports:
       - "8082:8080"
+      - "5005:5005"
     depends_on:
       - frs-postgres-db
       - frs-mongo-db
+    environment:
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
+      - MONGO_URL=mongodb://${mongo_domain}:${mongo_port}
 
   frs-fe:
+    image: ${registry}frs-fe
     build:
       context: ui
       dockerfile: docker-prod/Dockerfile
+    volumes:
+      - ${frs-fe-volume}
     container_name: "frs-ui"
     ports:
       - "8000:80"
@@ -53,9 +67,12 @@ services:
       - frs-admin
 
   frs-core:
+    image: ${registry}frs-core
     container_name: "frs-core"
+    ports:
+      - "3300:3000"
     build:
       context: embedding-calculator
     environment:
-      - MONGODB_URI=mongodb://frs-mongo-db:27017/efrs_db
+      - MONGODB_URI=mongodb://${mongo_domain}:${mongo_port}/efrs_db
       - ML_PORT=3000
