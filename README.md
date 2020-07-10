@@ -67,7 +67,7 @@ docker-compose up --build
 
 
 
-![how-it-works](https://github.com/pospielov/frs-private/blob/develop/infrastructure/how-it-works.jpg)
+![how-it-works](https://user-images.githubusercontent.com/4942439/87042598-4ff45f00-c20d-11ea-8142-7aba30723117.jpg)
 
 **Finding the face:** we reused base project code for this, for face recognition they use multi-task cascaded convolutional neural networks (MTCNN).
 **Posing and projecting faces:** we reused base project code for this.
@@ -106,7 +106,7 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 
 
 
-![architecture](https://github.com/pospielov/frs-private/blob/develop/infrastructure/architecture.jpg)
+![architecture](https://user-images.githubusercontent.com/4942439/87042452-220f1a80-c20d-11ea-96ee-5f7ad6ddf93b.jpg)
 
 
 
@@ -357,6 +357,19 @@ Response body on success:
 
 
 
+
+### Delete model and all faces that belong to it
+
+Delete model and everything related to it from MongoDB. Please, note that it has no effect on PostgreSQL data. So deleting model from MongoDB doesn't remove model's record from PostgreSQL. Originally, endpoint was created to reffer from [admin](/admin) modul.
+
+```
+curl  -X DELETE \
+-H "x-frs-api-key: <model_api_key>"
+https://localhost:8080/api/v1/faces
+```
+
+**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+
 ## Use cases and domains
 
 <todo: cases and domains>
@@ -373,12 +386,11 @@ We have rules on formatting:
 <todo: links to code style files> 
 
 
-> TL;DR: you can modify, distribute and use it commercially, 
-but you MUST reference the original author or give a link to service
-
-
 
 ## License info
 
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+    
+> TL;DR: you can modify, distribute and use it commercially, 
+but you MUST reference the original author or give a link to service
     

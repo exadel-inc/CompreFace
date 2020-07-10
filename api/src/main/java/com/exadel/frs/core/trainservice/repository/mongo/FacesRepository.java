@@ -24,13 +24,13 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface FacesRepository extends MongoRepository<Face, String> {
 
-    List<Face> findByApiKey(final String modelApiKey);
+    List<Face> findByApiKey(String modelApiKey);
 
-    List<Face> deleteByApiKeyAndFaceName(final String modelApiKey, final String faceName);
+    List<Face> deleteByApiKeyAndFaceName(String modelApiKey, String faceName);
 
-    List<Face> deleteFacesByApiKey(final String modelApiKey);
+    List<Face> deleteFacesByApiKey(String modelApiKey);
 
-    int countByApiKey(final String modelApiKey);
+    int countByApiKey(String modelApiKey);
 
     List<Face> findByIdIn(List<String> ids);
 }

@@ -14,11 +14,19 @@
  * permissions and limitations under the License.
  */
 
-import {Environment} from './interface';
+package com.exadel.frs.core.trainservice.mapper;
 
-export const environment: Environment = {
-  production: false,
-  basicToken:  `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=`,
-  // local mock server:
-  apiUrl: '/admin/'
-};
+import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
+import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+@Mapper
+public interface FaceMapper {
+
+    @Mapping(source = "id", target = "id")
+    @Mapping(source = "faceName", target = "name")
+    FaceResponseDto toResponseDto(Face face);
+    List<FaceResponseDto> toResponseDto(List<Face> faces);
+}

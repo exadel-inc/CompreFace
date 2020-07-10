@@ -14,11 +14,19 @@
  * permissions and limitations under the License.
  */
 
-import {Environment} from './interface';
+package com.exadel.frs.core.trainservice.dto.ui;
 
-export const environment: Environment = {
-  production: false,
-  basicToken:  `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=`,
-  // local mock server:
-  apiUrl: '/admin/'
-};
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class FaceResponseDto {
+
+    private String id;
+    private String name;
+}

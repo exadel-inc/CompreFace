@@ -35,6 +35,7 @@ import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.entity.UserOrganizationRoleId;
+import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.OrganizationNotFoundException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.helpers.EmailSender;
@@ -261,6 +262,64 @@ class OrganizationServiceTest {
 
         verify(organizationRepositoryMock).save(organization);
         verifyNoMoreInteractions(organizationRepositoryMock);
+    }
+
+    @Nested
+    public class GetOrgRolesToAssignTest {
+
+        private final Organization organization;
+        private final long orgOwnerId = 1L;
+        private final long orgAdminId = 2L;
+        private final long orgUserRole = 3L;
+
+        public GetOrgRolesToAssignTest() {
+            val ownerRole = makeOrgRole(OWNER, orgOwnerId);
+            val adminRole = makeOrgRole(ADMINISTRATOR, orgAdminId);
+            val userRole = makeOrgRole(USER, orgUserRole);
+
+            val userOrgRoles = List.of(ownerRole, adminRole, userRole);
+            this.organization = Organization.builder()
+                                            .userOrganizationRoles(userOrgRoles)
+                                            .build();
+        }
+
+        @BeforeEach
+        void init() {
+            when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID))
+                    .thenReturn(Optional.of(organization));
+        }
+
+        @Test
+        void orgOwnerCanAssignAnyRole() {
+            val actual = organizationService.getOrgRolesToAssign(ORGANIZATION_GUID, orgOwnerId);
+
+            assertThat(actual).containsExactly(OrganizationRole.values());
+        }
+
+        @Test
+        void AdminCanAssignLimitedRoles() {
+            val actual = organizationService.getOrgRolesToAssign(ORGANIZATION_GUID, orgAdminId);
+
+            assertThat(actual).contains(ADMINISTRATOR)
+                              .contains(USER)
+                              .doesNotContain(OWNER);
+        }
+
+        @Test
+        void userCanAssignNoRole() {
+            val actual = organizationService.getOrgRolesToAssign(ORGANIZATION_GUID, orgUserRole);
+
+            assertThat(actual).doesNotHaveAnyElementsOfTypes(OrganizationRole.class);
+        }
+
+        private UserOrganizationRole makeOrgRole(final OrganizationRole owner, final long orgOwnerId) {
+            return UserOrganizationRole.builder()
+                                       .id(UserOrganizationRoleId.builder()
+                                                                 .userId(orgOwnerId)
+                                                                 .build())
+                                       .role(owner)
+                                       .build();
+        }
     }
 
     @DisplayName("Test organization delete")

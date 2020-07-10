@@ -4,7 +4,8 @@
   "license": "Apache-2.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 4201 --disable-host-check --configuration=local --hmr",
+    "start": "ng serve --disable-host-check --configuration=local --hmr --proxy-config proxy.conf.json",
+    "start:dev": "docker-compose -f ../docker-compose.yml -f ../docker-compose.dev.ui.yml up --build  & npm run start",
     "build": "ng build",
     "build:prod": "ng build --configuration=production",
     "test": "ng test",
