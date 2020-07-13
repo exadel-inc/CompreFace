@@ -36,6 +36,7 @@ import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.val;
@@ -52,13 +53,13 @@ public class FaceControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static final String API_KEY = "model_key";
-
     @MockBean
     private FacesRepository facesRepository;
 
     @MockBean
     private ModelDao modelDao;
+
+    private static final String API_KEY = "model_key";
 
     @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
@@ -71,15 +72,15 @@ public class FaceControllerTest {
                 .when(facesRepository)
                 .findByApiKey(API_KEY);
 
-        val expectedContent = new ObjectMapper().writeValueAsString(
-                faces.stream()
-                     .map(face -> FaceResponseDto.builder()
-                                                 .id(face.getId())
-                                                 .name(face.getFaceName())
-                                                 .build()
-                     )
-                     .collect(toList())
-        );
+        val expectedFaces = faces.stream()
+                                 .map(face -> FaceResponseDto.builder()
+                                                             .id(face.getId())
+                                                             .name(face.getFaceName())
+                                                             .build()
+                                 )
+                                 .collect(toList());
+
+        val expectedContent = new ObjectMapper().writeValueAsString(Map.of("faces", expectedFaces));
 
         mockMvc.perform(get(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
                .andExpect(status().isOk())

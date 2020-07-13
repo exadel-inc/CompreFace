@@ -23,6 +23,7 @@ import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,11 +42,11 @@ public class FaceController {
     private final FaceMapper faceMapper;
 
     @GetMapping
-    public List<FaceResponseDto> findFacesByModel(
+    public Map<String, List<FaceResponseDto>> findFacesByModel(
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        return faceMapper.toResponseDto(faceService.findFaces(apiKey));
+        return Map.of("faces", faceMapper.toResponseDto(faceService.findFaces(apiKey)));
     }
 
     @WriteEndpoint
