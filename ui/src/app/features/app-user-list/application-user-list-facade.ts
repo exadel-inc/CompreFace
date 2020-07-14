@@ -28,7 +28,7 @@ import {
 } from 'src/app/store/app-user/actions';
 import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/selectors';
 import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
-import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
+import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
 import { LoadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
@@ -54,7 +54,14 @@ export class ApplicationUserListFacade implements IFacade {
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
     this.availableEmails$ = store.select(selectUsers).pipe(map(data => data.map(user => user.email)));
-    this.userRole$ = store.select(selectUserRollForSelectedApp);
+    this.userRole$ = combineLatest(this.store.select(selectUserRollForSelectedApp),
+      this.store.select(selectUserRollForSelectedOrganization)).pipe(
+      map(([applicationRole, organizationRole]) => {
+       //the organization role most relevant than the application role
+       return organizationRole !== "USER" ? organizationRole : applicationRole
+      })
+    );
+
     this.currentUserId$ = store.select(selectUserId);
     const allRoles$ = store.select(selectAllRoles);
 
