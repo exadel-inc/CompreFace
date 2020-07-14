@@ -54,10 +54,11 @@ export class ApplicationUserListFacade implements IFacade {
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
     this.availableEmails$ = store.select(selectUsers).pipe(map(data => data.map(user => user.email)));
-    this.userRole$ = combineLatest(this.store.select(selectUserRollForSelectedApp),
+    this.userRole$ = combineLatest(
+      this.store.select(selectUserRollForSelectedApp),
       this.store.select(selectUserRollForSelectedOrganization)).pipe(
       map(([applicationRole, organizationRole]) => {
-       //the organization role most relevant than the application role
+       // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
        return organizationRole !== "USER" ? organizationRole : applicationRole
       })
     );
