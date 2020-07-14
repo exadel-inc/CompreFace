@@ -26,7 +26,6 @@ import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.system.feign.python.Face;
 import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.math.BigDecimal;
@@ -85,7 +84,7 @@ public class RecognizeController {
         val scanResponse = client.scanFaces(file, limit, 0.5D);
         val results = new ArrayList<FacePrediction>();
 
-        for (ScanResult scanResult : scanResponse.getResult()) {
+        for (val scanResult : scanResponse.getResult()) {
             val predictions = classifierPredictor.predict(
                     apiKey,
                     scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray(),
