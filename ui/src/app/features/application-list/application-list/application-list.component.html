@@ -19,7 +19,7 @@ limitations under the License.
   <app-table *ngIf="tableConfig.data.length > 0" class="app-table" [isLoading]="isLoading" [tableConfig]="tableConfig"
     (changeRow)="selectApp.emit($event)">
   </app-table>
-  <div class="create-new-message" *ngIf="tableConfig.data.length === 0">
+  <div class="create-new-message" *ngIf="tableConfig.data.length === 0 && !isLoading">
     <mat-icon>info</mat-icon>
     <p>
       The first step in using face recognition service is to create an application. An application is where you can
