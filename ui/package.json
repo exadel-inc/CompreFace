@@ -5,7 +5,6 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --disable-host-check --configuration=local --hmr --proxy-config proxy.conf.json",
-    "start:dev": "docker-compose -f ../docker-compose.yml -f ../docker-compose.dev.ui.yml up --build  & npm run start",
     "build": "ng build",
     "build:prod": "ng build --configuration=production",
     "test": "ng test",
