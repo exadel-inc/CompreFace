@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 
 import { Application } from '../../data/application';
 import { IFacade } from '../../data/facade/IFacade';
@@ -28,7 +28,8 @@ import {
   selectIsPendingApplicationList,
   selectUserRollForSelectedApp,
 } from '../../store/application/selectors';
-import { selectCurrentOrganizationId } from '../../store/organization/selectors';
+import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from '../../store/organization/selectors';
+import { map } from "rxjs/operators";
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {
@@ -43,7 +44,15 @@ export class ApplicationHeaderFacade implements IFacade {
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
-    this.userRole$ = this.store.select(selectUserRollForSelectedApp);
+    this.userRole$ = combineLatest(
+      this.store.select(selectUserRollForSelectedApp),
+      this.store.select(selectUserRollForSelectedOrganization)
+    ).pipe(
+      map(([applicationRole, organizationRole]) => {
+        // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
+        return organizationRole !== "USER" ? organizationRole : applicationRole
+      })
+    );
     this.selectedId$ = this.store.select(selectCurrentAppId);
     this.loading$ = this.store.select(selectIsPendingApplicationList);
   }
