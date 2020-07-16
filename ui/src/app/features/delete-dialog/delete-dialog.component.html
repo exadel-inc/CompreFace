@@ -26,18 +26,25 @@
         <p>The user {{data.entity.firstName}} {{data.entity.lastName}} is an owner of applications:
           <b>{{data.entity.ownerOfApplications.join(', ')}}</b>.
         </p>
-        <p>You can delete him anyway. In this case the owner of this applications will be:</p>
-        <mat-radio-group
-          aria-labelledby="delete-radio-group"
-          class="delete-radio-group"
-          [(ngModel)]="data.seletedOption">
-          <mat-radio-button
-            class="delete-radio-button"
-            *ngFor="let option of data.options"
-            [value]="option.value">
-            {{option.name}}
-          </mat-radio-button>
-        </mat-radio-group>
+        <p>You can delete him anyway.
+          <ng-container *ngIf="isOrganizationOwner; else userListText" >
+            In this case you will become the OWNER of these applications.
+          </ng-container>
+          <ng-template #userListText>
+            In this case the owner of this applications will be:
+            <mat-radio-group
+              aria-labelledby="delete-radio-group"
+              class="delete-radio-group"
+              [(ngModel)]="data.seletedOption">
+              <mat-radio-button
+                class="delete-radio-button"
+                *ngFor="let option of data.options"
+                [value]="option.value">
+                {{option.name}}
+              </mat-radio-button>
+            </mat-radio-group>
+          </ng-template>
+        </p>
       </ng-container>
 
       <ng-container *ngIf="data.entity.ownerOfApplications.length === 0">

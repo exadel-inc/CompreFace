@@ -23,11 +23,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 
 export class DeleteDialogComponent implements OnInit {
+  isOrganizationOwner: boolean;
 
   constructor(
     public dialogRef: MatDialogRef<DeleteDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.isOrganizationOwner = this.data.options[0].name === this.data.options[1].name;
+  }
 }
