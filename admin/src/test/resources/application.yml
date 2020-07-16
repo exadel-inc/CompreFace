@@ -40,9 +40,6 @@ spring:
   liquibase:
     enabled: false
 
-proxy:
-  baseUrl: ${PROXY_URL:http://localhost:5000}
-
 host:
   full:
     dns:

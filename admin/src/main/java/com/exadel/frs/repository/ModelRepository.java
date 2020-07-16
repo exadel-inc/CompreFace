@@ -19,7 +19,6 @@ package com.exadel.frs.repository;
 import com.exadel.frs.entity.Model;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -33,9 +32,5 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     Optional<Model> findByGuid(String guid);
 
-    @EntityGraph(attributePaths = {"app"})
-    Optional<Model> findByApiKey(String apiKey);
-
     boolean existsByNameAndAppId(String name, Long appId);
-
 }
