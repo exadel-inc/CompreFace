@@ -14,9 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output, SimpleChanges} from '@angular/core';
 import {AppUser} from 'src/app/data/appUser';
 
 
@@ -27,16 +25,16 @@ import {MatTableDataSource} from '@angular/material';
 @Component({
   selector: 'app-user-table',
   templateUrl:  './user-table.component.html',
-  styleUrls: ['./user-table.component.scss']
+  styleUrls: ['./user-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserTableComponent implements OnInit {
+export class UserTableComponent implements OnChanges {
   form: FormGroup;
   dataSource: MatTableDataSource<any>;
   displayedColumns = ['name', 'role', 'delete'];
 
-  @Input() users$: Observable<AppUser[]>;
+  @Input() users: AppUser[];
   @Input() availableRoles: string[];
-  @Input() availableRoles$: Observable<string[]>;
   @Input() currentUserId: string;
   @Input() userRole: string;
   @Input() currentUserEmail: string;
@@ -49,36 +47,35 @@ export class UserTableComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder
   ) {
-  }
-
-  ngOnInit() {
     this.form = this.formBuilder.group({
       users: this.formBuilder.array([])
     });
-    this.usersAsFormArray().subscribe(users => {
-      this.form.setControl('users', users);
+  }
+
+  ngOnChanges(simpleChanges: SimpleChanges) {
+    if(simpleChanges.users && simpleChanges.users.currentValue) {
+      this.form.setControl('users', this.usersAsFormArray());
       this.dataSource = new MatTableDataSource((this.form.get('users') as FormArray).controls);
       this.dataSource.filterPredicate = (data: FormGroup, filter: string) => {
         return Object.values(data.controls).some(x => x.value === filter);
       };
-    });
+    }
   }
 
-  get users(): FormArray {
+  get usersForm(): FormArray {
     return this.form.get('users') as FormArray;
   }
 
-  usersAsFormArray(): Observable<FormArray> {
-    return this.users$.pipe(map((appUsers: AppUser[]) => {
-      const fg$ = appUsers.map(user => this.userAsFormGroup(user));
-      return new FormArray(fg$);
-    }));
+  usersAsFormArray(): FormArray {
+    const fg$ = this.users.map(user => this.userAsFormGroup(user));
+    return new FormArray(fg$);
   }
 
   userAsFormGroup(appUser: AppUser): FormGroup {
     return new FormGroup({
       id: new FormControl(appUser.id),
-      name: new FormControl(appUser.firstName, Validators.required),
+      userId: new FormControl(appUser.userId),
+      firstName: new FormControl(appUser.firstName, Validators.required),
       lastName: new FormControl(appUser.lastName, Validators.required),
       role: new FormControl(appUser.role, Validators.required),
       email: new FormControl(appUser.email),
@@ -86,27 +83,22 @@ export class UserTableComponent implements OnInit {
     });
   }
 
-  isRoleChangeAllowed(userRole: string): Observable<boolean> {
-    return this.userRole !== 'USER' && this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
+  isRoleChangeAllowed(userRole: string): boolean {
+    return this.userRole !== 'USER' && this.availableRoles.indexOf(userRole) > -1;
   }
 
   onChangeRole(event, userGroup: FormGroup) {
     const user = {
-      firstName: userGroup.get('name').value,
-      lastName: userGroup.get('lastName').value,
+      ...userGroup.value,
       role: event,
-      id: userGroup.get('id').value,
     };
     this.changeRole.emit(user);
   }
 
   onDelete(event, userGroup: FormGroup) {
     const user = {
-      firstName: userGroup.get('name').value,
-      lastName: userGroup.get('lastName').value,
-      userId: userGroup.get('id').value,
-      email: userGroup.get('email').value,
-      ownerOfApplications: userGroup.get('ownerOfApplications').value
+      ...userGroup.value,
+      role: event,
     };
     this.deleteUser.emit(user);
   }

@@ -29,10 +29,10 @@
   <app-user-table
     class="app-table"
     [isLoading]="isLoading$ | async"
-    [availableRoles$]="availableRoles$"
+    [availableRoles]="availableRoles$ | async"
     [currentUserId]="currentUserId$ | async"
     [userRole]="userRole$ | async"
-    [users$]="users$"
+    [users]="users$ | async"
     [createHeader]="'Add users to the FRS'"
     [createMessage]="'You can add other users to the FRS application. They need to register and login to FRS. After registration and login users will appear automatically in the users\' table.'"
     (changeRole)="onChange($event)"

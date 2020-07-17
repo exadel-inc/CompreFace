@@ -44,11 +44,11 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
     return userAdapter.addAll(users, {...state, isPending: false});
   }),
   on(updateUserRoleAction, (state) => ({...state, isPending: true})),
-  on(updateUserRoleSuccessAction, (state, user)  => {
+  on(updateUserRoleSuccessAction, (state, { user })  => {
     return userAdapter.updateOne({
-      id: user.user.userId,
+      id: user.userId,
       changes: {
-        role: user.user.role
+        role: user.role
       }
     }, {...state, isPending: false});
   }),

@@ -34,8 +34,8 @@
     [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
     [currentUserId]="currentUserId$ | async"
-    [availableRoles$]="availableRoles$"
-    [users$]="appUsers$"
+    [availableRoles]="availableRoles$ | async"
+    [users]="appUsers$ | async"
     (changeRole)="onChange($event)"
     (deleteUser)="onDelete($event)">
   </app-user-table>
