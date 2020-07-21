@@ -51,7 +51,7 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<ng-container *ngIf="data.length <= 1 && (createHeader || createMessage)">
+<ng-container *ngIf="data.length <= 1 && (createHeader || createMessage) && !isLoading">
   <h4>{{createHeader}}</h4>
   <div class="create-new-message">
     <mat-icon>info</mat-icon>

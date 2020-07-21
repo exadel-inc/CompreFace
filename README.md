@@ -69,10 +69,12 @@ docker-compose up --build
 
 ![how-it-works](https://user-images.githubusercontent.com/4942439/87042598-4ff45f00-c20d-11ea-8142-7aba30723117.jpg)
 
-**Finding the face:** we reused base project code for this, for face recognition they use multi-task cascaded convolutional neural networks (MTCNN).
-**Posing and projecting faces:** we reused base project code for this.
-**Calculate embedding from faces:** we reused base project code for this, they take pretrained CNN for face recognition, remove the last 3 fully connected layers and the result NN calculates embedding.
-**Use embedding for training model/recognize face using embedding:**
+- **Finding the face:** we reused base project code for this, for face recognition they use multi-task cascaded convolutional neural
+ networks (MTCNN).
+- **Posing and projecting faces:** we reused base project code for this.
+- **Calculate embedding from faces:** we reused base project code for this, they take pretrained CNN for face recognition, remove the last
+ 3 fully connected layers and the result NN calculates embedding.
+- **Use embedding for training model/recognize face using embedding:**
 right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/api/java/smile/classification/LogisticRegression.html) as a classifier, because of small number of train examples.
 
 
@@ -165,22 +167,25 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 ### Add an example of the face
 
 Add an example image of a know person's face. It will be used during face recognition. Face will be recognized after the model is trained.
-```
+```http request
 curl  -X POST \
 -H "Content-Type: multipart/form-data" \
 -H "x-frs-api-key: <model_api_key>" \
--F file=@<localfilename>
--F det_prob_threshold=@<det_prob_threshold>
--F retrain=@<retrain_option>
+-F file=<localfilename>
+-F det_prob_threshold=<det_prob_threshold>
+-F retrain=<retrain_option>
 
-http://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
+http://localhost:8080/api/v1/faces/<face_name>
 ```
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-**[localfilename]** - jpeg of png image on your local computer.
-**[face_name]** - name of the person on the image. It could be any string if you need depersonalize images.
-**[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
-**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running
- processes of classifier training. Default value: force
+- **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
+" header)
+- **[localfilename]** - jpeg of png image on your local computer
+- **[face_name]** - name of the person on the image. It could be any string if you need depersonalize images
+- **[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0
+- **[retrain_option]** - (optional) specify whether the model should start retraining immediately after the request is completed (set this
+ parameter to
+ value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running
+ processes of classifier training. Default value: *FORCE*
 
 **Available images extensions:** jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp
 
@@ -191,53 +196,57 @@ http://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
 ### Recognize faces from given image
 
 Recognizes faces from given image.
-```
+```http request
 curl  -X POST \
 -H "Content-Type: multipart/form-data" \
 -H "x-frs-api-key: <model_api_key>" \
--F file=@<localfilename>
+-F file=<local_file>
 -F limit=<limit>
--F det_prob_threshold=<det_prob_threshold>
+-F prediction_count=<prediction_count>
 
 https://localhost:8080/api/v1/recognize[?limit=<limit>]
 ```
 
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-**[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
-**[localfilename]** - jpeg of png image on your local computer.
-**[limit]** (optional) - parameter to specify the maximum number of faces to be recognized. Value of 0 represents no limit. Default value: 0. 
+- **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
+" header)
+- **[local_file]** - path to jpeg of png image on your local computer
+- **[limit]** (optional) - parameter to specify the maximum number of faces to be recognized. Value of 0 represents no limit. Default
+ value: 0
+- **[prediction_count]** (optional) - parameter to specify the maximum number of predictions per faces. Default value: 1
 
 **Available images extensions:** jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp
 
 **Max images size:** 5Mb (5242880 bytes)
 
 Response body on success:
-```
+```json
 {
-     "result" : [
-         {
-             "box" :
-             {
-                    "x_min"=<integer>,
-                    "x_max"=<integer>,
-                    "y_min"=<integer>,
-                    "y_max"=<integer>,
-                    "probability"=<det_probability>,
-
-             },
-             "face_name" : <face_name1>,
-             "probability" : <probability1>
-         },
-         ...
-     ]
+  "result": [
+    {
+      "box": {
+        "probability": <det_probability>,
+        "x_max": <integer>,
+        "y_max": <integer>,
+        "x_min": <integer>,
+        "y_min": <integer>
+      },
+      "faces": [
+        {
+          "similarity": <similarity1>,
+          "face_name": <face_name1>
+        },
+        ...
+      ]
+    }
+  ]
 }
 ```
-<todo: output format will be changed>
 
-**[face_name]** - name of the person on the image with the biggest probability
-**[probability]** - probability that on that image predicted person
-**[det_probability]** - probability that a found face is a actually a face
-**[parameters]** - list of parameters of the bounding box for this face
+- **[box]** - list of parameters of the bounding box for this face
+    - **[det_probability]** - probability that a found face is actually a face
+- **[faces]** - list of similar faces with size of **[prediction_count]** order by similarity
+    - **[face_name]** - name of the person in model
+    - **[similarity]** - similarity that on that image predicted person
 
 
 
@@ -245,17 +254,17 @@ Response body on success:
 
 Retrains model for specified API Key. The model should be retrained if updates to the face database were done with the retrain  flag to  false (which is useful when uploading/deleting a lot of faces). 
 
-```
+```http request
 curl  -X POST \
 -H "x-frs-api-key: <model_api_key>" \
 
 https://localhost:8080/api/v1/retrain
 ```
 
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+- **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
 
 Response body on success:
-```
+```json
 {
   "status": "Training is started"
 }
@@ -267,24 +276,25 @@ Response body on success:
 
 Gets face model retraining status for specified API Key. This REST endpoint could be useful if you want to check if the model is still retraining before adding more faces and retraining model again.
 
-```
+```http request
 curl  -X GET \
 -H "x-frs-api-key: <model_api_key>" \
 
 https://localhost:8080/api/v1/retrain
 ```
 
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+- **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
+" header)
 
 Response body on success:
-```
+```json
 {
   "status": "Retraining has been previously started"
 }
 ```
 or
 
-```
+```json
 {
   "status": "Ready to start training"
 }
@@ -296,17 +306,18 @@ or
 
 Aborts training the specified API Key. This REST endpoint could be useful if you want to stop retraining the model.
 
-```
+```http request
 curl  -X DELETE \
 -H "x-frs-api-key: <model_api_key>" \
 
 https://localhost:8080/api/v1/retrain
 ```
 
-**[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key" header)
+- **[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key
+" header)
 
 Response body on success:
-```
+```json
 {
   "status": "Retraining is ensured to be stopped"
 }
@@ -317,16 +328,21 @@ Response body on success:
 
 Delete all image examples of the face. Face will not be recognized after the model is retrained.
 
-```
+```http request
 curl  -X DELETE \
 -H "x-frs-api-key: <model_api_key>"
+-F retrain=<retrain_option>
 
-https://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
+https://localhost:8080/api/v1/faces/<face_name>
 ```
 
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-**[face_name]** - the name of the person, whose records need to be removed from the database, as a string.
-**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running processes of classifier training. Default value : *force*
+- **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
+" header)
+- **[face_name]** - the name of the person, whose records need to be removed from the database, as a string
+- **[retrain_option]** - (optional) specify whether the model should start retraining immediately after the request is completed (set this
+ parameter to
+ value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort
+  already running processes of classifier training. Default value: *FORCE*
 
 
 
@@ -334,27 +350,30 @@ https://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
 
 As with all other endpoints, applies only to faces uploaded with the specified API key.
 
-```
+```http request
 curl  -X GET \
 -H "x-frs-api-key: <model_api_key>" \
 https://localhost:8080/api/v1/faces
 ```
 
-**[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key" header)
+- **[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key
+" header)
 
 Response body on success:
-```
+```json
 {
-   "names" : [
-     <face_name1>,
-     <face_name2>,
-     ...
-   ]
+  "faces": [
+    {
+      "id": <face_id>,
+      "name": <face_name>
+    },
+    ...
+  ]
 }
 ```
 
-**[face_name]** - name of the person, whose picture was saved for this api key. 
-
+- **[face_id]** - id of the face in the database
+- **[face_name]** - name of the person, whose picture was saved for this api key 
 
 
 
@@ -362,13 +381,14 @@ Response body on success:
 
 Delete model and everything related to it from MongoDB. Please, note that it has no effect on PostgreSQL data. So deleting model from MongoDB doesn't remove model's record from PostgreSQL. Originally, endpoint was created to reffer from [admin](/admin) modul.
 
-```
+```http request
 curl  -X DELETE \
 -H "x-frs-api-key: <model_api_key>"
 https://localhost:8080/api/v1/faces
 ```
 
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+- **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
+" header)
 
 ## Use cases and domains
 

@@ -33,6 +33,11 @@ body {
   h3 {
     font-weight: 400;
     margin-top: 0;
+    font-family: Roboto Regular, "Helvetica Neue", sans-serif;
+  }
+
+  h4 {
+    font-family: Roboto Regular, "Helvetica Neue", sans-serif;
   }
 }
 
@@ -47,6 +52,11 @@ body {
 
 mat-card {
   box-sizing: border-box;
+  font-family: Roboto Regular, "Helvetica Neue", sans-serif;
+}
+
+.app-user-list-card{
+  margin-top: -150px;
 }
 
 .mat-raised-button {
@@ -136,6 +146,7 @@ app-table, app-user-table, app-model-table {
 
     .mat-header-cell {
       width: 50%;
+      font-family: Roboto Regular, "Helvetica Neue", sans-serif;
     }
 
     .mat-form-field {
