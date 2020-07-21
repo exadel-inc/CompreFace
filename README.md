@@ -410,7 +410,3 @@ We have rules on formatting:
 ## License info
 
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-    
-> TL;DR: you can modify, distribute and use it commercially, 
-but you MUST reference the original author or give a link to service
-    
