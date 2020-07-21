@@ -16,13 +16,18 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { Application } from 'src/app/data/application';
 import { IFacade } from 'src/app/data/facade/IFacade';
 import { AppState } from 'src/app/store';
 import { createApplication, loadApplications } from 'src/app/store/application/action';
-import { selectApplications, selectIsPendingApplicationList } from 'src/app/store/application/selectors';
+import {
+  selectApplications,
+  selectIsPendingApplicationList,
+  selectUserRollForSelectedApp
+} from 'src/app/store/application/selectors';
 import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
+import { map } from "rxjs/operators";
 
 @Injectable()
 export class ApplicationListFacade implements IFacade {
@@ -37,8 +42,15 @@ export class ApplicationListFacade implements IFacade {
   constructor(private store: Store<AppState>) {
     this.applications$ = store.select(selectApplications);
     this.selectedOrganizationId$ = store.select(selectCurrentOrganizationId);
-    this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
-
+    this.userRole$ = combineLatest(
+      this.store.select(selectUserRollForSelectedApp),
+      this.store.select(selectUserRollForSelectedOrganization)
+    ).pipe(
+      map(([applicationRole, organizationRole]) => {
+        // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
+        return organizationRole !== "USER" ? organizationRole : applicationRole
+      })
+    );
     this.isLoading$ = store.select(selectIsPendingApplicationList);
   }
 
