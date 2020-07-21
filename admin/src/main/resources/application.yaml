@@ -66,9 +66,6 @@ security:
   encoding-strength: 256
   expire-length: 86400000
 
-proxy:
-  baseUrl: ${PROXY_URL:http://localhost:5000}
-
 swagger:
   auth:
     server: http://localhost:${server.port}
@@ -88,15 +85,3 @@ registration:
     expires: 3600000
     scheduler:
       period: 300000
-
-image:
-  types:
-    - tif
-    - tiff
-    - jpg
-    - jpeg
-    - png
-    - bmp
-    - ico
-    - gif
-    - webp

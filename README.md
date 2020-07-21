@@ -175,7 +175,7 @@ curl  -X POST \
 -F det_prob_threshold=<det_prob_threshold>
 -F retrain=<retrain_option>
 
-http://localhost:8080/api/v1/faces/<face_name>
+http://localhost:8000/api/v1/faces/<face_name>
 ```
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
 " header)
@@ -204,7 +204,7 @@ curl  -X POST \
 -F limit=<limit>
 -F prediction_count=<prediction_count>
 
-https://localhost:8080/api/v1/recognize[?limit=<limit>]
+https://localhost:8000/api/v1/recognize
 ```
 
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
@@ -219,7 +219,7 @@ https://localhost:8080/api/v1/recognize[?limit=<limit>]
 **Max images size:** 5Mb (5242880 bytes)
 
 Response body on success:
-```json
+```
 {
   "result": [
     {
@@ -258,7 +258,7 @@ Retrains model for specified API Key. The model should be retrained if updates t
 curl  -X POST \
 -H "x-frs-api-key: <model_api_key>" \
 
-https://localhost:8080/api/v1/retrain
+https://localhost:8000/api/v1/retrain
 ```
 
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
@@ -280,7 +280,7 @@ Gets face model retraining status for specified API Key. This REST endpoint coul
 curl  -X GET \
 -H "x-frs-api-key: <model_api_key>" \
 
-https://localhost:8080/api/v1/retrain
+https://localhost:8000/api/v1/retrain
 ```
 
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
@@ -310,7 +310,7 @@ Aborts training the specified API Key. This REST endpoint could be useful if you
 curl  -X DELETE \
 -H "x-frs-api-key: <model_api_key>" \
 
-https://localhost:8080/api/v1/retrain
+https://localhost:8000/api/v1/retrain
 ```
 
 - **[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key
@@ -333,7 +333,7 @@ curl  -X DELETE \
 -H "x-frs-api-key: <model_api_key>"
 -F retrain=<retrain_option>
 
-https://localhost:8080/api/v1/faces/<face_name>
+https://localhost:8000/api/v1/faces/<face_name>
 ```
 
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
@@ -353,14 +353,14 @@ As with all other endpoints, applies only to faces uploaded with the specified A
 ```http request
 curl  -X GET \
 -H "x-frs-api-key: <model_api_key>" \
-https://localhost:8080/api/v1/faces
+https://localhost:8000/api/v1/faces
 ```
 
 - **[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key
 " header)
 
 Response body on success:
-```json
+```
 {
   "faces": [
     {
@@ -384,7 +384,7 @@ Delete model and everything related to it from MongoDB. Please, note that it has
 ```http request
 curl  -X DELETE \
 -H "x-frs-api-key: <model_api_key>"
-https://localhost:8080/api/v1/faces
+https://localhost:8000/api/v1/faces
 ```
 
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
@@ -410,7 +410,3 @@ We have rules on formatting:
 ## License info
 
 [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-    
-> TL;DR: you can modify, distribute and use it commercially, 
-but you MUST reference the original author or give a link to service
-    

@@ -21,9 +21,6 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
 
-proxy:
-  baseUrl: ${PROXY_URL:http://localhost:5000}
-
 host:
   full:
     dns:
