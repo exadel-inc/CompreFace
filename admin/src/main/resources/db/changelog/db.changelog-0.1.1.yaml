@@ -11,23 +11,20 @@ databaseChangeLog:
                   name: id
                   type: bigint
               - column:
-                  name: faceName
+                  name: face_name
                   type: varchar(255)
               - column:
                   name: api_key
                   type: varchar(36)
               - column:
                   name: embeddings
-                  type: jsonb
+                  type: bytea
               - column:
                   name: raw_img_fs
-                  type: blob
+                  type: bytea
               - column:
                   name: face_img_fs
-                  type: blob
-              - column:
-                  name: calculator_version
-                  type: varchar(255)                  
+                  type: bytea
         - addPrimaryKey:
             columnNames: id
             constraintName: pk_face

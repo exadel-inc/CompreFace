@@ -15,7 +15,7 @@ databaseChangeLog:
                     type: varchar(36)
                 - column:
                     name: classifier
-                    type: jsonb
+                    type: bytea
                 - column:
                     name: calculator_version
                     type: varchar(255)
