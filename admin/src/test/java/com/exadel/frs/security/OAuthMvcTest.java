@@ -56,7 +56,10 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @SpringBootTest(classes = FrsApplication.class)
-@MockBeans({@MockBean(EmailSender.class), @MockBean(OrganizationService.class)})
+@MockBeans({
+        @MockBean(EmailSender.class),
+        @MockBean(OrganizationService.class)
+})
 class OAuthMvcTest {
 
     private String registrationToken = UUID.randomUUID().toString();

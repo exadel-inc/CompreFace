@@ -55,7 +55,10 @@ import org.springframework.test.web.servlet.MockMvc;
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
                 classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class})
 )
-@MockBeans({@MockBean(AppMapper.class), @MockBean(UserAppRoleMapper.class)})
+@MockBeans({
+        @MockBean(AppMapper.class),
+        @MockBean(UserAppRoleMapper.class)
+})
 class AppControllerTest {
 
     private static final long APP_ID = 1L;

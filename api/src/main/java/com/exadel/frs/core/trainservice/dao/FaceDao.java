@@ -65,13 +65,15 @@ public class FaceDao {
         }
 
         val map = faces.stream()
-                       .collect(toMap(face -> Pair.of(face.getId(), face.getFaceName()),
+                       .collect(toMap(
+                               face -> Pair.of(face.getId(), face.getFaceName()),
                                face -> face.getEmbeddings().stream()
                                            .map(Embedding::getEmbedding)
-                                           .collect(toList()), (l1, l2) -> Stream
-                                       .concat(l1.stream(), l2.stream())
-                                       .collect(toList())
-                       ));
+                                           .collect(toList()),
+                               (l1, l2) -> Stream.concat(l1.stream(), l2.stream())
+                                                 .collect(toList())
+                               )
+                       );
 
         val embeddingFaceList = new EmbeddingFaceList();
         embeddingFaceList.setFaceEmbeddings(map);

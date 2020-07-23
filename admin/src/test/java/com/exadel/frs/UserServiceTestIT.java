@@ -47,7 +47,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
         @MockBean(OrganizationService.class)
 })
 @TestPropertySource(properties = "spring.mail.enable=true")
-class UserServiceIntegrationTest {
+class UserServiceTestIT {
 
     private static final String ENABLED_USER_EMAIL = "enabled_user@email.com";
     private static final String DISABLED_USER_EMAIL = "disabled_user@email.com";
