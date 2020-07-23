@@ -23,7 +23,8 @@ import { AppState } from 'src/app/store';
 import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
 import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
-import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
+import {selectCurrentOrganizationId, selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
+import {map} from "rxjs/operators";
 
 @Injectable()
 export class ModelListFacade implements IFacade {
@@ -42,7 +43,15 @@ export class ModelListFacade implements IFacade {
     this.isLoading$ = store.select(selectPendingModel);
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.selectedApplication$ = store.select(selectCurrentAppId);
-    this.userRole$ = store.select(selectUserRollForSelectedApp);
+    this.userRole$ = combineLatest(
+      this.store.select(selectUserRollForSelectedApp),
+      this.store.select(selectUserRollForSelectedOrganization)
+    ).pipe(
+      map(([applicationRole, organizationRole]) => {
+        // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
+        return organizationRole !== "USER" ? organizationRole : applicationRole;
+      })
+    );
   }
 
   initSubscriptions(): void {
