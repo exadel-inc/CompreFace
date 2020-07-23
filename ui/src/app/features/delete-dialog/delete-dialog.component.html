@@ -27,7 +27,7 @@
           <b>{{data.entity.ownerOfApplications.join(', ')}}</b>.
         </p>
         <p>You can delete him anyway.
-          <ng-container *ngIf="isOrganizationOwner; else userListText" >
+          <ng-container *ngIf="data.isOrganizationOwner; else userListText" >
             In this case you will become the OWNER of these applications.
           </ng-container>
           <ng-template #userListText>
