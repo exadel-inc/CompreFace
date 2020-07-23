@@ -86,6 +86,7 @@ export class UserListComponent implements OnInit, OnDestroy {
                 { name: email, value: 'deleter' },
                 { name: this.orgOwnerEmail, value: 'owner' },
               ],
+              isOrganizationOwner: email === this.orgOwnerEmail,
               seletedOption: this.seletedOption,
             }
           }).afterClosed();
