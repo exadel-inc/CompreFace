@@ -55,9 +55,7 @@ mat-card {
   font-family: Roboto Regular, "Helvetica Neue", sans-serif;
 }
 
-.app-user-list-card{
-  margin-top: -150px;
-}
+
 
 .mat-raised-button {
   &.mat-primary {
@@ -87,6 +85,16 @@ mat-card {
       height: 58px;
     }
   }
+}
+
+.grid-application-container {
+  width: 49%;
+  display: inline-block;
+}
+
+.app-user {
+  float: right;
+  height: 100%;
 }
 
 app-table, app-user-table, app-model-table {
