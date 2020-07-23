@@ -51,7 +51,8 @@ export class ModelListFacade implements IFacade {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
         return organizationRole !== "USER" ? organizationRole : applicationRole
       })
-    );  }
+    );
+  }
 
   initSubscriptions(): void {
     this.currentArgsAndApplicationSubscription = combineLatest(
