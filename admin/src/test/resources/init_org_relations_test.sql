@@ -1,6 +1,6 @@
-INSERT INTO user(id, email, password, first_name, last_name, account_non_expired, account_non_locked, credentials_non_expired, enabled, guid)
+INSERT INTO public.user(id, email, password, first_name, last_name, account_non_expired, account_non_locked, credentials_non_expired, enabled, guid)
 VALUES
-(25,'donigone@email.com','$2a$10$MrVO.yx9Ei1oKSTJr3NXm.4FWxNDbWRitjAZo3mEyCk72jCmon5RO','FirstName','LastName',true,true,true,true,'8ecbc91e-428b-454f-a6f8-398b5daa65c2');
+(2147483647,'c509063d-3e1d-4277-9a72-d7b808c3635c@email.com','$2a$10$MrVO.yx9Ei1oKSTJr3NXm.4FWxNDbWRitjAZo3mEyCk72jCmon5RO','FirstName','LastName',true,true,true,true,'246cade7-1a82-4df1-aeb1-8fada9f4231c');
 
 INSERT INTO organization(id, name, guid)
 VALUES
@@ -26,9 +26,9 @@ VALUES
 
 INSERT INTO user_app_role(app_id, user_id, role)
 VALUES
-	(2000001, 25, 'A'),
-	(2000002, 25, 'O'),
-	(2000003, 25, 'A');
+	(2000001, 2147483647, 'A'),
+	(2000002, 2147483647, 'O'),
+	(2000003, 2147483647, 'A');
 
 
 INSERT INTO model_share_request(app_id, request_id, request_time)
@@ -47,5 +47,5 @@ VALUES
 
 INSERT INTO user_organization_role(organization_id, user_id, role)
 VALUES
-	(1000001, 25, 'O' ),
-	(1000002, 25, 'O' );
+	(1000001, 2147483647, 'O' ),
+	(1000002, 2147483647, 'O' );

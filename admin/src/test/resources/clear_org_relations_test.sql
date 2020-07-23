@@ -1,0 +1,24 @@
+DELETE FROM user_organization_role
+	   WHERE organization_id IN (1000001, 1000002)
+	   AND user_id = 2147483647;
+
+DELETE FROM app_model
+	   WHERE app_id IN (2000001, 2000003);
+
+DELETE FROM model_share_request
+ 	   WHERE app_id IN (2000001, 2000002, 2000003);
+
+DELETE FROM user_app_role
+	   WHERE app_id IN (2000001, 2000002, 2000003);
+
+DELETE FROM model
+	   WHERE id IN (3000001, 3000002, 3000003, 3000004, 3000005);
+
+DELETE FROM app
+	   WHERE id IN (2000001, 2000002, 2000003);
+
+DELETE FROM organization
+	   WHERE id IN (1000001, 1000002);
+
+DELETE FROM public.user
+	   WHERE id = 2147483647;

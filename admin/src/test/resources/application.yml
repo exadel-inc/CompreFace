@@ -20,25 +20,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
-  datasource:
-    driver-class-name: org.h2.Driver
-    url: ${POSTGRES_URL:jdbc:h2:mem:db;DB_CLOSE_DELAY=-1}
-    username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:postgres}
-  jpa:
-    properties:
-      hibernate:
-        jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
-        format_sql: true
-    hibernate:
-      ddl-auto: create
-    show_sql: false
-    database: h2
-    database-platform: org.hibernate.dialect.H2Dialect
-    open-in-view: true
-    generate-ddl: true
-  liquibase:
-    enabled: false
 
 host:
   full:
