@@ -50,12 +50,14 @@ app-spinner {
 
 @include tablet-landscape;
 .table-header-container form input {
-  max-width: 310px;
+  width: 90%;
+  margin-left: 10px;
 }
 
 @include tablet-portrait;
 .table-header-container form input {
-  max-width: 220px;
+  width: 90%;
+  margin-left: 10px;
 }
 
 @include mobile;
@@ -63,7 +65,8 @@ app-spinner {
   width: 75%;
 
   input {
-    max-width: 150px;
+    width: 90%;
+    margin-left: 10px;
   }
 
   i {
