@@ -92,16 +92,18 @@ mat-card {
 app-table, app-user-table, app-model-table {
   overflow-y: auto;
   display: block;
-  min-height: 300px;
+  min-height: 425px;
   max-height: 530px;
   margin-bottom: 50px;
 
   @media (min-height: 951px) and (max-height: 1050px) {
-    max-height: 400px
+    max-height: 400px;
+    min-height: 425px;
   }
 
   @media (max-height: 950px) {
     max-height: 300px;
+    min-height: 425px;
   }
 
   @include tablet {
