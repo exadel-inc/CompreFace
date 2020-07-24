@@ -50,7 +50,7 @@ export class ApplicationHeaderFacade implements IFacade {
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== "USER" ? organizationRole : applicationRole
+        return organizationRole !== "USER" ? "OWNER" : applicationRole
       })
     );
     this.selectedId$ = this.store.select(selectCurrentAppId);
