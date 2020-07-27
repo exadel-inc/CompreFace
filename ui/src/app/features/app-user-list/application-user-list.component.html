@@ -40,6 +40,6 @@
     (deleteUser)="onDelete($event)">
   </app-user-table>
   <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
-    <button  mat-button color="primary" (click)="onInviteUser();">ADD</button>
+    <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onInviteUser();">ADD</button>
   </div>
 </div>
