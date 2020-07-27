@@ -76,12 +76,13 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.user = this.form.value;
     const payload: SignUp = {
-      email: this.user.email,
-      password: this.user.password,
-      firstName: this.user.firstName,
-      lastName: this.user.lastName
+      email: this.user.email.trim(),
+      password: this.user.password.trim(),
+      firstName: this.user.firstName.trim(),
+      lastName: this.user.lastName.trim()
     };
     this.isLoading = true;
     this.store.dispatch(signUp(payload));
   }
+
 }

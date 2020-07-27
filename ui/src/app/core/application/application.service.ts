@@ -32,10 +32,12 @@ export class ApplicationService {
   }
 
   create(organizationId: string, name: string): Observable<Application> {
+    name = name.trim();
     return this.http.post<Application>(`${environment.apiUrl}org/${organizationId}/app`, { name });
   }
 
   put(organizationId: string, appId: string, name: string): Observable<Application> {
+    name = name.trim();
     return this.http.put<Application>(`${environment.apiUrl}org/${organizationId}/app/${appId}`, { name });
   }
 
