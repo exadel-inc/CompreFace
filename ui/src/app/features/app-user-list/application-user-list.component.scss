@@ -46,6 +46,13 @@ app-spinner {
   }
 }
 
+.add-model-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 mat-form-field {
   margin-top: -25px;
 }
+
