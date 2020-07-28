@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
@@ -84,7 +84,7 @@ class FaceServiceTest {
 
     @Test
     void deleteFaceById() {
-        val faceId = "faceId";
+        val faceId = 12345L;
 
         faceService.deleteFaceById(faceId, API_KEY, NO.name());
 

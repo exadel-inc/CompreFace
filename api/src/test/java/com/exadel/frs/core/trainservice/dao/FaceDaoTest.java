@@ -20,35 +20,26 @@ import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
-import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.mock.web.MockMultipartFile;
 
 class FaceDaoTest {
 
     @Mock
     private FacesRepository facesRepository;
-
-    @Mock
-    private GridFsOperations gridFsOperations;
 
     @InjectMocks
     private FaceDao faceDao;
@@ -70,13 +61,12 @@ class FaceDaoTest {
         assertThat(actual).isEqualTo(faces);
 
         verify(facesRepository).deleteByApiKeyAndFaceName(apiKey, faceName);
-        verify(gridFsOperations, times(2)).delete(any());
         verifyNoMoreInteractions(facesRepository);
     }
 
     @Test
     void deleteFaceById() {
-        val faceId = "faceId";
+        val faceId = 12345L;
         val face = Optional.of(new Face());
         when(facesRepository.findById(faceId)).thenReturn(face);
 
@@ -86,13 +76,12 @@ class FaceDaoTest {
 
         verify(facesRepository).findById(faceId);
         verify(facesRepository).delete(face.get());
-        verify(gridFsOperations, times(2)).delete(any());
         verifyNoMoreInteractions(facesRepository);
     }
 
     @Test
     void deleteNonexistentFaceById() {
-        val faceId = "faceId";
+        val faceId = 12345L;
         when(facesRepository.findById(faceId)).thenReturn(Optional.empty());
 
         val actual = faceDao.deleteFaceById(faceId);
@@ -101,7 +90,6 @@ class FaceDaoTest {
 
         verify(facesRepository).findById(faceId);
         verifyNoMoreInteractions(facesRepository);
-        verifyNoInteractions(gridFsOperations);
     }
 
     @Test
@@ -115,7 +103,6 @@ class FaceDaoTest {
         assertThat(actual).isEqualTo(faces);
 
         verify(facesRepository).deleteFacesByApiKey(apiKey);
-        verify(gridFsOperations, times(2)).delete(any());
         verifyNoMoreInteractions(facesRepository);
     }
 
@@ -137,28 +124,23 @@ class FaceDaoTest {
     @Test
     void addFaceFile() throws IOException {
         val embeddingNumbers = List.of(100500D);
-        val embeddings = List.of(new Face.Embedding(embeddingNumbers, null));
+        val embeddings = new Face.Embedding(embeddingNumbers, "1.0");
         val faceName = "faceName";
         val modelKey = "modelKey";
-        val faceId = new ObjectId("507f1f77bcf86cd799439011");
+        val faceId = "507f1f77bcf86cd799439011";
 
-        val mockFile = new MockMultipartFile("mockFile", "".getBytes());
-
-        when(gridFsOperations.store(any(InputStream.class), anyString())).thenReturn(faceId);
+        val mockFile = new MockMultipartFile("mockFile", faceId.getBytes());
 
         val actual = faceDao.addNewFace(embeddings, mockFile, faceName, modelKey);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getFaceName()).isEqualTo(faceName);
         assertThat(actual.getApiKey()).isEqualTo(modelKey);
-        assertThat(actual.getFaceImgId()).isEqualTo(faceId);
-        assertThat(actual.getRawImgId()).isEqualTo(faceId);
-        assertThat(actual.getEmbeddings()).allSatisfy(
-                embedding -> assertThat(embedding.getEmbedding()).isEqualTo(embeddingNumbers)
-        );
+        assertThat(actual.getFaceImg()).isEqualTo(faceId.getBytes());
+        assertThat(actual.getRawImg()).isEqualTo(faceId.getBytes());
+        assertThat(actual.getEmbedding().getEmbeddings()).isEqualTo(embeddingNumbers);
 
-        verify(gridFsOperations).store(any(InputStream.class), anyString());
         verify(facesRepository).save(any(Face.class));
-        verifyNoMoreInteractions(gridFsOperations, facesRepository);
+        verifyNoMoreInteractions(facesRepository);
     }
 }

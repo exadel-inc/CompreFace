@@ -72,7 +72,7 @@ public class FaceController {
             @RequestParam(name = "retrain", required = false)
             final String retrain
     ) {
-        faceService.deleteFaceById(faceId, apiKey, retrain);
+        faceService.deleteFaceById(Long.valueOf(faceId), apiKey, retrain);
     }
 
     @WriteEndpoint

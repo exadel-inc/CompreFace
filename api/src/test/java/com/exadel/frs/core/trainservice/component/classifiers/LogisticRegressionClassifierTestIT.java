@@ -30,7 +30,7 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void train() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
@@ -43,7 +43,7 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void trainModelWithWrongParamSizeFailed() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0};
@@ -57,7 +57,7 @@ public class LogisticRegressionClassifierTestIT {
     void predict() {
         val faceName = "faceName";
         val predictResult = 1;
-        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
@@ -82,7 +82,7 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void isTrained() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
         val classifier = new LogisticRegressionClassifier(facesList);
 
         assertThat(classifier.isTrained()).isFalse();
@@ -98,12 +98,12 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void getUsedFaceIds() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of("faceId", faceName), Pair.of("faceId1", faceName));
+        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
 
         val facesIds = new LogisticRegressionClassifier(facesList).getUsedFaceIds();
 
         assertThat(facesIds).size().isEqualTo(2);
-        assertThat(facesIds).contains("faceId");
-        assertThat(facesIds).contains("faceId1");
+        assertThat(facesIds).contains(1L);
+        assertThat(facesIds).contains(2L);
     }
 }

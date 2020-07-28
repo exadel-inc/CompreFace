@@ -16,7 +16,6 @@
 
 package com.exadel.frs.core.trainservice.dao;
 
-import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
@@ -26,7 +25,6 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
@@ -54,10 +52,6 @@ public class ModelDao {
                          )
                          .modelKey(modelKey)
                          .classifier(classifier)
-                         .faces(classifier.getUsedFaceIds().stream()
-                                          .map(ObjectId::new)
-                                          .collect(toList())
-                         )
                          .calculatorVersion(calculatorVersion)
                          .build();
 

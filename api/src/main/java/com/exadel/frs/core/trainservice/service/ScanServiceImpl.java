@@ -16,13 +16,12 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.entity.postgres.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import java.io.IOException;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -56,11 +55,7 @@ public class ScanServiceImpl implements ScanService {
                               .findFirst().orElseThrow()
                               .getEmbedding();
 
-        val embeddingToSave = Stream.of(
-                new Face.Embedding()
-                        .setEmbedding(embedding)
-                        .setCalculatorVersion(scanResponse.getCalculatorVersion())
-        ).collect(toList());
+        val embeddingToSave = new Embedding(embedding, scanResponse.getCalculatorVersion());
 
         return faceDao.addNewFace(embeddingToSave, file, faceName, modelKey);
     }
