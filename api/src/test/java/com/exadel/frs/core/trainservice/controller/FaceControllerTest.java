@@ -64,8 +64,8 @@ public class FaceControllerTest {
     @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
         val faces = List.of(
-                makeFace("A", API_KEY),
-                makeFace("B", API_KEY)
+                makeFace(1L,"A", API_KEY),
+                makeFace(2L,"B", API_KEY)
         );
 
         doReturn(faces)

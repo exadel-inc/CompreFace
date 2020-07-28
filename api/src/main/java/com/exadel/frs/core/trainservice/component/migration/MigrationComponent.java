@@ -79,14 +79,14 @@ public class MigrationComponent {
             val faces = model.getFaces();
             if (faces == null || faces.isEmpty()) {
                 faceManager.initNewClassifier(model.getId());
-            } else {
+            } /*else {
                 faceManager.initNewClassifier(
                         model.getId(),
                         faces.stream()
                              .map(ObjectId::toString)
                              .collect(toList())
                 );
-            }
+            }*/
         }
     }
 
