@@ -37,8 +37,8 @@ app-spinner {
     input {
       padding: 5px 30px 5px 5px;
       background-color: #EEEEEE;
-      width: 90%;
-      margin-left: 10px;
+      width: 100%;
+      max-width: 360px;
     }
 
     i {
@@ -51,14 +51,14 @@ app-spinner {
 
 @include tablet-landscape;
 .table-header-container form input {
-  width: 90%;
-  margin-left: 10px;
+  width: 100%;
+  max-width: 360px;
 }
 
 @include tablet-portrait;
 .table-header-container form input {
-  width: 90%;
-  margin-left: 10px;
+  width: 100%;
+  max-width: 360px;
 }
 
 @include mobile;
@@ -66,11 +66,8 @@ app-spinner {
   width: 75%;
 
   input {
-    width: 90%;
-    margin-left: 10px;
+    width: 100%;
+    max-width: 360px;
   }
 
-  i {
-    right: -5px;
-  }
 }
