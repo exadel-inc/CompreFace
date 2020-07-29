@@ -43,9 +43,9 @@ public class FacesRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        val faceA = makeFace(1L,"A", MODEL_KEY);
-        val faceB = makeFace(2L,"B", MODEL_KEY_OTHER);
-        val faceC = makeFace(3L,"C", MODEL_KEY);
+        val faceA = makeFace(1L, "A", MODEL_KEY);
+        val faceB = makeFace(2L, "B", MODEL_KEY_OTHER);
+        val faceC = makeFace(3L, "C", MODEL_KEY);
 
         facesRepository.saveAll(List.of(faceA, faceB, faceC));
     }
