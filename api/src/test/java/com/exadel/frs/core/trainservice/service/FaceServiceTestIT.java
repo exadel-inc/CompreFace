@@ -103,11 +103,6 @@ public class FaceServiceTestIT {
                 .setApiKey(modelApiKey)
                 .setFaceImg("hex-string-1".getBytes())
                 .setRawImg("hex-string-2".getBytes())
-                .setId(12345L)
-                /*.setEmbedding(
-                        new Face.Embedding()
-                                .setEmbeddings(List.of(0.0D))
-                                .setCalculatorVersion("1.0")
-                        )*/;
+                .setId(12345L);
     }
 }
