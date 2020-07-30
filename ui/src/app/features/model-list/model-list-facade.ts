@@ -25,6 +25,7 @@ import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store
 import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
 import {selectCurrentOrganizationId, selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
 import {map} from "rxjs/operators";
+import { RoleEnum } from 'src/app/data/appUser';
 
 @Injectable()
 export class ModelListFacade implements IFacade {
@@ -49,7 +50,7 @@ export class ModelListFacade implements IFacade {
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== "USER" ? organizationRole : applicationRole;
+        return organizationRole !== RoleEnum.USER ? organizationRole : applicationRole;
       })
     );
   }

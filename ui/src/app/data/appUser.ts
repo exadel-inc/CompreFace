@@ -19,7 +19,13 @@ export interface AppUser {
   userId: string;
   firstName: string;
   lastName: string;
-  role: string;
+  role: RoleEnum;
   email?: string;
   ownerOfApplications?: string[];
+}
+
+export enum RoleEnum{
+  OWNER = 'OWNER',
+  ADMINISTRATOR = 'ADMINISTRATOR',
+  USER = 'USER'
 }

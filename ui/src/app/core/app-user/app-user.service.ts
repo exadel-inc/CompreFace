@@ -18,7 +18,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AppUser } from 'src/app/data/appUser';
+import { AppUser, RoleEnum } from 'src/app/data/appUser';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -35,7 +35,7 @@ export class AppUserService {
       );
   }
 
-  update(organizationId: string, applicationId: string, userId: string, role: string): Observable<AppUser> {
+  update(organizationId: string, applicationId: string, userId: string, role: RoleEnum): Observable<AppUser> {
     return this.http.put<AppUser>(`${environment.apiUrl}org/${organizationId}/app/${applicationId}/role`, { userId, role });
   }
 

@@ -16,6 +16,7 @@
 
 import {selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp} from './selectors';
 import {Application} from '../../data/application';
+import { RoleEnum } from 'src/app/data/appUser';
 
 describe('ApplicationSelectors', () => {
 
@@ -53,15 +54,15 @@ describe('ApplicationSelectors', () => {
     const app1 = {
       id: 2,
       name: 'name1',
-      role: 'ADMIN'
+      role: RoleEnum.ADMINISTRATOR
     };
 
     const app2 = {
       id: 2,
       name: 'name1',
-      role: 'OWNER'
+      role: RoleEnum.OWNER
     };
-    expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMIN');
+    expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMINISTRATOR');
     expect(selectUserRollForSelectedApp.projector(app2)).toBe('OWNER');
     expect(selectUserRollForSelectedApp.projector(null)).toBeFalsy();
   });
