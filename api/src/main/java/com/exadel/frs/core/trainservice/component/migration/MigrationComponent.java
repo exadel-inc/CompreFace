@@ -79,7 +79,10 @@ public class MigrationComponent {
             val faces = model.getFaces();
             if (faces == null || faces.isEmpty()) {
                 faceManager.initNewClassifier(model.getId());
-            } /*else {
+            }
+            //todo
+            // -Update this block when model's moved to postgres
+            /*else {
                 faceManager.initNewClassifier(
                         model.getId(),
                         faces.stream()
