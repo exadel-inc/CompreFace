@@ -14,7 +14,8 @@
  * permissions and limitations under the License.
  */
 import { createAction, props } from '@ngrx/store';
-import { AppUser, RoleEnum } from 'src/app/data/appUser';
+import { AppUser  } from 'src/app/data/appUser';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 export const SetPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
 export const LoadUsersEntityAction = createAction('[User/API] Load Users', props<{ organizationId: string }>());

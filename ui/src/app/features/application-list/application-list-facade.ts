@@ -28,7 +28,8 @@ import {
 } from 'src/app/store/application/selectors';
 import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
 import { map } from "rxjs/operators";
-import { RoleEnum } from 'src/app/data/appUser';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
+
 
 @Injectable()
 export class ApplicationListFacade implements IFacade {

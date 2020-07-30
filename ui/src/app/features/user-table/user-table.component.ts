@@ -17,9 +17,10 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AppUser, RoleEnum } from 'src/app/data/appUser';
+import { AppUser } from 'src/app/data/appUser';
 
 import { TableComponent } from '../table/table.component';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 
 @Component({

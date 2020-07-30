@@ -15,7 +15,8 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { AppUser, RoleEnum } from 'src/app/data/appUser';
+import { AppUser } from 'src/app/data/appUser';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 export const loadAppUserEntityAction = createAction('[App-User/API] Load App Users', props<{
   organizationId: string,

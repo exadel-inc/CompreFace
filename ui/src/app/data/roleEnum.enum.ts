@@ -14,15 +14,8 @@
  * permissions and limitations under the License.
  */
 
-import { RoleEnum } from './roleEnum.enum';
-
-export interface AppUser {
-  id: string;
-  userId: string;
-  firstName: string;
-  lastName: string;
-  role: RoleEnum;
-  email?: string;
-  ownerOfApplications?: string[];
+export enum RoleEnum{
+    OWNER = 'OWNER',
+    ADMINISTRATOR = 'ADMINISTRATOR',
+    USER = 'USER'
 }
-
