@@ -155,9 +155,7 @@
         <dependency>
             <groupId>com.vladmihalcea</groupId>
             <artifactId>hibernate-types-52</artifactId>
-            <version>2.9.12</version>
         </dependency>
-
 
     </dependencies>
 

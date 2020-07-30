@@ -36,6 +36,7 @@
         <ehcache.version>2.7.2</ehcache.version>
         <javax-cache.version>1.1.1</javax-cache.version>
         <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
+        <hibernate-types.version>2.9.13</hibernate-types.version>
     </properties>
 
     <dependencies>
@@ -138,6 +139,11 @@
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct-processor</artifactId>
                 <version>${mapstruct.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.vladmihalcea</groupId>
+                <artifactId>hibernate-types-52</artifactId>
+                <version>${hibernate-types.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
