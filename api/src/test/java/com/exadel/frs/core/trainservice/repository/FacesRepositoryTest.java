@@ -18,21 +18,21 @@ package com.exadel.frs.core.trainservice.repository;
 
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
-import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.util.Arrays;
 import java.util.List;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@DataMongoTest
+@DataJpaTest
 @ExtendWith(SpringExtension.class)
 public class FacesRepositoryTest {
 
@@ -43,9 +43,9 @@ public class FacesRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        val faceA = makeFace("A", MODEL_KEY);
-        val faceB = makeFace("B", MODEL_KEY_OTHER);
-        val faceC = makeFace("C", MODEL_KEY);
+        val faceA = makeFace(1L, "A", MODEL_KEY);
+        val faceB = makeFace(2L, "B", MODEL_KEY_OTHER);
+        val faceC = makeFace(3L, "C", MODEL_KEY);
 
         facesRepository.saveAll(List.of(faceA, faceB, faceC));
     }
@@ -55,19 +55,13 @@ public class FacesRepositoryTest {
         facesRepository.deleteAll();
     }
 
-    public static Face makeFace(final String name, final String modelApiKey) {
+    public static Face makeFace(final Long id, final String name, final String modelApiKey) {
         val face = new Face()
                 .setFaceName(name)
                 .setApiKey(modelApiKey);
-        face.setEmbeddings(List.of(
-                new Face.Embedding()
-                        .setEmbedding(List.of(0.0D))
-                        .setCalculatorVersion("1.0")
-                )
-        );
-        face.setFaceImgId(new ObjectId("hex-string-1".getBytes()));
-        face.setRawImgId(new ObjectId("hex-string-2".getBytes()));
-        face.setId("Id_" + name);
+        face.setFaceImg("hex-string-1".getBytes());
+        face.setRawImg("hex-string-2".getBytes());
+        face.setId(id);
 
         return face;
     }
@@ -80,12 +74,11 @@ public class FacesRepositoryTest {
         assertThat(actual).hasSize(3);
         assertThat(actual).allSatisfy(
                 face -> {
-                    assertThat(face.getId()).isNotEmpty();
+                    assertThat(face.getId()).isNotNull();
                     assertThat(face.getFaceName()).isNotEmpty();
                     assertThat(face.getApiKey()).isNotEmpty();
-                    assertThat(face.getFaceImgId()).isNotNull();
-                    assertThat(face.getRawImgId()).isNotNull();
-                    assertThat(face.getEmbeddings()).isNotEmpty();
+                    assertThat(face.getFaceImg()).isNotNull();
+                    assertThat(face.getRawImg()).isNotNull();
                 }
         );
     }
@@ -111,7 +104,7 @@ public class FacesRepositoryTest {
 
     @Test
     public void findFaceIdsIn() {
-        val faces = facesRepository.findByIdIn(List.of("Id_A", "Id_B"));
+        val faces = facesRepository.findByIdIn(List.of(1L, 2L));
 
         assertThat(faces).isNotNull();
         assertThat(faces).hasSize(2);

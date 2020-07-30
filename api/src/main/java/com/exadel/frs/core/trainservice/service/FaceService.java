@@ -19,7 +19,7 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -47,7 +47,7 @@ public class FaceService {
     }
 
     public void deleteFaceById(
-            final String faceId,
+            final Long faceId,
             final String apiKey,
             final String retrain
     ) {

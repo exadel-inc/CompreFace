@@ -54,7 +54,7 @@ public class FaceClassifierManager {
         modelDao.deleteModel(modelKey);
     }
 
-    public void initNewClassifier(final String modelKey, final List<String> faces) {
+    public void initNewClassifier(final String modelKey, final List<Long> faces) {
         lockManager.lock(modelKey);
         val faceClassifier = context.getBean(FaceClassifierAdapter.class);
         faceClassifier.train(faceDao.findAllFacesIn(faces), modelKey);

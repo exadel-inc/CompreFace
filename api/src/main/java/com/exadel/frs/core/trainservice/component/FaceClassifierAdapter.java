@@ -55,7 +55,7 @@ public class FaceClassifierAdapter {
 
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
-            val labelMap = new ArrayList<Pair<String, String>>();
+            val labelMap = new ArrayList<Pair<Long, String>>();
 
             val faceNameEmbeddingsMap = embeddingFaceList.getFaceEmbeddings();
             if (faceNameEmbeddingsMap.isEmpty()) {
@@ -63,17 +63,13 @@ public class FaceClassifierAdapter {
             }
 
             for (val faceNameId : faceNameEmbeddingsMap.keySet()) {
-                val lists = faceNameEmbeddingsMap.get(faceNameId).stream()
+                val embeddings = faceNameEmbeddingsMap.get(faceNameId).stream()
                                                  .filter(ObjectUtils::isNotEmpty)
                                                  .collect(toList());
-
-                if (isNotEmpty(lists)) {
+                if (isNotEmpty(embeddings)) {
                     labelMap.add(faceNameId);
-
-                    lists.forEach(embeddings -> {
-                        x.add(embeddings.stream().mapToDouble(d -> d).toArray());
-                        y.add(labelMap.indexOf(faceNameId));
-                    });
+                    x.add(embeddings.stream().mapToDouble(d -> d).toArray());
+                    y.add(labelMap.indexOf(faceNameId));
                 }
             }
 

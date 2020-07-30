@@ -20,25 +20,24 @@ import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
-import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@DataMongoTest
+@DataJpaTest
 @ExtendWith(SpringExtension.class)
 @Import({FaceService.class, FaceDao.class})
 @MockBeans({
@@ -102,14 +101,8 @@ public class FaceServiceTestIT {
         return new Face()
                 .setFaceName(name)
                 .setApiKey(modelApiKey)
-                .setFaceImgId(new ObjectId("hex-string-1".getBytes()))
-                .setRawImgId(new ObjectId("hex-string-2".getBytes()))
-                .setId("Id_" + name)
-                .setEmbeddings(List.of(
-                        new Face.Embedding()
-                                .setEmbedding(List.of(0.0D))
-                                .setCalculatorVersion("1.0")
-                        )
-                );
+                .setFaceImg("hex-string-1".getBytes())
+                .setRawImg("hex-string-2".getBytes())
+                .setId(12345L);
     }
 }

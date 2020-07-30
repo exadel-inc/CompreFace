@@ -25,7 +25,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.entity.postgres.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
@@ -67,7 +68,7 @@ class ScanServiceImplTest {
     @Test
     void scanAndSaveFace() throws IOException {
         val scanResponse = new ScanResponse().setResult(List.of(SCAN_RESULT));
-        val embeddings = List.of(new Face.Embedding(List.of(EMBEDDING), null));
+        val embeddings = new Embedding(List.of(EMBEDDING), null);
         val face = new Face();
 
         when(scanFacesClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))

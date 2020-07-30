@@ -72,9 +72,4 @@ class MongoConfig extends AbstractMongoClientConfiguration {
 
         return mappingMongoConverter;
     }
-
-    @Bean
-    public GridFsTemplate gridFsTemplate() throws Exception {
-        return new GridFsTemplate(mongoDbFactory(), mappingMongoConverter(), "FACES");
-    }
 }

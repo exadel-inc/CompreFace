@@ -33,10 +33,10 @@ public class LogisticRegressionClassifier implements Classifier {
     private static final double TOLERANCE = 0.0001;
     private static final int MAX_ITER = 100;
 
-    private final List<Pair<String, String>> faces;
+    private final List<Pair<Long, String>> faces;
     private LogisticRegression logisticRegression;
 
-    public LogisticRegressionClassifier(final List<Pair<String, String>> faces) {
+    public LogisticRegressionClassifier(final List<Pair<Long, String>> faces) {
         this.faces = faces;
     }
 
@@ -76,7 +76,7 @@ public class LogisticRegressionClassifier implements Classifier {
     }
 
     @Override
-    public List<String> getUsedFaceIds() {
+    public List<Long> getUsedFaceIds() {
         if (faces == null) {
             return List.of();
         }

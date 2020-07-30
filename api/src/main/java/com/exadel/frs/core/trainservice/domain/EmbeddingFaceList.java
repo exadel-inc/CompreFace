@@ -32,5 +32,5 @@ public class EmbeddingFaceList {
     /**
      * Pair of <id and face name> as key and <list of embeddings> as value
      */
-    private Map<Pair<String, String>, List<List<Double>>> faceEmbeddings = new HashMap<>();
+    private Map<Pair<Long, String>, List<Double>> faceEmbeddings = new HashMap<>();
 }

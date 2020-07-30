@@ -9,6 +9,10 @@ spring:
     password: ${POSTGRES_PASSWORD:postgres}
   cache:
     type: none
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
 
 environment:
   servers:
