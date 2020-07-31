@@ -18,7 +18,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
-import { AppUser } from 'src/app/data/appUser';
+import { AppUser} from 'src/app/data/appUser';
 import { IFacade } from 'src/app/data/facade/IFacade';
 import { AppState } from 'src/app/store';
 import {
@@ -35,6 +35,7 @@ import {
 } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 @Injectable()
 export class UserListFacade implements IFacade {
@@ -95,7 +96,7 @@ export class UserListFacade implements IFacade {
     }));
   }
 
-  updateUserRole(id: string, role: string): void {
+  updateUserRole(id: string, role: RoleEnum): void {
     this.store.dispatch(PutUpdatedUserRoleEntityAction({
       organizationId: this.selectedOrganization,
       user: {

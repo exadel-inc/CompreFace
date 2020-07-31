@@ -18,7 +18,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription, zip } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { AppUser } from 'src/app/data/appUser';
+import { AppUser} from 'src/app/data/appUser';
 import { IFacade } from 'src/app/data/facade/IFacade';
 import { AppState } from 'src/app/store';
 import {
@@ -36,6 +36,7 @@ import { selectUserId } from 'src/app/store/userInfo/selectors';
 import { AppUserService } from '../../core/app-user/app-user.service';
 import { LoadUsersEntityAction } from '../../store/user/action';
 import { selectUsers } from '../../store/user/selectors';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 @Injectable()
 export class ApplicationUserListFacade implements IFacade {
@@ -60,7 +61,7 @@ export class ApplicationUserListFacade implements IFacade {
     ).pipe(
       map(([applicationRole, organizationRole]) => {
        // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-       return organizationRole !== "USER" ? organizationRole : applicationRole
+       return organizationRole !== RoleEnum.USER ? organizationRole : applicationRole
       })
     );
 
@@ -108,7 +109,7 @@ export class ApplicationUserListFacade implements IFacade {
     }));
   }
 
-  updateUserRole(id: string, role: string): void {
+  updateUserRole(id: string, role: RoleEnum): void {
     this.store.dispatch(putUpdatedAppUserRoleEntityAction({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId,

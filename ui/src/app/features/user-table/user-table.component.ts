@@ -20,6 +20,7 @@ import { map } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
 
 import { TableComponent } from '../table/table.component';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 
 @Component({
@@ -37,7 +38,7 @@ export class UserTableComponent extends TableComponent implements OnInit {
   @Output() deleteUser = new EventEmitter<AppUser>();
 
   isRoleChangeAllowed(userRole: string): Observable<boolean> {
-    return this.userRole !== 'USER' && this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
+    return this.userRole !== RoleEnum.USER && this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
   }
 
   delete(user: AppUser): void {

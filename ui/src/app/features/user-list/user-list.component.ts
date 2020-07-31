@@ -23,6 +23,7 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 @Component({
   selector: 'app-user-list-container',
@@ -52,7 +53,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.userRole$ = this.userListFacade.userRole$;
 
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
-      this.orgOwnerEmail = users.filter(user => user.role === 'OWNER').map(user => user.email)[0];
+      this.orgOwnerEmail = users.filter(user => user.role === RoleEnum.OWNER).map(user => user.email)[0];
       return {
         columns: [{ title: 'user', property: 'username' }, {
           title: 'role',
