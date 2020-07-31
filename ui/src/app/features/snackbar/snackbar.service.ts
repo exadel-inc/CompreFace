@@ -31,7 +31,7 @@ const messageMap = {
 export class SnackBarService {
   constructor(private snackBar: MatSnackBar) { }
 
-  public openInfo(messageCode: string, duration: number = 3000, message?: string): void {
+  openInfo(messageCode: string, duration: number = 3000, message?: string): void {
     const data = {
       message: messageCode ? messageMap[messageCode] : message,
       type: 'info'
@@ -40,7 +40,7 @@ export class SnackBarService {
     this.openSnackBar(data, duration);
   }
 
-  public openError(messageCode: string, duration: number = 8000, message?: string): void {
+  openError(messageCode: string, duration: number = 8000, message?: string): void {
     const data = {
       message: messageCode ? messageMap[messageCode] : message,
       type: 'error'
@@ -49,9 +49,10 @@ export class SnackBarService {
     this.openSnackBar(data, duration);
   }
 
-  public openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
+  openHttpError(error: HttpErrorResponse, duration: number = 8000): void {
+    const { message } = error.error || error;
     const data = {
-      message: message.message || message.error.message,
+      message,
       type: 'error'
     };
 
