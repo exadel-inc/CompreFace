@@ -45,6 +45,7 @@ export class ApplicationUserListFacade implements IFacade {
   availableRoles$: Observable<string[]>;
   availableEmails$: Observable<string[]>;
   userRole$: Observable<string>;
+  organizationRole$: Observable<string>;
   currentUserId$: Observable<string>;
   selectedApplicationName: string;
 
@@ -55,9 +56,10 @@ export class ApplicationUserListFacade implements IFacade {
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
     this.availableEmails$ = store.select(selectUsers).pipe(map(data => data.map(user => user.email)));
+    this.organizationRole$ = this.store.select(selectUserRollForSelectedOrganization);
     this.userRole$ = combineLatest(
       this.store.select(selectUserRollForSelectedApp),
-      this.store.select(selectUserRollForSelectedOrganization)
+      this.organizationRole$
     ).pipe(
       map(([applicationRole, organizationRole]) => {
        // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
@@ -68,11 +70,15 @@ export class ApplicationUserListFacade implements IFacade {
     this.currentUserId$ = store.select(selectUserId);
     const allRoles$ = store.select(selectAllRoles);
 
-    this.availableRoles$ = combineLatest(allRoles$, this.userRole$).pipe(
-      map(([allRoles, userRole]) => {
-        const roleIndex = allRoles.indexOf(userRole);
-        return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
-      }),
+    this.availableRoles$ = combineLatest(allRoles$, this.userRole$, this.organizationRole$).pipe(
+      map(([allRoles, userRole, organizationRole]) => {
+        if(organizationRole !== "USER"){
+          return allRoles
+        } else {
+          const roleIndex = allRoles.indexOf(userRole);
+          return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
+        }
+      })
     );
 
     const usersLoading$ = store.select(selectAppUserIsPending);
