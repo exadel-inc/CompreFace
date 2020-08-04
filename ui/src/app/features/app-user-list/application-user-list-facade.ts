@@ -72,7 +72,7 @@ export class ApplicationUserListFacade implements IFacade {
 
     this.availableRoles$ = combineLatest(allRoles$, this.userRole$, this.organizationRole$).pipe(
       map(([allRoles, userRole, organizationRole]) => {
-        if(organizationRole !== "USER"){
+        if(organizationRole !== RoleEnum.USER){
           return allRoles
         } else {
           const roleIndex = allRoles.indexOf(userRole);

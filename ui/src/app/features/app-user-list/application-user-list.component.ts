@@ -25,6 +25,7 @@ import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component'
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
+import {RoleEnum} from '../../data/roleEnum.enum';
 
 @Component({
   selector: 'app-application-user-list',
@@ -88,6 +89,12 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
         this.appUserListFacade.delete(user.userId);
       }
     });
+  }
+
+  isRoleChangeAllowed(userRole: string): Observable<boolean> {
+    return userRole !== RoleEnum.OWNER &&
+           this.userRole$.pipe(map(role => role !== RoleEnum.USER)) &&
+           this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1))
   }
 
   ngOnDestroy(): void {

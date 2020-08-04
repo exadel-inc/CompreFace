@@ -69,6 +69,10 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
   }
 
+  isRoleChangeAllowed(userRole: string): Observable<boolean> {
+    return this.userRole$.pipe(map(role => role !== RoleEnum.USER)) && this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
+  }
+
   onChange(user: AppUser): void {
     this.userListFacade.updateUserRole(user.id, user.role);
   }
