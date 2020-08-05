@@ -166,7 +166,7 @@ public class AppService {
         val user = userService.getUser(userInviteDto.getUserEmail());
         val userOrgRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
         val userAppRole = app.getUserAppRole(user.getId());
-        if (USER != userOrgRole.getRole() || userAppRole.isPresent()) {
+        if (userAppRole.isPresent()) {
             throw new UserAlreadyHasAccessToAppException(userInviteDto.getUserEmail(), appGuid);
         }
 
