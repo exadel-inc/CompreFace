@@ -87,37 +87,12 @@ mat-card {
   }
 }
 
-.grid-application-container {
-  width: 49%;
-  display: inline-block;
-}
-
-.app-user {
-  float: right;
-  height: 100%;
-}
-
 app-table, app-user-table, app-model-table {
   overflow-y: auto;
   display: block;
   min-height: 425px;
   max-height: 530px;
   margin-bottom: 50px;
-
-  @media (min-height: 951px) and (max-height: 1050px) {
-    max-height: 500px;
-    min-height: 425px;
-  }
-
-  @media (max-height: 950px) {
-    max-height: 500px;
-    min-height: 425px;
-  }
-
-  @include tablet {
-    min-height: 425px;
-    max-height: 500px
-  }
 }
 
 @include mobile {

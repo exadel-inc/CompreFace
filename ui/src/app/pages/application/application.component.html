@@ -19,18 +19,14 @@
     <app-breadcrumbs></app-breadcrumbs>
   </div>
   <div class="app-list-container">
-    <div class="grid-application-container">
-      <app-application-header></app-application-header>
-    </div>
-    <div class="grid-application-container app-user">
-      <mat-card class="app-user-list-card">
-        <app-application-user-list></app-application-user-list>
-      </mat-card>
-    </div>
-    <div class="grid-application-container">
-      <mat-card>
-        <app-model-list></app-model-list>
-      </mat-card>
-    </div>
+    <app-application-header class="app-list-container__header"></app-application-header>
+
+    <mat-card class="app-list-container__users">
+      <app-application-user-list></app-application-user-list>
+    </mat-card>
+
+    <mat-card class="app-list-container__models">
+      <app-model-list></app-model-list>
+    </mat-card>
   </div>
 </div>
