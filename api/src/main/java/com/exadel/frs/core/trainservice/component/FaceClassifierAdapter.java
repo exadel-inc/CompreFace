@@ -55,21 +55,21 @@ public class FaceClassifierAdapter {
 
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
-            val labelMap = new ArrayList<Pair<Long, String>>();
+            val labelMap = new ArrayList<String>();
 
             val faceNameEmbeddingsMap = embeddingFaceList.getFaceEmbeddings();
             if (faceNameEmbeddingsMap.isEmpty()) {
                 throw new ModelNotTrainedException();
             }
 
-            for (val faceNameId : faceNameEmbeddingsMap.keySet()) {
-                val embeddings = faceNameEmbeddingsMap.get(faceNameId).stream()
-                                                 .filter(ObjectUtils::isNotEmpty)
-                                                 .collect(toList());
+            for (val faceName : faceNameEmbeddingsMap.keySet()) {
+                val embeddings = faceNameEmbeddingsMap.get(faceName).stream()
+                                                      .filter(ObjectUtils::isNotEmpty)
+                                                      .collect(toList());
                 if (isNotEmpty(embeddings)) {
-                    labelMap.add(faceNameId);
+                    labelMap.add(faceName);
                     x.add(embeddings.stream().mapToDouble(d -> d).toArray());
-                    y.add(labelMap.indexOf(faceNameId));
+                    y.add(labelMap.indexOf(faceName));
                 }
             }
 

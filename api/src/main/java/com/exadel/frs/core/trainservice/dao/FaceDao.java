@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -53,10 +52,11 @@ public class FaceDao {
             return new EmbeddingFaceList();
         }
 
-        Map<Pair<Long, String>, List<Double>> map = faces.stream().collect(toMap(
-                               face -> Pair.of(face.getId(), face.getFaceName()),
-                               face -> face.getEmbedding().getEmbeddings())
-                       );
+        Map<String, List<Double>> map = faces.stream().collect(toMap(
+                face -> face.getFaceName(),
+                face -> face.getEmbedding().getEmbeddings()
+                )
+        );
 
         val embeddingFaceList = new EmbeddingFaceList();
         embeddingFaceList.setFaceEmbeddings(map);

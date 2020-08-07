@@ -22,7 +22,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import java.util.List;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 public class LogisticRegressionClassifierTestIT {
@@ -30,7 +29,7 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void train() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val facesList = List.of(faceName, faceName);
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
@@ -43,7 +42,7 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void trainModelWithWrongParamSizeFailed() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val facesList = List.of(faceName, faceName);
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0};
@@ -57,7 +56,7 @@ public class LogisticRegressionClassifierTestIT {
     void predict() {
         val faceName = "faceName";
         val predictResult = 1;
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val facesList = List.of(faceName, faceName);
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
@@ -82,7 +81,7 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void isTrained() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val facesList = List.of(faceName, faceName);
         val classifier = new LogisticRegressionClassifier(facesList);
 
         assertThat(classifier.isTrained()).isFalse();
@@ -93,17 +92,5 @@ public class LogisticRegressionClassifierTestIT {
         classifier.train(xorMatrix, xorResults);
 
         assertThat(classifier.isTrained()).isTrue();
-    }
-
-    @Test
-    void getUsedFaceIds() {
-        val faceName = "faceName";
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
-
-        val facesIds = new LogisticRegressionClassifier(facesList).getUsedFaceIds();
-
-        assertThat(facesIds).size().isEqualTo(2);
-        assertThat(facesIds).contains(1L);
-        assertThat(facesIds).contains(2L);
     }
 }

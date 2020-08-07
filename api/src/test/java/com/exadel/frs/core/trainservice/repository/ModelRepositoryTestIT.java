@@ -16,7 +16,6 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
-import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -29,7 +28,6 @@ import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,10 +91,7 @@ public class ModelRepositoryTestIT {
         y[0] = 1;
         y[1] = 2;
 
-        val faces = List.of(
-                Pair.of(nextLong(), "firstLabel"),
-                Pair.of(nextLong(), "secondLabel")
-        );
+        val faces = List.of("firstLabel", "secondLabel");
 
         val classifier = new LogisticRegressionClassifier(faces);
         classifier.train(x, y);
