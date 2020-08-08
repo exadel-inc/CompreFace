@@ -46,12 +46,12 @@ public class FaceService {
         getTrainingOption(retrain).run(apiKey, retrainService);
     }
 
-    public void deleteFaceById(
-            final Long faceId,
+    public void deleteFaceByGuid(
+            final String guid,
             final String apiKey,
             final String retrain
     ) {
-        faceDao.deleteFaceById(faceId);
+        faceDao.deleteFaceByGuId(guid);
         getTrainingOption(retrain).run(apiKey, retrainService);
     }
 

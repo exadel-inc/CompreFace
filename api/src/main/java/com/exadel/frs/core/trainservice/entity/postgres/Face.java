@@ -38,6 +38,7 @@ public class Face {
     private String faceName;
     @Column(name = "api_key")
     private String apiKey;
+    private String guid;
     @Type(type = "jsonb")
     @Column(name = "embeddings")
     private Embedding embedding;

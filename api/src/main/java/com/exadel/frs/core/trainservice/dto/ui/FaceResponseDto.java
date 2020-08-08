@@ -27,6 +27,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FaceResponseDto {
 
-    private Long id;
+    private String guid;
     private String name;
 }

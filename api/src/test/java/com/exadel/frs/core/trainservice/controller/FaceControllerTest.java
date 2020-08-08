@@ -31,8 +31,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -64,8 +64,8 @@ public class FaceControllerTest {
     @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
         val faces = List.of(
-                makeFace(1L, "A", API_KEY),
-                makeFace(2L, "B", API_KEY)
+                makeFace("A", API_KEY),
+                makeFace("B", API_KEY)
         );
 
         doReturn(faces)
@@ -74,7 +74,7 @@ public class FaceControllerTest {
 
         val expectedFaces = faces.stream()
                                  .map(face -> FaceResponseDto.builder()
-                                                             .id(face.getId())
+                                                             .guid(face.getGuid())
                                                              .name(face.getFaceName())
                                                              .build()
                                  )

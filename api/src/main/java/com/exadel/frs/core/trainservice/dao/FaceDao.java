@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.dao;
 
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toMap;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.entity.postgres.Face;
@@ -36,12 +37,6 @@ public class FaceDao {
 
     private final FacesRepository facesRepository;
 
-    public EmbeddingFaceList findAllFacesIn(List<Long> ids) {
-        val faces = facesRepository.findByIdIn(ids);
-
-        return facesToEmbeddingList(faces);
-    }
-
     public EmbeddingFaceList findAllFaceEmbeddingsByApiKey(final String modelApiKey) {
         val faces = facesRepository.findByApiKey(modelApiKey);
 
@@ -54,9 +49,10 @@ public class FaceDao {
         }
 
         Map<Pair<Long, String>, List<Double>> map = faces.stream().collect(toMap(
-                               face -> Pair.of(face.getId(), face.getFaceName()),
-                               face -> face.getEmbedding().getEmbeddings())
-                       );
+                face -> Pair.of(face.getId(), face.getFaceName()),
+                face -> face.getEmbedding().getEmbeddings()
+                )
+        );
 
         val embeddingFaceList = new EmbeddingFaceList();
         embeddingFaceList.setFaceEmbeddings(map);
@@ -73,8 +69,8 @@ public class FaceDao {
         return facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
     }
 
-    public Face deleteFaceById(final Long faceId) {
-        val foundFace = facesRepository.findById(faceId);
+    public Face deleteFaceByGuId(final String guid) {
+        val foundFace = facesRepository.findByGuid(guid);
         foundFace.ifPresent(face -> {
             facesRepository.delete(face);
         });
@@ -106,6 +102,7 @@ public class FaceDao {
         val face = new Face()
                 .setEmbedding(embeddings)
                 .setFaceName(faceName)
+                .setGuid(randomUUID().toString())
                 .setApiKey(modelKey)
                 .setFaceImg(file.getBytes())
                 .setRawImg(file.getBytes());
