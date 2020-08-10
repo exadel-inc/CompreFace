@@ -13,17 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
+import { Store } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { UserService } from 'src/app/core/user/user.service';
 import {
     AddUsersEntityAction,
-    UpdateUserRoleEntityAction,
     LoadUsersEntityAction,
     PutUpdatedUserRoleEntityAction,
-    DeleteUser
+    DeleteUser,
+    DeleteUserSuccess,
+    DeleteUserFail
 } from 'src/app/store/user/action';
 import { switchMap, map, catchError, filter, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
@@ -31,6 +32,7 @@ import { FetchRolesEntityAction, LoadRolesEntityAction } from 'src/app/store/rol
 import { forkJoin, of } from 'rxjs';
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
 import { OrganizationEnService } from '../organization/organization-entitys.service';
+import {AppState} from '../index';
 
 @Injectable()
 export class UserListEffect {
@@ -39,6 +41,7 @@ export class UserListEffect {
         private userService: UserService,
         private organizationEnService: OrganizationEnService,
         private snackBarService: SnackBarService,
+        private store: Store<AppState>
     ) {
     }
 
@@ -72,7 +75,12 @@ export class UserListEffect {
         this.actions.pipe(
             ofType(DeleteUser),
             switchMap(action => forkJoin([
-                this.userService.delete(action.organizationId, action.userId, action.newOwner),
+                this.userService.delete(action.organizationId, action.userId, action.newOwner).pipe(
+                  map(() => {
+                    this.store.dispatch(DeleteUserSuccess({ id: null }));
+                }),
+                  catchError(error => of(DeleteUserFail({error})))
+                ),
                 of(action.organizationId)
             ]).pipe(
                 catchError((error: HttpErrorResponse) => of(this.snackBarService.openHttpError(error))),
