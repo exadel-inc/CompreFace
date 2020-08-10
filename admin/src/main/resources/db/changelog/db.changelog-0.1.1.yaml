@@ -8,8 +8,8 @@ databaseChangeLog:
             tableName: face
             columns:
               - column:
-                  name: id
-                  type: bigint
+                  name: guid
+                  type: varchar(36)
               - column:
                   name: face_name
                   type: varchar(255)
@@ -25,13 +25,11 @@ databaseChangeLog:
               - column:
                   name: face_img_fs
                   type: bytea
-        - addPrimaryKey:
-            columnNames: id
-            constraintName: pk_face
-            tableName: face
 
-        - createSequence:
-            sequenceName: face_id_seq
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: face_guid_uindex
+            tableName: face
             
         - addForeignKeyConstraint:
             baseColumnNames: api_key

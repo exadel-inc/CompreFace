@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,10 +30,7 @@ import org.hibernate.annotations.TypeDef;
         typeClass = JsonBinaryType.class
 )
 public class Face {
-
-    @Id
-    @GeneratedValue(strategy = SEQUENCE, generator = "face_id_seq")
-    @SequenceGenerator(name = "face_id_seq", sequenceName = "face_id_seq", allocationSize = 1)
+    @Transient
     private Long id;
     @Column(name = "face_name")
     private String faceName;
