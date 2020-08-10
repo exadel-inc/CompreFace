@@ -8,7 +8,7 @@ databaseChangeLog:
             tableName: face
             columns:
               - column:
-                  name: guid
+                  name: id
                   type: varchar(36)
               - column:
                   name: face_name
@@ -27,8 +27,8 @@ databaseChangeLog:
                   type: bytea
 
         - addUniqueConstraint:
-            columnNames: guid
-            constraintName: face_guid_uindex
+            columnNames: id
+            constraintName: face_id_uindex
             tableName: face
             
         - addForeignKeyConstraint:

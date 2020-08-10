@@ -21,7 +21,6 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static smile.math.MathEx.randomLong;
 import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.util.Arrays;
@@ -60,15 +59,12 @@ public class FacesRepositoryTest {
     }
 
     public static Face makeFace(final String name, final String modelApiKey) {
-        val face = new Face()
+        return new Face()
                 .setFaceName(name)
-                .setApiKey(modelApiKey);
-        face.setFaceImg("hex-string-1".getBytes());
-        face.setRawImg("hex-string-2".getBytes());
-        face.setId(randomLong());
-        face.setGuid(randomUUID().toString());
-
-        return face;
+                .setApiKey(modelApiKey)
+                .setFaceImg("hex-string-1".getBytes())
+                .setRawImg("hex-string-2".getBytes())
+                .setId(randomUUID().toString());
     }
 
     @Test
@@ -84,7 +80,6 @@ public class FacesRepositoryTest {
                     assertThat(face.getApiKey()).isNotEmpty();
                     assertThat(face.getFaceImg()).isNotNull();
                     assertThat(face.getRawImg()).isNotNull();
-                    assertThat(face.getGuid()).isNotNull();
                 }
         );
     }
@@ -113,8 +108,8 @@ public class FacesRepositoryTest {
         val faces = facesRepository.findAll();
         val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
 
-        val actual = facesRepository.findByGuid(face.getGuid());
+        val actual = facesRepository.findById(face.getId());
         assertTrue(actual.isPresent());
-        assertEquals(actual.get().getGuid(), face.getGuid());
+        assertEquals(actual.get().getId(), face.getId());
     }
 }

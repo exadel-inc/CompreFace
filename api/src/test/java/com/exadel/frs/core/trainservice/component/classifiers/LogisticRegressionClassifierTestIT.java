@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
 import static java.lang.Math.round;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
@@ -30,7 +31,9 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void train() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val guid1 = randomUUID().toString();
+        val guid2 = randomUUID().toString();
+        val facesList = List.of(Pair.of(guid1, faceName), Pair.of(guid2, faceName));
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
@@ -43,7 +46,9 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void trainModelWithWrongParamSizeFailed() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val guid1 = randomUUID().toString();
+        val guid2 = randomUUID().toString();
+        val facesList = List.of(Pair.of(guid1, faceName), Pair.of(guid2, faceName));
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0};
@@ -56,8 +61,10 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void predict() {
         val faceName = "faceName";
+        val guid1 = randomUUID().toString();
+        val guid2 = randomUUID().toString();
         val predictResult = 1;
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val facesList = List.of(Pair.of(guid1, faceName), Pair.of(guid2, faceName));
         val classifier = new LogisticRegressionClassifier(facesList);
         val xorMatrix = new double[][]{{0, 0}, {1, 0}};
         val xorResults = new int[]{0, 1};
@@ -82,7 +89,9 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void isTrained() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val guid1 = randomUUID().toString();
+        val guid2 = randomUUID().toString();
+        val facesList = List.of(Pair.of(guid1, faceName), Pair.of(guid2, faceName));
         val classifier = new LogisticRegressionClassifier(facesList);
 
         assertThat(classifier.isTrained()).isFalse();
@@ -98,12 +107,14 @@ public class LogisticRegressionClassifierTestIT {
     @Test
     void getUsedFaceIds() {
         val faceName = "faceName";
-        val facesList = List.of(Pair.of(1L, faceName), Pair.of(2L, faceName));
+        val guid1 = randomUUID().toString();
+        val guid2 = randomUUID().toString();
+        val facesList = List.of(Pair.of(guid1, faceName), Pair.of(guid2, faceName));
 
         val facesIds = new LogisticRegressionClassifier(facesList).getUsedFaceIds();
 
         assertThat(facesIds).size().isEqualTo(2);
-        assertThat(facesIds).contains(1L);
-        assertThat(facesIds).contains(2L);
+        assertThat(facesIds).contains(guid1);
+        assertThat(facesIds).contains(guid2);
     }
 }

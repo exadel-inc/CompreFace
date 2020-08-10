@@ -69,13 +69,13 @@ class FaceDaoTest {
     void deleteFaceByGuid() {
         val faceGuid = randomUUID().toString();
         val face = Optional.of(new Face());
-        when(facesRepository.findByGuid(faceGuid)).thenReturn(face);
+        when(facesRepository.findById(faceGuid)).thenReturn(face);
 
-        val actual = faceDao.deleteFaceByGuId(faceGuid);
+        val actual = faceDao.deleteFaceById(faceGuid);
 
         assertThat(actual).isEqualTo(face.get());
 
-        verify(facesRepository).findByGuid(faceGuid);
+        verify(facesRepository).findById(faceGuid);
         verify(facesRepository).delete(face.get());
         verifyNoMoreInteractions(facesRepository);
     }
@@ -83,13 +83,13 @@ class FaceDaoTest {
     @Test
     void deleteNonexistentFaceById() {
         val faceGuid = randomUUID().toString();
-        when(facesRepository.findByGuid(faceGuid)).thenReturn(Optional.empty());
+        when(facesRepository.findById(faceGuid)).thenReturn(Optional.empty());
 
-        val actual = faceDao.deleteFaceByGuId(faceGuid);
+        val actual = faceDao.deleteFaceById(faceGuid);
 
         assertThat(actual).isNull();
 
-        verify(facesRepository).findByGuid(faceGuid);
+        verify(facesRepository).findById(faceGuid);
         verifyNoMoreInteractions(facesRepository);
     }
 

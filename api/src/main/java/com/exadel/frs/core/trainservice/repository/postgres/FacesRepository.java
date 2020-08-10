@@ -18,5 +18,5 @@ public interface FacesRepository extends JpaRepository<Face, Long> {
 
     int countByApiKey(String modelApiKey);
 
-    Optional<Face> findByGuid(String guid);
+    Optional<Face> findById(String id);
 }

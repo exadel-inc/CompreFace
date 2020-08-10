@@ -48,7 +48,7 @@ public class FaceDao {
             return new EmbeddingFaceList();
         }
 
-        Map<Pair<Long, String>, List<Double>> map = faces.stream().collect(toMap(
+        Map<Pair<String, String>, List<Double>> map = faces.stream().collect(toMap(
                 face -> Pair.of(face.getId(), face.getFaceName()),
                 face -> face.getEmbedding().getEmbeddings()
                 )
@@ -69,8 +69,8 @@ public class FaceDao {
         return facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
     }
 
-    public Face deleteFaceByGuId(final String guid) {
-        val foundFace = facesRepository.findByGuid(guid);
+    public Face deleteFaceById(final String faceId) {
+        val foundFace = facesRepository.findById(faceId);
         foundFace.ifPresent(face -> {
             facesRepository.delete(face);
         });
@@ -100,9 +100,9 @@ public class FaceDao {
             final String modelKey
     ) throws IOException {
         val face = new Face()
+                .setId(randomUUID().toString())
                 .setEmbedding(embeddings)
                 .setFaceName(faceName)
-                .setGuid(randomUUID().toString())
                 .setApiKey(modelKey)
                 .setFaceImg(file.getBytes())
                 .setRawImg(file.getBytes());

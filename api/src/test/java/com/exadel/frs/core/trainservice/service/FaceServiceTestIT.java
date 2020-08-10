@@ -69,7 +69,7 @@ public class FaceServiceTestIT {
         val faces = facesRepository.findAll();
         val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
 
-        faceService.deleteFaceByGuid(face.getGuid(), face.getApiKey(), NO.name());
+        faceService.deleteFaceById(face.getId(), face.getApiKey(), NO.name());
 
         val actual = facesRepository.findAll();
 
@@ -103,6 +103,6 @@ public class FaceServiceTestIT {
                 .setApiKey(modelApiKey)
                 .setFaceImg("hex-string-1".getBytes())
                 .setRawImg("hex-string-2".getBytes())
-                .setGuid(randomUUID().toString());
+                .setId(randomUUID().toString());
     }
 }

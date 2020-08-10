@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
-import static org.apache.commons.lang3.RandomUtils.nextLong;
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,7 +26,6 @@ import com.exadel.frs.core.trainservice.config.MongoTest;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
 import com.exadel.frs.core.trainservice.repository.mongo.ModelRepository;
 import java.util.List;
-import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -94,8 +93,8 @@ public class ModelRepositoryTestIT {
         y[1] = 2;
 
         val faces = List.of(
-                Pair.of(nextLong(), "firstLabel"),
-                Pair.of(nextLong(), "secondLabel")
+                Pair.of(randomUUID().toString(), "firstLabel"),
+                Pair.of(randomUUID().toString(), "secondLabel")
         );
 
         val classifier = new LogisticRegressionClassifier(faces);
@@ -103,7 +102,7 @@ public class ModelRepositoryTestIT {
 
         val model = Model.builder()
                          .classifier(classifier)
-                         .id(UUID.randomUUID().toString())
+                         .id(randomUUID().toString())
                          .build();
 
         return modelRepository.save(model).getId();

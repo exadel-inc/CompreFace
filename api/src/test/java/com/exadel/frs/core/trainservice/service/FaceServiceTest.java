@@ -87,9 +87,9 @@ class FaceServiceTest {
     void deleteFaceByGuid() {
         val faceId = randomUUID().toString();
 
-        faceService.deleteFaceByGuid(faceId, API_KEY, NO.name());
+        faceService.deleteFaceById(faceId, API_KEY, NO.name());
 
-        verify(faceDao).deleteFaceByGuId(faceId);
+        verify(faceDao).deleteFaceById(faceId);
         verifyNoInteractions(classifierManager);
     }
 
