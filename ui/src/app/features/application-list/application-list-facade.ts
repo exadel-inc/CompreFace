@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subscription, Subject } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 import { Application } from 'src/app/data/application';
 import { IFacade } from 'src/app/data/facade/IFacade';
 import { AppState } from 'src/app/store';
@@ -40,7 +40,6 @@ export class ApplicationListFacade implements IFacade {
 
   private selectedOrganizationIdSubscription: Subscription;
   private selectedOrgId: string;
-  destroyed$ = new Subject<boolean>();
 
   constructor(private store: Store<AppState>) {
     this.applications$ = store.select(selectApplications);
@@ -88,8 +87,4 @@ export class ApplicationListFacade implements IFacade {
     return this.selectedOrgId;
   }
 
-  onDestroy(){
-    this.destroyed$.next();
-    this.destroyed$.complete();
-  }
 }
