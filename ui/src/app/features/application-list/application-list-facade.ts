@@ -27,10 +27,8 @@ import {
   selectUserRollForSelectedApp
 } from 'src/app/store/application/selectors';
 import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
-import {map, takeUntil} from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
-import { ActionsSubject } from '@ngrx/store';
-import { ofType } from "@ngrx/effects";
 
 
 @Injectable()
@@ -44,7 +42,7 @@ export class ApplicationListFacade implements IFacade {
   private selectedOrgId: string;
   destroyed$ = new Subject<boolean>();
 
-  constructor(private store: Store<AppState>, private actionsListener$: ActionsSubject) {
+  constructor(private store: Store<AppState>) {
     this.applications$ = store.select(selectApplications);
     this.selectedOrganizationId$ = store.select(selectCurrentOrganizationId);
     this.userRole$ = combineLatest(
@@ -57,12 +55,6 @@ export class ApplicationListFacade implements IFacade {
       })
     );
     this.isLoading$ = store.select(selectIsPendingApplicationList);
-    this.actionsListener$
-      .pipe(ofType("[User/API] Delete User Success"))
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: any) => {
-        this.loadApplications();
-      });
   }
 
   initSubscriptions(): void {

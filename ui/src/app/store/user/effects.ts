@@ -23,9 +23,9 @@ import {
     LoadUsersEntityAction,
     PutUpdatedUserRoleEntityAction,
     DeleteUser,
-    DeleteUserSuccess,
     DeleteUserFail
 } from 'src/app/store/user/action';
+import { loadApplications } from 'src/app/store/application/action';
 import { switchMap, map, catchError, filter, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
 import { FetchRolesEntityAction, LoadRolesEntityAction } from 'src/app/store/role/actions';
@@ -77,7 +77,9 @@ export class UserListEffect {
             switchMap(action => forkJoin([
                 this.userService.delete(action.organizationId, action.userId, action.newOwner).pipe(
                   map(() => {
-                    this.store.dispatch(DeleteUserSuccess({ id: null }));
+                    this.store.dispatch(
+                      loadApplications({ organizationId: action.organizationId })
+                    );
                 }),
                   catchError(error => of(DeleteUserFail({error})))
                 ),

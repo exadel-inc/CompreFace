@@ -30,5 +30,5 @@ export const DeleteUser = createAction('[User/API] Delete User', props<{
   organizationId: string,
   newOwner?: string,
 }>());
-export const DeleteUserSuccess = createAction('[User/API] Delete User Success', props<{ id: string }>());
+export const DeleteUserSuccess = createAction('[User/API] Delete User Success', props<{}>());
 export const DeleteUserFail = createAction('[User/API] Delete User Fail', props<{ error: any }>());
