@@ -36,7 +36,7 @@ public class FaceDao {
 
     private final FacesRepository facesRepository;
 
-    public EmbeddingFaceList findAllFacesIn(List<Long> ids) {
+    public EmbeddingFaceList findAllFacesIn(final List<Long> ids) {
         val faces = facesRepository.findByIdIn(ids);
 
         return facesToEmbeddingList(faces);
@@ -48,7 +48,7 @@ public class FaceDao {
         return facesToEmbeddingList(faces);
     }
 
-    private EmbeddingFaceList facesToEmbeddingList(List<Face> faces) {
+    private EmbeddingFaceList facesToEmbeddingList(final List<Face> faces) {
         if (faces.isEmpty()) {
             return new EmbeddingFaceList();
         }
