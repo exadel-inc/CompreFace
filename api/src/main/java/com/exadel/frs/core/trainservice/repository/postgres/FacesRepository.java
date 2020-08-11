@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Transactional
 public interface FacesRepository extends JpaRepository<Face, Long> {
+
     List<Face> findByApiKey(String modelApiKey);
 
     List<Face> deleteByApiKeyAndFaceName(String modelApiKey, String faceName);
