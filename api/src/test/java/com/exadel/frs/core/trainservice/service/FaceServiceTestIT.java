@@ -67,7 +67,7 @@ public class FaceServiceTestIT {
     @Test
     public void deleteFaceByGuid() {
         val faces = facesRepository.findAll();
-        val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
+        val face = faces.get(new Random().nextInt(faces.size()));
 
         faceService.deleteFaceById(face.getId(), face.getApiKey(), NO.name());
 

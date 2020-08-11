@@ -24,7 +24,6 @@ import com.exadel.frs.core.trainservice.entity.postgres.Face.Embedding;
 import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -48,14 +47,15 @@ public class FaceDao {
             return new EmbeddingFaceList();
         }
 
-        Map<Pair<String, String>, List<Double>> map = faces.stream().collect(toMap(
-                face -> Pair.of(face.getId(), face.getFaceName()),
-                face -> face.getEmbedding().getEmbeddings()
+        var faceEmbeddings = faces.stream().collect(
+                toMap(
+                        face -> Pair.of(face.getId(), face.getFaceName()),
+                        face -> face.getEmbedding().getEmbeddings()
                 )
         );
 
         val embeddingFaceList = new EmbeddingFaceList();
-        embeddingFaceList.setFaceEmbeddings(map);
+        embeddingFaceList.setFaceEmbeddings(faceEmbeddings);
         embeddingFaceList.setCalculatorVersion(faces.get(0).getEmbedding().getCalculatorVersion());
 
         return embeddingFaceList;

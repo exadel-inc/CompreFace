@@ -52,7 +52,6 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
@@ -87,9 +86,6 @@ class AppServiceTest {
 
     @Mock
     private UserService userServiceMock;
-
-    @Mock
-    private ModelShareRequestRepository modelShareRequestRepository;
 
     @Mock
     private CoreFacesClient coreFacesClient;
