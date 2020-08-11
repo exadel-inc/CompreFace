@@ -63,16 +63,16 @@ public class FaceController {
     }
 
     @WriteEndpoint
-    @DeleteMapping("/{faceId}")
+    @DeleteMapping("/{id}")
     public void deleteFaceById(
             @PathVariable
-            final Long faceId,
+            final String id,
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey,
             @RequestParam(name = "retrain", required = false)
             final String retrain
     ) {
-        faceService.deleteFaceById(faceId, apiKey, retrain);
+        faceService.deleteFaceById(id, apiKey, retrain);
     }
 
     @WriteEndpoint

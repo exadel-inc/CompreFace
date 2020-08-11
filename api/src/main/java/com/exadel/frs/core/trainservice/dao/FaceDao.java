@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.dao;
 
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toMap;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.entity.postgres.Face;
@@ -23,7 +24,6 @@ import com.exadel.frs.core.trainservice.entity.postgres.Face.Embedding;
 import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -36,12 +36,6 @@ public class FaceDao {
 
     private final FacesRepository facesRepository;
 
-    public EmbeddingFaceList findAllFacesIn(final List<Long> ids) {
-        val faces = facesRepository.findByIdIn(ids);
-
-        return facesToEmbeddingList(faces);
-    }
-
     public EmbeddingFaceList findAllFaceEmbeddingsByApiKey(final String modelApiKey) {
         val faces = facesRepository.findByApiKey(modelApiKey);
 
@@ -53,13 +47,15 @@ public class FaceDao {
             return new EmbeddingFaceList();
         }
 
-        Map<Pair<Long, String>, List<Double>> map = faces.stream().collect(toMap(
-                               face -> Pair.of(face.getId(), face.getFaceName()),
-                               face -> face.getEmbedding().getEmbeddings())
-                       );
+        var faceEmbeddings = faces.stream().collect(
+                toMap(
+                        face -> Pair.of(face.getId(), face.getFaceName()),
+                        face -> face.getEmbedding().getEmbeddings()
+                )
+        );
 
         val embeddingFaceList = new EmbeddingFaceList();
-        embeddingFaceList.setFaceEmbeddings(map);
+        embeddingFaceList.setFaceEmbeddings(faceEmbeddings);
         embeddingFaceList.setCalculatorVersion(faces.get(0).getEmbedding().getCalculatorVersion());
 
         return embeddingFaceList;
@@ -73,7 +69,7 @@ public class FaceDao {
         return facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
     }
 
-    public Face deleteFaceById(final Long faceId) {
+    public Face deleteFaceById(final String faceId) {
         val foundFace = facesRepository.findById(faceId);
         foundFace.ifPresent(face -> {
             facesRepository.delete(face);
@@ -104,6 +100,7 @@ public class FaceDao {
             final String modelKey
     ) throws IOException {
         val face = new Face()
+                .setId(randomUUID().toString())
                 .setEmbedding(embeddings)
                 .setFaceName(faceName)
                 .setApiKey(modelKey)

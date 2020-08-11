@@ -55,7 +55,7 @@ public class FaceClassifierAdapter {
 
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
-            val labelMap = new ArrayList<Pair<Long, String>>();
+            val labelMap = new ArrayList<Pair<String, String>>();
 
             val faceNameEmbeddingsMap = embeddingFaceList.getFaceEmbeddings();
             if (faceNameEmbeddingsMap.isEmpty()) {

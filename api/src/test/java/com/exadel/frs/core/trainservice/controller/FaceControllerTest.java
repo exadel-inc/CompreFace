@@ -20,6 +20,7 @@ import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -31,8 +32,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import com.exadel.frs.core.trainservice.entity.mongo.Model;
+import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -64,8 +65,8 @@ public class FaceControllerTest {
     @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
         val faces = List.of(
-                makeFace(1L, "A", API_KEY),
-                makeFace(2L, "B", API_KEY)
+                makeFace("A", API_KEY),
+                makeFace("B", API_KEY)
         );
 
         doReturn(faces)
@@ -95,7 +96,7 @@ public class FaceControllerTest {
 
     @Test
     public void deleteFacesByIdShouldReturnResponseAsExpected() throws Exception {
-        val faceId = 12345L;
+        val faceId = randomUUID().toString();
         val response = Optional.of(new Face());
 
         doReturn(response)
@@ -143,7 +144,7 @@ public class FaceControllerTest {
 
     @Test
     public void updateModelKeySuccess() throws Exception {
-        val newModelKey = UUID.randomUUID().toString();
+        val newModelKey = randomUUID().toString();
 
         doReturn(Model.builder().build())
                 .when(modelDao).updateModelApiKey(any(), any());

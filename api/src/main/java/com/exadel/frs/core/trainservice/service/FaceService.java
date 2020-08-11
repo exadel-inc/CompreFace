@@ -47,11 +47,11 @@ public class FaceService {
     }
 
     public void deleteFaceById(
-            final Long faceId,
+            final String id,
             final String apiKey,
             final String retrain
     ) {
-        faceDao.deleteFaceById(faceId);
+        faceDao.deleteFaceById(id);
         getTrainingOption(retrain).run(apiKey, retrainService);
     }
 

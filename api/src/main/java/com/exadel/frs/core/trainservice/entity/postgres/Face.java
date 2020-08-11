@@ -1,13 +1,10 @@
 package com.exadel.frs.core.trainservice.entity.postgres;
 
-import static javax.persistence.GenerationType.SEQUENCE;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,9 +28,7 @@ import org.hibernate.annotations.TypeDef;
 public class Face {
 
     @Id
-    @GeneratedValue(strategy = SEQUENCE, generator = "face_id_seq")
-    @SequenceGenerator(name = "face_id_seq", sequenceName = "face_id_seq", allocationSize = 1)
-    private Long id;
+    private String id;
     @Column(name = "face_name")
     private String faceName;
     @Column(name = "api_key")
