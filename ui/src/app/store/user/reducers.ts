@@ -20,7 +20,7 @@ import {
   SetPending,
   AddUsersEntityAction,
   UpdateUserRoleEntityAction,
-  LoadUsersEntityAction,
+  loadUsersEntityAction,
   PutUpdatedUserRoleEntityAction
 } from './action';
 
@@ -37,7 +37,7 @@ const initialState: AppUserEntityState = userAdapter.getInitialState({
 
 const reducer: ActionReducer<AppUserEntityState> = createReducer(
   initialState,
-  on(LoadUsersEntityAction, (state) => ({...state, isPending: true})),
+  on(loadUsersEntityAction, (state) => ({...state, isPending: true})),
   on(SetPending, (state, {isPending}) => ({...state, isPending})),
   on(AddUsersEntityAction, (state, {users}) => {
     return userAdapter.addAll(users, {...state, isPending: false});

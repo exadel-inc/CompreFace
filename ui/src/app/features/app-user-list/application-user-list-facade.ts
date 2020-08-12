@@ -34,7 +34,7 @@ import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/sel
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 import { AppUserService } from '../../core/app-user/app-user.service';
-import { LoadUsersEntityAction } from '../../store/user/action';
+import { loadUsersEntityAction } from '../../store/user/action';
 import { selectUsers } from '../../store/user/selectors';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
@@ -110,7 +110,7 @@ export class ApplicationUserListFacade implements IFacade {
       applicationId: this.selectedApplicationId
     }));
     this.store.dispatch(LoadRolesEntityAction());
-    this.store.dispatch(LoadUsersEntityAction({
+    this.store.dispatch(loadUsersEntityAction({
       organizationId: this.selectedOrganizationId
     }));
   }

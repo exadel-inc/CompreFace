@@ -20,10 +20,11 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { UserService } from 'src/app/core/user/user.service';
 import {
     AddUsersEntityAction,
-    LoadUsersEntityAction,
+    loadUsersEntityAction,
     PutUpdatedUserRoleEntityAction,
-    DeleteUser,
-    DeleteUserFail
+    deleteUser,
+    deleteUserSuccess,
+    deleteUserFail
 } from 'src/app/store/user/action';
 import { loadApplications } from 'src/app/store/application/action';
 import { switchMap, map, catchError, filter, tap } from 'rxjs/operators';
@@ -48,7 +49,7 @@ export class UserListEffect {
     @Effect()
     fetchUserList =
         this.actions.pipe(
-            ofType(LoadUsersEntityAction),
+            ofType(loadUsersEntityAction),
             switchMap((action) => this.userService.getAll(action.organizationId)),
             map((users: AppUser[]) => AddUsersEntityAction({ users }))
         );
@@ -66,30 +67,32 @@ export class UserListEffect {
                 const [user, organizationId] = res;
                 this.organizationEnService.getAll();
 
-                return [LoadUsersEntityAction({ organizationId })];
+                return [loadUsersEntityAction({ organizationId })];
             })
         );
 
     @Effect()
-    deleteUser$ =
-        this.actions.pipe(
-            ofType(DeleteUser),
-            switchMap(action => forkJoin([
-                this.userService.delete(action.organizationId, action.userId, action.newOwner).pipe(
-                  map(() => {
-                    this.store.dispatch(
-                      loadApplications({ organizationId: action.organizationId })
-                    );
-                }),
-                  catchError(error => of(DeleteUserFail({error})))
-                ),
-                of(action.organizationId)
-            ]).pipe(
-                catchError((error: HttpErrorResponse) => of(this.snackBarService.openHttpError(error))),
-            )),
-            filter((data: any) => !!data),
-            map(([deleteResult, organizationId]) => LoadUsersEntityAction({ organizationId })),
-        );
+    deleteUser$ = this.actions.pipe(
+      ofType(deleteUser),
+      switchMap(({ organizationId, userId, newOwner }) =>
+        this.userService.delete(organizationId, userId, newOwner).pipe(
+          switchMap(() => [
+            deleteUserSuccess({ userId }),
+            loadApplications({ organizationId }),
+            loadUsersEntityAction({ organizationId }),
+          ]),
+          catchError(error => of(deleteUserFail({ error })))
+        )
+      ),
+    );
+
+    @Effect({ dispatch: false })
+    showError$ = this.actions.pipe(
+      ofType(deleteUserFail),
+      tap(action => {
+        this.snackBarService.openHttpError(action.error);
+      })
+    );
 
     @Effect()
     FetchAvailableRoles = this.actions
@@ -100,4 +103,5 @@ export class UserListEffect {
             catchError(x => of(['OWNER', 'ADMIN', 'USER'])),
             map((rolesArray) => FetchRolesEntityAction({ role: { id: 0, accessLevels: rolesArray } }))
         );
+
 }
