@@ -93,7 +93,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           }).afterClosed();
         }),
         filter((isClosed: boolean) => isClosed),
-        tap(() => this.userListFacade.deleteUser(user.userId, this.seletedOption)),
+        tap(() => this.userListFacade.deleteUser(user, this.seletedOption)),
       )
       .subscribe();
   }

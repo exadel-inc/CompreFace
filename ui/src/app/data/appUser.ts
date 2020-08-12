@@ -23,6 +23,7 @@ export interface AppUser {
   lastName: string;
   role: RoleEnum;
   email?: string;
+  deleterUserId: string,
   ownerOfApplications?: string[];
 }
 

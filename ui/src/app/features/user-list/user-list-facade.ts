@@ -106,10 +106,11 @@ export class UserListFacade implements IFacade {
     }));
   }
 
-  deleteUser(userId: string, newOwner?: string): void {
+  deleteUser(user: any, newOwner?: string): void {
     this.store.dispatch(deleteUser({
       organizationId: this.selectedOrganization,
-      userId,
+      userId: user.userId,
+      deleterUserId: user.deleterUserId,
       newOwner,
     }));
   }
