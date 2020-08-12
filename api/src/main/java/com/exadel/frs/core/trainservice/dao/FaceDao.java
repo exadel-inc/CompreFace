@@ -42,7 +42,7 @@ public class FaceDao {
         return facesToEmbeddingList(faces);
     }
 
-    private EmbeddingFaceList facesToEmbeddingList(List<Face> faces) {
+    private EmbeddingFaceList facesToEmbeddingList(final List<Face> faces) {
         if (faces.isEmpty()) {
             return new EmbeddingFaceList();
         }
