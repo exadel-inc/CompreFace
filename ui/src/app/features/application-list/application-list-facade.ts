@@ -27,7 +27,7 @@ import {
   selectUserRollForSelectedApp
 } from 'src/app/store/application/selectors';
 import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
-import { map } from "rxjs/operators";
+import { map } from 'rxjs/operators';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 
@@ -86,4 +86,5 @@ export class ApplicationListFacade implements IFacade {
   getOrgId(): string {
     return this.selectedOrgId;
   }
+
 }

@@ -18,15 +18,17 @@ import { AppUser  } from 'src/app/data/appUser';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 export const SetPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
-export const LoadUsersEntityAction = createAction('[User/API] Load Users', props<{ organizationId: string }>());
+export const loadUsersEntityAction = createAction('[User/API] Load Users', props<{ organizationId: string }>());
 export const AddUsersEntityAction = createAction('[User/API] Add Users', props<{ users: AppUser[] }>());
 export const PutUpdatedUserRoleEntityAction = createAction(
   '[User/API] Put Updated User Role',
   props<{ organizationId: string; user: { id: string, role: RoleEnum } }>()
 );
 export const UpdateUserRoleEntityAction = createAction('[User/API] Update Role', props<{ user: AppUser }>());
-export const DeleteUser = createAction('[User/API] Delete User', props<{
+export const deleteUser = createAction('[User/API] Delete User', props<{
   userId: string,
   organizationId: string,
   newOwner?: string,
 }>());
+export const deleteUserSuccess = createAction('[User/API] Delete User Success', props<{ userId: string }>());
+export const deleteUserFail = createAction('[User/API] Delete User Fail', props<{ error: any }>());

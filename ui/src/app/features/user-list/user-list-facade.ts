@@ -29,8 +29,8 @@ import {
 import { LoadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import {
-  DeleteUser,
-  LoadUsersEntityAction,
+  deleteUser,
+  loadUsersEntityAction,
   PutUpdatedUserRoleEntityAction,
 } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
@@ -91,7 +91,7 @@ export class UserListFacade implements IFacade {
   }
 
   loadUsers(): void {
-    this.store.dispatch(LoadUsersEntityAction({
+    this.store.dispatch(loadUsersEntityAction({
       organizationId: this.selectedOrganization
     }));
   }
@@ -107,7 +107,7 @@ export class UserListFacade implements IFacade {
   }
 
   deleteUser(userId: string, newOwner?: string): void {
-    this.store.dispatch(DeleteUser({
+    this.store.dispatch(deleteUser({
       organizationId: this.selectedOrganization,
       userId,
       newOwner,

@@ -13,24 +13,27 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
+import { Store } from '@ngrx/store';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { UserService } from 'src/app/core/user/user.service';
 import {
     AddUsersEntityAction,
-    UpdateUserRoleEntityAction,
-    LoadUsersEntityAction,
+    loadUsersEntityAction,
     PutUpdatedUserRoleEntityAction,
-    DeleteUser
+    deleteUser,
+    deleteUserSuccess,
+    deleteUserFail
 } from 'src/app/store/user/action';
+import { loadApplications } from 'src/app/store/application/action';
 import { switchMap, map, catchError, filter, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
 import { FetchRolesEntityAction, LoadRolesEntityAction } from 'src/app/store/role/actions';
 import { forkJoin, of } from 'rxjs';
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
 import { OrganizationEnService } from '../organization/organization-entitys.service';
+import {AppState} from '../index';
 
 @Injectable()
 export class UserListEffect {
@@ -39,13 +42,14 @@ export class UserListEffect {
         private userService: UserService,
         private organizationEnService: OrganizationEnService,
         private snackBarService: SnackBarService,
+        private store: Store<AppState>
     ) {
     }
 
     @Effect()
     fetchUserList =
         this.actions.pipe(
-            ofType(LoadUsersEntityAction),
+            ofType(loadUsersEntityAction),
             switchMap((action) => this.userService.getAll(action.organizationId)),
             map((users: AppUser[]) => AddUsersEntityAction({ users }))
         );
@@ -63,23 +67,32 @@ export class UserListEffect {
                 const [user, organizationId] = res;
                 this.organizationEnService.getAll();
 
-                return [LoadUsersEntityAction({ organizationId })];
+                return [loadUsersEntityAction({ organizationId })];
             })
         );
 
     @Effect()
-    deleteUser$ =
-        this.actions.pipe(
-            ofType(DeleteUser),
-            switchMap(action => forkJoin([
-                this.userService.delete(action.organizationId, action.userId, action.newOwner),
-                of(action.organizationId)
-            ]).pipe(
-                catchError((error: HttpErrorResponse) => of(this.snackBarService.openHttpError(error))),
-            )),
-            filter((data: any) => !!data),
-            map(([deleteResult, organizationId]) => LoadUsersEntityAction({ organizationId })),
-        );
+    deleteUser$ = this.actions.pipe(
+      ofType(deleteUser),
+      switchMap(({ organizationId, userId, newOwner }) =>
+        this.userService.delete(organizationId, userId, newOwner).pipe(
+          switchMap(() => [
+            deleteUserSuccess({ userId }),
+            loadApplications({ organizationId }),
+            loadUsersEntityAction({ organizationId }),
+          ]),
+          catchError(error => of(deleteUserFail({ error })))
+        )
+      ),
+    );
+
+    @Effect({ dispatch: false })
+    showError$ = this.actions.pipe(
+      ofType(deleteUserFail),
+      tap(action => {
+        this.snackBarService.openHttpError(action.error);
+      })
+    );
 
     @Effect()
     FetchAvailableRoles = this.actions
@@ -90,4 +103,5 @@ export class UserListEffect {
             catchError(x => of(['OWNER', 'ADMIN', 'USER'])),
             map((rolesArray) => FetchRolesEntityAction({ role: { id: 0, accessLevels: rolesArray } }))
         );
+
 }
