@@ -24,17 +24,17 @@ import { AppState } from 'src/app/store';
 import {
   deleteUserFromApplication,
   loadAppUserEntityAction,
-  putUpdatedAppUserRoleEntityAction,
+  updateAppUserRoleAction,
 } from 'src/app/store/app-user/actions';
 import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/selectors';
 import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
-import { LoadRolesEntityAction } from 'src/app/store/role/actions';
+import { loadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 import { AppUserService } from '../../core/app-user/app-user.service';
-import { LoadUsersEntityAction } from '../../store/user/action';
+import { loadUsersEntityAction } from '../../store/user/action';
 import { selectUsers } from '../../store/user/selectors';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
@@ -109,14 +109,14 @@ export class ApplicationUserListFacade implements IFacade {
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId
     }));
-    this.store.dispatch(LoadRolesEntityAction());
-    this.store.dispatch(LoadUsersEntityAction({
+    this.store.dispatch(loadRolesEntityAction());
+    this.store.dispatch(loadUsersEntityAction({
       organizationId: this.selectedOrganizationId
     }));
   }
 
   updateUserRole(id: string, role: RoleEnum): void {
-    this.store.dispatch(putUpdatedAppUserRoleEntityAction({
+    this.store.dispatch(updateAppUserRoleAction({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId,
       user: {

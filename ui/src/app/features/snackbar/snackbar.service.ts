@@ -49,10 +49,10 @@ export class SnackBarService {
     this.openSnackBar(data, duration);
   }
 
-  openHttpError(error: HttpErrorResponse, duration: number = 8000): void {
-    const { message } = error.error || error;
+  openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
+    const errorMessage = message.error || message;
     const data = {
-      message,
+      message: errorMessage.message,
       type: 'error'
     };
 
