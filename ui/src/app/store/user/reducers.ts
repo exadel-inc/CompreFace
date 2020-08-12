@@ -17,11 +17,11 @@
 import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
 import {AppUser} from 'src/app/data/appUser';
 import {
-  SetPending,
-  AddUsersEntityAction,
-  UpdateUserRoleEntityAction,
+  setPending,
+  addUsersEntityAction,
+  updateUserRoleAction,
   loadUsersEntityAction,
-  PutUpdatedUserRoleEntityAction
+  updateUserRoleFailAction, updateUserRoleSuccessAction
 } from './action';
 
 import {EntityState, createEntityAdapter, EntityAdapter} from '@ngrx/entity';
@@ -38,19 +38,21 @@ const initialState: AppUserEntityState = userAdapter.getInitialState({
 const reducer: ActionReducer<AppUserEntityState> = createReducer(
   initialState,
   on(loadUsersEntityAction, (state) => ({...state, isPending: true})),
-  on(SetPending, (state, {isPending}) => ({...state, isPending})),
-  on(AddUsersEntityAction, (state, {users}) => {
+  on(setPending, (state, {isPending}) => ({...state, isPending})),
+  on(addUsersEntityAction, (state, {users}) => {
     return userAdapter.addAll(users, {...state, isPending: false});
   }),
-  on(PutUpdatedUserRoleEntityAction, (state) => ({...state, isPending: true})),
-  on(UpdateUserRoleEntityAction, (state, {user}) => {
+  on(updateUserRoleAction, (state) => ({...state, isPending: true})),
+  on(updateUserRoleAction, (state) => ({...state, isPending: true})),
+  on(updateUserRoleSuccessAction, (state, { user })  => {
     return userAdapter.updateOne({
-      id: user.id,
+      id: user.userId,
       changes: {
         role: user.role
       }
     }, {...state, isPending: false});
-  })
+  }),
+  on(updateUserRoleFailAction, (state)  => ({...state, isPending: false})),
 );
 
 export function AppUserReducer(appUserState: AppUserEntityState, action: Action) {
