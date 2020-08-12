@@ -54,12 +54,6 @@ public class FaceClassifierManager {
         modelDao.deleteModel(modelKey);
     }
 
-    public void initNewClassifier(final String modelKey, final List<Long> faces) {
-        lockManager.lock(modelKey);
-        val faceClassifier = context.getBean(FaceClassifierAdapter.class);
-        faceClassifier.train(faceDao.findAllFacesIn(faces), modelKey);
-    }
-
     public void initNewClassifier(final String modelKey) {
         if (faceDao.countFacesInModel(modelKey) < MIN_FACES_TO_TRAIN) {
             throw new ModelHasNotEnoughFacesException();

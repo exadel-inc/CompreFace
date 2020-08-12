@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.dao;
 
+import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,29 +67,29 @@ class FaceDaoTest {
 
     @Test
     void deleteFaceById() {
-        val faceId = 12345L;
+        val faceGuid = randomUUID().toString();
         val face = Optional.of(new Face());
-        when(facesRepository.findById(faceId)).thenReturn(face);
+        when(facesRepository.findById(faceGuid)).thenReturn(face);
 
-        val actual = faceDao.deleteFaceById(faceId);
+        val actual = faceDao.deleteFaceById(faceGuid);
 
         assertThat(actual).isEqualTo(face.get());
 
-        verify(facesRepository).findById(faceId);
+        verify(facesRepository).findById(faceGuid);
         verify(facesRepository).delete(face.get());
         verifyNoMoreInteractions(facesRepository);
     }
 
     @Test
     void deleteNonexistentFaceById() {
-        val faceId = 12345L;
-        when(facesRepository.findById(faceId)).thenReturn(Optional.empty());
+        val faceGuid = randomUUID().toString();
+        when(facesRepository.findById(faceGuid)).thenReturn(Optional.empty());
 
-        val actual = faceDao.deleteFaceById(faceId);
+        val actual = faceDao.deleteFaceById(faceGuid);
 
         assertThat(actual).isNull();
 
-        verify(facesRepository).findById(faceId);
+        verify(facesRepository).findById(faceGuid);
         verifyNoMoreInteractions(facesRepository);
     }
 

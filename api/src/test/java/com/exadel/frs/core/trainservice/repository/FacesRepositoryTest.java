@@ -16,12 +16,16 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @DataJpaTest
@@ -43,9 +46,9 @@ public class FacesRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        val faceA = makeFace(1L, "A", MODEL_KEY);
-        val faceB = makeFace(2L, "B", MODEL_KEY_OTHER);
-        val faceC = makeFace(3L, "C", MODEL_KEY);
+        val faceA = makeFace("A", MODEL_KEY);
+        val faceB = makeFace("B", MODEL_KEY_OTHER);
+        val faceC = makeFace("C", MODEL_KEY);
 
         facesRepository.saveAll(List.of(faceA, faceB, faceC));
     }
@@ -55,15 +58,13 @@ public class FacesRepositoryTest {
         facesRepository.deleteAll();
     }
 
-    public static Face makeFace(final Long id, final String name, final String modelApiKey) {
-        val face = new Face()
+    public static Face makeFace(final String name, final String modelApiKey) {
+        return new Face()
                 .setFaceName(name)
-                .setApiKey(modelApiKey);
-        face.setFaceImg("hex-string-1".getBytes());
-        face.setRawImg("hex-string-2".getBytes());
-        face.setId(id);
-
-        return face;
+                .setApiKey(modelApiKey)
+                .setFaceImg("hex-string-1".getBytes())
+                .setRawImg("hex-string-2".getBytes())
+                .setId(randomUUID().toString());
     }
 
     @Test
@@ -103,10 +104,12 @@ public class FacesRepositoryTest {
     }
 
     @Test
-    public void findFaceIdsIn() {
-        val faces = facesRepository.findByIdIn(List.of(1L, 2L));
+    public void findByGuid() {
+        val faces = facesRepository.findAll();
+        val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
 
-        assertThat(faces).isNotNull();
-        assertThat(faces).hasSize(2);
+        val actual = facesRepository.findById(face.getId());
+        assertTrue(actual.isPresent());
+        assertEquals(actual.get().getId(), face.getId());
     }
 }

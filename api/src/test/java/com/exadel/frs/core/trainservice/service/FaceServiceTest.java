@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.inOrder;
@@ -84,7 +85,7 @@ class FaceServiceTest {
 
     @Test
     void deleteFaceById() {
-        val faceId = 12345L;
+        val faceId = randomUUID().toString();
 
         faceService.deleteFaceById(faceId, API_KEY, NO.name());
 

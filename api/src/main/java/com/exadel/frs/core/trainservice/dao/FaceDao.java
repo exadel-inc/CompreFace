@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.dao;
 
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toMap;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.entity.postgres.Face;
@@ -35,12 +36,6 @@ public class FaceDao {
 
     private final FacesRepository facesRepository;
 
-    public EmbeddingFaceList findAllFacesIn(List<Long> ids) {
-        val faces = facesRepository.findByIdIn(ids);
-
-        return facesToEmbeddingList(faces);
-    }
-
     public EmbeddingFaceList findAllFaceEmbeddingsByApiKey(final String modelApiKey) {
         val faces = facesRepository.findByApiKey(modelApiKey);
 
@@ -52,14 +47,14 @@ public class FaceDao {
             return new EmbeddingFaceList();
         }
 
-        Map<String, List<Double>> map = faces.stream().collect(toMap(
+        val faceEmbedding = faces.stream().collect(toMap(
                 face -> face.getFaceName(),
                 face -> face.getEmbedding().getEmbeddings()
                 )
         );
 
         val embeddingFaceList = new EmbeddingFaceList();
-        embeddingFaceList.setFaceEmbeddings(map);
+        embeddingFaceList.setFaceEmbeddings(faceEmbedding);
         embeddingFaceList.setCalculatorVersion(faces.get(0).getEmbedding().getCalculatorVersion());
 
         return embeddingFaceList;
@@ -73,7 +68,7 @@ public class FaceDao {
         return facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
     }
 
-    public Face deleteFaceById(final Long faceId) {
+    public Face deleteFaceById(final String faceId) {
         val foundFace = facesRepository.findById(faceId);
         foundFace.ifPresent(face -> {
             facesRepository.delete(face);
@@ -104,6 +99,7 @@ public class FaceDao {
             final String modelKey
     ) throws IOException {
         val face = new Face()
+                .setId(randomUUID().toString())
                 .setEmbedding(embeddings)
                 .setFaceName(faceName)
                 .setApiKey(modelKey)

@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
@@ -24,7 +25,6 @@ import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,8 +52,8 @@ public class FaceServiceTestIT {
     @Autowired
     private FaceService faceService;
 
-    private static final String MODEL_KEY = UUID.randomUUID().toString();
-    private static final String MODEL_KEY_OTHER = UUID.randomUUID().toString();
+    private static final String MODEL_KEY = randomUUID().toString();
+    private static final String MODEL_KEY_OTHER = randomUUID().toString();
 
     @BeforeEach
     void setUp() {
@@ -65,9 +65,9 @@ public class FaceServiceTestIT {
     }
 
     @Test
-    public void deleteFaceById() {
+    public void deleteFaceByGuid() {
         val faces = facesRepository.findAll();
-        val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
+        val face = faces.get(new Random().nextInt(faces.size()));
 
         faceService.deleteFaceById(face.getId(), face.getApiKey(), NO.name());
 
@@ -103,6 +103,6 @@ public class FaceServiceTestIT {
                 .setApiKey(modelApiKey)
                 .setFaceImg("hex-string-1".getBytes())
                 .setRawImg("hex-string-2".getBytes())
-                .setId(12345L);
+                .setId(randomUUID().toString());
     }
 }
