@@ -13,15 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
-
-import { TableComponent } from '../table/table.component';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
+import { TableComponent } from '../table/table.component';
 
 @Component({
   selector: 'app-user-table',
@@ -30,15 +26,17 @@ import { RoleEnum } from 'src/app/data/roleEnum.enum';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserTableComponent extends TableComponent implements OnInit {
-  @Input() availableRoles$: Observable<string[]>;
+  @Input() availableRoles: string[];
   @Input() currentUserId: string;
   @Input() userRole: string;
   @Input() createHeader: string;
   @Input() createMessage: string;
   @Output() deleteUser = new EventEmitter<AppUser>();
 
-  isRoleChangeAllowed(userRole: string): Observable<boolean> {
-    return this.userRole !== RoleEnum.USER && this.availableRoles$.pipe(map(availableRoles => availableRoles.indexOf(userRole) > -1));
+  isRoleChangeAllowed(user: AppUser): boolean {
+    return user.userId !== this.currentUserId
+      && this.userRole !== RoleEnum.USER
+      && this.availableRoles.indexOf(user.role) > -1;
   }
 
   delete(user: AppUser): void {
