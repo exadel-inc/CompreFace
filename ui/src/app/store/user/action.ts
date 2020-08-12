@@ -27,6 +27,7 @@ export const PutUpdatedUserRoleEntityAction = createAction(
 export const UpdateUserRoleEntityAction = createAction('[User/API] Update Role', props<{ user: AppUser }>());
 export const deleteUser = createAction('[User/API] Delete User', props<{
   userId: string,
+  deleterUserId: string,
   organizationId: string,
   newOwner?: string,
 }>());

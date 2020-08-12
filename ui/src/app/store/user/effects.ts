@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 import { Store } from '@ngrx/store';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { UserService } from 'src/app/core/user/user.service';
+import { AuthService } from '../../core/auth/auth.service';
 import {
     AddUsersEntityAction,
     loadUsersEntityAction,
@@ -40,6 +40,7 @@ export class UserListEffect {
     constructor(
         private actions: Actions,
         private userService: UserService,
+        private authService: AuthService,
         private organizationEnService: OrganizationEnService,
         private snackBarService: SnackBarService,
         private store: Store<AppState>
@@ -74,13 +75,18 @@ export class UserListEffect {
     @Effect()
     deleteUser$ = this.actions.pipe(
       ofType(deleteUser),
-      switchMap(({ organizationId, userId, newOwner }) =>
+      switchMap(({ organizationId, userId, newOwner, deleterUserId}) =>
         this.userService.delete(organizationId, userId, newOwner).pipe(
-          switchMap(() => [
-            deleteUserSuccess({ userId }),
-            loadApplications({ organizationId }),
-            loadUsersEntityAction({ organizationId }),
-          ]),
+          switchMap(() => {
+            if(deleterUserId === userId){
+                this.authService.logOut();
+                return []
+            }
+            return [
+              deleteUserSuccess({ userId }),
+              loadApplications({ organizationId }),
+              loadUsersEntityAction({ organizationId }),
+          ]}),
           catchError(error => of(deleteUserFail({ error })))
         )
       ),

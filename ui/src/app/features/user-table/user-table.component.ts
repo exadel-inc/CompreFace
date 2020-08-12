@@ -40,6 +40,7 @@ export class UserTableComponent extends TableComponent implements OnInit {
   }
 
   delete(user: AppUser): void {
+    user.deleterUserId =  this.currentUserId;
     this.deleteUser.emit(user);
   }
 }
