@@ -17,14 +17,15 @@
 package com.exadel.frs.core.trainservice.dao;
 
 import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.entity.postgres.Face;
 import com.exadel.frs.core.trainservice.entity.postgres.Face.Embedding;
 import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -46,10 +47,10 @@ public class FaceDao {
         if (faces.isEmpty()) {
             return new EmbeddingFaceList();
         }
-
-        val faceEmbedding = faces.stream().collect(toMap(
-                face -> face.getFaceName(),
-                face -> face.getEmbedding().getEmbeddings()
+        val faceEmbedding = faces.stream().collect(
+                groupingBy(
+                        Face::getFaceName,
+                        mapping(face -> face.getEmbedding().getEmbeddings(), toList())
                 )
         );
 

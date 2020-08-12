@@ -68,8 +68,11 @@ public class FaceClassifierAdapter {
                                                       .collect(toList());
                 if (isNotEmpty(embeddings)) {
                     labelMap.add(faceName);
-                    x.add(embeddings.stream().mapToDouble(d -> d).toArray());
-                    y.add(labelMap.indexOf(faceName));
+
+                    embeddings.forEach(embedding -> {
+                        x.add(embedding.stream().mapToDouble(d -> d).toArray());
+                        y.add(labelMap.indexOf(faceName));
+                    });
                 }
             }
 
