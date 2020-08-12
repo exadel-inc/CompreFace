@@ -26,12 +26,12 @@ import {
   selectSelectedOrganization,
   selectUserRollForSelectedOrganization,
 } from 'src/app/store/organization/selectors';
-import { LoadRolesEntityAction } from 'src/app/store/role/actions';
+import { loadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import {
   deleteUser,
   loadUsersEntityAction,
-  PutUpdatedUserRoleEntityAction,
+  updateUserRoleAction,
 } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
@@ -97,7 +97,7 @@ export class UserListFacade implements IFacade {
   }
 
   updateUserRole(id: string, role: RoleEnum): void {
-    this.store.dispatch(PutUpdatedUserRoleEntityAction({
+    this.store.dispatch(updateUserRoleAction({
       organizationId: this.selectedOrganization,
       user: {
         id,
@@ -115,7 +115,7 @@ export class UserListFacade implements IFacade {
   }
 
   loadAvailableRoles(): void {
-    this.store.dispatch(LoadRolesEntityAction());
+    this.store.dispatch(loadRolesEntityAction());
   }
 
   unsubscribe(): void {
