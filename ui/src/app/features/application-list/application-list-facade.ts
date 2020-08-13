@@ -44,15 +44,7 @@ export class ApplicationListFacade implements IFacade {
   constructor(private store: Store<AppState>) {
     this.applications$ = store.select(selectApplications);
     this.selectedOrganizationId$ = store.select(selectCurrentOrganizationId);
-    this.userRole$ = combineLatest(
-      this.store.select(selectUserRollForSelectedApp),
-      this.store.select(selectUserRollForSelectedOrganization)
-    ).pipe(
-      map(([applicationRole, organizationRole]) => {
-        // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== RoleEnum.USER ? organizationRole : applicationRole
-      })
-    );
+    this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
     this.isLoading$ = store.select(selectIsPendingApplicationList);
   }
 
