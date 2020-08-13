@@ -50,7 +50,7 @@ export class ApplicationListFacade implements IFacade {
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== RoleEnum.USER ? organizationRole : applicationRole
+        return organizationRole === RoleEnum.USER ? organizationRole : applicationRole
       })
     );
     this.isLoading$ = store.select(selectIsPendingApplicationList);
