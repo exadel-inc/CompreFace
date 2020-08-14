@@ -14,21 +14,15 @@
  * permissions and limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { Application } from 'src/app/data/application';
-import { IFacade } from 'src/app/data/facade/IFacade';
-import { AppState } from 'src/app/store';
-import { createApplication, loadApplications } from 'src/app/store/application/action';
-import {
-  selectApplications,
-  selectIsPendingApplicationList,
-  selectUserRollForSelectedApp
-} from 'src/app/store/application/selectors';
-import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
-import { map } from 'rxjs/operators';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import {Injectable} from '@angular/core';
+import {Store} from '@ngrx/store';
+import {Observable, Subscription} from 'rxjs';
+import {Application} from 'src/app/data/application';
+import {IFacade} from 'src/app/data/facade/IFacade';
+import {AppState} from 'src/app/store';
+import {createApplication, loadApplications} from 'src/app/store/application/action';
+import {selectApplications, selectIsPendingApplicationList} from 'src/app/store/application/selectors';
+import {selectCurrentOrganizationId, selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
 
 
 @Injectable()
