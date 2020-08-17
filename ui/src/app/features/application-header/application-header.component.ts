@@ -35,6 +35,7 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   app$: Observable<Application>;
   userRole$: Observable<string | null>;
   loading$: Observable<boolean>;
+  maxHeaderLinkLength = 25;
 
   constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog) { }
 

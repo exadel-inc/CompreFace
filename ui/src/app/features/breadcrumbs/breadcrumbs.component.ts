@@ -28,6 +28,7 @@ import { BreadcrumbsFacade } from './breadcrumbs.facade';
 export class BreadcrumbsComponent {
   app$: Observable<Application>;
   ROUTERS_URL = ROUTERS_URL;
+  maxTitleLength = 100;
 
   constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
     this.app$ = breadcrumbsFacade.app$;

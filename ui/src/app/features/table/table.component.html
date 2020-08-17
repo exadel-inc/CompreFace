@@ -17,8 +17,11 @@
 <table mat-table *ngIf="!isLoading" [dataSource]="data">
   <!-- Position Column -->
   <ng-container *ngFor="let col of columnsDefinition" matColumnDef={{col.title}}>
-    <th mat-header-cell *matHeaderCellDef> {{col.title}} </th>
-    <td mat-cell *matCellDef="let element" (click)="change(element)"> {{element[col.property]}} </td>
+    <th mat-header-cell *matHeaderCellDef> {{col.title}}</th>
+    <td mat-cell *matCellDef="let element" (click)="change(element)" matTooltip="{{element[col.property]}}"
+    [matTooltipDisabled]="disableToolTip(element[col.property])">
+      {{element[col.property] | truncate:maxElementLength}}
+    </td>
   </ng-container>
 
 
