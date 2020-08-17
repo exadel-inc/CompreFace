@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: prod
 
 ---
 
@@ -13,7 +13,6 @@ environment:
       url: ${PYTHON_URL:http://frs-core:3000}
 
 spring:
-
   cache:
     jcache:
       config: classpath:ehcache.xml
@@ -62,6 +61,7 @@ image:
     - ico
     - gif
     - webp
+
 ---
 
 spring:

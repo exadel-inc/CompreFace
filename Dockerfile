@@ -12,7 +12,7 @@ RUN mvn package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.sk
 FROM bellsoft/liberica-openjdk-alpine:11 as frs_core
 ARG DIR=/workspace/frs
 COPY --from=build ${DIR}/api/target/*.jar /home/app.jar
-ENTRYPOINT ["java","-jar","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","-Dspring.profiles.active=local","/home/app.jar"]
+ENTRYPOINT ["java","-jar","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","/home/app.jar"]
 
 FROM bellsoft/liberica-openjdk-alpine:11 as frs_crud
 ARG DIR=/workspace/frs
