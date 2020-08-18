@@ -55,7 +55,18 @@ export class ApplicationUserListFacade implements IFacade {
 
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
-    this.availableEmails$ = store.select(selectUsers).pipe(map(data => data.map(user => user.email)));
+    this.availableEmails$ = combineLatest(
+      store.select(selectUsers),
+      this.appUsers$
+    ).pipe(
+        map(([users, appUsers]) => {
+          return users.map(user => {
+            if(appUsers.every(appUser => appUser.id !== user.id )){
+              return user.email
+            }
+          })
+        })
+    );
     this.organizationRole$ = this.store.select(selectUserRollForSelectedOrganization);
     this.userRole$ = combineLatest(
       this.store.select(selectUserRollForSelectedApp),
