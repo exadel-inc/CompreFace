@@ -20,6 +20,8 @@ import { MatIconModule, MatMenuModule, MatTableModule } from '@angular/material'
 import { MatButtonModule } from '@angular/material/button';
 
 import { ModelTableComponent } from './model-table.component';
+import {TruncateModule} from "../../ui/truncate-pipe/truncate.module";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [ModelTableComponent],
@@ -30,6 +32,8 @@ import { ModelTableComponent } from './model-table.component';
     MatTableModule,
     MatIconModule,
     MatMenuModule,
+    TruncateModule,
+    MatTooltipModule,
   ]
 })
 export class ModelTableModule { }

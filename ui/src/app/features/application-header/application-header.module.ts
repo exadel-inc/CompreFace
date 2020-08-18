@@ -23,6 +23,8 @@ import {EntityTitleModule} from '../entity-title/entity-title.module';
 import {ApplicationHeaderFacade} from './application-header.facade';
 import {SpinnerModule} from '../spinner/spinner.module';
 import {MatCardModule} from '@angular/material';
+import {TruncateModule} from "../../ui/truncate-pipe/truncate.module";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [ApplicationHeaderComponent],
@@ -35,7 +37,9 @@ import {MatCardModule} from '@angular/material';
     MatButtonModule,
     SpinnerModule,
     EntityTitleModule,
-    MatCardModule
+    MatCardModule,
+    TruncateModule,
+    MatTooltipModule
   ],
   providers: [ApplicationHeaderFacade],
 })

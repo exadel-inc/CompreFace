@@ -43,6 +43,8 @@ export class TableComponent implements OnInit {
 
   @Output() changeRow = new EventEmitter<any>();
 
+  maxElementLength = 10;
+
   public columnsDefinition: {
     title: string;
     property: string;
@@ -56,5 +58,9 @@ export class TableComponent implements OnInit {
 
   public change(element: any): void {
     this.changeRow.emit(element);
+  }
+
+  disableToolTip(element: string): boolean {
+    return element.length <= this.maxElementLength;
   }
 }

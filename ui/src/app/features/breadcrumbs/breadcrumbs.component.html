@@ -17,5 +17,7 @@
 <mat-card *ngIf="app$ | async as app" class="breadcrumbs">
   <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">Home</a>
   <div class="separator"> / </div>
-  <div class="breadcrumbs-link">{{app.name}}</div>
+  <div class="breadcrumbs-link" matTooltip="{{app.name}}" [matTooltipDisabled]="app.name.length <= maxTitleLength">
+    {{app.name | truncate:maxTitleLength}}
+  </div>
 </mat-card>
