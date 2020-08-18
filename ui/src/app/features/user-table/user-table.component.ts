@@ -13,7 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { AppUser } from 'src/app/data/appUser';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
@@ -25,19 +33,25 @@ import { TableComponent } from '../table/table.component';
   styleUrls: ['./user-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserTableComponent extends TableComponent implements OnInit {
+export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
   @Input() availableRoles: string[];
   @Input() currentUserId: string;
   @Input() userRole: string;
   @Input() createHeader: string;
   @Input() createMessage: string;
   @Output() deleteUser = new EventEmitter<AppUser>();
+  @Output() dataChanged = new EventEmitter();
 
   isRoleChangeAllowed(user: AppUser): boolean {
     return user.userId !== this.currentUserId
       && this.userRole !== RoleEnum.USER
       && this.availableRoles.indexOf(user.role) > -1;
   }
+
+  ngOnChanges(): void {
+    this.dataChanged.emit();
+  }
+
 
   delete(user: AppUser): void {
     this.deleteUser.emit(user);

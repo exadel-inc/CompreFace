@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
@@ -43,6 +43,11 @@ export class UserListComponent implements OnInit, OnDestroy {
   currentUserEmail$: Observable<string>;
   seletedOption = 'deleter';
   orgOwnerEmail: string;
+  messageHeader: string;
+  message: string;
+  welcomeMessageHeader = 'Add users to the FRS'
+  welcomeMessage = 'You can add other users to the FRS application. They need to register and login to FRS. After registration ' +
+    'and login users will appear automatically in the users\' table.'
 
   constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog) {
     userListFacade.initSubscriptions();
@@ -67,6 +72,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
     this.currentUserId$ = this.userListFacade.currentUserId$;
     this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
+    this.messageHeader = this.welcomeMessageHeader;
+    this.message = this.welcomeMessage;
   }
 
   onChange(user: AppUser): void {
@@ -101,5 +108,13 @@ export class UserListComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.userListFacade.unsubscribe();
     this.availableRolesSubscription.unsubscribe();
+  }
+
+  onDataChange() {
+    this.getMessageHeader();
+  }
+
+  getMessageHeader(): void {
+    this.search.length ? this.message = "No matches found" : this.message = this.welcomeMessage;
   }
 }
