@@ -42,4 +42,8 @@ export class UserTableComponent extends TableComponent implements OnInit {
   delete(user: AppUser): void {
     this.deleteUser.emit(user);
   }
+
+  isSerched():boolean{
+    return document.getElementsByClassName("search-input")[0].getAttribute("ng-reflect-model") != '';
+  }
 }
