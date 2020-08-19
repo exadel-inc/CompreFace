@@ -47,7 +47,7 @@ public class FaceDao {
         if (faces.isEmpty()) {
             return new EmbeddingFaceList();
         }
-        val faceEmbedding = faces.stream().collect(
+        val faceEmbeddings = faces.stream().collect(
                 groupingBy(
                         Face::getFaceName,
                         mapping(face -> face.getEmbedding().getEmbeddings(), toList())
@@ -55,7 +55,7 @@ public class FaceDao {
         );
 
         val embeddingFaceList = new EmbeddingFaceList();
-        embeddingFaceList.setFaceEmbeddings(faceEmbedding);
+        embeddingFaceList.setFaceEmbeddings(faceEmbeddings);
         embeddingFaceList.setCalculatorVersion(faces.get(0).getEmbedding().getCalculatorVersion());
 
         return embeddingFaceList;

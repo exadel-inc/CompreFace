@@ -55,7 +55,7 @@ public class FaceClassifierAdapter {
 
             val x = new ArrayList<double[]>();
             val y = new ArrayList<Integer>();
-            val labelMap = new ArrayList<String>();
+            val labels = new ArrayList<String>();
 
             val faceNameEmbeddingsMap = embeddingFaceList.getFaceEmbeddings();
             if (faceNameEmbeddingsMap.isEmpty()) {
@@ -67,16 +67,16 @@ public class FaceClassifierAdapter {
                                                       .filter(ObjectUtils::isNotEmpty)
                                                       .collect(toList());
                 if (isNotEmpty(embeddings)) {
-                    labelMap.add(faceName);
+                    labels.add(faceName);
 
                     embeddings.forEach(embedding -> {
                         x.add(embedding.stream().mapToDouble(d -> d).toArray());
-                        y.add(labelMap.indexOf(faceName));
+                        y.add(labels.indexOf(faceName));
                     });
                 }
             }
 
-            classifier = new LogisticRegressionClassifier(labelMap);
+            classifier = new LogisticRegressionClassifier(labels);
             classifier.train(
                     x.toArray(double[][]::new),
                     y.stream().mapToInt(integer -> integer).toArray()
