@@ -25,22 +25,24 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 
 import { LoginFormComponent } from './login-form.component';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [LoginFormComponent],
   exports: [
     LoginFormComponent,
   ],
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
-    MatCardModule,
-    MatInputModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-  ]
+    imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        RouterModule,
+        MatCardModule,
+        MatInputModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        TranslateModule,
+    ]
 })
 export class LoginFormModule { }

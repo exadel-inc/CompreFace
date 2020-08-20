@@ -22,19 +22,21 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {RouterModule} from '@angular/router';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [ToolBarComponent],
   exports: [
     ToolBarComponent,
   ],
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatIconModule,
-    RouterModule
-  ]
+    imports: [
+        CommonModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatMenuModule,
+        MatIconModule,
+        RouterModule,
+        TranslateModule
+    ]
 })
 export class ToolBarModule { }

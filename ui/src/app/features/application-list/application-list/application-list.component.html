@@ -14,7 +14,8 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <div class="application-list">
-  <h3>{{tableConfig.data.length > 0 ? "Applications": "Create Application"}}</h3>
+  <h3 *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{'applications.title' | translate}}</h3>
+  <ng-template #firstStepInfo><h3>{{'applications.first_steps_title' | translate}}</h3></ng-template>
   <app-spinner *ngIf="isLoading"></app-spinner>
   <app-table *ngIf="tableConfig.data.length > 0" class="app-table" [isLoading]="isLoading" [tableConfig]="tableConfig"
     (changeRow)="selectApp.emit($event)">
@@ -22,14 +23,12 @@ limitations under the License.
   <div class="create-new-message" *ngIf="tableConfig.data.length === 0 && !isLoading">
     <mat-icon>info</mat-icon>
     <p>
-      The first step in using face recognition service is to create an application. An application is where you can
-      create and manage models.
+      {{'applications.first_steps_info' | translate}}
     </p>
   </div>
-
   <div class="card-single-action-container">
     <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="createApp.emit()">
-      CREATE
+      {{'common.capital.create' | translate}}
     </button>
   </div>
 </div>

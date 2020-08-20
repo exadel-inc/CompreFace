@@ -25,22 +25,24 @@ import {SpinnerModule} from '../spinner/spinner.module';
 import {MatCardModule} from '@angular/material';
 import {TruncateModule} from "../../ui/truncate-pipe/truncate.module";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [ApplicationHeaderComponent],
   exports: [
     ApplicationHeaderComponent
   ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatButtonModule,
-    SpinnerModule,
-    EntityTitleModule,
-    MatCardModule,
-    TruncateModule,
-    MatTooltipModule
-  ],
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatButtonModule,
+        SpinnerModule,
+        EntityTitleModule,
+        MatCardModule,
+        TruncateModule,
+        MatTooltipModule,
+        TranslateModule
+    ],
   providers: [ApplicationHeaderFacade],
 })
 export class ApplicationHeaderModule {

@@ -24,6 +24,7 @@ import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-user-list-container',
@@ -43,15 +44,19 @@ export class UserListComponent implements OnInit, OnDestroy {
   currentUserEmail$: Observable<string>;
   seletedOption = 'deleter';
   orgOwnerEmail: string;
+  messageHeader: string;
+  messageInfo: string;
+  translate: TranslateService;
 
-  constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog) {
+  constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog,
+              translate: TranslateService) {
     userListFacade.initSubscriptions();
+    this.translate = translate;
   }
 
   ngOnInit() {
     this.isLoading$ = this.userListFacade.isLoading$;
     this.userRole$ = this.userListFacade.userRole$;
-
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       this.orgOwnerEmail = users.filter(user => user.role === RoleEnum.OWNER).map(user => user.email)[0];
       return {
@@ -67,6 +72,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
     this.currentUserId$ = this.userListFacade.currentUserId$;
     this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
+    this.translate.get("org_users.add_users_title").subscribe(title => this.messageHeader = title);
+    this.translate.get("org_users.add_users_info").subscribe(info => this.messageInfo = info);
   }
 
   onChange(user: AppUser): void {
