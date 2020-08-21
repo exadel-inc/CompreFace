@@ -41,9 +41,10 @@
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef> </th>
     <td mat-cell *matCellDef="let element">
-      <mat-icon *ngIf="(element.userId === this.currentUserId) ||
+      <mat-icon *ngIf="(element.userId === this.currentUserId && element.role !== 'OWNER') ||
                        (userRole === 'ADMINISTRATOR' && element.role !== 'OWNER') ||
-                        userRole === 'OWNER'" (click)="delete(element)" title="remove user">delete_outline</mat-icon>
+                       (userRole === 'OWNER' && element.role !== 'OWNER')"
+                (click)="delete(element)" title="remove user">delete_outline</mat-icon>
     </td>
   </ng-container>
 

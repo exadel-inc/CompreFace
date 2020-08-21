@@ -18,6 +18,7 @@ import { AppUser } from 'src/app/data/appUser';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 import { TableComponent } from '../table/table.component';
+import {UserDeletion} from "../../data/userDeletion";
 
 @Component({
   selector: 'app-user-table',
@@ -31,7 +32,7 @@ export class UserTableComponent extends TableComponent implements OnInit {
   @Input() userRole: string;
   @Input() createHeader: string;
   @Input() createMessage: string;
-  @Output() deleteUser = new EventEmitter<AppUser>();
+  @Output() deleteUser = new EventEmitter<UserDeletion>();
 
   isRoleChangeAllowed(user: AppUser): boolean {
     return user.userId !== this.currentUserId
@@ -40,7 +41,10 @@ export class UserTableComponent extends TableComponent implements OnInit {
   }
 
   delete(user: AppUser): void {
-    user.deleterUserId =  this.currentUserId;
-    this.deleteUser.emit(user);
+    let deletion: UserDeletion = {
+      userToDelete: user,
+      deleterUserId: this.currentUserId
+    }
+    this.deleteUser.emit(deletion);
   }
 }

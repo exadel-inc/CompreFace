@@ -74,7 +74,7 @@ export class UserListEffect {
           switchMap(() => {
             if(deleterUserId === userId){
                 this.authService.logOut();
-                return []
+                return [];
             }
             return [
               deleteUserSuccess({ userId }),

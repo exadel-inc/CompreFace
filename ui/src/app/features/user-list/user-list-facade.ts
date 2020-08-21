@@ -36,6 +36,7 @@ import {
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import {UserDeletion} from "../../data/userDeletion";
 
 @Injectable()
 export class UserListFacade implements IFacade {
@@ -106,11 +107,11 @@ export class UserListFacade implements IFacade {
     }));
   }
 
-  deleteUser(user: any, newOwner?: string): void {
+  deleteUser(deletion: UserDeletion, newOwner?: string): void {
     this.store.dispatch(deleteUser({
       organizationId: this.selectedOrganization,
-      userId: user.userId,
-      deleterUserId: user.deleterUserId,
+      userId: deletion.userToDelete.userId,
+      deleterUserId: deletion.deleterUserId,
       newOwner,
     }));
   }
