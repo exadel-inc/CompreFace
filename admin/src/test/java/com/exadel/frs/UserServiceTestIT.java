@@ -18,7 +18,6 @@ package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -90,7 +89,9 @@ class UserServiceTestIT {
         assertThat(disabledUser).isNotNull();
         assertThat(disabledUser.isEnabled()).isFalse();
 
-        assertThrows(UserDoesNotExistException.class, () -> userService.getEnabledUserByEmail(DISABLED_USER_EMAIL));
+        assertThatThrownBy(() -> {
+            userService.getEnabledUserByEmail(DISABLED_USER_EMAIL);
+        }).isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
@@ -103,7 +104,9 @@ class UserServiceTestIT {
 
     @Test
     void getUserByEmailThrowsExceptionIfNoUser() {
-        assertThrows(UserDoesNotExistException.class, () -> userService.getUser(USER_EMAIL));
+        assertThatThrownBy(() -> {
+            userService.getUser(USER_EMAIL);
+        }).isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
@@ -118,8 +121,9 @@ class UserServiceTestIT {
 
     @Test
     void getUserByGuidThrowsExceptionIfNoUser() {
-        assertThatThrownBy(() -> userService.getUserByGuid(USER_GUID))
-                .isInstanceOf(UserDoesNotExistException.class);
+        assertThatThrownBy(() -> {
+            userService.getUserByGuid(USER_GUID);
+        }).isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
