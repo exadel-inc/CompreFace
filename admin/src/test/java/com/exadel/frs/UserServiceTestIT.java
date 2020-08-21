@@ -51,6 +51,10 @@ class UserServiceTestIT {
 
     private static final String ENABLED_USER_EMAIL = "enabled_user@email.com";
     private static final String DISABLED_USER_EMAIL = "disabled_user@email.com";
+    private static final String USER_EMAIL = "user@email.com";
+    private static final String USER_EMAIL_2 = "user_2@email.com";
+    private static final String USER_GUID = "testUserGuid";
+    private static final String USER_EMAIL_PART = "user";
 
     @SpyBean
     private UserService userService;
@@ -62,6 +66,8 @@ class UserServiceTestIT {
     void cleanDB() {
         deleteUserIfExists(ENABLED_USER_EMAIL);
         deleteUserIfExists(DISABLED_USER_EMAIL);
+        deleteUserIfExists(USER_EMAIL);
+        deleteUserIfExists(USER_EMAIL_2);
     }
 
     @Test
@@ -84,6 +90,53 @@ class UserServiceTestIT {
         assertThat(disabledUser.isEnabled()).isFalse();
 
         assertThrows(UserDoesNotExistException.class, () -> userService.getEnabledUserByEmail(DISABLED_USER_EMAIL));
+    }
+
+    @Test
+    void getUserByEmailReturnsUser() {
+        createUser(USER_EMAIL);
+
+        val user = userService.getUser(USER_EMAIL);
+
+        assertThat(user).isNotNull();
+    }
+
+    @Test
+    void getUserByEmailThrowsExceptionIfNoUser() {
+        assertThrows(UserDoesNotExistException.class, () -> userService.getUser(USER_EMAIL));
+    }
+
+    @Test
+    void getUserByGuidReturnsUser() {
+        createUser(USER_EMAIL);
+
+        val createdUser = userRepository.findByEmail(USER_EMAIL).get();
+
+        val user = userService.getUserByGuid(createdUser.getGuid());
+
+        assertThat(user).isNotNull();
+    }
+
+    @Test
+    void getUserByGuidThrowsExceptionIfNoUser() {
+        assertThrows(UserDoesNotExistException.class, () -> userService.getUserByGuid(USER_GUID));
+    }
+
+    @Test
+    void autocompleteReturnsEmptyList() {
+        val users = userService.autocomplete("");
+
+        assertThat(users).isEmpty();
+    }
+
+    @Test
+    void autocompleteReturnsUsers() {
+        createUser(USER_EMAIL);
+        createUser(USER_EMAIL_2);
+
+        val users = userService.autocomplete(USER_EMAIL_PART);
+
+        assertThat(users).hasSize(2);
     }
 
     private void createAndEnableUser(final String email) {

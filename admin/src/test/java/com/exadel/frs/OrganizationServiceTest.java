@@ -247,6 +247,32 @@ class OrganizationServiceTest {
         verifyNoMoreInteractions(organizationRepositoryMock);
     }
 
+    @Test
+    void successGetOrgUsers() {
+        val fistUserRole = UserOrganizationRoleId.builder()
+                .userId(0L)
+                .build();
+
+        val user = UserOrganizationRole.builder()
+                .id(fistUserRole)
+                .build();
+
+        val organization = Organization.builder()
+                .userOrganizationRoles(newArrayList(user))
+                .id(ORGANIZATION_ID)
+                .build();
+
+        when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
+
+        val result = organizationService.getOrgUsers(ORGANIZATION_GUID, USER_ID);
+
+        assertThat(result).hasSize(1);
+
+        verify(organizationRepositoryMock).findByGuid(ORGANIZATION_GUID);
+        verify(authManagerMock).verifyReadPrivilegesToOrg(USER_ID, organization);
+        verifyNoMoreInteractions(organizationRepositoryMock, authManagerMock);
+    }
+
     @Nested
     public class GetOrgRolesToAssignTest {
 
