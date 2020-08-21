@@ -264,9 +264,9 @@ class OrganizationServiceTest {
 
         when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
 
-        val result = organizationService.getOrgUsers(ORGANIZATION_GUID, USER_ID);
+        val actual = organizationService.getOrgUsers(ORGANIZATION_GUID, USER_ID);
 
-        assertThat(result).hasSize(1);
+        assertThat(actual).hasSize(1);
 
         verify(organizationRepositoryMock).findByGuid(ORGANIZATION_GUID);
         verify(authManagerMock).verifyReadPrivilegesToOrg(USER_ID, organization);

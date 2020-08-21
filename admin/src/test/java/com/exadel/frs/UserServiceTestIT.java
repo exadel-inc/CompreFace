@@ -17,6 +17,7 @@
 package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.UserCreateDto;
@@ -95,10 +96,9 @@ class UserServiceTestIT {
     @Test
     void getUserByEmailReturnsUser() {
         createUser(USER_EMAIL);
+        val actual = userService.getUser(USER_EMAIL);
 
-        val user = userService.getUser(USER_EMAIL);
-
-        assertThat(user).isNotNull();
+        assertThat(actual).isNotNull();
     }
 
     @Test
@@ -109,24 +109,24 @@ class UserServiceTestIT {
     @Test
     void getUserByGuidReturnsUser() {
         createUser(USER_EMAIL);
-
         val createdUser = userRepository.findByEmail(USER_EMAIL).get();
 
-        val user = userService.getUserByGuid(createdUser.getGuid());
+        val actual = userService.getUserByGuid(createdUser.getGuid());
 
-        assertThat(user).isNotNull();
+        assertThat(actual).isNotNull();
     }
 
     @Test
     void getUserByGuidThrowsExceptionIfNoUser() {
-        assertThrows(UserDoesNotExistException.class, () -> userService.getUserByGuid(USER_GUID));
+        assertThatThrownBy(() -> userService.getUserByGuid(USER_GUID))
+                .isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
     void autocompleteReturnsEmptyList() {
-        val users = userService.autocomplete("");
+        val actual = userService.autocomplete("");
 
-        assertThat(users).isEmpty();
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -134,9 +134,9 @@ class UserServiceTestIT {
         createUser(USER_EMAIL);
         createUser(USER_EMAIL_2);
 
-        val users = userService.autocomplete(USER_EMAIL_PART);
+        val actual = userService.autocomplete(USER_EMAIL_PART);
 
-        assertThat(users).hasSize(2);
+        assertThat(actual).hasSize(2);
     }
 
     private void createAndEnableUser(final String email) {
