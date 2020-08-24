@@ -43,21 +43,21 @@
 
   </appender>
 
-  <springProfile name="local">
+  <springProfile name="prod">
     <logger name="com.exadel" level="DEBUG" additivity="false">
-      <appender-ref ref="CONSOLE"/>
+      <appender-ref ref="consoleJsonAppender"/>
     </logger>
     <root level="INFO">
-      <appender-ref ref="CONSOLE"/>
+      <appender-ref ref="consoleJsonAppender"/>
     </root>
   </springProfile>
 
-  <springProfile name="!local">
+  <springProfile name="!prod">
     <logger name="com.exadel" level="DEBUG" additivity="false">
-      <appender-ref ref="consoleJsonAppender"/>
+      <appender-ref ref="CONSOLE"/>
     </logger>
     <root level="INFO">
-      <appender-ref ref="consoleJsonAppender"/>
+      <appender-ref ref="CONSOLE"/>
     </root>
   </springProfile>
 
