@@ -34,7 +34,6 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
-import com.exadel.frs.system.rest.CoreFacesClient;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -50,12 +49,11 @@ public class ModelService {
     private final AppService appService;
     private final ModelShareRequestRepository modelShareRequestRepository;
     private final AppModelRepository appModelRepository;
-    private final CoreFacesClient coreFacesClient;
     private final AuthorizationManager authManager;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
-                .orElseThrow(() -> new ModelNotFoundException(modelGuid));
+                              .orElseThrow(() -> new ModelNotFoundException(modelGuid));
     }
 
     private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {
@@ -95,11 +93,11 @@ public class ModelService {
         verifyNameIsUnique(modelCreateDto.getName(), app.getId());
 
         val model = Model.builder()
-                .name(modelCreateDto.getName())
-                .guid(randomUUID().toString())
-                .apiKey(randomUUID().toString())
-                .app(app)
-                .build();
+                         .name(modelCreateDto.getName())
+                         .guid(randomUUID().toString())
+                         .apiKey(randomUUID().toString())
+                         .app(app)
+                         .build();
 
         return modelRepository.save(model);
     }
@@ -142,7 +140,6 @@ public class ModelService {
 
         authManager.verifyWritePrivilegesToApp(userId, model.getApp());
 
-        coreFacesClient.deleteFaces(model.getApiKey());
         modelRepository.deleteById(model.getId());
     }
 

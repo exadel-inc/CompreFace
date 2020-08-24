@@ -33,7 +33,7 @@ public class ClientsConfig {
     private final EnvironmentProperties properties;
 
     @Bean
-    public CoreFacesClient getDeleteFacesClient() {
+    public CoreFacesClient init() {
         return Feign.builder()
                     .encoder(new SpringFormEncoder())
                     .decoder(new JacksonDecoder())

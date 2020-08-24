@@ -41,7 +41,6 @@ import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
-import com.exadel.frs.system.rest.CoreFacesClient;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
@@ -66,7 +65,6 @@ class ModelServiceTest {
     private ModelService modelService;
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
-    private CoreFacesClient facesClient;
     private AuthorizationManager authManager;
 
     ModelServiceTest() {
@@ -74,14 +72,12 @@ class ModelServiceTest {
         appServiceMock = mock(AppService.class);
         modelShareRequestRepository = mock(ModelShareRequestRepository.class);
         appModelRepository = mock(AppModelRepository.class);
-        facesClient = mock(CoreFacesClient.class);
         authManager = mock(AuthorizationManager.class);
         modelService = new ModelService(
                 modelRepositoryMock,
                 appServiceMock,
                 modelShareRequestRepository,
                 appModelRepository,
-                facesClient,
                 authManager
         );
     }
@@ -275,13 +271,12 @@ class ModelServiceTest {
         modelService.regenerateApiKey(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
-        verify(facesClient).updateModelKeyForFaces(anyString(), anyString());
         verify(modelRepositoryMock).save(any());
         verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
         verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, model);
         verify(authManager).verifyWritePrivilegesToApp(USER_ID, app);
-        verifyNoMoreInteractions(facesClient, modelRepositoryMock, authManager);
+        verifyNoMoreInteractions(modelRepositoryMock, authManager);
     }
 
     @Test
@@ -306,13 +301,12 @@ class ModelServiceTest {
 
         modelService.deleteModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
-        verify(facesClient).deleteFaces(modelKey);
         verify(modelRepositoryMock).findByGuid(anyString());
         verify(modelRepositoryMock).deleteById(anyLong());
         verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
         verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, model);
         verify(authManager).verifyWritePrivilegesToApp(USER_ID, app);
-        verifyNoMoreInteractions(facesClient, modelRepositoryMock, authManager);
+        verifyNoMoreInteractions(modelRepositoryMock, authManager);
     }
 }

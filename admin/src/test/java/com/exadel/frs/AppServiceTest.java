@@ -32,7 +32,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.verification.VerificationModeFactory.times;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
@@ -55,7 +54,6 @@ import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
-import com.exadel.frs.system.rest.CoreFacesClient;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
@@ -86,9 +84,6 @@ class AppServiceTest {
 
     @Mock
     private UserService userServiceMock;
-
-    @Mock
-    private CoreFacesClient coreFacesClient;
 
     @InjectMocks
     private AppService appService;
@@ -342,11 +337,10 @@ class AppServiceTest {
 
         verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
         verify(appRepositoryMock).deleteById(anyLong());
-        verify(coreFacesClient, times(models.size())).deleteFaces(anyString());
         verify(authManagerMock).verifyWritePrivilegesToApp(USER_ID, app);
         verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
         verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
-        verifyNoMoreInteractions(appRepositoryMock, coreFacesClient, authManagerMock);
+        verifyNoMoreInteractions(appRepositoryMock, authManagerMock);
     }
 
     @Test
