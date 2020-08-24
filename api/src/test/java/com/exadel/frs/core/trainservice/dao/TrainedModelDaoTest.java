@@ -24,24 +24,24 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static smile.math.MathEx.randomLong;
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
-import com.exadel.frs.core.trainservice.entity.mongo.Model;
-import com.exadel.frs.core.trainservice.repository.mongo.ModelRepository;
+import com.exadel.frs.core.trainservice.entity.TrainedModel;
+import com.exadel.frs.core.trainservice.repository.TrainedModelRepository;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-public class ModelDaoTest {
+public class TrainedModelDaoTest {
 
     @Mock
-    private ModelRepository modelRepository;
+    private TrainedModelRepository trainedModelRepository;
 
     @InjectMocks
-    private ModelDao modelDao;
+    private TrainedModelDao trainedModelDao;
 
     public static final String MODEL_KEY = "model_key";
 
@@ -60,34 +60,34 @@ public class ModelDaoTest {
         val classifier = mock(Classifier.class);
         val calculator = "1.0";
 
-        when(modelRepository.findFirstByModelKey(MODEL_KEY)).thenReturn(Optional.empty());
-        when(modelRepository.save(any())).then(returnsFirstArg());
+        when(trainedModelRepository.findFirstByModelKey(MODEL_KEY)).thenReturn(Optional.empty());
+        when(trainedModelRepository.save(any())).then(returnsFirstArg());
 
-        val actual = modelDao.saveModel(MODEL_KEY, classifier, calculator);
+        val actual = trainedModelDao.saveModel(MODEL_KEY, classifier, calculator);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getModelKey()).isEqualTo(MODEL_KEY);
         assertThat(actual.getClassifier()).isEqualTo(classifier);
         assertThat(actual.getCalculatorVersion()).isEqualTo(calculator);
 
-        verify(modelRepository).findFirstByModelKey(MODEL_KEY);
-        verify(modelRepository).save(actual);
-        verifyNoMoreInteractions(modelRepository);
+        verify(trainedModelRepository).findFirstByModelKey(MODEL_KEY);
+        verify(trainedModelRepository).save(actual);
+        verifyNoMoreInteractions(trainedModelRepository);
     }
 
     @Test
     void updateOldModel() {
         val classifier = mock(Classifier.class);
         val calculator = "1.0";
-        val id = UUID.randomUUID().toString();
-        val model = Model.builder()
-                         .id(id)
-                         .build();
+        val id = randomLong();
+        val model = TrainedModel.builder()
+                                .id(id)
+                                .build();
 
-        when(modelRepository.findFirstByModelKey(MODEL_KEY)).thenReturn(Optional.of(model));
-        when(modelRepository.save(any())).then(returnsFirstArg());
+        when(trainedModelRepository.findFirstByModelKey(MODEL_KEY)).thenReturn(Optional.of(model));
+        when(trainedModelRepository.save(any())).then(returnsFirstArg());
 
-        val actual = modelDao.saveModel(MODEL_KEY, classifier, calculator);
+        val actual = trainedModelDao.saveModel(MODEL_KEY, classifier, calculator);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getId()).isEqualTo(id);
@@ -95,9 +95,9 @@ public class ModelDaoTest {
         assertThat(actual.getClassifier()).isEqualTo(classifier);
         assertThat(actual.getCalculatorVersion()).isEqualTo(calculator);
 
-        verify(modelRepository).findFirstByModelKey(MODEL_KEY);
-        verify(modelRepository).save(actual);
-        verifyNoMoreInteractions(modelRepository);
+        verify(trainedModelRepository).findFirstByModelKey(MODEL_KEY);
+        verify(trainedModelRepository).save(actual);
+        verifyNoMoreInteractions(trainedModelRepository);
     }
 
     @Test

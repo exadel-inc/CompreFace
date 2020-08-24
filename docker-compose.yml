@@ -11,12 +11,6 @@ services:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_DB=frs
 
-  frs-mongo-db:
-    image: mongo:4.0.4-xenial
-    ports:
-      - "27517:27017"
-    container_name: "frs-mongo-db"
-
   frs-admin:
     image: ${registry}frs-admin
     build:
@@ -46,11 +40,9 @@ services:
       - "5005:5005"
     depends_on:
       - frs-postgres-db
-      - frs-mongo-db
     environment:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
-      - MONGO_URL=mongodb://${mongo_domain}:${mongo_port}
 
   frs-fe:
     image: ${registry}frs-fe
@@ -74,5 +66,4 @@ services:
     build:
       context: embedding-calculator
     environment:
-      - MONGODB_URI=mongodb://${mongo_domain}:${mongo_port}/efrs_db
       - ML_PORT=3000

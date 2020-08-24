@@ -1,6 +1,6 @@
-package com.exadel.frs.core.trainservice.repository.postgres;
+package com.exadel.frs.core.trainservice.repository;
 
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.List;
 import java.util.Optional;
 import javax.transaction.Transactional;
@@ -20,4 +20,6 @@ public interface FacesRepository extends JpaRepository<Face, Long> {
     int countByApiKey(String modelApiKey);
 
     Optional<Face> findById(String id);
+
+    List<Face> findByIdIn(List<String> ids);
 }

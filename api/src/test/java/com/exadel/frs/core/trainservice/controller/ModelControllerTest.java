@@ -24,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Model;
+import com.exadel.frs.core.trainservice.entity.Model;
 import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.Test;

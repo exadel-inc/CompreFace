@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.exception.ModelHasNotEnoughFacesException;
 import lombok.val;
@@ -41,7 +41,7 @@ import org.springframework.context.ApplicationContext;
 public class ClassifierManagerTest {
 
     @Mock
-    private ModelDao modelDao;
+    private TrainedModelDao trainedModelDao;
 
     @Mock
     private FaceDao faceDao;
@@ -68,20 +68,20 @@ public class ClassifierManagerTest {
 
         manager.saveClassifier(MODEL_KEY, classifier, "1.0");
 
-        val inOrder = inOrder(modelDao, lockManager);
-        inOrder.verify(modelDao).saveModel(MODEL_KEY, classifier, "1.0");
+        val inOrder = inOrder(trainedModelDao, lockManager);
+        inOrder.verify(trainedModelDao).saveModel(MODEL_KEY, classifier, "1.0");
         inOrder.verify(lockManager).unlock(MODEL_KEY);
-        verifyNoMoreInteractions(modelDao, lockManager);
+        verifyNoMoreInteractions(trainedModelDao, lockManager);
     }
 
     @Test
     void removeFaceClassifier() {
         manager.removeFaceClassifier(MODEL_KEY);
 
-        val inOrder = inOrder(modelDao, lockManager);
+        val inOrder = inOrder(trainedModelDao, lockManager);
         inOrder.verify(lockManager).unlock(MODEL_KEY);
-        inOrder.verify(modelDao).deleteModel(MODEL_KEY);
-        verifyNoMoreInteractions(modelDao, lockManager);
+        inOrder.verify(trainedModelDao).deleteModel(MODEL_KEY);
+        verifyNoMoreInteractions(trainedModelDao, lockManager);
     }
 
     @Test
@@ -103,7 +103,7 @@ public class ClassifierManagerTest {
         inOrder.verify(adapterMock).train(faceList, MODEL_KEY);
 
         verifyNoMoreInteractions(faceDao, lockManager, context, adapterMock);
-        verifyNoInteractions(modelDao);
+        verifyNoInteractions(trainedModelDao);
     }
 
     @Test

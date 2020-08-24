@@ -18,7 +18,7 @@ package com.exadel.frs.core.trainservice.component;
 
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import com.exadel.frs.core.trainservice.exception.ModelHasNotEnoughFacesException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +32,7 @@ public class FaceClassifierManager {
 
     private static final int MIN_FACES_TO_TRAIN = 2;
 
-    private final ModelDao modelDao;
+    private final TrainedModelDao trainedModelDao;
     private final FaceDao faceDao;
     private final FaceClassifierLockManager lockManager;
     private final ApplicationContext context;
@@ -43,7 +43,7 @@ public class FaceClassifierManager {
             final String calculatorVersion
     ) {
         try {
-            modelDao.saveModel(modelKey, classifier, calculatorVersion);
+            trainedModelDao.saveModel(modelKey, classifier, calculatorVersion);
         } finally {
             lockManager.unlock(modelKey);
         }
@@ -51,7 +51,13 @@ public class FaceClassifierManager {
 
     public void removeFaceClassifier(final String modelKey) {
         lockManager.unlock(modelKey);
-        modelDao.deleteModel(modelKey);
+        trainedModelDao.deleteModel(modelKey);
+    }
+
+    public void initNewClassifier(final String modelKey, final List<String> faces) {
+        lockManager.lock(modelKey);
+        val faceClassifier = context.getBean(FaceClassifierAdapter.class);
+        faceClassifier.train(faceDao.findAllFacesIn(faces), modelKey);
     }
 
     public void initNewClassifier(final String modelKey) {

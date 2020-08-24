@@ -27,7 +27,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
-import com.exadel.frs.core.trainservice.service.ModelServicePg;
+import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -54,7 +54,7 @@ public class SecurityValidationFilterTest {
     private ObjectMapper mapper;
 
     @Mock
-    private ModelServicePg modelService;
+    private ModelService modelService;
 
     @InjectMocks
     private SecurityValidationFilter securityValidationFilter;

@@ -19,9 +19,9 @@ package com.exadel.frs.core.trainservice.dao;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toMap;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
-import com.exadel.frs.core.trainservice.entity.postgres.Face.Embedding;
-import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.Face.Embedding;
+import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +38,12 @@ public class FaceDao {
 
     public EmbeddingFaceList findAllFaceEmbeddingsByApiKey(final String modelApiKey) {
         val faces = facesRepository.findByApiKey(modelApiKey);
+
+        return facesToEmbeddingList(faces);
+    }
+
+    public EmbeddingFaceList findAllFacesIn(final List<String> ids) {
+        val faces = facesRepository.findByIdIn(ids);
 
         return facesToEmbeddingList(faces);
     }

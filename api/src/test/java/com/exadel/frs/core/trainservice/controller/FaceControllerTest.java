@@ -22,24 +22,20 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
-import com.exadel.frs.core.trainservice.entity.mongo.Model;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
-import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +54,7 @@ public class FaceControllerTest {
     private FacesRepository facesRepository;
 
     @MockBean
-    private ModelDao modelDao;
+    private TrainedModelDao trainedModelDao;
 
     private static final String API_KEY = "model_key";
 
@@ -140,16 +136,5 @@ public class FaceControllerTest {
     public void deleteFacesByModelFacesShouldReturnBadRequestWhenApiKeyIsMissing() throws Exception {
         mockMvc.perform(delete(API_V1 + "/faces"))
                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void updateModelKeySuccess() throws Exception {
-        val newModelKey = randomUUID().toString();
-
-        doReturn(Model.builder().build())
-                .when(modelDao).updateModelApiKey(any(), any());
-
-        mockMvc.perform(put(API_V1 + "/models/api-key?new_model_api_key=" + newModelKey).header(X_FRS_API_KEY_HEADER, API_KEY))
-               .andExpect(status().isOk());
     }
 }

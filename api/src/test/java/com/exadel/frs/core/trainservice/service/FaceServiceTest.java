@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
