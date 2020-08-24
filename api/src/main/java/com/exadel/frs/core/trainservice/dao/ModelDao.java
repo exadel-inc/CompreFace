@@ -13,21 +13,8 @@ public class ModelDao {
 
     private final ModelRepository modelRepository;
 
-    public Model updateModelApiKey(
-            final String oldModelKey,
-            final String newModelKey
-    ) {
-        val model = modelRepository.findByApiKey(oldModelKey);
-        model.ifPresent(newModel -> {
-            newModel.setApiKey(newModelKey);
-            modelRepository.save(newModel);
-        });
-
-        return model.orElse(null);
-    }
-
     public Model findByApiKey(final String modelKey) {
+
         return modelRepository.findByApiKey(modelKey).orElse(null);
     }
-
 }

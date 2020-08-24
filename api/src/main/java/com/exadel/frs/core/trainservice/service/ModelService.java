@@ -32,8 +32,4 @@ public class ModelService {
     public ValidationResult validateModelKey(final String modelKey) {
         return (modelDao.findByApiKey(modelKey) != null) ? OK : FORBIDDEN;
     }
-
-    public void updateModelApiKeyForFaces(final String modelKey, final String newModelApiKey) {
-        modelDao.updateModelApiKey(modelKey, newModelApiKey);
-    }
 }

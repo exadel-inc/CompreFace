@@ -132,8 +132,6 @@ public class ModelService {
 
         val newApiKey = randomUUID().toString();
 
-        coreFacesClient.updateModelKeyForFaces(repoModel.getApiKey(), newApiKey);
-
         repoModel.setApiKey(newApiKey);
         modelRepository.save(repoModel);
     }
