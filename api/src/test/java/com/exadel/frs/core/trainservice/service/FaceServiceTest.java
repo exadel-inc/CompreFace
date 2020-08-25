@@ -84,7 +84,7 @@ class FaceServiceTest {
     }
 
     @Test
-    void deleteFaceByGuid() {
+    void deleteFaceById() {
         val faceId = randomUUID().toString();
 
         faceService.deleteFaceById(faceId, API_KEY, NO.name());

@@ -16,7 +16,6 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
-import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,7 +25,6 @@ import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegression
 import com.exadel.frs.core.trainservice.entity.TrainedModel;
 import java.util.List;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -74,15 +72,6 @@ public class TrainedModelRepositoryTestIT {
         assertEquals(0L, trainedModelRepository.count());
     }
 
-    @Test
-    public void deleteWrong() {
-        var id = saveTrainedModel();
-
-        assertEquals(1L, trainedModelRepository.count());
-        assertDoesNotThrow(() -> trainedModelRepository.deleteById(id + 1));
-        assertEquals(1L, trainedModelRepository.count());
-    }
-
     private Long saveTrainedModel() {
         val x = new double[2][2];
         x[0][0] = 2;
@@ -93,10 +82,7 @@ public class TrainedModelRepositoryTestIT {
         y[0] = 1;
         y[1] = 2;
 
-        val faces = List.of(
-                Pair.of(randomUUID().toString(), "firstLabel"),
-                Pair.of(randomUUID().toString(), "secondLabel")
-        );
+        val faces = List.of("firstLabel", "secondLabel");
 
         val classifier = new LogisticRegressionClassifier(faces);
         classifier.train(x, y);

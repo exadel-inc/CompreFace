@@ -17,7 +17,9 @@
 package com.exadel.frs.core.trainservice.dao;
 
 import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.mapping;
+import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
@@ -26,7 +28,6 @@ import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -52,11 +53,10 @@ public class FaceDao {
         if (faces.isEmpty()) {
             return new EmbeddingFaceList();
         }
-
-        var faceEmbeddings = faces.stream().collect(
-                toMap(
-                        face -> Pair.of(face.getId(), face.getFaceName()),
-                        face -> face.getEmbedding().getEmbeddings()
+        val faceEmbeddings = faces.stream().collect(
+                groupingBy(
+                        Face::getFaceName,
+                        mapping(face -> face.getEmbedding().getEmbeddings(), toList())
                 )
         );
 

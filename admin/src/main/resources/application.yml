@@ -16,6 +16,8 @@ app:
           resource-ids: authorization
 
 spring:
+  profiles:
+    active: prod
   servlet:
     multipart:
       max-file-size: 10MB

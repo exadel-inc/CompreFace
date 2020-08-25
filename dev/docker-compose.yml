@@ -7,6 +7,8 @@ services:
   frs-postgres-db:
     image: postgres:11.5
     container_name: "frs-postgres-db"
+    ports:
+      - "6432:5432"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${postgres_password}
@@ -17,13 +19,17 @@ services:
   frs-admin:
     image: ${registry}frs-admin
     build:
-      dockerfile: Dockerfile
-      context: .
+      context: ..
+      dockerfile: dev/Dockerfile
       target: frs_crud
     container_name: "frs-admin"
+    ports:
+      - "8081:8080"
+      - "5006:5005"
     environment:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
+      - SPRING_PROFILES_ACTIVE=dev
     depends_on:
       - frs-postgres-db
       - frs-api
@@ -31,21 +37,27 @@ services:
   frs-api:
     image: ${registry}frs-api
     build:
-      dockerfile: Dockerfile
-      context: .
+      context: ..
+      dockerfile: dev/Dockerfile
       target: frs_core
     container_name: "frs-api"
+    ports:
+      - "8082:8080"
+      - "5005:5005"
     depends_on:
       - frs-postgres-db
     environment:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
+      - SPRING_PROFILES_ACTIVE=dev
 
   frs-fe:
     image: ${registry}frs-fe
     build:
-      context: ui
+      context: ../ui
       dockerfile: docker-prod/Dockerfile
+    volumes:
+      - ${frs-fe-volume}
     container_name: "frs-ui"
     ports:
       - "8000:80"
@@ -56,7 +68,9 @@ services:
   frs-core:
     image: ${registry}frs-core
     container_name: "frs-core"
+    ports:
+      - "3300:3000"
     build:
-      context: embedding-calculator
+      context: ../embedding-calculator
     environment:
       - ML_PORT=3000
