@@ -45,8 +45,6 @@ export class UserTableComponent extends TableComponent implements OnInit {
   }
 
   isSearched():boolean{
-    //return document.getElementsByClassName("search-input")[0].getAttribute("ng-reflect-model") != '';
-    console.log("Searched Text is: " + this.searchText)
     return this.searchText != '';
   }
 }
