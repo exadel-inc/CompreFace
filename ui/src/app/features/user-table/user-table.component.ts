@@ -34,13 +34,27 @@ import { TableComponent } from '../table/table.component';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
+  messageHeader: string;
+  message: string;
+  welcomeMessageHeader = 'Add users to the FRS';
+  welcomeMessage = 'You can add other users to the FRS application. They need to register and login to FRS. After registration ' +
+    'and login users will appear automatically in the users\' table.';
+  noResultMessage = 'No matches found';
+
   @Input() availableRoles: string[];
   @Input() currentUserId: string;
   @Input() userRole: string;
-  @Input() createHeader: string;
-  @Input() createMessage: string;
+  @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<AppUser>();
-  @Output() dataChanged = new EventEmitter();
+
+  ngOnInit() {
+    this.messageHeader = this.welcomeMessageHeader;
+    this.message = this.welcomeMessage;
+  }
+
+  ngOnChanges(): void {
+    this.getMessageContent();
+  }
 
   isRoleChangeAllowed(user: AppUser): boolean {
     return user.userId !== this.currentUserId
@@ -48,12 +62,17 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
       && this.availableRoles.indexOf(user.role) > -1;
   }
 
-  ngOnChanges(): void {
-    this.dataChanged.emit();
-  }
-
-
   delete(user: AppUser): void {
     this.deleteUser.emit(user);
+  }
+
+  getMessageContent(): void {
+    if(this.searchText.length) {
+      this.messageHeader = '';
+      this.message = this.noResultMessage;
+    } else {
+      this.messageHeader = this.welcomeMessageHeader;
+      this.message = this.welcomeMessage;
+    }
   }
 }
