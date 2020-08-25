@@ -18,6 +18,7 @@
   <h3>{{'models.title' | translate}}</h3>
   <app-spinner *ngIf="isLoading$ | async">></app-spinner>
   <app-model-table
+    *ngIf="(tableConfig$ | async)?.data.length > 0"
     class="app-table"
     [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
@@ -26,6 +27,13 @@
     (edit)="edit($event)"
     (delete)="delete($event)">
   </app-model-table>
+  <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
+    <mat-icon>info</mat-icon>
+    <p>
+      Create the first model, where you will be able to add, recognize, delete faces,
+      get list of the model faces, train the model and remove already trained.
+    </p>
+  </div>
 </div>
 <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
   <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onCreateNewModel()">
