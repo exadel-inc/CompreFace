@@ -27,6 +27,15 @@
     height: 295px;
     overflow-x: hidden;
   }
+
+  .create-new-message {
+    display: flex;
+    min-height: 345px;
+
+    mat-icon {
+      padding: 25px 20px 0 0
+    }
+  }
 }
 
 .add-model-button-container {
