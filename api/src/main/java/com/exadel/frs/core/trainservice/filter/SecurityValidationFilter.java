@@ -115,6 +115,7 @@ public class SecurityValidationFilter implements Filter {
     @SneakyThrows
     private void buildException(final HttpServletResponse response, final ResponseEntity<?> responseEntity) {
         response.setStatus(responseEntity.getStatusCode().value());
+        response.setContentType("application/json");
         response.getWriter().append(objectMapper.writeValueAsString(responseEntity.getBody()));
         response.getWriter().flush();
     }
