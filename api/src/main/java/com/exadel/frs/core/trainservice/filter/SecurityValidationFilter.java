@@ -44,6 +44,7 @@ import lombok.SneakyThrows;
 import lombok.val;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
@@ -115,7 +116,7 @@ public class SecurityValidationFilter implements Filter {
     @SneakyThrows
     private void buildException(final HttpServletResponse response, final ResponseEntity<?> responseEntity) {
         response.setStatus(responseEntity.getStatusCode().value());
-        response.setContentType("application/json");
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().append(objectMapper.writeValueAsString(responseEntity.getBody()));
         response.getWriter().flush();
     }

@@ -27,6 +27,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import com.exadel.frs.core.trainservice.dto.RetrainResponse;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
+import com.exadel.frs.core.trainservice.service.ModelServicePg;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -39,6 +41,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 public class SecurityValidationFilterTest {
@@ -47,6 +50,12 @@ public class SecurityValidationFilterTest {
 
     @Mock
     private ResponseExceptionHandler exceptionHandler;
+
+    @Mock
+    private ObjectMapper mapper;
+
+    @Mock
+    private ModelServicePg modelService;
 
     @InjectMocks
     private SecurityValidationFilter securityValidationFilter;
@@ -75,6 +84,6 @@ public class SecurityValidationFilterTest {
                 .handleBadFormatModelKeyException(new BadFormatModelKeyException())
                 .getStatusCode()
                 .value());
-        verify(httpServletResponse).setContentType("application/json");
+        verify(httpServletResponse).setContentType(MediaType.APPLICATION_JSON_VALUE);
     }
 }
