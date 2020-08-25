@@ -25,6 +25,7 @@ import { User } from '../../data/user';
 import { AppState } from '../../store';
 import { logIn, resetErrorMessage } from '../../store/auth/action';
 import { selectAuthState } from '../../store/auth/selectors';
+import {environment} from '../../../environments/environment';
 
 @Component({
   selector: 'app-login-form',
@@ -38,6 +39,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   isLoading = false;
   ROUTERS_URL = ROUTERS_URL;
   stateSubscription: Subscription;
+  env = environment;
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);

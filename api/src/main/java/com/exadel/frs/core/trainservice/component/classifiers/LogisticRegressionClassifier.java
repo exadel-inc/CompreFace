@@ -33,10 +33,10 @@ public class LogisticRegressionClassifier implements Classifier {
     private static final double TOLERANCE = 0.0001;
     private static final int MAX_ITER = 100;
 
-    private final List<Pair<String, String>> faces;
+    private final List<String> faces;
     private LogisticRegression logisticRegression;
 
-    public LogisticRegressionClassifier(final List<Pair<String, String>> faces) {
+    public LogisticRegressionClassifier(final List<String> faces) {
         this.faces = faces;
     }
 
@@ -64,7 +64,7 @@ public class LogisticRegressionClassifier implements Classifier {
 
         return IntStream.of(labels.values)
                         .boxed()
-                        .map(i -> Pair.of(probs[i], faces.get(i).getRight()))
+                        .map(i -> Pair.of(probs[i], faces.get(i)))
                         .sorted((o1, o2) -> o2.getLeft().compareTo(o1.getLeft()))
                         .limit(resultCount)
                         .collect(toList());
@@ -73,16 +73,5 @@ public class LogisticRegressionClassifier implements Classifier {
     @Override
     public boolean isTrained() {
         return logisticRegression != null;
-    }
-
-    @Override
-    public List<String> getUsedFaceIds() {
-        if (faces == null) {
-            return List.of();
-        }
-
-        return faces.stream()
-                    .map(Pair::getLeft)
-                    .collect(toList());
     }
 }
