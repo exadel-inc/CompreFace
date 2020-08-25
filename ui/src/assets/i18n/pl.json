@@ -68,6 +68,7 @@
     "title": "Modele",
     "name": "Nazwa",
     "api_key": "Klucz API",
+    "create_model_info": " Stwórz pierwszy model, gdzie będziesz dodawał, rozpoznawał, usuwał twarze,\n gromadził modele twarzy, trenował modele i usuwał te wytrenowane.",
     "create_dialog": {
       "title": "Stwórz model",
       "name": "Nazwa"
@@ -111,6 +112,7 @@
     "add_users_info": "Możesz dodawać innych użytkowników do aplikacji. Użytkownicy muszą się zarejestrować i zalogować do FRS. Po rejestracji i zalogowaniu użytkownicy pojawią się na liście użytkowników."
   },
   "app_users": {
+    "add_users_info": "Użytkownik powinien być zaproszony z domyślnej orgaznizacji by pojawić się w liście użytkowników.\n* Właściciel i Administratorzy domyślnej organizacji mają dostęp do każdej aplikacji bez potrzeby ich zapraszania.",
     "delete_dialog": {
       "title": "Usuń użytkownika",
       "confirmation_question": "Jesteś pewien, że chcesz usunąć użytkownika {{name}} z {{application}}?"

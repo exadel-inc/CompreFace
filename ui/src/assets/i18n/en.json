@@ -67,6 +67,7 @@
     "title": "Models",
     "name": "Name",
     "api_key": "API key",
+    "create_model_info": " Create the first model, where you will be able to add, recognize, delete faces,\n      get list of the model faces, train the model and remove already trained.",
     "create_dialog": {
       "title": "Create model",
       "name": "Name"
@@ -110,6 +111,7 @@
     "add_users_info": "You can add other users to the FRS application. They need to register and login to FRS. After registration and login users will appear automatically in the users' table."
   },
   "app_users": {
+    "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",
     "delete_dialog": {
       "title": "Delete user",
       "confirmation_question": "Are you sure you want remove user {{name}} from {{application}}?"

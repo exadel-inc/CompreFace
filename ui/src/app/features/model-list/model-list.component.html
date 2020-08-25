@@ -30,8 +30,7 @@
   <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
     <mat-icon>info</mat-icon>
     <p>
-      Create the first model, where you will be able to add, recognize, delete faces,
-      get list of the model faces, train the model and remove already trained.
+      {{'models.create_model_info' | translate}}
     </p>
   </div>
 </div>
