@@ -20,5 +20,6 @@ export const environment: Environment = {
   production: false,
   basicToken:  `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=`,
   // local mock server:
-  apiUrl: '/admin/'
+  apiUrl: '/admin/',
+  buildNumber:'local'
 };
