@@ -31,6 +31,7 @@ export class UserTableComponent extends TableComponent implements OnInit {
   @Input() userRole: string;
   @Input() createHeader: string;
   @Input() createMessage: string;
+  @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<AppUser>();
 
   isRoleChangeAllowed(user: AppUser): boolean {
@@ -43,7 +44,9 @@ export class UserTableComponent extends TableComponent implements OnInit {
     this.deleteUser.emit(user);
   }
 
-  isSerched():boolean{
-    return document.getElementsByClassName("search-input")[0].getAttribute("ng-reflect-model") != '';
+  isSearched():boolean{
+    //return document.getElementsByClassName("search-input")[0].getAttribute("ng-reflect-model") != '';
+    console.log("Searched Text is: " + this.searchText)
+    return this.searchText != '';
   }
 }

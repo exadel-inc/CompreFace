@@ -44,7 +44,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   seletedOption = 'deleter';
   orgOwnerEmail: string;
 
-
   constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog) {
     userListFacade.initSubscriptions();
   }
@@ -104,7 +103,4 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.availableRolesSubscription.unsubscribe();
   }
 
-  isSearched(): boolean{
-    return this.search === '';
-  }
 }
