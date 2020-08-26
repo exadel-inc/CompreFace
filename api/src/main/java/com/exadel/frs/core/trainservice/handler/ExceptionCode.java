@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.handler;
+package com.exadel.frs.core.trainservice.handler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;

@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.handler;
 
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MISSING_REQUEST_HEADER;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.LOCKED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -27,6 +28,7 @@ import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MissingRequestHeaderException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -65,5 +67,15 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleNotFoundException(final ModelNotFoundException e) {
         return ResponseEntity.status(NOT_FOUND)
                              .body(new RetrainResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(value = {MissingRequestHeaderException.class})
+    public ResponseEntity<Object> handleMissingRequestHeader(final MissingRequestHeaderException e) {
+        return handleMissingRequestHeader(e.getHeaderName());
+    }
+
+    public ResponseEntity<Object> handleMissingRequestHeader(final String headerName) {
+        return ResponseEntity.status(MISSING_REQUEST_HEADER.getHttpStatus())
+                             .body(new RetrainResponse("Missing header: " + headerName));
     }
 }
