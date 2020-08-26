@@ -13,7 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { AppUser } from 'src/app/data/appUser';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
@@ -26,7 +34,13 @@ import {UserDeletion} from "../../data/userDeletion";
   styleUrls: ['./user-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserTableComponent extends TableComponent implements OnInit {
+export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
+
+
+  messageHeader: string;
+  message: string;
+  noResultMessage = 'No matches found';
+
   @Input() availableRoles: string[];
   @Input() currentUserId: string;
   @Input() userRole: string;
@@ -35,6 +49,15 @@ export class UserTableComponent extends TableComponent implements OnInit {
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
   roleEnum = RoleEnum;
+
+  ngOnInit() {
+    this.messageHeader = this.createHeader;
+    this.message = this.createMessage;
+  }
+
+  ngOnChanges(): void {
+    this.getMessageContent();
+  }
 
   isRoleChangeAllowed(user: AppUser): boolean {
     return user.userId !== this.currentUserId
@@ -48,5 +71,15 @@ export class UserTableComponent extends TableComponent implements OnInit {
       deleterUserId: this.currentUserId
     }
     this.deleteUser.emit(deletion);
+  }
+
+  getMessageContent(): void {
+    if(this.searchText.length) {
+      this.messageHeader = '';
+      this.message = this.noResultMessage;
+    } else {
+      this.messageHeader = this.createHeader;
+      this.message = this.createMessage;
+    }
   }
 }

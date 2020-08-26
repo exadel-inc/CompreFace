@@ -48,15 +48,14 @@
     </td>
   </ng-container>
 
-
   <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
 <ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && (createHeader || createMessage) && !isLoading">
-  <h4>{{createHeader}}</h4>
+  <h4>{{messageHeader}}</h4>
   <div class="create-new-message">
     <mat-icon>info</mat-icon>
-    <p>{{createMessage}}</p>
+    <p>{{message}}</p>
   </div>
 </ng-container>
