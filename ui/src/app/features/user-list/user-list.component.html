@@ -33,6 +33,8 @@
     [availableRoles]="availableRoles$ | async"
     [currentUserId]="currentUserId$ | async"
     [userRole]="userRole$ | async"
+    [createHeader]="messageHeader"
+    [createMessage]="message"
     [searchText]="search"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)"
