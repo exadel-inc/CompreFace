@@ -43,8 +43,4 @@ export class UserTableComponent extends TableComponent implements OnInit {
   delete(user: AppUser): void {
     this.deleteUser.emit(user);
   }
-
-  getSearched():boolean{
-    return this.searchText != '';
-  }
 }
