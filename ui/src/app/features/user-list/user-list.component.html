@@ -34,7 +34,8 @@
     [currentUserId]="currentUserId$ | async"
     [userRole]="userRole$ | async"
     [createHeader]="messageHeader"
-    [createMessage]="messageInfo"
+    [createMessage]="message"
+    [searchText]="search"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)"
   ></app-user-table>
