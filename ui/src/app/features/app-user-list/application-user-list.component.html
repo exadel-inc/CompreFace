@@ -36,7 +36,7 @@
     [currentUserId]="currentUserId$ | async"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
     [availableRoles]="availableRoles$ | async"
-    [createMessage]=" 'A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.'"
+    [createMessage]="message"
     [searchText]="search"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)">

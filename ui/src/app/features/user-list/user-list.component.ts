@@ -46,7 +46,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   seletedOption = 'deleter';
   orgOwnerEmail: string;
   messageHeader: string;
-  messageInfo: string;
+  message: string;
   translate: TranslateService;
 
   constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog,
@@ -73,8 +73,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
     this.currentUserId$ = this.userListFacade.currentUserId$;
     this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
-    this.translate.get("org_users.add_users_title").subscribe(title => this.messageHeader = title);
-    this.translate.get("org_users.add_users_info").subscribe(info => this.messageInfo = info);
+    this.messageHeader = this.translate.instant("org_users.add_users_title");
+    this.message = this.translate.instant("org_users.add_users_info");
   }
 
   onChange(user: AppUser): void {

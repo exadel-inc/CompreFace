@@ -26,6 +26,7 @@ import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
 import {UserDeletion} from "../../data/userDeletion";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-user-list',
@@ -40,6 +41,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   availableRoles$: Observable<string[]>;
   errorMessage: string;
   availableEmails$: Observable<string[]>;
+  message: string;
   search = '';
   availableRoles: string[];
   currentUserId$: Observable<string>;
@@ -48,7 +50,8 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   constructor(
     private appUserListFacade: ApplicationUserListFacade,
     private dialog: MatDialog,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private translate: TranslateService
   ) {
     appUserListFacade.initSubscriptions();
   }
@@ -65,7 +68,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
         data: users
       };
     }));
-
+    this.message = this.translate.instant('app_users.add_users_info');
     this.availableRoles$ = this.appUserListFacade.availableRoles$;
     this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
   }

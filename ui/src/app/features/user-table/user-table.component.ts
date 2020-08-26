@@ -36,10 +36,10 @@ import {UserDeletion} from "../../data/userDeletion";
 })
 export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
 
-
   messageHeader: string;
   message: string;
   noResultMessage = 'No matches found';
+  roleEnum = RoleEnum;
 
   @Input() availableRoles: string[];
   @Input() currentUserId: string;
@@ -48,7 +48,6 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() createMessage: string;
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
-  roleEnum = RoleEnum;
 
   ngOnInit() {
     this.messageHeader = this.createHeader;
