@@ -52,10 +52,11 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
 
-<ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && (createHeader || createMessage) && !isLoading">
-  <h4>{{createHeader}}</h4>
+<ng-container *ngIf="(!searchText && data.length <= 1 && (messageHeader || message) && !isLoading) ||
+                     (searchText && !data.length && !isLoading)">
+  <h4>{{messageHeader}}</h4>
   <div class="create-new-message">
     <mat-icon>info</mat-icon>
-    <p>{{createMessage}}</p>
+    <p>{{message}}</p>
   </div>
 </ng-container>

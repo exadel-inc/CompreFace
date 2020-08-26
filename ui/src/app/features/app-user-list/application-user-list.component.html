@@ -36,19 +36,11 @@
     [currentUserId]="currentUserId$ | async"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
     [availableRoles]="availableRoles$ | async"
-    [createHeader]=""
-    [createMessage]=""
+    [createMessage]=" 'A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.'"
     [searchText]="search"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)">
   </app-user-table>
-  <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 1">
-    <mat-icon>info</mat-icon>
-    <p>
-      A user should be invited from the Default organization to appear in the list of users.
-      * Default organization Owner and Administrators already have access to any application without invite.
-    </p>
-  </div>
   <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
     <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onInviteUser();">ADD</button>
   </div>
