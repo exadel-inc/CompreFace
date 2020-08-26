@@ -35,6 +35,7 @@
     [userRole]="userRole$ | async"
     [createHeader]="'Add users to the FRS'"
     [createMessage]="'You can add other users to the FRS application. They need to register and login to FRS. After registration and login users will appear automatically in the users\' table.'"
+    [searchText]="search"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)"
   ></app-user-table>
