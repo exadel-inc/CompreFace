@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.apache.commons.lang3.tuple.Pair;
 
 @Data
 @Accessors(chain = true)
@@ -32,5 +31,5 @@ public class EmbeddingFaceList {
     /**
      * Pair of <id and face name> as key and <list of embeddings> as value
      */
-    private Map<Pair<String, String>, List<Double>> faceEmbeddings = new HashMap<>();
+    private Map<String, List<List<Double>>> faceEmbeddings = new HashMap<>();
 }

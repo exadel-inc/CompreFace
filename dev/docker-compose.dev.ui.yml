@@ -3,5 +3,5 @@ version: '3.4'
 services:
   frs-fe:
     build:
-      context: ui
+      context: ../ui
       dockerfile: docker-dev/Dockerfile

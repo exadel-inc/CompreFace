@@ -28,6 +28,7 @@ export const updateUserRoleSuccessAction = createAction('[User/API] Update User 
 export const updateUserRoleFailAction = createAction('[User/API] Update User Role Failed)', props<{error: any }>());
 export const deleteUser = createAction('[User/API] Delete User', props<{
   userId: string,
+  deleterUserId: string,
   organizationId: string,
   newOwner?: string,
 }>());

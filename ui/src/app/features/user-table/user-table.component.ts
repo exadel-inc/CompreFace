@@ -26,6 +26,7 @@ import { AppUser } from 'src/app/data/appUser';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 import { TableComponent } from '../table/table.component';
+import {UserDeletion} from "../../data/userDeletion";
 
 @Component({
   selector: 'app-user-table',
@@ -46,7 +47,8 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() createHeader: string;
   @Input() createMessage: string;
   @Input() searchText: string;
-  @Output() deleteUser = new EventEmitter<AppUser>();
+  @Output() deleteUser = new EventEmitter<UserDeletion>();
+  roleEnum = RoleEnum;
 
   ngOnInit() {
     this.messageHeader = this.createHeader;
@@ -64,7 +66,11 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   }
 
   delete(user: AppUser): void {
-    this.deleteUser.emit(user);
+    let deletion: UserDeletion = {
+      userToDelete: user,
+      deleterUserId: this.currentUserId
+    }
+    this.deleteUser.emit(deletion);
   }
 
   getMessageContent(): void {

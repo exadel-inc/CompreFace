@@ -24,6 +24,7 @@ import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import {UserDeletion} from "../../data/userDeletion";
 
 @Component({
   selector: 'app-user-list-container',
@@ -78,7 +79,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.userListFacade.updateUserRole(user.id, user.role);
   }
 
-  onDelete(user: AppUser): void {
+  onDelete(deletion: UserDeletion): void {
     this.userListFacade.currentUserEmail$
       .pipe(
         take(1),
@@ -87,7 +88,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             width: '400px',
             data: {
               entityType: 'system-user',
-              entity: user,
+              entity: deletion.userToDelete,
               options: [
                 { name: email, value: 'deleter' },
                 { name: this.orgOwnerEmail, value: 'owner' },
@@ -98,7 +99,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           }).afterClosed();
         }),
         filter((isClosed: boolean) => isClosed),
-        tap(() => this.userListFacade.deleteUser(user.userId, this.seletedOption)),
+        tap(() => this.userListFacade.deleteUser(deletion, this.seletedOption)),
       )
       .subscribe();
   }

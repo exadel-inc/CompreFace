@@ -66,7 +66,7 @@ class FaceDaoTest {
     }
 
     @Test
-    void deleteFaceByGuid() {
+    void deleteFaceById() {
         val faceGuid = randomUUID().toString();
         val face = Optional.of(new Face());
         when(facesRepository.findById(faceGuid)).thenReturn(face);

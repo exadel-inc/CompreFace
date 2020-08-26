@@ -27,22 +27,24 @@ import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material';
 import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
+import {MatIconModule} from '@angular/material/';
 
 @NgModule({
   declarations: [ApplicationUserListComponent],
   exports: [ApplicationUserListComponent],
   providers: [ApplicationUserListFacade],
-  imports: [
-    CommonModule,
-    UserTableModule,
-    SpinnerModule,
-    InviteUserModule,
-    FormsModule,
-    UserTablePipeModule,
-    MatInputModule,
-    MatButtonModule,
-    InviteDialogModule
-  ],
+    imports: [
+        CommonModule,
+        UserTableModule,
+        SpinnerModule,
+        InviteUserModule,
+        FormsModule,
+        UserTablePipeModule,
+        MatInputModule,
+        MatButtonModule,
+        InviteDialogModule,
+        MatIconModule
+    ],
   entryComponents: [InviteDialogComponent]
 })
 export class AppUserListModule {}

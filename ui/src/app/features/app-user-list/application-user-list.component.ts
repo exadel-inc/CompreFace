@@ -25,6 +25,7 @@ import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component'
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
+import {UserDeletion} from "../../data/userDeletion";
 
 @Component({
   selector: 'app-application-user-list',
@@ -73,19 +74,19 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.appUserListFacade.updateUserRole(user.id, user.role);
   }
 
-  onDelete(user: AppUser): void {
+  onDelete(deletion: UserDeletion): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
         entityType: 'user',
-        entityName: `${user.firstName} ${user.lastName}`,
+        entityName: `${deletion.userToDelete.firstName} ${deletion.userToDelete.lastName}`,
         applicationName: this.appUserListFacade.selectedApplicationName,
       }
     });
 
     dialog.afterClosed().pipe(first()).subscribe(result => {
       if (result) {
-        this.appUserListFacade.delete(user.userId);
+        this.appUserListFacade.delete(deletion.userToDelete.userId);
       }
     });
   }
