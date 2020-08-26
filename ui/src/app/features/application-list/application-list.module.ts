@@ -24,6 +24,7 @@ import { TableModule } from '../table/table.module';
 import { ApplicationListContainerComponent } from './application-list-container.component';
 import { ApplicationListFacade } from './application-list-facade';
 import { ApplicationListComponent } from './application-list/application-list.component';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [ApplicationListContainerComponent, ApplicationListComponent],
@@ -37,6 +38,7 @@ import { ApplicationListComponent } from './application-list/application-list.co
     SnackBarModule,
     MatCardModule,
     MatIconModule,
+    TranslateModule,
   ]
 })
 export class ApplicationListModule {}

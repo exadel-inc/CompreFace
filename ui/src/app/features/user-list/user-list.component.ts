@@ -25,6 +25,7 @@ import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 import {UserDeletion} from "../../data/userDeletion";
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-user-list-container',
@@ -46,15 +47,17 @@ export class UserListComponent implements OnInit, OnDestroy {
   orgOwnerEmail: string;
   messageHeader: string;
   message: string;
+  translate: TranslateService;
 
-  constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog) {
+  constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog,
+              translate: TranslateService) {
     userListFacade.initSubscriptions();
+    this.translate = translate;
   }
 
   ngOnInit() {
     this.isLoading$ = this.userListFacade.isLoading$;
     this.userRole$ = this.userListFacade.userRole$;
-
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       this.orgOwnerEmail = users.filter(user => user.role === RoleEnum.OWNER).map(user => user.email)[0];
       return {
@@ -70,9 +73,8 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
     this.currentUserId$ = this.userListFacade.currentUserId$;
     this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
-    this.messageHeader = 'Add users to the FRS';
-    this.message = 'You can add other users to the FRS application. They need to register and login to FRS. After registration ' +
-      'and login users will appear automatically in the users\' table.';
+    this.messageHeader = this.translate.instant("org_users.add_users_title");
+    this.message = this.translate.instant("org_users.add_users_info");
   }
 
   onChange(user: AppUser): void {

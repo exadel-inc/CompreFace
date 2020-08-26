@@ -16,10 +16,10 @@
 
 <div class="user-list">
   <div class="table-header-container">
-    <h3>Users</h3>
+    <h3>{{'users.title' | translate}}</h3>
     <form>
       <input matInput type="text" class="search-input" [(ngModel)]="search" [ngModelOptions]="{standalone: true}"
-        placeholder="Search User">
+        placeholder="{{'users.search.org_title' | translate}}">
       <i class="material-icons">
         search
       </i>

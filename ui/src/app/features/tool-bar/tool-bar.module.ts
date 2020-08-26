@@ -22,6 +22,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {RouterModule} from '@angular/router';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [ToolBarComponent],
@@ -34,7 +35,8 @@ import {RouterModule} from '@angular/router';
     MatButtonModule,
     MatMenuModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    TranslateModule
   ]
 })
 export class ToolBarModule { }

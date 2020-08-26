@@ -19,10 +19,10 @@ mat-icon {
 }
 
 .create-new-message {
-  padding-left: 20px;
   display: flex;
-
+  position: absolute;
+  top: 200px;
   mat-icon {
-    padding: 25px 20px 0 0;
+    padding: 25px 20px 0 0
   }
 }

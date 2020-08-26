@@ -17,7 +17,7 @@
 <table *ngIf="!isLoading" mat-table [dataSource]="data">
 
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef>Name</th>
+    <th mat-header-cell *matHeaderCellDef>{{'models.name' | translate}}</th>
     <td mat-cell *matCellDef="let element" matTooltip="{{element.name}}"
         [matTooltipDisabled]="disableToolTip(element.name)">
       {{element.name | truncate:maxElementLength}}
@@ -25,7 +25,7 @@
   </ng-container>
 
   <ng-container matColumnDef="apiKey">
-    <th mat-header-cell *matHeaderCellDef>API key</th>
+    <th mat-header-cell *matHeaderCellDef>{{'models.api_key' | translate}}</th>
     <td mat-cell *matCellDef="let element"> {{element.apiKey}}
       <button mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
         <mat-icon>content_copy</mat-icon>
@@ -42,10 +42,10 @@
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="edit.emit(element)">
-            <span>EDIT</span>
+            <span>{{'common.capital.edit' | translate}}</span>
           </button>
           <button mat-menu-item (click)="delete.emit(element)">
-            <span>DELETE</span>
+            <span>{{'common.capital.delete' | translate}}</span>
           </button>
         </mat-menu>
       </ng-container>
