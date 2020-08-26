@@ -33,6 +33,7 @@ export class UserTableComponent extends TableComponent implements OnInit {
   @Input() createHeader: string;
   @Input() createMessage: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
+  roleEnum = RoleEnum;
 
   isRoleChangeAllowed(user: AppUser): boolean {
     return user.userId !== this.currentUserId
