@@ -32,6 +32,7 @@ export class UserTableComponent extends TableComponent implements OnInit {
   @Input() userRole: string;
   @Input() createHeader: string;
   @Input() createMessage: string;
+  @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
   roleEnum = RoleEnum;
 
