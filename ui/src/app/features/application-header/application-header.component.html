@@ -24,8 +24,8 @@
           {{app.name | truncate: maxHeaderLinkLength}}
         </div>
         <div *ngIf="userRole$ | async as userRole">
-          <button *ngIf="userRole !== 'USER'" mat-button type="button" color="primary" (click)="rename(app.name)">EDIT</button>
-          <button *ngIf="userRole === 'OWNER'" mat-button type="button" color="primary" (click)="delete(app.name)">DELETE</button>
+          <button *ngIf="userRole !== userRoleEnum.USER" mat-button type="button" color="primary" (click)="rename(app.name)">EDIT</button>
+          <button *ngIf="userRole === userRoleEnum.OWNER" mat-button type="button" color="primary" (click)="delete(app.name)">DELETE</button>
         </div>
       </div>
     </div>

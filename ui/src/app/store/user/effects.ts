@@ -35,12 +35,14 @@ import {of} from 'rxjs';
 import {SnackBarService} from '../../features/snackbar/snackbar.service';
 import {OrganizationEnService} from '../organization/organization-entitys.service';
 import {AppState} from '../index';
+import {AuthService} from "../../core/auth/auth.service";
 
 @Injectable()
 export class UserListEffect {
     constructor(
         private actions: Actions,
         private userService: UserService,
+        private authService: AuthService,
         private organizationEnService: OrganizationEnService,
         private snackBarService: SnackBarService,
         private store: Store<AppState>
@@ -64,20 +66,25 @@ export class UserListEffect {
         catchError((error) => of(updateUserRoleFailAction({ error })))
       )));
 
-  @Effect()
-  deleteUser$ = this.actions.pipe(
-    ofType(deleteUser),
-    switchMap(({ organizationId, userId, newOwner }) =>
-      this.userService.delete(organizationId, userId, newOwner).pipe(
-        switchMap(() => [
-          deleteUserSuccess({ userId }),
-          loadApplications({ organizationId }),
-          loadUsersEntityAction({ organizationId }),
-        ]),
-        catchError(error => of(deleteUserFail({ error })))
-      )
-    ),
-  );
+    @Effect()
+    deleteUser$ = this.actions.pipe(
+      ofType(deleteUser),
+      switchMap(({ organizationId, userId, newOwner, deleterUserId}) =>
+        this.userService.delete(organizationId, userId, newOwner).pipe(
+          switchMap(() => {
+            if(deleterUserId === userId){
+                this.authService.logOut();
+                return [];
+            }
+            return [
+              deleteUserSuccess({ userId }),
+              loadApplications({ organizationId }),
+              loadUsersEntityAction({ organizationId }),
+              catchError(error => of(deleteUserFail({ error })))
+          ]}),
+        )
+      ),
+    );
 
 
     @Effect({ dispatch: false })
