@@ -102,5 +102,4 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.userListFacade.unsubscribe();
     this.availableRolesSubscription.unsubscribe();
   }
-
 }
