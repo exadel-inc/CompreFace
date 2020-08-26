@@ -32,17 +32,17 @@ import {TranslateModule} from "@ngx-translate/core";
   exports: [
     ApplicationHeaderComponent
   ],
-    imports: [
-        CommonModule,
-        RouterModule,
-        MatButtonModule,
-        SpinnerModule,
-        EntityTitleModule,
-        MatCardModule,
-        TruncateModule,
-        MatTooltipModule,
-        TranslateModule
-    ],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    SpinnerModule,
+    EntityTitleModule,
+    MatCardModule,
+    TruncateModule,
+    MatTooltipModule,
+    TranslateModule
+  ],
   providers: [ApplicationHeaderFacade],
 })
 export class ApplicationHeaderModule {

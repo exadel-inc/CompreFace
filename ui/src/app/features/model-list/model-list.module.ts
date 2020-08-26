@@ -29,13 +29,13 @@ import {TranslateModule} from "@ngx-translate/core";
   declarations: [ModelListComponent],
   exports: [ModelListComponent],
   providers: [ModelListFacade],
-    imports: [
-        CommonModule,
-        SpinnerModule,
-        MatButtonModule,
-        MatIconModule,
-        ModelTableModule,
-        TranslateModule,
-    ]
+  imports: [
+    CommonModule,
+    SpinnerModule,
+    MatButtonModule,
+    MatIconModule,
+    ModelTableModule,
+    TranslateModule,
+  ]
 })
 export class ModelListModule { }

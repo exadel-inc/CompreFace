@@ -30,15 +30,15 @@ import {TranslateModule} from "@ngx-translate/core";
   declarations: [ApplicationListContainerComponent, ApplicationListComponent],
   exports: [ApplicationListContainerComponent],
   providers: [ApplicationListFacade],
-    imports: [
-        CommonModule,
-        TableModule,
-        SpinnerModule,
-        MatButtonModule,
-        SnackBarModule,
-        MatCardModule,
-        MatIconModule,
-        TranslateModule,
-    ]
+  imports: [
+    CommonModule,
+    TableModule,
+    SpinnerModule,
+    MatButtonModule,
+    SnackBarModule,
+    MatCardModule,
+    MatIconModule,
+    TranslateModule,
+  ]
 })
 export class ApplicationListModule {}

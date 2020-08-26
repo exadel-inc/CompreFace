@@ -29,14 +29,14 @@ import {TranslateModule} from "@ngx-translate/core";
   exports: [
     ToolBarComponent,
   ],
-    imports: [
-        CommonModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatMenuModule,
-        MatIconModule,
-        RouterModule,
-        TranslateModule
-    ]
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    RouterModule,
+    TranslateModule
+  ]
 })
 export class ToolBarModule { }

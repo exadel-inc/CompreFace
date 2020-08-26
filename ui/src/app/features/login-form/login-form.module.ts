@@ -32,17 +32,17 @@ import {TranslateModule} from "@ngx-translate/core";
   exports: [
     LoginFormComponent,
   ],
-    imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterModule,
-        MatCardModule,
-        MatInputModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatIconModule,
-        TranslateModule,
-    ]
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    RouterModule,
+    MatCardModule,
+    MatInputModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    TranslateModule,
+  ]
 })
 export class LoginFormModule { }
