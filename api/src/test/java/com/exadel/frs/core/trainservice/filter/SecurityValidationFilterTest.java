@@ -41,6 +41,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 public class SecurityValidationFilterTest {
@@ -83,5 +84,6 @@ public class SecurityValidationFilterTest {
                 .handleBadFormatModelKeyException(new BadFormatModelKeyException())
                 .getStatusCode()
                 .value());
+        verify(httpServletResponse).setContentType(MediaType.APPLICATION_JSON_VALUE);
     }
 }
