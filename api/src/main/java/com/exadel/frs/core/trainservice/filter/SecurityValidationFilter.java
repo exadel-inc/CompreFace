@@ -23,7 +23,7 @@ import static java.util.stream.Collectors.toMap;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
-import com.exadel.frs.core.trainservice.service.ModelServicePg;
+import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Collections;
@@ -57,7 +57,7 @@ import org.springframework.stereotype.Component;
 @Order(1)
 public class SecurityValidationFilter implements Filter {
 
-    private final ModelServicePg modelService;
+    private final ModelService modelService;
     private final ResponseExceptionHandler handler;
     private final ObjectMapper objectMapper;
 

@@ -17,8 +17,8 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
-import com.exadel.frs.core.trainservice.entity.postgres.Face.Embedding;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import java.io.IOException;

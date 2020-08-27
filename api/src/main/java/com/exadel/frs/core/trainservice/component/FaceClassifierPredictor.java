@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.component;
 
-import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -28,11 +28,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FaceClassifierPredictor {
 
-    private final ModelDao modelDao;
+    private final TrainedModelDao trainedModelDao;
     private final ApplicationContext context;
 
     public List<Pair<Double, String>> predict(final String modelKey, final double[] input, final int resultCount) {
-        val model = modelDao.getModel(modelKey);
+        val model = trainedModelDao.getModel(modelKey);
         val faceClassifier = context.getBean(FaceClassifierAdapter.class);
         faceClassifier.setClassifier(model);
 

@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.entity.postgres;
+package com.exadel.frs.core.trainservice.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 import java.util.List;

@@ -19,7 +19,7 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

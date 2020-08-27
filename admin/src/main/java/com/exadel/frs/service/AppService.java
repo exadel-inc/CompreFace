@@ -41,7 +41,6 @@ import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
-import com.exadel.frs.system.rest.CoreFacesClient;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,6 @@ public class AppService {
     private final OrganizationService organizationService;
     private final UserService userService;
     private final ModelShareRequestRepository modelShareRequestRepository;
-    private final CoreFacesClient coreFacesClient;
     private final AuthorizationManager authManager;
 
     public App getApp(final String appGuid) {
@@ -267,10 +265,6 @@ public class AppService {
         val app = getApp(orgGuid, guid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, app);
-
-        app.getModels().forEach(model ->
-                coreFacesClient.deleteFaces(model.getApiKey())
-        );
 
         appRepository.deleteById(app.getId());
     }

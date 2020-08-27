@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.entity.postgres;
+package com.exadel.frs.core.trainservice.entity;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 import javax.persistence.Column;
