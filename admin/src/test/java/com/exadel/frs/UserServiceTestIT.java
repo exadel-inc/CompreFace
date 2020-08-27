@@ -97,6 +97,7 @@ class UserServiceTestIT {
     @Test
     void getUserByEmailReturnsUser() {
         createUser(USER_EMAIL);
+
         val actual = userService.getUser(USER_EMAIL);
 
         assertThat(actual).isNotNull();

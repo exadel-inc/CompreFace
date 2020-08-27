@@ -115,7 +115,9 @@ public class FaceServiceTestIT {
         val actual = facesRepository.findAll();
 
         assertThat(actual).hasSize(faces.size() - 2);
-        oneKeyFaces.forEach(face -> assertThat(actual).doesNotContain(face));
+        assertThat(oneKeyFaces).allSatisfy(face -> {
+            assertThat(actual).doesNotContain(face);
+        });
     }
 
     @AfterEach
