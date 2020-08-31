@@ -37,28 +37,21 @@ public class FaceService {
         return faceDao.findAllFacesByApiKey(apiKey);
     }
 
-    public void deleteFaceByName(
+    public List<Face> deleteFaceByName(
             final String faceName,
-            final String apiKey,
-            final String retrain
+            final String apiKey
     ) {
-        faceDao.deleteFaceByName(faceName, apiKey);
-        getTrainingOption(retrain).run(apiKey, retrainService);
+        return faceDao.deleteFaceByName(faceName, apiKey);
     }
 
-    public void deleteFaceById(
-            final String id,
-            final String apiKey,
-            final String retrain
+    public Face deleteFaceById(
+            final String id
     ) {
-        faceDao.deleteFaceById(id);
-        getTrainingOption(retrain).run(apiKey, retrainService);
+        return faceDao.deleteFaceById(id);
     }
 
-    public int deleteFacesByModel(final String modelKey) {
+    public List<Face> deleteFacesByModel(final String modelKey) {
         classifierManager.removeFaceClassifier(modelKey);
-        val deletedFaces = faceDao.deleteFacesByApiKey(modelKey);
-
-        return deletedFaces.size();
+        return faceDao.deleteFacesByApiKey(modelKey);
     }
 }
