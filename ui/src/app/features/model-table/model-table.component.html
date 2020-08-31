@@ -42,10 +42,13 @@
         </button>
         <mat-menu #menu="matMenu">
           <button mat-menu-item (click)="edit.emit(element)">
-            <span>{{'common.capital.edit' | translate}}</span>
+            <span>{{'models.select_menu.edit' | translate}}</span>
           </button>
           <button mat-menu-item (click)="delete.emit(element)">
-            <span>{{'common.capital.delete' | translate}}</span>
+            <span>{{'models.select_menu.delete' | translate}}</span>
+          </button>
+          <button mat-menu-item (click)="test.emit(element)">
+            <span>{{'models.select_menu.test' | translate}}</span>
           </button>
         </mat-menu>
       </ng-container>

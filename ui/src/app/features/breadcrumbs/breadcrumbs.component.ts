@@ -13,24 +13,37 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable, Subscription} from 'rxjs';
 
-import { Application } from '../../data/application';
-import { ROUTERS_URL } from '../../data/routers-url.variable';
-import { BreadcrumbsFacade } from './breadcrumbs.facade';
+import {Application} from '../../data/application';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {BreadcrumbsFacade} from './breadcrumbs.facade';
+import {Model} from "../../data/model";
 
 @Component({
   selector: 'app-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
   styleUrls: ['./breadcrumbs.component.scss']
 })
-export class BreadcrumbsComponent {
+export class BreadcrumbsComponent implements OnInit, OnDestroy {
+  orgSubscription: Subscription;
+  orgId: string;
   app$: Observable<Application>;
+  model$: Observable<Model>;
   ROUTERS_URL = ROUTERS_URL;
-  maxTitleLength = 100;
+  maxNameLength = 20;
 
   constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
-    this.app$ = breadcrumbsFacade.app$;
+  }
+
+  ngOnInit(): void {
+    this.orgSubscription = this.breadcrumbsFacade.orgId$.subscribe(orgId => this.orgId = orgId);
+    this.app$ = this.breadcrumbsFacade.app$;
+    this.model$ = this.breadcrumbsFacade.model$;
+  }
+
+  ngOnDestroy(): void {
+    this.orgSubscription.unsubscribe();
   }
 }

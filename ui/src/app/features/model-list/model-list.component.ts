@@ -14,17 +14,19 @@
  * permissions and limitations under the License.
  */
 
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
-import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
-import { Model } from 'src/app/data/model';
-import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
-import { ITableConfig } from 'src/app/features/table/table.component';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {MatDialog} from '@angular/material';
+import {Observable} from 'rxjs';
+import {first, map} from 'rxjs/operators';
+import {Model} from 'src/app/data/model';
+import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialog.component';
+import {ITableConfig} from 'src/app/features/table/table.component';
 
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
-import { ModelListFacade } from './model-list-facade';
+import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
+import {EditDialogComponent} from '../edit-dialog/edit-dialog.component';
+import {ModelListFacade} from './model-list-facade';
+import {ROUTERS_URL} from "../../data/routers-url.variable";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-model-list',
@@ -38,12 +40,12 @@ export class ModelListComponent implements OnInit, OnDestroy {
   errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
   columns = [
-    { title: 'name', property: 'name' },
-    { title: 'apiKey', property: 'apiKey' },
-    { title: 'actions', property: 'id' },
+    {title: 'name', property: 'name'},
+    {title: 'apiKey', property: 'apiKey'},
+    {title: 'actions', property: 'id'},
   ];
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog) {
+  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router) {
     this.modelListFacade.initSubscriptions();
   }
 
@@ -95,6 +97,16 @@ export class ModelListComponent implements OnInit, OnDestroy {
     dialog.afterClosed().pipe(first()).subscribe(result => {
       if (result) {
         this.modelListFacade.deleteModel(model.id);
+      }
+    });
+  }
+
+  test(model: Model) {
+    this.router.navigate([ROUTERS_URL.TEST_MODEL], {
+      queryParams: {
+        org: this.modelListFacade.selectedOrganizationId,
+        app: this.modelListFacade.selectedApplicationId,
+        model: model.id
       }
     });
   }

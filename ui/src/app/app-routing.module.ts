@@ -30,6 +30,11 @@ const routes: Routes = [
       { path: '', loadChildren: './pages/application/application.module#ApplicationModule' }
     ]
   },
+  {
+    path: 'test-model', component: MainLayoutComponent, children: [
+      { path: '', loadChildren: './pages/test-model/test-model.module#TestModelModule' }
+    ]
+  },
   { path: 'login', loadChildren: './pages/login/login.module#LoginModule' },
   { path: 'sign-up', loadChildren: './pages/sign-up/sign-up.module#SignUpModule' },
   { path: '**', redirectTo: '/' }

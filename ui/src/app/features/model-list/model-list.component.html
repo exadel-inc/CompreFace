@@ -25,7 +25,8 @@
     [tableConfig]="tableConfig$ | async"
     (copyApiKey)="copyApiKey($event)"
     (edit)="edit($event)"
-    (delete)="delete($event)">
+    (delete)="delete($event)"
+    (test)="test($event)">
   </app-model-table>
   <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
     <mat-icon>info</mat-icon>
