@@ -25,6 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 
 import { SignUpFormComponent } from './sign-up-form.component';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [SignUpFormComponent],
@@ -41,6 +42,7 @@ import { SignUpFormComponent } from './sign-up-form.component';
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
+    TranslateModule,
   ]
 })
 export class SignUpFormModule { }

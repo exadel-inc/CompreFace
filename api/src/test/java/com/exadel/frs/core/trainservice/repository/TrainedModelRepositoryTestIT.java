@@ -20,28 +20,28 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static smile.math.MathEx.randomLong;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
-import com.exadel.frs.core.trainservice.config.MongoTest;
-import com.exadel.frs.core.trainservice.entity.mongo.Model;
-import com.exadel.frs.core.trainservice.repository.mongo.ModelRepository;
+import com.exadel.frs.core.trainservice.entity.TrainedModel;
 import java.util.List;
-import java.util.UUID;
-import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@MongoTest
-@Slf4j
-public class ModelRepositoryTestIT {
+@DataJpaTest
+@ExtendWith(SpringExtension.class)
+public class TrainedModelRepositoryTestIT {
 
     @Autowired
-    private ModelRepository modelRepository;
+    private TrainedModelRepository trainedModelRepository;
 
     @AfterEach
     public void after() {
-        modelRepository.deleteAll();
+        trainedModelRepository.deleteAll();
     }
 
     @Test
@@ -53,35 +53,26 @@ public class ModelRepositoryTestIT {
     public void classifierGet() {
         val id = saveTrainedModel();
 
-        assertTrue(modelRepository.findById(id).isPresent());
+        assertTrue(trainedModelRepository.findById(id).isPresent());
     }
 
     @Test
     public void classifierGetNotFound() {
         val id = saveTrainedModel();
 
-        assertFalse(modelRepository.findById(id + "1").isPresent());
+        assertFalse(trainedModelRepository.findById(id + 1).isPresent());
     }
 
     @Test
     public void delete() {
         var id = saveTrainedModel();
 
-        assertEquals(1L, modelRepository.count());
-        assertDoesNotThrow(() -> modelRepository.deleteById(id));
-        assertEquals(0L, modelRepository.count());
+        assertEquals(1L, trainedModelRepository.count());
+        assertDoesNotThrow(() -> trainedModelRepository.deleteById(id));
+        assertEquals(0L, trainedModelRepository.count());
     }
 
-    @Test
-    public void deleteWrong() {
-        var id = saveTrainedModel();
-
-        assertEquals(1L, modelRepository.count());
-        assertDoesNotThrow(() -> modelRepository.deleteById(id + "1"));
-        assertEquals(1L, modelRepository.count());
-    }
-
-    private String saveTrainedModel() {
+    private Long saveTrainedModel() {
         val x = new double[2][2];
         x[0][0] = 2;
         x[0][1] = 2;
@@ -96,11 +87,11 @@ public class ModelRepositoryTestIT {
         val classifier = new LogisticRegressionClassifier(faces);
         classifier.train(x, y);
 
-        val model = Model.builder()
-                         .classifier(classifier)
-                         .id(UUID.randomUUID().toString())
-                         .build();
+        val model = TrainedModel.builder()
+                                .classifier(classifier)
+                                .id(randomLong())
+                                .build();
 
-        return modelRepository.save(model).getId();
+        return trainedModelRepository.save(model).getId();
     }
 }

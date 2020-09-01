@@ -23,6 +23,7 @@ import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 import { ModelTableModule } from '../model-table/model-table.module';
 import { ModelListFacade } from './model-list-facade';
 import { ModelListComponent } from './model-list.component';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [ModelListComponent],
@@ -34,6 +35,7 @@ import { ModelListComponent } from './model-list.component';
     MatButtonModule,
     MatIconModule,
     ModelTableModule,
+    TranslateModule,
   ]
 })
 export class ModelListModule { }

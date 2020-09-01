@@ -115,8 +115,6 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 ### Databases
 
 * postgreSQL
-* mongoDB
-
 
 
 ### Platform server
@@ -379,7 +377,8 @@ Response body on success:
 
 ### Delete model and all faces that belong to it
 
-Delete model and everything related to it from MongoDB. Please, note that it has no effect on PostgreSQL data. So deleting model from MongoDB doesn't remove model's record from PostgreSQL. Originally, endpoint was created to reffer from [admin](/admin) modul.
+Delete trained model and all faces related to it. Please, note that it has no effect on not trained model.
+Originally, endpoint was created to reffer from [admin](/admin) module.
 
 ```http request
 curl  -X DELETE \

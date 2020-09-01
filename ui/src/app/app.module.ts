@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormBuilder, FormsModule } from '@angular/forms';
 import { MatRadioModule } from '@angular/material';
@@ -34,7 +34,8 @@ import { ToolBarModule } from './features/tool-bar/tool-bar.module';
 import { AppStoreModule } from './store/app-store.module';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { CustomMaterialModule } from './ui/material/material.module';
-
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,13 @@ import { CustomMaterialModule } from './ui/material/material.module';
     HttpClientModule,
     SnackBarModule,
     MatRadioModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient]
+      }
+    })
   ],
   providers: [
     AuthGuard,
@@ -76,5 +84,8 @@ import { CustomMaterialModule } from './ui/material/material.module';
   bootstrap: [AppComponent],
   entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent, DeleteDialogComponent]
 })
-export class AppModule {
+export class AppModule {}
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http);
 }

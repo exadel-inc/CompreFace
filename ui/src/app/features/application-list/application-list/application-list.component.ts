@@ -32,4 +32,5 @@ export class ApplicationListComponent {
   @Output() selectApp = new EventEmitter();
   @Output() createApp = new EventEmitter();
 
+
 }

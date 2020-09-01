@@ -16,7 +16,10 @@
 
 package com.exadel.frs.core.trainservice.service;
 
+import static com.exadel.frs.core.trainservice.enums.ValidationResult.FORBIDDEN;
+import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
 import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.enums.ValidationResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +29,7 @@ public class ModelService {
 
     private final ModelDao modelDao;
 
-    public void updateModelApiKeyForFaces(final String modelKey, final String newModelApiKey) {
-        modelDao.updateModelApiKey(modelKey, newModelApiKey);
+    public ValidationResult validateModelKey(final String modelKey) {
+        return (modelDao.findByApiKey(modelKey) != null) ? OK : FORBIDDEN;
     }
 }

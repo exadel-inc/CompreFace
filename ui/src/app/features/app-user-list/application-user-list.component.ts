@@ -25,6 +25,8 @@ import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component'
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
+import {UserDeletion} from "../../data/userDeletion";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-user-list',
@@ -39,6 +41,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   availableRoles$: Observable<string[]>;
   errorMessage: string;
   availableEmails$: Observable<string[]>;
+  message: string;
   search = '';
   availableRoles: string[];
   currentUserId$: Observable<string>;
@@ -47,7 +50,8 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   constructor(
     private appUserListFacade: ApplicationUserListFacade,
     private dialog: MatDialog,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private translate: TranslateService
   ) {
     appUserListFacade.initSubscriptions();
   }
@@ -64,7 +68,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
         data: users
       };
     }));
-
+    this.message = this.translate.instant('app_users.add_users_info');
     this.availableRoles$ = this.appUserListFacade.availableRoles$;
     this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
   }
@@ -73,19 +77,19 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.appUserListFacade.updateUserRole(user.id, user.role);
   }
 
-  onDelete(user: AppUser): void {
+  onDelete(deletion: UserDeletion): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
         entityType: 'user',
-        entityName: `${user.firstName} ${user.lastName}`,
+        entityName: `${deletion.userToDelete.firstName} ${deletion.userToDelete.lastName}`,
         applicationName: this.appUserListFacade.selectedApplicationName,
       }
     });
 
     dialog.afterClosed().pipe(first()).subscribe(result => {
       if (result) {
-        this.appUserListFacade.delete(user.userId);
+        this.appUserListFacade.delete(deletion.userToDelete.userId);
       }
     });
   }

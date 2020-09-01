@@ -16,14 +16,14 @@
 
 <div class="app-user-list">
   <div class="table-header-container">
-    <h3>Users</h3>
+    <h3>{{'users.title' | translate}}</h3>
     <form>
       <input
         matInput
         type="text"
         class="search-input"
         [(ngModel)]="search"
-        placeholder="search"
+        placeholder="{{'users.search.app_title' | translate}}"
         [ngModelOptions]="{standalone: true}">
       <i class="material-icons">search</i>
     </form>
@@ -36,17 +36,12 @@
     [currentUserId]="currentUserId$ | async"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
     [availableRoles]="availableRoles$ | async"
+    [createMessage]="message"
+    [searchText]="search"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)">
   </app-user-table>
-  <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 1">
-    <mat-icon>info</mat-icon>
-    <p>
-      A user should be invited from the Default organization to appear in the list of users.
-      * Default organization Owner and Administrators already have access to any application without invite.
-    </p>
-  </div>
   <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
-    <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onInviteUser();">ADD</button>
+    <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onInviteUser();">{{'common.capital.add' | translate}}</button>
   </div>
 </div>

@@ -19,19 +19,18 @@ package com.exadel.frs.core.trainservice.component.migration;
 import static java.util.stream.Collectors.toList;
 import com.exadel.frs.core.trainservice.component.FaceClassifierLockManager;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
-import com.exadel.frs.core.trainservice.dao.ModelDao;
-import com.exadel.frs.core.trainservice.entity.postgres.Face.Embedding;
-import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
+import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.Face.Embedding;
+import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.system.feign.FeignClientFactory;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import feign.FeignException;
-import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -45,7 +44,7 @@ public class MigrationComponent {
     private final FaceClassifierManager faceManager;
     private final MigrationStatusStorage migrationStatusStorage;
     private final FacesRepository facesRepository;
-    private final ModelDao modelDao;
+    private final TrainedModelDao trainedModelDao;
 
     @SneakyThrows
     @Async
@@ -73,23 +72,20 @@ public class MigrationComponent {
     }
 
     private void processModels() {
-        val models = modelDao.findAllWithoutClassifier();
+        val models = trainedModelDao.findAllWithoutClassifier();
         for (val model : models) {
             log.info("Retraining model {}", model.getId());
-            val faces = model.getFaces();
+            val faces = facesRepository.findByApiKey(model.getModelKey());
             if (faces == null || faces.isEmpty()) {
-                faceManager.initNewClassifier(model.getId());
-            }
-            //todo
-            // -Update this block when model's moved to postgres
-            /*else {
+                faceManager.initNewClassifier(model.getModelKey());
+            } else {
                 faceManager.initNewClassifier(
-                        model.getId(),
+                        model.getModelKey(),
                         faces.stream()
-                             .map(ObjectId::toString)
+                             .map(Face::getId)
                              .collect(toList())
                 );
-            }*/
+            }
         }
     }
 

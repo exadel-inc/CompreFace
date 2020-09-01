@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.repository.postgres;
+package com.exadel.frs.core.trainservice.repository;
 
-import com.exadel.frs.core.trainservice.entity.postgres.Model;
+import com.exadel.frs.core.trainservice.entity.Model;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 @Transactional("tmPg")
-public interface ModelRepositoryPg extends JpaRepository<Model, Long> {
+public interface ModelRepository extends JpaRepository<Model, Long> {
 
     Optional<Model> findByApiKey(String apiKey);
 }

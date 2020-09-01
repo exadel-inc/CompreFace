@@ -32,7 +32,7 @@ import com.exadel.frs.core.trainservice.enums.ValidationResult;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
-import com.exadel.frs.core.trainservice.service.ModelServicePg;
+import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -45,6 +45,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 public class SecurityValidationFilterTest {
@@ -60,7 +61,7 @@ public class SecurityValidationFilterTest {
     private ObjectMapper mapper;
 
     @Mock
-    private ModelServicePg modelService;
+    private ModelService modelService;
 
     @InjectMocks
     private SecurityValidationFilter securityValidationFilter;
@@ -152,5 +153,6 @@ public class SecurityValidationFilterTest {
                 .handleBadFormatModelKeyException(new BadFormatModelKeyException())
                 .getStatusCode()
                 .value());
+        verify(httpServletResponse).setContentType(MediaType.APPLICATION_JSON_VALUE);
     }
 }

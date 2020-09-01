@@ -19,6 +19,7 @@ import { AuthInit } from './core/auth/auth.init';
 import { Store } from '@ngrx/store';
 import { AppState } from './store';
 import { AuthService } from './core/auth/auth.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-root',
@@ -28,7 +29,8 @@ import { AuthService } from './core/auth/auth.service';
 export class AppComponent {
   title = 'frs-client-fe';
 
-  constructor(auth: AuthService, store: Store<AppState>) {
+  constructor(auth: AuthService, store: Store<AppState>, private translate: TranslateService) {
     (new AuthInit(store, auth)).init();
+    translate.setDefaultLang('en');
   }
 }

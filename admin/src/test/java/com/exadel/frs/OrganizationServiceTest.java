@@ -21,7 +21,7 @@ import static com.exadel.frs.enums.OrganizationRole.OWNER;
 import static com.exadel.frs.enums.OrganizationRole.USER;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
@@ -126,10 +126,9 @@ class OrganizationServiceTest {
         when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
 
-        assertThrows(
-                SelfRoleChangeException.class,
-                () -> organizationService.updateUserOrgRole(userRoleUpdateDto, ORGANIZATION_GUID, USER_ID)
-        );
+        assertThatThrownBy(() -> {
+            organizationService.updateUserOrgRole(userRoleUpdateDto, ORGANIZATION_GUID, USER_ID);
+        }).isInstanceOf(SelfRoleChangeException.class);
 
         verify(organizationRepositoryMock).findByGuid(ORGANIZATION_GUID);
         verify(authManagerMock).verifyWritePrivilegesToOrg(USER_ID, organization);
@@ -154,10 +153,9 @@ class OrganizationServiceTest {
 
     @Test
     void failGetDefaultOrg() {
-        assertThrows(
-                OrganizationNotFoundException.class,
-                () -> organizationService.getDefaultOrg()
-        );
+        assertThatThrownBy(() -> {
+            organizationService.getDefaultOrg();
+        }).isInstanceOf(OrganizationNotFoundException.class);
 
         verify(organizationRepositoryMock).findFirstByIsDefaultTrue();
         verifyNoMoreInteractions(organizationRepositoryMock);
@@ -245,6 +243,32 @@ class OrganizationServiceTest {
 
         verify(organizationRepositoryMock).save(organization);
         verifyNoMoreInteractions(organizationRepositoryMock);
+    }
+
+    @Test
+    void successGetOrgUsers() {
+        val fistUserRole = UserOrganizationRoleId.builder()
+                                                 .userId(0L)
+                                                 .build();
+
+        val user = UserOrganizationRole.builder()
+                                       .id(fistUserRole)
+                                       .build();
+
+        val organization = Organization.builder()
+                                       .userOrganizationRoles(newArrayList(user))
+                                       .id(ORGANIZATION_ID)
+                                       .build();
+
+        when(organizationRepositoryMock.findByGuid(ORGANIZATION_GUID)).thenReturn(Optional.of(organization));
+
+        val actual = organizationService.getOrgUsers(ORGANIZATION_GUID, USER_ID);
+
+        assertThat(actual).hasSize(1);
+
+        verify(organizationRepositoryMock).findByGuid(ORGANIZATION_GUID);
+        verify(authManagerMock).verifyReadPrivilegesToOrg(USER_ID, organization);
+        verifyNoMoreInteractions(organizationRepositoryMock, authManagerMock);
     }
 
     @Nested

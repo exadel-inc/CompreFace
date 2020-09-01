@@ -21,10 +21,11 @@ import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
-import com.exadel.frs.core.trainservice.repository.postgres.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -79,17 +80,44 @@ public class FaceServiceTestIT {
 
     @Test
     public void findFaces() {
-        //todo
+        val faces = facesRepository.findAll()
+                                   .stream()
+                                   .filter(face -> face.getApiKey().equals(MODEL_KEY))
+                                   .collect(Collectors.toList());
+
+        val actual = faceService.findFaces(MODEL_KEY);
+
+        assertThat(actual).hasSize(faces.size());
     }
 
     @Test
     public void deleteFaceByName() {
-        //todo
+        val faces = facesRepository.findAll();
+        val face = faces.get(new Random().nextInt(faces.size()));
+
+        faceService.deleteFaceByName(face.getFaceName(), face.getApiKey(), NO.name());
+
+        val actual = facesRepository.findAll();
+
+        assertThat(actual).hasSize(faces.size() - 1);
+        assertThat(actual).doesNotContain(face);
     }
 
     @Test
     public void deleteFacesByModel() {
-        //todo
+        val faces = facesRepository.findAll();
+        val oneKeyFaces = faces.stream()
+                               .filter(face -> face.getApiKey().equals(MODEL_KEY))
+                               .collect(Collectors.toList());
+
+        faceService.deleteFacesByModel(MODEL_KEY);
+
+        val actual = facesRepository.findAll();
+
+        assertThat(actual).hasSize(faces.size() - 2);
+        assertThat(oneKeyFaces).allSatisfy(face -> {
+            assertThat(actual).doesNotContain(face);
+        });
     }
 
     @AfterEach

@@ -17,7 +17,7 @@
 package com.exadel.frs.core.trainservice.mapper;
 
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
-import com.exadel.frs.core.trainservice.entity.postgres.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

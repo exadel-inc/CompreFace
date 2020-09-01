@@ -17,7 +17,7 @@
 package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -51,6 +51,10 @@ class UserServiceTestIT {
 
     private static final String ENABLED_USER_EMAIL = "enabled_user@email.com";
     private static final String DISABLED_USER_EMAIL = "disabled_user@email.com";
+    private static final String USER_EMAIL = "user@email.com";
+    private static final String USER_EMAIL_2 = "user_2@email.com";
+    private static final String USER_GUID = "testUserGuid";
+    private static final String USER_EMAIL_PART = "user";
 
     @SpyBean
     private UserService userService;
@@ -62,6 +66,8 @@ class UserServiceTestIT {
     void cleanDB() {
         deleteUserIfExists(ENABLED_USER_EMAIL);
         deleteUserIfExists(DISABLED_USER_EMAIL);
+        deleteUserIfExists(USER_EMAIL);
+        deleteUserIfExists(USER_EMAIL_2);
     }
 
     @Test
@@ -83,7 +89,59 @@ class UserServiceTestIT {
         assertThat(disabledUser).isNotNull();
         assertThat(disabledUser.isEnabled()).isFalse();
 
-        assertThrows(UserDoesNotExistException.class, () -> userService.getEnabledUserByEmail(DISABLED_USER_EMAIL));
+        assertThatThrownBy(() -> {
+            userService.getEnabledUserByEmail(DISABLED_USER_EMAIL);
+        }).isInstanceOf(UserDoesNotExistException.class);
+    }
+
+    @Test
+    void getUserByEmailReturnsUser() {
+        createUser(USER_EMAIL);
+
+        val actual = userService.getUser(USER_EMAIL);
+
+        assertThat(actual).isNotNull();
+    }
+
+    @Test
+    void getUserByEmailThrowsExceptionIfNoUser() {
+        assertThatThrownBy(() -> {
+            userService.getUser(USER_EMAIL);
+        }).isInstanceOf(UserDoesNotExistException.class);
+    }
+
+    @Test
+    void getUserByGuidReturnsUser() {
+        createUser(USER_EMAIL);
+        val createdUser = userRepository.findByEmail(USER_EMAIL).get();
+
+        val actual = userService.getUserByGuid(createdUser.getGuid());
+
+        assertThat(actual).isNotNull();
+    }
+
+    @Test
+    void getUserByGuidThrowsExceptionIfNoUser() {
+        assertThatThrownBy(() -> {
+            userService.getUserByGuid(USER_GUID);
+        }).isInstanceOf(UserDoesNotExistException.class);
+    }
+
+    @Test
+    void autocompleteReturnsEmptyList() {
+        val actual = userService.autocomplete("");
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void autocompleteReturnsUsers() {
+        createUser(USER_EMAIL);
+        createUser(USER_EMAIL_2);
+
+        val actual = userService.autocomplete(USER_EMAIL_PART);
+
+        assertThat(actual).hasSize(2);
     }
 
     private void createAndEnableUser(final String email) {

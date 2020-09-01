@@ -23,6 +23,7 @@ import { Application } from '../../data/application';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ApplicationHeaderFacade } from './application-header.facade';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 @Component({
   selector: 'app-application-header',
@@ -36,6 +37,7 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   userRole$: Observable<string | null>;
   loading$: Observable<boolean>;
   maxHeaderLinkLength = 25;
+  userRoleEnum = RoleEnum;
 
   constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog) { }
 

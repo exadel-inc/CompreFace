@@ -1,0 +1,120 @@
+{
+  "common": {
+    "capital": {
+      "create": "CREATE",
+      "cancel": "CANCEL",
+      "yes": "YES",
+      "add": "ADD",
+      "rename": "RENAME",
+      "edit": "EDIT"
+    },
+    "name": "Name",
+    "create": "Create"
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "sign_up": "SIGN UP",
+    "email_hint": "Email should have correct format",
+    "password_hint": "Password is required",
+    "login": "LOGIN"
+  },
+  "registration": {
+    "title": "Sign up",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "password_restriction": "Minimum 8 characters",
+    "password_dont_match": "Passwords don't match",
+    "name_restriction": "First name is required",
+    "last_name_restriction": "Last name is required",
+    "email_hint": "Email should have correct format",
+    "login": "LOGIN",
+    "sign_up": "SIGN_UP"
+  },
+  "toolbar": {
+    "logout": "Logout"
+  },
+  "applications": {
+    "title": "Applications",
+    "first_steps_title": "Create Application",
+    "name": "Name",
+    "owner": "Owner",
+    "first_steps_info": "The first step in using face recognition service is to create an application. An application is where you can\n create and manage models.",
+    "create": {
+      "title": "Create application"
+    },
+    "header": {
+      "title": "Application",
+      "edit": "EDIT",
+      "delete": "DELETE",
+      "delete_dialog": {
+        "title": "Delete application",
+        "warn_information": "and all related data will be deleted",
+        "confirmation_question": "Are you sure"
+      },
+      "edit_dialog": {
+        "title": "Edit application",
+        "rename": "RENAME",
+        "name": "Name"
+      }
+    }
+  },
+  "models": {
+    "title": "Models",
+    "name": "Name",
+    "api_key": "API key",
+    "create_model_info": " Create the first model, where you will be able to add, recognize, delete faces,\n      get list of the model faces, train the model and remove already trained.",
+    "create_dialog": {
+      "title": "Create model",
+      "name": "Name"
+    },
+    "select_menu": {
+      "edit": "EDIT",
+      "delete": "DELETE"
+    },
+    "edit_dialog": {
+      "title": "EDIT MODEL",
+      "name": "Name",
+      "rename": "RENAME"
+    },
+    "delete_dialog": {
+      "title": "Delete model",
+      "warn_information": "and all related data will be deleted.",
+      "confirmation_question": "Are you sure?"
+    }
+  },
+  "users": {
+    "title": "Users",
+    "user": "User",
+    "role": "Role",
+    "search": {
+      "org_title": "Search User",
+      "app_title": "search",
+      "no_results": "No matches found"
+    }
+  },
+  "org_users": {
+    "delete_dialog": {
+      "title": "Delete user",
+      "confirmation_question": "Are you sure you want remove user {{name}} {{lastName}}?",
+      "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
+      "warn_hint_anyway": "You can delete him anyway.",
+      "warn_hint_owner": "In this case you will become the OWNER of these applications.",
+      "warn_hint_new_owner": "In this case the owner of this applications will be: ",
+      "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
+    },
+    "add_users_title": "Add users to the FRS",
+    "add_users_info": "You can add other users to the FRS application. They need to register and login to FRS. After registration and login users will appear automatically in the users' table."
+  },
+  "app_users": {
+    "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",
+    "delete_dialog": {
+      "title": "Delete user",
+      "confirmation_question": "Are you sure you want remove user {{name}} from {{application}}?"
+    }
+  }
+}
