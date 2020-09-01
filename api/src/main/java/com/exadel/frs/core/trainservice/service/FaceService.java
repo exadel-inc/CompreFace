@@ -54,4 +54,8 @@ public class FaceService {
         classifierManager.removeFaceClassifier(modelKey);
         return faceDao.deleteFacesByApiKey(modelKey);
     }
+
+    public int countFacesInModel(final String modelKey) {
+        return faceDao.countFacesInModel(modelKey);
+    }
 }
