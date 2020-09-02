@@ -16,7 +16,6 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
@@ -70,7 +69,7 @@ public class FaceServiceTestIT {
         val faces = facesRepository.findAll();
         val face = faces.get(new Random().nextInt(faces.size()));
 
-        faceService.deleteFaceById(face.getId(), face.getApiKey(), NO.name());
+        faceService.deleteFaceById(face.getId());
 
         val actual = facesRepository.findAll();
 
