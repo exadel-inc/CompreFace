@@ -86,21 +86,28 @@ public class SecurityValidationFilter implements Filter {
 
         var apiKey = headersMap.getOrDefault(X_FRS_API_KEY_HEADER, emptyList());
 
-        val key = apiKey.get(0);
-        try {
-            if (key.length() < 36) {
-                throw new IllegalArgumentException("UUID length is incorrect");
-            }
-            UUID.fromString(key);
-        } catch (Exception e) {
-            val objectResponseEntity = handler.handleBadFormatModelKeyException(new BadFormatModelKeyException());
-            buildException(httpResponse, objectResponseEntity);
+        if (!apiKey.isEmpty()) {
+            val key = apiKey.get(0);
+            try {
+                if (key.length() < 36) {
+                    throw new IllegalArgumentException("UUID length is incorrect");
+                }
+                UUID.fromString(key);
+            } catch (Exception e) {
+                val objectResponseEntity = handler.handleBadFormatModelKeyException(new BadFormatModelKeyException());
+                buildException(httpResponse, objectResponseEntity);
 
-            return;
-        }
-        val validationResult = modelService.validateModelKey(key);
-        if (validationResult != OK) {
-            val objectResponseEntity = handler.handleNotFoundException(new ModelNotFoundException());
+                return;
+            }
+            val validationResult = modelService.validateModelKey(key);
+            if (validationResult != OK) {
+                val objectResponseEntity = handler.handleNotFoundException(new ModelNotFoundException());
+                buildException(httpResponse, objectResponseEntity);
+
+                return;
+            }
+        } else {
+            val objectResponseEntity = handler.handleMissingRequestHeader(X_FRS_API_KEY_HEADER);
             buildException(httpResponse, objectResponseEntity);
 
             return;
