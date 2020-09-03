@@ -94,14 +94,14 @@ public class SecurityValidationFilter implements Filter {
                 }
                 UUID.fromString(key);
             } catch (Exception e) {
-                val objectResponseEntity = handler.handleBadFormatModelKeyException(new BadFormatModelKeyException());
+                val objectResponseEntity = handler.handleDefinedExceptions(new BadFormatModelKeyException());
                 buildException(httpResponse, objectResponseEntity);
 
                 return;
             }
             val validationResult = modelService.validateModelKey(key);
             if (validationResult != OK) {
-                val objectResponseEntity = handler.handleNotFoundException(new ModelNotFoundException());
+                val objectResponseEntity = handler.handleDefinedExceptions(new ModelNotFoundException(key));
                 buildException(httpResponse, objectResponseEntity);
 
                 return;

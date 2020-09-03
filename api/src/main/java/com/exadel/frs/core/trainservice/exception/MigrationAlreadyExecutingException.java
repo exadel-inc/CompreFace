@@ -16,15 +16,13 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import static java.lang.String.format;
-import lombok.Value;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.ALREADY_IN_PROGRESS;
 
-@Value
-public class MigrationAlreadyExecutingException extends RuntimeException {
+public class MigrationAlreadyExecutingException extends BasicException {
+
     private static final String MESSAGE = "Migration already executing";
 
     public MigrationAlreadyExecutingException() {
-        super(format(MESSAGE));
+        super(ALREADY_IN_PROGRESS, MESSAGE);
     }
-
 }
