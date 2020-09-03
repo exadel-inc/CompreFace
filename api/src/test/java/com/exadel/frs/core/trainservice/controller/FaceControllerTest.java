@@ -116,8 +116,11 @@ public class FaceControllerTest {
 
     @Test
     public void findAllShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
+        val expectedContent = "{\"message\":\"" + String.format("Missing header: %s", X_FRS_API_KEY_HEADER) + "\",\"code\":20}";
+
         mockMvc.perform(get(API_V1 + "/faces"))
-               .andExpect(status().isBadRequest());
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
     }
 
     @Test
@@ -176,7 +179,10 @@ public class FaceControllerTest {
 
     @Test
     public void deleteFacesByModelFacesShouldReturnBadRequestWhenApiKeyIsMissing() throws Exception {
+        val expectedContent = "{\"message\":\"" + String.format("Missing header: %s", X_FRS_API_KEY_HEADER) + "\",\"code\":20}";
+
         mockMvc.perform(delete(API_V1 + "/faces"))
-               .andExpect(status().isBadRequest());
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
     }
 }

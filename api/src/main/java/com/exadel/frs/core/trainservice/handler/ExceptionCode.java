@@ -17,7 +17,7 @@
 package com.exadel.frs.core.trainservice.handler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +27,22 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum ExceptionCode {
 
-    MISSING_REQUEST_HEADER(20, BAD_REQUEST);
+    MODEL_NOT_FOUND(10, NOT_FOUND),
+    MISSING_REQUEST_HEADER(20, BAD_REQUEST),
+    UNAVAILABLE_FILE_EXTENSION(21, BAD_REQUEST),
+    VALIDATION_CONSTRAINT_VIOLATION(26, BAD_REQUEST),
+    ALREADY_IN_PROGRESS(27, BAD_REQUEST),
+
+    MODEL_ALREADY_LOCKED(28, BAD_REQUEST),
+    MODEL_NOT_TRAINED(29, BAD_REQUEST),
+    MODEL_HAS_NOT_ENOUGH_FACES(30, BAD_REQUEST),
+    TOO_MANY_FACES(31, BAD_REQUEST),
+    WRITING_NOT_ALLOWED(32, METHOD_NOT_ALLOWED),
+
+    MISSING_REQUEST_PARAMETER(33, BAD_REQUEST),
+
+
+    UNDEFINED(0, BAD_REQUEST);
 
     private final Integer code;
     private final HttpStatus httpStatus;

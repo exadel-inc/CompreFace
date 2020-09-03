@@ -14,15 +14,15 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
+package com.exadel.frs.core.trainservice.dto;
 
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_HAS_NOT_ENOUGH_FACES;
+import lombok.Builder;
+import lombok.Data;
 
-public class ModelHasNotEnoughFacesException extends BasicException {
+@Data
+@Builder
+public class ExceptionResponseDto {
 
-    private static final String MESSAGE = "Model should contain at least 2 faces";
-
-    public ModelHasNotEnoughFacesException() {
-        super(MODEL_HAS_NOT_ENOUGH_FACES, MESSAGE);
-    }
+    private String message;
+    private Integer code;
 }
