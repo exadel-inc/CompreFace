@@ -1,10 +1,10 @@
-# Exadel Face Recognition System (Exadel FRS)
+# CompreFace
 
 [![GitHub license](https://img.shields.io/github/license/pospielov/frs-private)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/pospielov/frs-private)](https://github.com/pospielov/frs-private/graphs/contributors)
 
 
 
- [Exadel Face Recognition System (Exadel FRS)](#exadel-face-recognition-system--exadel-frs-)
+ [CompreFace](#exadel-face-recognition-system--exadel-frs-)
   * [Features](#features)
   * [Getting started](#getting-started)
   * [How it works](#how-it-works)
@@ -42,7 +42,7 @@ Every user could have several models trained on different subset of people. The 
 
 ## Features
 
-FRS is:
+CompreFace is:
 
 - just one docker command for app start
 - fast and high accuracy face recognizing
@@ -168,17 +168,18 @@ Add an example image of a know person's face. It will be used during face recogn
 ```http request
 curl  -X POST \
 -H "Content-Type: multipart/form-data" \
--H "x-frs-api-key: <model_api_key>" \
+-H "x-api-key: <model_api_key>" \
 -F file=<localfilename>
 -F det_prob_threshold=<det_prob_threshold>
 -F retrain=<retrain_option>
+-F subject=<subject>
 
-http://localhost:8000/api/v1/faces/<face_name>
+http://localhost:8000/api/v1/faces
 ```
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
 " header)
 - **[localfilename]** - jpeg of png image on your local computer
-- **[face_name]** - name of the person on the image. It could be any string if you need depersonalize images
+- **[subject]** - name of the person on the image. It could be any string if you need depersonalize images
 - **[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0
 - **[retrain_option]** - (optional) specify whether the model should start retraining immediately after the request is completed (set this
  parameter to
@@ -189,15 +190,20 @@ http://localhost:8000/api/v1/faces/<face_name>
 
 **Max images size:** 5Mb (5242880 bytes)
 
-
-
+Response body on success:
+```
+{
+  "image_id": <image_id>,
+  "subject": <subject_name>
+}
+```
 ### Recognize faces from given image
 
 Recognizes faces from given image.
 ```http request
 curl  -X POST \
 -H "Content-Type: multipart/form-data" \
--H "x-frs-api-key: <model_api_key>" \
+-H "x-api-key: <model_api_key>" \
 -F file=<local_file>
 -F limit=<limit>
 -F prediction_count=<prediction_count>
@@ -254,7 +260,7 @@ Retrains model for specified API Key. The model should be retrained if updates t
 
 ```http request
 curl  -X POST \
--H "x-frs-api-key: <model_api_key>" \
+-H "x-api-key: <model_api_key>" \
 
 https://localhost:8000/api/v1/retrain
 ```
@@ -276,7 +282,7 @@ Gets face model retraining status for specified API Key. This REST endpoint coul
 
 ```http request
 curl  -X GET \
--H "x-frs-api-key: <model_api_key>" \
+-H "x-api-key: <model_api_key>" \
 
 https://localhost:8000/api/v1/retrain
 ```
@@ -306,7 +312,7 @@ Aborts training the specified API Key. This REST endpoint could be useful if you
 
 ```http request
 curl  -X DELETE \
--H "x-frs-api-key: <model_api_key>" \
+-H "x-api-key: <model_api_key>" \
 
 https://localhost:8000/api/v1/retrain
 ```
@@ -328,21 +334,28 @@ Delete all image examples of the face. Face will not be recognized after the mod
 
 ```http request
 curl  -X DELETE \
--H "x-frs-api-key: <model_api_key>"
+-H "x-api-key: <model_api_key>"
 -F retrain=<retrain_option>
+-F subject=<subject>
 
-https://localhost:8000/api/v1/faces/<face_name>
+https://localhost:8000/api/v1/faces
 ```
 
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
 " header)
-- **[face_name]** - the name of the person, whose records need to be removed from the database, as a string
+- **[subject]** - the name of the person, whose records need to be removed from the database, as a string
 - **[retrain_option]** - (optional) specify whether the model should start retraining immediately after the request is completed (set this
  parameter to
  value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort
   already running processes of classifier training. Default value: *FORCE*
 
-
+Response body on success:
+```
+{
+  "image_id": <image_id>,
+  "subject": <subject_name>
+}
+```
 
 ### List names of all saved faces
 
@@ -350,7 +363,7 @@ As with all other endpoints, applies only to faces uploaded with the specified A
 
 ```http request
 curl  -X GET \
--H "x-frs-api-key: <model_api_key>" \
+-H "x-api-key: <model_api_key>" \
 https://localhost:8000/api/v1/faces
 ```
 
@@ -362,16 +375,16 @@ Response body on success:
 {
   "faces": [
     {
-      "id": <face_id>,
-      "name": <face_name>
+      "image_id": <image_id>,
+      "subject": <subject_name>
     },
     ...
   ]
 }
 ```
 
-- **[face_id]** - id of the face in the database
-- **[face_name]** - name of the person, whose picture was saved for this api key 
+- **[image_id]** - id of the face in the database
+- **[subject]** - name of the person, whose picture was saved for this api key 
 
 
 
@@ -382,12 +395,25 @@ Originally, endpoint was created to reffer from [admin](/admin) module.
 
 ```http request
 curl  -X DELETE \
--H "x-frs-api-key: <model_api_key>"
+-H "x-api-key: <model_api_key>"
 https://localhost:8000/api/v1/faces
 ```
 
 - **[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key
 " header)
+
+Response body on success:
+```
+[
+    {
+      "image_id": <image_id>,
+      "subject": <subject_name>
+    },
+    ...
+]
+```
+- **[image_id]** - id of the face in the database
+- **[subject]** - name of the person, whose picture was saved for this api key 
 
 ## Use cases and domains
 

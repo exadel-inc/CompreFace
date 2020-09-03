@@ -23,7 +23,7 @@ import {Environment} from './interface';
 export const environment: Environment = {
   production: false,
   basicToken:  `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=`,
-  apiUrl: 'http://frs-api:8080/admin/',
+  apiUrl: 'http://compreface-api:8080/admin/',
   buildNumber:'0.0.0'
 };
 
