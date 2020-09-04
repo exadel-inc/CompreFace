@@ -17,14 +17,33 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.utils.TestUtils.buildUser;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.dto.ui.UserAutocompleteDto;
+import com.exadel.frs.dto.ui.UserCreateDto;
+import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.entity.User;
+import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.ConstraintViolationException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
@@ -34,6 +53,7 @@ import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +62,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -59,11 +80,25 @@ import org.springframework.test.web.servlet.MockMvc;
 })
 public class UserControllerTest {
 
+    private static final String USER_GUID = "user-guid";
+
     @Autowired
     private ObjectMapper mapper;
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private OrganizationService organizationService;
+
+    @Autowired
+    private AppService appService;
 
     @Test
     void shouldReturnErrorMessageWhenUpdateFirstNameIsEmpty() throws Exception {
@@ -139,5 +174,128 @@ public class UserControllerTest {
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithShortPassword)))
                .andExpect(status().isBadRequest())
                .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    void shouldReturnUpdatedUser() throws Exception {
+        val updateDto = new UserUpdateDto();
+        updateDto.setLastName("gdsag");
+        updateDto.setFirstName("test");
+        updateDto.setPassword("test-password");
+
+        val createRequest = put("/user/update")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updateDto));
+
+        val responseDto = new UserResponseDto();
+        responseDto.setFirstName(updateDto.getFirstName());
+        responseDto.setLastName(updateDto.getLastName());
+
+        when(userService.updateUser(any(UserUpdateDto.class), anyLong())).thenReturn(new User());
+        when(userMapper.toResponseDto(any(User.class))).thenReturn(responseDto);
+
+        mockMvc.perform(createRequest)
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+    }
+
+    @Test
+    void shouldReturnOkWhenDeleteUser() throws Exception {
+        val updateDto = new UserUpdateDto();
+        updateDto.setLastName("gdsag");
+        updateDto.setFirstName("test");
+        updateDto.setPassword("test-password");
+
+        val deleteRequest = delete("/user/" + USER_GUID)
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(deleteRequest)
+               .andExpect(status().isOk());
+
+        verify(userService).getUser(anyLong());
+        verify(userService).getUserByGuid(eq(USER_GUID));
+        verify(organizationService).getDefaultOrg();
+        verify(userService).deleteUser(any(), any());
+        verifyNoMoreInteractions(organizationService, userService);
+        verifyNoInteractions(appService);
+    }
+
+    @Test
+    void shouldReturnAutocomplete() throws Exception {
+        val createRequest = get("/user/autocomplete")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("query", "query-string");
+
+        val responseDto = new UserResponseDto();
+        responseDto.setFirstName("name-test");
+        val responseDtoList = List.of(responseDto, responseDto);
+
+        when(userService.autocomplete(eq("query-string"))).thenReturn(List.of(new User()));
+        when(userMapper.toResponseDto(anyList())).thenReturn(responseDtoList);
+
+        val expectedResult = UserAutocompleteDto.builder()
+                                                .length(responseDtoList.size())
+                                                .query("query-string")
+                                                .results(responseDtoList)
+                                                .build();
+
+        mockMvc.perform(createRequest)
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(expectedResult)));
+    }
+
+    @Test
+    void shouldReturnSendRedirect() throws Exception {
+        val createRequest = get("/user/registration/confirm")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("token", "token-test");
+
+
+        mockMvc.perform(createRequest)
+               .andExpect(status().isFound())
+               .andExpect(redirectedUrlPattern("https:/**"));
+    }
+
+    @Test
+    void shouldReturnErrorMessageWhenNoUser() throws Exception {
+        val expectedContent = "{\"message\":\"" + AccessDeniedException.MESSAGE + "\",\"code\":1}";
+
+        val createNewModelRequest = get("/user/me")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        when(userService.getUser(anyLong())).thenThrow(new UserDoesNotExistException("user-id"));
+
+        mockMvc.perform(createNewModelRequest)
+               .andExpect(status().isForbidden())
+               .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    void shouldReturnOkWhenUserNotEnabled() throws Exception {
+        val createDto = new UserCreateDto("email", "name", "last", "password");
+
+        val createRequest = post("/user/register")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writeValueAsString(createDto));
+
+        when(userService.createUser(any())).thenReturn(User.builder()
+                                                           .enabled(false)
+                                                           .build());
+
+
+        mockMvc.perform(createRequest)
+               .andExpect(status().isOk());
     }
 }

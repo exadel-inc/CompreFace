@@ -18,18 +18,30 @@ package com.exadel.frs.controller;
 
 import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
 import static com.exadel.frs.utils.TestUtils.buildUser;
+import static java.util.UUID.randomUUID;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyListOf;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.dto.ui.ModelCreateDto;
+import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
+import com.exadel.frs.entity.Model;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
@@ -38,8 +50,10 @@ import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -60,6 +74,7 @@ class ModelControllerTest {
     private static final String ORG_GUID = "org-guid";
     private static final String APP_GUID = "app-guid";
     private static final String MODEL_GUID = "model-guid";
+    private static final String MODEL_NAME = "model-name";
 
     @Autowired
     private ObjectMapper mapper;
@@ -69,6 +84,9 @@ class ModelControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    private MlModelMapper modelMapper;
 
     @Test
     void shouldReturnMessageAndCodeWhenModelNameIsMissingOnUpdate() throws Exception {
@@ -84,12 +102,12 @@ class ModelControllerTest {
                 .contentType(APPLICATION_JSON);
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithNoName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
     }
 
     @Test
@@ -99,15 +117,14 @@ class ModelControllerTest {
 
         val url = "/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/share";
         val requestToShareModel = post(url)
-                                    .with(csrf())
-                                    .with(user(buildUser()))
-                                    .contentType(APPLICATION_JSON)
-                                    .content(mapper.writeValueAsString(new ModelShareDto()));
-
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(APPLICATION_JSON)
+                .content(mapper.writeValueAsString(new ModelShareDto()));
 
         mockMvc.perform(requestToShareModel)
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
     }
 
     @Test
@@ -124,11 +141,140 @@ class ModelControllerTest {
                 .contentType(APPLICATION_JSON);
 
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
 
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithNoName)))
-                .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+               .andExpect(status().isBadRequest())
+               .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    void shouldReturnModel() throws Exception {
+        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(APPLICATION_JSON);
+
+        val model = Model.builder().name(MODEL_NAME).build();
+
+        val responseDto = new ModelResponseDto();
+        responseDto.setName(MODEL_NAME);
+
+        when(modelService.getModel(eq(ORG_GUID), eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
+        when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
+
+        mockMvc.perform(request)
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+    }
+
+    @Test
+    void shouldReturnModels() throws Exception {
+        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/models")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(APPLICATION_JSON);
+
+        val model = Model.builder().name(MODEL_NAME).build();
+
+        val responseDto = new ModelResponseDto();
+        responseDto.setName(MODEL_NAME);
+
+        when(modelService.getModels(eq(APP_GUID), anyLong())).thenReturn(List.of(model, model));
+        when(modelMapper.toResponseDto(anyList(), eq(APP_GUID))).thenReturn(List.of(responseDto, responseDto));
+
+        mockMvc.perform(request)
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(List.of(responseDto, responseDto))));
+    }
+
+    @Test
+    void shouldReturnCreatedModel() throws Exception {
+        val createDto = new ModelCreateDto();
+        createDto.setName(MODEL_NAME);
+
+        val createRequest = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(APPLICATION_JSON)
+                .content(mapper.writeValueAsString(createDto));
+
+        val model = Model.builder().name(MODEL_NAME).build();
+
+        val responseDto = new ModelResponseDto();
+        responseDto.setName(MODEL_NAME);
+
+        when(modelService.createModel(any(ModelCreateDto.class), eq(ORG_GUID), eq(APP_GUID), anyLong())).thenReturn(model);
+        when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
+
+        mockMvc.perform(createRequest)
+               .andExpect(status().isCreated())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+    }
+
+    @Test
+    void shouldReturnUpdatedModel() throws Exception {
+        val updateDto = new ModelUpdateDto();
+        updateDto.setName(MODEL_NAME);
+
+        val createRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(APPLICATION_JSON)
+                .content(mapper.writeValueAsString(updateDto));
+
+        val model = Model.builder().name(MODEL_NAME).build();
+
+        val responseDto = new ModelResponseDto();
+        responseDto.setName(MODEL_NAME);
+
+        when(modelService.updateModel(any(ModelUpdateDto.class), eq(ORG_GUID), eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
+        when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
+
+        mockMvc.perform(createRequest)
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+    }
+
+    @Test
+    void shouldReturnUpdatedWithApiKeyModel() throws Exception {
+        val updateDto = new ModelUpdateDto();
+        updateDto.setName(MODEL_NAME);
+
+        val request = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(APPLICATION_JSON);
+
+        val newApiKey = randomUUID().toString();
+
+        val model = Model.builder().apiKey(newApiKey).build();
+
+        val responseDto = new ModelResponseDto();
+        responseDto.setApiKey(newApiKey);
+
+        when(modelService.getModel(eq(ORG_GUID), eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
+        when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
+
+        mockMvc.perform(request)
+               .andExpect(status().isOk())
+               .andExpect(content().string(mapper.writeValueAsString(responseDto)));
+    }
+
+    @Test
+    void shouldReturnOkWhenDeleteModel() throws Exception {
+        val updateDto = new ModelUpdateDto();
+        updateDto.setName(MODEL_NAME);
+
+        val request = delete("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(APPLICATION_JSON);
+
+        doNothing().when(modelService).deleteModel(eq(ORG_GUID), eq(APP_GUID), eq(MODEL_GUID), anyLong());
+
+        mockMvc.perform(request)
+               .andExpect(status().isOk());
     }
 }
