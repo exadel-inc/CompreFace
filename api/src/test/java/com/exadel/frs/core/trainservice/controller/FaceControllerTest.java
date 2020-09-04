@@ -89,6 +89,26 @@ public class FaceControllerTest {
     }
 
     @Test
+    void scanFacesForFirstItemWithEmptyRetrain() throws Exception {
+        val mockFile = new MockMultipartFile("file", "test data".getBytes());
+
+        doReturn(1)
+                .when(facesRepository)
+                .countByApiKey(API_KEY);
+
+        mockMvc.perform(
+                multipart(API_V1 + "/faces")
+                        .file(mockFile)
+                        .param("subject", "name")
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        ).andExpect(status().isCreated());
+
+        verify(imageValidator).validate(any());
+        verify(scanService).scanAndSaveFace(any(), any(), any(), any());
+        verifyNoMoreInteractions(imageValidator, scanService);
+    }
+
+    @Test
     public void findAllShouldReturnResponseAsExpected() throws Exception {
         val faces = List.of(
                 makeFace("A", API_KEY),
