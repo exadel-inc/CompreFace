@@ -266,10 +266,10 @@ class AppServiceTest {
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
         when(appRepositoryMock.save(any())).thenReturn(app);
 
-        val userAppRole = appService
+        val actual = appService
                 .updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
 
-        assertThat(userAppRole.getRole()).isEqualTo(Enum.valueOf(AppRole.class, userRoleUpdateDto.getRole()));
+        assertThat(actual.getRole()).isEqualTo(Enum.valueOf(AppRole.class, userRoleUpdateDto.getRole()));
 
         verify(authManagerMock).verifyWritePrivilegesToApp(ADMIN_ID, app);
         verify(authManagerMock).verifyReadPrivilegesToApp(ADMIN_ID, app);
