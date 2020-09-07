@@ -16,10 +16,13 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.ALREADY_IN_PROGRESS;
 
-@ResponseStatus(code = HttpStatus.LOCKED, reason = "Classifier training is already in progress")
-public class ClassifierIsAlreadyTrainingException extends RuntimeException {
+public class ClassifierIsAlreadyTrainingException extends BasicException {
 
+    private static final String MESSAGE = "Classifier training is already in progress";
+
+    public ClassifierIsAlreadyTrainingException() {
+        super(ALREADY_IN_PROGRESS, MESSAGE);
+    }
 }

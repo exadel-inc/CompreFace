@@ -16,10 +16,13 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_NOT_TRAINED;
 
-@ResponseStatus(code = BAD_REQUEST, reason = "Model is not trained")
-public class ModelNotTrainedException extends RuntimeException {
+public class ModelNotTrainedException extends BasicException {
 
+    private static final String MESSAGE = "Model is not trained";
+
+    public ModelNotTrainedException() {
+        super(MODEL_NOT_TRAINED, MESSAGE);
+    }
 }

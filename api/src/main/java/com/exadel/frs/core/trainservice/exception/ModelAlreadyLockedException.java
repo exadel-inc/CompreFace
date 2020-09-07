@@ -16,12 +16,11 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_ALREADY_LOCKED;
 
-@Data
-@AllArgsConstructor
-public class ModelAlreadyLockedException extends RuntimeException {
+public class ModelAlreadyLockedException extends BasicException {
 
-    private String message;
+    public ModelAlreadyLockedException(String msg) {
+        super(MODEL_ALREADY_LOCKED, msg);
+    }
 }

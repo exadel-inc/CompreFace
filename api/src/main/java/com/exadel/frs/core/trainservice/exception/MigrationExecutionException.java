@@ -16,15 +16,13 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import static java.lang.String.format;
-import lombok.Value;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.WRITING_NOT_ALLOWED;
 
-@Value
-public class MigrationExecutionException extends RuntimeException {
+public class MigrationExecutionException extends BasicException {
+
     private static final String MESSAGE = "Write operations during migration aren't allowed";
 
     public MigrationExecutionException() {
-        super(format(MESSAGE));
+        super(WRITING_NOT_ALLOWED, MESSAGE);
     }
-
 }

@@ -66,7 +66,7 @@ public class ResponseExceptionHandler {
 
         val body = ExceptionResponseDto.builder()
                                        .code(UNDEFINED.getCode())
-                                       .message("No message available")
+                                       .message(ex.getMessage() != null ? ex.getMessage() : "No message available")
                                        .build();
 
         return ResponseEntity.status(NOT_FOUND).body(body);

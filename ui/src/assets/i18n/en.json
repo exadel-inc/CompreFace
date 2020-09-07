@@ -107,8 +107,8 @@
       "warn_hint_new_owner": "In this case the owner of this applications will be: ",
       "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
     },
-    "add_users_title": "Add users to the FRS",
-    "add_users_info": "You can add other users to the FRS application. They need to register and login to FRS. After registration and login users will appear automatically in the users' table."
+    "add_users_title": "Add users to the CompreFace",
+    "add_users_info": "You can add other users to the CompreFace application. They need to register and login to CompreFace. After registration and login users will appear automatically in the users' table."
   },
   "app_users": {
     "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",

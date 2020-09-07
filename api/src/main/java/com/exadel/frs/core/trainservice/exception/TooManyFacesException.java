@@ -16,10 +16,13 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.TOO_MANY_FACES;
 
-@ResponseStatus(code = BAD_REQUEST, reason = "More than one face in the image")
-public class TooManyFacesException extends RuntimeException {
+public class TooManyFacesException extends BasicException {
 
+    private static final String MESSAGE = "More than one face in the image";
+
+    public TooManyFacesException() {
+        super(TOO_MANY_FACES, MESSAGE);
+    }
 }
