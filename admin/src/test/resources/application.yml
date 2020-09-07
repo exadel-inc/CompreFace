@@ -1,11 +1,6 @@
 server:
   port: ${CRUD_PORT:8080}
 
-environment:
-  servers:
-    FRS_CORE:
-      url: ${CORE_URL:http://frs-api:8080}
-
 app:
   security:
     oauth2:
@@ -27,7 +22,7 @@ spring:
       max-request-size: 10MB
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://frs-postgres-db:5432/frs}
+    url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
   jpa:
@@ -44,7 +39,7 @@ spring:
     generate-ddl: false
   mail:
     enable: ${ENABLE_EMAIL_SERVER:false}
-    sender: ${FRS_EMAIL:example@example.com}
+    sender: ${COMPREFACE_EMAIL:example@example.com}
     host: ${POSTFIX_HOST:example.com}
     port: 25
     test-connection: false
