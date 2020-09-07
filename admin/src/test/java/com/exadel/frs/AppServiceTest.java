@@ -561,10 +561,10 @@ class AppServiceTest {
         when(userServiceMock.getUser(anyString())).thenReturn(user);
         when(appRepositoryMock.save(any())).thenReturn(app);
 
-        val userAppRole = appService.inviteUser(userInviteDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+        val actual = appService.inviteUser(userInviteDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
 
-        assertThat(userAppRole.getUser().getEmail()).isEqualTo(userEmail);
-        assertThat(userAppRole.getRole()).isEqualTo(userRole);
+        assertThat(actual.getUser().getEmail()).isEqualTo(userEmail);
+        assertThat(actual.getRole()).isEqualTo(userRole);
         assertThat(app.getOwner().get().getRole()).isEqualTo(userRole);
 
         verify(appRepositoryMock).save(app);
