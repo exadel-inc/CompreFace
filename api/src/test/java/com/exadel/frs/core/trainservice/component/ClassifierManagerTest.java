@@ -31,9 +31,11 @@ import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.exception.ModelHasNotEnoughFacesException;
+import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
@@ -85,11 +87,32 @@ public class ClassifierManagerTest {
     }
 
     @Test
+    void initNewClassifierWithFaces() {
+        val adapterMock = mock(FaceClassifierAdapter.class);
+        List<String> faces = List.of();
+        EmbeddingFaceList embeddingFaceList = new EmbeddingFaceList();
+
+        when(context.getBean(FaceClassifierAdapter.class)).thenReturn(adapterMock);
+        when(faceDao.findAllFacesIn(faces)).thenReturn(embeddingFaceList);
+
+        manager.initNewClassifier(MODEL_KEY, faces);
+
+        val inOrder = inOrder(lockManager, context, faceDao, adapterMock);
+        inOrder.verify(lockManager).lock(MODEL_KEY);
+        inOrder.verify(context).getBean(FaceClassifierAdapter.class);
+        inOrder.verify(faceDao).findAllFacesIn(faces);
+        inOrder.verify(adapterMock).train(embeddingFaceList, MODEL_KEY);
+
+        verifyNoMoreInteractions(lockManager, context, faceDao, adapterMock);
+        verifyNoInteractions(trainedModelDao);
+    }
+
+    @Test
     void initNewClassifier() {
         val adapterMock = mock(FaceClassifierAdapter.class);
         val faceList = mock(EmbeddingFaceList.class);
 
-        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(nextInt());
+        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(nextInt());//error
         when(faceDao.findAllFaceEmbeddingsByApiKey(MODEL_KEY)).thenReturn(faceList);
         when(context.getBean(FaceClassifierAdapter.class)).thenReturn(adapterMock);
 
