@@ -18,8 +18,8 @@ import {NgModule} from '@angular/core';
 import {TableComponent} from './table.component';
 import {MatTableModule} from '@angular/material';
 import {CommonModule} from '@angular/common';
-import {TruncateModule} from "../../ui/truncate-pipe/truncate.module";
-import {MatTooltipModule} from "@angular/material/tooltip";
+import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [TableComponent],

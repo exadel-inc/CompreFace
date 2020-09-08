@@ -59,6 +59,8 @@ public class FaceController {
     private final FaceMapper faceMapper;
     private final ImageExtensionValidator imageValidator;
 
+    private static final int FIRST_ITEM_ADDED_NUM = 1;
+
     @WriteEndpoint
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -73,7 +75,7 @@ public class FaceController {
                     "(set this parameter to value \"no\", if operating with a lot of images one after another). " +
                     "Allowed values: \"yes\", \"no\", \"force\". \"Force\" option will abort already running processes of " +
                     "classifier training.")
-            @RequestParam(value = "retrain", required = false, defaultValue = "force")
+            @RequestParam(value = "retrain", required = false)
             final String retrainOption,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false)
@@ -84,7 +86,10 @@ public class FaceController {
     ) throws IOException {
         imageValidator.validate(file);
         val face = scanService.scanAndSaveFace(file, faceName, detProbThreshold, apiKey);
-        getTrainingOption(retrainOption).run(apiKey, retrainService);
+        if (!(isBlank(retrainOption) &&
+                faceService.countFacesInModel(apiKey) == FIRST_ITEM_ADDED_NUM)) {
+            getTrainingOption(retrainOption).run(apiKey, retrainService);
+        }
 
         return faceMapper.toResponseDto(face);
     }

@@ -31,7 +31,6 @@ import {SnackBarService} from '../snackbar/snackbar.service';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
 import {MatDialogModule} from '@angular/material';
 
-
 describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;

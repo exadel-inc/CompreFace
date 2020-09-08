@@ -24,7 +24,7 @@ import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/
 import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
 import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
 import {selectCurrentOrganizationId, selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
-import {map} from "rxjs/operators";
+import {map} from 'rxjs/operators';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 @Injectable()

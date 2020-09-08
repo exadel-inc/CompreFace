@@ -27,7 +27,7 @@ import {FormsModule} from '@angular/forms';
 import {MatButtonModule} from '@angular/material';
 import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 import {MatIconModule} from '@angular/material/';
 
 @NgModule({

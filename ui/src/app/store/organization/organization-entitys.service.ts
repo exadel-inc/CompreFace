@@ -27,4 +27,3 @@ export class OrganizationEnService extends EntityCollectionServiceBase<Organizat
     super('Organization', serviceElementsFactory);
   }
 }
-

@@ -20,8 +20,8 @@ import {RouterModule} from '@angular/router';
 import {BreadcrumbsComponent} from './breadcrumbs.component';
 import {BreadcrumbsFacade} from './breadcrumbs.facade';
 import {MatCardModule} from '@angular/material';
-import {TruncateModule} from "../../ui/truncate-pipe/truncate.module";
-import {MatTooltipModule} from "@angular/material/tooltip";
+import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
+import {MatTooltipModule} from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [BreadcrumbsComponent],

@@ -1,4 +1,4 @@
-import {AppUser} from "./appUser";
+import {AppUser} from './appUser';
 
 export interface UserDeletion {
   deleterUserId: string;
