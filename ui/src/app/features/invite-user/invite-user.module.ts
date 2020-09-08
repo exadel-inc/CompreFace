@@ -22,7 +22,6 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {MatInputModule} from '@angular/material/input';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
-
 @NgModule({
   declarations: [InviteUserComponent],
   exports: [

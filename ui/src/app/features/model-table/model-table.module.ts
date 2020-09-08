@@ -20,9 +20,9 @@ import { MatIconModule, MatMenuModule, MatTableModule } from '@angular/material'
 import { MatButtonModule } from '@angular/material/button';
 
 import { ModelTableComponent } from './model-table.component';
-import {TruncateModule} from "../../ui/truncate-pipe/truncate.module";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {TranslateModule} from "@ngx-translate/core";
+import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ModelTableComponent],

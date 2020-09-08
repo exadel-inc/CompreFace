@@ -23,9 +23,9 @@ import {EntityTitleModule} from '../entity-title/entity-title.module';
 import {ApplicationHeaderFacade} from './application-header.facade';
 import {SpinnerModule} from '../spinner/spinner.module';
 import {MatCardModule} from '@angular/material';
-import {TruncateModule} from "../../ui/truncate-pipe/truncate.module";
-import {MatTooltipModule} from "@angular/material/tooltip";
-import {TranslateModule} from "@ngx-translate/core";
+import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ApplicationHeaderComponent],

@@ -25,7 +25,7 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 
 import { LoginFormComponent } from './login-form.component';
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [LoginFormComponent],

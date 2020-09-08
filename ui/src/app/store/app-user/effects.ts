@@ -20,7 +20,7 @@ import {of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
 import {AppUserService} from 'src/app/core/app-user/app-user.service';
 import {SnackBarService} from 'src/app/features/snackbar/snackbar.service';
-import {loadApplications} from "../application/action";
+import {loadApplications} from '../application/action';
 
 import {
   addAppUserEntityAction,
@@ -32,7 +32,6 @@ import {
   updateAppUserRoleFailAction,
   updateAppUserRoleSuccessAction,
 } from './actions';
-
 
 @Injectable()
 export class AppUserEffects {

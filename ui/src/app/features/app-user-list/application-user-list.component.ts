@@ -25,7 +25,7 @@ import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component'
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
-import {UserDeletion} from "../../data/userDeletion";
+import {UserDeletion} from '../../data/userDeletion';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({

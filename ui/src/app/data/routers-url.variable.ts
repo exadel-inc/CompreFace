@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 
-
 export enum ROUTERS_URL {
   LOGIN= '/login',
   HOME= '/',
