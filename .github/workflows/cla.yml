@@ -17,8 +17,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
-          path-to-signatures: 'signatures/version1/cla.json'
+          path-to-signatures: 'signatures/cla.json'
           path-to-cla-document: 'https://github.com/exadel-inc/face-recognition-service/blob/master/CLA.md'
           # branch should not be protected
           branch: 'master'
-          allowlist: user1,bot*
+          allowlist: Elijas,daffy-,sbvalijon,stashess,kemerava,mmisachenka,isobolev,endypanda,mjakowiec,dmitry-boiko,pospielov,
+          andreigaevsky,ivandodz,aabramovich-dev,DmitryRomaniuk,bot*
