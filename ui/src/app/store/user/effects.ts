@@ -35,7 +35,7 @@ import {of} from 'rxjs';
 import {SnackBarService} from '../../features/snackbar/snackbar.service';
 import {OrganizationEnService} from '../organization/organization-entitys.service';
 import {AppState} from '../index';
-import {AuthService} from "../../core/auth/auth.service";
+import {AuthService} from '../../core/auth/auth.service';
 
 @Injectable()
 export class UserListEffect {
@@ -72,7 +72,7 @@ export class UserListEffect {
       switchMap(({ organizationId, userId, newOwner, deleterUserId}) =>
         this.userService.delete(organizationId, userId, newOwner).pipe(
           switchMap(() => {
-            if(deleterUserId === userId){
+            if (deleterUserId === userId) {
                 this.authService.logOut();
                 return [];
             }
@@ -81,11 +81,10 @@ export class UserListEffect {
               loadApplications({ organizationId }),
               loadUsersEntityAction({ organizationId }),
               catchError(error => of(deleteUserFail({ error })))
-          ]}),
+          ]; }),
         )
       ),
     );
-
 
     @Effect({ dispatch: false })
     showError$ = this.actions.pipe(

@@ -18,7 +18,7 @@ import {NgModule} from '@angular/core';
 import {UserTableComponent} from './user-table.component';
 import {MatTableModule, MatFormFieldModule, MatSelectModule,  MatIconModule} from '@angular/material';
 import {CommonModule} from '@angular/common';
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [UserTableComponent],

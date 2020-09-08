@@ -29,7 +29,6 @@ import {UserInfoService} from '../../core/user-info/user-info.service';
 export class UserInfoEffect {
   constructor(private actions: Actions, private userInfoService: UserInfoService) { }
 
-
   @Effect()
   getUser$ = this.actions.pipe(
     ofType(getUserInfo),

@@ -22,7 +22,6 @@ import {
 } from './action';
 import { initialState, AuthReducer } from './reducers';
 
-
 describe('AuthReducer', () => {
 
   describe('LOGIN_SUCCESS action', () => {
@@ -55,7 +54,6 @@ describe('AuthReducer', () => {
       expect(state.isLoading).toBe(false);
     });
   });
-
 
   describe('SIGNUP_FAILURE action', () => {
     it('should set errorMessage to value, and loading false', () => {
