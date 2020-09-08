@@ -38,6 +38,7 @@ import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
+import com.exadel.frs.entity.ModelShareRequest;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
@@ -65,6 +66,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 class AppServiceTest {
 
@@ -73,9 +78,13 @@ class AppServiceTest {
     private static final long APPLICATION_ID = 1L;
     private static final long ORGANISATION_ID = 2L;
     private static final long USER_ID = 3L;
+    private static final long ADMIN_ID = 4L;
 
     @Mock
     private AppRepository appRepositoryMock;
+
+    @Mock
+    private ModelShareRequestRepository modelShareRequestRepositoryMock;
 
     @Mock
     private OrganizationService organizationServiceMock;
@@ -664,9 +673,74 @@ class AppServiceTest {
         verifyNoMoreInteractions(authManagerMock);
     }
 
+    @Test
+    void successGenerateUuidToRequestModelShare() {
+        val user = user(USER_ID);
+        val organization = organization();
+        organization.addUserOrganizationRole(user, OrganizationRole.OWNER);
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+
+        val authentication = Mockito.mock(Authentication.class);
+        val securityContext = Mockito.mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(authentication.getPrincipal()).thenReturn(User.builder().id(USER_ID).build());
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        val actual = appService.generateUuidToRequestModelShare(ORGANISATION_GUID, APPLICATION_GUID);
+
+        assertThat(actual).isNotNull();
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verify(modelShareRequestRepositoryMock).save(any(ModelShareRequest.class));
+        verifyNoMoreInteractions(authManagerMock, modelShareRequestRepositoryMock);
+    }
+
+    @Test
+    void successUpdateUserAppRole() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(OWNER.toString())
+                                                 .build();
+        val user = user(USER_ID);
+        val organization = organization();
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .userAppRoles(List.of(UserAppRole.builder()
+                                                      .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                                      .role(AppRole.ADMINISTRATOR)
+                                                      .build()
+                     ))
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+
+        appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(ADMIN_ID, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(ADMIN_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verify(appRepositoryMock).save(any(App.class));
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
     private UserOrganizationRole makeRole(final long userId, final OrganizationRole role) {
         return UserOrganizationRole.builder()
-                                   .id(UserOrganizationRoleId.builder().userId(userId).build())
+                                   .id(UserOrganizationRoleId.builder()
+                                                             .userId(userId)
+                                                             .build()
+                                   )
                                    .role(role)
                                    .user(user(userId))
                                    .build();
