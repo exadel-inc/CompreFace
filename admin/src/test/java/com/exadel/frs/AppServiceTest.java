@@ -685,10 +685,11 @@ class AppServiceTest {
                      .organization(organization)
                      .build();
 
-        Authentication authentication = Mockito.mock(Authentication.class);
-        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        val authentication = Mockito.mock(Authentication.class);
+        val securityContext = Mockito.mock(SecurityContext.class);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
+
         when(authentication.getPrincipal()).thenReturn(User.builder().id(USER_ID).build());
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
 
@@ -736,7 +737,10 @@ class AppServiceTest {
 
     private UserOrganizationRole makeRole(final long userId, final OrganizationRole role) {
         return UserOrganizationRole.builder()
-                                   .id(UserOrganizationRoleId.builder().userId(userId).build())
+                                   .id(UserOrganizationRoleId.builder()
+                                                             .userId(userId)
+                                                             .build()
+                                   )
                                    .role(role)
                                    .user(user(userId))
                                    .build();

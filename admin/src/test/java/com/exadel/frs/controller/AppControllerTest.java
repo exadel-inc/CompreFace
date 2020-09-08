@@ -356,7 +356,7 @@ class AppControllerTest {
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        doNothing().when(appService).deleteUserFromApp(eq(USER_GUID) ,eq(ORG_GUID), eq(APP_GUID), anyLong());
+        doNothing().when(appService).deleteUserFromApp(eq(USER_GUID), eq(ORG_GUID), eq(APP_GUID), anyLong());
 
         mockMvc.perform(request)
                .andExpect(status().isOk());
