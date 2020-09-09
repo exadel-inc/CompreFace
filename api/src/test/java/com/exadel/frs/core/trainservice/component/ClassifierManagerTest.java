@@ -113,7 +113,7 @@ public class ClassifierManagerTest {
         val adapterMock = mock(FaceClassifierAdapter.class);
         val faceList = mock(EmbeddingFaceList.class);
 
-        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(MIN_FACES_TO_TRAIN + nextInt(0, 100));
+        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(nextInt(MIN_FACES_TO_TRAIN , 100));
         when(faceDao.findAllFaceEmbeddingsByApiKey(MODEL_KEY)).thenReturn(faceList);
         when(context.getBean(FaceClassifierAdapter.class)).thenReturn(adapterMock);
 
