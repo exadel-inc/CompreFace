@@ -15,7 +15,7 @@
   -->
 
 <div class="model-list">
-  <h3>{{'models.title' | translate}}</h3>
+  <h3>{{'models.create_dialog.title' | translate}}</h3>
   <app-spinner *ngIf="isLoading$ | async">></app-spinner>
   <app-model-table
     *ngIf="(tableConfig$ | async)?.data.length > 0"
@@ -35,6 +35,6 @@
   </div>
 </div>
 <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
-  <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onCreateNewModel()">
+  <button *ngIf="userRole !== roleEnum.USER" mat-button color="primary" (click)="onCreateNewModel()">
     {{'common.capital.create' | translate}}</button>
 </div>

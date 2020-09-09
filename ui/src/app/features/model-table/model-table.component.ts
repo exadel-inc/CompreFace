@@ -18,6 +18,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { Model } from 'src/app/data/model';
 
 import { TableComponent } from '../table/table.component';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 @Component({
   selector: 'app-model-table',
@@ -30,4 +31,5 @@ export class ModelTableComponent extends TableComponent {
   @Output() copyApiKey = new EventEmitter<string>();
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
+  roleEnum = RoleEnum;
 }
