@@ -32,10 +32,11 @@ public class OrganizationRoleConverter implements AttributeConverter<Organizatio
 
     @Override
     public OrganizationRole convertToEntityAttribute(String code) {
-        return code == null ? null : Stream.of(OrganizationRole.values())
-                .filter(organizationRole -> organizationRole.getCode().equals(code))
-                .findFirst()
-                .orElseThrow(() -> new IncorrectOrganizationRoleException(code));
+        return code == null
+                ? null
+                : Stream.of(OrganizationRole.values())
+                        .filter(organizationRole -> organizationRole.getCode().equals(code))
+                        .findFirst()
+                        .orElseThrow(() -> new IncorrectOrganizationRoleException(code));
     }
-
 }

@@ -25,5 +25,4 @@ public class AccessDeniedException extends BasicException {
     public AccessDeniedException() {
         super(APP_ACCESS_DENIED, MESSAGE);
     }
-
 }

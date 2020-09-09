@@ -26,5 +26,4 @@ public class UserDoesNotExistException extends BasicException {
     public UserDoesNotExistException(final String userId) {
         super(USER_DOES_NOT_EXIST, format(MESSAGE, userId));
     }
-
 }

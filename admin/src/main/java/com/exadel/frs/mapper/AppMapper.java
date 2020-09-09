@@ -33,21 +33,21 @@ public interface AppMapper {
     @Mapping(source = "app", target = "role", qualifiedByName = "getRole")
     @Mapping(source = "app", target = "owner", qualifiedByName = "getOwner")
     AppResponseDto toResponseDto(App app, @Context Long userId);
+
     List<AppResponseDto> toResponseDto(List<App> apps, @Context Long userId);
 
     @Named("getOwner")
     default User getOwner(App app) {
         return app.getOwner()
-                .map(UserAppRole::getUser)
-                .orElse(null);
+                  .map(UserAppRole::getUser)
+                  .orElse(null);
     }
 
     @Named("getRole")
     default String getRole(App app, @Context Long userId) {
         return app.getUserAppRole(userId)
-                .map(UserAppRole::getRole)
-                .map(Enum::name)
-                .orElse(null);
+                  .map(UserAppRole::getRole)
+                  .map(Enum::name)
+                  .orElse(null);
     }
-
 }

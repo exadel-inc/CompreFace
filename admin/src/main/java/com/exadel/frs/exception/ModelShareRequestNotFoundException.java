@@ -21,6 +21,7 @@ import static java.lang.String.format;
 import java.util.UUID;
 
 public class ModelShareRequestNotFoundException extends BasicException {
+
     public static final String MESSAGE = "Model share request %s not found. It might be expired.";
 
     public ModelShareRequestNotFoundException(final UUID requestId) {

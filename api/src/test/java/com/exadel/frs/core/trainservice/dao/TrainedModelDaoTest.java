@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.dao;
 
+import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,7 +25,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static smile.math.MathEx.randomLong;
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.entity.TrainedModel;
 import com.exadel.frs.core.trainservice.repository.TrainedModelRepository;
@@ -79,7 +79,7 @@ public class TrainedModelDaoTest {
     void updateOldModel() {
         val classifier = mock(Classifier.class);
         val calculator = "1.0";
-        val id = randomLong();
+        val id = nextLong();
         val model = TrainedModel.builder()
                                 .id(id)
                                 .build();

@@ -26,5 +26,4 @@ public class EmptyRequiredFieldException extends BasicException {
     public EmptyRequiredFieldException(final String fieldName) {
         super(EMPTY_REQUIRED_FIELD, format(MESSAGE, fieldName));
     }
-
 }

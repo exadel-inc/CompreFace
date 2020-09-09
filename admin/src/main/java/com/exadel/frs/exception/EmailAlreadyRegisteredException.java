@@ -25,5 +25,4 @@ public class EmailAlreadyRegisteredException extends BasicException {
     public EmailAlreadyRegisteredException() {
         super(EMAIL_ALREADY_REGISTERED, MESSAGE);
     }
-
 }

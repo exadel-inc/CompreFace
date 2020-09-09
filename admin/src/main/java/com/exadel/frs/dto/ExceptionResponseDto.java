@@ -25,5 +25,4 @@ public class ExceptionResponseDto {
 
     private String message;
     private Integer code;
-
 }

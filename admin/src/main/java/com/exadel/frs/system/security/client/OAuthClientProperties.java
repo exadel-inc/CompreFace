@@ -53,6 +53,5 @@ public class OAuthClientProperties {
         private String clientSecret;
         private Integer refreshTokenValidity;
         private List<String> resourceIds;
-
     }
 }

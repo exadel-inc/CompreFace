@@ -22,4 +22,4 @@ databaseChangeLog:
   - include:
       file: db/changelog/db.changelog-0.1.1.yaml
   - include:
-     file: db/changelog/db.changelog-0.1.2.yaml
+      file: db/changelog/db.changelog-0.1.2.yaml

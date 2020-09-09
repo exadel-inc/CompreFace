@@ -194,7 +194,9 @@ class AppServiceTest {
 
     @Test
     void successCreateApp() {
-        AppCreateDto appCreateDto = AppCreateDto.builder().name("appName").build();
+        val appCreateDto = AppCreateDto.builder()
+                                       .name("appName")
+                                       .build();
         val user = user(USER_ID);
 
         val organization = organization();
@@ -217,7 +219,9 @@ class AppServiceTest {
 
     @Test
     void failCreateOrganizationNameIsNotUnique() {
-        val appCreateDto = AppCreateDto.builder().name("appName").build();
+        val appCreateDto = AppCreateDto.builder()
+                                       .name("appName")
+                                       .build();
 
         val organization = organization();
 
@@ -231,7 +235,9 @@ class AppServiceTest {
 
     @Test
     void successUpdateApp() {
-        val appUpdateDto = AppUpdateDto.builder().name("appName").build();
+        val appUpdateDto = AppUpdateDto.builder()
+                                       .name("appName")
+                                       .build();
         val organization = organization();
 
         val app = App.builder()
@@ -285,7 +291,9 @@ class AppServiceTest {
 
     @Test
     void failUpdateAppNameIsNotUnique() {
-        val appUpdateDto = AppUpdateDto.builder().name("new_name").build();
+        val appUpdateDto = AppUpdateDto.builder()
+                                       .name("new_name")
+                                       .build();
         val organization = organization();
 
         val app = App.builder()
@@ -553,10 +561,22 @@ class AppServiceTest {
         val oldOwner = user(1L);
         val newOwner = user(2L);
 
-        when(app1.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
-        when(app2.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
-        when(app3.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(AppRole.ADMINISTRATOR).build()));
-        when(app4.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(AppRole.USER).build()));
+        when(app1.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
+                                                                        .role(OWNER)
+                                                                        .build())
+        );
+        when(app2.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
+                                                                        .role(OWNER)
+                                                                        .build())
+        );
+        when(app3.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
+                                                                        .role(AppRole.ADMINISTRATOR)
+                                                                        .build())
+        );
+        when(app4.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
+                                                                        .role(AppRole.USER)
+                                                                        .build())
+        );
 
         when(organizationServiceMock.getDefaultOrg()).thenReturn(defaultOrg);
         when(organizationServiceMock.getOrganization(defaultOrg.getGuid())).thenReturn(defaultOrg);
@@ -690,7 +710,10 @@ class AppServiceTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        when(authentication.getPrincipal()).thenReturn(User.builder().id(USER_ID).build());
+        when(authentication.getPrincipal()).thenReturn(User.builder()
+                                                           .id(USER_ID)
+                                                           .build()
+        );
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
 
         val actual = appService.generateUuidToRequestModelShare(ORGANISATION_GUID, APPLICATION_GUID);

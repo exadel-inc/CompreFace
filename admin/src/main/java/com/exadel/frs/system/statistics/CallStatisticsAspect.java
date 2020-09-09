@@ -27,12 +27,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @RequiredArgsConstructor
 public class CallStatisticsAspect {
+
     private final CallStatisticsRepository repository;
 
     @AfterReturning(pointcut = "@annotation(CallStatistics)", returning = "result")
-    public void afterReturningSingle(JoinPoint joinPoint, IStatistics result) {
-        repository.updateCallStatistics(result.getObjectType().toString(),
+    public void afterReturningSingle(final JoinPoint joinPoint, final IStatistics result) {
+        repository.updateCallStatistics(
+                result.getObjectType().toString(),
                 UUID.randomUUID().toString(),
-                result.getGuid());
+                result.getGuid()
+        );
     }
 }

@@ -19,18 +19,17 @@ package com.exadel.frs.core.trainservice.filter;
 import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toMap;
+import static java.util.Collections.list;
+import static java.util.function.Function.identity;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
 import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -76,13 +75,12 @@ public class SecurityValidationFilter implements Filter {
         val httpRequest = (HttpServletRequest) servletRequest;
         val httpResponse = (HttpServletResponse) servletResponse;
 
-        Map<String, List<String>> headersMap = Collections
-                .list(httpRequest.getHeaderNames())
-                .stream()
-                .collect(toMap(
-                        Function.identity(),
-                        h -> Collections.list(httpRequest.getHeaders(h))
-                ));
+        val headersMap =
+                list(httpRequest.getHeaderNames()).stream()
+                                                  .collect(Collectors.<String, String, List<String>>toMap(
+                                                          identity(),
+                                                          header -> list(httpRequest.getHeaders(header))
+                                                  ));
 
         var apiKey = headersMap.getOrDefault(X_FRS_API_KEY_HEADER, emptyList());
 

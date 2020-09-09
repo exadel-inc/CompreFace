@@ -33,9 +33,8 @@ public class ModelAccessTypeConverter implements AttributeConverter<AppModelAcce
     @Override
     public AppModelAccess convertToEntityAttribute(String code) {
         return code == null ? null : Stream.of(AppModelAccess.values())
-                .filter(accessType -> accessType.getCode().equals(code))
-                .findFirst()
-                .orElseThrow(() -> new IncorrectAccessTypeException(code));
+                                           .filter(accessType -> accessType.getCode().equals(code))
+                                           .findFirst()
+                                           .orElseThrow(() -> new IncorrectAccessTypeException(code));
     }
-
 }

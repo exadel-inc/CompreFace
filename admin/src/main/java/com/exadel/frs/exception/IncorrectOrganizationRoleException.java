@@ -26,5 +26,4 @@ public class IncorrectOrganizationRoleException extends BasicException {
     public IncorrectOrganizationRoleException(final String organizationRole) {
         super(INCORRECT_ORGANIZATION_ROLE, format(ORGANIZATION_ROLE_NOT_EXISTS_MESSAGE, organizationRole));
     }
-
 }

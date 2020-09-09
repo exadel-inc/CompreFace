@@ -26,5 +26,4 @@ public class IncorrectAppRoleException extends BasicException {
     public IncorrectAppRoleException(final String appRole) {
         super(INCORRECT_APP_ROLE, format(APP_ROLE_NOT_EXISTS_MESSAGE, appRole));
     }
-
 }

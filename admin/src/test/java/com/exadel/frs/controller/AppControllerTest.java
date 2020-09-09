@@ -63,7 +63,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
@@ -71,19 +70,14 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(value = AppController.class,
         excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
-                classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class})
+                classes = {
+                        JwtAuthenticationFilter.class,
+                        WebSecurityConfig.class,
+                        AuthServerConfig.class,
+                        ResourceServerConfig.class
+                })
 )
-@MockBeans({
-        @MockBean(AppMapper.class),
-        @MockBean(UserAppRoleMapper.class)
-})
 class AppControllerTest {
-
-    private static final long APP_ID = 1L;
-    private static final String APP_GUID = "app-guid";
-    private static final String ORG_GUID = "org-guid";
-    private static final String USER_GUID = "user-id";
-    private static final String APP_NAME = "test-app";
 
     @MockBean
     private AppService appService;
@@ -91,13 +85,19 @@ class AppControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-    @Autowired
+    @MockBean
     private AppMapper appMapper;
 
-    @Autowired
+    @MockBean
     private UserAppRoleMapper userAppRoleMapper;
 
     private ObjectMapper mapper = new ObjectMapper();
+
+    private static final long APP_ID = 1L;
+    private static final String APP_GUID = "app-guid";
+    private static final String ORG_GUID = "org-guid";
+    private static final String USER_GUID = "user-id";
+    private static final String APP_NAME = "test-app";
 
     @Test
     public void shouldReturnMessageAndCodeWhenAppNotFoundExceptionThrown() throws Exception {
@@ -129,7 +129,12 @@ class AppControllerTest {
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(App.builder().id(APP_ID).build()));
+                .content(mapper.writeValueAsString(
+                        App.builder()
+                           .id(APP_ID)
+                           .build()
+                        )
+                );
 
         val expectedContent = "{\"message\":\"Application name cannot be empty\",\"code\":26}";
 
@@ -162,7 +167,9 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnNewApp() throws Exception {
-        val appCreateDto = AppCreateDto.builder().name(APP_NAME).build();
+        val appCreateDto = AppCreateDto.builder()
+                                       .name(APP_NAME)
+                                       .build();
 
         val request = post("/org/" + ORG_GUID + "/app")
                 .with(csrf())
@@ -187,7 +194,9 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnUpdatedApp() throws Exception {
-        val appCreateDto = AppCreateDto.builder().name(APP_NAME).build();
+        val appCreateDto = AppCreateDto.builder()
+                                       .name(APP_NAME)
+                                       .build();
 
         val request = put("/org/" + ORG_GUID + "/app/" + APP_GUID)
                 .with(csrf())
@@ -269,7 +278,10 @@ class AppControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writeValueAsString("Search string"));
 
-        val appUsers = List.of(UserAppRole.builder().role(OWNER).build());
+        val appUsers = List.of(UserAppRole.builder()
+                                          .role(OWNER)
+                                          .build()
+        );
         val userRoleResponseDto = new UserRoleResponseDto();
         val userRoleResponseDtoList = List.of(userRoleResponseDto);
 
@@ -283,7 +295,10 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnInvitedUser() throws Exception {
-        val appCreateDto = UserInviteDto.builder().role(USER.name()).userEmail("email@test.com").build();
+        val appCreateDto = UserInviteDto.builder()
+                                        .role(USER.name())
+                                        .userEmail("email@test.com")
+                                        .build();
 
         val request = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/invite")
                 .with(csrf())
@@ -308,7 +323,10 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnUpdatedUserAppRole() throws Exception {
-        val userRoleUpdateDto = UserRoleUpdateDto.builder().role(USER.name()).userId(USER_GUID).build();
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .role(USER.name())
+                                                 .userId(USER_GUID)
+                                                 .build();
 
         val request = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/role")
                 .with(csrf())
@@ -340,7 +358,9 @@ class AppControllerTest {
 
         val uuid = UUID.randomUUID();
 
-        val expectedResult = ModelShareResponseDto.builder().modelRequestUuid(uuid).build();
+        val expectedResult = ModelShareResponseDto.builder()
+                                                  .modelRequestUuid(uuid)
+                                                  .build();
 
         when(appService.generateUuidToRequestModelShare(eq(ORG_GUID), eq(APP_GUID))).thenReturn(uuid);
 

@@ -92,13 +92,6 @@ public class FaceDao {
         return facesRepository.countByApiKey(modelApiKey);
     }
 
-    public void updateFacesModelKey(final String modelApiKey, final String newModelApiKey) {
-        val faces = facesRepository.findByApiKey(modelApiKey);
-        faces.forEach(face -> face.setApiKey(newModelApiKey));
-
-        facesRepository.saveAll(faces);
-    }
-
     public Face addNewFace(
             final Embedding embeddings,
             final MultipartFile file,

@@ -41,7 +41,6 @@ public enum ExceptionCode {
 
     MISSING_REQUEST_PARAMETER(33, BAD_REQUEST),
 
-
     UNDEFINED(0, BAD_REQUEST);
 
     private final Integer code;

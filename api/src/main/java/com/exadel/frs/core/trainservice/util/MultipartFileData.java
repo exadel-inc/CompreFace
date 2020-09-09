@@ -24,6 +24,7 @@ import java.io.InputStream;
 import org.springframework.web.multipart.MultipartFile;
 
 public class MultipartFileData implements MultipartFile {
+
     private final byte[] content;
     private final String name;
     private final String contentType;

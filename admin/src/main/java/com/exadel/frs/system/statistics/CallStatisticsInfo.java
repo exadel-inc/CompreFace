@@ -32,6 +32,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(of = {"guid"})
 public class CallStatisticsInfo {
+
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "call_statistics_info_seq")
     @SequenceGenerator(name = "call_statistics_info_seq", sequenceName = "call_statistics_info_seq", allocationSize = 1)

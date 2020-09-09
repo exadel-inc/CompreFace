@@ -29,20 +29,19 @@ public class MigrationStatusStorage {
 
     private AtomicBoolean isMigrating = new AtomicBoolean(false);
 
-    public void startMigration(){
-        if (isMigrating.getAndSet(true)){
+    public void startMigration() {
+        if (isMigrating.getAndSet(true)) {
             throw new MigrationAlreadyExecutingException();
         }
         log.warn("Migration started");
     }
 
-    public void finishMigration(){
+    public void finishMigration() {
         isMigrating.getAndSet(false);
         log.warn("Migration finished");
     }
 
-    public boolean isMigrating(){
+    public boolean isMigrating() {
         return isMigrating.get();
     }
-
 }

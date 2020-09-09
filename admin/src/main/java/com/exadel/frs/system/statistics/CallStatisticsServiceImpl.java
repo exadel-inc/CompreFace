@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CallStatisticsServiceImpl implements CallStatisticsService {
+
     private final CallStatisticsRepository repository;
 
     @Override

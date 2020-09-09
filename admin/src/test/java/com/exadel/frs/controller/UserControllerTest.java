@@ -32,7 +32,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.dto.ui.UserAutocompleteDto;
@@ -59,10 +58,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -72,33 +69,27 @@ import org.springframework.test.web.servlet.MockMvc;
                 classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
         )
 )
-@MockBeans({
-        @MockBean(UserMapper.class),
-        @MockBean(UserService.class),
-        @MockBean(AppService.class),
-        @MockBean(OrganizationService.class)
-})
 public class UserControllerTest {
 
     private static final String USER_GUID = "user-guid";
+
+    @MockBean
+    private UserMapper userMapper;
+
+    @MockBean
+    private UserService userService;
+
+    @MockBean
+    private AppService appService;
+
+    @MockBean
+    private OrganizationService organizationService;
 
     @Autowired
     private ObjectMapper mapper;
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private OrganizationService organizationService;
-
-    @Autowired
-    private AppService appService;
 
     @Test
     void shouldReturnErrorMessageWhenUpdateFirstNameIsEmpty() throws Exception {
@@ -258,7 +249,6 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .param("token", "token-test");
 
-
         mockMvc.perform(createRequest)
                .andExpect(status().isFound())
                .andExpect(redirectedUrlPattern("https:/**"));
@@ -293,7 +283,6 @@ public class UserControllerTest {
         when(userService.createUser(any())).thenReturn(User.builder()
                                                            .enabled(false)
                                                            .build());
-
 
         mockMvc.perform(createRequest)
                .andExpect(status().isOk());

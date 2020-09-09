@@ -199,7 +199,7 @@ public class OrganizationControllerTest {
                .andExpect(status().isOk())
                .andExpect(content().string(mapper.writeValueAsString(responseDto)));
 
-        verify(organizationService).updateUserOrgRole(any(UserRoleUpdateDto.class), eq(ORG_GUID),anyLong());
+        verify(organizationService).updateUserOrgRole(any(UserRoleUpdateDto.class), eq(ORG_GUID), anyLong());
         verify(orgRoleMapper).toUserRoleResponseDto(any(UserOrganizationRole.class));
         verifyNoMoreInteractions(organizationService, orgRoleMapper);
         verifyNoInteractions(orgMapper);

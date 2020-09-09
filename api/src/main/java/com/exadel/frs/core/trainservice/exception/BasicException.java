@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class BasicException extends RuntimeException {
+
     private final ExceptionCode exceptionCode;
     private final String message;
 

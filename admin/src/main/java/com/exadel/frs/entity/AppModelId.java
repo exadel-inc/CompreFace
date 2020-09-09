@@ -29,7 +29,5 @@ import lombok.NoArgsConstructor;
 public class AppModelId implements Serializable {
 
     private Long appId;
-
     private Long modelId;
-
 }
