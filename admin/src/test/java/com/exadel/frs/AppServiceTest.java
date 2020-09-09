@@ -42,6 +42,7 @@ import com.exadel.frs.entity.ModelShareRequest;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.entity.UserAppRoleId;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.entity.UserOrganizationRoleId;
 import com.exadel.frs.enums.AppRole;
@@ -52,6 +53,7 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
@@ -274,8 +276,7 @@ class AppServiceTest {
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
         when(appRepositoryMock.save(any())).thenReturn(app);
 
-        val actual = appService
-                .updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
+        val actual = appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
 
         assertThat(actual.getRole()).isEqualTo(Enum.valueOf(AppRole.class, userRoleUpdateDto.getRole()));
 

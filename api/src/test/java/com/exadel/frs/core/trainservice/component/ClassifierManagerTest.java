@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.component;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.MIN_FACES_TO_TRAIN;
 import static org.apache.commons.lang3.RandomUtils.nextInt;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -89,8 +90,8 @@ public class ClassifierManagerTest {
     @Test
     void initNewClassifierWithFaces() {
         val adapterMock = mock(FaceClassifierAdapter.class);
-        List<String> faces = List.of();
-        EmbeddingFaceList embeddingFaceList = new EmbeddingFaceList();
+        val faces = List.<String>of();
+        val embeddingFaceList = new EmbeddingFaceList();
 
         when(context.getBean(FaceClassifierAdapter.class)).thenReturn(adapterMock);
         when(faceDao.findAllFacesIn(faces)).thenReturn(embeddingFaceList);
@@ -112,7 +113,7 @@ public class ClassifierManagerTest {
         val adapterMock = mock(FaceClassifierAdapter.class);
         val faceList = mock(EmbeddingFaceList.class);
 
-        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(nextInt());//error
+        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(MIN_FACES_TO_TRAIN + nextInt(0, 100));
         when(faceDao.findAllFaceEmbeddingsByApiKey(MODEL_KEY)).thenReturn(faceList);
         when(context.getBean(FaceClassifierAdapter.class)).thenReturn(adapterMock);
 

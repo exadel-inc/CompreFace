@@ -16,13 +16,11 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -37,16 +35,11 @@ public class FaceService {
         return faceDao.findAllFacesByApiKey(apiKey);
     }
 
-    public List<Face> deleteFaceByName(
-            final String faceName,
-            final String apiKey
-    ) {
+    public List<Face> deleteFaceByName(final String faceName, final String apiKey) {
         return faceDao.deleteFaceByName(faceName, apiKey);
     }
 
-    public Face deleteFaceById(
-            final String id
-    ) {
+    public Face deleteFaceById(final String id) {
         return faceDao.deleteFaceById(id);
     }
 
