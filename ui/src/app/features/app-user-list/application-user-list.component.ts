@@ -27,6 +27,7 @@ import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
 import {UserDeletion} from "../../data/userDeletion";
 import { TranslateService } from '@ngx-translate/core';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 @Component({
   selector: 'app-application-user-list',
@@ -45,6 +46,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   search = '';
   availableRoles: string[];
   currentUserId$: Observable<string>;
+  roleEnum = RoleEnum;
   private availableRolesSubscription: Subscription;
 
   constructor(

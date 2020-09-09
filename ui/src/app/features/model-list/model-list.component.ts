@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Input } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
@@ -25,6 +25,7 @@ import { ITableConfig } from 'src/app/features/table/table.component';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 @Component({
   selector: 'app-model-list',
@@ -37,6 +38,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   userRole$: Observable<string>;
   errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
+  roleEnum = RoleEnum;
   columns = [
     { title: 'name', property: 'name' },
     { title: 'apiKey', property: 'apiKey' },
