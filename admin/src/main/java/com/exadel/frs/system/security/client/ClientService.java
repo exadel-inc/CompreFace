@@ -32,7 +32,9 @@ public class ClientService implements ClientDetailsService {
     @Override
     public ClientDetails loadClientByClientId(String clientId) {
         return clientRepository.findByClientId(clientId)
-                .orElseThrow(() -> new EntityNotFoundException(String.format("Client with id %s not found", clientId)));
+                               .orElseThrow(() -> new EntityNotFoundException(
+                                       String.format("Client with id %s not found", clientId))
+                               );
     }
 
     public List<? extends ClientDetails> saveAll(List<Client> clientsDetail) {

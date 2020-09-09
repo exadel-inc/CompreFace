@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/statistics/calls")
 @RequiredArgsConstructor
 public class CallStatisticsController {
+
     private final CallStatisticsService service;
 
     @GetMapping

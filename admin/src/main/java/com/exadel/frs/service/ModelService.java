@@ -56,10 +56,6 @@ public class ModelService {
                               .orElseThrow(() -> new ModelNotFoundException(modelGuid));
     }
 
-    private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {
-        return organization.getUserOrganizationRoleOrThrow(userId).getRole();
-    }
-
     private void verifyNameIsUnique(final String name, final Long appId) {
         if (modelRepository.existsByNameAndAppId(name, appId)) {
             throw new NameIsNotUniqueException(name);

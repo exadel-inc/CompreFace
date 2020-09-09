@@ -28,5 +28,6 @@ public interface FaceMapper {
     @Mapping(source = "id", target = "image_id")
     @Mapping(source = "faceName", target = "subject")
     FaceResponseDto toResponseDto(Face face);
+
     List<FaceResponseDto> toResponseDto(List<Face> faces);
 }

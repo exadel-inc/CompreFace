@@ -323,7 +323,8 @@ class OrganizationServiceTest {
             return UserOrganizationRole.builder()
                                        .id(UserOrganizationRoleId.builder()
                                                                  .userId(orgOwnerId)
-                                                                 .build())
+                                                                 .build()
+                                       )
                                        .role(owner)
                                        .build();
         }

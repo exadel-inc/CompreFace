@@ -29,6 +29,6 @@ public interface UserAppRoleMapper {
     @Mapping(source = "user.firstName", target = "firstName")
     @Mapping(source = "user.lastName", target = "lastName")
     UserRoleResponseDto toUserRoleResponseDto(UserAppRole userAppRole);
-    List<UserRoleResponseDto> toUserRoleResponseDto(List<UserAppRole> userAppRoles);
 
+    List<UserRoleResponseDto> toUserRoleResponseDto(List<UserAppRole> userAppRoles);
 }

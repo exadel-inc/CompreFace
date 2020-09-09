@@ -166,7 +166,7 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-            modelService.deleteModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
+        modelService.deleteModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @PostMapping("/model/{guid}/share")

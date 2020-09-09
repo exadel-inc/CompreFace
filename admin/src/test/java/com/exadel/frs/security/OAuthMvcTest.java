@@ -38,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.web.FilterChainProxy;
@@ -56,15 +55,13 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @SpringBootTest(classes = FrsApplication.class)
-@MockBeans({
-        @MockBean(EmailSender.class),
-        @MockBean(OrganizationService.class)
-})
 class OAuthMvcTest {
 
-    private String registrationToken = UUID.randomUUID().toString();
+    @MockBean
+    private EmailSender emailSender;
 
-    private String userEmail;
+    @MockBean
+    private OrganizationService organizationService;
 
     @Autowired
     private WebApplicationContext wac;
@@ -82,6 +79,8 @@ class OAuthMvcTest {
     private UserService userService;
 
     private MockMvc mockMvc;
+    private String registrationToken = UUID.randomUUID().toString();
+    private String userEmail;
 
     @BeforeEach
     void setup() throws Exception {

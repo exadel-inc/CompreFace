@@ -3,73 +3,73 @@ databaseChangeLog:
       id: changelog-0.0.6.1
       author: Vladyslav Yavorskyi
       changes:
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: organization
             columnName: name
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: organization
             columnName: guid
 
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: app
             columnName: name
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: app
             columnName: guid
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: app
             columnName: organization_id
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: app
             columnName: api_key
 
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: model
             columnName: name
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: model
             columnName: guid
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: model
             columnName: app_id
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: model
             columnName: api_key
 
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user_app_role
             columnName: role
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user_organization_role
             columnName: role
 
-      - dropColumn:
+        - dropColumn:
             tableName: user
             columnName: username
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: email
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: password
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: first_name
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: last_name
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: guid
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: account_non_expired
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: account_non_locked
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: credentials_non_expired
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user
             columnName: enabled

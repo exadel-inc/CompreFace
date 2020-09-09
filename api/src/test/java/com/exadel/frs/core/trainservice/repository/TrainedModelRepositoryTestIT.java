@@ -16,11 +16,8 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static smile.math.MathEx.randomLong;
+import static org.apache.commons.lang3.RandomUtils.nextLong;
+import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
 import com.exadel.frs.core.trainservice.entity.TrainedModel;
 import java.util.List;
@@ -45,31 +42,28 @@ public class TrainedModelRepositoryTestIT {
     }
 
     @Test
-    public void classifierSave() {
-        assertDoesNotThrow(this::saveTrainedModel);
-    }
-
-    @Test
     public void classifierGet() {
         val id = saveTrainedModel();
 
-        assertTrue(trainedModelRepository.findById(id).isPresent());
+        assertThat(trainedModelRepository.findById(id)).isPresent();
     }
 
     @Test
     public void classifierGetNotFound() {
         val id = saveTrainedModel();
 
-        assertFalse(trainedModelRepository.findById(id + 1).isPresent());
+        assertThat(trainedModelRepository.findById(id + 1)).isNotPresent();
     }
 
     @Test
     public void delete() {
         var id = saveTrainedModel();
 
-        assertEquals(1L, trainedModelRepository.count());
-        assertDoesNotThrow(() -> trainedModelRepository.deleteById(id));
-        assertEquals(0L, trainedModelRepository.count());
+        assertThat(trainedModelRepository.count()).isEqualTo(1L);
+
+        trainedModelRepository.deleteById(id);
+
+        assertThat(trainedModelRepository.count()).isEqualTo(0L);
     }
 
     private Long saveTrainedModel() {
@@ -89,7 +83,7 @@ public class TrainedModelRepositoryTestIT {
 
         val model = TrainedModel.builder()
                                 .classifier(classifier)
-                                .id(randomLong())
+                                .id(nextLong())
                                 .build();
 
         return trainedModelRepository.save(model).getId();

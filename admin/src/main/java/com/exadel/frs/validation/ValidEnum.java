@@ -27,8 +27,12 @@ import javax.validation.Payload;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = EnumValidator.class)
 public @interface ValidEnum {
+
     String message() default "Given String is not valid enum!";
+
     Class<?>[] groups() default {};
+
     Class<? extends Payload>[] payload() default {};
+
     Class<? extends Enum<?>> targetClassType();
 }

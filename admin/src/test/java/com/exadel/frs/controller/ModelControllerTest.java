@@ -21,12 +21,10 @@ import static com.exadel.frs.utils.TestUtils.buildUser;
 import static java.util.UUID.randomUUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.anyListOf;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -53,11 +51,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -68,25 +64,24 @@ import org.springframework.test.web.servlet.MockMvc;
                 classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
         )
 )
-@MockBeans({@MockBean(MlModelMapper.class)})
 class ModelControllerTest {
+
+    @MockBean
+    private ModelService modelService;
+
+    @MockBean
+    private MlModelMapper modelMapper;
+
+    @Autowired
+    private ObjectMapper mapper;
+
+    @Autowired
+    private MockMvc mockMvc;
 
     private static final String ORG_GUID = "org-guid";
     private static final String APP_GUID = "app-guid";
     private static final String MODEL_GUID = "model-guid";
     private static final String MODEL_NAME = "model-name";
-
-    @Autowired
-    private ObjectMapper mapper;
-
-    @MockBean
-    private ModelService modelService;
-
-    @Autowired
-    private MockMvc mockMvc;
-
-    @Autowired
-    private MlModelMapper modelMapper;
 
     @Test
     void shouldReturnMessageAndCodeWhenModelNameIsMissingOnUpdate() throws Exception {
@@ -156,7 +151,9 @@ class ModelControllerTest {
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
 
-        val model = Model.builder().name(MODEL_NAME).build();
+        val model = Model.builder()
+                         .name(MODEL_NAME)
+                         .build();
 
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
@@ -176,7 +173,9 @@ class ModelControllerTest {
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
 
-        val model = Model.builder().name(MODEL_NAME).build();
+        val model = Model.builder()
+                         .name(MODEL_NAME)
+                         .build();
 
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
@@ -200,7 +199,9 @@ class ModelControllerTest {
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(createDto));
 
-        val model = Model.builder().name(MODEL_NAME).build();
+        val model = Model.builder()
+                         .name(MODEL_NAME)
+                         .build();
 
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
@@ -224,7 +225,9 @@ class ModelControllerTest {
                 .contentType(APPLICATION_JSON)
                 .content(mapper.writeValueAsString(updateDto));
 
-        val model = Model.builder().name(MODEL_NAME).build();
+        val model = Model.builder()
+                         .name(MODEL_NAME)
+                         .build();
 
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
@@ -249,7 +252,9 @@ class ModelControllerTest {
 
         val newApiKey = randomUUID().toString();
 
-        val model = Model.builder().apiKey(newApiKey).build();
+        val model = Model.builder()
+                         .apiKey(newApiKey)
+                         .build();
 
         val responseDto = new ModelResponseDto();
         responseDto.setApiKey(newApiKey);

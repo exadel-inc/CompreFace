@@ -32,10 +32,11 @@ public class AppRoleConverter implements AttributeConverter<AppRole, String> {
 
     @Override
     public AppRole convertToEntityAttribute(String code) {
-        return code == null ? null : Stream.of(AppRole.values())
-                .filter(appRole -> appRole.getCode().equals(code))
-                .findFirst()
-                .orElseThrow(() -> new IncorrectAppRoleException(code));
+        return code == null
+                ? null
+                : Stream.of(AppRole.values())
+                        .filter(appRole -> appRole.getCode().equals(code))
+                        .findFirst()
+                        .orElseThrow(() -> new IncorrectAppRoleException(code));
     }
-
 }

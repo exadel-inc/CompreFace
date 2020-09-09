@@ -30,7 +30,7 @@ databaseChangeLog:
             columnNames: id
             constraintName: face_id_uindex
             tableName: face
-            
+
         - addForeignKeyConstraint:
             baseColumnNames: api_key
             baseTableName: face

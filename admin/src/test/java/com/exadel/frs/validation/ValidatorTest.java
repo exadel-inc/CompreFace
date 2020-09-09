@@ -16,10 +16,10 @@
 
 package com.exadel.frs.validation;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import javax.validation.Validator;
 import lombok.val;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,7 +34,7 @@ public class ValidatorTest {
     public void testUserRoleUpdateDtoEmpty() {
         val actual = validator.validate(UserRoleUpdateDto.builder().build());
 
-        Assertions.assertFalse(actual.isEmpty());
+        assertThat(actual).isNotEmpty();
     }
 
     @Test
@@ -44,7 +44,7 @@ public class ValidatorTest {
                                                          .userId("test")
                                                          .build());
 
-        Assertions.assertTrue(actual.isEmpty());
+        assertThat(actual).isEmpty();
     }
 
     @Test
@@ -54,6 +54,6 @@ public class ValidatorTest {
                                                          .userId("test")
                                                          .build());
 
-        Assertions.assertFalse(actual.isEmpty());
+        assertThat(actual).isNotEmpty();
     }
 }

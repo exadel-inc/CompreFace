@@ -23,6 +23,6 @@ import lombok.Value;
 public class Face {
 
     @JsonProperty("face_name")
-    String faceName;
-    float similarity;
+    private String faceName;
+    private float similarity;
 }

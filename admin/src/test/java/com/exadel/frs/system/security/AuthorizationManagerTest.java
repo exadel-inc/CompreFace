@@ -430,7 +430,10 @@ class AuthorizationManagerTest {
                                    .id(id)
                                    .role(role)
                                    .organization(organization)
-                                   .user(User.builder().id(userId).build())
+                                   .user(User.builder()
+                                             .id(userId)
+                                             .build()
+                                   )
                                    .build();
     }
 
@@ -441,7 +444,10 @@ class AuthorizationManagerTest {
                           .id(id)
                           .app(application)
                           .role(role)
-                          .user(User.builder().id(userId).build())
+                          .user(User.builder()
+                                    .id(userId)
+                                    .build()
+                          )
                           .build();
     }
 }

@@ -69,10 +69,8 @@ public class Model {
     }
 
     public Optional<AppModel> getAppModel(String appGuid) {
-        return appModelAccess
-                .stream()
-                .filter(appModel -> appModel.getApp().getGuid().equals(appGuid))
-                .findFirst();
+        return appModelAccess.stream()
+                             .filter(appModel -> appModel.getApp().getGuid().equals(appGuid))
+                             .findFirst();
     }
-
 }

@@ -34,18 +34,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-@MockBeans({
-        @MockBean(SpringLiquibase.class),
-        @MockBean(EmailSender.class),
-        @MockBean(OrganizationService.class)
-})
 @TestPropertySource(properties = "spring.mail.enable=true")
 class UserServiceTestIT {
 
@@ -55,6 +49,15 @@ class UserServiceTestIT {
     private static final String USER_EMAIL_2 = "user_2@email.com";
     private static final String USER_GUID = "testUserGuid";
     private static final String USER_EMAIL_PART = "user";
+
+    @MockBean
+    private SpringLiquibase springLiquibase;
+
+    @MockBean
+    private EmailSender emailSender;
+
+    @MockBean
+    private OrganizationService organizationService;
 
     @SpyBean
     private UserService userService;

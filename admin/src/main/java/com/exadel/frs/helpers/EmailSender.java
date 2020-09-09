@@ -34,7 +34,7 @@ public class EmailSender {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public void sendMail(String to, String subject, String message)  {
+    public void sendMail(final String to, final String subject, final String message) {
         val msg = new SimpleMailMessage();
         msg.setTo(to);
         msg.setFrom(frsEmail);
@@ -47,5 +47,4 @@ public class EmailSender {
             throw new UnreachableEmailException(to);
         }
     }
-
 }

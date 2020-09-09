@@ -26,5 +26,4 @@ public class IncorrectAccessTypeException extends BasicException {
     public IncorrectAccessTypeException(final String accessType) {
         super(INCORRECT_ACCESS_TYPE, format(ACCESS_TYPE_NOT_EXISTS_MESSAGE, accessType));
     }
-
 }

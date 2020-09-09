@@ -86,10 +86,11 @@ public class SecurityValidationFilterTest {
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(httpServletResponse).setStatus(exceptionHandler
-                .handleDefinedExceptions(new BadFormatModelKeyException())
-                .getStatusCode()
-                .value());
+        verify(httpServletResponse).setStatus(
+                exceptionHandler.handleDefinedExceptions(new BadFormatModelKeyException())
+                                .getStatusCode()
+                                .value()
+        );
     }
 
     @Test
@@ -100,10 +101,11 @@ public class SecurityValidationFilterTest {
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(httpServletResponse).setStatus(exceptionHandler
-                .handleMissingRequestHeader(X_FRS_API_KEY_HEADER)
-                .getStatusCode()
-                .value());
+        verify(httpServletResponse).setStatus(
+                exceptionHandler.handleMissingRequestHeader(X_FRS_API_KEY_HEADER)
+                                .getStatusCode()
+                                .value()
+        );
     }
 
     @Test
@@ -126,10 +128,11 @@ public class SecurityValidationFilterTest {
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(httpServletResponse).setStatus(exceptionHandler
-                .handleDefinedExceptions(new ModelNotFoundException(VALID_API_KEY))
-                .getStatusCode()
-                .value());
+        verify(httpServletResponse).setStatus(
+                exceptionHandler.handleDefinedExceptions(new ModelNotFoundException(VALID_API_KEY))
+                                .getStatusCode()
+                                .value()
+        );
     }
 
     @Test
@@ -140,10 +143,11 @@ public class SecurityValidationFilterTest {
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(httpServletResponse).setStatus(exceptionHandler
-                .handleDefinedExceptions(new BadFormatModelKeyException())
-                .getStatusCode()
-                .value());
+        verify(httpServletResponse).setStatus(
+                exceptionHandler.handleDefinedExceptions(new BadFormatModelKeyException())
+                                .getStatusCode()
+                                .value()
+        );
         verify(httpServletResponse).setContentType(MediaType.APPLICATION_JSON_VALUE);
     }
 }

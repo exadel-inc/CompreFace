@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
@@ -24,7 +25,6 @@ import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,17 +33,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
 @Import({FaceService.class, FaceDao.class})
-@MockBeans({
-        @MockBean(RetrainService.class),
-        @MockBean(FaceClassifierManager.class)
-})
 public class FaceServiceTestIT {
 
     @Autowired
@@ -51,6 +46,9 @@ public class FaceServiceTestIT {
 
     @Autowired
     private FaceService faceService;
+
+    @MockBean
+    private FaceClassifierManager faceClassifierManager;
 
     private static final String MODEL_KEY = randomUUID().toString();
     private static final String MODEL_KEY_OTHER = randomUUID().toString();
@@ -79,10 +77,9 @@ public class FaceServiceTestIT {
 
     @Test
     public void findFaces() {
-        val faces = facesRepository.findAll()
-                                   .stream()
+        val faces = facesRepository.findAll().stream()
                                    .filter(face -> face.getApiKey().equals(MODEL_KEY))
-                                   .collect(Collectors.toList());
+                                   .collect(toList());
 
         val actual = faceService.findFaces(MODEL_KEY);
 
@@ -107,7 +104,7 @@ public class FaceServiceTestIT {
         val faces = facesRepository.findAll();
         val oneKeyFaces = faces.stream()
                                .filter(face -> face.getApiKey().equals(MODEL_KEY))
-                               .collect(Collectors.toList());
+                               .collect(toList());
 
         faceService.deleteFacesByModel(MODEL_KEY);
 
