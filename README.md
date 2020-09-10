@@ -361,7 +361,6 @@ Response body on success:
 | subject  | string | <face_name> of the person, whose picture was saved for this api key |
 
 
-
 ## Contributing
 
 Contributions are welcomed and greatly appreciated.
