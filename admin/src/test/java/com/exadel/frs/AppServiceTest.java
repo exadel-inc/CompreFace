@@ -48,6 +48,7 @@ import com.exadel.frs.entity.UserOrganizationRoleId;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.SelfRoleApplicationChangeException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
@@ -259,6 +260,38 @@ class AppServiceTest {
         verifyNoMoreInteractions(appRepositoryMock, authManagerMock);
 
         assertThat(varArgs.getValue().getName()).isEqualTo(appUpdateDto.getName());
+    }
+
+    @Test
+    void failUpdateUserAppSelfRoleOwnerChange() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(AppRole.USER.toString())
+                                                 .build();
+        val user = user(USER_ID);
+        val organization = organization();
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+        app.addUserAppRole(user, OWNER);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(appRepositoryMock.save(any())).thenReturn(app);
+
+        assertThatThrownBy(() -> {
+            appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
+        }).isInstanceOf(SelfRoleApplicationChangeException.class);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(ADMIN_ID, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(ADMIN_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
+        verifyNoMoreInteractions(authManagerMock);
+        verifyNoMoreInteractions(appRepositoryMock);
     }
 
     @Test
@@ -475,6 +508,50 @@ class AppServiceTest {
         assertThat(userAppRole.getUser().getEmail()).isEqualTo(userEmail);
         assertThat(userAppRole.getRole()).isEqualTo(userRole);
 
+        verify(authManagerMock).verifyWritePrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void successUserWithAppRoleOwnerInvite() {
+        val admin = user(USER_ID);
+
+        val userEmail = "email";
+        val user = User.builder()
+                       .id(nextLong())
+                       .email(userEmail)
+                       .build();
+
+        val userRole = AppRole.OWNER;
+        val userInviteDto = UserInviteDto.builder()
+                                         .userEmail(userEmail)
+                                         .role(userRole.toString())
+                                         .build();
+
+        val organization = organization();
+        organization.addUserOrganizationRole(admin, ADMINISTRATOR);
+        organization.addUserOrganizationRole(user, USER);
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+        app.addUserAppRole(admin, userRole);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(anyString())).thenReturn(user);
+        when(appRepositoryMock.save(any())).thenReturn(app);
+
+        val actual = appService.inviteUser(userInviteDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+
+        assertThat(actual.getUser().getEmail()).isEqualTo(userEmail);
+        assertThat(actual.getRole()).isEqualTo(userRole);
+        assertThat(app.getOwner().get().getRole()).isEqualTo(userRole);
+
+        verify(appRepositoryMock).save(app);
         verify(authManagerMock).verifyWritePrivilegesToApp(USER_ID, app);
         verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
         verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);

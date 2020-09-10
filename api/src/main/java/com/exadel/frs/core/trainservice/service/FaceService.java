@@ -34,10 +34,7 @@ public class FaceService {
         return faceDao.findAllFacesByApiKey(apiKey);
     }
 
-    public List<Face> deleteFaceByName(
-            final String faceName,
-            final String apiKey
-    ) {
+    public List<Face> deleteFaceByName(final String faceName, final String apiKey) {
         return faceDao.deleteFaceByName(faceName, apiKey);
     }
 
