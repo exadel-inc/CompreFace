@@ -19,8 +19,6 @@ import org.springframework.context.ApplicationContext;
 
 class FaceClassifierPredictorTest {
 
-    private static final String MODEL_KEY = "modelKey";
-
     @Mock
     private TrainedModelDao trainedModelDao;
 
@@ -28,7 +26,9 @@ class FaceClassifierPredictorTest {
     private ApplicationContext context;
 
     @InjectMocks
-    private FaceClassifierPredictor faceClassifierPredictor;
+    private FaceClassifierPredictor faceClassifierPredictor;\
+
+    private static final String MODEL_KEY = "modelKey";
 
     @BeforeEach
     void setUp() {

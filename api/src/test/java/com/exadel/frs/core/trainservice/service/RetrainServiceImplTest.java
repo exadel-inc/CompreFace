@@ -14,13 +14,13 @@ import org.mockito.Mock;
 
 class RetrainServiceImplTest {
 
-    private static final String MODEL_KEY = "model_key";
-
     @Mock
     private FaceClassifierManager manager;
 
     @InjectMocks
     private RetrainServiceImpl retrainService;
+
+    private static final String MODEL_KEY = "model_key";
 
     @BeforeEach
     void setUp() {
