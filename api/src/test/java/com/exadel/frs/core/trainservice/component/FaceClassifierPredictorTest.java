@@ -26,7 +26,7 @@ class FaceClassifierPredictorTest {
     private ApplicationContext context;
 
     @InjectMocks
-    private FaceClassifierPredictor faceClassifierPredictor;\
+    private FaceClassifierPredictor faceClassifierPredictor;
 
     private static final String MODEL_KEY = "modelKey";
 
