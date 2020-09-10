@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;

@@ -257,39 +257,6 @@ class AppServiceTest {
     }
 
     @Test
-    void successUpdateUserAppRole() {
-        val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(AppRole.OWNER.toString())
-                                                 .build();
-        val user = user(USER_ID);
-        val organization = organization();
-
-        val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .organization(organization)
-                     .build();
-        app.addUserAppRole(user, AppRole.USER);
-
-        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
-        when(appRepositoryMock.save(any())).thenReturn(app);
-
-        val actual = appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
-
-        assertThat(actual.getRole()).isEqualTo(Enum.valueOf(AppRole.class, userRoleUpdateDto.getRole()));
-
-        verify(authManagerMock).verifyWritePrivilegesToApp(ADMIN_ID, app);
-        verify(authManagerMock).verifyReadPrivilegesToApp(ADMIN_ID, app);
-        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
-        verify(appRepositoryMock).save(app);
-        verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
-        verifyNoMoreInteractions(authManagerMock);
-        verifyNoMoreInteractions(appRepositoryMock);
-    }
-
-    @Test
     void failUpdateUserAppSelfRoleOwnerChange() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
                                                  .userId("userGuid")

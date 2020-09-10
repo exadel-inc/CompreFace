@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -20,8 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 class MigrateControllerTest {
 
-    private static final String URL = "migrate_url";
-
     @Autowired
     private MockMvc mockMvc;
 
@@ -30,6 +27,8 @@ class MigrateControllerTest {
 
     @MockBean
     private MigrationComponent migrationComponent;
+
+    private static final String URL = "migrate_url";
 
     @Test
     void migrate() throws Exception {

@@ -36,7 +36,6 @@ import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
@@ -113,7 +112,7 @@ public class ClassifierManagerTest {
         val adapterMock = mock(FaceClassifierAdapter.class);
         val faceList = mock(EmbeddingFaceList.class);
 
-        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(nextInt(MIN_FACES_TO_TRAIN , 100));
+        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(nextInt(MIN_FACES_TO_TRAIN, 100));
         when(faceDao.findAllFaceEmbeddingsByApiKey(MODEL_KEY)).thenReturn(faceList);
         when(context.getBean(FaceClassifierAdapter.class)).thenReturn(adapterMock);
 

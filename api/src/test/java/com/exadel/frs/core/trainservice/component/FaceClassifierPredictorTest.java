@@ -1,14 +1,11 @@
 package com.exadel.frs.core.trainservice.component;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
 import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import java.util.List;
@@ -16,7 +13,6 @@ import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.context.ApplicationContext;
