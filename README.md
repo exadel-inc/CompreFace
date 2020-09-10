@@ -366,6 +366,10 @@ Response body on success:
 
 Contributions are welcomed and greatly appreciated.
 
+After creating your first contributing PR you will be requested to sign our 
+Contributor License Agreement by commenting your PR with a
+special message.
+
 
 
 ### Formatting standards

@@ -1,0 +1,24 @@
+name: "CLA Assistant"
+on:
+  issue_comment:
+    types: [created]
+  pull_request_target:
+    types: [opened,closed,synchronize]
+
+jobs:
+  CLAssistant:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "CLA Assistant"
+        if: (github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request_target'
+        # Alpha Release
+        uses: cla-assistant/github-action@v2.0.1-alpha
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+        with:
+          path-to-signatures: 'signatures/cla.json'
+          path-to-cla-document: 'https://github.com/exadel-inc/face-recognition-service/blob/develop/CLA.md'
+          branch: 'develop'
+          allowlist: Elijas,daffy-,sbvalijon,stashess,kemerava,mmisachenka,isobolev,endypanda,mjakowiec,dmitry-boiko,pospielov,
+          andreigaevsky,ivandodz,aabramovich-dev,DmitryRomaniuk,bot*
