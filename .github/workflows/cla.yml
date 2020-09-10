@@ -20,5 +20,4 @@ jobs:
           path-to-signatures: 'signatures/cla.json'
           path-to-cla-document: 'https://github.com/exadel-inc/face-recognition-service/blob/develop/CLA.md'
           branch: 'develop'
-          allowlist: Elijas,daffy-,sbvalijon,stashess,kemerava,mmisachenka,isobolev,endypanda,mjakowiec,dmitry-boiko,pospielov,
-          andreigaevsky,ivandodz,aabramovich-dev,DmitryRomaniuk,bot*
+          allowlist: Elijas,daffy-,sbvalijon,stashess,kemerava,mmisachenka,isobolev,endypanda,mjakowiec,dmitry-boiko,pospielov,andreigaevsky,ivandodz,aabramovich-dev,DmitryRomaniuk,bot*
