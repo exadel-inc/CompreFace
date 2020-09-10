@@ -20,10 +20,10 @@ import org.springframework.context.ApplicationContext;
 class FaceClassifierPredictorTest {
 
     @Mock
-    private TrainedModelDao trainedModelDao;
+    private ApplicationContext context;
 
     @Mock
-    private ApplicationContext context;
+    private TrainedModelDao trainedModelDao;
 
     @InjectMocks
     private FaceClassifierPredictor faceClassifierPredictor;
