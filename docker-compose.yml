@@ -16,10 +16,6 @@ services:
 
   compreface-admin:
     image: ${registry}compreface-admin
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: frs_crud
     container_name: "compreface-admin"
     environment:
       - POSTGRES_PASSWORD=${postgres_password}
@@ -30,10 +26,6 @@ services:
 
   compreface-api:
     image: ${registry}compreface-api
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: frs_core
     container_name: "compreface-api"
     depends_on:
       - compreface-postgres-db
@@ -43,9 +35,6 @@ services:
 
   compreface-fe:
     image: ${registry}compreface-fe
-    build:
-      context: ui
-      dockerfile: docker-prod/Dockerfile
     container_name: "compreface-ui"
     ports:
       - "8000:80"
@@ -56,7 +45,5 @@ services:
   compreface-core:
     image: ${registry}compreface-core
     container_name: "compreface-core"
-    build:
-      context: embedding-calculator
     environment:
       - ML_PORT=3000

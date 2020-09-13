@@ -1,6 +1,6 @@
 # CompreFace
 
-[![GitHub license](https://img.shields.io/github/license/exadel-inc/face-recognition-service)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/exadel-inc/face-recognition-service)](https://github.com/exadel-inc/face-recognition-service/graphs/contributors)
+[![GitHub license](https://img.shields.io/github/license/exadel-inc/CompreFace)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/exadel-inc/CompreFace)](https://github.com/exadel-inc/CompreFace/graphs/contributors)
 
 
 
@@ -59,12 +59,14 @@ CompreFace is:
 
 To get started, perform the following steps:
 
-1. install Docker
-1. just run command:
+1. Install Docker
+1. Download archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+1. Unzip archive
+1. Run command:
 `
 docker-compose up --build
 `
-1. open http://localhost:8000/
+1. Open http://localhost:8000/
 
 
 
@@ -102,9 +104,9 @@ Recognizing the person in the photo. Haifengl/smile [LogisticRegression](http://
 
 ### ML technologies
 
-* MTCNN (Multi-task Cascaded Convolutional Networks)
+* [MTCNN (Multi-task Cascaded Convolutional Networks)](https://arxiv.org/pdf/1604.02878.pdf)
+* [FaceNet](https://github.com/davidsandberg/facenet)
 * Logistic Regression
-* Transfer learning
 
 
 
@@ -130,7 +132,7 @@ Recognizing the person in the photo. Haifengl/smile [LogisticRegression](http://
 
 
 
-![architecture](https://user-images.githubusercontent.com/4942439/87042452-220f1a80-c20d-11ea-96ee-5f7ad6ddf93b.jpg)
+![architecture](https://user-images.githubusercontent.com/3736126/93017579-81edbd00-f5d2-11ea-9539-f4c984f4de4c.png)
 
 
 
@@ -380,7 +382,7 @@ For java just import dev/team_codestyle.xml file in your IntelliJ IDEA
 
 ### Report Bugs
 
-Report bugs at https://github.com/exadel-inc/face-recognition-service/issues.
+Report bugs at https://github.com/exadel-inc/CompreFace/issues.
 
 If you are reporting a bug, please include:
 
@@ -392,7 +394,7 @@ If you are reporting a bug, please include:
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/exadel-inc/face-recognition-service/issues. 
+The best way to send feedback is to file an issue at https://github.com/exadel-inc/CompreFace/issues. 
 
 If you are proposing a feature, please:
 
