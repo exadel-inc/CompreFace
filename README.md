@@ -132,7 +132,7 @@ Recognizing the person in the photo. Haifengl/smile [LogisticRegression](http://
 
 
 
-![architecture](https://user-images.githubusercontent.com/3736126/93017579-81edbd00-f5d2-11ea-9539-f4c984f4de4c.png)
+![architecture](https://user-images.githubusercontent.com/3736126/93056370-0133cd00-f675-11ea-910a-f12881dfe758.png)
 
 
 
