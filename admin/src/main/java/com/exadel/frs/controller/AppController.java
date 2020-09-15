@@ -29,7 +29,6 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.mapper.UserAppRoleMapper;
 import com.exadel.frs.service.AppService;
-import com.exadel.frs.system.statistics.CallStatistics;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -59,7 +58,6 @@ public class AppController {
     private final AppMapper appMapper;
     private final UserAppRoleMapper userAppRoleMapper;
 
-    @CallStatistics
     @GetMapping("/app/{guid}")
     @ApiOperation(value = "Get application")
     public AppResponseDto getApp(
