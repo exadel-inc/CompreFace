@@ -14,8 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{'org_users.delete_dialog.title' | translate}}
-  {{data.entityType === 'system-user' ? 'user' : data.entityType }}</h1>
+<h1 mat-dialog-title>{{'models.delete_dialog.title' | translate}}</h1>
 <div mat-dialog-content>
   <ng-container [ngSwitch]="data.entityType.toLowerCase()">
     <ng-container *ngSwitchCase="'user'">

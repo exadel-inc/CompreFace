@@ -6,6 +6,7 @@
       "yes": "YES",
       "add": "ADD",
       "rename": "RENAME",
+      "delete": "DELETE",
       "edit": "EDIT"
     },
     "name": "Name",
@@ -67,9 +68,9 @@
     "title": "Models",
     "name": "Name",
     "api_key": "API key",
-    "create_model_info": " Create the first model, where you will be able to add, recognize, delete faces,\n      get list of the model faces, train the model and remove already trained.",
+    "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
     "create_dialog": {
-      "title": "Create model",
+      "title": "Create Face Collection",
       "name": "Name"
     },
     "select_menu": {
@@ -77,12 +78,12 @@
       "delete": "DELETE"
     },
     "edit_dialog": {
-      "title": "EDIT MODEL",
+      "title": "Edit Face Collection",
       "name": "Name",
       "rename": "RENAME"
     },
     "delete_dialog": {
-      "title": "Delete model",
+      "title": "Delete Face Collection",
       "warn_information": "and all related data will be deleted.",
       "confirmation_question": "Are you sure?"
     }
