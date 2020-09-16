@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.entity;
 
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import com.vladmihalcea.hibernate.type.json.JsonStringType;
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -21,10 +22,7 @@ import org.hibernate.annotations.TypeDef;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Builder
-@TypeDef(
-        name = "jsonb",
-        typeClass = JsonBinaryType.class
-)
+@TypeDef(name = "json", typeClass = JsonStringType.class)
 public class Face {
 
     @Id
@@ -33,7 +31,7 @@ public class Face {
     private String faceName;
     @Column(name = "api_key")
     private String apiKey;
-    @Type(type = "jsonb")
+    @Type(type = "json")
     @Column(name = "embeddings")
     private Embedding embedding;
     @Column(name = "raw_img_fs")
@@ -42,10 +40,11 @@ public class Face {
     private byte[] faceImg;
 
     @Data
+    @Builder
     @NoArgsConstructor
     @AllArgsConstructor
     @Accessors(chain = true)
-    public static class Embedding {
+    public static class Embedding implements Serializable {
 
         private List<Double> embeddings;
         private String calculatorVersion;
