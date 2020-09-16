@@ -1,34 +1,30 @@
 databaseChangeLog:
   - changeSet:
-      id: create-user_app_role-table
+      id: create-app_model-table
       author: Andrei Hayeuski
       changes:
-        # user_app_role
+        # app_model
         - createTable:
-            tableName: user_app_role
+            tableName: app_model
             columns:
               - column:
                   name: app_id
                   type: bigint
               - column:
-                  name: user_id
+                  name: model_id
                   type: bigint
               - column:
-                  name: role
+                  name: access_type
                   type: varchar(1)
 
         - addPrimaryKey:
-            columnNames: app_id, user_id
-            constraintName: pk_user_app_role
-            tableName: user_app_role
-
-        - addNotNullConstraint:
-            tableName: user_app_role
-            columnName: role
+            columnNames: app_id, model_id
+            constraintName: pk_app_model
+            tableName: app_model
 
         - addForeignKeyConstraint:
             baseColumnNames: app_id
-            baseTableName: user_app_role
+            baseTableName: app_model
             referencedColumnNames: id
             referencedTableName: app
             constraintName: fk_app_id
@@ -36,10 +32,14 @@ databaseChangeLog:
             onUpdate: CASCADE
 
         - addForeignKeyConstraint:
-            baseColumnNames: user_id
-            baseTableName: user_app_role
+            baseColumnNames: model_id
+            baseTableName: app_model
             referencedColumnNames: id
-            referencedTableName: user
-            constraintName: fk_user_id
+            referencedTableName: model
+            constraintName: fk_model_id
             onDelete: CASCADE
             onUpdate: CASCADE
+
+        - addNotNullConstraint:
+            columnName: access_type
+            tableName: app_model

@@ -1,41 +1,43 @@
 databaseChangeLog:
   - changeSet:
-      id: create face table
+      id: create-trained_model-table
       author: Maryna Misachenka
       changes:
-        # face
+        # trained_model
         - createTable:
-            tableName: face
+            tableName: trained_model
             columns:
               - column:
                   name: id
+                  type: bigint
+              - column:
+                  name: model_key
                   type: varchar(36)
               - column:
-                  name: face_name
+                  name: classifier
+                  type: bytea
+              - column:
+                  name: calculator_version
                   type: varchar(255)
-              - column:
-                  name: api_key
-                  type: varchar(36)
-              - column:
-                  name: embeddings
-                  type: jsonb
-              - column:
-                  name: raw_img_fs
-                  type: bytea
-              - column:
-                  name: face_img_fs
-                  type: bytea
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_trained_model
+            tableName: trained_model
+
+        - createSequence:
+            sequenceName: trained_model_id_seq
 
         - addUniqueConstraint:
-            columnNames: id
-            constraintName: face_id_uindex
-            tableName: face
+            columnNames: model_key
+            constraintName: trained_model_key_uindex
+            tableName: trained_model
 
         - addForeignKeyConstraint:
-            baseColumnNames: api_key
-            baseTableName: face
+            baseColumnNames: model_key
+            baseTableName: trained_model
             referencedColumnNames: api_key
             referencedTableName: model
-            constraintName: fk_api_key
+            constraintName: fk_model_key
             onDelete: CASCADE
             onUpdate: CASCADE
