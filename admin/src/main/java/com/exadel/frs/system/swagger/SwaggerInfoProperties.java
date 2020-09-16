@@ -18,6 +18,7 @@ package com.exadel.frs.system.swagger;
 
 import static org.springframework.util.StringUtils.isEmpty;
 import lombok.Data;
+import lombok.val;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
@@ -43,30 +44,25 @@ public class SwaggerInfoProperties {
 
     public ApiInfo getApiInfo() {
 
-        ApiInfoBuilder builder = new ApiInfoBuilder();
+        val builder = new ApiInfoBuilder();
 
         if (!isEmpty(this.contactName)
                 || !isEmpty(this.contactUrl)
                 || !isEmpty(this.contactEmail)) {
             builder.contact(new Contact(this.contactName, this.contactUrl, this.contactEmail));
         }
-
         if (!isEmpty(this.description)) {
             builder.description(this.description);
         }
-
         if (!isEmpty(this.termsOfServiceUrl)) {
             builder.termsOfServiceUrl(this.termsOfServiceUrl);
         }
-
         if (!isEmpty(this.title)) {
             builder.title(this.title);
         }
-
         if (!isEmpty(this.license)) {
             builder.license(this.license);
         }
-
         if (!isEmpty(this.version)) {
             builder.version(this.version);
         }
