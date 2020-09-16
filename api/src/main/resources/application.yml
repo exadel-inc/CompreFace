@@ -66,3 +66,8 @@ spring:
       enabled: true
     livereload:
       enabled: false
+
+swagger:
+  info:
+    title: CompreFace - API
+    version: 0.0.2-SNAPSHOT

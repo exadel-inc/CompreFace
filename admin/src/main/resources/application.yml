@@ -67,7 +67,7 @@ swagger:
   auth:
     server: http://localhost:${server.port}
   info:
-    title: Face Recognition Service - Client
+    title: CompreFace - ADMIN
     version: 0.0.2-SNAPSHOT
 
 host:

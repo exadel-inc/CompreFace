@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.system.swagger;
+package com.exadel.frs.core.trainservice.system.swagger;
 
 import static org.springframework.util.StringUtils.isEmpty;
 import lombok.Data;

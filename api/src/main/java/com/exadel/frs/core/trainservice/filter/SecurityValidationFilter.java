@@ -75,40 +75,42 @@ public class SecurityValidationFilter implements Filter {
         val httpRequest = (HttpServletRequest) servletRequest;
         val httpResponse = (HttpServletResponse) servletResponse;
 
-        val headersMap =
-                list(httpRequest.getHeaderNames()).stream()
-                                                  .collect(Collectors.<String, String, List<String>>toMap(
-                                                          identity(),
-                                                          header -> list(httpRequest.getHeaders(header))
-                                                  ));
+        if (!httpRequest.getRequestURI().matches("^/(swagger|webjars|v2).*$")) {
+            val headersMap =
+                    list(httpRequest.getHeaderNames()).stream()
+                                                      .collect(Collectors.<String, String, List<String>>toMap(
+                                                              identity(),
+                                                              header -> list(httpRequest.getHeaders(header))
+                                                      ));
 
-        var apiKey = headersMap.getOrDefault(X_FRS_API_KEY_HEADER, emptyList());
+            var apiKey = headersMap.getOrDefault(X_FRS_API_KEY_HEADER, emptyList());
 
-        if (!apiKey.isEmpty()) {
-            val key = apiKey.get(0);
-            try {
-                if (key.length() < 36) {
-                    throw new IllegalArgumentException("UUID length is incorrect");
+            if (!apiKey.isEmpty()) {
+                val key = apiKey.get(0);
+                try {
+                    if (key.length() < 36) {
+                        throw new IllegalArgumentException("UUID length is incorrect");
+                    }
+                    UUID.fromString(key);
+                } catch (Exception e) {
+                    val objectResponseEntity = handler.handleDefinedExceptions(new BadFormatModelKeyException());
+                    buildException(httpResponse, objectResponseEntity);
+
+                    return;
                 }
-                UUID.fromString(key);
-            } catch (Exception e) {
-                val objectResponseEntity = handler.handleDefinedExceptions(new BadFormatModelKeyException());
+                val validationResult = modelService.validateModelKey(key);
+                if (validationResult != OK) {
+                    val objectResponseEntity = handler.handleDefinedExceptions(new ModelNotFoundException(key));
+                    buildException(httpResponse, objectResponseEntity);
+
+                    return;
+                }
+            } else {
+                val objectResponseEntity = handler.handleMissingRequestHeader(X_FRS_API_KEY_HEADER);
                 buildException(httpResponse, objectResponseEntity);
 
                 return;
             }
-            val validationResult = modelService.validateModelKey(key);
-            if (validationResult != OK) {
-                val objectResponseEntity = handler.handleDefinedExceptions(new ModelNotFoundException(key));
-                buildException(httpResponse, objectResponseEntity);
-
-                return;
-            }
-        } else {
-            val objectResponseEntity = handler.handleMissingRequestHeader(X_FRS_API_KEY_HEADER);
-            buildException(httpResponse, objectResponseEntity);
-
-            return;
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }
