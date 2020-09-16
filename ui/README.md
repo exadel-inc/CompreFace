@@ -14,7 +14,6 @@ Go to http://localhost:8000/
 - Run `cd ui`
 - Run `npm install`
 
-- Run `cd ..`
 - Run `cd ../dev`
 - Run `start--dev.sh` to start docker container with backend and UI application in live reload mode
 
