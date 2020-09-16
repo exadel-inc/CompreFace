@@ -6,8 +6,8 @@
       "yes": "YES",
       "add": "ADD",
       "rename": "RENAME",
-      "delete": "DELETE",
-      "edit": "EDIT"
+      "edit": "EDIT",
+      "delete": "DELETE"
     },
     "name": "Name",
     "create": "Create"
@@ -34,7 +34,7 @@
     "last_name_restriction": "Last name is required",
     "email_hint": "Email should have correct format",
     "login": "LOGIN",
-    "sign_up": "SIGN_UP"
+    "sign_up": "SIGN UP"
   },
   "toolbar": {
     "logout": "Logout"
