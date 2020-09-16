@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonStringType;
-import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -44,7 +43,7 @@ public class Face {
     @NoArgsConstructor
     @AllArgsConstructor
     @Accessors(chain = true)
-    public static class Embedding implements Serializable {
+    public static class Embedding {
 
         private List<Double> embeddings;
         private String calculatorVersion;
