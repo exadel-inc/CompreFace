@@ -14,10 +14,10 @@ Go to http://localhost:8000/
 - Run `cd ui`
 - Run `npm install`
 
-(run in root directory)
-- Run `start-dev.sh` to start docker container with backend and UI application in live reload mode
+- Run `cd ../dev`
+- Run `start--dev.sh` to start docker container with backend and UI application in live reload mode
 
-Go to http://localhost:4200/
+Go to http://localhost:4200/ and you can sign up with any credentials
 
 ## Code scaffolding
 
