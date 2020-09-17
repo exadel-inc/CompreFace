@@ -18,7 +18,7 @@ databaseChangeLog:
                   type: varchar(36)
               - column:
                   name: embeddings
-                  type: jsonb
+                  type: json
               - column:
                   name: raw_img_fs
                   type: bytea
