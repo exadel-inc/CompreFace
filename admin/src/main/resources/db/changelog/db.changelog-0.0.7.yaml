@@ -1,103 +1,45 @@
 databaseChangeLog:
   - changeSet:
-      id: security-oauth2
-      author: Dmitry Andryianau
+      id: create-user_organization_role-table
+      author: Andrei Hayeuski
       changes:
-        # oauth_access_token
+        # user_organization_role
         - createTable:
-            tableName: oauth_refresh_token
+            tableName: user_organization_role
             columns:
               - column:
-                  name: token_id
-                  type: varchar(255)
+                  name: organization_id
+                  type: bigint
               - column:
-                  name: token
-                  type: bytea
+                  name: user_id
+                  type: bigint
               - column:
-                  name: authentication
-                  type: bytea
-
-        # oauth_access_token
-        - createTable:
-            tableName: oauth_access_token
-            columns:
-              - column:
-                  name: token_id
-                  type: varchar(255)
-              - column:
-                  name: token
-                  type: bytea
-              - column:
-                  name: authentication_id
-                  type: varchar(255)
-              - column:
-                  name: user_name
-                  type: varchar(255)
-              - column:
-                  name: client_id
-                  type: varchar(255)
-              - column:
-                  name: authentication
-                  type: bytea
-              - column:
-                  name: refresh_token
-                  type: varchar(255)
-        - addPrimaryKey:
-            columnNames: authentication_id
-            constraintName: pk_cauthentication_id
-            tableName: oauth_access_token
-
-        # oauth_client_details
-        - createTable:
-            tableName: oauth_client_details
-            columns:
-              - column:
-                  name: client_id
-                  type: varchar(50)
-              - column:
-                  name: access_token_validity
-                  type: int4
-              - column:
-                  name: additional_information
-                  type: varchar(255)
-              - column:
-                  name: authorities
-                  type: varchar(255)
-              - column:
-                  name: authorized_grant_types
-                  type: varchar(255)
-              - column:
-                  name: auto_approve
-                  type: varchar(255)
-              - column:
-                  name: client_secret
-                  type: varchar(255)
-              - column:
-                  name: refresh_token_validity
-                  type: int4
-              - column:
-                  name: resource_ids
-                  type: varchar(255)
-              - column:
-                  name: scope
-                  type: varchar(255)
+                  name: role
+                  type: varchar(1)
 
         - addPrimaryKey:
-            columnNames: client_id
-            constraintName: pk_clientId
-            tableName: oauth_client_details
+            columnNames: organization_id, user_id
+            constraintName: pk_user_organization_role
+            tableName: user_organization_role
+
         - addNotNullConstraint:
-            columnName: client_id
-            tableName: oauth_client_details
-        - addNotNullConstraint:
-            columnName: authorities
-            tableName: oauth_client_details
-        - addNotNullConstraint:
-            columnName: authorized_grant_types
-            tableName: oauth_client_details
-        - addNotNullConstraint:
-            columnName: resource_ids
-            tableName: oauth_client_details
-        - addNotNullConstraint:
-            columnName: scope
-            tableName: oauth_client_details
+            tableName: user_organization_role
+            columnName: role
+
+        - addForeignKeyConstraint:
+            baseColumnNames: organization_id
+            baseTableName: user_organization_role
+            referencedColumnNames: id
+            referencedTableName: organization
+            constraintName: fk_organization_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_organization_role
+            referencedColumnNames: id
+            referencedTableName: user
+            constraintName: fk_user_id
+            onDelete: CASCADE
+            onUpdate: CASCADE

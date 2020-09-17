@@ -1,8 +1,33 @@
 databaseChangeLog:
   - changeSet:
-      id: changelog-0.0.2.1
-      author: Vladyslav Yavorskyi
+      id: create-organization-table
+      author: Andrei Hayeuski
       changes:
+        # organization
+        - createTable:
+            tableName: organization
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: guid
+                  type: varchar(36)
+              - column:
+                  name: is_default
+                  type: boolean
+                  defaultValueBoolean: false
+
+        - addNotNullConstraint:
+            tableName: organization
+            columnName: name
+
+        - addNotNullConstraint:
+            tableName: organization
+            columnName: guid
 
         - addUniqueConstraint:
             columnNames: name
@@ -10,11 +35,31 @@ databaseChangeLog:
             tableName: organization
 
         - addUniqueConstraint:
-            columnNames: name, organization_id
-            constraintName: app_name_organization_id_uindex
-            tableName: app
+            columnNames: guid
+            constraintName: organization_guid_uindex
+            tableName: organization
 
-        - addUniqueConstraint:
-            columnNames: name, app_id
-            constraintName: app_name_app_id_uindex
-            tableName: model
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_organization
+            tableName: organization
+
+        - createSequence:
+            sequenceName: organization_id_seq
+
+        #add default organization
+        - insert:
+            tableName: organization
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 0
+              - column:
+                  name: name
+                  value: Default
+              - column:
+                  name: guid
+                  value: 00000000-0000-0000-0000-000000000000
+              - column:
+                  name: is_default
+                  valueBoolean: true
