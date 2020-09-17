@@ -1,32 +1,103 @@
 databaseChangeLog:
   - changeSet:
-      id: share-model
-      author: Valijon Sobirov
+      id: create-security-oauth2-tables
+      author: Dmitry Andryianau
       changes:
-        # model_share_request
+        # oauth_access_token
         - createTable:
-            tableName: model_share_request
+            tableName: oauth_refresh_token
             columns:
               - column:
-                  name: app_id
-                  type: bigint
+                  name: token_id
+                  type: varchar(255)
               - column:
-                  name: request_id
-                  type: uuid
+                  name: token
+                  type: bytea
               - column:
-                  name: request_time
-                  type: timestamp
+                  name: authentication
+                  type: bytea
+
+        # oauth_access_token
+        - createTable:
+            tableName: oauth_access_token
+            columns:
+              - column:
+                  name: token_id
+                  type: varchar(255)
+              - column:
+                  name: token
+                  type: bytea
+              - column:
+                  name: authentication_id
+                  type: varchar(255)
+              - column:
+                  name: user_name
+                  type: varchar(255)
+              - column:
+                  name: client_id
+                  type: varchar(255)
+              - column:
+                  name: authentication
+                  type: bytea
+              - column:
+                  name: refresh_token
+                  type: varchar(255)
+        - addPrimaryKey:
+            columnNames: authentication_id
+            constraintName: pk_cauthentication_id
+            tableName: oauth_access_token
+
+        # oauth_client_details
+        - createTable:
+            tableName: oauth_client_details
+            columns:
+              - column:
+                  name: client_id
+                  type: varchar(50)
+              - column:
+                  name: access_token_validity
+                  type: int4
+              - column:
+                  name: additional_information
+                  type: varchar(255)
+              - column:
+                  name: authorities
+                  type: varchar(255)
+              - column:
+                  name: authorized_grant_types
+                  type: varchar(255)
+              - column:
+                  name: auto_approve
+                  type: varchar(255)
+              - column:
+                  name: client_secret
+                  type: varchar(255)
+              - column:
+                  name: refresh_token_validity
+                  type: int4
+              - column:
+                  name: resource_ids
+                  type: varchar(255)
+              - column:
+                  name: scope
+                  type: varchar(255)
 
         - addPrimaryKey:
-            columnNames: app_id, request_id
-            constraintName: model_share_request_pkey
-            tableName: model_share_request
-
-        - addForeignKeyConstraint:
-            baseColumnNames: app_id
-            baseTableName: model_share_request
-            referencedColumnNames: id
-            referencedTableName: app
-            constraintName: fkhqgswtck7x4ulfbvac6lt86pu
-            onDelete: CASCADE
-            onUpdate: CASCADE
+            columnNames: client_id
+            constraintName: pk_clientId
+            tableName: oauth_client_details
+        - addNotNullConstraint:
+            columnName: client_id
+            tableName: oauth_client_details
+        - addNotNullConstraint:
+            columnName: authorities
+            tableName: oauth_client_details
+        - addNotNullConstraint:
+            columnName: authorized_grant_types
+            tableName: oauth_client_details
+        - addNotNullConstraint:
+            columnName: resource_ids
+            tableName: oauth_client_details
+        - addNotNullConstraint:
+            columnName: scope
+            tableName: oauth_client_details
