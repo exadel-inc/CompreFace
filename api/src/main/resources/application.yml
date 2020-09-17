@@ -28,6 +28,8 @@ spring:
     hikari:
       maximum-pool-size: 3
       minimum-idle: 3
+      data-source-properties:
+        stringtype: unspecified
   jpa:
     properties:
       hibernate:
