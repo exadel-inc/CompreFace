@@ -73,7 +73,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(EditDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'model',
+        entityType: 'Face Collection',
         entityName: model.name,
       }
     });
@@ -89,7 +89,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'model',
+        entityType: 'Face Collection',
         entityName: model.name,
       }
     });
@@ -105,7 +105,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
-        entityType: 'model',
+        entityType: 'Face Collection',
       }
     });
 
