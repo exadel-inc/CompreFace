@@ -7,17 +7,18 @@ import {BreadcrumbsModule} from "../../features/breadcrumbs/breadcrumbs.module";
 import {MatCardModule} from "@angular/material/card";
 import {TestModelPageService} from "./test-model.service";
 import {ModelTestComponent} from "../../features/model-test/model-test.component";
+import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
 
 
 @NgModule({
   declarations: [TestModelComponent, ModelTestComponent],
   imports: [
     CommonModule,
+    BreadcrumbsContainerModule,
     RouterModule.forChild([
       {path: '', component: TestModelComponent, canActivate: [AuthGuard]},
     ]),
-    BreadcrumbsModule,
-    MatCardModule,
+    MatCardModule
   ],
   providers: [TestModelPageService]
 })

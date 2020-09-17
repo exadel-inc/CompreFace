@@ -117,5 +117,8 @@
       "title": "Delete user",
       "confirmation_question": "Are you sure you want remove user {{name}} from {{application}}?"
     }
+  },
+  "breadcrumbs": {
+    "home": "Home"
   }
 }

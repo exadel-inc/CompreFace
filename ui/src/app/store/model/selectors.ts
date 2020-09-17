@@ -14,14 +14,14 @@
  * permissions and limitations under the License.
  */
 
-import {EntityState} from '@ngrx/entity';
-import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {Model} from 'src/app/data/model';
+import { EntityState } from '@ngrx/entity';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { Model } from 'src/app/data/model';
 
-import {modelAdapter, ModelEntityState} from './reducers';
+import { modelAdapter, ModelEntityState } from './reducers';
 
 export const selectModelEntityState = createFeatureSelector<EntityState<Model>>('model');
-const {selectEntities, selectAll} = modelAdapter.getSelectors();
+const { selectEntities, selectAll } = modelAdapter.getSelectors();
 
 export const selectModels = createSelector(selectModelEntityState, selectAll);
 
@@ -40,6 +40,3 @@ export const selectCurrentModel = createSelector(
   selectCurrentModelId,
   (models, selectedModelId) => models.entities ? models.entities[selectedModelId] : null
 );
-
-
-

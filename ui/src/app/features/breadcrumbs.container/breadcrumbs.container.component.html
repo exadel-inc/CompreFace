@@ -13,13 +13,10 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-<div class="container">
-  <div class="header-container">
-    <app-breadcrumbs-container></app-breadcrumbs-container>
-  </div>
-    <mat-card class="test-model-container">
-      <app-model-test></app-model-test>
-    </mat-card>
+<div>
+    <app-breadcrumbs
+    [model]="model$ | async"
+    [app]="app$ | async"
+    [orgId]="orgId$ | async">
+    </app-breadcrumbs>
 </div>
-

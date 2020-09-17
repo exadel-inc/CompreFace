@@ -37,6 +37,7 @@ import {CustomMaterialModule} from './ui/material/material.module';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {BreadcrumbsModule} from "./features/breadcrumbs/breadcrumbs.module";
+import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/breadcrumbs.container.module';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,7 @@ import {BreadcrumbsModule} from "./features/breadcrumbs/breadcrumbs.module";
     CreateDialogComponent,
     EditDialogComponent,
     AlertComponent,
-    DeleteDialogComponent
+    DeleteDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,14 +60,15 @@ import {BreadcrumbsModule} from "./features/breadcrumbs/breadcrumbs.module";
     HttpClientModule,
     SnackBarModule,
     MatRadioModule,
+    BreadcrumbsModule,
+    BreadcrumbsContainerModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
         deps: [HttpClient]
       }
-    }),
-    BreadcrumbsModule
+    })
   ],
   providers: [
     AuthGuard,

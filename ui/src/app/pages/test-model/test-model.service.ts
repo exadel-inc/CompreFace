@@ -14,20 +14,20 @@
  * permissions and limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store';
-import {loadApplications, setSelectedAppIdEntityAction} from '../../store/application/action';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {setSelectedId} from '../../store/organization/action';
-import {loadModels, setSelectedModelIdEntityAction} from "../../store/model/actions";
-import {Subscription} from "rxjs";
-import {selectApplications} from "../../store/application/selectors";
-import {filter, take} from "rxjs/operators";
-import {getUserInfo} from "../../store/userInfo/action";
-import {OrganizationEnService} from "../../store/organization/organization-entitys.service";
-import {selectModels} from "../../store/model/selectors";
+import { Injectable } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
+import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { setSelectedId } from '../../store/organization/action';
+import { loadModels, setSelectedModelIdEntityAction } from "../../store/model/actions";
+import { Subscription } from "rxjs";
+import { selectApplications } from "../../store/application/selectors";
+import { filter, take } from "rxjs/operators";
+import { getUserInfo } from "../../store/userInfo/action";
+import { OrganizationEnService } from "../../store/organization/organization-entitys.service";
+import { selectModels } from "../../store/model/selectors";
 
 @Injectable()
 export class TestModelPageService {
@@ -51,9 +51,9 @@ export class TestModelPageService {
     this.modelId = this.route.snapshot.queryParams.model;
 
     if (this.appId && this.orgId && this.modelId) {
-      this.store.dispatch(setSelectedAppIdEntityAction({selectedAppId: this.appId}));
-      this.store.dispatch(setSelectedId({selectId: this.orgId}));
-      this.store.dispatch(setSelectedModelIdEntityAction({selectedModelId: this.modelId}));
+      this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
+      this.store.dispatch(setSelectedId({ selectId: this.orgId }));
+      this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
       this.appsSub = this.store.select(selectApplications).pipe(
         filter(apps => !apps.length),
         take(1)
@@ -65,13 +65,12 @@ export class TestModelPageService {
         take(1)
       ).subscribe(() => {
         this.fetchModels();
-        }
+      }
       )
     } else {
       this.router.navigate([ROUTERS_URL.HOME]);
     }
   }
-
 
   fetchApps() {
     this.store.dispatch(loadApplications({ organizationId: this.orgId }));
@@ -80,11 +79,11 @@ export class TestModelPageService {
   }
 
   fetchModels() {
-    this.store.dispatch(loadModels({organizationId: this.orgId, applicationId: this.appId}));
+    this.store.dispatch(loadModels({ organizationId: this.orgId, applicationId: this.appId }));
   }
 
   clearSelectedModelId() {
-    this.store.dispatch(setSelectedModelIdEntityAction({selectedModelId: null}));
+    this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: null }));
   }
 
   unSubscribe() {

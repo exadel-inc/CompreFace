@@ -14,21 +14,17 @@
   ~ permissions and limitations under the License.
   -->
 
-<mat-card *ngIf="app$ | async as app" class="breadcrumbs">
-  <div *ngIf="model$ | async as model else onlyApp" class="breadcrumbs">
-    <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">Home</a>
+<mat-card *ngIf="app" class="breadcrumbs">
+  <div *ngIf="model else onlyApp" class="breadcrumbs">
+    <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">{{'breadcrumbs.home' | translate}}</a>
     <div class="separator"> /</div>
     <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.APPLICATION]" [queryParams]="{'org': orgId, 'app': app.id}"
        matTooltip="{{app.name}}" [matTooltipDisabled]="app.name.length <= maxNameLength">
       {{app.name | truncate:maxNameLength}}
     </a>
-    <div class="separator"> /</div>
-    <div class="breadcrumbs-link" matTooltip="{{model.name}}" [matTooltipDisabled]="model.name.length <= maxNameLength">
-      {{model.name | truncate:maxNameLength}}
-    </div>
   </div>
   <ng-template #onlyApp>
-    <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">Home</a>
+    <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">{{'breadcrumbs.home' | translate}}</a>
     <div class="separator"> /</div>
     <div class="breadcrumbs-link" matTooltip="{{app.name}}" [matTooltipDisabled]="app.name.length <= maxNameLength">
       {{app.name | truncate:maxNameLength}}

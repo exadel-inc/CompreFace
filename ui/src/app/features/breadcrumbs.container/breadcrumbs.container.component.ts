@@ -17,27 +17,25 @@ import {Component, OnDestroy, OnInit, Input} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 
 import {Application} from '../../data/application';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {BreadcrumbsFacade} from './breadcrumbs.facade';
+import {BreadcrumbsFacade} from '../breadcrumbs/breadcrumbs.facade';
 import {Model} from "../../data/model";
 
+
 @Component({
-  selector: 'app-breadcrumbs',
-  templateUrl: './breadcrumbs.component.html',
-  styleUrls: ['./breadcrumbs.component.scss']
+  selector: 'app-breadcrumbs-container',
+  templateUrl: './breadcrumbs.container.component.html',
+  styleUrls: ['./breadcrumbs.container.component.scss']
 })
-export class BreadcrumbsComponent implements OnInit{
-  orgSubscription: Subscription;
-  ROUTERS_URL = ROUTERS_URL;
-  maxNameLength = 20;
-  @Input() model: Model;
-  @Input() orgId: String;
-  @Input() app: Application;
+export class BreadcrumbsContainerComponent implements OnInit{
+  orgId$: Observable<String>;
+  app$: Observable<Application>;
+  model$: Observable<Model>;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
-  }
+  constructor(private breadcrumbsFacade: BreadcrumbsFacade) { }
 
-  ngOnInit(): void {
-    
+  ngOnInit() {
+    this.orgId$ = this.breadcrumbsFacade.orgId$;
+    this.app$ = this.breadcrumbsFacade.app$;
+    this.model$ = this.breadcrumbsFacade.model$;    
   }
 }

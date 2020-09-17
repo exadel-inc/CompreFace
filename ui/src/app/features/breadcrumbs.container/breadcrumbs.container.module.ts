@@ -13,19 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
+import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
 
-import { Component, OnInit } from '@angular/core';
 
-@Component({
-  selector: 'app-model-test',
-  templateUrl: './model-test.component.html',
-  styleUrls: ['./model-test.component.scss']
+
+@NgModule({
+  declarations: [BreadcrumbsContainerComponent],
+  exports: [
+    BreadcrumbsContainerComponent
+  ],
+  imports: [
+    CommonModule,
+    BreadcrumbsModule
+  ]
 })
-export class ModelTestComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-}
+export class BreadcrumbsContainerModule { }
