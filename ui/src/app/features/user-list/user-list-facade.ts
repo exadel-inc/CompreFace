@@ -31,7 +31,7 @@ import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/sel
 import {
   deleteUser,
   loadUsersEntityAction,
-  updateUserRoleAction,
+  updateUserRoleWithRefreshAction,
 } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
@@ -98,7 +98,7 @@ export class UserListFacade implements IFacade {
   }
 
   updateUserRole(id: string, role: RoleEnum): void {
-    this.store.dispatch(updateUserRoleAction({
+    this.store.dispatch(updateUserRoleWithRefreshAction({
       organizationId: this.selectedOrganization,
       user: {
         id,
