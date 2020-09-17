@@ -29,6 +29,7 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.List;
+import java.util.Random;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -104,6 +105,21 @@ class FaceServiceTest {
         val inOrder = inOrder(classifierManager, faceDao);
         inOrder.verify(classifierManager).removeFaceClassifier(API_KEY);
         inOrder.verify(faceDao).deleteFacesByApiKey(API_KEY);
+        verifyNoMoreInteractions(faceDao);
+    }
+
+    @Test
+    void countFacesInModel() {
+        val facesCount = new Random().nextInt(10);
+
+        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(facesCount);
+
+        val actual = faceService.countFacesInModel(MODEL_KEY);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual).isEqualTo(facesCount);
+
+        verify(faceDao).countFacesInModel(MODEL_KEY);
         verifyNoMoreInteractions(faceDao);
     }
 }

@@ -25,6 +25,7 @@ import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,9 +112,19 @@ public class FaceServiceTestIT {
         val actual = facesRepository.findAll();
 
         assertThat(actual).hasSize(faces.size() - 2);
-        assertThat(oneKeyFaces).allSatisfy(face -> {
-            assertThat(actual).doesNotContain(face);
-        });
+        assertThat(oneKeyFaces).allSatisfy(face -> assertThat(actual).doesNotContain(face));
+    }
+
+    @Test
+    public void countFacesInModel() {
+        val faces = facesRepository.findAll();
+        val oneKeyFaces = faces.stream()
+                               .filter(face -> face.getApiKey().equals(MODEL_KEY))
+                               .collect(Collectors.toList());
+
+        val actual = faceService.countFacesInModel(MODEL_KEY);
+
+        assertThat(actual).isEqualTo(oneKeyFaces.size());
     }
 
     @AfterEach
