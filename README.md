@@ -73,7 +73,7 @@ docker-compose up --build
 `git config --global core.autocrlf false`
 2. Last line in /dev/start.sh file change to 
 `docker-compose -f docker-compose.yml up --remove-orphans --build`
-3. Run start--dev.sh file.
+3. Run /dev/start--dev.sh file.
 
 ## Simple tutorial of usage
 
