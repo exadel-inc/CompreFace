@@ -15,6 +15,7 @@
  */
 import {Store} from '@ngrx/store';
 import {Injectable} from '@angular/core';
+import { merge } from 'rxjs';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {UserService} from 'src/app/core/user/user.service';
 import {
@@ -25,7 +26,7 @@ import {
   loadUsersEntityAction,
   updateUserRoleAction,
   updateUserRoleFailAction,
-  updateUserRoleSuccessAction
+  updateUserRoleSuccessAction, updateUserRoleWithRefreshAction
 } from 'src/app/store/user/action';
 import {loadApplications} from 'src/app/store/application/action';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
@@ -63,6 +64,18 @@ export class UserListEffect {
     switchMap(({ organizationId, user }) =>
       this.userService.updateRole(organizationId, user.id, user.role).pipe(
         map(res => (updateUserRoleSuccessAction({user: res}))),
+        catchError((error) => of(updateUserRoleFailAction({ error })))
+      )));
+
+  @Effect()
+  updateUserRoleWithRefresh = this.actions.pipe(
+    ofType(updateUserRoleWithRefreshAction),
+    switchMap(({ organizationId, user }) =>
+      this.userService.updateRole(organizationId, user.id, user.role).pipe(
+        switchMap((res) => merge(
+          of(updateUserRoleSuccessAction({user: res})),
+          of(loadUsersEntityAction({organizationId}))
+        )),
         catchError((error) => of(updateUserRoleFailAction({ error })))
       )));
 

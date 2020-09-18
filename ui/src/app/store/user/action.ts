@@ -24,6 +24,10 @@ export const updateUserRoleAction = createAction(
   '[User/API] Update User Role',
   props<{ organizationId: string; user: { id: string, role: RoleEnum } }>()
 );
+export const updateUserRoleWithRefreshAction = createAction(
+  '[User/API] Update User Role With Refresh',
+  props<{ organizationId: string; user: { id: string, role: RoleEnum } }>()
+);
 export const updateUserRoleSuccessAction = createAction('[User/API] Update User Role Success', props<{ user: AppUser }>());
 export const updateUserRoleFailAction = createAction('[User/API] Update User Role Failed)', props<{error: any }>());
 export const deleteUser = createAction('[User/API] Delete User', props<{
