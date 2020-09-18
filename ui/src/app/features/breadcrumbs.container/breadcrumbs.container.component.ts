@@ -28,11 +28,10 @@ import {Model} from '../../data/model';
       [model]="model$ | async"
       [app]="app$ | async"
       [orgId]="orgId$ | async">
-    </app-abreadcrumbs>
-`,,
+    </app-abreadcrumbs>`,
   styleUrls: ['./breadcrumbs.container.component.scss']
 })
-export class BreadcrumbsContainerComponent implements OnInit{
+export class BreadcrumbsContainerComponent implements OnInit {
   orgId$: Observable<string>;
   app$: Observable<Application>;
   model$: Observable<Model>;
