@@ -13,31 +13,25 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Component, OnDestroy, OnInit, Input} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import {Component, Input} from '@angular/core';
 
 import {Application} from '../../data/application';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {BreadcrumbsFacade} from './breadcrumbs.facade';
-import {Model} from "../../data/model";
+import {Model} from '../../data/model';
 
 @Component({
   selector: 'app-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
   styleUrls: ['./breadcrumbs.component.scss']
 })
-export class BreadcrumbsComponent implements OnInit{
-  orgSubscription: Subscription;
+export class BreadcrumbsComponent {
   ROUTERS_URL = ROUTERS_URL;
   maxNameLength = 20;
   @Input() model: Model;
-  @Input() orgId: String;
+  @Input() orgId: string;
   @Input() app: Application;
 
   constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
-  }
-
-  ngOnInit(): void {
-    
   }
 }

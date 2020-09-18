@@ -18,16 +18,22 @@ import {Observable, Subscription} from 'rxjs';
 
 import {Application} from '../../data/application';
 import {BreadcrumbsFacade} from '../breadcrumbs/breadcrumbs.facade';
-import {Model} from "../../data/model";
+import {Model} from '../../data/model';
 
 
 @Component({
   selector: 'app-breadcrumbs-container',
-  templateUrl: './breadcrumbs.container.component.html',
+  template: `
+    <app-breadcrumbs
+      [model]="model$ | async"
+      [app]="app$ | async"
+      [orgId]="orgId$ | async">
+    </app-abreadcrumbs>
+`,,
   styleUrls: ['./breadcrumbs.container.component.scss']
 })
 export class BreadcrumbsContainerComponent implements OnInit{
-  orgId$: Observable<String>;
+  orgId$: Observable<string>;
   app$: Observable<Application>;
   model$: Observable<Model>;
 
@@ -36,6 +42,6 @@ export class BreadcrumbsContainerComponent implements OnInit{
   ngOnInit() {
     this.orgId$ = this.breadcrumbsFacade.orgId$;
     this.app$ = this.breadcrumbsFacade.app$;
-    this.model$ = this.breadcrumbsFacade.model$;    
+    this.model$ = this.breadcrumbsFacade.model$;
   }
 }

@@ -21,13 +21,13 @@ import { AppState } from '../../store';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { ROUTERS_URL } from '../../data/routers-url.variable';
 import { setSelectedId } from '../../store/organization/action';
-import { loadModels, setSelectedModelIdEntityAction } from "../../store/model/actions";
-import { Subscription } from "rxjs";
-import { selectApplications } from "../../store/application/selectors";
-import { filter, take } from "rxjs/operators";
-import { getUserInfo } from "../../store/userInfo/action";
-import { OrganizationEnService } from "../../store/organization/organization-entitys.service";
-import { selectModels } from "../../store/model/selectors";
+import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/actions';
+import { Subscription } from 'rxjs';
+import { selectApplications } from '../../store/application/selectors';
+import { filter, take } from 'rxjs/operators';
+import { getUserInfo } from '../../store/userInfo/action';
+import { OrganizationEnService } from '../../store/organization/organization-entitys.service';
+import { selectModels } from '../../store/model/selectors';
 
 @Injectable()
 export class TestModelPageService {
@@ -54,28 +54,16 @@ export class TestModelPageService {
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedId({ selectId: this.orgId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
-      this.appsSub = this.store.select(selectApplications).pipe(
-        filter(apps => !apps.length),
-        take(1)
-      ).subscribe(() => {
-        this.fetchApps();
-      });
       this.modelSub = this.store.select(selectModels).pipe(
         filter(models => !models.length),
         take(1)
       ).subscribe(() => {
         this.fetchModels();
       }
-      )
+      );
     } else {
       this.router.navigate([ROUTERS_URL.HOME]);
     }
-  }
-
-  fetchApps() {
-    this.store.dispatch(loadApplications({ organizationId: this.orgId }));
-    this.store.dispatch(getUserInfo());
-    this.organizationEnService.getAll();
   }
 
   fetchModels() {
