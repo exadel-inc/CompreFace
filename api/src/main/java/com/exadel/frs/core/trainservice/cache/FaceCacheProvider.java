@@ -38,10 +38,6 @@ public class FaceCacheProvider {
         return result;
     }
 
-    public boolean cached(String collectionId) {
-        return cache.getIfPresent(collectionId) != null;
-    }
-
     public void invalidate(String collectionId) {
         cache.invalidate(collectionId);
     }
