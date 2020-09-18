@@ -20,7 +20,7 @@ import static java.lang.Thread.currentThread;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.ObjectUtils.isNotEmpty;
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
-import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.exception.ModelNotTrainedException;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class FaceClassifierAdapter {
                 }
             }
 
-            classifier = new LogisticRegressionClassifier(labels);
+            classifier = new EuclideanDistanceClassifier(labels);
             classifier.train(
                     x.toArray(double[][]::new),
                     y.stream()
