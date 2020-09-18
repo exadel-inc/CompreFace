@@ -68,9 +68,9 @@
     "title": "Models",
     "name": "Name",
     "api_key": "API key",
-    "create_model_info": " Create the first model, where you will be able to add, recognize, delete faces,\n      get list of the model faces, train the model and remove already trained.",
+    "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
     "create_dialog": {
-      "title": "Create model",
+      "title": "Create Face Collection",
       "name": "Name"
     },
     "select_menu": {
@@ -100,7 +100,7 @@
   },
   "org_users": {
     "delete_dialog": {
-      "title": "Delete user",
+      "title": "Delete User",
       "confirmation_question": "Are you sure you want remove user {{name}} {{lastName}}?",
       "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
       "warn_hint_anyway": "You can delete him anyway.",
