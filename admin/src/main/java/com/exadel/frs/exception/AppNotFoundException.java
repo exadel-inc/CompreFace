@@ -26,5 +26,4 @@ public class AppNotFoundException extends BasicException {
     public AppNotFoundException(final String guid) {
         super(APP_NOT_FOUND, format(MESSAGE, guid));
     }
-
 }

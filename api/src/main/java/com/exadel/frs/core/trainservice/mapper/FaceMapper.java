@@ -25,8 +25,9 @@ import org.mapstruct.Mapping;
 @Mapper
 public interface FaceMapper {
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "faceName", target = "name")
+    @Mapping(source = "id", target = "image_id")
+    @Mapping(source = "faceName", target = "subject")
     FaceResponseDto toResponseDto(Face face);
+
     List<FaceResponseDto> toResponseDto(List<Face> faces);
 }

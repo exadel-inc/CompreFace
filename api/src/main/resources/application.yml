@@ -10,7 +10,7 @@ spring:
 environment:
   servers:
     PYTHON:
-      url: ${PYTHON_URL:http://frs-core:3000}
+      url: ${PYTHON_URL:http://compreface-core:3000}
 
 spring:
   cache:
@@ -22,12 +22,14 @@ spring:
       indent-output: true
   datasource-pg:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://frs-postgres-db:5432/frs}
+    url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
       maximum-pool-size: 3
       minimum-idle: 3
+      data-source-properties:
+        stringtype: unspecified
   jpa:
     properties:
       hibernate:
@@ -66,3 +68,8 @@ spring:
       enabled: true
     livereload:
       enabled: false
+
+swagger:
+  info:
+    title: CompreFace - API
+    version: 0.0.2-SNAPSHOT

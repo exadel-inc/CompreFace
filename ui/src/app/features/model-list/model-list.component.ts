@@ -14,18 +14,19 @@
  * permissions and limitations under the License.
  */
 
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialog} from '@angular/material';
-import {Observable} from 'rxjs';
-import {first, map} from 'rxjs/operators';
-import {Model} from 'src/app/data/model';
-import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialog.component';
-import {ITableConfig} from 'src/app/features/table/table.component';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { Observable } from 'rxjs';
+import { first, map } from 'rxjs/operators';
+import { Model } from 'src/app/data/model';
+import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
+import { ITableConfig } from 'src/app/features/table/table.component';
 
-import {DeleteDialogComponent} from '../delete-dialog/delete-dialog.component';
-import {EditDialogComponent} from '../edit-dialog/edit-dialog.component';
-import {ModelListFacade} from './model-list-facade';
-import {ROUTERS_URL} from "../../data/routers-url.variable";
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
+import { ModelListFacade } from './model-list-facade';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {Router} from "@angular/router";
 
 @Component({
@@ -39,6 +40,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   userRole$: Observable<string>;
   errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
+  roleEnum = RoleEnum;
   columns = [
     {title: 'name', property: 'name'},
     {title: 'apiKey', property: 'apiKey'},
@@ -73,7 +75,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(EditDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'model',
+        entityType: 'Face Collection',
         entityName: model.name,
       }
     });
@@ -89,7 +91,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'model',
+        entityType: 'Face Collection',
         entityName: model.name,
       }
     });
@@ -115,7 +117,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
-        entityType: 'model',
+        entityType: 'Face Collection',
       }
     });
 

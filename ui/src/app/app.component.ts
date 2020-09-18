@@ -19,7 +19,7 @@ import { AuthInit } from './core/auth/auth.init';
 import { Store } from '@ngrx/store';
 import { AppState } from './store';
 import { AuthService } from './core/auth/auth.service';
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',

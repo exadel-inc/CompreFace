@@ -24,7 +24,6 @@ import {createApplication, loadApplications} from 'src/app/store/application/act
 import {selectApplications, selectIsPendingApplicationList} from 'src/app/store/application/selectors';
 import {selectCurrentOrganizationId, selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
 
-
 @Injectable()
 export class ApplicationListFacade implements IFacade {
   applications$: Observable<Application[]>;

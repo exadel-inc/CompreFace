@@ -16,6 +16,7 @@
 
 package com.exadel.frs.system.security.config;
 
+import static java.util.stream.Collectors.toList;
 import com.exadel.frs.system.security.AuthenticationKeyGeneratorImpl;
 import com.exadel.frs.system.security.CustomOAuth2Exception;
 import com.exadel.frs.system.security.CustomUserDetailsService;
@@ -23,7 +24,6 @@ import com.exadel.frs.system.security.TokenServicesImpl;
 import com.exadel.frs.system.security.client.Client;
 import com.exadel.frs.system.security.client.ClientService;
 import com.exadel.frs.system.security.client.OAuthClientProperties;
-import java.util.stream.Collectors;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -72,7 +72,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer.tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()");
+                   .checkTokenAccess("isAuthenticated()");
     }
 
     @Override
@@ -81,19 +81,19 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         clients.withClientDetails(clientService);
 
         var appClients = authClientProperties.getClients().values()
-                .stream()
-                .map(it ->
-                        new Client()
-                                .setClientId(it.getClientId())
-                                .setAuthorizedGrantTypes(String.join(",", it.getAuthorizedGrantTypes()))
-                                .setAuthorities(String.join(",", it.getAuthorities()))
-                                .setResourceIds(String.join(",", it.getResourceIds()))
-                                .setScope(String.join(",", it.getClientScope()))
-                                .setClientSecret(passwordEncoder.encode(it.getClientSecret()))
-                                .setAccessTokenValidity(it.getAccessTokenValidity())
-                                .setRefreshTokenValidity(it.getRefreshTokenValidity())
-                                .setAutoApprove("*"))
-                .collect(Collectors.toList());
+                                             .stream()
+                                             .map(it ->
+                                                     new Client()
+                                                             .setClientId(it.getClientId())
+                                                             .setAuthorizedGrantTypes(String.join(",", it.getAuthorizedGrantTypes()))
+                                                             .setAuthorities(String.join(",", it.getAuthorities()))
+                                                             .setResourceIds(String.join(",", it.getResourceIds()))
+                                                             .setScope(String.join(",", it.getClientScope()))
+                                                             .setClientSecret(passwordEncoder.encode(it.getClientSecret()))
+                                                             .setAccessTokenValidity(it.getAccessTokenValidity())
+                                                             .setRefreshTokenValidity(it.getRefreshTokenValidity())
+                                                             .setAutoApprove("*"))
+                                             .collect(toList());
         clientService.saveAll(appClients);
     }
 

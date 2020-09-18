@@ -16,15 +16,13 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import static java.lang.String.format;
-import lombok.Value;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
 
-@Value
-public class BadFormatModelKeyException extends RuntimeException {
+public class BadFormatModelKeyException extends BasicException {
 
     private static final String MESSAGE = "Model key should be UUID";
 
     public BadFormatModelKeyException() {
-        super(format(MESSAGE));
+        super(VALIDATION_CONSTRAINT_VIOLATION, MESSAGE);
     }
 }

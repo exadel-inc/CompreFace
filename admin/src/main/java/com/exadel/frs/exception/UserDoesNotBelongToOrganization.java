@@ -26,5 +26,4 @@ public class UserDoesNotBelongToOrganization extends BasicException {
     public UserDoesNotBelongToOrganization() {
         super(USER_DOES_NOT_BELONG_TO_ORGANIZATION, format(MESSAGE));
     }
-
 }

@@ -28,7 +28,7 @@ import {MatCardModule} from '@angular/material/card';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
 import {MatDialogModule, MatButtonModule} from '@angular/material';
 import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
-import {TranslateModule} from "@ngx-translate/core";
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [UserListComponent],

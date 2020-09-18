@@ -1,42 +1,45 @@
 databaseChangeLog:
   - changeSet:
-      id: frs call statistics
-      author: Dmitry Andryianau
+      id: create-app_model-table
+      author: Andrei Hayeuski
       changes:
-        # system_call_statistics
+        # app_model
         - createTable:
-            tableName: system_call_statistics
+            tableName: app_model
             columns:
               - column:
-                  name: id
+                  name: app_id
                   type: bigint
               - column:
-                  name: object_type
-                  type: varchar(255)
-              - column:
-                  name: guid
-                  type: varchar(36)
-              - column:
-                  name: call_count
+                  name: model_id
                   type: bigint
               - column:
-                  name: object_guid
-                  type: varchar(36)
+                  name: access_type
+                  type: varchar(1)
 
         - addPrimaryKey:
-            columnNames: id
-            constraintName: pk_system_call_statistics
-            tableName: system_call_statistics
-        - createSequence:
-            sequenceName: call_statistics_info_seq
+            columnNames: app_id, model_id
+            constraintName: pk_app_model
+            tableName: app_model
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: app_model
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: model_id
+            baseTableName: app_model
+            referencedColumnNames: id
+            referencedTableName: model
+            constraintName: fk_model_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
         - addNotNullConstraint:
-            columnName: call_count
-            tableName: system_call_statistics
-        - addUniqueConstraint:
-            columnNames: object_type,object_guid
-            constraintName: call_statistics_object_index
-            tableName: system_call_statistics
-        - addDefaultValue:
-            columnName: call_count
-            defaultValue: 1
-            tableName: system_call_statistics
+            columnName: access_type
+            tableName: app_model

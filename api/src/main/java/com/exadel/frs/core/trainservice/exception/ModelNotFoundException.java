@@ -16,15 +16,14 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_NOT_FOUND;
 import static java.lang.String.format;
-import lombok.Value;
 
-@Value
-public class ModelNotFoundException extends RuntimeException {
+public class ModelNotFoundException extends BasicException {
 
-    private static final String MESSAGE = "Model not found";
+    private static final String MESSAGE = "Model %s not found";
 
-    public ModelNotFoundException() {
-        super(format(MESSAGE));
+    public ModelNotFoundException(String modelId) {
+        super(MODEL_NOT_FOUND, format(MESSAGE, modelId));
     }
 }

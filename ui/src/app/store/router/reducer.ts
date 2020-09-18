@@ -24,7 +24,6 @@ export interface RouterStateUrl  {
   data: Data;
 }
 
-
 export class AppSerializer implements RouterStateSerializer<RouterStateUrl > {
   serialize(state: RouterStateSnapshot): RouterStateUrl  {
     let currentRoute = state.root;

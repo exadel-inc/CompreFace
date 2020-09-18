@@ -16,10 +16,13 @@
 
 package com.exadel.frs.core.trainservice.exception;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_HAS_NOT_ENOUGH_FACES;
 
-@ResponseStatus(code = BAD_REQUEST, reason = "Model should contain at least 2 faces")
-public class ModelHasNotEnoughFacesException extends RuntimeException {
+public class ModelHasNotEnoughFacesException extends BasicException {
 
+    private static final String MESSAGE = "Model should contain at least 2 faces";
+
+    public ModelHasNotEnoughFacesException() {
+        super(MODEL_HAS_NOT_ENOUGH_FACES, MESSAGE);
+    }
 }

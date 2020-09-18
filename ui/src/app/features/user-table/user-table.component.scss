@@ -20,9 +20,11 @@ mat-icon {
 
 .create-new-message {
   display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
   top: 200px;
   mat-icon {
-    padding: 25px 20px 0 0
+    padding-right: 15px;
   }
 }

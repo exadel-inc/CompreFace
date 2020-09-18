@@ -26,5 +26,4 @@ public class NameIsNotUniqueException extends BasicException {
     public NameIsNotUniqueException(String fieldName) {
         super(NAME_IS_NOT_UNIQUE, format(MESSAGE, fieldName));
     }
-
 }

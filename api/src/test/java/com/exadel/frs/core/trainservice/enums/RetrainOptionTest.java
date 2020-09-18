@@ -20,7 +20,7 @@ import static com.exadel.frs.core.trainservice.enums.RetrainOption.FORCE;
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static com.exadel.frs.core.trainservice.enums.RetrainOption.YES;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -61,8 +61,9 @@ class RetrainOptionTest {
         val retrainService = mock(RetrainService.class);
         when(retrainService.isTrainingRun(MODEL_KEY)).thenReturn(true);
 
-        assertThrows(ClassifierIsAlreadyTrainingException.class, () ->
-                YES.run(MODEL_KEY, retrainService));
+        assertThatThrownBy(() ->
+                YES.run(MODEL_KEY, retrainService)
+        ).isInstanceOf(ClassifierIsAlreadyTrainingException.class);
 
         verify(retrainService).isTrainingRun(MODEL_KEY);
         verifyNoMoreInteractions(retrainService);

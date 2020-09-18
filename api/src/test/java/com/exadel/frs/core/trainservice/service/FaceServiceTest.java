@@ -16,7 +16,6 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doNothing;
@@ -30,6 +29,7 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.List;
+import java.util.Random;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,9 +40,6 @@ class FaceServiceTest {
 
     @Mock
     private FaceDao faceDao;
-
-    @Mock
-    private RetrainService retrainService;
 
     @Mock
     private FaceClassifierManager classifierManager;
@@ -77,7 +74,7 @@ class FaceServiceTest {
     void deleteFaceByName() {
         val faceName = "face_name";
 
-        faceService.deleteFaceByName(faceName, API_KEY, NO.name());
+        faceService.deleteFaceByName(faceName, API_KEY);
 
         verify(faceDao).deleteFaceByName(faceName, API_KEY);
         verifyNoInteractions(classifierManager);
@@ -87,7 +84,7 @@ class FaceServiceTest {
     void deleteFaceById() {
         val faceId = randomUUID().toString();
 
-        faceService.deleteFaceById(faceId, API_KEY, NO.name());
+        faceService.deleteFaceById(faceId);
 
         verify(faceDao).deleteFaceById(faceId);
         verifyNoInteractions(classifierManager);
@@ -103,12 +100,26 @@ class FaceServiceTest {
         val actual = faceService.deleteFacesByModel(API_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(faces.size());
+        assertThat(actual.size()).isEqualTo(faces.size());
 
         val inOrder = inOrder(classifierManager, faceDao);
         inOrder.verify(classifierManager).removeFaceClassifier(API_KEY);
         inOrder.verify(faceDao).deleteFacesByApiKey(API_KEY);
         verifyNoMoreInteractions(faceDao);
-        verifyNoInteractions(retrainService);
+    }
+
+    @Test
+    void countFacesInModel() {
+        val facesCount = new Random().nextInt(10);
+
+        when(faceDao.countFacesInModel(MODEL_KEY)).thenReturn(facesCount);
+
+        val actual = faceService.countFacesInModel(MODEL_KEY);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual).isEqualTo(facesCount);
+
+        verify(faceDao).countFacesInModel(MODEL_KEY);
+        verifyNoMoreInteractions(faceDao);
     }
 }

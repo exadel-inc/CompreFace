@@ -57,7 +57,6 @@ public enum ExceptionCode {
     USER_REGISTRATION_TOKEN_EXPIRED(25, FORBIDDEN),
     VALIDATION_CONSTRAINT_VIOLATION(26, BAD_REQUEST),
 
-
     UNDEFINED(0, BAD_REQUEST);
 
     private final Integer code;

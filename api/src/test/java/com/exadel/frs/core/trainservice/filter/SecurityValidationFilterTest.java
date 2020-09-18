@@ -16,16 +16,20 @@
 
 package com.exadel.frs.core.trainservice.filter;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.enumeration;
 import static java.util.Collections.singletonList;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import com.exadel.frs.core.trainservice.dto.RetrainResponse;
+import com.exadel.frs.core.trainservice.enums.ValidationResult;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
+import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
 import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,16 +40,17 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 
 public class SecurityValidationFilterTest {
 
     private static final String SHORT_API_KEY = "9892f9e2-1844-46f3-a710-72e";
+    private static final String VALID_API_KEY = "11f4cb4b-ea5a-45d4-8da7-863fea07c40a";
+    private static final String NOT_VALID_API_KEY = "11f4cb4bea5a45d48da7863fea07c40a11111";
 
     @Mock
     private ResponseExceptionHandler exceptionHandler;
@@ -59,29 +64,92 @@ public class SecurityValidationFilterTest {
     @InjectMocks
     private SecurityValidationFilter securityValidationFilter;
 
+    private HttpServletRequest httpServletRequest;
+    private HttpServletResponse httpServletResponse;
+    private FilterChain filterChain;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         initMocks(this);
+
+        httpServletRequest = mock(HttpServletRequest.class);
+        httpServletResponse = mock(HttpServletResponse.class);
+        filterChain = mock(FilterChain.class);
+
+        when(httpServletResponse.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
+        when(httpServletRequest.getRequestURI()).thenReturn(API_V1);
     }
 
     @Test
     public void testDoFilterWithShortApiKey() throws IOException, ServletException {
-        val httpServletRequest = mock(HttpServletRequest.class);
-        val httpServletResponse = mock(HttpServletResponse.class);
-        val filterChain = mock(FilterChain.class);
-
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(SHORT_API_KEY)));
-        when(httpServletResponse.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-        when(exceptionHandler.handleBadFormatModelKeyException(new BadFormatModelKeyException()))
-                .thenReturn(ResponseEntity.status(BAD_REQUEST)
-                        .body(new RetrainResponse(new BadFormatModelKeyException().getMessage())));
+        when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
-        verify(httpServletResponse).setStatus(exceptionHandler
-                .handleBadFormatModelKeyException(new BadFormatModelKeyException())
-                .getStatusCode()
-                .value());
+        verify(httpServletResponse).setStatus(
+                exceptionHandler.handleDefinedExceptions(new BadFormatModelKeyException())
+                                .getStatusCode()
+                                .value()
+        );
+    }
+
+    @Test
+    public void testDoFilterWithoutApiKey() throws IOException, ServletException {
+        when(httpServletRequest.getHeaderNames()).thenReturn(emptyEnumeration());
+        when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(emptyEnumeration());
+        when(exceptionHandler.handleMissingRequestHeader(anyString())).thenCallRealMethod();
+
+        securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+
+        verify(httpServletResponse).setStatus(
+                exceptionHandler.handleMissingRequestHeader(X_FRS_API_KEY_HEADER)
+                                .getStatusCode()
+                                .value()
+        );
+    }
+
+    @Test
+    public void testDoFilterWithValidApiKey() throws IOException, ServletException {
+        when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
+        when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
+        when(modelService.validateModelKey(anyString())).thenReturn(ValidationResult.OK);
+
+        securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+
+        verify(filterChain).doFilter(httpServletRequest, httpServletResponse);
+    }
+
+    @Test
+    public void testDoFilterWithNonExistentApiKey() throws IOException, ServletException {
+        when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
+        when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
+        when(modelService.validateModelKey(anyString())).thenReturn(ValidationResult.FORBIDDEN);
+        when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();
+
+        securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+
+        verify(httpServletResponse).setStatus(
+                exceptionHandler.handleDefinedExceptions(new ModelNotFoundException(VALID_API_KEY))
+                                .getStatusCode()
+                                .value()
+        );
+    }
+
+    @Test
+    public void testDoFilterWithNotValidApiKey() throws IOException, ServletException {
+        when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
+        when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(NOT_VALID_API_KEY)));
+        when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();
+
+        securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
+
+        verify(httpServletResponse).setStatus(
+                exceptionHandler.handleDefinedExceptions(new BadFormatModelKeyException())
+                                .getStatusCode()
+                                .value()
+        );
+        verify(httpServletResponse).setContentType(MediaType.APPLICATION_JSON_VALUE);
     }
 }

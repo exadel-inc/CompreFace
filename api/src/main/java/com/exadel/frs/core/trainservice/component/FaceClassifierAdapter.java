@@ -70,7 +70,10 @@ public class FaceClassifierAdapter {
                     labels.add(faceName);
 
                     embeddings.forEach(embedding -> {
-                        x.add(embedding.stream().mapToDouble(d -> d).toArray());
+                        x.add(embedding.stream()
+                                       .mapToDouble(d -> d)
+                                       .toArray()
+                        );
                         y.add(labels.indexOf(faceName));
                     });
                 }
@@ -79,7 +82,9 @@ public class FaceClassifierAdapter {
             classifier = new LogisticRegressionClassifier(labels);
             classifier.train(
                     x.toArray(double[][]::new),
-                    y.stream().mapToInt(integer -> integer).toArray()
+                    y.stream()
+                     .mapToInt(integer -> integer)
+                     .toArray()
             );
 
             manager.saveClassifier(modelKey, classifier, embeddingFaceList.getCalculatorVersion());
@@ -88,13 +93,6 @@ public class FaceClassifierAdapter {
         } finally {
             manager.finishClassifierTraining(modelKey);
         }
-    }
-
-    public void trainSync(
-            final EmbeddingFaceList embeddingFaceList,
-            final String modelKey
-    ) {
-        this.train(embeddingFaceList, modelKey);
     }
 
     public List<Pair<Double, String>> predict(final double[] x, final int resultCount) {

@@ -30,6 +30,6 @@ public interface UserOrgRoleMapper {
     @Mapping(source = "user.lastName", target = "lastName")
     @Mapping(source = "user.email", target = "email")
     UserRoleResponseDto toUserRoleResponseDto(UserOrganizationRole userAppRole);
-    List<UserRoleResponseDto> toUserRoleResponseDto(List<UserOrganizationRole> userAppRoles);
 
+    List<UserRoleResponseDto> toUserRoleResponseDto(List<UserOrganizationRole> userAppRoles);
 }

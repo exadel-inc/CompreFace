@@ -60,7 +60,6 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
   on(deleteUserFromApplicationSuccess, (state, { id }) => appUserAdapter.removeOne(id, { ...state, isPending: false })),
 );
 
-
 export function appUserReducer(appUserState: AppUserEntityState, action: Action) {
   return reducer(appUserState, action);
 }

@@ -23,7 +23,7 @@ import static java.util.Collections.nCopies;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -38,6 +38,7 @@ import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
+import com.exadel.frs.entity.ModelShareRequest;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
@@ -47,10 +48,12 @@ import com.exadel.frs.entity.UserOrganizationRoleId;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.SelfRoleApplicationChangeException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
@@ -64,6 +67,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 class AppServiceTest {
 
@@ -72,9 +79,13 @@ class AppServiceTest {
     private static final long APPLICATION_ID = 1L;
     private static final long ORGANISATION_ID = 2L;
     private static final long USER_ID = 3L;
+    private static final long ADMIN_ID = 4L;
 
     @Mock
     private AppRepository appRepositoryMock;
+
+    @Mock
+    private ModelShareRequestRepository modelShareRequestRepositoryMock;
 
     @Mock
     private OrganizationService organizationServiceMock;
@@ -177,12 +188,16 @@ class AppServiceTest {
 
         when(organizationServiceMock.getOrganization(ORGANISATION_GUID)).thenReturn(organization);
 
-        assertThrows(UserDoesNotBelongToOrganization.class, () -> appService.getApps(ORGANISATION_GUID, USER_ID));
+        assertThatThrownBy(() -> {
+            appService.getApps(ORGANISATION_GUID, USER_ID);
+        }).isInstanceOf(UserDoesNotBelongToOrganization.class);
     }
 
     @Test
     void successCreateApp() {
-        AppCreateDto appCreateDto = AppCreateDto.builder().name("appName").build();
+        val appCreateDto = AppCreateDto.builder()
+                                       .name("appName")
+                                       .build();
         val user = user(USER_ID);
 
         val organization = organization();
@@ -205,19 +220,25 @@ class AppServiceTest {
 
     @Test
     void failCreateOrganizationNameIsNotUnique() {
-        val appCreateDto = AppCreateDto.builder().name("appName").build();
+        val appCreateDto = AppCreateDto.builder()
+                                       .name("appName")
+                                       .build();
 
         val organization = organization();
 
         when(organizationServiceMock.getOrganization(anyString())).thenReturn(organization);
         when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
 
-        assertThrows(NameIsNotUniqueException.class, () -> appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID));
+        assertThatThrownBy(() -> {
+            appService.createApp(appCreateDto, ORGANISATION_GUID, USER_ID);
+        }).isInstanceOf(NameIsNotUniqueException.class);
     }
 
     @Test
     void successUpdateApp() {
-        val appUpdateDto = AppUpdateDto.builder().name("appName").build();
+        val appUpdateDto = AppUpdateDto.builder()
+                                       .name("appName")
+                                       .build();
         val organization = organization();
 
         val app = App.builder()
@@ -242,6 +263,38 @@ class AppServiceTest {
     }
 
     @Test
+    void failUpdateUserAppSelfRoleOwnerChange() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(AppRole.USER.toString())
+                                                 .build();
+        val user = user(USER_ID);
+        val organization = organization();
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+        app.addUserAppRole(user, OWNER);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(appRepositoryMock.save(any())).thenReturn(app);
+
+        assertThatThrownBy(() -> {
+            appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
+        }).isInstanceOf(SelfRoleApplicationChangeException.class);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(ADMIN_ID, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(ADMIN_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
+        verifyNoMoreInteractions(authManagerMock);
+        verifyNoMoreInteractions(appRepositoryMock);
+    }
+
+    @Test
     void failUpdateAppSelfRoleChange() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
                                                  .userId("userGuid")
@@ -259,9 +312,9 @@ class AppServiceTest {
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
 
-        assertThrows(SelfRoleChangeException.class, () ->
-                appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID)
-        );
+        assertThatThrownBy(() -> {
+            appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+        }).isInstanceOf(SelfRoleChangeException.class);
 
         verify(authManagerMock).verifyWritePrivilegesToApp(USER_ID, app);
         verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
@@ -271,7 +324,9 @@ class AppServiceTest {
 
     @Test
     void failUpdateAppNameIsNotUnique() {
-        val appUpdateDto = AppUpdateDto.builder().name("new_name").build();
+        val appUpdateDto = AppUpdateDto.builder()
+                                       .name("new_name")
+                                       .build();
         val organization = organization();
 
         val app = App.builder()
@@ -283,9 +338,9 @@ class AppServiceTest {
         when(appRepositoryMock.existsByNameAndOrganizationId(anyString(), anyLong())).thenReturn(true);
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
 
-        assertThrows(NameIsNotUniqueException.class, () ->
-                appService.updateApp(appUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID)
-        );
+        assertThatThrownBy(() -> {
+            appService.updateApp(appUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+        }).isInstanceOf(NameIsNotUniqueException.class);
     }
 
     @Test
@@ -460,6 +515,50 @@ class AppServiceTest {
     }
 
     @Test
+    void successUserWithAppRoleOwnerInvite() {
+        val admin = user(USER_ID);
+
+        val userEmail = "email";
+        val user = User.builder()
+                       .id(nextLong())
+                       .email(userEmail)
+                       .build();
+
+        val userRole = AppRole.OWNER;
+        val userInviteDto = UserInviteDto.builder()
+                                         .userEmail(userEmail)
+                                         .role(userRole.toString())
+                                         .build();
+
+        val organization = organization();
+        organization.addUserOrganizationRole(admin, ADMINISTRATOR);
+        organization.addUserOrganizationRole(user, USER);
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+        app.addUserAppRole(admin, userRole);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(anyString())).thenReturn(user);
+        when(appRepositoryMock.save(any())).thenReturn(app);
+
+        val actual = appService.inviteUser(userInviteDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+
+        assertThat(actual.getUser().getEmail()).isEqualTo(userEmail);
+        assertThat(actual.getRole()).isEqualTo(userRole);
+        assertThat(app.getOwner().get().getRole()).isEqualTo(userRole);
+
+        verify(appRepositoryMock).save(app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
     void failUserInviteUserAlreadyHasAccessToApp() {
         val userInviteDto = UserInviteDto.builder()
                                          .userEmail("email")
@@ -483,10 +582,9 @@ class AppServiceTest {
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUser(anyString())).thenReturn(user);
 
-        assertThrows(
-                UserAlreadyHasAccessToAppException.class,
-                () -> appService.inviteUser(userInviteDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID)
-        );
+        assertThatThrownBy(() -> {
+            appService.inviteUser(userInviteDto, ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+        }).isInstanceOf(UserAlreadyHasAccessToAppException.class);
     }
 
     @Test
@@ -540,10 +638,22 @@ class AppServiceTest {
         val oldOwner = user(1L);
         val newOwner = user(2L);
 
-        when(app1.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
-        when(app2.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(OWNER).build()));
-        when(app3.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(AppRole.ADMINISTRATOR).build()));
-        when(app4.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder().role(AppRole.USER).build()));
+        when(app1.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
+                                                                        .role(OWNER)
+                                                                        .build())
+        );
+        when(app2.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
+                                                                        .role(OWNER)
+                                                                        .build())
+        );
+        when(app3.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
+                                                                        .role(AppRole.ADMINISTRATOR)
+                                                                        .build())
+        );
+        when(app4.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
+                                                                        .role(AppRole.USER)
+                                                                        .build())
+        );
 
         when(organizationServiceMock.getDefaultOrg()).thenReturn(defaultOrg);
         when(organizationServiceMock.getOrganization(defaultOrg.getGuid())).thenReturn(defaultOrg);
@@ -570,15 +680,167 @@ class AppServiceTest {
         verifyNoMoreInteractions(app1, app2, app3, app4);
     }
 
-    private App makeApp(final long userId, final AppRole appRole, final long appId) {
-        return App.builder()
-                  .userAppRoles(List.of(UserAppRole.builder().id(new UserAppRoleId(userId, appId)).role(appRole).build()))
-                  .build();
+    @Test
+    void getAppRolesToAssignReturnsToOwner() {
+        val user = user(USER_ID);
+        val organization = organization();
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+        app.addUserAppRole(user, OWNER);
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        val actual = appService.getAppRolesToAssign(ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+
+        assertThat(actual).hasSize(AppRole.values().length);
+
+        verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void getAppRolesToAssignReturnsToUser() {
+        val user = user(USER_ID);
+        val organization = organization();
+        organization.addUserOrganizationRole(user, USER);
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        val actual = appService.getAppRolesToAssign(ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+
+        assertThat(actual).isEmpty();
+
+        verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void getAppRolesToAssignReturnsDefault() {
+        val user = user(USER_ID);
+        val organization = organization();
+        organization.addUserOrganizationRole(user, OrganizationRole.OWNER);
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        val actual = appService.getAppRolesToAssign(ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+
+        assertThat(actual).hasSize(AppRole.values().length);
+
+        verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void getAppRolesToAssignThrowsExceptionIfNoOrgUser() {
+        val organization = organization();
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        assertThatThrownBy(() -> {
+            appService.getAppRolesToAssign(ORGANISATION_GUID, APPLICATION_GUID, USER_ID);
+        }).isInstanceOf(UserDoesNotBelongToOrganization.class);
+
+        verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void successGenerateUuidToRequestModelShare() {
+        val user = user(USER_ID);
+        val organization = organization();
+        organization.addUserOrganizationRole(user, OrganizationRole.OWNER);
+
+        val app = App.builder()
+                     .id(APPLICATION_ID)
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .build();
+
+        val authentication = Mockito.mock(Authentication.class);
+        val securityContext = Mockito.mock(SecurityContext.class);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        when(authentication.getPrincipal()).thenReturn(User.builder()
+                                                           .id(USER_ID)
+                                                           .build()
+        );
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+
+        val actual = appService.generateUuidToRequestModelShare(ORGANISATION_GUID, APPLICATION_GUID);
+
+        assertThat(actual).isNotNull();
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verify(modelShareRequestRepositoryMock).save(any(ModelShareRequest.class));
+        verifyNoMoreInteractions(authManagerMock, modelShareRequestRepositoryMock);
+    }
+
+    @Test
+    void successUpdateUserAppRole() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(OWNER.toString())
+                                                 .build();
+        val user = user(USER_ID);
+        val organization = organization();
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .organization(organization)
+                     .userAppRoles(List.of(UserAppRole.builder()
+                                                      .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                                      .role(AppRole.ADMINISTRATOR)
+                                                      .build()
+                     ))
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+
+        appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(ADMIN_ID, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(ADMIN_ID, app);
+        verify(authManagerMock).verifyOrganizationHasTheApp(ORGANISATION_GUID, app);
+        verify(appRepositoryMock).save(any(App.class));
+        verifyNoMoreInteractions(authManagerMock);
     }
 
     private UserOrganizationRole makeRole(final long userId, final OrganizationRole role) {
         return UserOrganizationRole.builder()
-                                   .id(UserOrganizationRoleId.builder().userId(userId).build())
+                                   .id(UserOrganizationRoleId.builder()
+                                                             .userId(userId)
+                                                             .build()
+                                   )
                                    .role(role)
                                    .user(user(userId))
                                    .build();

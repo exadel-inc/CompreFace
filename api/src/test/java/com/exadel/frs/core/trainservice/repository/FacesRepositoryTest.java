@@ -19,8 +19,6 @@ package com.exadel.frs.core.trainservice.repository;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.Arrays;
 import java.util.List;
@@ -86,6 +84,7 @@ public class FacesRepositoryTest {
     @Test
     public void findNamesForApiGuid() {
         val expected = Arrays.asList("A", "C");
+
         val actual = facesRepository.findByApiKey(MODEL_KEY).stream()
                                     .map(Face::getFaceName)
                                     .collect(toList());
@@ -96,6 +95,7 @@ public class FacesRepositoryTest {
     @Test
     public void countByApiKey() {
         val expected = facesRepository.findByApiKey(MODEL_KEY);
+
         val actual = facesRepository.countByApiKey(MODEL_KEY);
 
         assertThat(actual).isGreaterThan(0);
@@ -108,7 +108,8 @@ public class FacesRepositoryTest {
         val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
 
         val actual = facesRepository.findById(face.getId());
-        assertTrue(actual.isPresent());
-        assertEquals(actual.get().getId(), face.getId());
+
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getId()).isEqualTo(face.getId());
     }
 }
