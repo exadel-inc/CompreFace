@@ -24,6 +24,9 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import com.exadel.frs.core.trainservice.cache.CachedFace;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
+import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
@@ -51,6 +54,9 @@ class ScanServiceImplTest {
     @Mock
     private MockMultipartFile mockFile;
 
+    @Mock
+    private FaceCacheProvider faceCacheProvider;
+
     @InjectMocks
     private ScanServiceImpl scanService;
 
@@ -70,16 +76,19 @@ class ScanServiceImplTest {
         val scanResponse = new ScanResponse().setResult(List.of(SCAN_RESULT));
         val embeddings = new Embedding(List.of(EMBEDDING), null);
         val face = new Face();
+        face.setEmbedding(embeddings);
 
         when(scanFacesClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
                 .thenReturn(scanResponse);
 
         when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
 
+        when(faceCacheProvider.getOrLoad(MODEL_KEY)).thenReturn(FaceCollection.buildFromFaces(List.of(face)));
+
         val actual = scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(face);
+        assertThat(actual).isEqualTo(new CachedFace(face.getFaceName(), face.getId()));
 
         verify(scanFacesClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
         verify(faceDao).addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY);

@@ -16,13 +16,13 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.cache.CachedFace;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ScanService {
 
-    Face scanAndSaveFace(
+    CachedFace scanAndSaveFace(
             final MultipartFile file,
             final String faceName,
             final Double detProbThreshold,

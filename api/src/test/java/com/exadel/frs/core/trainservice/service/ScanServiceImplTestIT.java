@@ -3,8 +3,8 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.core.trainservice.service.ScanServiceImpl.MAX_FACES_TO_RECOGNIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.multipart.MultipartFile;
 
 @DataJpaTest
-@Import({ScanServiceImpl.class, FacesClient.class, FaceDao.class})
+@Import({ScanServiceImpl.class, FacesClient.class, FaceDao.class, FaceCacheProvider.class})
 class ScanServiceImplTestIT {
 
     @Autowired
@@ -49,15 +49,6 @@ class ScanServiceImplTestIT {
         val actual = scanService.scanAndSaveFace(MULTIPART_FILE_DATA, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getEmbedding()).isEqualTo(Face.Embedding.builder()
-                                                                  .embeddings(SCAN_RESULT.getResult().get(0).getEmbedding())
-                                                                  .calculatorVersion(SCAN_RESULT.getCalculatorVersion())
-                                                                  .build()
-        );
-        assertThat(actual.getFaceName()).isEqualTo(FACE_NAME);
-        assertThat(actual.getApiKey()).isEqualTo(MODEL_KEY);
-        assertThat(actual.getApiKey()).isEqualTo(MODEL_KEY);
-        assertThat(actual.getFaceImg()).isEqualTo(MULTIPART_FILE_DATA.getBytes());
-        assertThat(actual.getRawImg()).isEqualTo(MULTIPART_FILE_DATA.getBytes());
+        assertThat(actual.getName()).isEqualTo(FACE_NAME);
     }
 }

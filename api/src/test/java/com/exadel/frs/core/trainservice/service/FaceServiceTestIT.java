@@ -16,12 +16,13 @@
 
 package com.exadel.frs.core.trainservice.service;
 
+import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import java.util.List;
 import java.util.Random;
@@ -39,7 +40,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Import({FaceService.class, FaceDao.class})
+@Import({FaceService.class, FaceDao.class, FaceCacheProvider.class})
 public class FaceServiceTestIT {
 
     @Autowired
@@ -65,12 +66,12 @@ public class FaceServiceTestIT {
 
     @Test
     public void deleteFaceByGuid() {
-        val faces = facesRepository.findAll();
+        val faces = facesRepository.findByApiKey(MODEL_KEY);
         val face = faces.get(new Random().nextInt(faces.size()));
 
-        faceService.deleteFaceById(face.getId());
+        faceService.deleteFaceById(face.getId(), MODEL_KEY);
 
-        val actual = facesRepository.findAll();
+        val actual = facesRepository.findByApiKey(MODEL_KEY);
 
         assertThat(actual).hasSize(faces.size() - 1);
         assertThat(actual).doesNotContain(face);
@@ -89,12 +90,12 @@ public class FaceServiceTestIT {
 
     @Test
     public void deleteFaceByName() {
-        val faces = facesRepository.findAll();
+        val faces = facesRepository.findByApiKey(MODEL_KEY);
         val face = faces.get(new Random().nextInt(faces.size()));
 
         faceService.deleteFaceByName(face.getFaceName(), face.getApiKey());
 
-        val actual = facesRepository.findAll();
+        val actual = facesRepository.findByApiKey(MODEL_KEY);
 
         assertThat(actual).hasSize(faces.size() - 1);
         assertThat(actual).doesNotContain(face);
@@ -129,15 +130,7 @@ public class FaceServiceTestIT {
 
     @AfterEach
     public void cleanUp() {
-        facesRepository.deleteAll();
-    }
-
-    public static Face makeFace(final String name, final String modelApiKey) {
-        return new Face()
-                .setFaceName(name)
-                .setApiKey(modelApiKey)
-                .setFaceImg("hex-string-1".getBytes())
-                .setRawImg("hex-string-2".getBytes())
-                .setId(randomUUID().toString());
+        faceService.deleteFacesByModel(MODEL_KEY);
+        faceService.deleteFacesByModel(MODEL_KEY_OTHER);
     }
 }

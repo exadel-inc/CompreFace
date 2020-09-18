@@ -37,6 +37,7 @@
         <javax-cache.version>1.1.1</javax-cache.version>
         <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
         <hibernate-types.version>2.9.13</hibernate-types.version>
+        <nd4j.version>1.0.0-beta7</nd4j.version>
     </properties>
 
     <dependencies>
@@ -144,6 +145,11 @@
                 <groupId>com.vladmihalcea</groupId>
                 <artifactId>hibernate-types-52</artifactId>
                 <version>${hibernate-types.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.nd4j</groupId>
+                <artifactId>nd4j-native</artifactId>
+                <version>${nd4j.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

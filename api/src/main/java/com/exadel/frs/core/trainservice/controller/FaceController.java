@@ -22,8 +22,8 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.MIN_FACES
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
+import com.exadel.frs.core.trainservice.cache.CachedFace;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
-import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.RetrainService;
@@ -31,7 +31,7 @@ import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -119,7 +119,7 @@ public class FaceController {
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val faces = new ArrayList<Face>();
+        val faces = new HashSet<CachedFace>();
         if (isBlank(subject)) {
             faces.addAll(faceService.deleteFacesByModel(apiKey));
         } else {
@@ -148,7 +148,7 @@ public class FaceController {
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val face = faceService.deleteFaceById(image_id);
+        val face = faceService.deleteFaceById(image_id, apiKey);
         if (face != null &&
                 !(isBlank(retrain) && faceService.countFacesInModel(apiKey) < MIN_FACES_TO_TRAIN)) {
             getTrainingOption(retrain).run(apiKey, retrainService);

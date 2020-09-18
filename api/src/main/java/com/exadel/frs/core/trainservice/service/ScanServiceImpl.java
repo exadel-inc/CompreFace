@@ -16,8 +16,9 @@
 
 package com.exadel.frs.core.trainservice.service;
 
+import com.exadel.frs.core.trainservice.cache.CachedFace;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
@@ -36,9 +37,10 @@ public class ScanServiceImpl implements ScanService {
 
     private final FacesClient facesClient;
     private final FaceDao faceDao;
+    private final FaceCacheProvider faceCacheProvider;
 
     @Override
-    public Face scanAndSaveFace(
+    public CachedFace scanAndSaveFace(
             final MultipartFile file,
             final String faceName,
             final Double detProbThreshold,
@@ -57,6 +59,8 @@ public class ScanServiceImpl implements ScanService {
 
         val embeddingToSave = new Embedding(embedding, scanResponse.getCalculatorVersion());
 
-        return faceDao.addNewFace(embeddingToSave, file, faceName, modelKey);
+        return faceCacheProvider.getOrLoad(modelKey).addFace(
+                faceDao.addNewFace(embeddingToSave, file, faceName, modelKey)
+        );
     }
 }
