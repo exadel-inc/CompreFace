@@ -20,7 +20,6 @@ import {Application} from '../../data/application';
 import {BreadcrumbsFacade} from '../breadcrumbs/breadcrumbs.facade';
 import {Model} from '../../data/model';
 
-
 @Component({
   selector: 'app-breadcrumbs-container',
   template: `
@@ -28,8 +27,7 @@ import {Model} from '../../data/model';
       [model]="model$ | async"
       [app]="app$ | async"
       [orgId]="orgId$ | async">
-    </app-abreadcrumbs>`,
-  styleUrls: ['./breadcrumbs.container.component.scss']
+    </app-breadcrumbs>`
 })
 export class BreadcrumbsContainerComponent implements OnInit {
   orgId$: Observable<string>;
