@@ -15,7 +15,7 @@
  */
 import {Store} from '@ngrx/store';
 import {Injectable} from '@angular/core';
-import { merge } from 'rxjs/operators';
+import { merge } from 'rxjs';
 import {Actions, Effect, ofType} from '@ngrx/effects';
 import {UserService} from 'src/app/core/user/user.service';
 import {
