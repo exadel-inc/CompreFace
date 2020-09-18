@@ -32,6 +32,5 @@ import lombok.NoArgsConstructor;
 public class ModelShareRequestId implements Serializable {
 
     private Long appId;
-
     private UUID requestId;
 }

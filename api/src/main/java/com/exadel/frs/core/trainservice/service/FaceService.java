@@ -44,6 +44,7 @@ public class FaceService {
 
     public List<Face> deleteFacesByModel(final String modelKey) {
         classifierManager.removeFaceClassifier(modelKey);
+
         return faceDao.deleteFacesByApiKey(modelKey);
     }
 

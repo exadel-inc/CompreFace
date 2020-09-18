@@ -21,6 +21,7 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.MIN_FACES_TO_TRAIN;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.entity.Face;
@@ -36,7 +37,6 @@ import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -62,7 +62,7 @@ public class FaceController {
     private static final int FIRST_ITEM_ADDED_NUM = 1;
 
     @WriteEndpoint
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     @PostMapping
     public FaceResponseDto addFaces(
             @ApiParam(value = "A picture with at least one face (accepted formats: jpeg, png).", required = true)

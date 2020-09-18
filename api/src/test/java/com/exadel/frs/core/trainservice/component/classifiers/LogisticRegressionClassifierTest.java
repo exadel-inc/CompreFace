@@ -24,7 +24,7 @@ import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-public class LogisticRegressionClassifierTestIT {
+public class LogisticRegressionClassifierTest {
 
     @Test
     void train() {
