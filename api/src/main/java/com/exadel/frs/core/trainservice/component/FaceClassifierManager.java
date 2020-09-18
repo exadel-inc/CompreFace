@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.component;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.MIN_FACES_TO_TRAIN;
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
@@ -29,8 +30,6 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class FaceClassifierManager {
-
-    private static final int MIN_FACES_TO_TRAIN = 2;
 
     private final TrainedModelDao trainedModelDao;
     private final FaceDao faceDao;

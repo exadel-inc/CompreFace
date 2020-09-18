@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-export enum RoleEnum{
+export enum RoleEnum {
     OWNER = 'OWNER',
     ADMINISTRATOR = 'ADMINISTRATOR',
     USER = 'USER'

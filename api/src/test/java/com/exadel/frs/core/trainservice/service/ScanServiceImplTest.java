@@ -18,7 +18,7 @@ package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.service.ScanServiceImpl.MAX_FACES_TO_RECOGNIZE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -93,10 +93,9 @@ class ScanServiceImplTest {
         when(scanFacesClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
                 .thenReturn(scanResponse);
 
-        assertThrows(
-                TooManyFacesException.class,
-                () -> scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY)
-        );
+        assertThatThrownBy(() ->
+                scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY)
+        ).isInstanceOf(TooManyFacesException.class);
 
         verify(scanFacesClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
         verifyNoInteractions(faceDao);

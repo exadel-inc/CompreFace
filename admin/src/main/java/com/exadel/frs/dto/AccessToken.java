@@ -26,5 +26,4 @@ public class AccessToken {
 
     @JsonProperty("access_token")
     private String accessToken;
-
 }

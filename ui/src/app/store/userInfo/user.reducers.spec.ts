@@ -17,7 +17,6 @@
 import {updateUserAuthorization, resetUserInfo, updateUserInfo} from './action';
 import {UserInfoReducer} from './reducers';
 
-
 describe('UserInfoReducer', () => {
   const initialState = {
     isAuthenticated: false,

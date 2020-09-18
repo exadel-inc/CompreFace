@@ -163,7 +163,6 @@ public class AppService {
         authManager.verifyWritePrivilegesToApp(userId, app);
 
         val user = userService.getUser(userInviteDto.getUserEmail());
-        val userOrgRole = app.getOrganization().getUserOrganizationRoleOrThrow(user.getId());
         val userAppRole = app.getUserAppRole(user.getId());
         if (userAppRole.isPresent()) {
             throw new UserAlreadyHasAccessToAppException(userInviteDto.getUserEmail(), appGuid);

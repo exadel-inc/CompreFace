@@ -31,14 +31,14 @@ public interface OrganizationMapper {
     @Mapping(source = "guid", target = "id")
     @Mapping(source = "organization", target = "role", qualifiedByName = "getRole")
     OrgResponseDto toResponseDto(Organization organization, @Context Long userId);
+
     List<OrgResponseDto> toResponseDto(List<Organization> organizations, @Context Long userId);
 
     @Named("getRole")
     default String getRole(Organization organization, @Context Long userId) {
         return organization.getUserOrganizationRole(userId)
-                .map(UserOrganizationRole::getRole)
-                .map(Enum::name)
-                .orElse(null);
+                           .map(UserOrganizationRole::getRole)
+                           .map(Enum::name)
+                           .orElse(null);
     }
-
 }

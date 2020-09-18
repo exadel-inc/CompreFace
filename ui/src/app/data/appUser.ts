@@ -25,4 +25,3 @@ export interface AppUser {
   email?: string;
   ownerOfApplications?: string[];
 }
-

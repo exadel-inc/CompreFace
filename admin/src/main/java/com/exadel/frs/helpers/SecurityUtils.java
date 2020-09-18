@@ -30,5 +30,4 @@ public final class SecurityUtils {
     public Long getPrincipalId() {
         return getPrincipal().getId();
     }
-
 }

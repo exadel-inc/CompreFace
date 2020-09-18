@@ -18,7 +18,6 @@ import {selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp} from
 import {Application} from '../../data/application';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
-
 describe('ApplicationSelectors', () => {
 
   it('selectCurrentAppId', () => {

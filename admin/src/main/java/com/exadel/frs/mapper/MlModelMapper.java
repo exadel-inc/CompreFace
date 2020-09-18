@@ -32,6 +32,7 @@ public interface MlModelMapper {
     @Mapping(source = "guid", target = "id")
     @Mapping(source = "model", target = "accessLevel", qualifiedByName = "getAccessLevel")
     ModelResponseDto toResponseDto(Model model, @Context String appGuid);
+
     List<ModelResponseDto> toResponseDto(List<Model> model, @Context String appGuid);
 
     @Named("getAccessLevel")
@@ -40,8 +41,7 @@ public interface MlModelMapper {
             return AppModelAccess.OWNER;
         }
         return model.getAppModel(appGuid)
-                .map(AppModel::getAccessType)
-                .orElse(null);
+                    .map(AppModel::getAccessType)
+                    .orElse(null);
     }
-
 }

@@ -29,7 +29,6 @@ import { of } from 'rxjs';
 
 import { SignUpFormComponent } from './sign-up-form.component';
 
-
 describe('SignUpFormComponent', () => {
   let component: SignUpFormComponent;
   let fixture: ComponentFixture<SignUpFormComponent>;

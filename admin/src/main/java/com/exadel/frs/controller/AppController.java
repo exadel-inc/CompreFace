@@ -29,7 +29,6 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.mapper.UserAppRoleMapper;
 import com.exadel.frs.service.AppService;
-import com.exadel.frs.system.statistics.CallStatistics;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -59,7 +58,6 @@ public class AppController {
     private final AppMapper appMapper;
     private final UserAppRoleMapper userAppRoleMapper;
 
-    @CallStatistics
     @GetMapping("/app/{guid}")
     @ApiOperation(value = "Get application")
     public AppResponseDto getApp(
@@ -100,7 +98,10 @@ public class AppController {
             @RequestBody
             final AppCreateDto appCreateDto
     ) {
-        return appMapper.toResponseDto(appService.createApp(appCreateDto, orgGuid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
+        return appMapper.toResponseDto(
+                appService.createApp(appCreateDto, orgGuid, SecurityUtils.getPrincipalId()),
+                SecurityUtils.getPrincipalId()
+        );
     }
 
     @PutMapping("/app/{guid}")
@@ -110,15 +111,12 @@ public class AppController {
     })
     public AppResponseDto updateApp(
             @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
+            @PathVariable final String orgGuid,
             @ApiParam(value = "GUID of application that needs to be updated", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String guid,
+            @PathVariable final String guid,
             @ApiParam(value = "Application data", required = true)
             @Valid
-            @RequestBody
-            final AppUpdateDto appUpdateDto
+            @RequestBody final AppUpdateDto appUpdateDto
     ) {
         val userId = SecurityUtils.getPrincipalId();
         val updatedApplication = appService.updateApp(appUpdateDto, orgGuid, guid, userId);
@@ -233,8 +231,8 @@ public class AppController {
         val requestId = appService.generateUuidToRequestModelShare(orgGuid, guid);
 
         return ModelShareResponseDto.builder()
-                                .modelRequestUuid(requestId)
-                                .build();
+                                    .modelRequestUuid(requestId)
+                                    .build();
     }
 
     @DeleteMapping("/app/{guid}/user/{userGuid}")

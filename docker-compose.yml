@@ -4,9 +4,9 @@ volumes:
   postgres-data:
 
 services:
-  frs-postgres-db:
+  compreface-postgres-db:
     image: postgres:11.5
-    container_name: "frs-postgres-db"
+    container_name: "compreface-postgres-db"
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=${postgres_password}
@@ -14,49 +14,36 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
-  frs-admin:
-    image: ${registry}frs-admin
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: frs_crud
-    container_name: "frs-admin"
+  compreface-admin:
+    image: ${registry}compreface-admin
+    container_name: "compreface-admin"
     environment:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
     depends_on:
-      - frs-postgres-db
-      - frs-api
+      - compreface-postgres-db
+      - compreface-api
 
-  frs-api:
-    image: ${registry}frs-api
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: frs_core
-    container_name: "frs-api"
+  compreface-api:
+    image: ${registry}compreface-api
+    container_name: "compreface-api"
     depends_on:
-      - frs-postgres-db
+      - compreface-postgres-db
     environment:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
 
-  frs-fe:
-    image: ${registry}frs-fe
-    build:
-      context: ui
-      dockerfile: docker-prod/Dockerfile
-    container_name: "frs-ui"
+  compreface-fe:
+    image: ${registry}compreface-fe
+    container_name: "compreface-ui"
     ports:
       - "8000:80"
     depends_on:
-      - frs-api
-      - frs-admin
+      - compreface-api
+      - compreface-admin
 
-  frs-core:
-    image: ${registry}frs-core
-    container_name: "frs-core"
-    build:
-      context: embedding-calculator
+  compreface-core:
+    image: ${registry}compreface-core
+    container_name: "compreface-core"
     environment:
       - ML_PORT=3000

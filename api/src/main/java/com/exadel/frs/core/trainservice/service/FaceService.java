@@ -16,13 +16,11 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -30,35 +28,26 @@ import org.springframework.stereotype.Service;
 public class FaceService {
 
     private final FaceDao faceDao;
-    private final RetrainService retrainService;
     private final FaceClassifierManager classifierManager;
 
     public List<Face> findFaces(final String apiKey) {
         return faceDao.findAllFacesByApiKey(apiKey);
     }
 
-    public void deleteFaceByName(
-            final String faceName,
-            final String apiKey,
-            final String retrain
-    ) {
-        faceDao.deleteFaceByName(faceName, apiKey);
-        getTrainingOption(retrain).run(apiKey, retrainService);
+    public List<Face> deleteFaceByName(final String faceName, final String apiKey) {
+        return faceDao.deleteFaceByName(faceName, apiKey);
     }
 
-    public void deleteFaceById(
-            final String id,
-            final String apiKey,
-            final String retrain
-    ) {
-        faceDao.deleteFaceById(id);
-        getTrainingOption(retrain).run(apiKey, retrainService);
+    public Face deleteFaceById(final String id) {
+        return faceDao.deleteFaceById(id);
     }
 
-    public int deleteFacesByModel(final String modelKey) {
+    public List<Face> deleteFacesByModel(final String modelKey) {
         classifierManager.removeFaceClassifier(modelKey);
-        val deletedFaces = faceDao.deleteFacesByApiKey(modelKey);
+        return faceDao.deleteFacesByApiKey(modelKey);
+    }
 
-        return deletedFaces.size();
+    public int countFacesInModel(final String modelKey) {
+        return faceDao.countFacesInModel(modelKey);
     }
 }

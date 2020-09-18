@@ -55,7 +55,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -64,12 +63,19 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @Nested
-@MockBeans({
-        @MockBean(SpringLiquibase.class),
-        @MockBean(PasswordEncoder.class),
-        @MockBean(EmailSender.class)
-})
 public class OrganizationServiceTestIT {
+
+    @MockBean
+    private SpringLiquibase springLiquibase;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+    @MockBean
+    private EmailSender emailSender;
+
+    @PersistenceUnit
+    private EntityManagerFactory emf;
 
     @Autowired
     private OrganizationRepository repository;
@@ -82,9 +88,6 @@ public class OrganizationServiceTestIT {
 
     @Autowired
     private ModelShareRequestRepository modelShareRequestRepository;
-
-    @PersistenceUnit
-    private EntityManagerFactory emf;
 
     @Autowired
     private DataSource dataSource;

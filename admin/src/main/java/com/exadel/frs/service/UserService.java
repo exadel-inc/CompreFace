@@ -116,7 +116,7 @@ public class UserService {
                 + "/admin/user/registration/confirm?token="
                 + user.getRegistrationToken();
 
-        val subject = "Exadel FRS Registration";
+        val subject = "CompreFace Registration";
 
         emailSender.sendMail(user.getEmail(), subject, message);
     }

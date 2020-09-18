@@ -18,7 +18,6 @@ package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
@@ -108,10 +107,9 @@ class UserServiceTest {
     void failGetUser() {
         when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(
-                UserDoesNotExistException.class,
-                () -> userService.getUser(USER_ID)
-        );
+        assertThatThrownBy(() -> {
+            userService.getUser(USER_ID);
+        }).isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
@@ -161,10 +159,9 @@ class UserServiceTest {
                                          .lastName("lastName")
                                          .build();
 
-        assertThrows(
-                EmptyRequiredFieldException.class,
-                () -> userService.createUser(userCreateDto)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userCreateDto)
+        ).isInstanceOf(EmptyRequiredFieldException.class);
     }
 
     @Test
@@ -176,10 +173,9 @@ class UserServiceTest {
                                          .lastName("lastName")
                                          .build();
 
-        assertThrows(
-                EmptyRequiredFieldException.class,
-                () -> userService.createUser(userCreateDto)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userCreateDto)
+        ).isInstanceOf(EmptyRequiredFieldException.class);
     }
 
     @Test
@@ -193,10 +189,9 @@ class UserServiceTest {
 
         when(userRepositoryMock.existsByEmail(anyString())).thenReturn(true);
 
-        assertThrows(
-                EmailAlreadyRegisteredException.class,
-                () -> userService.createUser(userCreateDto)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userCreateDto)
+        ).isInstanceOf(EmailAlreadyRegisteredException.class);
     }
 
     @Test
@@ -235,10 +230,9 @@ class UserServiceTest {
                                                   .lastName("lastName")
                                                   .build();
 
-        assertThrows(
-                InvalidEmailException.class,
-                () -> userService.createUser(userWithIncorrectEmial)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userWithIncorrectEmial)
+        ).isInstanceOf(InvalidEmailException.class);
     }
 
     @Test
@@ -250,10 +244,9 @@ class UserServiceTest {
                                                 .lastName("lastName")
                                                 .build();
 
-        assertThrows(
-                EmptyRequiredFieldException.class,
-                () -> userService.createUser(userWithoutFirstName)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userWithoutFirstName)
+        ).isInstanceOf(EmptyRequiredFieldException.class);
     }
 
     @Test
@@ -265,18 +258,16 @@ class UserServiceTest {
                                                 .lastName(null)
                                                 .build();
 
-        assertThrows(
-                EmptyRequiredFieldException.class,
-                () -> userService.createUser(userWithoutFirstName)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userWithoutFirstName)
+        ).isInstanceOf(EmptyRequiredFieldException.class);
     }
 
     @Test
     void confirmRegistrationReturns403WhenTokenIsExpired() {
-        assertThrows(
-                RegistrationTokenExpiredException.class,
-                () -> userService.confirmRegistration(EXPIRED_TOKEN)
-        );
+        assertThatThrownBy(() ->
+                userService.confirmRegistration(EXPIRED_TOKEN)
+        ).isInstanceOf(RegistrationTokenExpiredException.class);
     }
 
     @Test
@@ -380,16 +371,15 @@ class UserServiceTest {
 
         @Test
         void exceptionWhenWrongReplacerParamIsPassed() {
-            assertThatThrownBy(() -> {
-                UserDeleteDto.builder()
-                             .replacer(Replacer.from("wrong_param"))
-                             .userToDelete(orgUser)
-                             .deleter(orgAdmin)
-                             .defaultOrg(defaultOrg)
-                             .updateAppsConsumer(updateAppsConsumer)
-                             .build();
-            }).isInstanceOf(IllegalReplacerException.class)
-              .hasMessage(String.format("Illegal replacer value=%s!", "wrong_param"));
+            assertThatThrownBy(() -> UserDeleteDto.builder()
+                                                  .replacer(Replacer.from("wrong_param"))
+                                                  .userToDelete(orgUser)
+                                                  .deleter(orgAdmin)
+                                                  .defaultOrg(defaultOrg)
+                                                  .updateAppsConsumer(updateAppsConsumer)
+                                                  .build())
+                    .isInstanceOf(IllegalReplacerException.class)
+                    .hasMessage(String.format("Illegal replacer value=%s!", "wrong_param"));
         }
 
         private User makeUser(final long orgUserId) {

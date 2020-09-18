@@ -1,30 +1,41 @@
 databaseChangeLog:
   - changeSet:
-      id: add-default-org
-      author: Vadim Amirov
+      id: create-face-table
+      author: Maryna Misachenka
       changes:
-        #add property column for default organization
-        - addColumn:
-            tableName: organization
-            columns:
-              - column:
-                  name: is_default
-                  type: boolean
-                  defaultValueBoolean: false
-
-        #add default organization
-        - insert:
-            tableName: organization
+        # face
+        - createTable:
+            tableName: face
             columns:
               - column:
                   name: id
-                  valueNumeric: 0
+                  type: varchar(36)
               - column:
-                  name: name
-                  value: Default
+                  name: face_name
+                  type: varchar(255)
               - column:
-                  name: guid
-                  value: 00000000-0000-0000-0000-000000000000
+                  name: api_key
+                  type: varchar(36)
               - column:
-                  name: is_default
-                  valueBoolean: true
+                  name: embeddings
+                  type: json
+              - column:
+                  name: raw_img_fs
+                  type: bytea
+              - column:
+                  name: face_img_fs
+                  type: bytea
+
+        - addUniqueConstraint:
+            columnNames: id
+            constraintName: face_id_uindex
+            tableName: face
+
+        - addForeignKeyConstraint:
+            baseColumnNames: api_key
+            baseTableName: face
+            referencedColumnNames: api_key
+            referencedTableName: model
+            constraintName: fk_api_key
+            onDelete: CASCADE
+            onUpdate: CASCADE

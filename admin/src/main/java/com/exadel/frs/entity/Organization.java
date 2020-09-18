@@ -85,9 +85,9 @@ public class Organization {
 
     public User getOwner() {
         return this.getUserOrganizationRoles().stream()
-                                              .filter(orgRole -> orgRole.getRole() == OWNER)
-                                              .findAny()
-                                              .orElseThrow(IllegalStateException::new)
-                                              .getUser();
+                   .filter(orgRole -> orgRole.getRole() == OWNER)
+                   .findAny()
+                   .orElseThrow(IllegalStateException::new)
+                   .getUser();
     }
 }

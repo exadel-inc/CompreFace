@@ -14,15 +14,15 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice;
+package com.exadel.frs.core.trainservice.dto;
 
-import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import org.junit.jupiter.api.Test;
+import lombok.Builder;
+import lombok.Data;
 
-@IntegrationTest
-class TrainServiceApplicationTests {
+@Data
+@Builder
+public class ExceptionResponseDto {
 
-    @Test
-    void contextLoads() {
-    }
+    private String message;
+    private Integer code;
 }

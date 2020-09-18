@@ -6,7 +6,8 @@
       "yes": "YES",
       "add": "ADD",
       "rename": "RENAME",
-      "edit": "EDIT"
+      "edit": "EDIT",
+      "delete": "DELETE"
     },
     "name": "Name",
     "create": "Create"
@@ -33,7 +34,7 @@
     "last_name_restriction": "Last name is required",
     "email_hint": "Email should have correct format",
     "login": "LOGIN",
-    "sign_up": "SIGN_UP"
+    "sign_up": "SIGN UP"
   },
   "toolbar": {
     "logout": "Logout"
@@ -67,9 +68,9 @@
     "title": "Models",
     "name": "Name",
     "api_key": "API key",
-    "create_model_info": " Create the first model, where you will be able to add, recognize, delete faces,\n      get list of the model faces, train the model and remove already trained.",
+    "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
     "create_dialog": {
-      "title": "Create model",
+      "title": "Create Face Collection",
       "name": "Name"
     },
     "select_menu": {
@@ -100,7 +101,7 @@
   },
   "org_users": {
     "delete_dialog": {
-      "title": "Delete user",
+      "title": "Delete User",
       "confirmation_question": "Are you sure you want remove user {{name}} {{lastName}}?",
       "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
       "warn_hint_anyway": "You can delete him anyway.",
@@ -108,8 +109,8 @@
       "warn_hint_new_owner": "In this case the owner of this applications will be: ",
       "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
     },
-    "add_users_title": "Add users to the FRS",
-    "add_users_info": "You can add other users to the FRS application. They need to register and login to FRS. After registration and login users will appear automatically in the users' table."
+    "add_users_title": "Add users to the CompreFace",
+    "add_users_info": "You can add other users to the CompreFace application. They need to register and login to CompreFace. After registration and login users will appear automatically in the users' table."
   },
   "app_users": {
     "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",

@@ -16,9 +16,8 @@
 
 package com.exadel.frs.core.trainservice.component;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +40,9 @@ public class ClassifierLockManagerTest {
     public void lock() {
         lockManager.lock(MODEL_KEY);
 
-        assertThrows(RuntimeException.class, () -> lockManager.lock(MODEL_KEY));
+        assertThatThrownBy(() ->
+                lockManager.lock(MODEL_KEY)
+        ).isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -49,17 +50,17 @@ public class ClassifierLockManagerTest {
         lockManager.lock(MODEL_KEY);
         lockManager.unlock(MODEL_KEY);
 
-        assertFalse(lockManager.isLocked(MODEL_KEY));
+        assertThat(lockManager.isLocked(MODEL_KEY)).isFalse();
     }
 
     @Test
     public void isLock() {
-        assertFalse(lockManager.isLocked(MODEL_KEY));
+        assertThat(lockManager.isLocked(MODEL_KEY)).isFalse();
 
         lockManager.lock(MODEL_KEY);
-        assertTrue(lockManager.isLocked(MODEL_KEY));
+        assertThat(lockManager.isLocked(MODEL_KEY)).isTrue();
 
         lockManager.unlock(MODEL_KEY);
-        assertFalse(lockManager.isLocked(MODEL_KEY));
+        assertThat(lockManager.isLocked(MODEL_KEY)).isFalse();
     }
 }

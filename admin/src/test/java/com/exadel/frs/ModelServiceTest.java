@@ -16,11 +16,11 @@
 
 package com.exadel.frs;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -32,8 +32,6 @@ import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
-import com.exadel.frs.entity.Organization;
-import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.repository.AppModelRepository;
@@ -55,16 +53,17 @@ class ModelServiceTest {
     private static final String APPLICATION_GUID = "app-guid";
     private static final String APPLICATION_API_KEY = "app-key";
     private static final String ORGANIZATION_GUID = "org-guid";
+
     private static final Long USER_ID = 1L;
     private static final Long MODEL_ID = 2L;
     private static final Long APPLICATION_ID = 3L;
-    private static final Long ORGANIZATION_ID = 4L;
 
     private AppService appServiceMock;
     private ModelRepository modelRepositoryMock;
     private ModelService modelService;
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
+
     private AuthorizationManager authManager;
 
     ModelServiceTest() {
@@ -80,19 +79,6 @@ class ModelServiceTest {
                 appModelRepository,
                 authManager
         );
-    }
-
-    private User user(final Long id) {
-        return User.builder()
-                   .id(id)
-                   .build();
-    }
-
-    private Organization organization(final Long id) {
-        return Organization.builder()
-                           .id(id)
-                           .guid(ORGANIZATION_GUID)
-                           .build();
     }
 
     @Test
@@ -183,9 +169,9 @@ class ModelServiceTest {
         when(appServiceMock.getApp(anyString())).thenReturn(app);
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
-        assertThrows(NameIsNotUniqueException.class, () ->
+        assertThatThrownBy(() ->
                 modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID)
-        );
+        ).isInstanceOf(NameIsNotUniqueException.class);
     }
 
     @Test
@@ -246,9 +232,9 @@ class ModelServiceTest {
         when(appServiceMock.getApp(anyString())).thenReturn(app);
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
-        assertThrows(NameIsNotUniqueException.class, () ->
+        assertThatThrownBy(() ->
                 modelService.updateModel(modelUpdateDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
-        );
+        ).isInstanceOf(NameIsNotUniqueException.class);
     }
 
     @Test

@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.validation;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -81,8 +81,8 @@ class ImageExtensionValidatorTest {
         val file = mock(MultipartFile.class);
         when(file.getOriginalFilename()).thenReturn("image.tmp");
 
-        assertThrows(FileExtensionException.class, () ->
+        assertThatThrownBy(() ->
                 validator.validate(file)
-        );
+        ).isInstanceOf(FileExtensionException.class);
     }
 }

@@ -26,7 +26,7 @@ import { AppUser } from 'src/app/data/appUser';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 
 import { TableComponent } from '../table/table.component';
-import {UserDeletion} from "../../data/userDeletion";
+import {UserDeletion} from '../../data/userDeletion';
 
 @Component({
   selector: 'app-user-table',
@@ -65,15 +65,15 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   }
 
   delete(user: AppUser): void {
-    let deletion: UserDeletion = {
+    const deletion: UserDeletion = {
       userToDelete: user,
       deleterUserId: this.currentUserId
-    }
+    };
     this.deleteUser.emit(deletion);
   }
 
   getMessageContent(): void {
-    if(this.searchText.length) {
+    if (this.searchText.length) {
       this.messageHeader = '';
       this.message = this.noResultMessage;
     } else {

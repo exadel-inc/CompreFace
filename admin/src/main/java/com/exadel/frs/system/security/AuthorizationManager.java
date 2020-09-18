@@ -76,8 +76,8 @@ public class AuthorizationManager {
         }
 
         val appRole = app.getUserAppRole(userId)
-                      .orElseThrow(InsufficientPrivilegesException::new)
-                      .getRole();
+                         .orElseThrow(InsufficientPrivilegesException::new)
+                         .getRole();
 
         if (AppRole.USER == appRole) {
             throw new InsufficientPrivilegesException();

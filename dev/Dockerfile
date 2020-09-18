@@ -1,5 +1,5 @@
 FROM maven:3.6.3-jdk-11-slim as build
-WORKDIR /workspace/frs
+WORKDIR /workspace/compreface
 LABEL intermidiate_frs=true
 COPY pom.xml .
 COPY api/pom.xml api/
@@ -10,11 +10,11 @@ COPY admin admin
 RUN mvn package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.skip=true
 
 FROM openjdk:11.0.8-jre-slim as frs_core
-ARG DIR=/workspace/frs
+ARG DIR=/workspace/compreface
 COPY --from=build ${DIR}/api/target/*.jar /home/app.jar
 ENTRYPOINT ["java","-jar","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","/home/app.jar"]
 
 FROM openjdk:11.0.8-jre-slim as frs_crud
-ARG DIR=/workspace/frs
+ARG DIR=/workspace/compreface
 COPY --from=build ${DIR}/admin/target/*.jar /home/app.jar
 ENTRYPOINT ["java","-jar","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","/home/app.jar"]

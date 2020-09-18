@@ -23,8 +23,6 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {FormsModule} from '@angular/forms';
 
-
-
 @NgModule({
   declarations: [EntityTitleComponent],
   exports: [

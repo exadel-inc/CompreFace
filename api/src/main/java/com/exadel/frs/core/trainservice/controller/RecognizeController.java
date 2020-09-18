@@ -87,7 +87,9 @@ public class RecognizeController {
         for (val scanResult : scanResponse.getResult()) {
             val predictions = classifierPredictor.predict(
                     apiKey,
-                    scanResult.getEmbedding().stream().mapToDouble(d -> d).toArray(),
+                    scanResult.getEmbedding().stream()
+                                             .mapToDouble(d -> d)
+                                             .toArray(),
                     predictionCount
             );
 

@@ -16,11 +16,11 @@
 
 package com.exadel.frs.utils;
 
+import static com.exadel.frs.handler.ExceptionCode.UNDEFINED;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import com.exadel.frs.dto.ExceptionResponseDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.BasicException;
-import com.exadel.frs.handler.ExceptionCode;
 import javax.sql.DataSource;
 import lombok.val;
 import org.springframework.core.io.ClassPathResource;
@@ -40,7 +40,7 @@ public class TestUtils {
 
     public static ExceptionResponseDto buildUndefinedExceptionResponse(final Exception ex) {
         return ExceptionResponseDto.builder()
-                                   .code(ExceptionCode.UNDEFINED.getCode())
+                                   .code(UNDEFINED.getCode())
                                    .message(ex.getMessage())
                                    .build();
     }
