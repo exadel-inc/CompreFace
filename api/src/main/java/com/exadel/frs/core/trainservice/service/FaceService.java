@@ -39,22 +39,21 @@ public class FaceService {
     }
 
     public Set<CachedFace> deleteFaceByName(final String faceName, final String apiKey) {
-
         val collection = faceCacheProvider.getOrLoad(apiKey);
+
         return faceDao.deleteFaceByName(faceName, apiKey)
                       .stream()
                       .map(face -> collection.removeFace(face.getId(), face.getFaceName()))
                       .collect(toSet());
     }
 
-    public CachedFace deleteFaceById(
-            final String id,
-            final String apiKey) {
+    public CachedFace deleteFaceById(final String id, final String apiKey) {
         val collection = faceCacheProvider.getOrLoad(apiKey);
         val face = faceDao.deleteFaceById(id);
         if (face != null) {
             return collection.removeFace(face.getId(), face.getFaceName());
         }
+
         return null;
     }
 

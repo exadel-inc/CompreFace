@@ -40,6 +40,7 @@ public class MigrateController {
     public ResponseEntity migrate(@RequestParam @Valid @URL final String url) {
         migrationStatusStorage.startMigration();
         migrationComponent.migrate(url);
+
         return ResponseEntity.ok("Migration started");
     }
 }

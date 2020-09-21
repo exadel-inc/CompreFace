@@ -35,9 +35,9 @@
 
 CompreFace is the application for face recognition that can be integrated as a standalone server or deployed on cloud, and can be set up and used without machine learning knowledge. 
 
-We use one of the most popular face recognition methods based on [deep neural networks](#used-ml-papers-and-algorithms), and provide a convenient API for model training and face recognition. We also provide a convenient roles system with which you can easily control who has access to the model.
+We use one of the most popular face recognition methods based on [deep neural networks](#used-ml-papers-and-algorithms), and provide a convenient API for Face Collection training and face recognition. We also provide a convenient roles system with which you can easily control who has access to the Face Collection.
 
-Every user can create several models trained on different subsets of people. 
+Every user can create several Face Collections trained on different subsets of people. 
 
 
 
@@ -73,7 +73,7 @@ docker-compose up --build
 ## Simple tutorial of usage
 
 1. Registration users in the app
-1. Creating applications, models, inviting users
+1. Creating applications, Face Collections, inviting users
 1. Integrating your app via API if need
 1. Images uploading, training a model with your own images by using the API key
 1. Send a new image to recognize the face on it.
@@ -171,7 +171,7 @@ Recognizing the person in the photo. Haifengl/smile [LogisticRegression](http://
 
 ## Rest API description
 
-By using the created API key, the user can add an image as an example of the face, retrieve a list of saved images, recognize a face from the uploaded image, retrain the model, and delete all examples of the face by the name.
+By using the created API key, the user can add an image as an example of the face, retrieve a list of saved images, recognize a face from the uploaded image, retrain the Face Collection, and delete all examples of the face by the name.
 
 
 
@@ -265,13 +265,13 @@ Response body on success:
 | x_max, y_max, x_min, y_min | integer | coordinates of the frame containing the face                 |
 | faces                          | list    | list of similar faces with size of <prediction_count> order by similarity |
 | similarity                     | float   | similarity that on that image predicted person              |
-| subject                        | string  | name of the subject in model                                 |
+| subject                        | string  | name of the subject in Face Collection                                 |
 
 
 
 ### Get list of saved images
 
-Retrieves a list of images saved in a model
+Retrieves a list of images saved in a Face Collection
 
 ```http request
 curl  -X GET "http://localhost:8000/api/v1/faces" \
@@ -315,8 +315,8 @@ curl  -X DELETE "http://localhost:8000/api/v1/faces/?subject=<face_name>&retrain
 | Element        | Description | Type   | Required | Notes                                                        |
 | -------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
 | x-api-key      | header      | string | required | api key of the model, created by the user                    |
-| face_name      | param       | string | optional | is the name you assign to the image you save. **Caution!** If this parameter is absent, all faces in model will be removed |
-| retrain_option | param       | string | optional | retrains the model after deleting. Can be set to "yes", "no", "force". Default value: "force" |
+| face_name      | param       | string | optional | is the name you assign to the image you save. **Caution!** If this parameter is absent, all faces in Face Collection will be removed |
+| retrain_option | param       | string | optional | retrains the Face Collection after deleting. Can be set to "yes", "no", "force". Default value: "force" |
 Response body on success:
 ```
 [
@@ -348,7 +348,7 @@ curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>retrain=<retrain_o
 | -------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
 | x-api-key      | header      | string | required | api key of the model, created by the user                    |
 | image_id       | variable    | UUID   | required | UUID of the removing face                                    |
-| retrain_option | param       | string | optional | retrains the model after deleting. Can be set to "yes", "no", "force". Default value: "force" |
+| retrain_option | param       | string | optional | retrains the Face Collection after deleting. Can be set to "yes", "no", "force". Default value: "force" |
 Response body on success:
 ```
 {
