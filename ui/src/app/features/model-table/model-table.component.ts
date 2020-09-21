@@ -31,5 +31,6 @@ export class ModelTableComponent extends TableComponent {
   @Output() copyApiKey = new EventEmitter<string>();
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
+  @Output() test = new EventEmitter<Model>();
   roleEnum = RoleEnum;
 }

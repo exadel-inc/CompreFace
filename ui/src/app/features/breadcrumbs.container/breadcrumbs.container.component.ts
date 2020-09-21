@@ -13,26 +13,32 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs';
+import {Component, OnDestroy, OnInit, Input} from '@angular/core';
+import {Observable, Subscription} from 'rxjs';
 
 import {Application} from '../../data/application';
-import {AppState} from '../../store';
-import {selectCurrentApp} from '../../store/application/selectors';
-import {Model} from "../../data/model";
-import {selectCurrentModel} from "../../store/model/selectors";
-import {selectCurrentOrganizationId} from "../../store/organization/selectors";
+import {BreadcrumbsFacade} from '../breadcrumbs/breadcrumbs.facade';
+import {Model} from '../../data/model';
 
-@Injectable()
-export class BreadcrumbsFacade {
+@Component({
+  selector: 'app-breadcrumbs-container',
+  template: `
+    <app-breadcrumbs
+      [model]="model$ | async"
+      [app]="app$ | async"
+      [orgId]="orgId$ | async">
+    </app-breadcrumbs>`
+})
+export class BreadcrumbsContainerComponent implements OnInit {
   orgId$: Observable<string>;
   app$: Observable<Application>;
   model$: Observable<Model>;
 
-  constructor(private store: Store<AppState>) {
-    this.orgId$ = this.store.select(selectCurrentOrganizationId);
-    this.app$ = this.store.select(selectCurrentApp);
-    this.model$ = this.store.select(selectCurrentModel);
+  constructor(private breadcrumbsFacade: BreadcrumbsFacade) { }
+
+  ngOnInit() {
+    this.orgId$ = this.breadcrumbsFacade.orgId$;
+    this.app$ = this.breadcrumbsFacade.app$;
+    this.model$ = this.breadcrumbsFacade.model$;
   }
 }

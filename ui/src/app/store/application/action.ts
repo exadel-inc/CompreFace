@@ -33,4 +33,4 @@ export const deleteApplication = createAction('[Application] Delete Application'
 export const deleteApplicationSuccess = createAction('[Application] Delete Application Success', props<{ id: string }>());
 export const deleteApplicationFail = createAction('[Application] Delete Application Fail', props<{ error: any }>());
 
-export const setSelectedIdEntityAction = createAction('[Application] Set Selected Id Applications', props<{ selectedAppId }>());
+export const setSelectedAppIdEntityAction = createAction('[Application] Set Selected Id Applications', props<{ selectedAppId }>());

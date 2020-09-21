@@ -29,6 +29,7 @@ import {ModelListModule} from 'src/app/features/model-list/model-list.module';
 import {AppUserListModule} from 'src/app/features/app-user-list/application-user-list.module';
 import {FooterModule} from '../../features/footer/footer.module';
 import {ApplicationListModule} from '../../features/application-list/application-list.module';
+import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
 
 @NgModule({
   declarations: [ApplicationComponent],
@@ -40,13 +41,13 @@ import {ApplicationListModule} from '../../features/application-list/application
     AppUserListModule,
     FooterModule,
     ApplicationListModule,
+    ToolBarModule,
+    BreadcrumbsModule,
+    BreadcrumbsContainerModule,
+    MatCardModule,
     RouterModule.forChild([
       { path: '', component: ApplicationComponent, canActivate: [AuthGuard] },
-    ]),
-    ToolBarModule,
-
-    BreadcrumbsModule,
-    MatCardModule
+    ])
   ],
   providers: [ApplicationPageService]
 })

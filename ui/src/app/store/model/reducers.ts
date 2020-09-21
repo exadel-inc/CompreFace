@@ -28,6 +28,7 @@ import {
   loadModels,
   loadModelsFail,
   loadModelsSuccess,
+  setSelectedModelIdEntityAction,
   updateModel,
   updateModelFail,
   updateModelSuccess,
@@ -35,13 +36,14 @@ import {
 
 export interface ModelEntityState extends EntityState<Model> {
   isPending: boolean;
+  selectedModelId: string | null;
 }
 
 export const modelAdapter: EntityAdapter<Model> = createEntityAdapter<Model>();
 
 const initialState: ModelEntityState = modelAdapter.getInitialState({
   isPending: false,
-  selectedId: null
+  selectedModelId: null
 });
 
 const reducer: ActionReducer<ModelEntityState> = createReducer(
@@ -55,6 +57,7 @@ const reducer: ActionReducer<ModelEntityState> = createReducer(
     { ...state, isPending: false }
   )),
   on(deleteModelSuccess, (state, { modelId }) => modelAdapter.removeOne(modelId, { ...state, isPending: false })),
+  on(setSelectedModelIdEntityAction, (state, { selectedModelId }) => ({ ...state, selectedModelId }))
 );
 
 export function modelReducer(modelState: ModelEntityState, action: Action) {

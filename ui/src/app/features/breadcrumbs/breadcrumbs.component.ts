@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import {Component, Input} from '@angular/core';
 
-import { Application } from '../../data/application';
-import { ROUTERS_URL } from '../../data/routers-url.variable';
-import { BreadcrumbsFacade } from './breadcrumbs.facade';
+import {Application} from '../../data/application';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {BreadcrumbsFacade} from './breadcrumbs.facade';
+import {Model} from '../../data/model';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -26,11 +26,12 @@ import { BreadcrumbsFacade } from './breadcrumbs.facade';
   styleUrls: ['./breadcrumbs.component.scss']
 })
 export class BreadcrumbsComponent {
-  app$: Observable<Application>;
   ROUTERS_URL = ROUTERS_URL;
-  maxTitleLength = 100;
+  maxNameLength = 20;
+  @Input() model: Model;
+  @Input() orgId: string;
+  @Input() app: Application;
 
   constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
-    this.app$ = breadcrumbsFacade.app$;
   }
 }

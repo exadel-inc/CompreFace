@@ -33,7 +33,7 @@ import {
   loadApplications,
   loadApplicationsFail,
   loadApplicationsSuccess,
-  setSelectedIdEntityAction,
+  setSelectedAppIdEntityAction,
   updateApplication,
   updateApplicationFail,
   updateApplicationSuccess,
@@ -83,7 +83,7 @@ export class ApplicationListEffect {
         switchMap(() => {
           this.router.navigate([`${ROUTERS_URL.HOME}`]);
           return [deleteApplicationSuccess({ id: app.id }),
-            setSelectedIdEntityAction({ selectedAppId: null })];
+            setSelectedAppIdEntityAction({ selectedAppId: null })];
         }),
         catchError(error => of(deleteApplicationFail({ error }))),
       )),

@@ -17,26 +17,24 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-import {BreadcrumbsComponent} from './breadcrumbs.component';
-import {BreadcrumbsFacade} from './breadcrumbs.facade';
-import {MatCardModule} from '@angular/material';
-import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslateModule} from '@ngx-translate/core';
+import {AuthGuard} from '../../core/auth/auth.guard';
+import {TestModelComponent} from './test-model.component';
+import {MatCardModule} from '@angular/material/card';
+import {TestModelPageService} from './test-model.service';
+import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
+
 
 @NgModule({
-  declarations: [BreadcrumbsComponent],
-  exports: [
-    BreadcrumbsComponent
-  ],
+  declarations: [TestModelComponent],
   imports: [
     CommonModule,
-    RouterModule,
-    MatCardModule,
-    TruncateModule,
-    MatTooltipModule,
-    TranslateModule
+    BreadcrumbsContainerModule,
+    RouterModule.forChild([
+      {path: '', component: TestModelComponent, canActivate: [AuthGuard]},
+    ]),
+    MatCardModule
   ],
-  providers: [BreadcrumbsFacade],
+  providers: [TestModelPageService]
 })
-export class BreadcrumbsModule { }
+export class TestModelModule {
+}
