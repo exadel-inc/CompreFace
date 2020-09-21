@@ -36,7 +36,7 @@ import {MainLayoutComponent} from './ui/main-layout/main-layout.component';
 import {CustomMaterialModule} from './ui/material/material.module';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {BreadcrumbsModule} from "./features/breadcrumbs/breadcrumbs.module";
+import {BreadcrumbsModule} from './features/breadcrumbs/breadcrumbs.module';
 import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/breadcrumbs.container.module';
 
 @NgModule({

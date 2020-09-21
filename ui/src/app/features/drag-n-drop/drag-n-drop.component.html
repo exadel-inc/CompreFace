@@ -1,0 +1,7 @@
+<h3>{{'dnd.test' | translate}}</h3>
+<div class="dropzone" appDnd (fileDropped)="onFileDropped($event)">
+    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+    <img src="../../../assets/dnd/ic-upload-file.svg" alt="">
+    <h3>{{'dnd.title' | translate}}</h3>
+    <label>{{'dnd.label' | translate}}</label>
+</div>
