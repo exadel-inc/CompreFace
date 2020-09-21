@@ -121,5 +121,10 @@
   },
   "breadcrumbs": {
     "home": "Home"
+  },
+  "dnd": {
+    "title": "Click here or Drag and drop your image here",
+    "label": "image must be with formats, and no more than 5 MB",
+    "test": "Test model"
   }
 }
