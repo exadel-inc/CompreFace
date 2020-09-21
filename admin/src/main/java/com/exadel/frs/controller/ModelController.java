@@ -17,6 +17,7 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
+import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
@@ -31,7 +32,6 @@ import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -85,7 +85,7 @@ public class ModelController {
         );
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     @PostMapping("/model")
     @ApiOperation(value = "Create model")
     @ApiResponses({
@@ -182,7 +182,7 @@ public class ModelController {
             @ApiParam(value = "GUID from model share request", required = true)
             @RequestBody
             final ModelShareDto modelShare
-            ) {
+    ) {
         modelService.share(modelShare, orgGuid, appGuid, guid);
     }
 }

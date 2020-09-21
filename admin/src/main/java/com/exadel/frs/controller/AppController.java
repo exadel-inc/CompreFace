@@ -17,6 +17,7 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
+import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
@@ -37,7 +38,6 @@ import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -83,7 +83,7 @@ public class AppController {
         return appMapper.toResponseDto(appService.getApps(orgGuid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     @PostMapping("/app")
     @ApiOperation(value = "Create application")
     @ApiResponses({
@@ -181,7 +181,7 @@ public class AppController {
         return userAppRoleMapper.toUserRoleResponseDto(appService.getAppUsers(search, orgGuid, guid, SecurityUtils.getPrincipalId()));
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     @PostMapping("/app/{guid}/invite")
     @ApiOperation(value = "Invite user to application")
     public UserRoleResponseDto inviteUser(
