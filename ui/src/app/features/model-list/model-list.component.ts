@@ -28,6 +28,7 @@ import { ModelListFacade } from './model-list-facade';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {Router} from "@angular/router";
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-model-list',
@@ -47,9 +48,10 @@ export class ModelListComponent implements OnInit, OnDestroy {
     {title: 'actions', property: 'id'},
   ];
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router) {
-    this.modelListFacade.initSubscriptions();
+  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router, private translate: TranslateService) {
+    this.modelListFacade.initSubscriptions();    
   }
+
 
   ngOnInit() {
     this.isLoading$ = this.modelListFacade.isLoading$;
@@ -75,7 +77,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(EditDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'Face Collection',
+        entityType: this.translate.instant('models.header'),
         entityName: model.name,
       }
     });
@@ -91,7 +93,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'Face Collection',
+        entityType: this.translate.instant('models.header'),
         entityName: model.name,
       }
     });
@@ -117,7 +119,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
-        entityType: 'Face Collection',
+        entityType: this.translate.instant('models.header'),
       }
     });
 

@@ -36,11 +36,12 @@
     "login": "LOGIN",
     "sign_up": "SIGN UP"
   },
+
   "toolbar": {
     "logout": "Logout"
   },
   "applications": {
-    "title": "Applications",
+    "title": "Applications",    
     "first_steps_title": "Create Application",
     "name": "Name",
     "owner": "Owner",
@@ -68,6 +69,7 @@
     "title": "Models",
     "name": "Name",
     "api_key": "API key",
+    "header": "Face Collection",
     "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
     "create_dialog": {
       "title": "Create Face Collection",
@@ -99,6 +101,7 @@
       "no_results": "No matches found"
     }
   },
+  "system-user": "system-user",
   "org_users": {
     "delete_dialog": {
       "title": "Delete User",
