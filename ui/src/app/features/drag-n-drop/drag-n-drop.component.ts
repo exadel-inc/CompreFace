@@ -14,7 +14,6 @@ export class DragNDropComponent {
    * on file drop handler
    */
   onFileDropped($event) {
-    console.log('File upload');
     this.processFile($event);
   }
 
@@ -31,8 +30,6 @@ export class DragNDropComponent {
    * TODO Send file to api
    */
   processFile(files: Array<any>) {
-    for (const item of files) {
-      this.file = item;
-    }
+    this.file = files[0];
   }
 }
