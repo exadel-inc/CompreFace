@@ -85,7 +85,7 @@ docker-compose up --build
 7. Run `sh start.sh` and make sure http://localhost:8000/ starts
 8. Stopped all containers:
 `$ docker-compose down`
-3. Run `sh start--dev.sh` and make sure http://localhost:4200/ starts
+9. Run `sh start--dev.sh` and make sure http://localhost:4200/ starts
 
 
 ## Simple tutorial of usage
