@@ -22,13 +22,14 @@ import {TestModelComponent} from './test-model.component';
 import {MatCardModule} from '@angular/material/card';
 import {TestModelPageService} from './test-model.service';
 import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
-
+import { DragNDropModule } from 'src/app/features/drag-n-drop/drag-n-drop.module';
 
 @NgModule({
   declarations: [TestModelComponent],
   imports: [
     CommonModule,
     BreadcrumbsContainerModule,
+    DragNDropModule,
     RouterModule.forChild([
       {path: '', component: TestModelComponent, canActivate: [AuthGuard]},
     ]),

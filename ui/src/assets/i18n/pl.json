@@ -75,7 +75,8 @@
     },
     "select_menu": {
       "edit": "EDYTUJ",
-      "delete": "USUŃ"
+      "delete": "USUŃ",
+      "test" : "TEST"
     },
     "edit_dialog": {
       "title": "EDYTUJ MODEL",
@@ -119,6 +120,11 @@
     }
   },
   "breadcrumbs": {
-    "home": "Domek"
+    "home": "Home"
+  },
+  "dnd": {
+    "title": "Click here or Drag and drop your image here",
+    "label": "image must be with formats, and no more than 5 MB",
+    "test": "Test model"
   }
 }
