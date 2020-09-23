@@ -89,7 +89,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           return this.dialog.open(DeleteDialogComponent, {
             width: '400px',
             data: {
-              entityType: 'system-user',
+              entityType: this.translate.instant('users.system-user'),
               entity: deletion.userToDelete,
               options: [
                 { name: email, value: 'deleter' },

@@ -83,7 +83,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'user',
+        entityType: this.translate.instant('users.user'),
         entityName: `${deletion.userToDelete.firstName} ${deletion.userToDelete.lastName}`,
         applicationName: this.appUserListFacade.selectedApplicationName,
       }
