@@ -44,7 +44,8 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   userRole$: Observable<string>;
   tableConfig$: Observable<ITableConfig>;
 
-  constructor(private applicationFacade: ApplicationListFacade, private dialog: MatDialog, private router: Router, private translate: TranslateService) {
+  constructor(private applicationFacade: ApplicationListFacade, private dialog: MatDialog, private router: Router,
+              private translate: TranslateService) {
     this.applicationFacade.initSubscriptions();
   }
 

@@ -27,7 +27,7 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {Router} from "@angular/router";
+import {Router} from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -48,10 +48,10 @@ export class ModelListComponent implements OnInit, OnDestroy {
     {title: 'actions', property: 'id'},
   ];
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router, private translate: TranslateService) {
+  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router,
+              private translate: TranslateService) {
     this.modelListFacade.initSubscriptions();
   }
-
 
   ngOnInit() {
     this.isLoading$ = this.modelListFacade.isLoading$;
