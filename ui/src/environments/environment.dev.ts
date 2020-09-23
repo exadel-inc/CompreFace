@@ -20,5 +20,7 @@ export const environment: Environment = {
   production: true,
   basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
   apiUrl: 'http://compreface-api:8080/admin/',
+  adminApiUrl: 'http://compreface-api:8080/admin/',
+  userApiUrl: 'http://compreface-api:8080/api/v1/',
   buildNumber: '0.0.4'
 };

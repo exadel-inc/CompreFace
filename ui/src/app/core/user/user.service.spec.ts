@@ -63,7 +63,7 @@ describe('UserService', () => {
       expect(data[1].lastName).toBe(mock[1].lastName);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}org/organizationId/roles`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/roles`);
     expect(req.request.method).toBe('GET');
     req.flush(mock);
   });
@@ -83,7 +83,7 @@ describe('UserService', () => {
       expect(data.lastName).toBe(mock.lastName);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}org/organizationId/role`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/role`);
     expect(req.request.method).toBe('PUT');
     req.flush(mock);
   });

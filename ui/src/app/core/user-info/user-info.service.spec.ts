@@ -53,7 +53,7 @@ describe('UserInfoService', () => {
       expect(data).toEqual(mockData);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}user/me`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}user/me`);
     expect(req.request.method).toBe('GET');
     req.flush(mockData);
   });

@@ -23,6 +23,7 @@ import {MatCardModule} from '@angular/material/card';
 import {TestModelPageService} from './test-model.service';
 import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
 import { DragNDropModule } from 'src/app/features/drag-n-drop/drag-n-drop.module';
+import { DragNDropContainerModule } from 'src/app/features/drag-n-drop.container/drag-n-drop.container.module';
 
 @NgModule({
   declarations: [TestModelComponent],
@@ -30,6 +31,7 @@ import { DragNDropModule } from 'src/app/features/drag-n-drop/drag-n-drop.module
     CommonModule,
     BreadcrumbsContainerModule,
     DragNDropModule,
+    DragNDropContainerModule,
     RouterModule.forChild([
       {path: '', component: TestModelComponent, canActivate: [AuthGuard]},
     ]),

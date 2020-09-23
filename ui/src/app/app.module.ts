@@ -38,6 +38,8 @@ import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {BreadcrumbsModule} from './features/breadcrumbs/breadcrumbs.module';
 import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/breadcrumbs.container.module';
+import { DragNDropContainerModule } from './features/drag-n-drop.container/drag-n-drop.container.module';
+import { DragNDropModule } from './features/drag-n-drop/drag-n-drop.module';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,7 @@ import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/bre
     CreateDialogComponent,
     EditDialogComponent,
     AlertComponent,
-    DeleteDialogComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -62,6 +64,8 @@ import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/bre
     MatRadioModule,
     BreadcrumbsModule,
     BreadcrumbsContainerModule,
+    DragNDropContainerModule,
+    DragNDropModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

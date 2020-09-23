@@ -73,7 +73,7 @@ describe('ModelService', () => {
       expect(data).toEqual(mockModels);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}org/0/app/0/models`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/0/app/0/models`);
     expect(req.request.method).toBe('GET');
     req.flush(mockModels);
   });
@@ -84,7 +84,7 @@ describe('ModelService', () => {
       expect(data.name).toEqual('new model');
       expect(data.relations[0].id).toEqual('app_0');
     });
-    const req = httpMock.expectOne(`${environment.apiUrl}org/0/app/app_0/model`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/0/app/app_0/model`);
     expect(req.request.method).toBe('POST');
     req.flush({
       id: '2',

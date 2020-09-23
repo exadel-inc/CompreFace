@@ -49,7 +49,7 @@ describe('ApplicationService', () => {
       expect(data[1].organizationId).toBe('organizationId');
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}org/organizationId/apps`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/apps`);
     expect(req.request.method).toBe('GET');
     req.flush([{
       name: 'test-application-one',
@@ -70,7 +70,7 @@ describe('ApplicationService', () => {
       expect(data.organizationId).toBe('organizationId');
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}org/organizationId/app`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/app`);
     expect(req.request.method).toBe('POST');
     req.flush({
       name: 'new-app',
@@ -85,7 +85,7 @@ describe('ApplicationService', () => {
       expect(data.name).toBe('new app');
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}org/orgId/app/appId`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/orgId/app/appId`);
     expect(req.request.method).toBe('PUT');
     req.flush({
       name: 'new app',
