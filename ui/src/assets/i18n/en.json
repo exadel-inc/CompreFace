@@ -41,7 +41,7 @@
     "logout": "Logout"
   },
   "applications": {
-    "title": "Applications",    
+    "title": "Applications",
     "first_steps_title": "Create Application",
     "name": "Name",
     "owner": "Owner",
