@@ -1,0 +1,23 @@
+@import 'media.scss';
+
+.container {
+  min-height: 650px;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
+  .header-container {
+    width: 100%;
+
+    @include mobile {
+      height: auto;
+    }
+  }
+}
+
+.test-model-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 650px;
+}

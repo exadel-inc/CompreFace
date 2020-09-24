@@ -69,6 +69,24 @@ docker-compose up --build
 1. Open http://localhost:8000/
 
 
+** Tips for Windows**  (use Git Bash terminal)
+1. Turn of the git autocrlf with command:
+`git config --global core.autocrlf false`
+2. Make sure all your containers are down:
+`$ docker ps`
+3. In case some containers are working, they should be stopped:
+`$ docker-compose down`
+4. Clean all local datebases and images:
+`docker system prune --volumes`
+5. Last line in /dev/start.sh file change to 
+`docker-compose -f docker-compose.yml up --remove-orphans --build` 
+6. Go to Dev folder
+`cd dev`
+7. Run `sh start.sh` and make sure http://localhost:8000/ starts
+8. Stopped all containers:
+`$ docker-compose down`
+9. Run `sh start--dev.sh` and make sure http://localhost:4200/ starts
+
 
 ## Simple tutorial of usage
 

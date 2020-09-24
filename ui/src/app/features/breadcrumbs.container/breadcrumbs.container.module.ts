@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
+import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
 
-.breadcrumbs {
-  font-family: 'Roboto';
-  display: flex;
-  margin-bottom: 20px;
-  margin-top: 15px;
 
-  &-link {
-    margin-right: 8px;
-  }
 
-  .separator {
-    margin-right: 8px;
-  }
-}
+@NgModule({
+  declarations: [BreadcrumbsContainerComponent],
+  exports: [
+    BreadcrumbsContainerComponent
+  ],
+  imports: [
+    CommonModule,
+    BreadcrumbsModule
+  ]
+})
+export class BreadcrumbsContainerModule { }

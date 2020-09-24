@@ -36,6 +36,7 @@
     "login": "LOGIN",
     "sign_up": "SIGN UP"
   },
+
   "toolbar": {
     "logout": "Logout"
   },
@@ -68,6 +69,7 @@
     "title": "Models",
     "name": "Name",
     "api_key": "API key",
+    "header": "Face Collection",
     "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
     "create_dialog": {
       "title": "Create Face Collection",
@@ -75,7 +77,8 @@
     },
     "select_menu": {
       "edit": "EDIT",
-      "delete": "DELETE"
+      "delete": "DELETE",
+      "test" : "TEST"
     },
     "edit_dialog": {
       "title": "EDIT MODEL",
@@ -98,6 +101,7 @@
       "no_results": "No matches found"
     }
   },
+  "system-user": "system-user",
   "org_users": {
     "delete_dialog": {
       "title": "Delete User",
@@ -117,5 +121,13 @@
       "title": "Delete user",
       "confirmation_question": "Are you sure you want remove user {{name}} from {{application}}?"
     }
+  },
+  "breadcrumbs": {
+    "home": "Home"
+  },
+  "dnd": {
+    "title": "Click here or Drag and drop your image here",
+    "label": "image must be with formats, and no more than 5 MB",
+    "test": "Test model"
   }
 }

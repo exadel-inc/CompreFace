@@ -151,6 +151,12 @@ app-table, app-user-table, app-model-table {
   }
 }
 
+.test-model-page {
+  height: auto;
+  margin-bottom: 60px;
+  overflow-y: hidden;
+}
+
 .mat-form-field-type-mat-select .mat-form-field-underline {
   display: none;
 }

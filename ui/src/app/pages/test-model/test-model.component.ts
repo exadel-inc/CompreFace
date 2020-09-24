@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {TestModelPageService} from './test-model.service';
 
-.breadcrumbs {
-  font-family: 'Roboto';
-  display: flex;
-  margin-bottom: 20px;
-  margin-top: 15px;
+@Component({
+  selector: 'app-test-model',
+  templateUrl: './test-model.component.html',
+  styleUrls: ['./test-model.component.scss']
+})
+export class TestModelComponent implements OnInit, OnDestroy {
+  constructor(private modelService: TestModelPageService) {}
 
-  &-link {
-    margin-right: 8px;
+  ngOnInit() {
+    this.modelService.initUrlBindingStreams();
   }
-
-  .separator {
-    margin-right: 8px;
+  ngOnDestroy(): void {
+    this.modelService.clearSelectedModelId();
+    this.modelService.unSubscribe();
   }
 }

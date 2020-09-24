@@ -29,3 +29,14 @@ export const selectPendingModel = createSelector(
   selectModelEntityState,
   (state: ModelEntityState) => state.isPending
 );
+
+export const selectCurrentModelId = createSelector(
+  selectModelEntityState,
+  (state: ModelEntityState) => state.selectedModelId
+);
+
+export const selectCurrentModel = createSelector(
+  selectModelEntityState,
+  selectCurrentModelId,
+  (models, selectedModelId) => models.entities ? models.entities[selectedModelId] : null
+);

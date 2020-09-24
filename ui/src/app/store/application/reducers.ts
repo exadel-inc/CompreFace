@@ -28,7 +28,7 @@ import {
   loadApplications,
   loadApplicationsFail,
   loadApplicationsSuccess,
-  setSelectedIdEntityAction,
+  setSelectedAppIdEntityAction,
   updateApplication,
   updateApplicationFail,
   updateApplicationSuccess,
@@ -60,7 +60,7 @@ const reducer: ActionReducer<AppEntityState> = createReducer(
     { ...state, isPending: false }
   )),
   on(deleteApplicationSuccess, (state, { id }) => applicationAdapter.removeOne(id, { ...state, isPending: false })),
-  on(setSelectedIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
+  on(setSelectedAppIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
 );
 
 export function ApplicationReducer(appState: AppEntityState, action: Action) {

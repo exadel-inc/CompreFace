@@ -23,7 +23,7 @@ import {selectApplications} from '../../store/application/selectors';
 import {loadApplications} from '../../store/application/action';
 import {ROUTERS_URL} from '../../data/routers-url.variable';
 import {filter, take} from 'rxjs/operators';
-import {setSelectedIdEntityAction} from '../../store/application/action';
+import {setSelectedAppIdEntityAction} from '../../store/application/action';
 import {getUserInfo} from '../../store/userInfo/action';
 import {setSelectedId} from '../../store/organization/action';
 import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
@@ -46,7 +46,7 @@ export class ApplicationPageService {
     this.appId = this.route.snapshot.queryParams.app;
 
     if (this.appId && this.orgId) {
-      this.store.dispatch(setSelectedIdEntityAction({ selectedAppId: this.appId }));
+      this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedId({ selectId: this.orgId }));
       this.appsSub = this.store.select(selectApplications).pipe(
         filter(apps => !apps.length),

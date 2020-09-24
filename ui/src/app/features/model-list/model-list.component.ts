@@ -26,6 +26,9 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {Router} from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-model-list',
@@ -40,12 +43,13 @@ export class ModelListComponent implements OnInit, OnDestroy {
   tableConfig$: Observable<ITableConfig>;
   roleEnum = RoleEnum;
   columns = [
-    { title: 'name', property: 'name' },
-    { title: 'apiKey', property: 'apiKey' },
-    { title: 'actions', property: 'id' },
+    {title: 'name', property: 'name'},
+    {title: 'apiKey', property: 'apiKey'},
+    {title: 'actions', property: 'id'},
   ];
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog) {
+  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router,
+              private translate: TranslateService) {
     this.modelListFacade.initSubscriptions();
   }
 
@@ -73,7 +77,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(EditDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'Face Collection',
+        entityType: this.translate.instant('models.header'),
         entityName: model.name,
       }
     });
@@ -89,7 +93,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'Face Collection',
+        entityType: this.translate.instant('models.header'),
         entityName: model.name,
       }
     });
@@ -101,11 +105,21 @@ export class ModelListComponent implements OnInit, OnDestroy {
     });
   }
 
+  test(model: Model) {
+    this.router.navigate([ROUTERS_URL.TEST_MODEL], {
+      queryParams: {
+        org: this.modelListFacade.selectedOrganizationId,
+        app: this.modelListFacade.selectedApplicationId,
+        model: model.id
+      }
+    });
+  }
+
   onCreateNewModel(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
-        entityType: 'Face Collection',
+        entityType: this.translate.instant('models.header'),
       }
     });
 
