@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.cache.CachedFace;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
@@ -88,7 +88,7 @@ class ScanServiceImplTest {
         val actual = scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(new CachedFace(face.getFaceName(), face.getId()));
+        assertThat(actual).isEqualTo(new FaceBO(face.getFaceName(), face.getId()));
 
         verify(scanFacesClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
         verify(faceDao).addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY);

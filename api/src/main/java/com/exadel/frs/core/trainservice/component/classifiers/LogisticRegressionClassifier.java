@@ -40,12 +40,10 @@ public class LogisticRegressionClassifier implements Classifier {
         this.faces = faces;
     }
 
-    @Override
     public void train(final double[][] x, final int[] y) {
         this.logisticRegression = LogisticRegression.fit(x, y, LAMBDA, TOLERANCE, MAX_ITER);
     }
 
-    @Override
     public List<Pair<Double, String>> predict(final double[] input, int resultCount) {
         if (isTrained()) {
             val probs = new double[faces.size()];
@@ -55,6 +53,11 @@ public class LogisticRegressionClassifier implements Classifier {
         }
 
         throw new ModelNotTrainedException();
+    }
+
+    @Override
+    public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
+        return null;
     }
 
     @SneakyThrows
@@ -70,7 +73,6 @@ public class LogisticRegressionClassifier implements Classifier {
                         .collect(toList());
     }
 
-    @Override
     public boolean isTrained() {
         return logisticRegression != null;
     }

@@ -17,9 +17,8 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static java.util.stream.Collectors.toSet;
-import com.exadel.frs.core.trainservice.cache.CachedFace;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -31,23 +30,22 @@ import org.springframework.stereotype.Service;
 public class FaceService {
 
     private final FaceDao faceDao;
-    private final FaceClassifierManager classifierManager;
     private final FaceCacheProvider faceCacheProvider;
 
-    public Set<CachedFace> findFaces(final String apiKey) {
+    public Set<FaceBO> findFaces(final String apiKey) {
         return faceCacheProvider.getOrLoad(apiKey).getFaces();
     }
 
-    public Set<CachedFace> deleteFaceByName(final String faceName, final String apiKey) {
-        val collection = faceCacheProvider.getOrLoad(apiKey);
+    public Set<FaceBO> deleteFaceByName(final String faceName, final String apiKey) {
+        val faces = faceCacheProvider.getOrLoad(apiKey);
 
         return faceDao.deleteFaceByName(faceName, apiKey)
                       .stream()
-                      .map(face -> collection.removeFace(face.getId(), face.getFaceName()))
+                      .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
                       .collect(toSet());
     }
 
-    public CachedFace deleteFaceById(final String id, final String apiKey) {
+    public FaceBO deleteFaceById(final String id, final String apiKey) {
         val collection = faceCacheProvider.getOrLoad(apiKey);
         val face = faceDao.deleteFaceById(id);
         if (face != null) {
@@ -57,8 +55,7 @@ public class FaceService {
         return null;
     }
 
-    public Set<CachedFace> deleteFacesByModel(final String modelKey) {
-        classifierManager.removeFaceClassifier(modelKey);
+    public Set<FaceBO> deleteFacesByModel(final String modelKey) {
         faceDao.deleteFacesByApiKey(modelKey);
 
         val facesToDelete = faceCacheProvider.getOrLoad(modelKey).getFaces();

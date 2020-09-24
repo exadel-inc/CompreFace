@@ -21,7 +21,6 @@ import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import java.util.List;
@@ -34,7 +33,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -48,9 +46,6 @@ public class FaceServiceTestIT {
 
     @Autowired
     private FaceService faceService;
-
-    @MockBean
-    private FaceClassifierManager faceClassifierManager;
 
     private static final String MODEL_KEY = randomUUID().toString();
     private static final String MODEL_KEY_OTHER = randomUUID().toString();

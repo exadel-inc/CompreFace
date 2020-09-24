@@ -42,6 +42,7 @@ public class Model {
     @GeneratedValue(strategy = SEQUENCE, generator = "model_id_seq")
     @SequenceGenerator(name = "model_id_seq", sequenceName = "model_id_seq", allocationSize = 1)
     private Long id;
+
     private String name;
 
     @Column(name = "api_key")

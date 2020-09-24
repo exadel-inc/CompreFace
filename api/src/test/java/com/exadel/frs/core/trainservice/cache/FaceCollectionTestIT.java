@@ -37,9 +37,9 @@ public class FaceCollectionTestIT {
         assertThat(faceCollection).isNotNull();
         assertThat(faceCollection.getFaces()).isNotNull();
         assertThat(faceCollection.getFaces()).hasSize(faces.size());
-        assertThat(faceCollection.getFacesMap().get(new CachedFace(face1.getFaceName(), face1.getId()))).isEqualTo(0);
-        assertThat(faceCollection.getFacesMap().get(new CachedFace(face2.getFaceName(), face2.getId()))).isEqualTo(1);
-        assertThat(faceCollection.getFacesMap().get(new CachedFace(face3.getFaceName(), face3.getId()))).isEqualTo(2);
+        assertThat(faceCollection.getFacesMap().get(new FaceBO(face1.getFaceName(), face1.getId()))).isEqualTo(0);
+        assertThat(faceCollection.getFacesMap().get(new FaceBO(face2.getFaceName(), face2.getId()))).isEqualTo(1);
+        assertThat(faceCollection.getFacesMap().get(new FaceBO(face3.getFaceName(), face3.getId()))).isEqualTo(2);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class FaceCollectionTestIT {
         faceCollection.addFace(addedFace);
 
         assertThat(faceCollection.getFaces()).hasSize(faces.size() + 1);
-        assertThat(faceCollection.getFacesMap().get(new CachedFace(addedFace.getFaceName(), addedFace.getId()))).isEqualTo(3);
+        assertThat(faceCollection.getFacesMap().get(new FaceBO(addedFace.getFaceName(), addedFace.getId()))).isEqualTo(3);
     }
 
     @Test
@@ -67,7 +67,7 @@ public class FaceCollectionTestIT {
         faceCollection.removeFace(face1.getId(), face1.getFaceName());
 
         assertThat(faceCollection.getFaces()).hasSize(faces.size() - 1);
-        assertThat(faceCollection.getFacesMap().get(new CachedFace(face2.getFaceName(), face2.getId()))).isEqualTo(0);
-        assertThat(faceCollection.getFacesMap().get(new CachedFace(face3.getFaceName(), face3.getId()))).isEqualTo(1);
+        assertThat(faceCollection.getFacesMap().get(new FaceBO(face2.getFaceName(), face2.getId()))).isEqualTo(0);
+        assertThat(faceCollection.getFacesMap().get(new FaceBO(face3.getFaceName(), face3.getId()))).isEqualTo(1);
     }
 }

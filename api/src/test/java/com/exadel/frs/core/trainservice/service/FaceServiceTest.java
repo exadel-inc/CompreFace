@@ -19,16 +19,12 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import java.util.List;
 import lombok.val;
@@ -41,9 +37,6 @@ class FaceServiceTest {
 
     @Mock
     private FaceDao faceDao;
-
-    @Mock
-    private FaceClassifierManager classifierManager;
 
     @Mock
     private FaceCacheProvider faceCacheProvider;
@@ -87,7 +80,6 @@ class FaceServiceTest {
         faceService.deleteFaceByName(faceName, API_KEY);
 
         verify(faceDao).deleteFaceByName(faceName, API_KEY);
-        verifyNoInteractions(classifierManager);
     }
 
     @Test
@@ -97,7 +89,6 @@ class FaceServiceTest {
         faceService.deleteFaceById(faceId, API_KEY);
 
         verify(faceDao).deleteFaceById(faceId);
-        verifyNoInteractions(classifierManager);
     }
 
     @Test
@@ -112,16 +103,13 @@ class FaceServiceTest {
         when(faceCacheProvider.getOrLoad(API_KEY))
                 .thenReturn(faceCollection);
         when(faceDao.deleteFacesByApiKey(API_KEY)).thenReturn(faces);
-        doNothing().when(classifierManager).removeFaceClassifier(API_KEY);
 
         val actual = faceService.deleteFacesByModel(API_KEY);
 
         assertThat(actual).isNotNull();
         assertThat(actual.size()).isEqualTo(faces.size());
 
-        val inOrder = inOrder(classifierManager, faceDao);
-        inOrder.verify(classifierManager).removeFaceClassifier(API_KEY);
-        inOrder.verify(faceDao).deleteFacesByApiKey(API_KEY);
+        verify(faceDao).deleteFacesByApiKey(API_KEY);
         verifyNoMoreInteractions(faceDao);
     }
 

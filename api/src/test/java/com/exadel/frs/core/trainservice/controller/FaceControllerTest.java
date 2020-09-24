@@ -16,7 +16,6 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
@@ -33,7 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.service.ScanService;
@@ -61,9 +59,6 @@ public class FaceControllerTest {
     private FacesRepository facesRepository;
 
     @MockBean
-    private TrainedModelDao trainedModelDao;
-
-    @MockBean
     private ScanService scanService;
 
     @MockBean
@@ -81,7 +76,6 @@ public class FaceControllerTest {
         mockMvc.perform(
                 multipart(API_V1 + "/faces")
                         .file(mockFile)
-                        .param("retrain", NO.name())
                         .param("subject", "name")
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isCreated());
@@ -169,7 +163,6 @@ public class FaceControllerTest {
 
         mockMvc.perform(delete(API_V1 + "/faces/" + face.getId())
                 .header(X_FRS_API_KEY_HEADER, API_KEY)
-                .param("retrain", NO.name())
         ).andExpect(status().isOk());
     }
 
@@ -194,7 +187,6 @@ public class FaceControllerTest {
 
         mockMvc.perform(delete(API_V1 + "/faces")
                 .header(X_FRS_API_KEY_HEADER, API_KEY)
-                .param("retrain", NO.name())
                 .param("subject", faceName)
         )
                .andExpect(status().isOk())

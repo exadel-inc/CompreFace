@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.cache.CachedFace;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
@@ -40,7 +40,7 @@ public class ScanServiceImpl implements ScanService {
     private final FaceCacheProvider faceCacheProvider;
 
     @Override
-    public CachedFace scanAndSaveFace(
+    public FaceBO scanAndSaveFace(
             final MultipartFile file,
             final String faceName,
             final Double detProbThreshold,

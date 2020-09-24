@@ -34,22 +34,21 @@ public class FaceCacheProvider {
 
     private static final long CACHE_EXPIRATION = 10;
     private static final long CACHE_MAXIMUM_SIZE = 3;
-
     private static final Cache<String, FaceCollection> cache =
             CacheBuilder.newBuilder()
                         .expireAfterAccess(CACHE_EXPIRATION, TimeUnit.SECONDS)
                         .maximumSize(CACHE_MAXIMUM_SIZE)
                         .build();
 
-    public FaceCollection getOrLoad(final String collectionId) {
-        if (collectionId == null) {
+    public FaceCollection getOrLoad(final String apiKey) {
+        if (apiKey == null) {
             return null;
         }
 
-        var result = cache.getIfPresent(collectionId);
+        var result = cache.getIfPresent(apiKey);
         if (result == null) {
-            result = buildFromFaces(findFaces(collectionId));
-            cache.put(collectionId, result);
+            result = buildFromFaces(findFaces(apiKey));
+            cache.put(apiKey, result);
         }
 
         return result;
