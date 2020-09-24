@@ -189,7 +189,7 @@ Recognizing the person in the photo. Haifengl/smile [LogisticRegression](http://
 
 ## Rest API description
 
-By using the created API key, the user can add an image as an example of the face, retrieve a list of saved images, recognize a face from the uploaded image, retrain the Face Collection, and delete all examples of the face by the name.
+By using the created API key, the user can add an image as an example of the face, retrieve a list of saved images, recognize a face from the uploaded image the Face Collection, and delete all examples of the face by the name.
 
 
 
@@ -198,12 +198,11 @@ By using the created API key, the user can add an image as an example of the fac
 Creates an example of the face by saving images. To train the system, you can add as many images as you want.
 
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/faces/?subject=<face_name>&retrain=<retrain_option>" \
+curl  -X POST "http://localhost:8000/api/v1/faces/?subject=<face_name>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <model_api_key>" \
 -F file=@<local_file> \
 -F det_prob_threshold=@<det_prob_threshold> \
--F retrain=@<retrain_option> \
 ```
 | Element             | Description | Type   | Required | Notes                                                        |
 | ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
@@ -212,7 +211,6 @@ curl  -X POST "http://localhost:8000/api/v1/faces/?subject=<face_name>&retrain=<
 | face_name           | param       | string | required | is the name you assign to the image you save                 |
 | file                | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 | det_prob_ threshold | body        | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0 |
-| retrain_option      | body        | string | optional | retrains the model for the specified API key. Can be set to "yes", "no", "force". Default value: "force" |
 
 Response body on success:
 
@@ -326,15 +324,14 @@ Response body on success:
 Deletes all image examples of the <face_name>.
 
 ```http request
-curl  -X DELETE "http://localhost:8000/api/v1/faces/?subject=<face_name>&retrain=<retrain_option>" \
+curl  -X DELETE "http://localhost:8000/api/v1/faces/?subject=<face_name>" \
 -H "x-api-key: <model_api_key>"
 ```
 
-| Element        | Description | Type   | Required | Notes                                                        |
-| -------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| x-api-key      | header      | string | required | api key of the model, created by the user                    |
-| face_name      | param       | string | optional | is the name you assign to the image you save. **Caution!** If this parameter is absent, all faces in Face Collection will be removed |
-| retrain_option | param       | string | optional | retrains the Face Collection after deleting. Can be set to "yes", "no", "force". Default value: "force" |
+| Element   | Description | Type   | Required | Notes                                                        |
+| --------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
+| x-api-key | header      | string | required | api key of the model, created by the user                    |
+| face_name | param       | string | optional | is the name you assign to the image you save. **Caution!** If this parameter is absent, all faces in Face Collection will be removed |
 Response body on success:
 ```
 [
@@ -358,15 +355,14 @@ Response body on success:
 Deletes image by ID.
 
 ```http request
-curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>retrain=<retrain_option>" \
+curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
 -H "x-api-key: <model_api_key>"
 ```
 
-| Element        | Description | Type   | Required | Notes                                                        |
-| -------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| x-api-key      | header      | string | required | api key of the model, created by the user                    |
-| image_id       | variable    | UUID   | required | UUID of the removing face                                    |
-| retrain_option | param       | string | optional | retrains the Face Collection after deleting. Can be set to "yes", "no", "force". Default value: "force" |
+| Element   | Description | Type   | Required | Notes                                     |
+| --------- | ----------- | ------ | -------- | ----------------------------------------- |
+| x-api-key | header      | string | required | api key of the model, created by the user |
+| image_id  | variable    | UUID   | required | UUID of the removing face                 |
 Response body on success:
 ```
 {
