@@ -15,11 +15,11 @@
  */
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { map, skipWhile } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
-import { AppUser } from 'src/app/data/interfaces/app-user';
-import { IFacade } from 'src/app/data/interfaces/IFacade';
+import { AppUser } from 'src/app/data/appUser';
+import { IFacade } from 'src/app/data/facade/IFacade';
 import { AppState } from 'src/app/store';
 import {
   selectCurrentOrganizationId,
@@ -28,15 +28,11 @@ import {
 } from 'src/app/store/organization/selectors';
 import { loadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
-import {
-  deleteUser,
-  loadUsersEntityAction,
-  updateUserRoleWithRefreshAction,
-} from 'src/app/store/user/action';
+import { deleteUser, loadUsersEntityAction, updateUserRoleWithRefreshAction, } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
-import { Role } from 'src/app/data/enums/role.enum';
-import { UserDeletion } from '../../data/interfaces/user-deletion';
+import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { UserDeletion } from '../../data/userDeletion';
 
 @Injectable()
 export class UserListFacade implements IFacade {
