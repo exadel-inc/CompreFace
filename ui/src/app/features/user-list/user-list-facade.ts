@@ -15,10 +15,10 @@
  */
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
+import { map, skipWhile } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
-import { AppUser} from 'src/app/data/appUser';
+import { AppUser } from 'src/app/data/appUser';
 import { IFacade } from 'src/app/data/facade/IFacade';
 import { AppState } from 'src/app/store';
 import {
@@ -28,15 +28,11 @@ import {
 } from 'src/app/store/organization/selectors';
 import { loadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
-import {
-  deleteUser,
-  loadUsersEntityAction,
-  updateUserRoleWithRefreshAction,
-} from 'src/app/store/user/action';
+import { deleteUser, loadUsersEntityAction, updateUserRoleWithRefreshAction, } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
 import { RoleEnum } from 'src/app/data/roleEnum.enum';
-import {UserDeletion} from '../../data/userDeletion';
+import { UserDeletion } from '../../data/userDeletion';
 
 @Injectable()
 export class UserListFacade implements IFacade {
@@ -48,6 +44,13 @@ export class UserListFacade implements IFacade {
   currentUserId$: Observable<string>;
   currentUserEmail$: Observable<string>;
   userRole$: Observable<string>;
+  currentUserRole: BehaviorSubject<string> = new BehaviorSubject<string>(null);
+
+  public get currentUserRole$(): Observable<string> {
+    return this.currentUserRole.asObservable().pipe(
+      skipWhile((role) => !role)
+    );
+  }
 
   private selectedOrganization: string;
 
@@ -60,10 +63,12 @@ export class UserListFacade implements IFacade {
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.selectedOrganizationName$ = store.select(selectSelectedOrganization).pipe(map(org => org.name));
     this.users$ = store.select(selectUsersWithOwnerApp);
-    this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
+    this.store.select(selectUserRollForSelectedOrganization).subscribe((role) => {
+      this.currentUserRole.next(role);
+    });
 
     const allRoles$ = store.select(selectAllRoles);
-    this.availableRoles$ = combineLatest(allRoles$, this.userRole$).pipe(
+    this.availableRoles$ = combineLatest(allRoles$, this.currentUserRole$).pipe(
       map(([allRoles, userRole]) => {
         const roleIndex = allRoles.indexOf(userRole);
         return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
@@ -105,6 +110,10 @@ export class UserListFacade implements IFacade {
         role
       }
     }));
+
+    if (this.currentUserRole.getValue() === RoleEnum.OWNER && role === RoleEnum.OWNER) {
+      this.currentUserRole.next(RoleEnum.ADMINISTRATOR);
+    }
   }
 
   deleteUser(deletion: UserDeletion, newOwner?: string): void {

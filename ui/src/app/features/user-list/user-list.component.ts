@@ -15,7 +15,7 @@
  */
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/appUser';
 
@@ -57,7 +57,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.isLoading$ = this.userListFacade.isLoading$;
-    this.userRole$ = this.userListFacade.userRole$;
+    this.userRole$ = this.userListFacade.currentUserRole$;
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
       this.orgOwnerEmail = users.filter(user => user.role === RoleEnum.OWNER).map(user => user.email)[0];
       return {
