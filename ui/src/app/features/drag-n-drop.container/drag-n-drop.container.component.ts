@@ -16,21 +16,36 @@
 import { Component, OnInit } from '@angular/core';
 import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 import { Model } from 'src/app/data/model';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store';
+import { DragNDropFacade } from './drag-n-drop.facade';
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-drag-n-drop-container',
   template: `
     <app-drag-n-drop
-      [model]="model$ | async">
+      [model]="model$ | async"
+      [data]="data$ | async"
+      [loading]="loading$ | async"
+      (recognizeFace)=recognizeFace($event)>
    </app-drag-n-drop>`
 })
 export class DragNDropContainerComponent implements OnInit {
   model$: Observable<Model>;
+  testSub: Observable<string>;
+  private store: Store<AppState>;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade) { }
+  constructor(private breadcrumbsFacade: BreadcrumbsFacade, private dragNdropFacade: DragNDropFacade) {}
 
   ngOnInit() {
     this.model$ = this.breadcrumbsFacade.model$;
+    this.testSub = this.dragNdropFacade.testData$;
+  }
+
+  recognizeFace(file: any, model: Model) {
+    this.dragNdropFacade.recognizeFace(model, file);
+
   }
 }
