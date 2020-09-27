@@ -6,7 +6,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import java.util.List;
 import lombok.val;
@@ -37,13 +37,13 @@ class FaceClassifierPredictorTest {
 
     @Test
     void predict() {
-        val logisticRegressionClassifier = mock(LogisticRegressionClassifier.class);
+        val euclideanDistanceClassifier = mock(EuclideanDistanceClassifier.class);
         val faceClassifierAdapter = mock(FaceClassifierAdapter.class);
         double[] input = new double[0];
         int resultCount = 1;
         val expected = List.of(Pair.of(1.0, ""));
 
-        when(trainedModelDao.getModel(MODEL_KEY)).thenReturn(logisticRegressionClassifier);
+        when(trainedModelDao.getModel(MODEL_KEY)).thenReturn(euclideanDistanceClassifier);
         when(context.getBean(FaceClassifierAdapter.class)).thenReturn(faceClassifierAdapter);
         when(faceClassifierAdapter.predict(input, resultCount)).thenReturn(expected);
 
@@ -54,7 +54,7 @@ class FaceClassifierPredictorTest {
         val inOrder = inOrder(trainedModelDao, context, faceClassifierAdapter);
         inOrder.verify(trainedModelDao).getModel(MODEL_KEY);
         inOrder.verify(context).getBean(FaceClassifierAdapter.class);
-        inOrder.verify(faceClassifierAdapter).setClassifier(logisticRegressionClassifier);
+        inOrder.verify(faceClassifierAdapter).setClassifier(euclideanDistanceClassifier);
         inOrder.verify(faceClassifierAdapter).predict(input, resultCount);
 
         verifyNoMoreInteractions(trainedModelDao);

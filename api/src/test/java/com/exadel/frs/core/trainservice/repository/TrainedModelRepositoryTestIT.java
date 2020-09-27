@@ -18,7 +18,7 @@ package com.exadel.frs.core.trainservice.repository;
 
 import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.exadel.frs.core.trainservice.component.classifiers.LogisticRegressionClassifier;
+import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.entity.TrainedModel;
 import java.util.List;
 import lombok.val;
@@ -78,7 +78,7 @@ public class TrainedModelRepositoryTestIT {
 
         val faces = List.of("firstLabel", "secondLabel");
 
-        val classifier = new LogisticRegressionClassifier(faces);
+        val classifier = new EuclideanDistanceClassifier(faces);
         classifier.train(x, y);
 
         val model = TrainedModel.builder()
