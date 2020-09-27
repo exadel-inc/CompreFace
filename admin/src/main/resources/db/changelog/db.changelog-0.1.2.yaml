@@ -1,0 +1,41 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-demo-data
+      author: Hayeuski Andrei
+      changes:
+        - insert:
+            tableName: app
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 0
+              - column:
+                  name: name
+                  value: Demo app
+              - column:
+                  name: guid
+                  type: 00000000-0000-0000-0000-000000000000
+              - column:
+                  name: organization_id
+                  type: 0
+              - column:
+                  name: api_key
+                  type: 00000000-0000-0000-0000-000000000000
+        - insert:
+            tableName: model
+            columns:
+              - column:
+                  name: id
+                  valueNumeric: 0
+              - column:
+                  name: name
+                  value: Demo app
+              - column:
+                  name: guid
+                  type: 00000000-0000-0000-0000-000000000000
+              - column:
+                  name: organization_id
+                  type: 0
+              - column:
+                  name: api_key
+                  type: 00000000-0000-0000-0000-000000000000

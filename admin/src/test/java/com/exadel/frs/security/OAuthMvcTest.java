@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.FrsApplication;
 import com.exadel.frs.helpers.EmailSender;
@@ -29,13 +29,13 @@ import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
+import javax.servlet.http.Cookie;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -102,7 +102,7 @@ class OAuthMvcTest {
         }
     }
 
-    private String obtainAccessToken(String username, String password) throws Exception {
+    private Cookie getCookie(String username, String password) throws Exception {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "password");
@@ -116,22 +116,19 @@ class OAuthMvcTest {
                 .with(httpBasic("CommonClientId", "password"))
                 .accept("application/json;charset=UTF-8"))
                          .andExpect(status().isOk())
-                         .andExpect(content().contentType("application/json;charset=UTF-8"));
+                         .andExpect(cookie().exists("CFSESSION"));
 
-        String resultString = result.andReturn().getResponse().getContentAsString();
-
-        JacksonJsonParser jsonParser = new JacksonJsonParser();
-        return jsonParser.parseMap(resultString).get("access_token").toString();
+        return result.andReturn().getResponse().getCookie("CFSESSION");
     }
 
     @Test
-    void availableOnlyWithAccessToken() throws Exception {
+    void availableOnlyWithCookie() throws Exception {
         mockMvc.perform(get("/user/me"))
                .andExpect(status().isUnauthorized());
 
-        var accessToken = obtainAccessToken(userEmail, "test1");
+        var cookie = getCookie(userEmail, "test1");
         mockMvc.perform(get("/user/me")
-                .header("Authorization", "Bearer " + accessToken))
+                .cookie(cookie))
                .andExpect(status().isOk());
     }
 
@@ -140,10 +137,10 @@ class OAuthMvcTest {
         mockMvc.perform(get("/user/me"))
                .andExpect(status().isUnauthorized());
 
-        val accessToken = obtainAccessToken(userEmail.toUpperCase(), "test1");
+        val cookie = getCookie(userEmail.toUpperCase(), "test1");
 
         mockMvc.perform(get("/user/me")
-                .header("Authorization", "Bearer " + accessToken))
+                .cookie(cookie))
                .andExpect(status().isOk());
     }
 

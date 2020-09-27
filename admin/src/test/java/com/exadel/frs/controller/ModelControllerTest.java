@@ -43,7 +43,6 @@ import com.exadel.frs.entity.Model;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
-import com.exadel.frs.system.security.JwtAuthenticationFilter;
 import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
@@ -61,7 +60,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = ModelController.class,
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
-                classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
+                classes = {WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
         )
 )
 class ModelControllerTest {
