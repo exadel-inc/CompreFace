@@ -26,15 +26,20 @@ public class Face {
 
     @Id
     private String id;
+
     @Column(name = "face_name")
     private String faceName;
+
     @Column(name = "api_key")
     private String apiKey;
+
     @Type(type = "json")
     @Column(name = "embeddings")
     private Embedding embedding;
+
     @Column(name = "raw_img_fs")
     private byte[] rawImg;
+
     @Column(name = "face_img_fs")
     private byte[] faceImg;
 

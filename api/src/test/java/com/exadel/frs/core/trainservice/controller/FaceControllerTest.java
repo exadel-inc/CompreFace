@@ -16,11 +16,9 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -31,10 +29,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
+import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
-import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
@@ -61,13 +59,13 @@ public class FaceControllerTest {
     private FacesRepository facesRepository;
 
     @MockBean
-    private TrainedModelDao trainedModelDao;
-
-    @MockBean
     private ScanService scanService;
 
     @MockBean
     private ImageExtensionValidator imageValidator;
+
+    @MockBean
+    private FaceCacheProvider faceCacheProvider;
 
     private static final String API_KEY = "model_key";
 
@@ -78,7 +76,6 @@ public class FaceControllerTest {
         mockMvc.perform(
                 multipart(API_V1 + "/faces")
                         .file(mockFile)
-                        .param("retrain", NO.name())
                         .param("subject", "name")
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isCreated());
@@ -92,9 +89,13 @@ public class FaceControllerTest {
     void scanFacesForFirstItemWithEmptyRetrain() throws Exception {
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
 
-        doReturn(1)
-                .when(facesRepository)
-                .countByApiKey(API_KEY);
+        val faceCollection = FaceCollection.buildFromFaces(List.of(
+                makeFace("A", API_KEY)
+        ));
+
+        doReturn(faceCollection)
+                .when(faceCacheProvider)
+                .getOrLoad(API_KEY);
 
         mockMvc.perform(
                 multipart(API_V1 + "/faces")
@@ -115,9 +116,14 @@ public class FaceControllerTest {
                 makeFace("B", API_KEY)
         );
 
+        val faceCollection = FaceCollection.buildFromFaces(faces);
+
         doReturn(faces)
                 .when(facesRepository)
                 .findByApiKey(API_KEY);
+        doReturn(faceCollection)
+                .when(faceCacheProvider)
+                .getOrLoad(API_KEY);
 
         val expectedFaces = faces.stream()
                                  .map(face -> FaceResponseDto.builder()
@@ -145,33 +151,46 @@ public class FaceControllerTest {
 
     @Test
     public void deleteFacesByIdShouldReturnResponseAsExpected() throws Exception {
-        val faceId = randomUUID().toString();
-        val response = Optional.of(new Face());
+        val face = makeFace("A", API_KEY);
+        val faceCollection = FaceCollection.buildFromFaces(List.of(face));
 
-        doReturn(response)
+        doReturn(Optional.of(face))
                 .when(facesRepository)
-                .findById(faceId);
+                .findById(face.getId());
+        doReturn(faceCollection)
+                .when(faceCacheProvider)
+                .getOrLoad(API_KEY);
 
-        mockMvc.perform(delete(API_V1 + "/faces/" + faceId)
+        mockMvc.perform(delete(API_V1 + "/faces/" + face.getId())
                 .header(X_FRS_API_KEY_HEADER, API_KEY)
-                .param("retrain", NO.name())
         ).andExpect(status().isOk());
     }
 
     @Test
     public void deleteFacesByNameShouldReturnResponseAsExpected() throws Exception {
         val faceName = "faceName";
-        val response = List.of(new Face(), new Face(), new Face());
+        val face = makeFace(faceName, API_KEY);
+        val faceCollection = FaceCollection.buildFromFaces(List.of(face));
 
-        doReturn(response)
+        doReturn(List.of(face))
                 .when(facesRepository)
                 .deleteByApiKeyAndFaceName(API_KEY, faceName);
+        doReturn(faceCollection)
+                .when(faceCacheProvider)
+                .getOrLoad(API_KEY);
+
+        val expectedFaces = List.of(FaceResponseDto.builder()
+                                                   .image_id(face.getId())
+                                                   .subject(face.getFaceName())
+                                                   .build());
+        val expectedContent = new ObjectMapper().writeValueAsString(expectedFaces);
 
         mockMvc.perform(delete(API_V1 + "/faces")
                 .header(X_FRS_API_KEY_HEADER, API_KEY)
-                .param("retrain", NO.name())
                 .param("subject", faceName)
-        ).andExpect(status().isOk());
+        )
+               .andExpect(status().isOk())
+               .andExpect(content().json(expectedContent));
     }
 
     @Test
@@ -181,17 +200,25 @@ public class FaceControllerTest {
                 makeFace("B", API_KEY),
                 makeFace("C", API_KEY)
         );
+        val faceCollection = FaceCollection.buildFromFaces(faces);
+
         doReturn(faces)
                 .when(facesRepository)
                 .deleteFacesByApiKey(API_KEY);
-        val expectedFaces = faces.stream()
-                                 .map(face -> FaceResponseDto.builder()
-                                                             .image_id(face.getId())
-                                                             .subject(face.getFaceName())
-                                                             .build()
-                                 )
-                                 .collect(toList());
+        doReturn(faceCollection)
+                .when(faceCacheProvider)
+                .getOrLoad(API_KEY);
+
+        val expectedFaces = faceCollection.getFaces().stream()
+                                          .map(face -> FaceResponseDto.builder()
+                                                                      .image_id(face.getImageId())
+                                                                      .subject(face.getName())
+                                                                      .build()
+                                          )
+                                          .collect(toList());
+
         val expectedContent = new ObjectMapper().writeValueAsString(expectedFaces);
+
         mockMvc.perform(delete(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
                .andExpect(status().isOk())
                .andExpect(content().json(expectedContent));

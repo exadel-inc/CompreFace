@@ -14,31 +14,31 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.component;
+package com.exadel.frs.core.trainservice.cache;
 
+import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
+import com.exadel.frs.core.trainservice.dao.FaceDao;
 import java.util.List;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-class FaceClassifierPredictorTest {
+public class FaceCacheProviderTest {
 
     @Mock
-    private Classifier classifier;
+    private FaceDao faceDao;
 
     @InjectMocks
-    private FaceClassifierPredictor faceClassifierPredictor;
+    private FaceCacheProvider faceCacheProvider;
 
-    private static final String MODEL_KEY = "modelKey";
+    private static final String API_KEY = "model_key";
 
     @BeforeEach
     void setUp() {
@@ -46,18 +46,20 @@ class FaceClassifierPredictorTest {
     }
 
     @Test
-    void predict() {
-        double[] input = new double[0];
-        int resultCount = 1;
-        val expected = List.of(Pair.of(1.0, ""));
+    void getOrLoad() {
+        val faces = List.of(
+                makeFace("A", API_KEY),
+                makeFace("B", API_KEY)
+        );
+        when(faceDao.findAllFacesByApiKey(API_KEY)).thenReturn(faces);
 
-        when(classifier.predict(input, MODEL_KEY, resultCount)).thenReturn(expected);
+        val actual = faceCacheProvider.getOrLoad(API_KEY);
 
-        val actual = faceClassifierPredictor.predict(MODEL_KEY, input, resultCount);
+        verify(faceDao).findAllFacesByApiKey(API_KEY);
+        verifyNoMoreInteractions(faceDao);
 
-        assertThat(actual).isEqualTo(expected);
-
-        verify(classifier).predict(input, MODEL_KEY, resultCount);
-        verifyNoMoreInteractions(classifier);
+        assertThat(actual).isNotNull();
+        assertThat(actual.getFaces()).isNotNull();
+        assertThat(actual.getFaces().size()).isEqualTo(faces.size());
     }
 }
