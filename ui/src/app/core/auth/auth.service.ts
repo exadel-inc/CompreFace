@@ -32,7 +32,7 @@ import { updateUserAuthorization } from '../../store/userInfo/action';
   providedIn: 'root'
 })
 export class AuthService {
-  public token$: BehaviorSubject<string>;
+  token$: BehaviorSubject<string>;
   refreshInProgress: boolean;
   requests = [];
 
