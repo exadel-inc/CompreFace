@@ -16,23 +16,20 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.MIN_FACES_TO_TRAIN;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
-import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.service.FaceService;
-import com.exadel.frs.core.trainservice.service.RetrainService;
 import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
@@ -54,12 +51,9 @@ import org.springframework.web.multipart.MultipartFile;
 public class FaceController {
 
     private final ScanService scanService;
-    private final RetrainService retrainService;
     private final FaceService faceService;
     private final FaceMapper faceMapper;
     private final ImageExtensionValidator imageValidator;
-
-    private static final int FIRST_ITEM_ADDED_NUM = 1;
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
@@ -71,12 +65,6 @@ public class FaceController {
             @ApiParam(value = "Person's name to whom the face belongs to.", required = true)
             @RequestParam("subject")
             final String faceName,
-            @ApiParam(value = "Specify whether the model should start retraining immediately after the request is completed " +
-                    "(set this parameter to value \"no\", if operating with a lot of images one after another). " +
-                    "Allowed values: \"yes\", \"no\", \"force\". \"Force\" option will abort already running processes of " +
-                    "classifier training.")
-            @RequestParam(value = "retrain", required = false)
-            final String retrainOption,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false)
             final Double detProbThreshold,
@@ -86,10 +74,6 @@ public class FaceController {
     ) throws IOException {
         imageValidator.validate(file);
         val face = scanService.scanAndSaveFace(file, faceName, detProbThreshold, apiKey);
-        if (!(isBlank(retrainOption) &&
-                faceService.countFacesInModel(apiKey) == FIRST_ITEM_ADDED_NUM)) {
-            getTrainingOption(retrainOption).run(apiKey, retrainService);
-        }
 
         return faceMapper.toResponseDto(face);
     }
@@ -109,25 +93,15 @@ public class FaceController {
             @ApiParam(value = "Person's name to whom the face belongs to.", required = true)
             @RequestParam(name = "subject", required = false)
             final String subject,
-            @ApiParam(value = "Specify whether the model should start retraining immediately after the request is completed " +
-                    "(set this parameter to value \"no\", if operating with a lot of images one after another). " +
-                    "Allowed values: \"yes\", \"no\", \"force\". \"Force\" option will abort already running processes of " +
-                    "classifier training.")
-            @RequestParam(value = "retrain", required = false)
-            final String retrain,
             @ApiParam(value = "api key", required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val faces = new ArrayList<Face>();
+        val faces = new HashSet<FaceBO>();
         if (isBlank(subject)) {
             faces.addAll(faceService.deleteFacesByModel(apiKey));
         } else {
             faces.addAll(faceService.deleteFaceByName(subject, apiKey));
-            if (!faces.isEmpty() &&
-                    !(isBlank(retrain) && faceService.countFacesInModel(apiKey) < MIN_FACES_TO_TRAIN)) {
-                getTrainingOption(retrain).run(apiKey, retrainService);
-            }
         }
 
         return faceMapper.toResponseDto(faces);
@@ -138,21 +112,11 @@ public class FaceController {
     public FaceResponseDto deleteFaceById(
             @PathVariable
             final String image_id,
-            @ApiParam(value = "Specify whether the model should start retraining immediately after the request is completed " +
-                    "(set this parameter to value \"no\", if operating with a lot of images one after another). " +
-                    "Allowed values: \"yes\", \"no\", \"force\". \"Force\" option will abort already running processes of " +
-                    "classifier training.")
-            @RequestParam(name = "retrain", required = false)
-            final String retrain,
             @ApiParam(value = "api key", required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER)
             final String apiKey
     ) {
-        val face = faceService.deleteFaceById(image_id);
-        if (face != null &&
-                !(isBlank(retrain) && faceService.countFacesInModel(apiKey) < MIN_FACES_TO_TRAIN)) {
-            getTrainingOption(retrain).run(apiKey, retrainService);
-        }
+        val face = faceService.deleteFaceById(image_id, apiKey);
 
         return faceMapper.toResponseDto(face);
     }

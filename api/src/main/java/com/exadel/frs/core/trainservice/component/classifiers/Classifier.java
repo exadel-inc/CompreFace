@@ -22,9 +22,5 @@ import org.apache.commons.lang3.tuple.Pair;
 
 public interface Classifier extends Serializable {
 
-    void train(double[][] input, int[] output);
-
-    List<Pair<Double, String>> predict(double[] input, int resultCount);
-
-    boolean isTrained();
+    List<Pair<Double, String>> predict(double[] input, String apiKey, int resultCount);
 }

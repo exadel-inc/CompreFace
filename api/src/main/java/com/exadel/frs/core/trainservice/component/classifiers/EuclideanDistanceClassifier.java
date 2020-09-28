@@ -14,68 +14,49 @@
  * permissions and limitations under the License.
  */
 
-/*
- * Copyright (c) 2020 the original author or authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
-
 package com.exadel.frs.core.trainservice.component.classifiers;
 
 import static java.lang.Math.min;
 import static java.util.Arrays.sort;
 import static org.nd4j.linalg.factory.Nd4j.create;
-import static org.nd4j.linalg.factory.Nd4j.createFromArray;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.google.common.primitives.Doubles;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class EuclideanDistanceClassifier implements Classifier {
 
-    private final List<String> faces;
-    private INDArray indArray;
+    private final FaceCacheProvider faceCacheProvider;
 
-    public EuclideanDistanceClassifier(final List<String> faces) {
-        this.faces = faces;
+    @Autowired
+    private EuclideanDistanceClassifier(final FaceCacheProvider faceCacheProvider) {
+        this.faceCacheProvider = faceCacheProvider;
     }
 
     @Override
-    public void train(final double[][] input, final int[] output) {
-        indArray = createFromArray(input);
-    }
-
-    @Override
-    public List<Pair<Double, String>> predict(final double[] input, final int resultCount) {
+    public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
         val inputFace = create(input);
-        val probabilities = recognize(inputFace, indArray);
+        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
+
+        val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
         val argSort = argSort(probabilities);
-        val result = new LinkedList<Pair<Double, String>>();
+        val facesMap = faceCollection.getFacesMap().inverse();
+        val result = new ArrayList<Pair<Double, String>>();
 
         for (int i = 0; i < min(resultCount, argSort.length); i++) {
-            val faceName = faces.get(argSort[i]);
+            val face = facesMap.get(argSort[i]);
             val prob = probabilities[argSort[i]];
-            result.add(Pair.of(prob, faceName));
+
+            result.add(Pair.of(prob, face.getName()));
         }
 
         return result;
-    }
-
-    @Override
-    public boolean isTrained() {
-        return indArray != null;
     }
 
     private INDArray normalizeOne(final INDArray embeddings) {
