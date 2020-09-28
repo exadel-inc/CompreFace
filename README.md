@@ -87,7 +87,6 @@ docker-compose up --build
 `$ docker-compose down`
 9. Run `sh start--dev.sh` and make sure http://localhost:4200/ starts
 
-
 ## Simple tutorial of usage
 
 1. Registration users in the app
