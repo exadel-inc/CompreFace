@@ -21,7 +21,7 @@ import static java.util.Arrays.sort;
 import static org.nd4j.linalg.factory.Nd4j.create;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.google.common.primitives.Doubles;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -47,7 +47,7 @@ public class EuclideanDistanceClassifier implements Classifier {
         val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
         val argSort = argSort(probabilities);
         val facesMap = faceCollection.getFacesMap().inverse();
-        val result = new LinkedList<Pair<Double, String>>();
+        val result = new ArrayList<Pair<Double, String>>();
 
         for (int i = 0; i < min(resultCount, argSort.length); i++) {
             val face = facesMap.get(argSort[i]);
