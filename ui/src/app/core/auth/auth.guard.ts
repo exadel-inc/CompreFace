@@ -28,7 +28,7 @@ import {UserInfoState} from 'src/app/store/userInfo/reducers';
 export class AuthGuard implements CanActivate {
   private userInfo: Observable<UserInfoState>;
 
-  constructor(public router: Router, private store: Store<AppState>) {
+  constructor(private router: Router, private store: Store<AppState>) {
     this.userInfo = this.store.select(selectUserInfoState);
   }
 
@@ -50,7 +50,7 @@ export class AuthGuard implements CanActivate {
 export class LoginGuard implements CanActivate {
   private userInfo$: Observable<UserInfoState>;
 
-  constructor(public router: Router, private store: Store<AppState>) {
+  constructor(private router: Router, private store: Store<AppState>) {
     this.userInfo$ = this.store.select(selectUserInfoState);
   }
 

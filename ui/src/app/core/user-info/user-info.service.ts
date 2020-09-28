@@ -28,7 +28,7 @@ export class UserInfoService {
 
   constructor(private http: HttpClient) {}
 
-  public get(): Observable<User> {
+  get(): Observable<User> {
     return this.http.get<User>(`${environment.apiUrl}${API_URL.GET_USER_INFO}`);
   }
 }
