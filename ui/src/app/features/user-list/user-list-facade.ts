@@ -15,8 +15,8 @@
  */
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
-import { map, skipWhile } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
 import { AppUser } from 'src/app/data/appUser';
 import { IFacade } from 'src/app/data/facade/IFacade';
