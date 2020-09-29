@@ -45,18 +45,18 @@ export class TableComponent implements OnInit {
 
   maxElementLength = 10;
 
-  public columnsDefinition: {
+  columnsDefinition: {
     title: string;
     property: string;
   }[];
-  public displayedColumns: string[];
-  public data: any[];
+  displayedColumns: string[];
+  data: any[];
 
   constructor() { }
 
   ngOnInit() { }
 
-  public change(element: any): void {
+  change(element: any): void {
     this.changeRow.emit(element);
   }
 
