@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 import { Component, OnInit } from '@angular/core';
-import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 import { Model } from 'src/app/data/model';
 import { Observable, Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
@@ -26,20 +25,21 @@ import { async } from '@angular/core/testing';
   selector: 'app-drag-n-drop-container',
   template: `
     <app-drag-n-drop
-      [model]="testMmodel$ | async"
-      [data]="model$ | async"
-      [loading]="isPending$ | async"
+      [model]="model$ | async"
+      [data]="data$ | async"
       (recognizeFace)=recognizeFace($event)>
    </app-drag-n-drop>`
 })
 export class DragNDropContainerComponent implements OnInit {
-  testModel$: Observable<Model>;
+  model$: Observable<Model>;
   private store: Store<AppState>;
+  data$: Observable<string>;
 
   constructor(private dragNdropFacade: DragNDropFacade) {}
 
   ngOnInit() {
-    this.testModel$ = this.dragNdropFacade.model$;
+    this.model$ = this.dragNdropFacade.model$;
+    this.data$ = this.dragNdropFacade.testData$;
   }
 
   recognizeFace(file: any, model: Model) {

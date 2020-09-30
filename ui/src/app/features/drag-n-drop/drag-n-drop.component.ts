@@ -17,7 +17,7 @@
 import { Component, ViewChild, ElementRef, Input, Output } from '@angular/core';
 import { Model } from 'src/app/data/model';
 import { DragNDropService } from './drag-n-drop.service';
-import { EventEmitter } from 'protractor';
+import { EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-drag-n-drop',
@@ -34,20 +34,19 @@ export class DragNDropComponent {
   @Output() recognizeFace = new EventEmitter();
   @ViewChild('myCanvas', { static: true }) myCanvas: ElementRef;
 
-
   constructor(private dragService: DragNDropService) {}
 
   /**
    * on file drop handler
    */
-  onFileDroppedReco($event) {
+  onFileDropped($event) {
     this.processFileRecoFace($event);
   }
 
   /**
    * handle file from browsing
    */
-  fileBrowseHandlerReco(files) {
+  fileBrowseHandler(files) {
     this.processFileRecoFace(files);
   }
 
@@ -58,7 +57,7 @@ export class DragNDropComponent {
    */
   processFileRecoFace(files: Array<any>) {
     this.file = files[0];
-    this.recognizeFace.emit(this.file, this.model);
+    this.recognizeFace.emit(this.file);
   }
 
   printResult(box: any, face: any) {
