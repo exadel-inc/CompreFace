@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.exception.ImageNotFoundException;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import java.util.List;
@@ -131,5 +132,13 @@ public class FaceCollection {
 
     synchronized public Set<FaceBO> getFaces() {
         return facesMap.keySet();
+    }
+
+    synchronized public INDArray getEmbeddingsByImageId(String imageId) {
+        val index = facesMap.get(facesMap.keySet().stream()
+                                         .filter(face -> face.getImageId().equals(imageId))
+                                         .findFirst()
+                                         .orElseThrow(() -> new ImageNotFoundException(imageId)));
+        return embeddings.get(NDArrayIndex.interval(index, index + 1), NDArrayIndex.all());
     }
 }

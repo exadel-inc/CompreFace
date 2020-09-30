@@ -23,4 +23,6 @@ import org.apache.commons.lang3.tuple.Pair;
 public interface Classifier extends Serializable {
 
     List<Pair<Double, String>> predict(double[] input, String apiKey, int resultCount);
+
+    Double verify(double[] input, String apiKey, String imageId);
 }
