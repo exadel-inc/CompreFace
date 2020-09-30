@@ -19,7 +19,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
-import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { setSelectedId } from '../../store/organization/action';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/actions';
 import { Subscription } from 'rxjs';

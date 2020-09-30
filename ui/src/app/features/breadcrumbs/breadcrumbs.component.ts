@@ -15,10 +15,10 @@
  */
 import {Component, Input} from '@angular/core';
 
-import {Application} from '../../data/application';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {Application} from '../../data/interfaces/application';
+import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
 import {BreadcrumbsFacade} from './breadcrumbs.facade';
-import {Model} from '../../data/model';
+import {Model} from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-breadcrumbs',

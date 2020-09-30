@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {Role} from 'src/app/data/role';
+import {Role} from 'src/app/data/interfaces/role';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import {setPendingRoleEntityAction, fetchRolesEntityAction, loadRolesEntityAction} from './actions';
 import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
