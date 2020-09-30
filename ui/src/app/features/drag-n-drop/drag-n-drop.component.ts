@@ -57,9 +57,7 @@ export class DragNDropComponent {
    * TODO Send file to api
    */
   processFileRecoFace(files: Array<any>) {
-    for (const item of files) {
-      this.file = item;
-    }
+    this.file = files[0];
     this.recognizeFace.emit(this.file, this.model);
   }
 

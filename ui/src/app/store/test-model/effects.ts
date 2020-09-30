@@ -25,12 +25,14 @@ import {
     recognizeFaceSuccess,
     recognizeFaceFail
   } from './actions';
+import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 @Injectable()
 export class TestEffects {
   constructor(
     private actions: Actions,
-    private testService: DragNDropService
+    private testService: DragNDropService,
+    private snackBarService: SnackBarService
   ) { }
 
   @Effect()
@@ -40,6 +42,16 @@ export class TestEffects {
       map(model => recognizeFaceSuccess({ model })),
       catchError(error => of(recognizeFaceFail({ error }))),
     )),
+  );
+
+  @Effect({ dispatch: false })
+  showError$ = this.actions.pipe(
+    ofType(
+      recognizeFaceFail
+    ),
+    tap(action => {
+      this.snackBarService.openHttpError(action.error);
+    })
   );
 
 }

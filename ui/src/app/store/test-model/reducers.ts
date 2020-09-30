@@ -37,9 +37,7 @@ const initialState: TestEntityState = testAdapter.getInitialState({
 const reducer: ActionReducer<TestEntityState> = createReducer(
   initialState,
   on(recognizeFace, (state) => ({ ...state, isPending: true })),
-  on(recognizeFaceSuccess, (state,  { model } ) => {
-    return model;
-  }),
+  on(recognizeFaceSuccess, (state,  { model } ) => ({ ...state, model })),
   on(recognizeFaceFail, (state) => ({...state, isPending: false})),
 );
 

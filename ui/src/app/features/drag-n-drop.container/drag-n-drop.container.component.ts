@@ -26,20 +26,20 @@ import { async } from '@angular/core/testing';
   selector: 'app-drag-n-drop-container',
   template: `
     <app-drag-n-drop
-      [model]="model$ | async"
-      [data]="data$ | async"
-      [loading]="loading$ | async"
+      [model]="testMmodel$ | async"
+      [data]="model$ | async"
+      [loading]="isPending$ | async"
       (recognizeFace)=recognizeFace($event)>
    </app-drag-n-drop>`
 })
 export class DragNDropContainerComponent implements OnInit {
-  model$: Observable<Model>;
+  testModel$: Observable<Model>;
   private store: Store<AppState>;
 
   constructor(private dragNdropFacade: DragNDropFacade) {}
 
   ngOnInit() {
-    this.model$ = this.dragNdropFacade.model$;
+    this.testModel$ = this.dragNdropFacade.model$;
   }
 
   recognizeFace(file: any, model: Model) {
