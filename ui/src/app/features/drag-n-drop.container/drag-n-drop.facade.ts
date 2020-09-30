@@ -21,13 +21,16 @@ import {AppState} from '../../store';
 import { selectTest } from 'src/app/store/test-model/selectors';
 import { recognizeFace } from 'src/app/store/test-model/actions';
 import { Model } from 'src/app/data/model';
+import { selectCurrentModel } from 'src/app/store/model/selectors';
 
 @Injectable()
 export class DragNDropFacade {
     testData$: Observable<string>;
+    model$: Observable<Model>;
 
   constructor(private store: Store<AppState>) {
       this.testData$ = this.store.select(selectTest);
+      this.model$ = this.store.select(selectCurrentModel);
    }
 
   recognizeFace(model: Model, file: any) {

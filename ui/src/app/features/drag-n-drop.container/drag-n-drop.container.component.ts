@@ -34,18 +34,15 @@ import { async } from '@angular/core/testing';
 })
 export class DragNDropContainerComponent implements OnInit {
   model$: Observable<Model>;
-  testSub: Observable<string>;
   private store: Store<AppState>;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade, private dragNdropFacade: DragNDropFacade) {}
+  constructor(private dragNdropFacade: DragNDropFacade) {}
 
   ngOnInit() {
-    this.model$ = this.breadcrumbsFacade.model$;
-    this.testSub = this.dragNdropFacade.testData$;
+    this.model$ = this.dragNdropFacade.model$;
   }
 
   recognizeFace(file: any, model: Model) {
     this.dragNdropFacade.recognizeFace(model, file);
-
   }
 }

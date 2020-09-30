@@ -1,5 +1,3 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 /*
  * Copyright (c) 2020 the original author or authors
  *
@@ -15,6 +13,8 @@ import { CommonModule } from '@angular/common';
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { DragNDropContainerComponent } from './drag-n-drop.container.component';
 import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
 
