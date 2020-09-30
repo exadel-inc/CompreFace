@@ -13,27 +13,42 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { of } from 'rxjs';
 import {Store} from '@ngrx/store';
 import {Injectable} from '@angular/core';
 import {Actions, Effect, ofType} from '@ngrx/effects';
-import { switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {OrganizationEnService} from '../organization/organization-entitys.service';
 import {AppState} from '../index';
-import { loadOrganizations } from './action';
+import { SnackBarService } from '../../features/snackbar/snackbar.service';
+import { loadOrganizations, loadOrganizationsFail, loadOrganizationsSuccess } from './action';
 
 @Injectable()
 export class OrganizationEffect {
     constructor(
         private actions: Actions,
         private organizationEnService: OrganizationEnService,
+        private snackBarService: SnackBarService,
         private store: Store<AppState>
     ) {
     }
 
-    @Effect({ dispatch: false })
-    fetchOrganizations =
+    @Effect()
+    fetchOrganizations$ =
         this.actions.pipe(
             ofType(loadOrganizations),
-            switchMap((action) => this.organizationEnService.getAll())
+            switchMap((action) => this.organizationEnService.getAll().pipe(
+              map(loadOrganizationsSuccess)
+            )),
+            catchError(error => of(loadOrganizationsFail({ error })))
+        );
+
+    @Effect({ dispatch: false })
+    showError$ =
+        this.actions.pipe(
+            ofType(loadOrganizationsFail),
+            tap(action => {
+                this.snackBarService.openHttpError(action.error);
+            })
         );
 }

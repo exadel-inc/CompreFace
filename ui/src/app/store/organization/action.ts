@@ -18,3 +18,5 @@ import {createAction, props} from '@ngrx/store';
 
 export const setSelectedId = createAction('[Organization] Set Selected Id', props<{selectId: string}>());
 export const loadOrganizations = createAction('[Organization] Load Organization');
+export const loadOrganizationsSuccess = createAction('[Organization] Load Organization Success');
+export const loadOrganizationsFail = createAction('[Organization] Load Organization Error', props<{ error: any }>());
