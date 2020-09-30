@@ -106,8 +106,7 @@ public class EuclideanDistanceClassifier implements Classifier {
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
 
         val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
-        val argSort = argSort(probabilities);
 
-        return probabilities[argSort[0]];
+        return probabilities[0];
     }
 }

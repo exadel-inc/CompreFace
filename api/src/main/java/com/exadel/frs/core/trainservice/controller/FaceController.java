@@ -25,6 +25,7 @@ import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
+import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.ScanService;
@@ -34,7 +35,6 @@ import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -55,6 +55,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping(API_V1 + "/faces")
 @RequiredArgsConstructor
 public class FaceController {
+
+    public static final int MAX_FACES_TO_VERIFY = 1;
 
     private final ScanService scanService;
     private final FaceService faceService;
@@ -130,7 +132,7 @@ public class FaceController {
     }
 
     @PostMapping(value = "/{image_id}/verify")
-    public Map<String, List<FaceVerification>> recognize(
+    public Map<String, FaceVerification> recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey,
@@ -145,32 +147,33 @@ public class FaceController {
         imageValidator.validate(file);
 
         val scanResponse = client.scanFaces(file, 1, 0.5D);
-        val results = new ArrayList<FaceVerification>();
 
-        for (val scanResult : scanResponse.getResult()) {
-            val prediction = classifierPredictor.verify(
-                    apiKey,
-                    scanResult.getEmbedding().stream()
-                              .mapToDouble(d -> d)
-                              .toArray(),
-                    image_id
-            );
-
-            var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
-            inBoxProb = inBoxProb.setScale(5, HALF_UP);
-            scanResult.getBox().setProbability(inBoxProb.doubleValue());
-
-            var pred = BigDecimal.valueOf(prediction);
-            pred = pred.setScale(5, HALF_UP);
-
-            val result = new FaceVerification(
-                    scanResult.getBox(),
-                    pred.floatValue()
-            );
-
-            results.add(result);
+        if (scanResponse.getResult().size() > MAX_FACES_TO_VERIFY) {
+            throw new TooManyFacesException();
         }
+        val scanResult = scanResponse.getResult().stream()
+                                     .findFirst().orElseThrow();
 
-        return Map.of("result", results);
+        val prediction = classifierPredictor.verify(
+                apiKey,
+                scanResult.getEmbedding().stream()
+                          .mapToDouble(d -> d)
+                          .toArray(),
+                image_id
+        );
+
+        var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
+        inBoxProb = inBoxProb.setScale(5, HALF_UP);
+        scanResult.getBox().setProbability(inBoxProb.doubleValue());
+
+        var pred = BigDecimal.valueOf(prediction);
+        pred = pred.setScale(5, HALF_UP);
+
+        val result = new FaceVerification(
+                scanResult.getBox(),
+                pred.floatValue()
+        );
+
+        return Map.of("result", result);
     }
 }
