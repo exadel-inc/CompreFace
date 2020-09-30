@@ -17,8 +17,8 @@
 import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable, Subscription} from 'rxjs';
-import {Application} from 'src/app/data/application';
-import {IFacade} from 'src/app/data/facade/IFacade';
+import {Application} from 'src/app/data/interfaces/application';
+import {IFacade} from 'src/app/data/interfaces/IFacade';
 import {AppState} from 'src/app/store';
 import {createApplication, loadApplications} from 'src/app/store/application/action';
 import {selectApplications, selectIsPendingApplicationList} from 'src/app/store/application/selectors';

@@ -15,10 +15,10 @@
  */
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Model } from 'src/app/data/model';
+import { Model } from 'src/app/data/interfaces/model';
 
 import { TableComponent } from '../table/table.component';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Component({
   selector: 'app-model-table',
@@ -32,5 +32,5 @@ export class ModelTableComponent extends TableComponent {
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();
-  roleEnum = RoleEnum;
+  roleEnum = Role;
 }

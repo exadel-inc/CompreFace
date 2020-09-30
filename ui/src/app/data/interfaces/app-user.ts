@@ -14,14 +14,14 @@
  * permissions and limitations under the License.
  */
 
-import { RoleEnum } from './roleEnum.enum';
+import { Role } from '../enums/role.enum';
 
 export interface AppUser {
   id: string;
   userId: string;
   firstName: string;
   lastName: string;
-  role: RoleEnum;
+  role: Role;
   email?: string;
   ownerOfApplications?: string[];
 }

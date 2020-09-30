@@ -17,15 +17,15 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { IFacade } from 'src/app/data/facade/IFacade';
-import { Model } from 'src/app/data/model';
+import { IFacade } from 'src/app/data/interfaces/IFacade';
+import { Model } from 'src/app/data/interfaces/model';
 import { AppState } from 'src/app/store';
 import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
 import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
-import {selectCurrentOrganizationId, selectUserRollForSelectedOrganization} from 'src/app/store/organization/selectors';
-import {map} from 'rxjs/operators';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
+import { map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable()
 export class ModelListFacade implements IFacade {
@@ -50,7 +50,7 @@ export class ModelListFacade implements IFacade {
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== RoleEnum.USER ? organizationRole : applicationRole;
+        return organizationRole !== Role.USER ? organizationRole : applicationRole;
       })
     );
   }
