@@ -18,8 +18,8 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
-import { AppUser} from 'src/app/data/appUser';
-import { IFacade } from 'src/app/data/facade/IFacade';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { AppState } from 'src/app/store';
 import {
   selectCurrentOrganizationId,
@@ -35,8 +35,8 @@ import {
 } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
-import {UserDeletion} from '../../data/userDeletion';
+import { Role } from 'src/app/data/enums/role.enum';
+import { UserDeletion } from '../../data/interfaces/user-deletion';
 
 @Injectable()
 export class UserListFacade implements IFacade {
@@ -97,7 +97,7 @@ export class UserListFacade implements IFacade {
     }));
   }
 
-  updateUserRole(id: string, role: RoleEnum): void {
+  updateUserRole(id: string, role: Role): void {
     this.store.dispatch(updateUserRoleWithRefreshAction({
       organizationId: this.selectedOrganization,
       user: {

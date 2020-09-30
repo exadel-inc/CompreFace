@@ -28,8 +28,8 @@ export interface IAlertData {
   styleUrls: ['./alert.component.scss']
 })
 export class AlertComponent implements OnInit {
-  public message: string;
-  public type: 'error' | 'warning' | 'info';
+  message: string;
+  type: 'error' | 'warning' | 'info';
 
   constructor(
     public dialogRef: MatDialogRef<AlertComponent>,
@@ -41,7 +41,7 @@ export class AlertComponent implements OnInit {
 
   ngOnInit() {}
 
-  public onOkClick(): void {
+  onOkClick(): void {
     this.dialogRef.close();
   }
 }

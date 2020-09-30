@@ -18,8 +18,8 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 
-import { Application } from '../../data/application';
-import { IFacade } from '../../data/facade/IFacade';
+import { Application } from '../../data/interfaces/application';
+import { IFacade } from '../../data/interfaces/IFacade';
 import { AppState } from '../../store';
 import { deleteApplication, updateApplication } from '../../store/application/action';
 import {
@@ -30,7 +30,7 @@ import {
 } from '../../store/application/selectors';
 import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from '../../store/organization/selectors';
 import { map } from 'rxjs/operators';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {
@@ -51,7 +51,7 @@ export class ApplicationHeaderFacade implements IFacade {
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== RoleEnum.USER.toString() ? RoleEnum.OWNER.toString() : applicationRole;
+        return organizationRole !== Role.USER.toString() ? Role.OWNER.toString() : applicationRole;
       })
     );
     this.selectedId$ = this.store.select(selectCurrentAppId);

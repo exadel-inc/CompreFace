@@ -16,7 +16,7 @@
 
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
-import { Application } from 'src/app/data/application';
+import { Application } from 'src/app/data/interfaces/application';
 
 import {
   createApplication,

@@ -18,7 +18,7 @@ import {
   EntityCollectionServiceBase,
   EntityCollectionServiceElementsFactory
 } from '@ngrx/data';
-import {Organization} from '../../data/organization';
+import {Organization} from '../../data/interfaces/organization';
 import {Injectable} from '@angular/core';
 
 @Injectable()

@@ -18,16 +18,16 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Input } from '@a
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { Model } from 'src/app/data/model';
+import { Model } from 'src/app/data/interfaces/model';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {Router} from '@angular/router';
+import { Role } from 'src/app/data/enums/role.enum';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -41,15 +41,15 @@ export class ModelListComponent implements OnInit, OnDestroy {
   userRole$: Observable<string>;
   errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
-  roleEnum = RoleEnum;
+  roleEnum = Role;
   columns = [
-    {title: 'name', property: 'name'},
-    {title: 'apiKey', property: 'apiKey'},
-    {title: 'actions', property: 'id'},
+    { title: 'name', property: 'name' },
+    { title: 'apiKey', property: 'apiKey' },
+    { title: 'actions', property: 'id' },
   ];
 
   constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router,
-              private translate: TranslateService) {
+    private translate: TranslateService) {
     this.modelListFacade.initSubscriptions();
   }
 

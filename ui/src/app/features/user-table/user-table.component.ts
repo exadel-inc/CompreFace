@@ -22,11 +22,11 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { AppUser } from 'src/app/data/appUser';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { Role } from 'src/app/data/enums/role.enum';
 
 import { TableComponent } from '../table/table.component';
-import {UserDeletion} from '../../data/userDeletion';
+import { UserDeletion } from '../../data/interfaces/user-deletion';
 
 @Component({
   selector: 'app-user-table',
@@ -39,7 +39,7 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   messageHeader: string;
   message: string;
   noResultMessage = 'No matches found';
-  roleEnum = RoleEnum;
+  roleEnum = Role;
 
   @Input() availableRoles: string[];
   @Input() currentUserId: string;
@@ -60,7 +60,7 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
 
   isRoleChangeAllowed(user: AppUser): boolean {
     return user.userId !== this.currentUserId
-      && this.userRole !== RoleEnum.USER
+      && this.userRole !== Role.USER
       && this.availableRoles.indexOf(user.role) > -1;
   }
 

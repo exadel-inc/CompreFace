@@ -28,11 +28,11 @@ import {startWith, map} from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InviteDialogComponent implements OnInit {
-  public availableRoles: string[];
-  public form: FormGroup;
-  public users: string[];
-  public filteredOptions$: Observable<string[]>;
-  public actionType: string;
+  availableRoles: string[];
+  form: FormGroup;
+  users: string[];
+  filteredOptions$: Observable<string[]>;
+  actionType: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,11 +59,11 @@ export class InviteDialogComponent implements OnInit {
     }
   }
 
-  public onCancelClick(): void {
+  onCancelClick(): void {
     this.dialogRef.close({});
   }
 
-  public onInviteClick(): void {
+  onInviteClick(): void {
     if (this.form.valid) {
       this.dialogRef.close({
         ...this.form.value

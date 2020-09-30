@@ -14,22 +14,22 @@
  * permissions and limitations under the License.
  */
 import { createAction, props } from '@ngrx/store';
-import { AppUser  } from 'src/app/data/appUser';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { Role } from 'src/app/data/enums/role.enum';
 
 export const setPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
 export const loadUsersEntityAction = createAction('[User/API] Load Users', props<{ organizationId: string }>());
 export const addUsersEntityAction = createAction('[User/API] Add Users', props<{ users: AppUser[] }>());
 export const updateUserRoleAction = createAction(
   '[User/API] Update User Role',
-  props<{ organizationId: string; user: { id: string, role: RoleEnum } }>()
+  props<{ organizationId: string; user: { id: string, role: Role } }>()
 );
 export const updateUserRoleWithRefreshAction = createAction(
   '[User/API] Update User Role With Refresh',
-  props<{ organizationId: string; user: { id: string, role: RoleEnum } }>()
+  props<{ organizationId: string; user: { id: string, role: Role } }>()
 );
 export const updateUserRoleSuccessAction = createAction('[User/API] Update User Role Success', props<{ user: AppUser }>());
-export const updateUserRoleFailAction = createAction('[User/API] Update User Role Failed)', props<{error: any }>());
+export const updateUserRoleFailAction = createAction('[User/API] Update User Role Failed)', props<{ error: any }>());
 export const deleteUser = createAction('[User/API] Delete User', props<{
   userId: string,
   deleterUserId: string,
