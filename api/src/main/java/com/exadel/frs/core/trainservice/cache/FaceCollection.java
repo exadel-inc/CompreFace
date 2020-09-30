@@ -109,7 +109,7 @@ public class FaceCollection {
         val faceToDelete = new FaceBO(faceName, imageId);
         val index = facesMap.get(faceToDelete);
         facesMap.remove(faceToDelete);
-        facesMap.replaceAll((k, v) -> v - 1);
+        facesMap.replaceAll((k, v) -> v > index ? v - 1 : v);
 
         embeddings = Nd4j.concat(
                 0,
