@@ -22,7 +22,7 @@ import { map } from 'rxjs/operators';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
-import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { ApplicationListFacade } from './application-list-facade';
 import { TranslateService } from '@ngx-translate/core';
 

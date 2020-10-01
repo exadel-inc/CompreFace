@@ -17,7 +17,7 @@
 import {Injectable} from '@angular/core';
 import {Router, CanActivate} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
 import {AppState} from 'src/app/store';
 import {selectUserInfoState} from '../../store/userInfo/selectors';
 import {Observable} from 'rxjs';

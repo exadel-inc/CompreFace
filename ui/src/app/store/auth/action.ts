@@ -15,7 +15,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { SignUp } from '../../data/sign-up';
+import { SignUp } from '../../data/interfaces/sign-up';
 
 export const logIn = createAction('[Auth] Login', props<{ email: string, password: string }>());
 export const logInSuccess = createAction('[Auth] Login Success');

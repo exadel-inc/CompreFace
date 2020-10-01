@@ -17,7 +17,7 @@
 import {TestBed} from '@angular/core/testing';
 import {AuthGuard, LoginGuard} from './auth.guard';
 import {Router} from '@angular/router';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
 import {Store, MemoizedSelector} from '@ngrx/store';
 import {provideMockStore, MockStore} from '@ngrx/store/testing';
 import {AppState} from 'src/app/store';

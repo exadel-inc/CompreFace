@@ -15,7 +15,7 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Application } from 'src/app/data/application';
+import { Application } from 'src/app/data/interfaces/application';
 
 export const loadApplications = createAction('[Application] Load Applications', props<{ organizationId: string }>());
 export const loadApplicationsSuccess = createAction('[Application] Load Applications Success', props<{ applications: Application[] }>());

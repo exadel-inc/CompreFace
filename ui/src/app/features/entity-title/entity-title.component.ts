@@ -15,10 +15,10 @@
  */
 
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Organization} from '../../data/organization';
+import {Organization} from '../../data/interfaces/organization';
 import {Observable} from 'rxjs';
-import {Application} from '../../data/application';
-import {Model} from '../../data/model';
+import {Application} from '../../data/interfaces/application';
+import {Model} from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-entity-title',
