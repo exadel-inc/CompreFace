@@ -57,8 +57,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FaceController {
 
-    public static final int MAX_FACES_TO_VERIFY = 1;
-
     private final ScanService scanService;
     private final FaceService faceService;
     private final FaceMapper faceMapper;
