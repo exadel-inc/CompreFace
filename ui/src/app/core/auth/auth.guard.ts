@@ -17,7 +17,7 @@
 import {Injectable} from '@angular/core';
 import {Router, CanActivate} from '@angular/router';
 import {Store} from '@ngrx/store';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
 import {AppState} from 'src/app/store';
 import {selectUserInfoState} from '../../store/userInfo/selectors';
 import {Observable} from 'rxjs';
@@ -28,7 +28,7 @@ import {UserInfoState} from 'src/app/store/userInfo/reducers';
 export class AuthGuard implements CanActivate {
   private userInfo: Observable<UserInfoState>;
 
-  constructor(public router: Router, private store: Store<AppState>) {
+  constructor(private router: Router, private store: Store<AppState>) {
     this.userInfo = this.store.select(selectUserInfoState);
   }
 
@@ -50,7 +50,7 @@ export class AuthGuard implements CanActivate {
 export class LoginGuard implements CanActivate {
   private userInfo$: Observable<UserInfoState>;
 
-  constructor(public router: Router, private store: Store<AppState>) {
+  constructor(private router: Router, private store: Store<AppState>) {
     this.userInfo$ = this.store.select(selectUserInfoState);
   }
 

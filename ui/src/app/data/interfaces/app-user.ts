@@ -14,11 +14,14 @@
  * permissions and limitations under the License.
  */
 
-export enum ROUTERS_URL {
-  LOGIN= '/login',
-  HOME= '/',
-  APPLICATION= '/application',
-  SIGN_UP= '/sign-up',
-  FORGOT_PASSWORD= '/forgot-password',
-  TEST_MODEL= '/test-model',
+import { Role } from '../enums/role.enum';
+
+export interface AppUser {
+  id: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  role: Role;
+  email?: string;
+  ownerOfApplications?: string[];
 }

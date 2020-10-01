@@ -20,6 +20,7 @@ import com.exadel.frs.core.trainservice.entity.Face;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -109,11 +110,12 @@ public class FaceCollection {
         val faceToDelete = new FaceBO(faceName, imageId);
         val index = facesMap.get(faceToDelete);
         facesMap.remove(faceToDelete);
-        facesMap.entrySet().forEach(entry -> {
-            if (entry.getValue() > index) {
-                entry.setValue(entry.getValue() - 1);
-            }
-        });
+        val shiftedItems = facesMap.entrySet().stream()
+                                   .filter(entry -> entry.getValue() > index)
+                                   .sorted(Map.Entry.comparingByValue())
+                                   .collect(Collectors.toList());
+
+        shiftedItems.forEach(e -> facesMap.replace(e.getKey(), e.getValue(), e.getValue() - 1));
 
         embeddings = Nd4j.concat(
                 0,

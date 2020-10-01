@@ -27,7 +27,6 @@
         <lombok.version>1.18.12</lombok.version>
         <swagger.version>2.9.2</swagger.version>
         <docker.image.prefix>frs</docker.image.prefix>
-        <smile.version>2.4.0</smile.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
         <feign-form.version>3.8.0</feign-form.version>
         <feign-core.version>10.7.4</feign-core.version>
@@ -85,11 +84,6 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-jwt</artifactId>
                 <version>${spring.oauth2.jwt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.haifengl</groupId>
-                <artifactId>smile-core</artifactId>
-                <version>${smile.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>

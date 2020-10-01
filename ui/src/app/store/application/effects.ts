@@ -20,7 +20,7 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApplicationService } from 'src/app/core/application/application.service';
-import { ROUTERS_URL } from 'src/app/data/routers-url.variable';
+import { ROUTERS_URL } from 'src/app/data/enums/routers-url.enum';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import {

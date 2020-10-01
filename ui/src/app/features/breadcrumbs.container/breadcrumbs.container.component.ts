@@ -16,9 +16,9 @@
 import {Component, OnDestroy, OnInit, Input} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 
-import {Application} from '../../data/application';
+import {Application} from '../../data/interfaces/application';
 import {BreadcrumbsFacade} from '../breadcrumbs/breadcrumbs.facade';
-import {Model} from '../../data/model';
+import {Model} from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-breadcrumbs-container',

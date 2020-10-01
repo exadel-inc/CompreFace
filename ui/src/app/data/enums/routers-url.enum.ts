@@ -14,15 +14,11 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
-
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_NOT_TRAINED;
-
-public class ModelNotTrainedException extends BasicException {
-
-    private static final String MESSAGE = "Model is not trained";
-
-    public ModelNotTrainedException() {
-        super(MODEL_NOT_TRAINED, MESSAGE);
-    }
+export enum ROUTERS_URL {
+  LOGIN = '/login',
+  HOME = '/',
+  APPLICATION = '/application',
+  SIGN_UP = '/sign-up',
+  FORGOT_PASSWORD = '/forgot-password',
+  TEST_MODEL = '/test-model',
 }

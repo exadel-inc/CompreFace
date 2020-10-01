@@ -18,16 +18,16 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { AppUser } from 'src/app/data/appUser';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
-import {UserDeletion} from '../../data/userDeletion';
+import {UserDeletion} from '../../data/interfaces/user-deletion';
 import { TranslateService } from '@ngx-translate/core';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Component({
   selector: 'app-application-user-list',
@@ -46,7 +46,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   search = '';
   availableRoles: string[];
   currentUserId$: Observable<string>;
-  roleEnum = RoleEnum;
+  roleEnum = Role;
   private availableRolesSubscription: Subscription;
 
   constructor(

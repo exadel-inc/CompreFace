@@ -15,8 +15,8 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { AppUser } from 'src/app/data/appUser';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { Role } from 'src/app/data/enums/role.enum';
 
 export const loadAppUserEntityAction = createAction('[App-User/API] Load App Users', props<{
   organizationId: string,
@@ -25,10 +25,10 @@ export const loadAppUserEntityAction = createAction('[App-User/API] Load App Use
 export const addAppUserEntityAction = createAction('[App-User/API] Add App Users', props<{ users: AppUser[] }>());
 export const updateAppUserRoleAction = createAction(
   '[App-User/API] Update App User',
-  props<{ organizationId: string; applicationId: string; user: { id: string, role: RoleEnum } }>()
+  props<{ organizationId: string; applicationId: string; user: { id: string, role: Role } }>()
 );
 export const updateAppUserRoleSuccessAction = createAction('[App-User/API] Update App User Role Success', props<{ user: AppUser }>());
-export const updateAppUserRoleFailAction = createAction('[App-User/API] Update App User Role Failed)', props<{error: any }>());
+export const updateAppUserRoleFailAction = createAction('[App-User/API] Update App User Role Failed)', props<{ error: any }>());
 export const deleteUserFromApplication = createAction('[App-User] Delete User From Application',
   props<{ userId: string; organizationId: string, applicationId: string }>());
 export const deleteUserFromApplicationSuccess = createAction('[App-User] Delete User From Application Success', props<{ id: string }>());
