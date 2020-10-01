@@ -99,4 +99,14 @@ public class EuclideanDistanceClassifier implements Classifier {
 
         return ret;
     }
+
+    @Override
+    public Double verify(final double[] input, final String apiKey, final String imageId) {
+        val inputFace = create(input);
+        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
+
+        val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
+
+        return probabilities[0];
+    }
 }

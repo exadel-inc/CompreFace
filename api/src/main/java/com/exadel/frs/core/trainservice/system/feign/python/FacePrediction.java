@@ -22,6 +22,6 @@ import lombok.Value;
 @Value
 public class FacePrediction {
 
-    private ScanBox box;
-    private List<FaceResponse> faces;
+    ScanBox box;
+    List<FaceResponse> faces;
 }

@@ -14,15 +14,17 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.component.classifiers;
+package com.exadel.frs.core.trainservice.exception;
 
-import java.io.Serializable;
-import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.IMAGE_NOT_FOUND;
+import static java.lang.String.format;
 
-public interface Classifier extends Serializable {
+public class ImageNotFoundException extends BasicException {
 
-    List<Pair<Double, String>> predict(double[] input, String apiKey, int resultCount);
+    private static final String MESSAGE = "Image %s not found";
 
-    Double verify(double[] input, String apiKey, String imageId);
+    public ImageNotFoundException(String imageId) {
+        super(IMAGE_NOT_FOUND, format(MESSAGE, imageId));
+    }
+
 }

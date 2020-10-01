@@ -14,15 +14,13 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.component.classifiers;
+package com.exadel.frs.core.trainservice.system.feign.python;
 
-import java.io.Serializable;
-import java.util.List;
-import org.apache.commons.lang3.tuple.Pair;
+import lombok.Value;
 
-public interface Classifier extends Serializable {
+@Value
+public class FaceVerification {
 
-    List<Pair<Double, String>> predict(double[] input, String apiKey, int resultCount);
-
-    Double verify(double[] input, String apiKey, String imageId);
+    ScanBox box;
+    float similarity;
 }

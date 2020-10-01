@@ -37,4 +37,8 @@ public class FaceClassifierPredictor {
     public List<Pair<Double, String>> predict(final String modelKey, final double[] input, final int resultCount) {
         return classifier.predict(input, modelKey, resultCount);
     }
+
+    public Double verify(final String modelKey, final double[] input, final String imageId) {
+        return classifier.verify(input, modelKey, imageId);
+    }
 }
