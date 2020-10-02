@@ -1,0 +1,15 @@
+<p class="header-title">Test Model</p>
+
+<div class="face-uploader">
+    <app-drag-n-drop
+            [model]="model$ | async"
+            (upload)=recognizeFace($event)>
+    </app-drag-n-drop>
+</div>
+
+<div class="separate-line"></div>
+
+<div class="face-result">
+    <app-recognition-result></app-recognition-result>
+</div>
+

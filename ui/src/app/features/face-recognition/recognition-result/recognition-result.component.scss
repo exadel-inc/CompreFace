@@ -1,0 +1,43 @@
+@import "colors.scss";
+
+.result-container {
+  padding: 25px 50px;
+  position: relative;
+  border-radius: 5px;
+  border: 1px solid black;
+  min-height: 350px;
+  background-color: $dark-gray;
+
+  .result-label {
+    position: absolute;
+    left: 5px;
+    top: -10px;
+    background-color: $primary-light;
+    padding: 3px;
+    color: white;
+    border-radius: 3px;
+  }
+
+  .result-image {
+    background-color: $primary-light;
+  }
+
+  .result-sections {
+    display: flex;
+    justify-content: center;
+
+    .result-section-left {
+      background-color: $primary-light;
+      margin-right: 15px;
+      flex-grow: 0.5;
+    }
+
+    .result-section-right {
+      border: 1px solid $super-dark-gray;
+      flex-grow: 1;
+      width: 450px;
+      background-color: $blue-gray;
+      padding: 5px 10px;
+    }
+  }
+}

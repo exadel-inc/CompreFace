@@ -13,19 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DragNDropContainerComponent } from './drag-n-drop.container.component';
-import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { FaceRecognitionEffects } from './effects';
+import { FaceRecognitionEffectsReducer } from './reducers';
 
 @NgModule({
-  declarations: [DragNDropContainerComponent],
-  exports: [
-    DragNDropContainerComponent
-  ],
+  declarations: [],
   imports: [
-    CommonModule,
-    DragNDropModule
+    EffectsModule.forFeature([ FaceRecognitionEffects ]),
+    StoreModule.forFeature('testModel', FaceRecognitionEffectsReducer)
   ]
 })
-export class DragNDropContainerModule { }
+export class FaceRecognitionStoreModule {
+}

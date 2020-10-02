@@ -15,13 +15,16 @@
  */
 
 import {NgModule} from '@angular/core';
-import {TestEffects} from './effects';
+import {TestModelEffects} from './effects';
 import {EffectsModule} from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { TestModelReducer } from './reducers';
 
 @NgModule({
   declarations: [],
   imports: [
-    EffectsModule.forFeature([TestEffects]),
+    EffectsModule.forFeature([TestModelEffects]),
+    StoreModule.forFeature('testModel', TestModelReducer)
   ]
 })
-export class TestStoreModule {}
+export class TestModelStoreModule {}

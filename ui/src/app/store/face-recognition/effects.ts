@@ -16,26 +16,25 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-
-import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail,
-  addFaceFail, addFace, addFaceSuccess } from './actions';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
+import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail,
+  addFaceFail, addFace, addFaceSuccess } from './actions';
 
 @Injectable()
-export class TestModelEffects {
+export class FaceRecognitionEffects {
   constructor(
     private actions: Actions,
-    private testService: FaceRecognitionService,
+    private recognitionService: FaceRecognitionService,
     private snackBarService: SnackBarService
   ) { }
 
   @Effect()
   recognizeFace$ = this.actions.pipe(
     ofType(recognizeFace),
-    switchMap(action => this.testService.recognize(action.file, action.model).pipe(
+    switchMap(action => this.recognitionService.recognize(action.file, action.model).pipe(
       map(model => recognizeFaceSuccess({ model })),
       catchError(error => of(recognizeFaceFail({ error }))),
     )),
@@ -44,7 +43,7 @@ export class TestModelEffects {
   @Effect()
   addFace$ = this.actions.pipe(
     ofType(addFace),
-    switchMap(action => this.testService.addFace(action.file, action.model).pipe(
+    switchMap(action => this.recognitionService.addFace(action.file, action.model).pipe(
       map(model => addFaceSuccess({ model })),
       catchError(error => of(addFaceFail({ error }))),
     )),

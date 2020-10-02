@@ -17,8 +17,8 @@
 import {createSelector, createFeatureSelector} from '@ngrx/store';
 import {TestEntityState, testAdapter} from './reducers';
 
-const {selectAll} = testAdapter.getSelectors();
+const { selectAll } = testAdapter.getSelectors();
 
 export const selectTestEntityState = createFeatureSelector<TestEntityState>('test');
 export const selectTestIsPending = createSelector(selectTestEntityState, state => state.isPending);
-export const selectTest = createSelector(selectTestEntityState, selectAll)[0];
+export const selectTest = createSelector(selectTestEntityState, selectAll);

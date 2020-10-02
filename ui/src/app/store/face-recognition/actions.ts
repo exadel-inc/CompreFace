@@ -15,7 +15,7 @@
  */
 
 import {createAction, props} from '@ngrx/store';
-import {Model, ModelUpdate} from 'src/app/data/model';
+import { Model } from 'src/app/data/model';
 
 export const recognizeFace = createAction('[Model] Face Reconize', props<{ file: any, model: Model }>());
 export const recognizeFaceSuccess = createAction('[Model] Face Recognize Success', props<{ model: any }>());

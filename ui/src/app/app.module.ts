@@ -13,32 +13,31 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
-import {NgModule} from '@angular/core';
-import {FormBuilder, FormsModule} from '@angular/forms';
-import {MatRadioModule} from '@angular/material';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialog.component';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { FormBuilder, FormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 
-import {AppRoutingModule} from './app-routing.module';
-import {AppComponent} from './app.component';
-import {AuthGuard, LoginGuard} from './core/auth/auth.guard';
-import {ErrorInterceptor, TokenInterceptor} from './core/auth/token.inerceptor';
-import {AlertComponent} from './features/alert/alert.component';
-import {DeleteDialogComponent} from './features/delete-dialog/delete-dialog.component';
-import {EditDialogComponent} from './features/edit-dialog/edit-dialog.component';
-import {FooterModule} from './features/footer/footer.module';
-import {SnackBarModule} from './features/snackbar/snackbar.module';
-import {ToolBarModule} from './features/tool-bar/tool-bar.module';
-import {AppStoreModule} from './store/app-store.module';
-import {MainLayoutComponent} from './ui/main-layout/main-layout.component';
-import {CustomMaterialModule} from './ui/material/material.module';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
-import {BreadcrumbsModule} from './features/breadcrumbs/breadcrumbs.module';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AuthGuard, LoginGuard } from './core/auth/auth.guard';
+import { ErrorInterceptor, TokenInterceptor } from './core/auth/token.inerceptor';
+import { AlertComponent } from './features/alert/alert.component';
+import { DeleteDialogComponent } from './features/delete-dialog/delete-dialog.component';
+import { EditDialogComponent } from './features/edit-dialog/edit-dialog.component';
+import { FooterModule } from './features/footer/footer.module';
+import { SnackBarModule } from './features/snackbar/snackbar.module';
+import { ToolBarModule } from './features/tool-bar/tool-bar.module';
+import { AppStoreModule } from './store/app-store.module';
+import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
+import { CustomMaterialModule } from './ui/material/material.module';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { BreadcrumbsModule } from './features/breadcrumbs/breadcrumbs.module';
 import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/breadcrumbs.container.module';
-import { DragNDropContainerModule } from './features/drag-n-drop.container/drag-n-drop.container.module';
 import { DragNDropModule } from './features/drag-n-drop/drag-n-drop.module';
 
 @NgModule({
@@ -64,13 +63,12 @@ import { DragNDropModule } from './features/drag-n-drop/drag-n-drop.module';
     MatRadioModule,
     BreadcrumbsModule,
     BreadcrumbsContainerModule,
-    DragNDropContainerModule,
     DragNDropModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
+        deps: [ HttpClient ]
       }
     })
   ],
@@ -89,9 +87,9 @@ import { DragNDropModule } from './features/drag-n-drop/drag-n-drop.module';
       multi: true
     }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [ AppComponent ],
   exports: [],
-  entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent, DeleteDialogComponent]
+  entryComponents: [ CreateDialogComponent, AlertComponent, EditDialogComponent, DeleteDialogComponent ]
 })
 export class AppModule {
 }

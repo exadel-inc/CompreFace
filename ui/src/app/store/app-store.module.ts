@@ -33,6 +33,7 @@ import { RoleStoreModule } from './role/role.module';
 import { AppSerializer } from './router/reducer';
 import { UserStoreModule } from './user/user.module';
 import { UserInfoStoreModule } from './userInfo/user-info.module';
+import { TestModelStoreModule } from './test-model/test-model.module';
 
 @NgModule({
   declarations: [],
@@ -46,6 +47,7 @@ import { UserInfoStoreModule } from './userInfo/user-info.module';
     UserStoreModule,
     RoleStoreModule,
     ModelStoreModule,
+    TestModelStoreModule,
     AppUserStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'

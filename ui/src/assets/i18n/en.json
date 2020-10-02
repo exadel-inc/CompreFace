@@ -124,7 +124,7 @@
   },
   "dnd": {
     "title": "Click here or Drag and drop your image here",
-    "label": "image must be with formats, and no more than 5 MB",
+    "label": "Available images extensions: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp \nMax images size = 5Mb (5242880bytes)",
     "test": "Test model",
     "add": "Add to model",
     "train": "Train model",

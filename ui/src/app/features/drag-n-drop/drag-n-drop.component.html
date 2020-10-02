@@ -14,13 +14,14 @@
   ~ permissions and limitations under the License.
   -->
 
-<h3>{{'dnd.test' | translate}}</h3>
-</button>
 <div class="dropzone" appDnd (fileDropped)="onFileDropped($event)">
+    <div class="dropzone-icon">
+        <img src="../../../assets/dnd/tmp-upload-file.svg" alt="">
+    </div>
+    <div class="dropzone-content">
+        <h4>{{title}}</h4>
+        <label>{{label}}</label>
+    </div>
+
     <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
-    <img src="../../../assets/dnd/tmp-upload-file.svg" alt="">
-    <h3>{{'dnd.title' | translate}}</h3>
-    <label>{{'dnd.label' | translate}}</label>
 </div>
-<pre *ngIf="!loading">Request result: {{ data | json}}</pre>
-<canvas #myCanvas height="1000" width="1000"> </canvas>

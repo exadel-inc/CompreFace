@@ -1,0 +1,21 @@
+@import "colors.scss";
+
+.header-title {
+  argin: 5px 0;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.face-uploader {
+  width: 60%;
+  margin: auto;
+}
+
+.separate-line {
+  border: 1px solid $normal-gray;
+  margin: 30px 0;
+}
+
+.face-result {
+  padding: 0 20px;
+}
