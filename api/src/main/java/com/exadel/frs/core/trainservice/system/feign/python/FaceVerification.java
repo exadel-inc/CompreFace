@@ -14,13 +14,13 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
+package com.exadel.frs.core.trainservice.system.feign.python;
 
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_ALREADY_LOCKED;
+import lombok.Value;
 
-public class ModelAlreadyLockedException extends BasicException {
+@Value
+public class FaceVerification {
 
-    public ModelAlreadyLockedException(String msg) {
-        super(MODEL_ALREADY_LOCKED, msg);
-    }
+    ScanBox box;
+    float similarity;
 }

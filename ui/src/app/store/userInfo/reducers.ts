@@ -16,7 +16,7 @@
 
 import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
 import { updateUserInfo, resetUserInfo, updateUserAuthorization, getUserInfoSuccess } from './action';
-import { User } from '../../data/user';
+import { User } from '../../data/interfaces/user';
 
 export interface UserInfoState extends User {
   isAuthenticated: boolean;

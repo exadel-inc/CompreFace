@@ -14,14 +14,14 @@
  * permissions and limitations under the License.
  */
 
-import {selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp} from './selectors';
-import {Application} from '../../data/application';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp } from './selectors';
+import { Application } from '../../data/interfaces/application';
+import { Role } from 'src/app/data/enums/role.enum';
 
 describe('ApplicationSelectors', () => {
 
   it('selectCurrentAppId', () => {
-    expect(selectCurrentAppId.projector({selectedAppId: 'someId'})).toBe('someId');
+    expect(selectCurrentAppId.projector({ selectedAppId: 'someId' })).toBe('someId');
   });
   it('selectCurrentApp', () => {
     interface AppsInterface {
@@ -33,18 +33,19 @@ describe('ApplicationSelectors', () => {
         {
           id: '1',
           name: 'name1',
-          owner: {firstName: '', lastName: '', userId: ''},
+          owner: { firstName: '', lastName: '', userId: '' },
           role: '',
           organizationId: ''
-      },
-      {
-        id: '2',
-        name: 'name2',
-        owner: {firstName: '', lastName: '', userId: ''},
-        role: '',
-        organizationId: ''
-      }
-    ]};
+        },
+        {
+          id: '2',
+          name: 'name2',
+          owner: { firstName: '', lastName: '', userId: '' },
+          role: '',
+          organizationId: ''
+        }
+      ]
+    };
     expect(selectCurrentApp.projector(apps, 0)).toEqual(apps.entities[0]);
     expect(selectCurrentApp.projector(apps, 1)).toEqual(apps.entities[1]);
     expect(selectCurrentApp.projector(apps, 3)).toBeFalsy();
@@ -54,13 +55,13 @@ describe('ApplicationSelectors', () => {
     const app1 = {
       id: 2,
       name: 'name1',
-      role: RoleEnum.ADMINISTRATOR
+      role: Role.ADMINISTRATOR
     };
 
     const app2 = {
       id: 2,
       name: 'name1',
-      role: RoleEnum.OWNER
+      role: Role.OWNER
     };
     expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMINISTRATOR');
     expect(selectUserRollForSelectedApp.projector(app2)).toBe('OWNER');

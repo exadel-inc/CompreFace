@@ -30,7 +30,7 @@ import {
 } from 'src/app/store/user/action';
 import {loadApplications} from 'src/app/store/application/action';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {AppUser} from 'src/app/data/appUser';
+import {AppUser} from 'src/app/data/interfaces/app-user';
 import {fetchRolesEntityAction, loadRolesEntityAction} from 'src/app/store/role/actions';
 import {of} from 'rxjs';
 import {SnackBarService} from '../../features/snackbar/snackbar.service';

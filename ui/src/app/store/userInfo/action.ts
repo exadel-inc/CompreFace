@@ -15,7 +15,7 @@
  */
 
 import {createAction, props} from '@ngrx/store';
-import {User} from '../../data/user';
+import {User} from '../../data/interfaces/user';
 
 export const updateUserInfo = createAction('[User] Login Success', props<{isAuthenticated?: boolean, firstName?: string}>());
 export const resetUserInfo = createAction('[User] Update Token');

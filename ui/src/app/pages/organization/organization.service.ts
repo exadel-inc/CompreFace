@@ -18,7 +18,7 @@ import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 
-import { Organization } from '../../data/organization';
+import { Organization } from '../../data/interfaces/organization';
 import { AppState } from '../../store';
 import { setSelectedId } from '../../store/organization/action';
 import { OrganizationEnService } from '../../store/organization/organization-entitys.service';

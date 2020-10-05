@@ -17,7 +17,7 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {ApplicationService} from './application.service';
-import {Application} from 'src/app/data/application';
+import {Application} from 'src/app/data/interfaces/application';
 import {environment} from '../../../environments/environment';
 
 describe('ApplicationService', () => {

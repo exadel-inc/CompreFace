@@ -14,15 +14,11 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
-
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_HAS_NOT_ENOUGH_FACES;
-
-public class ModelHasNotEnoughFacesException extends BasicException {
-
-    private static final String MESSAGE = "Model should contain at least 2 faces";
-
-    public ModelHasNotEnoughFacesException() {
-        super(MODEL_HAS_NOT_ENOUGH_FACES, MESSAGE);
-    }
+export enum ROUTERS_URL {
+  LOGIN = '/login',
+  HOME = '/',
+  APPLICATION = '/application',
+  SIGN_UP = '/sign-up',
+  FORGOT_PASSWORD = '/forgot-password',
+  TEST_MODEL = '/test-model',
 }

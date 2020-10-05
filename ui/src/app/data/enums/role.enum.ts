@@ -14,13 +14,8 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.service;
-
-public interface RetrainService {
-
-    void startRetrain(final String modelKey);
-
-    boolean isTrainingRun(final String modelKey);
-
-    void abortTraining(final String modelKey);
+export enum Role {
+    OWNER = 'OWNER',
+    ADMINISTRATOR = 'ADMINISTRATOR',
+    USER = 'USER'
 }

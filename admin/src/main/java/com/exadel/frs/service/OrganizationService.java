@@ -24,6 +24,7 @@ import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.enums.OrganizationRole;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.OrganizationNotFoundException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.repository.OrganizationRepository;
@@ -79,19 +80,27 @@ public class OrganizationService {
         return organization.getUserOrganizationRoles();
     }
 
-    public UserOrganizationRole updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
+    public UserOrganizationRole updateUserOrgRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long currentUserId) {
         val organization = getOrganization(guid);
-        authManager.verifyWritePrivilegesToOrg(adminId, organization);
+        authManager.verifyWritePrivilegesToOrg(currentUserId, organization);
 
         val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
-        if (user.getId().equals(adminId)) {
+        if (user.getId().equals(currentUserId)) {
             throw new SelfRoleChangeException();
         }
 
         val userOrganizationRole = organization.getUserOrganizationRoleOrThrow(user.getId());
         val newOrgRole = OrganizationRole.valueOf(userRoleUpdateDto.getRole());
+
+        val currentUser = organization.getUserOrganizationRoleOrThrow(currentUserId);
+
+        if (ADMINISTRATOR.equals(currentUser.getRole()) &&
+                (OWNER.equals(newOrgRole)) || OWNER.equals(userOrganizationRole.getRole())) {
+            throw new InsufficientPrivilegesException();
+        }
+
         if (newOrgRole == OWNER) {
-            organization.getUserOrganizationRoleOrThrow(adminId).setRole(OrganizationRole.ADMINISTRATOR);
+            currentUser.setRole(OrganizationRole.ADMINISTRATOR);
         }
 
         userOrganizationRole.setRole(newOrgRole);

@@ -1,10 +1,26 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.service.ScanServiceImpl.MAX_FACES_TO_RECOGNIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
@@ -20,7 +36,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.multipart.MultipartFile;
 
 @DataJpaTest
-@Import({ScanServiceImpl.class, FacesClient.class, FaceDao.class})
+@Import({ScanServiceImpl.class, FacesClient.class, FaceDao.class, FaceCacheProvider.class})
 class ScanServiceImplTestIT {
 
     @Autowired
@@ -49,15 +65,6 @@ class ScanServiceImplTestIT {
         val actual = scanService.scanAndSaveFace(MULTIPART_FILE_DATA, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getEmbedding()).isEqualTo(Face.Embedding.builder()
-                                                                  .embeddings(SCAN_RESULT.getResult().get(0).getEmbedding())
-                                                                  .calculatorVersion(SCAN_RESULT.getCalculatorVersion())
-                                                                  .build()
-        );
-        assertThat(actual.getFaceName()).isEqualTo(FACE_NAME);
-        assertThat(actual.getApiKey()).isEqualTo(MODEL_KEY);
-        assertThat(actual.getApiKey()).isEqualTo(MODEL_KEY);
-        assertThat(actual.getFaceImg()).isEqualTo(MULTIPART_FILE_DATA.getBytes());
-        assertThat(actual.getRawImg()).isEqualTo(MULTIPART_FILE_DATA.getBytes());
+        assertThat(actual.getName()).isEqualTo(FACE_NAME);
     }
 }
