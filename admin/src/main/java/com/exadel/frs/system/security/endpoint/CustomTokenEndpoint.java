@@ -1,9 +1,10 @@
-package com.exadel.frs.system.security;
+package com.exadel.frs.system.security.endpoint;
 
+import static com.exadel.frs.system.global.Constants.ACCESS_TOKEN_COOKIE_NAME;
 import com.exadel.frs.entity.User;
 import java.security.Principal;
 import java.util.Map;
-import org.springframework.http.HttpCookie;
+import lombok.val;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -19,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/oauth/token")
 public class CustomTokenEndpoint extends TokenEndpoint {
 
-    private static final String ACCESS_TOKEN_COOKIE_NAME = "CFSESSION";
-
     @PostMapping
     public ResponseEntity<OAuth2AccessToken> postAccessToken(
             Principal principal,
@@ -33,15 +32,15 @@ public class CustomTokenEndpoint extends TokenEndpoint {
             }
         }
 
-        ResponseEntity<OAuth2AccessToken> defaultResponse = super.postAccessToken(principal, parameters);
-        OAuth2AccessToken defaultToken = defaultResponse.getBody();
+        val defaultResponse = super.postAccessToken(principal, parameters);
+        val defaultToken = defaultResponse.getBody();
 
-        HttpCookie cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE_NAME, defaultToken.getValue())
-                                          .httpOnly(true)
-                                          .maxAge(defaultToken.getExpiresIn())
-                                          .path("/admin")
-                                          .build();
-        HttpHeaders headers = new HttpHeaders();
+        val cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE_NAME, defaultToken.getValue())
+                                   .httpOnly(true)
+                                   .maxAge(defaultToken.getExpiresIn())
+                                   .path("/admin")
+                                   .build();
+        val headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).build();
