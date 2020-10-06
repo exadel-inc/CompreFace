@@ -28,9 +28,9 @@ export interface FaceRecognitionEntityState extends EntityState<string> {
   model: any;
 }
 
-export const testAdapter = createEntityAdapter<string>();
+export const faceRecognitionAdapter = createEntityAdapter<string>();
 
-const initialState: FaceRecognitionEntityState = testAdapter.getInitialState({
+const initialState: FaceRecognitionEntityState = faceRecognitionAdapter.getInitialState({
   isPending: false,
   model: null
 });
@@ -38,7 +38,7 @@ const initialState: FaceRecognitionEntityState = testAdapter.getInitialState({
 const reducer: ActionReducer<FaceRecognitionEntityState> = createReducer(
   initialState,
   on(recognizeFace, (state) => ({ ...state, isPending: true })),
-  on(recognizeFaceSuccess, (state,  { model } ) => ({ ...state, model })),
+  on(recognizeFaceSuccess, (state,  { model } ) => ({ ...state, model, isPending: false })),
   on(recognizeFaceFail, (state) => ({...state, isPending: false})),
 );
 

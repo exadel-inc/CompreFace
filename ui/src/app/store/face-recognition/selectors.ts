@@ -15,10 +15,18 @@
  */
 
 import {createSelector, createFeatureSelector} from '@ngrx/store';
-import {TestEntityState, testAdapter} from './reducers';
+import { FaceRecognitionEntityState, faceRecognitionAdapter } from './reducers';
 
-const { selectAll } = testAdapter.getSelectors();
+const { selectAll } = faceRecognitionAdapter.getSelectors();
 
-export const selectTestEntityState = createFeatureSelector<TestEntityState>('test');
+export const selectTestEntityState = createFeatureSelector<FaceRecognitionEntityState>('faceRecognition');
+
+export const selectModels = createSelector(selectTestEntityState, selectAll);
+
 export const selectTestIsPending = createSelector(selectTestEntityState, state => state.isPending);
-export const selectTest = createSelector(selectTestEntityState, selectAll);
+
+export const selectTest =  createSelector(selectTestEntityState, (data) => {
+  debugger;
+
+  return data;
+});

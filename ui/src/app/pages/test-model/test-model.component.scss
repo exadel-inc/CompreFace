@@ -2,13 +2,13 @@
 @import 'colors.scss';
 
 .container {
-  margin: 10px auto;
-  background-color: $super-light-gray;
-  border: 1px solid black;
   height: 85%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
+  margin: 10px auto;
+  background-color: $super-light-gray;
+  border: 1px solid black;
 
   .header-container {
     width: 100%;

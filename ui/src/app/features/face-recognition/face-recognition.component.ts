@@ -4,6 +4,8 @@ import { Model } from '../../data/model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { recognizeFace, addFace } from '../../store/face-recognition/actions';
+import { selectTest } from '../../store/face-recognition/selectors';
+import { selectCurrentModel } from '../../store/model/selectors';
 
 @Component({
   selector: 'app-face-recognition',
@@ -12,15 +14,15 @@ import { recognizeFace, addFace } from '../../store/face-recognition/actions';
 })
 export class FaceRecognitionComponent implements OnInit {
   public model$: Observable<Model>;
-  public data$: Observable<string>;
+  public data$: Observable<any>;
 
   constructor(private store: Store<AppState>) {
     // Component constructor.
   }
 
   ngOnInit() {
-    // this.model$ = this.store.select();
-    // this.data$ = this.store.select();
+    this.model$ = this.store.select(selectCurrentModel);
+    this.data$ = this.store.select(selectTest);
   }
 
   recognizeFace({file, model}: {file: File, model: Model}) {

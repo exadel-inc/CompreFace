@@ -33,7 +33,7 @@ import { RoleStoreModule } from './role/role.module';
 import { AppSerializer } from './router/reducer';
 import { UserStoreModule } from './user/user.module';
 import { UserInfoStoreModule } from './userInfo/user-info.module';
-import { TestModelStoreModule } from './test-model/test-model.module';
+import { FaceRecognitionStoreModule } from './face-recognition/face-recognition.module';
 
 @NgModule({
   declarations: [],
@@ -47,7 +47,7 @@ import { TestModelStoreModule } from './test-model/test-model.module';
     UserStoreModule,
     RoleStoreModule,
     ModelStoreModule,
-    TestModelStoreModule,
+    FaceRecognitionStoreModule,
     AppUserStoreModule,
     StoreRouterConnectingModule.forRoot({
       stateKey: 'router'

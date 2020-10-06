@@ -30,14 +30,14 @@ export class DragNDropComponent implements OnInit {
    * on file drop handler
    */
   onFileDropped($event) {
-    this.UploadFile($event);
+    this.uploadFile($event);
   }
 
   /**
    * handle file from browsing
    */
   fileBrowseHandler(files) {
-    this.UploadFile(files);
+    this.uploadFile(files);
   }
 
   /**
@@ -45,7 +45,7 @@ export class DragNDropComponent implements OnInit {
    * @param files (Files List)
    * TODO Send file to api
    */
-  UploadFile(files: Array<any>) {
+  uploadFile(files: Array<any>) {
     this.file = files[0];
     this.upload.emit({file: this.file, model: this.model});
   }

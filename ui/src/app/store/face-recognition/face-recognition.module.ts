@@ -24,7 +24,7 @@ import { FaceRecognitionEffectsReducer } from './reducers';
   declarations: [],
   imports: [
     EffectsModule.forFeature([ FaceRecognitionEffects ]),
-    StoreModule.forFeature('testModel', FaceRecognitionEffectsReducer)
+    StoreModule.forFeature('faceRecognition', FaceRecognitionEffectsReducer)
   ]
 })
 export class FaceRecognitionStoreModule {
