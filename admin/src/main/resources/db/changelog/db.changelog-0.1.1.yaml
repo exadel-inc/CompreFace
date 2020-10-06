@@ -41,7 +41,7 @@ databaseChangeLog:
               - column:
                   name: api_key
                   value: 00000000-0000-0000-0000-000000000002
-        # add app_model
+        # add demo user
         - insert:
             tableName: user
             columns:
@@ -77,7 +77,7 @@ databaseChangeLog:
                   value: null
               - column:
                   name: guid
-                  valueNumeric: uuid_generate_v4()
+                  value: 00000000-0000-0000-0000-000000000000
               - column:
                   name: reg_time
                   value: now()

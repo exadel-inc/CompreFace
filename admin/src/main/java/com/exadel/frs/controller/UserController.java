@@ -25,6 +25,7 @@ import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
+import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -98,8 +99,13 @@ public class UserController {
             @ApiParam(value = "User object that needs to be created", required = true)
             @RequestBody final UserCreateDto userCreateDto
     ) {
-        val user = userService.createUser(userCreateDto);
-        organizationService.addUserToDefaultOrg(user.getEmail());
+        User user;
+        if (userService.isFirstRegistration()) {
+            user = userService.updateDemoUser(userCreateDto);
+        } else {
+            user = userService.createUser(userCreateDto);
+            organizationService.addUserToDefaultOrg(user.getEmail());
+        }
 
         if (user.isEnabled()) {
             return new ResponseEntity(CREATED);
@@ -125,11 +131,9 @@ public class UserController {
     @ApiOperation(value = "Delete user")
     public void deleteUser(
             @ApiParam(value = "GUID of the user being deleted", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String userGuid,
+            @PathVariable final String userGuid,
             @ApiParam(value = "Replacer option to determine next owner of org/apps that the user own", allowableValues = "deleter, owner")
-            @RequestParam(defaultValue = "deleter")
-            final String replacer
+            @RequestParam(defaultValue = "deleter") final String replacer
     ) {
         val deleteUserDto = UserDeleteDto.builder()
                                          .deleter(userService.getUser(SecurityUtils.getPrincipalId()))
