@@ -214,9 +214,6 @@ public class FaceControllerTest {
         );
         val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        doReturn(faces)
-                .when(facesRepository)
-                .deleteFacesByApiKey(API_KEY);
         doReturn(faceCollection)
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
@@ -253,9 +250,6 @@ public class FaceControllerTest {
         val faces = List.of(faceA, faceB, faceC);
         val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        doReturn(faces)
-                .when(facesRepository)
-                .deleteFacesByApiKey(API_KEY);
         doReturn(faceCollection)
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);

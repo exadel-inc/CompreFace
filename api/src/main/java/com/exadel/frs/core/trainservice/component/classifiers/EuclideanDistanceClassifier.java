@@ -43,20 +43,30 @@ public class EuclideanDistanceClassifier implements Classifier {
     public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
         val inputFace = create(input);
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
-
-        val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
-        val argSort = argSort(probabilities);
-        val facesMap = faceCollection.getFacesMap().inverse();
         val result = new ArrayList<Pair<Double, String>>();
+        if (faceCollection.getEmbeddings() != null) {
+            val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
+            val argSort = argSort(probabilities);
+            val facesMap = faceCollection.getFacesMap().inverse();
 
-        for (int i = 0; i < min(resultCount, argSort.length); i++) {
-            val face = facesMap.get(argSort[i]);
-            val prob = probabilities[argSort[i]];
+            for (int i = 0; i < min(resultCount, argSort.length); i++) {
+                val face = facesMap.get(argSort[i]);
+                val prob = probabilities[argSort[i]];
 
-            result.add(Pair.of(prob, face.getName()));
+                result.add(Pair.of(prob, face.getName()));
+            }
         }
-
         return result;
+    }
+
+    @Override
+    public Double verify(final double[] input, final String apiKey, final String imageId) {
+        val inputFace = create(input);
+        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
+
+        val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
+
+        return probabilities[0];
     }
 
     private INDArray normalizeOne(final INDArray embeddings) {
@@ -98,15 +108,5 @@ public class EuclideanDistanceClassifier implements Classifier {
         }
 
         return ret;
-    }
-
-    @Override
-    public Double verify(final double[] input, final String apiKey, final String imageId) {
-        val inputFace = create(input);
-        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
-
-        val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
-
-        return probabilities[0];
     }
 }
