@@ -27,7 +27,6 @@
         <lombok.version>1.18.12</lombok.version>
         <swagger.version>2.9.2</swagger.version>
         <docker.image.prefix>frs</docker.image.prefix>
-        <smile.version>2.4.0</smile.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
         <feign-form.version>3.8.0</feign-form.version>
         <feign-core.version>10.7.4</feign-core.version>
@@ -37,7 +36,7 @@
         <javax-cache.version>1.1.1</javax-cache.version>
         <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
         <hibernate-types.version>2.9.13</hibernate-types.version>
-        <nd4j-native.version>1.0.0-beta7</nd4j-native.version>
+        <nd4j.version>1.0.0-beta7</nd4j.version>
     </properties>
 
     <dependencies>
@@ -85,11 +84,6 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-jwt</artifactId>
                 <version>${spring.oauth2.jwt.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.haifengl</groupId>
-                <artifactId>smile-core</artifactId>
-                <version>${smile.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
@@ -149,7 +143,13 @@
             <dependency>
                 <groupId>org.nd4j</groupId>
                 <artifactId>nd4j-native</artifactId>
-                <version>${nd4j-native.version}</version>
+                <version>${nd4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.nd4j</groupId>
+                <artifactId>nd4j-native</artifactId>
+                <version>${nd4j.version}</version>
+                <classifier>linux-x86_64-avx2</classifier>
             </dependency>
         </dependencies>
     </dependencyManagement>

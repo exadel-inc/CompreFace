@@ -16,11 +16,6 @@
 
 package com.exadel.frs.core.trainservice.component.migration;
 
-import static java.util.stream.Collectors.toList;
-import com.exadel.frs.core.trainservice.component.FaceClassifierLockManager;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
-import com.exadel.frs.core.trainservice.dao.TrainedModelDao;
-import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.system.feign.FeignClientFactory;
@@ -40,27 +35,16 @@ import org.springframework.stereotype.Component;
 public class MigrationComponent {
 
     private final FeignClientFactory feignClientFactory;
-    private final FaceClassifierLockManager lockManager;
-    private final FaceClassifierManager faceManager;
     private final MigrationStatusStorage migrationStatusStorage;
     private final FacesRepository facesRepository;
-    private final TrainedModelDao trainedModelDao;
 
     @SneakyThrows
     @Async
-    public void migrate(String url) {
-        log.info("Waiting till current models finish training");
-        waitUntilModelsFinishTraining();
-        log.info("Models finished training");
-
+    public void migrate(final String url) {
         try {
             log.info("Migrating...");
             processFaces(url);
             log.info("Calculating embedding for faces finished");
-
-            log.info("Retraining models");
-            processModels();
-            log.info("Retraining models finished");
 
             log.info("Migration successfully finished");
         } catch (Exception e) {
@@ -71,27 +55,8 @@ public class MigrationComponent {
         }
     }
 
-    private void processModels() {
-        val models = trainedModelDao.findAllWithoutClassifier();
-        for (val model : models) {
-            log.info("Retraining model {}", model.getId());
-            val faces = facesRepository.findByApiKey(model.getModelKey());
-            if (faces == null || faces.isEmpty()) {
-                faceManager.initNewClassifier(model.getModelKey());
-            } else {
-                faceManager.initNewClassifier(
-                        model.getModelKey(),
-                        faces.stream()
-                             .map(Face::getId)
-                             .collect(toList())
-                );
-            }
-        }
-    }
-
-    private void processFaces(String url) {
+    private void processFaces(final String url) {
         val migrationServerFeignClient = feignClientFactory.getFeignClient(FacesClient.class, url);
-
         val migrationCalculatorVersion = migrationServerFeignClient.getStatus().getCalculatorVersion();
 
         log.info("Calculating embedding for faces");
@@ -108,21 +73,15 @@ public class MigrationComponent {
                                                  .findFirst().orElseThrow()
                                                  .getEmbedding();
                     face.setEmbedding(new Embedding(embeddings, scanResponse.getCalculatorVersion()));
+
                     facesRepository.save(face);
                 } catch (FeignException.InternalServerError | FeignException.BadRequest error) {
                     log.error("{} during processing facename {} with id {}", error.toString(), face.getFaceName(), face.getId());
                     face.setEmbedding(new Embedding());
+
                     facesRepository.save(face);
                 }
             }
-        }
-    }
-
-    private void waitUntilModelsFinishTraining() {
-        try {
-            lockManager.getCountDownLatch().await();
-        } catch (InterruptedException e) {
-            throw new RuntimeException();
         }
     }
 }

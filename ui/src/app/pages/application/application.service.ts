@@ -21,7 +21,7 @@ import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {selectApplications} from '../../store/application/selectors';
 import {loadApplications} from '../../store/application/action';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
 import {filter, take} from 'rxjs/operators';
 import {setSelectedAppIdEntityAction} from '../../store/application/action';
 import {getUserInfo} from '../../store/userInfo/action';

@@ -17,10 +17,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { AppUser} from 'src/app/data/appUser';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
 import { environment } from '../../../environments/environment';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -35,7 +35,7 @@ export class UserService {
     );
   }
 
-  updateRole(organizationId: string, userId: string, role: RoleEnum): Observable<any> {
+  updateRole(organizationId: string, userId: string, role: Role): Observable<any> {
     // temporary workaround to fix cors errors
     return this.http.put<AppUser>(`${environment.adminApiUrl}org/${organizationId}/role`, { userId, role }, { withCredentials: false });
   }

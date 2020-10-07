@@ -17,10 +17,10 @@ import {Injectable} from '@angular/core';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 
-import {Application} from '../../data/application';
+import {Application} from '../../data/interfaces/application';
 import {AppState} from '../../store';
 import {selectCurrentApp} from '../../store/application/selectors';
-import {Model} from '../../data/model';
+import {Model} from '../../data/interfaces/model';
 import {selectCurrentModel} from '../../store/model/selectors';
 import {selectCurrentOrganizationId} from '../../store/organization/selectors';
 

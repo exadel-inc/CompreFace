@@ -1,9 +1,4 @@
 spring:
-  datasource-pg:
-    driver-class-name: org.h2.Driver
-    url: ${POSTGRES_URL:jdbc:h2:mem:db;DB_CLOSE_DELAY=-1}
-    username: ${POSTGRES_USERNAME:postgres}
-    password: ${POSTGRES_PASSWORD:postgres}
   cache:
     type: none
   jpa:

@@ -18,7 +18,7 @@ import {TestBed} from '@angular/core/testing';
 import {ModelService} from './model.service';
 import {HttpTestingController, HttpClientTestingModule} from '@angular/common/http/testing';
 import {environment} from '../../../environments/environment';
-import {Model} from 'src/app/data/model';
+import {Model} from 'src/app/data/interfaces/model';
 
 describe('ModelService', () => {
   let httpMock: HttpTestingController;

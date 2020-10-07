@@ -17,10 +17,6 @@
 package com.exadel.frs.core.trainservice.dao;
 
 import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.mapping;
-import static java.util.stream.Collectors.toList;
-import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
@@ -36,36 +32,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class FaceDao {
 
     private final FacesRepository facesRepository;
-
-    public EmbeddingFaceList findAllFaceEmbeddingsByApiKey(final String modelApiKey) {
-        val faces = facesRepository.findByApiKey(modelApiKey);
-
-        return facesToEmbeddingList(faces);
-    }
-
-    public EmbeddingFaceList findAllFacesIn(final List<String> ids) {
-        val faces = facesRepository.findByIdIn(ids);
-
-        return facesToEmbeddingList(faces);
-    }
-
-    private EmbeddingFaceList facesToEmbeddingList(final List<Face> faces) {
-        if (faces.isEmpty()) {
-            return new EmbeddingFaceList();
-        }
-        val faceEmbeddings = faces.stream().collect(
-                groupingBy(
-                        Face::getFaceName,
-                        mapping(face -> face.getEmbedding().getEmbeddings(), toList())
-                )
-        );
-
-        val embeddingFaceList = new EmbeddingFaceList();
-        embeddingFaceList.setFaceEmbeddings(faceEmbeddings);
-        embeddingFaceList.setCalculatorVersion(faces.get(0).getEmbedding().getCalculatorVersion());
-
-        return embeddingFaceList;
-    }
 
     public List<Face> findAllFacesByApiKey(final String modelApiKey) {
         return facesRepository.findByApiKey(modelApiKey);

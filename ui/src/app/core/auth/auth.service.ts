@@ -23,8 +23,8 @@ import { BehaviorSubject, Observable, Subscriber } from 'rxjs';
 import { first } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
-import { API_URL } from '../../data/api.variables';
-import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { API_URL } from '../../data/enums/api-url.enum';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { AppState } from '../../store';
 import { updateUserAuthorization } from '../../store/userInfo/action';
 
@@ -32,7 +32,7 @@ import { updateUserAuthorization } from '../../store/userInfo/action';
   providedIn: 'root'
 })
 export class AuthService {
-  public token$: BehaviorSubject<string>;
+  token$: BehaviorSubject<string>;
   refreshInProgress: boolean;
   requests = [];
 

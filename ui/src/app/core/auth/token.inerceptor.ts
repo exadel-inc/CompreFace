@@ -19,7 +19,7 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse
 import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { API_URL } from '../../data/api.variables';
+import { API_URL } from '../../data/enums/api-url.enum';
 
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {

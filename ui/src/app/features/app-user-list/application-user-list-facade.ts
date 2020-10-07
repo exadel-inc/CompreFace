@@ -18,8 +18,8 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription, zip } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { AppUser} from 'src/app/data/appUser';
-import { IFacade } from 'src/app/data/facade/IFacade';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { AppState } from 'src/app/store';
 import {
   deleteUserFromApplication,
@@ -36,7 +36,7 @@ import { selectUserId } from 'src/app/store/userInfo/selectors';
 import { AppUserService } from '../../core/app-user/app-user.service';
 import { loadUsersEntityAction } from '../../store/user/action';
 import { selectUsers } from '../../store/user/selectors';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable()
 export class ApplicationUserListFacade implements IFacade {
@@ -59,13 +59,13 @@ export class ApplicationUserListFacade implements IFacade {
       store.select(selectUsers),
       this.appUsers$
     ).pipe(
-        map(([users, appUsers]) => {
-          return users.map(user => {
-            if (appUsers.every(appUser => appUser.id !== user.id )) {
-              return user.email;
-            }
-          });
-        })
+      map(([users, appUsers]) => {
+        return users.map(user => {
+          if (appUsers.every(appUser => appUser.id !== user.id)) {
+            return user.email;
+          }
+        });
+      })
     );
     this.organizationRole$ = this.store.select(selectUserRollForSelectedOrganization);
     this.userRole$ = combineLatest(
@@ -73,8 +73,8 @@ export class ApplicationUserListFacade implements IFacade {
       this.organizationRole$
     ).pipe(
       map(([applicationRole, organizationRole]) => {
-       // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-       return organizationRole !== RoleEnum.USER ? organizationRole : applicationRole;
+        // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
+        return organizationRole !== Role.USER ? organizationRole : applicationRole;
       })
     );
 
@@ -126,7 +126,7 @@ export class ApplicationUserListFacade implements IFacade {
     }));
   }
 
-  updateUserRole(id: string, role: RoleEnum): void {
+  updateUserRole(id: string, role: Role): void {
     this.store.dispatch(updateAppUserRoleAction({
       organizationId: this.selectedOrganizationId,
       applicationId: this.selectedApplicationId,

@@ -18,7 +18,7 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '../../../environments/environment';
-import { API_URL } from '../../data/api.variables';
+import { API_URL } from '../../data/enums/api-url.enum';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';

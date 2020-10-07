@@ -14,14 +14,17 @@
  * permissions and limitations under the License.
  */
 
-import { RoleEnum } from './roleEnum.enum';
+package com.exadel.frs.core.trainservice.exception;
 
-export interface AppUser {
-  id: string;
-  userId: string;
-  firstName: string;
-  lastName: string;
-  role: RoleEnum;
-  email?: string;
-  ownerOfApplications?: string[];
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.IMAGE_NOT_FOUND;
+import static java.lang.String.format;
+
+public class ImageNotFoundException extends BasicException {
+
+    private static final String MESSAGE = "Image %s not found";
+
+    public ImageNotFoundException(String imageId) {
+        super(IMAGE_NOT_FOUND, format(MESSAGE, imageId));
+    }
+
 }

@@ -40,6 +40,7 @@ public class FacesRepositoryTest {
     private FacesRepository facesRepository;
     private final static String MODEL_KEY = "model_key";
     private final static String MODEL_KEY_OTHER = "model_key_other";
+    private static final double EMBEDDING = 100500;
 
     @BeforeEach
     void setUp() {
@@ -59,6 +60,7 @@ public class FacesRepositoryTest {
         return new Face()
                 .setFaceName(name)
                 .setApiKey(modelApiKey)
+                .setEmbedding(new Face.Embedding(List.of(EMBEDDING), null))
                 .setFaceImg("hex-string-1".getBytes())
                 .setRawImg("hex-string-2".getBytes())
                 .setId(randomUUID().toString());

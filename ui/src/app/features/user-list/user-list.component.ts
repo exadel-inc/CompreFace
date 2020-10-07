@@ -13,19 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
-import { AppUser } from 'src/app/data/appUser';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
-import {UserDeletion} from '../../data/userDeletion';
-import {TranslateService} from '@ngx-translate/core';
+import { Role } from 'src/app/data/enums/role.enum';
+import { UserDeletion } from '../../data/interfaces/user-deletion';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-list-container',
@@ -50,7 +50,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   translate: TranslateService;
 
   constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog,
-              translate: TranslateService) {
+    translate: TranslateService) {
     userListFacade.initSubscriptions();
     this.translate = translate;
   }
@@ -59,7 +59,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.userListFacade.isLoading$;
     this.userRole$ = this.userListFacade.userRole$;
     this.tableConfig$ = this.userListFacade.users$.pipe(map((users: AppUser[]) => {
-      this.orgOwnerEmail = users.filter(user => user.role === RoleEnum.OWNER).map(user => user.email)[0];
+      this.orgOwnerEmail = users.filter(user => user.role === Role.OWNER).map(user => user.email)[0];
       return {
         columns: [{ title: 'user', property: 'username' }, {
           title: 'role',
@@ -89,7 +89,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           return this.dialog.open(DeleteDialogComponent, {
             width: '400px',
             data: {
-              entityType: 'system-user',
+              entityType: this.translate.instant('users.system-user'),
               entity: deletion.userToDelete,
               options: [
                 { name: email, value: 'deleter' },

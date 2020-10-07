@@ -14,22 +14,13 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.domain;
+package com.exadel.frs.core.trainservice.cache;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Value;
 
-@Data
-@Accessors(chain = true)
-public class EmbeddingFaceList {
+@Value
+public class FaceBO {
 
-    private String calculatorVersion;
-
-    /**
-     * Pair of <id and face name> as key and <list of embeddings> as value
-     */
-    private Map<String, List<List<Double>>> faceEmbeddings = new HashMap<>();
+    private String name;
+    private String imageId;
 }

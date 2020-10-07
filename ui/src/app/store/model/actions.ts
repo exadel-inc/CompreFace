@@ -15,7 +15,7 @@
  */
 
 import {createAction, props} from '@ngrx/store';
-import {Model, ModelUpdate} from 'src/app/data/model';
+import {Model, ModelUpdate} from 'src/app/data/interfaces/model';
 
 export const loadModels = createAction('[Model] Load Models', props<{ organizationId: string, applicationId: string }>());
 export const loadModelsSuccess = createAction('[Model] Load Models Success', props<{ models: Model[] }>());

@@ -16,15 +16,15 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {User} from '../../data/user';
+import {User} from '../../data/interfaces/user';
 import {Store} from '@ngrx/store';
 import {AppState} from '../../store';
 import {Observable, Subscription} from 'rxjs';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
+import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
 import {resetErrorMessage, signUp} from '../../store/auth/action';
 import {selectAuthState} from '../../store/auth/selectors';
 import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
-import {SignUp} from '../../data/sign-up';
+import {SignUp} from '../../data/interfaces/sign-up';
 
 @Component({
   selector: 'app-sign-up-form',

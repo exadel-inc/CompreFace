@@ -14,12 +14,12 @@
  * permissions and limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
-import {UserService} from './user.service';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {environment} from '../../../environments/environment';
-import {AppUser} from '../../data/appUser';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
+import { TestBed } from '@angular/core/testing';
+import { UserService } from './user.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { environment } from '../../../environments/environment';
+import { AppUser } from '../../data/interfaces/app-user';
+import { Role } from 'src/app/data/enums/role.enum';
 
 describe('UserService', () => {
   let service: UserService;
@@ -45,13 +45,13 @@ describe('UserService', () => {
       organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
-      role: RoleEnum.USER
+      role: Role.USER
     }, {
       id: 1,
       organizationId: 'ksdfklsn1111111',
       firstName: 'Tony',
       lastName: 'Stark',
-      role: RoleEnum.ADMINISTRATOR
+      role: Role.ADMINISTRATOR
     }];
 
     service.getAll('organizationId').subscribe((data: AppUser[]) => {
@@ -74,10 +74,10 @@ describe('UserService', () => {
       organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
-      role: RoleEnum.USER
+      role: Role.USER
     };
 
-    service.updateRole('organizationId', 'userId', RoleEnum.USER).subscribe((data: AppUser) => {
+    service.updateRole('organizationId', 'userId', Role.USER).subscribe((data: AppUser) => {
       expect(data.role).toBe(mock.role);
       expect(data.firstName).toBe(mock.firstName);
       expect(data.lastName).toBe(mock.lastName);

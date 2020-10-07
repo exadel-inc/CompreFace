@@ -14,15 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
+package com.exadel.frs.core.trainservice.system.feign.python;
 
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.MODEL_NOT_TRAINED;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Value;
 
-public class ModelNotTrainedException extends BasicException {
+@Value
+public class FaceResponse {
 
-    private static final String MESSAGE = "Model is not trained";
+    @JsonProperty("face_name")
+    private String faceName;
 
-    public ModelNotTrainedException() {
-        super(MODEL_NOT_TRAINED, MESSAGE);
-    }
+    private float similarity;
 }

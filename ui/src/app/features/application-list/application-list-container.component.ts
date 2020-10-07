@@ -22,8 +22,9 @@ import { map } from 'rxjs/operators';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
-import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { ApplicationListFacade } from './application-list-facade';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-list-container',
@@ -43,7 +44,8 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   userRole$: Observable<string>;
   tableConfig$: Observable<ITableConfig>;
 
-  constructor(private applicationFacade: ApplicationListFacade, private dialog: MatDialog, private router: Router) {
+  constructor(private applicationFacade: ApplicationListFacade, private dialog: MatDialog, private router: Router,
+              private translate: TranslateService) {
     this.applicationFacade.initSubscriptions();
   }
 
@@ -75,7 +77,7 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
-        entityType: 'application',
+        entityType: this.translate.instant('applications.header.title'),
         name: ''
       }
     });
