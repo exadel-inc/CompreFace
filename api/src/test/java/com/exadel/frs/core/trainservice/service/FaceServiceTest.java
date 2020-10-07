@@ -102,12 +102,8 @@ class FaceServiceTest {
 
         when(faceCacheProvider.getOrLoad(API_KEY))
                 .thenReturn(faceCollection);
-        when(faceDao.deleteFacesByApiKey(API_KEY)).thenReturn(faces);
 
-        val actual = faceService.deleteFacesByModel(API_KEY);
-
-        assertThat(actual).isNotNull();
-        assertThat(actual.size()).isEqualTo(faces.size());
+        faceService.deleteFacesByModel(API_KEY);
 
         verify(faceDao).deleteFacesByApiKey(API_KEY);
         verifyNoMoreInteractions(faceDao);

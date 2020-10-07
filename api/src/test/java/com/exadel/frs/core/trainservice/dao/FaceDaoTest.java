@@ -26,7 +26,9 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.Image;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +43,9 @@ class FaceDaoTest {
 
     @Mock
     private FacesRepository facesRepository;
+
+    @Mock
+    private ImagesRepository imagesRepository;
 
     @InjectMocks
     private FaceDao faceDao;
@@ -96,12 +101,8 @@ class FaceDaoTest {
     @Test
     void deleteFacesByApiKey() {
         val apiKey = randomAlphabetic(10);
-        val faces = List.of(new Face());
-        when(facesRepository.deleteFacesByApiKey(apiKey)).thenReturn(faces);
 
-        val actual = faceDao.deleteFacesByApiKey(apiKey);
-
-        assertThat(actual).isEqualTo(faces);
+        faceDao.deleteFacesByApiKey(apiKey);
 
         verify(facesRepository).deleteFacesByApiKey(apiKey);
         verifyNoMoreInteractions(facesRepository);
@@ -137,11 +138,9 @@ class FaceDaoTest {
         assertThat(actual).isNotNull();
         assertThat(actual.getFaceName()).isEqualTo(faceName);
         assertThat(actual.getApiKey()).isEqualTo(modelKey);
-        assertThat(actual.getFaceImg()).isEqualTo(faceId.getBytes());
-        assertThat(actual.getRawImg()).isEqualTo(faceId.getBytes());
         assertThat(actual.getEmbedding().getEmbeddings()).isEqualTo(embeddingNumbers);
 
-        verify(facesRepository).save(any(Face.class));
-        verifyNoMoreInteractions(facesRepository);
+        verify(imagesRepository).save(any(Image.class));
+        verifyNoMoreInteractions(imagesRepository);
     }
 }

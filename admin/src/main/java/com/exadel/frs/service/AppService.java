@@ -34,8 +34,8 @@ import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.AppNotFoundException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.exception.SelfRoleApplicationChangeException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.helpers.SecurityUtils;
@@ -224,11 +224,16 @@ public class AppService {
 
         val userAppRole = app.getUserAppRole(user.getId()).orElseThrow();
         val newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
+
+        val currentUserRole = app.getUserAppRoleOrThrow(adminId);
+
+        if (ADMINISTRATOR.equals(currentUserRole.getRole()) &&
+                (OWNER.equals(newAppRole)) || OWNER.equals(userAppRole.getRole())) {
+            throw new InsufficientPrivilegesException();
+        }
+
         if (OWNER == newAppRole) {
             app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(ADMINISTRATOR));
-        }
-        if (OWNER == userAppRole.getRole() && OWNER != newAppRole) {
-            throw new SelfRoleApplicationChangeException();
         }
 
         userAppRole.setRole(newAppRole);
