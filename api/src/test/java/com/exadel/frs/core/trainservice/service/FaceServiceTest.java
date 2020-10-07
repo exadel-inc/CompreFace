@@ -103,6 +103,8 @@ class FaceServiceTest {
         when(faceCacheProvider.getOrLoad(API_KEY))
                 .thenReturn(faceCollection);
 
+        faceService.deleteFacesByModel(API_KEY);
+
         verify(faceDao).deleteFacesByApiKey(API_KEY);
         verifyNoMoreInteractions(faceDao);
     }
