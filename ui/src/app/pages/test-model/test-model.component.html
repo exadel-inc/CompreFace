@@ -20,7 +20,12 @@
   </div>
 
   <div class="test-model-container">
-    <app-face-recognition></app-face-recognition>
+    <div class="test-model-loader"
+       *ngIf="modelLoading$ | async">
+      <app-spinner></app-spinner>
+    </div>
+
+    <app-face-recognition *ngIf="!(modelLoading$ | async)"></app-face-recognition>
   </div>
 </div>
 

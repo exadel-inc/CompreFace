@@ -15,11 +15,12 @@
  */
 
 import {createAction, props} from '@ngrx/store';
-import { Model } from 'src/app/data/model';
+import { Model } from 'src/app/data/interfaces/model';
 
 export const recognizeFace = createAction('[Model] Face Reconize', props<{ file: any, model: Model }>());
-export const recognizeFaceSuccess = createAction('[Model] Face Recognize Success', props<{ model: any }>());
+export const recognizeFaceSuccess = createAction('[Model] Face Recognize Success', props<{ model: any, file: any, request: any }>());
 export const recognizeFaceFail = createAction('[Model] Face Recognize Fail', props<{ error: any }>());
+export const recognizeFaceReset = createAction('[Model] Face Recognize Reset');
 
 export const addFace = createAction('[Model] Add Face', props<{ file: any, model: Model }>());
 export const addFaceSuccess = createAction('[Model] Add Face Success', props<{ model: any }>());

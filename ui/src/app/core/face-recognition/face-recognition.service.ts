@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Model } from '../../data/model';
+import { Model } from '../../data/interfaces/model';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -21,12 +22,17 @@ export class FaceRecognitionService {
     });
   }
 
-  recognize(file: any, model: Model): Observable<object> {
+  recognize(file: any, model: Model): Observable<any> {
     const formData = new FormData();
     formData.append('file', file);
-    return this.http.post(`${environment.userApiUrl}recognize`, formData, {
-      headers: { 'x-api-key': model.apiKey}
+    const request = this.http.post(`${environment.userApiUrl}recognize`, formData, {
+      headers: { 'x-api-key': model.apiKey},
+      observe: 'response'
     });
+
+    return request.pipe(
+      map((response) => ({response, request: (request as any).source.source.value}))
+    );
   }
 
   getAllFaces(model: Model): Observable<object> {

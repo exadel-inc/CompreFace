@@ -231,3 +231,8 @@ app-table, app-user-table, app-model-table {
 .mat-error {
   color: $red;
 }
+
+.separate-line {
+  border: 1px solid $normal-gray;
+  margin: 30px 0;
+}

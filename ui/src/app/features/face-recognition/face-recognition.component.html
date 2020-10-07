@@ -10,9 +10,17 @@
 <div class="separate-line"></div>
 
 <div class="face-result">
-    <app-recognition-result
-            [model]="model$ | async"
-            [printData]="data$ | async">
-    </app-recognition-result>
+    <div *ngIf="!(data$ | async); else resultBox">
+<!--        no result-->
+    </div>
+
+    <ng-template #resultBox>
+        <app-recognition-result
+                [model]="model$ | async"
+                [file]="file$ | async"
+                [requestInfo]="requestInfo$ | async"
+                [printData]="data$ | async">
+        </app-recognition-result>
+    </ng-template>
 </div>
 

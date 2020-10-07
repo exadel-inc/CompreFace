@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter,
   Input, OnInit, Output, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Model } from '../../data/model';
+import { Model } from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-drag-n-drop',

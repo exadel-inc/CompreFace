@@ -19,7 +19,12 @@
   }
 
   .result-image {
-    background-color: $primary-light;
+    height: 250px;
+    text-align: right;
+    width: 100%;
+    canvas {
+      display: inline;
+    }
   }
 
   .result-sections {
@@ -27,7 +32,6 @@
     justify-content: center;
 
     .result-section-left {
-      background-color: $primary-light;
       margin-right: 15px;
       flex-grow: 0.5;
     }
@@ -36,8 +40,18 @@
       border: 1px solid $super-dark-gray;
       flex-grow: 1;
       width: 450px;
-      background-color: $blue-gray;
       padding: 5px 10px;
+      background-color: $blue-gray;
+    }
+
+    .result-textarea {
+      color: white;
+      border: none;
+      background-color: $blue-gray;
+    }
+
+    .result-request, .result-response {
+      color: white;
     }
   }
 }

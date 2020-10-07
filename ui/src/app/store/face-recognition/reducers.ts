@@ -18,27 +18,33 @@ import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
 import {
-    recognizeFace,
-    recognizeFaceSuccess,
-    recognizeFaceFail
+  recognizeFace,
+  recognizeFaceSuccess,
+  recognizeFaceFail, recognizeFaceReset
 } from './actions';
 
 export interface FaceRecognitionEntityState extends EntityState<string> {
   isPending: boolean;
   model: any;
+  file: any;
+  request: any;
 }
 
 export const faceRecognitionAdapter = createEntityAdapter<string>();
 
 const initialState: FaceRecognitionEntityState = faceRecognitionAdapter.getInitialState({
   isPending: false,
-  model: null
+  model: null,
+  file: null,
+  request: null
 });
 
 const reducer: ActionReducer<FaceRecognitionEntityState> = createReducer(
   initialState,
   on(recognizeFace, (state) => ({ ...state, isPending: true })),
-  on(recognizeFaceSuccess, (state,  { model } ) => ({ ...state, model, isPending: false })),
+  on(recognizeFaceSuccess, (state,  { model, file, request } ) =>
+    ({ ...state, model, file, request, isPending: false })),
+  on(recognizeFaceReset, () => ({...initialState})),
   on(recognizeFaceFail, (state) => ({...state, isPending: false})),
 );
 

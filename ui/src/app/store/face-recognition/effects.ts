@@ -35,7 +35,11 @@ export class FaceRecognitionEffects {
   recognizeFace$ = this.actions.pipe(
     ofType(recognizeFace),
     switchMap(action => this.recognitionService.recognize(action.file, action.model).pipe(
-      map(model => recognizeFaceSuccess({ model })),
+      map(({response, request}) => recognizeFaceSuccess({
+        model: response.body,
+        file: action.file,
+        request
+      })),
       catchError(error => of(recognizeFaceFail({ error }))),
     )),
   );

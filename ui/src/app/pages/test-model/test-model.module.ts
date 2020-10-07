@@ -21,6 +21,7 @@ import {AuthGuard} from '../../core/auth/auth.guard';
 import {TestModelComponent} from './test-model.component';
 import {MatCardModule} from '@angular/material/card';
 import {TestModelPageService} from './test-model.service';
+import { SpinnerModule } from '../../features/spinner/spinner.module';
 import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
 import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
 
@@ -33,7 +34,8 @@ import { FaceRecognitionModule } from '../../features/face-recognition/face-reco
       { path: '', component: TestModelComponent, canActivate: [ AuthGuard ] },
     ]),
     MatCardModule,
-    FaceRecognitionModule
+    FaceRecognitionModule,
+    SpinnerModule
   ],
   providers: [TestModelPageService]
 })

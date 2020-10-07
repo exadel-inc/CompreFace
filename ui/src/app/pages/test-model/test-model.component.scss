@@ -25,4 +25,10 @@
   flex-direction: column;
   justify-content: space-between;
   min-height: 650px;
+
+  .test-model-loader {
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+  }
 }

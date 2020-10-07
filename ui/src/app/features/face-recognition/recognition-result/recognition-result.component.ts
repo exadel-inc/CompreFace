@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Model } from '../../../data/model';
+import { Model } from '../../../data/interfaces/model';
 
 @Component({
   selector: 'app-recognition-result',
@@ -7,16 +7,20 @@ import { Model } from '../../../data/model';
   styleUrls: ['./recognition-result.component.scss']
 })
 export class RecognitionResultComponent implements OnInit {
-  @Input() printData: object;
+  @Input() printData: any;
   @Input() pending = true;
   @Input() model: Model;
   @Input() file: File;
+  @Input() requestInfo: any;
 
   @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
 
   constructor() { }
 
   ngOnInit() {
+    if (this.printData) {
+      this.printResult2(this.printData.box, this.printData.faces);
+    }
   }
 
   /*
@@ -25,12 +29,12 @@ export class RecognitionResultComponent implements OnInit {
    * @param box Box
    * @param face Face
    */
-  printResult(box: any, face: any) {
+  printResult2(box: any, face: any) {
     const img = new Image();
     const ctx: CanvasRenderingContext2D =
       this.myCanvas.nativeElement.getContext('2d');
     img.onload = () => {
-      ctx.drawImage(img, 0, 0);
+      ctx.drawImage(img, 0, 0, 250, 250);
       ctx.beginPath();
       ctx.strokeStyle = 'green';
       ctx.moveTo(box.x_min, box.y_min);
@@ -40,10 +44,10 @@ export class RecognitionResultComponent implements OnInit {
       ctx.lineTo(box.x_min, box.y_min);
       ctx.stroke();
       ctx.fillStyle = 'green';
-      ctx.fillRect(box.x_min, box.y_min - 25, 200, 25);
-      ctx.fillRect(box.x_min, box.y_max, 200, 25);
+      ctx.fillRect(box.x_min, box.y_min - 25, box.x_max - box.x_min, 25);
+      ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, 25);
       ctx.fillStyle = 'white';
-      ctx.font = '20pt Roboto Regular Helvetica Neue sans-serif';
+      ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
       ctx.fillText(box.probability, box.x_min + 10, box.y_max + 20);
       ctx.fillText(face[0].face_name, box.x_min + 10, box.y_min - 5);
     };

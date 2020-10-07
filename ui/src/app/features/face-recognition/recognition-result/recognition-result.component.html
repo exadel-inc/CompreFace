@@ -1,14 +1,37 @@
 <div class="result-container">
-    <div class="result-label"> Recognition results</div>
+    <div class="result-label">Recognition results</div>
     <div class="result-sections">
         <div class="result-section-left">
             <div class="result-image">
-                <canvas #canvasElement height="200" width="200"> </canvas>
+                <canvas #canvasElement height="250" width="250"> </canvas>
             </div>
         </div>
         <div class="result-section-right">
-            <div class="result-request"></div>
-            <div class="result-response"></div>
+            <div class="result-request">
+                <p>Request</p>
+                <textarea class="result-textarea"
+                          name=""
+                          cols="70"
+                          rows="16"
+                          disabled>
+                    {{requestInfo.request}}
+                </textarea>
+            </div>
+
+            <div class="separate-line"></div>
+
+            <div class="result-response">
+                <p>Response</p>
+                <textarea class="result-textarea"
+                          name=""
+                          cols="70"
+                          rows="16"
+                          disabled>
+                    {{requestInfo.response}}
+                </textarea>
+            </div>
+        </div>
+        <div>
         </div>
     </div>
 </div>

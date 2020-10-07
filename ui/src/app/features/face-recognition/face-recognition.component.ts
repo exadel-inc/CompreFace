@@ -1,20 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Model } from '../../data/model';
+import { Model } from '../../data/interfaces/model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { recognizeFace, addFace } from '../../store/face-recognition/actions';
-import { selectTest } from '../../store/face-recognition/selectors';
+import { recognizeFace, addFace, recognizeFaceReset } from '../../store/face-recognition/actions';
+import { selectTest, selectFile,
+  selectRequest } from '../../store/face-recognition/selectors';
 import { selectCurrentModel } from '../../store/model/selectors';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-face-recognition',
   templateUrl: './face-recognition.component.html',
   styleUrls: ['./face-recognition.component.scss']
 })
-export class FaceRecognitionComponent implements OnInit {
+export class FaceRecognitionComponent implements OnInit, OnDestroy {
   public model$: Observable<Model>;
   public data$: Observable<any>;
+  public file$: Observable<any>;
+  public requestInfo$: Observable<any>;
 
   constructor(private store: Store<AppState>) {
     // Component constructor.
@@ -23,6 +27,12 @@ export class FaceRecognitionComponent implements OnInit {
   ngOnInit() {
     this.model$ = this.store.select(selectCurrentModel);
     this.data$ = this.store.select(selectTest);
+    this.file$ = this.store.select(selectFile);
+    this.requestInfo$ = this.store.select(selectRequest);
+  }
+
+  ngOnDestroy() {
+    this.store.dispatch(recognizeFaceReset());
   }
 
   recognizeFace({file, model}: {file: File, model: Model}) {
