@@ -134,7 +134,8 @@ public class UserController {
             @PathVariable
             final String userGuid,
             @ApiParam(value = "Replacer option to determine next owner of org/apps that the user own", allowableValues = "deleter, owner")
-            @RequestParam(defaultValue = "deleter") final String replacer
+            @RequestParam(defaultValue = "deleter")
+            final String replacer
     ) {
         val deleteUserDto = UserDeleteDto.builder()
                                          .deleter(userService.getUser(SecurityUtils.getPrincipalId()))
