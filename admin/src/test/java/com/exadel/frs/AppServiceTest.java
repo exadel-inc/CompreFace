@@ -47,6 +47,7 @@ import com.exadel.frs.entity.UserOrganizationRole;
 import com.exadel.frs.entity.UserOrganizationRoleId;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.OrganizationRole;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
@@ -265,9 +266,10 @@ class AppServiceTest {
     void failUpdateUserAppSelfRoleOwnerChange() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
                                                  .userId("userGuid")
-                                                 .role(AppRole.USER.toString())
+                                                 .role(AppRole.ADMINISTRATOR.toString())
                                                  .build();
         val user = user(USER_ID);
+        val admin = user(ADMIN_ID);
         val organization = organization();
 
         val app = App.builder()
@@ -275,7 +277,9 @@ class AppServiceTest {
                      .guid(APPLICATION_GUID)
                      .organization(organization)
                      .build();
-        app.addUserAppRole(user, OWNER);
+
+        app.addUserAppRole(user, AppRole.OWNER);
+        app.addUserAppRole(admin, AppRole.ADMINISTRATOR);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
@@ -283,7 +287,7 @@ class AppServiceTest {
 
         assertThatThrownBy(() -> {
             appService.updateUserAppRole(userRoleUpdateDto, ORGANISATION_GUID, APPLICATION_GUID, ADMIN_ID);
-        }).isInstanceOf(SelfRoleApplicationChangeException.class);
+        }).isInstanceOf(InsufficientPrivilegesException.class);
 
         verify(authManagerMock).verifyWritePrivilegesToApp(ADMIN_ID, app);
         verify(authManagerMock).verifyReadPrivilegesToApp(ADMIN_ID, app);
