@@ -108,7 +108,7 @@ public class FaceController {
     ) {
         val faces = new HashSet<FaceBO>();
         if (isBlank(subject)) {
-            faces.addAll(faceService.deleteFacesByModel(apiKey));
+            faceService.deleteFacesByModel(apiKey);
         } else {
             faces.addAll(faceService.deleteFaceByName(subject, apiKey));
         }

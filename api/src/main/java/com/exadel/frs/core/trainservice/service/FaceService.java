@@ -55,13 +55,9 @@ public class FaceService {
         return null;
     }
 
-    public Set<FaceBO> deleteFacesByModel(final String modelKey) {
+    public void deleteFacesByModel(final String modelKey) {
         faceDao.deleteFacesByApiKey(modelKey);
-
-        val facesToDelete = faceCacheProvider.getOrLoad(modelKey).getFaces();
         faceCacheProvider.invalidate(modelKey);
-
-        return facesToDelete;
     }
 
     public int countFacesInModel(final String modelKey) {
