@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { forkJoin, of } from 'rxjs';
+import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
@@ -35,8 +35,8 @@ export class FaceRecognitionEffects {
   recognizeFace$ = this.actions.pipe(
     ofType(recognizeFace),
     switchMap(action => this.recognitionService.recognize(action.file, action.model).pipe(
-      map(({response, request}) => recognizeFaceSuccess({
-        model: response.body,
+      map(({data, request}) => recognizeFaceSuccess({
+        model: data,
         file: action.file,
         request
       })),

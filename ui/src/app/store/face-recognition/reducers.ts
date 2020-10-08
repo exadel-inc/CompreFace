@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
 import {

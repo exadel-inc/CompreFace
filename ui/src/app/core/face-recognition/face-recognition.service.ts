@@ -26,12 +26,12 @@ export class FaceRecognitionService {
     const formData = new FormData();
     formData.append('file', file);
     const request = this.http.post(`${environment.userApiUrl}recognize`, formData, {
-      headers: { 'x-api-key': model.apiKey},
-      observe: 'response'
+      headers: { 'x-api-key': model.apiKey}
     });
 
     return request.pipe(
-      map((response) => ({response, request: (request as any).source.source.value}))
+      // (request as any).source.source.source.value -> solution to display request in UI.
+      map((data) => ({data, request: (request as any).source.source.source.value}))
     );
   }
 

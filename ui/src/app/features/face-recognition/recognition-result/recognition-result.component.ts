@@ -2,6 +2,7 @@ import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@ang
 import { Model } from '../../../data/interfaces/model';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-recognition.helpers';
 
 @Component({
   selector: 'app-recognition-result',
@@ -13,6 +14,7 @@ export class RecognitionResultComponent implements OnDestroy {
   @Input() model: Model;
   @Input() file: File;
   @Input() requestInfo: any;
+  // Handle input changes and update image.
   @Input() set printData(value: any) {
     if (this.printSubscription) {
       this.printSubscription.unsubscribe();
@@ -38,7 +40,7 @@ export class RecognitionResultComponent implements OnDestroy {
   }
 
   /*
-   * Print result.
+   * Print result on template.
    *
    * @param box Box
    * @param face Face
@@ -51,10 +53,10 @@ export class RecognitionResultComponent implements OnDestroy {
   }
 
   /*
-   * Print the result of recognition.
+   * Make canvas and draw face and info on image.
    *
-   * @param box Box
-   * @param face Face
+   * @param box Face coordinates from BE.
+   * @param face.
    */
   drawCanvas(box: any, face: any) {
     const img = new Image();
@@ -80,40 +82,4 @@ export class RecognitionResultComponent implements OnDestroy {
     };
     img.src = URL.createObjectURL(this.file);
   }
-}
-
-interface ImageSize {
-  width: any;
-  height: any;
-}
-
-/**
- * Get image size.
- *
- * @param file File.
- */
-function getImageSize(file: File): Observable<ImageSize> {
-  let img = new Image();
-
-  return new Observable((subscriber) => {
-    img = new Image();
-    img.onload = () => {
-        subscriber.next({width: img.width, height: img.height});
-        subscriber.complete();
-      };
-    img.src = URL.createObjectURL(file);
-  });
-}
-
-function recalculateFaceCoordinate(box: any, imageSize: ImageSize, sizeToCalc: ImageSize): any {
-  const divideWidth = imageSize.width / sizeToCalc.width;
-  const divideHeight = imageSize.height / sizeToCalc.height;
-
-  return {
-    ...box,
-    x_max: box.x_max / divideWidth,
-    x_min: box.x_min / divideWidth,
-    y_max: box.y_max / divideHeight,
-    y_min: box.y_min / divideHeight
-  };
 }
