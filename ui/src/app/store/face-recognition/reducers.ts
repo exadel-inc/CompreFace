@@ -23,27 +23,25 @@ import {
   recognizeFaceFail, recognizeFaceReset
 } from './actions';
 
-export interface FaceRecognitionEntityState extends EntityState<string> {
+export interface FaceRecognitionEntityState {
   isPending: boolean;
   model: any;
   file: any;
   request: any;
 }
 
-export const faceRecognitionAdapter = createEntityAdapter<string>();
-
-const initialState: FaceRecognitionEntityState = faceRecognitionAdapter.getInitialState({
+const initialState: FaceRecognitionEntityState = {
   isPending: false,
   model: null,
   file: null,
   request: null
-});
+};
 
 const reducer: ActionReducer<FaceRecognitionEntityState> = createReducer(
   initialState,
   on(recognizeFace, (state) => ({ ...state, isPending: true })),
-  on(recognizeFaceSuccess, (state,  { model, file, request } ) =>
-    ({ ...state, model, file, request, isPending: false })),
+  on(recognizeFaceSuccess, (state,  action ) =>
+    ({ ...state, ...action, isPending: false })),
   on(recognizeFaceReset, () => ({...initialState})),
   on(recognizeFaceFail, (state) => ({...state, isPending: false})),
 );

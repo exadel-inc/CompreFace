@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, Observable } from 'rxjs';
 import { Model } from '../../data/interfaces/model';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { recognizeFace, addFace, recognizeFaceReset } from '../../store/face-recognition/actions';
-import { selectTest, selectFile,
-  selectRequest } from '../../store/face-recognition/selectors';
+import { recognizeFace, recognizeFaceReset } from '../../store/face-recognition/actions';
+import { selectTest, selectFile, selectRequest,
+  selectTestIsPending } from '../../store/face-recognition/selectors';
 import { selectCurrentModel } from '../../store/model/selectors';
 import { map } from 'rxjs/operators';
 
@@ -19,6 +19,8 @@ export class FaceRecognitionComponent implements OnInit, OnDestroy {
   public data$: Observable<any>;
   public file$: Observable<any>;
   public requestInfo$: Observable<any>;
+  public pending$: Observable<boolean>;
+  public isDisplayResult$: Observable<boolean>;
 
   constructor(private store: Store<AppState>) {
     // Component constructor.
@@ -29,6 +31,10 @@ export class FaceRecognitionComponent implements OnInit, OnDestroy {
     this.data$ = this.store.select(selectTest);
     this.file$ = this.store.select(selectFile);
     this.requestInfo$ = this.store.select(selectRequest);
+    this.pending$ = this.store.select(selectTestIsPending);
+    this.isDisplayResult$ = combineLatest(this.data$, this.pending$).pipe(
+      map(([data, pending]) => !!data && !pending)
+    );
   }
 
   ngOnDestroy() {
@@ -37,13 +43,6 @@ export class FaceRecognitionComponent implements OnInit, OnDestroy {
 
   recognizeFace({file, model}: {file: File, model: Model}) {
     return this.store.dispatch(recognizeFace({
-      file,
-      model
-    }));
-  }
-
-  addFace({file, model}: {file: File, model: Model}) {
-    return this.store.dispatch(addFace({
       file,
       model
     }));

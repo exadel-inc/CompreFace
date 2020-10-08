@@ -2,13 +2,10 @@
 @import 'colors.scss';
 
 .container {
-  height: 85%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  margin: 10px auto;
-  background-color: $super-light-gray;
-  border: 1px solid black;
 
   .header-container {
     width: 100%;
@@ -20,7 +17,12 @@
 }
 
 .test-model-container {
-  padding: 10px 0;
+  width: 100%;
+  margin: 10px auto;
+  border: 1px solid black;
+  background-color: $super-light-gray;
+  height: 85%;
+  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
