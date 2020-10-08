@@ -1,8 +1,0 @@
-databaseChangeLog:
-  - changeSet:
-      id: drop_trained_model
-      author: Maryna Misachenka
-      changes:  
-        -  dropTable:  
-            cascadeConstraints:  true  
-            tableName:  trained_model
