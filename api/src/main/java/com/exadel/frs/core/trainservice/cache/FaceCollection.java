@@ -55,8 +55,9 @@ public class FaceCollection {
     }
 
     public INDArray getEmbeddings() {
-        embeddingsCopy.assign(embeddings);
-
+        if (embeddingsCopy != null) {
+            embeddingsCopy.assign(embeddings);
+        }
         return embeddingsCopy;
     }
 
@@ -139,6 +140,7 @@ public class FaceCollection {
                                          .filter(face -> face.getImageId().equals(imageId))
                                          .findFirst()
                                          .orElseThrow(() -> new ImageNotFoundException(imageId)));
-        return embeddings.get(NDArrayIndex.interval(index, index + 1), NDArrayIndex.all());
+        embeddingsCopy = embeddings.dup();
+        return embeddingsCopy.get(NDArrayIndex.interval(index, index + 1), NDArrayIndex.all());
     }
 }

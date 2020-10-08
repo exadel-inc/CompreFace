@@ -19,7 +19,9 @@ package com.exadel.frs.core.trainservice.dao;
 import static java.util.UUID.randomUUID;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
+import com.exadel.frs.core.trainservice.entity.Image;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +34,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class FaceDao {
 
     private final FacesRepository facesRepository;
+
+    private final ImagesRepository imagesRepository;
 
     public List<Face> findAllFacesByApiKey(final String modelApiKey) {
         return facesRepository.findByApiKey(modelApiKey);
@@ -50,8 +54,8 @@ public class FaceDao {
         return foundFace.orElse(null);
     }
 
-    public List<Face> deleteFacesByApiKey(final String modelApiKey) {
-        return facesRepository.deleteFacesByApiKey(modelApiKey);
+    public void deleteFacesByApiKey(final String modelApiKey) {
+        facesRepository.deleteFacesByApiKey(modelApiKey);
     }
 
     public int countFacesInModel(final String modelApiKey) {
@@ -68,11 +72,13 @@ public class FaceDao {
                 .setId(randomUUID().toString())
                 .setEmbedding(embeddings)
                 .setFaceName(faceName)
-                .setApiKey(modelKey)
+                .setApiKey(modelKey);
+        val image = new Image()
                 .setFaceImg(file.getBytes())
-                .setRawImg(file.getBytes());
+                .setRawImg(file.getBytes())
+                .setFace(face);
 
-        facesRepository.save(face);
+        imagesRepository.save(image);
 
         return face;
     }

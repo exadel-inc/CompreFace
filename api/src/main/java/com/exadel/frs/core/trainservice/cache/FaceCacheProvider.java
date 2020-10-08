@@ -32,8 +32,8 @@ public class FaceCacheProvider {
 
     private final FaceDao faceDao;
 
-    private static final long CACHE_EXPIRATION = 10;
-    private static final long CACHE_MAXIMUM_SIZE = 3;
+    private static final long CACHE_EXPIRATION = 60 * 60 * 24;
+    private static final long CACHE_MAXIMUM_SIZE = 10;
     private static final Cache<String, FaceCollection> cache =
             CacheBuilder.newBuilder()
                         .expireAfterAccess(CACHE_EXPIRATION, TimeUnit.SECONDS)
