@@ -14,14 +14,15 @@
  * permissions and limitations under the License.
  */
 
-import { RoleEnum } from './roleEnum.enum';
+package com.exadel.frs.core.trainservice.repository;
 
-export interface AppUser {
-  id: string;
-  userId: string;
-  firstName: string;
-  lastName: string;
-  role: RoleEnum;
-  email?: string;
-  ownerOfApplications?: string[];
+import com.exadel.frs.core.trainservice.entity.Image;
+import javax.transaction.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+@Transactional
+public interface ImagesRepository extends JpaRepository<Image, String> {
+
 }

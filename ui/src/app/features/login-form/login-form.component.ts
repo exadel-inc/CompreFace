@@ -20,8 +20,8 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
-import { ROUTERS_URL } from '../../data/routers-url.variable';
-import { User } from '../../data/user';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { User } from '../../data/interfaces/user';
 import { AppState } from '../../store';
 import { logIn, resetErrorMessage } from '../../store/auth/action';
 import { selectAuthState } from '../../store/auth/selectors';

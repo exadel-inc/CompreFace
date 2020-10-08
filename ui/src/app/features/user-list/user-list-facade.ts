@@ -18,8 +18,9 @@ import { Store } from '@ngrx/store';
 import { BehaviorSubject, combineLatest, Observable, Subscription } from 'rxjs';
 import { map, skipWhile } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
-import { AppUser } from 'src/app/data/appUser';
-import { IFacade } from 'src/app/data/facade/IFacade';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { IFacade } from 'src/app/data/interfaces/IFacade';
+import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { AppState } from 'src/app/store';
 import {
   selectCurrentOrganizationId,
@@ -31,8 +32,7 @@ import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/sel
 import { deleteUser, loadUsersEntityAction, updateUserRoleWithRefreshAction, } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
-import { RoleEnum } from 'src/app/data/roleEnum.enum';
-import { UserDeletion } from '../../data/userDeletion';
+import { Role } from '../../data/enums/role.enum';
 
 @Injectable()
 export class UserListFacade implements IFacade {
@@ -102,7 +102,7 @@ export class UserListFacade implements IFacade {
     }));
   }
 
-  updateUserRole(id: string, role: RoleEnum): void {
+  updateUserRole(id: string, role: Role): void {
     this.store.dispatch(updateUserRoleWithRefreshAction({
       organizationId: this.selectedOrganization,
       user: {

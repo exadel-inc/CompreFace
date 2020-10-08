@@ -14,8 +14,13 @@
  * permissions and limitations under the License.
  */
 
-export enum RoleEnum {
-    OWNER = 'OWNER',
-    ADMINISTRATOR = 'ADMINISTRATOR',
-    USER = 'USER'
+package com.exadel.frs.core.trainservice.system.feign.python;
+
+import lombok.Value;
+
+@Value
+public class FaceVerification {
+
+    ScanBox box;
+    float similarity;
 }

@@ -15,10 +15,10 @@
  */
 
 export enum ROUTERS_URL {
-  LOGIN= '/login',
-  HOME= '/',
-  APPLICATION= '/application',
-  SIGN_UP= '/sign-up',
-  FORGOT_PASSWORD= '/forgot-password',
-  TEST_MODEL= '/test-model',
+  LOGIN = '/login',
+  HOME = '/',
+  APPLICATION = '/application',
+  SIGN_UP = '/sign-up',
+  FORGOT_PASSWORD = '/forgot-password',
+  TEST_MODEL = '/test-model',
 }

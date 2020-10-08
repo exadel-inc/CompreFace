@@ -30,13 +30,14 @@ import {
 } from 'src/app/store/user/action';
 import {loadApplications} from 'src/app/store/application/action';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {AppUser} from 'src/app/data/appUser';
+import {AppUser} from 'src/app/data/interfaces/app-user';
 import {fetchRolesEntityAction, loadRolesEntityAction} from 'src/app/store/role/actions';
 import {of} from 'rxjs';
 import {SnackBarService} from '../../features/snackbar/snackbar.service';
 import {OrganizationEnService} from '../organization/organization-entitys.service';
 import {AppState} from '../index';
 import {AuthService} from '../../core/auth/auth.service';
+import { loadOrganizations } from '../organization/action';
 
 @Injectable()
 export class UserListEffect {
@@ -74,7 +75,8 @@ export class UserListEffect {
       this.userService.updateRole(organizationId, user.id, user.role).pipe(
         switchMap((res) => merge(
           of(updateUserRoleSuccessAction({user: res})),
-          of(loadUsersEntityAction({organizationId}))
+          of(loadUsersEntityAction({organizationId})),
+          of(loadOrganizations())
         )),
         catchError((error) => of(updateUserRoleFailAction({ error })))
       )));

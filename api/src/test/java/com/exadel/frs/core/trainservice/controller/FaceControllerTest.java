@@ -24,6 +24,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -31,10 +32,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
+import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.service.ScanService;
+import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanBox;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -66,6 +72,12 @@ public class FaceControllerTest {
 
     @MockBean
     private FaceCacheProvider faceCacheProvider;
+
+    @MockBean
+    private FaceClassifierPredictor predictor;
+
+    @MockBean
+    private FacesClient client;
 
     private static final String API_KEY = "model_key";
 
@@ -202,26 +214,12 @@ public class FaceControllerTest {
         );
         val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        doReturn(faces)
-                .when(facesRepository)
-                .deleteFacesByApiKey(API_KEY);
         doReturn(faceCollection)
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
 
-        val expectedFaces = faceCollection.getFaces().stream()
-                                          .map(face -> FaceResponseDto.builder()
-                                                                      .image_id(face.getImageId())
-                                                                      .subject(face.getName())
-                                                                      .build()
-                                          )
-                                          .collect(toList());
-
-        val expectedContent = new ObjectMapper().writeValueAsString(expectedFaces);
-
         mockMvc.perform(delete(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
-               .andExpect(status().isOk())
-               .andExpect(content().json(expectedContent));
+               .andExpect(status().isOk());
     }
 
     @Test
@@ -231,5 +229,41 @@ public class FaceControllerTest {
         mockMvc.perform(delete(API_V1 + "/faces"))
                .andExpect(status().isBadRequest())
                .andExpect(content().string(expectedContent));
+    }
+
+    @Test
+    void verifyFaces() throws Exception {
+        val faceA = makeFace("A", API_KEY);
+        val faceB = makeFace("B", API_KEY);
+        val faceC = makeFace("C", API_KEY);
+        val faces = List.of(faceA, faceB, faceC);
+        val faceCollection = FaceCollection.buildFromFaces(faces);
+
+        doReturn(faceCollection)
+                .when(faceCacheProvider)
+                .getOrLoad(API_KEY);
+
+        val scanResponse = new ScanResponse().setResult(
+                List.of(new ScanResult()
+                        .setEmbedding(List.of(1.0))
+                        .setBox(new ScanBox().setProbability(1D))
+                )
+        );
+
+        when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
+        when(predictor.verify(any(), any(), any())).thenReturn(1.0);
+
+        val mockFile = new MockMultipartFile("file", "test data".getBytes());
+
+        mockMvc.perform(
+                multipart(API_V1 + "/faces/" + faceA.getId() + "/verify")
+                        .file(mockFile)
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        ).andExpect(status().isOk());
+
+        verify(imageValidator).validate(any());
+        verify(client).scanFaces(any(), any(), any());
+        verify(predictor).verify(any(), any(), any());
+        verifyNoMoreInteractions(imageValidator, client, predictor);
     }
 }

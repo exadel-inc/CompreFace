@@ -22,7 +22,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
-import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { resetUserInfo, updateUserInfo } from '../userInfo/action';
 import { logIn, logInFailure, logInSuccess, logOut, signUp, signUpFailure, signUpSuccess } from './action';
 

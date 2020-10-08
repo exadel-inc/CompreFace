@@ -19,7 +19,7 @@ import {
   selectSelectedOrganization,
   selectUserRollForSelectedOrganization
 } from './selectors';
-import {Organization} from '../../data/organization';
+import {Organization} from '../../data/interfaces/organization';
 
 describe('OrganizationSelectors', () => {
 

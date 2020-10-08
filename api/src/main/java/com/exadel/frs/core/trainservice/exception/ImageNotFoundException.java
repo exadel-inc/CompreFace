@@ -14,21 +14,17 @@
  * permissions and limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {User} from '../../data/interfaces/user';
-import {API_URL} from '../../data/enums/api-url.enum';
+package com.exadel.frs.core.trainservice.exception;
 
-@Injectable({
-  providedIn: 'root'
-})
-export class UserInfoService {
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.IMAGE_NOT_FOUND;
+import static java.lang.String.format;
 
-  constructor(private http: HttpClient) {}
+public class ImageNotFoundException extends BasicException {
 
-  get(): Observable<User> {
-    return this.http.get<User>(`${environment.apiUrl}${API_URL.GET_USER_INFO}`);
-  }
+    private static final String MESSAGE = "Image %s not found";
+
+    public ImageNotFoundException(String imageId) {
+        super(IMAGE_NOT_FOUND, format(MESSAGE, imageId));
+    }
+
 }

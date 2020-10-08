@@ -17,7 +17,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Application } from 'src/app/data/application';
+import { Application } from 'src/app/data/interfaces/application';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

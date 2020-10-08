@@ -18,20 +18,27 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.math.RoundingMode.HALF_UP;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
+import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.ScanService;
+import com.exadel.frs.core.trainservice.system.feign.python.FaceVerification;
+import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -54,6 +61,8 @@ public class FaceController {
     private final FaceService faceService;
     private final FaceMapper faceMapper;
     private final ImageExtensionValidator imageValidator;
+    private final FaceClassifierPredictor classifierPredictor;
+    private final FacesClient client;
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
@@ -99,7 +108,7 @@ public class FaceController {
     ) {
         val faces = new HashSet<FaceBO>();
         if (isBlank(subject)) {
-            faces.addAll(faceService.deleteFacesByModel(apiKey));
+            faceService.deleteFacesByModel(apiKey);
         } else {
             faces.addAll(faceService.deleteFaceByName(subject, apiKey));
         }
@@ -119,5 +128,53 @@ public class FaceController {
         val face = faceService.deleteFaceById(image_id, apiKey);
 
         return faceMapper.toResponseDto(face);
+    }
+
+    @PostMapping(value = "/{image_id}/verify")
+    public Map<String, List<FaceVerification>> recognize(
+            @ApiParam(value = "Api key of application and model", required = true)
+            @RequestHeader(X_FRS_API_KEY_HEADER)
+            final String apiKey,
+            @ApiParam(value = "A picture with one face (accepted formats: jpeg, png).", required = true)
+            @RequestParam
+            final MultipartFile file,
+            @ApiParam(value = "Maximum number of faces to be verified")
+            @RequestParam(defaultValue = "0", required = false)
+            @Min(value = 0, message = "Limit should be equal or greater than 0")
+            final Integer limit,
+            @ApiParam(value = "Image Id from collection to compare with face.", required = true)
+            @PathVariable
+            final String image_id
+
+    ) {
+        imageValidator.validate(file);
+
+        val scanResponse = client.scanFaces(file, limit, 0.5D);
+
+        val results = new ArrayList<FaceVerification>();
+
+        for (val scanResult : scanResponse.getResult()) {
+            val prediction = classifierPredictor.verify(
+                    apiKey,
+                    scanResult.getEmbedding().stream()
+                              .mapToDouble(d -> d)
+                              .toArray(),
+                    image_id
+            );
+
+            var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
+            inBoxProb = inBoxProb.setScale(5, HALF_UP);
+            scanResult.getBox().setProbability(inBoxProb.doubleValue());
+
+            var pred = BigDecimal.valueOf(prediction);
+            pred = pred.setScale(5, HALF_UP);
+
+            results.add(new FaceVerification(
+                    scanResult.getBox(),
+                    pred.floatValue()
+            ));
+        }
+
+        return Map.of("result", results);
     }
 }

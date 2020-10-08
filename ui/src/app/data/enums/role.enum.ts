@@ -14,21 +14,8 @@
  * permissions and limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {User} from '../../data/interfaces/user';
-import {API_URL} from '../../data/enums/api-url.enum';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class UserInfoService {
-
-  constructor(private http: HttpClient) {}
-
-  get(): Observable<User> {
-    return this.http.get<User>(`${environment.apiUrl}${API_URL.GET_USER_INFO}`);
-  }
+export enum Role {
+    OWNER = 'OWNER',
+    ADMINISTRATOR = 'ADMINISTRATOR',
+    USER = 'USER'
 }
