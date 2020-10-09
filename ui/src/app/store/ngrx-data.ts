@@ -18,14 +18,14 @@ import {EntityMetadataMap, EntityDataModuleConfig, DefaultDataServiceConfig} fro
 import {environment} from '../../environments/environment';
 
 export const defaultDataServiceConfig: DefaultDataServiceConfig = {
-  // root: environment.apiUrl,
+  // root: environment.adminApiUrl,
   // example of configuration:
   entityHttpResourceUrls: {
     // Case matters. Match the case of the entity name.
     Organization: {
       // You must specify the root as part of the resource URL.
-      entityResourceUrl: environment.apiUrl + 'org/',
-      collectionResourceUrl: environment.apiUrl + 'orgs'
+      entityResourceUrl: environment.adminApiUrl + 'org/',
+      collectionResourceUrl: environment.adminApiUrl + 'orgs'
     }
   },
 };

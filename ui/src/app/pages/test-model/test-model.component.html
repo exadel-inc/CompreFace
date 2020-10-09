@@ -18,8 +18,14 @@
   <div class="header-container">
     <app-breadcrumbs-container></app-breadcrumbs-container>
   </div>
-    <mat-card class="test-model-container">
-      <app-drag-n-drop></app-drag-n-drop>
-    </mat-card>
+
+  <div class="test-model-container">
+    <div class="test-model-loader"
+       *ngIf="modelLoading$ | async">
+      <app-spinner></app-spinner>
+    </div>
+
+    <app-face-recognition *ngIf="!(modelLoading$ | async)"></app-face-recognition>
+  </div>
 </div>
 

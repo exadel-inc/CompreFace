@@ -7,5 +7,14 @@
     "pathRewrite": {
       "http://frs.local/admin": "http://localhost:8000/admin"
     }
+  },
+  "/api/*": {
+    "target": "http://localhost:8000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "http://frs.local/api": "http://localhost:8000/api"
+    }
   }
 }

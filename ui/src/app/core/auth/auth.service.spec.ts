@@ -61,7 +61,7 @@ describe('AuthService', () => {
       expect(token).toEqual(dummyToken);
     });
 
-    const request = httpMock.expectOne(`${environment.apiUrl}${API_URL.LOGIN}`);
+    const request = httpMock.expectOne(`${environment.adminApiUrl}${API_URL.LOGIN}`);
     expect(request.request.method).toBe('POST');
     request.flush(dummyToken);
   });
@@ -80,7 +80,7 @@ describe('AuthService', () => {
       expect(response.status).toEqual(201);
     });
 
-    const request = httpMock.expectOne(`${environment.apiUrl}${API_URL.REGISTER}`);
+    const request = httpMock.expectOne(`${environment.adminApiUrl}${API_URL.REGISTER}`);
     expect(request.request.method).toBe('POST');
     request.flush(dummyToken, { status: 201, statusText: 'Created' });
   });

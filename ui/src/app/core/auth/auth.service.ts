@@ -61,7 +61,7 @@ export class AuthService {
   }
 
   logIn(email: string, password: string): Observable<any> {
-    const url = `${environment.apiUrl}${API_URL.LOGIN}`;
+    const url = `${environment.adminApiUrl}${API_URL.LOGIN}`;
     const form = this.formBuilder.group({
       email,
       password,
@@ -75,7 +75,7 @@ export class AuthService {
   }
 
   signUp(firstName: string, password: string, email: string, lastName: string): Observable<any> {
-    const url = `${environment.apiUrl}${API_URL.REGISTER}`;
+    const url = `${environment.adminApiUrl}${API_URL.REGISTER}`;
     return this.http.post(url, { email, password, firstName, lastName }, {observe: 'response'});
   }
 
@@ -95,7 +95,7 @@ export class AuthService {
     this.requests.push({ subscriber, failedRequest: request });
     if (!this.refreshInProgress) {
       this.refreshInProgress = true;
-      const url = `${environment.apiUrl}${API_URL.REFRESH_TOKEN}`;
+      const url = `${environment.adminApiUrl}${API_URL.REFRESH_TOKEN}`;
 
       const form = this.formBuilder.group({
         grant_type: 'refresh_token',

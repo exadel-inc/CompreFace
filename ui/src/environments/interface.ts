@@ -17,6 +17,7 @@
 export interface Environment {
   production: boolean;
   basicToken: string;
-  apiUrl: string;
+  adminApiUrl: string;
+  userApiUrl: string;
   buildNumber: string;
 }

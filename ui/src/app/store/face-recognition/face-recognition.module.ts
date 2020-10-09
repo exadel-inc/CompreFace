@@ -14,12 +14,18 @@
  * permissions and limitations under the License.
  */
 
-import {Environment} from './interface';
+import { NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
+import { FaceRecognitionEffects } from './effects';
+import { FaceRecognitionEffectsReducer } from './reducers';
 
-export const environment: Environment = {
-  production: true,
-  basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
-  adminApiUrl: '/admin/',
-  userApiUrl: '/api/v1/',
-  buildNumber: '0.3.0'
-};
+@NgModule({
+  declarations: [],
+  imports: [
+    EffectsModule.forFeature([ FaceRecognitionEffects ]),
+    StoreModule.forFeature('faceRecognition', FaceRecognitionEffectsReducer)
+  ]
+})
+export class FaceRecognitionStoreModule {
+}
