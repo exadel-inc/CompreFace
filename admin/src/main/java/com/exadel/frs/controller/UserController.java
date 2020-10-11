@@ -25,7 +25,6 @@ import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -99,13 +98,8 @@ public class UserController {
             @ApiParam(value = "User object that needs to be created", required = true)
             @RequestBody final UserCreateDto userCreateDto
     ) {
-        User user;
-        if (userService.isFirstRegistration()) {
-            user = userService.updateDemoUser(userCreateDto);
-        } else {
-            user = userService.createUser(userCreateDto);
-            organizationService.addUserToDefaultOrg(user.getEmail());
-        }
+        val user = userService.createUser(userCreateDto);
+        organizationService.addUserToDefaultOrg(user.getEmail());
 
         if (user.isEnabled()) {
             return new ResponseEntity(CREATED);
