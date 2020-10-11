@@ -163,31 +163,6 @@ class OrganizationServiceTest {
     }
 
     @Test
-    void addFirstUserToDefaultOrg() {
-        val email = "email";
-        val user = User.builder()
-                       .id(1L)
-                       .build();
-
-        val defaultOrg = Organization.builder().build();
-
-        when(userServiceMock.getUser(email)).thenReturn(user);
-        when(organizationRepositoryMock.findFirstByIsDefaultTrue()).thenReturn(Optional.of(defaultOrg));
-
-        val actual = organizationService.addUserToDefaultOrg(email);
-
-        assertThat(actual).isNotNull();
-        assertThat(actual.getUser()).isEqualTo(user);
-        assertThat(actual.getRole()).isEqualTo(OWNER);
-        assertThat(actual.getOrganization()).isEqualTo(defaultOrg);
-
-        verify(userServiceMock).getUser(email);
-        verify(organizationRepositoryMock).findFirstByIsDefaultTrue();
-        verify(organizationRepositoryMock).save(defaultOrg);
-        verifyNoMoreInteractions(userServiceMock, organizationRepositoryMock);
-    }
-
-    @Test
     void addSecondUserToDefaultOrg() {
         val email = "email";
         val fistUserRole = UserOrganizationRoleId.builder()

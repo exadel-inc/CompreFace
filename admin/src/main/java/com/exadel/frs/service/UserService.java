@@ -52,6 +52,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
+    private static final String DEMO_USER_GUID  = "00000000-0000-0000-0000-000000000000";
+
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
     private final EmailSender emailSender;
@@ -198,6 +200,31 @@ public class UserService {
     private void manageOwnedAppsByUserBeingDeleted(final UserDeleteDto userDeleteDto) {
         authManager.verifyCanDeleteUser(userDeleteDto);
         updateAppsOwnership(userDeleteDto);
+    }
+
+    public boolean isFirstRegistration () {
+        return userRepository.existsByGuid(DEMO_USER_GUID);
+    }
+
+    public User updateDemoUser (UserCreateDto userCreateDto) {
+        val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
+
+        val isAccountEnabled = isNotTrue(isMailServerEnabled);
+
+        val user = getUserByGuid(DEMO_USER_GUID);
+        user.setEmail(userCreateDto.getEmail());
+        user.setEnabled(isAccountEnabled);
+        user.setFirstName(userCreateDto.getFirstName());
+        user.setLastName(userCreateDto.getLastName());
+        user.setPassword(encoder.encode(userCreateDto.getPassword()));
+        user.setGuid(UUID.randomUUID().toString());
+
+        if (isMailServerEnabled) {
+            user.setRegistrationToken(generateRegistrationToken());
+            sendRegistrationTokenToUser(user);
+        }
+
+        return userRepository.save(user);
     }
 
     private void updateAppsOwnership(final UserDeleteDto userDeleteDto) {
