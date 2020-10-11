@@ -113,11 +113,7 @@ public class OrganizationService {
     public UserOrganizationRole addUserToDefaultOrg(final String userEmail) {
         val defaultOrg = getDefaultOrg();
         val user = userService.getUser(userEmail);
-        if (defaultOrg.getUserOrganizationRoles().isEmpty()) {
-            defaultOrg.addUserOrganizationRole(user, OWNER);
-        } else {
-            defaultOrg.addUserOrganizationRole(user, USER);
-        }
+        defaultOrg.addUserOrganizationRole(user, USER);
 
         organizationRepository.save(defaultOrg);
 
