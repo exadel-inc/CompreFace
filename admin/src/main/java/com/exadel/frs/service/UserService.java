@@ -16,6 +16,7 @@
 
 package com.exadel.frs.service;
 
+import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -51,8 +52,6 @@ import org.springframework.stereotype.Service;
 @EnableScheduling
 @RequiredArgsConstructor
 public class UserService {
-
-    private static final String DEMO_USER_GUID  = "00000000-0000-0000-0000-000000000000";
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
@@ -202,16 +201,16 @@ public class UserService {
         updateAppsOwnership(userDeleteDto);
     }
 
-    public boolean isFirstRegistration () {
-        return userRepository.existsByGuid(DEMO_USER_GUID);
+    public boolean hasOnlyDemoUser() {
+        return userRepository.existsByGuid(DEMO_GUID);
     }
 
-    public User updateDemoUser (UserCreateDto userCreateDto) {
+    public User updateDemoUser(UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
         val isAccountEnabled = isNotTrue(isMailServerEnabled);
 
-        val user = getUserByGuid(DEMO_USER_GUID);
+        val user = getUserByGuid(DEMO_GUID);
         user.setEmail(userCreateDto.getEmail());
         user.setEnabled(isAccountEnabled);
         user.setFirstName(userCreateDto.getFirstName());

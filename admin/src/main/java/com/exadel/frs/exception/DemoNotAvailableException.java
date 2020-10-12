@@ -14,10 +14,15 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.system.global;
+package com.exadel.frs.exception;
 
-public class Constants {
+import static com.exadel.frs.handler.ExceptionCode.DEMO_MODEL_NOT_AVAILABLE;
 
-    public static final String GUID_EXAMPLE = "3913717b-a40b-4d6f-acc4-a861aa612651";
-    public static final String DEMO_GUID = "00000000-0000-0000-0000-000000000000";
+public class DemoNotAvailableException extends BasicException {
+
+    public static final String MESSAGE = "The Demo model is not available more!";
+
+    public DemoNotAvailableException() {
+        super(DEMO_MODEL_NOT_AVAILABLE, MESSAGE);
+    }
 }
