@@ -20,9 +20,9 @@ import {Observable} from 'rxjs';
 import {Application} from '../../data/interfaces/application';
 import {AppState} from '../../store';
 import {selectCurrentApp} from '../../store/application/selectors';
-import {Model} from "../../data/interfaces/model";
-import {selectCurrentModel} from "../../store/model/selectors";
-import {selectCurrentOrganizationId} from "../../store/organization/selectors";
+import {Model} from '../../data/interfaces/model';
+import {selectCurrentModel} from '../../store/model/selectors';
+import {selectCurrentOrganizationId} from '../../store/organization/selectors';
 
 @Injectable()
 export class BreadcrumbsFacade {

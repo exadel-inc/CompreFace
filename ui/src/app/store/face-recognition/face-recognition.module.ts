@@ -14,20 +14,18 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {StoreModule} from '@ngrx/store';
-import {OrganizationReducer} from './reducers';
-import {OrganizationEnService} from './organization-entitys.service';
+import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
-import { OrganizationEffect } from './effects';
+import { StoreModule } from '@ngrx/store';
+import { FaceRecognitionEffects } from './effects';
+import { FaceRecognitionEffectsReducer } from './reducers';
 
 @NgModule({
   declarations: [],
   imports: [
-    EffectsModule.forFeature([OrganizationEffect]),
-    StoreModule.forFeature('Organization', OrganizationReducer),
-  ],
-  providers: [OrganizationEnService]
+    EffectsModule.forFeature([ FaceRecognitionEffects ]),
+    StoreModule.forFeature('faceRecognition', FaceRecognitionEffectsReducer)
+  ]
 })
-export class OrganizationStoreModule {
+export class FaceRecognitionStoreModule {
 }

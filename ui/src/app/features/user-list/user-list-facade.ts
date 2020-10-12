@@ -20,6 +20,7 @@ import { map } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
+import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { AppState } from 'src/app/store';
 import {
   selectCurrentOrganizationId,
@@ -35,8 +36,7 @@ import {
 } from 'src/app/store/user/action';
 import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
-import { Role } from 'src/app/data/enums/role.enum';
-import { UserDeletion } from '../../data/interfaces/user-deletion';
+import { Role } from '../../data/enums/role.enum';
 
 @Injectable()
 export class UserListFacade implements IFacade {

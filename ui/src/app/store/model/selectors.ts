@@ -21,7 +21,7 @@ import { Model } from 'src/app/data/interfaces/model';
 import { modelAdapter, ModelEntityState } from './reducers';
 
 export const selectModelEntityState = createFeatureSelector<EntityState<Model>>('model');
-const { selectEntities, selectAll } = modelAdapter.getSelectors();
+const { selectAll } = modelAdapter.getSelectors();
 
 export const selectModels = createSelector(selectModelEntityState, selectAll);
 
