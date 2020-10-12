@@ -29,6 +29,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 class FaceClassifierPredictorTest {
 
@@ -58,6 +59,23 @@ class FaceClassifierPredictorTest {
         assertThat(actual).isEqualTo(expected);
 
         verify(classifier).predict(input, MODEL_KEY, resultCount);
+        verifyNoMoreInteractions(classifier);
+    }
+
+    @Test
+    void verifyTest() {
+        double[] input = new double[0];
+        String imageId = "imageId";
+
+        double expected = 1;
+
+        when(classifier.verify(input, MODEL_KEY, imageId)).thenReturn(expected);
+
+        double actual = faceClassifierPredictor.verify(MODEL_KEY, input, imageId);
+
+        assertThat(actual).isEqualTo(expected);
+
+        Mockito.verify(classifier).verify(input, MODEL_KEY, imageId);
         verifyNoMoreInteractions(classifier);
     }
 }
