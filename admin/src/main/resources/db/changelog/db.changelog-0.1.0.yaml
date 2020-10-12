@@ -19,12 +19,6 @@ databaseChangeLog:
               - column:
                   name: embeddings
                   type: json
-              - column:
-                  name: raw_img_fs
-                  type: bytea
-              - column:
-                  name: face_img_fs
-                  type: bytea
 
         - addUniqueConstraint:
             columnNames: id
