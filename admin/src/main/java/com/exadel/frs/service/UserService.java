@@ -208,6 +208,7 @@ public class UserService {
     public User updateDemoUser(UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
+        validateUserCreateDto(userCreateDto);
         val isAccountEnabled = isNotTrue(isMailServerEnabled);
 
         val user = getUserByGuid(DEMO_GUID);

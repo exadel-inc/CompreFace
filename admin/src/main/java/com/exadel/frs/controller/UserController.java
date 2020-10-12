@@ -181,12 +181,12 @@ public class UserController {
 
     @GetMapping("/demo/model")
     @ApiOperation(value = "Get demo model apiKey if available")
-    public Map getDemoModel() {
+    public Map<String, String> getDemoModel() {
         if (!userService.hasOnlyDemoUser()) {
             throw new DemoNotAvailableException();
         }
 
-        return Collections.singletonMap("apiKey", modelService.getModel(DEMO_GUID));
+        return Collections.singletonMap("apiKey", modelService.getModel(DEMO_GUID).getApiKey());
     }
 
     private void redirectToHomePage(final HttpServletResponse response) throws IOException {
