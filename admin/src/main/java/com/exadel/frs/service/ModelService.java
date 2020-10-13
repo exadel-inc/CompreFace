@@ -24,8 +24,6 @@ import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
-import com.exadel.frs.entity.Organization;
-import com.exadel.frs.enums.OrganizationRole;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
