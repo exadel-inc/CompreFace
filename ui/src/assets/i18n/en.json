@@ -101,10 +101,9 @@
       "no_results": "No matches found"
     }
   },
-  "system-user": "system-user",
   "org_users": {
     "delete_dialog": {
-      "title": "Delete User",
+      "title": "Delete {{type}}",
       "confirmation_question": "Are you sure you want remove user {{name}} {{lastName}}?",
       "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
       "warn_hint_anyway": "You can delete him anyway.",

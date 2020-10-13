@@ -89,7 +89,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           return this.dialog.open(DeleteDialogComponent, {
             width: '400px',
             data: {
-              entityType: this.translate.instant('users.system-user'),
+              entityType: this.translate.instant('users.user'),
               entity: deletion.userToDelete,
               options: [
                 { name: email, value: 'deleter' },
@@ -97,6 +97,7 @@ export class UserListComponent implements OnInit, OnDestroy {
               ],
               isOrganizationOwner: email === this.orgOwnerEmail,
               seletedOption: this.seletedOption,
+              removeFromSystem: true,
             }
           }).afterClosed();
         }),
