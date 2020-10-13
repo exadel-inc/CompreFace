@@ -26,25 +26,32 @@ app-spinner {
 .table-header-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
+  padding-right: 1rem;
+  align-items: stretch;
+
+  h3 {
+    margin: 0;
+  }
 
   form {
-    width: 80%;
-    height: 35px;
-  }
+    display: flex;
+    height: 2rem;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 1rem;
+    flex-grow: 2;
+    align-items: center;
+    align-self: center;
 
-  input {
-    padding: 5px 30px 5px 5px;
-    background-color: #EEEEEE;
-    max-width: 385px;
-  }
-
-  i {
-    position: absolute;
-    right: 10px;
-    top: 2px;
+    input {
+      background-color: #EEEEEE;
+      flex-grow: 2;
+      height: 2rem;
+    }
   }
 }
+
 
 .add-model-button-container {
   display: flex;

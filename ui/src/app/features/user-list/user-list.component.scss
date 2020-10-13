@@ -28,27 +28,33 @@ app-spinner {
 .table-header-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
+  padding-right: 1rem;
+  align-items: stretch;
+
+  h3 {
+    margin: 0;
+  }
 
   form {
-    width: 80%;
-    height: 35px;
+    display: flex;
+    height: 2rem;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 1rem;
+    flex-grow: 2;
+    align-items: center;
+    align-self: center;
 
     input {
-      padding: 5px 30px 5px 5px;
       background-color: #EEEEEE;
-      width: 100%;
-      max-width: 360px;
-    }
-
-    i {
-      position: absolute;
-      right: 10px;
-      top: 2px;
+      flex-grow: 2;
+      height: 2rem;
     }
   }
 }
 
+/*
 @include tablet-landscape;
 .table-header-container form input {
   width: 100%;
@@ -65,9 +71,11 @@ app-spinner {
 .table-header-container form {
   width: 75%;
 
+
   input {
     width: 100%;
     max-width: 360px;
   }
 
 }
+*/
