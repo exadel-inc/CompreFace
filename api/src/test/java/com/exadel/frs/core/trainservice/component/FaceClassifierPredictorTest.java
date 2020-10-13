@@ -65,13 +65,13 @@ class FaceClassifierPredictorTest {
     @Test
     void verifyTest() {
         double[] input = new double[0];
-        String imageId = "imageId";
+        val imageId = "imageId";
 
-        double expected = 1;
+        val expected = 1d;
 
         when(classifier.verify(input, MODEL_KEY, imageId)).thenReturn(expected);
 
-        double actual = faceClassifierPredictor.verify(MODEL_KEY, input, imageId);
+        val actual = faceClassifierPredictor.verify(MODEL_KEY, input, imageId);
 
         assertThat(actual).isEqualTo(expected);
 
