@@ -73,13 +73,19 @@ public class FaceDao {
                 .setEmbedding(embeddings)
                 .setFaceName(faceName)
                 .setApiKey(modelKey);
-        val image = new Image()
-                .setFaceImg(file.getBytes())
-                .setRawImg(file.getBytes())
-                .setFace(face);
 
-        imagesRepository.save(image);
+        val saveImagesToDb = Boolean.parseBoolean(
+                System.getenv().get("SAVE_IMAGES_TO_DB"));
 
-        return face;
+        if(saveImagesToDb) {
+            val image = new Image()
+                    .setFaceImg(file.getBytes())
+                    .setRawImg(file.getBytes())
+                    .setFace(face);
+
+            imagesRepository.save(image);
+        }
+
+        return facesRepository.save(face);
     }
 }

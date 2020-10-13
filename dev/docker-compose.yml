@@ -50,6 +50,7 @@ services:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
       - SPRING_PROFILES_ACTIVE=dev
+      - SAVE_IMAGES_TO_DB=${save_images_to_db}
 
   compreface-fe:
     image: ${registry}compreface-fe
