@@ -20,9 +20,10 @@ import {Store} from '@ngrx/store';
 import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
 import {AppState} from 'src/app/store';
 import {selectUserInfoState} from '../../store/userInfo/selectors';
-import {Observable} from 'rxjs';
+import { Observable, of } from 'rxjs';
 import {take, map} from 'rxjs/operators';
 import {UserInfoState} from 'src/app/store/userInfo/reducers';
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -50,19 +51,18 @@ export class AuthGuard implements CanActivate {
 export class LoginGuard implements CanActivate {
   private userInfo$: Observable<UserInfoState>;
 
-  constructor(private router: Router, private store: Store<AppState>) {
+  constructor(private router: Router, private store: Store<AppState>, private auth: AuthService) {
     this.userInfo$ = this.store.select(selectUserInfoState);
   }
 
   canActivate(): Observable<boolean> {
-    return this.userInfo$.pipe(
-      take(1),
-      map((state: UserInfoState) => {
-        if (state.isAuthenticated) {
+    return of(this.auth.checkAuthorization()).pipe(
+      map((isAuthorized) => {
+        if (isAuthorized) {
           this.router.navigateByUrl(ROUTERS_URL.HOME);
         }
 
-        return !state.isAuthenticated;
+        return !isAuthorized;
       })
     );
   }

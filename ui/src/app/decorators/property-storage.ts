@@ -14,21 +14,29 @@
  * permissions and limitations under the License.
  */
 
-import {Store} from '@ngrx/store';
-import {AppState} from 'src/app/store';
-import {AuthService} from './auth.service';
-import {updateUserInfo} from '../../store/userInfo/action';
+/**
+ * Sync property with localStorage.
+ * @param key in Local Storage.
+ */
+export function propToLocalStorage(key: any = null) {
+  return (target: any, propertyKey: string) => {
+    const storageKey = key ? key : propertyKey;
 
-export class AuthInit {
-  constructor(private store: Store<AppState>, private auth: AuthService) {}
-
-  public init(): void {
-    const isAuthenticated: boolean = this.auth.checkAuthorization();
-
-    if (isAuthenticated) {
-      this.store.dispatch(updateUserInfo({
-        isAuthenticated: true
-      }));
+    function setValue(value: any) {
+      window.localStorage.setItem(storageKey, JSON.stringify(value));
     }
-  }
+
+    function getValue() {
+      const value: any = window.localStorage.getItem(storageKey);
+
+      return JSON.parse(value);
+    }
+
+    Object.defineProperty(target, propertyKey, {
+      configurable: true,
+      enumerable: true,
+      get: getValue,
+      set: setValue,
+    });
+  };
 }

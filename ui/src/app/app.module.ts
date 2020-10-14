@@ -24,8 +24,8 @@ import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialo
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {AuthGuard, LoginGuard} from './core/auth/auth.guard';
-import {ErrorInterceptor, TokenInterceptor} from './core/auth/token.inerceptor';
 import {AlertComponent} from './features/alert/alert.component';
+import {ErrorInterceptor} from './core/auth/token.inerceptor';
 import {DeleteDialogComponent} from './features/delete-dialog/delete-dialog.component';
 import {EditDialogComponent} from './features/edit-dialog/edit-dialog.component';
 import {FooterModule} from './features/footer/footer.module';
@@ -74,11 +74,6 @@ import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/bre
     AuthGuard,
     LoginGuard,
     FormBuilder,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: TokenInterceptor,
-      multi: true
-    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,

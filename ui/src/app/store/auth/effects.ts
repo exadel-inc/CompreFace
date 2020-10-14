@@ -17,14 +17,23 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, of as observableOf } from 'rxjs';
+import { merge, Observable, of, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { resetUserInfo, updateUserInfo } from '../userInfo/action';
-import { logIn, logInFailure, logInSuccess, logOut, signUp, signUpFailure, signUpSuccess } from './action';
+import {
+  clearUserToken,
+  logIn,
+  logInFailure,
+  logInSuccess,
+  logOut,
+  signUp,
+  signUpFailure,
+  signUpSuccess
+} from './action';
 
 @Injectable()
 export class AuthEffects {
@@ -41,14 +50,13 @@ export class AuthEffects {
     ofType(logIn),
     switchMap(action => {
       return this.authService.logIn(action.email, action.password).pipe(
-        switchMap(res => {
-          this.authService.updateTokens(res.access_token, res.refresh_token);
+        switchMap(() => {
+          this.authService.updateAuthorization(true);
           return [
             logInSuccess(),
             updateUserInfo(
               {
-                isAuthenticated: true,
-                firstName: res.firstName
+                isAuthenticated: true
               })
           ];
         }),
@@ -116,10 +124,16 @@ export class AuthEffects {
   @Effect()
   public LogOut: Observable<any> = this.actions.pipe(
     ofType(logOut),
-    map(() => {
-      this.authService.removeToken();
+    switchMap(() => {
       this.router.navigateByUrl(ROUTERS_URL.LOGIN);
-      return resetUserInfo();
+
+      return merge(of(clearUserToken()), of(resetUserInfo()));
     })
+  );
+
+  @Effect({dispatch: false})
+  public ClearUserToken: Observable<any> = this.actions.pipe(
+    ofType(clearUserToken),
+    switchMap(() => this.authService.clearUserToken())
   );
 }
