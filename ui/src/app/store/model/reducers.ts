@@ -50,7 +50,7 @@ const reducer: ActionReducer<ModelEntityState> = createReducer(
   initialState,
   on(loadModels, createModel, updateModel, deleteModel, (state) => ({ ...state, isPending: true })),
   on(loadModelsFail, createModelFail, updateModelFail, deleteModelFail, (state) => ({ ...state, isPending: false })),
-  on(loadModelsSuccess, (state, { models }) => modelAdapter.addAll(models, { ...state, isPending: false })),
+  on(loadModelsSuccess, (state, { models }) => modelAdapter.setAll(models, { ...state, isPending: false })),
   on(createModelSuccess, (state, { model }) => modelAdapter.addOne(model, { ...state, isPending: false })),
   on(updateModelSuccess, (state, { model }) => modelAdapter.updateOne(
     { id: model.id, changes: model },

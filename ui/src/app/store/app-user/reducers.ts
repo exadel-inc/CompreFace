@@ -45,7 +45,7 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
   on(deleteUserFromApplicationFail, (state) => ({ ...state, isPending: false })),
   on(addAppUserEntityAction, (state, { users }) => {
     const newState = { ...state, isPending: false };
-    return appUserAdapter.addAll(users, newState);
+    return appUserAdapter.setAll(users, newState);
   }),
   on(updateAppUserRoleAction, (state) => ({ ...state, isPending: true })),
   on(updateAppUserRoleSuccessAction, (state,  { user } ) => {
