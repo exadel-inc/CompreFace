@@ -22,21 +22,21 @@ const routes: Routes = [
   {
     path: '', component: MainLayoutComponent,
     children: [
-      { path: '', loadChildren: './pages/organization/organization.module#OrganizationModule' }
+      { path: '', loadChildren: () => import('./pages/organization/organization.module').then(m => m.OrganizationModule) }
     ]
   },
   {
     path: 'application', component: MainLayoutComponent, children: [
-      { path: '', loadChildren: './pages/application/application.module#ApplicationModule' }
+      { path: '', loadChildren: () => import('./pages/application/application.module').then(m => m.ApplicationModule) }
     ]
   },
   {
     path: 'test-model', component: MainLayoutComponent, children: [
-      { path: '', loadChildren: './pages/test-model/test-model.module#TestModelModule' }
+      { path: '', loadChildren: () => import('./pages/test-model/test-model.module').then(m => m.TestModelModule) }
     ]
   },
-  { path: 'login', loadChildren: './pages/login/login.module#LoginModule' },
-  { path: 'sign-up', loadChildren: './pages/sign-up/sign-up.module#SignUpModule' },
+  { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
+  { path: 'sign-up', loadChildren: () => import('./pages/sign-up/sign-up.module').then(m => m.SignUpModule) },
   { path: '**', redirectTo: '/' }
 ];
 
