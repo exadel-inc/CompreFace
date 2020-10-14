@@ -18,8 +18,6 @@ import { CommonModule } from '@angular/common';
 import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
 import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
 
-
-
 @NgModule({
   declarations: [BreadcrumbsContainerComponent],
   exports: [

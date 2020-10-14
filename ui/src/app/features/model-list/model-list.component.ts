@@ -49,7 +49,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   ];
 
   constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router,
-    private translate: TranslateService) {
+              private translate: TranslateService) {
     this.modelListFacade.initSubscriptions();
   }
 

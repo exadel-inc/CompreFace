@@ -50,7 +50,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   translate: TranslateService;
 
   constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog,
-    translate: TranslateService) {
+              translate: TranslateService) {
     userListFacade.initSubscriptions();
     this.translate = translate;
   }
