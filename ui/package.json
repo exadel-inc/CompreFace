@@ -32,7 +32,7 @@
     "@ngrx/store": "^8.5.2",
     "@ngrx/store-devtools": "^8.5.2",
     "@ngx-translate/core": "^12.1.2",
-    "@ngx-translate/http-loader": "^6.0.0",
+    "@ngx-translate/http-loader": "^5.0.0",
     "jasmine-marbles": "^0.6.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
