@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/interfaces/app-user';

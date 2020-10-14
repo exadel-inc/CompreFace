@@ -20,7 +20,7 @@ import {SpinnerModule} from '../spinner/spinner.module';
 import {UserTableModule} from '../user-table/user-table.module';
 import {ApplicationUserListFacade} from './application-user-list-facade';
 import {of} from 'rxjs';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {InviteUserModule} from '../invite-user/invite-user.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';

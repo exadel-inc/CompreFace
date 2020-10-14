@@ -29,7 +29,7 @@ import {MatInputModule} from '@angular/material/input';
 import {CommonModule} from '@angular/common';
 import {SnackBarService} from '../snackbar/snackbar.service';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
-import {MatDialogModule} from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;

@@ -26,7 +26,8 @@ import {MatInputModule} from '@angular/material/input';
 import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
 import {MatCardModule} from '@angular/material/card';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
-import {MatDialogModule, MatButtonModule} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
 import {TranslateModule} from '@ngx-translate/core';
 
