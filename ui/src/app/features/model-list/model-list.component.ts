@@ -45,6 +45,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   columns = [
     { title: 'name', property: 'name' },
     { title: 'apiKey', property: 'apiKey' },
+    { title: 'copyKey', property: 'copyKey'},
     { title: 'actions', property: 'id' },
   ];
 
