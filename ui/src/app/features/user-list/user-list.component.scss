@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-@import 'media.scss';
+@import 'colors.scss';
 
 .user-list {
   position: relative;
@@ -47,35 +47,9 @@ app-spinner {
     align-self: center;
 
     input {
-      background-color: #EEEEEE;
+      background-color: $super-light-gray;
       flex-grow: 2;
       height: 2rem;
     }
   }
 }
-
-/*
-@include tablet-landscape;
-.table-header-container form input {
-  width: 100%;
-  max-width: 360px;
-}
-
-@include tablet-portrait;
-.table-header-container form input {
-  width: 100%;
-  max-width: 360px;
-}
-
-@include mobile;
-.table-header-container form {
-  width: 75%;
-
-
-  input {
-    width: 100%;
-    max-width: 360px;
-  }
-
-}
-*/
