@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output} from '@angular/core';
 import { Model } from 'src/app/data/interfaces/model';
 
 import { TableComponent } from '../table/table.component';
@@ -33,4 +33,10 @@ export class ModelTableComponent extends TableComponent {
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();
   roleEnum = Role;
+  windowWidth = window.innerWidth;
+
+  @HostListener('window:resize')
+  onResize() {
+    this.windowWidth = window.innerWidth;
+  }
 }
