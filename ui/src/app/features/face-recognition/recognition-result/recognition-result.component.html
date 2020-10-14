@@ -8,10 +8,9 @@
         </div>
         <div class="result-section-right">
             <div class="result-request">
-                <p>Request</p>
+                <label for="result-textarea-request">Request</label>
                 <textarea class="result-textarea"
-                          name=""
-                          cols="70"
+                          id="result-textarea-request"
                           rows="16"
                           disabled>
                     {{requestInfo.request}}
@@ -21,10 +20,9 @@
             <div class="separate-line"></div>
 
             <div class="result-response">
-                <p>Response</p>
+              <label for="result-textarea-response">Response</label>
                 <textarea class="result-textarea"
-                          name=""
-                          cols="70"
+                          id="result-textarea-response"
                           rows="16"
                           disabled>
                     {{requestInfo.response}}
