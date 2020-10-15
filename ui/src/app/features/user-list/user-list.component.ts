@@ -97,7 +97,7 @@ export class UserListComponent implements OnInit, OnDestroy {
               ],
               isOrganizationOwner: email === this.orgOwnerEmail,
               seletedOption: this.seletedOption,
-              removeFromSystem: true,
+              isSystemUser: true,
             }
           }).afterClosed();
         }),
