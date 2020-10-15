@@ -26,8 +26,7 @@
 
   <ng-container matColumnDef="apiKey">
     <th mat-header-cell *matHeaderCellDef>{{'models.api_key' | translate}}</th>
-    <td mat-cell *matCellDef="let element">
-      {{windowWidth < 770? (element.apiKey | truncate: 10) : element.apiKey}}</td>
+    <td mat-cell *matCellDef="let element">{{element.apiKey}}</td>
   </ng-container>
 
   <ng-container matColumnDef="copyKey">

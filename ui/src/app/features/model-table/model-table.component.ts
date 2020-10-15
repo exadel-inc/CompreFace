@@ -33,10 +33,4 @@ export class ModelTableComponent extends TableComponent {
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();
   roleEnum = Role;
-  windowWidth = window.innerWidth;
-
-  @HostListener('window:resize')
-  onResize() {
-    this.windowWidth = window.innerWidth;
-  }
 }
