@@ -18,7 +18,7 @@
 <div mat-dialog-content>
   <ng-container [ngSwitch]="data.entityType.toLowerCase()">
     <ng-container *ngSwitchCase="'user'">
-      <p *ngIf="!data.removeFromSystem; else notFromSystem">{{'app_users.delete_dialog.confirmation_question' | translate :
+      <p *ngIf="!data.isSystemUser; else notFromSystem">{{'app_users.delete_dialog.confirmation_question' | translate :
         {name: data.entityName, application: data.organizationName || data.applicationName} }}
       </p>
       <ng-template #notFromSystem>
