@@ -19,7 +19,7 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {BreadcrumbsComponent} from './breadcrumbs.component';
 import {BreadcrumbsFacade} from './breadcrumbs.facade';
-import {MatCardModule} from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
 import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {TranslateModule} from '@ngx-translate/core';

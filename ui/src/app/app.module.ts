@@ -16,7 +16,7 @@
 import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormBuilder, FormsModule } from '@angular/forms';
-import { MatRadioModule } from '@angular/material';
+import { MatRadioModule } from '@angular/material/radio';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';

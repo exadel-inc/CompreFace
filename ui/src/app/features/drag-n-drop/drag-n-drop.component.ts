@@ -9,7 +9,7 @@ import { Model } from '../../data/interfaces/model';
   styleUrls: ['./drag-n-drop.component.scss']
 })
 export class DragNDropComponent implements OnInit {
-  @ViewChild('fileDropRef', { static: false }) fileDropEl: ElementRef;
+  @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
   @Input() model: any;
