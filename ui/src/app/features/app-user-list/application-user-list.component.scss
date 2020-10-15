@@ -29,7 +29,7 @@ app-spinner {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  padding-right: 1rem;
+  padding-right: 16px;
   align-items: stretch;
 
   h3 {
@@ -38,10 +38,10 @@ app-spinner {
 
   form {
     display: flex;
-    height: 2rem;
+    height: 32px;
     flex-direction: row;
     justify-content: space-between;
-    padding-left: 1rem;
+    padding-left: 16px;
     flex-grow: 2;
     align-items: center;
     align-self: center;
@@ -49,7 +49,7 @@ app-spinner {
     input {
       background-color: $super-light-gray;
       flex-grow: 2;
-      height: 2rem;
+      height: 32px;
     }
   }
 }
