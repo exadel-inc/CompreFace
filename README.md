@@ -30,7 +30,7 @@ To get started:
 3. Unzip the archive
 4. Run Docker
 5. Windows search bar-\&gt; cmd-\&gt;in the Command prompt-\&gt; cd -\&gt;paste the path to the extracted zip folder
-6. Run command: docker-compose up --build
+6. Run command: docker-compose up
 7. Open [http://localhost:8000/](http://localhost:8000/)
 
 Getting started for Contributors:
