@@ -19,6 +19,7 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 import static java.lang.Math.min;
 import static java.util.Arrays.sort;
 import static org.nd4j.linalg.factory.Nd4j.create;
+import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.google.common.primitives.Doubles;
 import java.util.ArrayList;
@@ -83,9 +84,12 @@ public class EuclideanDistanceClassifier implements Classifier {
 
     private double[] recognize(final INDArray newFace, final INDArray existingFaces) {
         val distance = euclidean_distance(newFace, existingFaces);
-        distance.divi(2).rsubi(1);
 
-        return distance.toDoubleVector();
+        return calculateSimilarities(distance).toDoubleVector();
+    }
+
+    private INDArray calculateSimilarities(INDArray distance) {
+        return tanh(distance.rsub(1.1).mul(2.5)).addi(1).divi(2);
     }
 
     private static INDArray euclidean_distance(final INDArray newFace, INDArray existingFaces) {
