@@ -48,6 +48,8 @@
       color: white;
       border: none;
       background-color: $blue-gray;
+      resize: none;
+      width: 100%;
     }
 
     .result-request, .result-response {
