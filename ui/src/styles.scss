@@ -99,6 +99,13 @@ app-table, app-user-table, app-model-table {
   .container {
     max-width: 540px;
   }
+
+  .mat-column-apiKey.mat-cell {
+    max-width: $short-apiKey-length;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 @include tablet-portrait {
@@ -130,7 +137,6 @@ app-table, app-user-table, app-model-table {
     }
 
     .mat-header-cell {
-      width: 50%;
       font-family: Roboto Regular, "Helvetica Neue", sans-serif;
     }
 

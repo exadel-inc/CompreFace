@@ -18,6 +18,7 @@ $mobile-width: 576px;
 $tablet-portrait-width: 768px;
 $tablet-landscape-width: 992px;
 $desktop-width: 1200px;
+$short-apiKey-length: 50px;
 
 @mixin mobile {
   @media (max-width: #{$tablet-portrait-width - 1px}) {
