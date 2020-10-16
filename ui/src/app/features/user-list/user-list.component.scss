@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-@import 'media.scss';
+@import 'colors.scss';
 
 .user-list {
   position: relative;
@@ -28,46 +28,28 @@ app-spinner {
 .table-header-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-around;
+  padding-right: 16px;
+  align-items: stretch;
+
+  h3 {
+    margin: 0;
+  }
 
   form {
-    width: 80%;
-    height: 35px;
+    display: flex;
+    height: 32px;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 16px;
+    flex-grow: 2;
+    align-items: center;
+    align-self: center;
 
     input {
-      padding: 5px 30px 5px 5px;
-      background-color: #EEEEEE;
-      width: 100%;
-      max-width: 360px;
-    }
-
-    i {
-      position: absolute;
-      right: 10px;
-      top: 2px;
+      background-color: $super-light-gray;
+      flex-grow: 2;
+      height: 32px;
     }
   }
-}
-
-@include tablet-landscape;
-.table-header-container form input {
-  width: 100%;
-  max-width: 360px;
-}
-
-@include tablet-portrait;
-.table-header-container form input {
-  width: 100%;
-  max-width: 360px;
-}
-
-@include mobile;
-.table-header-container form {
-  width: 75%;
-
-  input {
-    width: 100%;
-    max-width: 360px;
-  }
-
 }
