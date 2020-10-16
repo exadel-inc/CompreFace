@@ -14,13 +14,14 @@
  * permissions and limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {AppState} from '../../store';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs';
 import {logOut} from '../../store/auth/action';
 import {selectAuthState} from '../../store/auth/selectors';
 import {selectUserAvatar} from '../../store/userInfo/selectors';
+import { UserInfoService } from 'src/app/core/user-info/user-info.service';
 
 @Component({
   selector: 'app-tool-bar',
@@ -28,12 +29,13 @@ import {selectUserAvatar} from '../../store/userInfo/selectors';
   styleUrls: ['./tool-bar.component.scss']
 })
 export class ToolBarComponent implements OnInit {
+  @Input () userInfo: string;
   getState$: Observable<any>;
   userAvatarInfo$: Observable<string>;
   isAuthenticated: false;
   user = null;
 
-  constructor( private store: Store<AppState>) {
+  constructor( private store: Store<AppState>, private userInfoService: UserInfoService) {
     this.getState$ = this.store.select(selectAuthState);
     this.userAvatarInfo$ = this.store.select(selectUserAvatar);
   }
@@ -42,6 +44,14 @@ export class ToolBarComponent implements OnInit {
     this.getState$.subscribe((state) => {
       this.isAuthenticated = state.isAuthenticated;
       this.user = state.user;
+    });
+    this.getUserInfo();
+  }
+
+  getUserInfo() {
+    this.userInfoService.get().subscribe((data: any) => {
+      this.userInfo = (data.firstName + ' ' + data.lastName);
+      console.log(this.userInfo);
     });
   }
 
