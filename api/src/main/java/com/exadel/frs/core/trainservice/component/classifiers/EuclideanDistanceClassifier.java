@@ -89,7 +89,7 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     private INDArray calculateSimilarities(INDArray distance) {
-        return tanh(distance.rsubi(1.1).muli(2.5)).addi(1).divi(2);
+        return tanh(distance.rsubi(1.1).muli(2.5), false).addi(1).divi(2);
     }
 
     private static INDArray euclidean_distance(final INDArray newFace, INDArray existingFaces) {
