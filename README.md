@@ -233,7 +233,7 @@ Response body on success:
 
 Recognizes faces from the uploaded images.
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/recognize" \
+curl  -X POST "http://localhost:8000/api/v1/faces/recognize" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <model_api_key>" \
 -F file=<local_file>
