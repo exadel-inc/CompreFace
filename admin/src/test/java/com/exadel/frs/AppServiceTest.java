@@ -32,6 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
@@ -58,9 +59,11 @@ import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -810,7 +813,7 @@ class AppServiceTest {
     void successUpdateUserAppRole() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
                                                  .userId("userGuid")
-                                                 .role(OWNER.toString())
+                                                 .role(ADMINISTRATOR.toString())
                                                  .build();
         val user = user(USER_ID);
         val organization = organization();
@@ -819,10 +822,15 @@ class AppServiceTest {
                      .name("name")
                      .guid(APPLICATION_GUID)
                      .organization(organization)
-                     .userAppRoles(List.of(UserAppRole.builder()
-                                                      .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
-                                                      .role(AppRole.ADMINISTRATOR)
-                                                      .build()
+                     .userAppRoles(List.of(
+                             UserAppRole.builder()
+                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                        .role(AppRole.USER)
+                                        .build(),
+                             UserAppRole.builder()
+                                        .id(new UserAppRoleId(ADMIN_ID, APPLICATION_ID))
+                                        .role(AppRole.ADMINISTRATOR)
+                                        .build()
                      ))
                      .build();
 
