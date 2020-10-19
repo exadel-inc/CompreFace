@@ -47,7 +47,7 @@ export class AuthService {
   }
 
   logIn(email: string, password: string): Observable<any> {
-    const url = `${environment.apiUrl}${API_URL.LOGIN}`;
+    const url = `${environment.adminApiUrl}${API_URL.LOGIN}`;
     const form = this.formBuilder.group({
       email,
       password,
@@ -67,12 +67,12 @@ export class AuthService {
 
   clearUserToken(): Observable<any> {
     localStorage.clear();
-    const url = `${environment.apiUrl}${API_URL.LOGIN}`;
+    const url = `${environment.adminApiUrl}${API_URL.LOGIN}`;
     return this.http.delete(url, { headers: { Authorization: environment.basicToken }});
   }
 
   signUp(firstName: string, password: string, email: string, lastName: string): Observable<any> {
-    const url = `${environment.apiUrl}${API_URL.REGISTER}`;
+    const url = `${environment.adminApiUrl}${API_URL.REGISTER}`;
     return this.http.post(url, { email, password, firstName, lastName }, {observe: 'response'});
   }
 
@@ -80,10 +80,5 @@ export class AuthService {
     this.clearUserToken();
     this.store.dispatch(updateUserAuthorization({ value: false }));
     this.router.navigateByUrl(ROUTERS_URL.LOGIN);
-  }
-
-  // todo: for feature
-  isTokenValid(token: string): boolean {
-    return true;
   }
 }

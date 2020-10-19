@@ -1,0 +1,59 @@
+@import "colors.scss";
+
+.result-container {
+  padding: 25px 50px;
+  position: relative;
+  border-radius: 5px;
+  border: 1px solid black;
+  min-height: 350px;
+  background-color: $dark-gray;
+
+  .result-label {
+    position: absolute;
+    left: 5px;
+    top: -10px;
+    background-color: $primary-light;
+    padding: 3px;
+    color: white;
+    border-radius: 3px;
+  }
+
+  .result-image {
+    height: 250px;
+    text-align: right;
+    width: 100%;
+    canvas {
+      display: inline;
+    }
+  }
+
+  .result-sections {
+    display: flex;
+    justify-content: center;
+
+    .result-section-left {
+      margin-right: 15px;
+      flex-grow: 0.5;
+    }
+
+    .result-section-right {
+      border: 1px solid $super-dark-gray;
+      flex-grow: 1;
+      width: 450px;
+      padding: 5px 10px;
+      background-color: $blue-gray;
+    }
+
+    .result-textarea {
+      color: white;
+      border: none;
+      background-color: $blue-gray;
+      resize: none;
+      width: 100%;
+    }
+
+    .result-request, .result-response {
+      color: white;
+    }
+  }
+}

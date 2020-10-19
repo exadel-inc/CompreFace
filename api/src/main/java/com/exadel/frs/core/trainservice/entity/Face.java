@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
@@ -37,6 +38,7 @@ import org.hibernate.annotations.TypeDef;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Builder
+@EqualsAndHashCode(of = "id")
 @TypeDef(name = "json", typeClass = JsonStringType.class)
 public class Face {
 
@@ -52,12 +54,6 @@ public class Face {
     @Type(type = "json")
     @Column(name = "embeddings")
     private Embedding embedding;
-
-    @Column(name = "raw_img_fs")
-    private byte[] rawImg;
-
-    @Column(name = "face_img_fs")
-    private byte[] faceImg;
 
     @Data
     @Builder

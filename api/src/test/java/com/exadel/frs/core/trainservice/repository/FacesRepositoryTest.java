@@ -61,8 +61,6 @@ public class FacesRepositoryTest {
                 .setFaceName(name)
                 .setApiKey(modelApiKey)
                 .setEmbedding(new Face.Embedding(List.of(EMBEDDING), null))
-                .setFaceImg("hex-string-1".getBytes())
-                .setRawImg("hex-string-2".getBytes())
                 .setId(randomUUID().toString());
     }
 
@@ -77,8 +75,6 @@ public class FacesRepositoryTest {
                     assertThat(face.getId()).isNotNull();
                     assertThat(face.getFaceName()).isNotEmpty();
                     assertThat(face.getApiKey()).isNotEmpty();
-                    assertThat(face.getFaceImg()).isNotNull();
-                    assertThat(face.getRawImg()).isNotNull();
                 }
         );
     }

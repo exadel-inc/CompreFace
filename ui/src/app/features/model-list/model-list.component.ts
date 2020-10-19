@@ -15,7 +15,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Input } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { Model } from 'src/app/data/interfaces/model';
@@ -45,11 +45,12 @@ export class ModelListComponent implements OnInit, OnDestroy {
   columns = [
     { title: 'name', property: 'name' },
     { title: 'apiKey', property: 'apiKey' },
+    { title: 'copyKey', property: 'copyKey'},
     { title: 'actions', property: 'id' },
   ];
 
   constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router,
-    private translate: TranslateService) {
+              private translate: TranslateService) {
     this.modelListFacade.initSubscriptions();
   }
 

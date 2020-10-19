@@ -16,6 +16,7 @@
 
 package com.exadel.frs.service;
 
+import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -198,6 +199,32 @@ public class UserService {
     private void manageOwnedAppsByUserBeingDeleted(final UserDeleteDto userDeleteDto) {
         authManager.verifyCanDeleteUser(userDeleteDto);
         updateAppsOwnership(userDeleteDto);
+    }
+
+    public boolean hasOnlyDemoUser() {
+        return userRepository.existsByGuid(DEMO_GUID);
+    }
+
+    public User updateDemoUser(UserCreateDto userCreateDto) {
+        val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
+
+        validateUserCreateDto(userCreateDto);
+        val isAccountEnabled = isNotTrue(isMailServerEnabled);
+
+        val user = getUserByGuid(DEMO_GUID);
+        user.setEmail(userCreateDto.getEmail());
+        user.setEnabled(isAccountEnabled);
+        user.setFirstName(userCreateDto.getFirstName());
+        user.setLastName(userCreateDto.getLastName());
+        user.setPassword(encoder.encode(userCreateDto.getPassword()));
+        user.setGuid(UUID.randomUUID().toString());
+
+        if (isMailServerEnabled) {
+            user.setRegistrationToken(generateRegistrationToken());
+            sendRegistrationTokenToUser(user);
+        }
+
+        return userRepository.save(user);
     }
 
     private void updateAppsOwnership(final UserDeleteDto userDeleteDto) {

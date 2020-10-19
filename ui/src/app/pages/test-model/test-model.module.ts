@@ -21,19 +21,21 @@ import {AuthGuard} from '../../core/auth/auth.guard';
 import {TestModelComponent} from './test-model.component';
 import {MatCardModule} from '@angular/material/card';
 import {TestModelPageService} from './test-model.service';
+import { SpinnerModule } from '../../features/spinner/spinner.module';
 import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
-import { DragNDropModule } from 'src/app/features/drag-n-drop/drag-n-drop.module';
+import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
 
 @NgModule({
   declarations: [TestModelComponent],
   imports: [
     CommonModule,
     BreadcrumbsContainerModule,
-    DragNDropModule,
     RouterModule.forChild([
-      {path: '', component: TestModelComponent, canActivate: [AuthGuard]},
+      { path: '', component: TestModelComponent, canActivate: [ AuthGuard ] },
     ]),
-    MatCardModule
+    MatCardModule,
+    FaceRecognitionModule,
+    SpinnerModule
   ],
   providers: [TestModelPageService]
 })

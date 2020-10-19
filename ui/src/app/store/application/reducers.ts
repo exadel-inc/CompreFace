@@ -54,7 +54,7 @@ const reducer: ActionReducer<AppEntityState> = createReducer(
   on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail,
     (state) => ({ ...state, isPending: false })),
   on(createApplicationSuccess, (state, { application }) => applicationAdapter.addOne(application, { ...state, isPending: false })),
-  on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.addAll(applications, { ...state, isPending: false })),
+  on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.setAll(applications, { ...state, isPending: false })),
   on(updateApplicationSuccess, (state, { application }) => applicationAdapter.updateOne(
     { id: application.id, changes: application },
     { ...state, isPending: false }

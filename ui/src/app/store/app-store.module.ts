@@ -17,7 +17,7 @@
 import { NgModule } from '@angular/core';
 import { DefaultDataServiceConfig, EntityDataModule } from '@ngrx/data';
 import { EffectsModule } from '@ngrx/effects';
-import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
+import { RouterStateSerializer, StoreRouterConnectingModule, DefaultRouterStateSerializer } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
@@ -33,6 +33,7 @@ import { RoleStoreModule } from './role/role.module';
 import { AppSerializer } from './router/reducer';
 import { UserStoreModule } from './user/user.module';
 import { UserInfoStoreModule } from './userInfo/user-info.module';
+import { FaceRecognitionStoreModule } from './face-recognition/face-recognition.module';
 
 @NgModule({
   declarations: [],
@@ -46,8 +47,10 @@ import { UserInfoStoreModule } from './userInfo/user-info.module';
     UserStoreModule,
     RoleStoreModule,
     ModelStoreModule,
+    FaceRecognitionStoreModule,
     AppUserStoreModule,
     StoreRouterConnectingModule.forRoot({
+      serializer: DefaultRouterStateSerializer,
       stateKey: 'router'
     }),
     !environment.production

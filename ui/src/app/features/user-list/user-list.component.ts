@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { filter, map, switchMap, take, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/interfaces/app-user';
@@ -50,7 +50,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   translate: TranslateService;
 
   constructor(private userListFacade: UserListFacade, private snackBarService: SnackBarService, public dialog: MatDialog,
-    translate: TranslateService) {
+              translate: TranslateService) {
     userListFacade.initSubscriptions();
     this.translate = translate;
   }
@@ -89,7 +89,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           return this.dialog.open(DeleteDialogComponent, {
             width: '400px',
             data: {
-              entityType: this.translate.instant('users.system-user'),
+              entityType: this.translate.instant('users.user'),
               entity: deletion.userToDelete,
               options: [
                 { name: email, value: 'deleter' },
@@ -97,6 +97,7 @@ export class UserListComponent implements OnInit, OnDestroy {
               ],
               isOrganizationOwner: email === this.orgOwnerEmail,
               seletedOption: this.seletedOption,
+              isSystemUser: true,
             }
           }).afterClosed();
         }),

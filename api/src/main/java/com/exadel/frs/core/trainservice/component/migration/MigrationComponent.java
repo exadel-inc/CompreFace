@@ -17,7 +17,9 @@
 package com.exadel.frs.core.trainservice.component.migration;
 
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
+import com.exadel.frs.core.trainservice.entity.Image;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.core.trainservice.system.feign.FeignClientFactory;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
@@ -37,6 +39,7 @@ public class MigrationComponent {
     private final FeignClientFactory feignClientFactory;
     private final MigrationStatusStorage migrationStatusStorage;
     private final FacesRepository facesRepository;
+    private final ImagesRepository imagesRepository;
 
     @SneakyThrows
     @Async
@@ -64,7 +67,8 @@ public class MigrationComponent {
         for (val face : all) {
             log.info("Processing facename {} with id {}", face.getFaceName(), face.getId());
             if (!migrationCalculatorVersion.equals(face.getEmbedding().getCalculatorVersion())) {
-                val file = new MultipartFileData(face.getRawImg(), face.getFaceName(), null);
+                val image = imagesRepository.findById(face.getId()).orElse(new Image());
+                val file = new MultipartFileData(image.getRawImg(), face.getFaceName(), null);
 
                 try {
                     val scanResponse = migrationServerFeignClient.scanFaces(file, 1, null);

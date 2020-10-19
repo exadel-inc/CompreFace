@@ -214,26 +214,12 @@ public class FaceControllerTest {
         );
         val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        doReturn(faces)
-                .when(facesRepository)
-                .deleteFacesByApiKey(API_KEY);
         doReturn(faceCollection)
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
 
-        val expectedFaces = faceCollection.getFaces().stream()
-                                          .map(face -> FaceResponseDto.builder()
-                                                                      .image_id(face.getImageId())
-                                                                      .subject(face.getName())
-                                                                      .build()
-                                          )
-                                          .collect(toList());
-
-        val expectedContent = new ObjectMapper().writeValueAsString(expectedFaces);
-
         mockMvc.perform(delete(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
-               .andExpect(status().isOk())
-               .andExpect(content().json(expectedContent));
+               .andExpect(status().isOk());
     }
 
     @Test
@@ -253,9 +239,6 @@ public class FaceControllerTest {
         val faces = List.of(faceA, faceB, faceC);
         val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        doReturn(faces)
-                .when(facesRepository)
-                .deleteFacesByApiKey(API_KEY);
         doReturn(faceCollection)
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);

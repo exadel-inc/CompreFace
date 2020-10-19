@@ -1,0 +1,22 @@
+@import "colors.scss";
+
+.header-title {
+  argin: 5px 0;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.face-uploader {
+  width: 60%;
+  margin: auto;
+}
+
+.face-result {
+  padding: 0 20px;
+}
+
+.recognition-loading {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+}

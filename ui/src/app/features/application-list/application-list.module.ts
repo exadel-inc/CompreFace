@@ -15,7 +15,8 @@
  */
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatCardModule, MatIconModule } from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { SnackBarModule } from 'src/app/features/snackbar/snackbar.module';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';

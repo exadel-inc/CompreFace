@@ -15,7 +15,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/interfaces/app-user';
@@ -25,7 +25,7 @@ import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component'
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
-import {UserDeletion} from '../../data/interfaces/user-deletion';
+import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { TranslateService } from '@ngx-translate/core';
 import { Role } from 'src/app/data/enums/role.enum';
 
@@ -82,6 +82,8 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   onDelete(deletion: UserDeletion): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
+      disableClose: true,
+      hasBackdrop: true,
       data: {
         entityType: this.translate.instant('users.user'),
         entityName: `${deletion.userToDelete.firstName} ${deletion.userToDelete.lastName}`,
@@ -103,6 +105,8 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
   onInviteUser(): void {
     const dialog = this.dialog.open(InviteDialogComponent, {
+      disableClose: true,
+      hasBackdrop: true,
       data: {
         availableRoles: this.availableRoles,
         options$: this.availableEmails$,

@@ -25,8 +25,8 @@ import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
 import {filter, take} from 'rxjs/operators';
 import {setSelectedAppIdEntityAction} from '../../store/application/action';
 import {getUserInfo} from '../../store/userInfo/action';
-import {setSelectedId} from '../../store/organization/action';
-import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
+import { loadOrganizations, setSelectedId } from '../../store/organization/action';
+import { OrganizationEnService } from '../../store/organization/organization-entitys.service';
 
 @Injectable()
 export class ApplicationPageService {
@@ -68,6 +68,6 @@ export class ApplicationPageService {
   fetchApps() {
     this.store.dispatch(loadApplications({ organizationId: this.orgId }));
     this.store.dispatch(getUserInfo());
-    this.organizationEnService.getAll();
+    this.store.dispatch(loadOrganizations());
   }
 }

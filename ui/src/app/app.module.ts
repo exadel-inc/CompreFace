@@ -13,13 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
-import {NgModule} from '@angular/core';
-import {FormBuilder, FormsModule} from '@angular/forms';
-import {MatRadioModule} from '@angular/material';
-import {BrowserModule} from '@angular/platform-browser';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {CreateDialogComponent} from 'src/app/features/create-dialog/create-dialog.component';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import { NgModule } from '@angular/core';
+import { FormBuilder, FormsModule } from '@angular/forms';
+import { MatRadioModule } from '@angular/material/radio';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
@@ -46,7 +46,7 @@ import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/bre
     CreateDialogComponent,
     EditDialogComponent,
     AlertComponent,
-    DeleteDialogComponent,
+    DeleteDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -66,7 +66,7 @@ import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/bre
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [HttpClient]
+        deps: [ HttpClient ]
       }
     })
   ],
@@ -80,9 +80,14 @@ import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/bre
       multi: true
     }
   ],
-  bootstrap: [AppComponent],
+  bootstrap: [ AppComponent ],
   exports: [],
-  entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent, DeleteDialogComponent]
+  entryComponents: [
+    CreateDialogComponent,
+    AlertComponent,
+    EditDialogComponent,
+    DeleteDialogComponent
+  ]
 })
 export class AppModule {
 }

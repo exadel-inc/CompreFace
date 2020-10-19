@@ -15,7 +15,9 @@
  */
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatButtonModule, MatMenuModule, MatTableModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 
 import { ModelTableComponent } from './model-table.component';

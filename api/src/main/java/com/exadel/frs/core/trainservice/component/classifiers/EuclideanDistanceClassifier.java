@@ -19,6 +19,7 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 import static java.lang.Math.min;
 import static java.util.Arrays.sort;
 import static org.nd4j.linalg.factory.Nd4j.create;
+import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.google.common.primitives.Doubles;
 import java.util.ArrayList;
@@ -43,20 +44,30 @@ public class EuclideanDistanceClassifier implements Classifier {
     public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
         val inputFace = create(input);
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
-
-        val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
-        val argSort = argSort(probabilities);
-        val facesMap = faceCollection.getFacesMap().inverse();
         val result = new ArrayList<Pair<Double, String>>();
+        if (faceCollection.getEmbeddings() != null) {
+            val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
+            val argSort = argSort(probabilities);
+            val facesMap = faceCollection.getFacesMap().inverse();
 
-        for (int i = 0; i < min(resultCount, argSort.length); i++) {
-            val face = facesMap.get(argSort[i]);
-            val prob = probabilities[argSort[i]];
+            for (int i = 0; i < min(resultCount, argSort.length); i++) {
+                val face = facesMap.get(argSort[i]);
+                val prob = probabilities[argSort[i]];
 
-            result.add(Pair.of(prob, face.getName()));
+                result.add(Pair.of(prob, face.getName()));
+            }
         }
-
         return result;
+    }
+
+    @Override
+    public Double verify(final double[] input, final String apiKey, final String imageId) {
+        val inputFace = create(input);
+        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
+
+        val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
+
+        return probabilities[0];
     }
 
     private INDArray normalizeOne(final INDArray embeddings) {
@@ -73,9 +84,12 @@ public class EuclideanDistanceClassifier implements Classifier {
 
     private double[] recognize(final INDArray newFace, final INDArray existingFaces) {
         val distance = euclidean_distance(newFace, existingFaces);
-        distance.divi(2).rsubi(1);
 
-        return distance.toDoubleVector();
+        return calculateSimilarities(distance).toDoubleVector();
+    }
+
+    private INDArray calculateSimilarities(INDArray distance) {
+        return tanh(distance.rsubi(1.1).muli(2.5), false).addi(1).divi(2);
     }
 
     private static INDArray euclidean_distance(final INDArray newFace, INDArray existingFaces) {
@@ -98,15 +112,5 @@ public class EuclideanDistanceClassifier implements Classifier {
         }
 
         return ret;
-    }
-
-    @Override
-    public Double verify(final double[] input, final String apiKey, final String imageId) {
-        val inputFace = create(input);
-        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
-
-        val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
-
-        return probabilities[0];
     }
 }

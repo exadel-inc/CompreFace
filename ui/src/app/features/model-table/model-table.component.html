@@ -26,7 +26,12 @@
 
   <ng-container matColumnDef="apiKey">
     <th mat-header-cell *matHeaderCellDef>{{'models.api_key' | translate}}</th>
-    <td mat-cell *matCellDef="let element"> {{element.apiKey}}
+    <td mat-cell *matCellDef="let element">{{element.apiKey}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="copyKey">
+    <th mat-header-cell *matHeaderCellDef></th>
+    <td mat-cell *matCellDef="let element">
       <button mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
         <mat-icon>content_copy</mat-icon>
       </button>

@@ -101,10 +101,9 @@
       "no_results": "No matches found"
     }
   },
-  "system-user": "system-user",
   "org_users": {
     "delete_dialog": {
-      "title": "Delete User",
+      "title": "Delete {{type}}",
       "confirmation_question": "Are you sure you want remove user {{name}} {{lastName}}?",
       "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
       "warn_hint_anyway": "You can delete him anyway.",
@@ -127,7 +126,10 @@
   },
   "dnd": {
     "title": "Click here or Drag and drop your image here",
-    "label": "image must be with formats, and no more than 5 MB",
-    "test": "Test model"
+    "label": "Available images extensions: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp \nMax images size = 5Mb (5242880bytes)",
+    "test": "Test model",
+    "add": "Add to model",
+    "train": "Train model",
+    "recognize": "Recognize Face"
   }
 }

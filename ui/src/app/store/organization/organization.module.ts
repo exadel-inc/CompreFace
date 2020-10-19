@@ -18,10 +18,13 @@ import {NgModule} from '@angular/core';
 import {StoreModule} from '@ngrx/store';
 import {OrganizationReducer} from './reducers';
 import {OrganizationEnService} from './organization-entitys.service';
+import { EffectsModule } from '@ngrx/effects';
+import { OrganizationEffect } from './effects';
 
 @NgModule({
   declarations: [],
   imports: [
+    EffectsModule.forFeature([OrganizationEffect]),
     StoreModule.forFeature('Organization', OrganizationReducer),
   ],
   providers: [OrganizationEnService]
