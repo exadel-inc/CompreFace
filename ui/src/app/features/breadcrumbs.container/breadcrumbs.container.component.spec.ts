@@ -13,19 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
+import {BreadcrumbsContainerComponent} from './breadcrumbs.container.component';
+import {BreadcrumbsFacade} from "../breadcrumbs/breadcrumbs.facade";
 
 describe('Breadcrumbs.ContainerComponent', () => {
   let component: BreadcrumbsContainerComponent;
   let fixture: ComponentFixture<BreadcrumbsContainerComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BreadcrumbsContainerComponent ]
+      declarations: [BreadcrumbsContainerComponent],
+      providers: [{provide: BreadcrumbsFacade, useValue: {}}]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -35,6 +37,6 @@ describe('Breadcrumbs.ContainerComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });
