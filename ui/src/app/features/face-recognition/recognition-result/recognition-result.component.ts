@@ -60,7 +60,7 @@ export class RecognitionResultComponent implements OnDestroy {
    */
   drawCanvas(box: any, face: any) {
     const img = new Image();
-    const resultFace = face.length > 0 ? face[0] : { face_name: 'Undefined', similarity: 0 };
+    const resultFace = face.length > 0 ? face[0] : { face_name: undefined, similarity: 0 };
     const ctx: CanvasRenderingContext2D =
       this.myCanvas.nativeElement.getContext('2d');
 
