@@ -18,7 +18,7 @@ import {TestBed} from '@angular/core/testing';
 import {AuthGuard, LoginGuard} from './auth.guard';
 import {Router} from '@angular/router';
 import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
-import {Store, MemoizedSelector} from '@ngrx/store';
+import {MemoizedSelector} from '@ngrx/store';
 import {provideMockStore, MockStore} from '@ngrx/store/testing';
 import {AppState} from 'src/app/store';
 import {selectUserInfoState} from '../../store/userInfo/selectors';
@@ -26,6 +26,7 @@ import {UserInfoState} from 'src/app/store/userInfo/reducers';
 
 describe('Auth Guard', () => {
   let guard: AuthGuard;
+  let router: Router;
   let mockStore: MockStore<AppState>;
   let mockUsernameSelector: MemoizedSelector<AppState, UserInfoState>;
 
@@ -41,7 +42,7 @@ describe('Auth Guard', () => {
       ],
     });
 
-    mockStore = TestBed.get(Store);
+    mockStore = TestBed.inject<MockStore<AppState>>(MockStore);
     mockUsernameSelector = mockStore.overrideSelector(selectUserInfoState, {
       avatar: '',
       email: '',
@@ -52,14 +53,16 @@ describe('Auth Guard', () => {
       password: '',
       isAuthenticated: true,
     });
-    guard = TestBed.get<AuthGuard>(AuthGuard);
-    guard.router.navigateByUrl = jasmine.createSpy();
+    guard = TestBed.inject<AuthGuard>(AuthGuard);
+
+    router = TestBed.inject<Router>(Router);
+    router.navigateByUrl = jasmine.createSpy();
   });
 
   it('should return false if the user state is not logged in', () => {
     guard.canActivate().subscribe(value => {
       expect(value).toBeTruthy();
-      expect(guard.router.navigateByUrl).toHaveBeenCalledTimes(0);
+      expect(router.navigateByUrl).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -76,14 +79,15 @@ describe('Auth Guard', () => {
     });
     guard.canActivate().subscribe(value => {
       expect(value).toBeFalsy();
-      expect(guard.router.navigateByUrl).toHaveBeenCalledTimes(1);
-      expect(guard.router.navigateByUrl).toHaveBeenCalledWith(ROUTERS_URL.LOGIN);
+      expect(router.navigateByUrl).toHaveBeenCalledTimes(1);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(ROUTERS_URL.LOGIN);
     });
   });
 });
 
 describe('Login Guard', () => {
   let guard: LoginGuard;
+  let router: Router;
   let mockStore: MockStore<AppState>;
   let mockUsernameSelector: MemoizedSelector<AppState, UserInfoState>;
 
@@ -99,7 +103,7 @@ describe('Login Guard', () => {
       ],
     });
 
-    mockStore = TestBed.get(Store);
+    mockStore = TestBed.inject<MockStore<AppState>>(MockStore);
     mockUsernameSelector = mockStore.overrideSelector(selectUserInfoState, {
       avatar: '',
       email: '',
@@ -110,14 +114,17 @@ describe('Login Guard', () => {
       password: '',
       isAuthenticated: false,
     });
-    guard = TestBed.get<LoginGuard>(LoginGuard);
-    guard.router.navigateByUrl = jasmine.createSpy();
+
+    guard = TestBed.inject<LoginGuard>(LoginGuard);
+
+    router = TestBed.inject<Router>(Router);
+    router.navigateByUrl = jasmine.createSpy();
   });
 
   it('should return true if the user state is not logged in', () => {
     guard.canActivate().subscribe(value => {
       expect(value).toBeTruthy();
-      expect(guard.router.navigateByUrl).toHaveBeenCalledTimes(0);
+      expect(router.navigateByUrl).toHaveBeenCalledTimes(0);
     });
   });
 
@@ -134,8 +141,8 @@ describe('Login Guard', () => {
     });
     guard.canActivate().subscribe(value => {
       expect(value).toBeFalsy();
-      expect(guard.router.navigateByUrl).toHaveBeenCalledTimes(1);
-      expect(guard.router.navigateByUrl).toHaveBeenCalledWith(ROUTERS_URL.HOME);
+      expect(router.navigateByUrl).toHaveBeenCalledTimes(1);
+      expect(router.navigateByUrl).toHaveBeenCalledWith(ROUTERS_URL.HOME);
     });
   });
 });
