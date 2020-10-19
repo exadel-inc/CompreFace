@@ -19,16 +19,15 @@ describe('TestModelComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ TestModelComponent ],
       providers: [ {provide: TestModelPageService, useValue: new MockTestModelPageService()},
-        { provide: Store, useClass: MockStore}],
+                   {provide: Store, useValue: new MockStore()} ],
     }).compileComponents();
   }));
 
-  beforeEach(waitForAsync(() => {
-    TestBed.overrideProvider(Store, {useValue: new MockStore()})
+  beforeEach(() => {
     fixture = TestBed.createComponent(TestModelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  }));
+  });
 
   it('should create', () => {
     expect(component).toBeDefined();
