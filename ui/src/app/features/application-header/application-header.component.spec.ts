@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ApplicationHeaderComponent} from './application-header.component';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
@@ -30,7 +30,7 @@ describe('ApplicationHeaderComponent', () => {
   let component: ApplicationHeaderComponent;
   let fixture: ComponentFixture<ApplicationHeaderComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ApplicationHeaderComponent ],
       providers: [

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ApplicationUserListComponent} from './application-user-list.component';
 import {SpinnerModule} from '../spinner/spinner.module';
 import {UserTableModule} from '../user-table/user-table.module';
@@ -32,7 +32,7 @@ describe('ApplicationUserListComponent', () => {
   let component: ApplicationUserListComponent;
   let fixture: ComponentFixture<ApplicationUserListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ApplicationUserListComponent ],
       imports: [

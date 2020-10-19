@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {InviteUserComponent} from './invite-user.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,7 +26,7 @@ describe('InviteUserComponent', () => {
   let component: InviteUserComponent;
   let fixture: ComponentFixture<InviteUserComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,

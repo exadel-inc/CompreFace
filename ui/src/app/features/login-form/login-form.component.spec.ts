@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { CommonModule } from '@angular/common';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -35,7 +35,7 @@ describe('LoginFormComponent', () => {
   let store: MockStore<{ isAuthenticated: boolean, errorMessage: string, successMessage: string }>;
   const initialState = { isAuthenticated: false, errorMessage: 'some error message', successMessage: 'some success message' };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [
         LoginFormComponent

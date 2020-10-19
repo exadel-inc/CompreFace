@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {EntityTitleComponent} from './entity-title.component';
 import {CommonModule} from '@angular/common';
 import {MatInputModule} from '@angular/material/input';
@@ -28,7 +28,7 @@ describe('EntityTitleComponent', () => {
   let component: EntityTitleComponent;
   let fixture: ComponentFixture<EntityTitleComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ EntityTitleComponent ],
       imports: [

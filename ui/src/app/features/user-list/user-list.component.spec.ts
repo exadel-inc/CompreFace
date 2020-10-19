@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
 import {UserTableModule} from 'src/app/features/user-table/user-table.module';
 import {InviteUserComponent} from 'src/app/features/invite-user/invite-user.component';
@@ -35,7 +35,7 @@ describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,

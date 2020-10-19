@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ToolBarComponent} from './tool-bar.component';
 import {CommonModule} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -36,7 +36,7 @@ describe('ToolBarComponent', () => {
   let store: MockStore<{ isAuthenticated: boolean, errorMessage: string, user: User}>;
   const initialState = { isAuthenticated: false, errorMessage: 'some error message', user: {}};
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ ToolBarComponent ],
       providers: [

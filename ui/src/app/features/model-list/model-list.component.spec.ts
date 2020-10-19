@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
@@ -28,7 +28,7 @@ describe('ModelListComponent', () => {
   let component: ModelListComponent;
   let fixture: ComponentFixture<ModelListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ModelListComponent],
       imports: [SpinnerModule, ModelTableModule],
