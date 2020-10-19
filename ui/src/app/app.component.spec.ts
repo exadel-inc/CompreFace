@@ -22,11 +22,6 @@ import {provideMockStore} from '@ngrx/store/testing';
 import {FormBuilder} from '@angular/forms';
 import {TranslateService} from "@ngx-translate/core";
 
-class MockTranslateService {
-  setDefaultLang() {
-  };
-}
-
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
@@ -41,7 +36,9 @@ describe('AppComponent', () => {
         FormBuilder,
         {
           provide: TranslateService,
-          useValue: new MockTranslateService(),
+          useValue: {
+            setDefaultLang: () => {},
+          },
         }
       ],
       imports: [
