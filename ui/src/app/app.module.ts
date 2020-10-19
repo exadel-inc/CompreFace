@@ -25,7 +25,7 @@ import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {AuthGuard, LoginGuard} from './core/auth/auth.guard';
 import {AlertComponent} from './features/alert/alert.component';
-import {ErrorInterceptor} from './core/auth/token.inerceptor';
+import {ErrorInterceptor} from './core/auth/error.inerceptor';
 import {DeleteDialogComponent} from './features/delete-dialog/delete-dialog.component';
 import {EditDialogComponent} from './features/edit-dialog/edit-dialog.component';
 import {FooterModule} from './features/footer/footer.module';
