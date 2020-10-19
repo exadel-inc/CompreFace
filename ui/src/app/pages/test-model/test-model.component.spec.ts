@@ -10,18 +10,20 @@ describe('TestModelComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [TestModelComponent],
-      providers: [{
-        provide: TestModelPageService, useValue: {
-          initUrlBindingStreams: () => {
-          },
-        }
-      },
+      providers: [
         {
           provide: Store, useValue: {
             select: () => {
             },
           }
-        }],
+        },
+        {
+          provide: TestModelPageService, useValue: {
+            initUrlBindingStreams: () => {
+            },
+          }
+        },
+      ],
     }).compileComponents();
   }));
 
