@@ -1,7 +1,8 @@
-import { TestModelComponent } from './test-model.component';
-import { TestModelPageService } from './test-model.service';
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { Store } from '@ngrx/store';
+import {TestModelComponent} from './test-model.component';
+import {TestModelPageService} from './test-model.service';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {Store} from '@ngrx/store';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 
 describe('TestModelComponent', () => {
   let component: TestModelComponent;
