@@ -21,7 +21,7 @@
   * [Rest API description](#rest-api-description)
     + [Add an example of the face](#add-an-example-of-the-face)
     + [Recognize faces from given image](#recognize-faces-from-given-image)
-    + [List names of all saved faces](#list-names-of-all-saved-faces)
+    + [List of all saved faces](#list-of-all-saved-faces)
     + [Delete all examples of the face by name](#delete-all-examples-of-the-face-by-name)
     + [Delete an example of the face by ID](#delete-an-example-of-the-face-by-id)
     + [Verify faces from given image](#verify-faces-from-given-image)
@@ -95,7 +95,7 @@ docker-compose up --build
 1. Registration users in the app
 1. Creating applications, Face Collections, inviting users
 1. Integrating your app via API if need
-1. Images uploading, training a model with your own images by using the API key
+1. Images uploading, filling a Face Collection with your own images by using the API key
 1. Send a new image to recognize the face on it.
 
 ![how-it-works](https://user-images.githubusercontent.com/4942439/92221961-b3baa180-eeb7-11ea-89c9-af2bec2295fc.png)
@@ -208,7 +208,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces?subject=<face_name>&det_prob_t
 | Element             | Description | Type   | Required | Notes                                                        |
 | ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
 | Content-Type        | header      | string | required | multipart/form-data                                          |
-| x-api-key           | header      | string | required | api key of the model, created by the user                    |
+| x-api-key           | header      | string | required | api key of the Face Collection, created by the user          |
 | subject             | param       | string | required | is the name you assign to the image you save                 |
 | det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0 |
 | file                | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
@@ -242,9 +242,9 @@ curl  -X POST "http://localhost:8000/api/v1/recognize?limit=<limit>&prediction_c
 | Element          | Description | Type    | Required | Notes                                                        |
 | ---------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
 | Content-Type     | header      | string  | required | multipart/form-data                                          |
-| x-api-key        | header      | string  | required | api key of the model, created by the user                    |
+| x-api-key        | header      | string  | required | api key of the Face Collection, created by the user                    |
 | file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
-| limit            | param       | integer | optional | maximum number of faces to be recognized. Value of 0 represents no limit. Default value: 0 |
+| limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
 | prediction_count | param       | integer | optional | maximum number of predictions per faces. Default value: 1    |
 
 Response body on success:
@@ -282,7 +282,7 @@ Response body on success:
 
 
 
-### List names of all saved faces
+### List of all saved faces
 
 Retrieves a list of images saved in a Face Collection
 
@@ -293,7 +293,7 @@ curl  -X GET "http://localhost:8000/api/v1/faces" \
 
 | Element   | Description | Type   | Required | Notes                                     |
 | --------- | ----------- | ------ | -------- | ----------------------------------------- |
-| x-api-key | header      | string | required | api key of the model, created by the user |
+| x-api-key | header      | string | required | api key of the Face Collection, created by the user |
 
 Response body on success:
 
@@ -327,7 +327,7 @@ curl  -X DELETE "http://localhost:8000/api/v1/faces?subject=<face_name>" \
 
 | Element   | Description | Type   | Required | Notes                                                        |
 | --------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| x-api-key | header      | string | required | api key of the model, created by the user                    |
+| x-api-key | header      | string | required | api key of the Face Collection, created by the user                    |
 | subject   | param       | string | optional | is the name you assign to the image you save. **Caution!** If this parameter is absent, all faces in Face Collection will be removed |
 
 Response body on success:
@@ -359,7 +359,7 @@ curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
 
 | Element   | Description | Type   | Required | Notes                                     |
 | --------- | ----------- | ------ | -------- | ----------------------------------------- |
-| x-api-key | header      | string | required | api key of the model, created by the user |
+| x-api-key | header      | string | required | api key of the Face Collection, created by the user |
 | image_id  | variable    | UUID   | required | UUID of the removing face                 |
 
 Response body on success:
@@ -379,7 +379,7 @@ Response body on success:
 
 ### Verify faces from given image
 
-Recognizes faces from the uploaded images.
+Compares faces from the uploaded images with provided face id.
 ```http request
 curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>" \
 -H "Content-Type: multipart/form-data" \
@@ -391,10 +391,10 @@ curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit
 | Element          | Description | Type    | Required | Notes                                                        |
 | ---------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
 | Content-Type     | header      | string  | required | multipart/form-data                                          |
-| x-api-key        | header      | string  | required | api key of the model, created by the user                    |
+| x-api-key        | header      | string  | required | api key of the Face Collection, created by the user                    |
 | image_id         | variable    | UUID    | required | UUID of the verifying face                                   |
 | file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
-| limit            | param       | integer | optional | maximum number of faces to be verified. Value of 0 represents no limit. Default value: 0 |
+| limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
 
 Response body on success:
 ```
