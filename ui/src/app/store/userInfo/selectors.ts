@@ -15,9 +15,9 @@
  */
 
 import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {UserInfoState} from './reducers';
+import { User } from '../../data/interfaces/user';
 
-export const selectUserInfoState = createFeatureSelector<UserInfoState>('userInfo');
+export const selectUserInfoState = createFeatureSelector<User>('userInfo');
 
 export const selectUserId = createSelector(
   selectUserInfoState,

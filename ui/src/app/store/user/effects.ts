@@ -73,11 +73,12 @@ export class UserListEffect {
     ofType(updateUserRoleWithRefreshAction),
     switchMap(({ organizationId, user }) =>
       this.userService.updateRole(organizationId, user.id, user.role).pipe(
-        switchMap((res) => merge(
-          of(updateUserRoleSuccessAction({user: res})),
-          of(loadUsersEntityAction({organizationId})),
-          of(loadOrganizations())
-        )),
+        switchMap((res) => [
+            updateUserRoleSuccessAction({user: res}),
+            loadUsersEntityAction({organizationId}),
+            loadOrganizations()
+          ]
+        ),
         catchError((error) => of(updateUserRoleFailAction({ error })))
       )));
 

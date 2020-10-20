@@ -1,25 +1,38 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { TestModelComponent } from './test-model.component';
+import {TestModelComponent} from './test-model.component';
+import {TestModelPageService} from "./test-model.service";
+import {ComponentFixture, TestBed, waitForAsync} from "@angular/core/testing";
+import {Store} from "@ngrx/store";
 
 describe('TestModelComponent', () => {
   let component: TestModelComponent;
   let fixture: ComponentFixture<TestModelComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ TestModelComponent ]
-    })
-    .compileComponents();
+      declarations: [TestModelComponent],
+      providers: [
+        {
+          provide: Store, useValue: {
+            select: () => {
+            },
+          }
+        },
+        {
+          provide: TestModelPageService, useValue: {
+            initUrlBindingStreams: () => {
+            },
+          }
+        },
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestModelComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });

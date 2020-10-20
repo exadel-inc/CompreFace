@@ -43,7 +43,7 @@ export class TableComponent implements OnInit {
 
   @Output() changeRow = new EventEmitter<any>();
 
-  maxElementLength = 10;
+  maxElementLength = 27;
 
   columnsDefinition: {
     title: string;
