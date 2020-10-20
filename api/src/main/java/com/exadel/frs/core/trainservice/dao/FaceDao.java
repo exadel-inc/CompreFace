@@ -37,6 +37,8 @@ public class FaceDao {
 
     private final ImagesRepository imagesRepository;
 
+    private static final boolean SAVE_IMAGES_TO_DB_DEFAULT = true;
+
     public List<Face> findAllFacesByApiKey(final String modelApiKey) {
         return facesRepository.findByApiKey(modelApiKey);
     }
@@ -74,10 +76,14 @@ public class FaceDao {
                 .setFaceName(faceName)
                 .setApiKey(modelKey);
 
-        val saveImagesToDb = Boolean.parseBoolean(
-                System.getenv().get("SAVE_IMAGES_TO_DB"));
+        val saveImagesToDBSystemVariable = System.getenv().get("SAVE_IMAGES_TO_DB");
 
-        if(saveImagesToDb) {
+        val saveImagesToDb = (saveImagesToDBSystemVariable == null
+                || saveImagesToDBSystemVariable.isBlank()) ?
+                SAVE_IMAGES_TO_DB_DEFAULT :
+                Boolean.parseBoolean(saveImagesToDBSystemVariable);
+
+        if (saveImagesToDb) {
             val image = new Image()
                     .setFaceImg(file.getBytes())
                     .setRawImg(file.getBytes())
