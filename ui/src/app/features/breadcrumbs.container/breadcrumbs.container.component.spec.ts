@@ -13,22 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {BreadcrumbsContainerComponent} from './breadcrumbs.container.component';
-import {BreadcrumbsFacade} from "../breadcrumbs/breadcrumbs.facade";
+import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
+import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 
 describe('Breadcrumbs.ContainerComponent', () => {
   let component: BreadcrumbsContainerComponent;
   let fixture: ComponentFixture<BreadcrumbsContainerComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [BreadcrumbsContainerComponent],
-      providers: [{provide: BreadcrumbsFacade, useValue: {}}]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [BreadcrumbsContainerComponent],
+        providers: [{ provide: BreadcrumbsFacade, useValue: {} }],
+      }).compileComponents();
     })
-      .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BreadcrumbsContainerComponent);

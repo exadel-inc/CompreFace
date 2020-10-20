@@ -28,11 +28,11 @@ describe('UserService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [UserService]
+      providers: [UserService],
     });
 
-    service = TestBed.get(UserService);
-    httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.inject(UserService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -40,19 +40,22 @@ describe('UserService', () => {
   });
 
   it('should return set of users', () => {
-    const mock = [{
-      id: 0,
-      organizationId: 'ksdfklsn1111111',
-      firstName: 'John',
-      lastName: 'Malkovich',
-      role: Role.USER
-    }, {
-      id: 1,
-      organizationId: 'ksdfklsn1111111',
-      firstName: 'Tony',
-      lastName: 'Stark',
-      role: Role.ADMINISTRATOR
-    }];
+    const mock = [
+      {
+        id: 0,
+        organizationId: 'ksdfklsn1111111',
+        firstName: 'John',
+        lastName: 'Malkovich',
+        role: Role.USER,
+      },
+      {
+        id: 1,
+        organizationId: 'ksdfklsn1111111',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: Role.ADMINISTRATOR,
+      },
+    ];
 
     service.getAll('organizationId').subscribe((data: AppUser[]) => {
       expect(data[0].role).toBe(mock[0].role);
@@ -74,7 +77,7 @@ describe('UserService', () => {
       organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
-      role: Role.USER
+      role: Role.USER,
     };
 
     service.updateRole('organizationId', 'userId', Role.USER).subscribe((data: AppUser) => {

@@ -14,57 +14,57 @@
  * permissions and limitations under the License.
  */
 
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {ToolBarComponent} from './tool-bar.component';
-import {CommonModule} from '@angular/common';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {RouterModule} from '@angular/router';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {RouterTestingModule} from '@angular/router/testing';
-import {Store} from '@ngrx/store';
-import {of} from 'rxjs';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatIconModule} from '@angular/material/icon';
-import {TranslatePipe, TranslateService} from "@ngx-translate/core";
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ToolBarComponent } from './tool-bar.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 describe('ToolBarComponent', () => {
   let component: ToolBarComponent;
   let fixture: ComponentFixture<ToolBarComponent>;
-  const initialState = {isAuthenticated: false, errorMessage: 'some error message', user: {}};
+  const initialState = { isAuthenticated: false, errorMessage: 'some error message', user: {} };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ToolBarComponent, TranslatePipe],
-      providers: [
-        {
-          provide: Store,
-          useValue: {
-            dispatch: () => {
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ToolBarComponent, TranslatePipe],
+        providers: [
+          {
+            provide: Store,
+            useValue: {
+              dispatch: () => {},
+              select: () => {
+                return of(initialState);
+              },
             },
-            select: () => {
-              return of(initialState);
-            }
-          }
-        },
-        {provide: TranslateService, useValue: {}},
-      ],
-      imports: [
-        CommonModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatMenuModule,
-        MatIconModule,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterModule,
-        BrowserAnimationsModule,
-        RouterTestingModule
-      ]
+          },
+          { provide: TranslateService, useValue: {} },
+        ],
+        imports: [
+          CommonModule,
+          MatToolbarModule,
+          MatButtonModule,
+          MatMenuModule,
+          MatIconModule,
+          FormsModule,
+          ReactiveFormsModule,
+          RouterModule,
+          BrowserAnimationsModule,
+          RouterTestingModule,
+        ],
+      }).compileComponents();
     })
-      .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ToolBarComponent);

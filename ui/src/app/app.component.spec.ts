@@ -14,47 +14,46 @@
  * permissions and limitations under the License.
  */
 
-import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
-import {RouterTestingModule} from '@angular/router/testing';
-import {AppComponent} from './app.component';
-import {HttpClient} from '@angular/common/http';
-import {provideMockStore} from '@ngrx/store/testing';
-import {FormBuilder} from '@angular/forms';
-import {TranslateService} from "@ngx-translate/core";
+import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AppComponent } from './app.component';
+import { HttpClient } from '@angular/common/http';
+import { provideMockStore } from '@ngrx/store/testing';
+import { FormBuilder } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      providers: [provideMockStore(),
-        {
-          provide: HttpClient,
-          useValue: {}
-        },
-        FormBuilder,
-        {
-          provide: TranslateService,
-          useValue: {
-            setDefaultLang: () => {},
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          provideMockStore(),
+          {
+            provide: HttpClient,
+            useValue: {},
           },
-        }
-      ],
-      imports: [
-        RouterTestingModule
-      ],
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
-  }));
+          FormBuilder,
+          {
+            provide: TranslateService,
+            useValue: {
+              setDefaultLang: () => {},
+            },
+          },
+        ],
+        imports: [RouterTestingModule],
+        declarations: [AppComponent],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(AppComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  })
+  });
 
   it('should create the app', () => {
     expect(component).toBeDefined();
