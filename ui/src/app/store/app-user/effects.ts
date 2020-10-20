@@ -32,6 +32,7 @@ import {
   updateAppUserRoleFailAction,
   updateAppUserRoleSuccessAction,
 } from './actions';
+import { loadUsersEntityAction } from '../user/action';
 
 @Injectable()
 export class AppUserEffects {
@@ -56,7 +57,8 @@ export class AppUserEffects {
       this.appUserService.update(organizationId, applicationId, user.id, user.role).pipe(
         switchMap(res => [
           updateAppUserRoleSuccessAction({user: res}),
-          loadApplications({organizationId})
+          loadApplications({organizationId}),
+          loadAppUserEntityAction({organizationId, applicationId})
         ]),
         catchError((error) => of(updateAppUserRoleFailAction({error})))
       ))

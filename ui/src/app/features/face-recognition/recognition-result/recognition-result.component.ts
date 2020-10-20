@@ -26,7 +26,7 @@ export class RecognitionResultComponent implements OnDestroy {
   }
 
   private printSubscription: Subscription;
-  private canvasSize: ImageSize = {width: 250, height: 250};
+  private canvasSize: ImageSize = {width: 300, height: null};
 
   @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
 
@@ -47,6 +47,10 @@ export class RecognitionResultComponent implements OnDestroy {
    */
   printResult(box: any, face: any): Observable<any> {
     return getImageSize(this.file).pipe(
+      tap(({ width, height }) => {
+        this.canvasSize.height = (height / width) * this.canvasSize.width;
+        this.myCanvas.nativeElement.setAttribute('height', this.canvasSize.height);
+      }),
       map((imageSize) => recalculateFaceCoordinate(box, imageSize, this.canvasSize)),
       tap((recalculatedBox) => this.drawCanvas(recalculatedBox, face))
     );
