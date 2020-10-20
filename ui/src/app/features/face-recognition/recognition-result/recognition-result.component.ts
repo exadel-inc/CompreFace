@@ -60,8 +60,10 @@ export class RecognitionResultComponent implements OnDestroy {
    */
   drawCanvas(box: any, face: any) {
     const img = new Image();
+    const resultFace = face.length > 0 ? face[0] : { face_name: undefined, similarity: 0 };
     const ctx: CanvasRenderingContext2D =
       this.myCanvas.nativeElement.getContext('2d');
+
     img.onload = () => {
       ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
       ctx.beginPath();
@@ -77,8 +79,8 @@ export class RecognitionResultComponent implements OnDestroy {
       ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, 25);
       ctx.fillStyle = 'white';
       ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
-      ctx.fillText(box.probability, box.x_min + 10, box.y_max + 20);
-      ctx.fillText(face[ 0 ].face_name, box.x_min + 10, box.y_min - 5);
+      ctx.fillText(resultFace.similarity, box.x_min + 10, box.y_max + 20);
+      ctx.fillText(resultFace.face_name, box.x_min + 10, box.y_min - 5);
     };
     img.src = URL.createObjectURL(this.file);
   }
