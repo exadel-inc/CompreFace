@@ -34,3 +34,13 @@ export const selectUserAvatar = createSelector(
   selectUserInfoState,
   (userInfo) => userInfo.avatar || 'assets/img/avatar.png'
 );
+
+export const selectUserName = createSelector(
+  selectUserInfoState,
+  (userInfo) => userInfo.firstName + ' ' + userInfo.lastName
+);
+
+export const isAuthenticatedState = createSelector(
+  selectUserInfoState,
+  (userInfo) => userInfo.isAuthenticated
+);

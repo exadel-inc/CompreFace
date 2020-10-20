@@ -20,6 +20,7 @@ import {RouterStateUrl} from './router/reducer';
 import {UserInfoReducer, UserInfoState} from './userInfo/reducers';
 
 export interface AppState {
+  isAuthenticated: any;
   authState: AuthState;
   router: RouterReducerState<RouterStateUrl>;
   userInfo: UserInfoState;

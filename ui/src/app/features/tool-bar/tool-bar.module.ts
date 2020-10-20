@@ -14,29 +14,22 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ToolBarComponent} from './tool-bar.component';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatIconModule} from '@angular/material/icon';
-import {RouterModule} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ToolBarComponent } from './tool-bar.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { ToolBarContainerComponent } from './tool-bar.container.component';
+import { ToolBarFacade } from './tool-bar.facade';
 
 @NgModule({
-  declarations: [ToolBarComponent],
-  exports: [
-    ToolBarComponent,
-  ],
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatMenuModule,
-    MatIconModule,
-    RouterModule,
-    TranslateModule
-  ]
+  declarations: [ToolBarContainerComponent, ToolBarComponent],
+  exports: [ToolBarContainerComponent, ToolBarComponent],
+  imports: [CommonModule, MatToolbarModule, MatButtonModule, MatMenuModule, MatIconModule, RouterModule, TranslateModule],
+  providers: [ToolBarFacade],
 })
-export class ToolBarModule { }
+export class ToolBarModule {}
