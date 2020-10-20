@@ -26,7 +26,7 @@ export class RecognitionResultComponent implements OnDestroy {
   }
 
   private printSubscription: Subscription;
-  private canvasSize: ImageSize = {width: 300, height: null};
+  public canvasSize: ImageSize = {width: 300, height: null};
 
   @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
 
