@@ -14,27 +14,28 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ApplicationUserListComponent} from './application-user-list.component';
 import {SpinnerModule} from '../spinner/spinner.module';
 import {UserTableModule} from '../user-table/user-table.module';
 import {ApplicationUserListFacade} from './application-user-list-facade';
 import {of} from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {InviteUserModule} from '../invite-user/invite-user.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
 import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
 import {MatInputModule} from '@angular/material/input';
 import {SnackBarModule} from 'src/app/features/snackbar/snackbar.module';
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 describe('ApplicationUserListComponent', () => {
   let component: ApplicationUserListComponent;
   let fixture: ComponentFixture<ApplicationUserListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ApplicationUserListComponent ],
+      declarations: [ ApplicationUserListComponent, TranslatePipe ],
       imports: [
         SpinnerModule,
         UserTableModule,
@@ -65,7 +66,8 @@ describe('ApplicationUserListComponent', () => {
           unsubscribe() {
           }
         }
-      }]
+      },
+        {provide: TranslateService, useValue: {}}]
     })
     .compileComponents();
   }));
@@ -73,10 +75,9 @@ describe('ApplicationUserListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ApplicationUserListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });
