@@ -30,7 +30,6 @@ describe('TestModelComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TestModelComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

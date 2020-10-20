@@ -33,7 +33,6 @@ describe('Breadcrumbs.ContainerComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BreadcrumbsContainerComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
