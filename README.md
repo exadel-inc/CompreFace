@@ -425,8 +425,6 @@ Response body on success:
 
 
 
-
-
 ## Contributing
 
 Contributions are welcomed and greatly appreciated.
