@@ -17,7 +17,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-import {AuthGuard} from '../../core/auth/auth.guard';
 import {TestModelComponent} from './test-model.component';
 import {MatCardModule} from '@angular/material/card';
 import {TestModelPageService} from './test-model.service';
@@ -31,7 +30,7 @@ import { FaceRecognitionModule } from '../../features/face-recognition/face-reco
     CommonModule,
     BreadcrumbsContainerModule,
     RouterModule.forChild([
-      { path: '', component: TestModelComponent, canActivate: [ AuthGuard ] },
+      { path: '', component: TestModelComponent },
     ]),
     MatCardModule,
     FaceRecognitionModule,

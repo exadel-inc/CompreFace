@@ -57,6 +57,8 @@ spring:
           enable: true
         ssl:
           trust: ${POSTFIX_HOST}
+  main:
+    allow-bean-definition-overriding: true
 
 security:
   signing-key: MaYzkSjmkzPC57L

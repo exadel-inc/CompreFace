@@ -24,20 +24,24 @@ import com.exadel.frs.system.security.TokenServicesImpl;
 import com.exadel.frs.system.security.client.Client;
 import com.exadel.frs.system.security.client.ClientService;
 import com.exadel.frs.system.security.client.OAuthClientProperties;
+import com.exadel.frs.system.security.endpoint.CustomTokenEndpoint;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerEndpointsConfiguration;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,6 +64,19 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         JdbcTokenStore tokenStore = new JdbcTokenStore(dataSource);
         tokenStore.setAuthenticationKeyGenerator(new AuthenticationKeyGeneratorImpl());
         return tokenStore;
+    }
+
+    @Bean
+    @Primary
+    public TokenEndpoint tokenEndpoint(AuthorizationServerEndpointsConfiguration conf) {
+        TokenEndpoint tokenEndpoint = new CustomTokenEndpoint();
+        tokenEndpoint.setClientDetailsService(conf.getEndpointsConfigurer().getClientDetailsService());
+        tokenEndpoint.setProviderExceptionHandler(conf.getEndpointsConfigurer().getExceptionTranslator());
+        tokenEndpoint.setTokenGranter(conf.getEndpointsConfigurer().getTokenGranter());
+        tokenEndpoint.setOAuth2RequestFactory(conf.getEndpointsConfigurer().getOAuth2RequestFactory());
+        tokenEndpoint.setOAuth2RequestValidator(conf.getEndpointsConfigurer().getOAuth2RequestValidator());
+        tokenEndpoint.setAllowedRequestMethods(conf.getEndpointsConfigurer().getAllowedTokenEndpointRequestMethods());
+        return tokenEndpoint;
     }
 
     @Bean

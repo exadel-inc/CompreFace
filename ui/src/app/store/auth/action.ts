@@ -24,4 +24,5 @@ export const signUp = createAction('[Auth] Sign up', props<SignUp>());
 export const signUpFailure = createAction('[Auth] Sign up Failure', props<{ error: any }>());
 export const signUpSuccess = createAction('[Auth] Sign up Success', props<{ confirmationNeeded: boolean }>());
 export const logOut = createAction('[Auth] Logout');
+export const clearUserToken = createAction('[Auth] Clear User Token');
 export const resetErrorMessage = createAction('[Auth] Reset Error Message');

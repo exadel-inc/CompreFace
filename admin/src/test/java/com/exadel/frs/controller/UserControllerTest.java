@@ -47,7 +47,6 @@ import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
-import com.exadel.frs.system.security.JwtAuthenticationFilter;
 import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
@@ -66,7 +65,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = UserController.class,
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
-                classes = {JwtAuthenticationFilter.class, WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
+                classes = { WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
         )
 )
 public class UserControllerTest {
