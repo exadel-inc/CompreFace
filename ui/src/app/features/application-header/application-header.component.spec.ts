@@ -25,6 +25,7 @@ import {SpinnerModule} from '../spinner/spinner.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
 import {Subject} from 'rxjs';
+import {TranslateService} from "@ngx-translate/core";
 
 describe('ApplicationHeaderComponent', () => {
   let component: ApplicationHeaderComponent;
@@ -43,7 +44,8 @@ describe('ApplicationHeaderComponent', () => {
             app$: new Subject(),
           }
         },
-        {provide: MatDialog, useValue: {}}
+        {provide: MatDialog, useValue: {}},
+        {provide: TranslateService, useValue: {}},
       ],
       imports: [
         CommonModule,
@@ -64,6 +66,6 @@ describe('ApplicationHeaderComponent', () => {
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });

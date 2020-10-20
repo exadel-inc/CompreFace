@@ -15,7 +15,8 @@
  */
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
+import {BreadcrumbsContainerComponent} from './breadcrumbs.container.component';
+import {BreadcrumbsFacade} from "../breadcrumbs/breadcrumbs.facade";
 
 describe('Breadcrumbs.ContainerComponent', () => {
   let component: BreadcrumbsContainerComponent;
@@ -23,18 +24,18 @@ describe('Breadcrumbs.ContainerComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BreadcrumbsContainerComponent ]
+      declarations: [BreadcrumbsContainerComponent],
+      providers: [{provide: BreadcrumbsFacade, useValue: {}}]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BreadcrumbsContainerComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });

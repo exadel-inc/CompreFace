@@ -15,14 +15,15 @@
  */
 
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { of } from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {Router} from '@angular/router';
+import {of} from 'rxjs';
 
-import { ModelTableModule } from '../model-table/model-table.module';
-import { SpinnerModule } from '../spinner/spinner.module';
-import { ModelListFacade } from './model-list-facade';
-import { ModelListComponent } from './model-list.component';
+import {ModelTableModule} from '../model-table/model-table.module';
+import {SpinnerModule} from '../spinner/spinner.module';
+import {ModelListFacade} from './model-list-facade';
+import {ModelListComponent} from './model-list.component';
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 describe('ModelListComponent', () => {
   let component: ModelListComponent;
@@ -30,7 +31,7 @@ describe('ModelListComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ModelListComponent],
+      declarations: [ModelListComponent, TranslatePipe],
       imports: [SpinnerModule, ModelTableModule],
       providers: [{
         provide: MatDialog,
@@ -52,7 +53,8 @@ describe('ModelListComponent', () => {
           }
         }
       },
-      { provide: Router }
+        {provide: Router, useValue: {}},
+        {provide: TranslateService, useValue: {}},
       ]
     })
       .compileComponents();
@@ -61,10 +63,9 @@ describe('ModelListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ModelListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });

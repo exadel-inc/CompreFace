@@ -14,27 +14,33 @@
  * permissions and limitations under the License.
  */
 
-import {TestBed, waitForAsync} from '@angular/core/testing';
+import {TestBed, waitForAsync, ComponentFixture} from '@angular/core/testing';
 import {RouterTestingModule} from '@angular/router/testing';
 import {AppComponent} from './app.component';
 import {HttpClient} from '@angular/common/http';
-import {Store} from '@ngrx/store';
-import {provideMockStore, MockStore} from '@ngrx/store/testing';
-import {AppState} from 'src/app/store';
+import {provideMockStore} from '@ngrx/store/testing';
 import {FormBuilder} from '@angular/forms';
+import {TranslateService} from "@ngx-translate/core";
 
 describe('AppComponent', () => {
-  let mockStore: MockStore<AppState>;
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       providers: [provideMockStore(),
-      {
-        provide: HttpClient,
-        useValue: {}
-      },
-      FormBuilder
-    ],
+        {
+          provide: HttpClient,
+          useValue: {}
+        },
+        FormBuilder,
+        {
+          provide: TranslateService,
+          useValue: {
+            setDefaultLang: () => {},
+          },
+        }
+      ],
       imports: [
         RouterTestingModule
       ],
@@ -42,19 +48,20 @@ describe('AppComponent', () => {
         AppComponent
       ],
     }).compileComponents();
-
-    mockStore = TestBed.get(Store);
   }));
 
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  })
+
   it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+    expect(component).toBeDefined();
   });
 
-  // it(`should have as title 'frs-client-fe'`, () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   const app = fixture.debugElement.componentInstance;
-  //   expect(app.title).toEqual('frs-client-fe');
-  // });
+  it(`should have as title 'frs-client-fe'`, () => {
+    const app = fixture.debugElement.componentInstance;
+    expect(app.title).toEqual('frs-client-fe');
+  });
 });

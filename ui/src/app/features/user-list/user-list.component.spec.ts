@@ -29,7 +29,8 @@ import {MatInputModule} from '@angular/material/input';
 import {CommonModule} from '@angular/common';
 import {SnackBarService} from '../snackbar/snackbar.service';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
-import { MatDialogModule } from '@angular/material/dialog';
+import {MatDialogModule} from '@angular/material/dialog';
+import {TranslatePipe, TranslateService} from "@ngx-translate/core";
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -49,7 +50,7 @@ describe('UserListComponent', () => {
         MatDialogModule,
         InviteDialogModule
       ],
-      declarations: [UserListComponent],
+      declarations: [UserListComponent, TranslatePipe],
       providers: [
         {
           provide: SnackBarService,
@@ -70,7 +71,8 @@ describe('UserListComponent', () => {
             availableRoles$: of([{}]),
             unsubscribe() { }
           }
-        }],
+        },
+        {provide: TranslateService, useValue: {}}],
     })
       .overrideComponent(InviteUserComponent, {
         set: {}
@@ -81,10 +83,9 @@ describe('UserListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UserListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });
