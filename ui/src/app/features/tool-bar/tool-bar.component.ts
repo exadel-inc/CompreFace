@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { Component, Input, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-tool-bar',
@@ -22,14 +22,10 @@ import { Component, Input, OnInit, ChangeDetectionStrategy, Output, EventEmitter
   styleUrls: ['./tool-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToolBarComponent implements OnInit {
+export class ToolBarComponent {
   @Input() userAvatarInfo: string;
   @Input() userName: string;
   @Output() logout = new EventEmitter();
-
-  constructor() {}
-
-  ngOnInit() {}
 
   doLogout() {
     this.logout.emit();

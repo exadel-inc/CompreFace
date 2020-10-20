@@ -39,8 +39,3 @@ export const selectUserName = createSelector(
   selectUserInfoState,
   (userInfo) => userInfo.firstName + ' ' + userInfo.lastName
 );
-
-export const isAuthenticatedState = createSelector(
-  selectUserInfoState,
-  (userInfo) => userInfo.isAuthenticated
-);
