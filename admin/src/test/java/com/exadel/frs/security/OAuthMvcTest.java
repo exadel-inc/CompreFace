@@ -87,6 +87,7 @@ class OAuthMvcTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                                       .addFilter(springSecurityFilterChain).build();
         when(userService.generateRegistrationToken()).thenReturn(registrationToken);
+        when(userService.hasOnlyDemoUser()).thenReturn(false);
 
         this.userEmail = randomAlphanumeric(10) + "test@email.com";
         createUser(userEmail);
