@@ -17,13 +17,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { merge, Observable, of, of as observableOf } from 'rxjs';
+import { Observable, of as observableOf } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
-import { resetUserInfo, updateUserInfo } from '../userInfo/action';
+import { resetUserInfo } from '../userInfo/action';
 import {
   clearUserToken,
   logIn,
@@ -50,16 +50,7 @@ export class AuthEffects {
     ofType(logIn),
     switchMap(action => {
       return this.authService.logIn(action.email, action.password).pipe(
-        switchMap(() => {
-          this.authService.updateAuthorization(true);
-          return [
-            logInSuccess(),
-            updateUserInfo(
-              {
-                isAuthenticated: true
-              })
-          ];
-        }),
+        map(() => logInSuccess()),
         catchError(error => observableOf(logInFailure(error)))
       );
     }));
@@ -127,7 +118,7 @@ export class AuthEffects {
     switchMap(() => {
       this.router.navigateByUrl(ROUTERS_URL.LOGIN);
 
-      return merge(of(clearUserToken()), of(resetUserInfo()));
+      return [clearUserToken(), resetUserInfo()];
     })
   );
 

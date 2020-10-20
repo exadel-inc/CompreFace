@@ -23,7 +23,6 @@ import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dia
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {AuthGuard, LoginGuard} from './core/auth/auth.guard';
 import {AlertComponent} from './features/alert/alert.component';
 import {ErrorInterceptor} from './core/auth/error.inerceptor';
 import {DeleteDialogComponent} from './features/delete-dialog/delete-dialog.component';
@@ -71,8 +70,6 @@ import { BreadcrumbsContainerModule } from './features/breadcrumbs.container/bre
     })
   ],
   providers: [
-    AuthGuard,
-    LoginGuard,
     FormBuilder,
     {
       provide: HTTP_INTERCEPTORS,

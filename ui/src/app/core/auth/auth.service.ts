@@ -14,20 +14,17 @@
  * permissions and limitations under the License.
  */
 
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { catchError, switchMap } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { API_URL } from '../../data/enums/api-url.enum';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { AppState } from '../../store';
-import { updateUserAuthorization } from '../../store/userInfo/action';
-import { propToLocalStorage } from '../../decorators/property-storage';
 
 @Injectable({
   providedIn: 'root'
@@ -36,14 +33,7 @@ export class AuthService {
   refreshInProgress: boolean;
   requests = [];
 
-  @propToLocalStorage()
-  public isAuthorized: boolean;
-
   constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {
-  }
-
-  checkAuthorization(): boolean {
-    return this.isAuthorized;
   }
 
   logIn(email: string, password: string): Observable<any> {
@@ -61,12 +51,7 @@ export class AuthService {
     return this.http.post(url, formData, { headers: { Authorization: environment.basicToken }, withCredentials: false });
   }
 
-  updateAuthorization(value: boolean): void {
-    this.isAuthorized = value;
-  }
-
   clearUserToken(): Observable<any> {
-    localStorage.clear();
     const url = `${environment.adminApiUrl}${API_URL.LOGIN}`;
     return this.http.delete(url, { headers: { Authorization: environment.basicToken }});
   }
@@ -78,7 +63,6 @@ export class AuthService {
 
   logOut() {
     this.clearUserToken();
-    this.store.dispatch(updateUserAuthorization({ value: false }));
     this.router.navigateByUrl(ROUTERS_URL.LOGIN);
   }
 }
