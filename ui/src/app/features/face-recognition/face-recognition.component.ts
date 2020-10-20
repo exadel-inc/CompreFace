@@ -32,7 +32,7 @@ export class FaceRecognitionComponent implements OnInit, OnDestroy {
     this.file$ = this.store.select(selectFile);
     this.requestInfo$ = this.store.select(selectRequest);
     this.pending$ = this.store.select(selectTestIsPending);
-    this.isDisplayResult$ = combineLatest(this.data$, this.pending$).pipe(
+    this.isDisplayResult$ = combineLatest([this.data$, this.pending$]).pipe(
       map(([data, pending]) => !!data && !pending)
     );
   }

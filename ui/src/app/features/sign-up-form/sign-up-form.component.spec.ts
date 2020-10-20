@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { CommonModule } from '@angular/common';
-import { ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -24,51 +24,52 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import {of, Subscription} from 'rxjs';
 
 import { SignUpFormComponent } from './sign-up-form.component';
-import {TranslatePipe, TranslateService} from "@ngx-translate/core";
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 describe('SignUpFormComponent', () => {
   let component: SignUpFormComponent;
   let fixture: ComponentFixture<SignUpFormComponent>;
   const initialState = { isAuthenticated: false, errorMessage: 'some error message' };
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        SignUpFormComponent, TranslatePipe
-      ],
-      providers: [
-        {provide: TranslateService, useValue: {}},
-        {
-          provide: Store,
-          useValue: {
-            dispatch: () => { },
-            select: () => {
-              return of(initialState);
-            }
-          }
-        },
-      ],
-      imports: [
-        CommonModule,
-        MatCardModule,
-        MatInputModule,
-        MatDialogModule,
-        MatIconModule,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterModule,
-        BrowserAnimationsModule,
-        RouterTestingModule
-      ]
-    }).compileComponents();
-  }));
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [SignUpFormComponent, TranslatePipe],
+        providers: [
+          { provide: TranslateService, useValue: {} },
+          {
+            provide: Store,
+            useValue: {
+              dispatch: () => {},
+              select: () => {
+                return of(initialState);
+              },
+            },
+          },
+        ],
+        imports: [
+          CommonModule,
+          MatCardModule,
+          MatInputModule,
+          MatDialogModule,
+          MatIconModule,
+          FormsModule,
+          ReactiveFormsModule,
+          RouterModule,
+          BrowserAnimationsModule,
+          RouterTestingModule,
+        ],
+      }).compileComponents();
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SignUpFormComponent);
     component = fixture.componentInstance;
+    component.stateSubscription = new Subscription();
   });
 
   it('should create', () => {

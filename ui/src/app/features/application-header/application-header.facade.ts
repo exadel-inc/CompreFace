@@ -46,8 +46,8 @@ export class ApplicationHeaderFacade implements IFacade {
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
     this.userRole$ = combineLatest(
-      this.store.select(selectUserRollForSelectedApp),
-      this.store.select(selectUserRollForSelectedOrganization)
+      [this.store.select(selectUserRollForSelectedApp),
+      this.store.select(selectUserRollForSelectedOrganization)]
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role

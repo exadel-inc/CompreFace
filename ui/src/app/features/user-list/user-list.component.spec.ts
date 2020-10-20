@@ -20,7 +20,7 @@ import {UserTableModule} from 'src/app/features/user-table/user-table.module';
 import {InviteUserComponent} from 'src/app/features/invite-user/invite-user.component';
 import {UserListComponent} from './user-list.component';
 import {UserListFacade} from './user-list-facade';
-import {of} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {InviteUserModule} from '../invite-user/invite-user.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
@@ -30,7 +30,7 @@ import {CommonModule} from '@angular/common';
 import {SnackBarService} from '../snackbar/snackbar.service';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
 import {MatDialogModule} from '@angular/material/dialog';
-import {TranslatePipe, TranslateService} from "@ngx-translate/core";
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -83,6 +83,7 @@ describe('UserListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UserListComponent);
     component = fixture.componentInstance;
+    component.availableRolesSubscription = new Subscription();
   });
 
   it('should create', () => {

@@ -14,11 +14,11 @@
  * permissions and limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {ApplicationService} from './application.service';
-import {Application} from 'src/app/data/interfaces/application';
-import {environment} from '../../../environments/environment';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { ApplicationService } from './application.service';
+import { Application } from 'src/app/data/interfaces/application';
+import { environment } from '../../../environments/environment';
 
 describe('ApplicationService', () => {
   let service: ApplicationService;
@@ -27,11 +27,11 @@ describe('ApplicationService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [ApplicationService]
+      providers: [ApplicationService],
     });
 
-    service = TestBed.get(ApplicationService);
-    httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.inject(ApplicationService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -51,17 +51,20 @@ describe('ApplicationService', () => {
 
     const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/apps`);
     expect(req.request.method).toBe('GET');
-    req.flush([{
-      name: 'test-application-one',
-      id: '0',
-      owner: 'owner',
-      organizationId: 'organizationId'
-    }, {
-      name: 'test-application-two',
-      id: '1',
-      owner: 'owner',
-      organizationId: 'organizationId'
-    }]);
+    req.flush([
+      {
+        name: 'test-application-one',
+        id: '0',
+        owner: 'owner',
+        organizationId: 'organizationId',
+      },
+      {
+        name: 'test-application-two',
+        id: '1',
+        owner: 'owner',
+        organizationId: 'organizationId',
+      },
+    ]);
   });
 
   it('should return set of applications', () => {
@@ -76,7 +79,7 @@ describe('ApplicationService', () => {
       name: 'new-app',
       id: '2',
       owner: 'owner',
-      organizationId: 'organizationId'
+      organizationId: 'organizationId',
     });
   });
 
@@ -91,7 +94,7 @@ describe('ApplicationService', () => {
       name: 'new app',
       id: '2',
       owner: 'owner',
-      organizationId: 'orgId'
+      organizationId: 'orgId',
     });
   });
 });

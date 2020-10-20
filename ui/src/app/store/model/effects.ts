@@ -75,10 +75,10 @@ export class ModelEffects {
   deleteModel$ = this.actions.pipe(
     ofType(deleteModel),
     switchMap(action =>
-      forkJoin(
+      forkJoin([
         of(action.modelId),
         this.modelService.delete(action.organizationId, action.applicationId, action.modelId)
-      ).pipe(
+      ]).pipe(
         map(([modelId]) => deleteModelSuccess({ modelId })),
         catchError(error => of(deleteModelFail({ error }))),
       )),

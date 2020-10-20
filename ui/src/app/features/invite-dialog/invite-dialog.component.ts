@@ -51,8 +51,8 @@ export class InviteDialogComponent implements OnInit {
 
     if (this.data.options$) {
       this.filteredOptions$ = combineLatest(
-        this.data.options$,
-        this.form.controls.userEmail.valueChanges.pipe(startWith(''))
+        [this.data.options$,
+        this.form.controls.userEmail.valueChanges.pipe(startWith(''))]
       ).pipe(
         map(([options, value]) => this.filter(options as string[], value)),
       );
