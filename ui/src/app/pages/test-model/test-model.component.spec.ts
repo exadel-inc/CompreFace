@@ -8,27 +8,28 @@ describe('TestModelComponent', () => {
   let component: TestModelComponent;
   let fixture: ComponentFixture<TestModelComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        declarations: [TestModelComponent],
-        providers: [
-          {
-            provide: Store,
-            useValue: {
-              select: () => {},
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      declarations: [TestModelComponent],
+      providers: [
+        {
+          provide: Store, useValue: {
+            select: () => {
             },
-          },
-          {
-            provide: TestModelPageService,
-            useValue: {
-              initUrlBindingStreams: () => {},
+          }
+        },
+        {
+          provide: TestModelPageService, useValue: {
+            initUrlBindingStreams: () => {
             },
-          },
-        ],
-      }).compileComponents();
-    })
-  );
+            unSubscribe: () => {},
+            clearSelectedModelId: () => {},
+          }
+        },
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TestModelComponent);

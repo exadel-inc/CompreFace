@@ -36,59 +36,54 @@ describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
 
-  beforeEach(
-    waitForAsync(() => {
-      TestBed.configureTestingModule({
-        imports: [
-          NoopAnimationsModule,
-          CommonModule,
-          UserTableModule,
-          SpinnerModule,
-          InviteUserModule,
-          FormsModule,
-          UserTablePipeModule,
-          MatInputModule,
-          MatDialogModule,
-          InviteDialogModule,
-        ],
-        declarations: [UserListComponent, TranslatePipe],
-        providers: [
-          {
-            provide: SnackBarService,
-            useValue: {},
-          },
-          {
-            provide: UserListFacade,
-            useValue: {
-              initSubscriptions: () => of([{}]),
-              users$: of([
-                {
-                  id: 0,
-                  name: 'name',
-                  owner: {
-                    firstname: 'firstname',
-                  },
-                },
-              ]),
-              selectedOrganization$: of([{}]),
-              isLoading$: of([{}]),
-              availableRoles$: of([{}]),
-              unsubscribe() {},
-            },
-          },
-          { provide: TranslateService, useValue: {} },
-        ],
-      })
-        .overrideComponent(InviteUserComponent, {
-          set: {},
-        })
-        .compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        NoopAnimationsModule,
+        CommonModule,
+        UserTableModule,
+        SpinnerModule,
+        InviteUserModule,
+        FormsModule,
+        UserTablePipeModule,
+        MatInputModule,
+        MatDialogModule,
+        InviteDialogModule
+      ],
+      declarations: [UserListComponent, TranslatePipe],
+      providers: [
+        {
+          provide: SnackBarService,
+          useValue: {}
+        }, {
+          provide: UserListFacade,
+          useValue: {
+            initSubscriptions: () => of([{}]),
+            users$: of([{
+              id: 0,
+              name: 'name',
+              owner: {
+                firstname: 'firstname'
+              }
+            }]),
+            selectedOrganization$: of([{}]),
+            isLoading$: of([{}]),
+            availableRoles$: of([{}]),
+            unsubscribe() { }
+          }
+        },
+        {provide: TranslateService, useValue: {}}],
     })
-  );
+      .overrideComponent(InviteUserComponent, {
+        set: {}
+      })
+      .compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserListComponent);
     component = fixture.componentInstance;
+    component.availableRolesSubscription = new Subscription();
   });
 
   it('should create', () => {

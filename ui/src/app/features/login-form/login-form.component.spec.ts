@@ -25,7 +25,7 @@ import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store } from '@ngrx/store';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import { of } from 'rxjs';
+import {of, Subscription} from 'rxjs';
 
 import { LoginFormComponent } from './login-form.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -79,6 +79,7 @@ describe('LoginFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginFormComponent);
     component = fixture.componentInstance;
+    component.stateSubscription = new Subscription();
   });
 
   it('should create', () => {

@@ -19,7 +19,7 @@ import { ApplicationUserListComponent } from './application-user-list.component'
 import { SpinnerModule } from '../spinner/spinner.module';
 import { UserTableModule } from '../user-table/user-table.module';
 import { ApplicationUserListFacade } from './application-user-list-facade';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { InviteUserModule } from '../invite-user/invite-user.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -80,6 +80,7 @@ describe('ApplicationUserListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ApplicationUserListComponent);
     component = fixture.componentInstance;
+    component.availableRolesSubscription = new Subscription();
   });
 
   it('should create', () => {

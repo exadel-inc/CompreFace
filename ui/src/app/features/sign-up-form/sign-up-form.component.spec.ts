@@ -24,7 +24,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store } from '@ngrx/store';
-import { of } from 'rxjs';
+import {of, Subscription} from 'rxjs';
 
 import { SignUpFormComponent } from './sign-up-form.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -69,6 +69,7 @@ describe('SignUpFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SignUpFormComponent);
     component = fixture.componentInstance;
+    component.stateSubscription = new Subscription();
   });
 
   it('should create', () => {

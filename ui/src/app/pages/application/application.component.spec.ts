@@ -16,7 +16,7 @@
 
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {ApplicationComponent} from './application.component';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {NO_ERRORS_SCHEMA} from '@angular/core';
 import {ApplicationPageService} from './application.service';
 
 describe('ApplicationComponent', () => {
@@ -32,7 +32,7 @@ describe('ApplicationComponent', () => {
             unSubscribe: () => {},
           }}
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();
   }));
@@ -40,10 +40,9 @@ describe('ApplicationComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ApplicationComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });
