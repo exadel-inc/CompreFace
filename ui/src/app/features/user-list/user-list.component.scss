@@ -50,6 +50,7 @@ app-spinner {
       background-color: $super-light-gray;
       flex-grow: 2;
       height: 32px;
+      min-width:0;
     }
   }
 }
