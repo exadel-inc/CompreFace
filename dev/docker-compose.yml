@@ -30,6 +30,7 @@ services:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
       - SPRING_PROFILES_ACTIVE=dev
+      - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
     depends_on:
       - compreface-postgres-db
       - compreface-api
@@ -50,6 +51,7 @@ services:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
       - SPRING_PROFILES_ACTIVE=dev
+      - API_JAVA_OPTS=${compreface_api_java_options}
 
   compreface-fe:
     image: ${registry}compreface-fe
