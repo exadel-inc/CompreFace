@@ -7,7 +7,7 @@ import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-reco
 @Component({
   selector: 'app-recognition-result',
   templateUrl: './recognition-result.component.html',
-  styleUrls: ['./recognition-result.component.scss']
+  styleUrls: ['./recognition-result.component.scss'],
 })
 export class RecognitionResultComponent implements OnDestroy {
   @Input() pending = true;
@@ -24,14 +24,10 @@ export class RecognitionResultComponent implements OnDestroy {
       this.printSubscription = this.printResult(value.box, value.faces).subscribe();
     }
   }
-
-  private printSubscription: Subscription;
-  public canvasSize: ImageSize = {width: 300, height: null};
-
   @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
 
-  constructor() {
-  }
+  canvasSize: ImageSize = { width: 300, height: null };
+  private printSubscription: Subscription;
 
   ngOnDestroy() {
     if (this.printSubscription) {
@@ -65,8 +61,7 @@ export class RecognitionResultComponent implements OnDestroy {
   drawCanvas(box: any, face: any) {
     const img = new Image();
     const resultFace = face.length > 0 ? face[0] : { face_name: undefined, similarity: 0 };
-    const ctx: CanvasRenderingContext2D =
-      this.myCanvas.nativeElement.getContext('2d');
+    const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
 
     img.onload = () => {
       ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
