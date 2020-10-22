@@ -200,9 +200,9 @@ By using the created API key, the user can add an image as an example of the fac
 Creates an example of the face by saving images. To train the system, you can add as many images as you want.
 
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/faces?subject=<face_name>&det_prob_threshold=<det_prob_threshold>" \
+curl  -X POST "http://localhost:8000/api/v1/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
--H "x-api-key: <model_api_key>" \
+-H "x-api-key: <faces_collection_api_key>" \
 -F file=@<local_file> 
 ```
 | Element             | Description | Type   | Required | Notes                                                        |
@@ -217,24 +217,24 @@ Response body on success:
 ```
 {
   "image_id": "<UUID>",
-  "subject": "<face_name>"
+  "subject": "<subject>"
 }
 ```
 
 | Element  | Type   | Description                |
 | -------- | ------ | -------------------------- |
 | image_id | UUID   | UUID of uploaded image     |
-| subject  | string | <face_name> of saved image |
+| subject  | string | <subject> of saved image |
 
 
 
 ### Recognize faces from given image
 
-Recognizes faces from the uploaded images.
+Recognizes faces from the uploaded image.
 ```http request
 curl  -X POST "http://localhost:8000/api/v1/recognize?limit=<limit>&prediction_count=<prediction_count>" \
 -H "Content-Type: multipart/form-data" \
--H "x-api-key: <model_api_key>" \
+-H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
 ```
 
@@ -262,7 +262,7 @@ Response body on success:
       "faces": [
         {
           "similarity": <similarity1>,
-          "subject": <face_name1>	
+          "subject": <subject1>	
         },
         ...
       ]
@@ -288,7 +288,7 @@ Retrieves a list of images saved in a Face Collection
 
 ```http request
 curl  -X GET "http://localhost:8000/api/v1/faces" \
--H "x-api-key: <model_api_key>" \
+-H "x-api-key: <faces_collection_api_key>" \
 ```
 
 | Element   | Description | Type   | Required | Notes                                     |
@@ -301,8 +301,8 @@ Response body on success:
 {
   "faces": [
     {
-      "image_id": <face_id>,
-      "subject": <face_name>
+      "image_id": <image_id>,
+      "subject": <subject>
     },
     ...
   ]
@@ -312,17 +312,17 @@ Response body on success:
 | Element  | Type   | Description                                                  |
 | -------- | ------ | ------------------------------------------------------------ |
 | image_id | UUID   | UUID of the face                                             |
-| subject  | string | <face_name> of the person, whose picture was saved for this api key |
+| subject  | string | <subject> of the person, whose picture was saved for this api key |
 
 
 
 ### Delete all examples of the face by name
 
-Deletes all image examples of the <face_name>.
+Deletes all image examples of the <subject>.
 
 ```http request
-curl  -X DELETE "http://localhost:8000/api/v1/faces?subject=<face_name>" \
--H "x-api-key: <model_api_key>"
+curl  -X DELETE "http://localhost:8000/api/v1/faces?subject=<subject>" \
+-H "x-api-key: <faces_collection_api_key>"
 ```
 
 | Element   | Description | Type   | Required | Notes                                                        |
@@ -334,8 +334,8 @@ Response body on success:
 ```
 [
   {
-    "image_id": <face_id>,
-    "subject": <face_name>
+    "image_id": <image_id>,
+    "subject": <subject>
   },
   ...
 ]
@@ -344,7 +344,7 @@ Response body on success:
 | Element  | Type   | Description                                                  |
 | -------- | ------ | ------------------------------------------------------------ |
 | image_id | UUID   | UUID of the removed face                                     |
-| subject  | string | <face_name> of the person, whose picture was saved for this api key |
+| subject  | string | <subject> of the person, whose picture was saved for this api key |
 
 
 
@@ -354,7 +354,7 @@ Deletes an image by ID.
 
 ```http request
 curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
--H "x-api-key: <model_api_key>"
+-H "x-api-key: <faces_collection_api_key>"
 ```
 
 | Element   | Description | Type   | Required | Notes                                     |
@@ -365,25 +365,25 @@ curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
 Response body on success:
 ```
 {
-  "image_id": <face_id>,
-  "subject": <face_name>
+  "image_id": <image_id>,
+  "subject": <subject>
 }
 ```
 
 | Element  | Type   | Description                                                  |
 | -------- | ------ | ------------------------------------------------------------ |
 | image_id | UUID   | UUID of the removed face                                     |
-| subject  | string | <face_name> of the person, whose picture was saved for this api key |
+| subject  | string | <subject> of the person, whose picture was saved for this api key |
 
 
 
 ### Verify faces from given image
 
-Compares faces from the uploaded images with provided face id.
+Compares faces from the uploaded image with face in saved image id.
 ```http request
 curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>" \
 -H "Content-Type: multipart/form-data" \
--H "x-api-key: <model_api_key>" \
+-H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
 ```
 
