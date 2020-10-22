@@ -17,13 +17,13 @@
 <mat-toolbar>
   <mat-toolbar-row class="container">
     <a class="logo" [routerLink]="'/'">
-      <img src="assets/img/face-recognition-logo.svg" alt="" />
+      <img src="assets/img/face-recognition-logo.svg" alt="CompreFace logo" />
     </a>
     <div class="user-info-container">
       <span class="user-info-name">{{ userName }}</span>
       <span class="avatar-wrapper">
         <button mat-icon-button [matMenuTriggerFor]="menu">
-          <img [src]="userAvatarInfo" />
+          <img [src]="userAvatarInfo" alt="User Avatar"/>
         </button>
       </span>
     </div>
