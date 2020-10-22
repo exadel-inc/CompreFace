@@ -97,7 +97,7 @@
     "role": "Role",
     "search": {
       "org_title": "Search User",
-      "app_title": "search",
+      "app_title": "Search User",
       "no_results": "No matches found"
     }
   },
