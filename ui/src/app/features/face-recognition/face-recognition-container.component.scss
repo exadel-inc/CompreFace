@@ -14,39 +14,25 @@
  * permissions and limitations under the License.
  */
 
-@import 'media.scss';
-@import 'colors.scss';
+@import "colors.scss";
 
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
-
-  .header-container {
-    width: 100%;
-
-    @include mobile {
-      height: auto;
-    }
-  }
+.header-title {
+  argin: 5px 0;
+  font-weight: bold;
+  font-size: 15px;
 }
 
-.test-model-container {
-  width: 100%;
-  margin: 10px auto;
-  border: 1px solid black;
-  background-color: $super-light-gray;
-  height: 85%;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 650px;
+.face-uploader {
+  width: 60%;
+  margin: auto;
+}
 
-  .test-model-loader {
-    padding-top: 20px;
-    display: flex;
-    justify-content: center;
-  }
+.face-result {
+  padding: 0 20px;
+}
+
+.recognition-loading {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
 }

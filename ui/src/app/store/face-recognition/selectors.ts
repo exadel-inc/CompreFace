@@ -20,7 +20,7 @@ import { FaceRecognitionEntityState } from './reducers';
 export const selectTestEntityState = createFeatureSelector<FaceRecognitionEntityState>('faceRecognition');
 export const selectTestIsPending = createSelector(selectTestEntityState, state => state.isPending);
 
-export const selectTest =  createSelector(selectTestEntityState, state =>
+export const selectFaceData =  createSelector(selectTestEntityState, state =>
   state.model ? state.model.result[0] : null);
 export const selectFile =  createSelector(selectTestEntityState, state => state.file);
 export const selectRequest =  createSelector(selectTestEntityState, state => ({
