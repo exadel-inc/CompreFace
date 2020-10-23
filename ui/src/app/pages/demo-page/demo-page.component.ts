@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,39 +14,20 @@
  * permissions and limitations under the License.
  */
 
-@import 'media.scss';
-@import 'colors.scss';
+import { Component, OnInit } from '@angular/core';
+import { DemoPageService } from './demo-page.service';
 
-.container {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+@Component({
+  selector: 'app-demo-page',
+  templateUrl: './demo-page.component.html',
+  styleUrls: ['./demo-page.component.scss']
+})
+export class DemoPageComponent implements OnInit {
 
-  .header-container {
-    width: 100%;
+  constructor(private demoService: DemoPageService) { }
 
-    @include mobile {
-      height: auto;
-    }
+  ngOnInit(): void {
+    this.demoService.getDemoPageStatus().subscribe();
   }
-}
 
-.test-model-container {
-  width: 100%;
-  margin: 10px auto;
-  border: 1px solid black;
-  background-color: $super-light-gray;
-  height: 85%;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 650px;
-
-  .test-model-loader {
-    padding-top: 20px;
-    display: flex;
-    justify-content: center;
-  }
 }

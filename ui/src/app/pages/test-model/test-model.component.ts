@@ -16,8 +16,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {TestModelPageService} from './test-model.service';
 import { Store } from '@ngrx/store';
-import { selectPendingModel } from '../../store/model/selectors';
+import { selectCurrentModel, selectPendingModel } from '../../store/model/selectors';
 import { Observable } from 'rxjs';
+import { Model } from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-test-model',
@@ -25,12 +26,14 @@ import { Observable } from 'rxjs';
   styleUrls: ['./test-model.component.scss']
 })
 export class TestModelComponent implements OnInit, OnDestroy {
-  public modelLoading$: Observable<boolean>;
+  modelLoading$: Observable<boolean>;
+  model$: Observable<Model>;
   constructor(private modelService: TestModelPageService, private store: Store<any>) {}
 
   ngOnInit() {
     this.modelService.initUrlBindingStreams();
     this.modelLoading$ = this.store.select(selectPendingModel);
+    this.model$ = this.store.select(selectCurrentModel);
   }
 
   ngOnDestroy(): void {

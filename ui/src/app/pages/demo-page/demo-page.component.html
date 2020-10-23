@@ -14,25 +14,9 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="container">
-  <div class="header-container">
-    <app-breadcrumbs-container></app-breadcrumbs-container>
-  </div>
-
-  <div class="test-model-container">
-    <div class="test-model-loader"
-       *ngIf="modelLoading$ | async; else elseBlock">
-      <app-spinner></app-spinner>
-    </div>
-
-    <!-- todo add container component -->
-    <ng-template #elseBlock>
-      <app-face-recognition-container
-              [apiKey]="(model$ | async).apiKey"
-              [title]="('applications.header.edit' | translate)">
-      </app-face-recognition-container>
-    </ng-template>
-
-  </div>
+<div class="demo-page">
+    <app-face-recognition-container
+        [apiKey]="'1111'"
+        [title]="'Demo page'">
+    </app-face-recognition-container>
 </div>
-

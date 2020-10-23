@@ -22,17 +22,17 @@ export class FaceRecognitionService {
     });
   }
 
-  recognize(file: any, model: Model): Observable<any> {
+  recognize(file: any, apiKey: string): Observable<any> {
     const url = `${environment.userApiUrl}recognize`;
     const formData = new FormData();
     formData.append('file', file);
 
     return  this.http.post(url, formData, {
-      headers: { 'x-api-key': model.apiKey}
+      headers: { 'x-api-key': apiKey}
     }).pipe(
       map((data) => ({
         data,
-        request: this.createUIRequest(url, { 'x-api-key': model.apiKey})
+        request: this.createUIRequest(url, { 'x-api-key': apiKey})
       }))
     );
   }

@@ -16,20 +16,24 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
-import { FaceRecognitionContainerComponent } from './face-recognition-container.component';
-import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
-import { RecognitionResultComponent } from './recognition-result/recognition-result.component';
-import { SpinnerModule } from '../spinner/spinner.module';
+import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
+import { SpinnerModule } from '../../features/spinner/spinner.module';
+import { DemoPageComponent } from './demo-page.component';
+import { RouterModule } from '@angular/router';
+import { DemoPageService } from './demo-page.service';
 
 @NgModule({
-  declarations: [FaceRecognitionContainerComponent, RecognitionResultComponent],
+  declarations: [
+    DemoPageComponent
+  ],
   imports: [
     CommonModule,
-    DragNDropModule,
+    RouterModule.forChild([
+      { path: '', component: DemoPageComponent },
+    ]),
+    FaceRecognitionModule,
     SpinnerModule
   ],
-  providers: [ FaceRecognitionService ],
-  exports: [FaceRecognitionContainerComponent]
+  providers: [ DemoPageService ]
 })
-export class FaceRecognitionModule { }
+export class DemoPageModule { }
