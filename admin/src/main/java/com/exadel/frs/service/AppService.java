@@ -91,17 +91,16 @@ public class AppService {
         return organization.getUserOrganizationRoleOrThrow(userId).getRole();
     }
 
-    private void verifyNameIsUnique(final String name, final Long orgId) {
-        if (appRepository.existsByNameAndOrganizationId(name, orgId)) {
+    private void verifyNameIsUnique(final String name) {
+        if (appRepository.existsByName(name)) {
             throw new NameIsNotUniqueException(name);
         }
     }
 
-    public App getApp(final String orgGuid, final String appGuid, final Long userId) {
+    public App getApp(final String appGuid, final Long userId) {
         val app = getApp(appGuid);
 
         authManager.verifyReadPrivilegesToApp(userId, app);
-        authManager.verifyOrganizationHasTheApp(orgGuid, app);
 
         return app;
     }
@@ -116,8 +115,8 @@ public class AppService {
         return appRepository.findAllByOrganizationId(organization.getId());
     }
 
-    public AppRole[] getAppRolesToAssign(final String orgGuid, final String appGuid, final Long userId) {
-        val app = getApp(orgGuid, appGuid, userId);
+    public AppRole[] getAppRolesToAssign(final String appGuid, final Long userId) {
+        val app = getApp(appGuid, userId);
 
         val userAppRole = app.getUserAppRole(userId);
         if (userAppRole.isPresent() && OWNER == userAppRole.get().getRole()) {
@@ -132,8 +131,8 @@ public class AppService {
         return AppRole.values();
     }
 
-    public List<UserAppRole> getAppUsers(final String searchText, final String orgGuid, final String appGuid, final Long userId) {
-        val app = getApp(orgGuid, appGuid, userId);
+    public List<UserAppRole> getAppUsers(final String searchText, final String appGuid, final Long userId) {
+        val app = getApp(appGuid, userId);
 
         if (isNotEmpty(searchText)) {
             val result = new ArrayList<UserAppRole>();
@@ -154,11 +153,10 @@ public class AppService {
 
     public UserAppRole inviteUser(
             final UserInviteDto userInviteDto,
-            final String orgGuid,
             final String appGuid,
             final Long userId
     ) {
-        val app = getApp(orgGuid, appGuid, userId);
+        val app = getApp(appGuid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, app);
 
@@ -179,16 +177,11 @@ public class AppService {
         return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
 
-    public App createApp(final AppCreateDto appCreateDto, final String orgGuid, final Long userId) {
-        val organization = organizationService.getOrganization(orgGuid);
-
-        authManager.verifyWritePrivilegesToOrg(userId, organization);
-
-        verifyNameIsUnique(appCreateDto.getName(), organization.getId());
+    public App createApp(final AppCreateDto appCreateDto, final Long userId) {
+        verifyNameIsUnique(appCreateDto.getName());
 
         val app = App.builder()
                      .name(appCreateDto.getName())
-                     .organization(organization)
                      .guid(UUID.randomUUID().toString())
                      .apiKey(UUID.randomUUID().toString())
                      .build();
@@ -198,22 +191,22 @@ public class AppService {
         return appRepository.save(app);
     }
 
-    public App updateApp(final AppUpdateDto appUpdateDto, final String orgGuid, final String appGuid, final Long userId) {
-        val app = getApp(orgGuid, appGuid, userId);
+    public App updateApp(final AppUpdateDto appUpdateDto, final String appGuid, final Long userId) {
+        val app = getApp(appGuid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, app);
 
         val isSameName = app.getName().equals(appUpdateDto.getName());
         if (isNotTrue(isSameName)) {
-            verifyNameIsUnique(appUpdateDto.getName(), app.getOrganization().getId());
+            verifyNameIsUnique(appUpdateDto.getName());
             app.setName(appUpdateDto.getName());
         }
 
         return appRepository.save(app);
     }
 
-    public UserAppRole updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String orgGuid, final String guid, final Long adminId) {
-        val app = getApp(orgGuid, guid, adminId);
+    public UserAppRole updateUserAppRole(final UserRoleUpdateDto userRoleUpdateDto, final String guid, final Long adminId) {
+        val app = getApp(guid, adminId);
 
         authManager.verifyWritePrivilegesToApp(adminId, app);
 
@@ -243,9 +236,9 @@ public class AppService {
         return userAppRole;
     }
 
-    public void deleteUserFromApp(final String userGuid, final String orgGuid, final String guid, final Long adminId) {
+    public void deleteUserFromApp(final String userGuid, final String guid, final Long adminId) {
         val userId = userService.getUserByGuid(userGuid).getId();
-        val app = getApp(orgGuid, guid, userId);
+        val app = getApp(guid, userId);
 
         authManager.verifyWritePrivilegesToApp(adminId, app);
 
@@ -254,8 +247,8 @@ public class AppService {
         appRepository.save(app);
     }
 
-    public void regenerateApiKey(final String orgGuid, final String guid, final Long userId) {
-        val app = getApp(orgGuid, guid, userId);
+    public void regenerateApiKey(final String guid, final Long userId) {
+        val app = getApp(guid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, app);
 
@@ -265,19 +258,18 @@ public class AppService {
     }
 
     @Transactional
-    public void deleteApp(final String orgGuid, final String guid, final Long userId) {
-        val app = getApp(orgGuid, guid, userId);
+    public void deleteApp(final String guid, final Long userId) {
+        val app = getApp(guid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, app);
 
         appRepository.deleteById(app.getId());
     }
 
-    public UUID generateUuidToRequestModelShare(final String orgGuid, final String appGuid) {
+    public UUID generateUuidToRequestModelShare(final String appGuid) {
         val app = getApp(appGuid);
 
         authManager.verifyWritePrivilegesToApp(SecurityUtils.getPrincipalId(), app);
-        authManager.verifyOrganizationHasTheApp(orgGuid, app);
 
         val requestId = UUID.randomUUID();
         val id = ModelShareRequestId.builder()

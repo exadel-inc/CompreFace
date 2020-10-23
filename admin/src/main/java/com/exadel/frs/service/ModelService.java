@@ -60,11 +60,10 @@ public class ModelService {
         }
     }
 
-    public Model getModel(final String orgGuid, final String appGuid, final String modelGuid, final Long userId) {
+    public Model getModel(final String appGuid, final String modelGuid, final Long userId) {
         val model = getModel(modelGuid);
 
         authManager.verifyReadPrivilegesToApp(userId, model.getApp());
-        authManager.verifyOrganizationHasTheApp(orgGuid, model.getApp());
         authManager.verifyAppHasTheModel(appGuid, model);
 
         return model;
@@ -78,11 +77,10 @@ public class ModelService {
         return modelRepository.findAllByAppId(app.getId());
     }
 
-    public Model createModel(final ModelCreateDto modelCreateDto, final String orgGuid, final String appGuid, final Long userId) {
+    public Model createModel(final ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {
         val app = appService.getApp(appGuid);
 
         authManager.verifyWritePrivilegesToApp(userId, app);
-        authManager.verifyOrganizationHasTheApp(orgGuid, app);
 
         verifyNameIsUnique(modelCreateDto.getName(), app.getId());
 
@@ -98,13 +96,12 @@ public class ModelService {
 
     public Model updateModel(
             final ModelUpdateDto modelUpdateDto,
-            final String orgGuid,
             final String appGuid,
             final String modelGuid,
             final Long userId
     ) {
 
-        val model = getModel(orgGuid, appGuid, modelGuid, userId);
+        val model = getModel(appGuid, modelGuid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, model.getApp());
 
@@ -117,8 +114,8 @@ public class ModelService {
     }
 
     @Transactional
-    public void regenerateApiKey(final String orgGuid, final String appGuid, final String guid, final Long userId) {
-        val repoModel = getModel(orgGuid, appGuid, guid, userId);
+    public void regenerateApiKey(final String appGuid, final String guid, final Long userId) {
+        val repoModel = getModel(appGuid, guid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, repoModel.getApp());
 
@@ -129,8 +126,8 @@ public class ModelService {
     }
 
     @Transactional
-    public void deleteModel(final String orgGuid, final String appGuid, final String guid, final Long userId) {
-        val model = getModel(orgGuid, appGuid, guid, userId);
+    public void deleteModel(final String appGuid, final String guid, final Long userId) {
+        val model = getModel(appGuid, guid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, model.getApp());
 
@@ -140,13 +137,12 @@ public class ModelService {
     @Transactional
     public App share(
             final ModelShareDto modelShare,
-            final String orgGuid,
             final String appGuid,
             final String modelGuid
     ) {
         verifyShareRequest(modelShare);
 
-        val modelBeingShared = getModel(orgGuid, appGuid, modelGuid, SecurityUtils.getPrincipalId());
+        val modelBeingShared = getModel(appGuid, modelGuid, SecurityUtils.getPrincipalId());
 
         authManager.verifyWritePrivilegesToApp(SecurityUtils.getPrincipalId(), modelBeingShared.getApp());
 
