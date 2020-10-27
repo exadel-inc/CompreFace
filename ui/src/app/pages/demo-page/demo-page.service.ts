@@ -27,16 +27,7 @@ export class DemoPageService {
 
   constructor(private http: HttpClient) { }
 
-  getDemoPageStatus(): Observable<any> {
-    return this.http.get(`${environment.adminApiUrl}user/demo/model`).pipe(
-      map(() => of(true)),
-      catchError((response: any): Observable<boolean> => {
-        if (response instanceof HttpErrorResponse && response.status === 403) {
-          return of(false);
-        }
-
-        return throwError(response);
-      })
-    );
+  getModel(): Observable<any> {
+    return this.http.get(`${environment.adminApiUrl}user/demo/model`);
   }
 }

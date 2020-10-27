@@ -16,17 +16,21 @@
 
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { iif, Observable, of } from 'rxjs';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail,
   addFaceFail, addFace, addFaceSuccess } from './actions';
+import { Action, Store } from '@ngrx/store';
+import { selectCurrentModel, selectCurrentModelId } from '../model/selectors';
+import { selectDemoApiKey } from '../demo/selectors';
 
 @Injectable()
 export class FaceRecognitionEffects {
   constructor(
     private actions: Actions,
+    private store: Store<any>,
     private recognitionService: FaceRecognitionService,
     private snackBarService: SnackBarService
   ) { }
@@ -34,14 +38,20 @@ export class FaceRecognitionEffects {
   @Effect()
   recognizeFace$ = this.actions.pipe(
     ofType(recognizeFace),
-    switchMap(action => this.recognitionService.recognize(action.file, action.apiKey).pipe(
-      map(({data, request}) => recognizeFaceSuccess({
-        model: data,
-        file: action.file,
-        request
-      })),
-      catchError(error => of(recognizeFaceFail({ error }))),
-    )),
+    switchMap((action) => this.store.select(selectCurrentModelId).pipe(
+        mergeMap((data) =>
+          iif(
+            () => !!data,
+            this.store.select(selectCurrentModel).pipe(
+              switchMap((model) => this.recognizeFaceAction(action.file, model.apiKey))
+            ),
+            this.store.select(selectDemoApiKey).pipe(
+              switchMap((apiKey) => this.recognizeFaceAction(action.file, apiKey))
+            )
+          )
+        )
+      )
+    )
   );
 
   @Effect()
@@ -60,4 +70,21 @@ export class FaceRecognitionEffects {
       this.snackBarService.openHttpError(action.error);
     })
   );
+
+  /**
+   * Method made to finish recognize face effect, and for better understanding (more readable code).
+   *
+   * @param file Image
+   * @param apiKey model api key
+   */
+  private recognizeFaceAction(file, apiKey): Observable<Action> {
+    return this.recognitionService.recognize(file, apiKey).pipe(
+      map(({data, request}) => recognizeFaceSuccess({
+        model: data,
+        file,
+        request
+      })),
+      catchError(error => of(recognizeFaceFail({ error })))
+    );
+  }
 }

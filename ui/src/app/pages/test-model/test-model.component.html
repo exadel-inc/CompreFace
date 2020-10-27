@@ -27,9 +27,7 @@
 
     <!-- todo add container component -->
     <ng-template #elseBlock>
-      <app-face-recognition-container
-              [apiKey]="(model$ | async).apiKey"
-              [title]="('applications.header.edit' | translate)">
+      <app-face-recognition-container [title]="('test_model.title' | translate)">
       </app-face-recognition-container>
     </ng-template>
 

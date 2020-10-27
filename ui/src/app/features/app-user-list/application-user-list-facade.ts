@@ -74,7 +74,15 @@ export class ApplicationUserListFacade implements IFacade {
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== Role.USER ? organizationRole : applicationRole;
+        if (organizationRole !== Role.USER) {
+          if (organizationRole === Role.OWNER) {
+            return organizationRole;
+          }
+
+          if (organizationRole === Role.ADMINISTRATOR) {
+            return applicationRole === Role.OWNER ? applicationRole : organizationRole;
+          }
+        }
       })
     );
 
@@ -83,8 +91,10 @@ export class ApplicationUserListFacade implements IFacade {
 
     this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.organizationRole$]).pipe(
       map(([allRoles, userRole, organizationRole]) => {
-        if (organizationRole !== 'USER') {
+        if (organizationRole === Role.OWNER) {
           return allRoles;
+        } else if (organizationRole === Role.ADMINISTRATOR) {
+          return allRoles.filter(role => role !== Role.OWNER);
         } else {
           const roleIndex = allRoles.indexOf(userRole);
           return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];

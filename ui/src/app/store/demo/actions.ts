@@ -14,22 +14,8 @@
  * permissions and limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { DemoPageService } from './demo-page.service';
-import { Store } from '@ngrx/store';
-import { loadDemoApiKeyAction } from '../../store/demo/actions';
-import { selectDemoApiKey } from '../../store/demo/selectors';
-import { tap } from 'rxjs/operators';
+import {createAction, props} from '@ngrx/store';
 
-@Component({
-  selector: 'app-demo-page',
-  templateUrl: './demo-page.component.html',
-  styleUrls: ['./demo-page.component.scss']
-})
-export class DemoPageComponent implements OnInit {
-  constructor(private store: Store<any>) { }
-
-  ngOnInit(): void {
-    this.store.dispatch(loadDemoApiKeyAction());
-  }
-}
+export const loadDemoApiKeyAction  = createAction('[Demo/API] Load Demo Api Key');
+export const loadDemoApiKeySuccessAction  = createAction('[Demo/API] oad Demo Api Key Success', props<{apiKey: string}>());
+export const loadDemoApiKeyFailAction  = createAction('[Demo/API] oad Demo Api Key Fail');

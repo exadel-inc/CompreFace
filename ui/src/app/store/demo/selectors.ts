@@ -14,22 +14,9 @@
  * permissions and limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { DemoPageService } from './demo-page.service';
-import { Store } from '@ngrx/store';
-import { loadDemoApiKeyAction } from '../../store/demo/actions';
-import { selectDemoApiKey } from '../../store/demo/selectors';
-import { tap } from 'rxjs/operators';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {DemoEntityState} from './reducers';
 
-@Component({
-  selector: 'app-demo-page',
-  templateUrl: './demo-page.component.html',
-  styleUrls: ['./demo-page.component.scss']
-})
-export class DemoPageComponent implements OnInit {
-  constructor(private store: Store<any>) { }
-
-  ngOnInit(): void {
-    this.store.dispatch(loadDemoApiKeyAction());
-  }
-}
+export const selectDemoState = createFeatureSelector<DemoEntityState>('demo');
+export const selectDemoApiKey = createSelector(selectDemoState, (state) => state.apiKey);
+export const selectDemoPending = createSelector(selectDemoState, (state) => state.isPending);

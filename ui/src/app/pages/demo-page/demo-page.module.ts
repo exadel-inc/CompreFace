@@ -21,6 +21,7 @@ import { SpinnerModule } from '../../features/spinner/spinner.module';
 import { DemoPageComponent } from './demo-page.component';
 import { RouterModule } from '@angular/router';
 import { DemoPageService } from './demo-page.service';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import { DemoPageService } from './demo-page.service';
     RouterModule.forChild([
       { path: '', component: DemoPageComponent },
     ]),
+    TranslateModule,
     FaceRecognitionModule,
     SpinnerModule
   ],

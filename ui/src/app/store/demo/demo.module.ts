@@ -14,22 +14,18 @@
  * permissions and limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { DemoPageService } from './demo-page.service';
-import { Store } from '@ngrx/store';
-import { loadDemoApiKeyAction } from '../../store/demo/actions';
-import { selectDemoApiKey } from '../../store/demo/selectors';
-import { tap } from 'rxjs/operators';
+import { NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { DemoReducer } from './reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { DemoEffects } from './effects';
 
-@Component({
-  selector: 'app-demo-page',
-  templateUrl: './demo-page.component.html',
-  styleUrls: ['./demo-page.component.scss']
+@NgModule({
+  declarations: [],
+  imports: [
+    StoreModule.forFeature('demo', DemoReducer),
+    EffectsModule.forFeature([ DemoEffects ])
+  ]
 })
-export class DemoPageComponent implements OnInit {
-  constructor(private store: Store<any>) { }
-
-  ngOnInit(): void {
-    this.store.dispatch(loadDemoApiKeyAction());
-  }
+export class DemoStoreModule {
 }

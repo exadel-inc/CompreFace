@@ -20,8 +20,10 @@ import { map } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { recognizeFace, recognizeFaceReset } from '../../store/face-recognition/actions';
-import { selectFaceData, selectFile, selectRequest,
-  selectTestIsPending } from '../../store/face-recognition/selectors';
+import {
+  selectFaceData, selectFile, selectRequest, selectStateReady,
+  selectTestIsPending
+} from '../../store/face-recognition/selectors';
 
 @Component({
   selector: 'app-face-recognition-container',
@@ -33,10 +35,8 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   file$: Observable<any>;
   requestInfo$: Observable<any>;
   pending$: Observable<boolean>;
-  isDisplayResult$: Observable<boolean>;
+  isLoaded$: Observable<boolean>;
 
-  @Input()
-  apiKey: string;
   @Input()
   title: string;
 
@@ -49,9 +49,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
     this.file$ = this.store.select(selectFile);
     this.requestInfo$ = this.store.select(selectRequest);
     this.pending$ = this.store.select(selectTestIsPending);
-    this.isDisplayResult$ = combineLatest([this.data$, this.pending$]).pipe(
-      map(([data, pending]) => !!data && !pending)
-    );
+    this.isLoaded$ = this.store.select(selectStateReady);
   }
 
   ngOnDestroy() {
@@ -59,9 +57,6 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   }
 
   recognizeFace(file: File) {
-    return this.store.dispatch(recognizeFace({
-      file,
-      apiKey: this.apiKey
-    }));
+    return this.store.dispatch(recognizeFace({file}));
   }
 }
