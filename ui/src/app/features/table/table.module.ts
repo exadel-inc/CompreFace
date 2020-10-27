@@ -25,6 +25,12 @@ import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
   declarations: [TableComponent],
   exports: [TableComponent],
-  imports: [CommonModule, MatTableModule, TruncateModule, MatTooltipModule, TranslateModule],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    TruncateModule,
+    MatTooltipModule,
+    TranslateModule,
+  ],
 })
 export class TableModule {}
