@@ -18,7 +18,7 @@
 
 <div class="face-uploader">
     <app-drag-n-drop
-            (upload)="recognizeFace($event)">
+        (upload)="recognizeFace($event)">
     </app-drag-n-drop>
 </div>
 
@@ -31,7 +31,7 @@
 
 <div class="face-result">
     <app-recognition-result
-        *ngIf="isDisplayResult$| async"
+        *ngIf="isLoaded$| async"
         [file]="file$ | async"
         [requestInfo]="requestInfo$ | async"
         [printData]="data$ | async">

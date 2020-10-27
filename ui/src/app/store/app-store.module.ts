@@ -34,6 +34,7 @@ import { AppSerializer } from './router/reducer';
 import { UserStoreModule } from './user/user.module';
 import { UserInfoStoreModule } from './userInfo/user-info.module';
 import { FaceRecognitionStoreModule } from './face-recognition/face-recognition.module';
+import { DemoStoreModule } from './demo/demo.module';
 
 @NgModule({
   declarations: [],
@@ -48,6 +49,7 @@ import { FaceRecognitionStoreModule } from './face-recognition/face-recognition.
     RoleStoreModule,
     ModelStoreModule,
     FaceRecognitionStoreModule,
+    DemoStoreModule,
     AppUserStoreModule,
     StoreRouterConnectingModule.forRoot({
       serializer: DefaultRouterStateSerializer,
