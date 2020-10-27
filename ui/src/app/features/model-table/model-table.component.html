@@ -16,7 +16,7 @@
 
 <table *ngIf="!isLoading" mat-table [dataSource]="data">
 
-  <caption></caption>
+  <caption>{{'models.caption' | translate}}</caption>
 
   <ng-container matColumnDef="name">
     <th mat-header-cell *matHeaderCellDef scope="col">{{'models.name' | translate}}</th>

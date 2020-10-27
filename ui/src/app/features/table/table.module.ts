@@ -14,23 +14,17 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {TableComponent} from './table.component';
+import { NgModule } from '@angular/core';
+import { TableComponent } from './table.component';
 import { MatTableModule } from '@angular/material/table';
-import {CommonModule} from '@angular/common';
-import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { CommonModule } from '@angular/common';
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [TableComponent],
-  exports: [
-    TableComponent
-  ],
-  imports: [
-    CommonModule,
-    MatTableModule,
-    TruncateModule,
-    MatTooltipModule
-  ]
+  exports: [TableComponent],
+  imports: [CommonModule, MatTableModule, TruncateModule, MatTooltipModule, TranslateModule],
 })
-export class TableModule { }
+export class TableModule {}

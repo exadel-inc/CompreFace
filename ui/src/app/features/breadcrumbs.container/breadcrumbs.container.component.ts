@@ -22,7 +22,12 @@ import { Model } from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-breadcrumbs-container',
-  template: ` <app-breadcrumbs [model]="model$ | async" [app]="app$ | async" [orgId]="orgId$ | async"> </app-breadcrumbs>`,
+  template: `
+    <app-breadcrumbs
+      [model]="model$ | async"
+      [app]="app$ | async"
+      [orgId]="orgId$ | async">
+    </app-breadcrumbs>`,
 })
 export class BreadcrumbsContainerComponent implements OnInit {
   orgId$: Observable<string>;

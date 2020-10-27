@@ -38,9 +38,12 @@
   },
 
   "toolbar": {
-    "logout": "Logout"
+    "logout": "Logout",
+    "user_avatar_info": "User avatar",
+    "logo": "CompreFace logo"
   },
   "applications": {
+    "caption": "Table of applications",
     "title": "Applications",
     "first_steps_title": "Create Application",
     "name": "Name",
@@ -66,6 +69,7 @@
     }
   },
   "models": {
+    "caption": "Table of face collections",
     "title": "Models",
     "name": "Name",
     "api_key": "API key",
@@ -92,6 +96,7 @@
     }
   },
   "users": {
+    "caption": "Table of users",
     "title": "Users",
     "user": "User",
     "role": "Role",

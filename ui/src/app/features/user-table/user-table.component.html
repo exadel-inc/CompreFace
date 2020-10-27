@@ -16,7 +16,7 @@
 
 <table *ngIf="!isLoading" mat-table [dataSource]="data">
 
-  <caption></caption>
+  <caption>{{'users.caption' | translate}}</caption>
 
   <!-- Position Column -->
   <ng-container matColumnDef="user">
