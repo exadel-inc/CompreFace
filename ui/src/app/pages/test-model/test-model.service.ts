@@ -18,14 +18,12 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
+import { setSelectedAppIdEntityAction } from '../../store/application/action';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { setSelectedId } from '../../store/organization/action';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/actions';
 import { Subscription } from 'rxjs';
-import { selectApplications } from '../../store/application/selectors';
 import { filter, take } from 'rxjs/operators';
-import { getUserInfo } from '../../store/userInfo/action';
 import { OrganizationEnService } from '../../store/organization/organization-entitys.service';
 import { selectModels } from '../../store/model/selectors';
 
@@ -42,8 +40,7 @@ export class TestModelPageService {
     private route: ActivatedRoute,
     private store: Store<AppState>,
     private organizationEnService: OrganizationEnService
-  ) {
-  }
+  ) {}
 
   initUrlBindingStreams() {
     this.orgId = this.route.snapshot.queryParams.org;
@@ -54,13 +51,15 @@ export class TestModelPageService {
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedId({ selectId: this.orgId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
-      this.modelSub = this.store.select(selectModels).pipe(
-        filter(models => !models.length),
-        take(1)
-      ).subscribe(() => {
-        this.fetchModels();
-      }
-      );
+      this.modelSub = this.store
+        .select(selectModels)
+        .pipe(
+          filter((models) => !models.length),
+          take(1)
+        )
+        .subscribe(() => {
+          this.fetchModels();
+        });
     } else {
       this.router.navigate([ROUTERS_URL.HOME]);
     }
