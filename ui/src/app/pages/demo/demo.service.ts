@@ -14,22 +14,19 @@
  * permissions and limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { DemoPageService } from './demo-page.service';
-import { Store } from '@ngrx/store';
-import { loadDemoApiKeyAction } from '../../store/demo/actions';
-import { selectDemoApiKey } from '../../store/demo/selectors';
-import { tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
-@Component({
-  selector: 'app-demo-page',
-  templateUrl: './demo-page.component.html',
-  styleUrls: ['./demo-page.component.scss']
+@Injectable({
+  providedIn: 'root'
 })
-export class DemoPageComponent implements OnInit {
-  constructor(private store: Store<any>) { }
+export class DemoService {
 
-  ngOnInit(): void {
-    this.store.dispatch(loadDemoApiKeyAction());
+  constructor(private http: HttpClient) { }
+
+  getModel(): Observable<any> {
+    return this.http.get(`${environment.adminApiUrl}user/demo/model`);
   }
 }

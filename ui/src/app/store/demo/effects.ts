@@ -20,13 +20,13 @@ import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { loadDemoApiKeyAction, loadDemoApiKeyFailAction, loadDemoApiKeySuccessAction } from './actions';
-import { DemoPageService } from '../../pages/demo-page/demo-page.service';
+import { DemoService } from '../../pages/demo/demo.service';
 
 @Injectable()
 export class DemoEffects {
   constructor(
     private actions: Actions,
-    private demoService: DemoPageService
+    private demoService: DemoService
   ) { }
 
   @Effect()

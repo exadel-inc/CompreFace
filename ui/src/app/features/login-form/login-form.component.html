@@ -48,4 +48,8 @@
 </mat-card>
 <div class="footer">
   <span class="mat-caption">build version: {{env.buildNumber}}</span>
+  <br>
+  <div class="demo-page" *ngIf="isDemoPageAvailable | async">
+    <a [routerLink]="[ROUTERS_URL.DEMO]">{{'login.demo' | translate}}</a>
+  </div>
 </div>

@@ -26,6 +26,7 @@ import { AppState } from '../../store';
 import { logIn, resetErrorMessage } from '../../store/auth/action';
 import { selectAuthState } from '../../store/auth/selectors';
 import { environment } from '../../../environments/environment';
+import { selectDemoPageAvailability } from '../../store/demo/selectors';
 
 @Component({
   selector: 'app-login-form',
@@ -40,9 +41,11 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   ROUTERS_URL = ROUTERS_URL;
   stateSubscription: Subscription;
   env = environment;
+  isDemoPageAvailable: Observable<boolean>;
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);
+    this.isDemoPageAvailable = this.store.select(selectDemoPageAvailability);
   }
 
   ngOnInit() {

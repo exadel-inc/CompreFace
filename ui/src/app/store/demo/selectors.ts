@@ -20,3 +20,4 @@ import {DemoEntityState} from './reducers';
 export const selectDemoState = createFeatureSelector<DemoEntityState>('demo');
 export const selectDemoApiKey = createSelector(selectDemoState, (state) => state.apiKey);
 export const selectDemoPending = createSelector(selectDemoState, (state) => state.isPending);
+export const selectDemoPageAvailability = createSelector(selectDemoState, (state) => !!state.apiKey);

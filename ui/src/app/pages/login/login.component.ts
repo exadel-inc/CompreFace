@@ -14,18 +14,20 @@
  * permissions and limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Component, OnInit } from '@angular/core';
+import { loadDemoApiKeyAction } from '../../store/demo/actions';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: [ './login.component.scss' ]
 })
 export class LoginComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private store: Store) {
   }
 
+  ngOnInit() {
+    this.store.dispatch(loadDemoApiKeyAction());
+  }
 }

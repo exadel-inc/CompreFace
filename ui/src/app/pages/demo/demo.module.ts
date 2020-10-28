@@ -16,26 +16,27 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
 import { SpinnerModule } from '../../features/spinner/spinner.module';
-import { DemoPageComponent } from './demo-page.component';
+import { DemoComponent } from './demo.component';
 import { RouterModule } from '@angular/router';
-import { DemoPageService } from './demo-page.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { DemoService } from './demo.service';
+import { DemoGuard } from './demo.guard';
 
 @NgModule({
   declarations: [
-    DemoPageComponent
+    DemoComponent
   ],
   imports: [
     CommonModule,
     RouterModule.forChild([
-      { path: '', component: DemoPageComponent },
+      { path: '', component: DemoComponent, canActivate: [ DemoGuard ] },
     ]),
     TranslateModule,
     FaceRecognitionModule,
     SpinnerModule
   ],
-  providers: [ DemoPageService ]
+  providers: [ DemoService ]
 })
-export class DemoPageModule { }
+export class DemoModule { }

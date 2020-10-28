@@ -14,20 +14,13 @@
  * permissions and limitations under the License.
  */
 
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { environment } from '../../../environments/environment';
+import { Component } from '@angular/core';
 
-@Injectable({
-  providedIn: 'root'
+@Component({
+  selector: 'app-demo',
+  templateUrl: './demo.component.html',
+  styleUrls: ['./demo.component.scss']
 })
-export class DemoPageService {
-
-  constructor(private http: HttpClient) { }
-
-  getModel(): Observable<any> {
-    return this.http.get(`${environment.adminApiUrl}user/demo/model`);
-  }
+export class DemoComponent {
+  constructor() { }
 }
