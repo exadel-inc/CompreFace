@@ -14,20 +14,22 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.mapper;
 
-import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.exadel.frs.dto.ui.UserRoleResponseDto;
+import com.exadel.frs.entity.User;
+import java.util.List;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class OrgCreateDto {
+@Mapper
+public interface UserGlobalRoleMapper {
 
-    @NotBlank(message = "Organization name cannot be empty")
-    private String name;
+    @Mapping(source = "guid", target = "userId")
+    @Mapping(source = "firstName", target = "firstName")
+    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "email", target = "email")
+    UserRoleResponseDto toUserRoleResponseDto(User userAppRole);
+
+    List<UserRoleResponseDto> toUserRoleResponseDto(List<User> userAppRoles);
 }

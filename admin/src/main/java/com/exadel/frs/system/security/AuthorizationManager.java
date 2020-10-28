@@ -16,16 +16,14 @@
 
 package com.exadel.frs.system.security;
 
-import static com.exadel.frs.enums.OrganizationRole.ADMINISTRATOR;
-import static com.exadel.frs.enums.OrganizationRole.OWNER;
-import static com.exadel.frs.enums.OrganizationRole.USER;
+import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
+import static com.exadel.frs.enums.GlobalRole.OWNER;
+import static com.exadel.frs.enums.GlobalRole.USER;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
-import com.exadel.frs.entity.Organization;
+import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppRole;
-import com.exadel.frs.enums.OrganizationRole;
-import com.exadel.frs.exception.AppDoesNotBelongToOrgException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
@@ -36,17 +34,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthorizationManager {
 
-    public void verifyReadPrivilegesToOrg(final Long userId, final Organization organization) {
+    public void verifyGlobalWritePrivileges(final User user) {
         try {
-            organization.getUserOrganizationRoleOrThrow(userId);
-        } catch (UserDoesNotBelongToOrganization e) {
-            throw new InsufficientPrivilegesException();
-        }
-    }
-
-    public void verifyWritePrivilegesToOrg(final Long userId, final Organization organization) {
-        try {
-            val role = organization.getUserOrganizationRoleOrThrow(userId).getRole();
+            val role = user.getGlobalRole();
             if (!List.of(OWNER, ADMINISTRATOR).contains(role)) {
                 throw new InsufficientPrivilegesException();
             }
@@ -55,10 +45,10 @@ public class AuthorizationManager {
         }
     }
 
-    public void verifyReadPrivilegesToApp(final Long userId, final App app) {
+    public void verifyReadPrivilegesToApp(final User user, final App app) {
         try {
-            if (USER == getUserOrganizationRole(app.getOrganization(), userId)) {
-                app.getUserAppRole(userId)
+            if (USER == user.getGlobalRole()) {
+                app.getUserAppRole(user.getId())
                    .orElseThrow(InsufficientPrivilegesException::new);
             }
         } catch (UserDoesNotBelongToOrganization e) {
@@ -66,27 +56,17 @@ public class AuthorizationManager {
         }
     }
 
-    public void verifyWritePrivilegesToApp(final Long userId, final App app) {
-        val orgRole = app.getOrganization()
-                         .getUserOrganizationRoleOrThrow(userId)
-                         .getRole();
-
-        if (List.of(OWNER, ADMINISTRATOR).contains(orgRole)) {
+    public void verifyWritePrivilegesToApp(final User user, final App app) {
+        if (List.of(OWNER, ADMINISTRATOR).contains(user.getGlobalRole())) {
             return;
         }
 
-        val appRole = app.getUserAppRole(userId)
+        val appRole = app.getUserAppRole(user.getId())
                          .orElseThrow(InsufficientPrivilegesException::new)
                          .getRole();
 
         if (AppRole.USER == appRole) {
             throw new InsufficientPrivilegesException();
-        }
-    }
-
-    public void verifyOrganizationHasTheApp(final String orgGuid, final App app) {
-        if (!app.getOrganization().getGuid().equals(orgGuid)) {
-            throw new AppDoesNotBelongToOrgException(app.getGuid(), orgGuid);
         }
     }
 
@@ -96,28 +76,22 @@ public class AuthorizationManager {
         }
     }
 
-    public void verifyCanDeleteUser(final UserDeleteDto userDeleteDtg) {
-        val defaultOrg = userDeleteDtg.getDefaultOrg();
-        val userToDelete = userDeleteDtg.getUserToDelete();
-        val deleter = userDeleteDtg.getDeleter();
+    public void verifyCanDeleteUser(final UserDeleteDto userDeleteDto) {
+        val userToDelete = userDeleteDto.getUserToDelete();
+        val deleter = userDeleteDto.getDeleter();
 
-        val isOrgOwnerBeingDeleted = defaultOrg.getOwner().equals(userToDelete);
+        val isOwnerBeingDeleted = userToDelete.getGlobalRole() == OWNER;
 
-        if (isOrgOwnerBeingDeleted) {
+        if (isOwnerBeingDeleted) {
             throw new InsufficientPrivilegesException("Organization owner cannot be removed!");
         }
 
-        val deleterRole = defaultOrg.getUserOrganizationRole(deleter.getId())
-                                    .orElseThrow(InsufficientPrivilegesException::new)
-                                    .getRole();
+        val deleterRole = deleter.getGlobalRole();
+
         val isSelfRemoval = userToDelete.equals(deleter);
 
         if (deleterRole == USER && !isSelfRemoval) {
             throw new InsufficientPrivilegesException();
         }
-    }
-
-    private OrganizationRole getUserOrganizationRole(final Organization organization, final Long userId) {
-        return organization.getUserOrganizationRoleOrThrow(userId).getRole();
     }
 }

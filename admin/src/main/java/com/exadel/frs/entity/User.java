@@ -17,9 +17,12 @@
 package com.exadel.frs.entity;
 
 import static java.util.Collections.emptyList;
+import com.exadel.frs.enums.GlobalRole;
+import com.exadel.frs.helpers.GlobalRoleConverter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -62,16 +65,13 @@ public class User implements UserDetails {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
+    @Convert(converter = GlobalRoleConverter.class)
+    private GlobalRole globalRole;
 
     @ToString.Exclude
     @Builder.Default
     @OneToMany(mappedBy = "user")
     private List<UserAppRole> userAppRoles = new ArrayList<>();
-
-    @ToString.Exclude
-    @Builder.Default
-    @OneToMany(mappedBy = "user")
-    private List<UserOrganizationRole> userOrganizationRoles = new ArrayList<>();
 
     @Override
     public List<GrantedAuthority> getAuthorities() {

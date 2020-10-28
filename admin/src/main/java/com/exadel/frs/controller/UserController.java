@@ -25,17 +25,20 @@ import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
+import com.exadel.frs.dto.ui.UserRoleResponseDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.DemoNotAvailableException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserMapper;
+import com.exadel.frs.mapper.UserGlobalRoleMapper;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
-import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -43,6 +46,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -67,10 +71,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
     private final UserService userService;
-    private final OrganizationService organizationService;
     private final UserMapper userMapper;
     private final AppService appService;
     private final ModelService modelService;
+    private final UserGlobalRoleMapper userGlobalRoleMapper;
 
     private Environment env;
 
@@ -111,7 +115,6 @@ public class UserController {
             user = userService.updateDemoUser(userCreateDto);
         } else {
             user = userService.createUser(userCreateDto);
-            organizationService.addUserToDefaultOrg(user.getEmail());
         }
 
         if (user.isEnabled()) {
@@ -149,11 +152,10 @@ public class UserController {
                                          .deleter(userService.getUser(SecurityUtils.getPrincipalId()))
                                          .userToDelete(userService.getUserByGuid(userGuid))
                                          .replacer(Replacer.from(replacer))
-                                         .defaultOrg(organizationService.getDefaultOrg())
                                          .updateAppsConsumer(appService::passAllOwnedAppsToNewOwnerAndLeaveAllApps)
                                          .build();
 
-        userService.deleteUser(deleteUserDto, organizationService::removeUserFromOrganization);
+        userService.deleteUser(deleteUserDto);
     }
 
     @GetMapping("/autocomplete")
@@ -187,6 +189,42 @@ public class UserController {
         }
 
         return Collections.singletonMap("apiKey", modelService.getModel(DEMO_GUID).getApiKey());
+    }
+
+    @PutMapping("/global/role")
+    @ApiOperation(value = "Update user global role")
+    public UserRoleResponseDto updateUserGlobalRole(
+            @ApiParam(value = "User role data", required = true)
+            @Valid
+            @RequestBody
+            final UserRoleUpdateDto userRoleUpdateDto
+    ) {
+        val admin = SecurityUtils.getPrincipalId();
+        val updatedUserOrgRole = userService.updateUserGlobalRole(userRoleUpdateDto, admin);
+
+        return userGlobalRoleMapper.toUserRoleResponseDto(updatedUserOrgRole);
+    }
+
+    @GetMapping("/global/roles")
+    @ApiOperation(value = "Get all global user roles")
+    public GlobalRole[] getGlobalRoles() {
+        return GlobalRole.values();
+    }
+
+    @GetMapping("/global/assign-roles")
+    @ApiOperation(value = "Get global roles, that can be assigned to other users")
+    public GlobalRole[] getGlobalRolesToAssign(
+    ) {
+        return userService.getGlobalRolesToAssign(SecurityUtils.getPrincipalId());
+    }
+
+    @GetMapping("/roles")
+    @ApiOperation(value = "Get all users")
+    public List<UserRoleResponseDto> getUsers(
+    ) {
+        return userGlobalRoleMapper.toUserRoleResponseDto(
+                userService.getUsers()
+        );
     }
 
     private void redirectToHomePage(final HttpServletResponse response) throws IOException {

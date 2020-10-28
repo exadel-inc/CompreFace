@@ -69,13 +69,10 @@ public class AppController {
     }
 
     @GetMapping("/apps")
-    @ApiOperation(value = "Get all applications in organization")
+    @ApiOperation(value = "Get all applications")
     public List<AppResponseDto> getApps(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid
     ) {
-        return appMapper.toResponseDto(appService.getApps(orgGuid, SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
+        return appMapper.toResponseDto(appService.getApps(SecurityUtils.getPrincipalId()), SecurityUtils.getPrincipalId());
     }
 
     @ResponseStatus(CREATED)
@@ -212,7 +209,7 @@ public class AppController {
             @ApiParam(value = "GUID of the application that needs to be deleted", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String guid,
-            @ApiParam(value = "User guid for deleting from organization", required = true)
+            @ApiParam(value = "User guid for deleting from application", required = true)
             @PathVariable
             final String userGuid
     ) {

@@ -16,26 +16,26 @@
 
 package com.exadel.frs.helpers;
 
-import com.exadel.frs.enums.OrganizationRole;
+import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.IncorrectOrganizationRoleException;
 import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class OrganizationRoleConverter implements AttributeConverter<OrganizationRole, String> {
+public class GlobalRoleConverter implements AttributeConverter<GlobalRole, String> {
 
     @Override
-    public String convertToDatabaseColumn(OrganizationRole organizationRole) {
-        return organizationRole == null ? null : organizationRole.getCode();
+    public String convertToDatabaseColumn(GlobalRole globalRole) {
+        return globalRole == null ? null : globalRole.getCode();
     }
 
     @Override
-    public OrganizationRole convertToEntityAttribute(String code) {
+    public GlobalRole convertToEntityAttribute(String code) {
         return code == null
                 ? null
-                : Stream.of(OrganizationRole.values())
-                        .filter(organizationRole -> organizationRole.getCode().equals(code))
+                : Stream.of(GlobalRole.values())
+                        .filter(globalRole -> globalRole.getCode().equals(code))
                         .findFirst()
                         .orElseThrow(() -> new IncorrectOrganizationRoleException(code));
     }

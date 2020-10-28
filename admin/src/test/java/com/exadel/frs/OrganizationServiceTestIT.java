@@ -34,16 +34,13 @@ package com.exadel.frs;
 
 import static com.exadel.frs.utils.TestUtils.executeScript;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
-import com.exadel.frs.repository.OrganizationRepository;
 import java.util.UUID;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.sql.DataSource;
-import liquibase.integration.spring.SpringLiquibase;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
@@ -54,8 +51,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Slf4j
@@ -65,20 +60,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @Nested
 public class OrganizationServiceTestIT {
 
-    @MockBean
-    private SpringLiquibase springLiquibase;
-
-    @MockBean
-    private PasswordEncoder passwordEncoder;
-
-    @MockBean
-    private EmailSender emailSender;
-
     @PersistenceUnit
     private EntityManagerFactory emf;
-
-    @Autowired
-    private OrganizationRepository repository;
 
     @Autowired
     private AppRepository appRepository;
@@ -104,25 +87,12 @@ public class OrganizationServiceTestIT {
         executeScript(dataSource, "clear_org_relations_test.sql");
     }
 
-    private final String ORG_GUID = "d098a11e-c4e4-4f56-86b2-85ab3bc83044";
-    private final Long ORG_ID = 1_000_001L;
     private final Long APP_ID = 2_000_001L;
     private final Long MODEL1_ID = 3_000_001L;
     private final Long USER_ID = 2147483647L;
 
     @Test
-    @DisplayName("Removal of app doesn't remove its parent organization")
-    void removalOfAppDoesNotRemoveItsOrganization() {
-        val app = appRepository.findById(APP_ID).get();
-
-        appRepository.delete(app);
-
-        assertThat(appRepository.findById(APP_ID)).isNotPresent();
-        assertThat(repository.findByGuid(ORG_GUID)).isPresent();
-    }
-
-    @Test
-    @DisplayName("Removal of model doesn't remove its parent app and organization")
+    @DisplayName("Removal of model doesn't remove its parent app")
     void removalOfModelDoesNotDeleteItsParentAppAndOrganization() {
         val model = modelRepository.findById(MODEL1_ID).get();
 
@@ -130,11 +100,10 @@ public class OrganizationServiceTestIT {
 
         assertThat(modelRepository.findById(MODEL1_ID)).isNotPresent();
         assertThat(appRepository.findById(APP_ID)).isPresent();
-        assertThat(repository.findByGuid(ORG_GUID)).isPresent();
     }
 
     @Test
-    @DisplayName("Removal of model share request doesn't remove its parent app and organization")
+    @DisplayName("Removal of model share request doesn't remove its parent app")
     void modelShareRequestRemovalDoesNotAffectItsParents() {
         val modelShareRequestIdFromApp1 = UUID.fromString("22d7f072-cda0-4601-a95d-979fc37c67ce");
         val modelShareRequest = modelShareRequestRepository.findModelShareRequestByRequestId(modelShareRequestIdFromApp1);
@@ -143,35 +112,10 @@ public class OrganizationServiceTestIT {
 
         assertThat(modelShareRequestRepository.findModelShareRequestByRequestId(modelShareRequestIdFromApp1)).isNull();
         assertThat(appRepository.findById(APP_ID)).isPresent();
-        assertThat(repository.findByGuid(ORG_GUID)).isPresent();
     }
 
     @Test
-    @DisplayName("Removing user from organization doesn't delete organization itself")
-    void removeUserFromOrgDoesNotDeleteOrgItself() {
-        val entityManager = emf.createEntityManager();
-        val transaction = entityManager.getTransaction();
-
-        val hql = "select u from UserOrganizationRole u where u.organization.id = :orgId and u.user.id=:userId";
-        val query = entityManager
-                .createQuery(hql)
-                .setParameter("userId", USER_ID)
-                .setParameter("orgId", ORG_ID);
-
-        val userOrgRole = query.getResultList().get(0);
-        assertThat(userOrgRole).isNotNull();
-
-        transaction.begin();
-        entityManager.remove(userOrgRole);
-        entityManager.flush();
-        transaction.commit();
-
-        assertThat(query.getResultList()).isEmpty();
-        assertThat(repository.findByGuid(ORG_GUID)).isPresent();
-    }
-
-    @Test
-    @DisplayName("Removing user from app doesn't delete app itself and parent organization")
+    @DisplayName("Removing user from app doesn't delete app itself")
     void removeUserFromAppDoesNotAffectAppAndParentOrg() {
         val entityManager = emf.createEntityManager();
         val transaction = entityManager.getTransaction();
@@ -192,6 +136,5 @@ public class OrganizationServiceTestIT {
 
         assertThat(query.getResultList()).isEmpty();
         assertThat(appRepository.findById(APP_ID)).isPresent();
-        assertThat(repository.findByGuid(ORG_GUID)).isPresent();
     }
 }

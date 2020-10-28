@@ -16,6 +16,9 @@
 
 package com.exadel.frs.service;
 
+import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
+import static com.exadel.frs.enums.GlobalRole.OWNER;
+import static com.exadel.frs.enums.GlobalRole.USER;
 import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
@@ -23,13 +26,17 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
+import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
@@ -38,7 +45,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Consumer;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -96,6 +102,7 @@ public class UserService {
                        .accountNonLocked(true)
                        .credentialsNonExpired(true)
                        .enabled(isAccountEnabled)
+                       .globalRole(USER)
                        .build();
 
         if (isMailServerEnabled) {
@@ -159,9 +166,8 @@ public class UserService {
     }
 
     @Transactional
-    public void deleteUser(final UserDeleteDto userDeleteDto, final Consumer<UserDeleteDto> removeUserFromOrgConsumer) {
+    public void deleteUser(final UserDeleteDto userDeleteDto) {
         manageOwnedAppsByUserBeingDeleted(userDeleteDto);
-        removeUserFromOrgConsumer.accept(userDeleteDto);
         userRepository.deleteByGuid(userDeleteDto.getUserToDelete().getGuid());
     }
 
@@ -235,18 +241,62 @@ public class UserService {
         updateAppsConsumer.accept(userBeingDeleted, newOwner);
     }
 
+    public User updateUserGlobalRole(final UserRoleUpdateDto userRoleUpdateDto, final Long currentUserId) {
+        val currentUser = getUser(currentUserId);
+
+        authManager.verifyGlobalWritePrivileges(currentUser);
+
+        val user = getUserByGuid(userRoleUpdateDto.getUserId());
+        if (user.getId().equals(currentUserId)) {
+            throw new SelfRoleChangeException();
+        }
+
+        val newOrgRole = GlobalRole.valueOf(userRoleUpdateDto.getRole());
+
+        if (ADMINISTRATOR.equals(currentUser.getGlobalRole()) &&
+                (OWNER.equals(newOrgRole)) || OWNER.equals(user.getGlobalRole())) {
+            throw new InsufficientPrivilegesException();
+        }
+
+        if (newOrgRole == OWNER) {
+            currentUser.setGlobalRole(GlobalRole.ADMINISTRATOR);
+        }
+
+        user.setGlobalRole(newOrgRole);
+
+        userRepository.save(user);
+
+        return user;
+    }
+
+    public GlobalRole[] getGlobalRolesToAssign(final Long userId) {
+        val role = getUser(userId).getGlobalRole();
+        var roles = new GlobalRole[0];
+
+        if (role == OWNER) {
+            roles = GlobalRole.values();
+        } else if (role == ADMINISTRATOR) {
+            roles = new GlobalRole[]{ADMINISTRATOR, USER};
+        }
+
+        return roles;
+    }
+
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
     private User decideNewOwner(final UserDeleteDto userDeleteDto) {
         val deleter = userDeleteDto.getDeleter();
-        val defaultOrg = userDeleteDto.getDefaultOrg();
+        val globalOwner = userRepository.findByGlobalRole(GlobalRole.OWNER);
         val userToDelete = userDeleteDto.getUserToDelete();
         val replacer = userDeleteDto.getReplacer();
-
         val selfRemoval = userToDelete.equals(deleter);
 
         if (selfRemoval) {
-            return defaultOrg.getOwner();
+            return globalOwner;
         }
 
-        return replacer == Replacer.DELETER ? deleter : defaultOrg.getOwner();
+        return replacer == Replacer.DELETER ? deleter : globalOwner;
     }
 }

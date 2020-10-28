@@ -113,7 +113,7 @@ class AppControllerTest {
     public void shouldReturnMessageAndCodeWhenUnexpectedExceptionThrown() throws Exception {
         final Exception expectedException = new NullPointerException("Something went wrong, please try again");
 
-        when(appService.getApps(ORG_GUID, USER_ID)).thenThrow(expectedException);
+        when(appService.getApps(USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildUndefinedExceptionResponse(expectedException));
         mockMvc.perform(get("/apps").with(user(buildUser())))
