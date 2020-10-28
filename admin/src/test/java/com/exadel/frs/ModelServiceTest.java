@@ -32,6 +32,7 @@ import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
+import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.repository.AppModelRepository;
@@ -39,6 +40,7 @@ import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
+import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
@@ -52,7 +54,6 @@ class ModelServiceTest {
     private static final String MODEL_API_KEY = "model-key";
     private static final String APPLICATION_GUID = "app-guid";
     private static final String APPLICATION_API_KEY = "app-key";
-    private static final String ORGANIZATION_GUID = "org-guid";
 
     private static final Long USER_ID = 1L;
     private static final Long MODEL_ID = 2L;
@@ -63,6 +64,7 @@ class ModelServiceTest {
     private ModelService modelService;
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
+    private UserService userServiceMock;
 
     private AuthorizationManager authManager;
 
@@ -72,12 +74,14 @@ class ModelServiceTest {
         modelShareRequestRepository = mock(ModelShareRequestRepository.class);
         appModelRepository = mock(AppModelRepository.class);
         authManager = mock(AuthorizationManager.class);
+        userServiceMock = mock(UserService.class);
         modelService = new ModelService(
                 modelRepositoryMock,
                 appServiceMock,
                 modelShareRequestRepository,
                 appModelRepository,
-                authManager
+                authManager,
+                userServiceMock
         );
     }
 
@@ -93,15 +97,19 @@ class ModelServiceTest {
                          .app(app)
                          .build();
 
-        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
 
-        val result = modelService.getModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        val result = modelService.getModel(APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         assertThat(result.getGuid(), is(MODEL_GUID));
         assertThat(result.getId(), is(MODEL_ID));
 
-        verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
-        verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
+        verify(authManager).verifyReadPrivilegesToApp(user, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, model);
         verifyNoMoreInteractions(authManager);
     }
@@ -118,14 +126,19 @@ class ModelServiceTest {
                          .app(app)
                          .build();
 
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
+
         when(modelRepositoryMock.findAllByAppId(anyLong())).thenReturn(List.of(model));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         val result = modelService.getModels(APPLICATION_GUID, USER_ID);
 
         assertThat(result.size(), is(1));
 
-        verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManager).verifyReadPrivilegesToApp(user, app);
         verifyNoMoreInteractions(authManager);
     }
 
@@ -140,15 +153,19 @@ class ModelServiceTest {
                      .guid(APPLICATION_GUID)
                      .build();
 
-        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
 
-        modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID);
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        modelService.createModel(modelCreateDto, APPLICATION_GUID, USER_ID);
 
         val varArgs = ArgumentCaptor.forClass(Model.class);
         verify(modelRepositoryMock).existsByNameAndAppId("model-name", APPLICATION_ID);
         verify(modelRepositoryMock).save(varArgs.capture());
-        verify(authManager).verifyWritePrivilegesToApp(USER_ID, app);
-        verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
+        verify(authManager).verifyWritePrivilegesToApp(user, app);
         verifyNoMoreInteractions(modelRepositoryMock, authManager);
 
         assertThat(varArgs.getValue().getName(), is(modelCreateDto.getName()));
@@ -170,7 +187,7 @@ class ModelServiceTest {
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
-                modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID)
+                modelService.createModel(modelCreateDto, APPLICATION_GUID, USER_ID)
         ).isInstanceOf(NameIsNotUniqueException.class);
     }
 
@@ -191,20 +208,25 @@ class ModelServiceTest {
                              .guid(MODEL_GUID)
                              .app(app)
                              .build();
+
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
+
         repoModel.addAppModelAccess(app, AppModelAccess.READONLY);
 
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
-        modelService.updateModel(modelUpdateDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
+        modelService.updateModel(modelUpdateDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
         verify(modelRepositoryMock).existsByNameAndAppId("new_name", APPLICATION_ID);
         verify(modelRepositoryMock).save(any(Model.class));
-        verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
-        verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
+        verify(authManager).verifyReadPrivilegesToApp(user, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
-        verify(authManager).verifyWritePrivilegesToApp(USER_ID, app);
+        verify(authManager).verifyWritePrivilegesToApp(user, app);
         verifyNoMoreInteractions(modelRepositoryMock, authManager);
 
         assertThat(repoModel.getName(), is(modelUpdateDto.getName()));
@@ -233,7 +255,7 @@ class ModelServiceTest {
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
-                modelService.updateModel(modelUpdateDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
+                modelService.updateModel(modelUpdateDto, APPLICATION_GUID, MODEL_GUID, USER_ID)
         ).isInstanceOf(NameIsNotUniqueException.class);
     }
 
@@ -252,16 +274,20 @@ class ModelServiceTest {
                          .app(app)
                          .build();
 
-        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
 
-        modelService.regenerateApiKey(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        modelService.regenerateApiKey(APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
         verify(modelRepositoryMock).save(any());
-        verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
-        verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
+        verify(authManager).verifyReadPrivilegesToApp(user, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, model);
-        verify(authManager).verifyWritePrivilegesToApp(USER_ID, app);
+        verify(authManager).verifyWritePrivilegesToApp(user, app);
         verifyNoMoreInteractions(modelRepositoryMock, authManager);
     }
 
@@ -283,16 +309,20 @@ class ModelServiceTest {
                          .app(app)
                          .build();
 
-        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
 
-        modelService.deleteModel(ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(model));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        modelService.deleteModel(APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(anyString());
         verify(modelRepositoryMock).deleteById(anyLong());
-        verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
-        verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
+        verify(authManager).verifyReadPrivilegesToApp(user, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, model);
-        verify(authManager).verifyWritePrivilegesToApp(USER_ID, app);
+        verify(authManager).verifyWritePrivilegesToApp(user, app);
         verifyNoMoreInteractions(modelRepositoryMock, authManager);
     }
 }
