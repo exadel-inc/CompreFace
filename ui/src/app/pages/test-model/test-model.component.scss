@@ -18,7 +18,6 @@
 @import 'colors.scss';
 
 .container {
-  height: 100%;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -29,24 +28,5 @@
     @include mobile {
       height: auto;
     }
-  }
-}
-
-.test-model-container {
-  width: 100%;
-  margin: 10px auto;
-  border: 1px solid black;
-  background-color: $super-light-gray;
-  height: 85%;
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 650px;
-
-  .test-model-loader {
-    padding-top: 20px;
-    display: flex;
-    justify-content: center;
   }
 }

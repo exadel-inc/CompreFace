@@ -96,7 +96,7 @@
     "role": "Role",
     "search": {
       "org_title": "Search User",
-      "app_title": "search",
+      "app_title": "Search User",
       "no_results": "No matches found"
     }
   },
@@ -132,7 +132,9 @@
     "recognize": "Recognize Face"
   },
   "test_model": {
-    "title": "Test Model"
+    "title": "Test Model",
+    "request": "Request",
+    "response": "Response"
   },
   "demo": {
     "title": "Demo"
