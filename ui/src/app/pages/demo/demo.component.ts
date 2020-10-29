@@ -14,13 +14,21 @@
  * permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectDemoPending } from '../../store/demo/selectors';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-demo',
   templateUrl: './demo.component.html',
   styleUrls: ['./demo.component.scss']
 })
-export class DemoComponent {
-  constructor() { }
+export class DemoComponent implements OnInit {
+  isPending$: Observable<any>;
+  constructor(private store: Store<any>) { }
+
+  ngOnInit() {
+    this.isPending$ = this.store.select(selectDemoPending);
+  }
 }

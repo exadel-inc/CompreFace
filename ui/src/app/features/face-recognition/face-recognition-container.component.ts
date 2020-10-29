@@ -37,8 +37,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   @Input()
   title: string;
 
-  constructor(private store: Store<AppState>) {
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.data$ = this.store.select(selectFaceData);
@@ -53,6 +52,6 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   }
 
   recognizeFace(file: File) {
-    return this.store.dispatch(recognizeFace({file}));
+    this.store.dispatch(recognizeFace({file}));
   }
 }

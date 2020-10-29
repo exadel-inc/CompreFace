@@ -14,9 +14,12 @@
  * permissions and limitations under the License.
  */
 
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Component, OnInit } from '@angular/core';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { loadDemoApiKeyAction } from '../../store/demo/actions';
+import { selectDemoPageAvailability, selectDemoPending } from '../../store/demo/selectors';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +27,13 @@ import { loadDemoApiKeyAction } from '../../store/demo/actions';
   styleUrls: [ './login.component.scss' ]
 })
 export class LoginComponent implements OnInit {
+  ROUTERS_URL = ROUTERS_URL;
+  isPending$: Observable<boolean>;
+  isDemoPageAvailable$: Observable<boolean>;
+
   constructor(private store: Store) {
+    this.isPending$ = this.store.select(selectDemoPending);
+    this.isDemoPageAvailable$ = this.store.select(selectDemoPageAvailability);
   }
 
   ngOnInit() {

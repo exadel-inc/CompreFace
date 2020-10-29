@@ -35,7 +35,7 @@ export class DemoEffects {
     switchMap(() => this.demoService.getModel().pipe(
       map(data => loadDemoApiKeySuccessAction(data)),
       catchError((response: any): Observable<any> => {
-        if (response instanceof HttpErrorResponse && response.status === 403) {
+        if (response instanceof HttpErrorResponse) {
           return of(loadDemoApiKeyFailAction());
         }
 

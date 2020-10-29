@@ -15,5 +15,13 @@
   -->
 
 <div class="login-form-container">
-  <app-login-form class="login-form-item"></app-login-form>
+  <app-spinner *ngIf="(isPending$ | async); else appLoginForm"></app-spinner>
+
+  <ng-template #appLoginForm >
+    <app-login-form class="login-form-item"></app-login-form>
+  </ng-template>
+
+  <div class="demo-page-link" *ngIf="(isDemoPageAvailable$ | async) && !(isPending$ | async)">
+    <a mat-raised-button [routerLink]="[ROUTERS_URL.DEMO]">{{'demo.link' | translate}}</a>
+  </div>
 </div>

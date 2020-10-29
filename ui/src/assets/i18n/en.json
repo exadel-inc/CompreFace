@@ -140,6 +140,7 @@
     "title": "Test Model"
   },
   "demo": {
-    "title": "Demo"
+    "title": "Demo",
+    "link": "Try Demo"
   }
 }
