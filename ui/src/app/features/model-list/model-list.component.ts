@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
@@ -34,7 +34,7 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-model-list',
   templateUrl: './model-list.component.html',
   styleUrls: ['./model-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModelListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
@@ -45,12 +45,16 @@ export class ModelListComponent implements OnInit, OnDestroy {
   columns = [
     { title: 'name', property: 'name' },
     { title: 'apiKey', property: 'apiKey' },
-    { title: 'copyKey', property: 'copyKey'},
+    { title: 'copyKey', property: 'copyKey' },
     { title: 'actions', property: 'id' },
   ];
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router,
-              private translate: TranslateService) {
+  constructor(
+    private modelListFacade: ModelListFacade,
+    public dialog: MatDialog,
+    private router: Router,
+    private translate: TranslateService
+  ) {
     this.modelListFacade.initSubscriptions();
   }
 
@@ -58,10 +62,10 @@ export class ModelListComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.modelListFacade.isLoading$;
     this.userRole$ = this.modelListFacade.userRole$;
     this.tableConfig$ = this.modelListFacade.models$.pipe(
-      map(models => ({
+      map((models) => ({
         columns: this.columns,
         data: models,
-      })),
+      }))
     );
   }
 
@@ -80,14 +84,17 @@ export class ModelListComponent implements OnInit, OnDestroy {
       data: {
         entityType: this.translate.instant('models.header'),
         entityName: model.name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(name => {
-      if (name) {
-        this.modelListFacade.renameModel(model.id, name);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe((name) => {
+        if (name) {
+          this.modelListFacade.renameModel(model.id, name);
+        }
+      });
   }
 
   delete(model: Model) {
@@ -96,14 +103,17 @@ export class ModelListComponent implements OnInit, OnDestroy {
       data: {
         entityType: this.translate.instant('models.header'),
         entityName: model.name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(result => {
-      if (result) {
-        this.modelListFacade.deleteModel(model.id);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe((result) => {
+        if (result) {
+          this.modelListFacade.deleteModel(model.id);
+        }
+      });
   }
 
   test(model: Model) {
@@ -111,8 +121,8 @@ export class ModelListComponent implements OnInit, OnDestroy {
       queryParams: {
         org: this.modelListFacade.selectedOrganizationId,
         app: this.modelListFacade.selectedApplicationId,
-        model: model.id
-      }
+        model: model.id,
+      },
     });
   }
 
@@ -121,14 +131,17 @@ export class ModelListComponent implements OnInit, OnDestroy {
       width: '300px',
       data: {
         entityType: this.translate.instant('models.header'),
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(name => {
-      if (name) {
-        this.modelListFacade.createModel(name);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe((name) => {
+        if (name) {
+          this.modelListFacade.createModel(name);
+        }
+      });
   }
 
   ngOnDestroy(): void {

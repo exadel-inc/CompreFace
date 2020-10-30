@@ -14,10 +14,21 @@
  * permissions and limitations under the License.
  */
 
-import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {DemoEntityState} from './reducers';
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { selectDemoPending } from '../../store/demo/selectors';
+import { Observable } from 'rxjs';
 
-export const selectDemoState = createFeatureSelector<DemoEntityState>('demo');
-export const selectDemoApiKey = createSelector(selectDemoState, (state) => state.apiKey);
-export const selectDemoPending = createSelector(selectDemoState, (state) => state.isPending);
-export const selectDemoPageAvailability = createSelector(selectDemoState, (state) => !!state.apiKey);
+@Component({
+  selector: 'app-demo',
+  templateUrl: './demo.component.html',
+  styleUrls: ['./demo.component.scss']
+})
+export class DemoComponent implements OnInit {
+  isPending$: Observable<any>;
+  constructor(private store: Store<any>) { }
+
+  ngOnInit() {
+    this.isPending$ = this.store.select(selectDemoPending);
+  }
+}

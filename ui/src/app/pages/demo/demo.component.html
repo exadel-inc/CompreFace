@@ -1,4 +1,3 @@
-
 <!--
   ~ Copyright (c) 2020 the original author or authors
   ~
@@ -15,10 +14,11 @@
   ~ permissions and limitations under the License.
   -->
 
-<mat-toolbar>
-  <mat-toolbar-row class="container">
-    <span>
-      <span class="mat-caption">build version: {{env.buildNumber}}</span>
-    </span>
-  </mat-toolbar-row>
-</mat-toolbar>
+<div class="demo-page container">
+    <app-spinner *ngIf="(isPending$ | async); else appLoginForm"></app-spinner>
+
+    <ng-template #appLoginForm >
+        <app-face-recognition-container [title]="('demo.title' | translate)">
+        </app-face-recognition-container>
+    </ng-template>
+</div>

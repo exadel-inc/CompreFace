@@ -15,22 +15,28 @@
  */
 
 import { NgModule } from '@angular/core';
-import { TableComponent } from './table.component';
-import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
+import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
+import { SpinnerModule } from '../../features/spinner/spinner.module';
+import { DemoComponent } from './demo.component';
+import { RouterModule } from '@angular/router';
+import { DemoService } from './demo.service';
+import { DemoGuard } from './demo.guard';
 
 @NgModule({
-  declarations: [TableComponent],
-  exports: [TableComponent],
+  declarations: [
+    DemoComponent
+  ],
   imports: [
     CommonModule,
-    MatTableModule,
-    TruncateModule,
-    MatTooltipModule,
+    RouterModule.forChild([
+      { path: '', component: DemoComponent, canActivate: [ DemoGuard ] },
+    ]),
     TranslateModule,
+    FaceRecognitionModule,
+    SpinnerModule
   ],
+  providers: [ DemoService ]
 })
-export class TableModule {}
+export class DemoModule { }

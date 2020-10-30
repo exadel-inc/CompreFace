@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-recognition.helpers';
@@ -40,7 +40,7 @@ export class RecognitionResultComponent implements OnDestroy {
   }
   @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
 
-  canvasSize: ImageSize = { width: 500, height: null };
+  canvasSize: ImageSize = { width: 300, height: null };
   private printSubscription: Subscription;
 
   ngOnDestroy() {

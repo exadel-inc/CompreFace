@@ -14,10 +14,19 @@
  * permissions and limitations under the License.
  */
 
-import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {DemoEntityState} from './reducers';
+import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
-export const selectDemoState = createFeatureSelector<DemoEntityState>('demo');
-export const selectDemoApiKey = createSelector(selectDemoState, (state) => state.apiKey);
-export const selectDemoPending = createSelector(selectDemoState, (state) => state.isPending);
-export const selectDemoPageAvailability = createSelector(selectDemoState, (state) => !!state.apiKey);
+@Injectable({
+  providedIn: 'root'
+})
+export class DemoService {
+
+  constructor(private http: HttpClient) { }
+
+  getModel(): Observable<any> {
+    return this.http.get(`${environment.adminApiUrl}user/demo/model`);
+  }
+}

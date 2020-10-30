@@ -13,15 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Role } from 'src/app/data/enums/role.enum';
 
@@ -32,10 +24,9 @@ import { UserDeletion } from '../../data/interfaces/user-deletion';
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
-
   messageHeader: string;
   message: string;
   noResultMessage = 'No matches found';
@@ -59,24 +50,19 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   }
 
   isRoleChangeAllowed(user: AppUser): boolean {
-    return user.userId !== this.currentUserId
-      && this.userRole !== Role.USER
-      && user.role !== Role.OWNER
-      && this.availableRoles.indexOf(user.role) > -1;
-  }
-
-  isDisabled(element): any {
-    return (element.userId === this.currentUserId && element.role !== Role.OWNER) ||
-      (this.userRole === Role.ADMINISTRATOR && element.role !== Role.OWNER) ||
-      (this.userRole === Role.OWNER && element.role !== Role.OWNER);
+    return user.userId !== this.currentUserId && this.userRole !== Role.USER && this.availableRoles.indexOf(user.role) > -1;
   }
 
   delete(user: AppUser): void {
     const deletion: UserDeletion = {
       userToDelete: user,
-      deleterUserId: this.currentUserId
+      deleterUserId: this.currentUserId,
     };
     this.deleteUser.emit(deletion);
+  }
+
+  changeRole(event: any, element: AppUser): void {
+    this.change({ id: element.id, role: event.value });
   }
 
   getMessageContent(): void {

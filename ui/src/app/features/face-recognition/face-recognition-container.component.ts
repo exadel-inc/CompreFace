@@ -15,14 +15,11 @@
  */
 
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { recognizeFace, recognizeFaceReset } from '../../store/face-recognition/actions';
-import {
-  selectFaceData, selectFile, selectRequest, selectStateReady,
-  selectTestIsPending
+import { selectFaceData, selectFile, selectRequest, selectTestIsPending, selectStateReady
 } from '../../store/face-recognition/selectors';
 
 @Component({
@@ -40,9 +37,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   @Input()
   title: string;
 
-  constructor(private store: Store<AppState>) {
-    // Component constructor.
-  }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
     this.data$ = this.store.select(selectFaceData);
@@ -57,6 +52,6 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   }
 
   recognizeFace(file: File) {
-    return this.store.dispatch(recognizeFace({file}));
+    this.store.dispatch(recognizeFace({file}));
   }
 }

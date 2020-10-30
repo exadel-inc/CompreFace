@@ -17,7 +17,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { iif, Observable, of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail,
@@ -38,18 +38,12 @@ export class FaceRecognitionEffects {
   @Effect()
   recognizeFace$ = this.actions.pipe(
     ofType(recognizeFace),
-    switchMap((action) => this.store.select(selectCurrentModelId).pipe(
-        mergeMap((data) =>
-          iif(
-            () => !!data,
-            this.store.select(selectCurrentModel).pipe(
-              switchMap((model) => this.recognizeFaceAction(action.file, model.apiKey))
-            ),
-            this.store.select(selectDemoApiKey).pipe(
-              switchMap((apiKey) => this.recognizeFaceAction(action.file, apiKey))
-            )
-          )
-        )
+    withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey)),
+    switchMap(([action, model, demoApiKey]) =>
+      iif(
+        () => !!model,
+        this.recognizeFace(action.file, model?.apiKey),
+        this.recognizeFace(action.file, demoApiKey)
       )
     )
   );
@@ -77,7 +71,7 @@ export class FaceRecognitionEffects {
    * @param file Image
    * @param apiKey model api key
    */
-  private recognizeFaceAction(file, apiKey): Observable<Action> {
+  private recognizeFace(file, apiKey): Observable<Action> {
     return this.recognitionService.recognize(file, apiKey).pipe(
       map(({data, request}) => recognizeFaceSuccess({
         model: data,
