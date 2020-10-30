@@ -14,23 +14,11 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="container">
-  <div class="header-container">
-    <app-breadcrumbs-container></app-breadcrumbs-container>
-  </div>
+<div class="demo-page container">
+    <app-spinner *ngIf="(isPending$ | async); else appLoginForm"></app-spinner>
 
-  <div class="test-model-container">
-    <div class="test-model-loader"
-       *ngIf="modelLoading$ | async; else elseBlock">
-      <app-spinner></app-spinner>
-    </div>
-
-    <!-- todo add container component -->
-    <ng-template #elseBlock>
-      <app-face-recognition-container [title]="('test_model.title' | translate)">
-      </app-face-recognition-container>
+    <ng-template #appLoginForm >
+        <app-face-recognition-container [title]="('demo.title' | translate)">
+        </app-face-recognition-container>
     </ng-template>
-
-  </div>
 </div>
-

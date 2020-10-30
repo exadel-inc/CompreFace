@@ -36,7 +36,6 @@
     "login": "LOGIN",
     "sign_up": "SIGN UP"
   },
-
   "toolbar": {
     "logout": "Logout",
     "user_avatar_info": "User avatar",
@@ -136,5 +135,12 @@
     "add": "Add to model",
     "train": "Train model",
     "recognize": "Recognize Face"
+  },
+  "test_model": {
+    "title": "Test Model"
+  },
+  "demo": {
+    "title": "Demo",
+    "link": "Try Demo"
   }
 }

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +14,9 @@
  * permissions and limitations under the License.
  */
 
-.login-form {
-  &-container {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+import {createAction, props} from '@ngrx/store';
 
-    .demo-page-link {
-      padding-top: 15px;
-    }
-  }
-
-  &-item {
-    width: 300px;
-  }
-}
+export const loadDemoApiKeyAction  = createAction('[Demo/API] Load Demo Api Key');
+export const loadDemoApiKeySuccessAction  = createAction('[Demo/API] oad Demo Api Key Success', props<{apiKey: string}>());
+export const loadDemoApiKeyFailAction  = createAction('[Demo/API] oad Demo Api Key Fail');
+export const setDemoKeyPendingAction  = createAction('[Demo/API] Set Demo Key Pending Action');

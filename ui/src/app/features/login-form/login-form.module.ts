@@ -42,7 +42,7 @@ import {TranslateModule} from '@ngx-translate/core';
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
-    TranslateModule,
+    TranslateModule
   ]
 })
 export class LoginFormModule { }

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +14,18 @@
  * permissions and limitations under the License.
  */
 
-.login-form {
-  &-container {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+import { NgModule } from '@angular/core';
+import { StoreModule } from '@ngrx/store';
+import { DemoReducer } from './reducers';
+import { EffectsModule } from '@ngrx/effects';
+import { DemoEffects } from './effects';
 
-    .demo-page-link {
-      padding-top: 15px;
-    }
-  }
-
-  &-item {
-    width: 300px;
-  }
+@NgModule({
+  declarations: [],
+  imports: [
+    StoreModule.forFeature('demo', DemoReducer),
+    EffectsModule.forFeature([ DemoEffects ])
+  ]
+})
+export class DemoStoreModule {
 }

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +14,19 @@
  * permissions and limitations under the License.
  */
 
-.login-form {
-  &-container {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+import { Observable } from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
-    .demo-page-link {
-      padding-top: 15px;
-    }
-  }
+@Injectable({
+  providedIn: 'root'
+})
+export class DemoService {
 
-  &-item {
-    width: 300px;
+  constructor(private http: HttpClient) { }
+
+  getModel(): Observable<any> {
+    return this.http.get(`${environment.adminApiUrl}user/demo/model`);
   }
 }

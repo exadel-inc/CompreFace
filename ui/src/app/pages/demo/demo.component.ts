@@ -13,28 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TestModelPageService} from './test-model.service';
+
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectPendingModel } from '../../store/model/selectors';
+import { selectDemoPending } from '../../store/demo/selectors';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-test-model',
-  templateUrl: './test-model.component.html',
-  styleUrls: ['./test-model.component.scss']
+  selector: 'app-demo',
+  templateUrl: './demo.component.html',
+  styleUrls: ['./demo.component.scss']
 })
-export class TestModelComponent implements OnInit, OnDestroy {
-  modelLoading$: Observable<boolean>;
-  constructor(private modelService: TestModelPageService, private store: Store<any>) {}
+export class DemoComponent implements OnInit {
+  isPending$: Observable<any>;
+  constructor(private store: Store<any>) { }
 
   ngOnInit() {
-    this.modelService.initUrlBindingStreams();
-    this.modelLoading$ = this.store.select(selectPendingModel);
-  }
-
-  ngOnDestroy(): void {
-    this.modelService.clearSelectedModelId();
-    this.modelService.unSubscribe();
+    this.isPending$ = this.store.select(selectDemoPending);
   }
 }

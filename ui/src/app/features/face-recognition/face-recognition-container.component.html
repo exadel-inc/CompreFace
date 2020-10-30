@@ -14,23 +14,27 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="container">
-  <div class="header-container">
-    <app-breadcrumbs-container></app-breadcrumbs-container>
-  </div>
+<p class="header-title">{{title}}</p>
 
-  <div class="test-model-container">
-    <div class="test-model-loader"
-       *ngIf="modelLoading$ | async; else elseBlock">
-      <app-spinner></app-spinner>
-    </div>
+<div class="face-uploader">
+    <app-drag-n-drop
+        (upload)="recognizeFace($event)">
+    </app-drag-n-drop>
+</div>
 
-    <!-- todo add container component -->
-    <ng-template #elseBlock>
-      <app-face-recognition-container [title]="('test_model.title' | translate)">
-      </app-face-recognition-container>
-    </ng-template>
+<div class="separate-line"></div>
 
-  </div>
+<div class="recognition-loading"
+     *ngIf="pending$ | async">
+    <app-spinner></app-spinner>
+</div>
+
+<div class="face-result">
+    <app-recognition-result
+        *ngIf="isLoaded$| async"
+        [file]="file$ | async"
+        [requestInfo]="requestInfo$ | async"
+        [printData]="data$ | async">
+    </app-recognition-result>
 </div>
 

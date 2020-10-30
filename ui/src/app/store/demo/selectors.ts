@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +14,10 @@
  * permissions and limitations under the License.
  */
 
-.login-form {
-  &-container {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+import {createFeatureSelector, createSelector} from '@ngrx/store';
+import {DemoEntityState} from './reducers';
 
-    .demo-page-link {
-      padding-top: 15px;
-    }
-  }
-
-  &-item {
-    width: 300px;
-  }
-}
+export const selectDemoState = createFeatureSelector<DemoEntityState>('demo');
+export const selectDemoApiKey = createSelector(selectDemoState, (state) => state.apiKey);
+export const selectDemoPending = createSelector(selectDemoState, (state) => state.isPending);
+export const selectDemoPageAvailability = createSelector(selectDemoState, (state) => !!state.apiKey);
