@@ -21,11 +21,7 @@ import { map, tap } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { AppState } from 'src/app/store';
-import {
-  deleteUserFromApplication,
-  loadAppUserEntityAction,
-  updateAppUserRoleAction,
-} from 'src/app/store/app-user/actions';
+import { deleteUserFromApplication, loadAppUserEntityAction, updateAppUserRoleAction } from 'src/app/store/app-user/actions';
 import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/selectors';
 import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
@@ -46,6 +42,7 @@ export class ApplicationUserListFacade implements IFacade {
   availableEmails$: Observable<string[]>;
   userRole$: Observable<string>;
   organizationRole$: Observable<string>;
+  applicationRole$: Observable<string>;
   currentUserId$: Observable<string>;
   selectedApplicationName: string;
 
@@ -55,36 +52,43 @@ export class ApplicationUserListFacade implements IFacade {
 
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
-    this.availableEmails$ = combineLatest(
-      [store.select(selectUsers),
-      this.appUsers$]
-    ).pipe(
+    this.availableEmails$ = combineLatest([store.select(selectUsers), this.appUsers$]).pipe(
       map(([users, appUsers]) => {
-        return users.map(user => {
-          if (appUsers.every(appUser => appUser.id !== user.id)) {
+        return users.map((user) => {
+          if (appUsers.every((appUser) => appUser.id !== user.id)) {
             return user.email;
           }
         });
       })
     );
+
     this.organizationRole$ = this.store.select(selectUserRollForSelectedOrganization);
-    this.userRole$ = combineLatest(
-      [this.store.select(selectUserRollForSelectedApp),
-      this.organizationRole$]
-    ).pipe(
+    this.applicationRole$ = this.store.select(selectUserRollForSelectedApp);
+    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.organizationRole$]).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== Role.USER ? organizationRole : applicationRole;
+        console.log(applicationRole);
+        if (organizationRole !== Role.USER) {
+          if (organizationRole === Role.OWNER) {
+            return organizationRole;
+          }
+
+          if (organizationRole === Role.ADMINISTRATOR) {
+            return applicationRole === Role.OWNER ? applicationRole : organizationRole;
+          }
+        }
       })
     );
 
     this.currentUserId$ = store.select(selectUserId);
     const allRoles$ = store.select(selectAllRoles);
 
-    this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.organizationRole$]).pipe(
-      map(([allRoles, userRole, organizationRole]) => {
-        if (organizationRole !== 'USER') {
+    this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.applicationRole$, this.organizationRole$]).pipe(
+      map(([allRoles, userRole, applicationRole, organizationRole]) => {
+        if (organizationRole === Role.OWNER || applicationRole === Role.OWNER) {
           return allRoles;
+        } else if (organizationRole === Role.ADMINISTRATOR) {
+          return allRoles.filter((role) => role !== Role.OWNER);
         } else {
           const roleIndex = allRoles.indexOf(userRole);
           return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
@@ -95,17 +99,11 @@ export class ApplicationUserListFacade implements IFacade {
     const usersLoading$ = store.select(selectAppUserIsPending);
     const roleLoading$ = store.select(selectIsPendingRoleStore);
 
-    this.isLoading$ = combineLatest([usersLoading$, roleLoading$])
-      .pipe(
-        map(observResults => !(!observResults[0] && !observResults[1])
-        ));
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
   }
 
   initSubscriptions(): void {
-    this.sub = zip(
-      this.store.select(selectCurrentApp),
-      this.store.select(selectCurrentOrganizationId)
-    ).subscribe(([app, orgId]) => {
+    this.sub = zip(this.store.select(selectCurrentApp), this.store.select(selectCurrentOrganizationId)).subscribe(([app, orgId]) => {
       if (app && orgId) {
         this.selectedApplicationId = app.id;
         this.selectedApplicationName = app.name;
@@ -116,43 +114,54 @@ export class ApplicationUserListFacade implements IFacade {
   }
 
   loadData(): void {
-    this.store.dispatch(loadAppUserEntityAction({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId
-    }));
+    this.store.dispatch(
+      loadAppUserEntityAction({
+        organizationId: this.selectedOrganizationId,
+        applicationId: this.selectedApplicationId,
+      })
+    );
     this.store.dispatch(loadRolesEntityAction());
-    this.store.dispatch(loadUsersEntityAction({
-      organizationId: this.selectedOrganizationId
-    }));
+    this.store.dispatch(
+      loadUsersEntityAction({
+        organizationId: this.selectedOrganizationId,
+      })
+    );
   }
 
   updateUserRole(id: string, role: Role): void {
-    this.store.dispatch(updateAppUserRoleAction({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId,
-      user: {
-        id,
-        role
-      }
-    }));
+    this.store.dispatch(
+      updateAppUserRoleAction({
+        organizationId: this.selectedOrganizationId,
+        applicationId: this.selectedApplicationId,
+        user: {
+          id,
+          role,
+        },
+      })
+    );
   }
 
   inviteUser(email: string, role: string): Observable<any> {
-    return this.userService.inviteUser(this.selectedOrganizationId, this.selectedApplicationId, email, role)
-      .pipe(tap(() =>
-        this.store.dispatch(loadAppUserEntityAction({
-          organizationId: this.selectedOrganizationId,
-          applicationId: this.selectedApplicationId
-        }))
-      ));
+    return this.userService.inviteUser(this.selectedOrganizationId, this.selectedApplicationId, email, role).pipe(
+      tap(() =>
+        this.store.dispatch(
+          loadAppUserEntityAction({
+            organizationId: this.selectedOrganizationId,
+            applicationId: this.selectedApplicationId,
+          })
+        )
+      )
+    );
   }
 
   delete(userId: string) {
-    this.store.dispatch(deleteUserFromApplication({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId,
-      userId,
-    }));
+    this.store.dispatch(
+      deleteUserFromApplication({
+        organizationId: this.selectedOrganizationId,
+        applicationId: this.selectedApplicationId,
+        userId,
+      })
+    );
   }
 
   unsubscribe(): void {
