@@ -6,7 +6,7 @@ import { CanActivate, ActivatedRouteSnapshot,
   RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { DemoService } from './demo.service';
-import { loadDemoApiKeyAction } from '../../store/demo/actions';
+import { loadDemoApiKeyAction, loadDemoApiKeySuccessAction, setDemoKeyPendingAction } from '../../store/demo/actions';
 
 @Injectable({
   providedIn: 'root'
@@ -18,14 +18,17 @@ export class DemoGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+    this.store.dispatch(setDemoKeyPendingAction());
+
     return this.demoService.getModel().pipe(
-      map(() => true),
-      catchError(() => of(false)),
-      tap((hasAccess) => {
-        if (!hasAccess) {
-          this.router.navigate([ROUTERS_URL.HOME]);
+      catchError(() => of(null)),
+      map((data) => {
+        if (data?.apiKey) {
+          this.store.dispatch(loadDemoApiKeySuccessAction(data));
+          return true;
         } else {
-          this.store.dispatch(loadDemoApiKeyAction());
+          this.router.navigate([ROUTERS_URL.HOME]);
+          return false;
         }
       })
     );

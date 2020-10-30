@@ -19,3 +19,4 @@ import {createAction, props} from '@ngrx/store';
 export const loadDemoApiKeyAction  = createAction('[Demo/API] Load Demo Api Key');
 export const loadDemoApiKeySuccessAction  = createAction('[Demo/API] oad Demo Api Key Success', props<{apiKey: string}>());
 export const loadDemoApiKeyFailAction  = createAction('[Demo/API] oad Demo Api Key Fail');
+export const setDemoKeyPendingAction  = createAction('[Demo/API] Set Demo Key Pending Action');
