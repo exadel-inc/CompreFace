@@ -22,6 +22,7 @@ import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.entity.Image;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
+import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import java.io.IOException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +38,7 @@ public class FaceDao {
 
     private final ImagesRepository imagesRepository;
 
-    private static final boolean SAVE_IMAGES_TO_DB_DEFAULT = true;
+    private final ImageProperties imageProperties;
 
     public List<Face> findAllFacesByApiKey(final String modelApiKey) {
         return facesRepository.findByApiKey(modelApiKey);
@@ -76,14 +77,7 @@ public class FaceDao {
                 .setFaceName(faceName)
                 .setApiKey(modelKey);
 
-        val saveImagesToDBSystemVariable = System.getenv().get("SAVE_IMAGES_TO_DB");
-
-        val saveImagesToDb = (saveImagesToDBSystemVariable == null
-                || saveImagesToDBSystemVariable.isBlank()) ?
-                SAVE_IMAGES_TO_DB_DEFAULT :
-                Boolean.parseBoolean(saveImagesToDBSystemVariable);
-
-        if (saveImagesToDb) {
+        if (imageProperties.isSave()) {
             val image = new Image()
                     .setFaceImg(file.getBytes())
                     .setRawImg(file.getBytes())

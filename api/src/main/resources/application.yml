@@ -59,6 +59,7 @@ image:
     - ico
     - gif
     - webp
+  save: ${SAVE_IMAGES_TO_DB:true}
 ---
 
 spring:
