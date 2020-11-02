@@ -28,16 +28,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailSender {
 
-    @Value("${spring.mail.sender}")
-    private String frsEmail;
-
     @Autowired
     private JavaMailSender javaMailSender;
 
     public void sendMail(final String to, final String subject, final String message) {
         val msg = new SimpleMailMessage();
         msg.setTo(to);
-        msg.setFrom(frsEmail);
         msg.setSubject(subject);
         msg.setText(message);
 

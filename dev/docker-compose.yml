@@ -30,6 +30,10 @@ services:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
       - SPRING_PROFILES_ACTIVE=dev
+      - ENABLE_EMAIL_SERVER=${enable_email_server}
+      - HOST=${email_host}
+      - HOST_EMAIL=${email_sender}
+      - HOST_PASSWORD=${email_password}
     depends_on:
       - compreface-postgres-db
       - compreface-api
