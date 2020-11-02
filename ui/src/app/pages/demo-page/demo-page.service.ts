@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +14,20 @@
  * permissions and limitations under the License.
  */
 
-@import "colors.scss";
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
 
+@Injectable({
+  providedIn: 'root'
+})
+export class DemoPageService {
 
-.face-uploader {
-  width: 80%;
-  margin: auto;
-}
+  constructor(private http: HttpClient) { }
 
-.face-result {
-  padding: 0 20px;
-  margin-bottom: 20px;
-}
-
-.recognition-loading {
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
+  getModel(): Observable<any> {
+    return this.http.get(`${environment.adminApiUrl}user/demo/model`);
+  }
 }

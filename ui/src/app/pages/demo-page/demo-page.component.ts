@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,21 +14,22 @@
  * permissions and limitations under the License.
  */
 
-@import "colors.scss";
+import { Component, OnInit } from '@angular/core';
+import { DemoPageService } from './demo-page.service';
+import { Store } from '@ngrx/store';
+import { loadDemoApiKeyAction } from '../../store/demo/actions';
+import { selectDemoApiKey } from '../../store/demo/selectors';
+import { tap } from 'rxjs/operators';
 
+@Component({
+  selector: 'app-demo-page',
+  templateUrl: './demo-page.component.html',
+  styleUrls: ['./demo-page.component.scss']
+})
+export class DemoPageComponent implements OnInit {
+  constructor(private store: Store<any>) { }
 
-.face-uploader {
-  width: 80%;
-  margin: auto;
-}
-
-.face-result {
-  padding: 0 20px;
-  margin-bottom: 20px;
-}
-
-.recognition-loading {
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
+  ngOnInit(): void {
+    this.store.dispatch(loadDemoApiKeyAction());
+  }
 }
