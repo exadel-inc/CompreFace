@@ -129,7 +129,7 @@ class ModelControllerTest {
 
         val bodyWithNoName = new ModelCreateDto();
 
-        val createNewModelRequest = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model")
+        val createNewModelRequest = post("/app/" + APP_GUID + "/model")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -145,7 +145,7 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnModel() throws Exception {
-        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val request = get("/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -167,7 +167,7 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnModels() throws Exception {
-        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/models")
+        val request = get("/app/" + APP_GUID + "/models")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -192,7 +192,7 @@ class ModelControllerTest {
         val createDto = new ModelCreateDto();
         createDto.setName(MODEL_NAME);
 
-        val createRequest = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model")
+        val createRequest = post("/app/" + APP_GUID + "/model")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON)
@@ -218,7 +218,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val createRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val createRequest = put("/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON)
@@ -244,7 +244,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val request = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
+        val request = put("/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -271,7 +271,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val request = delete("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val request = delete("/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
