@@ -50,7 +50,12 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   }
 
   isRoleChangeAllowed(user: AppUser): boolean {
-    return user.userId !== this.currentUserId && this.userRole !== Role.USER && this.availableRoles.indexOf(user.role) > -1;
+    return (
+      user.userId !== this.currentUserId &&
+      this.userRole !== Role.USER &&
+      user.role !== Role.OWNER &&
+      this.availableRoles.indexOf(user.role) > -1
+    );
   }
 
   delete(user: AppUser): void {
