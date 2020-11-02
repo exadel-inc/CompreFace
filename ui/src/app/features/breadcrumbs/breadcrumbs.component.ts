@@ -27,7 +27,7 @@ import {Model} from '../../data/interfaces/model';
 })
 export class BreadcrumbsComponent {
   ROUTERS_URL = ROUTERS_URL;
-  maxNameLength = 20;
+  maxNameLength = 30;
   @Input() model: Model;
   @Input() orgId: string;
   @Input() app: Application;
