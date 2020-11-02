@@ -35,6 +35,7 @@ const routes: Routes = [
       { path: '', loadChildren: () => import('./pages/test-model/test-model.module').then(m => m.TestModelModule) }
     ]
   },
+  { path: 'demo', loadChildren: () => import('./pages/demo/demo.module').then(m => m.DemoModule) },
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
   { path: 'sign-up', loadChildren: () => import('./pages/sign-up/sign-up.module').then(m => m.SignUpModule) },
   { path: '**', redirectTo: '/' }

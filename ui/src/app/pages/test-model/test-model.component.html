@@ -19,17 +19,9 @@
     <app-breadcrumbs-container></app-breadcrumbs-container>
   </div>
 
-  <div class="test-model-container">
-    <div class="test-model-loader"
-       *ngIf="modelLoading$ | async; else elseBlock">
-      <app-spinner></app-spinner>
-    </div>
-
-    <!-- todo add container component -->
-    <ng-template #elseBlock>
-      <app-face-recognition></app-face-recognition>
-    </ng-template>
-
-  </div>
+  <mat-card>
+      <app-face-recognition-container>
+      </app-face-recognition-container>
+  </mat-card>
 </div>
 

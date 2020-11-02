@@ -14,18 +14,19 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {TestModelComponent} from './test-model.component';
-import {MatCardModule} from '@angular/material/card';
-import {TestModelPageService} from './test-model.service';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { TestModelComponent } from './test-model.component';
+import { MatCardModule } from '@angular/material/card';
+import { TranslateModule } from '@ngx-translate/core';
+import { TestModelPageService } from './test-model.service';
 import { SpinnerModule } from '../../features/spinner/spinner.module';
 import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
 import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
 
 @NgModule({
-  declarations: [TestModelComponent],
+  declarations: [ TestModelComponent ],
   imports: [
     CommonModule,
     BreadcrumbsContainerModule,
@@ -34,9 +35,10 @@ import { FaceRecognitionModule } from '../../features/face-recognition/face-reco
     ]),
     MatCardModule,
     FaceRecognitionModule,
-    SpinnerModule
+    SpinnerModule,
+    TranslateModule
   ],
-  providers: [TestModelPageService]
+  providers: [ TestModelPageService ]
 })
 export class TestModelModule {
 }

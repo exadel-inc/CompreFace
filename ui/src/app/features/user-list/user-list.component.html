@@ -19,10 +19,10 @@
     <h3>{{'users.title' | translate}}</h3>
     <form>
       <input matInput type="text" class="search-input" [(ngModel)]="search" [ngModelOptions]="{standalone: true}"
-        placeholder="{{'users.search.org_title' | translate}}">
-      <i class="material-icons notranslate">
+             placeholder="{{'users.search.org_title' | translate}}">
+      <mat-icon class="material-icons notranslate">
         search
-      </i>
+      </mat-icon>
     </form>
   </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>

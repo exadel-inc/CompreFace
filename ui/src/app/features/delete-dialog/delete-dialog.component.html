@@ -25,7 +25,7 @@
         <ng-container *ngIf="data.entity.ownerOfApplications.length > 0">
           <p>{{'org_users.delete_dialog.warn_information' | translate :
             {firstName: data.entity.firstName, lastName: data.entity.lastName} }}
-            <b>{{data.entity.ownerOfApplications.join(', ')}}</b>.
+            <strong>{{data.entity.ownerOfApplications.join(', ')}}</strong>.
           </p>
           <p>{{'org_users.delete_dialog.warn_hint_anyway' | translate}}
             <ng-container *ngIf="data.isOrganizationOwner; else userListText" >

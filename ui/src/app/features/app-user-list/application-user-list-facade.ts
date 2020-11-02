@@ -70,7 +70,7 @@ export class ApplicationUserListFacade implements IFacade {
     this.organizationRole$ = this.store.select(selectUserRollForSelectedOrganization);
     this.userRole$ = combineLatest(
       [this.store.select(selectUserRollForSelectedApp),
-      this.organizationRole$]
+        this.organizationRole$]
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
