@@ -75,7 +75,7 @@ public class FaceController {
             @RequestParam("subject")
             final String faceName,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
-            @RequestParam(value = "det_prob_threshold", required = false)
+            @RequestParam(value = "det_prob_threshold", required = false, defaultValue = "0")
             final Double detProbThreshold,
             @ApiParam(value = "api key", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
@@ -144,12 +144,15 @@ public class FaceController {
             final Integer limit,
             @ApiParam(value = "Image Id from collection to compare with face.", required = true)
             @PathVariable
-            final String image_id
+            final String image_id,
+            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
+            @RequestParam(value = "det_prob_threshold", required = false, defaultValue = "0")
+            final Double detProbThreshold
 
     ) {
         imageValidator.validate(file);
 
-        val scanResponse = client.scanFaces(file, limit, 0.5D);
+        val scanResponse = client.scanFaces(file, limit, detProbThreshold);
 
         val results = new ArrayList<FaceVerification>();
 

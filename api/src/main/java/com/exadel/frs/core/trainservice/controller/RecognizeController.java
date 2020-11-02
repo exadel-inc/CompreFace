@@ -66,19 +66,22 @@ public class RecognizeController {
             @ApiParam(value = "Maximum number of predictions per faces")
             @RequestParam(defaultValue = "1", name = "prediction_count", required = false)
             @Min(value = 1, message = "prediction_count should be equal or greater than 1")
-            final Integer predictionCount
-    ) {
+            final Integer predictionCount,
+            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
+            @RequestParam(value = "det_prob_threshold", required = false, defaultValue = "0")
+            final Double detProbThreshold
+            ) {
         imageValidator.validate(file);
 
-        val scanResponse = client.scanFaces(file, limit, 0.5D);
+        val scanResponse = client.scanFaces(file, limit, detProbThreshold);
         val results = new ArrayList<FacePrediction>();
 
         for (val scanResult : scanResponse.getResult()) {
             val predictions = classifierPredictor.predict(
                     apiKey,
                     scanResult.getEmbedding().stream()
-                                             .mapToDouble(d -> d)
-                                             .toArray(),
+                              .mapToDouble(d -> d)
+                              .toArray(),
                     predictionCount
             );
 

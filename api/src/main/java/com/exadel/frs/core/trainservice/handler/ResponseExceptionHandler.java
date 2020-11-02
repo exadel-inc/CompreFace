@@ -75,12 +75,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ExceptionResponseDto> handleMultipartException(final Exception ex) {
+    public ResponseEntity<ExceptionResponseDto> handleUndefinedException(final Exception ex) {
         log.error("Multipart exception occurred", ex);
 
         return ResponseEntity
                 .status(UNDEFINED.getHttpStatus())
-                .body(buildBody(UNDEFINED.getCode(), ex.getMessage() != null ? ex.getMessage() : "No message available"));
+                .body(buildBody(UNDEFINED.getCode(), "No message available"));
     }
 
     @Override

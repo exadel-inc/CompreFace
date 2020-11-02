@@ -210,7 +210,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces?subject=<subject>&det_prob_thr
 | Content-Type        | header      | string | required | multipart/form-data                                          |
 | x-api-key           | header      | string | required | api key of the Face Collection, created by the user          |
 | subject             | param       | string | required | is the name you assign to the image you save                 |
-| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. Default value: 0 |
 | file                | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 
 Response body on success:
@@ -232,7 +232,7 @@ Response body on success:
 
 Recognizes faces from the uploaded image.
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/recognize?limit=<limit>&prediction_count=<prediction_count>" \
+curl  -X POST "http://localhost:8000/api/v1/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
@@ -245,6 +245,7 @@ curl  -X POST "http://localhost:8000/api/v1/recognize?limit=<limit>&prediction_c
 | x-api-key        | header      | string  | required | api key of the Face Collection, created by the user                    |
 | file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 | limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. Default value: 0 |
 | prediction_count | param       | integer | optional | maximum number of predictions per faces. Default value: 1    |
 
 Response body on success:
@@ -381,7 +382,7 @@ Response body on success:
 
 Compares faces from the uploaded image with face in saved image id.
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>" \
+curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
@@ -395,6 +396,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit
 | image_id         | variable    | UUID    | required | UUID of the verifying face                                   |
 | file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 | limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. Default value: 0 |
 
 Response body on success:
 ```

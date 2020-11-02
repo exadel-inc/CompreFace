@@ -27,7 +27,7 @@ public interface FacesClient {
     @Headers("Content-Type: multipart/form-data")
     ScanResponse scanFaces(@Param(value = "file") MultipartFile photo,
                            @Param(value = "limit") Integer faceLimit,
-                           @Param(value = "threshold_c") Double thresholdC);
+                           @Param(value = "det_prob_threshold") Double thresholdC);
 
     @RequestLine("GET /status")
     @Headers("Content-Type: multipart/form-data")
