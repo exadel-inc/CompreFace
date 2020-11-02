@@ -38,11 +38,12 @@ describe('AuthService', () => {
         provideMockStore(),
         {
           provide: Router,
-          useValue: { navigateByUrl: () => { } }
-        }]
+          useValue: { navigateByUrl: () => {} },
+        },
+      ],
     });
-    service = TestBed.get(AuthService);
-    httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.inject(AuthService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -52,12 +53,12 @@ describe('AuthService', () => {
   it('be able to logIn', () => {
     const dummyUser = {
       firstName: 'firstName',
-      password: 'password'
+      password: 'password',
     };
 
     const dummyToken = 'Some token';
 
-    service.logIn(dummyUser.firstName, dummyUser.password).subscribe(token => {
+    service.logIn(dummyUser.firstName, dummyUser.password).subscribe((token) => {
       expect(token).toEqual(dummyToken);
     });
 
@@ -71,12 +72,12 @@ describe('AuthService', () => {
       firstName: 'firstName',
       password: 'password',
       lastName: 'lastName',
-      email: 'q@q.com'
+      email: 'q@q.com',
     };
 
     const dummyToken = 'Some token';
 
-    service.signUp(dummyUser.firstName, dummyUser.password, dummyUser.email, dummyUser.lastName).subscribe(response => {
+    service.signUp(dummyUser.firstName, dummyUser.password, dummyUser.email, dummyUser.lastName).subscribe((response) => {
       expect(response.status).toEqual(201);
     });
 

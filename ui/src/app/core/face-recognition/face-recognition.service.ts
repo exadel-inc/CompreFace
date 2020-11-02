@@ -22,16 +22,18 @@ export class FaceRecognitionService {
     });
   }
 
-  recognize(file: any, model: Model): Observable<any> {
+  recognize(file: any, apiKey: string): Observable<any> {
+    const url = `${environment.userApiUrl}recognize`;
     const formData = new FormData();
     formData.append('file', file);
-    const request = this.http.post(`${environment.userApiUrl}recognize`, formData, {
-      headers: { 'x-api-key': model.apiKey}
-    });
 
-    return request.pipe(
-      // (request as any).source.source.source.value -> solution to display request in UI.
-      map((data) => ({data, request: (request as any).source.source.source.value}))
+    return  this.http.post(url, formData, {
+      headers: { 'x-api-key': apiKey}
+    }).pipe(
+      map((data) => ({
+        data,
+        request: this.createUIRequest(url, { 'x-api-key': apiKey})
+      }))
     );
   }
 
@@ -42,5 +44,27 @@ export class FaceRecognitionService {
   train(model: Model): Observable<object> {
     const formData = new FormData();
     return this.http.post(`${environment.userApiUrl}retrain`, formData, { headers: { 'x-api-key': model.apiKey }});
+  }
+
+  /**
+   * Create mocked request just to display request info on UI.
+   *
+   * @param url Request url.
+   * @param options Headers options.
+   * @param params url parameters.
+   * @private
+   */
+  private createUIRequest(url: string,  options = {}, params = {}): any {
+    const parsedParams = Object.keys(params).length ? `?${(new URLSearchParams(params)).toString()}` : '';
+
+    return {
+      Headers: {
+        'Content-Type': 'multipart/form-data',
+        Origin: window.location.origin,
+        Referer: `${window.location.origin}${parsedParams}`,
+        host: `${window.location.host}:${window.location.port}`,
+        ...options
+      }
+    };
   }
 }

@@ -63,7 +63,7 @@ export class UserListFacade implements IFacade {
     this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
 
     const allRoles$ = store.select(selectAllRoles);
-    this.availableRoles$ = combineLatest(allRoles$, this.userRole$).pipe(
+    this.availableRoles$ = combineLatest([allRoles$, this.userRole$]).pipe(
       map(([allRoles, userRole]) => {
         const roleIndex = allRoles.indexOf(userRole);
         return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
@@ -75,7 +75,7 @@ export class UserListFacade implements IFacade {
     this.currentUserId$ = store.select(selectUserId);
     this.currentUserEmail$ = store.select(selectUserEmail);
 
-    this.isLoading$ = combineLatest(usersLoading$, roleLoading$)
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$])
       .pipe(map(observResults => !(!observResults[0] && !observResults[1])));
   }
 

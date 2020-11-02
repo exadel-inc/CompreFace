@@ -27,7 +27,6 @@ import { TableModule } from 'src/app/features/table/table.module';
 import { UserListModule } from 'src/app/features/user-list/user-list.module';
 import { UserTableModule } from 'src/app/features/user-table/user-table.module';
 
-import { AuthGuard } from '../../core/auth/auth.guard';
 import { ToolBarModule } from '../../features/tool-bar/tool-bar.module';
 import { OrganizationComponent } from './organization.component';
 import { OrganizationService } from './organization.service';
@@ -48,7 +47,7 @@ import { OrganizationService } from './organization.service';
     MatInputModule,
     FormsModule,
     RouterModule.forChild([
-      { path: '', component: OrganizationComponent, canActivate: [AuthGuard] }
+      { path: '', component: OrganizationComponent }
     ]),
     ToolBarModule,
     MatCardModule,

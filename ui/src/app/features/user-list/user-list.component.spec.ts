@@ -14,13 +14,13 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
 import {UserTableModule} from 'src/app/features/user-table/user-table.module';
 import {InviteUserComponent} from 'src/app/features/invite-user/invite-user.component';
 import {UserListComponent} from './user-list.component';
 import {UserListFacade} from './user-list-facade';
-import {of} from 'rxjs';
+import {of, Subscription} from 'rxjs';
 import {InviteUserModule} from '../invite-user/invite-user.module';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {FormsModule} from '@angular/forms';
@@ -29,13 +29,14 @@ import {MatInputModule} from '@angular/material/input';
 import {CommonModule} from '@angular/common';
 import {SnackBarService} from '../snackbar/snackbar.service';
 import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
-import { MatDialogModule } from '@angular/material/dialog';
+import {MatDialogModule} from '@angular/material/dialog';
+import {TranslatePipe, TranslateService} from '@ngx-translate/core';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       imports: [
         NoopAnimationsModule,
@@ -49,7 +50,7 @@ describe('UserListComponent', () => {
         MatDialogModule,
         InviteDialogModule
       ],
-      declarations: [UserListComponent],
+      declarations: [UserListComponent, TranslatePipe],
       providers: [
         {
           provide: SnackBarService,
@@ -70,7 +71,8 @@ describe('UserListComponent', () => {
             availableRoles$: of([{}]),
             unsubscribe() { }
           }
-        }],
+        },
+        {provide: TranslateService, useValue: {}}],
     })
       .overrideComponent(InviteUserComponent, {
         set: {}
@@ -81,10 +83,10 @@ describe('UserListComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UserListComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.availableRolesSubscription = new Subscription();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });

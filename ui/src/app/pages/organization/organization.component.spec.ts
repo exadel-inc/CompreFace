@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {OrganizationComponent} from './organization.component';
 import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {OrganizationService} from './organization.service';
@@ -23,7 +23,7 @@ describe('OrganizationComponent', () => {
   let component: OrganizationComponent;
   let fixture: ComponentFixture<OrganizationComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [OrganizationComponent],
       providers: [

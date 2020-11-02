@@ -21,12 +21,16 @@
 
   <div class="test-model-container">
     <div class="test-model-loader"
-       *ngIf="modelLoading$ | async">
+       *ngIf="modelLoading$ | async; else elseBlock">
       <app-spinner></app-spinner>
     </div>
 
     <!-- todo add container component -->
-    <app-face-recognition *ngIf="!(modelLoading$ | async)"></app-face-recognition>
+    <ng-template #elseBlock>
+      <app-face-recognition-container [title]="('test_model.title' | translate)">
+      </app-face-recognition-container>
+    </ng-template>
+
   </div>
 </div>
 

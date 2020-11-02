@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { CommonModule } from '@angular/common';
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -24,58 +24,65 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store } from '@ngrx/store';
-import { MockStore } from '@ngrx/store/testing';
-import { of } from 'rxjs';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import {of, Subscription} from 'rxjs';
 
 import { LoginFormComponent } from './login-form.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
   let fixture: ComponentFixture<LoginFormComponent>;
-  let store: MockStore<{ isAuthenticated: boolean, errorMessage: string, successMessage: string }>;
+  let store: MockStore<{ isAuthenticated: boolean; errorMessage: string; successMessage: string }>;
   const initialState = { isAuthenticated: false, errorMessage: 'some error message', successMessage: 'some success message' };
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [
-        LoginFormComponent
-      ],
-      providers: [
-        {
-          provide: Store,
-          useValue: {
-            dispatch: () => { },
-            select: () => {
-              return of(initialState);
-            }
-          }
-        },
-      ],
-      imports: [
-        CommonModule,
-        MatCardModule,
-        MatInputModule,
-        MatDialogModule,
-        MatIconModule,
-        FormsModule,
-        ReactiveFormsModule,
-        RouterModule,
-        BrowserAnimationsModule,
-        RouterTestingModule
-      ]
-    })
-      .compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [LoginFormComponent, TranslatePipe],
+        providers: [
+          provideMockStore(),
+          {
+            provide: TranslateService,
+            useValue: {
+              get: () => {},
+            },
+          },
+          {
+            provide: Store,
+            useValue: {
+              dispatch: () => {},
+              select: () => {
+                return of(initialState);
+              },
+            },
+          },
+        ],
+        imports: [
+          CommonModule,
+          MatCardModule,
+          MatInputModule,
+          MatDialogModule,
+          MatIconModule,
+          FormsModule,
+          ReactiveFormsModule,
+          RouterModule,
+          BrowserAnimationsModule,
+          RouterTestingModule,
+        ],
+      });
 
-    store = TestBed.get<Store<any>>(Store);
-  }));
+      store = TestBed.inject<MockStore<{ isAuthenticated: boolean; errorMessage: string; successMessage: string }>>(MockStore);
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginFormComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    component.stateSubscription = new Subscription();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });

@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Component, OnDestroy, OnInit, Input} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import {Application} from '../../data/interfaces/application';
-import {BreadcrumbsFacade} from '../breadcrumbs/breadcrumbs.facade';
-import {Model} from '../../data/interfaces/model';
+import { Application } from '../../data/interfaces/application';
+import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
+import { Model } from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-breadcrumbs-container',
@@ -27,14 +27,14 @@ import {Model} from '../../data/interfaces/model';
       [model]="model$ | async"
       [app]="app$ | async"
       [orgId]="orgId$ | async">
-    </app-breadcrumbs>`
+    </app-breadcrumbs>`,
 })
 export class BreadcrumbsContainerComponent implements OnInit {
   orgId$: Observable<string>;
   app$: Observable<Application>;
   model$: Observable<Model>;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade) { }
+  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {}
 
   ngOnInit() {
     this.orgId$ = this.breadcrumbsFacade.orgId$;

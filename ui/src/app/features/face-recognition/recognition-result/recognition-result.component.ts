@@ -1,5 +1,20 @@
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Model } from '../../../data/interfaces/model';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-recognition.helpers';
@@ -7,11 +22,10 @@ import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-reco
 @Component({
   selector: 'app-recognition-result',
   templateUrl: './recognition-result.component.html',
-  styleUrls: ['./recognition-result.component.scss']
+  styleUrls: ['./recognition-result.component.scss'],
 })
 export class RecognitionResultComponent implements OnDestroy {
   @Input() pending = true;
-  @Input() model: Model;
   @Input() file: File;
   @Input() requestInfo: any;
   // Handle input changes and update image.
@@ -24,14 +38,10 @@ export class RecognitionResultComponent implements OnDestroy {
       this.printSubscription = this.printResult(value.box, value.faces).subscribe();
     }
   }
-
-  private printSubscription: Subscription;
-  private canvasSize: ImageSize = {width: 250, height: 250};
-
   @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
 
-  constructor() {
-  }
+  canvasSize: ImageSize = { width: 300, height: null };
+  private printSubscription: Subscription;
 
   ngOnDestroy() {
     if (this.printSubscription) {
@@ -47,6 +57,10 @@ export class RecognitionResultComponent implements OnDestroy {
    */
   printResult(box: any, face: any): Observable<any> {
     return getImageSize(this.file).pipe(
+      tap(({ width, height }) => {
+        this.canvasSize.height = (height / width) * this.canvasSize.width;
+        this.myCanvas.nativeElement.setAttribute('height', this.canvasSize.height);
+      }),
       map((imageSize) => recalculateFaceCoordinate(box, imageSize, this.canvasSize)),
       tap((recalculatedBox) => this.drawCanvas(recalculatedBox, face))
     );
@@ -60,8 +74,9 @@ export class RecognitionResultComponent implements OnDestroy {
    */
   drawCanvas(box: any, face: any) {
     const img = new Image();
-    const ctx: CanvasRenderingContext2D =
-      this.myCanvas.nativeElement.getContext('2d');
+    const resultFace = face.length > 0 ? face[0] : { face_name: undefined, similarity: 0 };
+    const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
+
     img.onload = () => {
       ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
       ctx.beginPath();
@@ -77,8 +92,8 @@ export class RecognitionResultComponent implements OnDestroy {
       ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, 25);
       ctx.fillStyle = 'white';
       ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
-      ctx.fillText(box.probability, box.x_min + 10, box.y_max + 20);
-      ctx.fillText(face[ 0 ].face_name, box.x_min + 10, box.y_min - 5);
+      ctx.fillText(resultFace.similarity, box.x_min + 10, box.y_max + 20);
+      ctx.fillText(resultFace.face_name, box.x_min + 10, box.y_min - 5);
     };
     img.src = URL.createObjectURL(this.file);
   }

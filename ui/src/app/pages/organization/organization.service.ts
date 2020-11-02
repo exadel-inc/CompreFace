@@ -43,7 +43,7 @@ export class OrganizationService {
     this.organizations$ = this.organizationEnService.entities$;
     this.selectedId$ = this.store.select(selectCurrentOrganizationId);
 
-    this.subscription = combineLatest(this.selectedId$, this.organizations$).pipe(
+    this.subscription = combineLatest([this.selectedId$, this.organizations$]).pipe(
       filter(([selectedId, data]) => data.length && selectedId === null),
       map(([selectedId, data]) => data[0].id),
     ).subscribe(routerId => {

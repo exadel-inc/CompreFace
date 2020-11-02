@@ -20,8 +20,12 @@ mat-icon {
 
 .create-new-message {
   display: flex;
-  align-items: center;  
+  align-items: center;
   mat-icon {
     padding-right: 15px;
   }
+}
+
+caption{
+  display: none;
 }
