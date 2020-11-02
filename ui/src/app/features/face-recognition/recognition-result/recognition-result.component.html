@@ -15,38 +15,33 @@
   -->
 
 <div class="result-container">
-    <div class="result-label">Recognition results</div>
-    <div class="result-sections">
-        <div class="result-section-left">
-            <div class="result-image">
-                <canvas #canvasElement [width]="canvasSize.width"></canvas>
-            </div>
-        </div>
-        <div class="result-section-right">
-            <div class="result-request">
-                <label for="result-textarea-request">Request</label>
-                <textarea class="result-textarea"
-                          id="result-textarea-request"
-                          rows="16"
-                          disabled>
-                    {{requestInfo.request}}
-                </textarea>
-            </div>
-
-            <div class="separate-line"></div>
-
-            <div class="result-response">
-              <label for="result-textarea-response">Response</label>
-                <textarea class="result-textarea"
-                          id="result-textarea-response"
-                          rows="16"
-                          disabled>
-                    {{requestInfo.response}}
-                </textarea>
-            </div>
-        </div>
-        <div>
-        </div>
+  <div class="result-sections">
+    <div class="result-section-image">
+      <div class="result-image">
+        <canvas #canvasElement [width]="canvasSize.width"></canvas>
+      </div>
     </div>
-</div>
 
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ 'test_model.request' | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <textarea class="result-textarea" id="result-textarea-request" rows="10" disabled>
+          {{ requestInfo.request }}
+      </textarea>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{ 'test_model.response' | translate }}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <textarea class="result-textarea" id="result-textarea-response" rows="16" disabled>
+          {{ requestInfo.response }}
+      </textarea>
+    </mat-expansion-panel>
+  </div>
+</div>
