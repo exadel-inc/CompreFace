@@ -13,25 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Component, Input} from '@angular/core';
 
-import {Application} from '../../data/interfaces/application';
-import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
-import {BreadcrumbsFacade} from './breadcrumbs.facade';
-import {Model} from '../../data/interfaces/model';
+import { Component, OnInit } from '@angular/core';
+import { DemoPageService } from './demo-page.service';
+import { Store } from '@ngrx/store';
+import { loadDemoApiKeyAction } from '../../store/demo/actions';
+import { selectDemoApiKey } from '../../store/demo/selectors';
+import { tap } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-breadcrumbs',
-  templateUrl: './breadcrumbs.component.html',
-  styleUrls: ['./breadcrumbs.component.scss']
+  selector: 'app-demo-page',
+  templateUrl: './demo-page.component.html',
+  styleUrls: ['./demo-page.component.scss']
 })
-export class BreadcrumbsComponent {
-  ROUTERS_URL = ROUTERS_URL;
-  maxNameLength = 30;
-  @Input() model: Model;
-  @Input() orgId: string;
-  @Input() app: Application;
+export class DemoPageComponent implements OnInit {
+  constructor(private store: Store<any>) { }
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
+  ngOnInit(): void {
+    this.store.dispatch(loadDemoApiKeyAction());
   }
 }

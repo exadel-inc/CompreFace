@@ -14,23 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="face-uploader">
-    <app-drag-n-drop
-        (upload)="recognizeFace($event)">
-    </app-drag-n-drop>
+<div class="demo-page">
+    <app-face-recognition-container [title]="('demo.title' | translate)">
+    </app-face-recognition-container>
 </div>
-
-<div class="recognition-loading"
-     *ngIf="pending$ | async">
-    <app-spinner></app-spinner>
-</div>
-
-<div class="face-result">
-    <app-recognition-result
-        *ngIf="isLoaded$| async"
-        [file]="file$ | async"
-        [requestInfo]="requestInfo$ | async"
-        [printData]="data$ | async">
-    </app-recognition-result>
-</div>
-

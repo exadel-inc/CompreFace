@@ -137,7 +137,9 @@
     "recognize": "Recognize Face"
   },
   "test_model": {
-    "title": "Test Model"
+    "title": "Test Model",
+    "request": "Request",
+    "response": "Response"
   },
   "demo": {
     "title": "Demo",
