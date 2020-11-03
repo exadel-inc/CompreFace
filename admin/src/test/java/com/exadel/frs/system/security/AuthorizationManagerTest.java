@@ -182,30 +182,30 @@ class AuthorizationManagerTest {
     @Nested
     public class TestDeleteUserPrivileges {
 
-        final User orgOwner;
-        final User orgAdmin;
-        final User orgAdmin2;
-        final User orgUser;
-        final User orgUser2;
+        final User globalOwner;
+        final User globalAdmin;
+        final User globalAdmin2;
+        final User globalUser;
+        final User globalUser2;
 
         public TestDeleteUserPrivileges() {
-            orgOwner = getUser(GLOBAL_OWNER_ID);
-            orgAdmin = getUser(GLOBAL_ADMIN_ID);
-            orgAdmin2 = getUser(GLOBAL_ADMIN_APP_ADMIN_ID);
-            orgUser = getUser(GLOBAL_USER_ID);
-            orgUser2 = getUser(GLOBAL_USER_APP_USER_ID);
+            globalOwner = getUser(GLOBAL_OWNER_ID);
+            globalAdmin = getUser(GLOBAL_ADMIN_ID);
+            globalAdmin2 = getUser(GLOBAL_ADMIN_APP_ADMIN_ID);
+            globalUser = getUser(GLOBAL_USER_ID);
+            globalUser2 = getUser(GLOBAL_USER_APP_USER_ID);
         }
 
         @Test
-        void orgOwnerCannotBeDeleted() {
+        void globalOwnerCannotBeDeleted() {
             val ownerRemovalByAdmin = UserDeleteDto.builder()
-                                                   .deleter(orgAdmin)
-                                                   .userToDelete(orgOwner)
+                                                   .deleter(globalAdmin)
+                                                   .userToDelete(globalOwner)
                                                    .build();
 
             val ownerRemovalByItself = UserDeleteDto.builder()
-                                                    .deleter(orgOwner)
-                                                    .userToDelete(orgOwner)
+                                                    .deleter(globalOwner)
+                                                    .userToDelete(globalOwner)
                                                     .build();
 
             assertThatThrownBy(() -> authManager.verifyCanDeleteUser(
@@ -221,25 +221,25 @@ class AuthorizationManagerTest {
         }
 
         @Test
-        void orgAdminCanDeleteItself() {
+        void globalAdminCanDeleteItself() {
             val adminRemovalByItself = UserDeleteDto.builder()
-                                                    .deleter(orgAdmin)
-                                                    .userToDelete(orgAdmin)
+                                                    .deleter(globalAdmin)
+                                                    .userToDelete(globalAdmin)
                                                     .build();
 
             authManager.verifyCanDeleteUser(adminRemovalByItself);
         }
 
         @Test
-        void orgAdminCanDeleteOtherAdminOrUsers() {
+        void globalAdminCanDeleteOtherAdminOrUsers() {
             val adminRemovalByOtherAdmin = UserDeleteDto.builder()
-                                                        .deleter(orgAdmin)
-                                                        .userToDelete(orgAdmin2)
+                                                        .deleter(globalAdmin)
+                                                        .userToDelete(globalAdmin2)
                                                         .build();
 
             val userRemovalByAdmin = UserDeleteDto.builder()
-                                                  .deleter(orgAdmin)
-                                                  .userToDelete(orgUser)
+                                                  .deleter(globalAdmin)
+                                                  .userToDelete(globalUser)
                                                   .build();
 
             authManager.verifyCanDeleteUser(adminRemovalByOtherAdmin);
@@ -247,15 +247,15 @@ class AuthorizationManagerTest {
         }
 
         @Test
-        void orgUserCannotDeleteOthers() {
+        void globalUserCannotDeleteOthers() {
             val adminRemovalByUser = UserDeleteDto.builder()
-                                                  .deleter(orgUser)
-                                                  .userToDelete(orgAdmin)
+                                                  .deleter(globalUser)
+                                                  .userToDelete(globalAdmin)
                                                   .build();
 
             val userRemovalByOtherUser = UserDeleteDto.builder()
-                                                      .deleter(orgUser)
-                                                      .userToDelete(orgUser2)
+                                                      .deleter(globalUser)
+                                                      .userToDelete(globalUser2)
                                                       .build();
 
             assertThatThrownBy(() -> authManager.verifyCanDeleteUser(
@@ -270,10 +270,10 @@ class AuthorizationManagerTest {
         }
 
         @Test
-        void orgUserCanDeleteItself() {
+        void globalUserCanDeleteItself() {
             val userRemovalByItself = UserDeleteDto.builder()
-                                                   .deleter(orgUser)
-                                                   .userToDelete(orgUser)
+                                                   .deleter(globalUser)
+                                                   .userToDelete(globalUser)
                                                    .build();
 
             authManager.verifyCanDeleteUser(userRemovalByItself);

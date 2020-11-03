@@ -200,9 +200,9 @@ public class UserController {
             final UserRoleUpdateDto userRoleUpdateDto
     ) {
         val admin = SecurityUtils.getPrincipalId();
-        val updatedUserOrgRole = userService.updateUserGlobalRole(userRoleUpdateDto, admin);
+        val updatedUserGlobalRole = userService.updateUserGlobalRole(userRoleUpdateDto, admin);
 
-        return userGlobalRoleMapper.toUserRoleResponseDto(updatedUserOrgRole);
+        return userGlobalRoleMapper.toUserRoleResponseDto(updatedUserGlobalRole);
     }
 
     @GetMapping("/global/roles")

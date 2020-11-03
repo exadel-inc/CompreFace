@@ -253,7 +253,7 @@ class AppControllerTest {
     }
 
     @Test
-    public void shouldReturnOrgRolesToAssign() throws Exception {
+    public void shouldReturnGlobalRolesToAssign() throws Exception {
         val request = get("/app/" + APP_GUID + "/assign-roles")
                 .with(csrf())
                 .with(user(buildUser()))

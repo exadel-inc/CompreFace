@@ -307,15 +307,15 @@ class UserServiceTest {
     @Nested
     public class DeleteUserTest {
 
-        final User orgOwner;
-        final User orgAdmin;
-        final User orgUser;
+        final User globalOwner;
+        final User globalAdmin;
+        final User globalUser;
         final BiConsumer<User, User> updateAppsConsumer;
 
         public DeleteUserTest() {
-            orgOwner = makeUser(1L);
-            orgAdmin = makeUser(2L);
-            orgUser = makeUser(3L);
+            globalOwner = makeUser(1L);
+            globalAdmin = makeUser(2L);
+            globalUser = makeUser(3L);
             updateAppsConsumer =
                     (oldOwner, newOwner) -> appService.passAllOwnedAppsToNewOwnerAndLeaveAllApps(
                             oldOwner, newOwner
@@ -326,51 +326,51 @@ class UserServiceTest {
         void successDeleteUserWhenDeleterIsReplacer() {
             val deleteUserDto = UserDeleteDto.builder()
                                              .replacer(Replacer.from("deleter"))
-                                             .userToDelete(orgUser)
-                                             .deleter(orgAdmin)
+                                             .userToDelete(globalUser)
+                                             .deleter(globalAdmin)
                                              .updateAppsConsumer(updateAppsConsumer)
                                              .build();
 
             userService.deleteUser(deleteUserDto);
 
             verify(authManager).verifyCanDeleteUser(deleteUserDto);
-            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(orgUser, orgAdmin);
-            verify(userRepositoryMock).deleteByGuid(orgUser.getGuid());
+            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(globalUser, globalAdmin);
+            verify(userRepositoryMock).deleteByGuid(globalUser.getGuid());
         }
 
         @Test
-        void successDeleteUserWhenOrgOwnerIsReplacer() {
+        void successDeleteUserWhenGlobalOwnerIsReplacer() {
             val deleteUserDto = UserDeleteDto.builder()
                                              .replacer(Replacer.from("owner"))
-                                             .userToDelete(orgUser)
-                                             .deleter(orgAdmin)
+                                             .userToDelete(globalUser)
+                                             .deleter(globalAdmin)
                                              .updateAppsConsumer(updateAppsConsumer)
                                              .build();
 
-            when(userRepositoryMock.findByGlobalRole(GlobalRole.OWNER)).thenReturn(orgOwner);
+            when(userRepositoryMock.findByGlobalRole(GlobalRole.OWNER)).thenReturn(globalOwner);
 
             userService.deleteUser(deleteUserDto);
 
             verify(authManager).verifyCanDeleteUser(deleteUserDto);
-            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(orgUser, orgOwner);
-            verify(userRepositoryMock).deleteByGuid(orgUser.getGuid());
+            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(globalUser, globalOwner);
+            verify(userRepositoryMock).deleteByGuid(globalUser.getGuid());
         }
 
         @Test
         void exceptionWhenWrongReplacerParamIsPassed() {
             assertThatThrownBy(() -> UserDeleteDto.builder()
                                                   .replacer(Replacer.from("wrong_param"))
-                                                  .userToDelete(orgUser)
-                                                  .deleter(orgAdmin)
+                                                  .userToDelete(globalUser)
+                                                  .deleter(globalAdmin)
                                                   .updateAppsConsumer(updateAppsConsumer)
                                                   .build())
                     .isInstanceOf(IllegalReplacerException.class)
                     .hasMessage(String.format("Illegal replacer value=%s!", "wrong_param"));
         }
 
-        private User makeUser(final long orgUserId) {
+        private User makeUser(final long globalUserId) {
             return User.builder()
-                       .id(orgUserId)
+                       .id(globalUserId)
                        .guid(UUID.randomUUID().toString())
                        .build();
         }
