@@ -12,9 +12,9 @@ RUN mvn package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.sk
 FROM openjdk:11.0.8-jre-slim as frs_core
 ARG DIR=/workspace/compreface
 COPY --from=build ${DIR}/api/target/*.jar /home/app.jar
-ENTRYPOINT ["java","-jar","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","/home/app.jar"]
+ENTRYPOINT ["sh","-c","java $API_JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /home/app.jar"]
 
 FROM openjdk:11.0.8-jre-slim as frs_crud
 ARG DIR=/workspace/compreface
 COPY --from=build ${DIR}/admin/target/*.jar /home/app.jar
-ENTRYPOINT ["java","-jar","-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005","/home/app.jar"]
+ENTRYPOINT ["sh","-c","java $ADMIN_JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /home/app.jar"]
