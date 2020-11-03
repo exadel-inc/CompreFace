@@ -43,9 +43,9 @@ export function getImageSize(file: File): Observable<ImageSize> {
  * @param box Face coordinates from BE.
  * @param imageSize Size of image.
  * @param sizeToCalc Canvas size. (design size).
- * @param widthOfTextArea Width of text area.
+ * @param yAxisPadding padding to ensure capacity for text area on image.
  */
-export function recalculateFaceCoordinate(box: any, imageSize: ImageSize, sizeToCalc: ImageSize, widthOfTextArea: number): any {
+export function recalculateFaceCoordinate(box: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number): any {
   const divideWidth = imageSize.width / sizeToCalc.width;
   const divideHeight = imageSize.height / sizeToCalc.height;
 
@@ -53,7 +53,7 @@ export function recalculateFaceCoordinate(box: any, imageSize: ImageSize, sizeTo
     ...box,
     x_max: box.x_max / divideWidth > sizeToCalc.width ? sizeToCalc.width : box.x_max / divideWidth,
     x_min: box.x_min / divideWidth,
-    y_max: box.y_max / divideHeight > sizeToCalc.height - widthOfTextArea ? sizeToCalc.height - widthOfTextArea :  box.y_max / divideHeight,
-    y_min: box.y_min / divideHeight > widthOfTextArea ? box.y_min / divideHeight : widthOfTextArea,
+    y_max: box.y_max / divideHeight > sizeToCalc.height - yAxisPadding ? sizeToCalc.height - yAxisPadding :  box.y_max / divideHeight,
+    y_min: box.y_min / divideHeight > yAxisPadding ? box.y_min / divideHeight : yAxisPadding,
   };
 }

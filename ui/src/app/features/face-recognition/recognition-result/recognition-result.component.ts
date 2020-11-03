@@ -41,7 +41,7 @@ export class RecognitionResultComponent implements OnDestroy {
   @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
 
   canvasSize: ImageSize = { width: 500, height: null };
-  widthOfTextArea = 25;
+  faceDescriptionHeight = 25;
   private printSubscription: Subscription;
 
   ngOnDestroy() {
@@ -62,7 +62,7 @@ export class RecognitionResultComponent implements OnDestroy {
         this.canvasSize.height = (height / width) * this.canvasSize.width;
         this.myCanvas.nativeElement.setAttribute('height', this.canvasSize.height);
       }),
-      map((imageSize) => recalculateFaceCoordinate(box, imageSize, this.canvasSize, this.widthOfTextArea)),
+      map((imageSize) => recalculateFaceCoordinate(box, imageSize, this.canvasSize, this.faceDescriptionHeight)),
       tap((recalculatedBox) => this.drawCanvas(recalculatedBox, face))
     );
   }
@@ -89,8 +89,8 @@ export class RecognitionResultComponent implements OnDestroy {
       ctx.lineTo(box.x_min, box.y_min);
       ctx.stroke();
       ctx.fillStyle = 'green';
-      ctx.fillRect(box.x_min, box.y_min - this.widthOfTextArea, box.x_max - box.x_min, this.widthOfTextArea);
-      ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.widthOfTextArea);
+      ctx.fillRect(box.x_min, box.y_min - this.faceDescriptionHeight, box.x_max - box.x_min, this.faceDescriptionHeight);
+      ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
       ctx.fillStyle = 'white';
       ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
       ctx.fillText(resultFace.similarity, box.x_min + 10, box.y_max + 20);
