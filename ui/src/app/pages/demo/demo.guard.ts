@@ -6,7 +6,7 @@ import { CanActivate, ActivatedRouteSnapshot,
   RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { DemoService } from './demo.service';
-import { loadDemoApiKeyAction, loadDemoApiKeySuccessAction, setDemoKeyPendingAction } from '../../store/demo/actions';
+import { loadDemoApiKeySuccessAction, setDemoKeyPendingAction } from '../../store/demo/actions';
 
 @Injectable({
   providedIn: 'root'
