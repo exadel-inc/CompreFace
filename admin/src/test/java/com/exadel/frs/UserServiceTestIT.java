@@ -21,15 +21,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
+import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
+import liquibase.integration.spring.SpringLiquibase;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -45,6 +48,12 @@ class UserServiceTestIT {
     private static final String USER_EMAIL_2 = "user_2@email.com";
     private static final String USER_GUID = "testUserGuid";
     private static final String USER_EMAIL_PART = "user";
+
+    @MockBean
+    private SpringLiquibase springLiquibase;
+
+    @MockBean
+    private EmailSender emailSender;
 
     @SpyBean
     private UserService userService;

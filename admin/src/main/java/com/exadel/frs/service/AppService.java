@@ -151,8 +151,9 @@ public class AppService {
     ) {
         val app = getApp(appGuid, userId);
         val user = userService.getUser(userInviteDto.getUserEmail());
+        val admin = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(admin, app);
 
         val userAppRole = app.getUserAppRole(user.getId());
         if (userAppRole.isPresent()) {

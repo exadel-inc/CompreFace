@@ -29,6 +29,7 @@ public interface UserGlobalRoleMapper {
     @Mapping(source = "firstName", target = "firstName")
     @Mapping(source = "lastName", target = "lastName")
     @Mapping(source = "email", target = "email")
+    @Mapping(source = "globalRole", target = "role")
     UserRoleResponseDto toUserRoleResponseDto(User userAppRole);
 
     List<UserRoleResponseDto> toUserRoleResponseDto(List<User> userAppRoles);

@@ -116,7 +116,8 @@ class AuthorizationManagerTest {
 
         @Test
         void userWithAnyRoleToAppCanReadApp() {
-            for (User user : users) {
+            // exclude global user
+            for (User user : users.subList(1,users.size())) {
                 authManager.verifyReadPrivilegesToApp(user, application);
             }
         }
@@ -211,12 +212,12 @@ class AuthorizationManagerTest {
                     ownerRemovalByAdmin
             )).isInstanceOf(InsufficientPrivilegesException.class)
               .hasMessage(
-                      "Organization owner cannot be removed!");
+                      "Global owner cannot be removed!");
 
             assertThatThrownBy(() -> authManager.verifyCanDeleteUser(
                     ownerRemovalByItself
             )).isInstanceOf(InsufficientPrivilegesException.class)
-              .hasMessage("Organization owner cannot be removed!");
+              .hasMessage("Global owner cannot be removed!");
         }
 
         @Test
@@ -348,6 +349,7 @@ class AuthorizationManagerTest {
 
     private User makeUser(final long userId, GlobalRole role) {
         return User.builder()
+                   .guid(UUID.randomUUID().toString())
                    .globalRole(role)
                    .id(userId)
                    .build();

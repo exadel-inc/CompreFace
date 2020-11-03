@@ -34,6 +34,6 @@ public class UserRoleUpdateDto {
     private String userId;
 
     @NotBlank(message = "Role cannot be empty")
-    @ValidEnum(message = "Organization role '${validatedValue}' doesn't exist!", targetClassType = GlobalRole.class)
+    @ValidEnum(message = "Global role '${validatedValue}' doesn't exist!", targetClassType = GlobalRole.class)
     private String role;
 }

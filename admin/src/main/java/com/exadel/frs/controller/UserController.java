@@ -206,7 +206,7 @@ public class UserController {
     }
 
     @GetMapping("/global/roles")
-    @ApiOperation(value = "Get all global user roles")
+    @ApiOperation(value = "Get all global roles")
     public GlobalRole[] getGlobalRoles() {
         return GlobalRole.values();
     }

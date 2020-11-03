@@ -26,7 +26,6 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
-import com.exadel.frs.exception.UserDoesNotBelongToOrganization;
 import java.util.List;
 import lombok.val;
 import org.springframework.stereotype.Component;
@@ -35,24 +34,16 @@ import org.springframework.stereotype.Component;
 public class AuthorizationManager {
 
     public void verifyGlobalWritePrivileges(final User user) {
-        try {
-            val role = user.getGlobalRole();
-            if (!List.of(OWNER, ADMINISTRATOR).contains(role)) {
-                throw new InsufficientPrivilegesException();
-            }
-        } catch (UserDoesNotBelongToOrganization e) {
+        val role = user.getGlobalRole();
+        if (!List.of(OWNER, ADMINISTRATOR).contains(role)) {
             throw new InsufficientPrivilegesException();
         }
     }
 
     public void verifyReadPrivilegesToApp(final User user, final App app) {
-        try {
-            if (USER == user.getGlobalRole()) {
-                app.getUserAppRole(user.getId())
-                   .orElseThrow(InsufficientPrivilegesException::new);
-            }
-        } catch (UserDoesNotBelongToOrganization e) {
-            throw new InsufficientPrivilegesException();
+        if (USER == user.getGlobalRole()) {
+            app.getUserAppRole(user.getId())
+               .orElseThrow(InsufficientPrivilegesException::new);
         }
     }
 
@@ -83,7 +74,7 @@ public class AuthorizationManager {
         val isOwnerBeingDeleted = userToDelete.getGlobalRole() == OWNER;
 
         if (isOwnerBeingDeleted) {
-            throw new InsufficientPrivilegesException("Organization owner cannot be removed!");
+            throw new InsufficientPrivilegesException("Global owner cannot be removed!");
         }
 
         val deleterRole = deleter.getGlobalRole();

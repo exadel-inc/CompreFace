@@ -251,18 +251,18 @@ public class UserService {
             throw new SelfRoleChangeException();
         }
 
-        val newOrgRole = GlobalRole.valueOf(userRoleUpdateDto.getRole());
+        val newGlobalRole = GlobalRole.valueOf(userRoleUpdateDto.getRole());
 
         if (ADMINISTRATOR.equals(currentUser.getGlobalRole()) &&
-                (OWNER.equals(newOrgRole)) || OWNER.equals(user.getGlobalRole())) {
+                (OWNER.equals(newGlobalRole)) || OWNER.equals(user.getGlobalRole())) {
             throw new InsufficientPrivilegesException();
         }
 
-        if (newOrgRole == OWNER) {
+        if (newGlobalRole == OWNER) {
             currentUser.setGlobalRole(GlobalRole.ADMINISTRATOR);
         }
 
-        user.setGlobalRole(newOrgRole);
+        user.setGlobalRole(newGlobalRole);
 
         userRepository.save(user);
 

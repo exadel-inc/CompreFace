@@ -17,7 +17,7 @@
 package com.exadel.frs.helpers;
 
 import com.exadel.frs.enums.GlobalRole;
-import com.exadel.frs.exception.IncorrectOrganizationRoleException;
+import com.exadel.frs.exception.IncorrectGlobalRoleException;
 import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
@@ -37,6 +37,6 @@ public class GlobalRoleConverter implements AttributeConverter<GlobalRole, Strin
                 : Stream.of(GlobalRole.values())
                         .filter(globalRole -> globalRole.getCode().equals(code))
                         .findFirst()
-                        .orElseThrow(() -> new IncorrectOrganizationRoleException(code));
+                        .orElseThrow(() -> new IncorrectGlobalRoleException(code));
     }
 }

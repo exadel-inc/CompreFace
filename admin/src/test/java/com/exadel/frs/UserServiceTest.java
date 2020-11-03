@@ -31,6 +31,7 @@ import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
@@ -345,6 +346,8 @@ class UserServiceTest {
                                              .deleter(orgAdmin)
                                              .updateAppsConsumer(updateAppsConsumer)
                                              .build();
+
+            when(userRepositoryMock.findByGlobalRole(GlobalRole.OWNER)).thenReturn(orgOwner);
 
             userService.deleteUser(deleteUserDto);
 

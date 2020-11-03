@@ -137,7 +137,7 @@ public class AppController {
 
     @GetMapping("/app/{guid}/assign-roles")
     @ApiOperation(value = "Get application roles, that can be assigned to other users")
-    public AppRole[] getOrgRolesToAssign(
+    public AppRole[] getAppRolesToAssign(
             @ApiParam(value = "GUID of the application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String guid

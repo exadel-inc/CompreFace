@@ -43,8 +43,10 @@ import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.ConstraintViolationException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.UserDoesNotExistException;
+import com.exadel.frs.mapper.UserGlobalRoleMapper;
 import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.AppService;
+import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.config.AuthServerConfig;
 import com.exadel.frs.system.security.config.ResourceServerConfig;
@@ -80,8 +82,14 @@ public class UserControllerTest {
     @MockBean
     private AppService appService;
 
+    @MockBean
+    private ModelService modelService;
+
     @Autowired
     private ObjectMapper mapper;
+
+    @MockBean
+    private UserGlobalRoleMapper userGlobalRoleMapper;
 
     @Autowired
     private MockMvc mockMvc;

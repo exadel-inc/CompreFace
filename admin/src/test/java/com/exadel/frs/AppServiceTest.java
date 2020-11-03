@@ -25,6 +25,7 @@ import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
@@ -104,7 +105,7 @@ class AppServiceTest {
 
     @Test
     void successGetApp() {
-        val user = user(USER_ID, USER);
+        val user = user(USER_ID, ADMINISTRATOR);
 
         val app = App.builder()
                      .id(APPLICATION_ID)
@@ -112,6 +113,7 @@ class AppServiceTest {
                      .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         val result = appService.getApp(APPLICATION_GUID, USER_ID);
 
@@ -141,12 +143,15 @@ class AppServiceTest {
 
     @Test
     void successGetAppsForGlobalUser() {
+        val user = user(USER_ID, USER);
+
         val app = App.builder()
                      .id(APPLICATION_ID)
                      .guid(APPLICATION_GUID)
                      .build();
 
         when(appRepositoryMock.findAllByUserAppRoles_Id_UserId(USER_ID)).thenReturn(List.of(app));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         val result = appService.getApps(USER_ID);
 
@@ -201,6 +206,7 @@ class AppServiceTest {
         val user = user(USER_ID, ADMINISTRATOR);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         appService.updateApp(appUpdateDto, APPLICATION_GUID, USER_ID);
 
@@ -234,6 +240,7 @@ class AppServiceTest {
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
         when(appRepositoryMock.save(any())).thenReturn(app);
 
         assertThatThrownBy(() -> appService.updateUserAppRole(
@@ -243,7 +250,7 @@ class AppServiceTest {
         )).isInstanceOf(InsufficientPrivilegesException.class);
 
         verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
-        verify(authManagerMock).verifyReadPrivilegesToApp(user, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
         verifyNoMoreInteractions(authManagerMock);
         verifyNoMoreInteractions(appRepositoryMock);
@@ -264,6 +271,7 @@ class AppServiceTest {
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         assertThatThrownBy(() -> appService.updateUserAppRole(
                 userRoleUpdateDto,
@@ -307,6 +315,7 @@ class AppServiceTest {
         val user = user(USER_ID, USER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         appService.regenerateApiKey(APPLICATION_GUID, USER_ID);
 
@@ -338,6 +347,7 @@ class AppServiceTest {
         val user = user(USER_ID, USER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         appService.deleteApp(APPLICATION_GUID, USER_ID);
 
@@ -360,6 +370,7 @@ class AppServiceTest {
         app.addUserAppRole(user, OWNER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         val result = appService.getAppUsers("", APPLICATION_GUID, USER_ID);
 
@@ -408,13 +419,14 @@ class AppServiceTest {
         app.addUserAppRole(user3, AppRole.USER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(user1Id)).thenReturn(user1);
 
-        val result = appService.getAppUsers("smith", APPLICATION_GUID, USER_ID);
+        val result = appService.getAppUsers("smith", APPLICATION_GUID, user1Id);
 
         assertThat(result).hasSize(2);
 
         verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
-        //verify(authManagerMock).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(user1, app);
         verifyNoMoreInteractions(appRepositoryMock, authManagerMock);
     }
 
@@ -442,6 +454,7 @@ class AppServiceTest {
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUser(anyString())).thenReturn(user);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(admin);
         when(appRepositoryMock.save(any())).thenReturn(app);
 
         val userAppRole = appService.inviteUser(userInviteDto, APPLICATION_GUID, USER_ID);
@@ -480,6 +493,7 @@ class AppServiceTest {
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUser(anyString())).thenReturn(user);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(admin);
         when(appRepositoryMock.save(any())).thenReturn(app);
 
         val actual = appService.inviteUser(userInviteDto, APPLICATION_GUID, USER_ID);
@@ -539,7 +553,8 @@ class AppServiceTest {
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(appRepositoryMock.save(any())).thenReturn(app);
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
-        when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
+        when(userServiceMock.getUser(userId)).thenReturn(user);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(admin);
 
         assertThat(app.getUserAppRoles()).hasSize(1);
         assertThat(app.getUserAppRoles()).allSatisfy(
@@ -590,6 +605,7 @@ class AppServiceTest {
         );
 
         when(appRepositoryMock.findAllByUserAppRoles_Id_UserId(anyLong())).thenReturn(apps);
+        when(userServiceMock.getUser(1L)).thenReturn(oldOwner);
 
         appService.passAllOwnedAppsToNewOwnerAndLeaveAllApps(oldOwner, newOwner);
 
@@ -624,6 +640,7 @@ class AppServiceTest {
         app.addUserAppRole(user, OWNER);
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         val actual = appService.getAppRolesToAssign(APPLICATION_GUID, USER_ID);
 
@@ -643,6 +660,7 @@ class AppServiceTest {
                      .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         val actual = appService.getAppRolesToAssign(APPLICATION_GUID, USER_ID);
 
@@ -730,6 +748,8 @@ class AppServiceTest {
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(admin);
 
         appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
 

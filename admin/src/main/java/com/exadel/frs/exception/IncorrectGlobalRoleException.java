@@ -16,14 +16,14 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.ORGANIZATION_NOT_FOUND;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_GLOBAL_ROLE;
 import static java.lang.String.format;
 
-public class OrganizationNotFoundException extends BasicException {
+public class IncorrectGlobalRoleException extends BasicException {
 
-    private static final String MESSAGE = "Organization %s not found";
+    public static final String GLOBAL_ROLE_NOT_EXISTS_MESSAGE = "Global role %s does not exists";
 
-    public OrganizationNotFoundException(final Object identifier) {
-        super(ORGANIZATION_NOT_FOUND, format(MESSAGE, identifier));
+    public IncorrectGlobalRoleException(final String globalRole) {
+        super(INCORRECT_GLOBAL_ROLE, format(GLOBAL_ROLE_NOT_EXISTS_MESSAGE, globalRole));
     }
 }

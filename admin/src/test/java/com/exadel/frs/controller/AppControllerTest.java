@@ -369,7 +369,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnOkWhenDeleteUserFromApp() throws Exception {
-        val request = delete("/org/" + ORG_GUID + "/app/" + APP_GUID + "/user/" + USER_GUID)
+        val request = delete("/app/" + APP_GUID + "/user/" + USER_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
