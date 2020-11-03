@@ -32,5 +32,5 @@ public class ImageProperties {
     @Size(min = 1)
     private final List types;
 
-    private boolean save;
+    private boolean saveImagesToDB;
 }

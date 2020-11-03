@@ -77,7 +77,7 @@ public class FaceDao {
                 .setFaceName(faceName)
                 .setApiKey(modelKey);
 
-        if (imageProperties.isSave()) {
+        if (imageProperties.isSaveImagesToDB()) {
             val image = new Image()
                     .setFaceImg(file.getBytes())
                     .setRawImg(file.getBytes())
