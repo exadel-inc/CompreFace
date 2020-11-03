@@ -17,7 +17,6 @@
 <form class="email-form" [formGroup]="form">
   <mat-form-field>
     <input matInput placeholder="email" formControlName="email" name="email" [matAutocomplete]="auto">
-<!--    <input *ngIf="!options" matInput placeholder="email" formControlName="email" name="email">-->
   </mat-form-field>
 
   <mat-autocomplete #auto="matAutocomplete">

@@ -9,11 +9,11 @@ import { Model } from '../../data/interfaces/model';
   styleUrls: ['./drag-n-drop.component.scss']
 })
 export class DragNDropComponent implements OnInit {
-  @ViewChild('fileDropRef', { static: false }) fileDropEl: ElementRef;
+  @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
   @Input() model: any;
-  @Output() upload: EventEmitter<{file: File, model: Model}> = new EventEmitter();
+  @Output() upload: EventEmitter<File> = new EventEmitter();
   private file: any;
 
   constructor(private translate: TranslateService) {
@@ -47,6 +47,6 @@ export class DragNDropComponent implements OnInit {
    */
   uploadFile(files: Array<any>) {
     this.file = files[0];
-    this.upload.emit({file: this.file, model: this.model});
+    this.upload.emit(this.file);
   }
 }

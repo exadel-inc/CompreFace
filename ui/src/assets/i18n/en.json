@@ -36,11 +36,13 @@
     "login": "LOGIN",
     "sign_up": "SIGN UP"
   },
-
   "toolbar": {
-    "logout": "Logout"
+    "logout": "Logout",
+    "user_avatar_info": "User avatar",
+    "logo": "CompreFace logo"
   },
   "applications": {
+    "caption": "Table of applications",
     "title": "Applications",
     "first_steps_title": "Create Application",
     "name": "Name",
@@ -66,6 +68,7 @@
     }
   },
   "models": {
+    "caption": "Table of face collections",
     "title": "Models",
     "name": "Name",
     "api_key": "API key",
@@ -92,20 +95,20 @@
     }
   },
   "users": {
+    "caption": "Table of users",
     "title": "Users",
     "user": "User",
     "role": "Role",
     "search": {
       "org_title": "Search User",
-      "app_title": "search",
+      "app_title": "Search User",
       "no_results": "No matches found"
     }
   },
-  "system-user": "system-user",
   "org_users": {
     "delete_dialog": {
-      "title": "Delete User",
-      "confirmation_question": "Are you sure you want remove user {{name}} {{lastName}}?",
+      "title": "Delete {{type}}",
+      "confirmation_question": "Are you sure you want to remove user {{name}} {{lastName}}?",
       "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
       "warn_hint_anyway": "You can delete him anyway.",
       "warn_hint_owner": "In this case you will become the OWNER of these applications.",
@@ -119,7 +122,7 @@
     "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",
     "delete_dialog": {
       "title": "Delete user",
-      "confirmation_question": "Are you sure you want remove user {{name}} from {{application}}?"
+      "confirmation_question": "Are you sure you want to remove user {{name}} from {{application}}?"
     }
   },
   "breadcrumbs": {
@@ -132,5 +135,14 @@
     "add": "Add to model",
     "train": "Train model",
     "recognize": "Recognize Face"
+  },
+  "test_model": {
+    "title": "Test Model",
+    "request": "Request",
+    "response": "Response"
+  },
+  "demo": {
+    "title": "Demo",
+    "link": "Try Demo"
   }
 }

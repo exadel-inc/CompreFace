@@ -23,8 +23,17 @@ import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
-import { resetUserInfo, updateUserInfo } from '../userInfo/action';
-import { logIn, logInFailure, logInSuccess, logOut, signUp, signUpFailure, signUpSuccess } from './action';
+import { resetUserInfo } from '../userInfo/action';
+import {
+  clearUserToken,
+  logIn,
+  logInFailure,
+  logInSuccess,
+  logOut,
+  signUp,
+  signUpFailure,
+  signUpSuccess
+} from './action';
 
 @Injectable()
 export class AuthEffects {
@@ -41,17 +50,7 @@ export class AuthEffects {
     ofType(logIn),
     switchMap(action => {
       return this.authService.logIn(action.email, action.password).pipe(
-        switchMap(res => {
-          this.authService.updateTokens(res.access_token, res.refresh_token);
-          return [
-            logInSuccess(),
-            updateUserInfo(
-              {
-                isAuthenticated: true,
-                firstName: res.firstName
-              })
-          ];
-        }),
+        map(() => logInSuccess()),
         catchError(error => observableOf(logInFailure(error)))
       );
     }));
@@ -116,10 +115,16 @@ export class AuthEffects {
   @Effect()
   public LogOut: Observable<any> = this.actions.pipe(
     ofType(logOut),
-    map(() => {
-      this.authService.removeToken();
+    switchMap(() => {
       this.router.navigateByUrl(ROUTERS_URL.LOGIN);
-      return resetUserInfo();
+
+      return [clearUserToken(), resetUserInfo()];
     })
+  );
+
+  @Effect({dispatch: false})
+  public ClearUserToken: Observable<any> = this.actions.pipe(
+    ofType(clearUserToken),
+    switchMap(() => this.authService.clearUserToken())
   );
 }

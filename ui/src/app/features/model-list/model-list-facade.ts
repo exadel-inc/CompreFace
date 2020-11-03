@@ -44,9 +44,9 @@ export class ModelListFacade implements IFacade {
     this.isLoading$ = store.select(selectPendingModel);
     this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
     this.selectedApplication$ = store.select(selectCurrentAppId);
-    this.userRole$ = combineLatest(
+    this.userRole$ = combineLatest([
       this.store.select(selectUserRollForSelectedApp),
-      this.store.select(selectUserRollForSelectedOrganization)
+      this.store.select(selectUserRollForSelectedOrganization)]
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
@@ -56,9 +56,9 @@ export class ModelListFacade implements IFacade {
   }
 
   initSubscriptions(): void {
-    this.currentArgsAndApplicationSubscription = combineLatest(
+    this.currentArgsAndApplicationSubscription = combineLatest([
       this.selectedOrganization$,
-      this.selectedApplication$
+      this.selectedApplication$]
     ).subscribe((ObservableResult) => {
       if (ObservableResult[0] !== null && ObservableResult[1] !== null) {
         this.selectedOrganizationId = ObservableResult[0];

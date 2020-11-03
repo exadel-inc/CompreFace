@@ -14,19 +14,19 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {BreadcrumbsComponent} from './breadcrumbs.component';
 import {CommonModule} from '@angular/common';
 import {BreadcrumbsFacade} from './breadcrumbs.facade';
 import {RouterModule} from '@angular/router';
 import {RouterTestingModule} from '@angular/router/testing';
-import {MatCardModule} from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
 
 describe('BreadcrumbsComponent', () => {
   let component: BreadcrumbsComponent;
   let fixture: ComponentFixture<BreadcrumbsComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ BreadcrumbsComponent ],
       providers: [

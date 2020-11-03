@@ -40,9 +40,9 @@ export class InviteUserComponent implements OnInit {
     });
 
     if (this.options$) {
-      this.filteredOptions$ = combineLatest(
+      this.filteredOptions$ = combineLatest([
         this.options$,
-        this.form.controls.email.valueChanges.pipe(startWith(''))
+        this.form.controls.email.valueChanges.pipe(startWith(''))]
       ).pipe(
         map(([options, value]) => this.filter(options, value)),
       );

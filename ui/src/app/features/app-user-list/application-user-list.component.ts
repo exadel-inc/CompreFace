@@ -15,7 +15,7 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/interfaces/app-user';
@@ -33,7 +33,7 @@ import { Role } from 'src/app/data/enums/role.enum';
   selector: 'app-application-user-list',
   templateUrl: './application-user-list.component.html',
   styleUrls: ['./application-user-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationUserListComponent implements OnInit, OnDestroy {
   tableConfig$: Observable<ITableConfig>;
@@ -47,7 +47,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   availableRoles: string[];
   currentUserId$: Observable<string>;
   roleEnum = Role;
-  private availableRolesSubscription: Subscription;
+  availableRolesSubscription: Subscription;
 
   constructor(
     private appUserListFacade: ApplicationUserListFacade,
@@ -64,15 +64,21 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.availableEmails$ = this.appUserListFacade.availableEmails$;
     this.currentUserId$ = this.appUserListFacade.currentUserId$;
 
-    this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(map((users: AppUser[]) => {
-      return {
-        columns: [{ title: 'user', property: 'username' }, { title: 'role', property: 'role' }, { title: 'delete', property: 'delete' }],
-        data: users
-      };
-    }));
+    this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(
+      map((users: AppUser[]) => {
+        return {
+          columns: [
+            { title: 'user', property: 'username' },
+            { title: 'role', property: 'role' },
+            { title: 'delete', property: 'delete' },
+          ],
+          data: users,
+        };
+      })
+    );
     this.message = this.translate.instant('app_users.add_users_info');
     this.availableRoles$ = this.appUserListFacade.availableRoles$;
-    this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe(value => this.availableRoles = value);
+    this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe((value) => (this.availableRoles = value));
   }
 
   onChange(user: AppUser): void {
@@ -88,14 +94,17 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
         entityType: this.translate.instant('users.user'),
         entityName: `${deletion.userToDelete.firstName} ${deletion.userToDelete.lastName}`,
         applicationName: this.appUserListFacade.selectedApplicationName,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(result => {
-      if (result) {
-        this.appUserListFacade.delete(deletion.userToDelete.userId);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe((result) => {
+        if (result) {
+          this.appUserListFacade.delete(deletion.userToDelete.userId);
+        }
+      });
   }
 
   ngOnDestroy(): void {
@@ -110,8 +119,8 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
       data: {
         availableRoles: this.availableRoles,
         options$: this.availableEmails$,
-        actionType: 'add'
-      }
+        actionType: 'add',
+      },
     });
 
     const dialogSubscription = dialog.afterClosed().subscribe(({ userEmail, role }) => {

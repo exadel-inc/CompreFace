@@ -28,6 +28,7 @@
   .logo, .logo img {
     height: 90%;
     margin: 3px 0;
+    flex-grow: 3;
   }
 }
 
@@ -69,4 +70,8 @@
 
 .page-name {
   text-transform: capitalize;
+}
+
+.user-info-name {
+  margin-right: 10px;
 }

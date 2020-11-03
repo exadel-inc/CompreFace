@@ -19,13 +19,9 @@
     <app-breadcrumbs-container></app-breadcrumbs-container>
   </div>
 
-  <div class="test-model-container">
-    <div class="test-model-loader"
-       *ngIf="modelLoading$ | async">
-      <app-spinner></app-spinner>
-    </div>
-
-    <app-face-recognition *ngIf="!(modelLoading$ | async)"></app-face-recognition>
-  </div>
+  <mat-card>
+      <app-face-recognition-container>
+      </app-face-recognition-container>
+  </mat-card>
 </div>
 

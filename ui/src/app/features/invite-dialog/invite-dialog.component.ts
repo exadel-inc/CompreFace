@@ -16,7 +16,7 @@
 
 import {Component, OnInit, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
 import {Observable, combineLatest} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
@@ -51,8 +51,8 @@ export class InviteDialogComponent implements OnInit {
 
     if (this.data.options$) {
       this.filteredOptions$ = combineLatest(
-        this.data.options$,
-        this.form.controls.userEmail.valueChanges.pipe(startWith(''))
+        [this.data.options$,
+        this.form.controls.userEmail.valueChanges.pipe(startWith(''))]
       ).pipe(
         map(([options, value]) => this.filter(options as string[], value)),
       );

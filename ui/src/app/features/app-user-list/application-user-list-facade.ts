@@ -56,8 +56,8 @@ export class ApplicationUserListFacade implements IFacade {
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
     this.availableEmails$ = combineLatest(
-      store.select(selectUsers),
-      this.appUsers$
+      [store.select(selectUsers),
+      this.appUsers$]
     ).pipe(
       map(([users, appUsers]) => {
         return users.map(user => {
@@ -69,8 +69,8 @@ export class ApplicationUserListFacade implements IFacade {
     );
     this.organizationRole$ = this.store.select(selectUserRollForSelectedOrganization);
     this.userRole$ = combineLatest(
-      this.store.select(selectUserRollForSelectedApp),
-      this.organizationRole$
+      [this.store.select(selectUserRollForSelectedApp),
+        this.organizationRole$]
     ).pipe(
       map(([applicationRole, organizationRole]) => {
         // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
@@ -81,7 +81,7 @@ export class ApplicationUserListFacade implements IFacade {
     this.currentUserId$ = store.select(selectUserId);
     const allRoles$ = store.select(selectAllRoles);
 
-    this.availableRoles$ = combineLatest(allRoles$, this.userRole$, this.organizationRole$).pipe(
+    this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.organizationRole$]).pipe(
       map(([allRoles, userRole, organizationRole]) => {
         if (organizationRole !== 'USER') {
           return allRoles;
@@ -95,7 +95,7 @@ export class ApplicationUserListFacade implements IFacade {
     const usersLoading$ = store.select(selectAppUserIsPending);
     const roleLoading$ = store.select(selectIsPendingRoleStore);
 
-    this.isLoading$ = combineLatest(usersLoading$, roleLoading$)
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$])
       .pipe(
         map(observResults => !(!observResults[0] && !observResults[1])
         ));

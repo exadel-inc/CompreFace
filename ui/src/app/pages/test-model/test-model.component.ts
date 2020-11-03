@@ -25,7 +25,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./test-model.component.scss']
 })
 export class TestModelComponent implements OnInit, OnDestroy {
-  public modelLoading$: Observable<boolean>;
+  modelLoading$: Observable<boolean>;
   constructor(private modelService: TestModelPageService, private store: Store<any>) {}
 
   ngOnInit() {

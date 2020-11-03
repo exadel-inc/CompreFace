@@ -14,8 +14,10 @@
  * permissions and limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatButtonModule, MatMenuModule, MatTableModule } from '@angular/material';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { MatButtonModule } from '@angular/material/button';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 
 import { ModelTableComponent } from './model-table.component';
@@ -24,7 +26,7 @@ describe('ModelTableComponent', () => {
   let component: ModelTableComponent;
   let fixture: ComponentFixture<ModelTableComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ModelTableComponent],
       imports: [

@@ -18,6 +18,6 @@ jobs:
           PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
           path-to-signatures: 'signatures/cla.json'
-          path-to-cla-document: 'https://github.com/exadel-inc/face-recognition-service/blob/develop/CLA.md'
-          branch: 'develop'
-          allowlist: Elijas,daffy-,sbvalijon,stashess,kemerava,mmisachenka,isobolev,endypanda,mjakowiec,dmitry-boiko,pospielov,andreigaevsky,ivandodz,aabramovich-dev,DmitryRomaniuk,omorgunova-pl,github-actions
+          path-to-cla-document: 'https://github.com/exadel-inc/CompreFace/blob/develop/CLA.md'
+          branch: 'CLA-signatures'
+          allowlist: bot*

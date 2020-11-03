@@ -25,7 +25,7 @@
         [(ngModel)]="search"
         placeholder="{{'users.search.app_title' | translate}}"
         [ngModelOptions]="{standalone: true}">
-      <i class="material-icons notranslate">search</i>
+      <mat-icon class="material-icons notranslate">search</mat-icon>
     </form>
   </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>

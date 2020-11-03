@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {AppUserService} from './app-user.service';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { AppUserService } from './app-user.service';
 
 describe('AppUserService', () => {
   let service: AppUserService;
@@ -25,11 +25,11 @@ describe('AppUserService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [AppUserService]
+      providers: [AppUserService],
     });
 
-    service = TestBed.get(AppUserService);
-    httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.inject(AppUserService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
