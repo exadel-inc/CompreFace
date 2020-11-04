@@ -1,8 +1,3 @@
-## Project setup and usage
-
-To start working with Face Recognition System, perform the following sequence of steps:
-[Read more](./README.md)
-
 ## Overview
 
 Face Recognition system is a way of recognizing a human face through technology. A facial recognition system uses facial features from a photograph and compares the information with a database of known faces to find a match.
@@ -26,26 +21,30 @@ The following result Json illustrates how these points map to a face, where
 3. x,y - coordinates of the frame containing the face
 4. Box coordinates are available set values for key in format x_min,x_max,y_min,y_max and the API will provided analysis for just one face
 
+```
+
 "result": [
 {
-"box": {
-"probability": 0.99583,
-"x_max": 551,
-"y_max": 364,
-"x_min": 319,
-"y_min": 55
-},
-"faces": [
-{
-"similarity": 0.99593,
-"face_name": "lisan"
+  "box": {
+    "probability": 0.99583,
+    "x_max": 551,
+    "y_max": 364,
+    "x_min": 319,
+    "y_min": 55
+  },
+  "faces": [
+  {
+    "similarity": 0.99593,
+    "face_name": "lisan"
+  }
+  ]
 }
 ]
-}
-]
+```
 
 The following JavaScript code example allows to add new face to Face Collection.
-To run the JavaScript example just load the source code into an browser console.
+
+```
 
 async function saveNewImageToFaceCollection()
 {
@@ -63,19 +62,25 @@ let photo = document.getElementById("fileDropRef").files[0];
 
 }
 
-To recognize a face, you should use the following:
+```
+
+This function sends image to our server and shows result in text area:
+
+```
 
 function recognizeFace(input) {
 
   async function getData() {
-      let response = await fetch('http://localhost:8000/api/v1/recognize')
-      let data = await response.json()
-        return data
+    let response = await fetch('http://localhost:8000/api/v1/recognize')
+    let data = await response.json()
+      return data
   };
 
   let result = Promise.resolve(response)
-       result.then(data => {
-       array = data
-         document.getElementById("result-textarea-request").innerHTML =  JSON.stringify(array);
-       });
+    result.then(data => {
+    array = data
+    document.getElementById("result-textarea-request").innerHTML = JSON.stringify(array);
+  });
 }
+
+```
