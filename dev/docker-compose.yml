@@ -52,6 +52,7 @@ services:
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
       - SPRING_PROFILES_ACTIVE=dev
       - API_JAVA_OPTS=${compreface_api_java_options}
+      - SAVE_IMAGES_TO_DB=${save_images_to_db}
 
   compreface-fe:
     image: ${registry}compreface-fe

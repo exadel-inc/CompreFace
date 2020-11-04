@@ -51,7 +51,7 @@ public class RecognizeController {
     private final FacesClient client;
     private final ImageExtensionValidator imageValidator;
 
-    @PostMapping(value = "/recognize")
+    @PostMapping(value = "/faces/recognize")
     public ResponseEntity recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
