@@ -21,13 +21,17 @@ import { FaceRecognitionContainerComponent } from './face-recognition-container.
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { RecognitionResultComponent } from './recognition-result/recognition-result.component';
 import { SpinnerModule } from '../spinner/spinner.module';
+import {MatExpansionModule} from '@angular/material/expansion';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [FaceRecognitionContainerComponent, RecognitionResultComponent],
   imports: [
     CommonModule,
     DragNDropModule,
-    SpinnerModule
+    SpinnerModule,
+    MatExpansionModule,
+    TranslateModule
   ],
   providers: [ FaceRecognitionService ],
   exports: [FaceRecognitionContainerComponent]

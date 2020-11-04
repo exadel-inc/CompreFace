@@ -100,7 +100,7 @@
     "role": "Rola",
     "search": {
       "org_title": "Wyszukaj użytkownika",
-      "app_title": "szukaj",
+      "app_title": "Wyszukaj użytkownika",
       "no_results": "Nie znaleziono wyników"
     }
   },
@@ -131,5 +131,13 @@
     "title": "Click here or Drag and drop your image here",
     "label": "image must be with formats, and no more than 5 MB",
     "test": "Test model"
+  },
+  "test_model": {
+  "title": "Model testowy",
+  "request": "Żądanie",
+  "response": "Odpowiedź"
+},
+  "demo": {
+    "title": "Demo"
   }
 }
