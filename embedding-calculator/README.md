@@ -79,6 +79,18 @@ Check more models in [Model Zoo](https://github.com/deepinsight/insightface/wiki
 1. download model and unpack it to `embedding-calculator/srcext/insightface/models/`
 1. run build with passing model name, e.g. `--build-arg CALCULATION_MODEL=model-r34-amf`. 
   
+#### NVidia GPU support
+
+Build container with CUDA 10.1.
+```
+$ docker build -t cuda101-py37 -f gpu.Dockerfile .
+$ docker build -t embedding-calculator-gpu --build-arg SCANNER=InsightFace --build-arg BASE_IMAGE=cuda101-py37 --build-arg GPU_ID=0  .
+```
+
+Run with enabled gpu
+```
+$ docker run -p 3000:3000 --gpus all embedding-calculator-gpu
+```
 
 # Tools
 Finds faces in a given image, puts bounding boxes and saves the resulting image. 
@@ -104,6 +116,14 @@ Optimizes face detection library parameters with a given annotated image dataset
 $ mkdir tmp
 $ python -m tools.optimize_detection_params
 ```
+
+# Benchmark
+
+Perform the following steps:
+1. [Build and run](#build) `embedding-calculator` with the needed scanner backend and CPU/GPU supports
+1. Run a benchmark:
+    1. inside the container `docker exec embedding-calculator ./benchmark`
+    1. or locally `cd .embedding-calculator && ./benchmark.sh` (require exposing API at localhost:3000)
 
 # Troubleshooting
 
