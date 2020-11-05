@@ -1,5 +1,10 @@
 # Changes to this file have to be applied to DevOps Dockerfile as well, e.g. https://git.exadel.com/exadel-face-recognition-service/frs-devops/blob/master/Docker/APP-GENERIC-PYTHON-dev2/Dockerfile
-FROM jjanzic/docker-python3-opencv
+FROM python:3.7
+
+RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
+        yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
+        libpng-dev libtiff-dev libavformat-dev libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # <different-from-jenkins>
 WORKDIR /app/ml

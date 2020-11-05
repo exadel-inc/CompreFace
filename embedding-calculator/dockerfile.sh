@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 cd "${0%/*}" || exit 1 # Set Current Dir to the script's dir
 
-python -m pip --no-cache-dir install -r requirements.txt -e srcext/insightface/python-package
+pip --no-cache-dir install -r requirements.txt -e srcext/insightface/python-package
 imageio_download_bin freeimage
 
 if [ "$SKIP_TESTS" != true ]; then
