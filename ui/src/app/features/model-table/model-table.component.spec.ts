@@ -21,6 +21,9 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 
 import { ModelTableComponent } from './model-table.component';
+import { TranslateModule, TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
 
 describe('ModelTableComponent', () => {
   let component: ModelTableComponent;
@@ -28,15 +31,26 @@ describe('ModelTableComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ModelTableComponent],
+      declarations: [
+        ModelTableComponent,
+        TranslatePipe
+      ],
       imports: [
         MatTableModule,
         MatButtonModule,
         MatIconModule,
         MatMenuModule,
+        MatTooltipModule,
+        TruncateModule,
+        {
+          provide: TranslateService,
+          useValue: {
+            get: () => {},
+          },
+        },
       ]
     })
-      .compileComponents();
+    .compileComponents();
   }));
 
   beforeEach(() => {
