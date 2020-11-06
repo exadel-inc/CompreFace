@@ -17,25 +17,38 @@
 package com.exadel.frs.helpers;
 
 import com.exadel.frs.exception.UnreachableEmailException;
-import lombok.val;
+import javax.mail.internet.MimeMessage;
+import liquibase.util.StringUtils;
+import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class EmailSender {
 
+    @Value("${spring.mail.from}")
+    private String from;
+
+    @Value("${spring.mail.username}")
+    private String sender;
+
     @Autowired
     private JavaMailSender javaMailSender;
 
+    @SneakyThrows
     public void sendMail(final String to, final String subject, final String message) {
-        val msg = new SimpleMailMessage();
-        msg.setTo(to);
-        msg.setSubject(subject);
-        msg.setText(message);
+        MimeMessage msg = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(msg, true);
+        if (StringUtils.isNotEmpty(from)) {
+            helper.setFrom(from);
+        }
+        helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(message);
 
         try {
             javaMailSender.send(msg);

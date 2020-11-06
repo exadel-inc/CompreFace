@@ -40,7 +40,7 @@ spring:
   mail:
     enable: ${ENABLE_EMAIL_SERVER:false}
     sender: ${COMPREFACE_EMAIL:example@example.com}
-    host: ${HOST:example.com}
+    host: ${EMAIL_HOST:example.com}
     port: 25
     test-connection: false
     properties.mail:
@@ -51,7 +51,7 @@ spring:
         starttls:
           enable: true
         ssl:
-          trust: ${HOST}
+          trust: ${EMAIL_HOST}
   main:
     allow-bean-definition-overriding: true
 
