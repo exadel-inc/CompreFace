@@ -51,18 +51,18 @@ class InsightFaceBoundingBox(BoundingBoxDTO):
 
 class InsightFace(FaceScanner):
     ID = 'InsightFace'
-    DETECTION_MODEL_NAME = 'retinaface_r50_v1'
-    CALCULATION_MODEL_NAME = 'arcface_r100_v1'
+    DETECTION_MODEL_NAME = ENV.DETECTION_MODEL
+    CALCULATION_MODEL_NAME = ENV.CALCULATION_MODEL
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
 
     def __init__(self):
         super().__init__()
         self._detection_model = FaceAnalysis(det_name=self.DETECTION_MODEL_NAME, rec_name=None, ga_name=None)
         self._calculation_model = model_zoo.get_model(self.CALCULATION_MODEL_NAME)
-        self._CTX_ID_CPU = -1
+        self._CTX_ID = ENV.GPU_ID
         self._NMS = 0.4
-        self._detection_model.prepare(ctx_id=self._CTX_ID_CPU, nms=self._NMS)
-        self._calculation_model.prepare(ctx_id=self._CTX_ID_CPU)
+        self._detection_model.prepare(ctx_id=self._CTX_ID, nms=self._NMS)
+        self._calculation_model.prepare(ctx_id=self._CTX_ID)
         self.det_prob_threshold = 0.8
 
     def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
