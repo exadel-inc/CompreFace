@@ -69,13 +69,16 @@ public class RecognizeController {
             @ApiParam(value = "Maximum number of predictions per faces")
             @RequestParam(defaultValue = "1", name = "prediction_count", required = false)
             @Min(value = 1, message = "prediction_count should be equal or greater than 1")
-            final Integer predictionCount
-    ) {
+            final Integer predictionCount,
+            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
+            @RequestParam(value = "det_prob_threshold", required = false)
+            final Double detProbThreshold
+            ) {
         imageValidator.validate(file);
 
         ScanResponse scanResponse;
         try {
-            scanResponse = client.scanFaces(file, limit, 0.5D);
+            scanResponse = client.scanFaces(file, limit, detProbThreshold);
         } catch (FeignException.BadRequest e) {
             return ResponseEntity.status(HttpStatus.OK)
                                  .body(Map.of("result", Collections.EMPTY_LIST));

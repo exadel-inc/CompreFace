@@ -147,14 +147,17 @@ public class FaceController {
             final Integer limit,
             @ApiParam(value = "Image Id from collection to compare with face.", required = true)
             @PathVariable
-            final String image_id
+            final String image_id,
+            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
+            @RequestParam(value = "det_prob_threshold", required = false)
+            final Double detProbThreshold
 
     ) {
         imageValidator.validate(file);
 
         ScanResponse scanResponse;
         try {
-            scanResponse = client.scanFaces(file, limit, 0.5D);
+            scanResponse = client.scanFaces(file, limit, detProbThreshold);
         } catch (FeignException.BadRequest e) {
             return Map.of("result", Collections.EMPTY_LIST);
         }
