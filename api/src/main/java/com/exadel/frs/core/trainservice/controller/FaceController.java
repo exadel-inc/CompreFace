@@ -30,11 +30,14 @@ import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.system.feign.python.FaceVerification;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
+import feign.FeignException;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -152,7 +155,12 @@ public class FaceController {
     ) {
         imageValidator.validate(file);
 
-        val scanResponse = client.scanFaces(file, limit, detProbThreshold);
+        ScanResponse scanResponse;
+        try {
+            scanResponse = client.scanFaces(file, limit, 0.5D);
+        } catch (FeignException.BadRequest e) {
+            return Map.of("result", Collections.EMPTY_LIST);
+        }
 
         val results = new ArrayList<FaceVerification>();
 
