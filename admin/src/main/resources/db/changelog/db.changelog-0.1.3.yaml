@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: add-demo-data
+      id: update-without-organization
       author: Andrei Zelikov
       changes:
         #drop organization table
@@ -21,3 +21,9 @@ databaseChangeLog:
         - dropTable:
             cascadeConstraints: true
             tableName: user_organization_role
+        #drop organization_id column
+        - dropColumn:
+            tableName: app
+            columns:
+              - column:
+                  name: organization_id
