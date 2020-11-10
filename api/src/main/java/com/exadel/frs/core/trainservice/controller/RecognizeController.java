@@ -68,7 +68,7 @@ public class RecognizeController {
             @Min(value = 1, message = "prediction_count should be equal or greater than 1")
             final Integer predictionCount,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
-            @RequestParam(value = "det_prob_threshold", required = false, defaultValue = "0")
+            @RequestParam(value = "det_prob_threshold", required = false)
             final Double detProbThreshold
             ) {
         imageValidator.validate(file);
