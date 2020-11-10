@@ -78,7 +78,7 @@ public class RecognizeController {
 
         ScanResponse scanResponse;
         try {
-            scanResponse = client.scanFaces(file, limit, 0.5D);
+            scanResponse = client.scanFaces(file, limit, detProbThreshold);
         } catch (FeignException.BadRequest e) {
             return ResponseEntity.status(HttpStatus.OK)
                                  .body(Map.of("result", Collections.EMPTY_LIST));

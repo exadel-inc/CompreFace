@@ -157,7 +157,7 @@ public class FaceController {
 
         ScanResponse scanResponse;
         try {
-            scanResponse = client.scanFaces(file, limit, 0.5D);
+            scanResponse = client.scanFaces(file, limit, detProbThreshold);
         } catch (FeignException.BadRequest e) {
             return Map.of("result", Collections.EMPTY_LIST);
         }
