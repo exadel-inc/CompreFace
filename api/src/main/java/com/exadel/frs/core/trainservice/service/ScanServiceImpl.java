@@ -20,8 +20,11 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
+import com.exadel.frs.core.trainservice.exception.NoFacesFoundException;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
+import feign.FeignException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -46,7 +49,12 @@ public class ScanServiceImpl implements ScanService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        val scanResponse = facesClient.scanFaces(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold);
+        ScanResponse scanResponse;
+        try {
+            scanResponse = facesClient.scanFaces(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold);
+        } catch (FeignException.BadRequest e) {
+            throw new NoFacesFoundException();
+        }
         val result = scanResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {

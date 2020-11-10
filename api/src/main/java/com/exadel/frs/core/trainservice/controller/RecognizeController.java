@@ -23,10 +23,13 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.feign.python.FaceResponse;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
+import feign.FeignException;
 import io.swagger.annotations.ApiParam;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +73,13 @@ public class RecognizeController {
     ) {
         imageValidator.validate(file);
 
-        val scanResponse = client.scanFaces(file, limit, 0.5D);
+        ScanResponse scanResponse;
+        try {
+            scanResponse = client.scanFaces(file, limit, 0.5D);
+        } catch (FeignException.BadRequest e) {
+            return ResponseEntity.status(HttpStatus.OK)
+                                 .body(Map.of("result", Collections.EMPTY_LIST));
+        }
         val results = new ArrayList<FacePrediction>();
 
         for (val scanResult : scanResponse.getResult()) {
