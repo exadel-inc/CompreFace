@@ -15,3 +15,4 @@
  */
 
 export const EMAIL_REGEXP_PATTERN = '\\S+@\\S+\\.\\S+';
+export const MAX_IMAGE_SIZE = 5000000;
