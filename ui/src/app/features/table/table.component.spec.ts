@@ -17,6 +17,8 @@
 import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import { MatTableModule } from '@angular/material/table';
 import {TableComponent} from './table.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TableComponent', () => {
   let component: TableComponent;
@@ -24,8 +26,17 @@ describe('TableComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTableModule],
-      declarations: [ TableComponent ]
+      imports: [
+        MatTableModule,
+        RouterTestingModule,
+        {
+          provide: TranslateService,
+          useValue: {
+            get: () => {},
+          },
+        },
+      ],
+      declarations: [ TableComponent, TranslatePipe ]
     })
     .compileComponents();
   }));
