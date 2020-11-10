@@ -33,9 +33,6 @@ public class EmailSender {
     @Value("${spring.mail.from}")
     private String from;
 
-    @Value("${spring.mail.username}")
-    private String sender;
-
     @Autowired
     private JavaMailSender javaMailSender;
 
