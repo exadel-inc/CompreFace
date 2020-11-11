@@ -21,6 +21,9 @@ import { AppState } from '../../store';
 import { recognizeFace, recognizeFaceReset } from '../../store/face-recognition/actions';
 import { selectFaceData, selectFile, selectRequest, selectTestIsPending, selectStateReady
 } from '../../store/face-recognition/selectors';
+import { MAX_IMAGE_SIZE } from 'src/app/core/constants';
+import { SnackBarService } from '../snackbar/snackbar.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-face-recognition-container',
@@ -37,7 +40,11 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   @Input()
   title: string;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(
+    private store: Store<AppState>,
+    private snackBarService: SnackBarService,
+    private translate: TranslateService
+  ) { }
 
   ngOnInit() {
     this.data$ = this.store.select(selectFaceData);
@@ -52,6 +59,11 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   }
 
   recognizeFace(file: File) {
-    this.store.dispatch(recognizeFace({file}));
+    file.size > MAX_IMAGE_SIZE ?
+      this.snackBarService.openError(
+        null, 8000, this.translate.instant('face_recognition_container.file_size_error')
+      )
+    :
+      this.store.dispatch(recognizeFace({file}));
   }
 }

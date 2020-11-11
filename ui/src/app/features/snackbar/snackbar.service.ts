@@ -52,7 +52,7 @@ export class SnackBarService {
   openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
     const errorMessage = message.error || message;
     const data = {
-      message: errorMessage.message,
+      message: errorMessage.message ? errorMessage.message : errorMessage,
       type: 'error'
     };
 

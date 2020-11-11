@@ -61,7 +61,7 @@ export class FaceRecognitionEffects {
   showError$ = this.actions.pipe(
     ofType(recognizeFaceFail, addFaceFail),
     tap(action => {
-      this.snackBarService.openHttpError(action.error);
+      this.snackBarService.openHttpError(action.error.message);
     })
   );
 
