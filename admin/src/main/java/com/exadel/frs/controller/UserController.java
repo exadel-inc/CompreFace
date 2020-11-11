@@ -191,7 +191,7 @@ public class UserController {
 
     private void redirectToHomePage(final HttpServletResponse response) throws IOException {
         response.setStatus(FOUND.value());
-        val url = "https://" + env.getProperty("host.frs");
+        val url = env.getProperty("host.frs");
         response.sendRedirect(url);
     }
 }

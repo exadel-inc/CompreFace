@@ -73,7 +73,7 @@ swagger:
     version: 0.0.2-SNAPSHOT
 
 host:
-  frs: ${FRS_CRUD_HOST:http://frs-crud:8080}
+  frs: ${FRS_CRUD_HOST:http://localhost:8000}
   full:
     dns:
       auth:
