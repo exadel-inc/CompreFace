@@ -23,10 +23,13 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
 import com.exadel.frs.core.trainservice.system.feign.python.FaceResponse;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
+import feign.FeignException;
 import io.swagger.annotations.ApiParam;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +54,7 @@ public class RecognizeController {
     private final FacesClient client;
     private final ImageExtensionValidator imageValidator;
 
-    @PostMapping(value = "/recognize")
+    @PostMapping(value = "/faces/recognize")
     public ResponseEntity recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
@@ -66,11 +69,20 @@ public class RecognizeController {
             @ApiParam(value = "Maximum number of predictions per faces")
             @RequestParam(defaultValue = "1", name = "prediction_count", required = false)
             @Min(value = 1, message = "prediction_count should be equal or greater than 1")
-            final Integer predictionCount
-    ) {
+            final Integer predictionCount,
+            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
+            @RequestParam(value = "det_prob_threshold", required = false)
+            final Double detProbThreshold
+            ) {
         imageValidator.validate(file);
 
-        val scanResponse = client.scanFaces(file, limit, 0.5D);
+        ScanResponse scanResponse;
+        try {
+            scanResponse = client.scanFaces(file, limit, detProbThreshold);
+        } catch (FeignException.BadRequest e) {
+            return ResponseEntity.status(HttpStatus.OK)
+                                 .body(Map.of("result", Collections.EMPTY_LIST));
+        }
         val results = new ArrayList<FacePrediction>();
 
         for (val scanResult : scanResponse.getResult()) {
