@@ -136,6 +136,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.snackBarService.openInfo(void 0, void 0, `Invitation was sent to ${email}`);
+    this.snackBarService.openInfo(this.translate.instant('application-user-list.invitation_sent') +
+      `${email}`);
   }
 }
