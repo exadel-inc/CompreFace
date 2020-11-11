@@ -17,6 +17,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AppSnackBarComponent } from './snackbar.component';
 
@@ -29,20 +30,25 @@ const messageMap = {
   providedIn: 'root'
 })
 export class SnackBarService {
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(
+    private snackBar: MatSnackBar,
+    private translate: TranslateService
+  ) { }
 
-  openInfo(messageCode: string, duration: number = 3000, message?: string): void {
+  openInfo(messageParam: string, duration: number = 3000): void {
+    const message = this.translate.instant(messageParam);
     const data = {
-      message: messageCode ? messageMap[messageCode] : message,
+      message: message ? message : messageMap[message],
       type: 'info'
     };
 
     this.openSnackBar(data, duration);
   }
 
-  openError(messageCode: string, duration: number = 8000, message?: string): void {
+  openError(messageParam: string, duration: number = 8000): void {
+    const message = this.translate.instant(messageParam);
     const data = {
-      message: messageCode ? messageMap[messageCode] : message,
+      message: message ? message : messageMap[message],
       type: 'error'
     };
 

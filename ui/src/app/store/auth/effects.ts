@@ -69,9 +69,9 @@ export class AuthEffects {
     ofType(logInFailure, signUpFailure),
     tap(action => {
       if (action.error && action.error.error_description === 'Bad credentials') {
-        this.snackBarService.openError(null, 8000, 'E-mail or Password is incorrect.');
+        this.snackBarService.openError('auth.incorrect_credentials');
       } else if (action.error && action.error.code === 4) {
-        this.snackBarService.openError(null, 8000, 'This e-mail is already in use.');
+        this.snackBarService.openError('auth.already_in_use');
       } else {
         this.snackBarService.openHttpError(action.error);
       }
@@ -83,9 +83,9 @@ export class AuthEffects {
     ofType(signUpSuccess),
     tap(action => {
       const message = action.confirmationNeeded
-        ? 'You have created new account, please confirm your email'
-        : 'You have created new account, please login into your account';
-      this.snackBarService.openInfo(null, 8000, message);
+        ? 'auth.new_account_confirm_email'
+        : 'auth.new_account_login';
+      this.snackBarService.openInfo(message);
     }),
   );
 
