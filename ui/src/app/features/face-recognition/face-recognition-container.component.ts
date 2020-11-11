@@ -23,6 +23,7 @@ import { selectFaceData, selectFile, selectRequest, selectTestIsPending, selectS
 } from '../../store/face-recognition/selectors';
 import { MAX_IMAGE_SIZE } from 'src/app/core/constants';
 import { SnackBarService } from '../snackbar/snackbar.service';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-face-recognition-container',
@@ -41,7 +42,8 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
 
   constructor(
     private store: Store<AppState>,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private translate: TranslateService
   ) { }
 
   ngOnInit() {
@@ -58,7 +60,9 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
 
   recognizeFace(file: File) {
     file.size > MAX_IMAGE_SIZE ?
-      this.snackBarService.openError(null, 8000, 'The photo size is more than 5 Mb')
+      this.snackBarService.openError(
+        null, 8000, this.translate.instant('face_recognition_container.file_size_error')
+      )
     :
       this.store.dispatch(recognizeFace({file}));
   }

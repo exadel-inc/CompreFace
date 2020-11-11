@@ -144,5 +144,8 @@
   "demo": {
     "title": "Demo",
     "link": "Try Demo"
+  },
+  "face_recognition_container": {
+    "file_size_error": "The photo size is more than 5 Mb"
   }
 }
