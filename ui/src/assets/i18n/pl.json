@@ -139,5 +139,9 @@
 },
   "demo": {
     "title": "Demo"
+  },
+  ,
+  "face_recognition_container": {
+    "file_size_error": "Rozmiar zdjęcia to ponad 5 Mb"
   }
 }
