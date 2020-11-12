@@ -76,7 +76,7 @@ class FaceDaoTest {
         val face = Optional.of(new Face());
         when(facesRepository.findById(faceGuid)).thenReturn(face);
 
-        val actual = faceDao.deleteFaceById(faceGuid);
+        val actual = faceDao.deleteFaceById(faceGuid, "");
 
         assertThat(actual).isEqualTo(face.get());
 
@@ -90,7 +90,7 @@ class FaceDaoTest {
         val faceGuid = randomUUID().toString();
         when(facesRepository.findById(faceGuid)).thenReturn(Optional.empty());
 
-        val actual = faceDao.deleteFaceById(faceGuid);
+        val actual = faceDao.deleteFaceById(faceGuid, "");
 
         assertThat(actual).isNull();
 

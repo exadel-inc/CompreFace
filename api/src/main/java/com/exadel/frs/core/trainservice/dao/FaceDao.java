@@ -16,7 +16,12 @@
 
 package com.exadel.frs.core.trainservice.dao;
 
+import static com.exadel.frs.core.trainservice.enums.DbAction.DELETE;
+import static com.exadel.frs.core.trainservice.system.global.Constants.SERVER_UUID;
 import static java.util.UUID.randomUUID;
+import com.exadel.frs.core.trainservice.enums.DbAction;
+import com.exadel.frs.core.trainservice.dto.DbActionDto;
+import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.entity.Image;
@@ -25,6 +30,7 @@ import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -40,24 +46,35 @@ public class FaceDao {
 
     private final ImageProperties imageProperties;
 
+    private final Notifier notifier;
+
     public List<Face> findAllFacesByApiKey(final String modelApiKey) {
         return facesRepository.findByApiKey(modelApiKey);
     }
 
     public List<Face> deleteFaceByName(final String faceName, final String modelApiKey) {
-        return facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
+        val facesToDelete = facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
+
+        val faceIds = facesToDelete.stream().map(Face::getId).collect(Collectors.toList());
+        facesToDelete.forEach(face -> notifier.notifyWithMessage(createAction(DELETE, modelApiKey, faceIds, face.getFaceName())));
+
+        return facesToDelete;
     }
 
-    public Face deleteFaceById(final String faceId) {
+    public Face deleteFaceById(final String faceId, final String apiKey) {
         val foundFace = facesRepository.findById(faceId);
-        foundFace.ifPresent(face -> {
-            facesRepository.delete(face);
-        });
+        foundFace.ifPresent(facesRepository::delete);
+
+        foundFace.ifPresent(face -> notifier.notifyWithMessage(createAction(
+                DELETE, face.getApiKey(), List.of(face.getId()),
+                face.getFaceName()
+        )));
 
         return foundFace.orElse(null);
     }
 
     public void deleteFacesByApiKey(final String modelApiKey) {
+        notifier.notifyWithMessage(createAction(DbAction.DELETE_ALL, modelApiKey, null, null));
         facesRepository.deleteFacesByApiKey(modelApiKey);
     }
 
@@ -86,6 +103,18 @@ public class FaceDao {
             imagesRepository.save(image);
         }
 
+        notifier.notifyWithMessage(createAction(DbAction.INSERT, face.getApiKey(), List.of(face.getId()), face.getFaceName()));
         return facesRepository.save(face);
+    }
+
+    private DbActionDto createAction(DbAction actionName, String apiKey, List<String> faceIds, String faceName) {
+     DbActionDto action = new DbActionDto();
+     action.setAction(actionName);
+     action.setApiKey(apiKey);
+     action.setFaceIds(faceIds);
+     action.setFaceName(faceName);
+     action.setServerUUID(SERVER_UUID);
+
+     return action;
     }
 }

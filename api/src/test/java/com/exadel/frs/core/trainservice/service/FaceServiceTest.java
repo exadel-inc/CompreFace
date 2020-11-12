@@ -88,7 +88,7 @@ class FaceServiceTest {
 
         faceService.deleteFaceById(faceId, API_KEY);
 
-        verify(faceDao).deleteFaceById(faceId);
+        verify(faceDao).deleteFaceById(faceId, API_KEY);
     }
 
     @Test

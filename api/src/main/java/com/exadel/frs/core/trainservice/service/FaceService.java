@@ -47,7 +47,7 @@ public class FaceService {
 
     public FaceBO deleteFaceById(final String id, final String apiKey) {
         val collection = faceCacheProvider.getOrLoad(apiKey);
-        val face = faceDao.deleteFaceById(id);
+        val face = faceDao.deleteFaceById(id, apiKey);
         if (face != null) {
             return collection.removeFace(face.getId(), face.getFaceName());
         }
