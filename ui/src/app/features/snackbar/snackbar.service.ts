@@ -55,6 +55,16 @@ export class SnackBarService {
     this.openSnackBar(data, duration);
   }
 
+  openWarning(messageParam: string, duration: number = 8000): void {
+    const message = this.translate.instant(messageParam);
+    const data = {
+      message: message ? message : messageMap[message],
+      type: 'warning'
+    };
+
+    this.openSnackBar(data, duration);
+  }
+
   openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
     const errorMessage = message.error || message;
     const data = {

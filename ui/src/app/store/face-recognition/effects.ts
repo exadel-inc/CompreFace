@@ -25,6 +25,8 @@ import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail,
 import { Action, Store } from '@ngrx/store';
 import { selectCurrentModel } from '../model/selectors';
 import { selectDemoApiKey } from '../demo/selectors';
+import {signUpSuccess} from "../auth/action";
+import {ROUTERS_URL} from "../../data/enums/routers-url.enum";
 
 @Injectable()
 export class FaceRecognitionEffects {
@@ -62,6 +64,18 @@ export class FaceRecognitionEffects {
     ofType(recognizeFaceFail, addFaceFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error.message);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  SignUpSuccess: Observable<any> = this.actions.pipe(
+    ofType(recognizeFaceSuccess),
+    tap(action => {
+      if (action.model.result.length === 0) {
+        this.snackBarService.openWarning('face_recognition.no_recognized');
+      } else if (action.model.result[0].faces.length === 0) {
+        this.snackBarService.openError('face_recognition.no_faces_in_collection');
+      }
     })
   );
 
