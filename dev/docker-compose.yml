@@ -79,6 +79,9 @@ services:
     ports:
       - "3300:3000"
     build:
+      args:
+        - SCANNER=InsightFace
+        - MXNET=mxnet-mkl==1.6.0
       context: ../embedding-calculator
     environment:
       - ML_PORT=3000

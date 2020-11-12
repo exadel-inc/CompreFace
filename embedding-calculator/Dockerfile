@@ -28,6 +28,7 @@ ARG DETECTION_MODEL="retinaface_r50_v1"
 ARG CALCULATION_MODEL="arcface_r100_v1"
 ENV DETECTION_MODEL=$DETECTION_MODEL CALCULATION_MODEL=$CALCULATION_MODEL
 COPY download_models.sh .
+RUN chmod +x download_models.sh
 RUN ./download_models.sh
 
 # install InsightFace packages
