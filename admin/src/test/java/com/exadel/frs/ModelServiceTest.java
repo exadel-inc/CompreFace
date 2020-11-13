@@ -16,6 +16,7 @@
 
 package com.exadel.frs;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
@@ -28,6 +29,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
@@ -42,6 +45,8 @@ import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -171,6 +176,79 @@ class ModelServiceTest {
 
         assertThatThrownBy(() ->
                 modelService.createModel(modelCreateDto, ORGANIZATION_GUID, APPLICATION_GUID, USER_ID)
+        ).isInstanceOf(NameIsNotUniqueException.class);
+    }
+
+    @Test
+    void successCloneModel() {
+        ModelCloneDto modelCloneDto = ModelCloneDto.builder()
+                .name("name_of_clone")
+                .build();
+
+        val app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
+
+        val repoModel = Model.builder()
+                .id(MODEL_ID)
+                .name("name")
+                .guid(MODEL_GUID)
+                .app(app)
+                .build();
+        repoModel.addAppModelAccess(app, AppModelAccess.READONLY);
+
+        val cloneModel = Model.builder()
+                .id(new Random().nextLong())
+                .name("name_of_clone")
+                .apiKey(randomUUID().toString())
+                .guid(randomUUID().toString())
+                .app(app)
+                .build();
+
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
+        when(modelRepositoryMock.save(any(Model.class))).thenReturn(cloneModel);
+
+        Model clonedModel = modelService.cloneModel(modelCloneDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
+
+        verify(modelRepositoryMock).findByGuid(MODEL_GUID);
+        verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
+        verify(modelRepositoryMock).save(any(Model.class));
+        verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
+        verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
+        verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
+        verify(authManager).verifyWritePrivilegesToApp(USER_ID, app);
+        verifyNoMoreInteractions(modelRepositoryMock, authManager);
+
+        assertThat(clonedModel.getId(), not(repoModel.getId()));
+        assertThat(clonedModel.getName(), is(modelCloneDto.getName()));
+    }
+
+    @Test
+    void failCloneModelNameIsNotUnique() {
+        val modelCloneDto = ModelCloneDto.builder()
+                .name("new_name")
+                .build();
+
+        val app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
+
+        val repoModel = Model.builder()
+                .id(MODEL_ID)
+                .name("name")
+                .guid(MODEL_GUID)
+                .app(app)
+                .build();
+
+        when(modelRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(anyString())).thenReturn(app);
+        when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
+
+        assertThatThrownBy(() ->
+                modelService.cloneModel(modelCloneDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
         ).isInstanceOf(NameIsNotUniqueException.class);
     }
 
