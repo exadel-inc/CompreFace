@@ -140,8 +140,16 @@
   "demo": {
     "title": "Demo"
   },
-  ,
   "face_recognition_container": {
     "file_size_error": "Rozmiar zdjęcia to ponad 5 Mb"
+  },
+  "auth": {
+    "incorrect_credentials": "Email lub hasło są niepoprawne.",
+    "already_in_use": "Ten email jest już w użyciu.",
+    "new_account_confirm_email": "Utworzyłeś nowe konto, potwierdź swój adres e-mail",
+    "new_account_login": "Utworzyłeś nowe konto, zaloguj się na swoje konto"
+  },
+  "application_user_list": {
+    "invitation_sent": "Zaproszenie zostało wysłane do {{email}}"
   }
 }

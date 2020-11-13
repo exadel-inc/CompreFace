@@ -17,33 +17,25 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AppSnackBarComponent } from './snackbar.component';
-
-const messageMap = {
-  'default-info': 'DEFAULT INFO MESSAGE',
-  'default-error': 'DEFAULT ERROR MESSAGE'
-};
 
 @Injectable({
   providedIn: 'root'
 })
 export class SnackBarService {
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(
+    private snackBar: MatSnackBar,
+    private translate: TranslateService
+  ) { }
 
-  openInfo(messageCode: string, duration: number = 3000, message?: string): void {
+  openNotification({messageText, messageOptions, duration = 3000, type = 'info'}:
+             {messageText: string, messageOptions?: any, duration?: number, type?: string}): void {
+    const message = this.translate.instant(messageText, messageOptions);
     const data = {
-      message: messageCode ? messageMap[messageCode] : message,
-      type: 'info'
-    };
-
-    this.openSnackBar(data, duration);
-  }
-
-  openError(messageCode: string, duration: number = 8000, message?: string): void {
-    const data = {
-      message: messageCode ? messageMap[messageCode] : message,
-      type: 'error'
+      message,
+      type
     };
 
     this.openSnackBar(data, duration);
