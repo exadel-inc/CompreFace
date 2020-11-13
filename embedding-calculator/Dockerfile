@@ -1,5 +1,5 @@
-# Changes to this file have to be applied to DevOps Dockerfile as well, e.g. https://git.exadel.com/exadel-face-recognition-service/frs-devops/blob/master/Docker/APP-GENERIC-PYTHON-dev2/Dockerfile
-FROM python:3.7-slim-buster
+ARG BASE_IMAGE=python:3.7-slim
+FROM $BASE_IMAGE
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
         libpng-dev libtiff-dev libavformat-dev libpq-dev libfreeimage3 \
@@ -27,29 +27,32 @@ ENV JOBLIB_MULTIPROCESSING=0
 ARG DETECTION_MODEL="retinaface_r50_v1"
 ARG CALCULATION_MODEL="arcface_r100_v1"
 ENV DETECTION_MODEL=$DETECTION_MODEL CALCULATION_MODEL=$CALCULATION_MODEL
-COPY download_models.sh .
-RUN chmod +x download_models.sh
-RUN ./download_models.sh
+COPY srcext srcext
+COPY pytest.ini .
+COPY prepare_scanners.sh .
+RUN chmod +x prepare_scanners.sh
+RUN ./prepare_scanners.sh
 
 # install InsightFace packages
 ARG MXNET
 ARG GPU_ID
 ENV GPU_ID=$GPU_ID
-COPY srcext srcext
 RUN if [[ "$SCANNER" == "InsightFace" ]]; then \
-      pip --no-cache-dir install ${MXNET:-mxnet==1.6.0} -e srcext/insightface/python-package; \
+      pip --no-cache-dir install ${MXNET:-mxnet-mkl==1.6.0} -e srcext/insightface/python-package; \
     fi
 
-# <different-from-jenkins>
-COPY sample_images sample_images
+# copy rest of the code
 COPY src src
 COPY tools tools
-COPY *.ini ./
-# </different-from-jenkins>
+COPY sample_images sample_images
 
 # run tests
 ARG SKIP_TESTS
 RUN if [ -z $SKIP_TESTS  ]; then pytest -m "not performance" /app/ml/src; fi
 
 EXPOSE 3000
+
+COPY uwsgi.ini .
+ENV UWSGI_PROCESSES=2
+ENV UWSGI_THREADS=1
 CMD ["uwsgi", "--ini", "uwsgi.ini"]

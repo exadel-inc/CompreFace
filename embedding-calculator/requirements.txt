@@ -5,10 +5,11 @@ Flask==1.1.2
 Werkzeug==1.0.1
 
 # tests
-mock==4.0.2
-pytest==6.1.2
-pytest-mock==3.3.1
+mock~=4.0.2
+pytest~=6.1.2
+pytest-mock~=3.3.1
 requests~=2.24.0
+pylama~=7.7.1
 
 # dependencies for both scanner backends
 Pillow~=8.0.1

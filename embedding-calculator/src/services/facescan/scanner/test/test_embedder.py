@@ -56,3 +56,10 @@ def test__given_diff_face_images__when_scanned__then_returns_diff_embeddings(sca
     emb2 = first_and_only(scanner.scan(img2)).embedding
 
     assert not embeddings_are_equal(emb1, emb2, DIFFERENCE_THRESHOLD[scanner_cls.ID])
+
+@pytest.mark.integration
+@pytest.mark.parametrize('scanner_cls', TESTED_SCANNERS)
+def test__size_of_embeddings(scanner_cls):
+    scanner: FaceScanner = get_scanner(scanner_cls)
+    emb = first_and_only(scanner.scan(IMG_DIR / '007_B.jpg')).embedding
+    assert len(emb) == 512
