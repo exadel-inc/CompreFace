@@ -29,6 +29,7 @@ import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Image;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
+import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -46,6 +47,9 @@ class FaceDaoTest {
 
     @Mock
     private ImagesRepository imagesRepository;
+
+    @Mock
+    private ImageProperties imageProperties;
 
     @InjectMocks
     private FaceDao faceDao;
@@ -76,7 +80,7 @@ class FaceDaoTest {
         val face = Optional.of(new Face());
         when(facesRepository.findById(faceGuid)).thenReturn(face);
 
-        val actual = faceDao.deleteFaceById(faceGuid, "");
+        val actual = faceDao.deleteFaceById(faceGuid);
 
         assertThat(actual).isEqualTo(face.get());
 
@@ -90,7 +94,7 @@ class FaceDaoTest {
         val faceGuid = randomUUID().toString();
         when(facesRepository.findById(faceGuid)).thenReturn(Optional.empty());
 
-        val actual = faceDao.deleteFaceById(faceGuid, "");
+        val actual = faceDao.deleteFaceById(faceGuid);
 
         assertThat(actual).isNull();
 
@@ -132,15 +136,13 @@ class FaceDaoTest {
         val faceId = "507f1f77bcf86cd799439011";
 
         val mockFile = new MockMultipartFile("mockFile", faceId.getBytes());
+        when(imageProperties.isSaveImagesToDB()).thenReturn(true);
 
-        val actual = faceDao.addNewFace(embeddings, mockFile, faceName, modelKey);
-
-        assertThat(actual).isNotNull();
-        assertThat(actual.getFaceName()).isEqualTo(faceName);
-        assertThat(actual.getApiKey()).isEqualTo(modelKey);
-        assertThat(actual.getEmbedding().getEmbeddings()).isEqualTo(embeddingNumbers);
+        faceDao.addNewFace(embeddings, mockFile, faceName, modelKey);
 
         verify(imagesRepository).save(any(Image.class));
+        verify(facesRepository).save(any(Face.class));
         verifyNoMoreInteractions(imagesRepository);
+        verifyNoMoreInteractions(facesRepository);
     }
 }

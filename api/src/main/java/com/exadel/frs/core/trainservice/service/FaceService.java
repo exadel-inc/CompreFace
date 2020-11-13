@@ -16,11 +16,19 @@
 
 package com.exadel.frs.core.trainservice.service;
 
+import static com.exadel.frs.core.trainservice.enums.DbAction.DELETE;
+import static com.exadel.frs.core.trainservice.system.global.Constants.SERVER_UUID;
 import static java.util.stream.Collectors.toSet;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
+import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.core.trainservice.dto.DbActionDto;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.enums.DbAction;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -31,6 +39,7 @@ public class FaceService {
 
     private final FaceDao faceDao;
     private final FaceCacheProvider faceCacheProvider;
+    private final Notifier notifier;
 
     public Set<FaceBO> findFaces(final String apiKey) {
         return faceCacheProvider.getOrLoad(apiKey).getFaces();
@@ -39,16 +48,22 @@ public class FaceService {
     public Set<FaceBO> deleteFaceByName(final String faceName, final String apiKey) {
         val faces = faceCacheProvider.getOrLoad(apiKey);
 
-        return faceDao.deleteFaceByName(faceName, apiKey)
-                      .stream()
-                      .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
-                      .collect(toSet());
+        val deletedFaces = faceDao.deleteFaceByName(faceName, apiKey);
+
+        val faceIds = deletedFaces.stream().map(Face::getId).collect(Collectors.toList());
+        deletedFaces.forEach(face -> notifier.notifyWithMessage(new DbActionDto(DELETE, apiKey, faceIds, face.getFaceName(), SERVER_UUID)));
+
+        return deletedFaces
+                .stream()
+                .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
+                .collect(toSet());
     }
 
     public FaceBO deleteFaceById(final String id, final String apiKey) {
         val collection = faceCacheProvider.getOrLoad(apiKey);
-        val face = faceDao.deleteFaceById(id, apiKey);
+        val face = faceDao.deleteFaceById(id);
         if (face != null) {
+            notifier.notifyWithMessage(new DbActionDto(DELETE, face.getApiKey(), List.of(face.getId()), face.getFaceName(), SERVER_UUID));
             return collection.removeFace(face.getId(), face.getFaceName());
         }
 
@@ -57,6 +72,7 @@ public class FaceService {
 
     public void deleteFacesByModel(final String modelKey) {
         faceDao.deleteFacesByApiKey(modelKey);
+        notifier.notifyWithMessage(new DbActionDto(DbAction.DELETE_ALL, modelKey, null, null, SERVER_UUID));
         faceCacheProvider.invalidate(modelKey);
     }
 
