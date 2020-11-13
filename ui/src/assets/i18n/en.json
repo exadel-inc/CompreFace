@@ -148,6 +148,10 @@
   "face_recognition_container": {
     "file_size_error": "The photo size is more than 5 Mb"
   },
+  "face_recognition": {
+    "no_recognized": "No faces recognized",
+    "no_faces_in_collection": "No faces uploaded to the Face Collection"
+  },
   "auth": {
     "incorrect_credentials": "E-mail or Password is incorrect.",
     "already_in_use": "This e-mail is already in use.",

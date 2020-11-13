@@ -65,6 +65,22 @@ export class FaceRecognitionEffects {
     })
   );
 
+  @Effect({ dispatch: false })
+  SignUpSuccess: Observable<any> = this.actions.pipe(
+    ofType(recognizeFaceSuccess),
+    tap(action => {
+      if (action.model.result.length === 0) {
+        this.snackBarService.openNotification(
+          {messageText: 'face_recognition.no_recognized', duration: 8000, type: 'warning'}
+        );
+      } else if (action.model.result[0].faces.length === 0) {
+        this.snackBarService.openNotification(
+          {messageText: 'face_recognition.no_faces_in_collection', duration: 8000, type: 'error'}
+        );
+      }
+    })
+  );
+
   /**
    * Method made to finish recognize face effect, and for better understanding (more readable code).
    *

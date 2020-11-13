@@ -58,7 +58,9 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
 
   recognizeFace(file: File) {
     file.size > MAX_IMAGE_SIZE ?
-      this.snackBarService.openNotification({messageText: 'face_recognition_container.file_size_error', type: 'error'})
+      this.snackBarService.openNotification(
+        {messageText: 'face_recognition_container.file_size_error', duration: 8000, type: 'error'}
+      )
     :
       this.store.dispatch(recognizeFace({file}));
   }

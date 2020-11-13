@@ -69,9 +69,13 @@ export class AuthEffects {
     ofType(logInFailure, signUpFailure),
     tap(action => {
       if (action.error && action.error.error_description === 'Bad credentials') {
-        this.snackBarService.openNotification({messageText: 'auth.incorrect_credentials', type: 'error'});
+        this.snackBarService.openNotification(
+          {messageText: 'auth.incorrect_credentials', duration: 8000, type: 'error'}
+        );
       } else if (action.error && action.error.code === 4) {
-        this.snackBarService.openNotification({messageText: 'auth.already_in_use', type: 'error'});
+        this.snackBarService.openNotification(
+          {messageText: 'auth.already_in_use', duration: 8000, type: 'error'}
+        );
       } else {
         this.snackBarService.openHttpError(action.error);
       }
