@@ -16,8 +16,7 @@
 
 package com.exadel.frs.service;
 
-import static com.exadel.frs.enums.AppModelAccess.READONLY;
-import static java.util.UUID.randomUUID;
+import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -33,11 +32,16 @@ import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
-import java.util.List;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.exadel.frs.enums.AppModelAccess.READONLY;
+import static java.util.UUID.randomUUID;
 
 @Service
 @RequiredArgsConstructor
@@ -94,6 +98,28 @@ public class ModelService {
                          .build();
 
         return modelRepository.save(model);
+    }
+
+    @Transactional
+    public Model cloneModel(
+            final ModelCloneDto modelCloneDto,
+            final String orgGuid,
+            final String appGuid,
+            final String modelGuid,
+            final Long userId
+    ){
+        val model = getModel(orgGuid, appGuid, modelGuid, userId);
+
+        authManager.verifyWritePrivilegesToApp(userId, model.getApp());
+
+        verifyNameIsUnique(modelCloneDto.getName(), model.getApp().getId());
+
+        Model clone = new Model(model);
+        clone.setId(null);
+        clone.setName(modelCloneDto.getName());
+        clone.setAppModelAccess(new ArrayList<>());
+
+        return modelRepository.save(clone);
     }
 
     public Model updateModel(
