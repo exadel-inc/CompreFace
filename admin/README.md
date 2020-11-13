@@ -23,3 +23,6 @@ To run project via Intellij Idea
 ## API
 
 To open swagger api view follow http://localhost:8080/swagger-ui.html
+
+## Add a name to mail "from" field
+To add a name to mail "from" field needs to set 'email_from' parameter in .env file in following format: name <example@gmail.com>
