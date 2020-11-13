@@ -149,7 +149,7 @@
                 <groupId>org.nd4j</groupId>
                 <artifactId>nd4j-native</artifactId>
                 <version>${nd4j.version}</version>
-                <classifier>linux-x86_64-avx2</classifier>
+                <classifier>linux-x86_64</classifier>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
