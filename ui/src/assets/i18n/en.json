@@ -81,7 +81,7 @@
     "select_menu": {
       "edit": "EDIT",
       "delete": "DELETE",
-      "test" : "TEST"
+      "test": "TEST"
     },
     "edit_dialog": {
       "title": "EDIT MODEL",

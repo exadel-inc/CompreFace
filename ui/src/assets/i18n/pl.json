@@ -80,7 +80,7 @@
     "select_menu": {
       "edit": "EDYTUJ",
       "delete": "USUŃ",
-      "test" : "TEST"
+      "test": "TEST"
     },
     "edit_dialog": {
       "title": "EDYTUJ MODEL",
@@ -133,10 +133,10 @@
     "test": "Test model"
   },
   "test_model": {
-  "title": "Model testowy",
-  "request": "Żądanie",
-  "response": "Odpowiedź"
-},
+    "title": "Model testowy",
+    "request": "Żądanie",
+    "response": "Odpowiedź"
+  },
   "demo": {
     "title": "Demo"
   },

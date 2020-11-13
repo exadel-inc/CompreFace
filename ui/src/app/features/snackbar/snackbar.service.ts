@@ -22,20 +22,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { AppSnackBarComponent } from './snackbar.component';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SnackBarService {
-  constructor(
-    private snackBar: MatSnackBar,
-    private translate: TranslateService
-  ) { }
+  constructor(private snackBar: MatSnackBar, private translate: TranslateService) {}
 
-  openNotification({messageText, messageOptions, duration = 3000, type = 'info'}:
-             {messageText: string, messageOptions?: any, duration?: number, type?: string}): void {
+  openNotification({ messageText, messageOptions, type = 'info' }: { messageText: string; messageOptions?: any; type?: string }): void {
     const message = this.translate.instant(messageText, messageOptions);
+    const duration = type === 'info' ? 3000 : 8000;
     const data = {
       message,
-      type
+      type,
     };
 
     this.openSnackBar(data, duration);
@@ -45,7 +42,7 @@ export class SnackBarService {
     const errorMessage = message.error || message;
     const data = {
       message: errorMessage.message ? errorMessage.message : errorMessage,
-      type: 'error'
+      type: 'error',
     };
 
     this.openSnackBar(data, duration);
@@ -56,7 +53,7 @@ export class SnackBarService {
       duration,
       data,
       verticalPosition: 'top',
-      panelClass: ['app-snackbar-panel', data.type]
+      panelClass: ['app-snackbar-panel', data.type],
     });
   }
 }
