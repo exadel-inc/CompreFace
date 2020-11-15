@@ -63,7 +63,7 @@ export class FaceRecognitionEffects {
   );
 
   @Effect({ dispatch: false })
-  signUpSuccess$: Observable<any> = this.actions.pipe(
+  recognizeFaceSuccess$: Observable<any> = this.actions.pipe(
     ofType(recognizeFaceSuccess),
     tap((action) => {
       if (action.model.result.length === 0) {
