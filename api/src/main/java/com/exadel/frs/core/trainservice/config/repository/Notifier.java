@@ -20,7 +20,7 @@ public class Notifier{
             try {
                 String actionString = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(actionDto);
                 Statement stmt = conn.createStatement();
-                stmt.execute(String.format("SELECT pg_notify('updatemsg', '%s');", actionString));
+                stmt.execute(String.format("SELECT pg_notify('face_collection_update_msg', '%s');", actionString));
                 stmt.close();
             } catch (SQLException | JsonProcessingException sqle) {
                 sqle.printStackTrace();

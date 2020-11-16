@@ -29,7 +29,7 @@ class Listener {
         this.conn = conn;
         this.pgconn = (PGConnection)conn;
         Statement stmt = conn.createStatement();
-        stmt.execute("LISTEN updatemsg");
+        stmt.execute("LISTEN face_collection_update_msg");
         stmt.close();
         log.info(String.format("Listener %s is started", SERVER_UUID));
     }
