@@ -20,17 +20,13 @@ import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.AppModel;
-import com.exadel.frs.entity.Model;
+import com.exadel.frs.entity.*;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.repository.AppModelRepository;
-import com.exadel.frs.repository.ModelRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
+import com.exadel.frs.repository.*;
 import com.exadel.frs.system.security.AuthorizationManager;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -39,6 +35,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.exadel.frs.enums.AppModelAccess.READONLY;
 import static java.util.UUID.randomUUID;
@@ -52,6 +49,8 @@ public class ModelService {
     private final ModelShareRequestRepository modelShareRequestRepository;
     private final AppModelRepository appModelRepository;
     private final AuthorizationManager authManager;
+    private final FacesRepository facesRepository;
+    private final ImagesRepository imagesRepository;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -107,19 +106,45 @@ public class ModelService {
             final String appGuid,
             final String modelGuid,
             final Long userId
-    ){
+    ) {
         val model = getModel(orgGuid, appGuid, modelGuid, userId);
 
         authManager.verifyWritePrivilegesToApp(userId, model.getApp());
 
         verifyNameIsUnique(modelCloneDto.getName(), model.getApp().getId());
 
-        Model clone = new Model(model);
+        val clone = new Model(model);
         clone.setId(null);
         clone.setName(modelCloneDto.getName());
         clone.setAppModelAccess(new ArrayList<>());
+        val clonedModel = modelRepository.save(clone);
 
-        return modelRepository.save(clone);
+        val feces = facesRepository.findByApiKey(model.getApiKey());
+        List<Face> cloneFaces = new ArrayList<>();
+        List<Image> cloneImages = new ArrayList<>();
+
+        for (Face face : feces) {
+            Face cloneFace = new Face(face);
+            cloneFace.setId(randomUUID().toString());
+            cloneFace.setApiKey(clone.getApiKey());
+
+            cloneFaces.add(cloneFace);
+
+            List<Image> images = imagesRepository.findByFaceId(face.getId());
+
+            for (Image image : images) {
+                Image cloneImage = new Image(image);
+                cloneImage.setId(null);
+                cloneImage.setFace(cloneFace);
+
+                cloneImages.add(cloneImage);
+            }
+        }
+
+        imagesRepository.saveAll(cloneImages);
+        facesRepository.saveAll(cloneFaces);
+
+        return clonedModel;
     }
 
     public Model updateModel(

@@ -22,6 +22,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -34,15 +35,19 @@ import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.Image;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.repository.AppModelRepository;
+import com.exadel.frs.repository.FacesRepository;
+import com.exadel.frs.repository.ImagesRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.system.security.AuthorizationManager;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -68,6 +73,8 @@ class ModelServiceTest {
     private ModelService modelService;
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
+    private FacesRepository facesRepositoryMock;
+    private ImagesRepository imagesRepositoryMock;
 
     private AuthorizationManager authManager;
 
@@ -77,12 +84,16 @@ class ModelServiceTest {
         modelShareRequestRepository = mock(ModelShareRequestRepository.class);
         appModelRepository = mock(AppModelRepository.class);
         authManager = mock(AuthorizationManager.class);
+        facesRepositoryMock = mock(FacesRepository.class);
+        imagesRepositoryMock = mock(ImagesRepository.class);
         modelService = new ModelService(
                 modelRepositoryMock,
                 appServiceMock,
                 modelShareRequestRepository,
                 appModelRepository,
-                authManager
+                authManager,
+                facesRepositoryMock,
+                imagesRepositoryMock
         );
     }
 
@@ -209,12 +220,16 @@ class ModelServiceTest {
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
         when(modelRepositoryMock.save(any(Model.class))).thenReturn(cloneModel);
+        when(imagesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
+        when(facesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
 
         Model clonedModel = modelService.cloneModel(modelCloneDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
         verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
         verify(modelRepositoryMock).save(any(Model.class));
+        verify(imagesRepositoryMock).saveAll(anyList());
+        verify(facesRepositoryMock).saveAll(anyList());
         verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
         verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
