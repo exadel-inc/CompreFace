@@ -22,22 +22,15 @@ import { Model } from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-breadcrumbs-container',
-  template: `
-    <app-breadcrumbs
-      [model]="model$ | async"
-      [app]="app$ | async"
-      [orgId]="orgId$ | async">
-    </app-breadcrumbs>`,
+  template: ` <app-breadcrumbs [model]="model$ | async" [app]="app$ | async"> </app-breadcrumbs>`,
 })
 export class BreadcrumbsContainerComponent implements OnInit {
-  orgId$: Observable<string>;
   app$: Observable<Application>;
   model$: Observable<Model>;
 
   constructor(private breadcrumbsFacade: BreadcrumbsFacade) {}
 
   ngOnInit() {
-    this.orgId$ = this.breadcrumbsFacade.orgId$;
     this.app$ = this.breadcrumbsFacade.app$;
     this.model$ = this.breadcrumbsFacade.model$;
   }

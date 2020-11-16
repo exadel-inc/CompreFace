@@ -23,29 +23,29 @@ import { environment } from 'src/environments/environment';
 import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AppUserService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  getAll(organizationId: string, applicationId: string): Observable<AppUser[]> {
-    return this.http.get<AppUser[]>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/roles`)
-      .pipe(
-        map(users => users.map(user => ({ id: user.userId, ...user })))
-      );
+  getAll(applicationId: string): Observable<AppUser[]> {
+    return this.http
+      .get<AppUser[]>(`${environment.adminApiUrl}app/${applicationId}/roles`)
+      .pipe(map((users) => users.map((user) => ({ id: user.userId, ...user }))));
   }
 
-  update(organizationId: string, applicationId: string, userId: string, role: Role): Observable<AppUser> {
-    return this.http.put<AppUser>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/role`, { userId, role });
+  update(applicationId: string, userId: string, role: Role): Observable<AppUser> {
+    return this.http.put<AppUser>(`${environment.adminApiUrl}app/${applicationId}/role`, { userId, role });
   }
 
-  inviteUser(organizationId: string, applicationId: string, userEmail: string, role: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/invite`,
-      { userEmail, role });
+  inviteUser(applicationId: string, userEmail: string, role: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${environment.adminApiUrl}app/${applicationId}/invite`, {
+      userEmail,
+      role,
+    });
   }
 
-  deleteUser(organizationId: string, applicationId: string, userId: string) {
-    return this.http.delete(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/user/${userId}`);
+  deleteUser(applicationId: string, userId: string) {
+    return this.http.delete(`${environment.adminApiUrl}app/${applicationId}/user/${userId}`);
   }
 }

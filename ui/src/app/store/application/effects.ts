@@ -45,60 +45,60 @@ export class ApplicationListEffect {
     private actions: Actions,
     private applicationService: ApplicationService,
     private snackBarService: SnackBarService,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   @Effect()
   loadApplications$ = this.actions.pipe(
     ofType(loadApplications),
-    switchMap((action) => this.applicationService.getAll(action.organizationId).pipe(
-      map(applications => loadApplicationsSuccess({ applications })),
-      catchError(error => of(loadApplicationsFail({ error }))),
-    )),
+    switchMap((action) =>
+      this.applicationService.getAll().pipe(
+        map((applications) => loadApplicationsSuccess({ applications })),
+        catchError((error) => of(loadApplicationsFail({ error })))
+      )
+    )
   );
 
   @Effect()
   createApplication$ = this.actions.pipe(
     ofType(createApplication),
-    switchMap(({ organizationId, name }) => this.applicationService.create(organizationId, name).pipe(
-      map(application => createApplicationSuccess({ application })),
-      catchError(error => of(createApplicationFail({ error }))),
-    )),
+    switchMap(({ name }) =>
+      this.applicationService.create(name).pipe(
+        map((application) => createApplicationSuccess({ application })),
+        catchError((error) => of(createApplicationFail({ error })))
+      )
+    )
   );
 
   @Effect()
   updateApplication$ = this.actions.pipe(
     ofType(updateApplication),
-    switchMap(({ organizationId, id, name }) => this.applicationService.put(organizationId, id, name).pipe(
-      map(application => updateApplicationSuccess({ application })),
-      catchError(error => of(updateApplicationFail({ error }))),
-    )),
+    switchMap(({ id, name }) =>
+      this.applicationService.put(id, name).pipe(
+        map((application) => updateApplicationSuccess({ application })),
+        catchError((error) => of(updateApplicationFail({ error })))
+      )
+    )
   );
 
   @Effect()
   deleteApplication$ = this.actions.pipe(
     ofType(deleteApplication),
-    switchMap((app =>
-      this.applicationService.delete(app.organizationId, app.id).pipe(
+    switchMap((app) =>
+      this.applicationService.delete(app.id).pipe(
         switchMap(() => {
           this.router.navigate([`${ROUTERS_URL.HOME}`]);
-          return [deleteApplicationSuccess({ id: app.id }),
-            setSelectedAppIdEntityAction({ selectedAppId: null })];
+          return [deleteApplicationSuccess({ id: app.id }), setSelectedAppIdEntityAction({ selectedAppId: null })];
         }),
-        catchError(error => of(deleteApplicationFail({ error }))),
-      )),
+        catchError((error) => of(deleteApplicationFail({ error })))
+      )
     )
   );
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(
-      loadApplicationsFail,
-      createApplicationFail,
-      updateApplicationFail,
-      deleteApplicationFail,
-    ),
-    tap(action => {
+    ofType(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail),
+    tap((action) => {
       this.snackBarService.openHttpError(action.error);
     })
   );

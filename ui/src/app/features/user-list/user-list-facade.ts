@@ -22,52 +22,35 @@ import { AppUser } from 'src/app/data/interfaces/app-user';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { AppState } from 'src/app/store';
-import {
-  selectCurrentOrganizationId,
-  selectSelectedOrganization,
-  selectUserRollForSelectedOrganization,
-} from 'src/app/store/organization/selectors';
 import { loadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
-import {
-  deleteUser,
-  loadUsersEntityAction,
-  updateUserRoleWithRefreshAction,
-} from 'src/app/store/user/action';
-import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
+import { deleteUser, loadUsersEntityAction, updateUserRoleWithRefreshAction } from 'src/app/store/user/action';
+import { selectCurrentUserRole, selectIsPendingUserStore, selectUsers, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
 import { Role } from '../../data/enums/role.enum';
 
 @Injectable()
 export class UserListFacade implements IFacade {
-  selectedOrganization$: Observable<string>;
-  selectedOrganizationName$: Observable<string>;
   users$: Observable<AppUser[]>;
   availableRoles$: Observable<string[]>;
   isLoading$: Observable<boolean>;
   currentUserId$: Observable<string>;
   currentUserEmail$: Observable<string>;
-  userRole$: Observable<string>;
+  userRole$: Observable<any>;
 
-  private selectedOrganization: string;
+  private sub: Subscription;
+  userspage$: Observable<any>;
 
-  private selectedOrganizationSubscription: Subscription;
-
-  constructor(
-    private store: Store<AppState>,
-    private userService: UserService,
-  ) {
-    this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
-    this.selectedOrganizationName$ = store.select(selectSelectedOrganization).pipe(map(org => org.name));
+  constructor(private store: Store<AppState>, private userService: UserService) {
     this.users$ = store.select(selectUsersWithOwnerApp);
-    this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
+    this.userRole$ = store.select(selectCurrentUserRole);
 
     const allRoles$ = store.select(selectAllRoles);
     this.availableRoles$ = combineLatest([allRoles$, this.userRole$]).pipe(
       map(([allRoles, userRole]) => {
         const roleIndex = allRoles.indexOf(userRole);
         return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
-      }),
+      })
     );
 
     const usersLoading$ = store.select(selectIsPendingUserStore);
@@ -75,52 +58,42 @@ export class UserListFacade implements IFacade {
     this.currentUserId$ = store.select(selectUserId);
     this.currentUserEmail$ = store.select(selectUserEmail);
 
-    this.isLoading$ = combineLatest([usersLoading$, roleLoading$])
-      .pipe(map(observResults => !(!observResults[0] && !observResults[1])));
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
   }
 
   initSubscriptions(): void {
-    this.selectedOrganizationSubscription = this.selectedOrganization$.subscribe(
-      orgId => {
-        if (orgId) {
-          this.selectedOrganization = orgId;
-          this.loadUsers();
-          this.loadAvailableRoles();
-        }
-      }
-    );
+    this.loadUsers();
+    this.loadAvailableRoles();
   }
 
   loadUsers(): void {
-    this.store.dispatch(loadUsersEntityAction({
-      organizationId: this.selectedOrganization
-    }));
+    this.store.dispatch(loadUsersEntityAction());
   }
 
   updateUserRole(id: string, role: Role): void {
-    this.store.dispatch(updateUserRoleWithRefreshAction({
-      organizationId: this.selectedOrganization,
-      user: {
-        id,
-        role
-      }
-    }));
+    this.store.dispatch(
+      updateUserRoleWithRefreshAction({
+        user: {
+          id,
+          role,
+        },
+      })
+    );
   }
 
   deleteUser(deletion: UserDeletion, newOwner?: string): void {
-    this.store.dispatch(deleteUser({
-      organizationId: this.selectedOrganization,
-      userId: deletion.userToDelete.userId,
-      deleterUserId: deletion.deleterUserId,
-      newOwner,
-    }));
+    this.store.dispatch(
+      deleteUser({
+        userId: deletion.userToDelete.userId,
+        deleterUserId: deletion.deleterUserId,
+        newOwner,
+      })
+    );
   }
 
   loadAvailableRoles(): void {
     this.store.dispatch(loadRolesEntityAction());
   }
 
-  unsubscribe(): void {
-    this.selectedOrganizationSubscription.unsubscribe();
-  }
+  unsubscribe(): void {}
 }

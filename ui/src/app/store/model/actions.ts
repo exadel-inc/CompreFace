@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-import {createAction, props} from '@ngrx/store';
-import {Model, ModelUpdate} from 'src/app/data/interfaces/model';
+import { createAction, props } from '@ngrx/store';
+import { Model, ModelUpdate } from 'src/app/data/interfaces/model';
 
-export const loadModels = createAction('[Model] Load Models', props<{ organizationId: string, applicationId: string }>());
+export const loadModels = createAction('[Model] Load Models', props<{ applicationId: string }>());
 export const loadModelsSuccess = createAction('[Model] Load Models Success', props<{ models: Model[] }>());
 export const loadModelsFail = createAction('[Model] Load Models Fail', props<{ error: any }>());
 
