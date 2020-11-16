@@ -81,7 +81,7 @@
     "select_menu": {
       "edit": "EDIT",
       "delete": "DELETE",
-      "test" : "TEST"
+      "test": "TEST"
     },
     "edit_dialog": {
       "title": "EDIT MODEL",
@@ -147,5 +147,18 @@
   },
   "face_recognition_container": {
     "file_size_error": "The photo size is more than 5 Mb"
+  },
+  "face_recognition": {
+    "no_recognized": "No faces recognized",
+    "no_faces_in_collection": "No faces uploaded to the Face Collection"
+  },
+  "auth": {
+    "incorrect_credentials": "E-mail or Password is incorrect.",
+    "already_in_use": "This e-mail is already in use.",
+    "new_account_confirm_email": "You have created new account, please confirm your email",
+    "new_account_login": "You have created new account, please login into your account"
+  },
+  "application_user_list": {
+    "invitation_sent": "Invitation was sent to {{email}}"
   }
 }

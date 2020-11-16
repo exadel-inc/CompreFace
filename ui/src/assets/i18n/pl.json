@@ -80,7 +80,7 @@
     "select_menu": {
       "edit": "EDYTUJ",
       "delete": "USUŃ",
-      "test" : "TEST"
+      "test": "TEST"
     },
     "edit_dialog": {
       "title": "EDYTUJ MODEL",
@@ -133,15 +133,27 @@
     "test": "Test model"
   },
   "test_model": {
-  "title": "Model testowy",
-  "request": "Żądanie",
-  "response": "Odpowiedź"
-},
+    "title": "Model testowy",
+    "request": "Żądanie",
+    "response": "Odpowiedź"
+  },
   "demo": {
     "title": "Demo"
   },
-  ,
   "face_recognition_container": {
     "file_size_error": "Rozmiar zdjęcia to ponad 5 Mb"
+  },
+  "face_recognition": {
+    "no_recognized": "Nie rozpoznano żadnych twarzy",
+    "no_faces_in_collection": "Do kolekcji twarzy nie przesłano żadnych twarzy"
+  },
+  "auth": {
+    "incorrect_credentials": "Email lub hasło są niepoprawne.",
+    "already_in_use": "Ten email jest już w użyciu.",
+    "new_account_confirm_email": "Utworzyłeś nowe konto, potwierdź swój adres e-mail",
+    "new_account_login": "Utworzyłeś nowe konto, zaloguj się na swoje konto"
+  },
+  "application_user_list": {
+    "invitation_sent": "Zaproszenie zostało wysłane do {{email}}"
   }
 }
