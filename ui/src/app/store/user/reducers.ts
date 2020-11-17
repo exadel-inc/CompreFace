@@ -29,13 +29,11 @@ import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 
 export interface AppUserEntityState extends EntityState<AppUser> {
   isPending: boolean;
-  currentId: string | null;
 }
 
 export const userAdapter: EntityAdapter<AppUser> = createEntityAdapter<AppUser>();
 const initialState: AppUserEntityState = userAdapter.getInitialState({
   isPending: false,
-  currentId: null,
 });
 
 const reducer: ActionReducer<AppUserEntityState> = createReducer(

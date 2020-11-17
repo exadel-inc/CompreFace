@@ -17,7 +17,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UserService } from 'src/app/core/user/user.service';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
@@ -36,12 +35,9 @@ export class UserListFacade implements IFacade {
   isLoading$: Observable<boolean>;
   currentUserId$: Observable<string>;
   currentUserEmail$: Observable<string>;
-  userRole$: Observable<any>;
+  userRole$: Observable<string>;
 
-  private sub: Subscription;
-  userspage$: Observable<any>;
-
-  constructor(private store: Store<AppState>, private userService: UserService) {
+  constructor(private store: Store<AppState>) {
     this.users$ = store.select(selectUsersWithOwnerApp);
     this.userRole$ = store.select(selectCurrentUserRole);
 

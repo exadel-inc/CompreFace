@@ -22,6 +22,7 @@ import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { AppState } from 'src/app/store';
 import { createApplication, loadApplications } from 'src/app/store/application/action';
 import { selectApplications, selectIsPendingApplicationList } from 'src/app/store/application/selectors';
+import { selectCurrentUserRole } from 'src/app/store/user/selectors';
 
 @Injectable()
 export class ApplicationListFacade implements IFacade {
@@ -31,6 +32,7 @@ export class ApplicationListFacade implements IFacade {
 
   constructor(private store: Store<AppState>) {
     this.applications$ = store.select(selectApplications);
+    this.userRole$ = this.store.select(selectCurrentUserRole);
     this.isLoading$ = store.select(selectIsPendingApplicationList);
   }
 

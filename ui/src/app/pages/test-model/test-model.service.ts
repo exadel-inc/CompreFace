@@ -42,7 +42,7 @@ export class TestModelPageService {
     if (this.appId && this.modelId) {
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
-      this.store.dispatch(loadApplications({ organizationId: this.orgId }));
+      this.store.dispatch(loadApplications());
       this.store.dispatch(getUserInfo());
       this.modelSub = this.store
         .select(selectModels)

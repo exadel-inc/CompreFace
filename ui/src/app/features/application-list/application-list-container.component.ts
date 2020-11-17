@@ -96,7 +96,5 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.applicationFacade.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 }

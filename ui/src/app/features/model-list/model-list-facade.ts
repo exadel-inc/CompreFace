@@ -40,7 +40,6 @@ export class ModelListFacade implements IFacade {
   constructor(private store: Store<AppState>) {
     this.models$ = store.select(selectModels);
     this.isLoading$ = store.select(selectPendingModel);
-    this.userRole$ = store.select(selectCurrentUserRole);
     this.selectedApplication$ = store.select(selectCurrentAppId);
     this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
       map(([applicationRole, globalRole]) => {
@@ -95,5 +94,7 @@ export class ModelListFacade implements IFacade {
     );
   }
 
-  unsubscribe(): void {}
+  unsubscribe(): void {
+    this.currentArgsAndApplicationSubscription.unsubscribe();
+  }
 }

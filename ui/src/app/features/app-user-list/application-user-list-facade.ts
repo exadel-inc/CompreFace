@@ -50,7 +50,7 @@ export class ApplicationUserListFacade implements IFacade {
 
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
-    this.availableEmails$ = combineLatest([store.select(selectUsers), this.appUsers$]).pipe(
+    this.availableEmails$ = combineLatest([this.store.select(selectUsers), this.appUsers$]).pipe(
       map(([users, appUsers]) => {
         return users.map((user) => {
           if (appUsers.every((appUser) => appUser.id !== user.id)) {
@@ -60,7 +60,7 @@ export class ApplicationUserListFacade implements IFacade {
       })
     );
 
-    this.userGlobalRole$ = store.select(selectCurrentUserRole);
+    this.userGlobalRole$ = this.store.select(selectCurrentUserRole);
     this.applicationRole$ = this.store.select(selectUserRollForSelectedApp);
     this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.userGlobalRole$]).pipe(
       map(([applicationRole, globalRole]) => {
@@ -152,5 +152,7 @@ export class ApplicationUserListFacade implements IFacade {
     );
   }
 
-  unsubscribe(): void {}
+  unsubscribe(): void {
+    this.sub.unsubscribe();
+  }
 }
