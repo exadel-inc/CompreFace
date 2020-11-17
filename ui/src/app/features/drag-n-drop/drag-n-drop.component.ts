@@ -1,12 +1,10 @@
-import { Component, ElementRef, EventEmitter,
-  Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Model } from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-drag-n-drop',
   templateUrl: './drag-n-drop.component.html',
-  styleUrls: ['./drag-n-drop.component.scss']
+  styleUrls: ['./drag-n-drop.component.scss'],
 })
 export class DragNDropComponent implements OnInit {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;

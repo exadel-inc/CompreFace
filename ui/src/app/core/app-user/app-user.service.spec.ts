@@ -20,7 +20,6 @@ import { AppUserService } from './app-user.service';
 
 describe('AppUserService', () => {
   let service: AppUserService;
-  let httpMock: HttpTestingController;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -29,7 +28,6 @@ describe('AppUserService', () => {
     });
 
     service = TestBed.inject(AppUserService);
-    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
