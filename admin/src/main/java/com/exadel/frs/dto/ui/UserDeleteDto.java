@@ -16,7 +16,6 @@
 
 package com.exadel.frs.dto.ui;
 
-import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.Replacer;
 import java.util.function.BiConsumer;
@@ -34,6 +33,5 @@ public class UserDeleteDto {
     private Replacer replacer;
     private User deleter;
     private User userToDelete;
-    private Organization defaultOrg;
     private BiConsumer<User, User> updateAppsConsumer;
 }

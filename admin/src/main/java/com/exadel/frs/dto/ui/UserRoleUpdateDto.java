@@ -16,7 +16,7 @@
 
 package com.exadel.frs.dto.ui;
 
-import com.exadel.frs.enums.OrganizationRole;
+import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.validation.ValidEnum;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -34,6 +34,6 @@ public class UserRoleUpdateDto {
     private String userId;
 
     @NotBlank(message = "Role cannot be empty")
-    @ValidEnum(message = "Organization role '${validatedValue}' doesn't exist!", targetClassType = OrganizationRole.class)
+    @ValidEnum(message = "Global role '${validatedValue}' doesn't exist!", targetClassType = GlobalRole.class)
     private String role;
 }

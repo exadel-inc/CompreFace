@@ -38,56 +38,56 @@ import {
 
 @Injectable()
 export class ModelEffects {
-  constructor(
-    private actions: Actions,
-    private modelService: ModelService,
-    private snackBarService: SnackBarService,
-  ) { }
+  constructor(private actions: Actions, private modelService: ModelService, private snackBarService: SnackBarService) {}
 
   @Effect()
   loadModels$ = this.actions.pipe(
     ofType(loadModels),
-    switchMap(action => this.modelService.getAll(action.organizationId, action.applicationId).pipe(
-      map(models => loadModelsSuccess({ models })),
-      catchError(error => of(loadModelsFail({ error }))),
-    )),
+    switchMap((action) =>
+      this.modelService.getAll(action.applicationId).pipe(
+        map((models) => loadModelsSuccess({ models })),
+        catchError((error) => of(loadModelsFail({ error })))
+      )
+    )
   );
 
   @Effect()
   createModel$ = this.actions.pipe(
     ofType(createModel),
-    switchMap(action => this.modelService.create(action.organizationId, action.applicationId, action.name).pipe(
-      map(model => createModelSuccess({ model })),
-      catchError(error => of(createModelFail({ error }))),
-    )),
+    switchMap((action) =>
+      this.modelService.create(action.applicationId, action.name).pipe(
+        map((model) => createModelSuccess({ model })),
+        catchError((error) => of(createModelFail({ error })))
+      )
+    )
   );
 
   @Effect()
   updateModel$ = this.actions.pipe(
     ofType(updateModel),
-    switchMap(action => this.modelService.update(action.organizationId, action.applicationId, action.modelId, action.name).pipe(
-      map(model => updateModelSuccess({ model })),
-      catchError(error => of(updateModelFail({ error }))),
-    )),
+    switchMap((action) =>
+      this.modelService.update(action.applicationId, action.modelId, action.name).pipe(
+        map((model) => updateModelSuccess({ model })),
+        catchError((error) => of(updateModelFail({ error })))
+      )
+    )
   );
 
   @Effect()
   deleteModel$ = this.actions.pipe(
     ofType(deleteModel),
-    switchMap(action =>
-      forkJoin([
-        of(action.modelId),
-        this.modelService.delete(action.organizationId, action.applicationId, action.modelId)
-      ]).pipe(
+    switchMap((action) =>
+      forkJoin([of(action.modelId), this.modelService.delete(action.applicationId, action.modelId)]).pipe(
         map(([modelId]) => deleteModelSuccess({ modelId })),
-        catchError(error => of(deleteModelFail({ error }))),
-      )),
+        catchError((error) => of(deleteModelFail({ error })))
+      )
+    )
   );
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(loadModelsFail, createModelFail, updateModelFail, deleteModelFail),
-    tap(action => {
+    tap((action) => {
       this.snackBarService.openHttpError(action.error);
     })
   );

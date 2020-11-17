@@ -23,82 +23,75 @@ import { AppState } from 'src/app/store';
 import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
 import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
-import { selectCurrentOrganizationId, selectUserRollForSelectedOrganization } from 'src/app/store/organization/selectors';
 import { map } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
+import { selectCurrentUserRole } from 'src/app/store/user/selectors';
 
 @Injectable()
 export class ModelListFacade implements IFacade {
   models$: Observable<Model[]>;
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
-  selectedOrganization$: Observable<string>;
   selectedApplication$: Observable<string>;
 
   private currentArgsAndApplicationSubscription: Subscription;
-  selectedOrganizationId: string;
   selectedApplicationId: string;
 
   constructor(private store: Store<AppState>) {
-    this.models$ = store.select(selectModels);
-    this.isLoading$ = store.select(selectPendingModel);
-    this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
-    this.selectedApplication$ = store.select(selectCurrentAppId);
-    this.userRole$ = combineLatest([
-      this.store.select(selectUserRollForSelectedApp),
-      this.store.select(selectUserRollForSelectedOrganization)]
-    ).pipe(
-      map(([applicationRole, organizationRole]) => {
-        // the organization role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return organizationRole !== Role.USER ? organizationRole : applicationRole;
+    this.models$ = this.store.select(selectModels);
+    this.isLoading$ = this.store.select(selectPendingModel);
+    this.selectedApplication$ = this.store.select(selectCurrentAppId);
+    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
+      map(([applicationRole, globalRole]) => {
+        // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
+        return globalRole !== Role.USER ? globalRole : applicationRole;
       })
     );
   }
 
   initSubscriptions(): void {
-    this.currentArgsAndApplicationSubscription = combineLatest([
-      this.selectedOrganization$,
-      this.selectedApplication$]
-    ).subscribe((ObservableResult) => {
-      if (ObservableResult[0] !== null && ObservableResult[1] !== null) {
-        this.selectedOrganizationId = ObservableResult[0];
-        this.selectedApplicationId = ObservableResult[1];
-
+    this.currentArgsAndApplicationSubscription = combineLatest([this.selectedApplication$]).subscribe((ObservableResult) => {
+      if (ObservableResult[0] !== null) {
+        this.selectedApplicationId = ObservableResult[0];
         this.loadModels();
       }
     });
   }
 
   loadModels(): void {
-    this.store.dispatch(loadModels({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId
-    }));
+    this.store.dispatch(
+      loadModels({
+        applicationId: this.selectedApplicationId,
+      })
+    );
   }
 
   createModel(name: string): void {
-    this.store.dispatch(createModel({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId,
-      name
-    }));
+    this.store.dispatch(
+      createModel({
+        applicationId: this.selectedApplicationId,
+        name,
+      })
+    );
   }
 
   renameModel(modelId: string, name: string): void {
-    this.store.dispatch(updateModel({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId,
-      modelId,
-      name,
-    }));
+    this.store.dispatch(
+      updateModel({
+        applicationId: this.selectedApplicationId,
+        modelId,
+        name,
+      })
+    );
   }
 
   deleteModel(modelId: string): void {
-    this.store.dispatch(deleteModel({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId,
-      modelId,
-    }));
+    this.store.dispatch(
+      deleteModel({
+        applicationId: this.selectedApplicationId,
+        modelId,
+      })
+    );
   }
 
   unsubscribe(): void {

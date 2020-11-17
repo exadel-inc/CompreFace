@@ -14,34 +14,33 @@
  * permissions and limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Model} from 'src/app/data/interfaces/model';
-import {Observable} from 'rxjs';
-import {environment} from 'src/environments/environment';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Model } from 'src/app/data/interfaces/model';
+import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModelService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  public getAll(organizationId: string, applicationId: string): Observable<Model[]> {
-    return this.http.get<Model[]>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/models`);
+  public getAll(applicationId: string): Observable<Model[]> {
+    return this.http.get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`);
   }
 
-  public create(organizationId: string, applicationId: string, name: string): Observable<Model> {
+  public create(applicationId: string, name: string): Observable<Model> {
     name = name.trim();
-    return this.http.post<Model>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/model`, { name });
+    return this.http.post<Model>(`${environment.adminApiUrl}app/${applicationId}/model`, { name });
   }
 
-  public update(organizationId: string, applicationId: string, modelId: string, name: string): Observable<Model> {
+  public update(applicationId: string, modelId: string, name: string): Observable<Model> {
     name = name.trim();
-    return this.http.put<Model>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}`, { name });
+    return this.http.put<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${modelId}`, { name });
   }
 
-  public delete(organizationId: string, applicationId: string, modelId: string): Observable<Model> {
-    return this.http.delete<Model>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}`);
+  public delete(applicationId: string, modelId: string): Observable<Model> {
+    return this.http.delete<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${modelId}`);
   }
 }

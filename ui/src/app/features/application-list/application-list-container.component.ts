@@ -34,18 +34,23 @@ import { TranslateService } from '@ngx-translate/core';
       [userRole]="userRole$ | async"
       [tableConfig]="tableConfig$ | async"
       (selectApp)="onClick($event)"
-      (createApp)="onCreateNewApp()">
+      (createApp)="onCreateNewApp()"
+    >
     </app-application-list>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   tableConfig$: Observable<ITableConfig>;
 
-  constructor(private applicationFacade: ApplicationListFacade, private dialog: MatDialog, private router: Router,
-              private translate: TranslateService) {
+  constructor(
+    private applicationFacade: ApplicationListFacade,
+    private dialog: MatDialog,
+    private router: Router,
+    private translate: TranslateService
+  ) {
     this.applicationFacade.initSubscriptions();
   }
 
@@ -53,23 +58,24 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.applicationFacade.isLoading$;
     this.userRole$ = this.applicationFacade.userRole$;
 
-    this.tableConfig$ = this.applicationFacade.applications$
-      .pipe(
-        map(apps => {
-          return ({
-            columns: [{ title: 'Name', property: 'name' }, { title: 'Owner', property: 'owner' }],
-            data: apps.map(app => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` }))
-          });
-        })
-      );
+    this.tableConfig$ = this.applicationFacade.applications$.pipe(
+      map((apps) => {
+        return {
+          columns: [
+            { title: 'Name', property: 'name' },
+            { title: 'Owner', property: 'owner' },
+          ],
+          data: apps.map((app) => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` })),
+        };
+      })
+    );
   }
 
   onClick(application): void {
     this.router.navigate([ROUTERS_URL.APPLICATION], {
       queryParams: {
-        org: this.applicationFacade.getOrgId(),
-        app: application.id
-      }
+        app: application.id,
+      },
     });
   }
 
@@ -78,11 +84,11 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
       width: '300px',
       data: {
         entityType: this.translate.instant('applications.header.title'),
-        name: ''
-      }
+        name: '',
+      },
     });
 
-    const dialogSubscription = dialog.afterClosed().subscribe(name => {
+    const dialogSubscription = dialog.afterClosed().subscribe((name) => {
       if (name) {
         this.applicationFacade.createApplication(name);
         dialogSubscription.unsubscribe();
@@ -90,7 +96,5 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.applicationFacade.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 }

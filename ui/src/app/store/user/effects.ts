@@ -34,10 +34,8 @@ import { AppUser } from 'src/app/data/interfaces/app-user';
 import { fetchRolesEntityAction, loadRolesEntityAction } from 'src/app/store/role/actions';
 import { of } from 'rxjs';
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
-import { OrganizationEnService } from '../organization/organization-entitys.service';
 import { AppState } from '../index';
 import { AuthService } from '../../core/auth/auth.service';
-import { loadOrganizations } from '../organization/action';
 
 @Injectable()
 export class UserListEffect {
@@ -45,7 +43,6 @@ export class UserListEffect {
     private actions: Actions,
     private userService: UserService,
     private authService: AuthService,
-    private organizationEnService: OrganizationEnService,
     private snackBarService: SnackBarService,
     private store: Store<AppState>
   ) {}
@@ -53,15 +50,15 @@ export class UserListEffect {
   @Effect()
   fetchUserList = this.actions.pipe(
     ofType(loadUsersEntityAction),
-    switchMap((action) => this.userService.getAll(action.organizationId)),
+    switchMap((action) => this.userService.getAll()),
     map((users: AppUser[]) => addUsersEntityAction({ users }))
   );
 
   @Effect()
   updateUserRole = this.actions.pipe(
     ofType(updateUserRoleAction),
-    switchMap(({ organizationId, user }) =>
-      this.userService.updateRole(organizationId, user.id, user.role).pipe(
+    switchMap(({ user }) =>
+      this.userService.updateRole(user.id, user.role).pipe(
         map((res) => updateUserRoleSuccessAction({ user: res })),
         catchError((error) => of(updateUserRoleFailAction({ error })))
       )
@@ -71,9 +68,9 @@ export class UserListEffect {
   @Effect()
   updateUserRoleWithRefresh = this.actions.pipe(
     ofType(updateUserRoleWithRefreshAction),
-    switchMap(({ organizationId, user }) =>
-      this.userService.updateRole(organizationId, user.id, user.role).pipe(
-        switchMap((res) => [updateUserRoleSuccessAction({ user: res }), loadUsersEntityAction({ organizationId }), loadOrganizations()]),
+    switchMap(({ user }) =>
+      this.userService.updateRole(user.id, user.role).pipe(
+        switchMap((res) => [updateUserRoleSuccessAction({ user: res }), loadUsersEntityAction()]),
         catchError((error) => of(updateUserRoleFailAction({ error })))
       )
     )
@@ -82,16 +79,20 @@ export class UserListEffect {
   @Effect()
   deleteUser$ = this.actions.pipe(
     ofType(deleteUser),
-    switchMap(({ organizationId, userId, newOwner, deleterUserId }) =>
-      this.userService.delete(organizationId, userId, newOwner).pipe(
+    switchMap(({ userId, newOwner, deleterUserId }) =>
+      this.userService.delete(userId, newOwner).pipe(
         switchMap(() => {
           if (deleterUserId === userId) {
             this.authService.logOut();
             return [];
           }
-          return [deleteUserSuccess({ userId }), loadApplications({ organizationId }), loadUsersEntityAction({ organizationId })];
-        }),
-        catchError((error) => of(deleteUserFail({ error })))
+          return [
+            deleteUserSuccess({ userId }),
+            loadApplications(),
+            loadUsersEntityAction(),
+            catchError((error) => of(deleteUserFail({ error }))),
+          ];
+        })
       )
     )
   );

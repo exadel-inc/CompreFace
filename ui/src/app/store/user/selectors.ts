@@ -16,22 +16,25 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { selectApplications } from '../application/selectors';
+import { selectUserId } from '../userInfo/selectors';
 import { AppUserEntityState, userAdapter } from './reducers';
 
 export const selectUserEntityState = createFeatureSelector<AppUserEntityState>('user');
 const { selectEntities, selectAll } = userAdapter.getSelectors();
 
-export const selectUserById = (id: string) => createSelector(selectUserEntityState, selectEntities, usersDictionary => usersDictionary[id]);
+export const selectUserById = (id: string) =>
+  createSelector(selectUserEntityState, selectEntities, (usersDictionary) => usersDictionary[id]);
 export const selectUsers = createSelector(selectUserEntityState, selectAll);
 export const selectIsPendingUserStore = createSelector(selectUserEntityState, (state) => state.isPending);
 
-export const selectUsersWithOwnerApp = createSelector(
-  selectUsers,
-  selectApplications,
-  (users, apps) => users.map(user => ({
+export const selectCurrentUserRole = createSelector(selectUsers, selectUserId, (users, userId) => {
+  const selectedUser = users.find((user) => user.userId === userId);
+  return selectedUser && selectedUser.role;
+});
+
+export const selectUsersWithOwnerApp = createSelector(selectUsers, selectApplications, (users, apps) =>
+  users.map((user) => ({
     ...user,
-    ownerOfApplications: apps
-      .filter(app => app.owner.userId === user.userId)
-      .map(app => app.name),
-  })),
+    ownerOfApplications: apps.filter((app) => app.owner.userId === user.userId).map((app) => app.name),
+  }))
 );

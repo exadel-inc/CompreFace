@@ -90,7 +90,7 @@ class ModelControllerTest {
 
         val bodyWithNoName = new ModelUpdateDto();
 
-        val updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val updateRequest = put( "/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -106,10 +106,10 @@ class ModelControllerTest {
 
     @Test
     void shareModelShouldReturnErrorMessageWhenRequestIdIsMissing() throws Exception {
-        doCallRealMethod().when(modelService).share(any(), any(), any(), any());
+        doCallRealMethod().when(modelService).share(any(), any(), any());
         val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("requestId")));
 
-        val url = "/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/share";
+        val url = "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/share";
         val requestToShareModel = post(url)
                 .with(csrf())
                 .with(user(buildUser()))
@@ -129,7 +129,7 @@ class ModelControllerTest {
 
         val bodyWithNoName = new ModelCreateDto();
 
-        val createNewModelRequest = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model")
+        val createNewModelRequest = post("/app/" + APP_GUID + "/model")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -145,7 +145,7 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnModel() throws Exception {
-        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val request = get("/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -157,7 +157,7 @@ class ModelControllerTest {
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
 
-        when(modelService.getModel(eq(ORG_GUID), eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
+        when(modelService.getModel(eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
         when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
 
         mockMvc.perform(request)
@@ -167,7 +167,7 @@ class ModelControllerTest {
 
     @Test
     void shouldReturnModels() throws Exception {
-        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/models")
+        val request = get("/app/" + APP_GUID + "/models")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -192,7 +192,7 @@ class ModelControllerTest {
         val createDto = new ModelCreateDto();
         createDto.setName(MODEL_NAME);
 
-        val createRequest = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model")
+        val createRequest = post("/app/" + APP_GUID + "/model")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON)
@@ -205,7 +205,7 @@ class ModelControllerTest {
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
 
-        when(modelService.createModel(any(ModelCreateDto.class), eq(ORG_GUID), eq(APP_GUID), anyLong())).thenReturn(model);
+        when(modelService.createModel(any(ModelCreateDto.class), eq(APP_GUID), anyLong())).thenReturn(model);
         when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
 
         mockMvc.perform(createRequest)
@@ -218,7 +218,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val createRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val createRequest = put("/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON)
@@ -231,7 +231,7 @@ class ModelControllerTest {
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
 
-        when(modelService.updateModel(any(ModelUpdateDto.class), eq(ORG_GUID), eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
+        when(modelService.updateModel(any(ModelUpdateDto.class), eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
         when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
 
         mockMvc.perform(createRequest)
@@ -244,7 +244,7 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val request = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
+        val request = put("/app/" + APP_GUID + "/model/" + MODEL_GUID + "/apikey")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
@@ -258,7 +258,7 @@ class ModelControllerTest {
         val responseDto = new ModelResponseDto();
         responseDto.setApiKey(newApiKey);
 
-        when(modelService.getModel(eq(ORG_GUID), eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
+        when(modelService.getModel(eq(APP_GUID), eq(MODEL_GUID), anyLong())).thenReturn(model);
         when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
 
         mockMvc.perform(request)
@@ -271,12 +271,12 @@ class ModelControllerTest {
         val updateDto = new ModelUpdateDto();
         updateDto.setName(MODEL_NAME);
 
-        val request = delete("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/" + MODEL_GUID)
+        val request = delete("/app/" + APP_GUID + "/model/" + MODEL_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(APPLICATION_JSON);
 
-        doNothing().when(modelService).deleteModel(eq(ORG_GUID), eq(APP_GUID), eq(MODEL_GUID), anyLong());
+        doNothing().when(modelService).deleteModel(eq(APP_GUID), eq(MODEL_GUID), anyLong());
 
         mockMvc.perform(request)
                .andExpect(status().isOk());

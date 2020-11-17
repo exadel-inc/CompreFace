@@ -119,7 +119,6 @@ export class ModelListComponent implements OnInit, OnDestroy {
   test(model: Model) {
     this.router.navigate([ROUTERS_URL.TEST_MODEL], {
       queryParams: {
-        org: this.modelListFacade.selectedOrganizationId,
         app: this.modelListFacade.selectedApplicationId,
         model: model.id,
       },

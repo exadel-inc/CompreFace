@@ -17,19 +17,20 @@
 package com.exadel.frs.mapper;
 
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
-import com.exadel.frs.entity.UserOrganizationRole;
+import com.exadel.frs.entity.User;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
-public interface UserOrgRoleMapper {
+public interface UserGlobalRoleMapper {
 
-    @Mapping(source = "user.guid", target = "userId")
-    @Mapping(source = "user.firstName", target = "firstName")
-    @Mapping(source = "user.lastName", target = "lastName")
-    @Mapping(source = "user.email", target = "email")
-    UserRoleResponseDto toUserRoleResponseDto(UserOrganizationRole userAppRole);
+    @Mapping(source = "guid", target = "userId")
+    @Mapping(source = "firstName", target = "firstName")
+    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "email", target = "email")
+    @Mapping(source = "globalRole", target = "role")
+    UserRoleResponseDto toUserRoleResponseDto(User userAppRole);
 
-    List<UserRoleResponseDto> toUserRoleResponseDto(List<UserOrganizationRole> userAppRoles);
+    List<UserRoleResponseDto> toUserRoleResponseDto(List<User> userAppRoles);
 }
