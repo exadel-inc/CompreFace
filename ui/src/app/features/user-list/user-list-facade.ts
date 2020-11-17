@@ -38,10 +38,10 @@ export class UserListFacade implements IFacade {
   userRole$: Observable<string>;
 
   constructor(private store: Store<AppState>) {
-    this.users$ = store.select(selectUsersWithOwnerApp);
-    this.userRole$ = store.select(selectCurrentUserRole);
+    this.users$ = this.store.select(selectUsersWithOwnerApp);
+    this.userRole$ = this.store.select(selectCurrentUserRole);
 
-    const allRoles$ = store.select(selectAllRoles);
+    const allRoles$ = this.store.select(selectAllRoles);
     this.availableRoles$ = combineLatest([allRoles$, this.userRole$]).pipe(
       map(([allRoles, userRole]) => {
         const roleIndex = allRoles.indexOf(userRole);
@@ -49,10 +49,10 @@ export class UserListFacade implements IFacade {
       })
     );
 
-    const usersLoading$ = store.select(selectIsPendingUserStore);
-    const roleLoading$ = store.select(selectIsPendingRoleStore);
-    this.currentUserId$ = store.select(selectUserId);
-    this.currentUserEmail$ = store.select(selectUserEmail);
+    const usersLoading$ = this.store.select(selectIsPendingUserStore);
+    const roleLoading$ = this.store.select(selectIsPendingRoleStore);
+    this.currentUserId$ = this.store.select(selectUserId);
+    this.currentUserEmail$ = this.store.select(selectUserEmail);
 
     this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
   }

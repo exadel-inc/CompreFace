@@ -49,7 +49,7 @@ export class ApplicationUserListFacade implements IFacade {
   applicationRole$: Observable<string>;
 
   constructor(private store: Store<AppState>, private userService: AppUserService) {
-    this.appUsers$ = store.select(selectAppUsers);
+    this.appUsers$ = this.store.select(selectAppUsers);
     this.availableEmails$ = combineLatest([this.store.select(selectUsers), this.appUsers$]).pipe(
       map(([users, appUsers]) => {
         return users.map((user) => {
@@ -77,8 +77,8 @@ export class ApplicationUserListFacade implements IFacade {
       })
     );
 
-    this.currentUserId$ = store.select(selectUserId);
-    const allRoles$ = store.select(selectAllRoles);
+    this.currentUserId$ = this.store.select(selectUserId);
+    const allRoles$ = this.store.select(selectAllRoles);
 
     this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.applicationRole$, this.userGlobalRole$]).pipe(
       map(([allRoles, userRole, applicationRole, globalRole]) => {
@@ -93,8 +93,8 @@ export class ApplicationUserListFacade implements IFacade {
       })
     );
 
-    const usersLoading$ = store.select(selectAppUserIsPending);
-    const roleLoading$ = store.select(selectIsPendingRoleStore);
+    const usersLoading$ = this.store.select(selectAppUserIsPending);
+    const roleLoading$ = this.store.select(selectIsPendingRoleStore);
 
     this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
   }

@@ -38,9 +38,9 @@ export class ModelListFacade implements IFacade {
   selectedApplicationId: string;
 
   constructor(private store: Store<AppState>) {
-    this.models$ = store.select(selectModels);
-    this.isLoading$ = store.select(selectPendingModel);
-    this.selectedApplication$ = store.select(selectCurrentAppId);
+    this.models$ = this.store.select(selectModels);
+    this.isLoading$ = this.store.select(selectPendingModel);
+    this.selectedApplication$ = this.store.select(selectCurrentAppId);
     this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
       map(([applicationRole, globalRole]) => {
         // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role

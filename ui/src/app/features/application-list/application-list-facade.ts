@@ -31,9 +31,9 @@ export class ApplicationListFacade implements IFacade {
   userRole$: Observable<string>;
 
   constructor(private store: Store<AppState>) {
-    this.applications$ = store.select(selectApplications);
+    this.applications$ = this.store.select(selectApplications);
     this.userRole$ = this.store.select(selectCurrentUserRole);
-    this.isLoading$ = store.select(selectIsPendingApplicationList);
+    this.isLoading$ = this.store.select(selectIsPendingApplicationList);
   }
 
   initSubscriptions(): void {
