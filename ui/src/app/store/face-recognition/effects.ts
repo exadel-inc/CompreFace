@@ -20,8 +20,7 @@ import { iif, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
-import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail,
-  addFaceFail, addFace, addFaceSuccess } from './actions';
+import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail, addFaceFail, addFace, addFaceSuccess } from './actions';
 import { Action, Store } from '@ngrx/store';
 import { selectCurrentModel } from '../model/selectors';
 import { selectDemoApiKey } from '../demo/selectors';
@@ -33,35 +32,45 @@ export class FaceRecognitionEffects {
     private store: Store<any>,
     private recognitionService: FaceRecognitionService,
     private snackBarService: SnackBarService
-  ) { }
+  ) {}
 
   @Effect()
   recognizeFace$ = this.actions.pipe(
     ofType(recognizeFace),
     withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey)),
     switchMap(([action, model, demoApiKey]) =>
-      iif(
-        () => !!model,
-        this.recognizeFace(action.file, model?.apiKey),
-        this.recognizeFace(action.file, demoApiKey)
-      )
+      iif(() => !!model, this.recognizeFace(action.file, model?.apiKey), this.recognizeFace(action.file, demoApiKey))
     )
   );
 
   @Effect()
   addFace$ = this.actions.pipe(
     ofType(addFace),
-    switchMap(action => this.recognitionService.addFace(action.file, action.model).pipe(
-      map(model => addFaceSuccess({ model })),
-      catchError(error => of(addFaceFail({ error }))),
-    )),
+    switchMap((action) =>
+      this.recognitionService.addFace(action.file, action.model).pipe(
+        map((model) => addFaceSuccess({ model })),
+        catchError((error) => of(addFaceFail({ error })))
+      )
+    )
   );
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(recognizeFaceFail, addFaceFail),
-    tap(action => {
+    tap((action) => {
       this.snackBarService.openHttpError(action.error.message);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  recognizeFaceSuccess$: Observable<any> = this.actions.pipe(
+    ofType(recognizeFaceSuccess),
+    tap((action) => {
+      if (action.model.result.length === 0) {
+        this.snackBarService.openNotification({ messageText: 'face_recognition.no_recognized', type: 'warning' });
+      } else if (action.model.result[0].faces.length === 0) {
+        this.snackBarService.openNotification({ messageText: 'face_recognition.no_faces_in_collection', type: 'error' });
+      }
     })
   );
 
@@ -73,12 +82,14 @@ export class FaceRecognitionEffects {
    */
   private recognizeFace(file, apiKey): Observable<Action> {
     return this.recognitionService.recognize(file, apiKey).pipe(
-      map(({data, request}) => recognizeFaceSuccess({
-        model: data,
-        file,
-        request
-      })),
-      catchError(error => of(recognizeFaceFail({ error })))
+      map(({ data, request }) =>
+        recognizeFaceSuccess({
+          model: data,
+          file,
+          request,
+        })
+      ),
+      catchError((error) => of(recognizeFaceFail({ error })))
     );
   }
 }
