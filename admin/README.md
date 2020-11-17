@@ -29,5 +29,5 @@ For set up email sending following parameters should be filled in .env file
  - 'mail_host' (smtp.gmail.com)
  - 'email_username' (example@example.com)
  - 'email_from' (according format in RFC2822, is optional)
- - 'email_password' (password for 'email_username')
+ - 'email_password' (password for 'email_username' account)
  - 'enable_email_server' (true)
