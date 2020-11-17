@@ -89,13 +89,9 @@ export class UserListEffect {
             this.authService.logOut();
             return [];
           }
-          return [
-            deleteUserSuccess({ userId }),
-            loadApplications({ organizationId }),
-            loadUsersEntityAction({ organizationId }),
-            catchError((error) => of(deleteUserFail({ error }))),
-          ];
-        })
+          return [deleteUserSuccess({ userId }), loadApplications({ organizationId }), loadUsersEntityAction({ organizationId })];
+        }),
+        catchError((error) => of(deleteUserFail({ error })))
       )
     )
   );
