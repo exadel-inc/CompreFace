@@ -90,6 +90,4 @@ export class UserListFacade implements IFacade {
   loadAvailableRoles(): void {
     this.store.dispatch(loadRolesEntityAction());
   }
-
-  unsubscribe(): void {}
 }

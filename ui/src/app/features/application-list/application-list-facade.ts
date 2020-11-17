@@ -47,6 +47,4 @@ export class ApplicationListFacade implements IFacade {
   createApplication(name: string): void {
     this.store.dispatch(createApplication({ name }));
   }
-
-  unsubscribe(): void {}
 }
