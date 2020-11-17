@@ -32,7 +32,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - ENABLE_EMAIL_SERVER=${enable_email_server}
       - EMAIL_HOST=${email_host}
-      - EMAIL_SENDER=${email_sender}
+      - EMAIL_USERNAME=${email_username}
       - EMAIL_FROM=${email_from}
       - EMAIL_PASSWORD=${email_password}
       - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
