@@ -73,7 +73,7 @@ class RecognizeControllerTest {
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
 
         mockMvc.perform(
-                multipart(API_V1 + "/recognize")
+                multipart(API_V1 + "/faces/recognize")
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk());

@@ -44,9 +44,11 @@ spring:
     generate-ddl: false
   mail:
     enable: ${ENABLE_EMAIL_SERVER:false}
-    sender: ${FRS_EMAIL:example@example.com}
-    host: ${POSTFIX_HOST:example.com}
-    port: 25
+    host: ${EMAIL_HOST:example.com}
+    username: ${EMAIL_SENDER:example@example.com}
+    from: ${EMAIL_FROM:name <example@example.com>}
+    password: ${EMAIL_PASSWORD:example}
+    port: 587
     test-connection: false
     properties.mail:
       debug: true
@@ -56,7 +58,8 @@ spring:
         starttls:
           enable: true
         ssl:
-          trust: ${POSTFIX_HOST}
+          trust: ${EMAIL_HOST}
+        auth: true
   main:
     allow-bean-definition-overriding: true
 
@@ -73,7 +76,7 @@ swagger:
     version: 0.0.2-SNAPSHOT
 
 host:
-  frs: ${FRS_CRUD_HOST:http://frs-crud:8080}
+  frs: ${FRS_CRUD_HOST:http://localhost:8000}
   full:
     dns:
       auth:

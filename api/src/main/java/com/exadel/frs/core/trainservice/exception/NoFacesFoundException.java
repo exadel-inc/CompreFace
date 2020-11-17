@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,3 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
+package com.exadel.frs.core.trainservice.exception;
+
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.NO_FACES_FOUND;
+
+public class NoFacesFoundException extends BasicException {
+
+    private static final String MESSAGE = "No face is found in the given image";
+
+    public NoFacesFoundException() {
+        super(NO_FACES_FOUND, MESSAGE);
+    }
+}

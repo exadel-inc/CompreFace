@@ -30,6 +30,12 @@ services:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
       - SPRING_PROFILES_ACTIVE=dev
+      - ENABLE_EMAIL_SERVER=${enable_email_server}
+      - EMAIL_HOST=${email_host}
+      - EMAIL_SENDER=${email_sender}
+      - EMAIL_FROM=${email_from}
+      - EMAIL_PASSWORD=${email_password}
+      - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
     depends_on:
       - compreface-postgres-db
       - compreface-api
@@ -50,6 +56,8 @@ services:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
       - SPRING_PROFILES_ACTIVE=dev
+      - API_JAVA_OPTS=${compreface_api_java_options}
+      - SAVE_IMAGES_TO_DB=${save_images_to_db}
 
   compreface-fe:
     image: ${registry}compreface-fe

@@ -19,13 +19,14 @@ import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { recognizeFace, recognizeFaceReset } from '../../store/face-recognition/actions';
-import { selectFaceData, selectFile, selectRequest, selectTestIsPending, selectStateReady
-} from '../../store/face-recognition/selectors';
+import { selectFaceData, selectFile, selectRequest, selectTestIsPending, selectStateReady } from '../../store/face-recognition/selectors';
+import { MAX_IMAGE_SIZE } from 'src/app/core/constants';
+import { SnackBarService } from '../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-face-recognition-container',
   templateUrl: './face-recognition-container.component.html',
-  styleUrls: ['./face-recognition-container.component.scss']
+  styleUrls: ['./face-recognition-container.component.scss'],
 })
 export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   data$: Observable<any>;
@@ -37,7 +38,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   @Input()
   title: string;
 
-  constructor(private store: Store<AppState>) {}
+  constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
 
   ngOnInit() {
     this.data$ = this.store.select(selectFaceData);
@@ -52,6 +53,8 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   }
 
   recognizeFace(file: File) {
-    this.store.dispatch(recognizeFace({file}));
+    file.size > MAX_IMAGE_SIZE
+      ? this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' })
+      : this.store.dispatch(recognizeFace({ file }));
   }
 }

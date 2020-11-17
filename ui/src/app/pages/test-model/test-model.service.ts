@@ -18,12 +18,13 @@ import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
-import { setSelectedAppIdEntityAction } from '../../store/application/action';
+import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/actions';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { selectModels } from '../../store/model/selectors';
+import { getUserInfo } from '../../store/userInfo/action';
 
 @Injectable()
 export class TestModelPageService {
@@ -41,6 +42,8 @@ export class TestModelPageService {
     if (this.appId && this.modelId) {
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
+      this.store.dispatch(loadApplications({ organizationId: this.orgId }));
+      this.store.dispatch(getUserInfo());
       this.modelSub = this.store
         .select(selectModels)
         .pipe(

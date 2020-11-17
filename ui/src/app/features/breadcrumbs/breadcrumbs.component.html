@@ -27,6 +27,10 @@
     >
       {{ app.name | truncate: maxNameLength }}
     </a>
+    <div class="separator"> /</div>
+    <div class="breadcrumbs-link" matTooltip="{{model.name}}" [matTooltipDisabled]="model.name.length <= maxNameLength">
+      {{model.name | truncate:maxNameLength}}
+    </div>
   </div>
   <ng-template #onlyApp>
     <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">{{ 'breadcrumbs.home' | translate }}</a>

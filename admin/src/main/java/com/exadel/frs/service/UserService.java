@@ -119,7 +119,6 @@ public class UserService {
 
     private void sendRegistrationTokenToUser(final User user) {
         val message = "Please, confirm your registration clicking the link below:\n"
-                + "https://"
                 + env.getProperty("host.frs")
                 + "/admin/user/registration/confirm?token="
                 + user.getRegistrationToken();

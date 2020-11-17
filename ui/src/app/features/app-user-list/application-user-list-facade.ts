@@ -46,6 +46,7 @@ export class ApplicationUserListFacade implements IFacade {
   private selectedApplicationId: string;
   private sub: Subscription;
   userGlobalRole$: Observable<Role>;
+  applicationRole$: Observable<string>;
 
   constructor(private store: Store<AppState>, private userService: AppUserService) {
     this.appUsers$ = store.select(selectAppUsers);
@@ -58,21 +59,33 @@ export class ApplicationUserListFacade implements IFacade {
         });
       })
     );
+
     this.userGlobalRole$ = store.select(selectCurrentUserRole);
+    this.applicationRole$ = this.store.select(selectUserRollForSelectedApp);
     this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.userGlobalRole$]).pipe(
       map(([applicationRole, globalRole]) => {
         // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return globalRole !== Role.USER ? globalRole : applicationRole;
+        if (globalRole !== Role.USER) {
+          if (globalRole === Role.OWNER) {
+            return globalRole;
+          }
+
+          if (globalRole === Role.ADMINISTRATOR) {
+            return applicationRole === Role.OWNER ? applicationRole : globalRole;
+          }
+        }
       })
     );
 
     this.currentUserId$ = store.select(selectUserId);
     const allRoles$ = store.select(selectAllRoles);
 
-    this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.userGlobalRole$]).pipe(
-      map(([allRoles, userRole, globalRole]) => {
-        if (globalRole !== 'USER') {
+    this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.applicationRole$, this.userGlobalRole$]).pipe(
+      map(([allRoles, userRole, applicationRole, globalRole]) => {
+        if (globalRole === Role.OWNER || applicationRole === Role.OWNER) {
           return allRoles;
+        } else if (globalRole === Role.ADMINISTRATOR) {
+          return allRoles.filter((role) => role !== Role.OWNER);
         } else {
           const roleIndex = allRoles.indexOf(userRole);
           return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];

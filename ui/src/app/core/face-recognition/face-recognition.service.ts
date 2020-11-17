@@ -23,7 +23,7 @@ export class FaceRecognitionService {
   }
 
   recognize(file: any, apiKey: string): Observable<any> {
-    const url = `${environment.userApiUrl}recognize`;
+    const url = `${environment.userApiUrl}faces/recognize`;
     const formData = new FormData();
     formData.append('file', file);
 

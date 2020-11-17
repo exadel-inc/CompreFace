@@ -92,15 +92,86 @@ docker-compose up --build
 
 ## Simple tutorial of usage
 
-1. Registration users in the app
-1. Creating applications, Face Collections, inviting users
-1. Integrating your app via API if need
-1. Images uploading, filling a Face Collection with your own images by using the API key
-1. Send a new image to recognize the face on it.
+## Simple tutorial of usage
 
-![how-it-works](https://user-images.githubusercontent.com/4942439/92221961-b3baa180-eeb7-11ea-89c9-af2bec2295fc.png)
+Step 1. You need to sign up to the system (First user in CompareFace admin has Owner role, but it is possible to change the role) and then LogIn with created account or just use the existing one. After that system redirects you to the main page.
 
+Step 2. Create an application (left section) with "Create" link at the bottom of the page. An application is where you can create and manage your face collections.
 
+Step 3. Enter you application with double click on the name of the application. Here you will have two possibilities. The first one is to add new users to your application and manage permissions ( Global Owner and Administrator roles already have access to any application without invite, user role doesn't.) The second one is to create face collections.
+
+Step 4. After creating new collection, it appears at the Face Collections List created within the application with an appropriate name and API key. The user has the possibility to add new Face or to test the existing one (three dots on right side and click "test" link). This option will lead the user to Test Face Collection page, where is the drag&drop to upload image with face to recognize. We recommend an image size no higher than 5MB, as it could slow down the request process. Supported image formats are JPEG/PNG/JPG/ICO/BMP/GIF/TIF/TIFF format.
+
+Step 5. Upload your photo and let Face Recognition system compare faces. When you have face contour detection enabled (green borders around the face). These points represent the shape of the feature. API requests within the solution use RESTful API, and backend data collection. [Read more about API](https://github.com/exadel-inc/CompreFace#rest-api-description) With Face Recognition system APIs you can add Face Recognition capabilities using simple API Calls.
+
+The following result Json illustrates how these points map to a face, where
+
+1. subject -person identificator
+2. similarity - gives the confidence that this is the found subject
+3. probability - gives the confidence that this is a face
+4. x_min, x_max, y_min, y_max are coordinates of the face in the image
+
+```
+
+"result": [
+{
+  "box": {
+    "probability": 0.99583,
+    "x_max": 551,
+    "y_max": 364,
+    "x_min": 319,
+    "y_min": 55
+  },
+  "faces": [
+  {
+    "similarity": 0.99593,
+    "face_name": "lisan"
+  }
+  ]
+}
+]
+```
+
+The following JavaScript code example allows to add new face to Face Collection.
+
+```
+
+ async function saveNewImageToFaceCollection() {
+  let name = encodeURIComponent('John');
+  let formData = new FormData();
+  let photo = document.getElementById("fileDropRef").files[0];
+
+    formData.append("photo", photo);
+
+    try {
+       let r = await fetch('http://localhost:8000/api/v1/faces/?subject=`${name}`', {method: "POST", body: formData});
+     } catch(e) {
+       console.log('Houston, we have a problem...:', e);
+    }
+
+ }
+
+```
+
+This function sends image to our server and shows result in text area:
+
+```
+
+function recognizeFace(input) {
+
+  async function getData() {
+    let response = await fetch('http://localhost:8000/api/v1/recognize')
+    let data = await response.json()
+    return data
+  };
+
+  let result = Promise.resolve(response)
+    result.then(data => {
+    document.getElementById("result-textarea-request").innerHTML = JSON.stringify(data);
+  });
+}
+
+```
 
 ## How it works
 
@@ -210,7 +281,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces?subject=<subject>&det_prob_thr
 | Content-Type        | header      | string | required | multipart/form-data                                          |
 | x-api-key           | header      | string | required | api key of the Face Collection, created by the user          |
 | subject             | param       | string | required | is the name you assign to the image you save                 |
-| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 | file                | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 
 Response body on success:
@@ -232,7 +303,7 @@ Response body on success:
 
 Recognizes faces from the uploaded image.
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/recognize?limit=<limit>&prediction_count=<prediction_count>" \
+curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
@@ -245,6 +316,7 @@ curl  -X POST "http://localhost:8000/api/v1/recognize?limit=<limit>&prediction_c
 | x-api-key        | header      | string  | required | api key of the Face Collection, created by the user                    |
 | file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 | limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 | prediction_count | param       | integer | optional | maximum number of predictions per faces. Default value: 1    |
 
 Response body on success:
@@ -381,7 +453,7 @@ Response body on success:
 
 Compares faces from the uploaded image with face in saved image id.
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>" \
+curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
@@ -395,6 +467,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit
 | image_id         | variable    | UUID    | required | UUID of the verifying face                                   |
 | file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 | limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 
 Response body on success:
 ```
