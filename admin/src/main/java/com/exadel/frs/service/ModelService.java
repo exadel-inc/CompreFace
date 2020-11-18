@@ -117,23 +117,45 @@ public class ModelService {
         clone.setId(null);
         clone.setName(modelCloneDto.getName());
         clone.setAppModelAccess(new ArrayList<>());
+
         val clonedModel = modelRepository.save(clone);
 
-        val feces = facesRepository.findByApiKey(model.getApiKey());
+        List<AppModel> clonedAppModelAccessList = cloneAppModels(model, clonedModel);
+        clonedModel.setAppModelAccess(clonedAppModelAccessList);
+
+        val faces = facesRepository.findByApiKey(model.getApiKey());
+        cloneFaces(clone, faces);
+
+        return clonedModel;
+    }
+
+    private List<AppModel> cloneAppModels(final Model model, final Model clonedModel) {
+        List<AppModel> cloneAppModelAccessList = new ArrayList<>();
+        for (val appModel : model.getAppModelAccess()) {
+            AppModel cloneAppModelAccess = new AppModel(appModel);
+            cloneAppModelAccess.setId(new AppModelId(clonedModel.getApp().getId(), clonedModel.getId()));
+            cloneAppModelAccess.setModel(clonedModel);
+
+            cloneAppModelAccessList.add(cloneAppModelAccess);
+        }
+        return cloneAppModelAccessList;
+    }
+
+    private void cloneFaces(final Model clone, final List<Face> faces) {
         List<Face> cloneFaces = new ArrayList<>();
         List<Image> cloneImages = new ArrayList<>();
 
-        for (Face face : feces) {
-            Face cloneFace = new Face(face);
+        for (val face : faces) {
+            val cloneFace = new Face(face);
             cloneFace.setId(randomUUID().toString());
             cloneFace.setApiKey(clone.getApiKey());
 
             cloneFaces.add(cloneFace);
 
-            List<Image> images = imagesRepository.findByFaceId(face.getId());
+            val images = imagesRepository.findByFaceId(face.getId());
 
-            for (Image image : images) {
-                Image cloneImage = new Image(image);
+            for (val image : images) {
+                val cloneImage = new Image(image);
                 cloneImage.setId(null);
                 cloneImage.setFace(cloneFace);
 
@@ -143,8 +165,6 @@ public class ModelService {
 
         imagesRepository.saveAll(cloneImages);
         facesRepository.saveAll(cloneFaces);
-
-        return clonedModel;
     }
 
     public Model updateModel(
