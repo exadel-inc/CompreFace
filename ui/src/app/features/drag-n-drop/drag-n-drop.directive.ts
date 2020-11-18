@@ -13,17 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {
-  Directive,
-  Output,
-  Input,
-  EventEmitter,
-  HostBinding,
-  HostListener
-} from '@angular/core';
+import { Directive, EventEmitter, HostBinding, HostListener, Output } from '@angular/core';
 
 @Directive({
-  selector: '[appDnd]'
+  selector: '[appDnd]',
 })
 export class DragNDropDirective {
   @HostBinding('class.fileover') fileOver: boolean;

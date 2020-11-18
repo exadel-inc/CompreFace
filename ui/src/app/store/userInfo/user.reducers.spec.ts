@@ -18,29 +18,21 @@ import { resetUserInfo } from './action';
 import { UserInfoReducer } from './reducers';
 
 describe('UserInfoReducer', () => {
-  const initialState = {
-    isAuthenticated: false,
-    avatar: '',
-    email: '',
-    firstName: '',
-    guid: '',
-    userId: '',
-    lastName: '',
-    password: ''
-  };
-
   describe('ResetUserInfo action', () => {
     it('should should reset state to initial values', () => {
       const action = resetUserInfo();
-      const state = UserInfoReducer({
-        avatar: '',
-        email: '',
-        firstName: '',
-        guid: '',
-        userId: '',
-        lastName: '',
-        password: ''
-      }, action);
+      const state = UserInfoReducer(
+        {
+          avatar: '',
+          email: '',
+          firstName: '',
+          guid: '',
+          userId: '',
+          lastName: '',
+          password: '',
+        },
+        action
+      );
 
       expect(state.firstName).toBeNull();
     });
