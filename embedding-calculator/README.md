@@ -32,17 +32,13 @@ To skip tests during build, use:
 ```
 $ docker build -t embedding-calculator --build-arg SKIP_TESTS=true .
 ```
-Build with support for different scanner backends (use comma as separator, e.g. `SCANNER=Facenet2018,InsightFace`):
+Build with support for different scanner backend. Supported `Facenet2018` (default) and `InsightFace`:
 ```
 $ docker build -t embedding-calculator --build-arg SCANNER=InsightFace .
 ```
 ##### Run
 ```
 $ docker run -p3000:3000 embedding-calculator
-```
-To run with a different scanner backend
-```
-$ docker run -p3000:3000 -e SCANNER=InsightFace embedding-calculator
 ```
 
 ### Run tests

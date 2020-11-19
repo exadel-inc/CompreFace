@@ -12,14 +12,8 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-import io
-import sys
-from contextlib import redirect_stdout
-from unittest.mock import patch
-
 from flask.json import jsonify
 from werkzeug.exceptions import BadRequest
-from yolk.cli import Yolk
 
 from src.cache import get_scanner
 from src.constants import ENV
@@ -31,14 +25,6 @@ from src.services.imgtools.read_img import read_img
 
 
 def endpoints(app):
-    # TODO EFRS-497 Temporary endpoint for development (remove once the task is done)
-    @app.route('/licenses')
-    def licenses_get():
-        with io.StringIO() as output_buffer, redirect_stdout(output_buffer):
-            with patch.object(sys, 'argv', ['', '-l', '-f', 'license,home-page']):
-                Yolk().run()
-            return output_buffer.getvalue().replace('\n', '<br>')
-
     @app.route('/status')
     def status_get():
         return jsonify(status='OK', build_version=ENV.BUILD_VERSION, calculator_version=ENV.SCANNER)
