@@ -39,9 +39,11 @@ spring:
     generate-ddl: false
   mail:
     enable: ${ENABLE_EMAIL_SERVER:false}
-    sender: ${COMPREFACE_EMAIL:example@example.com}
     host: ${EMAIL_HOST:example.com}
-    port: 25
+    username: ${EMAIL_USERNAME:example@example.com}
+    from: ${EMAIL_FROM:name <example@example.com>}
+    password: ${EMAIL_PASSWORD:example}
+    port: 587
     test-connection: false
     properties.mail:
       debug: true
@@ -56,6 +58,7 @@ spring:
     allow-bean-definition-overriding: true
 
 host:
+  frs: ${FRS_CRUD_HOST:http://localhost:8000}
   full:
     dns:
       auth:
