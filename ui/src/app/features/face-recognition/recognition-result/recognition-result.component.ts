@@ -35,7 +35,7 @@ export class RecognitionResultComponent implements OnDestroy {
     }
 
     if (value) {
-      this.printSubscription = this.printResult(value.box, value.faces).subscribe();
+      this.printSubscription = this.printResult(value).subscribe();
     }
   }
   @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
@@ -50,51 +50,55 @@ export class RecognitionResultComponent implements OnDestroy {
     }
   }
 
-  /*
-   * Print result on template.
-   *
-   * @param box Box
-   * @param face Face
-   */
-  printResult(box: any, face: any): Observable<any> {
+  printResult(result: any): Observable<any> {
     return getImageSize(this.file).pipe(
       tap(({ width, height }) => {
         this.canvasSize.height = (height / width) * this.canvasSize.width;
         this.myCanvas.nativeElement.setAttribute('height', this.canvasSize.height);
       }),
-      map((imageSize) => recalculateFaceCoordinate(box, imageSize, this.canvasSize, this.faceDescriptionHeight)),
-      tap((recalculatedBox) => this.drawCanvas(recalculatedBox, face))
+      map((imageSize) => this.prepareForDraw(imageSize, result)),
+      map((preparedImageData) => this.drawCanvas(preparedImageData))
     );
+  }
+  private prepareForDraw(size, rawData): Observable<any> {
+    return rawData.map((value) => ({
+      box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),
+      faces: value.faces,
+    }));
+  }
+
+  private createImage(ctx, box, face) {
+    ctx.beginPath();
+    ctx.strokeStyle = 'green';
+    ctx.moveTo(box.x_min, box.y_min);
+    ctx.lineTo(box.x_max, box.y_min);
+    ctx.lineTo(box.x_max, box.y_max);
+    ctx.lineTo(box.x_min, box.y_max);
+    ctx.lineTo(box.x_min, box.y_min);
+    ctx.stroke();
+    ctx.fillStyle = 'green';
+    ctx.fillRect(box.x_min, box.y_min - this.faceDescriptionHeight, box.x_max - box.x_min, this.faceDescriptionHeight);
+    ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
+    ctx.fillStyle = 'white';
+    ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
+    ctx.fillText(face.similarity, box.x_min + 10, box.y_max + 20);
+    ctx.fillText(face.face_name, box.x_min + 10, box.y_min - 5);
   }
 
   /*
    * Make canvas and draw face and info on image.
    *
-   * @param box Face coordinates from BE.
-   * @param face.
+   * @preparedData prepared box data and faces.
    */
-  drawCanvas(box: any, face: any) {
+  drawCanvas(preparedData) {
     const img = new Image();
-    const resultFace = face.length > 0 ? face[0] : { face_name: undefined, similarity: 0 };
     const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
-
     img.onload = () => {
       ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
-      ctx.beginPath();
-      ctx.strokeStyle = 'green';
-      ctx.moveTo(box.x_min, box.y_min);
-      ctx.lineTo(box.x_max, box.y_min);
-      ctx.lineTo(box.x_max, box.y_max);
-      ctx.lineTo(box.x_min, box.y_max);
-      ctx.lineTo(box.x_min, box.y_min);
-      ctx.stroke();
-      ctx.fillStyle = 'green';
-      ctx.fillRect(box.x_min, box.y_min - this.faceDescriptionHeight, box.x_max - box.x_min, this.faceDescriptionHeight);
-      ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
-      ctx.fillStyle = 'white';
-      ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
-      ctx.fillText(resultFace.similarity, box.x_min + 10, box.y_max + 20);
-      ctx.fillText(resultFace.face_name, box.x_min + 10, box.y_min - 5);
+      for (const value of preparedData) {
+        const resultFace = value.faces.length > 0 ? value.faces[0] : { face_name: undefined, similarity: 0 };
+        this.createImage(ctx, value.box, resultFace);
+      }
     };
     img.src = URL.createObjectURL(this.file);
   }
