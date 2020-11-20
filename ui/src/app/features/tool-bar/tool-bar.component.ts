@@ -13,8 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-tool-bar',
@@ -25,7 +24,13 @@ import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from 
 export class ToolBarComponent {
   @Input() userAvatarInfo: string;
   @Input() userName: string;
+  @Input() isUserInfoAvailable: boolean;
   @Output() logout = new EventEmitter();
+  @Output() gosignup = new EventEmitter();
+
+  goSignUp() {
+    this.gosignup.emit();
+  }
 
   doLogout() {
     this.logout.emit();

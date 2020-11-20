@@ -14,21 +14,30 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { ROUTERS_URL } from 'src/app/data/enums/routers-url.enum';
+import { logOut } from 'src/app/store/auth/action';
+import { selectDemoPageAvailability } from 'src/app/store/demo/selectors';
+import { selectUserAvatar, selectUserName } from 'src/app/store/userInfo/selectors';
 
 import { AppState } from '../../store';
-import { selectUserAvatar, selectUserName } from 'src/app/store/userInfo/selectors';
-import { logOut } from 'src/app/store/auth/action';
 
 @Injectable()
 export class ToolBarFacade {
   userAvatarInfo$: Observable<string>;
   userName$: Observable<string>;
+  isUserInfoAvailable$: Observable<boolean>;
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>, private router: Router) {
     this.userAvatarInfo$ = this.store.select(selectUserAvatar);
     this.userName$ = this.store.select(selectUserName);
+    this.isUserInfoAvailable$ = this.store.select(selectDemoPageAvailability);
+  }
+
+  gosignup() {
+    this.router.navigateByUrl(ROUTERS_URL.SIGN_UP);
   }
 
   logout() {

@@ -22,11 +22,11 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-demo',
   templateUrl: './demo.component.html',
-  styleUrls: ['./demo.component.scss']
+  styleUrls: ['./demo.component.scss'],
 })
 export class DemoComponent implements OnInit {
   isPending$: Observable<any>;
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>) {}
 
   ngOnInit() {
     this.isPending$ = this.store.select(selectDemoPending);
