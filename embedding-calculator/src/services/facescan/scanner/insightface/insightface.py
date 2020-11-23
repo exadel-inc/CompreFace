@@ -17,6 +17,7 @@ from typing import List, Tuple
 
 import attr
 import numpy as np
+from cached_property import cached_property
 from insightface.app import FaceAnalysis
 from insightface.model_zoo import model_zoo
 from insightface.utils import face_align
@@ -55,22 +56,30 @@ class InsightFace(FaceScanner):
     CALCULATION_MODEL_NAME = ENV.CALCULATION_MODEL
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
 
-    def __init__(self):
-        super().__init__()
-        self._detection_model = FaceAnalysis(det_name=self.DETECTION_MODEL_NAME, rec_name=None, ga_name=None)
-        self._calculation_model = model_zoo.get_model(self.CALCULATION_MODEL_NAME)
-        self._CTX_ID = ENV.GPU_ID
-        self._NMS = 0.4
-        self._detection_model.prepare(ctx_id=self._CTX_ID, nms=self._NMS)
-        self._calculation_model.prepare(ctx_id=self._CTX_ID)
-        self.det_prob_threshold = 0.8
+    _CTX_ID = ENV.GPU_ID
+    # detection settings
+    _NMS = 0.4
+    det_prob_threshold = 0.8
+
+    @cached_property
+    def _detection_model(self):
+        model = FaceAnalysis(det_name=self.DETECTION_MODEL_NAME, rec_name=None, ga_name=None)
+        model.prepare(ctx_id=self._CTX_ID, nms=self._NMS)
+        return model
+
+    @cached_property
+    def _calculation_model(self):
+        model = model_zoo.get_model(self.CALCULATION_MODEL_NAME)
+        model.prepare(ctx_id=self._CTX_ID)
+        return model
 
     def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
         scanned_faces = []
-        for bounding_box in self.find_faces(img, det_prob_threshold):
-            norm_cropped_img = face_align.norm_crop(img, landmark=bounding_box.landmark)
-            embedding = self._calculation_model.get_embedding(norm_cropped_img).flatten()
-            scanned_faces.append(ScannedFace(box=bounding_box, embedding=embedding, img=img))
+        for box in self.find_faces(img, det_prob_threshold):
+            face_img = face_align.norm_crop(img, landmark=box.landmark)
+            embedding = self._calculation_model.get_embedding(face_img).flatten()
+            scanned_faces.append(ScannedFace(box=box, embedding=embedding,
+                                             img=img, face_img=face_img))
         return scanned_faces
 
     def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[InsightFaceBoundingBox]:

@@ -16,3 +16,9 @@ if [[ "$SCANNER" == "InsightFace" ]]; then
 else
   echo "  --ignore=src/services/facescan/scanner/insightface" >> pytest.ini
 fi
+
+if [[ "$SCANNER" == "Facenet2018" ]]; then
+  pip install --no-cache-dir tensorflow~=1.15.4
+else
+  echo "  --ignore=src/services/facescan/scanner/facenet" >> pytest.ini
+fi
