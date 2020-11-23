@@ -20,6 +20,7 @@ from typing import List
 import numpy as np
 import tensorflow as tf
 from srcext.facenet.align import detect_face
+from srcext.facenet.facenet import prewhiten
 from tensorflow.python.platform import gfile
 
 from src.constants import ENV
@@ -108,17 +109,18 @@ class Facenet2018(FaceScanner):
 
     def _calculate_embeddings(self, cropped_images):
         """Run forward pass to calculate embeddings"""
+        prewhitened_images = [prewhiten(img) for img in cropped_images]
         graph_images_placeholder = self._embedding_calculator.graph.get_tensor_by_name("input:0")
         graph_embeddings = self._embedding_calculator.graph.get_tensor_by_name("embeddings:0")
         graph_phase_train_placeholder = self._embedding_calculator.graph.get_tensor_by_name("phase_train:0")
         embedding_size = graph_embeddings.get_shape()[1]
-        image_count = len(cropped_images)
+        image_count = len(prewhitened_images)
         batches_per_epoch = int(math.ceil(1.0 * image_count / self.BATCH_SIZE))
         embeddings = np.zeros((image_count, embedding_size))
         for i in range(batches_per_epoch):
             start_index = i * self.BATCH_SIZE
             end_index = min((i + 1) * self.BATCH_SIZE, image_count)
-            feed_dict = {graph_images_placeholder: cropped_images, graph_phase_train_placeholder: False}
+            feed_dict = {graph_images_placeholder: prewhitened_images, graph_phase_train_placeholder: False}
             embeddings[start_index:end_index, :] = self._embedding_calculator.sess.run(graph_embeddings,
                                                                                        feed_dict=feed_dict)
         return embeddings

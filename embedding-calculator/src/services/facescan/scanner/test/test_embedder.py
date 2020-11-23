@@ -22,7 +22,7 @@ from src.services.utils.pyutils import first_and_only
 
 DIFFERENCE_THRESHOLD = {
     'InsightFace': 400,
-    'Facenet2018': 0.2
+    'Facenet2018': 0.4
 }
 
 

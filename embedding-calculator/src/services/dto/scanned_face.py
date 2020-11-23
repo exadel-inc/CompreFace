@@ -37,7 +37,7 @@ class ScannedFace(JSONEncodable):
 
     @property
     def face_img(self):
-        if not self._face_img:
+        if self._face_img is None:
             self._face_img = crop_img(self.img, self.box)
         return self._face_img
 
