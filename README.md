@@ -6,6 +6,7 @@
 
  [CompreFace](#compreface)
   * [Overview](#overview)
+  * [Feedback survey](#feedback-survey)
   * [Features](#features)
   * [Getting started](#getting-started)
   * [Simple tutorial of usage](#simple-tutorial-of-usage)
@@ -39,7 +40,11 @@ CompreFace is an application for facial recognition that can be integrated as a 
 Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient API for model training and face recognition. We also provide an easy-to-understand roles system with which you can easily control who has access to the model.
 Every user can create their own models and train them on different subsets of input data. 
 
+## Feedback survey
 
+We are constantly improving our product. But for better understanding which features we should add or improve we need your help!
+Feedback form is totally anonymous, it will take just 2 minutes of your time to answer the questions:
+https://forms.gle/ybAEPc3XmzEcpv4M8
 
 ## Features
 
@@ -50,7 +55,6 @@ CompreFace:
  - Uses one of the most popular face recognition methods for highest accuracy 
  - Includes a UI panel with roles for access control
  - Starts quickly with one docker command
-
 
 
 ## Getting started
