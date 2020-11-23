@@ -19,6 +19,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { ROUTERS_URL } from 'src/app/data/enums/routers-url.enum';
 import { logOut } from 'src/app/store/auth/action';
+import { loadDemoApiKeySuccessAction } from 'src/app/store/demo/actions';
 import { selectDemoPageAvailability } from 'src/app/store/demo/selectors';
 import { selectUserAvatar, selectUserName } from 'src/app/store/userInfo/selectors';
 
@@ -37,6 +38,7 @@ export class ToolBarFacade {
   }
 
   gosignup() {
+    this.store.dispatch(loadDemoApiKeySuccessAction(null));
     this.router.navigateByUrl(ROUTERS_URL.SIGN_UP);
   }
 
