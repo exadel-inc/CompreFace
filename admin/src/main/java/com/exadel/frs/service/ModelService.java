@@ -24,6 +24,7 @@ import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
+import com.exadel.frs.enums.StatisticsAction;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
@@ -32,11 +33,14 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
+import com.exadel.frs.system.feign.StatisticsDatabaseClient;
+import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -49,6 +53,10 @@ public class ModelService {
     private final AppModelRepository appModelRepository;
     private final AuthorizationManager authManager;
     private final UserService userService;
+    private final StatisticsDatabaseClient statisticsDatabaseClient;
+
+    @Value("${app.feign.appery-io.database.id}")
+    private String statisticsDatabaseId;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -94,6 +102,10 @@ public class ModelService {
                          .apiKey(randomUUID().toString())
                          .app(app)
                          .build();
+
+        if(user.isAllowStatistics()){
+            statisticsDatabaseClient.create(statisticsDatabaseId, new StatisticsGeneralEntity(user.getGuid(), StatisticsAction.APP_CREATE));
+        }
 
         return modelRepository.save(model);
     }

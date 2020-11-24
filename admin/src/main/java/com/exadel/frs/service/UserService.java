@@ -31,7 +31,7 @@ import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
-
+import com.exadel.frs.enums.StatisticsAction;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
@@ -41,7 +41,9 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
-
+import com.exadel.frs.system.feign.StatisticsDatabaseClient;
+import com.exadel.frs.system.feign.StatisticsFacesEntity;
+import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -67,6 +69,10 @@ public class UserService {
     private final EmailSender emailSender;
     private final Environment env;
     private final AuthorizationManager authManager;
+    private final StatisticsDatabaseClient statisticsDatabaseClient;
+
+    @Value("${app.feign.appery-io.database.id}")
+    private String statisticsDatabaseId;
 
     public User getUser(final Long id) {
         return userRepository.findById(id)
@@ -112,6 +118,10 @@ public class UserService {
         if (isMailServerEnabled) {
             user.setRegistrationToken(generateRegistrationToken());
             sendRegistrationTokenToUser(user);
+        }
+
+        if(user.isAllowStatistics()){
+             statisticsDatabaseClient.create(statisticsDatabaseId, new StatisticsGeneralEntity(user.getGuid(), StatisticsAction.USER_CREATE));
         }
 
         return userRepository.save(user);

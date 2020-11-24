@@ -31,6 +31,7 @@ import com.exadel.frs.entity.ModelShareRequestId;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
+import com.exadel.frs.enums.StatisticsAction;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
@@ -39,6 +40,9 @@ import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
+import com.exadel.frs.system.feign.StatisticsDatabaseClient;
+import com.exadel.frs.system.feign.StatisticsFacesEntity;
+import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +50,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -56,6 +61,10 @@ public class AppService {
     private final UserService userService;
     private final ModelShareRequestRepository modelShareRequestRepository;
     private final AuthorizationManager authManager;
+    private final StatisticsDatabaseClient statisticsDatabaseClient;
+
+    @Value("${app.feign.appery-io.database.id}")
+    private String statisticsDatabaseId;
 
     public App getApp(final String appGuid) {
         return appRepository.findByGuid(appGuid)
@@ -185,6 +194,10 @@ public class AppService {
                      .build();
 
         app.addUserAppRole(user, OWNER);
+
+        if(user.isAllowStatistics()){
+            statisticsDatabaseClient.create(statisticsDatabaseId, new StatisticsGeneralEntity(user.getGuid(), StatisticsAction.APP_CREATE));
+        }
 
         return appRepository.save(app);
     }

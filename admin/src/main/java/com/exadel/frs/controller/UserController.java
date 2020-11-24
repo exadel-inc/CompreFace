@@ -111,17 +111,17 @@ public class UserController {
             final UserCreateDto userCreateDto
     ) {
         User user;
-        if (userService.hasOnlyDemoUser()) {
-            user = userService.updateDemoUser(userCreateDto);
-        } else {
+//        if (userService.hasOnlyDemoUser()) {
+//            user = userService.updateDemoUser(userCreateDto);
+//        } else {
             user = userService.createUser(userCreateDto);
-        }
-
-        if (user.isEnabled()) {
-            return new ResponseEntity(CREATED);
-        } else {
+//        }
+//
+//        if (user.isEnabled()) {
+//            return new ResponseEntity(CREATED);
+//        } else {
             return new ResponseEntity(OK);
-        }
+//        }
     }
 
     @PutMapping("/update")
