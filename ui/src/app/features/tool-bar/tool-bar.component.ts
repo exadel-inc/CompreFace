@@ -25,8 +25,13 @@ import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from 
 export class ToolBarComponent {
   @Input() userAvatarInfo: string;
   @Input() userName: string;
+  @Input() isUserInfoAvailable: boolean;
   @Output() logout = new EventEmitter();
+  @Output() signUp = new EventEmitter();
 
+  goSignUp() {
+    this.signUp.emit();
+  }
   doLogout() {
     this.logout.emit();
   }
