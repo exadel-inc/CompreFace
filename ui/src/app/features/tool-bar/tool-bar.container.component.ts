@@ -20,14 +20,13 @@ import { ToolBarFacade } from './tool-bar.facade';
 @Component({
   selector: 'app-tool-bar-container',
   template: `
-  <app-tool-bar
-    [userAvatarInfo]="userAvatarInfo$ | async"
-    [userName]="userName$ | async"
-    (logout)="logout()">
-    [isUserInfoAvailable]="isUserInfoAvailable$ | async"
-    (logout)="logout()"
-    (signUp)="goSignUp()">
-  </app-tool-bar>`,
+    <app-tool-bar
+      [userAvatarInfo]="userAvatarInfo$ | async"
+      [userName]="userName$ | async"
+      [isUserInfoAvailable]="isUserInfoAvailable$ | async"
+      (logout)="logout()"
+      (signUp)="goSignUp()">
+    </app-tool-bar>`,
 })
 export class ToolBarContainerComponent implements OnInit {
   userAvatarInfo$: Observable<string>;
