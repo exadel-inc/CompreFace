@@ -20,12 +20,16 @@
 .mat-toolbar {
   background-color: $primary;
   color: $white;
+  position: fixed;
+  top: 0;
+  z-index: 2;
 }
 
 .mat-toolbar-row {
   justify-content: space-between;
 
-  .logo, .logo img {
+  .logo,
+  .logo img {
     height: 90%;
     margin: 3px 0;
     flex-grow: 3;
