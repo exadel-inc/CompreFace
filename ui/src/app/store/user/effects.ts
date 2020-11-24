@@ -89,10 +89,10 @@ export class UserListEffect {
           return [
             deleteUserSuccess({ userId }),
             loadApplications(),
-            loadUsersEntityAction(),
-            catchError((error) => of(deleteUserFail({ error }))),
+            loadUsersEntityAction()
           ];
-        })
+        }),
+        catchError((error) => of(deleteUserFail({ error }))),
       )
     )
   );

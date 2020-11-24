@@ -21,7 +21,7 @@ export const selectTestEntityState = createFeatureSelector<FaceRecognitionEntity
 export const selectTestIsPending = createSelector(selectTestEntityState, state => state.isPending);
 
 export const selectFaceData =  createSelector(selectTestEntityState, state =>
-  state.model ? state.model.result[0] : null);
+  state.model ? state.model.result : null);
 export const selectFile =  createSelector(selectTestEntityState, state => state.file);
 export const selectStateReady =  createSelector(selectTestEntityState, state =>
   !state.isPending && !!(state?.model?.result[0]));
