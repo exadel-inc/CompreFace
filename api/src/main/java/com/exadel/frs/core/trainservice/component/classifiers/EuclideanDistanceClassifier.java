@@ -45,7 +45,7 @@ public class EuclideanDistanceClassifier implements Classifier {
         val inputFace = create(input);
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
         val result = new ArrayList<Pair<Double, String>>();
-        if (faceCollection.getEmbeddings() != null) {
+        if (faceCollection.getEmbeddings() != null && faceCollection.getEmbeddings().length() > 0) {
             val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
             val argSort = argSort(probabilities);
             val facesMap = faceCollection.getFacesMap().inverse();
