@@ -19,14 +19,14 @@ import { ToolBarFacade } from './tool-bar.facade';
 
 @Component({
   selector: 'app-tool-bar-container',
-  template: ` <app-tool-bar
-    [userAvatarInfo]="userAvatarInfo$ | async"
-    [userName]="userName$ | async"
-    [isUserInfoAvailable]="isUserInfoAvailable$ | async"
-    (logout)="logout()"
-    (gosignup)="gosignup()"
-  >
-  </app-tool-bar>`,
+  template: `
+    <app-tool-bar
+      [userAvatarInfo]="userAvatarInfo$ | async"
+      [userName]="userName$ | async"
+      [isUserInfoAvailable]="isUserInfoAvailable$ | async"
+      (logout)="logout()"
+      (signUp)="goSignUp()">
+    </app-tool-bar>`,
 })
 export class ToolBarContainerComponent implements OnInit {
   userAvatarInfo$: Observable<string>;
@@ -41,8 +41,8 @@ export class ToolBarContainerComponent implements OnInit {
     this.isUserInfoAvailable$ = this.toolBarFacade.isUserInfoAvailable$;
   }
 
-  gosignup() {
-    this.toolBarFacade.gosignup();
+  goSignUp() {
+    this.toolBarFacade.goSignUp();
   }
 
   logout() {

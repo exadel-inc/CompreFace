@@ -26,10 +26,10 @@ export class ToolBarComponent {
   @Input() userName: string;
   @Input() isUserInfoAvailable: boolean;
   @Output() logout = new EventEmitter();
-  @Output() gosignup = new EventEmitter();
+  @Output() signUp = new EventEmitter();
 
   goSignUp() {
-    this.gosignup.emit();
+    this.signUp.emit();
   }
 
   doLogout() {

@@ -37,7 +37,7 @@ export class ToolBarFacade {
     this.isUserInfoAvailable$ = this.store.select(selectDemoPageAvailability);
   }
 
-  gosignup() {
+  goSignUp() {
     this.store.dispatch(loadDemoApiKeySuccessAction(null));
     this.router.navigateByUrl(ROUTERS_URL.SIGN_UP);
   }
