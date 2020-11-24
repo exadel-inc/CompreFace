@@ -95,10 +95,9 @@ class ModelServiceTest {
                 modelShareRequestRepository,
                 appModelRepository,
                 authManager,
+                userServiceMock,
                 facesRepositoryMock,
                 imagesRepositoryMock
-                authManager,
-                userServiceMock
         );
     }
 
@@ -210,6 +209,10 @@ class ModelServiceTest {
 
     @Test
     void successCloneModel() {
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
+
         ModelCloneDto modelCloneDto = ModelCloneDto.builder()
                 .name("name_of_clone")
                 .build();
@@ -240,19 +243,17 @@ class ModelServiceTest {
         when(modelRepositoryMock.save(any(Model.class))).thenReturn(cloneModel);
         when(imagesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
         when(facesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
-        Model clonedModel = modelService.cloneModel(modelCloneDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID);
+        Model clonedModel = modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
         verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
         verify(modelRepositoryMock).save(any(Model.class));
         verify(imagesRepositoryMock).saveAll(anyList());
         verify(facesRepositoryMock).saveAll(anyList());
-        verify(authManager).verifyReadPrivilegesToApp(USER_ID, app);
-        verify(authManager).verifyOrganizationHasTheApp(ORGANIZATION_GUID, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
-        verify(authManager).verifyWritePrivilegesToApp(USER_ID, app);
-        verifyNoMoreInteractions(modelRepositoryMock, authManager);
+        verify(authManager).verifyWritePrivilegesToApp(user, app);
 
         assertThat(clonedModel.getId(), not(repoModel.getId()));
         assertThat(clonedModel.getName(), is(modelCloneDto.getName()));
@@ -281,7 +282,7 @@ class ModelServiceTest {
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
-                modelService.cloneModel(modelCloneDto, ORGANIZATION_GUID, APPLICATION_GUID, MODEL_GUID, USER_ID)
+                modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID)
         ).isInstanceOf(NameIsNotUniqueException.class);
     }
 

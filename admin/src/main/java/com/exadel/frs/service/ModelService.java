@@ -104,14 +104,14 @@ public class ModelService {
     @Transactional
     public Model cloneModel(
             final ModelCloneDto modelCloneDto,
-            final String orgGuid,
             final String appGuid,
             final String modelGuid,
             final Long userId
     ) {
-        val model = getModel(orgGuid, appGuid, modelGuid, userId);
+        val user = userService.getUser(userId);
+        val model = getModel(appGuid, modelGuid, userId);
 
-        authManager.verifyWritePrivilegesToApp(userId, model.getApp());
+        authManager.verifyWritePrivilegesToApp(user, model.getApp());
 
         verifyNameIsUnique(modelCloneDto.getName(), model.getApp().getId());
 

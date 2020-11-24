@@ -105,9 +105,6 @@ public class ModelController {
             @ApiResponse(code = 400, message = "Field name cannot be empty | Application access type to model is not correct")
     })
     public ModelResponseDto cloneModel(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid,
@@ -119,7 +116,7 @@ public class ModelController {
             @RequestBody
             final ModelCloneDto modelCloneDto) {
 
-        var clonedModel = modelService.cloneModel(modelCloneDto, orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
+        var clonedModel = modelService.cloneModel(modelCloneDto, appGuid, guid, SecurityUtils.getPrincipalId());
 
         return modelMapper.toResponseDto(clonedModel, appGuid);
     }
