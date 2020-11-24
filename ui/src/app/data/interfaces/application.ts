@@ -18,11 +18,10 @@ export interface Application {
   id: string;
   name: string;
   owner: {
-    userId: string,
-    firstName: string,
-    lastName: string
+    userId: string;
+    firstName: string;
+    lastName: string;
   };
   role: string;
-  organizationId: string;
   apiKey?: string;
 }

@@ -32,10 +32,7 @@ export class OrganizationService {
 
   private organizations$: Observable<Array<Organization>>;
 
-  constructor(
-    private organizationEnService: OrganizationEnService,
-    private store: Store<AppState>,
-  ) { }
+  constructor(private organizationEnService: OrganizationEnService, private store: Store<AppState>) {}
 
   initUrlBindingStreams() {
     this.organizationEnService.load();
@@ -43,12 +40,14 @@ export class OrganizationService {
     this.organizations$ = this.organizationEnService.entities$;
     this.selectedId$ = this.store.select(selectCurrentOrganizationId);
 
-    this.subscription = combineLatest([this.selectedId$, this.organizations$]).pipe(
-      filter(([selectedId, data]) => data.length && selectedId === null),
-      map(([selectedId, data]) => data[0].id),
-    ).subscribe(routerId => {
-      this.store.dispatch(setSelectedId({ selectId: routerId }));
-    });
+    this.subscription = combineLatest([this.selectedId$, this.organizations$])
+      .pipe(
+        filter(([selectedId, data]) => data.length && selectedId === null),
+        map(([selectedId, data]) => data[0].id)
+      )
+      .subscribe((routerId) => {
+        this.store.dispatch(setSelectedId({ selectId: routerId }));
+      });
   }
 
   unSubscribe() {

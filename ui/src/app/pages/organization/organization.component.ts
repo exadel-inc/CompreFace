@@ -21,11 +21,10 @@ import { OrganizationService } from './organization.service';
   selector: 'app-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class OrganizationComponent implements OnInit, OnDestroy {
-
-  constructor(private organizationService: OrganizationService) { }
+  constructor(private organizationService: OrganizationService) {}
 
   ngOnInit() {
     this.organizationService.initUrlBindingStreams();

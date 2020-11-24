@@ -101,10 +101,10 @@ class AppControllerTest {
     public void shouldReturnMessageAndCodeWhenAppNotFoundExceptionThrown() throws Exception {
         final BasicException expectedException = new AppNotFoundException(APP_GUID);
 
-        when(appService.getApp(ORG_GUID, APP_GUID, USER_ID)).thenThrow(expectedException);
+        when(appService.getApp(APP_GUID, USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildExceptionResponse(expectedException));
-        mockMvc.perform(get("/org/" + ORG_GUID + "/app/" + APP_GUID).with(user(buildUser())))
+        mockMvc.perform(get( "/app/" + APP_GUID).with(user(buildUser())))
                .andExpect(status().isNotFound())
                .andExpect(content().string(expectedContent));
     }
@@ -113,17 +113,17 @@ class AppControllerTest {
     public void shouldReturnMessageAndCodeWhenUnexpectedExceptionThrown() throws Exception {
         final Exception expectedException = new NullPointerException("Something went wrong, please try again");
 
-        when(appService.getApps(ORG_GUID, USER_ID)).thenThrow(expectedException);
+        when(appService.getApps(USER_ID)).thenThrow(expectedException);
 
         String expectedContent = mapper.writeValueAsString(buildUndefinedExceptionResponse(expectedException));
-        mockMvc.perform(get("/org/" + ORG_GUID + "/apps").with(user(buildUser())))
+        mockMvc.perform(get("/apps").with(user(buildUser())))
                .andExpect(status().isBadRequest())
                .andExpect(content().string(expectedContent));
     }
 
     @Test
     public void shouldReturnMessageAndCodeWhenAppNameIsMissing() throws Exception {
-        val request = post("/org/" + ORG_GUID + "/app")
+        val request = post("/app")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -149,7 +149,7 @@ class AppControllerTest {
         bodyWithEmptyName.setName("");
         val bodyWithNoName = new AppUpdateDto();
 
-        val updateRequest = put("/org/" + ORG_GUID + "/app/" + APP_GUID)
+        val updateRequest = put("/app/" + APP_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -169,7 +169,7 @@ class AppControllerTest {
                                        .name(APP_NAME)
                                        .build();
 
-        val request = post("/org/" + ORG_GUID + "/app")
+        val request = post("/app")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -182,7 +182,7 @@ class AppControllerTest {
         val appResponseDto = new AppResponseDto();
         appResponseDto.setName(APP_NAME);
 
-        when(appService.createApp(any(), eq(ORG_GUID), anyLong())).thenReturn(app);
+        when(appService.createApp(any(), anyLong())).thenReturn(app);
         when(appMapper.toResponseDto(any(App.class), anyLong())).thenReturn(appResponseDto);
 
         mockMvc.perform(request)
@@ -196,7 +196,7 @@ class AppControllerTest {
                                        .name(APP_NAME)
                                        .build();
 
-        val request = put("/org/" + ORG_GUID + "/app/" + APP_GUID)
+        val request = put("/app/" + APP_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -209,7 +209,7 @@ class AppControllerTest {
         val appResponseDto = new AppResponseDto();
         appResponseDto.setName(APP_NAME);
 
-        when(appService.updateApp(any(AppUpdateDto.class), eq(ORG_GUID), eq(APP_GUID), anyLong())).thenReturn(app);
+        when(appService.updateApp(any(AppUpdateDto.class), eq(APP_GUID), anyLong())).thenReturn(app);
         when(appMapper.toResponseDto(any(App.class), anyLong())).thenReturn(appResponseDto);
 
         mockMvc.perform(request)
@@ -219,7 +219,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnUpdatedWithApiKeyApp() throws Exception {
-        val request = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/apikey")
+        val request = put("/app/" + APP_GUID + "/apikey")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -231,7 +231,7 @@ class AppControllerTest {
         val appResponseDto = new AppResponseDto();
         appResponseDto.setName(APP_NAME);
 
-        when(appService.getApp(eq(ORG_GUID), eq(APP_GUID), anyLong())).thenReturn(app);
+        when(appService.getApp(eq(APP_GUID), anyLong())).thenReturn(app);
         when(appMapper.toResponseDto(any(App.class), anyLong())).thenReturn(appResponseDto);
 
         mockMvc.perform(request)
@@ -241,27 +241,27 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnOkWhenDelete() throws Exception {
-        val request = delete("/org/" + ORG_GUID + "/app/" + APP_GUID)
+        val request = delete("/app/" + APP_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        doNothing().when(appService).deleteApp(eq(ORG_GUID), eq(APP_GUID), anyLong());
+        doNothing().when(appService).deleteApp(eq(APP_GUID), anyLong());
 
         mockMvc.perform(request)
                .andExpect(status().isOk());
     }
 
     @Test
-    public void shouldReturnOrgRolesToAssign() throws Exception {
-        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/assign-roles")
+    public void shouldReturnGlobalRolesToAssign() throws Exception {
+        val request = get("/app/" + APP_GUID + "/assign-roles")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
 
         val rolesToAssign = new AppRole[]{OWNER, USER};
 
-        when(appService.getAppRolesToAssign(eq(ORG_GUID), eq(APP_GUID), anyLong())).thenReturn(rolesToAssign);
+        when(appService.getAppRolesToAssign(eq(APP_GUID), anyLong())).thenReturn(rolesToAssign);
 
         mockMvc.perform(request)
                .andExpect(status().isOk())
@@ -270,7 +270,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnAppUsers() throws Exception {
-        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/roles")
+        val request = get("/app/" + APP_GUID + "/roles")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -283,7 +283,7 @@ class AppControllerTest {
         val userRoleResponseDto = new UserRoleResponseDto();
         val userRoleResponseDtoList = List.of(userRoleResponseDto);
 
-        when(appService.getAppUsers(eq("Search string"), eq(ORG_GUID), eq(APP_GUID), anyLong())).thenReturn(appUsers);
+        when(appService.getAppUsers(eq("Search string"), eq(APP_GUID), anyLong())).thenReturn(appUsers);
         when(userAppRoleMapper.toUserRoleResponseDto(anyList())).thenReturn(userRoleResponseDtoList);
 
         mockMvc.perform(request)
@@ -298,7 +298,7 @@ class AppControllerTest {
                                         .userEmail("email@test.com")
                                         .build();
 
-        val request = post("/org/" + ORG_GUID + "/app/" + APP_GUID + "/invite")
+        val request = post("/app/" + APP_GUID + "/invite")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -311,7 +311,7 @@ class AppControllerTest {
         val userRoleResponseDto = new UserRoleResponseDto();
         userRoleResponseDto.setRole(USER.getCode());
 
-        when(appService.inviteUser(any(UserInviteDto.class), eq(ORG_GUID), eq(APP_GUID), anyLong())).thenReturn(userAppRole);
+        when(appService.inviteUser(any(UserInviteDto.class), eq(APP_GUID), anyLong())).thenReturn(userAppRole);
         when(userAppRoleMapper.toUserRoleResponseDto(any(UserAppRole.class))).thenReturn(userRoleResponseDto);
 
         mockMvc.perform(request)
@@ -326,7 +326,7 @@ class AppControllerTest {
                                                  .userId(USER_GUID)
                                                  .build();
 
-        val request = put("/org/" + ORG_GUID + "/app/" + APP_GUID + "/role")
+        val request = put("/app/" + APP_GUID + "/role")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -339,7 +339,7 @@ class AppControllerTest {
         val userRoleResponseDto = new UserRoleResponseDto();
         userRoleResponseDto.setRole(USER.name());
 
-        when(appService.updateUserAppRole(any(UserRoleUpdateDto.class), eq(ORG_GUID), eq(APP_GUID), anyLong())).thenReturn(userAppRole);
+        when(appService.updateUserAppRole(any(UserRoleUpdateDto.class), eq(APP_GUID), anyLong())).thenReturn(userAppRole);
         when(userAppRoleMapper.toUserRoleResponseDto(any(UserAppRole.class))).thenReturn(userRoleResponseDto);
 
         mockMvc.perform(request)
@@ -349,7 +349,7 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnModelShare() throws Exception {
-        val request = get("/org/" + ORG_GUID + "/app/" + APP_GUID + "/model/request")
+        val request = get("/app/" + APP_GUID + "/model/request")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
@@ -360,7 +360,7 @@ class AppControllerTest {
                                                   .modelRequestUuid(uuid)
                                                   .build();
 
-        when(appService.generateUuidToRequestModelShare(eq(ORG_GUID), eq(APP_GUID))).thenReturn(uuid);
+        when(appService.generateUuidToRequestModelShare(eq(APP_GUID))).thenReturn(uuid);
 
         mockMvc.perform(request)
                .andExpect(status().isOk())
@@ -369,12 +369,12 @@ class AppControllerTest {
 
     @Test
     public void shouldReturnOkWhenDeleteUserFromApp() throws Exception {
-        val request = delete("/org/" + ORG_GUID + "/app/" + APP_GUID + "/user/" + USER_GUID)
+        val request = delete("/app/" + APP_GUID + "/user/" + USER_GUID)
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
 
-        doNothing().when(appService).deleteUserFromApp(eq(USER_GUID), eq(ORG_GUID), eq(APP_GUID), anyLong());
+        doNothing().when(appService).deleteUserFromApp(eq(USER_GUID), eq(APP_GUID), anyLong());
 
         mockMvc.perform(request)
                .andExpect(status().isOk());

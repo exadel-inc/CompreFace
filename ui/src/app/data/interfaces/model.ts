@@ -34,6 +34,5 @@ export interface Model {
 export interface ModelUpdate {
   name: string;
   applicationId: string;
-  organizationId: string;
   modelId: string;
 }

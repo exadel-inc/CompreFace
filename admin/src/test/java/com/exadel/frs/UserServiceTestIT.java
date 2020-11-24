@@ -23,7 +23,6 @@ import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
-import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
 import liquibase.integration.spring.SpringLiquibase;
@@ -55,9 +54,6 @@ class UserServiceTestIT {
 
     @MockBean
     private EmailSender emailSender;
-
-    @MockBean
-    private OrganizationService organizationService;
 
     @SpyBean
     private UserService userService;
@@ -92,9 +88,9 @@ class UserServiceTestIT {
         assertThat(disabledUser).isNotNull();
         assertThat(disabledUser.isEnabled()).isFalse();
 
-        assertThatThrownBy(() -> {
-            userService.getEnabledUserByEmail(DISABLED_USER_EMAIL);
-        }).isInstanceOf(UserDoesNotExistException.class);
+        assertThatThrownBy(() -> userService.getEnabledUserByEmail(
+                DISABLED_USER_EMAIL
+        )).isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
@@ -108,9 +104,9 @@ class UserServiceTestIT {
 
     @Test
     void getUserByEmailThrowsExceptionIfNoUser() {
-        assertThatThrownBy(() -> {
-            userService.getUser(USER_EMAIL);
-        }).isInstanceOf(UserDoesNotExistException.class);
+        assertThatThrownBy(() -> userService.getUser(
+                USER_EMAIL
+        )).isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
@@ -125,9 +121,9 @@ class UserServiceTestIT {
 
     @Test
     void getUserByGuidThrowsExceptionIfNoUser() {
-        assertThatThrownBy(() -> {
-            userService.getUserByGuid(USER_GUID);
-        }).isInstanceOf(UserDoesNotExistException.class);
+        assertThatThrownBy(() -> userService.getUserByGuid(
+                USER_GUID
+        )).isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
@@ -171,8 +167,6 @@ class UserServiceTestIT {
 
     private void deleteUserIfExists(final String email) {
         val user = userRepository.findByEmail(email);
-        if (user.isPresent()) {
-            userRepository.delete(user.get());
-        }
+        user.ifPresent(value -> userRepository.delete(value));
     }
 }

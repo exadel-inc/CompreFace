@@ -24,9 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.FrsApplication;
-import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
-import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
 import javax.servlet.http.Cookie;
@@ -37,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.web.FilterChainProxy;
@@ -56,12 +53,6 @@ import org.springframework.web.context.WebApplicationContext;
 @WebAppConfiguration
 @SpringBootTest(classes = FrsApplication.class)
 class OAuthMvcTest {
-
-    @MockBean
-    private EmailSender emailSender;
-
-    @MockBean
-    private OrganizationService organizationService;
 
     @Autowired
     private WebApplicationContext wac;
@@ -160,7 +151,7 @@ class OAuthMvcTest {
                 .accept("application/json"))
                .andExpect(status().is2xxSuccessful());
 
-        if (Boolean.valueOf(env.getProperty("spring.mail.enable"))) {
+        if (Boolean.parseBoolean(env.getProperty("spring.mail.enable"))) {
             confirmRegistration();
         }
     }

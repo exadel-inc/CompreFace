@@ -6,6 +6,7 @@
 
  [CompreFace](#compreface)
   * [Overview](#overview)
+  * [Feedback survey](#feedback-survey)
   * [Features](#features)
   * [Getting started](#getting-started)
   * [Simple tutorial of usage](#simple-tutorial-of-usage)
@@ -35,59 +36,57 @@
 
 ## Overview
 
-CompreFace is the application for face recognition that can be integrated as a standalone server or deployed on cloud, and can be set up and used without machine learning knowledge. 
+CompreFace is an application for facial recognition that can be integrated as a standalone server or deployed on the cloud and can be set up and used without machine learning expertise.
+Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient API for model training and face recognition. We also provide an easy-to-understand roles system with which you can easily control who has access to the model.
+Every user can create their own models and train them on different subsets of input data. 
 
-We use one of the most popular face recognition methods based on [deep neural networks](#used-ml-papers-and-algorithms), and provide a convenient API for Face Collection training and face recognition. We also provide a convenient roles system with which you can easily control who has access to the Face Collection.
+## Feedback survey
 
-Every user can create several Face Collections trained on different subsets of people. 
-
-
+We are constantly improving our product. But for better understanding which features we should add or improve we need your help!
+Feedback form is totally anonymous, it will take just 2 minutes of your time to answer the questions:
+https://forms.gle/ybAEPc3XmzEcpv4M8
 
 ## Features
 
-The system shows sufficient accuracy even if only one example for each face is used.
-
-CompreFace is:
-
-- opensource code and fully on-premise (security of your data)
-- can be set up and used without machine learning knowledge
-- used one of the most popular face recognition methods with high accuracy face recognizing
-- UI panel with roles for access control
-- fast start with one docker command
-
+The system can accurately identify people even when it is only given one example of their face.
+CompreFace:
+ - Uses open-source code and operates fully on-premises for data security 
+ - Can be set up and used without machine learning expertise
+ - Uses one of the most popular face recognition methods for highest accuracy 
+ - Includes a UI panel with roles for access control
+ - Starts quickly with one docker command
 
 
 ## Getting started
 
-To get started, perform the following steps:
-
+To get started:
 1. Install Docker
-1. Download archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
-1. Unzip archive
-1. Run command:
-`
-docker-compose up --build
-`
-1. Open http://localhost:8000/
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Run Docker
+5. Windows search bar-> cmd->in the Command prompt-> cd ->paste the path to the extracted zip folder
+6. Run command: _docker-compose up --build_
+7. Open http://localhost:8000/
 
+Getting started for Contributors:
 
-** Tips for Windows**  (use Git Bash terminal)
-1. Turn of the git autocrlf with command:
-`git config --global core.autocrlf false`
-2. Make sure all your containers are down:
-`$ docker ps`
-3. In case some containers are working, they should be stopped:
-`$ docker-compose down`
-4. Clean all local datebases and images:
-`docker system prune --volumes`
-5. Last line in /dev/start.sh file change to 
-`docker-compose -f docker-compose.yml up --remove-orphans --build` 
-6. Go to Dev folder
-`cd dev`
-7. Run `sh start.sh` and make sure http://localhost:8000/ starts
-8. Stopped all containers:
-`$ docker-compose down`
-9. Run `sh start--dev.sh` and make sure http://localhost:4200/ starts
+1. Install Docker 
+2. Clone repository
+3. Open dev folder
+4. Run command: _docker-compose up --build_
+5. Open http://localhost:8000/
+
+** Tips for Windows** (use Git Bash terminal)
+
+1. Turn of the git autocrlf with command: _git config --global core.autocrlf false_
+2. Make sure all your containers are down: _$ docker ps_
+3. In case some containers are working, they should be stopped: _$ docker-compose down_
+4. Clean all local datebases and images: _docker system prune --volumes_
+5. Last line in /dev/start.sh file change to _docker-compose -f docker-compose.yml up --remove-orphans --build_
+6. Go to Dev folder cd dev
+7. Run _sh start.sh_ and make sure http://localhost:8000/ starts
+8. Stopped all containers: $ docker-compose down
+9. Run _sh start--dev.sh_ and make sure http://localhost:4200/ starts
 
 
 ## Simple tutorial of usage
@@ -223,7 +222,7 @@ Recognizing the person in the photo. We calculate Euclidean distance using [Nd4j
 
 
 
-![architecture](https://user-images.githubusercontent.com/3736126/93056370-0133cd00-f675-11ea-910a-f12881dfe758.png)
+![architecture](https://user-images.githubusercontent.com/59657282/96593288-00d0c680-12f2-11eb-93ae-584a2cd08a3d.png)
 
 
 
@@ -500,11 +499,9 @@ Response body on success:
 
 ## Contributing
 
-Contributions are welcomed and greatly appreciated.
+Contributions are welcome and greatly appreciated.
+After creating your first contributing Pull Request you will receive a request to sign our Contributor License Agreement by commenting your PR with a special message.
 
-After creating your first contributing PR you will be requested to sign our 
-Contributor License Agreement by commenting your PR with a
-special message.
 
 
 

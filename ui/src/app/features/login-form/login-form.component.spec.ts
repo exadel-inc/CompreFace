@@ -24,8 +24,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store } from '@ngrx/store';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
-import {of, Subscription} from 'rxjs';
+import { provideMockStore } from '@ngrx/store/testing';
+import { of, Subscription } from 'rxjs';
 
 import { LoginFormComponent } from './login-form.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -33,7 +33,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
   let fixture: ComponentFixture<LoginFormComponent>;
-  let store: MockStore<{ isAuthenticated: boolean; errorMessage: string; successMessage: string }>;
   const initialState = { isAuthenticated: false, errorMessage: 'some error message', successMessage: 'some success message' };
 
   beforeEach(
@@ -71,8 +70,6 @@ describe('LoginFormComponent', () => {
           RouterTestingModule,
         ],
       });
-
-      store = TestBed.inject<MockStore<{ isAuthenticated: boolean; errorMessage: string; successMessage: string }>>(MockStore);
     })
   );
 

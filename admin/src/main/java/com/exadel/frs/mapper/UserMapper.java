@@ -23,7 +23,7 @@ import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(uses = {UserOrgRoleMapper.class, UserAppRoleMapper.class})
+@Mapper(uses = {UserGlobalRoleMapper.class, UserAppRoleMapper.class})
 public interface UserMapper {
 
     @Mapping(source = "guid", target = "userId")

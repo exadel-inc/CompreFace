@@ -40,20 +40,16 @@ export class AppUserEffects {
   @Effect()
   loadAppUsers = this.actions.pipe(
     ofType(loadAppUserEntityAction),
-    switchMap((action) => this.appUserService.getAll(action.organizationId, action.applicationId)),
+    switchMap((action) => this.appUserService.getAll(action.applicationId)),
     map((users) => addAppUserEntityAction({ users }))
   );
 
   @Effect()
   updateUserRole$ = this.actions.pipe(
     ofType(updateAppUserRoleAction),
-    switchMap(({ organizationId, applicationId, user }) =>
-      this.appUserService.update(organizationId, applicationId, user.id, user.role).pipe(
-        switchMap((res) => [
-          updateAppUserRoleSuccessAction({ user: res }),
-          loadApplications({ organizationId }),
-          loadAppUserEntityAction({ organizationId, applicationId }),
-        ]),
+    switchMap(({ applicationId, user }) =>
+      this.appUserService.update(applicationId, user.id, user.role).pipe(
+        switchMap((res) => [updateAppUserRoleSuccessAction({ user: res }), loadApplications(), loadAppUserEntityAction({ applicationId })]),
         catchError((error) => of(updateAppUserRoleFailAction({ error })))
       )
     )
@@ -63,7 +59,7 @@ export class AppUserEffects {
   deleteAppUser$ = this.actions.pipe(
     ofType(deleteUserFromApplication),
     switchMap((action) =>
-      this.appUserService.deleteUser(action.organizationId, action.applicationId, action.userId).pipe(
+      this.appUserService.deleteUser(action.applicationId, action.userId).pipe(
         map(() => deleteUserFromApplicationSuccess({ id: action.userId })),
         catchError((error) => of(deleteUserFromApplicationFail({ error })))
       )

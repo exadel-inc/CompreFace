@@ -14,20 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.exception;
 
-import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_GLOBAL_ROLE;
+import static java.lang.String.format;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class OrgCreateDto {
+public class IncorrectGlobalRoleException extends BasicException {
 
-    @NotBlank(message = "Organization name cannot be empty")
-    private String name;
+    public static final String GLOBAL_ROLE_NOT_EXISTS_MESSAGE = "Global role %s does not exists";
+
+    public IncorrectGlobalRoleException(final String globalRole) {
+        super(INCORRECT_GLOBAL_ROLE, format(GLOBAL_ROLE_NOT_EXISTS_MESSAGE, globalRole));
+    }
 }

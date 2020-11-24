@@ -20,11 +20,9 @@ import { Store } from '@ngrx/store';
 import { AppState } from '../../store';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
-import { setSelectedId } from '../../store/organization/action';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/actions';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
-import { OrganizationEnService } from '../../store/organization/organization-entitys.service';
 import { selectModels } from '../../store/model/selectors';
 import { getUserInfo } from '../../store/userInfo/action';
 
@@ -33,26 +31,18 @@ export class TestModelPageService {
   private appsSub: Subscription;
   private modelSub: Subscription;
   private appId: string;
-  private orgId: string;
   private modelId: string;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private store: Store<AppState>,
-    private organizationEnService: OrganizationEnService
-  ) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: Store<AppState>) {}
 
   initUrlBindingStreams() {
-    this.orgId = this.route.snapshot.queryParams.org;
     this.appId = this.route.snapshot.queryParams.app;
     this.modelId = this.route.snapshot.queryParams.model;
 
-    if (this.appId && this.orgId && this.modelId) {
+    if (this.appId && this.modelId) {
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
-      this.store.dispatch(setSelectedId({ selectId: this.orgId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
-      this.store.dispatch(loadApplications({ organizationId: this.orgId }));
+      this.store.dispatch(loadApplications());
       this.store.dispatch(getUserInfo());
       this.modelSub = this.store
         .select(selectModels)
@@ -69,7 +59,7 @@ export class TestModelPageService {
   }
 
   fetchModels() {
-    this.store.dispatch(loadModels({ organizationId: this.orgId, applicationId: this.appId }));
+    this.store.dispatch(loadModels({ applicationId: this.appId }));
   }
 
   clearSelectedModelId() {

@@ -14,16 +14,22 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.exception;
+package com.exadel.frs.enums;
 
-import static com.exadel.frs.handler.ExceptionCode.ORGANIZATION_NOT_FOUND;
-import static java.lang.String.format;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-public class OrganizationNotFoundException extends BasicException {
+@NoArgsConstructor
+@AllArgsConstructor
+public enum GlobalRole {
 
-    private static final String MESSAGE = "Organization %s not found";
+    OWNER("O"),
+    ADMINISTRATOR("A"),
+    USER("U");
 
-    public OrganizationNotFoundException(final Object identifier) {
-        super(ORGANIZATION_NOT_FOUND, format(MESSAGE, identifier));
-    }
+    @Getter
+    @Setter
+    private String code;
 }
