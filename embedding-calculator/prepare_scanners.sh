@@ -5,9 +5,11 @@ if [[ "$SCANNER" == "InsightFace" ]]; then
   mkdir -p $MODELS_PATH
   for MODEL in $DETECTION_MODEL $CALCULATION_MODEL
   do
+    # trying to find a pre-downloaded model
     DIR=~/srcext/insightface/models/$MODEL
-    [ -d "$DIR" ] && echo "Coping $MODEL from repo..." && cp -r $DIR $MODELS_PATH && continue
+    [ -d "$DIR" ] && echo "Coping $MODEL from repository..." && cp -r $DIR $MODELS_PATH && continue
 
+    # download a model
     URL=http://insightface.ai/files/models/$MODEL.zip
     echo "Downloading $URL..."
     mkdir -p $MODELS_PATH/$MODEL && cd "$_" && curl -L $URL -o m.zip  \
@@ -15,4 +17,10 @@ if [[ "$SCANNER" == "InsightFace" ]]; then
   done
 else
   echo "  --ignore=src/services/facescan/scanner/insightface" >> pytest.ini
+fi
+
+if [[ "$SCANNER" == "Facenet2018" ]]; then
+  pip install --no-cache-dir tensorflow~=1.15.4
+else
+  echo "  --ignore=src/services/facescan/scanner/facenet" >> pytest.ini
 fi
