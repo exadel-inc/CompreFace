@@ -14,6 +14,10 @@ if [[ "$SCANNER" == "InsightFace" ]]; then
     echo "Downloading $URL..."
     mkdir -p $MODELS_PATH/$MODEL && cd "$_" && curl -L $URL -o m.zip  \
       && unzip m.zip && rm m.zip
+
+    # MXNET_CUDNN_AUTOTUNE_DEFAULT=0 doesn't work, need to make changes in a models
+    # https://github.com/deepinsight/insightface/issues/764
+    sed -i 's/limited_workspace/None/g' $MODELS_PATH/$MODEL/*.json
   done
 else
   echo "  --ignore=src/services/facescan/scanner/insightface" >> pytest.ini

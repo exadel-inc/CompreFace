@@ -1,5 +1,6 @@
 ARG BASE_IMAGE=python:3.7-slim
 FROM $BASE_IMAGE
+
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
         libpng-dev libtiff-dev libavformat-dev libpq-dev libfreeimage3 \
@@ -29,8 +30,8 @@ ARG CALCULATION_MODEL="arcface_r100_v1"
 ENV DETECTION_MODEL=$DETECTION_MODEL CALCULATION_MODEL=$CALCULATION_MODEL
 COPY srcext srcext
 COPY pytest.ini .
-COPY prepare_scanners.sh .
-RUN chmod +x prepare_scanners.sh
+COPY *.sh ./
+RUN chmod +x *.sh
 RUN ./prepare_scanners.sh
 
 # install InsightFace packages
@@ -53,6 +54,6 @@ RUN if [ -z $SKIP_TESTS  ]; then pytest -m "not performance" /app/ml/src; fi
 EXPOSE 3000
 
 COPY uwsgi.ini .
-ENV UWSGI_PROCESSES=2
+ENV UWSGI_PROCESSES=${UWSGI_PROCESSES:-2}
 ENV UWSGI_THREADS=1
 CMD ["uwsgi", "--ini", "uwsgi.ini"]
