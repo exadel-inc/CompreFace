@@ -91,8 +91,6 @@ Getting started for Contributors:
 
 ## Simple tutorial of usage
 
-## Simple tutorial of usage
-
 Step 1. You need to sign up to the system (First user in CompareFace admin has Owner role, but it is possible to change the role) and then LogIn with created account or just use the existing one. After that system redirects you to the main page.
 
 Step 2. Create an application (left section) with "Create" link at the bottom of the page. An application is where you can create and manage your face collections.
