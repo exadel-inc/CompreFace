@@ -36,6 +36,7 @@
   grid-template-columns: calc(50% - 20px) auto;
   column-gap: 20px;
   row-gap: 20px;
+  margin-top: 120px;
 
   &__header {
     grid-column: 1;
@@ -63,12 +64,13 @@
 
   mat-card {
     width: 49%;
-    transform: perspective(1px)
+    transform: perspective(1px);
   }
 
-  app-model-list, app-application-user-list {
+  app-model-list,
+  app-application-user-list {
     display: flex;
     flex-direction: column;
-    justify-content: space-between
+    justify-content: space-between;
   }
 }
