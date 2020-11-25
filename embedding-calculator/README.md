@@ -32,10 +32,7 @@ To skip tests during build, use:
 ```
 $ docker build -t embedding-calculator --build-arg SKIP_TESTS=true .
 ```
-Build with support for different scanner backend. Supported `Facenet2018` (default) and `InsightFace`:
-```
-$ docker build -t embedding-calculator --build-arg SCANNER=InsightFace .
-```
+
 ##### Run
 ```
 $ docker run -p3000:3000 embedding-calculator
@@ -58,6 +55,30 @@ Lint checks
 ```
 $ python -m pylama --options pylama.ini src tools
 ```
+
+### InsightFace scanner backend
+
+FaceNet is a default scanner backend. It can be changed to InsightFace through passing build args:
+```
+$ docker build -t embedding-calculator --build-arg SCANNER=InsightFace .
+```
+
+#### Pretrained models
+
+InsightFace has few build in models:  
+* detection models: `retinaface_r50_v1` (default), `retinaface_mnet025_v1`, `retinaface_mnet025_v2`
+* recognition model - `arcface_r100_v1`
+
+Changing models is performed by passing  `build-args`, e.g. `--build-arg DETECTION_MODEL=retinaface_mnet025_v1`.   
+Pass `DETECTION_MODEL` for a detection model, `CALCULATION_MODEL` for a recognition model.
+
+##### More pretrained models
+
+Check more models in [Model Zoo](https://github.com/deepinsight/insightface/wiki/Model-Zoo#3-face-recognition-models). To use it follow these steps: 
+
+1. download model and unpack it to `embedding-calculator/srcext/insightface/models/`
+1. run build with passing model name, e.g. `--build-arg CALCULATION_MODEL=model-r34-amf`. 
+  
 
 # Tools
 Finds faces in a given image, puts bounding boxes and saves the resulting image. 
