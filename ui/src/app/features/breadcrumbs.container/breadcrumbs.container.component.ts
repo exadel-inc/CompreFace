@@ -23,6 +23,7 @@ import { Model } from '../../data/interfaces/model';
 @Component({
   selector: 'app-breadcrumbs-container',
   template: ` <app-breadcrumbs [model]="model$ | async" [app]="app$ | async"> </app-breadcrumbs>`,
+  styleUrls: ['./breadcrumbs.container.component.scss'],
 })
 export class BreadcrumbsContainerComponent implements OnInit {
   app$: Observable<Application>;

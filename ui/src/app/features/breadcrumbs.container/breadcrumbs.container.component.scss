@@ -15,22 +15,15 @@
  */
 
 @import 'media.scss';
-@import 'colors.scss';
 
-.container {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: nowrap;
+:host {
+  position: fixed;
+  top: 49px;
+  width: 100vw;
+  z-index: 2;
+  max-width: 1140px;
 
-  .header-container {
-    width: 100%;
-
-    @include mobile {
-      height: auto;
-    }
-  }
-
-  mat-card {
-    margin-top: 160px;
+  @include mobile-portrait {
+    max-width: 484px;
   }
 }
