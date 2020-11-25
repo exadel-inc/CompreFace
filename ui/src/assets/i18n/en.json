@@ -39,7 +39,8 @@
   "toolbar": {
     "logout": "Logout",
     "user_avatar_info": "User avatar",
-    "logo": "CompreFace logo"
+    "logo": "CompreFace logo",
+    "signup": "Sign Up"
   },
   "applications": {
     "caption": "Table of applications",
