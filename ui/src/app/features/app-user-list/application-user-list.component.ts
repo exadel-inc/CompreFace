@@ -125,20 +125,20 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
     const dialogSubscription = dialog.afterClosed().subscribe(({ userEmail, role }) => {
       if (userEmail && role) {
-        this.appUserListFacade.inviteUser(userEmail, role).subscribe(() => this.openEmailNotification(userEmail));
+        this.appUserListFacade.inviteUser(userEmail, role).subscribe(
+          () =>
+            this.snackBarService.openNotification({
+              messageText: 'application_user_list.invitation_sent',
+              messageOptions: { userEmail },
+            }),
+          (err) =>
+            this.snackBarService.openNotification({
+              messageText: err.error.message,
+              type: 'error',
+            })
+        );
         dialogSubscription.unsubscribe();
       }
-    });
-  }
-
-  private openEmailNotification(email: string): void {
-    if (!email) {
-      return;
-    }
-
-    this.snackBarService.openNotification({
-      messageText: 'application_user_list.invitation_sent',
-      messageOptions: { email },
     });
   }
 }
