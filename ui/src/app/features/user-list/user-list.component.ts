@@ -101,10 +101,7 @@ export class UserListComponent implements OnInit, OnDestroy {
               data: {
                 entityType: this.translate.instant('users.user'),
                 entity: deletion.userToDelete,
-                options: [
-                  { name: email, value: 'deleter' },
-                  { name: this.orgOwnerEmail, value: 'owner' },
-                ],
+                options: { name: this.orgOwnerEmail, value: 'owner' },
                 isOrganizationOwner: email === this.orgOwnerEmail,
                 seletedOption: this.seletedOption,
                 isSystemUser: true,
