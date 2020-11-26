@@ -27,6 +27,7 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
+  margin-top: 62px;
 
   @include mobile {
     height: auto;
@@ -39,10 +40,11 @@
 
   mat-card {
     width: 49%;
-    transform: perspective(1px)
+    transform: perspective(1px);
   }
 
-  app-application-list-container, app-user-list-container {
+  app-application-list-container,
+  app-user-list-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -58,7 +60,7 @@
 .message {
   display: flex;
   margin-top: 15vh;
-  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, .17);
+  box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.17);
   border-radius: 2px;
   flex-direction: column;
   width: 65vw;
@@ -74,13 +76,11 @@
   padding: 0 25px;
   height: 60px;
   justify-content: flex-end;
-  background: #EFEFEF;
+  background: #efefef;
   align-items: center;
 }
 
 .icon {
   color: #777;
-  margin-right: 25px
+  margin-right: 25px;
 }
-
-
