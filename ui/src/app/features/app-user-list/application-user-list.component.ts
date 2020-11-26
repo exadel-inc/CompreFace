@@ -28,6 +28,9 @@ import { ApplicationUserListFacade } from './application-user-list-facade';
 import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { TranslateService } from '@ngx-translate/core';
 import { Role } from 'src/app/data/enums/role.enum';
+import { Store } from '@ngrx/store';
+import { addAppUserEntityActionFail, addAppUserEntityActionSuccess } from '../../store/app-user/actions';
+import { AppState } from '../../store';
 
 @Component({
   selector: 'app-application-user-list',
@@ -53,7 +56,8 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     private appUserListFacade: ApplicationUserListFacade,
     private dialog: MatDialog,
     private snackBarService: SnackBarService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private store: Store<AppState>
   ) {
     appUserListFacade.initSubscriptions();
   }
@@ -127,15 +131,17 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
       if (userEmail && role) {
         this.appUserListFacade.inviteUser(userEmail, role).subscribe(
           () =>
-            this.snackBarService.openNotification({
-              messageText: 'application_user_list.invitation_sent',
-              messageOptions: { userEmail },
-            }),
-          (err) =>
-            this.snackBarService.openNotification({
-              messageText: err.error.message,
-              type: 'error',
-            })
+            this.store.dispatch(
+              addAppUserEntityActionSuccess({
+                userEmail,
+              })
+            ),
+          (error) =>
+            this.store.dispatch(
+              addAppUserEntityActionFail({
+                error,
+              })
+            )
         );
         dialogSubscription.unsubscribe();
       }

@@ -24,6 +24,8 @@ import { loadApplications } from '../application/action';
 
 import {
   addAppUserEntityAction,
+  addAppUserEntityActionFail,
+  addAppUserEntityActionSuccess,
   deleteUserFromApplication,
   deleteUserFromApplicationFail,
   deleteUserFromApplicationSuccess,
@@ -68,9 +70,21 @@ export class AppUserEffects {
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction),
+    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction, addAppUserEntityActionFail),
     tap((action) => {
       this.snackBarService.openHttpError(action.error);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  addUser$ = this.actions.pipe(
+    ofType(addAppUserEntityActionSuccess),
+    tap((action) => {
+      console.log(action);
+      this.snackBarService.openNotification({
+        messageText: 'application_user_list.invitation_sent',
+        messageOptions: { userEmail: action.userEmail },
+      });
     })
   );
 }
