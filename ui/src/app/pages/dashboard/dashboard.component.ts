@@ -19,12 +19,12 @@ import { AppState } from 'src/app/store';
 import { getUserInfo } from 'src/app/store/userInfo/action';
 
 @Component({
-  selector: 'app-organization',
-  templateUrl: './organization.component.html',
-  styleUrls: ['./organization.component.scss'],
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrganizationComponent implements OnInit {
+export class DashboardComponent implements OnInit {
   constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
