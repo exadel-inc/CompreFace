@@ -25,8 +25,12 @@ export const loadAppUserEntityAction = createAction(
   }>()
 );
 export const addAppUserEntityAction = createAction('[App-User/API] Add App Users', props<{ users: AppUser[] }>());
-export const addAppUserEntityActionSuccess = createAction('[App-User/API] Add User To Application Success', props<{ userEmail: string }>());
-export const addAppUserEntityActionFail = createAction('[App-User/API] Add User To Application Fail', props<{ error: any }>());
+export const inviteAppUserAction = createAction(
+  '[App-User/API] Invite User To Application',
+  props<{ applicationId: string; userEmail: string; role: Role }>()
+);
+export const inviteAppUserActionSuccess = createAction('[App-User/API] Invite User To Application Success', props<{ userEmail: string }>());
+export const inviteAppUserActionFail = createAction('[App-User/API] Invite User To Application Fail', props<{ error: any }>());
 export const updateAppUserRoleAction = createAction(
   '[App-User/API] Update App User',
   props<{ applicationId: string; user: { id: string; role: Role } }>()

@@ -29,7 +29,6 @@ import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { TranslateService } from '@ngx-translate/core';
 import { Role } from 'src/app/data/enums/role.enum';
 import { Store } from '@ngrx/store';
-import { addAppUserEntityActionFail, addAppUserEntityActionSuccess } from '../../store/app-user/actions';
 import { AppState } from '../../store';
 
 @Component({
@@ -129,20 +128,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
     const dialogSubscription = dialog.afterClosed().subscribe(({ userEmail, role }) => {
       if (userEmail && role) {
-        this.appUserListFacade.inviteUser(userEmail, role).subscribe(
-          () =>
-            this.store.dispatch(
-              addAppUserEntityActionSuccess({
-                userEmail,
-              })
-            ),
-          (error) =>
-            this.store.dispatch(
-              addAppUserEntityActionFail({
-                error,
-              })
-            )
-        );
+        this.appUserListFacade.inviteUser(userEmail, role);
         dialogSubscription.unsubscribe();
       }
     });

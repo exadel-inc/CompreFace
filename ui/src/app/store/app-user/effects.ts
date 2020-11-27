@@ -24,11 +24,12 @@ import { loadApplications } from '../application/action';
 
 import {
   addAppUserEntityAction,
-  addAppUserEntityActionFail,
-  addAppUserEntityActionSuccess,
   deleteUserFromApplication,
   deleteUserFromApplicationFail,
   deleteUserFromApplicationSuccess,
+  inviteAppUserAction,
+  inviteAppUserActionFail,
+  inviteAppUserActionSuccess,
   loadAppUserEntityAction,
   updateAppUserRoleAction,
   updateAppUserRoleFailAction,
@@ -68,9 +69,23 @@ export class AppUserEffects {
     )
   );
 
+  @Effect()
+  inviteAppUser$ = this.actions.pipe(
+    ofType(inviteAppUserAction),
+    switchMap((action) =>
+      this.appUserService.inviteUser(action.applicationId, action.userEmail, action.role).pipe(
+        switchMap(() => [
+          loadAppUserEntityAction({ applicationId: action.applicationId }),
+          inviteAppUserActionSuccess({ userEmail: action.userEmail }),
+        ]),
+        catchError((error) => of(inviteAppUserActionFail({ error })))
+      )
+    )
+  );
+
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction, addAppUserEntityActionFail),
+    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction, inviteAppUserActionFail),
     tap((action) => {
       this.snackBarService.openHttpError(action.error);
     })
@@ -78,7 +93,7 @@ export class AppUserEffects {
 
   @Effect({ dispatch: false })
   addUser$ = this.actions.pipe(
-    ofType(addAppUserEntityActionSuccess),
+    ofType(inviteAppUserActionSuccess),
     tap((action) => {
       console.log(action);
       this.snackBarService.openNotification({
