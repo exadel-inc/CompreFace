@@ -39,7 +39,11 @@ CompreFace is an application for facial recognition that can be integrated as a 
 Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient API for model training and face recognition. We also provide an easy-to-understand roles system with which you can easily control who has access to the model.
 Every user can create their own models and train them on different subsets of input data. 
 
+## Feedback survey
 
+We are constantly improving our product. But for better understanding which features we should add or improve we need your help!
+Feedback form is totally anonymous, it will take just 2 minutes of your time to answer the questions:
+https://forms.gle/ybAEPc3XmzEcpv4M8
 
 ## Features
 
@@ -52,25 +56,31 @@ CompreFace:
  - Starts quickly with one docker command
 
 
-
 ## Getting started
 
-To get started:
+#### To get started (Linux, MacOS):
+1. Install Docker and Docker-Compose
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Run command: _docker-compose up -d_
+5. Open in your browser: http://localhost:8000/login
+
+#### Getting started for Contributors:
+
+1. Install Docker and Docker-Compose
+2. Clone repository
+3. Open dev folder
+4. Run command: _docker-compose up --build_
+5. Open in your browser: http://localhost:8000/login
+
+#### To get started (Windows):
 1. Install Docker
 2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
 3. Unzip the archive
 4. Run Docker
 5. Windows search bar-> cmd->in the Command prompt-> cd ->paste the path to the extracted zip folder
-6. Run command: _docker-compose up --build_
-7. Open http://localhost:8000/
-
-Getting started for Contributors:
-
-1. Install Docker 
-2. Clone repository
-3. Open dev folder
-4. Run command: _docker-compose up --build_
-5. Open http://localhost:8000/
+6. Run command: _docker-compose up -d_
+7. Open http://localhost:8000/login
 
 ** Tips for Windows** (use Git Bash terminal)
 
@@ -84,8 +94,6 @@ Getting started for Contributors:
 8. Stopped all containers: $ docker-compose down
 9. Run _sh start--dev.sh_ and make sure http://localhost:4200/ starts
 
-
-## Simple tutorial of usage
 
 ## Simple tutorial of usage
 
