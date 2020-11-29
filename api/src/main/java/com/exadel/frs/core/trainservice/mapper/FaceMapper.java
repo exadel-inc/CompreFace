@@ -16,17 +16,19 @@
 
 package com.exadel.frs.core.trainservice.mapper;
 
+import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
 import java.util.List;
+import java.util.Set;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 @Mapper
 public interface FaceMapper {
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "faceName", target = "name")
-    FaceResponseDto toResponseDto(Face face);
-    List<FaceResponseDto> toResponseDto(List<Face> faces);
+    @Mapping(source = "imageId", target = "image_id")
+    @Mapping(source = "name", target = "subject")
+    FaceResponseDto toResponseDto(FaceBO faces);
+
+    List<FaceResponseDto> toResponseDto(Set<FaceBO> faces);
 }

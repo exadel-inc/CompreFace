@@ -15,14 +15,16 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 
-import { Application } from '../../data/application';
+import { Application } from '../../data/interfaces/application';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ApplicationHeaderFacade } from './application-header.facade';
+import { Role } from 'src/app/data/enums/role.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-header',
@@ -35,8 +37,10 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   app$: Observable<Application>;
   userRole$: Observable<string | null>;
   loading$: Observable<boolean>;
+  maxHeaderLinkLength = 25;
+  userRoleEnum = Role;
 
-  constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog) { }
+  constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog, private translate: TranslateService) { }
 
   ngOnInit() {
     this.applicationHeaderFacade.initSubscriptions();
@@ -53,7 +57,7 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(EditDialogComponent, {
       width: '300px',
       data: {
-        entityType: 'application',
+        entityType: this.translate.instant('applications.header.title'),
         entityName: name,
       }
     });
@@ -69,7 +73,7 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'application',
+        entityType: this.translate.instant('applications.header.title'),
         entityName: name,
       }
     });

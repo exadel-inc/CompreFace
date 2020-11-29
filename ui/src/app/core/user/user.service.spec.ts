@@ -14,11 +14,12 @@
  * permissions and limitations under the License.
  */
 
-import {TestBed} from '@angular/core/testing';
-import {UserService} from './user.service';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {environment} from '../../../environments/environment';
-import {AppUser} from '../../data/appUser';
+import { TestBed } from '@angular/core/testing';
+import { UserService } from './user.service';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { environment } from '../../../environments/environment';
+import { AppUser } from '../../data/interfaces/app-user';
+import { Role } from 'src/app/data/enums/role.enum';
 
 describe('UserService', () => {
   let service: UserService;
@@ -27,11 +28,11 @@ describe('UserService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [UserService]
+      providers: [UserService],
     });
 
-    service = TestBed.get(UserService);
-    httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.inject(UserService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -39,19 +40,22 @@ describe('UserService', () => {
   });
 
   it('should return set of users', () => {
-    const mock = [{
-      id: 0,
-      organizationId: 'ksdfklsn1111111',
-      firstName: 'John',
-      lastName: 'Malkovich',
-      role: 'USER'
-    }, {
-      id: 1,
-      organizationId: 'ksdfklsn1111111',
-      firstName: 'Tony',
-      lastName: 'Stark',
-      role: 'ADMINISTRATOR'
-    }];
+    const mock = [
+      {
+        id: 0,
+        organizationId: 'ksdfklsn1111111',
+        firstName: 'John',
+        lastName: 'Malkovich',
+        role: Role.USER,
+      },
+      {
+        id: 1,
+        organizationId: 'ksdfklsn1111111',
+        firstName: 'Tony',
+        lastName: 'Stark',
+        role: Role.ADMINISTRATOR,
+      },
+    ];
 
     service.getAll('organizationId').subscribe((data: AppUser[]) => {
       expect(data[0].role).toBe(mock[0].role);
@@ -62,7 +66,7 @@ describe('UserService', () => {
       expect(data[1].lastName).toBe(mock[1].lastName);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}org/organizationId/roles`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/roles`);
     expect(req.request.method).toBe('GET');
     req.flush(mock);
   });
@@ -73,16 +77,16 @@ describe('UserService', () => {
       organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
-      role: 'USER'
+      role: Role.USER,
     };
 
-    service.updateRole('organizationId', 'userId', 'USER').subscribe((data: AppUser) => {
+    service.updateRole('organizationId', 'userId', Role.USER).subscribe((data: AppUser) => {
       expect(data.role).toBe(mock.role);
       expect(data.firstName).toBe(mock.firstName);
       expect(data.lastName).toBe(mock.lastName);
     });
 
-    const req = httpMock.expectOne(`${environment.apiUrl}org/organizationId/role`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/role`);
     expect(req.request.method).toBe('PUT');
     req.flush(mock);
   });

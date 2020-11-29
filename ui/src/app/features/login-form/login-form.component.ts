@@ -20,16 +20,17 @@ import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
-import { ROUTERS_URL } from '../../data/routers-url.variable';
-import { User } from '../../data/user';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { User } from '../../data/interfaces/user';
 import { AppState } from '../../store';
 import { logIn, resetErrorMessage } from '../../store/auth/action';
 import { selectAuthState } from '../../store/auth/selectors';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login-form',
   templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.scss']
+  styleUrls: ['./login-form.component.scss'],
 })
 export class LoginFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -38,6 +39,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   isLoading = false;
   ROUTERS_URL = ROUTERS_URL;
   stateSubscription: Subscription;
+  env = environment;
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);
@@ -62,8 +64,8 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   onSubmit() {
     this.user = this.form.value;
     const payload = {
-      email: this.user.email,
-      password: this.user.password
+      email: this.user.email.trim(),
+      password: this.user.password.trim(),
     };
     this.isLoading = true;
     this.store.dispatch(logIn(payload));

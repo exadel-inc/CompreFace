@@ -1,75 +1,45 @@
 databaseChangeLog:
   - changeSet:
-      id: changelog-0.0.6.1
-      author: Vladyslav Yavorskyi
+      id: create-user_app_role-table
+      author: Andrei Hayeuski
       changes:
-      - addNotNullConstraint:
-            tableName: organization
-            columnName: name
-      - addNotNullConstraint:
-            tableName: organization
-            columnName: guid
+        # user_app_role
+        - createTable:
+            tableName: user_app_role
+            columns:
+              - column:
+                  name: app_id
+                  type: bigint
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: role
+                  type: varchar(1)
 
-      - addNotNullConstraint:
-            tableName: app
-            columnName: name
-      - addNotNullConstraint:
-            tableName: app
-            columnName: guid
-      - addNotNullConstraint:
-            tableName: app
-            columnName: organization_id
-      - addNotNullConstraint:
-            tableName: app
-            columnName: api_key
+        - addPrimaryKey:
+            columnNames: app_id, user_id
+            constraintName: pk_user_app_role
+            tableName: user_app_role
 
-      - addNotNullConstraint:
-            tableName: model
-            columnName: name
-      - addNotNullConstraint:
-            tableName: model
-            columnName: guid
-      - addNotNullConstraint:
-            tableName: model
-            columnName: app_id
-      - addNotNullConstraint:
-            tableName: model
-            columnName: api_key
-
-      - addNotNullConstraint:
+        - addNotNullConstraint:
             tableName: user_app_role
             columnName: role
-      - addNotNullConstraint:
-            tableName: user_organization_role
-            columnName: role
 
-      - dropColumn:
-            tableName: user
-            columnName: username
-      - addNotNullConstraint:
-            tableName: user
-            columnName: email
-      - addNotNullConstraint:
-            tableName: user
-            columnName: password
-      - addNotNullConstraint:
-            tableName: user
-            columnName: first_name
-      - addNotNullConstraint:
-            tableName: user
-            columnName: last_name
-      - addNotNullConstraint:
-            tableName: user
-            columnName: guid
-      - addNotNullConstraint:
-            tableName: user
-            columnName: account_non_expired
-      - addNotNullConstraint:
-            tableName: user
-            columnName: account_non_locked
-      - addNotNullConstraint:
-            tableName: user
-            columnName: credentials_non_expired
-      - addNotNullConstraint:
-            tableName: user
-            columnName: enabled
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: user_app_role
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_app_role
+            referencedColumnNames: id
+            referencedTableName: user
+            constraintName: fk_user_id
+            onDelete: CASCADE
+            onUpdate: CASCADE

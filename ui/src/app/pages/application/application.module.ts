@@ -20,7 +20,6 @@ import {ApplicationComponent} from './application.component';
 import {ApplicationPageService} from './application.service';
 import {MatButtonModule} from '@angular/material/button';
 import {RouterModule} from '@angular/router';
-import {AuthGuard} from '../../core/auth/auth.guard';
 import {ToolBarModule} from '../../features/tool-bar/tool-bar.module';
 import {ApplicationHeaderModule} from '../../features/application-header/application-header.module';
 import {MatCardModule} from '@angular/material/card';
@@ -29,6 +28,7 @@ import {ModelListModule} from 'src/app/features/model-list/model-list.module';
 import {AppUserListModule} from 'src/app/features/app-user-list/application-user-list.module';
 import {FooterModule} from '../../features/footer/footer.module';
 import {ApplicationListModule} from '../../features/application-list/application-list.module';
+import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
 
 @NgModule({
   declarations: [ApplicationComponent],
@@ -40,13 +40,13 @@ import {ApplicationListModule} from '../../features/application-list/application
     AppUserListModule,
     FooterModule,
     ApplicationListModule,
-    RouterModule.forChild([
-      { path: '', component: ApplicationComponent, canActivate: [AuthGuard] },
-    ]),
     ToolBarModule,
-
     BreadcrumbsModule,
-    MatCardModule
+    BreadcrumbsContainerModule,
+    MatCardModule,
+    RouterModule.forChild([
+      { path: '', component: ApplicationComponent },
+    ])
   ],
   providers: [ApplicationPageService]
 })

@@ -14,17 +14,35 @@
  * permissions and limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 import {LoginComponent} from './login.component';
 import {NO_ERRORS_SCHEMA} from '@angular/core';
+import { provideMockStore } from '@ngrx/store/testing';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  const initialState = {
+    isPending: false
+  };
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ LoginComponent ],
+      providers: [
+        provideMockStore(),
+        {
+          provide: Store,
+          useValue: {
+            select: () => {
+              return of(initialState);
+            },
+            dispatch: () => {}
+          }
+        },
+      ],
       schemas: [NO_ERRORS_SCHEMA]
     })
     .compileComponents();

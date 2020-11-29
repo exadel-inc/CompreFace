@@ -15,13 +15,13 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Application } from 'src/app/data/application';
+import { Application } from 'src/app/data/interfaces/application';
 
-export const loadApplications = createAction('[Application] Load Applications', props<{ organizationId: string }>());
+export const loadApplications = createAction('[Application] Load Applications');
 export const loadApplicationsSuccess = createAction('[Application] Load Applications Success', props<{ applications: Application[] }>());
 export const loadApplicationsFail = createAction('[Application] Load Applications Fail', props<{ error: any }>());
 
-export const createApplication = createAction('[Application] Create Application', props<{ organizationId: string, name: string }>());
+export const createApplication = createAction('[Application] Create Application', props<{ name: string }>());
 export const createApplicationSuccess = createAction('[Application] Create Application Success', props<{ application: Application }>());
 export const createApplicationFail = createAction('[Application] Create Application Fail', props<{ error: any }>());
 
@@ -33,4 +33,4 @@ export const deleteApplication = createAction('[Application] Delete Application'
 export const deleteApplicationSuccess = createAction('[Application] Delete Application Success', props<{ id: string }>());
 export const deleteApplicationFail = createAction('[Application] Delete Application Fail', props<{ error: any }>());
 
-export const setSelectedIdEntityAction = createAction('[Application] Set Selected Id Applications', props<{ selectedAppId }>());
+export const setSelectedAppIdEntityAction = createAction('[Application] Set Selected Id Applications', props<{ selectedAppId }>());

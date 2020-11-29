@@ -1,0 +1,164 @@
+{
+  "common": {
+    "capital": {
+      "create": "CREATE",
+      "cancel": "CANCEL",
+      "yes": "YES",
+      "add": "ADD",
+      "rename": "RENAME",
+      "edit": "EDIT",
+      "delete": "DELETE"
+    },
+    "name": "Name",
+    "create": "Create"
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "sign_up": "SIGN UP",
+    "email_hint": "Email should have correct format",
+    "password_hint": "Password is required",
+    "login": "LOGIN"
+  },
+  "registration": {
+    "title": "Sign up",
+    "first_name": "First Name",
+    "last_name": "Last Name",
+    "email": "Email",
+    "password": "Password",
+    "confirm_password": "Confirm password",
+    "password_restriction": "Minimum 8 characters",
+    "password_dont_match": "Passwords don't match",
+    "name_restriction": "First name is required",
+    "last_name_restriction": "Last name is required",
+    "email_hint": "Email should have correct format",
+    "login": "LOGIN",
+    "sign_up": "SIGN UP"
+  },
+  "toolbar": {
+    "logout": "Logout",
+    "user_avatar_info": "User avatar",
+    "logo": "CompreFace logo"
+  },
+  "applications": {
+    "caption": "Table of applications",
+    "title": "Applications",
+    "first_steps_title": "Create Application",
+    "name": "Name",
+    "owner": "Owner",
+    "first_steps_info": "The first step in using face recognition service is to create an application. An application is where you can\n create and manage models.",
+    "create": {
+      "title": "Create application"
+    },
+    "header": {
+      "title": "Application",
+      "edit": "EDIT",
+      "delete": "DELETE",
+      "delete_dialog": {
+        "title": "Delete application",
+        "warn_information": "and all related data will be deleted",
+        "confirmation_question": "Are you sure"
+      },
+      "edit_dialog": {
+        "title": "Edit application",
+        "rename": "RENAME",
+        "name": "Name"
+      }
+    }
+  },
+  "models": {
+    "caption": "Table of face collections",
+    "title": "Models",
+    "name": "Name",
+    "api_key": "API key",
+    "header": "Face Collection",
+    "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
+    "create_dialog": {
+      "title": "Create Face Collection",
+      "name": "Name"
+    },
+    "select_menu": {
+      "edit": "EDIT",
+      "delete": "DELETE",
+      "test": "TEST"
+    },
+    "edit_dialog": {
+      "title": "EDIT MODEL",
+      "name": "Name",
+      "rename": "RENAME"
+    },
+    "delete_dialog": {
+      "title": "Delete model",
+      "warn_information": "and all related data will be deleted.",
+      "confirmation_question": "Are you sure?"
+    }
+  },
+  "users": {
+    "caption": "Table of users",
+    "title": "Users",
+    "user": "User",
+    "role": "Role",
+    "search": {
+      "org_title": "Search User",
+      "app_title": "Search User",
+      "no_results": "No matches found"
+    }
+  },
+  "org_users": {
+    "delete_dialog": {
+      "title": "Delete {{type}}",
+      "confirmation_question": "Are you sure you want to remove user {{name}} {{lastName}}?",
+      "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
+      "warn_hint_anyway": "You can delete him anyway.",
+      "warn_hint_owner": "In this case you will become the OWNER of these applications.",
+      "warn_hint_new_owner": "In this case the owner of this applications will be: ",
+      "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
+    },
+    "add_users_title": "Add users to the CompreFace",
+    "add_users_info": "You can add other users to the CompreFace application. They need to register and login to CompreFace. After registration and login users will appear automatically in the users' table."
+  },
+  "app_users": {
+    "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",
+    "delete_dialog": {
+      "title": "Delete user",
+      "confirmation_question": "Are you sure you want to remove user {{name}} from {{application}}?"
+    }
+  },
+  "breadcrumbs": {
+    "home": "Home"
+  },
+  "dnd": {
+    "title": "Click here or Drag and drop your image here",
+    "label": "Available images extensions: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp \nMax images size = 5Mb (5242880bytes)",
+    "test": "Test model",
+    "add": "Add to model",
+    "train": "Train model",
+    "recognize": "Recognize Face"
+  },
+  "test_model": {
+    "title": "Test Model",
+    "request": "Request",
+    "response": "Response"
+  },
+  "demo": {
+    "title": "Demo",
+    "link": "Try Demo"
+  },
+  "face_recognition_container": {
+    "file_size_error": "The photo size is more than 5 Mb"
+  },
+  "face_recognition": {
+    "no_recognized": "No faces recognized",
+    "no_faces_in_collection": "No faces uploaded to the Face Collection"
+  },
+  "auth": {
+    "incorrect_credentials": "E-mail or Password is incorrect.",
+    "already_in_use": "This e-mail is already in use.",
+    "new_account_confirm_email": "You have created new account, please confirm your email",
+    "new_account_login": "You have created new account, please login into your account"
+  },
+  "application_user_list": {
+    "invitation_sent": "Invitation was sent to {{email}}"
+  }
+}

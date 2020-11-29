@@ -16,31 +16,30 @@
 
 package com.exadel.frs.security;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.FrsApplication;
-import com.exadel.frs.helpers.EmailSender;
-import com.exadel.frs.service.OrganizationService;
+import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
+import javax.servlet.http.Cookie;
 import lombok.val;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.core.env.Environment;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -50,13 +49,10 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
 @ActiveProfiles(profiles = "local-test")
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @SpringBootTest(classes = FrsApplication.class)
-@MockBeans({@MockBean(EmailSender.class), @MockBean(OrganizationService.class)})
-public class OAuthMvcTest {
-
-    private String registrationToken = UUID.randomUUID().toString();
+class OAuthMvcTest {
 
     @Autowired
     private WebApplicationContext wac;
@@ -67,19 +63,38 @@ public class OAuthMvcTest {
     @Autowired
     private FilterChainProxy springSecurityFilterChain;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @SpyBean
     private UserService userService;
 
     private MockMvc mockMvc;
+    private String registrationToken = UUID.randomUUID().toString();
+    private String userEmail;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac)
                                       .addFilter(springSecurityFilterChain).build();
         when(userService.generateRegistrationToken()).thenReturn(registrationToken);
+        when(userService.hasOnlyDemoUser()).thenReturn(false);
+
+        this.userEmail = randomAlphanumeric(10) + "test@email.com";
+        createUser(userEmail);
     }
 
-    private String obtainAccessToken(String username, String password) throws Exception {
+    @AfterEach
+    void clean() {
+        val userOptional = userRepository.findByEmail(userEmail.toLowerCase());
+
+        if (userOptional.isPresent()) {
+            val user = userOptional.get();
+            userRepository.delete(user);
+        }
+    }
+
+    private Cookie getCookie(String username, String password) throws Exception {
 
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "password");
@@ -93,38 +108,31 @@ public class OAuthMvcTest {
                 .with(httpBasic("CommonClientId", "password"))
                 .accept("application/json;charset=UTF-8"))
                          .andExpect(status().isOk())
-                         .andExpect(content().contentType("application/json;charset=UTF-8"));
+                         .andExpect(cookie().exists("CFSESSION"));
 
-        String resultString = result.andReturn().getResponse().getContentAsString();
-
-        JacksonJsonParser jsonParser = new JacksonJsonParser();
-        return jsonParser.parseMap(resultString).get("access_token").toString();
+        return result.andReturn().getResponse().getCookie("CFSESSION");
     }
 
     @Test
-    public void availableOnlyWithAccessToken() throws Exception {
+    void availableOnlyWithCookie() throws Exception {
         mockMvc.perform(get("/user/me"))
                .andExpect(status().isUnauthorized());
 
-        createUser("test1@email.com");
-
-        var accessToken = obtainAccessToken("test1@email.com", "test1");
+        var cookie = getCookie(userEmail, "test1");
         mockMvc.perform(get("/user/me")
-                .header("Authorization", "Bearer " + accessToken))
+                .cookie(cookie))
                .andExpect(status().isOk());
     }
 
     @Test
-    public void ignoresCaseWhenLogin() throws Exception {
+    void ignoresCaseWhenLogin() throws Exception {
         mockMvc.perform(get("/user/me"))
                .andExpect(status().isUnauthorized());
 
-        createUser("user@email.com");
-
-        val accessToken = obtainAccessToken("User@EmaiL.com", "test1");
+        val cookie = getCookie(userEmail.toUpperCase(), "test1");
 
         mockMvc.perform(get("/user/me")
-                .header("Authorization", "Bearer " + accessToken))
+                .cookie(cookie))
                .andExpect(status().isOk());
     }
 
@@ -134,8 +142,7 @@ public class OAuthMvcTest {
                 "  \"firstName\": \"test1\",\n" +
                 "  \"id\": null,\n" +
                 "  \"lastName\": \"test1\",\n" +
-                "  \"password\": \"test1\",\n" +
-                "  \"username\": \"test1\"\n" +
+                "  \"password\": \"test1\"\n" +
                 "}";
 
         mockMvc.perform(post("/user/register")
@@ -144,7 +151,7 @@ public class OAuthMvcTest {
                 .accept("application/json"))
                .andExpect(status().is2xxSuccessful());
 
-        if (Boolean.valueOf(env.getProperty("spring.mail.enable"))) {
+        if (Boolean.parseBoolean(env.getProperty("spring.mail.enable"))) {
             confirmRegistration();
         }
     }

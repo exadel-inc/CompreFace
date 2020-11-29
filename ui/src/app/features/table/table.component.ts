@@ -14,8 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Input, Output} from '@angular/core';
-import {Observable} from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 
 export interface ITableConfig {
   columns: {
@@ -29,32 +28,38 @@ export interface ITableConfig {
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableComponent implements OnInit {
   @Input() isLoading: boolean;
   @Input() set tableConfig(config: ITableConfig) {
     if (config) {
       this.columnsDefinition = config.columns;
-      this.displayedColumns = config.columns.map(column => column.title);
+      this.displayedColumns = config.columns.map((column) => column.title);
       this.data = config.data;
     }
   }
 
   @Output() changeRow = new EventEmitter<any>();
 
-  public columnsDefinition: {
+  maxElementLength = 27;
+
+  columnsDefinition: {
     title: string;
     property: string;
   }[];
-  public displayedColumns: string[];
-  public data: any[];
+  displayedColumns: string[];
+  data: any[];
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() { }
+  ngOnInit() {}
 
-  public change(element: any): void {
+  change(element: any): void {
     this.changeRow.emit(element);
+  }
+
+  disableToolTip(element: string): boolean {
+    return element.length <= this.maxElementLength;
   }
 }

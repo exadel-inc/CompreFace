@@ -16,6 +16,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { ITableConfig } from '../../table/table.component';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Component({
   selector: 'app-application-list',
@@ -28,6 +29,7 @@ export class ApplicationListComponent {
   @Input() isLoading: boolean;
   @Input() tableConfig: ITableConfig;
   @Input() userRole: string;
+  roleEnum = Role;
 
   @Output() selectApp = new EventEmitter();
   @Output() createApp = new EventEmitter();

@@ -28,17 +28,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
-@EnableJpaRepositories(basePackages = "com.exadel.frs.core.trainservice.repository.postgres",
+@EnableJpaRepositories(basePackages = "com.exadel.frs.core.trainservice.repository",
         entityManagerFactoryRef = "emPg",
         transactionManagerRef = "tmPg")
-@EnableMongoRepositories(basePackages = "com.exadel.frs.core.trainservice.repository.mongo")
 public class DbConfig {
 
     @Autowired
@@ -48,7 +46,7 @@ public class DbConfig {
     public LocalContainerEntityManagerFactoryBean pgEntityManager(@Autowired DataSource dataSource) {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.exadel.frs.core.trainservice.entity.postgres");
+        em.setPackagesToScan("com.exadel.frs.core.trainservice.entity");
         val vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         val properties = new HashMap<String, Object>();

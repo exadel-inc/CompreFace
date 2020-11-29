@@ -17,29 +17,19 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { UserService } from 'src/app/core/user/user.service';
-import { AppUser } from 'src/app/data/appUser';
-import { IFacade } from 'src/app/data/facade/IFacade';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { IFacade } from 'src/app/data/interfaces/IFacade';
+import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { AppState } from 'src/app/store';
-import {
-  selectCurrentOrganizationId,
-  selectSelectedOrganization,
-  selectUserRollForSelectedOrganization,
-} from 'src/app/store/organization/selectors';
-import { LoadRolesEntityAction } from 'src/app/store/role/actions';
+import { loadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
-import {
-  DeleteUser,
-  LoadUsersEntityAction,
-  PutUpdatedUserRoleEntityAction,
-} from 'src/app/store/user/action';
-import { selectIsPendingUserStore, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
+import { deleteUser, loadUsersEntityAction, updateUserRoleWithRefreshAction } from 'src/app/store/user/action';
+import { selectCurrentUserRole, selectIsPendingUserStore, selectUsers, selectUsersWithOwnerApp } from 'src/app/store/user/selectors';
 import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors';
+import { Role } from '../../data/enums/role.enum';
 
 @Injectable()
 export class UserListFacade implements IFacade {
-  selectedOrganization$: Observable<string>;
-  selectedOrganizationName$: Observable<string>;
   users$: Observable<AppUser[]>;
   availableRoles$: Observable<string[]>;
   isLoading$: Observable<boolean>;
@@ -47,77 +37,57 @@ export class UserListFacade implements IFacade {
   currentUserEmail$: Observable<string>;
   userRole$: Observable<string>;
 
-  private selectedOrganization: string;
+  constructor(private store: Store<AppState>) {
+    this.users$ = this.store.select(selectUsersWithOwnerApp);
+    this.userRole$ = this.store.select(selectCurrentUserRole);
 
-  private selectedOrganizationSubscription: Subscription;
-
-  constructor(
-    private store: Store<AppState>,
-    private userService: UserService,
-  ) {
-    this.selectedOrganization$ = store.select(selectCurrentOrganizationId);
-    this.selectedOrganizationName$ = store.select(selectSelectedOrganization).pipe(map(org => org.name));
-    this.users$ = store.select(selectUsersWithOwnerApp);
-    this.userRole$ = this.store.select(selectUserRollForSelectedOrganization);
-
-    const allRoles$ = store.select(selectAllRoles);
-    this.availableRoles$ = combineLatest(allRoles$, this.userRole$).pipe(
+    const allRoles$ = this.store.select(selectAllRoles);
+    this.availableRoles$ = combineLatest([allRoles$, this.userRole$]).pipe(
       map(([allRoles, userRole]) => {
         const roleIndex = allRoles.indexOf(userRole);
         return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
-      }),
+      })
     );
 
-    const usersLoading$ = store.select(selectIsPendingUserStore);
-    const roleLoading$ = store.select(selectIsPendingRoleStore);
-    this.currentUserId$ = store.select(selectUserId);
-    this.currentUserEmail$ = store.select(selectUserEmail);
+    const usersLoading$ = this.store.select(selectIsPendingUserStore);
+    const roleLoading$ = this.store.select(selectIsPendingRoleStore);
+    this.currentUserId$ = this.store.select(selectUserId);
+    this.currentUserEmail$ = this.store.select(selectUserEmail);
 
-    this.isLoading$ = combineLatest(usersLoading$, roleLoading$)
-      .pipe(map(observResults => !(!observResults[0] && !observResults[1])));
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
   }
 
   initSubscriptions(): void {
-    this.selectedOrganizationSubscription = this.selectedOrganization$.subscribe(
-      orgId => {
-        if (orgId) {
-          this.selectedOrganization = orgId;
-          this.loadUsers();
-          this.loadAvailableRoles();
-        }
-      }
-    );
+    this.loadUsers();
+    this.loadAvailableRoles();
   }
 
   loadUsers(): void {
-    this.store.dispatch(LoadUsersEntityAction({
-      organizationId: this.selectedOrganization
-    }));
+    this.store.dispatch(loadUsersEntityAction());
   }
 
-  updateUserRole(id: string, role: string): void {
-    this.store.dispatch(PutUpdatedUserRoleEntityAction({
-      organizationId: this.selectedOrganization,
-      user: {
-        id,
-        role
-      }
-    }));
+  updateUserRole(id: string, role: Role): void {
+    this.store.dispatch(
+      updateUserRoleWithRefreshAction({
+        user: {
+          id,
+          role,
+        },
+      })
+    );
   }
 
-  deleteUser(userId: string, newOwner?: string): void {
-    this.store.dispatch(DeleteUser({
-      organizationId: this.selectedOrganization,
-      userId,
-      newOwner,
-    }));
+  deleteUser(deletion: UserDeletion, newOwner?: string): void {
+    this.store.dispatch(
+      deleteUser({
+        userId: deletion.userToDelete.userId,
+        deleterUserId: deletion.deleterUserId,
+        newOwner,
+      })
+    );
   }
 
   loadAvailableRoles(): void {
-    this.store.dispatch(LoadRolesEntityAction());
-  }
-
-  unsubscribe(): void {
-    this.selectedOrganizationSubscription.unsubscribe();
+    this.store.dispatch(loadRolesEntityAction());
   }
 }

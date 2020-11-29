@@ -16,23 +16,23 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
+import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
-import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
+import com.exadel.frs.core.trainservice.entity.Face;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@DataMongoTest
+@DataJpaTest
 @ExtendWith(SpringExtension.class)
 public class FacesRepositoryTest {
 
@@ -40,6 +40,7 @@ public class FacesRepositoryTest {
     private FacesRepository facesRepository;
     private final static String MODEL_KEY = "model_key";
     private final static String MODEL_KEY_OTHER = "model_key_other";
+    private static final double EMBEDDING = 100500;
 
     @BeforeEach
     void setUp() {
@@ -56,20 +57,11 @@ public class FacesRepositoryTest {
     }
 
     public static Face makeFace(final String name, final String modelApiKey) {
-        val face = new Face()
+        return new Face()
                 .setFaceName(name)
-                .setApiKey(modelApiKey);
-        face.setEmbeddings(List.of(
-                new Face.Embedding()
-                        .setEmbedding(List.of(0.0D))
-                        .setCalculatorVersion("1.0")
-                )
-        );
-        face.setFaceImgId(new ObjectId("hex-string-1".getBytes()));
-        face.setRawImgId(new ObjectId("hex-string-2".getBytes()));
-        face.setId("Id_" + name);
-
-        return face;
+                .setApiKey(modelApiKey)
+                .setEmbedding(new Face.Embedding(List.of(EMBEDDING), null))
+                .setId(randomUUID().toString());
     }
 
     @Test
@@ -80,12 +72,9 @@ public class FacesRepositoryTest {
         assertThat(actual).hasSize(3);
         assertThat(actual).allSatisfy(
                 face -> {
-                    assertThat(face.getId()).isNotEmpty();
+                    assertThat(face.getId()).isNotNull();
                     assertThat(face.getFaceName()).isNotEmpty();
                     assertThat(face.getApiKey()).isNotEmpty();
-                    assertThat(face.getFaceImgId()).isNotNull();
-                    assertThat(face.getRawImgId()).isNotNull();
-                    assertThat(face.getEmbeddings()).isNotEmpty();
                 }
         );
     }
@@ -93,6 +82,7 @@ public class FacesRepositoryTest {
     @Test
     public void findNamesForApiGuid() {
         val expected = Arrays.asList("A", "C");
+
         val actual = facesRepository.findByApiKey(MODEL_KEY).stream()
                                     .map(Face::getFaceName)
                                     .collect(toList());
@@ -103,6 +93,7 @@ public class FacesRepositoryTest {
     @Test
     public void countByApiKey() {
         val expected = facesRepository.findByApiKey(MODEL_KEY);
+
         val actual = facesRepository.countByApiKey(MODEL_KEY);
 
         assertThat(actual).isGreaterThan(0);
@@ -110,10 +101,13 @@ public class FacesRepositoryTest {
     }
 
     @Test
-    public void findFaceIdsIn() {
-        val faces = facesRepository.findByIdIn(List.of("Id_A", "Id_B"));
+    public void findByGuid() {
+        val faces = facesRepository.findAll();
+        val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
 
-        assertThat(faces).isNotNull();
-        assertThat(faces).hasSize(2);
+        val actual = facesRepository.findById(face.getId());
+
+        assertThat(actual).isPresent();
+        assertThat(actual.get().getId()).isEqualTo(face.getId());
     }
 }

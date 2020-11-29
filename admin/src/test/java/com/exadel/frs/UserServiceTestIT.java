@@ -16,43 +16,44 @@
 
 package com.exadel.frs;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
-import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
 import liquibase.integration.spring.SpringLiquibase;
 import lombok.val;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.core.env.Environment;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@DisplayName("Tests that use database")
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
-@MockBeans({@MockBean(SpringLiquibase.class), @MockBean(PasswordEncoder.class), @MockBean(EmailSender.class),
-        @MockBean(OrganizationService.class), @MockBean(Environment.class)})
-@Import({UserService.class})
-public class UserServiceTestIT {
+@SpringBootTest
+@TestPropertySource(properties = "spring.mail.enable=true")
+class UserServiceTestIT {
 
     private static final String ENABLED_USER_EMAIL = "enabled_user@email.com";
     private static final String DISABLED_USER_EMAIL = "disabled_user@email.com";
+    private static final String USER_EMAIL = "user@email.com";
+    private static final String USER_EMAIL_2 = "user_2@email.com";
+    private static final String USER_GUID = "testUserGuid";
+    private static final String USER_EMAIL_PART = "user";
+
+    @MockBean
+    private SpringLiquibase springLiquibase;
+
+    @MockBean
+    private EmailSender emailSender;
 
     @SpyBean
     private UserService userService;
@@ -60,32 +61,86 @@ public class UserServiceTestIT {
     @Autowired
     private UserRepository userRepository;
 
-    @SpyBean
-    private Environment environment;
+    @AfterEach
+    void cleanDB() {
+        deleteUserIfExists(ENABLED_USER_EMAIL);
+        deleteUserIfExists(DISABLED_USER_EMAIL);
+        deleteUserIfExists(USER_EMAIL);
+        deleteUserIfExists(USER_EMAIL_2);
+    }
 
     @Test
     void getEnabledUserByEmailReturnsActiveUser() {
-        when(environment.getProperty("spring.mail.enable")).thenReturn("true");
         createAndEnableUser(ENABLED_USER_EMAIL);
 
         val enabledUser = userService.getEnabledUserByEmail(ENABLED_USER_EMAIL);
 
-        assertNotNull(enabledUser);
-        assertTrue(enabledUser.isEnabled());
+        assertThat(enabledUser).isNotNull();
+        assertThat(enabledUser.isEnabled()).isTrue();
     }
 
     @Test
     void getEnabledUserByEmailThrowsExceptionIfUserIsDisabled() {
-        when(environment.getProperty("spring.mail.enable")).thenReturn("true");
-
         createUser(DISABLED_USER_EMAIL);
 
         val disabledUser = userRepository.findByEmail(DISABLED_USER_EMAIL).get();
 
-        assertNotNull(disabledUser);
-        assertFalse(disabledUser.isEnabled());
+        assertThat(disabledUser).isNotNull();
+        assertThat(disabledUser.isEnabled()).isFalse();
 
-        assertThrows(UserDoesNotExistException.class, () -> userService.getEnabledUserByEmail(DISABLED_USER_EMAIL));
+        assertThatThrownBy(() -> userService.getEnabledUserByEmail(
+                DISABLED_USER_EMAIL
+        )).isInstanceOf(UserDoesNotExistException.class);
+    }
+
+    @Test
+    void getUserByEmailReturnsUser() {
+        createUser(USER_EMAIL);
+
+        val actual = userService.getUser(USER_EMAIL);
+
+        assertThat(actual).isNotNull();
+    }
+
+    @Test
+    void getUserByEmailThrowsExceptionIfNoUser() {
+        assertThatThrownBy(() -> userService.getUser(
+                USER_EMAIL
+        )).isInstanceOf(UserDoesNotExistException.class);
+    }
+
+    @Test
+    void getUserByGuidReturnsUser() {
+        createUser(USER_EMAIL);
+        val createdUser = userRepository.findByEmail(USER_EMAIL).get();
+
+        val actual = userService.getUserByGuid(createdUser.getGuid());
+
+        assertThat(actual).isNotNull();
+    }
+
+    @Test
+    void getUserByGuidThrowsExceptionIfNoUser() {
+        assertThatThrownBy(() -> userService.getUserByGuid(
+                USER_GUID
+        )).isInstanceOf(UserDoesNotExistException.class);
+    }
+
+    @Test
+    void autocompleteReturnsEmptyList() {
+        val actual = userService.autocomplete("");
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void autocompleteReturnsUsers() {
+        createUser(USER_EMAIL);
+        createUser(USER_EMAIL_2);
+
+        val actual = userService.autocomplete(USER_EMAIL_PART);
+
+        assertThat(actual).hasSize(2);
     }
 
     private void createAndEnableUser(final String email) {
@@ -108,5 +163,10 @@ public class UserServiceTestIT {
 
     private void confirmRegistration(final String regToken) {
         userService.confirmRegistration(regToken);
+    }
+
+    private void deleteUserIfExists(final String email) {
+        val user = userRepository.findByEmail(email);
+        user.ifPresent(value -> userRepository.delete(value));
     }
 }

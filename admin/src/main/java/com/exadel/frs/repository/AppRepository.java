@@ -25,10 +25,7 @@ public interface AppRepository extends JpaRepository<App, Long> {
 
     Optional<App> findByGuid(String guid);
 
-    List<App> findAllByOrganizationId(Long organizationId);
+    List<App> findAllByUserAppRoles_Id_UserId(Long userId);
 
-    List<App> findAllByOrganizationIdAndUserAppRoles_Id_UserId(Long organizationId, Long userId);
-
-    boolean existsByNameAndOrganizationId(String name, Long organizationId);
-
+    boolean existsByName(String name);
 }

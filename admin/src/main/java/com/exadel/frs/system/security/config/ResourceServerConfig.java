@@ -16,6 +16,8 @@
 
 package com.exadel.frs.system.security.config;
 
+import com.exadel.frs.system.security.CookieTokenExtractor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -23,23 +25,31 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 @Configuration
 @EnableResourceServer
 @EnableWebSecurity
 public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
+    @Autowired
+    private TokenStore jdbcTokenStore;
+
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/actuator/**", "/user/register", "/user/registration/confirm", "/api/**").permitAll()
-                .anyRequest().authenticated()
-                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        http.csrf()
+            .disable()
+            .authorizeRequests()
+            .antMatchers("/actuator/**", "/user/register", "/user/registration/confirm", "/user/demo/model", "/api/**").permitAll()
+            .anyRequest().authenticated()
+            .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) {
-        resources.resourceId("authorization");
+        CookieTokenExtractor tokenExtractor = new CookieTokenExtractor();
+        resources.resourceId("authorization")
+                 .tokenStore(jdbcTokenStore)
+                 .tokenExtractor(tokenExtractor);
     }
 }

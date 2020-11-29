@@ -1,45 +1,72 @@
 databaseChangeLog:
   - changeSet:
-      id: changelog-0.0.3.1
-      author: Siarhei Blashuk
+      id: create-app-table
+      author: Andrei Hayeuski
       changes:
-        - addColumn:
+        # app
+        - createTable:
             tableName: app
             columns:
               - column:
-                  name: api_key
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: guid
                   type: varchar(36)
-
-        - addColumn:
-            tableName: model
-            columns:
+              - column:
+                  name: organization_id
+                  type: bigint
               - column:
                   name: api_key
                   type: varchar(36)
 
-  - changeSet:
-      id: changelog-0.0.3.2
-      author: Siarhei Blashuk
-      changes:
-        - sql:
-            comment: Data migration from guid to api_key column for app table
-            sql: UPDATE app SET api_key = guid
-        - sql:
-            comment: Data migration from guid to api_key column for model table
-            sql: UPDATE model SET api_key = guid
+        - addNotNullConstraint:
+            tableName: app
+            columnName: name
 
-  - changeSet:
-      id: changelog-0.0.3.3
-      author: Siarhei Blashuk
-      changes:
+        - addNotNullConstraint:
+            tableName: app
+            columnName: guid
+
+        - addNotNullConstraint:
+            tableName: app
+            columnName: organization_id
+
+        - addNotNullConstraint:
+            tableName: app
+            columnName: api_key
+
+        - addUniqueConstraint:
+            columnNames: name, organization_id
+            constraintName: app_name_organization_id_uindex
+            tableName: app
+
         - addUniqueConstraint:
             columnNames: api_key
             constraintName: app_api_key_uindex
             tableName: app
 
         - addUniqueConstraint:
-            columnNames: api_key
-            constraintName: model_api_key_uindex
-            tableName: model
+            columnNames: guid
+            constraintName: app_guid_uindex
+            tableName: app
 
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_app
+            tableName: app
 
+        - addForeignKeyConstraint:
+            baseColumnNames: organization_id
+            baseTableName: app
+            referencedColumnNames: id
+            referencedTableName: organization
+            constraintName: fk_organization_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - createSequence:
+            sequenceName: app_id_seq

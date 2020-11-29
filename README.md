@@ -1,87 +1,207 @@
-# Exadel Face Recognition System (Exadel FRS)
+# CompreFace
 
-[![GitHub license](https://img.shields.io/github/license/pospielov/frs-private)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/pospielov/frs-private)](https://github.com/pospielov/frs-private/graphs/contributors)
+[![GitHub license](https://img.shields.io/github/license/exadel-inc/CompreFace)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/exadel-inc/CompreFace)](https://github.com/exadel-inc/CompreFace/graphs/contributors)
 
 
 
- [Exadel Face Recognition System (Exadel FRS)](#exadel-face-recognition-system--exadel-frs-)
+ [CompreFace](#compreface)
+  * [Overview](#overview)
   * [Features](#features)
   * [Getting started](#getting-started)
+  * [Simple tutorial of usage](#simple-tutorial-of-usage)
   * [How it works](#how-it-works)
-    + [ML Technologies](#ml-technologies)
+    + [ML technologies](#ml-technologies)
     + [Used ML Papers and Algorithms](#used-ml-papers-and-algorithms)
   * [Technologies](#technologies)
     + [Architecture diagram](#architecture-diagram)
-    + [Databases](#databases)
+    + [Database](#database)
     + [Platform server](#platform-server)
     + [API server](#api-server)
     + [Embedding server](#embedding-server)
-  * [Photo example of recognition](#photo-example-of-recognition)
-  * [Simple tutorial of usage](#simple-tutorial-of-usage)
   * [Rest API description](#rest-api-description)
     + [Add an example of the face](#add-an-example-of-the-face)
     + [Recognize faces from given image](#recognize-faces-from-given-image)
-    + [Retrain face model](#retrain-face-model)
-    + [Retraining status](#retraining-status)
-    + [Abort training](#abort-training)
+    + [List of all saved faces](#list-of-all-saved-faces)
     + [Delete all examples of the face by name](#delete-all-examples-of-the-face-by-name)
-    + [List names of all saved faces](#list-names-of-all-saved-faces)
-  * [Use cases and domains](#use-cases-and-domains)
+    + [Delete an example of the face by ID](#delete-an-example-of-the-face-by-id)
+    + [Verify faces from given image](#verify-faces-from-given-image)
   * [Contributing](#contributing)
-  * [License info](#license-info)
+    + [Formatting standards](#formatting-standards)
+    + [Report Bugs](#report-bugs)
+    + [Submit Feedback](#submit-feedback)
+  * [License info](#license)
 
 
 
-It is the solution for face recognition that can be integrated as a standalone server. 
+## Overview
 
-We combined state-of-the-art face recognition library that uses deep neural networks, trained on million faces, to retrieve features from faces with our own machine learning algorithm for face recognition. 
+CompreFace is an application for facial recognition that can be integrated as a standalone server or deployed on the cloud and can be set up and used without machine learning expertise.
+Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient API for model training and face recognition. We also provide an easy-to-understand roles system with which you can easily control who has access to the model.
+Every user can create their own models and train them on different subsets of input data. 
 
-Every user could have several models trained on different subset of people. The key idea is to make solution for faces recognition that anybody could setup and use without machine learning knowledge.
+## Feedback survey
 
-
+We are constantly improving our product. But for better understanding which features we should add or improve we need your help!
+Feedback form is totally anonymous, it will take just 2 minutes of your time to answer the questions:
+https://forms.gle/ybAEPc3XmzEcpv4M8
 
 ## Features
 
-FRS is:
-
-- just one docker command for app start
-- fast and high accuracy face recognizing
-- runs fully on-prem (control your data)
-- UI application panel for management
-- highload support
-
+The system can accurately identify people even when it is only given one example of their face.
+CompreFace:
+ - Uses open-source code and operates fully on-premises for data security 
+ - Can be set up and used without machine learning expertise
+ - Uses one of the most popular face recognition methods for highest accuracy 
+ - Includes a UI panel with roles for access control
+ - Starts quickly with one docker command
 
 
 ## Getting started
 
-1. install Docker
-1. just run command:
-`
-docker-compose up --build
-`
-1. open http://localhost:8000/
+#### To get started (Linux, MacOS):
+1. Install Docker and Docker-Compose
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Run command: _docker-compose up -d_
+5. Open in your browser: http://localhost:8000/login
+
+#### Getting started for Contributors:
+
+1. Install Docker and Docker-Compose
+2. Clone repository
+3. Open dev folder
+4. Run command: _docker-compose up --build_
+5. Open in your browser: http://localhost:8000/login
+
+#### To get started (Windows):
+1. Install Docker
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Run Docker
+5. Windows search bar-> cmd->in the Command prompt-> cd ->paste the path to the extracted zip folder
+6. Run command: _docker-compose up -d_
+7. Open http://localhost:8000/login
+
+** Tips for Windows** (use Git Bash terminal)
+
+1. Turn of the git autocrlf with command: _git config --global core.autocrlf false_
+2. Make sure all your containers are down: _$ docker ps_
+3. In case some containers are working, they should be stopped: _$ docker-compose down_
+4. Clean all local datebases and images: _docker system prune --volumes_
+5. Last line in /dev/start.sh file change to _docker-compose -f docker-compose.yml up --remove-orphans --build_
+6. Go to Dev folder cd dev
+7. Run _sh start.sh_ and make sure http://localhost:8000/ starts
+8. Stopped all containers: $ docker-compose down
+9. Run _sh start--dev.sh_ and make sure http://localhost:4200/ starts
 
 
+## Simple tutorial of usage
+
+Step 1. You need to sign up to the system (First user in CompareFace admin has Owner role, but it is possible to change the role) and then LogIn with created account or just use the existing one. After that system redirects you to the main page.
+
+Step 2. Create an application (left section) with "Create" link at the bottom of the page. An application is where you can create and manage your face collections.
+
+Step 3. Enter you application with double click on the name of the application. Here you will have two possibilities. The first one is to add new users to your application and manage permissions ( Global Owner and Administrator roles already have access to any application without invite, user role doesn't.) The second one is to create face collections.
+
+Step 4. After creating new collection, it appears at the Face Collections List created within the application with an appropriate name and API key. The user has the possibility to add new Face or to test the existing one (three dots on right side and click "test" link). This option will lead the user to Test Face Collection page, where is the drag&drop to upload image with face to recognize. We recommend an image size no higher than 5MB, as it could slow down the request process. Supported image formats are JPEG/PNG/JPG/ICO/BMP/GIF/TIF/TIFF format.
+
+Step 5. Upload your photo and let Face Recognition system compare faces. When you have face contour detection enabled (green borders around the face). These points represent the shape of the feature. API requests within the solution use RESTful API, and backend data collection. [Read more about API](https://github.com/exadel-inc/CompreFace#rest-api-description) With Face Recognition system APIs you can add Face Recognition capabilities using simple API Calls.
+
+The following result Json illustrates how these points map to a face, where
+
+1. subject -person identificator
+2. similarity - gives the confidence that this is the found subject
+3. probability - gives the confidence that this is a face
+4. x_min, x_max, y_min, y_max are coordinates of the face in the image
+
+```
+
+"result": [
+{
+  "box": {
+    "probability": 0.99583,
+    "x_max": 551,
+    "y_max": 364,
+    "x_min": 319,
+    "y_min": 55
+  },
+  "faces": [
+  {
+    "similarity": 0.99593,
+    "face_name": "lisan"
+  }
+  ]
+}
+]
+```
+
+The following JavaScript code example allows to add new face to Face Collection.
+
+```
+
+ async function saveNewImageToFaceCollection() {
+  let name = encodeURIComponent('John');
+  let formData = new FormData();
+  let photo = document.getElementById("fileDropRef").files[0];
+
+    formData.append("photo", photo);
+
+    try {
+       let r = await fetch('http://localhost:8000/api/v1/faces/?subject=`${name}`', {method: "POST", body: formData});
+     } catch(e) {
+       console.log('Houston, we have a problem...:', e);
+    }
+
+ }
+
+```
+
+This function sends image to our server and shows result in text area:
+
+```
+
+function recognizeFace(input) {
+
+  async function getData() {
+    let response = await fetch('http://localhost:8000/api/v1/recognize')
+    let data = await response.json()
+    return data
+  };
+
+  let result = Promise.resolve(response)
+    result.then(data => {
+    document.getElementById("result-textarea-request").innerHTML = JSON.stringify(data);
+  });
+}
+
+```
 
 ## How it works
 
+**Finding a face** 
+
+Detecting one or more faces in an image. Multi-task Cascaded Convolutional Neural Networks (MTCNN) was used for face recognition.
+
+**Posing and projecting faces** 
+
+Normalization of all found faces with rotate, scale and shear. 
+
+**Calculate embedding from faces**
+
+Calculating embedding and classifying the face based on extracted features. We took CNN for face recognition and the last 3 fully connected layers were removed. As a result, - NN calculates embedding. 
+
+**Use embedding for recognize/verify faces using embedding**
+
+Recognizing the person in the photo. We calculate Euclidean distance using [Nd4j](https://javadoc.io/static/org.nd4j/nd4j-api/0.4-rc3.6/org/nd4j/linalg/factory/Nd4j.html) to determine the level of matching faces.
 
 
-![how-it-works](https://user-images.githubusercontent.com/4942439/87042598-4ff45f00-c20d-11ea-8142-7aba30723117.jpg)
 
-**Finding the face:** we reused base project code for this, for face recognition they use multi-task cascaded convolutional neural networks (MTCNN).
-**Posing and projecting faces:** we reused base project code for this.
-**Calculate embedding from faces:** we reused base project code for this, they take pretrained CNN for face recognition, remove the last 3 fully connected layers and the result NN calculates embedding.
-**Use embedding for training model/recognize face using embedding:**
-right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/api/java/smile/classification/LogisticRegression.html) as a classifier, because of small number of train examples.
+### ML technologies
 
+* [MTCNN (Multi-task Cascaded Convolutional Networks)](https://arxiv.org/pdf/1604.02878.pdf)
+* [FaceNet](https://github.com/davidsandberg/facenet)
+* Euclidean distance
 
-
-### ML Technologies
-
-* MTCNN (Multi-task Cascaded Convolutional Networks)
-* logistic Regression
-* transfer learning
 
 
 ### Used ML Papers and Algorithms
@@ -100,297 +220,325 @@ right now we use haifengl/smile [LogisticRegression](http://haifengl.github.io/a
 
 
 
-## Technologies 
+## Technologies
 
 ### Architecture diagram
 
 
 
-![architecture](https://user-images.githubusercontent.com/4942439/87042452-220f1a80-c20d-11ea-96ee-5f7ad6ddf93b.jpg)
+![architecture](https://user-images.githubusercontent.com/59657282/96593288-00d0c680-12f2-11eb-93ae-584a2cd08a3d.png)
 
 
 
-### Databases
+### Database
 
-* postgreSQL
-* mongoDB
+* PostgreSQL
 
 
 
 ### Platform server
 
-* java 11
-* spring boot
+* Java 11
+* Spring Boot
 
   
 
 ### API server
 
-* java 11
-* spring boot
-* haifengl/smile
+* Java 11
+* Spring Boot
+* Nd4j
 
 
 
 ### Embedding server
 
-* python
-* [faceNet](https://github.com/davidsandberg/facenet)
-* [insightFace](https://github.com/deepinsight/insightface)
-* tensorFlow
-* sciPy
-* numPy
-* openCV (for images resizing)
-
-
-
-## Photo example of recognition
-
-<todo: add photo> 
-
-
-
-## Simple tutorial of usage
-
-1. What is needed to make it work is just create model and receive API key.
-1. Then will be able to use this API key to train model with your own images.
-1. As far as you trained the model you just need to send new face to REST endpoint to recognize face on it.
+* Python
+* [FaceNet](https://github.com/davidsandberg/facenet)
+* [InsightFace](https://github.com/deepinsight/insightface)
+* TensorFlow
+* SciPy
+* NumPy
+* OpenCV (for images resizing)
 
 
 
 ## Rest API description
 
-<todo: swagger link>
+By using the created API key, the user can add an image as an example of the face, retrieve a list of saved images, recognize a face from the uploaded image the Face Collection, and delete all examples of the face by the name.
+
+
 
 ### Add an example of the face
 
-Add an example image of a know person's face. It will be used during face recognition. Face will be recognized after the model is trained.
-```
-curl  -X POST \
+Creates an example of the face by saving images. To train the system, you can add as many images as you want.
+
+```http request
+curl  -X POST "http://localhost:8000/api/v1/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
--H "x-frs-api-key: <model_api_key>" \
--F file=@<localfilename>
--F det_prob_threshold=@<det_prob_threshold>
--F retrain=@<retrain_option>
-
-http://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
+-H "x-api-key: <faces_collection_api_key>" \
+-F file=@<local_file> 
 ```
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-**[localfilename]** - jpeg of png image on your local computer.
-**[face_name]** - name of the person on the image. It could be any string if you need depersonalize images.
-**[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
-**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running
- processes of classifier training. Default value: force
+| Element             | Description | Type   | Required | Notes                                                        |
+| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
+| Content-Type        | header      | string | required | multipart/form-data                                          |
+| x-api-key           | header      | string | required | api key of the Face Collection, created by the user          |
+| subject             | param       | string | required | is the name you assign to the image you save                 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+| file                | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 
-**Available images extensions:** jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp
+Response body on success:
+```
+{
+  "image_id": "<UUID>",
+  "subject": "<subject>"
+}
+```
 
-**Max images size:** 5Mb (5242880 bytes)
+| Element  | Type   | Description                |
+| -------- | ------ | -------------------------- |
+| image_id | UUID   | UUID of uploaded image     |
+| subject  | string | <subject> of saved image |
 
 
 
 ### Recognize faces from given image
 
-Recognizes faces from given image.
-```
-curl  -X POST \
+Recognizes faces from the uploaded image.
+```http request
+curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
--H "x-frs-api-key: <model_api_key>" \
--F file=@<localfilename>
--F limit=<limit>
--F det_prob_threshold=<det_prob_threshold>
-
-https://localhost:8080/api/v1/recognize[?limit=<limit>]
+-H "x-api-key: <faces_collection_api_key>" \
+-F file=<local_file>
 ```
 
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-**[det_prob_threshold]** (optional) - the minimum required confidence that a found face is actually a face. Value between 0.0 and 1.0.
-**[localfilename]** - jpeg of png image on your local computer.
-**[limit]** (optional) - parameter to specify the maximum number of faces to be recognized. Value of 0 represents no limit. Default value: 0. 
 
-**Available images extensions:** jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp
-
-**Max images size:** 5Mb (5242880 bytes)
+| Element          | Description | Type    | Required | Notes                                                        |
+| ---------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
+| Content-Type     | header      | string  | required | multipart/form-data                                          |
+| x-api-key        | header      | string  | required | api key of the Face Collection, created by the user                    |
+| file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+| prediction_count | param       | integer | optional | maximum number of predictions per faces. Default value: 1    |
 
 Response body on success:
 ```
 {
-     "result" : [
-         {
-             "box" :
-             {
-                    "x_min"=<integer>,
-                    "x_max"=<integer>,
-                    "y_min"=<integer>,
-                    "y_max"=<integer>,
-                    "probability"=<det_probability>,
-
-             },
-             "face_name" : <face_name1>,
-             "probability" : <probability1>
-         },
-         ...
-     ]
+  "result": [
+    {
+      "box": {
+        "probability": <probability>,
+        "x_max": <integer>,
+        "y_max": <integer>,
+        "x_min": <integer>,
+        "y_min": <integer>
+      },
+      "faces": [
+        {
+          "similarity": <similarity1>,
+          "subject": <subject1>	
+        },
+        ...
+      ]
+    }
+  ]
 }
 ```
-<todo: output format will be changed>
 
-**[face_name]** - name of the person on the image with the biggest probability
-**[probability]** - probability that on that image predicted person
-**[det_probability]** - probability that a found face is a actually a face
-**[parameters]** - list of parameters of the bounding box for this face
+| Element                        | Type    | Description                                                  |
+| ------------------------------ | ------- | ------------------------------------------------------------ |
+| box                            | object  | list of parameters of the bounding box for this face         |
+| probability                    | float   | probability that a found face is actually a face             |
+| x_max, y_max, x_min, y_min | integer | coordinates of the frame containing the face                 |
+| faces                          | list    | list of similar faces with size of <prediction_count> order by similarity |
+| similarity                     | float   | similarity that on that image predicted person              |
+| subject                        | string  | name of the subject in Face Collection                                 |
 
 
 
-### Retrain face model
+### List of all saved faces
 
-Retrains model for specified API Key. The model should be retrained if updates to the face database were done with the retrain  flag to  false (which is useful when uploading/deleting a lot of faces). 
+Retrieves a list of images saved in a Face Collection
 
+```http request
+curl  -X GET "http://localhost:8000/api/v1/faces" \
+-H "x-api-key: <faces_collection_api_key>" \
 ```
-curl  -X POST \
--H "x-frs-api-key: <model_api_key>" \
 
-https://localhost:8080/api/v1/retrain
-```
-
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
+| Element   | Description | Type   | Required | Notes                                     |
+| --------- | ----------- | ------ | -------- | ----------------------------------------- |
+| x-api-key | header      | string | required | api key of the Face Collection, created by the user |
 
 Response body on success:
-```
-{
-  "status": "Training is started"
-}
-```
-
-
-
-### Retraining status
-
-Gets face model retraining status for specified API Key. This REST endpoint could be useful if you want to check if the model is still retraining before adding more faces and retraining model again.
-
-```
-curl  -X GET \
--H "x-frs-api-key: <model_api_key>" \
-
-https://localhost:8080/api/v1/retrain
-```
-
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-
-Response body on success:
-```
-{
-  "status": "Retraining has been previously started"
-}
-```
-or
 
 ```
 {
-  "status": "Ready to start training"
+  "faces": [
+    {
+      "image_id": <image_id>,
+      "subject": <subject>
+    },
+    ...
+  ]
 }
 ```
 
+| Element  | Type   | Description                                                  |
+| -------- | ------ | ------------------------------------------------------------ |
+| image_id | UUID   | UUID of the face                                             |
+| subject  | string | <subject> of the person, whose picture was saved for this api key |
 
-
-### Abort training
-
-Aborts training the specified API Key. This REST endpoint could be useful if you want to stop retraining the model.
-
-```
-curl  -X DELETE \
--H "x-frs-api-key: <model_api_key>" \
-
-https://localhost:8080/api/v1/retrain
-```
-
-**[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key" header)
-
-Response body on success:
-```
-{
-  "status": "Retraining is ensured to be stopped"
-}
-```
 
 
 ### Delete all examples of the face by name
 
-Delete all image examples of the face. Face will not be recognized after the model is retrained.
+Deletes all image examples of the <subject>.
 
-```
-curl  -X DELETE \
--H "x-frs-api-key: <model_api_key>"
-
-https://localhost:8080/api/v1/faces/<face_name>?[retrain=<retrain>]
+```http request
+curl  -X DELETE "http://localhost:8000/api/v1/faces?subject=<subject>" \
+-H "x-api-key: <faces_collection_api_key>"
 ```
 
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-**[face_name]** - the name of the person, whose records need to be removed from the database, as a string.
-**[retrain]** - specify whether the model should start retraining immediately after the request is completed (set this parameter to value "no", if operating with a lot of images one after another). Allowed values: "yes", "no", "force". “Force” option will abort already running processes of classifier training. Default value : *force*
+| Element   | Description | Type   | Required | Notes                                                        |
+| --------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
+| x-api-key | header      | string | required | api key of the Face Collection, created by the user                    |
+| subject   | param       | string | optional | is the name you assign to the image you save. **Caution!** If this parameter is absent, all faces in Face Collection will be removed |
 
-
-
-### List names of all saved faces
-
-As with all other endpoints, applies only to faces uploaded with the specified API key.
-
+Response body on success:
 ```
-curl  -X GET \
--H "x-frs-api-key: <model_api_key>" \
-https://localhost:8080/api/v1/faces
+[
+  {
+    "image_id": <image_id>,
+    "subject": <subject>
+  },
+  ...
+]
 ```
 
-**[model_api_key]** - api key of model , created by client , to which application has access (in core service it is equal to "X-Api-Key" header)
+| Element  | Type   | Description                                                  |
+| -------- | ------ | ------------------------------------------------------------ |
+| image_id | UUID   | UUID of the removed face                                     |
+| subject  | string | <subject> of the person, whose picture was saved for this api key |
+
+
+
+### Delete an example of the face by ID
+
+Deletes an image by ID.
+
+```http request
+curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
+-H "x-api-key: <faces_collection_api_key>"
+```
+
+| Element   | Description | Type   | Required | Notes                                     |
+| --------- | ----------- | ------ | -------- | ----------------------------------------- |
+| x-api-key | header      | string | required | api key of the Face Collection, created by the user |
+| image_id  | variable    | UUID   | required | UUID of the removing face                 |
 
 Response body on success:
 ```
 {
-   "names" : [
-     <face_name1>,
-     <face_name2>,
-     ...
-   ]
+  "image_id": <image_id>,
+  "subject": <subject>
 }
 ```
 
-**[face_name]** - name of the person, whose picture was saved for this api key. 
+| Element  | Type   | Description                                                  |
+| -------- | ------ | ------------------------------------------------------------ |
+| image_id | UUID   | UUID of the removed face                                     |
+| subject  | string | <subject> of the person, whose picture was saved for this api key |
 
 
 
+### Verify faces from given image
 
-### Delete model and all faces that belong to it
-
-Delete model and everything related to it from MongoDB. Please, note that it has no effect on PostgreSQL data. So deleting model from MongoDB doesn't remove model's record from PostgreSQL. Originally, endpoint was created to reffer from [admin](/admin) modul.
-
+Compares faces from the uploaded image with face in saved image id.
+```http request
+curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>" \
+-H "Content-Type: multipart/form-data" \
+-H "x-api-key: <faces_collection_api_key>" \
+-F file=<local_file>
 ```
-curl  -X DELETE \
--H "x-frs-api-key: <model_api_key>"
-https://localhost:8080/api/v1/faces
+
+
+| Element          | Description | Type    | Required | Notes                                                        |
+| ---------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
+| Content-Type     | header      | string  | required | multipart/form-data                                          |
+| x-api-key        | header      | string  | required | api key of the Face Collection, created by the user                    |
+| image_id         | variable    | UUID    | required | UUID of the verifying face                                   |
+| file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+
+Response body on success:
+```
+{
+  "result": [
+    {
+      "box": {
+        "probability": <probability>,
+        "x_max": <integer>,
+        "y_max": <integer>,
+        "x_min": <integer>,
+        "y_min": <integer>
+      },
+      "similarity": <similarity1>
+    },
+    ...
+  ]
+}
 ```
 
-**[model_api_key]** - api key of model, created by client, to which application has access (in core service it is equal to "X-Api-Key" header)
-
-## Use cases and domains
-
-<todo: cases and domains>
+| Element                        | Type    | Description                                                  |
+| ------------------------------ | ------- | ------------------------------------------------------------ |
+| box                            | object  | list of parameters of the bounding box for this face         |
+| probability                    | float   | probability that a found face is actually a face             |
+| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
+| similarity                     | float   | similarity that on that image predicted person               |
+| subject                        | string  | name of the subject in Face Collection                       |
 
 
 
 ## Contributing
 
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-You can help us with opened issues too. There's always something to work on.
-We have rules on formatting:
+Contributions are welcome and greatly appreciated.
+After creating your first contributing Pull Request you will receive a request to sign our Contributor License Agreement by commenting your PR with a special message.
 
-- for java just import team_codestyle.xml file in your IntelliJ IDEA
-<todo: links to code style files> 
+
+
+
+### Formatting standards
+
+For java just import dev/team_codestyle.xml file in your IntelliJ IDEA
+
+
+
+### Report Bugs
+
+Report bugs at https://github.com/exadel-inc/CompreFace/issues.
+
+If you are reporting a bug, please include:
+
+* Your operating system name and version.
+* Any details about your local setup that might be helpful in troubleshooting.
+* Detailed steps to reproduce the bug.
+
+
+
+### Submit Feedback
+
+The best way to send feedback is to file an issue at https://github.com/exadel-inc/CompreFace/issues. 
+
+If you are proposing a feature, please:
+
+* Explain in detail how it should work.
+* Keep the scope as narrow as possible, to make it easier to implement.
 
 
 
 ## License info
 
-[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
-    
-> TL;DR: you can modify, distribute and use it commercially, 
-but you MUST reference the original author or give a link to service
-    
+CompreFace is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
+

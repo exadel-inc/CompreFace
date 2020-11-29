@@ -15,7 +15,8 @@
  */
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatCardModule, MatIconModule } from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { SnackBarModule } from 'src/app/features/snackbar/snackbar.module';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
@@ -24,6 +25,7 @@ import { TableModule } from '../table/table.module';
 import { ApplicationListContainerComponent } from './application-list-container.component';
 import { ApplicationListFacade } from './application-list-facade';
 import { ApplicationListComponent } from './application-list/application-list.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ApplicationListContainerComponent, ApplicationListComponent],
@@ -37,6 +39,7 @@ import { ApplicationListComponent } from './application-list/application-list.co
     SnackBarModule,
     MatCardModule,
     MatIconModule,
+    TranslateModule,
   ]
 })
 export class ApplicationListModule {}

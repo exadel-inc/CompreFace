@@ -1,0 +1,7 @@
+version: '3.4'
+
+services:
+  compreface-fe:
+    build:
+      context: ../ui
+      dockerfile: docker-dev/Dockerfile

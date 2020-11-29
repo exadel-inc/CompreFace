@@ -1,15 +1,32 @@
 databaseChangeLog:
   - changeSet:
-      id: registration-token
+      id: create-model_share_request-table
       author: Valijon Sobirov
       changes:
-        #user registration token
-        - addColumn:
-            tableName: user
+        # model_share_request
+        - createTable:
+            tableName: model_share_request
             columns:
               - column:
-                  name: registration_token
-                  type: varchar(36)
+                  name: app_id
+                  type: bigint
               - column:
-                  name: reg_time
+                  name: request_id
+                  type: uuid
+              - column:
+                  name: request_time
                   type: timestamp
+
+        - addPrimaryKey:
+            columnNames: app_id, request_id
+            constraintName: model_share_request_pkey
+            tableName: model_share_request
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: model_share_request
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fkhqgswtck7x4ulfbvac6lt86pu
+            onDelete: CASCADE
+            onUpdate: CASCADE

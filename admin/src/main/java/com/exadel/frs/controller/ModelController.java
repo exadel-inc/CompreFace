@@ -17,6 +17,7 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
+import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
@@ -24,7 +25,6 @@ import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
-import com.exadel.frs.system.statistics.CallStatistics;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
@@ -32,7 +32,6 @@ import io.swagger.annotations.ApiResponses;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,20 +43,16 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/org/{orgGuid}/app/{appGuid}")
+@RequestMapping("/app/{appGuid}")
 @RequiredArgsConstructor
 public class ModelController {
 
     private final ModelService modelService;
     private final MlModelMapper modelMapper;
 
-    @CallStatistics
     @GetMapping("/model/{guid}")
     @ApiOperation(value = "Get model")
     public ModelResponseDto getModel(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid,
@@ -66,7 +61,7 @@ public class ModelController {
             final String guid
     ) {
         return modelMapper.toResponseDto(
-                modelService.getModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId()),
+                modelService.getModel(appGuid, guid, SecurityUtils.getPrincipalId()),
                 appGuid
         );
     }
@@ -74,9 +69,6 @@ public class ModelController {
     @GetMapping("/models")
     @ApiOperation(value = "Get all models in application")
     public List<ModelResponseDto> getModels(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid
@@ -87,16 +79,13 @@ public class ModelController {
         );
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(CREATED)
     @PostMapping("/model")
     @ApiOperation(value = "Create model")
     @ApiResponses({
             @ApiResponse(code = 400, message = "Field name cannot be empty | Application access type to model is not correct")
     })
     public ModelResponseDto createModel(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid,
@@ -106,7 +95,7 @@ public class ModelController {
             final ModelCreateDto modelCreateDto
     ) {
         return modelMapper.toResponseDto(
-                modelService.createModel(modelCreateDto, orgGuid, appGuid, SecurityUtils.getPrincipalId()), appGuid
+                modelService.createModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId()), appGuid
         );
     }
 
@@ -116,9 +105,6 @@ public class ModelController {
             @ApiResponse(code = 400, message = "Field name cannot be empty | Application access type to model is not correct")
     })
     public ModelResponseDto updateModel(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid,
@@ -130,7 +116,7 @@ public class ModelController {
             @RequestBody
             final ModelUpdateDto modelUpdateDto
     ) {
-        var updatedModel = modelService.updateModel(modelUpdateDto, orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
+        var updatedModel = modelService.updateModel(modelUpdateDto, appGuid, guid, SecurityUtils.getPrincipalId());
 
         return modelMapper.toResponseDto(updatedModel, appGuid);
     }
@@ -138,9 +124,6 @@ public class ModelController {
     @PutMapping("/model/{guid}/apikey")
     @ApiOperation(value = "Generate new api-key for model")
     public ModelResponseDto regenerateApiKey(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid,
@@ -148,17 +131,14 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-        modelService.regenerateApiKey(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
+        modelService.regenerateApiKey(appGuid, guid, SecurityUtils.getPrincipalId());
 
-        return modelMapper.toResponseDto(modelService.getModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId()), appGuid);
+        return modelMapper.toResponseDto(modelService.getModel(appGuid, guid, SecurityUtils.getPrincipalId()), appGuid);
     }
 
     @DeleteMapping("/model/{guid}")
     @ApiOperation(value = "Delete model")
     public void deleteModel(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid,
@@ -166,15 +146,12 @@ public class ModelController {
             @PathVariable
             final String guid
     ) {
-            modelService.deleteModel(orgGuid, appGuid, guid, SecurityUtils.getPrincipalId());
+        modelService.deleteModel(appGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @PostMapping("/model/{guid}/share")
     @ApiOperation("Sharing model with another application")
     public void shareModel(
-            @ApiParam(value = "GUID of organization", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String orgGuid,
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable
             final String appGuid,
@@ -184,7 +161,7 @@ public class ModelController {
             @ApiParam(value = "GUID from model share request", required = true)
             @RequestBody
             final ModelShareDto modelShare
-            ) {
-        modelService.share(modelShare, orgGuid, appGuid, guid);
+    ) {
+        modelService.share(modelShare, appGuid, guid);
     }
 }

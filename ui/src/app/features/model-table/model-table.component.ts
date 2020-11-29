@@ -14,10 +14,11 @@
  * permissions and limitations under the License.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Model } from 'src/app/data/model';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import { Model } from 'src/app/data/interfaces/model';
 
 import { TableComponent } from '../table/table.component';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Component({
   selector: 'app-model-table',
@@ -30,4 +31,6 @@ export class ModelTableComponent extends TableComponent {
   @Output() copyApiKey = new EventEmitter<string>();
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
+  @Output() test = new EventEmitter<Model>();
+  roleEnum = Role;
 }

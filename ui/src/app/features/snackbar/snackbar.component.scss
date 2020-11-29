@@ -19,7 +19,7 @@
 
 .message {
   // todo fix font-family
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
   color: $white;
 }
 
@@ -31,5 +31,9 @@
 
   &.error {
     background-color: $red;
+  }
+
+  &.warning {
+    background-color: $orange;
   }
 }

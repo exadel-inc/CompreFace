@@ -16,6 +16,7 @@
 
 package com.exadel.frs.system.security.config;
 
+import static java.util.stream.Collectors.toList;
 import com.exadel.frs.system.security.AuthenticationKeyGeneratorImpl;
 import com.exadel.frs.system.security.CustomOAuth2Exception;
 import com.exadel.frs.system.security.CustomUserDetailsService;
@@ -23,21 +24,24 @@ import com.exadel.frs.system.security.TokenServicesImpl;
 import com.exadel.frs.system.security.client.Client;
 import com.exadel.frs.system.security.client.ClientService;
 import com.exadel.frs.system.security.client.OAuthClientProperties;
-import java.util.stream.Collectors;
+import com.exadel.frs.system.security.endpoint.CustomTokenEndpoint;
 import javax.sql.DataSource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.OAuth2Exception;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerEndpointsConfiguration;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 import org.springframework.transaction.annotation.Transactional;
@@ -63,6 +67,19 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     @Bean
+    @Primary
+    public TokenEndpoint tokenEndpoint(AuthorizationServerEndpointsConfiguration conf) {
+        TokenEndpoint tokenEndpoint = new CustomTokenEndpoint();
+        tokenEndpoint.setClientDetailsService(conf.getEndpointsConfigurer().getClientDetailsService());
+        tokenEndpoint.setProviderExceptionHandler(conf.getEndpointsConfigurer().getExceptionTranslator());
+        tokenEndpoint.setTokenGranter(conf.getEndpointsConfigurer().getTokenGranter());
+        tokenEndpoint.setOAuth2RequestFactory(conf.getEndpointsConfigurer().getOAuth2RequestFactory());
+        tokenEndpoint.setOAuth2RequestValidator(conf.getEndpointsConfigurer().getOAuth2RequestValidator());
+        tokenEndpoint.setAllowedRequestMethods(conf.getEndpointsConfigurer().getAllowedTokenEndpointRequestMethods());
+        return tokenEndpoint;
+    }
+
+    @Bean
     public DefaultTokenServices tokenServices() {
         TokenServicesImpl tokenServices = new TokenServicesImpl(tokenStore());
         tokenServices.setClientDetailsService(clientService);
@@ -72,7 +89,7 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(final AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer.tokenKeyAccess("permitAll()")
-                .checkTokenAccess("isAuthenticated()");
+                   .checkTokenAccess("isAuthenticated()");
     }
 
     @Override
@@ -81,19 +98,19 @@ public class AuthServerConfig extends AuthorizationServerConfigurerAdapter {
         clients.withClientDetails(clientService);
 
         var appClients = authClientProperties.getClients().values()
-                .stream()
-                .map(it ->
-                        new Client()
-                                .setClientId(it.getClientId())
-                                .setAuthorizedGrantTypes(String.join(",", it.getAuthorizedGrantTypes()))
-                                .setAuthorities(String.join(",", it.getAuthorities()))
-                                .setResourceIds(String.join(",", it.getResourceIds()))
-                                .setScope(String.join(",", it.getClientScope()))
-                                .setClientSecret(passwordEncoder.encode(it.getClientSecret()))
-                                .setAccessTokenValidity(it.getAccessTokenValidity())
-                                .setRefreshTokenValidity(it.getRefreshTokenValidity())
-                                .setAutoApprove("*"))
-                .collect(Collectors.toList());
+                                             .stream()
+                                             .map(it ->
+                                                     new Client()
+                                                             .setClientId(it.getClientId())
+                                                             .setAuthorizedGrantTypes(String.join(",", it.getAuthorizedGrantTypes()))
+                                                             .setAuthorities(String.join(",", it.getAuthorities()))
+                                                             .setResourceIds(String.join(",", it.getResourceIds()))
+                                                             .setScope(String.join(",", it.getClientScope()))
+                                                             .setClientSecret(passwordEncoder.encode(it.getClientSecret()))
+                                                             .setAccessTokenValidity(it.getAccessTokenValidity())
+                                                             .setRefreshTokenValidity(it.getRefreshTokenValidity())
+                                                             .setAutoApprove("*"))
+                                             .collect(toList());
         clientService.saveAll(appClients);
     }
 

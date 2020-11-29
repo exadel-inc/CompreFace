@@ -42,9 +42,7 @@ width: 100%;
   &-danger {
     background-color: $red;
   }
-}
 
-.alert {
   &-success {
     background-color: $green;
   }
@@ -72,4 +70,7 @@ width: 100%;
 .error-wrapper {
   display: flex;
   justify-content: space-between;
+}
+.footer{
+  text-align: center;
 }

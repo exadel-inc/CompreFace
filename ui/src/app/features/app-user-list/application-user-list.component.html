@@ -16,16 +16,16 @@
 
 <div class="app-user-list">
   <div class="table-header-container">
-    <h3>Users</h3>
+    <h3>{{'users.title' | translate}}</h3>
     <form>
       <input
         matInput
         type="text"
         class="search-input"
         [(ngModel)]="search"
-        placeholder="search"
+        placeholder="{{'users.search.app_title' | translate}}"
         [ngModelOptions]="{standalone: true}">
-      <i class="material-icons">search</i>
+      <mat-icon class="material-icons notranslate">search</mat-icon>
     </form>
   </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
@@ -35,11 +35,13 @@
     [userRole]="userRole$ | async"
     [currentUserId]="currentUserId$ | async"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
-    [availableRoles$]="availableRoles$"
+    [availableRoles]="availableRoles$ | async"
+    [createMessage]="message"
+    [searchText]="search"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)">
   </app-user-table>
-  <div class="card-single-action-container" *ngIf="userRole$ | async as userRole">
-    <button *ngIf="userRole !== 'USER'" mat-button color="primary" (click)="onInviteUser();">ADD</button>
+  <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
+    <button *ngIf="userRole !== roleEnum.USER" mat-button color="primary" (click)="onInviteUser();">{{'common.capital.add' | translate}}</button>
   </div>
 </div>

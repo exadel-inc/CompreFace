@@ -27,7 +27,7 @@ import {map, startWith} from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InviteUserComponent implements OnInit {
-  public form: FormGroup;
+  form: FormGroup;
   @Input() options$: Observable<string[]>;
   filteredOptions$: Observable<string[]>;
   @Output() email = new EventEmitter<string>();
@@ -40,16 +40,16 @@ export class InviteUserComponent implements OnInit {
     });
 
     if (this.options$) {
-      this.filteredOptions$ = combineLatest(
+      this.filteredOptions$ = combineLatest([
         this.options$,
-        this.form.controls.email.valueChanges.pipe(startWith(''))
+        this.form.controls.email.valueChanges.pipe(startWith(''))]
       ).pipe(
         map(([options, value]) => this.filter(options, value)),
       );
     }
   }
 
-  public onClick(): void {
+  onClick(): void {
     if (this.form.valid && this.form.value.email && this.form.value.email.length) {
       this.email.emit(this.form.value.email);
       this.form.reset();

@@ -16,10 +16,15 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatIconModule, MatMenuModule, MatTableModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 
 import { ModelTableComponent } from './model-table.component';
+import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ModelTableComponent],
@@ -30,6 +35,9 @@ import { ModelTableComponent } from './model-table.component';
     MatTableModule,
     MatIconModule,
     MatMenuModule,
+    TruncateModule,
+    MatTooltipModule,
+    TranslateModule,
   ]
 })
 export class ModelTableModule { }

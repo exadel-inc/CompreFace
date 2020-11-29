@@ -16,43 +16,33 @@
 
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AppSnackBarComponent } from './snackbar.component';
 
-const messageMap = {
-  'default-info': 'DEFAULT INFO MESSAGE',
-  'default-error': 'DEFAULT ERROR MESSAGE'
-};
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SnackBarService {
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar, private translate: TranslateService) {}
 
-  public openInfo(messageCode: string, duration: number = 3000, message?: string): void {
+  openNotification({ messageText, messageOptions, type = 'info' }: { messageText: string; messageOptions?: any; type?: string }): void {
+    const message = this.translate.instant(messageText, messageOptions);
+    const duration = type === 'info' ? 3000 : 8000;
     const data = {
-      message: messageCode ? messageMap[messageCode] : message,
-      type: 'info'
+      message,
+      type,
     };
 
     this.openSnackBar(data, duration);
   }
 
-  public openError(messageCode: string, duration: number = 8000, message?: string): void {
+  openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
+    const errorMessage = message.error || message;
     const data = {
-      message: messageCode ? messageMap[messageCode] : message,
-      type: 'error'
-    };
-
-    this.openSnackBar(data, duration);
-  }
-
-  public openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
-    const data = {
-      message: message.error.message || message.message,
-      type: 'error'
+      message: errorMessage.message ? errorMessage.message : errorMessage,
+      type: 'error',
     };
 
     this.openSnackBar(data, duration);
@@ -63,7 +53,7 @@ export class SnackBarService {
       duration,
       data,
       verticalPosition: 'top',
-      panelClass: ['app-snackbar-panel', data.type]
+      panelClass: ['app-snackbar-panel', data.type],
     });
   }
 }

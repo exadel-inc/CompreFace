@@ -1,0 +1,89 @@
+server:
+  port: ${CRUD_PORT:8080}
+
+app:
+  security:
+    oauth2:
+      clients:
+        COMMON:
+          access-token-validity: ${COMMON_ACCESS_TOKEN_VALIDITY:2400}
+          authorities: ROLE_APP_LOGIN
+          authorized-grant-types: password,refresh_token
+          client-id: CommonClientId
+          client-scope: all
+          client-secret: password
+          refresh-token-validity: ${COMMON_REFRESH_TOKEN_VALIDITY:1209600}
+          resource-ids: authorization
+
+spring:
+  profiles:
+    active: prod
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 10MB
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 3
+      minimum-idle: 3
+  jpa:
+    properties:
+      hibernate:
+        default_schema: public
+        jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    hibernate:
+      ddl-auto: none
+    database: postgresql
+    open-in-view: true
+    generate-ddl: false
+  mail:
+    enable: ${ENABLE_EMAIL_SERVER:false}
+    host: ${EMAIL_HOST:example.com}
+    username: ${EMAIL_USERNAME:example@example.com}
+    from: ${EMAIL_FROM:name <example@example.com>}
+    password: ${EMAIL_PASSWORD:example}
+    port: 587
+    test-connection: false
+    properties.mail:
+      debug: true
+      smtp:
+        connectiontimeout: 12000
+        writetimeout: 12000
+        starttls:
+          enable: true
+        ssl:
+          trust: ${EMAIL_HOST}
+        auth: true
+  main:
+    allow-bean-definition-overriding: true
+
+security:
+  signing-key: MaYzkSjmkzPC57L
+  encoding-strength: 256
+  expire-length: 86400000
+
+swagger:
+  auth:
+    server: http://localhost:${server.port}
+  info:
+    title: CompreFace - ADMIN
+    version: 0.0.2-SNAPSHOT
+
+host:
+  frs: ${FRS_CRUD_HOST:http://localhost:8000}
+  full:
+    dns:
+      auth:
+        link: ${DNS_URL:http://localhost:${server.port}}
+
+registration:
+  token:
+    expires: 3600000
+    scheduler:
+      period: 300000

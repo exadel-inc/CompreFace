@@ -15,15 +15,16 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
-import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { ApplicationListFacade } from './application-list-facade';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-list-container',
@@ -33,17 +34,23 @@ import { ApplicationListFacade } from './application-list-facade';
       [userRole]="userRole$ | async"
       [tableConfig]="tableConfig$ | async"
       (selectApp)="onClick($event)"
-      (createApp)="onCreateNewApp()">
+      (createApp)="onCreateNewApp()"
+    >
     </app-application-list>
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   tableConfig$: Observable<ITableConfig>;
 
-  constructor(private applicationFacade: ApplicationListFacade, private dialog: MatDialog, private router: Router) {
+  constructor(
+    private applicationFacade: ApplicationListFacade,
+    private dialog: MatDialog,
+    private router: Router,
+    private translate: TranslateService
+  ) {
     this.applicationFacade.initSubscriptions();
   }
 
@@ -51,23 +58,24 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.applicationFacade.isLoading$;
     this.userRole$ = this.applicationFacade.userRole$;
 
-    this.tableConfig$ = this.applicationFacade.applications$
-      .pipe(
-        map(apps => {
-          return ({
-            columns: [{ title: 'Name', property: 'name' }, { title: 'Owner', property: 'owner' }],
-            data: apps.map(app => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` }))
-          });
-        })
-      );
+    this.tableConfig$ = this.applicationFacade.applications$.pipe(
+      map((apps) => {
+        return {
+          columns: [
+            { title: 'Name', property: 'name' },
+            { title: 'Owner', property: 'owner' },
+          ],
+          data: apps.map((app) => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` })),
+        };
+      })
+    );
   }
 
   onClick(application): void {
     this.router.navigate([ROUTERS_URL.APPLICATION], {
       queryParams: {
-        org: this.applicationFacade.getOrgId(),
-        app: application.id
-      }
+        app: application.id,
+      },
     });
   }
 
@@ -75,12 +83,12 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
-        entityType: 'application',
-        name: ''
-      }
+        entityType: this.translate.instant('applications.header.title'),
+        name: '',
+      },
     });
 
-    const dialogSubscription = dialog.afterClosed().subscribe(name => {
+    const dialogSubscription = dialog.afterClosed().subscribe((name) => {
       if (name) {
         this.applicationFacade.createApplication(name);
         dialogSubscription.unsubscribe();
@@ -88,7 +96,5 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.applicationFacade.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 }

@@ -16,11 +16,11 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.getTrainingOption;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
+import static java.util.stream.Collectors.toSet;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
-import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -30,35 +30,37 @@ import org.springframework.stereotype.Service;
 public class FaceService {
 
     private final FaceDao faceDao;
-    private final RetrainService retrainService;
-    private final FaceClassifierManager classifierManager;
+    private final FaceCacheProvider faceCacheProvider;
 
-    public List<Face> findFaces(final String apiKey) {
-        return faceDao.findAllFacesByApiKey(apiKey);
+    public Set<FaceBO> findFaces(final String apiKey) {
+        return faceCacheProvider.getOrLoad(apiKey).getFaces();
     }
 
-    public void deleteFaceByName(
-            final String faceName,
-            final String apiKey,
-            final String retrain
-    ) {
-        faceDao.deleteFaceByName(faceName, apiKey);
-        getTrainingOption(retrain).run(apiKey, retrainService);
+    public Set<FaceBO> deleteFaceByName(final String faceName, final String apiKey) {
+        val faces = faceCacheProvider.getOrLoad(apiKey);
+
+        return faceDao.deleteFaceByName(faceName, apiKey)
+                      .stream()
+                      .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
+                      .collect(toSet());
     }
 
-    public void deleteFaceById(
-            final String faceId,
-            final String apiKey,
-            final String retrain
-    ) {
-        faceDao.deleteFaceById(faceId);
-        getTrainingOption(retrain).run(apiKey, retrainService);
+    public FaceBO deleteFaceById(final String id, final String apiKey) {
+        val collection = faceCacheProvider.getOrLoad(apiKey);
+        val face = faceDao.deleteFaceById(id);
+        if (face != null) {
+            return collection.removeFace(face.getId(), face.getFaceName());
+        }
+
+        return null;
     }
 
-    public int deleteFacesByModel(final String modelKey) {
-        classifierManager.removeFaceClassifier(modelKey);
-        val deletedFaces = faceDao.deleteFacesByApiKey(modelKey);
+    public void deleteFacesByModel(final String modelKey) {
+        faceDao.deleteFacesByApiKey(modelKey);
+        faceCacheProvider.invalidate(modelKey);
+    }
 
-        return deletedFaces.size();
+    public int countFacesInModel(final String modelKey) {
+        return faceCacheProvider.getOrLoad(modelKey).getFaces().size();
     }
 }

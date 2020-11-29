@@ -16,7 +16,7 @@
 
 import {Component, OnInit, Inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
 import {Observable, combineLatest} from 'rxjs';
 import {startWith, map} from 'rxjs/operators';
@@ -28,11 +28,11 @@ import {startWith, map} from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InviteDialogComponent implements OnInit {
-  public availableRoles: string[];
-  public form: FormGroup;
-  public users: string[];
-  public filteredOptions$: Observable<string[]>;
-  public actionType: string;
+  availableRoles: string[];
+  form: FormGroup;
+  users: string[];
+  filteredOptions$: Observable<string[]>;
+  actionType: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -51,19 +51,19 @@ export class InviteDialogComponent implements OnInit {
 
     if (this.data.options$) {
       this.filteredOptions$ = combineLatest(
-        this.data.options$,
-        this.form.controls.userEmail.valueChanges.pipe(startWith(''))
+        [this.data.options$,
+        this.form.controls.userEmail.valueChanges.pipe(startWith(''))]
       ).pipe(
         map(([options, value]) => this.filter(options as string[], value)),
       );
     }
   }
 
-  public onCancelClick(): void {
+  onCancelClick(): void {
     this.dialogRef.close({});
   }
 
-  public onInviteClick(): void {
+  onInviteClick(): void {
     if (this.form.valid) {
       this.dialogRef.close({
         ...this.form.value

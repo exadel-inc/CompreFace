@@ -16,21 +16,17 @@
 
 package com.exadel.frs.core.trainservice.dao;
 
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
-import com.exadel.frs.core.trainservice.domain.EmbeddingFaceList;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
-import com.exadel.frs.core.trainservice.entity.mongo.Face.Embedding;
-import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
+import static java.util.UUID.randomUUID;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.Face.Embedding;
+import com.exadel.frs.core.trainservice.entity.Image;
+import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.repository.ImagesRepository;
+import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.gridfs.GridFsOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,112 +35,57 @@ import org.springframework.web.multipart.MultipartFile;
 public class FaceDao {
 
     private final FacesRepository facesRepository;
-    private final GridFsOperations gridFsOperations;
 
-    public EmbeddingFaceList findAllFaceEmbeddings() {
-        val faces = facesRepository.findAll();
+    private final ImagesRepository imagesRepository;
 
-        return facesToEmbeddingList(faces);
-    }
-
-    public EmbeddingFaceList findAllFacesIn(List<String> ids) {
-        val faces = facesRepository.findByIdIn(ids);
-
-        return facesToEmbeddingList(faces);
-    }
-
-    public EmbeddingFaceList findAllFaceEmbeddingsByApiKey(final String modelApiKey) {
-        val faces = facesRepository.findByApiKey(modelApiKey);
-
-        return facesToEmbeddingList(faces);
-    }
-
-    private EmbeddingFaceList facesToEmbeddingList(List<Face> faces) {
-        if (faces.isEmpty()) {
-            return new EmbeddingFaceList();
-        }
-
-        val map = faces.stream()
-                       .collect(toMap(face -> Pair.of(face.getId(), face.getFaceName()),
-                               face -> face.getEmbeddings().stream()
-                                           .map(Embedding::getEmbedding)
-                                           .collect(toList()), (l1, l2) -> Stream
-                                       .concat(l1.stream(), l2.stream())
-                                       .collect(toList())
-                       ));
-
-        val embeddingFaceList = new EmbeddingFaceList();
-        embeddingFaceList.setFaceEmbeddings(map);
-        embeddingFaceList.setCalculatorVersion(faces.get(0).getEmbeddings().get(0).getCalculatorVersion());
-
-        return embeddingFaceList;
-    }
+    private final ImageProperties imageProperties;
 
     public List<Face> findAllFacesByApiKey(final String modelApiKey) {
         return facesRepository.findByApiKey(modelApiKey);
     }
 
     public List<Face> deleteFaceByName(final String faceName, final String modelApiKey) {
-        val deletedFaces = facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
-        deleteFiles(deletedFaces);
-
-        return deletedFaces;
+        return facesRepository.deleteByApiKeyAndFaceName(modelApiKey, faceName);
     }
 
     public Face deleteFaceById(final String faceId) {
         val foundFace = facesRepository.findById(faceId);
         foundFace.ifPresent(face -> {
             facesRepository.delete(face);
-            deleteFiles(List.of(face));
         });
 
         return foundFace.orElse(null);
     }
 
-    public List<Face> deleteFacesByApiKey(final String modelApiKey) {
-        val deletedFaces = facesRepository.deleteFacesByApiKey(modelApiKey);
-        deleteFiles(deletedFaces);
-
-        return deletedFaces;
+    public void deleteFacesByApiKey(final String modelApiKey) {
+        facesRepository.deleteFacesByApiKey(modelApiKey);
     }
 
     public int countFacesInModel(final String modelApiKey) {
         return facesRepository.countByApiKey(modelApiKey);
     }
 
-    public void updateFacesModelKey(final String modelApiKey, final String newModelApiKey) {
-        val faces = facesRepository.findByApiKey(modelApiKey);
-        faces.forEach(face -> face.setApiKey(newModelApiKey));
-
-        facesRepository.saveAll(faces);
-    }
-
-    private void deleteFiles(final List<Face> deletedFaces) {
-        deletedFaces.forEach(face -> {
-            val deleteOriginalPhoto = new Query(new Criteria("_id").is(face.getRawImgId()));
-            val deleteCroppedPhoto = new Query(new Criteria("_id").is(face.getFaceImgId()));
-            gridFsOperations.delete(deleteOriginalPhoto);
-            gridFsOperations.delete(deleteCroppedPhoto);
-        });
-    }
-
     public Face addNewFace(
-            final List<Embedding> embeddings,
+            final Embedding embeddings,
             final MultipartFile file,
             final String faceName,
             final String modelKey
     ) throws IOException {
-        val faceId = gridFsOperations.store(file.getInputStream(), faceName);
-
         val face = new Face()
-                .setEmbeddings(embeddings)
+                .setId(randomUUID().toString())
+                .setEmbedding(embeddings)
                 .setFaceName(faceName)
-                .setApiKey(modelKey)
-                .setFaceImgId(faceId)
-                .setRawImgId(faceId);
+                .setApiKey(modelKey);
 
-        facesRepository.save(face);
+        if (imageProperties.isSaveImagesToDB()) {
+            val image = new Image()
+                    .setFaceImg(file.getBytes())
+                    .setRawImg(file.getBytes())
+                    .setFace(face);
 
-        return face;
+            imagesRepository.save(image);
+        }
+
+        return facesRepository.save(face);
     }
 }

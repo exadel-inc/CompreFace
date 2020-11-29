@@ -1,0 +1,60 @@
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+@import "colors.scss";
+
+.result-container {
+  padding: 25px 50px;
+  position: relative;
+  min-height: 350px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  .result-image {
+    display: flex;
+    justify-content: center;
+    flex-shrink: 1;
+    width: 100%;
+    canvas {
+      display: inline;
+      min-width: 0;
+      min-height: 0;
+    }
+  }
+
+  .result-sections {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding-bottom: 10px;
+
+    .result-section-image {
+      flex-grow: 1;
+    }
+
+    .result-textarea {
+      border: none;
+      resize: none;
+      width: 100%;
+      background-color: $white;
+    }
+
+    mat-expansion-panel {
+      margin: 10px;
+    }
+  }
+}

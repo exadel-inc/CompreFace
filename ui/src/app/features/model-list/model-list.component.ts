@@ -15,35 +15,46 @@
  */
 
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { Model } from 'src/app/data/model';
+import { Model } from 'src/app/data/interfaces/model';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
+import { Role } from 'src/app/data/enums/role.enum';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-model-list',
   templateUrl: './model-list.component.html',
   styleUrls: ['./model-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModelListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
+  roleEnum = Role;
   columns = [
     { title: 'name', property: 'name' },
     { title: 'apiKey', property: 'apiKey' },
+    { title: 'copyKey', property: 'copyKey' },
     { title: 'actions', property: 'id' },
   ];
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog) {
+  constructor(
+    private modelListFacade: ModelListFacade,
+    public dialog: MatDialog,
+    private router: Router,
+    private translate: TranslateService
+  ) {
     this.modelListFacade.initSubscriptions();
   }
 
@@ -51,10 +62,10 @@ export class ModelListComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.modelListFacade.isLoading$;
     this.userRole$ = this.modelListFacade.userRole$;
     this.tableConfig$ = this.modelListFacade.models$.pipe(
-      map(models => ({
+      map((models) => ({
         columns: this.columns,
         data: models,
-      })),
+      }))
     );
   }
 
@@ -71,31 +82,46 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(EditDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'model',
+        entityType: this.translate.instant('models.header'),
         entityName: model.name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(name => {
-      if (name) {
-        this.modelListFacade.renameModel(model.id, name);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe((name) => {
+        if (name) {
+          this.modelListFacade.renameModel(model.id, name);
+        }
+      });
   }
 
   delete(model: Model) {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       width: '400px',
       data: {
-        entityType: 'model',
+        entityType: this.translate.instant('models.header'),
         entityName: model.name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(result => {
-      if (result) {
-        this.modelListFacade.deleteModel(model.id);
-      }
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe((result) => {
+        if (result) {
+          this.modelListFacade.deleteModel(model.id);
+        }
+      });
+  }
+
+  test(model: Model) {
+    this.router.navigate([ROUTERS_URL.TEST_MODEL], {
+      queryParams: {
+        app: this.modelListFacade.selectedApplicationId,
+        model: model.id,
+      },
     });
   }
 
@@ -103,15 +129,18 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(CreateDialogComponent, {
       width: '300px',
       data: {
-        entityType: 'model',
-      }
+        entityType: this.translate.instant('models.header'),
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(name => {
-      if (name) {
-        this.modelListFacade.createModel(name);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe((name) => {
+        if (name) {
+          this.modelListFacade.createModel(name);
+        }
+      });
   }
 
   ngOnDestroy(): void {

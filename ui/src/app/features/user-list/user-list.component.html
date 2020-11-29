@@ -16,13 +16,13 @@
 
 <div class="user-list">
   <div class="table-header-container">
-    <h3>Users</h3>
+    <h3>{{'users.title' | translate}}</h3>
     <form>
       <input matInput type="text" class="search-input" [(ngModel)]="search" [ngModelOptions]="{standalone: true}"
-        placeholder="Search User">
-      <i class="material-icons">
+             placeholder="{{'users.search.org_title' | translate}}">
+      <mat-icon class="material-icons notranslate">
         search
-      </i>
+      </mat-icon>
     </form>
   </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
@@ -30,11 +30,12 @@
     class="app-table"
     [isLoading]="isLoading$ | async"
     [tableConfig]="tableConfig$ | userTableFilter:search | async"
-    [availableRoles$]="availableRoles$"
+    [availableRoles]="availableRoles$ | async"
     [currentUserId]="currentUserId$ | async"
     [userRole]="userRole$ | async"
-    [createHeader]="'Add users to the FRS'"
-    [createMessage]="'You can add other users to the FRS application. They need to register and login to FRS. After registration and login users will appear automatically in the users\' table.'"
+    [createHeader]="messageHeader"
+    [createMessage]="message"
+    [searchText]="search"
     (changeRow)="onChange($event)"
     (deleteUser)="onDelete($event)"
   ></app-user-table>

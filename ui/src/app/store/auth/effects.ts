@@ -22,9 +22,9 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
-import { ROUTERS_URL } from '../../data/routers-url.variable';
-import { resetUserInfo, updateUserInfo } from '../userInfo/action';
-import { logIn, logInFailure, logInSuccess, logOut, signUp, signUpFailure, signUpSuccess } from './action';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { resetUserInfo } from '../userInfo/action';
+import { clearUserToken, logIn, logInFailure, logInSuccess, logOut, signUp, signUpFailure, signUpSuccess } from './action';
 
 @Injectable()
 export class AuthEffects {
@@ -32,29 +32,20 @@ export class AuthEffects {
     private actions: Actions,
     private authService: AuthService,
     private router: Router,
-    private snackBarService: SnackBarService,
-  ) { }
+    private snackBarService: SnackBarService
+  ) {}
 
   // Listen for the 'LOGIN' action
   @Effect()
   LogIn = this.actions.pipe(
     ofType(logIn),
-    switchMap(action => {
+    switchMap((action) => {
       return this.authService.logIn(action.email, action.password).pipe(
-        switchMap(res => {
-          this.authService.updateTokens(res.access_token, res.refresh_token);
-          return [
-            logInSuccess(),
-            updateUserInfo(
-              {
-                isAuthenticated: true,
-                firstName: res.firstName
-              })
-          ];
-        }),
-        catchError(error => observableOf(logInFailure(error)))
+        map(() => logInSuccess()),
+        catchError((error) => observableOf(logInFailure(error)))
       );
-    }));
+    })
+  );
 
   // Listen for the 'LogInSuccess' action
   @Effect({ dispatch: false })
@@ -68,11 +59,11 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(logInFailure, signUpFailure),
-    tap(action => {
+    tap((action) => {
       if (action.error && action.error.error_description === 'Bad credentials') {
-        this.snackBarService.openError(null, 8000, 'E-mail or Password is incorrect.');
+        this.snackBarService.openNotification({ messageText: 'auth.incorrect_credentials', type: 'error' });
       } else if (action.error && action.error.code === 4) {
-        this.snackBarService.openError(null, 8000, 'This e-mail is already in use.');
+        this.snackBarService.openNotification({ messageText: 'auth.already_in_use', type: 'error' });
       } else {
         this.snackBarService.openHttpError(action.error);
       }
@@ -82,23 +73,22 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   showSuccess$ = this.actions.pipe(
     ofType(signUpSuccess),
-    tap(action => {
-      const message = action.confirmationNeeded
-        ? 'You have created new account, please confirm your email'
-        : 'You have created new account, please login into your account';
-      this.snackBarService.openInfo(null, 8000, message);
-    }),
+    tap((action) => {
+      const message = action.confirmationNeeded ? 'auth.new_account_confirm_email' : 'auth.new_account_login';
+      this.snackBarService.openNotification({ messageText: message });
+    })
   );
 
   @Effect()
   SignUp: Observable<any> = this.actions.pipe(
     ofType(signUp),
-    switchMap(payload => {
+    switchMap((payload) => {
       return this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName).pipe(
-        map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
-        catchError(error => observableOf(signUpFailure(error)))
+        map((res) => signUpSuccess({ confirmationNeeded: res.status === 200 })),
+        catchError((error) => observableOf(signUpFailure(error)))
       );
-    }));
+    })
+  );
 
   @Effect({ dispatch: false })
   SignUpSuccess: Observable<any> = this.actions.pipe(
@@ -109,17 +99,21 @@ export class AuthEffects {
   );
 
   @Effect({ dispatch: false })
-  SignUpFailure: Observable<any> = this.actions.pipe(
-    ofType(signUpFailure)
-  );
+  SignUpFailure: Observable<any> = this.actions.pipe(ofType(signUpFailure));
 
   @Effect()
   public LogOut: Observable<any> = this.actions.pipe(
     ofType(logOut),
-    map(() => {
-      this.authService.removeToken();
+    switchMap(() => {
       this.router.navigateByUrl(ROUTERS_URL.LOGIN);
-      return resetUserInfo();
+
+      return [clearUserToken(), resetUserInfo()];
     })
+  );
+
+  @Effect({ dispatch: false })
+  public ClearUserToken: Observable<any> = this.actions.pipe(
+    ofType(clearUserToken),
+    switchMap(() => this.authService.clearUserToken())
   );
 }

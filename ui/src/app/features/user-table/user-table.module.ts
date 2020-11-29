@@ -14,22 +14,25 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {UserTableComponent} from './user-table.component';
-import {MatTableModule, MatFormFieldModule, MatSelectModule,  MatIconModule} from '@angular/material';
-import {CommonModule} from '@angular/common';
+import { NgModule } from '@angular/core';
+import { UserTableComponent } from './user-table.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [UserTableComponent],
-  exports: [
-    UserTableComponent
-  ],
+  exports: [UserTableComponent],
   imports: [
     CommonModule,
     MatFormFieldModule,
     MatTableModule,
     MatSelectModule,
-    MatIconModule
-  ]
+    MatIconModule,
+    TranslateModule,
+  ],
 })
-export class UserTableModule { }
+export class UserTableModule {}

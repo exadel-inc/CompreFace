@@ -16,13 +16,14 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 
 import { ModelTableModule } from '../model-table/model-table.module';
 import { ModelListFacade } from './model-list-facade';
 import { ModelListComponent } from './model-list.component';
+import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ModelListComponent],
@@ -34,6 +35,7 @@ import { ModelListComponent } from './model-list.component';
     MatButtonModule,
     MatIconModule,
     ModelTableModule,
+    TranslateModule,
   ]
 })
 export class ModelListModule { }

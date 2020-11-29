@@ -15,9 +15,9 @@
  */
 
 import { createAction, props } from '@ngrx/store';
-import { Model, ModelUpdate } from 'src/app/data/model';
+import { Model, ModelUpdate } from 'src/app/data/interfaces/model';
 
-export const loadModels = createAction('[Model] Load Models', props<{ organizationId: string, applicationId: string }>());
+export const loadModels = createAction('[Model] Load Models', props<{ applicationId: string }>());
 export const loadModelsSuccess = createAction('[Model] Load Models Success', props<{ models: Model[] }>());
 export const loadModelsFail = createAction('[Model] Load Models Fail', props<{ error: any }>());
 
@@ -32,3 +32,5 @@ export const updateModelFail = createAction('[Model] Update Model Fail', props<{
 export const deleteModel = createAction('[Model] Delete Model', props<Partial<ModelUpdate>>());
 export const deleteModelSuccess = createAction('[Model] Delete Model Success', props<{ modelId: string }>());
 export const deleteModelFail = createAction('[Model] Delete Model Fail', props<{ error: any }>());
+
+export const setSelectedModelIdEntityAction = createAction('[Model] Set Selected Model Id', props<{ selectedModelId }>());

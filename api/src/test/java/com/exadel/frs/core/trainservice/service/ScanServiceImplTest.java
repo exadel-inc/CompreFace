@@ -18,14 +18,18 @@ package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.service.ScanServiceImpl.MAX_FACES_TO_RECOGNIZE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
+import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
@@ -50,6 +54,9 @@ class ScanServiceImplTest {
     @Mock
     private MockMultipartFile mockFile;
 
+    @Mock
+    private FaceCacheProvider faceCacheProvider;
+
     @InjectMocks
     private ScanServiceImpl scanService;
 
@@ -67,18 +74,21 @@ class ScanServiceImplTest {
     @Test
     void scanAndSaveFace() throws IOException {
         val scanResponse = new ScanResponse().setResult(List.of(SCAN_RESULT));
-        val embeddings = List.of(new Face.Embedding(List.of(EMBEDDING), null));
+        val embeddings = new Embedding(List.of(EMBEDDING), null);
         val face = new Face();
+        face.setEmbedding(embeddings);
 
         when(scanFacesClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
                 .thenReturn(scanResponse);
 
         when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
 
+        when(faceCacheProvider.getOrLoad(MODEL_KEY)).thenReturn(FaceCollection.buildFromFaces(List.of(face)));
+
         val actual = scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(face);
+        assertThat(actual).isEqualTo(new FaceBO(face.getFaceName(), face.getId()));
 
         verify(scanFacesClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
         verify(faceDao).addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY);
@@ -92,10 +102,9 @@ class ScanServiceImplTest {
         when(scanFacesClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
                 .thenReturn(scanResponse);
 
-        assertThrows(
-                TooManyFacesException.class,
-                () -> scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY)
-        );
+        assertThatThrownBy(() ->
+                scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY)
+        ).isInstanceOf(TooManyFacesException.class);
 
         verify(scanFacesClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
         verifyNoInteractions(faceDao);

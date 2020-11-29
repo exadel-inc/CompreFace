@@ -17,7 +17,6 @@
 .application-header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 40px;
 
   .name-wrapper,
   .api-key-wrapper {
@@ -27,11 +26,11 @@
   }
 
   &_left-coll {
-    width: 49%;
+    width: 100%;
   }
 
   &_right-coll {
-    width: 49%;
+    width: 100%;
     display: flex;
     justify-content: flex-end;
   }

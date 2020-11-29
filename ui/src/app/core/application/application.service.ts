@@ -17,29 +17,30 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Application } from 'src/app/data/application';
+import { Application } from 'src/app/data/interfaces/application';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ApplicationService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  getAll(organizationId: string): Observable<Application[]> {
-    return this.http.get<Application[]>(`${environment.apiUrl}org/${organizationId}/apps`);
+  getAll(): Observable<Application[]> {
+    return this.http.get<Application[]>(`${environment.adminApiUrl}apps`);
   }
 
-  create(organizationId: string, name: string): Observable<Application> {
-    return this.http.post<Application>(`${environment.apiUrl}org/${organizationId}/app`, { name });
+  create(name: string): Observable<Application> {
+    name = name.trim();
+    return this.http.post<Application>(`${environment.adminApiUrl}app`, { name });
   }
 
-  put(organizationId: string, appId: string, name: string): Observable<Application> {
-    return this.http.put<Application>(`${environment.apiUrl}org/${organizationId}/app/${appId}`, { name });
+  put(appId: string, name: string): Observable<Application> {
+    name = name.trim();
+    return this.http.put<Application>(`${environment.adminApiUrl}app/${appId}`, { name });
   }
 
-  delete(organizationId: string, appId: string) {
-    return this.http.delete(`${environment.apiUrl}org/${organizationId}/app/${appId}`);
+  delete(appId: string) {
+    return this.http.delete(`${environment.adminApiUrl}app/${appId}`);
   }
 }

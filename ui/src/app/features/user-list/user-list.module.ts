@@ -14,25 +14,28 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {UserListComponent} from './user-list.component';
-import {UserListFacade} from './user-list-facade';
-import {UserTableModule} from '../user-table/user-table.module';
-import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
-import {InviteUserModule} from '../invite-user/invite-user.module';
-import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
-import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
-import {MatCardModule} from '@angular/material/card';
-import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
-import {MatDialogModule, MatButtonModule} from '@angular/material';
-import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UserListComponent } from './user-list.component';
+import { UserListFacade } from './user-list-facade';
+import { UserTableModule } from '../user-table/user-table.module';
+import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
+import { InviteUserModule } from '../invite-user/invite-user.module';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
+import { MatCardModule } from '@angular/material/card';
+import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [UserListComponent],
   exports: [UserListComponent],
-  providers: [UserListFacade, ],
+  providers: [UserListFacade],
   imports: [
     CommonModule,
     UserTableModule,
@@ -44,8 +47,10 @@ import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
     MatCardModule,
     MatDialogModule,
     InviteDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    TranslateModule,
+    MatIconModule,
   ],
-  entryComponents: [InviteDialogComponent]
+  entryComponents: [InviteDialogComponent],
 })
 export class UserListModule {}

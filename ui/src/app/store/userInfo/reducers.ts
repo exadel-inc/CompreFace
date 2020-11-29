@@ -15,15 +15,10 @@
  */
 
 import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
-import { updateUserInfo, resetUserInfo, updateUserAuthorization, getUserInfoSuccess } from './action';
-import { User } from '../../data/user';
+import { updateUserInfo, resetUserInfo, getUserInfoSuccess } from './action';
+import { User } from '../../data/interfaces/user';
 
-export interface UserInfoState extends User {
-  isAuthenticated: boolean;
-}
-
-export const initialState: UserInfoState = {
-  isAuthenticated: false,
+export const initialState: User = {
   guid: null,
   email: null,
   password: null,
@@ -33,13 +28,12 @@ export const initialState: UserInfoState = {
   userId: null,
 };
 
-const reducer: ActionReducer<UserInfoState> = createReducer(initialState,
+const reducer: ActionReducer<User> = createReducer(initialState,
   on(updateUserInfo, (state, action) => ({ ...state, ...action })),
   on(resetUserInfo, () => ({ ...initialState })),
-  on(updateUserAuthorization, (state, action) => ({ ...state, isAuthenticated: action.value })),
   on(getUserInfoSuccess, (state, action) => ({ ...state, ...action.user })),
 );
 
-export function UserInfoReducer(userInfoState: UserInfoState, action: Action) {
+export function UserInfoReducer(userInfoState: User, action: Action) {
   return reducer(userInfoState, action);
 }

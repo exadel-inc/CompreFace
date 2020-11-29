@@ -27,6 +27,7 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JdbcTokenStore;
 
 public class TokenServicesImpl extends DefaultTokenServices {
+
     private TokenStore tokenStore;
 
     public TokenServicesImpl(JdbcTokenStore tokenStore) {

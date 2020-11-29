@@ -19,10 +19,13 @@ mat-icon {
 }
 
 .create-new-message {
-  padding-left: 20px;
   display: flex;
-
+  align-items: center;
   mat-icon {
-    padding: 25px 20px 0 0;
+    padding-right: 15px;
   }
+}
+
+caption{
+  display: none;
 }

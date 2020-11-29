@@ -18,24 +18,20 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription, zip } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { AppUser } from 'src/app/data/appUser';
-import { IFacade } from 'src/app/data/facade/IFacade';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { AppState } from 'src/app/store';
-import {
-  deleteUserFromApplication,
-  loadAppUserEntityAction,
-  putUpdatedAppUserRoleEntityAction,
-} from 'src/app/store/app-user/actions';
+import { deleteUserFromApplication, loadAppUserEntityAction, updateAppUserRoleAction } from 'src/app/store/app-user/actions';
 import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/selectors';
 import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
-import { selectCurrentOrganizationId } from 'src/app/store/organization/selectors';
-import { LoadRolesEntityAction } from 'src/app/store/role/actions';
+import { loadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 import { AppUserService } from '../../core/app-user/app-user.service';
-import { LoadUsersEntityAction } from '../../store/user/action';
-import { selectUsers } from '../../store/user/selectors';
+import { loadUsersEntityAction } from '../../store/user/action';
+import { selectCurrentUserRole, selectUsers } from '../../store/user/selectors';
+import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable()
 export class ApplicationUserListFacade implements IFacade {
@@ -48,84 +44,112 @@ export class ApplicationUserListFacade implements IFacade {
   selectedApplicationName: string;
 
   private selectedApplicationId: string;
-  private selectedOrganizationId: string;
   private sub: Subscription;
+  userGlobalRole$: Observable<Role>;
+  applicationRole$: Observable<string>;
 
   constructor(private store: Store<AppState>, private userService: AppUserService) {
-    this.appUsers$ = store.select(selectAppUsers);
-    this.availableEmails$ = store.select(selectUsers).pipe(map(data => data.map(user => user.email)));
-    this.userRole$ = store.select(selectUserRollForSelectedApp);
-    this.currentUserId$ = store.select(selectUserId);
-    const allRoles$ = store.select(selectAllRoles);
-
-    this.availableRoles$ = combineLatest(allRoles$, this.userRole$).pipe(
-      map(([allRoles, userRole]) => {
-        const roleIndex = allRoles.indexOf(userRole);
-        return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
-      }),
+    this.appUsers$ = this.store.select(selectAppUsers);
+    this.availableEmails$ = combineLatest([this.store.select(selectUsers), this.appUsers$]).pipe(
+      map(([users, appUsers]) => {
+        return users.map((user) => {
+          if (appUsers.every((appUser) => appUser.id !== user.id)) {
+            return user.email;
+          }
+        });
+      })
     );
 
-    const usersLoading$ = store.select(selectAppUserIsPending);
-    const roleLoading$ = store.select(selectIsPendingRoleStore);
+    this.userGlobalRole$ = this.store.select(selectCurrentUserRole);
+    this.applicationRole$ = this.store.select(selectUserRollForSelectedApp);
+    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.userGlobalRole$]).pipe(
+      map(([applicationRole, globalRole]) => {
+        // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
+        if (globalRole !== Role.USER) {
+          if (globalRole === Role.OWNER) {
+            return globalRole;
+          }
 
-    this.isLoading$ = combineLatest(usersLoading$, roleLoading$)
-      .pipe(
-        map(observResults => !(!observResults[0] && !observResults[1])
-        ));
+          if (globalRole === Role.ADMINISTRATOR) {
+            return applicationRole === Role.OWNER ? applicationRole : globalRole;
+          }
+        }
+      })
+    );
+
+    this.currentUserId$ = this.store.select(selectUserId);
+    const allRoles$ = this.store.select(selectAllRoles);
+
+    this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.applicationRole$, this.userGlobalRole$]).pipe(
+      map(([allRoles, userRole, applicationRole, globalRole]) => {
+        if (globalRole === Role.OWNER || applicationRole === Role.OWNER) {
+          return allRoles;
+        } else if (globalRole === Role.ADMINISTRATOR) {
+          return allRoles.filter((role) => role !== Role.OWNER);
+        } else {
+          const roleIndex = allRoles.indexOf(userRole);
+          return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
+        }
+      })
+    );
+
+    const usersLoading$ = this.store.select(selectAppUserIsPending);
+    const roleLoading$ = this.store.select(selectIsPendingRoleStore);
+
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
   }
 
   initSubscriptions(): void {
-    this.sub = zip(
-      this.store.select(selectCurrentApp),
-      this.store.select(selectCurrentOrganizationId)
-    ).subscribe(([app, orgId]) => {
-      if (app && orgId) {
+    this.sub = this.store.select(selectCurrentApp).subscribe((app) => {
+      if (app) {
         this.selectedApplicationId = app.id;
         this.selectedApplicationName = app.name;
-        this.selectedOrganizationId = orgId;
         this.loadData();
       }
     });
   }
 
   loadData(): void {
-    this.store.dispatch(loadAppUserEntityAction({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId
-    }));
-    this.store.dispatch(LoadRolesEntityAction());
-    this.store.dispatch(LoadUsersEntityAction({
-      organizationId: this.selectedOrganizationId
-    }));
+    this.store.dispatch(
+      loadAppUserEntityAction({
+        applicationId: this.selectedApplicationId,
+      })
+    );
+    this.store.dispatch(loadRolesEntityAction());
+    this.store.dispatch(loadUsersEntityAction());
   }
 
-  updateUserRole(id: string, role: string): void {
-    this.store.dispatch(putUpdatedAppUserRoleEntityAction({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId,
-      user: {
-        id,
-        role
-      }
-    }));
+  updateUserRole(id: string, role: Role): void {
+    this.store.dispatch(
+      updateAppUserRoleAction({
+        applicationId: this.selectedApplicationId,
+        user: {
+          id,
+          role,
+        },
+      })
+    );
   }
 
   inviteUser(email: string, role: string): Observable<any> {
-    return this.userService.inviteUser(this.selectedOrganizationId, this.selectedApplicationId, email, role)
-      .pipe(tap(() =>
-        this.store.dispatch(loadAppUserEntityAction({
-          organizationId: this.selectedOrganizationId,
-          applicationId: this.selectedApplicationId
-        }))
-      ));
+    return this.userService.inviteUser(this.selectedApplicationId, email, role).pipe(
+      tap(() =>
+        this.store.dispatch(
+          loadAppUserEntityAction({
+            applicationId: this.selectedApplicationId,
+          })
+        )
+      )
+    );
   }
 
   delete(userId: string) {
-    this.store.dispatch(deleteUserFromApplication({
-      organizationId: this.selectedOrganizationId,
-      applicationId: this.selectedApplicationId,
-      userId,
-    }));
+    this.store.dispatch(
+      deleteUserFromApplication({
+        applicationId: this.selectedApplicationId,
+        userId,
+      })
+    );
   }
 
   unsubscribe(): void {

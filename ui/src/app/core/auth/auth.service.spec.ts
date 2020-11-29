@@ -18,18 +18,22 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { environment } from '../../../environments/environment';
-import { API_URL } from '../../data/api.variables';
+import { API_URL } from '../../data/enums/api-url.enum';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
 import { provideMockStore } from '@ngrx/store/testing';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
+  const initialState = {
+    isPending: false,
+    apiKey: null
+  };
 
   beforeEach(() => {
-    localStorage.clear();
-    localStorage.setItem('token', 'some token');
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
       providers: [
@@ -38,11 +42,21 @@ describe('AuthService', () => {
         provideMockStore(),
         {
           provide: Router,
-          useValue: { navigateByUrl: () => { } }
-        }]
+          useValue: { navigateByUrl: () => {} },
+        },
+        {
+          provide: Store,
+          useValue: {
+            dispatch: () => {},
+            select: () => {
+              return of(initialState);
+            },
+          },
+        },
+      ],
     });
-    service = TestBed.get(AuthService);
-    httpMock = TestBed.get(HttpTestingController);
+    service = TestBed.inject(AuthService);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   it('should be created', () => {
@@ -52,18 +66,13 @@ describe('AuthService', () => {
   it('be able to logIn', () => {
     const dummyUser = {
       firstName: 'firstName',
-      password: 'password'
+      password: 'password',
     };
 
-    const dummyToken = 'Some token';
+    service.logIn(dummyUser.firstName, dummyUser.password).subscribe();
 
-    service.logIn(dummyUser.firstName, dummyUser.password).subscribe(token => {
-      expect(token).toEqual(dummyToken);
-    });
-
-    const request = httpMock.expectOne(`${environment.apiUrl}${API_URL.LOGIN}`);
+    const request = httpMock.expectOne(`${environment.adminApiUrl}${API_URL.LOGIN}`);
     expect(request.request.method).toBe('POST');
-    request.flush(dummyToken);
   });
 
   it('be able to signUp', () => {
@@ -71,33 +80,12 @@ describe('AuthService', () => {
       firstName: 'firstName',
       password: 'password',
       lastName: 'lastName',
-      email: 'q@q.com'
+      email: 'q@q.com',
     };
 
-    const dummyToken = 'Some token';
+    service.signUp(dummyUser.firstName, dummyUser.password, dummyUser.email, dummyUser.lastName).subscribe();
 
-    service.signUp(dummyUser.firstName, dummyUser.password, dummyUser.email, dummyUser.lastName).subscribe(response => {
-      expect(response.status).toEqual(201);
-    });
-
-    const request = httpMock.expectOne(`${environment.apiUrl}${API_URL.REGISTER}`);
+    const request = httpMock.expectOne(`${environment.adminApiUrl}${API_URL.REGISTER}`);
     expect(request.request.method).toBe('POST');
-    request.flush(dummyToken, { status: 201, statusText: 'Created' });
-  });
-
-  it('be able to get token', () => {
-    expect(service.getToken()).toEqual('some token');
-  });
-
-  it('be able to update token', () => {
-    expect(service.getToken()).toEqual('some token');
-    service.updateTokens('token the second value', 'refreshToken value');
-    expect(service.getToken()).toEqual('Bearer token the second value');
-  });
-
-  it('be able to remove token', () => {
-    expect(service.getToken()).toEqual('some token');
-    service.removeToken();
-    expect(service.getToken()).toEqual(null);
   });
 });

@@ -17,6 +17,7 @@
 package com.exadel.frs.repository;
 
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.GlobalRole;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -33,8 +34,12 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByEmail(String email);
 
+    boolean existsByGuid(String guid);
+
     @Query("from User where email like :q or firstName like :q or lastName like :q")
     List<User> autocomplete(String q);
+
+    User findByGlobalRole(GlobalRole role);
 
     int deleteByEnabledFalseAndRegTimeBefore(LocalDateTime time);
 

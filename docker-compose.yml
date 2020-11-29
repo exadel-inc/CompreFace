@@ -1,61 +1,61 @@
 version: '3.4'
 
+volumes:
+  postgres-data:
+
 services:
-  frs-postgres-db:
+  compreface-postgres-db:
     image: postgres:11.5
-    container_name: "frs-postgres-db"
+    container_name: "compreface-postgres-db"
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_DB=frs
-    ports:
-      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
 
-  frs-mongo-db:
-    image: mongo:4.0.4-xenial
-    container_name: "frs-mongo-db"
-    ports:
-      - "27018:27017"
-
-  frs-admin:
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: frs_crud
-    container_name: "frs-admin"
-    ports:
-      - "8081:8080"
+  compreface-admin:
+    image: ${registry}compreface-admin
+    container_name: "compreface-admin"
+    environment:
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
+      - SPRING_PROFILES_ACTIVE=dev
+      - ENABLE_EMAIL_SERVER=${enable_email_server}
+      - EMAIL_HOST=${email_host}
+      - EMAIL_USERNAME=${email_username}
+      - EMAIL_FROM=${email_from}
+      - EMAIL_PASSWORD=${email_password}
+      - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
     depends_on:
-      - frs-postgres-db
-      - frs-api
+      - compreface-postgres-db
+      - compreface-api
 
-  frs-api:
-    build:
-      dockerfile: Dockerfile
-      context: .
-      target: frs_core
-    container_name: "frs-api"
-    ports:
-      - "8082:8080"
+  compreface-api:
+    image: ${registry}compreface-api
+    container_name: "compreface-api"
     depends_on:
-      - frs-postgres-db
-      - frs-mongo-db
+      - compreface-postgres-db
+    environment:
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
+      - SPRING_PROFILES_ACTIVE=dev
+      - API_JAVA_OPTS=${compreface_api_java_options}
+      - SAVE_IMAGES_TO_DB=${save_images_to_db}
 
-  frs-fe:
-    build:
-      context: ui
-      dockerfile: docker-prod/Dockerfile
-    container_name: "frs-ui"
+  compreface-fe:
+    image: ${registry}compreface-fe
+    volumes:
+      - ${compreface-fe-volume}
+    container_name: "compreface-ui"
     ports:
       - "8000:80"
     depends_on:
-      - frs-api
-      - frs-admin
+      - compreface-api
+      - compreface-admin
 
-  frs-core:
-    container_name: "frs-core"
-    build:
-      context: embedding-calculator
+  compreface-core:
+    image: ${registry}compreface-core
+    container_name: "compreface-core"
     environment:
-      - MONGODB_URI=mongodb://frs-mongo-db:27017/efrs_db
       - ML_PORT=3000

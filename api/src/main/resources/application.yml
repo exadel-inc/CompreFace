@@ -3,17 +3,16 @@ server:
 
 spring:
   profiles:
-    active: dev
+    active: prod
 
 ---
 
 environment:
   servers:
     PYTHON:
-      url: ${PYTHON_URL:http://frs-core:3000}
+      url: ${PYTHON_URL:http://compreface-core:3000}
 
 spring:
-
   cache:
     jcache:
       config: classpath:ehcache.xml
@@ -21,18 +20,16 @@ spring:
   jackson:
     serialization:
       indent-output: true
-  data:
-    mongodb:
-      uri: ${MONGO_URL:mongodb://frs-mongo-db:27017}
-      database: efrs_db
   datasource-pg:
     driver-class-name: org.postgresql.Driver
-    url: ${POSTGRES_URL:jdbc:postgresql://frs-postgres-db:5432/frs}
+    url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
     username: ${POSTGRES_USERNAME:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
       maximum-pool-size: 3
       minimum-idle: 3
+      data-source-properties:
+        stringtype: unspecified
   jpa:
     properties:
       hibernate:
@@ -62,6 +59,7 @@ image:
     - ico
     - gif
     - webp
+  saveImagesToDB: ${SAVE_IMAGES_TO_DB:true}
 ---
 
 spring:
@@ -71,3 +69,8 @@ spring:
       enabled: true
     livereload:
       enabled: false
+
+swagger:
+  info:
+    title: CompreFace - API
+    version: 0.0.2-SNAPSHOT

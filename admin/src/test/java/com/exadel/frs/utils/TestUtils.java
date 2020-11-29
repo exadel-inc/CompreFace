@@ -16,11 +16,16 @@
 
 package com.exadel.frs.utils;
 
+import static com.exadel.frs.handler.ExceptionCode.UNDEFINED;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import com.exadel.frs.dto.ExceptionResponseDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.BasicException;
-import com.exadel.frs.handler.ExceptionCode;
+import javax.sql.DataSource;
+import lombok.val;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.jdbc.datasource.init.DatabasePopulatorUtils;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 
 public class TestUtils {
 
@@ -28,24 +33,32 @@ public class TestUtils {
 
     public static ExceptionResponseDto buildExceptionResponse(final BasicException ex) {
         return ExceptionResponseDto.builder()
-                .code(ex.getExceptionCode().getCode())
-                .message(ex.getMessage())
-                .build();
+                                   .code(ex.getExceptionCode().getCode())
+                                   .message(ex.getMessage())
+                                   .build();
     }
 
     public static ExceptionResponseDto buildUndefinedExceptionResponse(final Exception ex) {
         return ExceptionResponseDto.builder()
-                .code(ExceptionCode.UNDEFINED.getCode())
-                .message(ex.getMessage())
-                .build();
+                                   .code(UNDEFINED.getCode())
+                                   .message(ex.getMessage())
+                                   .build();
     }
 
     public static User buildUser() {
         return User.builder()
-                .id(USER_ID)
-                .firstName(randomAlphabetic(10))
-                .lastName(randomAlphabetic(10))
-                .email(randomAlphabetic(10) + "@" + randomAlphabetic(5) + ".com")
-                .build();
+                   .id(USER_ID)
+                   .firstName(randomAlphabetic(10))
+                   .lastName(randomAlphabetic(10))
+                   .email(randomAlphabetic(10) + "@" + randomAlphabetic(5) + ".com")
+                   .build();
+    }
+
+    public static void executeScript(final DataSource dataSource, final String path) {
+        val script = new ClassPathResource(path);
+        val populator = new ResourceDatabasePopulator();
+        populator.addScript(script);
+
+        DatabasePopulatorUtils.execute(populator, dataSource);
     }
 }

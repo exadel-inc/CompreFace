@@ -14,46 +14,39 @@
  * permissions and limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {Subscription} from 'rxjs';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store';
-import {selectApplications} from '../../store/application/selectors';
-import {loadApplications} from '../../store/application/action';
-import {ROUTERS_URL} from '../../data/routers-url.variable';
-import {filter, take} from 'rxjs/operators';
-import {setSelectedIdEntityAction} from '../../store/application/action';
-import {getUserInfo} from '../../store/userInfo/action';
-import {setSelectedId} from '../../store/organization/action';
-import {OrganizationEnService} from '../../store/organization/organization-entitys.service';
+import { Injectable } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { selectApplications } from '../../store/application/selectors';
+import { loadApplications } from '../../store/application/action';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { filter, take } from 'rxjs/operators';
+import { setSelectedAppIdEntityAction } from '../../store/application/action';
+import { getUserInfo } from '../../store/userInfo/action';
 
 @Injectable()
 export class ApplicationPageService {
   private appsSub: Subscription;
   private appId: string;
-  private orgId: string;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private store: Store<AppState>,
-    private organizationEnService: OrganizationEnService
-  ) { }
+  constructor(private router: Router, private route: ActivatedRoute, private store: Store<AppState>) {}
 
   initUrlBindingStreams() {
-    this.orgId = this.route.snapshot.queryParams.org;
     this.appId = this.route.snapshot.queryParams.app;
 
-    if (this.appId && this.orgId) {
-      this.store.dispatch(setSelectedIdEntityAction({ selectedAppId: this.appId }));
-      this.store.dispatch(setSelectedId({ selectId: this.orgId }));
-      this.appsSub = this.store.select(selectApplications).pipe(
-        filter(apps => !apps.length),
-        take(1)
-      ).subscribe(() => {
-        this.fetchApps();
-      });
+    if (this.appId) {
+      this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
+      this.appsSub = this.store
+        .select(selectApplications)
+        .pipe(
+          filter((apps) => !apps.length),
+          take(1)
+        )
+        .subscribe(() => {
+          this.fetchApps();
+        });
     } else {
       this.router.navigate([ROUTERS_URL.HOME]);
     }
@@ -66,8 +59,7 @@ export class ApplicationPageService {
   }
 
   fetchApps() {
-    this.store.dispatch(loadApplications({ organizationId: this.orgId }));
+    this.store.dispatch(loadApplications());
     this.store.dispatch(getUserInfo());
-    this.organizationEnService.getAll();
   }
 }

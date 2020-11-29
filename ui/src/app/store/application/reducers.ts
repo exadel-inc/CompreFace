@@ -16,7 +16,7 @@
 
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
-import { Application } from 'src/app/data/application';
+import { Application } from 'src/app/data/interfaces/application';
 
 import {
   createApplication,
@@ -28,7 +28,7 @@ import {
   loadApplications,
   loadApplicationsFail,
   loadApplicationsSuccess,
-  setSelectedIdEntityAction,
+  setSelectedAppIdEntityAction,
   updateApplication,
   updateApplicationFail,
   updateApplicationSuccess,
@@ -54,13 +54,13 @@ const reducer: ActionReducer<AppEntityState> = createReducer(
   on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail,
     (state) => ({ ...state, isPending: false })),
   on(createApplicationSuccess, (state, { application }) => applicationAdapter.addOne(application, { ...state, isPending: false })),
-  on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.addAll(applications, { ...state, isPending: false })),
+  on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.setAll(applications, { ...state, isPending: false })),
   on(updateApplicationSuccess, (state, { application }) => applicationAdapter.updateOne(
     { id: application.id, changes: application },
     { ...state, isPending: false }
   )),
   on(deleteApplicationSuccess, (state, { id }) => applicationAdapter.removeOne(id, { ...state, isPending: false })),
-  on(setSelectedIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
+  on(setSelectedAppIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
 );
 
 export function ApplicationReducer(appState: AppEntityState, action: Action) {

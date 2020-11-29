@@ -15,7 +15,7 @@
  */
 
 .breadcrumbs {
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
   display: flex;
   margin-bottom: 20px;
   margin-top: 15px;
@@ -26,9 +26,5 @@
 
   .separator {
     margin-right: 8px;
-  }
-
-  div:last-child:not(.breadcrumbs-link) {
-    display: none;
   }
 }

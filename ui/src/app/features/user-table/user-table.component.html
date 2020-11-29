@@ -15,23 +15,32 @@
   -->
 
 <table *ngIf="!isLoading" mat-table [dataSource]="data">
+  <caption>
+    {{
+      'users.caption' | translate
+    }}
+  </caption>
+
   <!-- Position Column -->
   <ng-container matColumnDef="user">
-    <th mat-header-cell *matHeaderCellDef> User </th>
-    <td mat-cell *matCellDef="let element"> {{element.firstName}} {{element.lastName}} </td>
+    <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.user' | translate }}</th>
+    <td mat-cell *matCellDef="let element">{{ element.firstName }} {{ element.lastName }}</td>
   </ng-container>
 
   <ng-container matColumnDef="role">
-    <th mat-header-cell *matHeaderCellDef> Role </th>
+    <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.role' | translate }}</th>
     <td mat-cell *matCellDef="let element">
       <mat-form-field>
-        <mat-select *ngIf="(isRoleChangeAllowed(element.role) | async) else disabledRole" [(value)]="element.role"
-          (selectionChange)="change(element)">
-          <mat-option *ngFor="let role of (availableRoles$ | async)" value="{{role}}">{{role}}</mat-option>
+        <mat-select
+          *ngIf="isRoleChangeAllowed(element); else disabledRole"
+          [value]="element.role"
+          (selectionChange)="changeRole($event, element)"
+        >
+          <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role }}</mat-option>
         </mat-select>
         <ng-template #disabledRole>
           <mat-select disabled [(value)]="element.role">
-            <mat-option value="{{element.role}}">{{element.role}}</mat-option>
+            <mat-option [value]="element.role">{{ element.role }}</mat-option>
           </mat-select>
         </ng-template>
       </mat-form-field>
@@ -39,22 +48,29 @@
   </ng-container>
 
   <ng-container matColumnDef="delete">
-    <th mat-header-cell *matHeaderCellDef> </th>
+    <th mat-header-cell *matHeaderCellDef scope="col"></th>
     <td mat-cell *matCellDef="let element">
-      <mat-icon *ngIf="userRole!=='USER' && element.userId !== this.currentUserId && element.role !== 'OWNER'"
-        (click)="delete(element)" title="remove user">delete_outline</mat-icon>
+      <mat-icon
+        *ngIf="
+          (element.userId === this.currentUserId && element.role !== roleEnum.OWNER) ||
+          (userRole === roleEnum.ADMINISTRATOR && element.role !== roleEnum.OWNER) ||
+          (userRole === roleEnum.OWNER && element.role !== roleEnum.OWNER)
+        "
+        (click)="delete(element)"
+        title="remove user"
+        >delete_outline</mat-icon
+      >
     </td>
   </ng-container>
 
-
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<ng-container *ngIf="data.length <= 1 && (createHeader || createMessage)">
-  <h4>{{createHeader}}</h4>
+<ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && (createHeader || createMessage) && !isLoading">
+  <h4>{{ messageHeader }}</h4>
   <div class="create-new-message">
     <mat-icon>info</mat-icon>
-    <p>{{createMessage}}</p>
+    <p>{{ message }}</p>
   </div>
 </ng-container>

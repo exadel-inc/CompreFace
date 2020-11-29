@@ -16,10 +16,10 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 
-import { Application } from '../../data/application';
-import { IFacade } from '../../data/facade/IFacade';
+import { Application } from '../../data/interfaces/application';
+import { IFacade } from '../../data/interfaces/IFacade';
 import { AppState } from '../../store';
 import { deleteApplication, updateApplication } from '../../store/application/action';
 import {
@@ -28,7 +28,9 @@ import {
   selectIsPendingApplicationList,
   selectUserRollForSelectedApp,
 } from '../../store/application/selectors';
-import { selectCurrentOrganizationId } from '../../store/organization/selectors';
+import { map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
+import { selectCurrentUserRole } from 'src/app/store/user/selectors';
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {
@@ -37,32 +39,33 @@ export class ApplicationHeaderFacade implements IFacade {
   loading$: Observable<boolean>;
   userRole$: Observable<string | null>;
   app$: Observable<Application>;
-  orgId: string;
-  orgIdSub: Subscription;
   appIdSub: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
-    this.userRole$ = this.store.select(selectUserRollForSelectedApp);
+    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
+      map(([applicationRole, globalRole]) => {
+        // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
+        return globalRole !== Role.USER.toString() ? Role.OWNER.toString() : applicationRole;
+      })
+    );
     this.selectedId$ = this.store.select(selectCurrentAppId);
     this.loading$ = this.store.select(selectIsPendingApplicationList);
   }
 
   initSubscriptions() {
-    this.orgIdSub = this.store.select(selectCurrentOrganizationId).subscribe(orgId => this.orgId = orgId);
-    this.appIdSub = this.selectedId$.subscribe(selectedId => this.selectedId = selectedId);
+    this.appIdSub = this.selectedId$.subscribe((selectedId) => (this.selectedId = selectedId));
   }
 
   unsubscribe() {
-    this.orgIdSub.unsubscribe();
     this.appIdSub.unsubscribe();
   }
 
   rename(name: string) {
-    this.store.dispatch(updateApplication({ name, id: this.selectedId, organizationId: this.orgId }));
+    this.store.dispatch(updateApplication({ name, id: this.selectedId }));
   }
 
   delete() {
-    this.store.dispatch(deleteApplication({ id: this.selectedId, organizationId: this.orgId }));
+    this.store.dispatch(deleteApplication({ id: this.selectedId }));
   }
 }

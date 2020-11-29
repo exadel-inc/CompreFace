@@ -13,23 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, Input } from '@angular/core';
 
-import { Application } from '../../data/application';
-import { ROUTERS_URL } from '../../data/routers-url.variable';
+import { Application } from '../../data/interfaces/application';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { BreadcrumbsFacade } from './breadcrumbs.facade';
+import { Model } from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
-  styleUrls: ['./breadcrumbs.component.scss']
+  styleUrls: ['./breadcrumbs.component.scss'],
 })
 export class BreadcrumbsComponent {
-  app$: Observable<Application>;
   ROUTERS_URL = ROUTERS_URL;
+  maxNameLength = 30;
+  @Input() model: Model;
+  @Input() app: Application;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
-    this.app$ = breadcrumbsFacade.app$;
-  }
+  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {}
 }

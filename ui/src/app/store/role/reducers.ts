@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-import {Role} from 'src/app/data/role';
+import {Role} from 'src/app/data/interfaces/role';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {SetPendingRoleEntityAction, FetchRolesEntityAction, LoadRolesEntityAction} from './actions';
+import {setPendingRoleEntityAction, fetchRolesEntityAction, loadRolesEntityAction} from './actions';
 import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
 
 export interface RoleEntityState extends EntityState<Role> {
@@ -30,9 +30,9 @@ export const initialState: RoleEntityState = roleAdapter.getInitialState({
 
 const reducer: ActionReducer<RoleEntityState> = createReducer(
   initialState,
-  on(LoadRolesEntityAction, (state) => ({ ...state, isPending: true })),
-  on(SetPendingRoleEntityAction, (state, { isPending }) => ({ ...state, isPending })),
-  on(FetchRolesEntityAction, (state, { role }) => {
+  on(loadRolesEntityAction, (state) => ({ ...state, isPending: true })),
+  on(setPendingRoleEntityAction, (state, { isPending }) => ({ ...state, isPending })),
+  on(fetchRolesEntityAction, (state, { role }) => {
     const newState = roleAdapter.removeAll(state);
     newState.isPending = false;
     return roleAdapter.addOne({ id: 0, accessLevels: role.accessLevels }, newState);

@@ -16,13 +16,13 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ScanService {
 
-    Face scanAndSaveFace(
+    FaceBO scanAndSaveFace(
             final MultipartFile file,
             final String faceName,
             final Double detProbThreshold,

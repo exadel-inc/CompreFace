@@ -18,12 +18,10 @@ package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -32,8 +30,8 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.entity.Organization;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
@@ -44,13 +42,11 @@ import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.AppService;
-import com.exadel.frs.service.OrganizationService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -108,10 +104,9 @@ class UserServiceTest {
     void failGetUser() {
         when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(
-                UserDoesNotExistException.class,
-                () -> userService.getUser(USER_ID)
-        );
+        assertThatThrownBy(() -> userService.getUser(
+                USER_ID
+        )).isInstanceOf(UserDoesNotExistException.class);
     }
 
     @Test
@@ -161,10 +156,9 @@ class UserServiceTest {
                                          .lastName("lastName")
                                          .build();
 
-        assertThrows(
-                EmptyRequiredFieldException.class,
-                () -> userService.createUser(userCreateDto)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userCreateDto)
+        ).isInstanceOf(EmptyRequiredFieldException.class);
     }
 
     @Test
@@ -176,10 +170,9 @@ class UserServiceTest {
                                          .lastName("lastName")
                                          .build();
 
-        assertThrows(
-                EmptyRequiredFieldException.class,
-                () -> userService.createUser(userCreateDto)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userCreateDto)
+        ).isInstanceOf(EmptyRequiredFieldException.class);
     }
 
     @Test
@@ -193,10 +186,9 @@ class UserServiceTest {
 
         when(userRepositoryMock.existsByEmail(anyString())).thenReturn(true);
 
-        assertThrows(
-                EmailAlreadyRegisteredException.class,
-                () -> userService.createUser(userCreateDto)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userCreateDto)
+        ).isInstanceOf(EmailAlreadyRegisteredException.class);
     }
 
     @Test
@@ -235,10 +227,9 @@ class UserServiceTest {
                                                   .lastName("lastName")
                                                   .build();
 
-        assertThrows(
-                InvalidEmailException.class,
-                () -> userService.createUser(userWithIncorrectEmial)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userWithIncorrectEmial)
+        ).isInstanceOf(InvalidEmailException.class);
     }
 
     @Test
@@ -250,10 +241,9 @@ class UserServiceTest {
                                                 .lastName("lastName")
                                                 .build();
 
-        assertThrows(
-                EmptyRequiredFieldException.class,
-                () -> userService.createUser(userWithoutFirstName)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userWithoutFirstName)
+        ).isInstanceOf(EmptyRequiredFieldException.class);
     }
 
     @Test
@@ -265,18 +255,16 @@ class UserServiceTest {
                                                 .lastName(null)
                                                 .build();
 
-        assertThrows(
-                EmptyRequiredFieldException.class,
-                () -> userService.createUser(userWithoutFirstName)
-        );
+        assertThatThrownBy(() ->
+                userService.createUser(userWithoutFirstName)
+        ).isInstanceOf(EmptyRequiredFieldException.class);
     }
 
     @Test
     void confirmRegistrationReturns403WhenTokenIsExpired() {
-        assertThrows(
-                RegistrationTokenExpiredException.class,
-                () -> userService.confirmRegistration(EXPIRED_TOKEN)
-        );
+        assertThatThrownBy(() ->
+                userService.confirmRegistration(EXPIRED_TOKEN)
+        ).isInstanceOf(RegistrationTokenExpiredException.class);
     }
 
     @Test
@@ -319,82 +307,70 @@ class UserServiceTest {
     @Nested
     public class DeleteUserTest {
 
-        final Organization defaultOrg;
-        final User orgOwner;
-        final User orgAdmin;
-        final User orgUser;
+        final User globalOwner;
+        final User globalAdmin;
+        final User globalUser;
         final BiConsumer<User, User> updateAppsConsumer;
-        final OrganizationService orgServiceMock;
-        final Consumer<UserDeleteDto> deleteUserFromOrgConsumer;
 
         public DeleteUserTest() {
-            defaultOrg = mock(Organization.class);
-            orgOwner = makeUser(1L);
-            orgAdmin = makeUser(2L);
-            orgUser = makeUser(3L);
+            globalOwner = makeUser(1L);
+            globalAdmin = makeUser(2L);
+            globalUser = makeUser(3L);
             updateAppsConsumer =
-                    (oldOwner, newOwner) -> {
-                        appService.passAllOwnedAppsToNewOwnerAndLeaveAllApps(oldOwner, newOwner);
-                    };
-            orgServiceMock = mock(OrganizationService.class);
-            deleteUserFromOrgConsumer = orgServiceMock::removeUserFromOrganization;
-
-            when(defaultOrg.getOwner()).thenReturn(orgOwner);
+                    (oldOwner, newOwner) -> appService.passAllOwnedAppsToNewOwnerAndLeaveAllApps(
+                            oldOwner, newOwner
+                    );
         }
 
         @Test
         void successDeleteUserWhenDeleterIsReplacer() {
             val deleteUserDto = UserDeleteDto.builder()
                                              .replacer(Replacer.from("deleter"))
-                                             .userToDelete(orgUser)
-                                             .deleter(orgAdmin)
-                                             .defaultOrg(defaultOrg)
+                                             .userToDelete(globalUser)
+                                             .deleter(globalAdmin)
                                              .updateAppsConsumer(updateAppsConsumer)
                                              .build();
 
-            userService.deleteUser(deleteUserDto, deleteUserFromOrgConsumer);
+            userService.deleteUser(deleteUserDto);
 
             verify(authManager).verifyCanDeleteUser(deleteUserDto);
-            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(orgUser, orgAdmin);
-            verify(orgServiceMock).removeUserFromOrganization(deleteUserDto);
-            verify(userRepositoryMock).deleteByGuid(orgUser.getGuid());
+            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(globalUser, globalAdmin);
+            verify(userRepositoryMock).deleteByGuid(globalUser.getGuid());
         }
 
         @Test
-        void successDeleteUserWhenOrgOwnerIsReplacer() {
+        void successDeleteUserWhenGlobalOwnerIsReplacer() {
             val deleteUserDto = UserDeleteDto.builder()
                                              .replacer(Replacer.from("owner"))
-                                             .userToDelete(orgUser)
-                                             .deleter(orgAdmin)
-                                             .defaultOrg(defaultOrg)
+                                             .userToDelete(globalUser)
+                                             .deleter(globalAdmin)
                                              .updateAppsConsumer(updateAppsConsumer)
                                              .build();
 
-            userService.deleteUser(deleteUserDto, deleteUserFromOrgConsumer);
+            when(userRepositoryMock.findByGlobalRole(GlobalRole.OWNER)).thenReturn(globalOwner);
+
+            userService.deleteUser(deleteUserDto);
 
             verify(authManager).verifyCanDeleteUser(deleteUserDto);
-            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(orgUser, orgOwner);
-            verify(orgServiceMock).removeUserFromOrganization(deleteUserDto);
-            verify(userRepositoryMock).deleteByGuid(orgUser.getGuid());
+            verify(appService).passAllOwnedAppsToNewOwnerAndLeaveAllApps(globalUser, globalOwner);
+            verify(userRepositoryMock).deleteByGuid(globalUser.getGuid());
         }
 
         @Test
         void exceptionWhenWrongReplacerParamIsPassed() {
-            assertThatThrownBy(() -> {
-                UserDeleteDto.builder()
-                             .replacer(Replacer.from("wrong_param"))
-                             .userToDelete(orgUser)
-                             .deleter(orgAdmin)
-                             .defaultOrg(defaultOrg)
-                             .updateAppsConsumer(updateAppsConsumer)
-                             .build();
-            }).isInstanceOf(IllegalReplacerException.class)
-              .hasMessage(String.format("Illegal replacer value=%s!", "wrong_param"));
+            assertThatThrownBy(() -> UserDeleteDto.builder()
+                                                  .replacer(Replacer.from("wrong_param"))
+                                                  .userToDelete(globalUser)
+                                                  .deleter(globalAdmin)
+                                                  .updateAppsConsumer(updateAppsConsumer)
+                                                  .build())
+                    .isInstanceOf(IllegalReplacerException.class)
+                    .hasMessage(String.format("Illegal replacer value=%s!", "wrong_param"));
         }
 
-        private User makeUser(final long orgUserId) {
+        private User makeUser(final long globalUserId) {
             return User.builder()
-                       .id(orgUserId)
+                       .id(globalUserId)
                        .guid(UUID.randomUUID().toString())
                        .build();
         }

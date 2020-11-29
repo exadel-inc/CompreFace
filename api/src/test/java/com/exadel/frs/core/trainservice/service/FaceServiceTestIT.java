@@ -16,35 +16,29 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.enums.RetrainOption.NO;
+import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
+import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
-import com.exadel.frs.core.trainservice.component.FaceClassifierManager;
+import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.mongo.Face;
-import com.exadel.frs.core.trainservice.repository.mongo.FacesRepository;
+import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
+import java.util.stream.Collectors;
 import lombok.val;
-import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.MockBeans;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@DataMongoTest
+@DataJpaTest
 @ExtendWith(SpringExtension.class)
-@Import({FaceService.class, FaceDao.class})
-@MockBeans({
-        @MockBean(RetrainService.class),
-        @MockBean(FaceClassifierManager.class)
-})
+@Import({FaceService.class, FaceDao.class, FaceCacheProvider.class})
 public class FaceServiceTestIT {
 
     @Autowired
@@ -53,8 +47,8 @@ public class FaceServiceTestIT {
     @Autowired
     private FaceService faceService;
 
-    private static final String MODEL_KEY = UUID.randomUUID().toString();
-    private static final String MODEL_KEY_OTHER = UUID.randomUUID().toString();
+    private static final String MODEL_KEY = randomUUID().toString();
+    private static final String MODEL_KEY_OTHER = randomUUID().toString();
 
     @BeforeEach
     void setUp() {
@@ -66,13 +60,13 @@ public class FaceServiceTestIT {
     }
 
     @Test
-    public void deleteFaceById() {
-        val faces = facesRepository.findAll();
-        val face = faces.get(Math.abs(new Random().nextInt()) % faces.size());
+    public void deleteFaceByGuid() {
+        val faces = facesRepository.findByApiKey(MODEL_KEY);
+        val face = faces.get(new Random().nextInt(faces.size()));
 
-        faceService.deleteFaceById(face.getId(), face.getApiKey(), NO.name());
+        faceService.deleteFaceById(face.getId(), MODEL_KEY);
 
-        val actual = facesRepository.findAll();
+        val actual = facesRepository.findByApiKey(MODEL_KEY);
 
         assertThat(actual).hasSize(faces.size() - 1);
         assertThat(actual).doesNotContain(face);
@@ -80,36 +74,58 @@ public class FaceServiceTestIT {
 
     @Test
     public void findFaces() {
-        //todo
+        val faces = facesRepository.findAll().stream()
+                                   .filter(face -> face.getApiKey().equals(MODEL_KEY))
+                                   .collect(toList());
+
+        val actual = faceService.findFaces(MODEL_KEY);
+
+        assertThat(actual).hasSize(faces.size());
     }
 
     @Test
     public void deleteFaceByName() {
-        //todo
+        val faces = facesRepository.findByApiKey(MODEL_KEY);
+        val face = faces.get(new Random().nextInt(faces.size()));
+
+        faceService.deleteFaceByName(face.getFaceName(), face.getApiKey());
+
+        val actual = facesRepository.findByApiKey(MODEL_KEY);
+
+        assertThat(actual).hasSize(faces.size() - 1);
+        assertThat(actual).doesNotContain(face);
     }
 
     @Test
     public void deleteFacesByModel() {
-        //todo
+        val faces = facesRepository.findAll();
+        val oneKeyFaces = faces.stream()
+                               .filter(face -> face.getApiKey().equals(MODEL_KEY))
+                               .collect(toList());
+
+        faceService.deleteFacesByModel(MODEL_KEY);
+
+        val actual = facesRepository.findAll();
+
+        assertThat(actual).hasSize(faces.size() - 2);
+        assertThat(oneKeyFaces).allSatisfy(face -> assertThat(actual).doesNotContain(face));
+    }
+
+    @Test
+    public void countFacesInModel() {
+        val faces = facesRepository.findAll();
+        val oneKeyFaces = faces.stream()
+                               .filter(face -> face.getApiKey().equals(MODEL_KEY))
+                               .collect(Collectors.toList());
+
+        val actual = faceService.countFacesInModel(MODEL_KEY);
+
+        assertThat(actual).isEqualTo(oneKeyFaces.size());
     }
 
     @AfterEach
     public void cleanUp() {
-        facesRepository.deleteAll();
-    }
-
-    public static Face makeFace(final String name, final String modelApiKey) {
-        return new Face()
-                .setFaceName(name)
-                .setApiKey(modelApiKey)
-                .setFaceImgId(new ObjectId("hex-string-1".getBytes()))
-                .setRawImgId(new ObjectId("hex-string-2".getBytes()))
-                .setId("Id_" + name)
-                .setEmbeddings(List.of(
-                        new Face.Embedding()
-                                .setEmbedding(List.of(0.0D))
-                                .setCalculatorVersion("1.0")
-                        )
-                );
+        faceService.deleteFacesByModel(MODEL_KEY);
+        faceService.deleteFacesByModel(MODEL_KEY_OTHER);
     }
 }

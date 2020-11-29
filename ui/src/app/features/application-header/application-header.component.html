@@ -18,18 +18,18 @@
   <app-spinner *ngIf="loading$ | async"></app-spinner>
   <mat-card class="application-header_left-coll">
     <div *ngIf="app$ | async as app">
-      <h3 class="title">Application</h3>
+      <h3 class="title">{{'applications.header.title' | translate}}</h3>
       <div class="name-wrapper">
-        <div class="name-item">{{app.name}}</div>
+        <div class="name-item" matTooltip="{{app.name}}" [matTooltipDisabled]="app.name.length <= maxHeaderLinkLength">
+          {{app.name | truncate: maxHeaderLinkLength}}
+        </div>
         <div *ngIf="userRole$ | async as userRole">
-          <button *ngIf="userRole !== 'USER'" mat-button type="button" color="primary" (click)="rename(app.name)">EDIT</button>
-          <button *ngIf="userRole === 'OWNER'" mat-button type="button" color="primary" (click)="delete(app.name)">DELETE</button>
+          <button *ngIf="userRole !== userRoleEnum.USER" mat-button type="button" color="primary" (click)="rename(app.name)">
+            {{'applications.header.edit' | translate}}</button>
+          <button *ngIf="userRole === userRoleEnum.OWNER" mat-button type="button" color="primary" (click)="delete(app.name)">
+            {{'applications.header.delete' | translate}}</button>
         </div>
       </div>
     </div>
-  </mat-card>
-
-  <mat-card class="application-header_right-coll" *ngIf="userRole$ | async as userRole">
-    <div class="your_role">Your role: {{userRole}}</div>
   </mat-card>
 </div>

@@ -17,12 +17,13 @@
 import {routerReducer, RouterReducerState} from '@ngrx/router-store';
 import {AuthReducer, AuthState} from './auth/reducers';
 import {RouterStateUrl} from './router/reducer';
-import {UserInfoReducer, UserInfoState} from './userInfo/reducers';
+import {UserInfoReducer } from './userInfo/reducers';
+import { User } from '../data/interfaces/user';
 
 export interface AppState {
   authState: AuthState;
   router: RouterReducerState<RouterStateUrl>;
-  userInfo: UserInfoState;
+  userInfo: User;
 }
 
 // feature reducer need to import into specific module on the page
@@ -30,5 +31,5 @@ export interface AppState {
 export const sharedReducers = {
   auth: AuthReducer,
   router: routerReducer,
-  userInfo: UserInfoReducer
+  userInfo: UserInfoReducer,
 };
