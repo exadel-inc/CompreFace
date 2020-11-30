@@ -160,6 +160,6 @@
     "new_account_login": "You have created new account, please login into your account"
   },
   "application_user_list": {
-    "invitation_sent": "Invitation was sent to {{email}}"
+    "invitation_sent": "Invitation was sent to {{userEmail}}"
   }
 }

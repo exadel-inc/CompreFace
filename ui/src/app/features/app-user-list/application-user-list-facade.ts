@@ -16,12 +16,17 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subscription, zip } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { AppState } from 'src/app/store';
-import { deleteUserFromApplication, loadAppUserEntityAction, updateAppUserRoleAction } from 'src/app/store/app-user/actions';
+import {
+  deleteUserFromApplication,
+  inviteAppUserAction,
+  loadAppUserEntityAction,
+  updateAppUserRoleAction,
+} from 'src/app/store/app-user/actions';
 import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/selectors';
 import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { loadRolesEntityAction } from 'src/app/store/role/actions';
@@ -131,15 +136,13 @@ export class ApplicationUserListFacade implements IFacade {
     );
   }
 
-  inviteUser(email: string, role: string): Observable<any> {
-    return this.userService.inviteUser(this.selectedApplicationId, email, role).pipe(
-      tap(() =>
-        this.store.dispatch(
-          loadAppUserEntityAction({
-            applicationId: this.selectedApplicationId,
-          })
-        )
-      )
+  inviteUser(email: string, role: Role): void {
+    this.store.dispatch(
+      inviteAppUserAction({
+        applicationId: this.selectedApplicationId,
+        userEmail: email,
+        role,
+      })
     );
   }
 
