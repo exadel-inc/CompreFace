@@ -90,7 +90,7 @@ export class ApplicationUserListFacade implements IFacade {
         if (globalRole === Role.OWNER || applicationRole === Role.OWNER) {
           return allRoles;
         } else if (globalRole === Role.ADMINISTRATOR) {
-          return allRoles.filter((role) => role !== Role.OWNER);
+          return allRoles;
         } else {
           const roleIndex = allRoles.indexOf(userRole);
           return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
