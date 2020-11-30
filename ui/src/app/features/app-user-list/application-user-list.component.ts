@@ -55,8 +55,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     private appUserListFacade: ApplicationUserListFacade,
     private dialog: MatDialog,
     private snackBarService: SnackBarService,
-    private translate: TranslateService,
-    private store: Store<AppState>
+    private translate: TranslateService
   ) {
     appUserListFacade.initSubscriptions();
   }

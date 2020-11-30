@@ -95,7 +95,6 @@ export class AppUserEffects {
   addUser$ = this.actions.pipe(
     ofType(inviteAppUserActionSuccess),
     tap((action) => {
-      console.log(action);
       this.snackBarService.openNotification({
         messageText: 'application_user_list.invitation_sent',
         messageOptions: { userEmail: action.userEmail },
