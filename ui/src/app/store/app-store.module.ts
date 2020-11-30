@@ -27,8 +27,6 @@ import { AppUserStoreModule } from './app-user/app-user.module';
 import { ApplicationStoreModule } from './application/application.module';
 import { AuthEffects } from './auth/effects';
 import { ModelStoreModule } from './model/model.module';
-import { defaultDataServiceConfig, entityConfig } from './ngrx-data';
-import { OrganizationStoreModule } from './organization/organization.module';
 import { RoleStoreModule } from './role/role.module';
 import { AppSerializer } from './router/reducer';
 import { UserStoreModule } from './user/user.module';
@@ -41,8 +39,6 @@ import { DemoStoreModule } from './demo/demo.module';
   imports: [
     StoreModule.forRoot(sharedReducers),
     EffectsModule.forRoot([AuthEffects]),
-    EntityDataModule.forRoot(entityConfig),
-    OrganizationStoreModule,
     UserInfoStoreModule,
     ApplicationStoreModule,
     UserStoreModule,
@@ -53,15 +49,10 @@ import { DemoStoreModule } from './demo/demo.module';
     AppUserStoreModule,
     StoreRouterConnectingModule.forRoot({
       serializer: DefaultRouterStateSerializer,
-      stateKey: 'router'
+      stateKey: 'router',
     }),
-    !environment.production
-      ? StoreDevtoolsModule.instrument({ maxAge: 30 })
-      : [],
+    !environment.production ? StoreDevtoolsModule.instrument({ maxAge: 30 }) : [],
   ],
-  providers: [
-    { provide: DefaultDataServiceConfig, useValue: defaultDataServiceConfig },
-    { provide: RouterStateSerializer, useClass: AppSerializer },
-  ]
+  providers: [{ provide: RouterStateSerializer, useClass: AppSerializer }],
 })
-export class AppStoreModule { }
+export class AppStoreModule {}

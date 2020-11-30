@@ -22,7 +22,7 @@ const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
-    children: [{ path: '', loadChildren: () => import('./pages/organization/organization.module').then((m) => m.OrganizationModule) }],
+    children: [{ path: '', loadChildren: () => import('./pages/dashboard/dashboard.module').then((m) => m.DashboardModule) }],
   },
   {
     path: 'application',
