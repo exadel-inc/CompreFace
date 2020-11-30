@@ -13,10 +13,18 @@
 #  permissions and limitations under the License.
 
 from src.constants import ENV_MAIN
-from src.services.facescan.scanner.facenet.facenet import Facenet2018
 from src.services.facescan.scanner.facescanner import MockScanner
-from src.services.facescan.scanner.insightface.insightface import InsightFace
 
-_ALL_SCANNERS = Facenet2018, InsightFace, MockScanner
+_ALL_SCANNERS = [MockScanner]
+
+if ENV_MAIN.SCANNER == 'InsightFace':
+    from src.services.facescan.scanner.insightface.insightface import InsightFace
+    _ALL_SCANNERS.append(InsightFace)
+
+if ENV_MAIN.SCANNER == 'Facenet2018':
+    from src.services.facescan.scanner.facenet.facenet import Facenet2018
+    _ALL_SCANNERS.append(Facenet2018)
+
 id_2_face_scanner_cls = {backend.ID: backend for backend in _ALL_SCANNERS}
 TESTED_SCANNERS = [id_2_face_scanner_cls[k] for k in ENV_MAIN.SCANNERS]
+scanner = id_2_face_scanner_cls[ENV_MAIN.SCANNER]()
