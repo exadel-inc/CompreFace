@@ -28,8 +28,6 @@ import { ApplicationUserListFacade } from './application-user-list-facade';
 import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { TranslateService } from '@ngx-translate/core';
 import { Role } from 'src/app/data/enums/role.enum';
-import { Store } from '@ngrx/store';
-import { AppState } from '../../store';
 
 @Component({
   selector: 'app-application-user-list',
