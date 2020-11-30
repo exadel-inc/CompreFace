@@ -10,7 +10,8 @@
       "delete": "DELETE"
     },
     "name": "Name",
-    "create": "Create"
+    "create": "Create",
+    "unknown_error": "Sorry, something went wrong"
   },
   "login": {
     "title": "Login",
