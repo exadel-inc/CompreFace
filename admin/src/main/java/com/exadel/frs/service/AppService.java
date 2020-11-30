@@ -231,11 +231,11 @@ public class AppService {
             throw new InsufficientPrivilegesException();
         }
 
-        if (newAppRole == OWNER && admin.getGlobalRole().equals(GlobalRole.ADMINISTRATOR)) {
+        if (newAppRole.equals(OWNER) && admin.getGlobalRole().equals(GlobalRole.ADMINISTRATOR)) {
             throw new InsufficientPrivilegesException();
         }
 
-        if (newAppRole == OWNER) {
+        if (newAppRole.equals(OWNER)) {
             app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(ADMINISTRATOR));
         }
 

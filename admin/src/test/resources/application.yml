@@ -40,10 +40,7 @@ spring:
   mail:
     enable: ${ENABLE_EMAIL_SERVER:false}
     host: ${EMAIL_HOST:example.com}
-    username: ${EMAIL_USERNAME:example@example.com}
     from: ${EMAIL_FROM:name <example@example.com>}
-    password: ${EMAIL_PASSWORD:example}
-    port: 587
     test-connection: false
     properties.mail:
       debug: true
