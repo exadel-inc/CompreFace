@@ -10,7 +10,8 @@
     },
     "fistName": "Imię",
     "create": "Stwórz",
-    "name": "Nazwa"
+    "name": "Nazwa",
+    "unknown_error": "Przepraszam, coś poszło nie tak"
   },
   "login": {
     "title": "Login",
