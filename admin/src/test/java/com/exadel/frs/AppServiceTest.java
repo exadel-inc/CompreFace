@@ -749,13 +749,182 @@ class AppServiceTest {
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
         when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
-        when(userServiceMock.getUser(USER_ID)).thenReturn(admin);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
 
         verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verify(appRepositoryMock).save(any(App.class));
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void successUpdateUserAppRoleByGlobalAdmin() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(ADMINISTRATOR.toString())
+                                                 .build();
+        val user = user(USER_ID, USER);
+        val admin = user(ADMIN_ID, USER);
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .userAppRoles(List.of(
+                             UserAppRole.builder()
+                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                        .role(AppRole.USER)
+                                        .build()
+                     ))
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
+        verify(appRepositoryMock).save(any(App.class));
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void failUpdateOwnerAppRoleByAdmin() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(ADMINISTRATOR.toString())
+                                                 .build();
+        val user = user(USER_ID, USER);
+        val admin = user(ADMIN_ID, USER);
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .userAppRoles(List.of(
+                             UserAppRole.builder()
+                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                        .role(OWNER)
+                                        .build()
+                     ))
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        assertThatThrownBy(() ->
+                appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID)
+        ).isInstanceOf(InsufficientPrivilegesException.class);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void successUpdateAppRoleToOwnerByAdmin() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(OWNER.toString())
+                                                 .build();
+        val user = user(USER_ID, USER);
+        val admin = user(ADMIN_ID, ADMINISTRATOR);
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .userAppRoles(List.of(
+                             UserAppRole.builder()
+                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                        .role(AppRole.USER)
+                                        .build()
+                     ))
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void successUpdateAppRoleToOwnerByGlobalOwner() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(OWNER.toString())
+                                                 .build();
+        val user = user(USER_ID, USER);
+        val admin = user(ADMIN_ID, GlobalRole.OWNER);
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .userAppRoles(List.of(
+                             UserAppRole.builder()
+                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                        .role(AppRole.USER)
+                                        .build()
+                     ))
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
+        verify(appRepositoryMock).save(app);
+        verifyNoMoreInteractions(authManagerMock);
+    }
+
+    @Test
+    void successUpdateAppRoleToOwnerByAppOwner() {
+        val userRoleUpdateDto = UserRoleUpdateDto.builder()
+                                                 .userId("userGuid")
+                                                 .role(OWNER.toString())
+                                                 .build();
+        val user = user(USER_ID, USER);
+        val admin = user(ADMIN_ID, USER);
+
+        val app = App.builder()
+                     .name("name")
+                     .guid(APPLICATION_GUID)
+                     .userAppRoles(List.of(
+                             UserAppRole.builder()
+                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                        .role(AppRole.USER)
+                                        .build(),
+                             UserAppRole.builder()
+                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                        .role(AppRole.OWNER)
+                                        .build()
+                     ))
+                     .build();
+
+        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
+        when(userServiceMock.getUserByGuid(any())).thenReturn(user);
+        when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
+
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
+        verify(appRepositoryMock).save(app);
         verifyNoMoreInteractions(authManagerMock);
     }
 }

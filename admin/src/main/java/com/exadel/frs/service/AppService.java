@@ -31,6 +31,7 @@ import com.exadel.frs.entity.ModelShareRequestId;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
+import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
@@ -210,30 +211,29 @@ public class AppService {
 
         authManager.verifyWritePrivilegesToApp(admin, app);
 
-        val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
-        if (user.getId().equals(adminId)) {
+        val userToUpdate = userService.getUserByGuid(userRoleUpdateDto.getUserId());
+        if (userToUpdate.getId().equals(adminId)) {
             throw new SelfRoleChangeException();
         }
 
-        val userAppRole = app.getUserAppRole(user.getId()).orElseThrow();
+        val userToUpdateAppRole = app.getUserAppRole(userToUpdate.getId()).orElseThrow();
         val newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
 
-        val currentUserRole = app.getUserAppRoleOrThrow(adminId);
+        val currentUserRole = app.getUserAppRole(adminId);
 
-        if (ADMINISTRATOR.equals(currentUserRole.getRole()) &&
-                (OWNER.equals(newAppRole)) || OWNER.equals(userAppRole.getRole())) {
+        if(userToUpdateAppRole.getRole().equals(OWNER)) {
             throw new InsufficientPrivilegesException();
         }
 
-        if (OWNER == newAppRole) {
+        if (newAppRole.equals(OWNER)) {
             app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(ADMINISTRATOR));
         }
 
-        userAppRole.setRole(newAppRole);
+        userToUpdateAppRole.setRole(newAppRole);
 
         appRepository.save(app);
 
-        return userAppRole;
+        return userToUpdateAppRole;
     }
 
     public void deleteUserFromApp(final String userGuid, final String guid, final Long adminId) {
