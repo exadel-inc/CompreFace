@@ -220,18 +220,8 @@ public class AppService {
         val newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
 
         val currentUserRole = app.getUserAppRole(adminId);
-        if (currentUserRole.isPresent()) {
-            if (currentUserRole.get().getRole().equals(ADMINISTRATOR) &&
-                    newAppRole.equals(OWNER)) {
-                throw new InsufficientPrivilegesException();
-            }
-        }
 
         if(userToUpdateAppRole.getRole().equals(OWNER)) {
-            throw new InsufficientPrivilegesException();
-        }
-
-        if (newAppRole.equals(OWNER) && admin.getGlobalRole().equals(GlobalRole.ADMINISTRATOR)) {
             throw new InsufficientPrivilegesException();
         }
 

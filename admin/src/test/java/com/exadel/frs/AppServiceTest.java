@@ -827,7 +827,7 @@ class AppServiceTest {
     }
 
     @Test
-    void failUpdateAppRoleToOwnerByAdmin() {
+    void successUpdateAppRoleToOwnerByAdmin() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
                                                  .userId("userGuid")
                                                  .role(OWNER.toString())
@@ -851,9 +851,7 @@ class AppServiceTest {
         when(userServiceMock.getUser(ADMIN_ID)).thenReturn(admin);
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
-        assertThatThrownBy(() ->
-                appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID)
-        ).isInstanceOf(InsufficientPrivilegesException.class);
+        appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
 
         verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
