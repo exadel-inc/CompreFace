@@ -1,8 +1,41 @@
+
+<h1 align="center">CompreFace - open-source face recognition system from Exadel</h1>
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/3736126/100540268-f4228500-3244-11eb-92e7-1d263eba98bc.png" alt="angular-logo" height="150px"/>
+  <br>
+  <i>CompreFace is a free face recognition service that can be easily integrated into<br> any system without prior machine learning skills.
+     </i>
+  <br>
+</p>
+
+<p align="center">
+  <a href="https://exadel.com/services/engineering/ai-machine-learning/compreface/"><strong>Official website</strong></a>
+  <br>
+</p>
+
+<p align="center">
+  <a href="#contributing">Contributing</a>
+  ·
+  <a href="https://github.com/exadel-inc/CompreFace/issues">Submit an Issue</a>
+  ·
+  <a href="https://exadel.com/news/tag/compreface/">Blog</a>
+  ·
+  <a href="https://gitter.im/CompreFace/community">Community chat</a>
+  <br>
+</p>
+
+<p align="center">
+  <a href="https://www.apache.org/licenses/LICENSE-2.0">
+    <img src="https://img.shields.io/github/license/exadel-inc/CompreFace" alt="GitHub license" />
+  </a>&nbsp;
+  <a href="https://github.com/exadel-inc/CompreFace/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/exadel-inc/CompreFace" alt="GitHub contributors" />
+  </a>&nbsp;
+</p>
+<hr>
+
 # CompreFace
-
-[![GitHub license](https://img.shields.io/github/license/exadel-inc/CompreFace)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/exadel-inc/CompreFace)](https://github.com/exadel-inc/CompreFace/graphs/contributors)
-
-
 
  [CompreFace](#compreface)
   * [Overview](#overview)
