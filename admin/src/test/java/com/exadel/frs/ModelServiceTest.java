@@ -213,7 +213,7 @@ class ModelServiceTest {
                        .id(USER_ID)
                        .build();
 
-        ModelCloneDto modelCloneDto = ModelCloneDto.builder()
+        val modelCloneDto = ModelCloneDto.builder()
                 .name("name_of_clone")
                 .build();
 
@@ -245,7 +245,7 @@ class ModelServiceTest {
         when(facesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
-        Model clonedModel = modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
+        val clonedModel = modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
         verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
@@ -288,7 +288,7 @@ class ModelServiceTest {
 
     @Test
     void successUpdateModel() {
-        ModelUpdateDto modelUpdateDto = ModelUpdateDto.builder()
+        val modelUpdateDto = ModelUpdateDto.builder()
                                                       .name("new_name")
                                                       .build();
 

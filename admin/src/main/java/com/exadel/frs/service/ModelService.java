@@ -118,7 +118,6 @@ public class ModelService {
         val clone = new Model(model);
         clone.setId(null);
         clone.setName(modelCloneDto.getName());
-        clone.setAppModelAccess(new ArrayList<>());
 
         val clonedModel = modelRepository.save(clone);
 
@@ -132,7 +131,7 @@ public class ModelService {
     }
 
     private List<AppModel> cloneAppModels(final Model model, final Model clonedModel) {
-        List<AppModel> cloneAppModelAccessList = new ArrayList<>();
+        val cloneAppModelAccessList = new ArrayList<AppModel>();
         for (val appModel : model.getAppModelAccess()) {
             AppModel cloneAppModelAccess = new AppModel(appModel);
             cloneAppModelAccess.setId(new AppModelId(clonedModel.getApp().getId(), clonedModel.getId()));
@@ -144,8 +143,8 @@ public class ModelService {
     }
 
     private void cloneFaces(final Model clone, final List<Face> faces) {
-        List<Face> cloneFaces = new ArrayList<>();
-        List<Image> cloneImages = new ArrayList<>();
+        val cloneFaces = new ArrayList<Face>();
+        val cloneImages = new ArrayList<Image>();
 
         for (val face : faces) {
             val cloneFace = new Face(face);
