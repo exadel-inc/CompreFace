@@ -14,6 +14,11 @@
  * permissions and limitations under the License.
  */
 
-caption{
+caption {
   display: none;
+}
+
+.mat-cell:first-child {
+  width: 40%;
+  padding-right: 10px;
 }
