@@ -37,10 +37,10 @@ responses:
           properties:
             age:
               type: string
-              example: rude_carnie.AgeDetector
+              example: agegender.AgeDetector
             gender:
               type: string
-              example: rude_carnie.GenderDetector
+              example: agegender.GenderDetector
             detector:
               type: string
               example: facenet.FaceDetector

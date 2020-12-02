@@ -84,7 +84,7 @@ Set plugins by build arguments `FACE_DETECTION_PLUGIN` and `CALCULATION_PLUGIN`
 
 | Plugin name              | Slug       | Backend     | Framework  | GPU support |
 |--------------------------|------------|-------------|------------|-------------|
-| facenet.FaceDetector     | detector   | Facenet     | Tensorflow |             |
+| facenet.FaceDetector     | detector   | MTCNN       | Tensorflow |             |
 | facenet.Calculator       | calculator | Facenet     | Tensorflow |             |
 | insightface.FaceDetector | detector   | insightface | MXNet      |      +      |
 | insightface.Calculator   | calculator | insightface | MXNet      |      +      |
@@ -95,8 +95,8 @@ Pass to `EXTRA_PLUGINS` comma-separated names of plugins.
 
 | Plugin name                        | Slug           | Backend     | Framework  | GPU support |
 |------------------------------------|----------------|-------------|------------|-------------|
-| rude_carnie.AgeDetector            | age            | rude_carnie | Tensorflow |             |
-| rude_carnie.GenderDetector         | gender         | rude_carnie | Tensorflow |             |
+| agegender.AgeDetector              | age            | agegender   | Tensorflow |             |
+| agegender.GenderDetector           | gender         | agegender   | Tensorflow |             |
 | insightface.GenderAgeDetector      | gender_age     | insightface | MXNet      |      +      |
 | facenet.LandmarksDetector          | landmarks      | Facenet     | Tensorflow |      +      |
 | insightface.LandmarksDetector      | landmarks      | insightface | MXNet      |      +      |
@@ -113,7 +113,7 @@ Notes:
 ```
 FACE_DETECTION_PLUGIN=facenet.FaceDetector
 CALCULATION_PLUGIN=facenet.Calculator
-EXTRA_PLUGINS=rude_carnie.AgeDetector,rude_carnie.GenderDetector  
+EXTRA_PLUGINS=agegender.AgeDetector,agegender.GenderDetector  
 ```
 
 #### Pre-trained models
