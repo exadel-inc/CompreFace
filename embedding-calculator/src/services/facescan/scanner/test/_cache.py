@@ -11,11 +11,11 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
+from functools import lru_cache
 
-API_KEY_HEADER = 'X-Api-Key'
+from src.services.imgtools.read_img import read_img as org_read_img
 
 
-class ARG:
-    LIMIT = 'limit'
-    DET_PROB_THRESHOLD = 'det_prob_threshold'
-    FACE_PLUGINS = 'face_plugins'
+@lru_cache(maxsize=None)
+def read_img(img_path):
+    return org_read_img(img_path)

@@ -12,10 +12,9 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-API_KEY_HEADER = 'X-Api-Key'
+class PluginError(RuntimeError):
+    pass
 
 
-class ARG:
-    LIMIT = 'limit'
-    DET_PROB_THRESHOLD = 'det_prob_threshold'
-    FACE_PLUGINS = 'face_plugins'
+class ModelImportException(PluginError):
+    pass

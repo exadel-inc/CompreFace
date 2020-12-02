@@ -12,10 +12,21 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-API_KEY_HEADER = 'X-Api-Key'
+import os
+from importlib.util import find_spec
+
+modules_by_lib = {
+    'tensorflow': ('facenet', 'rude_carnie'),
+    'mexnet': ('insightface',)
+}
+modules_to_skip = []
+for lib, modules in modules_by_lib.items():
+    if find_spec(lib) is None:
+        modules_to_skip.extend(modules)
 
 
-class ARG:
-    LIMIT = 'limit'
-    DET_PROB_THRESHOLD = 'det_prob_threshold'
-    FACE_PLUGINS = 'face_plugins'
+def pytest_ignore_collect(path):
+    _, tail = os.path.split(path)
+    for module in modules:
+        if tail.startswith(module):
+            return True
