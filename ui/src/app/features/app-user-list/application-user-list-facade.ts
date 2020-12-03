@@ -79,6 +79,9 @@ export class ApplicationUserListFacade implements IFacade {
             return applicationRole === Role.OWNER ? applicationRole : globalRole;
           }
         }
+        if (applicationRole === Role.OWNER) {
+          return applicationRole;
+        }
       })
     );
 
