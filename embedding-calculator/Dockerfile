@@ -1,5 +1,5 @@
 # Changes to this file have to be applied to DevOps Dockerfile as well, e.g. https://git.exadel.com/exadel-face-recognition-service/frs-devops/blob/master/Docker/APP-GENERIC-PYTHON-dev2/Dockerfile
-FROM jjanzic/docker-python3-opencv
+FROM jjanzic/docker-python3-opencv@sha256:d4182ab5f84d40057a96ad43043855cc6b6e695b30f1c1a4867b1eb8930e6d83
 
 # <different-from-jenkins>
 WORKDIR /app/ml
