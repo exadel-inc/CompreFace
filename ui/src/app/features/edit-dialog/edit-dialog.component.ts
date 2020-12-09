@@ -23,7 +23,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./edit-dialog.component.scss'],
 })
 export class EditDialogComponent implements OnInit {
-  dataSelected: true;
+  dataSelected: boolean;
 
   constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
