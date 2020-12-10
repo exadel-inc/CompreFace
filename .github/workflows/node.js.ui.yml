@@ -15,9 +15,7 @@ jobs:
     strategy:
       matrix:
        include:
-         - node-version: 10.x
-           site: "prod"
-           datacenter: "site-a"
+         - node-version: 11.x
 
     steps:
     - uses: actions/checkout@v2
@@ -25,7 +23,5 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
-      working-directory: ./ui
     - run: npm test
       working-directory: ./ui
