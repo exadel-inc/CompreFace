@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -22,18 +22,19 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   templateUrl: './edit-dialog.component.html',
   styleUrls: ['./edit-dialog.component.scss'],
 })
-export class EditDialogComponent implements OnInit {
+export class EditDialogComponent {
   dataSelected: boolean;
+  initialName: string;
 
-  constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.initialName = data.entityName;
+  }
 
   onCancelClick(): void {
     this.dialogRef.close();
   }
 
-  onInputChange() {
-    this.dataSelected = true;
+  onInputChange(value: any) {
+    return value === this.initialName || !value ? (this.dataSelected = false) : (this.dataSelected = true);
   }
-
-  ngOnInit(): void {}
 }

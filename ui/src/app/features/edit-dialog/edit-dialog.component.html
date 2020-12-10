@@ -17,18 +17,12 @@
 <h1 mat-dialog-title>Edit {{ data.entityType }}</h1>
 <div mat-dialog-content>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.entityName" (click)="onInputChange()" placeholder="{{ 'common.name' | translate }}" />
+    <input matInput [(ngModel)]="data.entityName" (keyup)="onInputChange(data.entityName)" placeholder="{{ 'common.name' | translate }}" />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
   <button class="button-cancel" mat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
-  <button
-    class="button-create"
-    mat-button
-    [mat-dialog-close]="data.entityName"
-    cdkFocusInitial
-    [disabled]="!dataSelected || !data.entityName"
-  >
+  <button class="button-create" mat-button [mat-dialog-close]="data.entityName" cdkFocusInitial [disabled]="!dataSelected">
     {{ 'common.capital.rename' | translate }}
   </button>
 </div>
