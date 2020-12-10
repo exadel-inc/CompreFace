@@ -16,38 +16,31 @@
 
 package com.exadel.frs.service;
 
+import com.exadel.frs.dto.ui.AppCreateDto;
+import com.exadel.frs.dto.ui.AppUpdateDto;
+import com.exadel.frs.dto.ui.UserInviteDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.entity.*;
+import com.exadel.frs.enums.AppRole;
+import com.exadel.frs.exception.*;
+import com.exadel.frs.helpers.SecurityUtils;
+import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.repository.ModelShareRequestRepository;
+import com.exadel.frs.system.security.AuthorizationManager;
+import lombok.RequiredArgsConstructor;
+import lombok.val;
+import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
 import static com.exadel.frs.enums.AppRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.AppRole.OWNER;
 import static com.exadel.frs.enums.GlobalRole.USER;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
-import com.exadel.frs.dto.ui.AppCreateDto;
-import com.exadel.frs.dto.ui.AppUpdateDto;
-import com.exadel.frs.dto.ui.UserInviteDto;
-import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.ModelShareRequest;
-import com.exadel.frs.entity.ModelShareRequestId;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.entity.UserAppRole;
-import com.exadel.frs.enums.AppRole;
-import com.exadel.frs.enums.GlobalRole;
-import com.exadel.frs.exception.AppNotFoundException;
-import com.exadel.frs.exception.InsufficientPrivilegesException;
-import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.exception.SelfRoleChangeException;
-import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
-import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
-import com.exadel.frs.system.security.AuthorizationManager;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import javax.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import lombok.val;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -241,7 +234,7 @@ public class AppService {
         val app = getApp(guid, userId);
         val admin = userService.getUser(adminId);
 
-        authManager.verifyDeletionUserFromApp(admin, userGuid, app);
+        authManager.verifyUserDeletionFromApp(admin, userGuid, app);
 
         app.deleteUserAppRole(userGuid);
 

@@ -61,7 +61,7 @@ public class AuthorizationManager {
         }
     }
 
-    public void verifyDeletionUserFromApp(final User deleter, final String userGuid, final App app) {
+    public void verifyUserDeletionFromApp(final User deleter, final String userGuid, final App app) {
         if (List.of(OWNER, ADMINISTRATOR).contains(deleter.getGlobalRole())) {
             return;
         }
