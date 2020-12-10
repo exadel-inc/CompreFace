@@ -19,4 +19,4 @@ jobs:
         with:
           java-version: 1.11
       - name: Maven Package
-        run: mvn -B clean package -DskipTests
+        run: mvn -B clean package
