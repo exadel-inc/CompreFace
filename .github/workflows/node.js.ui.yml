@@ -11,12 +11,13 @@ on:
 
 jobs:
   build:
-
-    runs-on: node:10-alpine
-
+    runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+       include:
+         - node-version: 10.x
+           site: "prod"
+           datacenter: "site-a"
 
     steps:
     - uses: actions/checkout@v2
