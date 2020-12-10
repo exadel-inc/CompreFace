@@ -25,5 +25,6 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm test build
+    - run: npm install --no-color
+    - run: pm test build
       working-directory: ./ui
