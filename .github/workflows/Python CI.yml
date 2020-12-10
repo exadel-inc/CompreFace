@@ -20,6 +20,10 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.x'
+    - uses: actions/checkout@v2
+    - uses: Dovyski/setup-opencv-action@v1
+      with:
+        opencv-version: '4.0.0'  
     - name: Install dependencies
       working-directory: ./embedding-calculator/
       run: |
