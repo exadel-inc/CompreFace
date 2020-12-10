@@ -25,5 +25,5 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm install
       working-directory: ./ui
-    - run: npm run test --browsers=ChromeHeadlessCI
+    - run: npm run test --no-watch --no-progress --browsers=ChromeHeadlessCI
       working-directory: ./ui
