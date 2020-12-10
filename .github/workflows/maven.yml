@@ -21,5 +21,5 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      working-directory: ./api
+      working-directory: ./admin
       run: mvn -B package --file pom.xml
