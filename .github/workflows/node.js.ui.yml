@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
        include:
-         - node-version: 11.x
+         - node-version: 12.x
 
     steps:
     - uses: actions/checkout@v2
