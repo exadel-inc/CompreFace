@@ -23,7 +23,9 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm install
+    - name: Install, build, test
       working-directory: ./ui
-    - run: npm run test --no-watch --no-progress --browsers=ChromeHeadlessCI
-      working-directory: ./ui
+      run: |
+        npm install
+        npm run build
+        npm test
