@@ -5,14 +5,14 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ efrs-917-github-actions-to-run-unit-tests-on-pull-requests ]
   pull_request:
-    branches: [ master ]
+    branches: [ efrs-917-github-actions-to-run-unit-tests-on-pull-requests ]
 
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: node:10-alpine
 
     strategy:
       matrix:
