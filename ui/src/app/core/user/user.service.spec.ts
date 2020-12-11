@@ -43,21 +43,19 @@ describe('UserService', () => {
     const mock = [
       {
         id: 0,
-        organizationId: 'ksdfklsn1111111',
         firstName: 'John',
         lastName: 'Malkovich',
         role: Role.USER,
       },
       {
         id: 1,
-        organizationId: 'ksdfklsn1111111',
         firstName: 'Tony',
         lastName: 'Stark',
         role: Role.ADMINISTRATOR,
       },
     ];
 
-    service.getAll('organizationId').subscribe((data: AppUser[]) => {
+    service.getAll().subscribe((data: AppUser[]) => {
       expect(data[0].role).toBe(mock[0].role);
       expect(data[0].firstName).toBe(mock[0].firstName);
       expect(data[0].lastName).toBe(mock[0].lastName);
@@ -66,7 +64,7 @@ describe('UserService', () => {
       expect(data[1].lastName).toBe(mock[1].lastName);
     });
 
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/roles`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}user/roles`);
     expect(req.request.method).toBe('GET');
     req.flush(mock);
   });
@@ -74,19 +72,18 @@ describe('UserService', () => {
   it('should update user role', () => {
     const mock = {
       id: 'userId',
-      organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
       role: Role.USER,
     };
 
-    service.updateRole('organizationId', 'userId', Role.USER).subscribe((data: AppUser) => {
+    service.updateRole('userId', Role.USER).subscribe((data: AppUser) => {
       expect(data.role).toBe(mock.role);
       expect(data.firstName).toBe(mock.firstName);
       expect(data.lastName).toBe(mock.lastName);
     });
 
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/role`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}user/global/role`);
     expect(req.request.method).toBe('PUT');
     req.flush(mock);
   });
