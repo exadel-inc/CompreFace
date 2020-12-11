@@ -26,9 +26,11 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install opencv-python
         python -m pip --no-cache-dir install -r requirements.txt -e srcext/insightface/python-package
+        python -m pip uninstall mxnet-mkl -y 
+        python -m pip --no-cache-dir install mxnet==1.6.0
     - name: Test with pytest
-      working-directory: ./embedding-calculator/src
+      working-directory: ./embedding-calculator/
       run: |
        pip install pytest
        pip install pytest-cov
-       SCANNER=Facenet2018 JOBLIB_MULTIPROCESSING=0 python -m pytest -m "not performance"
+       SCANNER=Facenet2018 JOBLIB_MULTIPROCESSING=0 python -m pytest -m "not performance" ./src
