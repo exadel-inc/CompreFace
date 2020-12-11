@@ -24,7 +24,7 @@ jobs:
       working-directory: ./embedding-calculator/
       run: |
         python -m pip install --upgrade pip
-        python -m pip install opencv-contrib-python==4.1.0.25
+        pip install opencv-python==4.1.0.25
         python -m pip --no-cache-dir install -r requirements.txt
     - name: Test with pytest
       working-directory: ./embedding-calculator/
