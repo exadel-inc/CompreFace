@@ -20,14 +20,11 @@ jobs:
       uses: actions/setup-python@v2
       with:
         python-version: '3.9'
-    - uses: actions/checkout@v2
-    - uses: Dovyski/setup-opencv-action@v1
-      with:
-        opencv-version: '4.1.0'  
     - name: Install dependencies
       working-directory: ./embedding-calculator/
       run: |
         python -m pip install --upgrade pip
+        python -m pip install opencv-python
         python -m pip --no-cache-dir install -r requirements.txt
     - name: Test with pytest
       working-directory: ./embedding-calculator/
