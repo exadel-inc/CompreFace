@@ -12,18 +12,18 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.x]
+        python-version: [3.9]
 
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.x'
+        python-version: '3.9'
     - uses: actions/checkout@v2
     - uses: Dovyski/setup-opencv-action@v1
       with:
-        opencv-version: '4.0.0'  
+        opencv-version: '4.1.0'  
     - name: Install dependencies
       working-directory: ./embedding-calculator/
       run: |
