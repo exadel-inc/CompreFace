@@ -27,8 +27,8 @@ jobs:
         python -m pip install opencv-python
         python -m pip --no-cache-dir install -r requirements.txt
     - name: Test with pytest
-      working-directory: ./embedding-calculator/
+      working-directory: ./embedding-calculator/src
       run: |
        pip install pytest
        pip install pytest-cov
-       python -m pytest
+       JOBLIB_MULTIPROCESSING=0 python -m pytest
