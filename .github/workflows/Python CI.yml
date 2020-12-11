@@ -26,4 +26,6 @@ jobs:
     - name: Test with pytest
       working-directory: ./embedding-calculator/
       run: |
-       pytest -m "not performance"
+       pip install pytest
+       pip install pytest-cov
+       python -m pytest
