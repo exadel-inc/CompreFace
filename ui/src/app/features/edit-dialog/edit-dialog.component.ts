@@ -14,17 +14,22 @@
  * permissions and limitations under the License.
  */
 
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
   styleUrls: ['./edit-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EditDialogComponent {
-  dataSelected: boolean;
   initialName: string;
+
+  get isRenameDisabled(): any {
+    return this.data.entityName === this.initialName || !this.data.entityName;
+  }
 
   constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.initialName = data.entityName;
@@ -32,9 +37,5 @@ export class EditDialogComponent {
 
   onCancelClick(): void {
     this.dialogRef.close();
-  }
-
-  onInputChange(value: any) {
-    return value === this.initialName || !value ? (this.dataSelected = false) : (this.dataSelected = true);
   }
 }
