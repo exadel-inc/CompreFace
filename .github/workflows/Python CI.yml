@@ -2,9 +2,9 @@ name: Python package
 
 on:
   push:
-    branches: [ master ]
+    branches: [ efrs-917-github-actions-to-run-unit-tests-on-python ]
   pull_request:
-    branches: [ master ]
+    branches: [ efrs-917-github-actions-to-run-unit-tests-on-python ]
 
 jobs:
   build:
