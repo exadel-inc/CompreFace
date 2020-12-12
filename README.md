@@ -70,8 +70,8 @@
 
 ## Overview
 
-CompreFace is an application for facial recognition that can be integrated as a standalone server or deployed on the cloud and can be set up and used without machine learning expertise.
-Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient API for model training and face recognition. We also provide an easy-to-understand roles system with which you can easily control who has access to the model.
+CompreFace is docker-based application for facial recognition that can be integrated as a standalone server or deployed on the cloud and can be set up and used without machine learning expertise.
+Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient REST API for Face Collection training and face recognition. We also provide a roles system with which you can easily control who has access to the Face Collection.
 Every user can create their own models and train them on different subsets of input data. 
 
 ## Feedback survey
