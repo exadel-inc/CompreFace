@@ -1,5 +1,6 @@
-ARG BASE_IMAGE=python:3.7-slim
-FROM $BASE_IMAGE
+ARG GPU_IDX
+ARG BASE_IMAGE=${GPU_IDX:+exadel/compreface-core-cuda:101-py37}
+FROM ${BASE_IMAGE:-python:3.7-slim}
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         curl yasm pkg-config libswscale-dev libtbb2 libtbb-dev libjpeg-dev \
@@ -25,9 +26,10 @@ ENV PYTHONUNBUFFERED=0
 ENV JOBLIB_MULTIPROCESSING=0
 
 # download ML models
-ARG DETECTION_MODEL="retinaface_r50_v1"
-ARG CALCULATION_MODEL="arcface_r100_v1"
-ENV DETECTION_MODEL=$DETECTION_MODEL CALCULATION_MODEL=$CALCULATION_MODEL
+ARG DETECTION_MODEL
+ARG CALCULATION_MODEL
+ENV DETECTION_MODEL=${DETECTION_MODEL:-retinaface_r50_v1}
+ENV CALCULATION_MODEL=${CALCULATION_MODEL:-arcface_r100_v1}
 COPY srcext srcext
 COPY pytest.ini .
 COPY *.sh ./
@@ -35,11 +37,15 @@ RUN chmod +x *.sh
 RUN ./prepare_scanners.sh
 
 # install InsightFace packages
-ARG MXNET
-ARG GPU_ID
-ENV GPU_ID=$GPU_ID
+ARG INTEL_OPTIMIZATION
+ARG GPU_IDX
+ENV GPU_IDX=$GPU_IDX
+ENV MXNET_MOD=${GPU_IDX:+cu101}${INTEL_OPTIMIZATION:+mkl}
+ENV MXNET_LIB=mxnet${MXNET_MOD:+-$MXNET_MOD}
+ENV MXNET_VER="<1.7"
+
 RUN if [[ "$SCANNER" == "InsightFace" ]]; then \
-      pip --no-cache-dir install ${MXNET:-mxnet-mkl==1.6.0} -e srcext/insightface/python-package; \
+      pip --no-cache-dir install "$MXNET_LIB$MXNET_VER" -e srcext/insightface/python-package; \
     fi
 
 # copy rest of the code

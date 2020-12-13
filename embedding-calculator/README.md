@@ -23,6 +23,23 @@ $ python -m src.app
 ```
 
 ### Docker
+
+##### Images on DockerHub 
+
+There are some pre-build images on https://hub.docker.com/r/exadel/compreface-core. To use it run:
+```
+$ docker run -p 3000:3000 exadel/compreface-core:latest
+```
+
+###### DockerHub tags
+
+| Tag                    | Scanner     | Build arguments               | Comment                       |
+|------------------------|-------------|-------------------------------|-------------------------------|
+| :0.4.0 :latest         | Facenet2018 |                               |                               |
+| :0.4.0-insightface     | InsightFace | SCANNER=InsightFace           |                               |
+| :0.4.0-insightface-gpu | InsightFace | SCANNER=InsightFace GPU_IDX=0 | GPU_IDX - index of GPU-device |
+
+
 ##### Build
 Builds container (also runs main tests during the build):
 ```
@@ -35,7 +52,7 @@ $ docker build -t embedding-calculator --build-arg SKIP_TESTS=true .
 
 ##### Run
 ```
-$ docker run -p3000:3000 embedding-calculator
+$ docker run -p 3000:3000 embedding-calculator
 ```
 
 ### Run tests
@@ -84,7 +101,14 @@ Check more models in [Model Zoo](https://github.com/deepinsight/insightface/wiki
 Build container with CUDA 10.1.
 ```
 $ docker build -t cuda101-py37 -f gpu.Dockerfile .
-$ docker build -t embedding-calculator-gpu --build-arg SCANNER=InsightFace --build-arg BASE_IMAGE=cuda101-py37 --build-arg GPU_ID=0  .
+$ docker build -t embedding-calculator-gpu --build-arg SCANNER=InsightFace --build-arg GPU_IDX=0  .
+```
+
+Install the nvidia-docker2 package and dependencies:
+```
+sudo apt-get update
+sudo apt-get install -y nvidia-docker2
+sudo systemctl restart docker
 ```
 
 Run with enabled gpu
