@@ -33,8 +33,11 @@ jobs:
             ${{ runner.OS }}-node-
             ${{ runner.OS }}-
       - name: Install dependencies
+        working-directory: ./ui
         run: npm install
       - name: Run lint
+        working-directory: ./ui
         run: npm lint
       - name: Run tests
+        working-directory: ./ui
         run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
