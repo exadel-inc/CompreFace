@@ -33,4 +33,4 @@ jobs:
       run: |
         npm install
         npm build
-        npm run test-headless
+        npm run test
