@@ -36,4 +36,4 @@ jobs:
         npm install
         npm build
     - name: Run tests
-      run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+      run: npm test
