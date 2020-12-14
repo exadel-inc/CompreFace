@@ -12,28 +12,29 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
-       include:
-         - node-version: 12.x
+        node-version: [14.10]
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: add chrome
-      run: |
-        sudo apt-get update
-        sudo apt-get --only-upgrade install google-chrome-stable
-        google-chrome --version
-        sudo apt-get update
-        sudo apt-get install -y libgbm-dev
-        sudo apt-get install xvfb
-    - name: Install, build
-      working-directory: ./ui
-      run: |
-        npm install
-        npm build
-        xvfb-run --auto-servernum npm test
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.OS }}-node-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.OS }}-node-
+            ${{ runner.OS }}-
+      - name: Install dependencies
+        run: npm install
+      - name: Run lint
+        run: npm lint
+      - name: Run tests
+        run: npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
