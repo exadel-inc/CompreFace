@@ -27,6 +27,4 @@ jobs:
       working-directory: ./ui
       run: |
         npm install
-        install -y libgbm-dev
-        npm run build
-        npm test 
+        npm run test-headless
