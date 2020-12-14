@@ -28,4 +28,4 @@ jobs:
       run: |
         npm install
         npm run build
-        npm test --watch=false --browsers=ChromeHeadless
+        npm test 
