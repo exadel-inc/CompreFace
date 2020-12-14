@@ -23,8 +23,14 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - name: add chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get --only-upgrade install google-chrome-stable
+        google-chrome --version
     - name: Install, build, test
       working-directory: ./ui
       run: |
         npm install
+        npm build
         npm run test-headless
