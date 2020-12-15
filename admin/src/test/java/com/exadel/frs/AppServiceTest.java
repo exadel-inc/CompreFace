@@ -25,7 +25,6 @@ import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
@@ -571,7 +570,7 @@ class AppServiceTest {
 
         verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
         verify(appRepositoryMock).save(any());
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyUserDeletionFromApp(admin, userGuid, app);
         verify(authManagerMock).verifyReadPrivilegesToApp(user, app);
         verifyNoMoreInteractions(appRepositoryMock, authManagerMock);
     }

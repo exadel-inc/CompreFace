@@ -21,6 +21,11 @@ import static com.exadel.frs.enums.GlobalRole.OWNER;
 import static com.exadel.frs.enums.GlobalRole.USER;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
@@ -33,9 +38,14 @@ import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class AuthorizationManagerTest {
 
@@ -46,6 +56,7 @@ class AuthorizationManagerTest {
     private static final long GLOBAL_ADMIN_ID = 2L;
     private static final long GLOBAL_OWNER_ID = 3L;
     private static final long GLOBAL_USER_APP_USER_ID = 5L;
+    private static final long GLOBAL_USER_APP_ANOTHER_USER_ID = 55L;
     private static final long GLOBAL_USER_APP_ADMIN_ID = 6L;
     private static final long GLOBAL_USER_APP_OWNER_ID = 7L;
     private static final long GLOBAL_ADMIN_APP_USER_ID = 8L;
@@ -117,7 +128,7 @@ class AuthorizationManagerTest {
         @Test
         void userWithAnyRoleToAppCanReadApp() {
             // exclude global user
-            for (User user : users.subList(1,users.size())) {
+            for (User user : users.subList(1, users.size())) {
                 authManager.verifyReadPrivilegesToApp(user, application);
             }
         }
@@ -305,6 +316,64 @@ class AuthorizationManagerTest {
         assertThatThrownBy(() -> authManager.verifyAppHasTheModel(
                 APP_GUID, strangeModel
         )).isInstanceOf(ModelDoesNotBelongToAppException.class);
+    }
+
+    static Stream<Arguments> verifyUserDeletionFromAppGlobalProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_ADMIN_APP_USER_ID, GLOBAL_USER_APP_OWNER_ID),
+                Arguments.of(GLOBAL_OWNER_APP_USER_ID, GLOBAL_USER_APP_ADMIN_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyUserDeletionFromAppGlobalProvider")
+    void testVerifyUserDeletionFromAppByAllowedGlobalUser(Long deleterId, Long deletionSubjectId) {
+        // given
+        val deleter = getUser(deleterId);
+        val deletionSubject = getUser(deletionSubjectId);
+        App spyApp = spy(application);
+
+        // when
+        authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), spyApp);
+
+        // then
+        verifyNoInteractions(spyApp);
+    }
+
+    static Stream<Arguments> verifyUserDeletionFromAppGlobalUserProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_USER_APP_ADMIN_ID, GLOBAL_USER_APP_OWNER_ID),
+                Arguments.of(GLOBAL_USER_APP_OWNER_ID, GLOBAL_USER_APP_ADMIN_ID),
+                Arguments.of(GLOBAL_USER_APP_USER_ID, GLOBAL_USER_APP_USER_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyUserDeletionFromAppGlobalUserProvider")
+    void testVerifyUserDeletionFromAppByAllowedAppUser(Long deleterId, Long deletionSubjectId) {
+        // given
+        val deleter = getUser(deleterId);
+        val deletionSubject = getUser(deletionSubjectId);
+        App spyApp = spy(application);
+
+        // when
+        authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), spyApp);
+
+        // then
+        verify(spyApp, times(1)).getUserAppRole(deleter.getId());
+    }
+
+    @Test
+    void testVerifyUserDeletionFromAppByNotAllowedAppUser() {
+        // given
+        val deleter = getUser(GLOBAL_USER_APP_USER_ID);
+        val deletionSubject = makeUser(GLOBAL_USER_APP_ANOTHER_USER_ID, USER);
+
+        // when
+        Executable exec = () -> authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), application);
+
+        // then
+        assertThrows(InsufficientPrivilegesException.class, exec);
     }
 
     private User getUser(final Long id) {
