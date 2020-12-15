@@ -40,14 +40,12 @@ import com.exadel.frs.repository.FacesRepository;
 import com.exadel.frs.repository.ImagesRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
-import com.exadel.frs.system.feign.StatisticsDatabaseClient;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -60,12 +58,8 @@ public class ModelService {
     private final AppModelRepository appModelRepository;
     private final AuthorizationManager authManager;
     private final UserService userService;
-    private final StatisticsDatabaseClient statisticsDatabaseClient;
     private final FacesRepository facesRepository;
     private final ImagesRepository imagesRepository;
-
-    @Value("${app.feign.appery-io.database.id}")
-    private String statisticsDatabaseId;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)

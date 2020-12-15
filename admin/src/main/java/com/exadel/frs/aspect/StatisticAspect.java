@@ -10,7 +10,6 @@ import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.val;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -25,15 +24,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class StatisticAspect {
 
-    @Value("${app.feign.appery-io.database.id}")
-    private String statisticsDatabaseId;
+    @Value("${app.feign.appery-io.api-key}")
+    private String statisticsApiKey;
     private final UserService userService;
     private final StatisticsDatabaseClient statisticsDatabaseClient;
 
     @SneakyThrows
     @AfterReturning(pointcut = "@annotation(com.exadel.frs.annotation.Statistics)", returning = "result")
     public void afterMethodInvocation(JoinPoint joinPoint, Object result) {
-        if (StringUtils.isEmpty(statisticsDatabaseId)) {
+        if (StringUtils.isEmpty(statisticsApiKey)) {
             return;
         }
 
@@ -55,6 +54,6 @@ public class StatisticAspect {
         Statistics statistics = joinPoint.getTarget().getClass().getMethod(methodName, parameterTypes).getAnnotation(Statistics.class);
         StatisticsType statisticsType = statistics.type();
 
-        statisticsDatabaseClient.create(statisticsDatabaseId, new StatisticsGeneralEntity(user.getGuid(), statisticsType));
+        statisticsDatabaseClient.create(statisticsApiKey, new StatisticsGeneralEntity(user.getGuid(), statisticsType));
     }
 }

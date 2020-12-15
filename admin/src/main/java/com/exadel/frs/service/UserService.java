@@ -42,7 +42,6 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
-import com.exadel.frs.system.feign.StatisticsDatabaseClient;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,7 +50,6 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -68,10 +66,6 @@ public class UserService {
     private final EmailSender emailSender;
     private final Environment env;
     private final AuthorizationManager authManager;
-    private final StatisticsDatabaseClient statisticsDatabaseClient;
-
-    @Value("${app.feign.appery-io.database.id}")
-    private String statisticsDatabaseId;
 
     public User getUser(final Long id) {
         return userRepository.findById(id)
