@@ -16,11 +16,32 @@
 
 package com.exadel.frs;
 
+import static com.exadel.frs.enums.AppRole.OWNER;
+import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
+import static com.exadel.frs.enums.GlobalRole.USER;
+import static java.util.Collections.nCopies;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
+import static org.apache.commons.lang3.RandomUtils.nextLong;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.*;
+import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.Model;
+import com.exadel.frs.entity.ModelShareRequest;
+import com.exadel.frs.entity.User;
+import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.entity.UserAppRoleId;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
@@ -32,6 +53,9 @@ import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,22 +66,6 @@ import org.mockito.Mockito;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
-import static com.exadel.frs.enums.AppRole.OWNER;
-import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
-import static com.exadel.frs.enums.GlobalRole.USER;
-import static java.util.Collections.nCopies;
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import static org.apache.commons.lang3.RandomUtils.nextLong;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 class AppServiceTest {
 

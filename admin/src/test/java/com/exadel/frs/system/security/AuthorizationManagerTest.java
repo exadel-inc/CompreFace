@@ -16,12 +16,29 @@
 
 package com.exadel.frs.system.security;
 
+import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
+import static com.exadel.frs.enums.GlobalRole.OWNER;
+import static com.exadel.frs.enums.GlobalRole.USER;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import com.exadel.frs.dto.ui.UserDeleteDto;
-import com.exadel.frs.entity.*;
+import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.Model;
+import com.exadel.frs.entity.User;
+import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.entity.UserAppRoleId;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -29,16 +46,6 @@ import org.junit.jupiter.api.function.Executable;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Stream;
-
-import static com.exadel.frs.enums.GlobalRole.*;
-import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.*;
 
 class AuthorizationManagerTest {
 
@@ -121,7 +128,7 @@ class AuthorizationManagerTest {
         @Test
         void userWithAnyRoleToAppCanReadApp() {
             // exclude global user
-            for (User user : users.subList(1,users.size())) {
+            for (User user : users.subList(1, users.size())) {
                 authManager.verifyReadPrivilegesToApp(user, application);
             }
         }
@@ -299,12 +306,12 @@ class AuthorizationManagerTest {
     @Test
     void strangeModelThrowsException() {
         val otherApp = App.builder()
-                .guid(UUID.randomUUID().toString())
-                .build();
+                          .guid(UUID.randomUUID().toString())
+                          .build();
 
         val strangeModel = Model.builder()
-                .app(otherApp)
-                .build();
+                                .app(otherApp)
+                                .build();
 
         assertThatThrownBy(() -> authManager.verifyAppHasTheModel(
                 APP_GUID, strangeModel
@@ -371,9 +378,9 @@ class AuthorizationManagerTest {
 
     private User getUser(final Long id) {
         return users.stream()
-                .filter(user -> user.getId().equals(id))
-                .findFirst()
-                .get();
+                    .filter(user -> user.getId().equals(id))
+                    .findFirst()
+                    .get();
     }
 
     private List<User> getUsers() {

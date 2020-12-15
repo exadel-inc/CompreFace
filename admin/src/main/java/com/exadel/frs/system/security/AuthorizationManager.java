@@ -16,6 +16,9 @@
 
 package com.exadel.frs.system.security;
 
+import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
+import static com.exadel.frs.enums.GlobalRole.OWNER;
+import static com.exadel.frs.enums.GlobalRole.USER;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
@@ -23,12 +26,9 @@ import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
+import java.util.List;
 import lombok.val;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-
-import static com.exadel.frs.enums.GlobalRole.*;
 
 @Component
 public class AuthorizationManager {
@@ -43,7 +43,7 @@ public class AuthorizationManager {
     public void verifyReadPrivilegesToApp(final User user, final App app) {
         if (USER == user.getGlobalRole()) {
             app.getUserAppRole(user.getId())
-                    .orElseThrow(InsufficientPrivilegesException::new);
+               .orElseThrow(InsufficientPrivilegesException::new);
         }
     }
 
@@ -53,8 +53,8 @@ public class AuthorizationManager {
         }
 
         val appRole = app.getUserAppRole(user.getId())
-                .orElseThrow(InsufficientPrivilegesException::new)
-                .getRole();
+                         .orElseThrow(InsufficientPrivilegesException::new)
+                         .getRole();
 
         if (AppRole.USER == appRole) {
             throw new InsufficientPrivilegesException();
@@ -67,8 +67,8 @@ public class AuthorizationManager {
         }
 
         val appRole = app.getUserAppRole(deleter.getId())
-                .orElseThrow(InsufficientPrivilegesException::new)
-                .getRole();
+                         .orElseThrow(InsufficientPrivilegesException::new)
+                         .getRole();
 
         val isSelfRemoval = userGuid.equals(deleter.getGuid());
 
