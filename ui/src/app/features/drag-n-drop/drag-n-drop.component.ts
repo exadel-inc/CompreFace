@@ -44,7 +44,8 @@ export class DragNDropComponent implements OnInit {
    * TODO Send file to api
    */
   uploadFile(files: Array<any>) {
-    this.file = files[0];
-    this.upload.emit(this.file);
+    if (files.length > 0) {
+      this.upload.emit(files[0]);
+    }
   }
 }

@@ -14,21 +14,20 @@
  * permissions and limitations under the License.
  */
 
-import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
-import {setSelectedId} from './action';
+package com.exadel.frs.repository;
 
-export interface OrganizationsState {
-  selectId: string | null;
-}
+import com.exadel.frs.entity.Face;
+import com.exadel.frs.entity.Image;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-const initialOrganizationState: OrganizationsState = {
-  selectId: null
-};
+import javax.transaction.Transactional;
+import java.util.List;
 
-const reducer: ActionReducer<OrganizationsState> = createReducer(initialOrganizationState,
-  on(setSelectedId, (state, { selectId }) => ({ ...state, selectId }))
-);
+@Repository
+@Transactional
+public interface ImagesRepository extends JpaRepository<Image, String> {
 
-export function OrganizationReducer(organizationsState: OrganizationsState, action: Action) {
-  return reducer(organizationsState, action);
+    List<Image> findByFaceId(String modelApiKey);
+
 }

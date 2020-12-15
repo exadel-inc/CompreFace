@@ -19,6 +19,7 @@ from typing import List
 
 import numpy as np
 import tensorflow as tf
+from cached_property import cached_property
 from srcext.facenet.align import detect_face
 from tensorflow.python.platform import gfile
 
@@ -47,16 +48,14 @@ class Facenet2018(FaceScanner):
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
     EMBEDDING_MODEL_PATH = CURRENT_DIR / 'model' / 'embedding_calc_model_20180402.pb'
 
-    def __init__(self):
-        super().__init__()
-        self._embedding_calculator = self._get_embedding_calculator()
-        self._face_detection_nets = self._get_face_detection_nets()
-        self.det_prob_threshold = 0.65
-        self.det_threshold_a = 0.9436513301
-        self.det_threshold_b = 0.7059968943
-        self.det_threshold_c = 0.5506904359
+    # detection settings
+    det_prob_threshold = 0.65
+    det_threshold_a = 0.9436513301
+    det_threshold_b = 0.7059968943
+    det_threshold_c = 0.5506904359
 
-    def _get_embedding_calculator(self):
+    @cached_property
+    def _embedding_calculator(self):
         with tf.Graph().as_default() as graph:
             graph_def = tf.GraphDef()
             with gfile.FastGFile(str(self.EMBEDDING_MODEL_PATH), 'rb') as f:
@@ -65,8 +64,8 @@ class Facenet2018(FaceScanner):
             tf.import_graph_def(graph_def, name='')
             return _EmbeddingCalculator(graph=graph, sess=tf.Session(graph=graph))
 
-    @staticmethod
-    def _get_face_detection_nets():
+    @cached_property
+    def _face_detection_nets(self):
         with tf.Graph().as_default():
             sess = tf.Session()
             return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
@@ -126,9 +125,11 @@ class Facenet2018(FaceScanner):
     def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
         scanned_faces = []
         for box in self.find_faces(img, det_prob_threshold):
-            cropped_img = crop_img(img, box)
-            squished_img = squish_img(cropped_img, (self.IMAGE_SIZE, self.IMAGE_SIZE))
-            embedding = self._calculate_embeddings([squished_img])[0]
-            scanned_face = ScannedFace(embedding=embedding, box=box, img=img, face_img=cropped_img)
-            scanned_faces.append(scanned_face)
+            face_img = squish_img(crop_img(img, box), (self.IMAGE_SIZE, self.IMAGE_SIZE))
+            scanned_faces.append(
+                ScannedFace(
+                    embedding=self._calculate_embeddings([face_img])[0],
+                    box=box, img=img, face_img=face_img
+                )
+            )
         return scanned_faces

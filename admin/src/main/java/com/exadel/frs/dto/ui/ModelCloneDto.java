@@ -14,9 +14,22 @@
  * permissions and limitations under the License.
  */
 
-import {createAction, props} from '@ngrx/store';
+package com.exadel.frs.dto.ui;
 
-export const setSelectedId = createAction('[Organization] Set Selected Id', props<{selectId: string}>());
-export const loadOrganizations = createAction('[Organization] Load Organization');
-export const loadOrganizationsSuccess = createAction('[Organization] Load Organization Success');
-export const loadOrganizationsFail = createAction('[Organization] Load Organization Error', props<{ error: any }>());
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ModelCloneDto {
+
+    @NotBlank(message = "Model name cannot be empty")
+    private String name;
+
+}

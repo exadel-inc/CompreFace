@@ -1,9 +1,9 @@
 package com.exadel.frs.enums;
 
-public enum StatisticsAction {
+public enum StatisticsType {
 
     USER_CREATE,
     APP_CREATE,
-    MODEL_CREATE;
+    FACE_COLLECTION_CREATE;
 
 }

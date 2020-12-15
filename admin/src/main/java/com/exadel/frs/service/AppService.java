@@ -19,8 +19,10 @@ package com.exadel.frs.service;
 import static com.exadel.frs.enums.AppRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.AppRole.OWNER;
 import static com.exadel.frs.enums.GlobalRole.USER;
+import static com.exadel.frs.enums.StatisticsType.APP_CREATE;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import com.exadel.frs.annotation.Statistics;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
@@ -31,7 +33,6 @@ import com.exadel.frs.entity.ModelShareRequestId;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
-import com.exadel.frs.enums.StatisticsAction;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
@@ -41,7 +42,6 @@ import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.system.feign.StatisticsDatabaseClient;
-import com.exadel.frs.system.feign.StatisticsFacesEntity;
 import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
@@ -180,6 +180,7 @@ public class AppService {
         return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
 
+    @Statistics(type = APP_CREATE)
     public App createApp(final AppCreateDto appCreateDto, final Long userId) {
         verifyNameIsUnique(appCreateDto.getName());
 
@@ -194,10 +195,6 @@ public class AppService {
                      .build();
 
         app.addUserAppRole(user, OWNER);
-
-        if(user.isAllowStatistics()){
-            statisticsDatabaseClient.create(statisticsDatabaseId, new StatisticsGeneralEntity(user.getGuid(), StatisticsAction.APP_CREATE));
-        }
 
         return appRepository.save(app);
     }
@@ -223,30 +220,29 @@ public class AppService {
 
         authManager.verifyWritePrivilegesToApp(admin, app);
 
-        val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
-        if (user.getId().equals(adminId)) {
+        val userToUpdate = userService.getUserByGuid(userRoleUpdateDto.getUserId());
+        if (userToUpdate.getId().equals(adminId)) {
             throw new SelfRoleChangeException();
         }
 
-        val userAppRole = app.getUserAppRole(user.getId()).orElseThrow();
+        val userToUpdateAppRole = app.getUserAppRole(userToUpdate.getId()).orElseThrow();
         val newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
 
-        val currentUserRole = app.getUserAppRoleOrThrow(adminId);
+        val currentUserRole = app.getUserAppRole(adminId);
 
-        if (ADMINISTRATOR.equals(currentUserRole.getRole()) &&
-                (OWNER.equals(newAppRole)) || OWNER.equals(userAppRole.getRole())) {
+        if (userToUpdateAppRole.getRole().equals(OWNER)) {
             throw new InsufficientPrivilegesException();
         }
 
-        if (OWNER == newAppRole) {
+        if (newAppRole.equals(OWNER)) {
             app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(ADMINISTRATOR));
         }
 
-        userAppRole.setRole(newAppRole);
+        userToUpdateAppRole.setRole(newAppRole);
 
         appRepository.save(app);
 
-        return userAppRole;
+        return userToUpdateAppRole;
     }
 
     public void deleteUserFromApp(final String userGuid, final String guid, final Long adminId) {

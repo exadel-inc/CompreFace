@@ -10,7 +10,8 @@
     },
     "fistName": "Imię",
     "create": "Stwórz",
-    "name": "Nazwa"
+    "name": "Nazwa",
+    "unknown_error": "Przepraszam, coś poszło nie tak"
   },
   "login": {
     "title": "Login",
@@ -154,6 +155,6 @@
     "new_account_login": "Utworzyłeś nowe konto, zaloguj się na swoje konto"
   },
   "application_user_list": {
-    "invitation_sent": "Zaproszenie zostało wysłane do {{email}}"
+    "invitation_sent": "Zaproszenie zostało wysłane do {{userEmail}}"
   }
 }

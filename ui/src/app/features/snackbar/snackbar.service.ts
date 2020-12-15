@@ -39,7 +39,11 @@ export class SnackBarService {
   }
 
   openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
-    const errorMessage = message.error || message;
+    const errorMessage = message.error
+      ? message.error.error_description
+        ? message.error.error_description
+        : message.error
+      : this.translate.instant('common.unknown_error');
     const data = {
       message: errorMessage.message ? errorMessage.message : errorMessage,
       type: 'error',

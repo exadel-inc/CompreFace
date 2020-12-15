@@ -28,13 +28,10 @@ import { UserListModule } from 'src/app/features/user-list/user-list.module';
 import { UserTableModule } from 'src/app/features/user-table/user-table.module';
 
 import { ToolBarModule } from '../../features/tool-bar/tool-bar.module';
-import { OrganizationComponent } from './organization.component';
-import { OrganizationService } from './organization.service';
+import { DashboardComponent } from './dashboard.component';
 
 @NgModule({
-  declarations: [
-    OrganizationComponent,
-  ],
+  declarations: [DashboardComponent],
   imports: [
     ApplicationListModule,
     UserListModule,
@@ -46,13 +43,10 @@ import { OrganizationService } from './organization.service';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    RouterModule.forChild([
-      { path: '', component: OrganizationComponent }
-    ]),
+    RouterModule.forChild([{ path: '', component: DashboardComponent }]),
     ToolBarModule,
     MatCardModule,
   ],
-  providers: [OrganizationService],
   exports: [RouterModule],
 })
-export class OrganizationModule { }
+export class DashboardModule {}

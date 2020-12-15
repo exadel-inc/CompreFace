@@ -25,6 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
+import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import java.util.List;
 import lombok.val;
@@ -40,6 +41,9 @@ class FaceServiceTest {
 
     @Mock
     private FaceCacheProvider faceCacheProvider;
+
+    @Mock
+    private Notifier notifier;
 
     @InjectMocks
     private FaceService faceService;

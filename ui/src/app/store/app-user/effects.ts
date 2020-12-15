@@ -27,6 +27,9 @@ import {
   deleteUserFromApplication,
   deleteUserFromApplicationFail,
   deleteUserFromApplicationSuccess,
+  inviteAppUserAction,
+  inviteAppUserActionFail,
+  inviteAppUserActionSuccess,
   loadAppUserEntityAction,
   updateAppUserRoleAction,
   updateAppUserRoleFailAction,
@@ -66,11 +69,36 @@ export class AppUserEffects {
     )
   );
 
+  @Effect()
+  inviteAppUser$ = this.actions.pipe(
+    ofType(inviteAppUserAction),
+    switchMap((action) =>
+      this.appUserService.inviteUser(action.applicationId, action.userEmail, action.role).pipe(
+        switchMap(() => [
+          loadAppUserEntityAction({ applicationId: action.applicationId }),
+          inviteAppUserActionSuccess({ userEmail: action.userEmail }),
+        ]),
+        catchError((error) => of(inviteAppUserActionFail({ error })))
+      )
+    )
+  );
+
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction),
+    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction, inviteAppUserActionFail),
     tap((action) => {
       this.snackBarService.openHttpError(action.error);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  addUser$ = this.actions.pipe(
+    ofType(inviteAppUserActionSuccess),
+    tap((action) => {
+      this.snackBarService.openNotification({
+        messageText: 'application_user_list.invitation_sent',
+        messageOptions: { userEmail: action.userEmail },
+      });
     })
   );
 }

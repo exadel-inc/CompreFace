@@ -1,6 +1,6 @@
 package com.exadel.frs.system.feign;
 
-import com.exadel.frs.enums.StatisticsAction;
+import com.exadel.frs.enums.StatisticsType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,6 +15,6 @@ public class StatisticsGeneralEntity {
     private String userGuid;
 
     @JsonProperty("action_name")
-    private StatisticsAction actionName;
+    private StatisticsType actionName;
 
 }

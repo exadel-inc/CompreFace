@@ -38,7 +38,7 @@ export class AppUserService {
     return this.http.put<AppUser>(`${environment.adminApiUrl}app/${applicationId}/role`, { userId, role });
   }
 
-  inviteUser(applicationId: string, userEmail: string, role: string): Observable<{ message: string }> {
+  inviteUser(applicationId: string, userEmail: string, role: Role): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${environment.adminApiUrl}app/${applicationId}/invite`, {
       userEmail,
       role,

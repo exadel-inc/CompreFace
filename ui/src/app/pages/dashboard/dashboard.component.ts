@@ -13,24 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-
-import { OrganizationService } from './organization.service';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppState } from 'src/app/store';
+import { getUserInfo } from 'src/app/store/userInfo/action';
 
 @Component({
-  selector: 'app-organization',
-  templateUrl: './organization.component.html',
-  styleUrls: ['./organization.component.scss'],
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class OrganizationComponent implements OnInit, OnDestroy {
-  constructor(private organizationService: OrganizationService) {}
+export class DashboardComponent implements OnInit {
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
-    this.organizationService.initUrlBindingStreams();
-  }
-
-  ngOnDestroy() {
-    this.organizationService.unSubscribe();
+    this.store.dispatch(getUserInfo());
   }
 }

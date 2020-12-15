@@ -19,11 +19,13 @@ package com.exadel.frs.service;
 import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.GlobalRole.OWNER;
 import static com.exadel.frs.enums.GlobalRole.USER;
+import static com.exadel.frs.enums.StatisticsType.USER_CREATE;
 import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.isEmpty;
+import com.exadel.frs.annotation.Statistics;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
@@ -31,7 +33,6 @@ import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
-import com.exadel.frs.enums.StatisticsAction;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
@@ -42,8 +43,6 @@ import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.system.feign.StatisticsDatabaseClient;
-import com.exadel.frs.system.feign.StatisticsFacesEntity;
-import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -95,6 +94,7 @@ public class UserService {
     }
 
     @Transactional
+    @Statistics(type = USER_CREATE)
     public User createUser(final UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
@@ -118,10 +118,6 @@ public class UserService {
         if (isMailServerEnabled) {
             user.setRegistrationToken(generateRegistrationToken());
             sendRegistrationTokenToUser(user);
-        }
-
-        if(user.isAllowStatistics()){
-             statisticsDatabaseClient.create(statisticsDatabaseId, new StatisticsGeneralEntity(user.getGuid(), StatisticsAction.USER_CREATE));
         }
 
         return userRepository.save(user);
@@ -224,6 +220,7 @@ public class UserService {
         return userRepository.existsByGuid(DEMO_GUID);
     }
 
+    @Statistics(type = USER_CREATE)
     public User updateDemoUser(UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
@@ -237,6 +234,7 @@ public class UserService {
         user.setLastName(userCreateDto.getLastName());
         user.setPassword(encoder.encode(userCreateDto.getPassword()));
         user.setGuid(UUID.randomUUID().toString());
+        user.setAllowStatistics(userCreateDto.isAllowStatistics());
 
         if (isMailServerEnabled) {
             user.setRegistrationToken(generateRegistrationToken());
@@ -273,11 +271,14 @@ public class UserService {
 
         if (newGlobalRole == OWNER) {
             currentUser.setGlobalRole(GlobalRole.ADMINISTRATOR);
+            user.setAllowStatistics(currentUser.isAllowStatistics());
+            currentUser.setAllowStatistics(false);
         }
 
         user.setGlobalRole(newGlobalRole);
 
         userRepository.save(user);
+        userRepository.save(currentUser);
 
         return user;
     }

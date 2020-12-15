@@ -50,9 +50,7 @@ public class FaceDao {
 
     public Face deleteFaceById(final String faceId) {
         val foundFace = facesRepository.findById(faceId);
-        foundFace.ifPresent(face -> {
-            facesRepository.delete(face);
-        });
+        foundFace.ifPresent(facesRepository::delete);
 
         return foundFace.orElse(null);
     }

@@ -18,7 +18,7 @@ app:
     appery-io:
       url: https://api.appery.io/rest/1/db/collections
       database:
-        id: 4b0e22a3-8d61-4a89-8003-812ef052f8a5
+        id: ${APPERY_API_KEY:example}
 
 spring:
   profiles:
