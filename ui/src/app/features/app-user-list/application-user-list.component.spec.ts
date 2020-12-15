@@ -21,7 +21,6 @@ import { UserTableModule } from '../user-table/user-table.module';
 import { ApplicationUserListFacade } from './application-user-list-facade';
 import { of, Subscription } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
-import { InviteUserModule } from '../invite-user/invite-user.module';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
@@ -40,7 +39,6 @@ describe('ApplicationUserListComponent', () => {
         imports: [
           SpinnerModule,
           UserTableModule,
-          InviteUserModule,
           NoopAnimationsModule,
           FormsModule,
           UserTablePipeModule,
