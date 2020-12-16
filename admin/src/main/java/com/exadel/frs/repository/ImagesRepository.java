@@ -14,18 +14,20 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice;
+package com.exadel.frs.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import com.exadel.frs.entity.Face;
+import com.exadel.frs.entity.Image;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@EnableScheduling
-public class TrainServiceApplication {
+import javax.transaction.Transactional;
+import java.util.List;
 
-    public static void main(String[] args) {
-        SpringApplication.run(TrainServiceApplication.class, args);
-    }
+@Repository
+@Transactional
+public interface ImagesRepository extends JpaRepository<Image, String> {
+
+    List<Image> findByFaceId(String modelApiKey);
+
 }
