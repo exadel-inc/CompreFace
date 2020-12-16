@@ -19,7 +19,6 @@ import { Application } from '../../data/interfaces/application';
 import { Role } from 'src/app/data/enums/role.enum';
 
 describe('ApplicationSelectors', () => {
-
   it('selectCurrentAppId', () => {
     expect(selectCurrentAppId.projector({ selectedAppId: 'someId' })).toBe('someId');
   });
@@ -35,16 +34,14 @@ describe('ApplicationSelectors', () => {
           name: 'name1',
           owner: { firstName: '', lastName: '', userId: '' },
           role: '',
-          organizationId: ''
         },
         {
           id: '2',
           name: 'name2',
           owner: { firstName: '', lastName: '', userId: '' },
           role: '',
-          organizationId: ''
-        }
-      ]
+        },
+      ],
     };
     expect(selectCurrentApp.projector(apps, 0)).toEqual(apps.entities[0]);
     expect(selectCurrentApp.projector(apps, 1)).toEqual(apps.entities[1]);
@@ -55,13 +52,13 @@ describe('ApplicationSelectors', () => {
     const app1 = {
       id: 2,
       name: 'name1',
-      role: Role.ADMINISTRATOR
+      role: Role.ADMINISTRATOR,
     };
 
     const app2 = {
       id: 2,
       name: 'name1',
-      role: Role.OWNER
+      role: Role.OWNER,
     };
     expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMINISTRATOR');
     expect(selectUserRollForSelectedApp.projector(app2)).toBe('OWNER');

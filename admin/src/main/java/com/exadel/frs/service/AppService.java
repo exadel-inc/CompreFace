@@ -31,7 +31,6 @@ import com.exadel.frs.entity.ModelShareRequestId;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
-import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
@@ -221,7 +220,7 @@ public class AppService {
 
         val currentUserRole = app.getUserAppRole(adminId);
 
-        if(userToUpdateAppRole.getRole().equals(OWNER)) {
+        if (userToUpdateAppRole.getRole().equals(OWNER)) {
             throw new InsufficientPrivilegesException();
         }
 
@@ -241,7 +240,7 @@ public class AppService {
         val app = getApp(guid, userId);
         val admin = userService.getUser(adminId);
 
-        authManager.verifyWritePrivilegesToApp(admin, app);
+        authManager.verifyUserDeletionFromApp(admin, userGuid, app);
 
         app.deleteUserAppRole(userGuid);
 
