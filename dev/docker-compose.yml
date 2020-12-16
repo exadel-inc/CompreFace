@@ -17,7 +17,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   compreface-admin:
-    image: ${registry}compreface-admin
+    image: ${registry}compreface-admin:${ADMIN_VERSION}
     build:
       context: ..
       dockerfile: dev/Dockerfile
@@ -41,7 +41,7 @@ services:
       - compreface-api
 
   compreface-api:
-    image: ${registry}compreface-api
+    image: ${registry}compreface-api:${API_VERSION}
     build:
       context: ..
       dockerfile: dev/Dockerfile
@@ -60,7 +60,7 @@ services:
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
 
   compreface-fe:
-    image: ${registry}compreface-fe
+    image: ${registry}compreface-fe:${FE_VERSION}
     build:
       context: ../ui
       dockerfile: docker-prod/Dockerfile
@@ -74,7 +74,7 @@ services:
       - compreface-admin
 
   compreface-core:
-    image: ${registry}compreface-core
+    image: ${registry}compreface-core:${CORE_VERSION}
     build:
       context: ../embedding-calculator
     container_name: "compreface-core"
