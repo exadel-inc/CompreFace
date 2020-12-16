@@ -78,7 +78,7 @@ class InsightFace(FaceScanner):
     CALCULATION_MODEL_NAME = ENV.CALCULATION_MODEL
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
 
-    _CTX_ID = ENV.GPU_ID
+    _CTX_ID = ENV.GPU_IDX
     # detection settings
     _NMS = 0.4
     det_prob_threshold = 0.8
