@@ -56,7 +56,7 @@ public class AuthorizationManager {
                          .orElseThrow(InsufficientPrivilegesException::new)
                          .getRole();
 
-        if (AppRole.USER == appRole) {
+        if (AppRole.USER == appRole || AppRole.ADMINISTRATOR == appRole) {
             throw new InsufficientPrivilegesException();
         }
     }
@@ -72,7 +72,10 @@ public class AuthorizationManager {
 
         val isSelfRemoval = userGuid.equals(deleter.getGuid());
 
-        if (AppRole.USER == appRole && !isSelfRemoval) {
+        if (
+                ((AppRole.USER == appRole || AppRole.ADMINISTRATOR == appRole) && !isSelfRemoval)
+                        || (AppRole.OWNER == appRole && isSelfRemoval)
+        ) {
             throw new InsufficientPrivilegesException();
         }
     }
