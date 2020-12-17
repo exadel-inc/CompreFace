@@ -28,4 +28,4 @@ jobs:
        docker build . --file Dockerfile --tag exadel/comrepafe-core:${branches}-insightface-gpu --build-args SCANNER=InsightFace --build-args GPU_IDX=0
       
     - name: Docker Push
-      run: docker push tohaby/compreface-core
+      run: docker push exadel/compreface-core
