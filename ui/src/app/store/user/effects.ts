@@ -79,20 +79,16 @@ export class UserListEffect {
   @Effect()
   deleteUser$ = this.actions.pipe(
     ofType(deleteUser),
-    switchMap(({ userId, newOwner, deleterUserId }) =>
-      this.userService.delete(userId, newOwner).pipe(
+    switchMap(({ userId, deleterUserId }) =>
+      this.userService.delete(userId).pipe(
         switchMap(() => {
           if (deleterUserId === userId) {
             this.authService.logOut();
             return [];
           }
-          return [
-            deleteUserSuccess({ userId }),
-            loadApplications(),
-            loadUsersEntityAction()
-          ];
+          return [deleteUserSuccess({ userId }), loadApplications(), loadUsersEntityAction()];
         }),
-        catchError((error) => of(deleteUserFail({ error }))),
+        catchError((error) => of(deleteUserFail({ error })))
       )
     )
   );
