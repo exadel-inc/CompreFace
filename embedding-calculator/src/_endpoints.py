@@ -19,18 +19,20 @@ from werkzeug.exceptions import BadRequest
 
 from src.constants import ENV
 from src.exceptions import NoFaceFoundError
-from src.services.facescan.plugins import helpers
+from src.services.facescan.plugins import managers
 from src.services.facescan.scanner.facescanners import scanner
 from src.services.flask_.constants import ARG
 from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
+from src.services.utils.pyutils import Constants
 
 
 def endpoints(app):
     @app.route('/status')
     def status_get():
-        availiable_plugins = {p.type: str(p) for p in helpers.get_face_plugins()}
-        calculator = helpers.get_calculator()
+        availiable_plugins = {p.slug: str(p)
+                              for p in managers.plugin_manager.plugins}
+        calculator = managers.plugin_manager.calculator
         return jsonify(status='OK', build_version=ENV.BUILD_VERSION,
                        calculator_version=str(calculator),
                        availiable_plugins=availiable_plugins)
@@ -38,14 +40,16 @@ def endpoints(app):
     @app.route('/find_faces', methods=['POST'])
     @needs_attached_file
     def find_faces_post():
-        detector = helpers.get_detector()
-        face_plugins = helpers.get_face_plugins(_get_face_plugin_names())
+        detector = managers.plugin_manager.detector
+        face_plugins = managers.plugin_manager.filter_face_plugins(
+            _get_face_plugin_names()
+        )
         faces = detector(
             img=read_img(request.files['file']),
             det_prob_threshold=_get_det_prob_threshold(),
             face_plugins=face_plugins
         )
-        plugins_versions = {p.type: str(p) for p in [detector] + face_plugins}
+        plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
         return jsonify(results=faces, plugins_versions=plugins_versions)
 
     @app.route('/scan_faces', methods=['POST'])
@@ -73,7 +77,7 @@ def _get_face_plugin_names() -> Optional[List[str]]:
     if ARG.FACE_PLUGINS not in request.values:
         return
     return [
-        name for name in filter(None, request.values[ARG.FACE_PLUGINS].split(','))
+        name for name in Constants.split(request.values[ARG.FACE_PLUGINS])
     ]
 
 

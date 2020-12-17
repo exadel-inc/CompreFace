@@ -67,7 +67,7 @@ RUN ln -s $(which $PYTHON) /usr/local/bin/python
 
 
 # Variables for MXNET
-ENV MXNET=mxnet_cu101mkl MXNET_CPU_WORKER_NTHREADS=24
+ENV MXNET_CPU_WORKER_NTHREADS=24
 ENV MXNET_ENGINE_TYPE=ThreadedEnginePerDevice MXNET_CUDNN_AUTOTUNE_DEFAULT=0
 
 # No access to GPU devices in the build stage, so skip tests

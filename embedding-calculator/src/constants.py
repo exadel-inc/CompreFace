@@ -32,8 +32,6 @@ class ENV(Constants):
     BUILD_VERSION = get_env('APP_VERSION_STRING', 'dev')
 
     GPU_IDX = int(get_env('GPU_IDX', '-1'))
-    CUDA = get_env('CUDA', '')
-    INTEL_OPTIMIZATION = get_env('INTEL_OPTIMIZATION', '')
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]

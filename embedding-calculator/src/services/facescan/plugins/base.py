@@ -50,7 +50,7 @@ class MLModel:
 
     @property
     def path(self):
-        return Path(MODELS_ROOT) / self.plugin.backend / self.plugin.type / self.name
+        return Path(MODELS_ROOT) / self.plugin.backend / self.plugin.slug / self.name
 
     def exists(self):
         return os.path.exists(self.path)
@@ -83,9 +83,9 @@ class MLModel:
 
 
 class BasePlugin(ABC):
-    dependencies: Tuple[str, ...] = ()
     ml_models: Tuple[Tuple[str, str], ...] = ()
     ml_model: Optional[MLModel] = None
+    plugins_registry = []
 
     def __new__(cls, ml_model_name: str = None):
         """
@@ -94,13 +94,14 @@ class BasePlugin(ABC):
         """
         if not hasattr(cls, 'instance'):
             cls.instance = super(BasePlugin, cls).__new__(cls)
+            cls.plugins_registry.append(cls.instance)
             if cls.instance.ml_models:
                 cls.instance.ml_model = MLModel(cls.instance, ml_model_name)
         return cls.instance
 
     @property
     @abstractmethod
-    def type(self):
+    def slug(self):
         pass
 
     @property
@@ -123,7 +124,7 @@ class BasePlugin(ABC):
 
 
 class BaseFaceDetector(BasePlugin):
-    type = 'detector'
+    slug = 'detector'
     IMAGE_SIZE: int
     face_plugins: List[BasePlugin] = []
 
@@ -141,7 +142,7 @@ class BaseFaceDetector(BasePlugin):
         return [
             plugin_result.FaceDTO(
                 img=img, face_img=self.crop_face(img, box), box=box,
-                execution_time={self.type: (time() - start) / len(boxes)}
+                execution_time={self.slug: (time() - start) / len(boxes)}
             ) for box in boxes
         ]
 
@@ -150,11 +151,12 @@ class BaseFaceDetector(BasePlugin):
         for plugin in face_plugins:
             start = time()
             try:
-                face._plugins_dto.append(plugin(face._face_img))
+                result_dto = plugin(face._face_img)
+                face._plugins_dto.append(result_dto)
             except Exception as e:
                 raise exceptions.PluginError(f'{plugin} error - {e}')
             else:
-                face.execution_time[plugin.type] = time() - start
+                face.execution_time[plugin.slug] = time() - start
 
     @abstractmethod
     def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
@@ -168,7 +170,7 @@ class BaseFaceDetector(BasePlugin):
 
 
 class BaseCalculator(BasePlugin):
-    type = 'calculator'
+    slug = 'calculator'
 
     DIFFERENCE_THRESHOLD: float
 

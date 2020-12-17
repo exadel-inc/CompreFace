@@ -27,19 +27,16 @@ from src.services.imgtools.proc_img import crop_img, squish_img
 from src.services.imgtools.types import Array3D
 from src.services.utils.pyutils import get_current_dir
 
-from src.services.facescan.plugins import core
+from src.services.facescan.plugins import base
 
 CURRENT_DIR = get_current_dir(__file__)
-DEPENDENCIES = ('tensorflow~=1.15.4', 'facenet~=1.0.5')
 
 logger = logging.getLogger(__name__)
 _EmbeddingCalculator = namedtuple('_EmbeddingCalculator', 'graph sess')
 _FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')
 
 
-class FaceDetector(core.BaseFaceDetector):
-    dependencies = DEPENDENCIES
-
+class FaceDetector(base.BaseFaceDetector):
     BATCH_SIZE = 25
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
@@ -103,17 +100,14 @@ class FaceDetector(core.BaseFaceDetector):
         return filtered_bounding_boxes
 
 
-class Calculator(core.BaseCalculator):
-    dependencies = DEPENDENCIES
+class Calculator(base.BaseCalculator):
     ml_models = (
         # links from https://github.com/davidsandberg/facenet#pre-trained-models
         # VGGFace2 training set, 0.9965 LFW accuracy
         ('20180402-114759', 'https://drive.google.com/uc?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-'),
-        # ('20180402-114759', 'https://file-examples-com.github.io/uploads/2017/02/zip_2MB.zip'),
         # CASIA-WebFace training set, 0.9905 LFW accuracy
         ('20180408-102900', 'https://drive.google.com/uc?id=1R77HmFADxe87GmoLwzfgMu_HY0IhcyBz'),
     )
-
     BATCH_SIZE = 25
     DIFFERENCE_THRESHOLD = 0.2
 

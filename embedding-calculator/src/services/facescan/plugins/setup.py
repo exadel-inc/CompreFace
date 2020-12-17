@@ -1,7 +1,7 @@
 import subprocess
 import sys
 
-from src.services.facescan.plugins import helpers
+from src.services.facescan.plugins.managers import plugin_manager
 
 
 def install_requirements(requirements: set):
@@ -14,15 +14,9 @@ def install_requirements(requirements: set):
 
 
 if __name__ == '__main__':
-    plugins = helpers.get_face_plugins()
-    plugins.append(helpers.get_detector())
+    install_requirements(plugin_manager.requirements)
 
-    dependencies = set()
-    for plugin in plugins:
-        dependencies |= set(plugin.dependencies)
-    install_requirements(dependencies)
-
-    for plugin in plugins:
+    for plugin in plugin_manager.plugins:
         if plugin.ml_model:
             print(f'Checking models for {plugin}...')
             plugin.ml_model.download_if_not_exists()

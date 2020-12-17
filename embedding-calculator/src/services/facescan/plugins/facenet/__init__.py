@@ -12,4 +12,4 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-from .facenet import FaceDetector, Calculator
+requirements = ('tensorflow~=1.15.4', 'facenet~=1.0.5')

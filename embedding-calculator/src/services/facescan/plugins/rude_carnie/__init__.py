@@ -12,4 +12,4 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-from .rude_carnie import AgeDetector, GenderDetector
+requirements = ('tensorflow~=1.15.4',)

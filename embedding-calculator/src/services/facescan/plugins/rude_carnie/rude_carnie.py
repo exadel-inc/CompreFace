@@ -16,13 +16,12 @@ from functools import lru_cache
 from typing import Tuple, Union
 
 import numpy as np
+import tensorflow as tf
 
 from src.services.imgtools.types import Array3D
-from src.services.facescan.plugins import core, helpers
+from src.services.facescan.plugins import base, managers
 from src.services.dto import plugin_result
-
-
-DEPENDENCIES = ('tensorflow~=1.15.4',)
+from srcext.rude_carnie.model import inception_v3, get_checkpoint
 
 
 def prewhiten(img):
@@ -35,11 +34,9 @@ def prewhiten(img):
 
 
 @lru_cache(maxsize=2)
-def _get_rude_carnie_model(type: str, labels: Tuple, model_dir: str):
-    import tensorflow as tf
-    from srcext.rude_carnie.model import inception_v3, get_checkpoint
+def _get_rude_carnie_model(labels: Tuple, model_dir: str):
 
-    IMAGE_SIZE = helpers.get_detector().IMAGE_SIZE
+    IMAGE_SIZE = managers.plugin_manager.detector.IMAGE_SIZE
 
     g = tf.Graph()
     with g.as_default():
@@ -63,29 +60,27 @@ def _get_rude_carnie_model(type: str, labels: Tuple, model_dir: str):
         return get_value
 
 
-class AgeDetector(core.BasePlugin):
-    dependencies = DEPENDENCIES
-    type = 'age'
+class AgeDetector(base.BasePlugin):
+    slug = 'age'
     LABELS = ((0, 2), (4, 6), (8, 12), (15, 20), (25, 32), (38, 43), (48, 53), (60, 100))
     ml_models = (
         ('22801', 'https://drive.google.com/uc?id=1JSggfO1FPu8eM1BeQ6yMG5nKrGbJDyqG'),
     )
 
     def __call__(self, face_img: Array3D):
-        model = _get_rude_carnie_model(self.name, self.LABELS, self.ml_model.path)
+        model = _get_rude_carnie_model(self.LABELS, self.ml_model.path)
         value, probability = model(face_img)
         return plugin_result.AgeDTO(age=value, age_probability=probability)
 
 
-class GenderDetector(core.BasePlugin):
-    dependencies = DEPENDENCIES
-    type = 'gender'
+class GenderDetector(base.BasePlugin):
+    slug = 'gender'
     LABELS = ('male', 'female')
     ml_models = (
         ('21936', 'https://drive.google.com/uc?id=1Gem2hM6bg746pqgTHQCyNv-Egf3CFgYf'),
     )
 
     def __call__(self, face_img: Array3D):
-        model = _get_rude_carnie_model(self.name, self.LABELS, self.ml_model.path)
+        model = _get_rude_carnie_model(self.LABELS, self.ml_model.path)
         value, probability = model(face_img)
         return plugin_result.GenderDTO(gender=value, gender_probability=probability)
