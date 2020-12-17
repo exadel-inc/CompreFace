@@ -1,0 +1,27 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     - name: docker login
+       env:
+         DOCKER_USER: ${{secrets.DOCKER_USER}}
+         DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+       run: |
+         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
+     - name: Build the Docker image
+       working-directory: ./embedding-calculator/
+       run: |
+         docker build . --file Dockerfile --tag exadel/comrepafe-core:${branches} 
+         docker build . --file Dockerfile --tag exadel/comrepafe-core:${branches}-insightface --build-arg SCANNER=InsightFace
+         docker build . --file Dockerfile --tag exadel/compreface-core-cuda:101-py37 -f gpu.Dockerfile
+         docker build . --file Dockerfile --tag exadel/comrepafe-core:${branches}-insightface-gpu --build-args SCANNER=InsightFace --build-args GPU_IDX=0        
+     - name: Docker Push
+       run: docker push exadel/compreface-core
