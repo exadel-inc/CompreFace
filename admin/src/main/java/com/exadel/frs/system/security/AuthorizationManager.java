@@ -48,6 +48,10 @@ public class AuthorizationManager {
     }
 
     public void verifyWritePrivilegesToApp(final User user, final App app) {
+        verifyWritePrivilegesToApp(user, app, false);
+    }
+
+    public void verifyWritePrivilegesToApp(final User user, final App app, boolean adminDenied) {
         if (List.of(OWNER, ADMINISTRATOR).contains(user.getGlobalRole())) {
             return;
         }
@@ -56,7 +60,7 @@ public class AuthorizationManager {
                          .orElseThrow(InsufficientPrivilegesException::new)
                          .getRole();
 
-        if (AppRole.USER == appRole || AppRole.ADMINISTRATOR == appRole) {
+        if (AppRole.USER == appRole || (adminDenied && AppRole.ADMINISTRATOR == appRole)) {
             throw new InsufficientPrivilegesException();
         }
     }

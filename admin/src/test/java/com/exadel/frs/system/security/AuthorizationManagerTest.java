@@ -352,34 +352,42 @@ class AuthorizationManagerTest {
         verifyNoInteractions(spyApp);
     }
 
-    @Test
-    void testVerifyWritePrivilegesToAppByAppOwner() {
+    static Stream<Arguments> verifyWritePrivilegesToAppByAllowedAppUsersProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_USER_APP_OWNER_ID),
+                Arguments.of(GLOBAL_USER_APP_ADMIN_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyWritePrivilegesToAppByAllowedAppUsersProvider")
+    void testVerifyWritePrivilegesToAppByAllowedAppUsers(Long userId) {
         // given
-        val user = getUser(GLOBAL_USER_APP_OWNER_ID);
+        val user = getUser(userId);
         val spyApp = spy(application);
 
         // when
         authManager.verifyWritePrivilegesToApp(user, spyApp);
 
         // then
-        verify(spyApp, times(1)).getUserAppRole(GLOBAL_USER_APP_OWNER_ID);
+        verify(spyApp, times(1)).getUserAppRole(userId);
     }
 
     static Stream<Arguments> verifyWritePrivilegesToAppByNotAllowedAppUsersProvider() {
         return Stream.of(
-                Arguments.of(GLOBAL_USER_APP_USER_ID),
-                Arguments.of(GLOBAL_USER_APP_ADMIN_ID)
+                Arguments.of(GLOBAL_USER_APP_USER_ID, false),
+                Arguments.of(GLOBAL_USER_APP_ADMIN_ID, true)
         );
     }
 
     @ParameterizedTest
     @MethodSource("verifyWritePrivilegesToAppByNotAllowedAppUsersProvider")
-    void testVerifyWritePrivilegesToAppByNotAllowedAppUsers(Long userId) {
+    void testVerifyWritePrivilegesToAppByNotAllowedAppUsers(Long userId, boolean adminDenied) {
         // given
         val user = getUser(userId);
 
         // when
-        Executable action = () -> authManager.verifyWritePrivilegesToApp(user, application);
+        Executable action = () -> authManager.verifyWritePrivilegesToApp(user, application, adminDenied);
 
         // then
         assertThrows(InsufficientPrivilegesException.class, action);
