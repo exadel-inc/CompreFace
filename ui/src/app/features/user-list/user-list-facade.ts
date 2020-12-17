@@ -82,7 +82,6 @@ export class UserListFacade implements IFacade {
       deleteUser({
         userId: deletion.userToDelete.userId,
         deleterUserId: deletion.deleterUserId,
-        newOwner: 'owner',
       })
     );
   }

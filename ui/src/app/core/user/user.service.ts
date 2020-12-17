@@ -40,7 +40,7 @@ export class UserService {
   }
 
   delete(userId: string, newOwner?: string) {
-    return this.http.delete(`${environment.adminApiUrl}user/${userId}?replacer=${newOwner}`);
+    return this.http.delete(`${environment.adminApiUrl}user/${userId}?replacer=owner`);
   }
 
   fetchAvailableRoles(): Observable<string[]> {
