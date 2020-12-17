@@ -77,7 +77,7 @@ export class UserListFacade implements IFacade {
     );
   }
 
-  deleteUser(deletion: UserDeletion, newOwner?: string): void {
+  deleteUser(deletion: UserDeletion): void {
     this.store.dispatch(
       deleteUser({
         userId: deletion.userToDelete.userId,

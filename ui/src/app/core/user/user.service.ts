@@ -39,7 +39,7 @@ export class UserService {
     return this.http.put<AppUser>(`${environment.adminApiUrl}user/global/role`, { userId, role }, { withCredentials: false });
   }
 
-  delete(userId: string, newOwner?: string) {
+  delete(userId: string) {
     return this.http.delete(`${environment.adminApiUrl}user/${userId}?replacer=owner`);
   }
 
