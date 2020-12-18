@@ -42,7 +42,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   availableRolesSubscription: Subscription;
   currentUserId$: Observable<string>;
   currentUserEmail$: Observable<string>;
-  seletedOption = 'deleter';
   orgOwnerEmail: string;
   messageHeader: string;
   message: string;
@@ -103,7 +102,6 @@ export class UserListComponent implements OnInit, OnDestroy {
                 entity: deletion.userToDelete,
                 options: { name: this.orgOwnerEmail, value: 'owner' },
                 isOrganizationOwner: email === this.orgOwnerEmail,
-                seletedOption: this.seletedOption,
                 isSystemUser: true,
               },
             })
