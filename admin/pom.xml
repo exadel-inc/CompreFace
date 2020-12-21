@@ -13,6 +13,10 @@
     <version>0.0.1-SNAPSHOT</version>
     <description>Service for clients, apps, models handling for face recognition service</description>
 
+    <properties>
+        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -149,10 +153,6 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
     </dependencies>
-
-    <properties>
-        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
-    </properties>
 
     <build>
         <plugins>

@@ -246,6 +246,7 @@ public class UserService {
         updateAppsConsumer.accept(userBeingDeleted, newOwner);
     }
 
+    @Transactional
     public User updateUserGlobalRole(final UserRoleUpdateDto userRoleUpdateDto, final Long currentUserId) {
         val currentUser = getUser(currentUserId);
 

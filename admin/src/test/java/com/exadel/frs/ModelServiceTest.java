@@ -46,7 +46,7 @@ import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
-import com.exadel.frs.system.feign.StatisticsDatabaseClient;
+import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ class ModelServiceTest {
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
     private UserService userServiceMock;
-    private StatisticsDatabaseClient statisticsDatabaseClient;
+    private ApperyStatisticsClient apperyStatisticsClient;
     private FacesRepository facesRepositoryMock;
     private ImagesRepository imagesRepositoryMock;
 
@@ -86,7 +86,7 @@ class ModelServiceTest {
         appModelRepository = mock(AppModelRepository.class);
         authManager = mock(AuthorizationManager.class);
         userServiceMock = mock(UserService.class);
-        statisticsDatabaseClient = mock(StatisticsDatabaseClient.class);
+        apperyStatisticsClient = mock(ApperyStatisticsClient.class);
         facesRepositoryMock = mock(FacesRepository.class);
         imagesRepositoryMock = mock(ImagesRepository.class);
         modelService = new ModelService(
@@ -96,7 +96,7 @@ class ModelServiceTest {
                 appModelRepository,
                 authManager,
                 userServiceMock,
-                statisticsDatabaseClient,
+                apperyStatisticsClient,
                 facesRepositoryMock,
                 imagesRepositoryMock
         );

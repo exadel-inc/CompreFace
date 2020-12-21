@@ -3,31 +3,31 @@ package com.exadel.frs.aspect;
 import com.exadel.frs.annotation.Statistics;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.StatisticsType;
+import com.exadel.frs.exception.UnreachableApperyException;
 import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.service.UserService;
-import com.exadel.frs.system.feign.StatisticsDatabaseClient;
+import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.feign.StatisticsGeneralEntity;
+import feign.FeignException;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
 @Aspect
-@EnableAspectJAutoProxy
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class StatisticAspect {
 
     @Value("${app.feign.appery-io.api-key}")
     private String statisticsApiKey;
-    private final UserService userService;
-    private final StatisticsDatabaseClient statisticsDatabaseClient;
+    private final ApperyStatisticsClient apperyStatisticsClient;
 
     @SneakyThrows
     @AfterReturning(pointcut = "@annotation(com.exadel.frs.annotation.Statistics)", returning = "result")
@@ -38,10 +38,10 @@ public class StatisticAspect {
 
         User user;
 
-        if (User.class.equals(result.getClass())) {
+        if (result instanceof User) {
             user = (User) result;
         } else {
-            user = userService.getUser(SecurityUtils.getPrincipalId());
+            user = SecurityUtils.getPrincipal();
         }
 
         if (!user.isAllowStatistics()) {
@@ -54,6 +54,11 @@ public class StatisticAspect {
         Statistics statistics = joinPoint.getTarget().getClass().getMethod(methodName, parameterTypes).getAnnotation(Statistics.class);
         StatisticsType statisticsType = statistics.type();
 
-        statisticsDatabaseClient.create(statisticsApiKey, new StatisticsGeneralEntity(user.getGuid(), statisticsType));
+        try {
+            apperyStatisticsClient.create(statisticsApiKey, new StatisticsGeneralEntity(user.getGuid(), statisticsType));
+        } catch (FeignException exception) {
+            log.error(exception.getMessage());
+            throw new UnreachableApperyException();
+        }
     }
 }
