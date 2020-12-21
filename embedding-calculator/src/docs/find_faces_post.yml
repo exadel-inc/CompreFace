@@ -22,33 +22,67 @@ parameters:
     name: det_prob_threshold
     description: 'The minimum required confidence that a found face is actually a face. Decrease this value if faces are not detected. Valid values are in the range (0;1).'
     type: float
+  - in: formData
+    name: face_plugins
+    description: 'Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. `calculator,gender` - returns only embedding and gender for each face.'
+    type: string
 responses:
   '200':
-    description: 'Face scan completed'
+    description: 'Face scan completed with plugins `age,gender`'
     schema:
       type: object
       properties:
-        calculator_version:
-          type: string
-          example: 'Facenet2018'
+        plugins_versions:
+          type: object
+          properties:
+            age:
+              type: string
+              example: rude_carnie.AgeDetector
+            gender:
+              type: string
+              example: rude_carnie.GenderDetector
+            detector:
+              type: string
+              example: facenet.FaceDetector
         result:
           type: array
           items:
             type: object
             properties:
-              x_min:
-                type: integer
-                example: 141
-              x_max:
-                type: integer
-                example: 192
-              y_min:
-                type: integer
-                example: 57
-              y_max:
-                type: integer
-                example: 94
-              probability:
-                type: number
-                format: float
-                example: 0.9581532
+              age:
+                type: array
+                example: [25, 32]
+              box:
+                type: object
+                properties:
+                  x_min:
+                    type: integer
+                    example: 141
+                  x_max:
+                    type: integer
+                    example: 192
+                  y_min:
+                    type: integer
+                    example: 57
+                  y_max:
+                    type: integer
+                    example: 94
+                  probability:
+                    type: number
+                    format: float
+                    example: 0.9581532
+              gender:
+                type: string
+                example: "male"
+              execution_time:
+                type: object
+                properties:
+                  age:
+                    type: float
+                    example: 0.02832508087158203
+                  gender:
+                    type: float
+                    example: 0.01547824714423898
+                  detector:
+                    type: float
+                    example: 0.058936119079589844
