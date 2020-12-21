@@ -54,7 +54,7 @@ class InsightFaceBoundingBox(BoundingBoxDTO):
 
 
 class InsightFaceMixin:
-    _CTX_ID = ENV.GPU_ID
+    _CTX_ID = ENV.GPU_IDX
     _NMS = 0.4
 
     def get_model_file(self, ml_model: base.MLModel):
@@ -122,7 +122,9 @@ class FaceDetector(InsightFaceMixin, base.BaseFaceDetector):
 class Calculator(InsightFaceMixin, base.BaseCalculator):
     ml_models = (
         ('arcface_r100_v1', 'http://insightface.ai/files/models/arcface_r100_v1.zip'),
-        ('arcface_mnet', 'https://drive.google.com/uc?id=1ejWgx_7Nd1PvFXPxCu_1_QNzKfl6v7Hb'),
+        ('arcface_resnet34', 'https://drive.google.com/uc?id=1Zlork5jpEgUv_4PsfYtJls5lPH2cRaR3'),
+        ('arcface_resnet50', 'https://drive.google.com/uc?id=1bBtiJr5oIaWmLuSYuKPw-z05VId7Nwci'),
+        ('arcface_mobilefacenet', 'https://drive.google.com/uc?id=1ejWgx_7Nd1PvFXPxCu_1_QNzKfl6v7Hb'),
     )
 
     DIFFERENCE_THRESHOLD = 400

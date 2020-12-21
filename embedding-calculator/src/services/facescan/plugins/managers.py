@@ -47,11 +47,11 @@ class PluginManager:
         return requirements
 
     def get_plugins_names(self):
-        return [
+        return list(filter(None, [
             constants.ENV.FACE_DETECTION_PLUGIN,
             constants.ENV.CALCULATION_PLUGIN,
             *constants.ENV.EXTRA_PLUGINS
-        ]
+        ]))
 
     @cached_property
     def plugins(self):

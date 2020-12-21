@@ -30,12 +30,12 @@ from src.services.utils.pyutils import Constants
 def endpoints(app):
     @app.route('/status')
     def status_get():
-        availiable_plugins = {p.slug: str(p)
-                              for p in managers.plugin_manager.plugins}
+        available_plugins = {p.slug: str(p)
+                             for p in managers.plugin_manager.plugins}
         calculator = managers.plugin_manager.calculator
         return jsonify(status='OK', build_version=ENV.BUILD_VERSION,
                        calculator_version=str(calculator),
-                       availiable_plugins=availiable_plugins)
+                       available_plugins=available_plugins)
 
     @app.route('/find_faces', methods=['POST'])
     @needs_attached_file

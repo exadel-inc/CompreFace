@@ -17,7 +17,7 @@ from importlib.util import find_spec
 
 modules_by_lib = {
     'tensorflow': ('facenet', 'rude_carnie'),
-    'mexnet': ('insightface',)
+    'mxnet': ('insightface',)
 }
 modules_to_skip = []
 for lib, modules in modules_by_lib.items():
@@ -27,6 +27,6 @@ for lib, modules in modules_by_lib.items():
 
 def pytest_ignore_collect(path):
     _, tail = os.path.split(path)
-    for module in modules:
+    for module in modules_to_skip:
         if tail.startswith(module):
             return True

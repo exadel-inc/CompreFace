@@ -14,7 +14,7 @@
 
 import logging
 
-from src.services.utils.pyutils import get_env, get_env_split, Constants
+from src.services.utils.pyutils import get_env, get_env_split, get_env_bool, Constants
 
 _DEFAULT_SCANNER = 'Facenet2018'
 
@@ -25,13 +25,14 @@ class ENV(Constants):
 
     FACE_DETECTION_PLUGIN = get_env('FACE_DETECTION_PLUGIN', 'facenet.FaceDetector')
     CALCULATION_PLUGIN = get_env('CALCULATION_PLUGIN', 'facenet.Calculator')
-    EXTRA_PLUGINS = get_env_split('EXTRA_PLUGINS', 'rude_carnie.AgeDetector,rude_carnie.GenderDetector')
+    EXTRA_PLUGINS = get_env_split('EXTRA_PLUGINS', '')
 
     LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
     IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
     BUILD_VERSION = get_env('APP_VERSION_STRING', 'dev')
 
     GPU_IDX = int(get_env('GPU_IDX', '-1'))
+    INTEL_OPTIMIZATION = get_env_bool('INTEL_OPTIMIZATION')
 
 
 LOGGING_LEVEL = logging._nameToLevel[ENV.LOGGING_LEVEL_NAME]

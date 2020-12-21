@@ -14,17 +14,16 @@
 
 
 from src.constants import ENV
-from src.services.utils.pyutils import get_env, get_env_bool
+from src.services.utils.pyutils import get_env
 
 
 def get_requirements():
     cuda_version = get_env('CUDA', '').replace('.', '')
-    intel_optimization = get_env_bool('INTEL_OPTIMIZATION', False)
 
     mxnet_lib = 'mxnet-'
     if ENV.GPU_IDX > -1 and cuda_version:
         mxnet_lib += f"cu{cuda_version}"
-    if intel_optimization:
+    if ENV.INTEL_OPTIMIZATION:
         mxnet_lib += 'mkl'
     mxnet_lib = mxnet_lib.rstrip('-')
     return (
