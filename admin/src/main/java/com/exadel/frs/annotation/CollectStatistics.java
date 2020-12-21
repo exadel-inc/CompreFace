@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD})
 @Retention(RUNTIME)
-public @interface Statistics {
+public @interface CollectStatistics {
 
     StatisticsType type();
 }

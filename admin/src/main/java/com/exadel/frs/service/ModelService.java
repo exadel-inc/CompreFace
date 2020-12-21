@@ -19,7 +19,7 @@ package com.exadel.frs.service;
 import static com.exadel.frs.enums.AppModelAccess.READONLY;
 import static com.exadel.frs.enums.StatisticsType.FACE_COLLECTION_CREATE;
 import static java.util.UUID.randomUUID;
-import com.exadel.frs.annotation.Statistics;
+import com.exadel.frs.annotation.CollectStatistics;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
@@ -91,7 +91,7 @@ public class ModelService {
         return modelRepository.findAllByAppId(app.getId());
     }
 
-    @Statistics(type = FACE_COLLECTION_CREATE)
+    @CollectStatistics(type = FACE_COLLECTION_CREATE)
     public Model createModel(final ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {
         val app = appService.getApp(appGuid);
         val user = userService.getUser(userId);

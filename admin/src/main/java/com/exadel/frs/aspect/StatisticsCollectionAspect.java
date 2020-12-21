@@ -1,6 +1,6 @@
 package com.exadel.frs.aspect;
 
-import com.exadel.frs.annotation.Statistics;
+import com.exadel.frs.annotation.CollectStatistics;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.StatisticsType;
 import com.exadel.frs.exception.UnreachableApperyException;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class StatisticAspect {
+public class StatisticsCollectionAspect {
 
     @Value("${app.feign.appery-io.api-key}")
     private String statisticsApiKey;
@@ -51,8 +51,9 @@ public class StatisticAspect {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String methodName = signature.getMethod().getName();
         Class<?>[] parameterTypes = signature.getMethod().getParameterTypes();
-        Statistics statistics = joinPoint.getTarget().getClass().getMethod(methodName, parameterTypes).getAnnotation(Statistics.class);
-        StatisticsType statisticsType = statistics.type();
+        CollectStatistics collectStatistics = joinPoint.getTarget().getClass().getMethod(methodName, parameterTypes).getAnnotation(
+                CollectStatistics.class);
+        StatisticsType statisticsType = collectStatistics.type();
 
         try {
             apperyStatisticsClient.create(statisticsApiKey, new StatisticsGeneralEntity(user.getGuid(), statisticsType));

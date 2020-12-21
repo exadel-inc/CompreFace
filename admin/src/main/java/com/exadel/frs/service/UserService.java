@@ -25,7 +25,7 @@ import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.util.StringUtils.isEmpty;
-import com.exadel.frs.annotation.Statistics;
+import com.exadel.frs.annotation.CollectStatistics;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
@@ -88,7 +88,7 @@ public class UserService {
     }
 
     @Transactional
-    @Statistics(type = USER_CREATE)
+    @CollectStatistics(type = USER_CREATE)
     public User createUser(final UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
@@ -214,7 +214,7 @@ public class UserService {
         return userRepository.existsByGuid(DEMO_GUID);
     }
 
-    @Statistics(type = USER_CREATE)
+    @CollectStatistics(type = USER_CREATE)
     public User updateDemoUser(UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
