@@ -17,6 +17,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -38,7 +39,7 @@ public class StatisticsCollectionAspect {
 
         User user;
 
-        if (result instanceof User) {
+        if (SecurityUtils.isAnonymousUser()) {
             user = (User) result;
         } else {
             user = SecurityUtils.getPrincipal();
