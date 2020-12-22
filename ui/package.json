@@ -41,14 +41,25 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1100.5",
+    "@angular-eslint/builder": "^0.8.0-beta.6",
+    "@angular-eslint/eslint-plugin": "0.8.0-beta.6",
+    "@angular-eslint/eslint-plugin-template": "0.8.0-beta.6",
+    "@angular-eslint/schematics": "^0.8.0-beta.6",
+    "@angular-eslint/template-parser": "0.8.0-beta.6",
     "@angular/cli": "~11.0.5",
     "@angular/compiler-cli": "~11.0.5",
     "@angular/language-service": "~11.0.5",
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^12.11.1",
+    "@typescript-eslint/eslint-plugin": "4.3.0",
+    "@typescript-eslint/parser": "4.3.0",
     "body-parser": "latest",
     "codelyzer": "^6.0.0",
+    "eslint": "^7.6.0",
+    "eslint-plugin-import": "2.22.1",
+    "eslint-plugin-jsdoc": "30.7.6",
+    "eslint-plugin-prefer-arrow": "1.2.2",
     "express": "^4.16.4",
     "formidable": "^1.2.1",
     "jasmine-core": "~3.6.0",
@@ -62,7 +73,6 @@
     "prettier": "2.1.1",
     "protractor": "~7.0.0",
     "ts-node": "~7.0.0",
-    "tslint": "~6.1.0",
     "typescript": "~4.0.3"
   }
 }
