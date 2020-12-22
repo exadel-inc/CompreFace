@@ -13,10 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { loadApplications } from 'src/app/store/application/action';
+import { fetchRolesEntityAction, loadRolesEntityAction } from 'src/app/store/role/actions';
 import {
   addUsersEntityAction,
   deleteUser,
@@ -28,14 +33,10 @@ import {
   updateUserRoleSuccessAction,
   updateUserRoleWithRefreshAction,
 } from 'src/app/store/user/action';
-import { loadApplications } from 'src/app/store/application/action';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { AppUser } from 'src/app/data/interfaces/app-user';
-import { fetchRolesEntityAction, loadRolesEntityAction } from 'src/app/store/role/actions';
-import { of } from 'rxjs';
-import { SnackBarService } from '../../features/snackbar/snackbar.service';
-import { AppState } from '../index';
+
+import { AppState } from '..';
 import { AuthService } from '../../core/auth/auth.service';
+import { SnackBarService } from '../../features/snackbar/snackbar.service';
 
 @Injectable()
 export class UserListEffect {

@@ -13,16 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { EntityTitleComponent } from './entity-title.component';
 import { CommonModule } from '@angular/common';
-import { MatInputModule } from '@angular/material/input';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Subject } from 'rxjs';
+
+import { EntityTitleComponent } from './entity-title.component';
 
 describe('EntityTitleComponent', () => {
   let component: EntityTitleComponent;
@@ -42,9 +42,14 @@ describe('EntityTitleComponent', () => {
     component = fixture.componentInstance;
     component.options = [
       {
-        id: '',
-        name: 'someName',
-        role: '',
+        id: '1',
+        name: 'test',
+        owner: {
+          userId: '12',
+          firstName: 'test',
+          lastName: 'test',
+        },
+        role: 'OWNER',
       },
     ];
     component.selectId$ = new Subject();

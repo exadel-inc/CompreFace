@@ -25,10 +25,10 @@ import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store } from '@ngrx/store';
 import { provideMockStore } from '@ngrx/store/testing';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { of, Subscription } from 'rxjs';
 
 import { LoginFormComponent } from './login-form.component';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
@@ -51,9 +51,7 @@ describe('LoginFormComponent', () => {
             provide: Store,
             useValue: {
               dispatch: () => {},
-              select: () => {
-                return of(initialState);
-              },
+              select: () => of(initialState),
             },
           },
         ],

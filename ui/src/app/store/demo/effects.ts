@@ -13,14 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
-import { loadDemoApiKeyAction, loadDemoApiKeyFailAction, loadDemoApiKeySuccessAction } from './actions';
+
 import { DemoService } from '../../pages/demo/demo.service';
+import { loadDemoApiKeyAction, loadDemoApiKeyFailAction, loadDemoApiKeySuccessAction } from './actions';
 
 @Injectable()
 export class DemoEffects {

@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+
 import { environment } from '../../../environments/environment';
-import { UserInfoService } from './user-info.service';
 import { User } from '../../data/interfaces/user';
+import { UserInfoService } from './user-info.service';
 
 describe('UserInfoService', () => {
   let service: UserInfoService;

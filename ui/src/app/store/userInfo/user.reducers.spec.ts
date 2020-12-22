@@ -13,15 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { resetUserInfo } from './action';
-import { UserInfoReducer } from './reducers';
+import { userInfoReducer } from './reducers';
 
-describe('UserInfoReducer', () => {
+describe('userInfoReducer', () => {
   describe('ResetUserInfo action', () => {
     it('should should reset state to initial values', () => {
       const action = resetUserInfo();
-      const state = UserInfoReducer(
+      const state = userInfoReducer(
         {
           avatar: '',
           email: '',

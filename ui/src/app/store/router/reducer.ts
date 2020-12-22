@@ -13,10 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
+import { Injectable } from '@angular/core';
 import { Data, Params, RouterStateSnapshot } from '@angular/router';
 import { RouterStateSerializer } from '@ngrx/router-store';
-import { Injectable } from '@angular/core';
 
 export interface RouterStateUrl {
   url: string;

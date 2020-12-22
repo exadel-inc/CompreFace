@@ -13,14 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { CommonModule } from '@angular/common';
-import { BreadcrumbsFacade } from './breadcrumbs.facade';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatCardModule } from '@angular/material/card';
+
+import { BreadcrumbsComponent } from './breadcrumbs.component';
+import { BreadcrumbsFacade } from './breadcrumbs.facade';
 
 describe('BreadcrumbsComponent', () => {
   let component: BreadcrumbsComponent;

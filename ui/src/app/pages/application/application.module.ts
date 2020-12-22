@@ -13,22 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
+import { AppUserListModule } from 'src/app/features/app-user-list/application-user-list.module';
+import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
+import { ModelListModule } from 'src/app/features/model-list/model-list.module';
+
+import { ApplicationHeaderModule } from '../../features/application-header/application-header.module';
+import { ApplicationListModule } from '../../features/application-list/application-list.module';
+import { BreadcrumbsModule } from '../../features/breadcrumbs/breadcrumbs.module';
+import { FooterModule } from '../../features/footer/footer.module';
+import { ToolBarModule } from '../../features/tool-bar/tool-bar.module';
 import { ApplicationComponent } from './application.component';
 import { ApplicationPageService } from './application.service';
-import { MatButtonModule } from '@angular/material/button';
-import { RouterModule } from '@angular/router';
-import { ToolBarModule } from '../../features/tool-bar/tool-bar.module';
-import { ApplicationHeaderModule } from '../../features/application-header/application-header.module';
-import { MatCardModule } from '@angular/material/card';
-import { BreadcrumbsModule } from '../../features/breadcrumbs/breadcrumbs.module';
-import { ModelListModule } from 'src/app/features/model-list/model-list.module';
-import { AppUserListModule } from 'src/app/features/app-user-list/application-user-list.module';
-import { FooterModule } from '../../features/footer/footer.module';
-import { ApplicationListModule } from '../../features/application-list/application-list.module';
-import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
 
 @NgModule({
   declarations: [ApplicationComponent],

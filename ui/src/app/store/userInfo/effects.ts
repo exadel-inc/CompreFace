@@ -13,13 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { getUserInfo, getUserInfoFail, getUserInfoSuccess } from './action';
+import { catchError, map, switchMap } from 'rxjs/operators';
+
 import { UserInfoService } from '../../core/user-info/user-info.service';
+import { getUserInfo, getUserInfoFail, getUserInfoSuccess } from './action';
 
 @Injectable()
 export class UserInfoEffect {

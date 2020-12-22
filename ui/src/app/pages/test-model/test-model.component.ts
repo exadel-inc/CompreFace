@@ -14,10 +14,11 @@
  * permissions and limitations under the License.
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { TestModelPageService } from './test-model.service';
 import { Store } from '@ngrx/store';
-import { selectPendingModel } from '../../store/model/selectors';
 import { Observable } from 'rxjs';
+
+import { selectPendingModel } from '../../store/model/selectors';
+import { TestModelPageService } from './test-model.service';
 
 @Component({
   selector: 'app-test-model',

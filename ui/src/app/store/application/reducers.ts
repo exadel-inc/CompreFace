@@ -13,11 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
-import { Application } from 'src/app/data/interfaces/application';
 
+import { Application } from '../../data/interfaces/application';
 import {
   createApplication,
   createApplicationFail,
@@ -61,6 +60,4 @@ const reducer: ActionReducer<AppEntityState> = createReducer(
   on(setSelectedAppIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
 );
 
-export function ApplicationReducer(appState: AppEntityState, action: Action) {
-  return reducer(appState, action);
-}
+export const applicationReducer = (appState: AppEntityState, action: Action) => reducer(appState, action);

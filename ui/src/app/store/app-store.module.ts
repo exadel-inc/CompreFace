@@ -13,11 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { NgModule } from '@angular/core';
-import { DefaultDataServiceConfig, EntityDataModule } from '@ngrx/data';
 import { EffectsModule } from '@ngrx/effects';
-import { RouterStateSerializer, StoreRouterConnectingModule, DefaultRouterStateSerializer } from '@ngrx/router-store';
+import { DefaultRouterStateSerializer, RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
@@ -26,13 +24,13 @@ import { environment } from '../../environments/environment';
 import { AppUserStoreModule } from './app-user/app-user.module';
 import { ApplicationStoreModule } from './application/application.module';
 import { AuthEffects } from './auth/effects';
+import { DemoStoreModule } from './demo/demo.module';
+import { FaceRecognitionStoreModule } from './face-recognition/face-recognition.module';
 import { ModelStoreModule } from './model/model.module';
 import { RoleStoreModule } from './role/role.module';
 import { AppSerializer } from './router/reducer';
 import { UserStoreModule } from './user/user.module';
 import { UserInfoStoreModule } from './userInfo/user-info.module';
-import { FaceRecognitionStoreModule } from './face-recognition/face-recognition.module';
-import { DemoStoreModule } from './demo/demo.module';
 
 @NgModule({
   declarations: [],

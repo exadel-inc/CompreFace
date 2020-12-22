@@ -13,14 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { MAX_IMAGE_SIZE } from 'src/app/core/constants';
+
 import { AppState } from '../../store';
 import { recognizeFace, recognizeFaceReset } from '../../store/face-recognition/actions';
-import { selectFaceData, selectFile, selectRequest, selectTestIsPending, selectStateReady } from '../../store/face-recognition/selectors';
-import { MAX_IMAGE_SIZE } from 'src/app/core/constants';
+import { selectFaceData, selectFile, selectRequest, selectStateReady, selectTestIsPending } from '../../store/face-recognition/selectors';
 import { SnackBarService } from '../snackbar/snackbar.service';
 
 @Component({
@@ -53,8 +53,10 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   }
 
   recognizeFace(file: File) {
-    file.size > MAX_IMAGE_SIZE
-      ? this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' })
-      : this.store.dispatch(recognizeFace({ file }));
+    if (file.size > MAX_IMAGE_SIZE) {
+      this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
+    } else {
+      this.store.dispatch(recognizeFace({ file }));
+    }
   }
 }

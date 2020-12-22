@@ -13,11 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Role } from 'src/app/data/interfaces/role';
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
-import { setPendingRoleEntityAction, fetchRolesEntityAction, loadRolesEntityAction } from './actions';
-import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
+import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
+import { Role } from 'src/app/data/interfaces/role';
+
+import { fetchRolesEntityAction, loadRolesEntityAction, setPendingRoleEntityAction } from './actions';
 
 export interface RoleEntityState extends EntityState<Role> {
   isPending: boolean;
@@ -39,6 +39,4 @@ const reducer: ActionReducer<RoleEntityState> = createReducer(
   })
 );
 
-export function RoleReducer(roleState: RoleEntityState, action: Action) {
-  return reducer(roleState, action);
-}
+export const roleReducer = (roleState: RoleEntityState, action: Action) => reducer(roleState, action);

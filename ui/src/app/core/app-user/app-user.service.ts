@@ -13,14 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { environment } from 'src/environments/environment';
-import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable({
   providedIn: 'root',

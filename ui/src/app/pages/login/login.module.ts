@@ -13,15 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { MatButtonModule } from '@angular/material/button';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginComponent } from './login.component';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
-import { LoginFormModule } from '../../features/login-form/login-form.module';
 import { TranslateModule } from '@ngx-translate/core';
+
+import { LoginFormModule } from '../../features/login-form/login-form.module';
 import { SpinnerModule } from '../../features/spinner/spinner.module';
+import { LoginComponent } from './login.component';
 
 @NgModule({
   declarations: [LoginComponent],

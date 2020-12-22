@@ -13,18 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
-import { User } from '../../data/interfaces/user';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../store';
 import { Observable, Subscription } from 'rxjs';
-import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
+
+import { Routes } from '../../data/enums/routers-url.enum';
+import { SignUp } from '../../data/interfaces/sign-up';
+import { User } from '../../data/interfaces/user';
+import { AppState } from '../../store';
 import { resetErrorMessage, signUp } from '../../store/auth/action';
 import { selectAuthState } from '../../store/auth/selectors';
-import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
-import { SignUp } from '../../data/interfaces/sign-up';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -36,7 +36,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   user: User;
   getState: Observable<any>;
   isLoading = false;
-  ROUTERS_URL = ROUTERS_URL;
+  routes = Routes;
   stateSubscription: Subscription;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {

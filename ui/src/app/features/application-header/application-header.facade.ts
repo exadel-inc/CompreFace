@@ -13,10 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
+import { selectCurrentUserRole } from 'src/app/store/user/selectors';
 
 import { Application } from '../../data/interfaces/application';
 import { IFacade } from '../../data/interfaces/IFacade';
@@ -28,9 +30,6 @@ import {
   selectIsPendingApplicationList,
   selectUserRollForSelectedApp,
 } from '../../store/application/selectors';
-import { map } from 'rxjs/operators';
-import { Role } from 'src/app/data/enums/role.enum';
-import { selectCurrentUserRole } from 'src/app/store/user/selectors';
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {
@@ -44,10 +43,10 @@ export class ApplicationHeaderFacade implements IFacade {
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
     this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
-      map(([applicationRole, globalRole]) => {
+      map(([applicationRole, globalRole]) =>
         // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return globalRole !== Role.USER.toString() ? Role.OWNER.toString() : applicationRole;
-      })
+        globalRole !== Role.User.toString() ? Role.Owner.toString() : applicationRole
+      )
     );
     this.selectedId$ = this.store.select(selectCurrentAppId);
     this.loading$ = this.store.select(selectIsPendingApplicationList);

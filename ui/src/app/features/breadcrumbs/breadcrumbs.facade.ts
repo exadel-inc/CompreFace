@@ -18,9 +18,9 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { Application } from '../../data/interfaces/application';
+import { Model } from '../../data/interfaces/model';
 import { AppState } from '../../store';
 import { selectCurrentApp } from '../../store/application/selectors';
-import { Model } from '../../data/interfaces/model';
 import { selectCurrentModel } from '../../store/model/selectors';
 
 @Injectable()

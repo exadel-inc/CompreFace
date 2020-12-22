@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Role } from 'src/app/data/enums/role.enum';
 
 import { ITableConfig } from '../../table/table.component';
-import { Role } from 'src/app/data/enums/role.enum';
 
 @Component({
   selector: 'app-application-list',

@@ -37,7 +37,7 @@
   </div>
 </div>
 <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
-  <button *ngIf="userRole !== roleEnum.USER" mat-button color="primary" (click)="onCreateNewModel()">
+  <button *ngIf="userRole !== roleEnum.User" mat-button color="primary" (click)="onCreateNewModel()">
     {{ 'common.capital.create' | translate }}
   </button>
 </div>

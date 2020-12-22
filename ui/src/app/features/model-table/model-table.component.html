@@ -45,7 +45,7 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef scope="col"></th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="userRole !== roleEnum.USER">
+      <ng-container *ngIf="userRole !== roleEnum.User">
         <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="model actions">
           <mat-icon>more_vert</mat-icon>
         </button>

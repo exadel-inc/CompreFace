@@ -13,10 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
-import { updateUserInfo, resetUserInfo, getUserInfoSuccess } from './action';
 import { User } from '../../data/interfaces/user';
+import { getUserInfoSuccess, resetUserInfo, updateUserInfo } from './action';
 
 export const initialState: User = {
   guid: null,
@@ -35,6 +35,4 @@ const reducer: ActionReducer<User> = createReducer(
   on(getUserInfoSuccess, (state, action) => ({ ...state, ...action.user }))
 );
 
-export function UserInfoReducer(userInfoState: User, action: Action) {
-  return reducer(userInfoState, action);
-}
+export const userInfoReducer = (userInfoState: User, action: Action) => reducer(userInfoState, action);

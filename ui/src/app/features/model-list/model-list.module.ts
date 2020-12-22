@@ -13,17 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 
 import { ModelTableModule } from '../model-table/model-table.module';
 import { ModelListFacade } from './model-list-facade';
 import { ModelListComponent } from './model-list.component';
-import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ModelListComponent],

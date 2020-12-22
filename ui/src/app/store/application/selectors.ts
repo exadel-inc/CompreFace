@@ -13,11 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { applicationAdapter, AppEntityState } from './reducers';
-import { Application } from 'src/app/data/interfaces/application';
 import { EntityState } from '@ngrx/entity';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+
+import { Application } from '../../data/interfaces/application';
+import { AppEntityState, applicationAdapter } from './reducers';
 
 export const selectApplicationEntityState = createFeatureSelector<EntityState<Application>>('application');
 const { selectEntities, selectIds, selectAll } = applicationAdapter.getSelectors();

@@ -13,10 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Organization } from '../../data/interfaces/organization';
 import { Observable } from 'rxjs';
+
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
 
@@ -29,7 +28,7 @@ import { Model } from '../../data/interfaces/model';
 export class EntityTitleComponent implements OnInit {
   newName: string;
   selectedId: string;
-  @Input() options: [Organization | Application | Model];
+  @Input() options: [Application | Model];
   @Input() selectId$: Observable<any>;
   @Input() entityName: string;
   @Output() selectIdChange = new EventEmitter();

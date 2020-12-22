@@ -13,8 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createFeatureSelector, createSelector } from '@ngrx/store';
+
 import { RoleEntityState } from './reducers';
 
 export const selectRoleState = createFeatureSelector<RoleEntityState>('role');

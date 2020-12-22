@@ -13,9 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { of } from 'rxjs';
 
 import { UserTableFilterPipe } from './user-table-filter.pipe';
-import { of } from 'rxjs';
 
 describe('User table Pipe', () => {
   let pipe: UserTableFilterPipe;

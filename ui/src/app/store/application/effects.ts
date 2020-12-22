@@ -13,14 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApplicationService } from 'src/app/core/application/application.service';
-import { ROUTERS_URL } from 'src/app/data/enums/routers-url.enum';
+import { Routes } from 'src/app/data/enums/routers-url.enum';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import {
@@ -87,7 +86,7 @@ export class ApplicationListEffect {
     switchMap(app =>
       this.applicationService.delete(app.id).pipe(
         switchMap(() => {
-          this.router.navigate([`${ROUTERS_URL.HOME}`]);
+          this.router.navigate([`${Routes.Home}`]);
           return [deleteApplicationSuccess({ id: app.id }), setSelectedAppIdEntityAction({ selectedAppId: null })];
         }),
         catchError(error => of(deleteApplicationFail({ error })))

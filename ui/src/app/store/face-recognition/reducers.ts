@@ -13,10 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail, recognizeFaceReset } from './actions';
+import { recognizeFace, recognizeFaceFail, recognizeFaceReset, recognizeFaceSuccess } from './actions';
 
 export interface FaceRecognitionEntityState {
   isPending: boolean;
@@ -40,6 +39,4 @@ const reducer: ActionReducer<FaceRecognitionEntityState> = createReducer(
   on(recognizeFaceFail, state => ({ ...state, isPending: false }))
 );
 
-export function FaceRecognitionEffectsReducer(recognitionState: FaceRecognitionEntityState, action: Action) {
-  return reducer(recognitionState, action);
-}
+export const faceRecognitionReducer = (recognitionState: FaceRecognitionEntityState, action: Action) => reducer(recognitionState, action);

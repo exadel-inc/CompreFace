@@ -29,9 +29,9 @@ export class UserTableFilterPipe implements PipeTransform {
 
     return value.pipe(
       map(e => {
-        e.data = e.data.filter(row => {
-          return (row.firstName.toLocaleLowerCase() + ' ' + row.lastName.toLocaleLowerCase()).includes(search.toLocaleLowerCase());
-        });
+        e.data = e.data.filter(row =>
+          (row.firstName.toLocaleLowerCase() + ' ' + row.lastName.toLocaleLowerCase()).includes(search.toLocaleLowerCase())
+        );
         return e;
       })
     );

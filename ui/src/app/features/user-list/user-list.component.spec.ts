@@ -13,22 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
+import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { of, Subscription } from 'rxjs';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 import { UserTableModule } from 'src/app/features/user-table/user-table.module';
-import { UserListComponent } from './user-list.component';
-import { UserListFacade } from './user-list-facade';
-import { of, Subscription } from 'rxjs';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
+
 import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
-import { MatInputModule } from '@angular/material/input';
-import { CommonModule } from '@angular/common';
-import { SnackBarService } from '../snackbar/snackbar.service';
 import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
-import { MatDialogModule } from '@angular/material/dialog';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { SnackBarService } from '../snackbar/snackbar.service';
+import { UserListFacade } from './user-list-facade';
+import { UserListComponent } from './user-list.component';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
@@ -67,10 +67,9 @@ describe('UserListComponent', () => {
                   },
                 },
               ]),
-              selectedOrganization$: of([{}]),
               isLoading$: of([{}]),
               availableRoles$: of([{}]),
-              unsubscribe() {},
+              unsubscribe: () => {},
             },
           },
           { provide: TranslateService, useValue: {} },

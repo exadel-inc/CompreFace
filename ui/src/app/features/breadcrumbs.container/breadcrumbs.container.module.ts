@@ -13,10 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
+import { NgModule } from '@angular/core';
+
 import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
+import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
 
 @NgModule({
   declarations: [BreadcrumbsContainerComponent],

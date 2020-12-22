@@ -60,6 +60,4 @@ const reducer: ActionReducer<AuthState> = createReducer(
   on(logOut, () => ({ ...initialState }))
 );
 
-export function AuthReducer(authState: AuthState, action: Action) {
-  return reducer(authState, action);
-}
+export const authReducer = (authState: AuthState, action: Action) => reducer(authState, action);

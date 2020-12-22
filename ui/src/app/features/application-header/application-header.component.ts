@@ -13,18 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 
 import { Application } from '../../data/interfaces/application';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ApplicationHeaderFacade } from './application-header.facade';
-import { Role } from 'src/app/data/enums/role.enum';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-header',

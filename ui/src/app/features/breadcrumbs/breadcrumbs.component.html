@@ -16,11 +16,11 @@
 
 <mat-card *ngIf="app" class="breadcrumbs">
   <div *ngIf="model; else onlyApp" class="breadcrumbs">
-    <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">{{ 'breadcrumbs.home' | translate }}</a>
+    <a class="breadcrumbs-link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
     <div class="separator">/</div>
     <a
       class="breadcrumbs-link"
-      [routerLink]="[ROUTERS_URL.APPLICATION]"
+      [routerLink]="[routes.Application]"
       [queryParams]="{ app: app.id }"
       matTooltip="{{ app.name }}"
       [matTooltipDisabled]="app.name.length <= maxNameLength"
@@ -33,7 +33,7 @@
     </div>
   </div>
   <ng-template #onlyApp>
-    <a class="breadcrumbs-link" [routerLink]="[ROUTERS_URL.HOME]">{{ 'breadcrumbs.home' | translate }}</a>
+    <a class="breadcrumbs-link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
     <div class="separator">/</div>
     <div class="breadcrumbs-link" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxNameLength">
       {{ app.name | truncate: maxNameLength }}

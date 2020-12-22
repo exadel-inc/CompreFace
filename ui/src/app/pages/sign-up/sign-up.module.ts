@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SignUpComponent } from './sign-up.component';
+
 import { SignUpFormModule } from '../../features/sign-up-form/sign-up-form.module';
+import { SignUpComponent } from './sign-up.component';
 
 @NgModule({
   declarations: [SignUpComponent],

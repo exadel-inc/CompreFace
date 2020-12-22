@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from './store';
-import { AuthService } from './core/auth/auth.service';
 import { TranslateService } from '@ngx-translate/core';
+
+import { AuthService } from './core/auth/auth.service';
+import { AppState } from './store';
 
 @Component({
   selector: 'app-root',

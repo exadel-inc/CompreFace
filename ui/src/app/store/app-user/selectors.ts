@@ -13,9 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { createSelector, createFeatureSelector } from '@ngrx/store';
-import { AppUserEntityState, appUserAdapter } from './reducers';
+import { appUserAdapter, AppUserEntityState } from './reducers';
 
 const { selectAll } = appUserAdapter.getSelectors();
 

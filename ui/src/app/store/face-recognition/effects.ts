@@ -13,17 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Action, Store } from '@ngrx/store';
 import { iif, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
+
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
-import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail, addFaceFail, addFace, addFaceSuccess } from './actions';
-import { Action, Store } from '@ngrx/store';
-import { selectCurrentModel } from '../model/selectors';
 import { selectDemoApiKey } from '../demo/selectors';
+import { selectCurrentModel } from '../model/selectors';
+import { addFace, addFaceFail, addFaceSuccess, recognizeFace, recognizeFaceFail, recognizeFaceSuccess } from './actions';
 
 @Injectable()
 export class FaceRecognitionEffects {

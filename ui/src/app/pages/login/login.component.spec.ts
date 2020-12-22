@@ -13,13 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { LoginComponent } from './login.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { provideMockStore } from '@ngrx/store/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
+
+import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -37,9 +37,7 @@ describe('LoginComponent', () => {
           {
             provide: Store,
             useValue: {
-              select: () => {
-                return of(initialState);
-              },
+              select: () => of(initialState),
               dispatch: () => {},
             },
           },

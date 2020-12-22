@@ -13,7 +13,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 import { AppUser } from 'src/app/data/interfaces/app-user';
@@ -48,8 +47,8 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
     return appUserAdapter.setAll(users, newState);
   }),
   on(updateAppUserRoleAction, state => ({ ...state, isPending: true })),
-  on(updateAppUserRoleSuccessAction, (state, { user }) => {
-    return appUserAdapter.updateOne(
+  on(updateAppUserRoleSuccessAction, (state, { user }) =>
+    appUserAdapter.updateOne(
       {
         id: user.userId,
         changes: {
@@ -57,12 +56,10 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
         },
       },
       { ...state, isPending: false }
-    );
-  }),
+    )
+  ),
   on(updateAppUserRoleFailAction, state => ({ ...state, isPending: false })),
   on(deleteUserFromApplicationSuccess, (state, { id }) => appUserAdapter.removeOne(id, { ...state, isPending: false }))
 );
 
-export function appUserReducer(appUserState: AppUserEntityState, action: Action) {
-  return reducer(appUserState, action);
-}
+export const appUserReducer = (appUserState: AppUserEntityState, action: Action) => reducer(appUserState, action);

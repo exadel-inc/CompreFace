@@ -17,10 +17,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 
 import { environment } from '../../../environments/environment';
-import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable({
   providedIn: 'root',

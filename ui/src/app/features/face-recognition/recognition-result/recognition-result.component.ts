@@ -13,10 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+
 import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-recognition.helpers';
 
 @Component({
@@ -96,6 +96,7 @@ export class RecognitionResultComponent implements OnDestroy {
     img.onload = () => {
       ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
       for (const value of preparedData) {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         const resultFace = value.faces.length > 0 ? value.faces[0] : { face_name: undefined, similarity: 0 };
         this.createImage(ctx, value.box, resultFace);
       }

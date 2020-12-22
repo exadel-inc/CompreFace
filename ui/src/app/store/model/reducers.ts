@@ -13,7 +13,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 import { Model } from 'src/app/data/interfaces/model';
@@ -57,6 +56,4 @@ const reducer: ActionReducer<ModelEntityState> = createReducer(
   on(setSelectedModelIdEntityAction, (state, { selectedModelId }) => ({ ...state, selectedModelId }))
 );
 
-export function modelReducer(modelState: ModelEntityState, action: Action) {
-  return reducer(modelState, action);
-}
+export const modelReducer = (modelState: ModelEntityState, action: Action) => reducer(modelState, action);

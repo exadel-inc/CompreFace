@@ -15,6 +15,7 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { ToolBarFacade } from './tool-bar.facade';
 
 @Component({

@@ -13,22 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
+import { Routes } from '../../data/enums/routers-url.enum';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
-import { Role } from 'src/app/data/enums/role.enum';
-import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-model-list',
@@ -117,7 +116,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   }
 
   test(model: Model) {
-    this.router.navigate([ROUTERS_URL.TEST_MODEL], {
+    this.router.navigate([Routes.TestModel], {
       queryParams: {
         app: this.modelListFacade.selectedApplicationId,
         model: model.id,

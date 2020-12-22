@@ -1,9 +1,9 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { DemoComponent } from './demo.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
+
+import { DemoComponent } from './demo.component';
 
 describe('DemoComponent', () => {
   let component: DemoComponent;
@@ -20,9 +20,7 @@ describe('DemoComponent', () => {
         {
           provide: Store,
           useValue: {
-            select: () => {
-              return of(initialState);
-            },
+            select: () => of(initialState),
           },
         },
       ],
