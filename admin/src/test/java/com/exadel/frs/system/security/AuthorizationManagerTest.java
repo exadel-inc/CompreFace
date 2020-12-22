@@ -25,6 +25,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
@@ -36,6 +37,7 @@ import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 import lombok.val;
@@ -263,8 +265,10 @@ class AuthorizationManagerTest {
 
     static Stream<Arguments> verifyUserDeletionFromAppGlobalProvider() {
         return Stream.of(
-                Arguments.of(GLOBAL_ADMIN_APP_USER_ID, GLOBAL_USER_APP_OWNER_ID),
-                Arguments.of(GLOBAL_OWNER_APP_USER_ID, GLOBAL_USER_APP_ADMIN_ID)
+                Arguments.of(GLOBAL_ADMIN_APP_USER_ID, GLOBAL_USER_APP_ADMIN_ID),
+                Arguments.of(GLOBAL_ADMIN_APP_USER_ID, GLOBAL_USER_APP_USER_ID),
+                Arguments.of(GLOBAL_OWNER_APP_USER_ID, GLOBAL_USER_APP_ADMIN_ID),
+                Arguments.of(GLOBAL_OWNER_APP_USER_ID, GLOBAL_USER_APP_USER_ID)
         );
     }
 
@@ -280,7 +284,32 @@ class AuthorizationManagerTest {
         authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), spyApp);
 
         // then
-        verifyNoInteractions(spyApp);
+        verify(spyApp, times(0)).getUserAppRole(deleterId);
+    }
+
+    static Stream<Arguments> verifyUserDeletionFromAppGlobalNotAllowedProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_OWNER_APP_USER_ID, GLOBAL_USER_APP_OWNER_ID),
+                Arguments.of(GLOBAL_ADMIN_APP_USER_ID, GLOBAL_USER_APP_OWNER_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyUserDeletionFromAppGlobalNotAllowedProvider")
+    void testVerifyUserDeletionFromAppByGlobalUserNotAllowed(Long deleterId, Long deletionSubjectId) {
+        // given
+        val deleter = getUser(deleterId);
+        val deletionSubject = getUser(deletionSubjectId);
+        val spyApp = spy(application);
+        when(spyApp.getOwner()).thenReturn(Optional.of(UserAppRole.builder()
+                                                                  .user(deletionSubject)
+                                                                  .build()));
+
+        // when
+        Executable action = () -> authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), spyApp);
+
+        // then
+        assertThrows(InsufficientPrivilegesException.class, action);
     }
 
     static Stream<Arguments> verifyUserDeletionFromAppGlobalUserProvider() {
