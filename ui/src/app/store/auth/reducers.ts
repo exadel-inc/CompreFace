@@ -14,14 +14,8 @@
  * permissions and limitations under the License.
  */
 
-import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
-import {
-  logInSuccess,
-  logInFailure,
-  signUpSuccess,
-  signUpFailure,
-  logOut, resetErrorMessage
-} from './action';
+import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
+import { logInSuccess, logInFailure, signUpSuccess, signUpFailure, logOut, resetErrorMessage } from './action';
 
 export interface AuthState {
   errorMessage: string | null;
@@ -32,33 +26,34 @@ export interface AuthState {
 export const initialState: AuthState = {
   errorMessage: null,
   successMessage: null,
-  isLoading: false
+  isLoading: false,
 };
 
-const reducer: ActionReducer<AuthState> = createReducer(initialState,
-  on(logInSuccess, (state) => ({
+const reducer: ActionReducer<AuthState> = createReducer(
+  initialState,
+  on(logInSuccess, state => ({
     ...state,
     errorMessage: null,
-    isLoading: false
+    isLoading: false,
   })),
-  on(logInFailure, (state) => ({
+  on(logInFailure, state => ({
     ...state,
     errorMessage: 'E-mail or Password is incorrect.',
-    isLoading: false
+    isLoading: false,
   })),
-  on(signUpSuccess, (state) => ({
+  on(signUpSuccess, state => ({
     ...state,
     errorMessage: null,
     successMessage: 'You have created new account, please login into your account',
-    isLoading: false
+    isLoading: false,
   })),
-  on(signUpFailure, (state) => ({
+  on(signUpFailure, state => ({
     ...state,
     errorMessage: 'This e-mail is already in use.',
     successMessage: null,
-    isLoading: false
+    isLoading: false,
   })),
-  on(resetErrorMessage, (state) => ({
+  on(resetErrorMessage, state => ({
     ...state,
     errorMessage: null,
   })),

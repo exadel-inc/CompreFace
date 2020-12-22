@@ -14,21 +14,22 @@
  * permissions and limitations under the License.
  */
 
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {MainLayoutComponent} from './main-layout.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MainLayoutComponent } from './main-layout.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('MainLayoutComponent', () => {
   let component: MainLayoutComponent;
   let fixture: ComponentFixture<MainLayoutComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ MainLayoutComponent ],
-      schemas: [NO_ERRORS_SCHEMA]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [MainLayoutComponent],
+        schemas: [NO_ERRORS_SCHEMA],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MainLayoutComponent);

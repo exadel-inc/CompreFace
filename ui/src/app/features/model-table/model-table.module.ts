@@ -22,22 +22,13 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 
 import { ModelTableComponent } from './model-table.component';
-import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslateModule} from '@ngx-translate/core';
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ModelTableComponent],
   exports: [ModelTableComponent],
-  imports: [
-    CommonModule,
-    MatButtonModule,
-    MatTableModule,
-    MatIconModule,
-    MatMenuModule,
-    TruncateModule,
-    MatTooltipModule,
-    TranslateModule,
-  ]
+  imports: [CommonModule, MatButtonModule, MatTableModule, MatIconModule, MatMenuModule, TruncateModule, MatTooltipModule, TranslateModule],
 })
-export class ModelTableModule { }
+export class ModelTableModule {}

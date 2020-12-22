@@ -22,10 +22,6 @@ import { FaceRecognitionEffectsReducer } from './reducers';
 
 @NgModule({
   declarations: [],
-  imports: [
-    EffectsModule.forFeature([ FaceRecognitionEffects ]),
-    StoreModule.forFeature('faceRecognition', FaceRecognitionEffectsReducer)
-  ]
+  imports: [EffectsModule.forFeature([FaceRecognitionEffects]), StoreModule.forFeature('faceRecognition', FaceRecognitionEffectsReducer)],
 })
-export class FaceRecognitionStoreModule {
-}
+export class FaceRecognitionStoreModule {}

@@ -14,16 +14,10 @@
  * permissions and limitations under the License.
  */
 
-import {
-  logInSuccess,
-  logInFailure,
-  signUpFailure,
-  signUpSuccess
-} from './action';
+import { logInSuccess, logInFailure, signUpFailure, signUpSuccess } from './action';
 import { initialState, AuthReducer } from './reducers';
 
 describe('AuthReducer', () => {
-
   describe('LOGIN_SUCCESS action', () => {
     it('should set isAuthenticated to true, and loading false', () => {
       const action = logInSuccess();
@@ -46,7 +40,7 @@ describe('AuthReducer', () => {
 
   describe('SIGNUP_SUCCESS action', () => {
     it('should set successMessage to value, and loading false', () => {
-      const action = signUpSuccess({confirmationNeeded: false});
+      const action = signUpSuccess({ confirmationNeeded: false });
       const state = AuthReducer(initialState, action);
 
       expect(state.successMessage).toBe('You have created new account, please login into your account');

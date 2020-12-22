@@ -28,10 +28,11 @@ export const initialState: User = {
   userId: null,
 };
 
-const reducer: ActionReducer<User> = createReducer(initialState,
+const reducer: ActionReducer<User> = createReducer(
+  initialState,
   on(updateUserInfo, (state, action) => ({ ...state, ...action })),
   on(resetUserInfo, () => ({ ...initialState })),
-  on(getUserInfoSuccess, (state, action) => ({ ...state, ...action.user })),
+  on(getUserInfoSuccess, (state, action) => ({ ...state, ...action.user }))
 );
 
 export function UserInfoReducer(userInfoState: User, action: Action) {

@@ -14,22 +14,22 @@
  * permissions and limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators} from '@angular/forms';
-import {User} from '../../data/interfaces/user';
-import {Store} from '@ngrx/store';
-import {AppState} from '../../store';
-import {Observable, Subscription} from 'rxjs';
-import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
-import {resetErrorMessage, signUp} from '../../store/auth/action';
-import {selectAuthState} from '../../store/auth/selectors';
-import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
-import {SignUp} from '../../data/interfaces/sign-up';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { User } from '../../data/interfaces/user';
+import { Store } from '@ngrx/store';
+import { AppState } from '../../store';
+import { Observable, Subscription } from 'rxjs';
+import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { resetErrorMessage, signUp } from '../../store/auth/action';
+import { selectAuthState } from '../../store/auth/selectors';
+import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
+import { SignUp } from '../../data/interfaces/sign-up';
 
 @Component({
   selector: 'app-sign-up-form',
   templateUrl: './sign-up-form.component.html',
-  styleUrls: ['./sign-up-form.component.scss']
+  styleUrls: ['./sign-up-form.component.scss'],
 })
 export class SignUpFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
@@ -45,25 +45,25 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
     } else {
       return { passwordMismatch: true };
     }
-  }
+  };
 
   constructor(private store: Store<AppState>) {
     this.getState = this.store.select(selectAuthState);
   }
 
   ngOnInit() {
-    this.form = new FormGroup({
-      firstName: new FormControl(),
-      lastName: new FormControl(),
-      email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
-      password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
-      confirmPassword: new FormControl(null, [
-        Validators.required,
-        Validators.minLength(8),
-      ]),
-    }, { validators: this.passwordMatchValidator });
+    this.form = new FormGroup(
+      {
+        firstName: new FormControl(),
+        lastName: new FormControl(),
+        email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
+        password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+        confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+      },
+      { validators: this.passwordMatchValidator }
+    );
 
-    this.stateSubscription = this.getState.subscribe((state) => {
+    this.stateSubscription = this.getState.subscribe(state => {
       this.isLoading = state.isLoading;
     });
   }
@@ -79,10 +79,9 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
       email: this.user.email.trim(),
       password: this.user.password.trim(),
       firstName: this.user.firstName.trim(),
-      lastName: this.user.lastName.trim()
+      lastName: this.user.lastName.trim(),
     };
     this.isLoading = true;
     this.store.dispatch(signUp(payload));
   }
-
 }

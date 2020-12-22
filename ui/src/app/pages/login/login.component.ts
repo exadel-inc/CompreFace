@@ -24,7 +24,7 @@ import { selectDemoPageAvailability, selectDemoPending } from '../../store/demo/
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: [ './login.component.scss' ]
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
   ROUTERS_URL = ROUTERS_URL;

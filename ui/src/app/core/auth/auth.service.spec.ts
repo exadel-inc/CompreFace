@@ -30,7 +30,7 @@ describe('AuthService', () => {
   let httpMock: HttpTestingController;
   const initialState = {
     isPending: false,
-    apiKey: null
+    apiKey: null,
   };
 
   beforeEach(() => {

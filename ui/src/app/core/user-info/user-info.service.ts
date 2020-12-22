@@ -14,18 +14,17 @@
  * permissions and limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {environment} from '../../../environments/environment';
-import {User} from '../../data/interfaces/user';
-import {API_URL} from '../../data/enums/api-url.enum';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { User } from '../../data/interfaces/user';
+import { API_URL } from '../../data/enums/api-url.enum';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserInfoService {
-
   constructor(private http: HttpClient) {}
 
   public get(): Observable<User> {

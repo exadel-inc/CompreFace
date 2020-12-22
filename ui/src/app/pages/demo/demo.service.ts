@@ -20,11 +20,10 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DemoService {
-
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getModel(): Observable<any> {
     return this.http.get(`${environment.adminApiUrl}user/demo/model`);

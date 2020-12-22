@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-import {routerReducer, RouterReducerState} from '@ngrx/router-store';
-import {AuthReducer, AuthState} from './auth/reducers';
-import {RouterStateUrl} from './router/reducer';
-import {UserInfoReducer } from './userInfo/reducers';
+import { routerReducer, RouterReducerState } from '@ngrx/router-store';
+import { AuthReducer, AuthState } from './auth/reducers';
+import { RouterStateUrl } from './router/reducer';
+import { UserInfoReducer } from './userInfo/reducers';
 import { User } from '../data/interfaces/user';
 
 export interface AppState {

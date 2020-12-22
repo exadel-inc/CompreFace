@@ -62,7 +62,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.userRole$ = this.userListFacade.userRole$;
     this.tableConfig$ = this.userListFacade.users$.pipe(
       map((users: AppUser[]) => {
-        this.orgOwnerEmail = users.filter((user) => user.role === Role.OWNER).map((user) => user.email)[0];
+        this.orgOwnerEmail = users.filter(user => user.role === Role.OWNER).map(user => user.email)[0];
         return {
           columns: [
             { title: 'user', property: 'username' },
@@ -78,7 +78,7 @@ export class UserListComponent implements OnInit, OnDestroy {
     );
 
     this.availableRoles$ = this.userListFacade.availableRoles$;
-    this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe((value) => (this.availableRoles = value));
+    this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
     this.currentUserId$ = this.userListFacade.currentUserId$;
     this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
     this.messageHeader = this.translate.instant('org_users.add_users_title');

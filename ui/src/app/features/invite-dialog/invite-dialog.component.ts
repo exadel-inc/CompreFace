@@ -70,6 +70,6 @@ export class InviteDialogComponent implements OnInit {
 
   private filter(options: string[], value: string): string[] {
     const filterValue = value ? value.toLowerCase() : '';
-    return options ? options.filter((option) => option && option.toLowerCase().includes(filterValue)) : [''];
+    return options ? options.filter(option => option && option.toLowerCase().includes(filterValue)) : [''];
   }
 }

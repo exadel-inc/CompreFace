@@ -20,12 +20,7 @@ import { BreadcrumbsModule } from '../breadcrumbs/breadcrumbs.module';
 
 @NgModule({
   declarations: [BreadcrumbsContainerComponent],
-  exports: [
-    BreadcrumbsContainerComponent
-  ],
-  imports: [
-    CommonModule,
-    BreadcrumbsModule
-  ]
+  exports: [BreadcrumbsContainerComponent],
+  imports: [CommonModule, BreadcrumbsModule],
 })
-export class BreadcrumbsContainerModule { }
+export class BreadcrumbsContainerModule {}

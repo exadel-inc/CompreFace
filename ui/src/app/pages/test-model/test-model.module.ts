@@ -26,19 +26,16 @@ import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.contain
 import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
 
 @NgModule({
-  declarations: [ TestModelComponent ],
+  declarations: [TestModelComponent],
   imports: [
     CommonModule,
     BreadcrumbsContainerModule,
-    RouterModule.forChild([
-      { path: '', component: TestModelComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: TestModelComponent }]),
     MatCardModule,
     FaceRecognitionModule,
     SpinnerModule,
-    TranslateModule
+    TranslateModule,
   ],
-  providers: [ TestModelPageService ]
+  providers: [TestModelPageService],
 })
-export class TestModelModule {
-}
+export class TestModelModule {}

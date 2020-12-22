@@ -21,7 +21,7 @@ export class DemoGuard implements CanActivate {
 
     return this.demoService.getModel().pipe(
       catchError(() => of(null)),
-      map((data) => {
+      map(data => {
         if (data?.apiKey) {
           this.store.dispatch(loadDemoApiKeySuccessAction(data));
           return true;

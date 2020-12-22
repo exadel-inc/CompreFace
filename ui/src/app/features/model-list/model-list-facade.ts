@@ -50,7 +50,7 @@ export class ModelListFacade implements IFacade {
   }
 
   initSubscriptions(): void {
-    this.currentArgsAndApplicationSubscription = combineLatest([this.selectedApplication$]).subscribe((ObservableResult) => {
+    this.currentArgsAndApplicationSubscription = combineLatest([this.selectedApplication$]).subscribe(ObservableResult => {
       if (ObservableResult[0] !== null) {
         this.selectedApplicationId = ObservableResult[0];
         this.loadModels();

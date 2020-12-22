@@ -54,7 +54,7 @@ export class ApplicationHeaderFacade implements IFacade {
   }
 
   initSubscriptions() {
-    this.appIdSub = this.selectedId$.subscribe((selectedId) => (this.selectedId = selectedId));
+    this.appIdSub = this.selectedId$.subscribe(selectedId => (this.selectedId = selectedId));
   }
 
   unsubscribe() {

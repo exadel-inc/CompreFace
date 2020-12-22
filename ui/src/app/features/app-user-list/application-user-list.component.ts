@@ -78,7 +78,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     );
     this.message = this.translate.instant('app_users.add_users_info');
     this.availableRoles$ = this.appUserListFacade.availableRoles$;
-    this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe((value) => (this.availableRoles = value));
+    this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
   }
 
   onChange(user: AppUser): void {
@@ -100,7 +100,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     dialog
       .afterClosed()
       .pipe(first())
-      .subscribe((result) => {
+      .subscribe(result => {
         if (result) {
           this.appUserListFacade.delete(deletion.userToDelete.userId);
         }

@@ -14,24 +14,22 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ApplicationHeaderComponent} from './application-header.component';
-import {RouterModule} from '@angular/router';
-import {MatButtonModule} from '@angular/material/button';
-import {EntityTitleModule} from '../entity-title/entity-title.module';
-import {ApplicationHeaderFacade} from './application-header.facade';
-import {SpinnerModule} from '../spinner/spinner.module';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ApplicationHeaderComponent } from './application-header.component';
+import { RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { EntityTitleModule } from '../entity-title/entity-title.module';
+import { ApplicationHeaderFacade } from './application-header.facade';
+import { SpinnerModule } from '../spinner/spinner.module';
 import { MatCardModule } from '@angular/material/card';
-import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslateModule} from '@ngx-translate/core';
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ApplicationHeaderComponent],
-  exports: [
-    ApplicationHeaderComponent
-  ],
+  exports: [ApplicationHeaderComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -41,9 +39,8 @@ import {TranslateModule} from '@ngx-translate/core';
     MatCardModule,
     TruncateModule,
     MatTooltipModule,
-    TranslateModule
+    TranslateModule,
   ],
   providers: [ApplicationHeaderFacade],
 })
-export class ApplicationHeaderModule {
-}
+export class ApplicationHeaderModule {}

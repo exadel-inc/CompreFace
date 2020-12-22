@@ -22,10 +22,6 @@ import { DemoEffects } from './effects';
 
 @NgModule({
   declarations: [],
-  imports: [
-    StoreModule.forFeature('demo', DemoReducer),
-    EffectsModule.forFeature([ DemoEffects ])
-  ]
+  imports: [StoreModule.forFeature('demo', DemoReducer), EffectsModule.forFeature([DemoEffects])],
 })
-export class DemoStoreModule {
-}
+export class DemoStoreModule {}

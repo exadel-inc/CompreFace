@@ -7,9 +7,6 @@ import { DragNDropComponent } from './drag-n-drop.component';
 @NgModule({
   declarations: [DragNDropComponent, DragNDropDirective],
   exports: [DragNDropComponent],
-  imports: [
-    CommonModule,
-    TranslateModule
-  ]
+  imports: [CommonModule, TranslateModule],
 })
-export class DragNDropModule { }
+export class DragNDropModule {}

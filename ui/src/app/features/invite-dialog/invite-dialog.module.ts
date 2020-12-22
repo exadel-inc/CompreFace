@@ -14,16 +14,16 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {InviteDialogComponent} from './invite-dialog.component';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InviteDialogComponent } from './invite-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import {CommonModule} from '@angular/common';
-import {MatDialogModule} from '@angular/material/dialog';
+import { CommonModule } from '@angular/common';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   declarations: [InviteDialogComponent],
@@ -36,8 +36,8 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatInputModule,
     MatDialogModule,
     MatButtonModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,
   ],
-  exports: [InviteDialogComponent]
+  exports: [InviteDialogComponent],
 })
 export class InviteDialogModule {}

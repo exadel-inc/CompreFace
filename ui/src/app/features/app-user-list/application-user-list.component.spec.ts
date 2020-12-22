@@ -36,15 +36,7 @@ describe('ApplicationUserListComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ApplicationUserListComponent, TranslatePipe],
-        imports: [
-          SpinnerModule,
-          UserTableModule,
-          NoopAnimationsModule,
-          FormsModule,
-          UserTablePipeModule,
-          MatInputModule,
-          SnackBarModule,
-        ],
+        imports: [SpinnerModule, UserTableModule, NoopAnimationsModule, FormsModule, UserTablePipeModule, MatInputModule, SnackBarModule],
         providers: [
           {
             provide: MatDialog,

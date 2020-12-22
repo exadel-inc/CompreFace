@@ -49,7 +49,7 @@ describe('UserInfoService', () => {
   });
 
   it('should return user info', () => {
-    service.get().subscribe((data) => {
+    service.get().subscribe(data => {
       expect(data).toEqual(mockData);
     });
 

@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-import {createSelector, createFeatureSelector} from '@ngrx/store';
-import {AppUserEntityState, appUserAdapter} from './reducers';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
+import { AppUserEntityState, appUserAdapter } from './reducers';
 
-const {selectAll} = appUserAdapter.getSelectors();
+const { selectAll } = appUserAdapter.getSelectors();
 
 export const selectAppUserEntityState = createFeatureSelector<AppUserEntityState>('app-user');
 export const selectAppUserIsPending = createSelector(selectAppUserEntityState, state => state.isPending);

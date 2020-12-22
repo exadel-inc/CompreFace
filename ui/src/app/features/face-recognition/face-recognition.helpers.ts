@@ -27,10 +27,10 @@ export interface ImageSize {
  * @param file File.
  */
 export function getImageSize(file: File): Observable<ImageSize> {
-  return new Observable((subscriber) => {
+  return new Observable(subscriber => {
     const img = new Image();
     img.onload = () => {
-      subscriber.next({width: img.width, height: img.height});
+      subscriber.next({ width: img.width, height: img.height });
       subscriber.complete();
     };
     img.src = URL.createObjectURL(file);
@@ -53,7 +53,7 @@ export function recalculateFaceCoordinate(box: any, imageSize: ImageSize, sizeTo
     ...box,
     x_max: box.x_max / divideWidth > sizeToCalc.width ? sizeToCalc.width : box.x_max / divideWidth,
     x_min: box.x_min / divideWidth,
-    y_max: box.y_max / divideHeight > sizeToCalc.height - yAxisPadding ? sizeToCalc.height - yAxisPadding :  box.y_max / divideHeight,
+    y_max: box.y_max / divideHeight > sizeToCalc.height - yAxisPadding ? sizeToCalc.height - yAxisPadding : box.y_max / divideHeight,
     y_min: box.y_min / divideHeight > yAxisPadding ? box.y_min / divideHeight : yAxisPadding,
   };
 }

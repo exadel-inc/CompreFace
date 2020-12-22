@@ -51,7 +51,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       password: new FormControl(null, [Validators.required]),
     });
 
-    this.stateSubscription = this.getState.subscribe((state) => {
+    this.stateSubscription = this.getState.subscribe(state => {
       this.isLoading = state.isLoading;
     });
   }

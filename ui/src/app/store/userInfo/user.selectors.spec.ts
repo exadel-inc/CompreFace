@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-import {selectUserId} from './selectors';
+import { selectUserId } from './selectors';
 
 describe('UserSelectors', () => {
   it('selectUserId', () => {
-    expect(selectUserId.projector({userId: 'someId'})).toBe('someId');
+    expect(selectUserId.projector({ userId: 'someId' })).toBe('someId');
   });
 });

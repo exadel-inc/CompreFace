@@ -35,7 +35,7 @@ export class TableComponent implements OnInit {
   @Input() set tableConfig(config: ITableConfig) {
     if (config) {
       this.columnsDefinition = config.columns;
-      this.displayedColumns = config.columns.map((column) => column.title);
+      this.displayedColumns = config.columns.map(column => column.title);
       this.data = config.data;
     }
   }

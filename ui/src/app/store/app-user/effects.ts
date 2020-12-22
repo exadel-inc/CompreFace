@@ -43,8 +43,8 @@ export class AppUserEffects {
   @Effect()
   loadAppUsers = this.actions.pipe(
     ofType(loadAppUserEntityAction),
-    switchMap((action) => this.appUserService.getAll(action.applicationId)),
-    map((users) => addAppUserEntityAction({ users }))
+    switchMap(action => this.appUserService.getAll(action.applicationId)),
+    map(users => addAppUserEntityAction({ users }))
   );
 
   @Effect()
@@ -52,8 +52,8 @@ export class AppUserEffects {
     ofType(updateAppUserRoleAction),
     switchMap(({ applicationId, user }) =>
       this.appUserService.update(applicationId, user.id, user.role).pipe(
-        switchMap((res) => [updateAppUserRoleSuccessAction({ user: res }), loadApplications(), loadAppUserEntityAction({ applicationId })]),
-        catchError((error) => of(updateAppUserRoleFailAction({ error })))
+        switchMap(res => [updateAppUserRoleSuccessAction({ user: res }), loadApplications(), loadAppUserEntityAction({ applicationId })]),
+        catchError(error => of(updateAppUserRoleFailAction({ error })))
       )
     )
   );
@@ -61,10 +61,10 @@ export class AppUserEffects {
   @Effect()
   deleteAppUser$ = this.actions.pipe(
     ofType(deleteUserFromApplication),
-    switchMap((action) =>
+    switchMap(action =>
       this.appUserService.deleteUser(action.applicationId, action.userId).pipe(
         map(() => deleteUserFromApplicationSuccess({ id: action.userId })),
-        catchError((error) => of(deleteUserFromApplicationFail({ error })))
+        catchError(error => of(deleteUserFromApplicationFail({ error })))
       )
     )
   );
@@ -72,13 +72,13 @@ export class AppUserEffects {
   @Effect()
   inviteAppUser$ = this.actions.pipe(
     ofType(inviteAppUserAction),
-    switchMap((action) =>
+    switchMap(action =>
       this.appUserService.inviteUser(action.applicationId, action.userEmail, action.role).pipe(
         switchMap(() => [
           loadAppUserEntityAction({ applicationId: action.applicationId }),
           inviteAppUserActionSuccess({ userEmail: action.userEmail }),
         ]),
-        catchError((error) => of(inviteAppUserActionFail({ error })))
+        catchError(error => of(inviteAppUserActionFail({ error })))
       )
     )
   );
@@ -86,7 +86,7 @@ export class AppUserEffects {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction, inviteAppUserActionFail),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
   );
@@ -94,7 +94,7 @@ export class AppUserEffects {
   @Effect({ dispatch: false })
   addUser$ = this.actions.pipe(
     ofType(inviteAppUserActionSuccess),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openNotification({
         messageText: 'application_user_list.invitation_sent',
         messageOptions: { userEmail: action.userEmail },

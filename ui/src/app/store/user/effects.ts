@@ -50,7 +50,7 @@ export class UserListEffect {
   @Effect()
   fetchUserList = this.actions.pipe(
     ofType(loadUsersEntityAction),
-    switchMap((action) => this.userService.getAll()),
+    switchMap(action => this.userService.getAll()),
     map((users: AppUser[]) => addUsersEntityAction({ users }))
   );
 
@@ -59,8 +59,8 @@ export class UserListEffect {
     ofType(updateUserRoleAction),
     switchMap(({ user }) =>
       this.userService.updateRole(user.id, user.role).pipe(
-        map((res) => updateUserRoleSuccessAction({ user: res })),
-        catchError((error) => of(updateUserRoleFailAction({ error })))
+        map(res => updateUserRoleSuccessAction({ user: res })),
+        catchError(error => of(updateUserRoleFailAction({ error })))
       )
     )
   );
@@ -70,8 +70,8 @@ export class UserListEffect {
     ofType(updateUserRoleWithRefreshAction),
     switchMap(({ user }) =>
       this.userService.updateRole(user.id, user.role).pipe(
-        switchMap((res) => [updateUserRoleSuccessAction({ user: res }), loadUsersEntityAction()]),
-        catchError((error) => of(updateUserRoleFailAction({ error })))
+        switchMap(res => [updateUserRoleSuccessAction({ user: res }), loadUsersEntityAction()]),
+        catchError(error => of(updateUserRoleFailAction({ error })))
       )
     )
   );
@@ -88,7 +88,7 @@ export class UserListEffect {
           }
           return [deleteUserSuccess({ userId }), loadApplications(), loadUsersEntityAction()];
         }),
-        catchError((error) => of(deleteUserFail({ error })))
+        catchError(error => of(deleteUserFail({ error })))
       )
     )
   );
@@ -96,7 +96,7 @@ export class UserListEffect {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(deleteUserFail, updateUserRoleFailAction),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
   );
@@ -106,7 +106,7 @@ export class UserListEffect {
     ofType(loadRolesEntityAction),
     switchMap(() => this.userService.fetchAvailableRoles()),
     // workaround until backend doesnt support available roles call
-    catchError((x) => of(['OWNER', 'ADMIN', 'USER'])),
-    map((rolesArray) => fetchRolesEntityAction({ role: { id: 0, accessLevels: rolesArray } }))
+    catchError(x => of(['OWNER', 'ADMIN', 'USER'])),
+    map(rolesArray => fetchRolesEntityAction({ role: { id: 0, accessLevels: rolesArray } }))
   );
 }

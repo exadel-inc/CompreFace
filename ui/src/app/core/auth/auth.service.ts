@@ -27,21 +27,20 @@ import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
 import { AppState } from '../../store';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   refreshInProgress: boolean;
   requests = [];
 
-  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {
-  }
+  constructor(private http: HttpClient, private formBuilder: FormBuilder, private store: Store<AppState>, private router: Router) {}
 
   logIn(email: string, password: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API_URL.LOGIN}`;
     const form = this.formBuilder.group({
       email,
       password,
-      grant_type: 'password'
+      grant_type: 'password',
     });
     const formData = new FormData();
     formData.append('username', form.get('email').value);
@@ -53,12 +52,12 @@ export class AuthService {
 
   clearUserToken(): Observable<any> {
     const url = `${environment.adminApiUrl}${API_URL.LOGIN}`;
-    return this.http.delete(url, { headers: { Authorization: environment.basicToken }});
+    return this.http.delete(url, { headers: { Authorization: environment.basicToken } });
   }
 
   signUp(firstName: string, password: string, email: string, lastName: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API_URL.REGISTER}`;
-    return this.http.post(url, { email, password, firstName, lastName }, {observe: 'response'});
+    return this.http.post(url, { email, password, firstName, lastName }, { observe: 'response' });
   }
 
   logOut() {

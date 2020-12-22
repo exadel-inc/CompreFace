@@ -73,7 +73,7 @@ describe('ModelService', () => {
 
   it('should return models array', () => {
     const service: ModelService = TestBed.inject(ModelService);
-    service.getAll('0').subscribe((data) => {
+    service.getAll('0').subscribe(data => {
       expect(data).toEqual(mockModels);
     });
 
@@ -84,7 +84,7 @@ describe('ModelService', () => {
 
   it('should return created model', () => {
     const service: ModelService = TestBed.inject(ModelService);
-    service.create('app_0', 'new model').subscribe((data) => {
+    service.create('app_0', 'new model').subscribe(data => {
       expect(data.name).toEqual('new model');
       expect(data.relations[0].id).toEqual('app_0');
     });

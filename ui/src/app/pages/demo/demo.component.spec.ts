@@ -9,15 +9,13 @@ describe('DemoComponent', () => {
   let component: DemoComponent;
   let fixture: ComponentFixture<DemoComponent>;
   const initialState = {
-    isPending: false
+    isPending: false,
   };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DemoComponent ],
-      imports: [
-        HttpClientTestingModule
-      ],
+      declarations: [DemoComponent],
+      imports: [HttpClientTestingModule],
       providers: [
         {
           provide: Store,
@@ -25,11 +23,10 @@ describe('DemoComponent', () => {
             select: () => {
               return of(initialState);
             },
-          }
+          },
         },
-      ]
-    })
-    .compileComponents();
+      ],
+    }).compileComponents();
   });
 
   beforeEach(() => {

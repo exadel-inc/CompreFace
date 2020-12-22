@@ -45,20 +45,18 @@ export interface AppEntityState extends EntityState<Application> {
 export const initialState: AppEntityState = applicationAdapter.getInitialState({
   // additional entity state properties
   selectedAppId: null,
-  isPending: false
+  isPending: false,
 });
 
 const reducer: ActionReducer<AppEntityState> = createReducer(
   initialState,
-  on(loadApplications, createApplication, updateApplication, deleteApplication, (state) => ({ ...state, isPending: true })),
-  on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail,
-    (state) => ({ ...state, isPending: false })),
+  on(loadApplications, createApplication, updateApplication, deleteApplication, state => ({ ...state, isPending: true })),
+  on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail, state => ({ ...state, isPending: false })),
   on(createApplicationSuccess, (state, { application }) => applicationAdapter.addOne(application, { ...state, isPending: false })),
   on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.setAll(applications, { ...state, isPending: false })),
-  on(updateApplicationSuccess, (state, { application }) => applicationAdapter.updateOne(
-    { id: application.id, changes: application },
-    { ...state, isPending: false }
-  )),
+  on(updateApplicationSuccess, (state, { application }) =>
+    applicationAdapter.updateOne({ id: application.id, changes: application }, { ...state, isPending: false })
+  ),
   on(deleteApplicationSuccess, (state, { id }) => applicationAdapter.removeOne(id, { ...state, isPending: false })),
   on(setSelectedAppIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
 );

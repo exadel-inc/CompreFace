@@ -30,8 +30,8 @@ export class UserInfoEffect {
     ofType(getUserInfo),
     switchMap(() =>
       this.userInfoService.get().pipe(
-        map((user) => getUserInfoSuccess({ user })),
-        catchError((e) => of(getUserInfoFail({ errorMessage: e })))
+        map(user => getUserInfoSuccess({ user })),
+        catchError(e => of(getUserInfoFail({ errorMessage: e })))
       )
     )
   );

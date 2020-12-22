@@ -24,17 +24,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SpinnerModule } from '../../features/spinner/spinner.module';
 
 @NgModule({
-  declarations: [ LoginComponent ],
+  declarations: [LoginComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([
-      { path: '', component: LoginComponent }
-    ]),
+    RouterModule.forChild([{ path: '', component: LoginComponent }]),
     LoginFormModule,
     TranslateModule,
     SpinnerModule,
-    MatButtonModule
-  ]
+    MatButtonModule,
+  ],
 })
-export class LoginModule {
-}
+export class LoginModule {}

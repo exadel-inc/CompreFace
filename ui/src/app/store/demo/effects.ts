@@ -24,23 +24,24 @@ import { DemoService } from '../../pages/demo/demo.service';
 
 @Injectable()
 export class DemoEffects {
-  constructor(
-    private actions: Actions,
-    private demoService: DemoService
-  ) { }
+  constructor(private actions: Actions, private demoService: DemoService) {}
 
   @Effect()
   loadDemoApiKey$ = this.actions.pipe(
     ofType(loadDemoApiKeyAction),
-    switchMap(() => this.demoService.getModel().pipe(
-      map(data => loadDemoApiKeySuccessAction(data)),
-      catchError((response: any): Observable<any> => {
-        if (response instanceof HttpErrorResponse) {
-          return of(loadDemoApiKeyFailAction());
-        }
+    switchMap(() =>
+      this.demoService.getModel().pipe(
+        map(data => loadDemoApiKeySuccessAction(data)),
+        catchError(
+          (response: any): Observable<any> => {
+            if (response instanceof HttpErrorResponse) {
+              return of(loadDemoApiKeyFailAction());
+            }
 
-        return throwError(response);
-      })
-    )),
+            return throwError(response);
+          }
+        )
+      )
+    )
   );
 }

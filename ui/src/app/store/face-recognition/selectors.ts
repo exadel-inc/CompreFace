@@ -14,18 +14,16 @@
  * permissions and limitations under the License.
  */
 
-import {createSelector, createFeatureSelector} from '@ngrx/store';
+import { createSelector, createFeatureSelector } from '@ngrx/store';
 import { FaceRecognitionEntityState } from './reducers';
 
 export const selectTestEntityState = createFeatureSelector<FaceRecognitionEntityState>('faceRecognition');
 export const selectTestIsPending = createSelector(selectTestEntityState, state => state.isPending);
 
-export const selectFaceData =  createSelector(selectTestEntityState, state =>
-  state.model ? state.model.result : null);
-export const selectFile =  createSelector(selectTestEntityState, state => state.file);
-export const selectStateReady =  createSelector(selectTestEntityState, state =>
-  !state.isPending && !!(state?.model?.result[0]));
-export const selectRequest =  createSelector(selectTestEntityState, state => ({
-    request: JSON.stringify(state.request, undefined, 2),
-    response: JSON.stringify(state.model, undefined, 2)
-  }));
+export const selectFaceData = createSelector(selectTestEntityState, state => (state.model ? state.model.result : null));
+export const selectFile = createSelector(selectTestEntityState, state => state.file);
+export const selectStateReady = createSelector(selectTestEntityState, state => !state.isPending && !!state?.model?.result[0]);
+export const selectRequest = createSelector(selectTestEntityState, state => ({
+  request: JSON.stringify(state.request, undefined, 2),
+  response: JSON.stringify(state.model, undefined, 2),
+}));

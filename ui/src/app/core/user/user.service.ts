@@ -31,7 +31,7 @@ export class UserService {
   getAll(): Observable<AppUser[]> {
     return this.http
       .get<AppUser[]>(`${environment.adminApiUrl}user/roles`)
-      .pipe(map((users) => users.map((user) => ({ id: user.userId, ...user }))));
+      .pipe(map(users => users.map(user => ({ id: user.userId, ...user }))));
   }
 
   updateRole(userId: string, role: Role): Observable<any> {

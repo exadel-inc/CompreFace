@@ -57,8 +57,8 @@ export class ApplicationUserListFacade implements IFacade {
     this.appUsers$ = this.store.select(selectAppUsers);
     this.availableEmails$ = combineLatest([this.store.select(selectUsers), this.appUsers$]).pipe(
       map(([users, appUsers]) => {
-        return users.map((user) => {
-          if (appUsers.every((appUser) => appUser.id !== user.id)) {
+        return users.map(user => {
+          if (appUsers.every(appUser => appUser.id !== user.id)) {
             return user.email;
           }
         });
@@ -102,11 +102,11 @@ export class ApplicationUserListFacade implements IFacade {
     const usersLoading$ = this.store.select(selectAppUserIsPending);
     const roleLoading$ = this.store.select(selectIsPendingRoleStore);
 
-    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map(observResults => !(!observResults[0] && !observResults[1])));
   }
 
   initSubscriptions(): void {
-    this.sub = this.store.select(selectCurrentApp).subscribe((app) => {
+    this.sub = this.store.select(selectCurrentApp).subscribe(app => {
       if (app) {
         this.selectedApplicationId = app.id;
         this.selectedApplicationName = app.name;

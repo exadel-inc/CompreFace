@@ -59,13 +59,13 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
     this.userRole$ = this.applicationFacade.userRole$;
 
     this.tableConfig$ = this.applicationFacade.applications$.pipe(
-      map((apps) => {
+      map(apps => {
         return {
           columns: [
             { title: 'Name', property: 'name' },
             { title: 'Owner', property: 'owner' },
           ],
-          data: apps.map((app) => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` })),
+          data: apps.map(app => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` })),
         };
       })
     );
@@ -88,7 +88,7 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
       },
     });
 
-    const dialogSubscription = dialog.afterClosed().subscribe((name) => {
+    const dialogSubscription = dialog.afterClosed().subscribe(name => {
       if (name) {
         this.applicationFacade.createApplication(name);
         dialogSubscription.unsubscribe();

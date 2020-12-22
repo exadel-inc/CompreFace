@@ -23,19 +23,12 @@ import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 import { ModelTableModule } from '../model-table/model-table.module';
 import { ModelListFacade } from './model-list-facade';
 import { ModelListComponent } from './model-list.component';
-import {TranslateModule} from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [ModelListComponent],
   exports: [ModelListComponent],
   providers: [ModelListFacade],
-  imports: [
-    CommonModule,
-    SpinnerModule,
-    MatButtonModule,
-    MatIconModule,
-    ModelTableModule,
-    TranslateModule,
-  ]
+  imports: [CommonModule, SpinnerModule, MatButtonModule, MatIconModule, ModelTableModule, TranslateModule],
 })
-export class ModelListModule { }
+export class ModelListModule {}

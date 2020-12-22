@@ -14,18 +14,17 @@
  * permissions and limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.scss']
+  styleUrls: ['./footer.component.scss'],
 })
 export class FooterComponent implements OnInit {
   env = environment;
   constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }

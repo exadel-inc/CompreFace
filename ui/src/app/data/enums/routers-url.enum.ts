@@ -21,5 +21,5 @@ export enum ROUTERS_URL {
   SIGN_UP = '/sign-up',
   FORGOT_PASSWORD = '/forgot-password',
   TEST_MODEL = '/test-model',
-  DEMO = '/demo'
+  DEMO = '/demo',
 }

@@ -14,12 +14,12 @@
  * permissions and limitations under the License.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Pipe({
-  name: 'userTableFilter'
+  name: 'userTableFilter',
 })
 export class UserTableFilterPipe implements PipeTransform {
   transform(value: Observable<any>, search: string): Observable<any> {
@@ -36,5 +36,4 @@ export class UserTableFilterPipe implements PipeTransform {
       })
     );
   }
-
 }

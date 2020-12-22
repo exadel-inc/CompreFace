@@ -15,13 +15,13 @@
   -->
 
 <div class="dropzone" appDnd (fileDropped)="onFileDropped($event)">
-    <div class="dropzone-icon">
-        <img src="../../../assets/dnd/tmp-upload-file.svg" alt="">
-    </div>
-    <div class="dropzone-content">
-        <h4>{{title}}</h4>
-        <label>{{label}}</label>
-    </div>
+  <div class="dropzone-icon">
+    <img src="../../../assets/dnd/tmp-upload-file.svg" alt="" />
+  </div>
+  <div class="dropzone-content">
+    <h4>{{ title }}</h4>
+    <label>{{ label }}</label>
+  </div>
 
-    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+  <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
 </div>

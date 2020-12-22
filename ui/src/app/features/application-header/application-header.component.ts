@@ -30,9 +30,8 @@ import { TranslateService } from '@ngx-translate/core';
   selector: 'app-application-header',
   templateUrl: './application-header.component.html',
   styleUrls: ['./application-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   app$: Observable<Application>;
   userRole$: Observable<string | null>;
@@ -40,7 +39,7 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   maxHeaderLinkLength = 25;
   userRoleEnum = Role;
 
-  constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog, private translate: TranslateService) { }
+  constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog, private translate: TranslateService) {}
 
   ngOnInit() {
     this.applicationHeaderFacade.initSubscriptions();
@@ -59,14 +58,17 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
       data: {
         entityType: this.translate.instant('applications.header.title'),
         entityName: name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(result => {
-      if (result) {
-        this.applicationHeaderFacade.rename(result);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe(result => {
+        if (result) {
+          this.applicationHeaderFacade.rename(result);
+        }
+      });
   }
 
   delete(name: string) {
@@ -75,13 +77,16 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
       data: {
         entityType: this.translate.instant('applications.header.title'),
         entityName: name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(result => {
-      if (result) {
-        this.applicationHeaderFacade.delete();
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe(result => {
+        if (result) {
+          this.applicationHeaderFacade.delete();
+        }
+      });
   }
 }

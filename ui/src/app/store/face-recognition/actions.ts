@@ -14,14 +14,14 @@
  * permissions and limitations under the License.
  */
 
-import {createAction, props} from '@ngrx/store';
+import { createAction, props } from '@ngrx/store';
 import { Model } from 'src/app/data/interfaces/model';
 
 export const recognizeFace = createAction('[Model] Face Recognize', props<{ file: any }>());
-export const recognizeFaceSuccess = createAction('[Model] Face Recognize Success', props<{ model: any, file: any, request: any }>());
+export const recognizeFaceSuccess = createAction('[Model] Face Recognize Success', props<{ model: any; file: any; request: any }>());
 export const recognizeFaceFail = createAction('[Model] Face Recognize Fail', props<{ error: any }>());
 export const recognizeFaceReset = createAction('[Model] Face Recognize Reset');
 
-export const addFace = createAction('[Model] Add Face', props<{ file: any, model: Model }>());
+export const addFace = createAction('[Model] Add Face', props<{ file: any; model: Model }>());
 export const addFaceSuccess = createAction('[Model] Add Face Success', props<{ model: any }>());
 export const addFaceFail = createAction('[Model] Add Face Fail', props<{ error: any }>());

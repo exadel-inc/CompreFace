@@ -14,49 +14,50 @@
  * permissions and limitations under the License.
  */
 
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {InviteDialogComponent} from './invite-dialog.component';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { InviteDialogComponent } from './invite-dialog.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('InviteDialogComponent', () => {
   let component: InviteDialogComponent;
   let fixture: ComponentFixture<InviteDialogComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ InviteDialogComponent ],
-      imports: [
-        FormsModule,
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatSelectModule,
-        MatInputModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatAutocompleteModule,
-        NoopAnimationsModule
-      ],
-      providers: [
-        {
-          provide: MatDialogRef,
-          useValue: {}
-        },
-        {
-          provide: MAT_DIALOG_DATA,
-          useValue: {availableRoles: []}
-        }
-     ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [InviteDialogComponent],
+        imports: [
+          FormsModule,
+          ReactiveFormsModule,
+          MatFormFieldModule,
+          MatSelectModule,
+          MatInputModule,
+          MatDialogModule,
+          MatButtonModule,
+          MatAutocompleteModule,
+          NoopAnimationsModule,
+        ],
+        providers: [
+          {
+            provide: MatDialogRef,
+            useValue: {},
+          },
+          {
+            provide: MAT_DIALOG_DATA,
+            useValue: { availableRoles: [] },
+          },
+        ],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(InviteDialogComponent);

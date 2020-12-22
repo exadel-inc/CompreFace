@@ -47,7 +47,7 @@ export class TestModelPageService {
       this.modelSub = this.store
         .select(selectModels)
         .pipe(
-          filter((models) => !models.length),
+          filter(models => !models.length),
           take(1)
         )
         .subscribe(() => {

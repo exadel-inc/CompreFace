@@ -25,13 +25,11 @@ import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 
 import { SignUpFormComponent } from './sign-up-form.component';
-import {TranslateModule} from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [SignUpFormComponent],
-  exports: [
-    SignUpFormComponent
-  ],
+  exports: [SignUpFormComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -43,6 +41,6 @@ import {TranslateModule} from '@ngx-translate/core';
     MatButtonModule,
     MatIconModule,
     TranslateModule,
-  ]
+  ],
 })
-export class SignUpFormModule { }
+export class SignUpFormModule {}

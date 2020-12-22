@@ -14,29 +14,20 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {BreadcrumbsComponent} from './breadcrumbs.component';
-import {BreadcrumbsFacade} from './breadcrumbs.facade';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { BreadcrumbsComponent } from './breadcrumbs.component';
+import { BreadcrumbsFacade } from './breadcrumbs.facade';
 import { MatCardModule } from '@angular/material/card';
-import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslateModule} from '@ngx-translate/core';
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [BreadcrumbsComponent],
-  exports: [
-    BreadcrumbsComponent
-  ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    TruncateModule,
-    MatTooltipModule,
-    TranslateModule
-  ],
+  exports: [BreadcrumbsComponent],
+  imports: [CommonModule, RouterModule, MatCardModule, TruncateModule, MatTooltipModule, TranslateModule],
   providers: [BreadcrumbsFacade],
 })
-export class BreadcrumbsModule { }
+export class BreadcrumbsModule {}

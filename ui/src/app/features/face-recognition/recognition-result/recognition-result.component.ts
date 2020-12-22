@@ -56,12 +56,12 @@ export class RecognitionResultComponent implements OnDestroy {
         this.canvasSize.height = (height / width) * this.canvasSize.width;
         this.myCanvas.nativeElement.setAttribute('height', this.canvasSize.height);
       }),
-      map((imageSize) => this.prepareForDraw(imageSize, result)),
-      map((preparedImageData) => this.drawCanvas(preparedImageData))
+      map(imageSize => this.prepareForDraw(imageSize, result)),
+      map(preparedImageData => this.drawCanvas(preparedImageData))
     );
   }
   private prepareForDraw(size, rawData): Observable<any> {
-    return rawData.map((value) => ({
+    return rawData.map(value => ({
       box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),
       faces: value.faces,
     }));

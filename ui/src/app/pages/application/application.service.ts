@@ -41,7 +41,7 @@ export class ApplicationPageService {
       this.appsSub = this.store
         .select(selectApplications)
         .pipe(
-          filter((apps) => !apps.length),
+          filter(apps => !apps.length),
           take(1)
         )
         .subscribe(() => {

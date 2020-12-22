@@ -14,11 +14,11 @@
  * permissions and limitations under the License.
  */
 
-import {Data, Params, RouterStateSnapshot} from '@angular/router';
-import {RouterStateSerializer} from '@ngrx/router-store';
+import { Data, Params, RouterStateSnapshot } from '@angular/router';
+import { RouterStateSerializer } from '@ngrx/router-store';
 import { Injectable } from '@angular/core';
 
-export interface RouterStateUrl  {
+export interface RouterStateUrl {
   url: string;
   params: Params;
   queryParams: Params;
@@ -26,8 +26,8 @@ export interface RouterStateUrl  {
 }
 
 @Injectable()
-export class AppSerializer implements RouterStateSerializer<RouterStateUrl > {
-  serialize(state: RouterStateSnapshot): RouterStateUrl  {
+export class AppSerializer implements RouterStateSerializer<RouterStateUrl> {
+  serialize(state: RouterStateSnapshot): RouterStateUrl {
     let currentRoute = state.root;
 
     while (currentRoute.firstChild) {
@@ -36,10 +36,10 @@ export class AppSerializer implements RouterStateSerializer<RouterStateUrl > {
 
     const {
       url,
-      root: { queryParams }
+      root: { queryParams },
     } = state;
     const { params, data } = currentRoute;
 
-    return {url, params, queryParams, data};
+    return { url, params, queryParams, data };
   }
 }

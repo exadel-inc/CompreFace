@@ -14,65 +14,70 @@
  * permissions and limitations under the License.
  */
 
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
-import {UserTableModule} from 'src/app/features/user-table/user-table.module';
-import {UserListComponent} from './user-list.component';
-import {UserListFacade} from './user-list-facade';
-import {of, Subscription} from 'rxjs';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {FormsModule} from '@angular/forms';
-import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
-import {MatInputModule} from '@angular/material/input';
-import {CommonModule} from '@angular/common';
-import {SnackBarService} from '../snackbar/snackbar.service';
-import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
-import {MatDialogModule} from '@angular/material/dialog';
-import {TranslatePipe, TranslateService} from '@ngx-translate/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
+import { UserTableModule } from 'src/app/features/user-table/user-table.module';
+import { UserListComponent } from './user-list.component';
+import { UserListFacade } from './user-list-facade';
+import { of, Subscription } from 'rxjs';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
+import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
+import { MatInputModule } from '@angular/material/input';
+import { CommonModule } from '@angular/common';
+import { SnackBarService } from '../snackbar/snackbar.service';
+import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
+import { MatDialogModule } from '@angular/material/dialog';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 describe('UserListComponent', () => {
   let component: UserListComponent;
   let fixture: ComponentFixture<UserListComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [
-        NoopAnimationsModule,
-        CommonModule,
-        UserTableModule,
-        SpinnerModule,
-        FormsModule,
-        UserTablePipeModule,
-        MatInputModule,
-        MatDialogModule,
-        InviteDialogModule
-      ],
-      declarations: [UserListComponent, TranslatePipe],
-      providers: [
-        {
-          provide: SnackBarService,
-          useValue: {}
-        }, {
-          provide: UserListFacade,
-          useValue: {
-            initSubscriptions: () => of([{}]),
-            users$: of([{
-              id: 0,
-              name: 'name',
-              owner: {
-                firstname: 'firstname'
-              }
-            }]),
-            selectedOrganization$: of([{}]),
-            isLoading$: of([{}]),
-            availableRoles$: of([{}]),
-            unsubscribe() { }
-          }
-        },
-        {provide: TranslateService, useValue: {}}],
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [
+          NoopAnimationsModule,
+          CommonModule,
+          UserTableModule,
+          SpinnerModule,
+          FormsModule,
+          UserTablePipeModule,
+          MatInputModule,
+          MatDialogModule,
+          InviteDialogModule,
+        ],
+        declarations: [UserListComponent, TranslatePipe],
+        providers: [
+          {
+            provide: SnackBarService,
+            useValue: {},
+          },
+          {
+            provide: UserListFacade,
+            useValue: {
+              initSubscriptions: () => of([{}]),
+              users$: of([
+                {
+                  id: 0,
+                  name: 'name',
+                  owner: {
+                    firstname: 'firstname',
+                  },
+                },
+              ]),
+              selectedOrganization$: of([{}]),
+              isLoading$: of([{}]),
+              availableRoles$: of([{}]),
+              unsubscribe() {},
+            },
+          },
+          { provide: TranslateService, useValue: {} },
+        ],
+      }).compileComponents();
     })
-      .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(UserListComponent);

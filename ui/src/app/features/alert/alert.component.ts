@@ -25,16 +25,13 @@ export interface IAlertData {
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss']
+  styleUrls: ['./alert.component.scss'],
 })
 export class AlertComponent implements OnInit {
   message: string;
   type: 'error' | 'warning' | 'info';
 
-  constructor(
-    public dialogRef: MatDialogRef<AlertComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IAlertData
-  ) {
+  constructor(public dialogRef: MatDialogRef<AlertComponent>, @Inject(MAT_DIALOG_DATA) public data: IAlertData) {
     this.message = data.message;
     this.type = data.type;
   }

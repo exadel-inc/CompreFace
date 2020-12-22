@@ -14,20 +14,14 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {SignUpComponent} from './sign-up.component';
-import {SignUpFormModule} from '../../features/sign-up-form/sign-up-form.module';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { SignUpComponent } from './sign-up.component';
+import { SignUpFormModule } from '../../features/sign-up-form/sign-up-form.module';
 
 @NgModule({
   declarations: [SignUpComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild([
-      {path: '', component: SignUpComponent }
-    ]),
-    SignUpFormModule
-  ]
+  imports: [CommonModule, RouterModule.forChild([{ path: '', component: SignUpComponent }]), SignUpFormModule],
 })
-export class SignUpModule { }
+export class SignUpModule {}

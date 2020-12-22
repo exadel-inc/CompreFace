@@ -14,20 +14,20 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ApplicationUserListComponent} from './application-user-list.component';
-import {ApplicationUserListFacade} from './application-user-list-facade';
-import {UserTableModule} from '../user-table/user-table.module';
-import {SpinnerModule} from 'src/app/features/spinner/spinner.module';
-import {UserTablePipeModule} from '../../ui/search-pipe/user-table-filter.module';
-import {MatInputModule} from '@angular/material/input';
-import {FormsModule} from '@angular/forms';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ApplicationUserListComponent } from './application-user-list.component';
+import { ApplicationUserListFacade } from './application-user-list-facade';
+import { UserTableModule } from '../user-table/user-table.module';
+import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
+import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
+import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import {InviteDialogComponent} from '../invite-dialog/invite-dialog.component';
-import {InviteDialogModule} from '../invite-dialog/invite-dialog.module';
-import {TranslateModule} from '@ngx-translate/core';
-import {MatIconModule} from '@angular/material/icon';
+import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
+import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [ApplicationUserListComponent],
@@ -43,8 +43,8 @@ import {MatIconModule} from '@angular/material/icon';
     MatButtonModule,
     InviteDialogModule,
     TranslateModule,
-    MatIconModule
+    MatIconModule,
   ],
-  entryComponents: [InviteDialogComponent]
+  entryComponents: [InviteDialogComponent],
 })
 export class AppUserListModule {}

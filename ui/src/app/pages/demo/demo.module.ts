@@ -25,18 +25,14 @@ import { DemoService } from './demo.service';
 import { DemoGuard } from './demo.guard';
 
 @NgModule({
-  declarations: [
-    DemoComponent
-  ],
+  declarations: [DemoComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([
-      { path: '', component: DemoComponent, canActivate: [ DemoGuard ] },
-    ]),
+    RouterModule.forChild([{ path: '', component: DemoComponent, canActivate: [DemoGuard] }]),
     TranslateModule,
     FaceRecognitionModule,
-    SpinnerModule
+    SpinnerModule,
   ],
-  providers: [ DemoService ]
+  providers: [DemoService],
 })
-export class DemoModule { }
+export class DemoModule {}

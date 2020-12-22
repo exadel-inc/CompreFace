@@ -14,12 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import {
-  loadDemoApiKeyAction,
-  loadDemoApiKeySuccessAction,
-  loadDemoApiKeyFailAction,
-  setDemoKeyPendingAction
-} from './actions';
+import { loadDemoApiKeyAction, loadDemoApiKeySuccessAction, loadDemoApiKeyFailAction, setDemoKeyPendingAction } from './actions';
 import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
 
 export interface DemoEntityState {
@@ -29,15 +24,15 @@ export interface DemoEntityState {
 
 export const initialState: DemoEntityState = {
   isPending: false,
-  apiKey: null
+  apiKey: null,
 };
 
 const reducer: ActionReducer<DemoEntityState> = createReducer(
   initialState,
-  on(loadDemoApiKeyAction, (state) => ({ ...state, isPending: true })),
+  on(loadDemoApiKeyAction, state => ({ ...state, isPending: true })),
   on(loadDemoApiKeySuccessAction, (state, { apiKey }) => ({ ...state, apiKey, isPending: false })),
-  on(loadDemoApiKeyFailAction, (state) => ({ ...state, isPending: false })),
-  on(setDemoKeyPendingAction, (state) => ({ ...state, isPending: true }))
+  on(loadDemoApiKeyFailAction, state => ({ ...state, isPending: false })),
+  on(setDemoKeyPendingAction, state => ({ ...state, isPending: true }))
 );
 
 export function DemoReducer(demoState: DemoEntityState, action: Action) {

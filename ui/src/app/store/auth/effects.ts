@@ -39,10 +39,10 @@ export class AuthEffects {
   @Effect()
   LogIn = this.actions.pipe(
     ofType(logIn),
-    switchMap((action) => {
+    switchMap(action => {
       return this.authService.logIn(action.email, action.password).pipe(
         map(() => logInSuccess()),
-        catchError((error) => observableOf(logInFailure(error)))
+        catchError(error => observableOf(logInFailure(error)))
       );
     })
   );
@@ -59,7 +59,7 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(logInFailure, signUpFailure),
-    tap((action) => {
+    tap(action => {
       if (action.error && action.error.error_description === 'Bad credentials') {
         this.snackBarService.openNotification({ messageText: 'auth.incorrect_credentials', type: 'error' });
       } else if (action.error && action.error.code === 4) {
@@ -73,7 +73,7 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   showSuccess$ = this.actions.pipe(
     ofType(signUpSuccess),
-    tap((action) => {
+    tap(action => {
       const message = action.confirmationNeeded ? 'auth.new_account_confirm_email' : 'auth.new_account_login';
       this.snackBarService.openNotification({ messageText: message });
     })
@@ -82,10 +82,10 @@ export class AuthEffects {
   @Effect()
   SignUp: Observable<any> = this.actions.pipe(
     ofType(signUp),
-    switchMap((payload) => {
+    switchMap(payload => {
       return this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName).pipe(
-        map((res) => signUpSuccess({ confirmationNeeded: res.status === 200 })),
-        catchError((error) => observableOf(signUpFailure(error)))
+        map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
+        catchError(error => observableOf(signUpFailure(error)))
       );
     })
   );

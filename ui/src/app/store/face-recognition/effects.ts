@@ -46,10 +46,10 @@ export class FaceRecognitionEffects {
   @Effect()
   addFace$ = this.actions.pipe(
     ofType(addFace),
-    switchMap((action) =>
+    switchMap(action =>
       this.recognitionService.addFace(action.file, action.model).pipe(
-        map((model) => addFaceSuccess({ model })),
-        catchError((error) => of(addFaceFail({ error })))
+        map(model => addFaceSuccess({ model })),
+        catchError(error => of(addFaceFail({ error })))
       )
     )
   );
@@ -57,7 +57,7 @@ export class FaceRecognitionEffects {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(recognizeFaceFail, addFaceFail),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openHttpError(action.error.message);
     })
   );
@@ -65,7 +65,7 @@ export class FaceRecognitionEffects {
   @Effect({ dispatch: false })
   recognizeFaceSuccess$: Observable<any> = this.actions.pipe(
     ofType(recognizeFaceSuccess),
-    tap((action) => {
+    tap(action => {
       if (action.model.result.length === 0) {
         this.snackBarService.openNotification({ messageText: 'face_recognition.no_recognized', type: 'warning' });
       } else if (action.model.result[0].faces.length === 0) {
@@ -89,7 +89,7 @@ export class FaceRecognitionEffects {
           request,
         })
       ),
-      catchError((error) => of(recognizeFaceFail({ error })))
+      catchError(error => of(recognizeFaceFail({ error })))
     );
   }
 }

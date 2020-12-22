@@ -16,11 +16,7 @@
 
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import {
-  recognizeFace,
-  recognizeFaceSuccess,
-  recognizeFaceFail, recognizeFaceReset
-} from './actions';
+import { recognizeFace, recognizeFaceSuccess, recognizeFaceFail, recognizeFaceReset } from './actions';
 
 export interface FaceRecognitionEntityState {
   isPending: boolean;
@@ -33,16 +29,15 @@ const initialState: FaceRecognitionEntityState = {
   isPending: false,
   model: null,
   file: null,
-  request: null
+  request: null,
 };
 
 const reducer: ActionReducer<FaceRecognitionEntityState> = createReducer(
   initialState,
-  on(recognizeFace, (state) => ({ ...state, isPending: true })),
-  on(recognizeFaceSuccess, (state,  action ) =>
-    ({ ...state, ...action, isPending: false })),
-  on(recognizeFaceReset, () => ({...initialState})),
-  on(recognizeFaceFail, (state) => ({...state, isPending: false})),
+  on(recognizeFace, state => ({ ...state, isPending: true })),
+  on(recognizeFaceSuccess, (state, action) => ({ ...state, ...action, isPending: false })),
+  on(recognizeFaceReset, () => ({ ...initialState })),
+  on(recognizeFaceFail, state => ({ ...state, isPending: false }))
 );
 
 export function FaceRecognitionEffectsReducer(recognitionState: FaceRecognitionEntityState, action: Action) {

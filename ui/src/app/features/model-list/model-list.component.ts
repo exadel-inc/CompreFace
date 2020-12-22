@@ -62,7 +62,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.modelListFacade.isLoading$;
     this.userRole$ = this.modelListFacade.userRole$;
     this.tableConfig$ = this.modelListFacade.models$.pipe(
-      map((models) => ({
+      map(models => ({
         columns: this.columns,
         data: models,
       }))
@@ -90,7 +90,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     dialog
       .afterClosed()
       .pipe(first())
-      .subscribe((name) => {
+      .subscribe(name => {
         if (name) {
           this.modelListFacade.renameModel(model.id, name);
         }
@@ -109,7 +109,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     dialog
       .afterClosed()
       .pipe(first())
-      .subscribe((result) => {
+      .subscribe(result => {
         if (result) {
           this.modelListFacade.deleteModel(model.id);
         }
@@ -136,7 +136,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     dialog
       .afterClosed()
       .pipe(first())
-      .subscribe((name) => {
+      .subscribe(name => {
         if (name) {
           this.modelListFacade.createModel(name);
         }
