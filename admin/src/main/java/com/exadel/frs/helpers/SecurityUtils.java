@@ -32,6 +32,6 @@ public final class SecurityUtils {
     }
 
     public boolean isAnonymousUser() {
-        return SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+        return !SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
     }
 }
