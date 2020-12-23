@@ -73,7 +73,6 @@ class ModelServiceTest {
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
     private UserService userServiceMock;
-    private ApperyStatisticsClient apperyStatisticsClient;
     private FacesRepository facesRepositoryMock;
     private ImagesRepository imagesRepositoryMock;
 
@@ -86,7 +85,6 @@ class ModelServiceTest {
         appModelRepository = mock(AppModelRepository.class);
         authManager = mock(AuthorizationManager.class);
         userServiceMock = mock(UserService.class);
-        apperyStatisticsClient = mock(ApperyStatisticsClient.class);
         facesRepositoryMock = mock(FacesRepository.class);
         imagesRepositoryMock = mock(ImagesRepository.class);
         modelService = new ModelService(
@@ -96,7 +94,6 @@ class ModelServiceTest {
                 appModelRepository,
                 authManager,
                 userServiceMock,
-                apperyStatisticsClient,
                 facesRepositoryMock,
                 imagesRepositoryMock
         );

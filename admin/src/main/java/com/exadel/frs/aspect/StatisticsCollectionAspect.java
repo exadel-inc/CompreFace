@@ -3,7 +3,7 @@ package com.exadel.frs.aspect;
 import com.exadel.frs.annotation.CollectStatistics;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.StatisticsType;
-import com.exadel.frs.exception.UnreachableApperyException;
+import com.exadel.frs.exception.ApperyServiceException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.feign.StatisticsGeneralEntity;
@@ -17,7 +17,6 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 @Aspect
@@ -60,7 +59,7 @@ public class StatisticsCollectionAspect {
             apperyStatisticsClient.create(statisticsApiKey, new StatisticsGeneralEntity(user.getGuid(), statisticsType));
         } catch (FeignException exception) {
             log.error(exception.getMessage());
-            throw new UnreachableApperyException();
+            throw new ApperyServiceException();
         }
     }
 }
