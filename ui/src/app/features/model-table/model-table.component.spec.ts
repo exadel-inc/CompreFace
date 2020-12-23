@@ -24,7 +24,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
 import { ModelTableComponent } from './model-table.component';
 
-xdescribe('ModelTableComponent', () => {
+describe('ModelTableComponent', () => {
   let component: ModelTableComponent;
   let fixture: ComponentFixture<ModelTableComponent>;
 
@@ -39,11 +39,11 @@ xdescribe('ModelTableComponent', () => {
           MatMenuModule,
           MatTooltipModule,
           TruncateModule,
+        ],
+        providers: [
           {
             provide: TranslateService,
-            useValue: {
-              get: () => {},
-            },
+            useValue: {},
           },
         ],
       }).compileComponents();
@@ -53,7 +53,6 @@ xdescribe('ModelTableComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ModelTableComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
