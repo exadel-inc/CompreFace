@@ -13,13 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { TestBed } from '@angular/core/testing';
-import { UserService } from './user.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { Role } from 'src/app/data/enums/role.enum';
+
 import { environment } from '../../../environments/environment';
 import { AppUser } from '../../data/interfaces/app-user';
-import { Role } from 'src/app/data/enums/role.enum';
+import { UserService } from './user.service';
 
 describe('UserService', () => {
   let service: UserService;
@@ -45,13 +45,13 @@ describe('UserService', () => {
         id: 0,
         firstName: 'John',
         lastName: 'Malkovich',
-        role: Role.USER,
+        role: Role.User,
       },
       {
         id: 1,
         firstName: 'Tony',
         lastName: 'Stark',
-        role: Role.ADMINISTRATOR,
+        role: Role.Administrator,
       },
     ];
 
@@ -74,10 +74,10 @@ describe('UserService', () => {
       id: 'userId',
       firstName: 'John',
       lastName: 'Malkovich',
-      role: Role.USER,
+      role: Role.User,
     };
 
-    service.updateRole('userId', Role.USER).subscribe((data: AppUser) => {
+    service.updateRole('userId', Role.User).subscribe((data: AppUser) => {
       expect(data.role).toBe(mock.role);
       expect(data.firstName).toBe(mock.firstName);
       expect(data.lastName).toBe(mock.lastName);

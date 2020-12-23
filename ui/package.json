@@ -11,7 +11,8 @@
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
     "e2e": "ng e2e",
-    "postinstall": "ngcc"
+    "postinstall": "ngcc",
+    "pretty": "prettier --write \"./src/**/*.{js,ts,json,html}\""
   },
   "private": true,
   "dependencies": {

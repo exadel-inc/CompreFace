@@ -13,10 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+
 import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-recognition.helpers';
 
 @Component({
@@ -56,12 +56,12 @@ export class RecognitionResultComponent implements OnDestroy {
         this.canvasSize.height = (height / width) * this.canvasSize.width;
         this.myCanvas.nativeElement.setAttribute('height', this.canvasSize.height);
       }),
-      map((imageSize) => this.prepareForDraw(imageSize, result)),
-      map((preparedImageData) => this.drawCanvas(preparedImageData))
+      map(imageSize => this.prepareForDraw(imageSize, result)),
+      map(preparedImageData => this.drawCanvas(preparedImageData))
     );
   }
   private prepareForDraw(size, rawData): Observable<any> {
-    return rawData.map((value) => ({
+    return rawData.map(value => ({
       box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),
       faces: value.faces,
     }));
@@ -96,6 +96,7 @@ export class RecognitionResultComponent implements OnDestroy {
     img.onload = () => {
       ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
       for (const value of preparedData) {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         const resultFace = value.faces.length > 0 ? value.faces[0] : { face_name: undefined, similarity: 0 };
         this.createImage(ctx, value.box, resultFace);
       }

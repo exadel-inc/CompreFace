@@ -13,25 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { LoginFormComponent } from './login-form.component';
-import {TranslateModule} from '@ngx-translate/core';
 
 @NgModule({
   declarations: [LoginFormComponent],
-  exports: [
-    LoginFormComponent,
-  ],
+  exports: [LoginFormComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -42,7 +39,7 @@ import {TranslateModule} from '@ngx-translate/core';
     MatDialogModule,
     MatButtonModule,
     MatIconModule,
-    TranslateModule
-  ]
+    TranslateModule,
+  ],
 })
-export class LoginFormModule { }
+export class LoginFormModule {}

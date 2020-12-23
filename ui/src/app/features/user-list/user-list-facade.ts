@@ -54,7 +54,7 @@ export class UserListFacade implements IFacade {
     this.currentUserId$ = this.store.select(selectUserId);
     this.currentUserEmail$ = this.store.select(selectUserEmail);
 
-    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map(observResults => !(!observResults[0] && !observResults[1])));
   }
 
   initSubscriptions(): void {

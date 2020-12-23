@@ -42,7 +42,32 @@
         ],
         "arrow-parens": ["error", "as-needed"],
         "import/order": "off",
-        "no-multiple-empty-lines": "error"
+        "no-multiple-empty-lines": "error",
+        "no-shadow": "off", // replaced by ts-eslint rule below
+        "@typescript-eslint/no-shadow": "error",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "default",
+            "format": ["camelCase"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": "variable",
+            "format": ["camelCase", "UPPER_CASE"],
+            "leadingUnderscore": "allow",
+            "trailingUnderscore": "allow"
+          },
+          {
+            "selector": "typeLike",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "enumMember",
+            "format": ["StrictPascalCase"]
+          }
+        ]
       }
     },
     {

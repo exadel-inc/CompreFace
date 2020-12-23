@@ -13,10 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createAction, props } from '@ngrx/store';
-import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Role } from 'src/app/data/enums/role.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
 export const loadAppUserEntityAction = createAction(
   '[App-User/API] Load App Users',

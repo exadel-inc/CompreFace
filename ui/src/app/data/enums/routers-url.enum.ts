@@ -14,12 +14,11 @@
  * permissions and limitations under the License.
  */
 
-export enum ROUTERS_URL {
-  LOGIN = '/login',
-  HOME = '/',
-  APPLICATION = '/application',
-  SIGN_UP = '/sign-up',
-  FORGOT_PASSWORD = '/forgot-password',
-  TEST_MODEL = '/test-model',
-  DEMO = '/demo'
+export enum Routes {
+  Login = '/login',
+  Home = '/',
+  Application = '/application',
+  SignUp = '/sign-up',
+  TestModel = '/test-model',
+  Demo = '/demo',
 }

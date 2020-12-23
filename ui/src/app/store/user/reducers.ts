@@ -13,19 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 import { AppUser } from 'src/app/data/interfaces/app-user';
+
 import {
-  setPending,
   addUsersEntityAction,
-  updateUserRoleAction,
   loadUsersEntityAction,
+  setPending,
+  updateUserRoleAction,
   updateUserRoleFailAction,
   updateUserRoleSuccessAction,
 } from './action';
-
-import { EntityState, createEntityAdapter, EntityAdapter } from '@ngrx/entity';
 
 export interface AppUserEntityState extends EntityState<AppUser> {
   isPending: boolean;
@@ -38,15 +37,13 @@ const initialState: AppUserEntityState = userAdapter.getInitialState({
 
 const reducer: ActionReducer<AppUserEntityState> = createReducer(
   initialState,
-  on(loadUsersEntityAction, (state) => ({ ...state, isPending: true })),
+  on(loadUsersEntityAction, state => ({ ...state, isPending: true })),
   on(setPending, (state, { isPending }) => ({ ...state, isPending })),
-  on(addUsersEntityAction, (state, { users }) => {
-    return userAdapter.setAll(users, { ...state, isPending: false });
-  }),
-  on(updateUserRoleAction, (state) => ({ ...state, isPending: true })),
-  on(updateUserRoleAction, (state) => ({ ...state, isPending: true })),
-  on(updateUserRoleSuccessAction, (state, { user }) => {
-    return userAdapter.updateOne(
+  on(addUsersEntityAction, (state, { users }) => userAdapter.setAll(users, { ...state, isPending: false })),
+  on(updateUserRoleAction, state => ({ ...state, isPending: true })),
+  on(updateUserRoleAction, state => ({ ...state, isPending: true })),
+  on(updateUserRoleSuccessAction, (state, { user }) =>
+    userAdapter.updateOne(
       {
         id: user.userId,
         changes: {
@@ -54,11 +51,9 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
         },
       },
       { ...state, isPending: false }
-    );
-  }),
-  on(updateUserRoleFailAction, (state) => ({ ...state, isPending: false }))
+    )
+  ),
+  on(updateUserRoleFailAction, state => ({ ...state, isPending: false }))
 );
 
-export function AppUserReducer(appUserState: AppUserEntityState, action: Action) {
-  return reducer(appUserState, action);
-}
+export const appUserReducer = (appUserState: AppUserEntityState, action: Action) => reducer(appUserState, action);

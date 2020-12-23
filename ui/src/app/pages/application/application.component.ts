@@ -13,17 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ApplicationPageService} from './application.service';
+import { ApplicationPageService } from './application.service';
 
 @Component({
   selector: 'app-application',
   templateUrl: './application.component.html',
-  styleUrls: ['./application.component.scss']
+  styleUrls: ['./application.component.scss'],
 })
 export class ApplicationComponent implements OnInit, OnDestroy {
-  constructor(private appService: ApplicationPageService) { }
+  constructor(private appService: ApplicationPageService) {}
 
   ngOnInit() {
     this.appService.initUrlBindingStreams();

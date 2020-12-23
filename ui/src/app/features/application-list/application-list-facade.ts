@@ -13,10 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Application } from 'src/app/data/interfaces/application';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { AppState } from 'src/app/store';

@@ -13,8 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-tool-bar',

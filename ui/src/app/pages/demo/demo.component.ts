@@ -13,20 +13,20 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectDemoPending } from '../../store/demo/selectors';
 import { Observable } from 'rxjs';
+
+import { selectDemoPending } from '../../store/demo/selectors';
 
 @Component({
   selector: 'app-demo',
   templateUrl: './demo.component.html',
-  styleUrls: ['./demo.component.scss']
+  styleUrls: ['./demo.component.scss'],
 })
 export class DemoComponent implements OnInit {
   isPending$: Observable<any>;
-  constructor(private store: Store<any>) { }
+  constructor(private store: Store<any>) {}
 
   ngOnInit() {
     this.isPending$ = this.store.select(selectDemoPending);

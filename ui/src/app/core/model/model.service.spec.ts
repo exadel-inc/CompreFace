@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { ModelService } from './model.service';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { environment } from '../../../environments/environment';
 import { Model } from 'src/app/data/interfaces/model';
+
+import { environment } from '../../../environments/environment';
+import { ModelService } from './model.service';
 
 describe('ModelService', () => {
   let httpMock: HttpTestingController;
@@ -73,7 +73,7 @@ describe('ModelService', () => {
 
   it('should return models array', () => {
     const service: ModelService = TestBed.inject(ModelService);
-    service.getAll('0').subscribe((data) => {
+    service.getAll('0').subscribe(data => {
       expect(data).toEqual(mockModels);
     });
 
@@ -84,7 +84,7 @@ describe('ModelService', () => {
 
   it('should return created model', () => {
     const service: ModelService = TestBed.inject(ModelService);
-    service.create('app_0', 'new model').subscribe((data) => {
+    service.create('app_0', 'new model').subscribe(data => {
       expect(data.name).toEqual('new model');
       expect(data.relations[0].id).toEqual('app_0');
     });
