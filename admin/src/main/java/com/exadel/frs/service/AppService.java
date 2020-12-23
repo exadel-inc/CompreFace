@@ -243,7 +243,7 @@ public class AppService {
         val app = getApp(guid, userId);
         val admin = userService.getUser(adminId);
 
-        authManager.verifyWritePrivilegesToApp(admin, app);
+        authManager.verifyUserDeletionFromApp(admin, userGuid, app);
 
         app.deleteUserAppRole(userGuid);
 

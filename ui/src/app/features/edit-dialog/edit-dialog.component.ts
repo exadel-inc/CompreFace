@@ -14,24 +14,28 @@
  * permissions and limitations under the License.
  */
 
-import {Component, OnInit, Inject} from '@angular/core';
-import {MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-edit-dialog',
   templateUrl: './edit-dialog.component.html',
-  styleUrls: ['./edit-dialog.component.scss']
+  styleUrls: ['./edit-dialog.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditDialogComponent implements OnInit {
+export class EditDialogComponent {
+  initialName: string;
 
-  constructor(
-    public dialogRef: MatDialogRef<EditDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  get isRenameDisabled(): any {
+    return this.data.entityName === this.initialName || !this.data.entityName;
+  }
+
+  constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
+    this.initialName = data.entityName;
+  }
 
   onCancelClick(): void {
     this.dialogRef.close();
   }
-
-  ngOnInit(): void {}
 }

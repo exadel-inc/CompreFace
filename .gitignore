@@ -14,6 +14,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Property files ###
-.env

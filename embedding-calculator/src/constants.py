@@ -29,7 +29,7 @@ class ENV(Constants):
     IS_DEV_ENV = get_env('FLASK_ENV', 'production') == 'development'
     BUILD_VERSION = get_env('APP_VERSION_STRING', 'dev')
 
-    GPU_ID = int(get_env('GPU_ID', '-1'))
+    GPU_IDX = int(get_env('GPU_IDX', '-1'))
     DETECTION_MODEL = get_env('DETECTION_MODEL', 'retinaface_r50_v1')
     CALCULATION_MODEL = get_env('CALCULATION_MODEL', 'arcface_r100_v1')
 
