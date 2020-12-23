@@ -32,6 +32,7 @@ import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
@@ -292,5 +293,17 @@ public class UserService {
         }
 
         return replacer == Replacer.DELETER ? deleter : globalOwner;
+    }
+
+    public void changePassword(Long userId, String oldPwd, String newPwd) {
+        User user = getUser(userId);
+        boolean pwdMatches = encoder.matches(oldPwd, user.getPassword());
+        if (!pwdMatches) {
+            throw new IncorrectUserPasswordException();
+        }
+        String encodedNewPwd = encoder.encode(newPwd);
+        user.setPassword(encodedNewPwd);
+
+        userRepository.save(user);
     }
 }

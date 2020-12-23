@@ -21,6 +21,7 @@ import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.FOUND;
 import static org.springframework.http.HttpStatus.OK;
+import com.exadel.frs.dto.ui.ChangePasswordDto;
 import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
@@ -35,8 +36,8 @@ import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.DemoNotAvailableException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.mapper.UserGlobalRoleMapper;
+import com.exadel.frs.mapper.UserMapper;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
@@ -91,9 +92,25 @@ public class UserController {
             return userMapper.toResponseDto(user);
         } catch (UserDoesNotExistException e) {
             throw new AccessDeniedException();
-        } catch (Exception e) {
-            throw e;
         }
+    }
+
+    @PutMapping("/me/password")
+    @ApiOperation(value = "Change user's password")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Incorrect old or not valid both old and new passwords")
+    })
+    public void changePassword(
+            @ApiParam(value = "Old and new passwords DTO", required = true)
+            @RequestBody
+            @Valid
+            final ChangePasswordDto changePasswordDto
+    ) {
+        userService.changePassword(
+                SecurityUtils.getPrincipalId(),
+                changePasswordDto.getOldPassword(),
+                changePasswordDto.getNewPassword()
+        );
     }
 
     @PostMapping("/register")
@@ -105,7 +122,7 @@ public class UserController {
             @ApiResponse(code = 200, message = "200 Means user created, but not confirmed"),
             @ApiResponse(code = 201, message = "201 means user created and enabled")
     })
-    public ResponseEntity createUser(
+    public ResponseEntity<Void> createUser(
             @ApiParam(value = "User object that needs to be created", required = true)
             @RequestBody
             final UserCreateDto userCreateDto
@@ -118,9 +135,9 @@ public class UserController {
         }
 
         if (user.isEnabled()) {
-            return new ResponseEntity(CREATED);
+            return new ResponseEntity<>(CREATED);
         } else {
-            return new ResponseEntity(OK);
+            return new ResponseEntity<>(OK);
         }
     }
 
