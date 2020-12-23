@@ -67,21 +67,36 @@ public class AuthorizationManager {
 
     public void verifyUserDeletionFromApp(final User deleter, final String userGuid, final App app) {
         if (List.of(OWNER, ADMINISTRATOR).contains(deleter.getGlobalRole())) {
-            return;
+            if (isAppOwnerRemoval(userGuid, app)) {
+                throw new InsufficientPrivilegesException();
+            } else {
+                return;
+            }
         }
 
-        val appRole = app.getUserAppRole(deleter.getId())
-                         .orElseThrow(InsufficientPrivilegesException::new)
-                         .getRole();
-
-        val isSelfRemoval = userGuid.equals(deleter.getGuid());
-
+        AppRole appRole = app.getUserAppRole(deleter.getId())
+                             .orElseThrow(InsufficientPrivilegesException::new)
+                             .getRole();
+        boolean isSelfRemoval = userGuid.equals(deleter.getGuid());
         if (
                 ((AppRole.USER == appRole || AppRole.ADMINISTRATOR == appRole) && !isSelfRemoval)
                         || (AppRole.OWNER == appRole && isSelfRemoval)
         ) {
             throw new InsufficientPrivilegesException();
         }
+    }
+
+    private boolean isAppOwnerRemoval(final String userGuid, final App app) {
+        boolean ownerRemoval = false;
+        val owner = app.getOwner();
+        if (owner.isPresent()) {
+            String ownerGuid = owner
+                    .get()
+                    .getUser()
+                    .getGuid();
+            ownerRemoval = userGuid.equals(ownerGuid);
+        }
+        return ownerRemoval;
     }
 
     public void verifyAppHasTheModel(final String appGuid, final Model model) {
