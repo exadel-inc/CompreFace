@@ -36,6 +36,13 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(of = {"app", "model"})
 public class AppModel {
 
+    public AppModel(AppModel appModel){
+        this.id = appModel.id;
+        this.app = appModel.app;
+        this.model = appModel.model;
+        this.accessType = appModel.accessType;
+    }
+
     @EmbeddedId
     private AppModelId id;
 

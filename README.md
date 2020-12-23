@@ -39,6 +39,7 @@
 
  [CompreFace](#compreface)
   * [Overview](#overview)
+  * [Feedback survey](#feedback-survey)
   * [Features](#features)
   * [Getting started](#getting-started)
   * [Simple tutorial of usage](#simple-tutorial-of-usage)

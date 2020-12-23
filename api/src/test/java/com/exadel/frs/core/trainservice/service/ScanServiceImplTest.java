@@ -19,6 +19,8 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.core.trainservice.service.ScanServiceImpl.MAX_FACES_TO_RECOGNIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -27,6 +29,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
+import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
@@ -57,6 +60,9 @@ class ScanServiceImplTest {
     @Mock
     private FaceCacheProvider faceCacheProvider;
 
+    @Mock
+    private Notifier notifier;
+
     @InjectMocks
     private ScanServiceImpl scanService;
 
@@ -77,6 +83,7 @@ class ScanServiceImplTest {
         val embeddings = new Embedding(List.of(EMBEDDING), null);
         val face = new Face();
         face.setEmbedding(embeddings);
+        face.setId("FACE_ID");
 
         when(scanFacesClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
                 .thenReturn(scanResponse);
@@ -84,6 +91,8 @@ class ScanServiceImplTest {
         when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
 
         when(faceCacheProvider.getOrLoad(MODEL_KEY)).thenReturn(FaceCollection.buildFromFaces(List.of(face)));
+
+        doNothing().when(notifier).notifyWithMessage(any());
 
         val actual = scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
 

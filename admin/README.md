@@ -31,3 +31,8 @@ For set up email sending following parameters should be filled in .env file
  - 'email_from' (according format in RFC2822, is optional)
  - 'email_password' (password for 'email_username' account)
  - 'enable_email_server' (true)
+ 
+ ## AVX2 support
+ If your processor supports AVX2 instructions, you can improve performance. 
+ Just use ```-Pavx2-support``` parameter to run maven profile with using AVX2 instructions. 
+ Place this parameter after ```mvn package``` in the Dockerfile. 

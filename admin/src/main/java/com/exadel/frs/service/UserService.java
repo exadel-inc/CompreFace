@@ -31,6 +31,7 @@ import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
+
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
@@ -40,6 +41,7 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
+
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,6 +50,7 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -223,6 +226,7 @@ public class UserService {
         user.setLastName(userCreateDto.getLastName());
         user.setPassword(encoder.encode(userCreateDto.getPassword()));
         user.setGuid(UUID.randomUUID().toString());
+        user.setAllowStatistics(userCreateDto.isAllowStatistics());
 
         if (isMailServerEnabled) {
             user.setRegistrationToken(generateRegistrationToken());
@@ -259,6 +263,8 @@ public class UserService {
 
         if (newGlobalRole == OWNER) {
             currentUser.setGlobalRole(GlobalRole.ADMINISTRATOR);
+            user.setAllowStatistics(currentUser.isAllowStatistics());
+            currentUser.setAllowStatistics(false);
         }
 
         user.setGlobalRole(newGlobalRole);

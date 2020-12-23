@@ -14,18 +14,22 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice;
+package com.exadel.frs.dto.ui;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
-@EnableScheduling
-public class TrainServiceApplication {
+import javax.validation.constraints.NotBlank;
 
-    public static void main(String[] args) {
-        SpringApplication.run(TrainServiceApplication.class, args);
-    }
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ModelCloneDto {
+
+    @NotBlank(message = "Model name cannot be empty")
+    private String name;
+
 }

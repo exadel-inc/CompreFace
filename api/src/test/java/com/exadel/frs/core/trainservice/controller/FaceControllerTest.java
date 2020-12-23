@@ -34,6 +34,8 @@ import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
+import com.exadel.frs.core.trainservice.config.repository.NotificationConfig;
+import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.service.ScanService;
@@ -66,6 +68,12 @@ public class FaceControllerTest {
 
     @MockBean
     private ScanService scanService;
+
+    @MockBean
+    private NotificationConfig notificationConfig;
+
+    @MockBean
+    private Notifier notifier;
 
     @MockBean
     private ImageExtensionValidator imageValidator;
