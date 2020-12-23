@@ -202,7 +202,6 @@ class UserServiceTest {
                            .build();
 
         val userUpdateDto = UserUpdateDto.builder()
-                                         .password("password")
                                          .firstName("firstName")
                                          .lastName("lastName")
                                          .build();
@@ -211,7 +210,6 @@ class UserServiceTest {
 
         userService.updateUser(userUpdateDto, USER_ID);
 
-        assertThat(repoUser.getPassword()).isNotEqualTo(userUpdateDto.getPassword());
         assertThat(repoUser.getFirstName()).isEqualTo(userUpdateDto.getFirstName());
         assertThat(repoUser.getLastName()).isEqualTo(userUpdateDto.getLastName());
 

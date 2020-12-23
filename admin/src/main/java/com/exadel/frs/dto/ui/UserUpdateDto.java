@@ -17,7 +17,6 @@
 package com.exadel.frs.dto.ui;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,8 +33,4 @@ public class UserUpdateDto {
 
     @NotEmpty
     private String lastName;
-
-    @NotEmpty
-    @Size(min = 8, max = 255)
-    private String password;
 }

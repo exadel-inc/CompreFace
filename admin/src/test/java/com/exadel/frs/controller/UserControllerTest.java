@@ -99,7 +99,6 @@ public class UserControllerTest {
         val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "firstName") + "\",\"code\":5}";
         val bodyWithEmptyFirstName = new UserUpdateDto();
         bodyWithEmptyFirstName.setLastName("gdsag");
-        bodyWithEmptyFirstName.setPassword("adsfadsfasg");
 
         val createNewModelRequest = put("/user/update")
                 .with(csrf())
@@ -116,7 +115,6 @@ public class UserControllerTest {
         val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "lastName") + "\",\"code\":5}";
         val bodyWithEmptyLastName = new UserUpdateDto();
         bodyWithEmptyLastName.setFirstName("gdsag");
-        bodyWithEmptyLastName.setPassword("adsfadsfasg");
 
         val createNewModelRequest = put("/user/update")
                 .with(csrf())
@@ -158,7 +156,6 @@ public class UserControllerTest {
         val bodyWithShortPassword = new UserUpdateDto();
         bodyWithShortPassword.setLastName("gdsag");
         bodyWithShortPassword.setFirstName("test");
-        bodyWithShortPassword.setPassword("aaaa");
 
         val createNewModelRequest = put("/user/update")
                 .with(csrf())
@@ -175,7 +172,6 @@ public class UserControllerTest {
         val updateDto = new UserUpdateDto();
         updateDto.setLastName("gdsag");
         updateDto.setFirstName("test");
-        updateDto.setPassword("test-password");
 
         val createRequest = put("/user/update")
                 .with(csrf())
@@ -200,7 +196,6 @@ public class UserControllerTest {
         val updateDto = new UserUpdateDto();
         updateDto.setLastName("gdsag");
         updateDto.setFirstName("test");
-        updateDto.setPassword("test-password");
 
         val deleteRequest = delete("/user/" + USER_GUID)
                 .with(csrf())
