@@ -9,6 +9,7 @@ import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import feign.FeignException;
 import io.micrometer.core.instrument.util.StringUtils;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Slf4j
 public class StatisticsCollectionAspect {
 
@@ -58,7 +60,6 @@ public class StatisticsCollectionAspect {
         try {
             apperyStatisticsClient.create(statisticsApiKey, new StatisticsGeneralEntity(user.getGuid(), statisticsType));
         } catch (FeignException exception) {
-            log.error(exception.getMessage());
             throw new ApperyServiceException();
         }
     }

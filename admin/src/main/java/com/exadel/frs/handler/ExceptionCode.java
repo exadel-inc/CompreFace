@@ -18,6 +18,7 @@ package com.exadel.frs.handler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -54,7 +55,7 @@ public enum ExceptionCode {
     USER_REGISTRATION_TOKEN_EXPIRED(25, FORBIDDEN),
     VALIDATION_CONSTRAINT_VIOLATION(26, BAD_REQUEST),
 
-    APPERY_SERVICE(27, BAD_REQUEST),
+    APPERY_SERVICE_EXCEPTION(27, INTERNAL_SERVER_ERROR),
 
     UNDEFINED(0, BAD_REQUEST);
 
