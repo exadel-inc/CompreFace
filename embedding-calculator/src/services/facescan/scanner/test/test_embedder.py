@@ -18,12 +18,12 @@ from sample_images import IMG_DIR
 from src.services.facescan.scanner.facenet.facenet import Facenet2018
 from src.services.facescan.scanner.facescanner import FaceScanner
 from src.services.facescan.scanner.facescanners import TESTED_SCANNERS
-from src.services.facescan.scanner.insightface.insightface import InsightFace
+# from src.services.facescan.scanner.insightface.insightface import InsightFace
 from src.services.facescan.scanner.test._scanner_cache import get_scanner
 from src.services.utils.pyutils import first_and_only
 
 DIFFERENCE_THRESHOLD = {
-    InsightFace: 400,
+    # InsightFace: 400,
     Facenet2018: 0.2
 }
 
