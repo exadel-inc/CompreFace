@@ -64,7 +64,7 @@ class AgeDetector(base.BasePlugin):
     slug = 'age'
     LABELS = ((0, 2), (4, 6), (8, 12), (15, 20), (25, 32), (38, 43), (48, 53), (60, 100))
     ml_models = (
-        ('22801', 'https://drive.google.com/uc?id=1JSggfO1FPu8eM1BeQ6yMG5nKrGbJDyqG'),
+        ('22801', '1PxK72O-NROEz8pUGDDFRDYF4AABbvWiC'),
     )
 
     def __call__(self, face_img: Array3D):
@@ -77,7 +77,7 @@ class GenderDetector(base.BasePlugin):
     slug = 'gender'
     LABELS = ('male', 'female')
     ml_models = (
-        ('21936', 'https://drive.google.com/uc?id=1Gem2hM6bg746pqgTHQCyNv-Egf3CFgYf'),
+        ('21936', '1j9B76U3b4_F9e8-OKlNdOBQKa2ziGe_-'),
     )
 
     def __call__(self, face_img: Array3D):

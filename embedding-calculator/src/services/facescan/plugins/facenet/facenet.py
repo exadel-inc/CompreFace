@@ -102,11 +102,10 @@ class FaceDetector(base.BaseFaceDetector):
 
 class Calculator(base.BaseCalculator):
     ml_models = (
-        # links from https://github.com/davidsandberg/facenet#pre-trained-models
         # VGGFace2 training set, 0.9965 LFW accuracy
-        ('20180402-114759', 'https://drive.google.com/uc?id=1EXPBSXwTaqrSC0OhUdXNmKSh9qJUQ55-'),
+        ('20180402-114759', '1im5Qq006ZEV_tViKh3cgia_Q4jJ13bRK'),
         # CASIA-WebFace training set, 0.9905 LFW accuracy
-        ('20180408-102900', 'https://drive.google.com/uc?id=1R77HmFADxe87GmoLwzfgMu_HY0IhcyBz'),
+        ('20180408-102900', '100w4JIUz44Tkwte9F-wEH0DOFsY-bPaw'),
     )
     BATCH_SIZE = 25
     DIFFERENCE_THRESHOLD = 0.2

@@ -70,7 +70,14 @@ class MLModel:
 
     @classmethod
     def _download(cls, url: str, output):
-        return gdown.download(url, output)
+        return gdown.download(cls._prepare_url(url), output)
+
+    @staticmethod
+    def _prepare_url(url) -> str:
+        """ Convert Google Drive fileId to url """
+        if not url.startswith('http') and len(url) < 40:
+            return f'https://drive.google.com/uc?id={url}'
+        return url
 
     def _extract(self, filename: str):
         os.makedirs(self.path, exist_ok=True)
@@ -83,9 +90,9 @@ class MLModel:
 
 
 class BasePlugin(ABC):
+    # pairs of model name and Google Drive fileID or URL to file
     ml_models: Tuple[Tuple[str, str], ...] = ()
     ml_model: Optional[MLModel] = None
-    plugins_registry = []
 
     def __new__(cls, ml_model_name: str = None):
         """
@@ -94,7 +101,6 @@ class BasePlugin(ABC):
         """
         if not hasattr(cls, 'instance'):
             cls.instance = super(BasePlugin, cls).__new__(cls)
-            cls.plugins_registry.append(cls.instance)
             if cls.instance.ml_models:
                 cls.instance.ml_model = MLModel(cls.instance, ml_model_name)
         return cls.instance

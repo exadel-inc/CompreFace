@@ -74,9 +74,9 @@ class DetectionOnlyFaceAnalysis(FaceAnalysis):
 
 class FaceDetector(InsightFaceMixin, base.BaseFaceDetector):
     ml_models = (
-        ('retinaface_r50_v1', 'http://insightface.ai/files/models/retinaface_r50_v1.zip'),
-        ('retinaface_mnet025_v1', 'http://insightface.ai/files/models/retinaface_mnet025_v1.zip'),
-        ('retinaface_mnet025_v2', 'http://insightface.ai/files/models/retinaface_mnet025_v2.zip'),
+        ('retinaface_r50_v1', '1uyiIvAYhVPeTjHa8Gm7TfNXIGM5jqrMQ'),
+        ('retinaface_mnet025_v1', '1h5rHDGE7qXC3jZwphObh9mW55YQYKY8Y'),
+        ('retinaface_mnet025_v2', '1lAnFcBXoMKqE-SkZKTmi6MsYAmzG0tFw'),
     )
 
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
@@ -121,10 +121,12 @@ class FaceDetector(InsightFaceMixin, base.BaseFaceDetector):
 
 class Calculator(InsightFaceMixin, base.BaseCalculator):
     ml_models = (
-        ('arcface_r100_v1', 'http://insightface.ai/files/models/arcface_r100_v1.zip'),
-        ('arcface_resnet34', 'https://drive.google.com/uc?id=1Zlork5jpEgUv_4PsfYtJls5lPH2cRaR3'),
-        ('arcface_resnet50', 'https://drive.google.com/uc?id=1bBtiJr5oIaWmLuSYuKPw-z05VId7Nwci'),
-        ('arcface_mobilefacenet', 'https://drive.google.com/uc?id=1ejWgx_7Nd1PvFXPxCu_1_QNzKfl6v7Hb'),
+        ('arcface_r100_v1', '11xFaEHIQLNze3-2RUV1cQfT-q6PKKfYp'),
+        ('arcface_resnet34', '1J9hqSWqZz6YvMMNrDrmrzEW9anhvdKuC'),
+        ('arcface_resnet50', '1gNuvRNHCNgvFtz7SjhW82v2-znlAYaRO'),
+        ('arcface_mobilefacenet', '17TpxpyHuUc1ZTm3RIbfvhnBcZqhyKszV'),
+        ('arcface-r50-msfdrop75', '1ECp5XrLgfEAnwyTYFEhJgIsOAw6KaHa7'),
+        ('arcface-r100-msfdrop75', '1EYTMxgcNdlvoL1fSC8N1zkaWrX75ZoNL'),
     )
 
     DIFFERENCE_THRESHOLD = 400
@@ -150,7 +152,7 @@ class GenderAgeDTO(plugin_result.PluginResultDTO):
 class GenderAgeDetector(InsightFaceMixin, base.BasePlugin):
     slug = 'gender_age'
     ml_models = (
-        ('genderage_v1', 'http://insightface.ai/files/models/genderage_v1.zip'),
+        ('genderage_v1', '1ggNFFqpe0abWz6V1A82rnxD6fyxB8W2c'),
     )
 
     GENDERS = ('female', 'male')
