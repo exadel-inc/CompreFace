@@ -18,11 +18,13 @@ package com.exadel.frs.dto.ui;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class ChangePasswordDto {
 
     @NotEmpty
