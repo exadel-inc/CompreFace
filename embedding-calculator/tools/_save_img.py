@@ -142,6 +142,8 @@ def save_img(img: Array3D,
         color = next(color_iter)
         _draw_detection_box(text=str(i + 1), box=box, color=color)
         _draw_dot(img_draw, xy=nose, radius=radius, color=color)
+        for point in box.landmarks:
+            _draw_dot(img_draw, xy=point, radius=2, color=green_color)
     for box in draw_error_boxes:
         _draw_detection_box(text='Error', box=box, color=error_color)
     for nose in noses:

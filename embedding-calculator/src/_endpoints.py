@@ -75,7 +75,7 @@ def _get_det_prob_threshold():
 
 def _get_face_plugin_names() -> Optional[List[str]]:
     if ARG.FACE_PLUGINS not in request.values:
-        return
+        return []
     return [
         name for name in Constants.split(request.values[ARG.FACE_PLUGINS])
     ]

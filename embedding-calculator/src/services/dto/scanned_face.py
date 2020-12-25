@@ -18,7 +18,6 @@ import attr
 
 from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.dto.json_encodable import JSONEncodable
-from src.services.imgtools.proc_img import crop_img
 from src.services.imgtools.types import Array1D, Array3D
 
 
@@ -30,24 +29,8 @@ class Face(JSONEncodable):
 
 
 @attr.s(auto_attribs=True, frozen=True)
-class ScannedFaceDTO(JSONEncodable):
-    box: BoundingBoxDTO
-    embedding: Array1D
-
-
-@attr.s(auto_attribs=True)
 class ScannedFace(Face):
     embedding: Array1D
-
-    @property
-    def face_img(self):
-        if not self._face_img:
-            self._face_img = crop_img(self._img, self.box)
-        return self._face_img
-
-    @property
-    def dto(self):
-        return ScannedFaceDTO(self.box, self.embedding)
 
     @classmethod
     def from_request(cls, result):
@@ -57,5 +40,4 @@ class ScannedFace(Face):
                                               y_min=box_result['y_min'],
                                               y_max=box_result['y_max'],
                                               probability=box_result['probability']),
-                           embedding=result['embedding'],
-                           img=None, face_img=None)
+                           embedding=result['embedding'], img=None, face_img=None)

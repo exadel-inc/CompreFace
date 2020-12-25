@@ -24,11 +24,11 @@ parameters:
     type: float
   - in: formData
     name: face_plugins
-    description: 'Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. `calculator,gender` - returns only embedding and gender for each face.'
+    description: 'Comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. `calculator,gender` - returns only embedding and gender for each face.'
     type: string
 responses:
   '200':
-    description: 'Face scan completed with plugins `age,gender`'
+    description: 'Face scan completed with plugins `age,gender,landmarks`'
     schema:
       type: object
       properties:
@@ -74,15 +74,18 @@ responses:
               gender:
                 type: string
                 example: "male"
+              landmarks:
+                type: array
+                example: [[53, 904], [117, 907], [82, 948], [52, 969], [113,972]]
               execution_time:
                 type: object
                 properties:
                   age:
-                    type: float
-                    example: 0.02832508087158203
+                    type: integer
+                    example: 28
                   gender:
-                    type: float
-                    example: 0.01547824714423898
+                    type: integer
+                    example: 15
                   detector:
-                    type: float
-                    example: 0.058936119079589844
+                    type: integer
+                    example: 58
