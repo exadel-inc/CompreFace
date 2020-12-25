@@ -22,7 +22,7 @@ from sample_images import IMG_DIR
 from sample_images.annotations import SAMPLE_IMAGES
 from src.constants import ENV_MAIN, LOGGING_LEVEL
 from src.init_runtime import init_runtime
-from src.services.facescan.plugins.facenet import FaceDetector
+from src.services.facescan.plugins.facenet.facenet import FaceDetector
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_current_dir, Constants, get_env_split

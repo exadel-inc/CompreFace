@@ -18,7 +18,10 @@ from collections import namedtuple
 from typing import List
 
 import numpy as np
+import tensorflow as tf
+from tensorflow.python.platform import gfile
 from cached_property import cached_property
+from facenet.src.align import detect_face
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBoxDTO
@@ -52,9 +55,6 @@ class FaceDetector(base.BaseFaceDetector):
 
     @cached_property
     def _face_detection_nets(self):
-        import tensorflow as tf
-        from facenet.src.align import detect_face
-
         with tf.Graph().as_default():
             sess = tf.Session()
             return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
@@ -63,8 +63,6 @@ class FaceDetector(base.BaseFaceDetector):
         return squish_img(crop_img(img, box), (self.IMAGE_SIZE, self.IMAGE_SIZE))
 
     def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
-        from facenet.src.align import detect_face
-
         if det_prob_threshold is None:
             det_prob_threshold = self.det_prob_threshold
         assert 0 <= det_prob_threshold <= 1
@@ -119,8 +117,6 @@ class Calculator(base.BaseCalculator):
 
     @cached_property
     def _embedding_calculator(self):
-        import tensorflow as tf
-        from tensorflow.python.platform import gfile
         with tf.Graph().as_default() as graph:
             graph_def = tf.GraphDef()
             with gfile.FastGFile(self.ml_model_file, 'rb') as f:
