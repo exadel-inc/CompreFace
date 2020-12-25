@@ -11,7 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
-from typing import List
+from typing import List, Optional
 
 from flask import request
 from flask.json import jsonify
@@ -19,40 +19,51 @@ from werkzeug.exceptions import BadRequest
 
 from src.constants import ENV
 from src.exceptions import NoFaceFoundError
+from src.services.facescan.plugins import managers
 from src.services.facescan.scanner.facescanners import scanner
 from src.services.flask_.constants import ARG
 from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
+from src.services.utils.pyutils import Constants
 
 
 def endpoints(app):
     @app.route('/status')
     def status_get():
+        available_plugins = {p.slug: str(p)
+                             for p in managers.plugin_manager.plugins}
+        calculator = managers.plugin_manager.calculator
         return jsonify(status='OK', build_version=ENV.BUILD_VERSION,
-                       calculator_version=ENV.SCANNER)
+                       calculator_version=str(calculator),
+                       available_plugins=available_plugins)
 
     @app.route('/find_faces', methods=['POST'])
     @needs_attached_file
     def find_faces_post():
-        faces = scanner.find_faces(
-            img=read_img(request.files['file']),
-            det_prob_threshold=_get_det_prob_threshold(request),
+        detector = managers.plugin_manager.detector
+        face_plugins = managers.plugin_manager.filter_face_plugins(
+            _get_face_plugin_names()
         )
-        faces = _limit(faces, request.values.get(ARG.LIMIT))
-        return jsonify(calculator_version=scanner.ID, result=faces)
+        faces = detector(
+            img=read_img(request.files['file']),
+            det_prob_threshold=_get_det_prob_threshold(),
+            face_plugins=face_plugins
+        )
+        plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
+        return jsonify(results=faces, plugins_versions=plugins_versions)
 
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
     def scan_faces_post():
         faces = scanner.scan(
             img=read_img(request.files['file']),
-            det_prob_threshold=_get_det_prob_threshold(request)
+            det_prob_threshold=_get_det_prob_threshold()
         )
         faces = _limit(faces, request.values.get(ARG.LIMIT))
         return jsonify(calculator_version=scanner.ID, result=faces)
 
 
-def _get_det_prob_threshold(request):
+def _get_det_prob_threshold():
     det_prob_threshold_val = request.values.get(ARG.DET_PROB_THRESHOLD)
     if det_prob_threshold_val is None:
         return None
@@ -60,6 +71,14 @@ def _get_det_prob_threshold(request):
     if not (0 <= det_prob_threshold <= 1):
         raise BadRequest('Detection threshold incorrect (0 <= det_prob_threshold <= 1)')
     return det_prob_threshold
+
+
+def _get_face_plugin_names() -> Optional[List[str]]:
+    if ARG.FACE_PLUGINS not in request.values:
+        return
+    return [
+        name for name in Constants.split(request.values[ARG.FACE_PLUGINS])
+    ]
 
 
 def _limit(faces: List, limit: str = None) -> List:

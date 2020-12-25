@@ -17,10 +17,10 @@ from typing import List
 
 import numpy as np
 
-from src.exceptions import MoreThanOneFaceFoundError, NoFaceFoundError
 from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.dto.scanned_face import ScannedFace
 from src.services.imgtools.types import Array3D
+from src.services.facescan.plugins.managers import plugin_manager
 
 
 class FaceScanner(ABC):
@@ -44,14 +44,30 @@ class FaceScanner(ABC):
         """ Find face bounding boxes, without calculating embeddings"""
         raise NotImplementedError
 
-    def scan_one(self, img: Array3D,
-                 det_prob_threshold: float = None) -> ScannedFace:
-        results = self.scan(img=img, det_prob_threshold=det_prob_threshold)
-        if len(results) > 1:
-            raise MoreThanOneFaceFoundError
-        if len(results) == 0:
-            raise NoFaceFoundError
-        return results[0]
+    @property
+    @abstractmethod
+    def difference_threshold(self) -> float:
+        """ Difference threshold between two embeddings"""
+        raise NotImplementedError
+
+
+class ScannerWithPluggins(FaceScanner):
+    """
+    Class for backward compatibility.
+    The scanner only performs face detection and embedding calculation.
+    """
+    ID = "ScannerWithPlugins"
+
+    def scan(self, img: Array3D, det_prob_threshold: float = None):
+        return plugin_manager.detector(img, det_prob_threshold,
+                                       [plugin_manager.calculator])
+
+    def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
+        return plugin_manager.detector.find_faces(img, det_prob_threshold)
+
+    @property
+    def difference_threshold(self):
+        return plugin_manager.calculator.DIFFERENCE_THRESHOLD
 
 
 class MockScanner(FaceScanner):

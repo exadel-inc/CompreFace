@@ -37,18 +37,8 @@ class OneDimensionalImageIsGivenError(BadRequest):
     description = "Given image has only one dimension"
 
 
-class MoreThanOneFaceFoundError(BadRequest):
-    description = "Found more than one face in the given image"
-
-
 class ClassifierIsAlreadyTrainingError(Locked):
     description = "Classifier training is already in progress"
-
-
-class NoTrainedEmbeddingClassifierFoundError(BadRequest):
-    description = "No classifier model is yet trained, please train a classifier first. If the problem persists, " \
-                  "check the amount of unique faces saved, and whether all face embeddings have been migrated to " \
-                  f"version '{ENV.SCANNER}'"
 
 
 class NoFileFoundInDatabaseError(InternalServerError):

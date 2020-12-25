@@ -3,6 +3,7 @@ cached-property==1.5.2
 colour==0.1.5
 flasgger==0.9.5
 Flask==1.1.2
+gdown~=3.12
 Werkzeug==1.0.1
 
 # tests

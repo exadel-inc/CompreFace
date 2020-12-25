@@ -22,7 +22,7 @@ from sample_images import IMG_DIR
 from sample_images.annotations import SAMPLE_IMAGES
 from src.constants import ENV_MAIN, LOGGING_LEVEL
 from src.init_runtime import init_runtime
-from src.services.facescan.scanner.facenet.facenet import Facenet2018
+from src.services.facescan.plugins.facenet.facenet import FaceDetector
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_current_dir, Constants, get_env_split
@@ -45,22 +45,22 @@ class ENV(Constants):
 class Facenet2018DetectionThresholdOptimization:
     def __init__(self):
         self.arg_count = 4
-        self.scanner = Facenet2018()
+        self.detector = FaceDetector()
         self.dataset = [row for row in SAMPLE_IMAGES if row.img_name in ENV.IMG_NAMES]
         logging.getLogger('src.services.facescan.scanner.test.calculate_errors').setLevel(logging.WARNING)
         logging.getLogger('src.services.facescan.scanner.facenet.facenet').setLevel(logging.INFO)
 
     def cost(self, new_x=None):
         if new_x:
-            (self.scanner.det_prob_threshold,
-             self.scanner.threshold_a,
-             self.scanner.threshold_b,
-             self.scanner.threshold_c) = tuple(new_x)
+            (self.detector.det_prob_threshold,
+             self.detector.threshold_a,
+             self.detector.threshold_b,
+             self.detector.threshold_c) = tuple(new_x)
 
         total_errors = 0
         for row in self.dataset:
             img = cached_read_img(IMG_DIR / row.img_name)
-            boxes = self.scanner.find_faces(img)
+            boxes = self.detector.find_faces(img)
             errors = calculate_errors(boxes, row.noses)
             total_errors += errors
         return total_errors
