@@ -84,24 +84,23 @@ public class FaceCollection {
 
     synchronized public FaceBO addFace(final Face face) {
         val cachedFace = new FaceBO(face.getFaceName(), face.getId());
-        if(!facesMap.containsKey(cachedFace)) {
-            facesMap.put(cachedFace, size.get());
-            val faceEmbeddings = face.getEmbedding().getEmbeddings()
-                                     .stream()
-                                     .mapToDouble(d -> d).toArray();
-            if (embeddings == null) {
-                embeddings = Nd4j.create(new double[][]{faceEmbeddings});
-            } else {
-                embeddings = Nd4j.concat(
-                        0,
-                        embeddings,
-                        Nd4j.create(new double[][]{faceEmbeddings})
-                );
-            }
-
-            embeddingsCopy = embeddings.dup();
-            size.getAndIncrement();
+        facesMap.put(cachedFace, size.get());
+        val faceEmbeddings = face.getEmbedding().getEmbeddings()
+                                 .stream()
+                                 .mapToDouble(d -> d).toArray();
+        if (embeddings == null) {
+            embeddings = Nd4j.create(new double[][]{faceEmbeddings});
+        } else {
+            embeddings = Nd4j.concat(
+                    0,
+                    embeddings,
+                    Nd4j.create(new double[][]{faceEmbeddings})
+            );
         }
+
+        embeddingsCopy = embeddings.dup();
+        size.getAndIncrement();
+
         return cachedFace;
     }
 

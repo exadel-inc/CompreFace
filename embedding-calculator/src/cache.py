@@ -1,3 +1,6 @@
+"""
+This file should contain all objects that are cached in-memory between requests
+"""
 #  Copyright (c) 2020 the original author or authors
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,11 +15,15 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-from src.constants import ENV_MAIN
-from src.services.facescan.scanner.facenet.facenet import Facenet2018
-from src.services.facescan.scanner.facescanner import MockScanner
-from src.services.facescan.scanner.insightface.insightface import InsightFace
+from typing import Type
 
-_ALL_SCANNERS = Facenet2018, InsightFace, MockScanner
-id_2_face_scanner_cls = {backend.ID: backend for backend in _ALL_SCANNERS}
-TESTED_SCANNERS = [id_2_face_scanner_cls[k] for k in ENV_MAIN.SCANNERS]
+from src.constants import ENV
+from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
+from src.services.utils.pyutils import run_once
+
+
+@run_once
+def get_scanner():
+    from src.services.facescan.scanner.facescanner import FaceScanner
+    face_scanner_cls: Type[FaceScanner] = id_2_face_scanner_cls[ENV.SCANNER]
+    return face_scanner_cls()
