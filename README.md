@@ -2,7 +2,9 @@
 <h1 align="center">CompreFace - open-source face recognition system from Exadel</h1>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/3736126/100540268-f4228500-3244-11eb-92e7-1d263eba98bc.png" alt="angular-logo" height="150px"/>
+    <a target="_blank" href="https://exadel.com/services/engineering/ai-machine-learning/compreface/">
+  <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="angular-logo" height="250px"/>
+ </a>
   <br>
   <i>CompreFace is a free face recognition service that can be easily integrated into<br> any system without prior machine learning skills.
      </i>
@@ -49,7 +51,7 @@
   * [Technologies](#technologies)
     + [Architecture diagram](#architecture-diagram)
     + [Database](#database)
-    + [Platform server](#platform-server)
+    + [Admin server](#admin-server)
     + [API server](#api-server)
     + [Embedding server](#embedding-server)
   * [Rest API description](#rest-api-description)
@@ -69,8 +71,8 @@
 
 ## Overview
 
-CompreFace is an application for facial recognition that can be integrated as a standalone server or deployed on the cloud and can be set up and used without machine learning expertise.
-Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient API for model training and face recognition. We also provide an easy-to-understand roles system with which you can easily control who has access to the model.
+CompreFace is docker-based application for facial recognition that can be integrated as a standalone server or deployed on the cloud and can be set up and used without machine learning expertise.
+Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient REST API for Face Collection training and face recognition. We also provide a roles system with which you can easily control who has access to the Face Collection.
 Every user can create their own models and train them on different subsets of input data. 
 
 ## Feedback survey
@@ -260,7 +262,7 @@ Recognizing the person in the photo. We calculate Euclidean distance using [Nd4j
 
 
 
-![architecture](https://user-images.githubusercontent.com/59657282/96593288-00d0c680-12f2-11eb-93ae-584a2cd08a3d.png)
+![architecture](https://user-images.githubusercontent.com/3736126/101276552-71ef0f00-37b6-11eb-8b30-4455d09e74cc.png)
 
 
 
@@ -270,7 +272,7 @@ Recognizing the person in the photo. We calculate Euclidean distance using [Nd4j
 
 
 
-### Platform server
+### Admin server
 
 * Java 11
 * Spring Boot
