@@ -36,6 +36,15 @@ export const getImageSize = (file: File): Observable<ImageSize> =>
   });
 
 /**
+ * Get file extension.
+ *
+ * @param file File.
+ * @returns `string` File extension
+ * @example getFileExtension(file) ==> 'jpeg'
+ */
+export const getFileExtension = (file: File): string => file.name.slice((Math.max(0, file.name.lastIndexOf('.')) || Infinity) + 1);
+
+/**
  * Recalculate face coordinates according to canvas size (design).
  *
  * @param box Face coordinates from BE.

@@ -16,11 +16,12 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { MAX_IMAGE_SIZE } from 'src/app/core/constants';
+import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
 
 import { AppState } from '../../store';
 import { recognizeFace, recognizeFaceReset } from '../../store/face-recognition/actions';
 import { selectFaceData, selectFile, selectRequest, selectStateReady, selectTestIsPending } from '../../store/face-recognition/selectors';
+import { getFileExtension } from './face-recognition.helpers';
 import { SnackBarService } from '../snackbar/snackbar.service';
 
 @Component({
@@ -53,7 +54,13 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   }
 
   recognizeFace(file: File) {
-    if (file.size > MAX_IMAGE_SIZE) {
+    if (!AVAILABLE_IMAGE_EXTENSIONS.includes(getFileExtension(file))) {
+      this.snackBarService.openNotification({
+        messageText: 'face_recognition_container.file_unavailable_extension',
+        messageOptions: {filename: file.name},
+        type: 'error'
+      });
+    } else if (file.size > MAX_IMAGE_SIZE) {
       this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
     } else {
       this.store.dispatch(recognizeFace({ file }));
