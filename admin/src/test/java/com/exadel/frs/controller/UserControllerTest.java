@@ -16,11 +16,18 @@
 
 package com.exadel.frs.controller;
 
+import static com.exadel.frs.handler.ExceptionCode.EMPTY_REQUIRED_FIELD;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_USER_PASSWORD;
+import static com.exadel.frs.handler.ExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
 import static com.exadel.frs.utils.TestUtils.buildUser;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -32,16 +39,18 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.dto.ui.ChangePasswordDto;
 import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.exception.AccessDeniedException;
-import com.exadel.frs.exception.ConstraintViolationException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.mapper.UserGlobalRoleMapper;
 import com.exadel.frs.mapper.UserMapper;
@@ -53,8 +62,12 @@ import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.val;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -66,7 +79,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(controllers = UserController.class,
         excludeFilters = @ComponentScan.Filter(
                 type = FilterType.ASSIGNABLE_TYPE,
-                classes = { WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
+                classes = {WebSecurityConfig.class, AuthServerConfig.class, ResourceServerConfig.class}
         )
 )
 public class UserControllerTest {
@@ -99,7 +112,6 @@ public class UserControllerTest {
         val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "firstName") + "\",\"code\":5}";
         val bodyWithEmptyFirstName = new UserUpdateDto();
         bodyWithEmptyFirstName.setLastName("gdsag");
-        bodyWithEmptyFirstName.setPassword("adsfadsfasg");
 
         val createNewModelRequest = put("/user/update")
                 .with(csrf())
@@ -116,7 +128,6 @@ public class UserControllerTest {
         val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "lastName") + "\",\"code\":5}";
         val bodyWithEmptyLastName = new UserUpdateDto();
         bodyWithEmptyLastName.setFirstName("gdsag");
-        bodyWithEmptyLastName.setPassword("adsfadsfasg");
 
         val createNewModelRequest = put("/user/update")
                 .with(csrf())
@@ -128,46 +139,73 @@ public class UserControllerTest {
                .andExpect(content().string(expectedContent));
     }
 
-    @Test
-    void shouldReturnErrorMessageWhenUpdatePasswordIsEmpty() throws Exception {
-        val expectedContent = "{\"message\":\"" + String.format(EmptyRequiredFieldException.MESSAGE, "password") + "\",\"code\":5}";
-        val bodyWithEmptyPassword = new UserUpdateDto();
-        bodyWithEmptyPassword.setLastName("gdsag");
-        bodyWithEmptyPassword.setFirstName("test");
+    static Stream<Arguments> verifyChangePasswordValidationExceptionsProvider() {
+        return Stream.of(
+                Arguments.of("", ""),
+                Arguments.of("oldPassword", ""),
+                Arguments.of("", "newPassword"),
+                Arguments.of("old", "new"),
+                Arguments.of("oldPassword", "new"),
+                Arguments.of("old", "newPassword")
+        );
+    }
 
-        val createNewModelRequest = put("/user/update")
+    @ParameterizedTest
+    @MethodSource("verifyChangePasswordValidationExceptionsProvider")
+    void testChangePasswordValidationExceptions(String oldPwd, String newPwd) throws Exception {
+        // given
+        ChangePasswordDto bodyWithEmptyPassword = new ChangePasswordDto(oldPwd, newPwd);
+        val createNewModelRequest = put("/user/me/password")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
 
+        // when
         mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithEmptyPassword)))
+               // then
                .andExpect(status().isBadRequest())
-               .andExpect(content().string(expectedContent));
+               .andExpect(jsonPath("$.code", anyOf(
+                       is(VALIDATION_CONSTRAINT_VIOLATION.getCode()),
+                       is(EMPTY_REQUIRED_FIELD.getCode())
+                       ))
+               );
     }
 
     @Test
-    void shouldReturnErrorMessageWhenUpdatePasswordTooSmall() throws Exception {
-        val expectedContent = "{\"message\":\"" + String.format(
-                ConstraintViolationException.MESSAGE,
-                "password",
-                "size must be between 8 and 255"
-        ) + "\"," +
-                "\"code" +
-                "\":26}";
-
-        val bodyWithShortPassword = new UserUpdateDto();
-        bodyWithShortPassword.setLastName("gdsag");
-        bodyWithShortPassword.setFirstName("test");
-        bodyWithShortPassword.setPassword("aaaa");
-
-        val createNewModelRequest = put("/user/update")
+    void testChangePasswordIncorrectPassword() throws Exception {
+        // given
+        String oldPwd = "oldPassword";
+        String newPwd = "newPassword";
+        ChangePasswordDto bodyWithIncorrectPassword = new ChangePasswordDto(oldPwd, newPwd);
+        val createNewModelRequest = put("/user/me/password")
                 .with(csrf())
                 .with(user(buildUser()))
                 .contentType(MediaType.APPLICATION_JSON);
+        doThrow(new IncorrectUserPasswordException()).when(userService).changePassword(anyLong(), eq(oldPwd), eq(newPwd));
 
-        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithShortPassword)))
+        // when
+        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithIncorrectPassword)))
+               // then
                .andExpect(status().isBadRequest())
-               .andExpect(content().string(expectedContent));
+               .andExpect(jsonPath("$.code", is(INCORRECT_USER_PASSWORD.getCode())));
+    }
+
+    @Test
+    void testChangePassword() throws Exception {
+        // given
+        String oldPwd = "oldPassword";
+        String newPwd = "newPassword";
+        ChangePasswordDto bodyWithIncorrectPassword = new ChangePasswordDto(oldPwd, newPwd);
+        val createNewModelRequest = put("/user/me/password")
+                .with(csrf())
+                .with(user(buildUser()))
+                .contentType(MediaType.APPLICATION_JSON);
+        doNothing().when(userService).changePassword(anyLong(), eq(oldPwd), eq(newPwd));
+
+        // when
+        mockMvc.perform(createNewModelRequest.content(mapper.writeValueAsString(bodyWithIncorrectPassword)))
+               // then
+               .andExpect(status().isOk());
     }
 
     @Test
@@ -175,7 +213,6 @@ public class UserControllerTest {
         val updateDto = new UserUpdateDto();
         updateDto.setLastName("gdsag");
         updateDto.setFirstName("test");
-        updateDto.setPassword("test-password");
 
         val createRequest = put("/user/update")
                 .with(csrf())
@@ -200,7 +237,6 @@ public class UserControllerTest {
         val updateDto = new UserUpdateDto();
         updateDto.setLastName("gdsag");
         updateDto.setFirstName("test");
-        updateDto.setPassword("test-password");
 
         val deleteRequest = delete("/user/" + USER_GUID)
                 .with(csrf())

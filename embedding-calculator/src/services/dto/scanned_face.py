@@ -12,7 +12,7 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-from typing import Union
+from typing import Union, Optional
 
 import attr
 
@@ -22,23 +22,27 @@ from src.services.imgtools.proc_img import crop_img
 from src.services.imgtools.types import Array1D, Array3D
 
 
+@attr.s(auto_attribs=True)
+class Face(JSONEncodable):
+    _img: Optional[Array3D]
+    _face_img: Optional[Array3D]
+    box: BoundingBoxDTO
+
+
 @attr.s(auto_attribs=True, frozen=True)
 class ScannedFaceDTO(JSONEncodable):
     box: BoundingBoxDTO
     embedding: Array1D
 
 
-class ScannedFace(JSONEncodable):
-    def __init__(self, box: BoundingBoxDTO, embedding: Array1D, img: Union[Array3D, None], face_img: Array3D = None):
-        self.box = box
-        self.embedding = embedding
-        self.img = img
-        self._face_img = face_img
+@attr.s(auto_attribs=True)
+class ScannedFace(Face):
+    embedding: Array1D
 
     @property
     def face_img(self):
         if not self._face_img:
-            self._face_img = crop_img(self.img, self.box)
+            self._face_img = crop_img(self._img, self.box)
         return self._face_img
 
     @property
@@ -53,4 +57,5 @@ class ScannedFace(JSONEncodable):
                                               y_min=box_result['y_min'],
                                               y_max=box_result['y_max'],
                                               probability=box_result['probability']),
-                           embedding=result['embedding'], img=None)
+                           embedding=result['embedding'],
+                           img=None, face_img=None)

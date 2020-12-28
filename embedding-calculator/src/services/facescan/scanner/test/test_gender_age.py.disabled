@@ -1,0 +1,38 @@
+#  Copyright (c) 2020 the original author or authors
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#       https://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+#  or implied. See the License for the specific language governing
+#  permissions and limitations under the License.
+
+import pytest
+from typing import Type, Union
+
+from sample_images import IMG_DIR, annotations
+from src.services.facescan.scanner.facescanner import FaceScanner
+from src.services.facescan.scanner.facescanners import TESTED_SCANNERS
+from src.services.facescan.scanner.test._cache import read_img
+
+
+GENDER_AGE_SCANNERS = [s for s in TESTED_SCANNERS if issubclass(s, GenderAgeMixin)]
+GENDER_AGE_SAMPLE_IMAGES = [row for row in annotations.SAMPLE_IMAGES
+                            if row.is_male is not None and row.age is not None]
+
+
+@pytest.mark.performance
+@pytest.mark.parametrize('scanner_cls', GENDER_AGE_SCANNERS)
+@pytest.mark.parametrize('row', GENDER_AGE_SAMPLE_IMAGES)
+def test__getting_gender_and_age(scanner_cls: Type[FaceScanner], row: annotations.Row):
+    scanner: Union[FaceScanner, GenderAgeMixin] = scanner_cls()
+
+    img = read_img(IMG_DIR / row.img_name)
+    face = scanner.genderage(img)[0]
+    assert face.is_male == row.is_male, f'{row.img_name}: Wrong gender - {face.is_male}'
+    assert abs(face.age - row.age) < 5, f'{row.img_name}: Age mismatched: {face.age} ~= {row.age}'

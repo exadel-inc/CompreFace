@@ -14,23 +14,13 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.exception;
 
-import javax.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_USER_PASSWORD;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserUpdateDto {
+public class IncorrectUserPasswordException extends BasicException {
 
-    @NotEmpty
-    private String firstName;
-
-    @NotEmpty
-    private String lastName;
+    public IncorrectUserPasswordException() {
+        super(INCORRECT_USER_PASSWORD, "User's password is incorrect");
+    }
 }

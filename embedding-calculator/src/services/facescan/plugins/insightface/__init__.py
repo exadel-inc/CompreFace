@@ -12,10 +12,23 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-API_KEY_HEADER = 'X-Api-Key'
+
+from src.constants import ENV
+from src.services.utils.pyutils import get_env
 
 
-class ARG:
-    LIMIT = 'limit'
-    DET_PROB_THRESHOLD = 'det_prob_threshold'
-    FACE_PLUGINS = 'face_plugins'
+def get_requirements():
+    cuda_version = get_env('CUDA', '').replace('.', '')
+
+    mxnet_lib = 'mxnet-'
+    if ENV.GPU_IDX > -1 and cuda_version:
+        mxnet_lib += f"cu{cuda_version}"
+    if ENV.INTEL_OPTIMIZATION:
+        mxnet_lib += 'mkl'
+    mxnet_lib = mxnet_lib.rstrip('-')
+    return (
+        f'{mxnet_lib}<1.7',
+        'insightface==0.1.5',
+    )
+
+requirements = get_requirements()

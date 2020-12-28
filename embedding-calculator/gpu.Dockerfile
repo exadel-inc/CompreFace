@@ -12,6 +12,7 @@ ARG CUDNN_MAJOR_VERSION=7
 ARG LIB_DIR_PREFIX=x86_64
 ARG LIBNVINFER=6.0.1-1
 ARG LIBNVINFER_MAJOR_VERSION=6
+ENV CUDA=$CUDA
 
 # Needed for string substitution
 SHELL ["/bin/bash", "-c"]
@@ -66,7 +67,7 @@ RUN ln -s $(which $PYTHON) /usr/local/bin/python
 
 
 # Variables for MXNET
-ENV MXNET=mxnet_cu101mkl MXNET_CPU_WORKER_NTHREADS=24
+ENV MXNET_CPU_WORKER_NTHREADS=24
 ENV MXNET_ENGINE_TYPE=ThreadedEnginePerDevice MXNET_CUDNN_AUTOTUNE_DEFAULT=0
 
 # No access to GPU devices in the build stage, so skip tests

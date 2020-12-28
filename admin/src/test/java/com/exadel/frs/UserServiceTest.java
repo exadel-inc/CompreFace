@@ -18,6 +18,7 @@ package com.exadel.frs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
@@ -36,6 +37,7 @@ import com.exadel.frs.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.IllegalReplacerException;
+import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
@@ -51,6 +53,7 @@ import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.core.env.Environment;
@@ -202,7 +205,6 @@ class UserServiceTest {
                            .build();
 
         val userUpdateDto = UserUpdateDto.builder()
-                                         .password("password")
                                          .firstName("firstName")
                                          .lastName("lastName")
                                          .build();
@@ -211,7 +213,6 @@ class UserServiceTest {
 
         userService.updateUser(userUpdateDto, USER_ID);
 
-        assertThat(repoUser.getPassword()).isNotEqualTo(userUpdateDto.getPassword());
         assertThat(repoUser.getFirstName()).isEqualTo(userUpdateDto.getFirstName());
         assertThat(repoUser.getLastName()).isEqualTo(userUpdateDto.getLastName());
 
@@ -373,6 +374,57 @@ class UserServiceTest {
                        .id(globalUserId)
                        .guid(UUID.randomUUID().toString())
                        .build();
+        }
+    }
+
+    @Nested
+    class ChangePasswordTest {
+
+        private static final String oldPwd = "old-pwd";
+        private static final String newPwd = "new-pwd";
+        private final Long userId = 1L;
+
+        private final User user = User.builder()
+                                      .password("old-pwd")
+                                      .build();
+
+        @Test
+        void testChangePasswordNotExistingUser() {
+            // given & when
+            Executable action = () -> userService.changePassword(userId, oldPwd, newPwd);
+
+            // then
+            assertThrows(UserDoesNotExistException.class, action);
+        }
+
+        @Test
+        void testChangePasswordIncorrectPassword() {
+            // given
+            when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
+            when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
+
+            //when
+            Executable action = () -> userService.changePassword(userId, oldPwd, newPwd);
+
+            // then
+            assertThrows(IncorrectUserPasswordException.class, action);
+        }
+
+        @Test
+        void testChangePassword() {
+            // given
+            when(userRepositoryMock.findById(userId)).thenReturn(Optional.of(user));
+            when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
+            User newUser = User.builder()
+                               .password(newPwd)
+                               .build();
+
+            //when
+            userService.changePassword(userId, oldPwd, newPwd);
+
+            // then
+            verify(passwordEncoder).encode(newPwd);
+            verify(userRepositoryMock).save(newUser);
         }
     }
 }

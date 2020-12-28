@@ -2,7 +2,7 @@ tags:
   - Core
 summary: 'Find faces in the given image and return their bounding boxes.'
 description: 'Returns bounding boxes of detected faces on the image.'
-operationId: scanFacesPost
+operationId: findFacesPost
 consumes:
   - multipart/form-data
 produces:
