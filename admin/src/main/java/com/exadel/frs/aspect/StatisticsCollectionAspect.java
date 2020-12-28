@@ -32,7 +32,7 @@ public class StatisticsCollectionAspect {
     private final ApperyStatisticsClient apperyStatisticsClient;
 
     @SneakyThrows
-    @AfterReturning(pointcut = "@annotation(com.exadel.frs.annotation.Statistics)", returning = "result")
+    @AfterReturning(pointcut = "@annotation(com.exadel.frs.annotation.CollectStatistics)", returning = "result")
     public void afterMethodInvocation(JoinPoint joinPoint, Object result) {
         if (StringUtils.isEmpty(statisticsApiKey)) {
             return;
