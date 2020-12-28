@@ -33,11 +33,11 @@ $ docker run -p 3000:3000 exadel/compreface-core:latest
 
 ###### DockerHub tags
 
-| Tag                    | Scanner     | Build arguments               | Comment                       |
-|------------------------|-------------|-------------------------------|-------------------------------|
-| :0.4.0 :latest         | Facenet2018 |                               |                               |
-| :0.4.0-insightface     | InsightFace | SCANNER=InsightFace           |                               |
-| :0.4.0-insightface-gpu | InsightFace | SCANNER=InsightFace GPU_IDX=0 | GPU_IDX - index of GPU-device |
+| Tag                    | Scanner     | Build arguments                                                                                          | Comment                            |
+|------------------------|-------------|----------------------------------------------------------------------------------------------------------|------------------------------------|
+| :0.5.0 :latest         | Facenet2018 |                                                                                                          |                                    |
+| :0.5.0-insightface     | InsightFace | FACE_DETECTION_PLUGIN=insightface.FaceDetector<br>CALCULATION_PLUGIN=insightface.Calculator              |                                    |
+| :0.5.0-insightface-gpu | InsightFace | FACE_DETECTION_PLUGIN=insightface.FaceDetector<br>CALCULATION_PLUGIN=insightface.Calculator<br>GPU_IDX=0 | CORE_GPU_IDX - index of GPU-device |
 
 
 ##### Build
@@ -73,38 +73,66 @@ Lint checks
 $ python -m pylama --options pylama.ini src tools
 ```
 
-### InsightFace scanner backend
+### Plugins
 
-FaceNet is a default scanner backend. It can be changed to InsightFace through passing build args:
+If DockerHub images is not enough, build an image with only the necessary set of plugins.  
+For changing default plugins pass needed plugin names in build arguments and build your own image.
+
+##### Face detection and calculation plugins
+
+Set plugins by build arguments `FACE_DETECTION_PLUGIN` and `CALCULATION_PLUGIN`
+
+| Plugin name              | Type       | Backend     | Framework  | GPU support |
+|--------------------------|------------|-------------|------------|-------------|
+| facenet.FaceDetector     | detector   | Facenet     | Tensorflow |             |
+| facenet.Calculator       | calculator | Facenet     | Tensorflow |             |
+| insightface.FaceDetector | detector   | insightface | MXNet      |      +      |
+| insightface.Calculator   | calculator | insightface | MXNet      |      +      |
+
+##### Extra plugins
+
+Pass to `EXTRA_PLUGINS` comma-separated names of plugins. 
+
+| Plugin name                   | Type       | Backend     | Framework  | GPU support |
+|-------------------------------|------------|-------------|------------|-------------|
+| rude_carnie.AgeDetector       | age        | rude_carnie | Tensorflow |             |
+| rude_carnie.GenderDetector    | gender     | rude_carnie | Tensorflow |             |
+| insightface.GenderAgeDetector | gender_age | insightface | MXNet      |      +      |
+
+
+##### Default build arguments:
 ```
-$ docker build -t embedding-calculator --build-arg SCANNER=InsightFace .
+FACE_DETECTION_PLUGIN=facenet.FaceDetector
+CALCULATION_PLUGIN=facenet.Calculator
+EXTRA_PLUGINS=rude_carnie.AgeDetector,rude_carnie.GenderDetector  
 ```
 
-#### Pretrained models
+#### Pre-trained models
 
-InsightFace has few build in models:  
-* detection models: `retinaface_r50_v1` (default), `retinaface_mnet025_v1`, `retinaface_mnet025_v2`
-* recognition model - `arcface_r100_v1`
-
-Changing models is performed by passing  `build-args`, e.g. `--build-arg DETECTION_MODEL=retinaface_mnet025_v1`.   
-Pass `DETECTION_MODEL` for a detection model, `CALCULATION_MODEL` for a recognition model.
-
-##### More pretrained models
-
-Check more models in [Model Zoo](https://github.com/deepinsight/insightface/wiki/Model-Zoo#3-face-recognition-models). To use it follow these steps: 
-
-1. download model and unpack it to `embedding-calculator/srcext/insightface/models/`
-1. run build with passing model name, e.g. `--build-arg CALCULATION_MODEL=model-r34-amf`. 
-  
-#### NVidia GPU support
-
-Build container with CUDA 10.1.
+Some plugins have several pre-trained models.  
+To use an additional model pass a name of the model after a plugin name with a separator `@`. For example:
 ```
-$ docker build -t cuda101-py37 -f gpu.Dockerfile .
-$ docker build -t embedding-calculator-gpu --build-arg SCANNER=InsightFace --build-arg GPU_IDX=0  .
+FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1
 ```
 
-Install the nvidia-docker2 package and dependencies:
+List of pre-trained models:
+
+| Plugin name              | Default model     | Additional models                                             |
+|--------------------------|-------------------|---------------------------------------------------------------|
+| insightface.FaceDetector | retinaface_r50_v1 | retinaface_mnet025_v1<br>retinaface_mnet025_v2                |
+| insightface.Calculator   | arcface_r100_v1   | arcface_resnet34<br>arcface_resnet50<br>arcface_mobilefacenet | 
+
+
+#### Optimization 
+
+There are two build arguments for optimization:
+* `GPU_IDX` - id of NVIDIA GPU device, starts from `0` (empty or `-1` for disable)
+* `INTEL_OPTIMIZATION` - enable Intel MKL optimization (true/false)
+
+
+##### NVIDIA Runtime   
+
+Install the nvidia-docker2 package and dependencies on the host machine:
 ```
 sudo apt-get update
 sudo apt-get install -y nvidia-docker2
