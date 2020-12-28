@@ -23,7 +23,6 @@ import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.springframework.util.StringUtils.isEmpty;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
@@ -31,9 +30,9 @@ import com.exadel.frs.dto.ui.UserUpdateDto;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.Replacer;
-
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
+import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
@@ -41,7 +40,6 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
 import com.exadel.frs.repository.UserRepository;
-
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -50,7 +48,6 @@ import java.util.UUID;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -154,15 +151,8 @@ public class UserService {
 
     public User updateUser(final UserUpdateDto userUpdateDto, final Long userId) {
         val user = getUser(userId);
-        if (!isEmpty(userUpdateDto.getFirstName())) {
-            user.setFirstName(userUpdateDto.getFirstName());
-        }
-        if (!isEmpty(userUpdateDto.getLastName())) {
-            user.setLastName(userUpdateDto.getLastName());
-        }
-        if (!isEmpty(userUpdateDto.getPassword())) {
-            user.setPassword(encoder.encode(userUpdateDto.getPassword()));
-        }
+        user.setFirstName(userUpdateDto.getFirstName());
+        user.setLastName(userUpdateDto.getLastName());
 
         return userRepository.save(user);
     }
@@ -303,5 +293,17 @@ public class UserService {
         }
 
         return replacer == Replacer.DELETER ? deleter : globalOwner;
+    }
+
+    public void changePassword(Long userId, String oldPwd, String newPwd) {
+        User user = getUser(userId);
+        boolean pwdMatches = encoder.matches(oldPwd, user.getPassword());
+        if (!pwdMatches) {
+            throw new IncorrectUserPasswordException();
+        }
+        String encodedNewPwd = encoder.encode(newPwd);
+        user.setPassword(encodedNewPwd);
+
+        userRepository.save(user);
     }
 }

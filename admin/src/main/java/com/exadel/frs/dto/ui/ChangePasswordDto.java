@@ -17,20 +17,21 @@
 package com.exadel.frs.dto.ui;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateDto {
+@AllArgsConstructor
+public class ChangePasswordDto {
 
     @NotEmpty
-    private String firstName;
+    @Size(min = 8, max = 255)
+    private String oldPassword;
 
     @NotEmpty
-    private String lastName;
+    @Size(min = 8, max = 255)
+    private String newPassword;
 }
