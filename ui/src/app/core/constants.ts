@@ -16,3 +16,4 @@
 
 export const EMAIL_REGEXP_PATTERN = '\\S+@\\S+\\.\\S+';
 export const MAX_IMAGE_SIZE = 5000000;
+export const AVAILABLE_IMAGE_EXTENSIONS: string[] = ['jpeg', 'jpg', 'ico', 'png', 'bmp', 'gif', 'tif', 'tiff', 'webp'];
