@@ -24,10 +24,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Store } from '@ngrx/store';
-import {of, Subscription} from 'rxjs';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { of, Subscription } from 'rxjs';
 
 import { SignUpFormComponent } from './sign-up-form.component';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 describe('SignUpFormComponent', () => {
   let component: SignUpFormComponent;
@@ -44,9 +44,7 @@ describe('SignUpFormComponent', () => {
             provide: Store,
             useValue: {
               dispatch: () => {},
-              select: () => {
-                return of(initialState);
-              },
+              select: () => of(initialState),
             },
           },
         ],

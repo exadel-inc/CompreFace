@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse } from '@angular/common/http';
-import { AuthService } from './auth.service';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+
+import { AuthService } from './auth.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -29,15 +29,16 @@ export class ErrorInterceptor implements HttpInterceptor {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
     return next.handle(request).pipe(
-      catchError((response: any): Observable<HttpEvent<any>> => {
-        if (response instanceof HttpErrorResponse && response.status === 401) {
-          this.authService.logOut();
-        }
+      catchError(
+        (response: any): Observable<HttpEvent<any>> => {
+          if (response instanceof HttpErrorResponse && response.status === 401) {
+            this.authService.logOut();
+          }
 
-        return throwError(response);
-      })
+          return throwError(response);
+        }
+      )
     );
   }
 }

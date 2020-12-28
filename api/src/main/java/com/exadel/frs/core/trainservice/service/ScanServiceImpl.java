@@ -16,21 +16,16 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.SERVER_UUID;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
-import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.dto.DbActionDto;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
-import com.exadel.frs.core.trainservice.enums.DbAction;
 import com.exadel.frs.core.trainservice.exception.NoFacesFoundException;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
 import feign.FeignException;
 import java.io.IOException;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -46,7 +41,6 @@ public class ScanServiceImpl implements ScanService {
     private final FacesClient facesClient;
     private final FaceDao faceDao;
     private final FaceCacheProvider faceCacheProvider;
-    private final Notifier notifier;
 
     @Override
     public FaceBO scanAndSaveFace(
@@ -73,18 +67,8 @@ public class ScanServiceImpl implements ScanService {
 
         val embeddingToSave = new Embedding(embedding, scanResponse.getCalculatorVersion());
 
-        val savedFace = faceDao.addNewFace(embeddingToSave, file, faceName, modelKey);
-
-        notifier.notifyWithMessage(new DbActionDto(
-                DbAction.INSERT,
-                savedFace.getApiKey(),
-                List.of(savedFace.getId()),
-                savedFace.getFaceName(),
-                SERVER_UUID
-        ));
-
         return faceCacheProvider.getOrLoad(modelKey).addFace(
-                savedFace
+                faceDao.addNewFace(embeddingToSave, file, faceName, modelKey)
         );
     }
 }

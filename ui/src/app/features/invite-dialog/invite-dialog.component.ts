@@ -13,13 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { combineLatest, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
-import { Observable, combineLatest } from 'rxjs';
-import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-invite-dialog',
@@ -70,6 +69,6 @@ export class InviteDialogComponent implements OnInit {
 
   private filter(options: string[], value: string): string[] {
     const filterValue = value ? value.toLowerCase() : '';
-    return options ? options.filter((option) => option && option.toLowerCase().includes(filterValue)) : [''];
+    return options ? options.filter(option => option && option.toLowerCase().includes(filterValue)) : [''];
   }
 }

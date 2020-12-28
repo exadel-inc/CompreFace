@@ -13,18 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
 
 import { TableComponent } from '../table/table.component';
-import { Role } from 'src/app/data/enums/role.enum';
 
 @Component({
   selector: 'app-model-table',
   templateUrl: './model-table.component.html',
   styleUrls: ['./model-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModelTableComponent extends TableComponent {
   @Input() userRole: string;

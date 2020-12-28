@@ -13,21 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {SignUpComponent} from './sign-up.component';
-import {SignUpFormModule} from '../../features/sign-up-form/sign-up-form.module';
+import { SignUpFormModule } from '../../features/sign-up-form/sign-up-form.module';
+import { SignUpComponent } from './sign-up.component';
 
 @NgModule({
   declarations: [SignUpComponent],
-  imports: [
-    CommonModule,
-    RouterModule.forChild([
-      {path: '', component: SignUpComponent }
-    ]),
-    SignUpFormModule
-  ]
+  imports: [CommonModule, RouterModule.forChild([{ path: '', component: SignUpComponent }]), SignUpFormModule],
 })
-export class SignUpModule { }
+export class SignUpModule {}

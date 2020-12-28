@@ -25,8 +25,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.exadel.frs.core.trainservice.component.migration.MigrationComponent;
 import com.exadel.frs.core.trainservice.component.migration.MigrationStatusStorage;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.config.repository.NotificationConfig;
-import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -42,12 +40,6 @@ class MigrateControllerTest {
 
     @MockBean
     private MigrationStatusStorage migrationStatusStorage;
-
-    @MockBean
-    private NotificationConfig notificationConfig;
-
-    @MockBean
-    private Notifier notifier;
 
     @MockBean
     private MigrationComponent migrationComponent;

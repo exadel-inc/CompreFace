@@ -13,14 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import {
-  loadDemoApiKeyAction,
-  loadDemoApiKeySuccessAction,
-  loadDemoApiKeyFailAction,
-  setDemoKeyPendingAction
-} from './actions';
-import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
+import { loadDemoApiKeyAction, loadDemoApiKeyFailAction, loadDemoApiKeySuccessAction, setDemoKeyPendingAction } from './actions';
 
 export interface DemoEntityState {
   isPending: boolean;
@@ -29,17 +24,15 @@ export interface DemoEntityState {
 
 export const initialState: DemoEntityState = {
   isPending: false,
-  apiKey: null
+  apiKey: null,
 };
 
 const reducer: ActionReducer<DemoEntityState> = createReducer(
   initialState,
-  on(loadDemoApiKeyAction, (state) => ({ ...state, isPending: true })),
+  on(loadDemoApiKeyAction, state => ({ ...state, isPending: true })),
   on(loadDemoApiKeySuccessAction, (state, { apiKey }) => ({ ...state, apiKey, isPending: false })),
-  on(loadDemoApiKeyFailAction, (state) => ({ ...state, isPending: false })),
-  on(setDemoKeyPendingAction, (state) => ({ ...state, isPending: true }))
+  on(loadDemoApiKeyFailAction, state => ({ ...state, isPending: false })),
+  on(setDemoKeyPendingAction, state => ({ ...state, isPending: true }))
 );
 
-export function DemoReducer(demoState: DemoEntityState, action: Action) {
-  return reducer(demoState, action);
-}
+export const demoReducer = (demoState: DemoEntityState, action: Action) => reducer(demoState, action);

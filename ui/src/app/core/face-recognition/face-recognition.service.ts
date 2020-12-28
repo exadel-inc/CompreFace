@@ -1,24 +1,40 @@
-import { Injectable } from '@angular/core';
+/*
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Model } from '../../data/interfaces/model';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
 import { map } from 'rxjs/operators';
 
+import { environment } from '../../../environments/environment';
+import { Model } from '../../data/interfaces/model';
+
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FaceRecognitionService {
   headers: HttpHeaders;
 
   constructor(private http: HttpClient) {}
 
-  addFace(file: any, model: Model): Observable<object> {
+  addFace(file: any, model: Model): Observable<any> {
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('subject', file.name);
     return this.http.post(`${environment.userApiUrl}faces`, formData, {
-      headers: { 'x-api-key': model.apiKey}
+      headers: { 'x-api-key': model.apiKey },
     });
   }
 
@@ -27,23 +43,25 @@ export class FaceRecognitionService {
     const formData = new FormData();
     formData.append('file', file);
 
-    return  this.http.post(url, formData, {
-      headers: { 'x-api-key': apiKey}
-    }).pipe(
-      map((data) => ({
-        data,
-        request: this.createUIRequest(url, { 'x-api-key': apiKey})
-      }))
-    );
+    return this.http
+      .post(url, formData, {
+        headers: { 'x-api-key': apiKey },
+      })
+      .pipe(
+        map(data => ({
+          data,
+          request: this.createUIRequest(url, { 'x-api-key': apiKey }),
+        }))
+      );
   }
 
-  getAllFaces(model: Model): Observable<object> {
-    return this.http.get(`${environment.userApiUrl}faces`, { headers: { 'x-api-key': model.apiKey }});
+  getAllFaces(model: Model): Observable<any> {
+    return this.http.get(`${environment.userApiUrl}faces`, { headers: { 'x-api-key': model.apiKey } });
   }
 
-  train(model: Model): Observable<object> {
+  train(model: Model): Observable<any> {
     const formData = new FormData();
-    return this.http.post(`${environment.userApiUrl}retrain`, formData, { headers: { 'x-api-key': model.apiKey }});
+    return this.http.post(`${environment.userApiUrl}retrain`, formData, { headers: { 'x-api-key': model.apiKey } });
   }
 
   /**
@@ -54,17 +72,19 @@ export class FaceRecognitionService {
    * @param params url parameters.
    * @private
    */
-  private createUIRequest(url: string,  options = {}, params = {}): any {
-    const parsedParams = Object.keys(params).length ? `?${(new URLSearchParams(params)).toString()}` : '';
+  private createUIRequest(url: string, options = {}, params = {}): any {
+    const parsedParams = Object.keys(params).length ? `?${new URLSearchParams(params).toString()}` : '';
 
     return {
+      /* eslint-disable @typescript-eslint/naming-convention */
       Headers: {
         'Content-Type': 'multipart/form-data',
         Origin: window.location.origin,
         Referer: `${window.location.origin}${parsedParams}`,
-        host: `${window.location.host}:${window.location.port}`,
-        ...options
-      }
+        Host: `${window.location.host}:${window.location.port}`,
+        ...options,
+      },
+      /* eslint-enable @typescript-eslint/naming-convention */
     };
   }
 }

@@ -13,11 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
-import { Application } from 'src/app/data/interfaces/application';
 
+import { Application } from '../../data/interfaces/application';
 import {
   createApplication,
   createApplicationFail,
@@ -45,24 +44,20 @@ export interface AppEntityState extends EntityState<Application> {
 export const initialState: AppEntityState = applicationAdapter.getInitialState({
   // additional entity state properties
   selectedAppId: null,
-  isPending: false
+  isPending: false,
 });
 
 const reducer: ActionReducer<AppEntityState> = createReducer(
   initialState,
-  on(loadApplications, createApplication, updateApplication, deleteApplication, (state) => ({ ...state, isPending: true })),
-  on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail,
-    (state) => ({ ...state, isPending: false })),
+  on(loadApplications, createApplication, updateApplication, deleteApplication, state => ({ ...state, isPending: true })),
+  on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail, state => ({ ...state, isPending: false })),
   on(createApplicationSuccess, (state, { application }) => applicationAdapter.addOne(application, { ...state, isPending: false })),
   on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.setAll(applications, { ...state, isPending: false })),
-  on(updateApplicationSuccess, (state, { application }) => applicationAdapter.updateOne(
-    { id: application.id, changes: application },
-    { ...state, isPending: false }
-  )),
+  on(updateApplicationSuccess, (state, { application }) =>
+    applicationAdapter.updateOne({ id: application.id, changes: application }, { ...state, isPending: false })
+  ),
   on(deleteApplicationSuccess, (state, { id }) => applicationAdapter.removeOne(id, { ...state, isPending: false })),
   on(setSelectedAppIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
 );
 
-export function ApplicationReducer(appState: AppEntityState, action: Action) {
-  return reducer(appState, action);
-}
+export const applicationReducer = (appState: AppEntityState, action: Action) => reducer(appState, action);

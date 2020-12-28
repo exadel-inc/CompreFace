@@ -26,13 +26,6 @@ import { TranslateModule } from '@ngx-translate/core';
 @NgModule({
   declarations: [UserTableComponent],
   exports: [UserTableComponent],
-  imports: [
-    CommonModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatSelectModule,
-    MatIconModule,
-    TranslateModule,
-  ],
+  imports: [CommonModule, MatFormFieldModule, MatTableModule, MatSelectModule, MatIconModule, TranslateModule],
 })
 export class UserTableModule {}

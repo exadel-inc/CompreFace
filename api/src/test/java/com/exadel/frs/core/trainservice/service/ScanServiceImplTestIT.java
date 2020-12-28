@@ -20,12 +20,10 @@ import static com.exadel.frs.core.trainservice.service.ScanServiceImpl.MAX_FACES
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
-import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
-import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import java.io.IOException;
 import java.util.List;
@@ -38,7 +36,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.multipart.MultipartFile;
 
 @DataJpaTest
-@Import({ScanServiceImpl.class, FacesClient.class, FaceDao.class, FaceCacheProvider.class, ImageProperties.class})
+@Import({ScanServiceImpl.class, FacesClient.class, FaceDao.class, FaceCacheProvider.class})
 class ScanServiceImplTestIT {
 
     @Autowired
@@ -46,9 +44,6 @@ class ScanServiceImplTestIT {
 
     @MockBean
     private FacesClient facesClient;
-
-    @MockBean
-    private Notifier notifier;
 
     private static final MultipartFile MULTIPART_FILE_DATA = new MultipartFileData("hex-string-1".getBytes(), "test", "application/json");
     private static final String FACE_NAME = "faceName";

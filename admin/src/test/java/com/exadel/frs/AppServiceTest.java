@@ -213,7 +213,7 @@ class AppServiceTest {
         verify(appRepositoryMock).save(varArgs.capture());
         verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
         verify(appRepositoryMock).existsByName("appName");
-        verify(authManagerMock).verifyWritePrivilegesToApp(user, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(user, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(user, app);
         verifyNoMoreInteractions(appRepositoryMock, authManagerMock);
 
@@ -248,7 +248,7 @@ class AppServiceTest {
                 ADMIN_ID
         )).isInstanceOf(InsufficientPrivilegesException.class);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
         verifyNoMoreInteractions(authManagerMock);
@@ -278,7 +278,7 @@ class AppServiceTest {
                 USER_ID
         )).isInstanceOf(SelfRoleChangeException.class);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(user, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(user, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(user, app);
         verifyNoMoreInteractions(authManagerMock);
     }
@@ -320,7 +320,7 @@ class AppServiceTest {
 
         verify(appRepositoryMock).save(any(App.class));
         verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
-        verify(authManagerMock).verifyWritePrivilegesToApp(user, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(user, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(user, app);
         verifyNoMoreInteractions(appRepositoryMock, authManagerMock);
 
@@ -352,7 +352,7 @@ class AppServiceTest {
 
         verify(appRepositoryMock).findByGuid(APPLICATION_GUID);
         verify(appRepositoryMock).deleteById(anyLong());
-        verify(authManagerMock).verifyWritePrivilegesToApp(user, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(user, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(user, app);
         verifyNoMoreInteractions(appRepositoryMock, authManagerMock);
     }
@@ -461,7 +461,7 @@ class AppServiceTest {
         assertThat(userAppRole.getUser().getEmail()).isEqualTo(userEmail);
         assertThat(userAppRole.getRole()).isEqualTo(userRole);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verifyNoMoreInteractions(authManagerMock);
     }
@@ -502,7 +502,7 @@ class AppServiceTest {
         assertThat(app.getOwner().get().getRole()).isEqualTo(userRole);
 
         verify(appRepositoryMock).save(app);
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verifyNoMoreInteractions(authManagerMock);
     }
@@ -716,7 +716,7 @@ class AppServiceTest {
 
         assertThat(actual).isNotNull();
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(user, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(user, app, true);
         verify(modelShareRequestRepositoryMock).save(any(ModelShareRequest.class));
         verifyNoMoreInteractions(authManagerMock, modelShareRequestRepositoryMock);
     }
@@ -752,7 +752,7 @@ class AppServiceTest {
 
         appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verify(appRepositoryMock).save(any(App.class));
         verifyNoMoreInteractions(authManagerMock);
@@ -785,7 +785,7 @@ class AppServiceTest {
 
         appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verify(appRepositoryMock).save(any(App.class));
         verifyNoMoreInteractions(authManagerMock);
@@ -820,7 +820,7 @@ class AppServiceTest {
                 appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID)
         ).isInstanceOf(InsufficientPrivilegesException.class);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verifyNoMoreInteractions(authManagerMock);
     }
@@ -852,7 +852,7 @@ class AppServiceTest {
 
         appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verifyNoMoreInteractions(authManagerMock);
     }
@@ -884,7 +884,7 @@ class AppServiceTest {
 
         appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verify(appRepositoryMock).save(app);
         verifyNoMoreInteractions(authManagerMock);
@@ -921,7 +921,7 @@ class AppServiceTest {
 
         appService.updateUserAppRole(userRoleUpdateDto, APPLICATION_GUID, ADMIN_ID);
 
-        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app);
+        verify(authManagerMock).verifyWritePrivilegesToApp(admin, app, true);
         verify(authManagerMock).verifyReadPrivilegesToApp(admin, app);
         verify(appRepositoryMock).save(app);
         verifyNoMoreInteractions(authManagerMock);

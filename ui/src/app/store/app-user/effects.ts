@@ -13,15 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AppUserService } from 'src/app/core/app-user/app-user.service';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
-import { loadApplications } from '../application/action';
 
+import { loadApplications } from '../application/action';
 import {
   addAppUserEntityAction,
   deleteUserFromApplication,
@@ -43,8 +42,8 @@ export class AppUserEffects {
   @Effect()
   loadAppUsers = this.actions.pipe(
     ofType(loadAppUserEntityAction),
-    switchMap((action) => this.appUserService.getAll(action.applicationId)),
-    map((users) => addAppUserEntityAction({ users }))
+    switchMap(action => this.appUserService.getAll(action.applicationId)),
+    map(users => addAppUserEntityAction({ users }))
   );
 
   @Effect()
@@ -52,8 +51,8 @@ export class AppUserEffects {
     ofType(updateAppUserRoleAction),
     switchMap(({ applicationId, user }) =>
       this.appUserService.update(applicationId, user.id, user.role).pipe(
-        switchMap((res) => [updateAppUserRoleSuccessAction({ user: res }), loadApplications(), loadAppUserEntityAction({ applicationId })]),
-        catchError((error) => of(updateAppUserRoleFailAction({ error })))
+        switchMap(res => [updateAppUserRoleSuccessAction({ user: res }), loadApplications(), loadAppUserEntityAction({ applicationId })]),
+        catchError(error => of(updateAppUserRoleFailAction({ error })))
       )
     )
   );
@@ -61,10 +60,10 @@ export class AppUserEffects {
   @Effect()
   deleteAppUser$ = this.actions.pipe(
     ofType(deleteUserFromApplication),
-    switchMap((action) =>
+    switchMap(action =>
       this.appUserService.deleteUser(action.applicationId, action.userId).pipe(
         map(() => deleteUserFromApplicationSuccess({ id: action.userId })),
-        catchError((error) => of(deleteUserFromApplicationFail({ error })))
+        catchError(error => of(deleteUserFromApplicationFail({ error })))
       )
     )
   );
@@ -72,13 +71,13 @@ export class AppUserEffects {
   @Effect()
   inviteAppUser$ = this.actions.pipe(
     ofType(inviteAppUserAction),
-    switchMap((action) =>
+    switchMap(action =>
       this.appUserService.inviteUser(action.applicationId, action.userEmail, action.role).pipe(
         switchMap(() => [
           loadAppUserEntityAction({ applicationId: action.applicationId }),
           inviteAppUserActionSuccess({ userEmail: action.userEmail }),
         ]),
-        catchError((error) => of(inviteAppUserActionFail({ error })))
+        catchError(error => of(inviteAppUserActionFail({ error })))
       )
     )
   );
@@ -86,7 +85,7 @@ export class AppUserEffects {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction, inviteAppUserActionFail),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
   );
@@ -94,7 +93,7 @@ export class AppUserEffects {
   @Effect({ dispatch: false })
   addUser$ = this.actions.pipe(
     ofType(inviteAppUserActionSuccess),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openNotification({
         messageText: 'application_user_list.invitation_sent',
         messageOptions: { userEmail: action.userEmail },

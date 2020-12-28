@@ -13,32 +13,29 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { TestModelComponent } from './test-model.component';
+import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { TestModelPageService } from './test-model.service';
-import { SpinnerModule } from '../../features/spinner/spinner.module';
 import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
+
 import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
+import { SpinnerModule } from '../../features/spinner/spinner.module';
+import { TestModelComponent } from './test-model.component';
+import { TestModelPageService } from './test-model.service';
 
 @NgModule({
-  declarations: [ TestModelComponent ],
+  declarations: [TestModelComponent],
   imports: [
     CommonModule,
     BreadcrumbsContainerModule,
-    RouterModule.forChild([
-      { path: '', component: TestModelComponent },
-    ]),
+    RouterModule.forChild([{ path: '', component: TestModelComponent }]),
     MatCardModule,
     FaceRecognitionModule,
     SpinnerModule,
-    TranslateModule
+    TranslateModule,
   ],
-  providers: [ TestModelPageService ]
+  providers: [TestModelPageService],
 })
-export class TestModelModule {
-}
+export class TestModelModule {}

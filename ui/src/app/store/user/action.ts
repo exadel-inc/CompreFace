@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 import { createAction, props } from '@ngrx/store';
-import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Role } from 'src/app/data/enums/role.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
 export const setPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
 export const loadUsersEntityAction = createAction('[User/API] Load Users');
@@ -32,7 +32,6 @@ export const deleteUser = createAction(
   props<{
     userId: string;
     deleterUserId: string;
-    newOwner?: string;
   }>()
 );
 export const deleteUserSuccess = createAction('[User/API] Delete User Success', props<{ userId: string }>());

@@ -13,21 +13,20 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {Component, Inject} from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 @Component({
-    selector: 'app-snackbar',
-    styleUrls: ['./snackbar.component.scss'],
-    templateUrl: './snackbar.component.html'
+  selector: 'app-snackbar',
+  styleUrls: ['./snackbar.component.scss'],
+  templateUrl: './snackbar.component.html',
 })
 export class AppSnackBarComponent {
-    public type: string;
-    public message: string;
+  public type: string;
+  public message: string;
 
-    constructor(@Inject(MAT_SNACK_BAR_DATA) data: { type: string, message: string }) {
-        this.type = data.type;
-        this.message = data.message;
-    }
+  constructor(@Inject(MAT_SNACK_BAR_DATA) data: { type: string; message: string }) {
+    this.type = data.type;
+    this.message = data.message;
+  }
 }

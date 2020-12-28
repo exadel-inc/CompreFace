@@ -13,15 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {NgModule} from '@angular/core';
-import {AppSnackBarComponent} from './snackbar.component';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import {CommonModule} from '@angular/common';
+
+import { AppSnackBarComponent } from './snackbar.component';
 
 @NgModule({
-    declarations: [AppSnackBarComponent],
-    imports: [MatSnackBarModule, CommonModule],
-    entryComponents: [AppSnackBarComponent]
+  declarations: [AppSnackBarComponent],
+  imports: [MatSnackBarModule, CommonModule],
+  entryComponents: [AppSnackBarComponent],
 })
 export class SnackBarModule {}

@@ -13,29 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import {createFeatureSelector, createSelector} from '@ngrx/store';
 import { User } from '../../data/interfaces/user';
 
 export const selectUserInfoState = createFeatureSelector<User>('userInfo');
 
-export const selectUserId = createSelector(
-  selectUserInfoState,
-  (userInfo) => userInfo.userId
-);
+export const selectUserId = createSelector(selectUserInfoState, userInfo => userInfo.userId);
 
-export const selectUserEmail = createSelector(
-  selectUserInfoState,
-  (userInfo) => userInfo.email
-);
+export const selectUserEmail = createSelector(selectUserInfoState, userInfo => userInfo.email);
 
 // TODO: move default avatar to backend response
-export const selectUserAvatar = createSelector(
-  selectUserInfoState,
-  (userInfo) => userInfo.avatar || 'assets/img/avatar.png'
-);
+export const selectUserAvatar = createSelector(selectUserInfoState, userInfo => userInfo.avatar || 'assets/img/avatar.png');
 
-export const selectUserName = createSelector(
-  selectUserInfoState,
-  (userInfo) => userInfo.firstName + ' ' + userInfo.lastName
-);
+export const selectUserName = createSelector(selectUserInfoState, userInfo => userInfo.firstName + ' ' + userInfo.lastName);

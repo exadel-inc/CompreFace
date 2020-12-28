@@ -14,12 +14,12 @@
  * permissions and limitations under the License.
  */
 
-import {Environment} from './interface';
+import { Environment } from './interface';
 
 export const environment: Environment = {
   production: true,
   basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
   adminApiUrl: '/admin/',
   userApiUrl: '/api/v1/',
-  buildNumber: '0.5.0'
+  buildNumber: '0.4.1',
 };

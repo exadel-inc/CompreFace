@@ -13,9 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { of } from 'rxjs';
 
-import {UserTableFilterPipe} from './user-table-filter.pipe';
-import {of} from 'rxjs';
+import { UserTableFilterPipe } from './user-table-filter.pipe';
 
 describe('User table Pipe', () => {
   let pipe: UserTableFilterPipe;
@@ -23,22 +23,21 @@ describe('User table Pipe', () => {
     data: [
       {
         firstName: 'Tom',
-        lastName: 'Sem'
+        lastName: 'Sem',
       },
       {
         firstName: 'Tim',
-        lastName: 'Alex'
-      }
-    ]
+        lastName: 'Alex',
+      },
+    ],
   };
 
   beforeEach(() => {
-
     pipe = new UserTableFilterPipe();
   });
 
-  it('empty search string', (done) => {
-    const tableData$ = of({...tableData});
+  it('empty search string', done => {
+    const tableData$ = of({ ...tableData });
     pipe.transform(tableData$, '').subscribe(e => {
       expect(e.data.length).toBe(2);
       expect(e.data[0].firstName).toBe(tableData.data[0].firstName);
@@ -49,8 +48,8 @@ describe('User table Pipe', () => {
     });
   });
 
-  it('search for "To"', (done) => {
-    const tableData$ = of({...tableData});
+  it('search for "To"', done => {
+    const tableData$ = of({ ...tableData });
     pipe.transform(tableData$, 'To').subscribe(e => {
       expect(e.data.length).toBe(1);
       expect(e.data[0].firstName).toBe(tableData.data[0].firstName);
@@ -59,8 +58,8 @@ describe('User table Pipe', () => {
     });
   });
 
-  it('search for "Toa"', (done) => {
-    const tableData$ = of({...tableData});
+  it('search for "Toa"', done => {
+    const tableData$ = of({ ...tableData });
     pipe.transform(tableData$, 'Toa').subscribe(e => {
       expect(e.data.length).toBe(0);
       done();

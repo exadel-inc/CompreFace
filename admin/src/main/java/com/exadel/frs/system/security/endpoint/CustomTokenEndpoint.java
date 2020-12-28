@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @RequestMapping(value = "/oauth/token")
 public class CustomTokenEndpoint extends TokenEndpoint {
 
-    private final static long SESSION_TIME_SECONDS = 8 * 60 * 60;
-
     @PostMapping
     public ResponseEntity<OAuth2AccessToken> postAccessToken(
             Principal principal,
@@ -39,7 +37,7 @@ public class CustomTokenEndpoint extends TokenEndpoint {
 
         val cookie = ResponseCookie.from(ACCESS_TOKEN_COOKIE_NAME, defaultToken.getValue())
                                    .httpOnly(true)
-                                   .maxAge(SESSION_TIME_SECONDS)
+                                   .maxAge(defaultToken.getExpiresIn())
                                    .path("/admin")
                                    .build();
         val headers = new HttpHeaders();

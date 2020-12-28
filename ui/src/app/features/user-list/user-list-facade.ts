@@ -54,7 +54,7 @@ export class UserListFacade implements IFacade {
     this.currentUserId$ = this.store.select(selectUserId);
     this.currentUserEmail$ = this.store.select(selectUserEmail);
 
-    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map((observResults) => !(!observResults[0] && !observResults[1])));
+    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map(observResults => !(!observResults[0] && !observResults[1])));
   }
 
   initSubscriptions(): void {
@@ -77,12 +77,11 @@ export class UserListFacade implements IFacade {
     );
   }
 
-  deleteUser(deletion: UserDeletion, newOwner?: string): void {
+  deleteUser(deletion: UserDeletion): void {
     this.store.dispatch(
       deleteUser({
         userId: deletion.userToDelete.userId,
         deleterUserId: deletion.deleterUserId,
-        newOwner,
       })
     );
   }
