@@ -13,21 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, ViewChild, OnInit} from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-recognition.helpers';
+import { getImageSize, ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter } from '../face-recognition.helpers';
+import { RequestInfo } from '../../../data/interfaces/request-info';
 
 @Component({
   selector: 'app-recognition-result',
   templateUrl: './recognition-result.component.html',
   styleUrls: ['./recognition-result.component.scss'],
 })
-export class RecognitionResultComponent implements OnDestroy {
+export class RecognitionResultComponent implements OnInit, OnDestroy {
   @Input() pending = true;
   @Input() file: File;
-  @Input() requestInfo: any;
+  @Input() requestInfo: RequestInfo;
   // Handle input changes and update image.
   @Input() set printData(value: any) {
     if (this.printSubscription) {
@@ -42,7 +43,12 @@ export class RecognitionResultComponent implements OnDestroy {
 
   canvasSize: ImageSize = { width: 500, height: null };
   faceDescriptionHeight = 25;
+  formattedResult: string;
   private printSubscription: Subscription;
+
+  ngOnInit() {
+    this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
+  }
 
   ngOnDestroy() {
     if (this.printSubscription) {
@@ -60,6 +66,7 @@ export class RecognitionResultComponent implements OnDestroy {
       map(preparedImageData => this.drawCanvas(preparedImageData))
     );
   }
+
   private prepareForDraw(size, rawData): Observable<any> {
     return rawData.map(value => ({
       box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),
