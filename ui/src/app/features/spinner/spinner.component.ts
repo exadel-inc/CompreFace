@@ -13,19 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {Component, OnInit, Input} from '@angular/core';
-import {Observable} from 'rxjs';
+import { Component, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-spinner',
   templateUrl: './spinner.component.html',
-  styleUrls: ['./spinner.component.scss']
+  styleUrls: ['./spinner.component.scss'],
 })
-export class SpinnerComponent implements OnInit {
+export class SpinnerComponent {
   @Input() isVisible$: Observable<boolean>;
-  constructor() { }
-
-  ngOnInit() {
-  }
 }

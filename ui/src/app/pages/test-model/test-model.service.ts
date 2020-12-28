@@ -13,16 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { AppState } from '../../store';
-import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
-import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
-import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/actions';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
+
+import { Routes } from '../../data/enums/routers-url.enum';
+import { AppState } from '../../store';
+import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
+import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/actions';
 import { selectModels } from '../../store/model/selectors';
 import { getUserInfo } from '../../store/userInfo/action';
 
@@ -47,14 +47,14 @@ export class TestModelPageService {
       this.modelSub = this.store
         .select(selectModels)
         .pipe(
-          filter((models) => !models.length),
+          filter(models => !models.length),
           take(1)
         )
         .subscribe(() => {
           this.fetchModels();
         });
     } else {
-      this.router.navigate([ROUTERS_URL.HOME]);
+      this.router.navigate([Routes.Home]);
     }
   }
 

@@ -25,8 +25,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.config.repository.NotificationConfig;
-import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanBox;
 import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
@@ -57,12 +55,6 @@ class RecognizeControllerTest {
 
     @MockBean
     private ImageExtensionValidator imageValidator;
-
-    @MockBean
-    private Notifier notifier;
-
-    @MockBean
-    private NotificationConfig notificationConfig;
 
     private static final String MODEL_KEY = "model_key";
     private static final String API_KEY = MODEL_KEY;

@@ -30,7 +30,7 @@ responses:
       properties:
         calculator_version:
           type: string
-          example: 'Facenet2018'
+          example: 'FaceLibrary_v7'
         result:
           type: array
           items:

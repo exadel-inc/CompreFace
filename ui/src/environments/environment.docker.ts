@@ -14,12 +14,12 @@
  * permissions and limitations under the License.
  */
 
-import {Environment} from './interface';
+import { Environment } from './interface';
 
 export const environment: Environment = {
   production: true,
   basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
   adminApiUrl: 'http://compreface-api:8080/admin/',
   userApiUrl: 'http://compreface-api:8080/api/v1/',
-  buildNumber: 'docker'
+  buildNumber: 'docker',
 };

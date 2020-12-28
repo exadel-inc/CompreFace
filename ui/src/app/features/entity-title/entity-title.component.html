@@ -15,14 +15,12 @@
   -->
 
 <div class="title">
-  <div class="title-text" *ngIf="options.length === 1" >
-    {{entityName}} name: {{options[0].name}}
-  </div>
-  <mat-form-field *ngIf="options.length > 1" >
-    <mat-label>{{entityName}} name</mat-label>
+  <div class="title-text" *ngIf="options.length === 1">{{ entityName }} name: {{ options[0].name }}</div>
+  <mat-form-field *ngIf="options.length > 1">
+    <mat-label>{{ entityName }} name</mat-label>
     <mat-select [(value)]="selected">
       <mat-option *ngFor="let option of options" [value]="option.id">
-        {{option.name}}
+        {{ option.name }}
       </mat-option>
     </mat-select>
   </mat-form-field>

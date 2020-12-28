@@ -13,9 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 export interface IAlertData {
   type: 'error' | 'warning' | 'info';
@@ -25,21 +24,16 @@ export interface IAlertData {
 @Component({
   selector: 'app-alert',
   templateUrl: './alert.component.html',
-  styleUrls: ['./alert.component.scss']
+  styleUrls: ['./alert.component.scss'],
 })
-export class AlertComponent implements OnInit {
+export class AlertComponent {
   message: string;
   type: 'error' | 'warning' | 'info';
 
-  constructor(
-    public dialogRef: MatDialogRef<AlertComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: IAlertData
-  ) {
+  constructor(public dialogRef: MatDialogRef<AlertComponent>, @Inject(MAT_DIALOG_DATA) public data: IAlertData) {
     this.message = data.message;
     this.type = data.type;
   }
-
-  ngOnInit() {}
 
   onOkClick(): void {
     this.dialogRef.close();

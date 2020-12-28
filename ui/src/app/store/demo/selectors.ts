@@ -13,11 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {DemoEntityState} from './reducers';
+import { DemoEntityState } from './reducers';
 
 export const selectDemoState = createFeatureSelector<DemoEntityState>('demo');
-export const selectDemoApiKey = createSelector(selectDemoState, (state) => state.apiKey);
-export const selectDemoPending = createSelector(selectDemoState, (state) => state.isPending);
-export const selectDemoPageAvailability = createSelector(selectDemoState, (state) => !!state.apiKey);
+export const selectDemoApiKey = createSelector(selectDemoState, state => state.apiKey);
+export const selectDemoPending = createSelector(selectDemoState, state => state.isPending);
+export const selectDemoPageAvailability = createSelector(selectDemoState, state => !!state.apiKey);

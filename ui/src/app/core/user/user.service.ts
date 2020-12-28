@@ -17,10 +17,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 
 import { environment } from '../../../environments/environment';
-import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +31,7 @@ export class UserService {
   getAll(): Observable<AppUser[]> {
     return this.http
       .get<AppUser[]>(`${environment.adminApiUrl}user/roles`)
-      .pipe(map((users) => users.map((user) => ({ id: user.userId, ...user }))));
+      .pipe(map(users => users.map(user => ({ id: user.userId, ...user }))));
   }
 
   updateRole(userId: string, role: Role): Observable<any> {
@@ -39,8 +39,8 @@ export class UserService {
     return this.http.put<AppUser>(`${environment.adminApiUrl}user/global/role`, { userId, role }, { withCredentials: false });
   }
 
-  delete(userId: string, newOwner?: string) {
-    return this.http.delete(`${environment.adminApiUrl}user/${userId}?replacer=${newOwner}`);
+  delete(userId: string) {
+    return this.http.delete(`${environment.adminApiUrl}user/${userId}?replacer=owner`);
   }
 
   fetchAvailableRoles(): Observable<string[]> {

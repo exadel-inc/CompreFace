@@ -13,11 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createAction, props } from '@ngrx/store';
+
 import { SignUp } from '../../data/interfaces/sign-up';
 
-export const logIn = createAction('[Auth] Login', props<{ email: string, password: string }>());
+export const logIn = createAction('[Auth] Login', props<{ email: string; password: string }>());
 export const logInSuccess = createAction('[Auth] Login Success');
 export const logInFailure = createAction('[Auth] Login Failure', props<{ error: any }>());
 export const signUp = createAction('[Auth] Sign up', props<SignUp>());

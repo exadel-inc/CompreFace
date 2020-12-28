@@ -16,20 +16,24 @@
 
 <div class="user-list">
   <div class="table-header-container">
-    <h3>{{'users.title' | translate}}</h3>
+    <h3>{{ 'users.title' | translate }}</h3>
     <form>
-      <input matInput type="text" class="search-input" [(ngModel)]="search" [ngModelOptions]="{standalone: true}"
-             placeholder="{{'users.search.org_title' | translate}}">
-      <mat-icon class="material-icons notranslate">
-        search
-      </mat-icon>
+      <input
+        matInput
+        type="text"
+        class="search-input"
+        [(ngModel)]="search"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="{{ 'users.search.org_title' | translate }}"
+      />
+      <mat-icon class="material-icons notranslate"> search </mat-icon>
     </form>
   </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-user-table
     class="app-table"
     [isLoading]="isLoading$ | async"
-    [tableConfig]="tableConfig$ | userTableFilter:search | async"
+    [tableConfig]="tableConfig$ | userTableFilter: search | async"
     [availableRoles]="availableRoles$ | async"
     [currentUserId]="currentUserId$ | async"
     [userRole]="userRole$ | async"

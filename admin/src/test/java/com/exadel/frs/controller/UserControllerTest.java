@@ -310,7 +310,7 @@ public class UserControllerTest {
 
     @Test
     void shouldReturnOkWhenUserNotEnabled() throws Exception {
-        val createDto = new UserCreateDto("email", "name", "last", "password", false);
+        val createDto = new UserCreateDto("email", "name", "last", "password");
 
         val createRequest = post("/user/register")
                 .with(csrf())
