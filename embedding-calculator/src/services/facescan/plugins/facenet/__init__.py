@@ -12,10 +12,4 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-API_KEY_HEADER = 'X-Api-Key'
-
-
-class ARG:
-    LIMIT = 'limit'
-    DET_PROB_THRESHOLD = 'det_prob_threshold'
-    FACE_PLUGINS = 'face_plugins'
+requirements = ('tensorflow~=1.15.4', 'facenet~=1.0.5')
