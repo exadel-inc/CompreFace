@@ -148,7 +148,8 @@
     "link": "Try Demo"
   },
   "face_recognition_container": {
-    "file_size_error": "The photo size is more than 5 Mb"
+    "file_size_error": "The photo size is more than 5 Mb",
+    "file_unavailable_extension": "File {{filename}} has an unavailable extension"
   },
   "face_recognition": {
     "no_recognized": "No faces recognized",

@@ -142,7 +142,8 @@
     "title": "Demo"
   },
   "face_recognition_container": {
-    "file_size_error": "Rozmiar zdjęcia to ponad 5 Mb"
+    "file_size_error": "Rozmiar zdjęcia to ponad 5 Mb",
+    "file_unavailable_extension": "Plik {{filename}} ma niedostępne rozszerzenie"
   },
   "face_recognition": {
     "no_recognized": "Nie rozpoznano żadnych twarzy",
