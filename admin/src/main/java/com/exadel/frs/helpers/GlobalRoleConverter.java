@@ -18,25 +18,13 @@ package com.exadel.frs.helpers;
 
 import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.IncorrectGlobalRoleException;
-import java.util.stream.Stream;
-import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 @Converter(autoApply = true)
-public class GlobalRoleConverter implements AttributeConverter<GlobalRole, String> {
-
-    @Override
-    public String convertToDatabaseColumn(GlobalRole globalRole) {
-        return globalRole == null ? null : globalRole.getCode();
-    }
+public class GlobalRoleConverter extends EnumCodeConverter<GlobalRole> {
 
     @Override
     public GlobalRole convertToEntityAttribute(String code) {
-        return code == null
-                ? null
-                : Stream.of(GlobalRole.values())
-                        .filter(globalRole -> globalRole.getCode().equals(code))
-                        .findFirst()
-                        .orElseThrow(() -> new IncorrectGlobalRoleException(code));
+        return super.convertToEntityAttribute(code, GlobalRole.values(), new IncorrectGlobalRoleException(code));
     }
 }

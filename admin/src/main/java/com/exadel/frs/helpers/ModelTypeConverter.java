@@ -21,7 +21,7 @@ import com.exadel.frs.exception.IncorrectModelTypeException;
 import javax.persistence.Converter;
 
 @Converter
-public class ModelTypeConverter extends EnumCodeConverter<ModelType, IncorrectModelTypeException> {
+public class ModelTypeConverter extends EnumCodeConverter<ModelType> {
 
     @Override
     public ModelType convertToEntityAttribute(String code) {

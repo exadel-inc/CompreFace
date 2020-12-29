@@ -23,7 +23,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public enum AppModelAccess {
+public enum AppModelAccess implements EnumCode {
 
     OWNER("O"),
     READONLY("R"),

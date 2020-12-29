@@ -21,14 +21,14 @@ import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import org.apache.commons.lang3.StringUtils;
 
-public abstract class EnumCodeConverter<T extends Enum<T> & EnumCode, E extends BasicException> implements AttributeConverter<T, String> {
+public abstract class EnumCodeConverter<T extends Enum<T> & EnumCode> implements AttributeConverter<T, String> {
 
     @Override
     public String convertToDatabaseColumn(T enumeration) {
         return enumeration == null ? null : enumeration.getCode();
     }
 
-    protected T convertToEntityAttribute(String code, T[] values, E exception) {
+    protected T convertToEntityAttribute(String code, T[] values, BasicException exception) {
         if (StringUtils.isBlank(code) || values == null) {
             throw exception;
         }
