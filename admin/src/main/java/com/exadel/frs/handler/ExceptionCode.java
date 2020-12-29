@@ -18,6 +18,7 @@ package com.exadel.frs.handler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,11 +34,12 @@ public enum ExceptionCode {
     EMAIL_ALREADY_REGISTERED(4, BAD_REQUEST),
     EMPTY_REQUIRED_FIELD(5, BAD_REQUEST),
 
-    INCORRECT_ACCESS_TYPE(6, BAD_REQUEST),
-    INCORRECT_APP_ROLE(7, BAD_REQUEST),
-    INCORRECT_GLOBAL_ROLE(8, BAD_REQUEST),
+    INCORRECT_ACCESS_TYPE(6, INTERNAL_SERVER_ERROR),
+    INCORRECT_APP_ROLE(7, INTERNAL_SERVER_ERROR),
+    INCORRECT_GLOBAL_ROLE(8, INTERNAL_SERVER_ERROR),
     INSUFFICIENT_PRIVILEGES(9, BAD_REQUEST),
     MODEL_NOT_FOUND(10, NOT_FOUND),
+    INCORRECT_MODEL_TYPE(11, INTERNAL_SERVER_ERROR),
 
     ILLEGAL_REPLACER(13, BAD_REQUEST),
     SELF_ROLE_CHANGE(14, BAD_REQUEST),

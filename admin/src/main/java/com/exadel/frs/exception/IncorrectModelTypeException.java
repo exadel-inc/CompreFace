@@ -14,17 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.exception;
 
-import com.exadel.frs.enums.ModelType;
-import lombok.Data;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_MODEL_TYPE;
+import static java.lang.String.format;
 
-@Data
-public class ModelResponseDto {
+public class IncorrectModelTypeException extends BasicException {
 
-    private String id;
-    private String name;
-    private String apiKey;
-    private String accessLevel;
-    private ModelType type;
+    public static final String MODEL_TYPE_NOT_EXISTS_MESSAGE = "Model type %s does not exists";
+
+    public IncorrectModelTypeException(final String modelType) {
+        super(INCORRECT_MODEL_TYPE, format(MODEL_TYPE_NOT_EXISTS_MESSAGE, modelType));
+    }
 }

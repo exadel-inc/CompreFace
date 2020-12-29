@@ -14,25 +14,17 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.helpers;
 
 import com.exadel.frs.enums.ModelType;
-import com.exadel.frs.validation.ValidEnum;
-import javax.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.exadel.frs.exception.IncorrectModelTypeException;
+import javax.persistence.Converter;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class ModelCreateDto {
+@Converter
+public class ModelTypeConverter extends EnumCodeConverter<ModelType, IncorrectModelTypeException> {
 
-    @NotBlank(message = "Model name cannot be empty")
-    private String name;
-    @NotBlank(message = "Model Type cannot be empty")
-    @ValidEnum(message = "Model Type '${validatedValue}' doesn't exist!", targetClassType = ModelType.class)
-    private String type;
+    @Override
+    public ModelType convertToEntityAttribute(String code) {
+        return super.convertToEntityAttribute(code, ModelType.values(), new IncorrectModelTypeException(code));
+    }
 }

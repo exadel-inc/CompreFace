@@ -16,15 +16,14 @@
 
 package com.exadel.frs.validation;
 
+import java.util.stream.Stream;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import org.apache.commons.lang3.EnumUtils;
 
 public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
 
-    private Class<? extends Enum> enumType;
+    private Class<? extends Enum<?>> enumType;
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void initialize(ValidEnum targetEnum) {
         enumType = targetEnum.targetClassType();
@@ -32,6 +31,9 @@ public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        return EnumUtils.isValidEnum(enumType, value);
+        if (value == null) {
+            return false;
+        }
+        return Stream.of(enumType.getEnumConstants()).anyMatch(e -> value.equals(e.name()));
     }
-} 
+}

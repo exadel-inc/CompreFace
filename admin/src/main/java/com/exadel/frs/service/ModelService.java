@@ -24,6 +24,7 @@ import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
+import com.exadel.frs.enums.ModelType;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
@@ -93,6 +94,7 @@ public class ModelService {
                          .guid(randomUUID().toString())
                          .apiKey(randomUUID().toString())
                          .app(app)
+                         .type(ModelType.valueOf(modelCreateDto.getType()))
                          .build();
 
         return modelRepository.save(model);
