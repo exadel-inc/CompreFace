@@ -19,9 +19,8 @@ import com.exadel.frs.enums.EnumCode;
 import com.exadel.frs.exception.BasicException;
 import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
+import org.apache.commons.lang3.StringUtils;
 
-@Converter(autoApply = true)
 public abstract class EnumCodeConverter<T extends Enum<T> & EnumCode, E extends BasicException> implements AttributeConverter<T, String> {
 
     @Override
@@ -30,11 +29,13 @@ public abstract class EnumCodeConverter<T extends Enum<T> & EnumCode, E extends 
     }
 
     protected T convertToEntityAttribute(String code, T[] values, E exception) {
-        return code == null
-                ? null
-                : Stream.of(values)
-                        .filter(value -> value.getCode().equals(code))
-                        .findFirst()
-                        .orElseThrow(() -> exception);
+        if (StringUtils.isBlank(code) || values == null) {
+            throw exception;
+        }
+
+        return Stream.of(values)
+                     .filter(value -> value.getCode().equals(code))
+                     .findFirst()
+                     .orElseThrow(() -> exception);
     }
 }

@@ -19,6 +19,7 @@ package com.exadel.frs.validation;
 import java.util.stream.Stream;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import org.apache.commons.lang3.StringUtils;
 
 public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
 
@@ -31,7 +32,7 @@ public class EnumValidator implements ConstraintValidator<ValidEnum, String> {
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (value == null) {
+        if (StringUtils.isBlank(value)) {
             return false;
         }
         return Stream.of(enumType.getEnumConstants()).anyMatch(e -> value.equals(e.name()));
