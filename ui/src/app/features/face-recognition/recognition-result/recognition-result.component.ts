@@ -13,11 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, ElementRef, Input, OnDestroy, ViewChild, OnInit} from '@angular/core';
+
+import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { getImageSize, ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter } from '../face-recognition.helpers';
+import { RequestResult } from '../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../data/interfaces/request-info';
 
 @Component({
@@ -25,28 +27,34 @@ import { RequestInfo } from '../../../data/interfaces/request-info';
   templateUrl: './recognition-result.component.html',
   styleUrls: ['./recognition-result.component.scss'],
 })
-export class RecognitionResultComponent implements OnInit, OnDestroy {
-  @Input() pending = true;
+export class RecognitionResultComponent implements OnChanges, OnDestroy {
   @Input() file: File;
   @Input() requestInfo: RequestInfo;
-  // Handle input changes and update image.
-  @Input() set printData(value: any) {
-    if (this.printSubscription) {
-      this.printSubscription.unsubscribe();
-    }
+  @Input() printData: RequestResult;
+  @Input() isLoaded: boolean;
 
-    if (value) {
-      this.printSubscription = this.printResult(value).subscribe();
+  @ViewChild('canvasElement') set canvasElement(canvas: ElementRef) {
+    if (canvas) {
+      this.myCanvas = canvas;
+
+      if (this.printSubscription) {
+        this.printSubscription.unsubscribe();
+      }
+
+      if (this.printData && this.myCanvas) {
+        this.printSubscription = this.printResult(this.printData).subscribe();
+      }
     }
-  }
-  @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
+  };
 
   canvasSize: ImageSize = { width: 500, height: null };
+  myCanvas: ElementRef;
   faceDescriptionHeight = 25;
   formattedResult: string;
+
   private printSubscription: Subscription;
 
-  ngOnInit() {
+  ngOnChanges() {
     this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 
