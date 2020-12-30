@@ -149,7 +149,7 @@ The following result Json illustrates how these points map to a face, where
 3. probability - gives the confidence that this is a face
 4. x_min, x_max, y_min, y_max are coordinates of the face in the image
 
-```
+```json
 
 "result": [
 {
@@ -172,7 +172,7 @@ The following result Json illustrates how these points map to a face, where
 
 The following JavaScript code example allows to add new face to Face Collection.
 
-```
+```js
 
  async function saveNewImageToFaceCollection() {
   let name = encodeURIComponent('John');
@@ -193,7 +193,7 @@ The following JavaScript code example allows to add new face to Face Collection.
 
 This function sends image to our server and shows result in text area:
 
-```
+```js
 
 function recognizeFace(input) {
 
@@ -308,7 +308,7 @@ By using the created API key, the user can add an image as an example of the fac
 
 Creates an example of the face by saving images. To train the system, you can add as many images as you want.
 
-```http request
+```shell
 curl  -X POST "http://localhost:8000/api/v1/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
@@ -323,7 +323,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces?subject=<subject>&det_prob_thr
 | file                | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 
 Response body on success:
-```
+```json
 {
   "image_id": "<UUID>",
   "subject": "<subject>"
@@ -340,7 +340,7 @@ Response body on success:
 ### Recognize faces from given image
 
 Recognizes faces from the uploaded image.
-```http request
+```shell
 curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
@@ -358,7 +358,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&predic
 | prediction_count | param       | integer | optional | maximum number of predictions per faces. Default value: 1    |
 
 Response body on success:
-```
+```json
 {
   "result": [
     {
@@ -396,7 +396,7 @@ Response body on success:
 
 Retrieves a list of images saved in a Face Collection
 
-```http request
+```shell
 curl  -X GET "http://localhost:8000/api/v1/faces" \
 -H "x-api-key: <faces_collection_api_key>" \
 ```
@@ -407,7 +407,7 @@ curl  -X GET "http://localhost:8000/api/v1/faces" \
 
 Response body on success:
 
-```
+```json
 {
   "faces": [
     {
@@ -430,7 +430,7 @@ Response body on success:
 
 Deletes all image examples of the <subject>.
 
-```http request
+```shell
 curl  -X DELETE "http://localhost:8000/api/v1/faces?subject=<subject>" \
 -H "x-api-key: <faces_collection_api_key>"
 ```
@@ -441,7 +441,7 @@ curl  -X DELETE "http://localhost:8000/api/v1/faces?subject=<subject>" \
 | subject   | param       | string | optional | is the name you assign to the image you save. **Caution!** If this parameter is absent, all faces in Face Collection will be removed |
 
 Response body on success:
-```
+```json
 [
   {
     "image_id": <image_id>,
@@ -462,7 +462,7 @@ Response body on success:
 
 Deletes an image by ID.
 
-```http request
+```shell
 curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
 -H "x-api-key: <faces_collection_api_key>"
 ```
@@ -473,7 +473,7 @@ curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
 | image_id  | variable    | UUID   | required | UUID of the removing face                 |
 
 Response body on success:
-```
+```json
 {
   "image_id": <image_id>,
   "subject": <subject>
@@ -490,7 +490,7 @@ Response body on success:
 ### Verify faces from given image
 
 Compares faces from the uploaded image with face in saved image id.
-```http request
+```shell
 curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
@@ -508,7 +508,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit
 | det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 
 Response body on success:
-```
+```json
 {
   "result": [
     {
