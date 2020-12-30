@@ -26,8 +26,6 @@ import { AppState } from './store';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'frs-client-fe';
-
   constructor(auth: AuthService, store: Store<AppState>, private translate: TranslateService) {
     translate.setDefaultLang('en');
   }
