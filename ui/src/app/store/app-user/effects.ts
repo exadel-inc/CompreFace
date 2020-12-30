@@ -14,12 +14,14 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AppUserService } from 'src/app/core/app-user/app-user.service';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
+import { Routes } from '../../data/enums/routers-url.enum';
 import { loadApplications } from '../application/action';
 import {
   addAppUserEntityAction,
@@ -37,7 +39,12 @@ import {
 
 @Injectable()
 export class AppUserEffects {
-  constructor(private actions: Actions, private appUserService: AppUserService, private snackBarService: SnackBarService) {}
+  constructor(
+    private actions: Actions,
+    private appUserService: AppUserService,
+    private snackBarService: SnackBarService,
+    private router: Router
+  ) {}
 
   @Effect()
   loadAppUsers = this.actions.pipe(
@@ -63,6 +70,7 @@ export class AppUserEffects {
     switchMap(action =>
       this.appUserService.deleteUser(action.applicationId, action.userId).pipe(
         map(() => deleteUserFromApplicationSuccess({ id: action.userId })),
+        tap(() => this.router.navigateByUrl(Routes.Home)),
         catchError(error => of(deleteUserFromApplicationFail({ error })))
       )
     )
