@@ -29,6 +29,11 @@ class FaceScanner(ABC):
     def __init__(self):
         assert self.ID
 
+    def __new__(cls):
+        if not hasattr(cls, 'instance'):
+            cls.instance = super(FaceScanner, cls).__new__(cls)
+        return cls.instance
+
     @abstractmethod
     def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
         """ Find face bounding boxes and calculate embeddings"""
