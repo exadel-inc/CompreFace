@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
@@ -54,8 +54,10 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
 
   private printSubscription: Subscription;
 
-  ngOnChanges() {
-    this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes?.requestInfo?.currentValue) {
+        this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
+    }
   }
 
   ngOnDestroy() {
