@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="result-container">
+<div class="result-container" *ngIf="isLoaded">
   <div class="result-sections">
     <div class="result-section-image">
       <div class="result-image">
@@ -28,9 +28,7 @@
           {{ 'test_model.request' | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <textarea class="result-textarea" id="result-textarea-request" rows="10" disabled>
-          {{ requestInfo.request }}
-      </textarea>
+      <textarea class="result-textarea" id="result-textarea-request" rows="5" disabled>{{ requestInfo.request }}</textarea>
     </mat-expansion-panel>
 
     <mat-expansion-panel>
@@ -39,9 +37,7 @@
           {{ 'test_model.response' | translate }}
         </mat-panel-title>
       </mat-expansion-panel-header>
-      <textarea class="result-textarea" id="result-textarea-response" rows="16" disabled>
-          {{ requestInfo.response }}
-      </textarea>
+      <textarea class="result-textarea" id="result-textarea-response" rows="16" disabled>{{ formattedResult}}</textarea>
     </mat-expansion-panel>
   </div>
 </div>
