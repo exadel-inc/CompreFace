@@ -35,21 +35,24 @@ import {
 export class ApplicationHeaderFacade implements IFacade {
   selectedId$: Observable<string | null>;
   selectedId: string | null;
-  loading$: Observable<boolean>;
+  isLoading$: Observable<boolean>;
   userRole$: Observable<string | null>;
+  currentUserRole$: Observable<string | null>;
   app$: Observable<Application>;
   appIdSub: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
-    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
+    this.currentUserRole$ = this.store.select(selectCurrentUserRole);
+    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.currentUserRole$]).pipe(
       map(([applicationRole, globalRole]) =>
         // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        globalRole !== Role.User.toString() ? Role.Owner.toString() : applicationRole
+        globalRole !== Role.User ? Role.Owner : applicationRole
       )
     );
     this.selectedId$ = this.store.select(selectCurrentAppId);
-    this.loading$ = this.store.select(selectIsPendingApplicationList);
+    this.isLoading$ = combineLatest([this.store.select(selectIsPendingApplicationList), this.currentUserRole$]).pipe(
+      map(([pendingApplicationList, currentUserRole]) => (!pendingApplicationList && !currentUserRole)));
   }
 
   initSubscriptions() {

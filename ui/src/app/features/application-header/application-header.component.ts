@@ -34,7 +34,7 @@ import { ApplicationHeaderFacade } from './application-header.facade';
 export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   app$: Observable<Application>;
   userRole$: Observable<string | null>;
-  loading$: Observable<boolean>;
+  isLoading$: Observable<boolean>;
   maxHeaderLinkLength = 25;
   userRoleEnum = Role;
 
@@ -44,7 +44,7 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
     this.applicationHeaderFacade.initSubscriptions();
     this.app$ = this.applicationHeaderFacade.app$;
     this.userRole$ = this.applicationHeaderFacade.userRole$;
-    this.loading$ = this.applicationHeaderFacade.loading$;
+    this.isLoading$ = this.applicationHeaderFacade.isLoading$;
   }
 
   ngOnDestroy(): void {
