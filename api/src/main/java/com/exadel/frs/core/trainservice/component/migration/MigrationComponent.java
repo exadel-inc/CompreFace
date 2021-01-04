@@ -21,7 +21,7 @@ import com.exadel.frs.core.trainservice.entity.Image;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.core.trainservice.system.feign.FeignClientFactory;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +59,7 @@ public class MigrationComponent {
     }
 
     private void processFaces(final String url) {
-        val migrationServerFeignClient = feignClientFactory.getFeignClient(FacesClient.class, url);
+        val migrationServerFeignClient = feignClientFactory.getFeignClient(FacesServiceClient.class, url);
         val migrationCalculatorVersion = migrationServerFeignClient.getStatus().getCalculatorVersion();
 
         log.info("Calculating embedding for faces");

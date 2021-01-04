@@ -14,23 +14,28 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.system.feign.faces.dto;
 
-import java.util.ArrayList;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Accessors(chain = true)
-public class ScanResult {
+public class ScanBox {
 
-    private ScanBox box;
-    private List<Double> embedding = new ArrayList<>();
+    @JsonProperty(value = "probability")
+    private Double probability;
+
+    @JsonProperty(value = "x_max")
+    private Integer xMax;
+
+    @JsonProperty(value = "y_max")
+    private Integer yMax;
+
+    @JsonProperty(value = "x_min")
+    private Integer xMin;
+
+    @JsonProperty(value = "y_min")
+    private Integer yMin;
 }

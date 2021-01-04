@@ -13,14 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package com.exadel.frs.core.trainservice.system.feign.faces.dto;
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.Value;
+@Data
+@NoArgsConstructor
+public class PluginsVersions {
 
-@Value
-public class FaceVerification {
-
-    ScanBox box;
-    float similarity;
+    private String age;
+    private String gender;
+    private String detector;
+    private String calculator;
 }

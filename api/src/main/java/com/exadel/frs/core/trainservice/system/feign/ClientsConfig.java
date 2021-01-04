@@ -17,7 +17,7 @@
 package com.exadel.frs.core.trainservice.system.feign;
 
 import static com.exadel.frs.core.trainservice.system.global.EnvironmentProperties.ServerType.PYTHON;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
 import com.exadel.frs.core.trainservice.system.global.EnvironmentProperties;
 import feign.Feign;
 import feign.Logger;
@@ -34,11 +34,11 @@ public class ClientsConfig {
     private final EnvironmentProperties properties;
 
     @Bean
-    public FacesClient getScanFacesClient() {
+    public FacesServiceClient getScanFacesClient() {
         return Feign.builder()
                     .encoder(new SpringFormEncoder())
                     .decoder(new JacksonDecoder())
                     .logLevel(Logger.Level.FULL)
-                    .target(FacesClient.class, properties.getServers().get(PYTHON).getUrl());
+                    .target(FacesServiceClient.class, properties.getServers().get(PYTHON).getUrl());
     }
 }

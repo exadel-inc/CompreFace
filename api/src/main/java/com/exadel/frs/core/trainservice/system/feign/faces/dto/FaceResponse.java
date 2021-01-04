@@ -14,28 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.system.feign.faces.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Value;
 
-@Data
-@Accessors(chain = true)
-public class ScanBox {
+@Value
+public class FaceResponse {
 
-    @JsonProperty(value = "probability")
-    private Double probability;
+    @JsonProperty("face_name")
+    String faceName;
 
-    @JsonProperty(value = "x_max")
-    private Integer xMax;
-
-    @JsonProperty(value = "y_max")
-    private Integer yMax;
-
-    @JsonProperty(value = "x_min")
-    private Integer xMin;
-
-    @JsonProperty(value = "y_min")
-    private Integer yMin;
+    float similarity;
 }

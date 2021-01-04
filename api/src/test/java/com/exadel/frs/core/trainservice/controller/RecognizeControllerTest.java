@@ -25,10 +25,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanBox;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
+import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanBox;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResponse;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import java.util.List;
 import lombok.val;
@@ -51,7 +51,7 @@ class RecognizeControllerTest {
     private FaceClassifierPredictor predictor;
 
     @MockBean
-    private FacesClient client;
+    private FacesServiceClient client;
 
     @MockBean
     private ImageExtensionValidator imageValidator;

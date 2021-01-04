@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.handler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import lombok.AllArgsConstructor;
@@ -39,6 +40,8 @@ public enum ExceptionCode {
     TOO_MANY_FACES(31, BAD_REQUEST),
     WRITING_NOT_ALLOWED(32, METHOD_NOT_ALLOWED),
     MISSING_REQUEST_PARAMETER(33, BAD_REQUEST),
+
+    FACES_SERVICE_EXCEPTION(41, INTERNAL_SERVER_ERROR),
 
     UNDEFINED(0, BAD_REQUEST);
 

@@ -20,10 +20,10 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
-import com.exadel.frs.core.trainservice.system.feign.python.FaceResponse;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
+import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.FacePrediction;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.FaceResponse;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import feign.FeignException;
 import io.swagger.annotations.ApiParam;
@@ -51,7 +51,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class RecognizeController {
 
     private final FaceClassifierPredictor classifierPredictor;
-    private final FacesClient client;
+    private final FacesServiceClient client;
     private final ImageExtensionValidator imageValidator;
 
     @PostMapping(value = "/faces/recognize")

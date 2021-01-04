@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.system.feign.faces.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.ArrayList;

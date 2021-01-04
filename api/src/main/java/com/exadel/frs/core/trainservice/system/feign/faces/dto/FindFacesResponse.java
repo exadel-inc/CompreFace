@@ -13,23 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.system.feign.faces.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
 @Data
-@Accessors(chain = true)
-public class StatusResponse {
+@NoArgsConstructor
+public class FindFacesResponse {
 
-    @JsonProperty(value = "build_version")
-    private String buildVersion1;
-
-    @JsonProperty(value = "calculator_version")
-    private String calculatorVersion;
-
-    @JsonProperty(value = "status")
-    private String status;
+    @JsonProperty(value = "plugins_versions")
+    private PluginsVersions pluginsVersions;
+    private List<FindFacesResult> results;
 }

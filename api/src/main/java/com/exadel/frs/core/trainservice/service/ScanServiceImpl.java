@@ -22,8 +22,8 @@ import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.NoFacesFoundException;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
+import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResponse;
 import feign.FeignException;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class ScanServiceImpl implements ScanService {
     public static final int MAX_FACES_TO_SAVE = 1;
     public static final int MAX_FACES_TO_RECOGNIZE = 2;
 
-    private final FacesClient facesClient;
+    private final FacesServiceClient facesServiceClient;
     private final FaceDao faceDao;
     private final FaceCacheProvider faceCacheProvider;
 
@@ -51,7 +51,7 @@ public class ScanServiceImpl implements ScanService {
     ) throws IOException {
         ScanResponse scanResponse;
         try {
-            scanResponse = facesClient.scanFaces(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold);
+            scanResponse = facesServiceClient.scanFaces(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold);
         } catch (FeignException.BadRequest e) {
             throw new NoFacesFoundException();
         }

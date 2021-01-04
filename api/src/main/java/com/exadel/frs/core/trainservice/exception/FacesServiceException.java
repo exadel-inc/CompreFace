@@ -14,14 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.exception;
 
-import java.util.List;
-import lombok.Value;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.FACES_SERVICE_EXCEPTION;
+import static java.lang.String.format;
 
-@Value
-public class FacePrediction {
+public class FacesServiceException extends BasicException {
 
-    ScanBox box;
-    List<FaceResponse> faces;
+    private static final String MESSAGE = "Error during communication with Faces Service: %s";
+
+    public FacesServiceException(final String message) {
+        super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));
+    }
 }

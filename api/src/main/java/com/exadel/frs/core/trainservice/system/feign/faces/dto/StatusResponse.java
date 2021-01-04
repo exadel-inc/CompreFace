@@ -14,16 +14,22 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.system.feign.faces.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Value
-public class FaceResponse {
+@Data
+@Accessors(chain = true)
+public class StatusResponse {
 
-    @JsonProperty("face_name")
-    private String faceName;
+    @JsonProperty(value = "build_version")
+    private String buildVersion1;
 
-    private float similarity;
+    @JsonProperty(value = "calculator_version")
+    private String calculatorVersion;
+
+    @JsonProperty(value = "status")
+    private String status;
 }

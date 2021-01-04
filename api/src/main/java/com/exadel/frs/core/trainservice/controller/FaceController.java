@@ -28,9 +28,9 @@ import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.ScanService;
-import com.exadel.frs.core.trainservice.system.feign.python.FaceVerification;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
+import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.FaceVerification;
+import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import feign.FeignException;
 import io.swagger.annotations.ApiParam;
@@ -65,7 +65,7 @@ public class FaceController {
     private final FaceMapper faceMapper;
     private final ImageExtensionValidator imageValidator;
     private final FaceClassifierPredictor classifierPredictor;
-    private final FacesClient client;
+    private final FacesServiceClient client;
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
