@@ -50,6 +50,7 @@ def endpoints(app):
             face_plugins=face_plugins
         )
         plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
+        faces = _limit(faces, request.values.get(ARG.LIMIT))
         return jsonify(plugins_versions=plugins_versions, result=faces)
 
     @app.route('/scan_faces', methods=['POST'])

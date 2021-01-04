@@ -126,10 +126,22 @@ FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1
 
 List of pre-trained models:
 
-| Plugin name              | Default model     | Additional models                                             |
-|--------------------------|-------------------|---------------------------------------------------------------|
-| insightface.FaceDetector | retinaface_r50_v1 | retinaface_mnet025_v1<br>retinaface_mnet025_v2                |
-| insightface.Calculator   | arcface_r100_v1   | arcface_resnet34<br>arcface_resnet50<br>arcface_mobilefacenet | 
+* facenet.Calculator 
+    * 20180402-114759 (default)
+    * 20180408-102900
+
+* insightface.FaceDetector 
+    * retinaface_r50_v1 (default)
+    * retinaface_mnet025_v1
+    * retinaface_mnet025_v2
+    
+* insightface.Calculator 
+    * arcface_r100_v1 (default)
+    * arcface_resnet34
+    * arcface_resnet50
+    * arcface_mobilefacenet
+    * [arcface-r50-msfdrop75](https://github.com/deepinsight/insightface/tree/master/recognition/SubCenter-ArcFace)
+    * [arcface-r100-msfdrop75](https://github.com/deepinsight/insightface/tree/master/recognition/SubCenter-ArcFace)
 
 
 #### Optimization 
