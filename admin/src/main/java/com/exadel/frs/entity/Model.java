@@ -17,10 +17,13 @@
 package com.exadel.frs.entity;
 
 import com.exadel.frs.enums.AppModelAccess;
+import com.exadel.frs.enums.ModelType;
+import com.exadel.frs.helpers.ModelTypeConverter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.CascadeType;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -53,6 +56,8 @@ public class Model {
     private String name;
     private String guid;
     private String apiKey;
+    @Convert(converter = ModelTypeConverter.class)
+    private ModelType type;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private App app;

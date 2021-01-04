@@ -16,6 +16,8 @@
 
 package com.exadel.frs.dto.ui;
 
+import com.exadel.frs.enums.ModelType;
+import com.exadel.frs.validation.ValidEnum;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,4 +32,7 @@ public class ModelCreateDto {
 
     @NotBlank(message = "Model name cannot be empty")
     private String name;
+    @NotBlank(message = "Model Type cannot be empty")
+    @ValidEnum(message = "Model Type '${validatedValue}' doesn't exist!", targetClassType = ModelType.class)
+    private String type;
 }

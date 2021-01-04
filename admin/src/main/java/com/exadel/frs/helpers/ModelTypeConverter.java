@@ -16,15 +16,15 @@
 
 package com.exadel.frs.helpers;
 
-import com.exadel.frs.enums.GlobalRole;
-import com.exadel.frs.exception.IncorrectGlobalRoleException;
+import com.exadel.frs.enums.ModelType;
+import com.exadel.frs.exception.IncorrectModelTypeException;
 import javax.persistence.Converter;
 
-@Converter(autoApply = true)
-public class GlobalRoleConverter extends EnumCodeConverter<GlobalRole> {
+@Converter
+public class ModelTypeConverter extends EnumCodeConverter<ModelType> {
 
     @Override
-    public GlobalRole convertToEntityAttribute(String code) {
-        return super.convertToEntityAttribute(code, GlobalRole.values(), new IncorrectGlobalRoleException(code));
+    public ModelType convertToEntityAttribute(String code) {
+        return super.convertToEntityAttribute(code, ModelType.values(), new IncorrectModelTypeException(code));
     }
 }

@@ -14,17 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.helpers;
+package com.exadel.frs.exception;
 
-import com.exadel.frs.enums.GlobalRole;
-import com.exadel.frs.exception.IncorrectGlobalRoleException;
-import javax.persistence.Converter;
+import static com.exadel.frs.handler.ExceptionCode.INCORRECT_MODEL_TYPE;
+import static java.lang.String.format;
 
-@Converter(autoApply = true)
-public class GlobalRoleConverter extends EnumCodeConverter<GlobalRole> {
+public class IncorrectModelTypeException extends BasicException {
 
-    @Override
-    public GlobalRole convertToEntityAttribute(String code) {
-        return super.convertToEntityAttribute(code, GlobalRole.values(), new IncorrectGlobalRoleException(code));
+    public static final String MODEL_TYPE_NOT_EXISTS_MESSAGE = "Model type %s does not exists";
+
+    public IncorrectModelTypeException(final String modelType) {
+        super(INCORRECT_MODEL_TYPE, format(MODEL_TYPE_NOT_EXISTS_MESSAGE, modelType));
     }
 }

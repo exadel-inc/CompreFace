@@ -23,7 +23,7 @@ import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-public enum AppRole {
+public enum AppRole implements EnumCode {
 
     OWNER("O"),
     ADMINISTRATOR("A"),

@@ -16,6 +16,7 @@
 
 package com.exadel.frs.dto.ui;
 
+import com.exadel.frs.enums.ModelType;
 import lombok.Data;
 
 @Data
@@ -25,4 +26,5 @@ public class ModelResponseDto {
     private String name;
     private String apiKey;
     private String accessLevel;
+    private ModelType type;
 }
