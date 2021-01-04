@@ -34,7 +34,7 @@ class BoundingBoxDTO(JSONEncodable):
     x_max: int = attr.ib(converter=int)
     y_max: int = attr.ib(converter=int)
     probability: float = attr.ib(converter=float)
-    _np_landmarks: np.ndarray = attr.ib(factory=lambda: np.zeros(shape=(2, 5)),
+    _np_landmarks: np.ndarray = attr.ib(factory=lambda: np.zeros(shape=(0, 2)),
                                         eq=False)
 
     @property

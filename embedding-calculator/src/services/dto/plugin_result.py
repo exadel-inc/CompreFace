@@ -53,3 +53,10 @@ class FaceDTO(JSONEncodable):
         for dto in self._plugins_dto:
             if isinstance(dto, EmbeddingDTO):
                 return dto.embedding
+
+    @classmethod
+    def from_request(cls, result):
+        return FaceDTO(box=BoundingBoxDTO(**result['box']),
+                       plugins_dto=[EmbeddingDTO(embedding=result['embedding'])],
+                       execution_time=result['execution_time'],
+                       face_img=None, img=None)
