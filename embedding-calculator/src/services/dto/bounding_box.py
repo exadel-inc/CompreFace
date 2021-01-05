@@ -15,6 +15,7 @@
 from typing import List, Tuple
 
 import attr
+import numpy as np
 
 from src.services.dto.json_encodable import JSONEncodable
 
@@ -33,6 +34,12 @@ class BoundingBoxDTO(JSONEncodable):
     x_max: int = attr.ib(converter=int)
     y_max: int = attr.ib(converter=int)
     probability: float = attr.ib(converter=float)
+    _np_landmarks: np.ndarray = attr.ib(factory=lambda: np.zeros(shape=(0, 2)),
+                                        eq=False)
+
+    @property
+    def landmarks(self):
+        return self._np_landmarks.astype(int).tolist()
 
     @x_min.validator
     def check_x_min(self, attribute, value):
@@ -56,6 +63,14 @@ class BoundingBoxDTO(JSONEncodable):
     @property
     def center(self):
         return (self.x_min + self.x_max) // 2, (self.y_min + self.y_max) // 2
+
+    @property
+    def width(self):
+        return abs(self.x_max - self.x_min)
+
+    @property
+    def height(self):
+        return abs(self.y_max - self.y_min)
 
     def similar(self, other: 'BoundingBoxDTO', tolerance: int) -> bool:
         """
@@ -105,4 +120,5 @@ class BoundingBoxDTO(JSONEncodable):
                               y_min=self.y_min * coefficient,
                               x_max=self.x_max * coefficient,
                               y_max=self.y_max * coefficient,
+                              np_landmarks=self._np_landmarks * coefficient,
                               probability=self.probability)

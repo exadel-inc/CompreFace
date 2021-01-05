@@ -25,6 +25,7 @@ from facenet.src.align import detect_face
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBoxDTO
+from src.services.facescan.plugins import mixins
 from src.services.facescan.imgscaler.imgscaler import ImgScaler
 from src.services.imgtools.proc_img import crop_img, squish_img
 from src.services.imgtools.types import Array3D
@@ -39,7 +40,7 @@ _EmbeddingCalculator = namedtuple('_EmbeddingCalculator', 'graph sess')
 _FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')
 
 
-class FaceDetector(base.BaseFaceDetector):
+class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     BATCH_SIZE = 25
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
@@ -72,10 +73,14 @@ class FaceDetector(base.BaseFaceDetector):
         fdn = self._face_detection_nets
         detect_face_result = detect_face.detect_face(
             img, self.FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
-            [self.det_threshold_a, self.det_threshold_b, self.det_threshold_c], self.SCALE_FACTOR)
+            [self.det_threshold_a, self.det_threshold_b, self.det_threshold_c],
+            self.SCALE_FACTOR)
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
-        for result_item in detect_face_result[0]:
+
+        detect_face_result = list(
+            zip(detect_face_result[0], detect_face_result[1].transpose()))
+        for result_item, landmarks in detect_face_result:
             result_item = np.squeeze(result_item)
             margin = self.BOX_MARGIN / 2
             box = BoundingBoxDTO(
@@ -83,6 +88,7 @@ class FaceDetector(base.BaseFaceDetector):
                 y_min=int(np.maximum(result_item[1] - margin, 0)),
                 x_max=int(np.minimum(result_item[2] + margin, img_size[1])),
                 y_max=int(np.minimum(result_item[3] + margin, img_size[0])),
+                np_landmarks=landmarks.reshape(2, 5).transpose(),
                 probability=result_item[4]
             )
             logger.debug(f"Found: {box}")
@@ -98,7 +104,7 @@ class FaceDetector(base.BaseFaceDetector):
         return filtered_bounding_boxes
 
 
-class Calculator(base.BaseCalculator):
+class Calculator(mixins.CalculatorMixin, base.BasePlugin):
     ml_models = (
         # VGGFace2 training set, 0.9965 LFW accuracy
         ('20180402-114759', '1im5Qq006ZEV_tViKh3cgia_Q4jJ13bRK'),
@@ -142,3 +148,7 @@ class Calculator(base.BaseCalculator):
             embeddings[start_index:end_index, :] = calc_model.sess.run(
                 graph_embeddings, feed_dict=feed_dict)
         return embeddings
+
+
+class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):
+    """ Extract landmarks from FaceDetector results."""

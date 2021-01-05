@@ -15,7 +15,6 @@
 import os
 import logging
 import tempfile
-from time import time
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List, Tuple, Optional
@@ -23,10 +22,8 @@ from zipfile import ZipFile
 
 import attr
 import gdown
-from src.services.dto.bounding_box import BoundingBoxDTO
+from src.services.dto.json_encodable import JSONEncodable
 from src.services.dto import plugin_result
-from src.services.imgtools.types import Array3D
-from src.services.facescan.plugins import exceptions
 
 
 logger = logging.getLogger(__name__)
@@ -125,67 +122,5 @@ class BasePlugin(ABC):
             return self.name
 
     @abstractmethod
-    def __call__(self, face_img: Array3D) -> plugin_result.PluginResultDTO:
-        raise NotImplementedError
-
-
-class BaseFaceDetector(BasePlugin):
-    slug = 'detector'
-    IMAGE_SIZE: int
-    face_plugins: List[BasePlugin] = []
-
-    def __call__(self, img: Array3D, det_prob_threshold: float = None,
-                 face_plugins: Tuple[BasePlugin] = ()):
-        """ Returns cropped and normalized faces."""
-        faces = self._fetch_faces(img, det_prob_threshold)
-        for face in faces:
-            self._apply_face_plugins(face, face_plugins)
-        return faces
-
-    def _fetch_faces(self, img: Array3D, det_prob_threshold: float = None):
-        start = time()
-        boxes = self.find_faces(img, det_prob_threshold)
-        return [
-            plugin_result.FaceDTO(
-                img=img, face_img=self.crop_face(img, box), box=box,
-                execution_time={self.slug: (time() - start) / len(boxes)}
-            ) for box in boxes
-        ]
-
-    def _apply_face_plugins(self, face: plugin_result.FaceDTO,
-                            face_plugins: Tuple[BasePlugin]):
-        for plugin in face_plugins:
-            start = time()
-            try:
-                result_dto = plugin(face._face_img)
-                face._plugins_dto.append(result_dto)
-            except Exception as e:
-                raise exceptions.PluginError(f'{plugin} error - {e}')
-            else:
-                face.execution_time[plugin.slug] = time() - start
-
-    @abstractmethod
-    def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
-        """ Find face bounding boxes, without calculating embeddings"""
-        raise NotImplementedError
-
-    @abstractmethod
-    def crop_face(self, img: Array3D, box: BoundingBoxDTO) -> Array3D:
-        """ Crop face by bounding box and resize/squish it """
-        raise NotImplementedError
-
-
-class BaseCalculator(BasePlugin):
-    slug = 'calculator'
-
-    DIFFERENCE_THRESHOLD: float
-
-    def __call__(self, face_img: Array3D):
-        return plugin_result.EmbeddingDTO(
-            embedding=self.calc_embedding(face_img)
-        )
-
-    @abstractmethod
-    def calc_embedding(self, face_img: Array3D) -> Array3D:
-        """ Calculate embedding of a given face """
+    def __call__(self, face: plugin_result.FaceDTO) -> JSONEncodable:
         raise NotImplementedError

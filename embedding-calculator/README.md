@@ -82,7 +82,7 @@ For changing default plugins pass needed plugin names in build arguments and bui
 
 Set plugins by build arguments `FACE_DETECTION_PLUGIN` and `CALCULATION_PLUGIN`
 
-| Plugin name              | Type       | Backend     | Framework  | GPU support |
+| Plugin name              | Slug       | Backend     | Framework  | GPU support |
 |--------------------------|------------|-------------|------------|-------------|
 | facenet.FaceDetector     | detector   | Facenet     | Tensorflow |             |
 | facenet.Calculator       | calculator | Facenet     | Tensorflow |             |
@@ -93,12 +93,21 @@ Set plugins by build arguments `FACE_DETECTION_PLUGIN` and `CALCULATION_PLUGIN`
 
 Pass to `EXTRA_PLUGINS` comma-separated names of plugins. 
 
-| Plugin name                   | Type       | Backend     | Framework  | GPU support |
-|-------------------------------|------------|-------------|------------|-------------|
-| rude_carnie.AgeDetector       | age        | rude_carnie | Tensorflow |             |
-| rude_carnie.GenderDetector    | gender     | rude_carnie | Tensorflow |             |
-| insightface.GenderAgeDetector | gender_age | insightface | MXNet      |      +      |
+| Plugin name                        | Slug           | Backend     | Framework  | GPU support |
+|------------------------------------|----------------|-------------|------------|-------------|
+| rude_carnie.AgeDetector            | age            | rude_carnie | Tensorflow |             |
+| rude_carnie.GenderDetector         | gender         | rude_carnie | Tensorflow |             |
+| insightface.GenderAgeDetector      | gender_age     | insightface | MXNet      |      +      |
+| facenet.LandmarksDetector          | landmarks      | Facenet     | Tensorflow |      +      |
+| insightface.LandmarksDetector      | landmarks      | insightface | MXNet      |      +      |
+| insightface.Landmarks2d106Detector | landmarks2d106 | insightface | MXNet      |      +      |
 
+Notes:    
+* `facenet.LandmarksDetector` and `insightface.LandmarksDetector` extract landmarks
+  from results of `FaceDetector` plugin without additional processing. Returns 5 points of eyes, nose and mouth.
+* `insightface.Landmarks2d106Detector` detects 106 points of facial landmark.
+  [Points mark-up](https://github.com/deepinsight/insightface/tree/master/alignment/coordinateReg#visualization) 
+      
 
 ##### Default build arguments:
 ```
@@ -117,10 +126,22 @@ FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1
 
 List of pre-trained models:
 
-| Plugin name              | Default model     | Additional models                                             |
-|--------------------------|-------------------|---------------------------------------------------------------|
-| insightface.FaceDetector | retinaface_r50_v1 | retinaface_mnet025_v1<br>retinaface_mnet025_v2                |
-| insightface.Calculator   | arcface_r100_v1   | arcface_resnet34<br>arcface_resnet50<br>arcface_mobilefacenet | 
+* facenet.Calculator 
+    * 20180402-114759 (default)
+    * 20180408-102900
+
+* insightface.FaceDetector 
+    * retinaface_r50_v1 (default)
+    * retinaface_mnet025_v1
+    * retinaface_mnet025_v2
+    
+* insightface.Calculator 
+    * arcface_r100_v1 (default)
+    * arcface_resnet34
+    * arcface_resnet50
+    * arcface_mobilefacenet
+    * [arcface-r50-msfdrop75](https://github.com/deepinsight/insightface/tree/master/recognition/SubCenter-ArcFace)
+    * [arcface-r100-msfdrop75](https://github.com/deepinsight/insightface/tree/master/recognition/SubCenter-ArcFace)
 
 
 #### Optimization 
