@@ -16,9 +16,9 @@
 
 package com.exadel.frs.core.trainservice.sdk.faces.feign;
 
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.StatusResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
@@ -28,7 +28,7 @@ public interface FacesFeignClient {
 
     @RequestLine("POST /scan_faces")
     @Headers("Content-Type: multipart/form-data")
-    ScanResponse scanFaces(
+    ScanFacesResponse scanFaces(
             @Param(value = "file")
                     MultipartFile photo,
             @Param(value = "limit")
@@ -50,5 +50,5 @@ public interface FacesFeignClient {
 
     @RequestLine("GET /status")
     @Headers("Content-Type: multipart/form-data")
-    StatusResponse getStatus();
+    FacesStatusResponse getStatus();
 }

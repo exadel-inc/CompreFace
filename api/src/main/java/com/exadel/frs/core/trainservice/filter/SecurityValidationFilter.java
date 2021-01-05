@@ -75,7 +75,7 @@ public class SecurityValidationFilter implements Filter {
         val httpRequest = (HttpServletRequest) servletRequest;
         val httpResponse = (HttpServletResponse) servletResponse;
 
-        if (!httpRequest.getRequestURI().matches("^/(swagger|webjars|v2).*$")) {
+        if (!httpRequest.getRequestURI().matches("^/($|csrf|swagger|webjars|v2).*$")) {
             val headersMap =
                     list(httpRequest.getHeaderNames()).stream()
                                                       .collect(Collectors.<String, String, List<String>>toMap(

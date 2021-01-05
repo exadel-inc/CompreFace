@@ -26,24 +26,9 @@ public class FindFacesResult {
     private Integer[] age;
     private String gender;
     private Double[] embedding;
-    private Box box;
+    private FacesBox box;
     @JsonProperty(value = "execution_time")
     private ExecutionTime executionTime;
-
-    @Data
-    @NoArgsConstructor
-    public static class Box {
-
-        @JsonProperty(value = "x_min")
-        private Integer xMin;
-        @JsonProperty(value = "x_max")
-        private Integer xMax;
-        @JsonProperty(value = "y_min")
-        private Integer yMin;
-        @JsonProperty(value = "y_max")
-        private Integer yMax;
-        private Double probability;
-    }
 
     @Data
     @NoArgsConstructor

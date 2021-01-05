@@ -32,8 +32,8 @@ import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
 import java.io.IOException;
 import java.util.List;
 import lombok.val;
@@ -69,11 +69,11 @@ class ScanServiceImplTest {
     private static final String MODEL_KEY = "modelKey";
     private static final double THRESHOLD = 1.0;
     private static final double EMBEDDING = 100500;
-    private static final ScanResult SCAN_RESULT = new ScanResult().setEmbedding(List.of(EMBEDDING));
+    private static final ScanFacesResult SCAN_RESULT = new ScanFacesResult().setEmbedding(List.of(EMBEDDING));
 
     @Test
     void scanAndSaveFace() throws IOException {
-        val scanResponse = new ScanResponse().setResult(List.of(SCAN_RESULT));
+        val scanResponse = new ScanFacesResponse().setResult(List.of(SCAN_RESULT));
         val embeddings = new Embedding(List.of(EMBEDDING), null);
         val face = new Face();
         face.setEmbedding(embeddings);
@@ -97,7 +97,7 @@ class ScanServiceImplTest {
 
     @Test
     void tooManyFacesScan() {
-        val scanResponse = new ScanResponse().setResult(List.of(SCAN_RESULT, SCAN_RESULT));
+        val scanResponse = new ScanFacesResponse().setResult(List.of(SCAN_RESULT, SCAN_RESULT));
 
         when(scanFacesFeignClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
                 .thenReturn(scanResponse);

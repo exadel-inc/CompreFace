@@ -17,7 +17,7 @@
 package com.exadel.frs.core.trainservice.mapper;
 
 import com.exadel.frs.core.trainservice.cache.FaceBO;
-import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
+import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import java.util.List;
 import java.util.Set;
 import org.mapstruct.Mapper;

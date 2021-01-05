@@ -14,19 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.dto.ui;
+package com.exadel.frs.core.trainservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Value;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class FaceResponseDto {
+@Value
+public class FaceResponse {
 
-    private String image_id;
-    private String subject;
+    @JsonProperty("face_name")
+    String faceName;
+
+    float similarity;
 }

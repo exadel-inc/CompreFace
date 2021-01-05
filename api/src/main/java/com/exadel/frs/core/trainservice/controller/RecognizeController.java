@@ -20,10 +20,10 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
+import com.exadel.frs.core.trainservice.dto.FacePrediction;
+import com.exadel.frs.core.trainservice.dto.FaceResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacePrediction;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FaceResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.math.BigDecimal;
@@ -73,10 +73,10 @@ public class RecognizeController {
     ) {
         imageValidator.validate(file);
 
-        ScanResponse scanResponse = client.scanFaces(file, limit, detProbThreshold);
+        ScanFacesResponse scanFacesResponse = client.scanFaces(file, limit, detProbThreshold);
         val results = new ArrayList<FacePrediction>();
 
-        for (val scanResult : scanResponse.getResult()) {
+        for (val scanResult : scanFacesResponse.getResult()) {
             val predictions = classifierPredictor.predict(
                     apiKey,
                     scanResult.getEmbedding().stream()

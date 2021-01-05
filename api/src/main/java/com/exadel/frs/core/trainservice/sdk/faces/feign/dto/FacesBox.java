@@ -17,13 +17,25 @@
 package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-@Value
-public class FaceResponse {
+@Data
+@Accessors(chain = true)
+public class FacesBox {
 
-    @JsonProperty("face_name")
-    String faceName;
+    @JsonProperty(value = "probability")
+    private Double probability;
 
-    float similarity;
+    @JsonProperty(value = "x_max")
+    private Integer xMax;
+
+    @JsonProperty(value = "y_max")
+    private Integer yMax;
+
+    @JsonProperty(value = "x_min")
+    private Integer xMin;
+
+    @JsonProperty(value = "y_min")
+    private Integer yMin;
 }

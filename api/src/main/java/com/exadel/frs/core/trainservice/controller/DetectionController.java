@@ -21,13 +21,14 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiParam;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -45,10 +46,15 @@ public class DetectionController {
 
     @PostMapping(value = "/faces/detection")
     @ResponseStatus(HttpStatus.OK)
-    public FindFacesResponse recognize(
-            @ApiParam(value = "Api key of application and model", required = true)
-            @RequestHeader(X_FRS_API_KEY_HEADER)
-            final String apiKey,
+    @ApiImplicitParams({
+            @ApiImplicitParam(
+                    name = X_FRS_API_KEY_HEADER,
+                    dataTypeClass = String.class,
+                    paramType = "header",
+                    value = "Api key of application and model",
+                    required = true)
+    })
+    public FindFacesResponse detect(
             @ApiParam(value = "Image for recognizing", required = true)
             @RequestParam
             final MultipartFile file,

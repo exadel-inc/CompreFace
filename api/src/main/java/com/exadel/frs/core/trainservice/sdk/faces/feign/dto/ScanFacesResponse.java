@@ -16,11 +16,24 @@
 
 package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
-import lombok.Value;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-@Value
-public class FaceVerification {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+public class ScanFacesResponse {
 
-    ScanBox box;
-    float similarity;
+    @JsonProperty(value = "calculator_version")
+    private String calculatorVersion;
+
+    private List<ScanFacesResult> result = new ArrayList<>();
 }

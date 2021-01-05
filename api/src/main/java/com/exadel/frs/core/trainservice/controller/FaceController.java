@@ -24,11 +24,11 @@ import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
+import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
+import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
@@ -153,11 +153,11 @@ public class FaceController {
     ) {
         imageValidator.validate(file);
 
-        ScanResponse scanResponse = client.scanFaces(file, limit, detProbThreshold);
+        ScanFacesResponse scanFacesResponse = client.scanFaces(file, limit, detProbThreshold);
 
         val results = new ArrayList<FaceVerification>();
 
-        for (val scanResult : scanResponse.getResult()) {
+        for (val scanResult : scanFacesResponse.getResult()) {
             val prediction = classifierPredictor.verify(
                     apiKey,
                     scanResult.getEmbedding().stream()

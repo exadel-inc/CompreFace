@@ -14,23 +14,19 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
+package com.exadel.frs.core.trainservice.dto;
 
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
-public class ScanResult {
+public class FaceResponseDto {
 
-    private ScanBox box;
-    private List<Double> embedding = new ArrayList<>();
+    private String image_id;
+    private String subject;
 }

@@ -14,14 +14,14 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
+package com.exadel.frs.core.trainservice.dto;
 
-import java.util.List;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
 import lombok.Value;
 
 @Value
-public class FacePrediction {
+public class FaceVerification {
 
-    ScanBox box;
-    List<FaceResponse> faces;
+    FacesBox box;
+    float similarity;
 }
