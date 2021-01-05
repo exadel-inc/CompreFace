@@ -13,17 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package com.exadel.frs.core.trainservice.system.feign.faces.dto;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.exadel.frs.core.trainservice.sdk.faces.exception;
 
-@Data
-@NoArgsConstructor
-public class PluginsVersions {
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.NO_FACES_FOUND;
+import com.exadel.frs.core.trainservice.exception.BasicException;
 
-    private String age;
-    private String gender;
-    private String detector;
-    private String calculator;
+public class NoFacesFoundException extends BasicException {
+
+    private static final String MESSAGE = "No face is found in the given image";
+
+    public NoFacesFoundException() {
+        super(NO_FACES_FOUND, MESSAGE);
+    }
 }

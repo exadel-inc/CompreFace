@@ -25,11 +25,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanBox;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResponse;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResult;
-import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanBox;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResult;
 import java.util.List;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
@@ -51,10 +50,7 @@ class RecognizeControllerTest {
     private FaceClassifierPredictor predictor;
 
     @MockBean
-    private FacesServiceClient client;
-
-    @MockBean
-    private ImageExtensionValidator imageValidator;
+    private FacesApiClient client;
 
     private static final String MODEL_KEY = "model_key";
     private static final String API_KEY = MODEL_KEY;

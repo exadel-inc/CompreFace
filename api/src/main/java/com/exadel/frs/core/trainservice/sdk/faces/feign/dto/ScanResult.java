@@ -14,22 +14,23 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign;
+package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
-import feign.Feign;
-import feign.Logger;
-import feign.form.spring.SpringFormEncoder;
-import feign.jackson.JacksonDecoder;
-import org.springframework.stereotype.Component;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
-@Component
-public class FeignClientFactory {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
+public class ScanResult {
 
-    public <T> T getFeignClient(Class<T> clazz, String clientUrl) {
-        return Feign.builder()
-                    .encoder(new SpringFormEncoder())
-                    .decoder(new JacksonDecoder())
-                    .logLevel(Logger.Level.FULL)
-                    .target(clazz, clientUrl);
-    }
+    private ScanBox box;
+    private List<Double> embedding = new ArrayList<>();
 }

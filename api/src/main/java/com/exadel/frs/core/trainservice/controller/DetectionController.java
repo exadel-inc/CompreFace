@@ -18,11 +18,9 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import com.exadel.frs.core.trainservice.exception.FacesServiceException;
-import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
-import feign.FeignException;
 import io.swagger.annotations.ApiParam;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public class DetectionController {
 
-    private final FacesServiceClient client;
+    private final FacesApiClient client;
     private final ImageExtensionValidator imageValidator;
 
     @PostMapping(value = "/faces/detection")
@@ -67,10 +65,6 @@ public class DetectionController {
     ) {
         imageValidator.validate(file);
 
-        try {
-            return client.findFaces(file, limit, detProbThreshold, facePlugins);
-        } catch (FeignException e) {
-            throw new FacesServiceException(e.getMessage());
-        }
+        return client.findFaces(file, limit, detProbThreshold, facePlugins);
     }
 }

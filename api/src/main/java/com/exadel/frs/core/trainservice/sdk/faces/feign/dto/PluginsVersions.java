@@ -13,29 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
-package com.exadel.frs.core.trainservice.system.feign.faces.dto;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.NoArgsConstructor;
 
 @Data
-@Accessors(chain = true)
-public class ScanBox {
+@NoArgsConstructor
+public class PluginsVersions {
 
-    @JsonProperty(value = "probability")
-    private Double probability;
-
-    @JsonProperty(value = "x_max")
-    private Integer xMax;
-
-    @JsonProperty(value = "y_max")
-    private Integer yMax;
-
-    @JsonProperty(value = "x_min")
-    private Integer xMin;
-
-    @JsonProperty(value = "y_min")
-    private Integer yMin;
+    private String age;
+    private String gender;
+    private String detector;
+    private String calculator;
 }

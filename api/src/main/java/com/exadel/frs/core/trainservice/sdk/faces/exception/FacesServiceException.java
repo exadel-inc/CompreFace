@@ -14,26 +14,17 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.faces.dto;
+package com.exadel.frs.core.trainservice.sdk.faces.exception;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.ArrayList;
-import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.FACES_SERVICE_EXCEPTION;
+import static java.lang.String.format;
+import com.exadel.frs.core.trainservice.exception.BasicException;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Accessors(chain = true)
-public class ScanResponse {
+public class FacesServiceException extends BasicException {
 
-    @JsonProperty(value = "calculator_version")
-    private String calculatorVersion;
+    private static final String MESSAGE = "Error during communication with Faces Service: %s";
 
-    private List<ScanResult> result = new ArrayList<>();
+    public FacesServiceException(final String message) {
+        super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));
+    }
 }

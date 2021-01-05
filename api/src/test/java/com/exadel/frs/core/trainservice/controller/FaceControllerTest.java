@@ -36,11 +36,11 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanBox;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResult;
 import com.exadel.frs.core.trainservice.service.ScanService;
-import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanBox;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResponse;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -77,7 +77,7 @@ public class FaceControllerTest {
     private FaceClassifierPredictor predictor;
 
     @MockBean
-    private FacesServiceClient client;
+    private FacesApiClient client;
 
     private static final String API_KEY = "model_key";
 

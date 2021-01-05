@@ -14,13 +14,22 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.faces.dto;
+package com.exadel.frs.core.trainservice.sdk.config;
 
-import lombok.Value;
+import feign.Feign;
+import feign.Logger;
+import feign.form.spring.SpringFormEncoder;
+import feign.jackson.JacksonDecoder;
+import org.springframework.stereotype.Component;
 
-@Value
-public class FaceVerification {
+@Component
+public class FeignClientFactory {
 
-    ScanBox box;
-    float similarity;
+    public <T> T getFeignClient(Class<T> clazz, String clientUrl) {
+        return Feign.builder()
+                    .encoder(new SpringFormEncoder())
+                    .decoder(new JacksonDecoder())
+                    .logLevel(Logger.Level.FULL)
+                    .target(clazz, clientUrl);
+    }
 }

@@ -14,17 +14,17 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.faces;
+package com.exadel.frs.core.trainservice.sdk.faces.feign;
 
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResponse;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.StatusResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.StatusResponse;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import org.springframework.web.multipart.MultipartFile;
 
-public interface FacesServiceClient {
+public interface FacesFeignClient {
 
     @RequestLine("POST /scan_faces")
     @Headers("Content-Type: multipart/form-data")

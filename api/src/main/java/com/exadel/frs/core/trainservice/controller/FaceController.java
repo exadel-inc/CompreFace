@@ -26,18 +26,16 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FaceVerification;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanResponse;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.ScanService;
-import com.exadel.frs.core.trainservice.system.feign.faces.FacesServiceClient;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.system.feign.faces.dto.ScanResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
-import feign.FeignException;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +63,7 @@ public class FaceController {
     private final FaceMapper faceMapper;
     private final ImageExtensionValidator imageValidator;
     private final FaceClassifierPredictor classifierPredictor;
-    private final FacesServiceClient client;
+    private final FacesApiClient client;
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
@@ -155,12 +153,7 @@ public class FaceController {
     ) {
         imageValidator.validate(file);
 
-        ScanResponse scanResponse;
-        try {
-            scanResponse = client.scanFaces(file, limit, detProbThreshold);
-        } catch (FeignException.BadRequest e) {
-            return Map.of("result", Collections.EMPTY_LIST);
-        }
+        ScanResponse scanResponse = client.scanFaces(file, limit, detProbThreshold);
 
         val results = new ArrayList<FaceVerification>();
 

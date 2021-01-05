@@ -13,24 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
-package com.exadel.frs.core.trainservice.system.feign.faces.dto;
-
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
 @Data
-@Builder
 @NoArgsConstructor
-@AllArgsConstructor
-@Accessors(chain = true)
-public class ScanResult {
+public class FindFacesResponse {
 
-    private ScanBox box;
-    private List<Double> embedding = new ArrayList<>();
+    @JsonProperty(value = "plugins_versions")
+    private PluginsVersions pluginsVersions;
+    private List<FindFacesResult> result;
 }

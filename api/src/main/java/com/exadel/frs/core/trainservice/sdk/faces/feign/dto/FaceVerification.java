@@ -14,16 +14,13 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
+package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.FACES_SERVICE_EXCEPTION;
-import static java.lang.String.format;
+import lombok.Value;
 
-public class FacesServiceException extends BasicException {
+@Value
+public class FaceVerification {
 
-    private static final String MESSAGE = "Error during communication with Faces Service: %s";
-
-    public FacesServiceException(final String message) {
-        super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));
-    }
+    ScanBox box;
+    float similarity;
 }
