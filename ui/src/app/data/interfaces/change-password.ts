@@ -14,10 +14,7 @@
  * permissions and limitations under the License.
  */
 
-export enum API {
-  Login = 'oauth/token',
-  Register = 'user/register',
-  Logout = 'oauth/logout',
-  UserInfo = 'user/me',
-  ChangePassword = 'user/me/password'
+export interface ChangePassword {
+  oldPassword: string;
+  newPassword: string;
 }

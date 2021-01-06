@@ -67,4 +67,9 @@ export class AuthService {
     this.clearUserToken();
     this.router.navigateByUrl(Routes.Login);
   }
+
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    const url = `${environment.adminApiUrl}${API.ChangePassword}`;
+    return this.http.put(url, {oldPassword, newPassword}, { observe: 'response' });
+  }
 }

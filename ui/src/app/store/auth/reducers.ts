@@ -15,7 +15,16 @@
  */
 
 import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
-import { logInSuccess, logInFailure, signUpSuccess, signUpFailure, logOut, resetErrorMessage } from './action';
+import {
+  logInSuccess,
+  logInFailure,
+  signUpSuccess,
+  signUpFailure,
+  logOut,
+  resetErrorMessage,
+  changePasswordSuccess,
+  changePasswordFailure
+} from './action';
 
 export interface AuthState {
   errorMessage: string | null;
@@ -57,7 +66,19 @@ const reducer: ActionReducer<AuthState> = createReducer(
     ...state,
     errorMessage: null,
   })),
-  on(logOut, () => ({ ...initialState }))
+  on(logOut, () => ({ ...initialState })),
+  on(changePasswordSuccess, state => ({
+    ...state,
+    errorMessage: null,
+    successMessage: 'Password has successfully been changed',
+    isLoading: false,
+  })),
+  on(changePasswordFailure, (state, { error }) => ({
+    ...state,
+    errorMessage: error.message,
+    successMessage: null,
+    isLoading: false
+  }))
 );
 
 export const authReducer = (authState: AuthState, action: Action) => reducer(authState, action);
