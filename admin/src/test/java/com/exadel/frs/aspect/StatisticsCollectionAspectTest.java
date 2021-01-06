@@ -17,6 +17,7 @@ import com.exadel.frs.exception.ApperyServiceException;
 import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import feign.FeignException;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import lombok.SneakyThrows;
 import lombok.val;
@@ -29,6 +30,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class StatisticsCollectionAspectTest {
 
@@ -62,7 +64,7 @@ class StatisticsCollectionAspectTest {
         User user = User.builder()
                         .allowStatistics(true)
                         .build();
-        val statisticsCollectionAspect = new StatisticsCollectionAspect(STATISTICS_API_KEY, apperyStatisticsClient);
+        val statisticsCollectionAspect = createStatisticsCollectionAspect(STATISTICS_API_KEY);
 
         when(usernamePasswordAuthenticationToken.isAuthenticated()).thenReturn(true);
         when(authentication.getPrincipal()).thenReturn(user);
@@ -84,7 +86,7 @@ class StatisticsCollectionAspectTest {
         User user = User.builder()
                         .allowStatistics(true)
                         .build();
-        val statisticsCollectionAspect = new StatisticsCollectionAspect(STATISTICS_API_KEY, apperyStatisticsClient);
+        val statisticsCollectionAspect = createStatisticsCollectionAspect(STATISTICS_API_KEY);
 
         when(usernamePasswordAuthenticationToken.isAuthenticated()).thenReturn(false);
         when(authentication.getPrincipal()).thenReturn(user);
@@ -105,7 +107,7 @@ class StatisticsCollectionAspectTest {
         User user = User.builder()
                         .allowStatistics(true)
                         .build();
-        val statisticsCollectionAspect = new StatisticsCollectionAspect(EMPTY, apperyStatisticsClient);
+        val statisticsCollectionAspect = createStatisticsCollectionAspect(EMPTY);
 
         //when
         statisticsCollectionAspect.afterMethodInvocation(joinPoint, user);
@@ -119,7 +121,7 @@ class StatisticsCollectionAspectTest {
         User user = User.builder()
                         .allowStatistics(false)
                         .build();
-        val statisticsCollectionAspect = new StatisticsCollectionAspect(STATISTICS_API_KEY, apperyStatisticsClient);
+        val statisticsCollectionAspect = createStatisticsCollectionAspect(STATISTICS_API_KEY);
 
         //when
         statisticsCollectionAspect.afterMethodInvocation(joinPoint, user);
@@ -134,7 +136,7 @@ class StatisticsCollectionAspectTest {
         User user = User.builder()
                         .allowStatistics(true)
                         .build();
-        val statisticsCollectionAspect = new StatisticsCollectionAspect(STATISTICS_API_KEY, apperyStatisticsClient);
+        val statisticsCollectionAspect = createStatisticsCollectionAspect(STATISTICS_API_KEY);
         StatisticsGeneralEntity statisticsGeneralEntity = new StatisticsGeneralEntity(user.getGuid(), USER_CREATE);
 
         when(usernamePasswordAuthenticationToken.isAuthenticated()).thenReturn(false);
@@ -159,5 +161,12 @@ class StatisticsCollectionAspectTest {
             return User.builder()
                        .build();
         }
+    }
+
+    @SneakyThrows
+    private StatisticsCollectionAspect createStatisticsCollectionAspect(String statisticsApiKey) {
+        val statisticsCollectionAspect = new StatisticsCollectionAspect(apperyStatisticsClient);
+        ReflectionTestUtils.setField(statisticsCollectionAspect, STATISTICS_API_KEY, statisticsApiKey);
+        return statisticsCollectionAspect;
     }
 }

@@ -23,7 +23,6 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-@AllArgsConstructor
 @Slf4j
 public class StatisticsCollectionAspect {
 

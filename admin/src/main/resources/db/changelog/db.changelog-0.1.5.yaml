@@ -1,0 +1,18 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-organization-table
+      author: Pavel Nikolaichik
+      changes:
+        #organization
+        - createTable:
+            tableName: organization
+            columns:
+              - column:
+                  name: install_guid
+                  type: varchar(36)
+        - insert:
+            tableName: organization
+            columns:
+              - column:
+                  name: install_guid
+                  value: SELECT uuid_generate_v1()
