@@ -21,7 +21,7 @@ from sample_images.annotations import name_2_annotation, SAMPLE_IMAGES
 from src.constants import ENV_MAIN, LOGGING_LEVEL
 from src.exceptions import NoFaceFoundError
 from src.init_runtime import init_runtime
-from src.services.dto.scanned_face import ScannedFace
+from src.services.dto.plugin_result import FaceDTO
 from src.services.facescan.scanner.facescanners import scanner
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
@@ -57,7 +57,7 @@ def _scan_faces_remote(ml_url: str, img_name: str):
     if res.status_code == 400 and NoFaceFoundError.description in res.json()['message']:
         return []
     assert res.status_code == 200, res.content
-    return [ScannedFace.from_request(r) for r in res.json()['result']]
+    return [FaceDTO.from_request(r) for r in res.json()['result']]
 
 
 def _scan_faces_local(img_name):

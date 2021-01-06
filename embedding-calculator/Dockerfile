@@ -1,5 +1,5 @@
 ARG GPU_IDX
-ARG BASE_IMAGE=${GPU_IDX:+exadel/compreface-core-cuda:101-py37}
+ARG BASE_IMAGE=${GPU_IDX:+exadel/compreface-core-cuda:100-py37}
 FROM ${BASE_IMAGE:-python:3.7-slim}
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \

@@ -21,6 +21,9 @@ default:
 	python -m pylama --options pylama.ini src tools
 	docker build -t embedding-calculator --build-arg SCANNER=Facenet2018,InsightFace .
 
+build-cuda:
+	docker build -t exadel/compreface-core-cuda:100-py37 -f gpu.Dockerfile .
+
 up:
 	docker run -p3000:3000 embedding-calculator
 
