@@ -25,5 +25,4 @@ public class PluginsVersions {
     private String age;
     private String gender;
     private String detector;
-    private String calculator;
 }
