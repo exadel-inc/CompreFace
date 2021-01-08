@@ -22,6 +22,7 @@ import {
   signUpFailure,
   logOut,
   resetErrorMessage,
+  changePassword,
   changePasswordSuccess,
   changePasswordFailure
 } from './action';
@@ -67,6 +68,10 @@ const reducer: ActionReducer<AuthState> = createReducer(
     errorMessage: null,
   })),
   on(logOut, () => ({ ...initialState })),
+  on(changePassword, state => ({
+    ...state,
+    isLoading: true
+  })),
   on(changePasswordSuccess, state => ({
     ...state,
     errorMessage: null,
