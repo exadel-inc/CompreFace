@@ -14,11 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.enums;
+package com.exadel.frs.core.trainservice.exception;
 
-public interface EnumCode {
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.INCORRECT_MODEL_TYPE;
+import static java.lang.String.format;
 
-    void setCode(String code);
+public class IncorrectModelTypeException extends BasicException {
 
-    String getCode();
+    public static final String MODEL_TYPE_NOT_EXISTS_MESSAGE = "Model type %s does not exists";
+
+    public IncorrectModelTypeException(final String modelType) {
+        super(INCORRECT_MODEL_TYPE, format(MODEL_TYPE_NOT_EXISTS_MESSAGE, modelType));
+    }
 }

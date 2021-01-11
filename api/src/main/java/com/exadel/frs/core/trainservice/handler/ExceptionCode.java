@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.handler;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.METHOD_NOT_ALLOWED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import lombok.AllArgsConstructor;
@@ -29,6 +30,8 @@ public enum ExceptionCode {
 
     MODEL_NOT_FOUND(10, NOT_FOUND),
     IMAGE_NOT_FOUND(11, NOT_FOUND),
+
+    INCORRECT_MODEL_TYPE(12, INTERNAL_SERVER_ERROR),
 
     MISSING_REQUEST_HEADER(20, BAD_REQUEST),
     UNAVAILABLE_FILE_EXTENSION(21, BAD_REQUEST),
