@@ -18,12 +18,13 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Routes } from 'src/app/data/enums/routers-url.enum';
-import { logOut } from 'src/app/store/auth/action';
+import { logOut, changePassword } from 'src/app/store/auth/action';
 import { loadDemoApiKeySuccessAction } from 'src/app/store/demo/actions';
 import { selectDemoPageAvailability } from 'src/app/store/demo/selectors';
 import { selectUserAvatar, selectUserName } from 'src/app/store/userInfo/selectors';
 
 import { AppState } from '../../store';
+import { ChangePassword } from '../../data/interfaces/change-password';
 
 @Injectable()
 export class ToolBarFacade {
@@ -44,5 +45,9 @@ export class ToolBarFacade {
 
   logout() {
     this.store.dispatch(logOut());
+  }
+
+  changePassword(payload: ChangePassword) {
+    this.store.dispatch(changePassword(payload));
   }
 }

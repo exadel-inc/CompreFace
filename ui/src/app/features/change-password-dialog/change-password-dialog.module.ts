@@ -13,35 +13,32 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { RouterModule } from '@angular/router';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { ToolBarComponent } from './tool-bar.component';
-import { ToolBarContainerComponent } from './tool-bar.container.component';
-import { ToolBarFacade } from './tool-bar.facade';
-import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
-import { ChangePasswordDialogModule } from '../change-password-dialog/change-password-dialog.module';
+import { ChangePasswordDialogComponent } from './change-password-dialog.component';
 
 @NgModule({
-  declarations: [ToolBarContainerComponent, ToolBarComponent],
-  exports: [ToolBarContainerComponent, ToolBarComponent],
+  declarations: [ChangePasswordDialogComponent],
   imports: [
     CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatMenuModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
     MatIconModule,
-    RouterModule,
-    TranslateModule,
-    ChangePasswordDialogModule
+    MatInputModule,
+    MatDialogModule,
+    MatButtonModule,
+    TranslateModule
   ],
-  providers: [ToolBarFacade],
-  entryComponents: [ChangePasswordDialogComponent]
+  exports: [ChangePasswordDialogComponent],
 })
-export class ToolBarModule {}
+export class ChangePasswordDialogModule {}

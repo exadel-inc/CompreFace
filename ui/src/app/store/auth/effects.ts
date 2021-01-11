@@ -23,7 +23,19 @@ import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { AuthService } from '../../core/auth/auth.service';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { resetUserInfo } from '../userInfo/action';
-import { clearUserToken, logIn, logInFailure, logInSuccess, logOut, signUp, signUpFailure, signUpSuccess } from './action';
+import {
+  clearUserToken,
+  logIn,
+  logInFailure,
+  logInSuccess,
+  logOut,
+  signUp,
+  signUpFailure,
+  signUpSuccess,
+  changePassword,
+  changePasswordSuccess,
+  changePasswordFailure
+} from './action';
 
 @Injectable()
 export class AuthEffects {
@@ -114,5 +126,28 @@ export class AuthEffects {
   clearUserToken$: Observable<any> = this.actions.pipe(
     ofType(clearUserToken),
     switchMap(() => this.authService.clearUserToken())
+  );
+
+  @Effect()
+  changePassword$: Observable<any> = this.actions.pipe(
+    ofType(changePassword),
+    switchMap(payload =>
+      this.authService.changePassword(payload.oldPassword, payload.newPassword).pipe(
+        map(() => changePasswordSuccess()),
+        catchError(error => observableOf(changePasswordFailure(error)))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  changePasswordSuccess$: Observable<any> = this.actions.pipe(
+    ofType(changePasswordSuccess),
+    tap(() => this.snackBarService.openNotification({ messageText: 'auth.change_password_success'}))
+  );
+
+  @Effect({ dispatch: false })
+  changePasswordFailure$: Observable<any> = this.actions.pipe(
+    ofType(changePasswordFailure),
+    tap(action => this.snackBarService.openHttpError(action))
   );
 }

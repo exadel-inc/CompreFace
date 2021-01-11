@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { logInFailure, logInSuccess, signUpFailure, signUpSuccess } from './action';
+import { logInFailure, logInSuccess, signUpFailure, signUpSuccess, changePasswordSuccess, changePasswordFailure } from './action';
 import { authReducer, initialState } from './reducers';
 
 describe('AuthReducer', () => {
@@ -54,6 +54,28 @@ describe('AuthReducer', () => {
       const state = authReducer(initialState, action);
 
       expect(state.errorMessage).toBe('This e-mail is already in use.');
+      expect(state.successMessage).toBe(null);
+      expect(state.isLoading).toBe(false);
+    });
+  });
+
+  describe('CHANGE_PASSWORD_SUCCESS action', () => {
+    it('should set successMessage to value, and loading false', () => {
+      const action = changePasswordSuccess();
+      const state = authReducer(initialState, action);
+
+      expect(state.errorMessage).toBe(null);
+      expect(state.successMessage).toBe('Password has successfully been changed');
+      expect(state.isLoading).toBe(false);
+    });
+  });
+
+  describe('CHANGE_PASSWORD_FAILURE action', () => {
+    it('should set successMessage to value, and loading false', () => {
+      const action = changePasswordFailure({ error: {} });
+      const state = authReducer(initialState, action);
+
+      expect(state.errorMessage).toBeUndefined();
       expect(state.successMessage).toBe(null);
       expect(state.isLoading).toBe(false);
     });

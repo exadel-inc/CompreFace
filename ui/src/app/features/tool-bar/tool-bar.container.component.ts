@@ -17,6 +17,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ToolBarFacade } from './tool-bar.facade';
+import { ChangePassword } from '../../data/interfaces/change-password';
 
 @Component({
   selector: 'app-tool-bar-container',
@@ -26,6 +27,7 @@ import { ToolBarFacade } from './tool-bar.facade';
     [isUserInfoAvailable]="isUserInfoAvailable$ | async"
     (logout)="logout()"
     (signUp)="goSignUp()"
+    (changePassword)="changePassword($event)"
   >
   </app-tool-bar>`,
 })
@@ -48,5 +50,9 @@ export class ToolBarContainerComponent implements OnInit {
 
   logout() {
     this.toolBarFacade.logout();
+  }
+
+  changePassword(payload: ChangePassword) {
+    this.toolBarFacade.changePassword(payload)
   }
 }
