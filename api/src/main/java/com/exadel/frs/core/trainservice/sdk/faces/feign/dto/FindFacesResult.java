@@ -25,6 +25,7 @@ public class FindFacesResult {
 
     private Integer[] age;
     private String gender;
+    private Double[] embedding;
     private FacesBox box;
     @JsonProperty(value = "execution_time")
     private ExecutionTime executionTime;
@@ -36,5 +37,6 @@ public class FindFacesResult {
         private Double age;
         private Double gender;
         private Double detector;
+        private Double calculator;
     }
 }
