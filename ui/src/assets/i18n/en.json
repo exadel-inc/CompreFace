@@ -152,6 +152,7 @@
     "file_unavailable_extension": "File {{filename}} has an unavailable extension"
   },
   "face_recognition": {
+    "recognize_success": "Recognition has been successfully committed",
     "no_recognized": "No faces recognized",
     "no_faces_in_collection": "No faces uploaded to the Face Collection"
   },
