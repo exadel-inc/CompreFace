@@ -13,6 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,12 +25,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
 import { EntityTitleModule } from '../entity-title/entity-title.module';
 import { SpinnerModule } from '../spinner/spinner.module';
-import { ApplicationHeaderComponent } from './application-header.component';
+import { ApplicationHeaderComponent } from './application-header/application-header.component';
+import { ApplicationHeaderContainerComponent } from './application-header.container.component';
 import { ApplicationHeaderFacade } from './application-header.facade';
 
 @NgModule({
-  declarations: [ApplicationHeaderComponent],
-  exports: [ApplicationHeaderComponent],
+  declarations: [ApplicationHeaderComponent, ApplicationHeaderContainerComponent],
+  exports: [ApplicationHeaderComponent, ApplicationHeaderContainerComponent],
   imports: [
     CommonModule,
     RouterModule,

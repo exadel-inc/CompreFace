@@ -15,7 +15,7 @@
  */
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { selectApplications } from '../application/selectors';
+import { selectApplications, selectIsPendingApplicationList } from '../application/selectors';
 import { selectUserId } from '../userInfo/selectors';
 import { AppUserEntityState, userAdapter } from './reducers';
 
@@ -37,3 +37,6 @@ export const selectUsersWithOwnerApp = createSelector(selectUsers, selectApplica
     ownerOfApplications: apps.filter(app => app.owner.userId === user.userId).map(app => app.name),
   }))
 );
+
+export const selectIsLoadingApplicationList = createSelector(selectIsPendingApplicationList, selectCurrentUserRole,
+  (isPendingAppList, currentUserRole) => (!isPendingAppList && !currentUserRole));
