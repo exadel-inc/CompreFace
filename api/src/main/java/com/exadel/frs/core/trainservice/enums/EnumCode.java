@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.enums;
+package com.exadel.frs.core.trainservice.enums;
 
 public interface EnumCode {
 

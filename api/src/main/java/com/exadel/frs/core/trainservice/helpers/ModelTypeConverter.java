@@ -14,11 +14,17 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.enums;
+package com.exadel.frs.core.trainservice.helpers;
 
-public interface EnumCode {
+import com.exadel.frs.core.trainservice.enums.ModelType;
+import com.exadel.frs.core.trainservice.exception.IncorrectModelTypeException;
+import javax.persistence.Converter;
 
-    void setCode(String code);
+@Converter
+public class ModelTypeConverter extends EnumCodeConverter<ModelType> {
 
-    String getCode();
+    @Override
+    public ModelType convertToEntityAttribute(String code) {
+        return super.convertToEntityAttribute(code, ModelType.values(), new IncorrectModelTypeException(code));
+    }
 }

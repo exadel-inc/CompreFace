@@ -14,11 +14,21 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.enums;
+package com.exadel.frs.core.trainservice.enums;
 
-public interface EnumCode {
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    void setCode(String code);
+@NoArgsConstructor
+@AllArgsConstructor
+public enum ModelType implements EnumCode {
 
-    String getCode();
+    RECOGNITION("R"),
+    DETECTION("D");
+
+    @Getter
+    @Setter
+    private String code;
 }
