@@ -60,9 +60,6 @@ export class FaceRecognitionEffects {
     tap(action => this.snackBarService.openHttpError(action.error))
   );
 
-  @Effect({ dispatch: false })
-  recognizeFaceSuccess$: Observable<any> = this.actions.pipe(ofType(recognizeFaceSuccess));
-
   /**
    * Method made to finish recognize face effect, and for better understanding (more readable code).
    *
