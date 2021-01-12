@@ -57,21 +57,7 @@ export class FaceRecognitionEffects {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(recognizeFaceFail, addFaceFail),
-    tap(action => {
-      this.snackBarService.openHttpError(action.error.message);
-    })
-  );
-
-  @Effect({ dispatch: false })
-  recognizeFaceSuccess$: Observable<any> = this.actions.pipe(
-    ofType(recognizeFaceSuccess),
-    tap(action => {
-      if (action.model.result.length === 0) {
-        this.snackBarService.openNotification({ messageText: 'face_recognition.no_recognized', type: 'warning' });
-      } else if (action.model.result[0].faces.length === 0) {
-        this.snackBarService.openNotification({ messageText: 'face_recognition.no_faces_in_collection', type: 'error' });
-      }
-    })
+    tap(action => this.snackBarService.openHttpError(action.error))
   );
 
   /**
