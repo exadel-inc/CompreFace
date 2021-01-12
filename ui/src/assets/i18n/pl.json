@@ -146,7 +146,6 @@
     "file_unavailable_extension": "Plik {{filename}} ma niedostępne rozszerzenie"
   },
   "face_recognition": {
-    "recognize_success": "Uznanie zostało pomyślnie popełnione",
     "no_recognized": "Nie rozpoznano żadnych twarzy",
     "no_faces_in_collection": "Do kolekcji twarzy nie przesłano żadnych twarzy"
   },
