@@ -14,16 +14,17 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.sdk.faces.exception;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.FACES_SERVICE_EXCEPTION;
+import static java.lang.String.format;
+import com.exadel.frs.core.trainservice.exception.BasicException;
 
-@Value
-public class FaceResponse {
+public class FacesServiceException extends BasicException {
 
-    @JsonProperty("face_name")
-    private String faceName;
+    private static final String MESSAGE = "Error during communication with Faces Service: %s";
 
-    private float similarity;
+    public FacesServiceException(final String message) {
+        super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));
+    }
 }

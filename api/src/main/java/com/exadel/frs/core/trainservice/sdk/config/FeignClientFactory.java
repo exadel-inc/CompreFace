@@ -14,21 +14,22 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.mapper;
+package com.exadel.frs.core.trainservice.sdk.config;
 
-import com.exadel.frs.core.trainservice.cache.FaceBO;
-import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
-import java.util.List;
-import java.util.Set;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import feign.Feign;
+import feign.Logger;
+import feign.form.spring.SpringFormEncoder;
+import feign.jackson.JacksonDecoder;
+import org.springframework.stereotype.Component;
 
-@Mapper
-public interface FaceMapper {
+@Component
+public class FeignClientFactory {
 
-    @Mapping(source = "imageId", target = "image_id")
-    @Mapping(source = "name", target = "subject")
-    FaceResponseDto toResponseDto(FaceBO faces);
-
-    List<FaceResponseDto> toResponseDto(Set<FaceBO> faces);
+    public <T> T getFeignClient(Class<T> clazz, String clientUrl) {
+        return Feign.builder()
+                    .encoder(new SpringFormEncoder())
+                    .decoder(new JacksonDecoder())
+                    .logLevel(Logger.Level.FULL)
+                    .target(clazz, clientUrl);
+    }
 }

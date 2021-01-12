@@ -14,28 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.sdk.faces.exception;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.experimental.Accessors;
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.NO_FACES_FOUND;
+import com.exadel.frs.core.trainservice.exception.BasicException;
 
-@Data
-@Accessors(chain = true)
-public class ScanBox {
+public class NoFacesFoundException extends BasicException {
 
-    @JsonProperty(value = "probability")
-    private Double probability;
+    private static final String MESSAGE = "No face is found in the given image";
 
-    @JsonProperty(value = "x_max")
-    private Integer xMax;
-
-    @JsonProperty(value = "y_max")
-    private Integer yMax;
-
-    @JsonProperty(value = "x_min")
-    private Integer xMin;
-
-    @JsonProperty(value = "y_min")
-    private Integer yMin;
+    public NoFacesFoundException() {
+        super(NO_FACES_FOUND, MESSAGE);
+    }
 }

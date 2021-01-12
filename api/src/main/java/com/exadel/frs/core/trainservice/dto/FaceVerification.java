@@ -14,13 +14,14 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.dto;
 
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
 import lombok.Value;
 
 @Value
 public class FaceVerification {
 
-    ScanBox box;
+    FacesBox box;
     float similarity;
 }

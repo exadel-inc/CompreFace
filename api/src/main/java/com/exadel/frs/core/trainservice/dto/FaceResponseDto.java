@@ -14,22 +14,19 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign;
+package com.exadel.frs.core.trainservice.dto;
 
-import feign.Feign;
-import feign.Logger;
-import feign.form.spring.SpringFormEncoder;
-import feign.jackson.JacksonDecoder;
-import org.springframework.stereotype.Component;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Component
-public class FeignClientFactory {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class FaceResponseDto {
 
-    public <T> T getFeignClient(Class<T> clazz, String clientUrl) {
-        return Feign.builder()
-                    .encoder(new SpringFormEncoder())
-                    .decoder(new JacksonDecoder())
-                    .logLevel(Logger.Level.FULL)
-                    .target(clazz, clientUrl);
-    }
+    private String image_id;
+    private String subject;
 }

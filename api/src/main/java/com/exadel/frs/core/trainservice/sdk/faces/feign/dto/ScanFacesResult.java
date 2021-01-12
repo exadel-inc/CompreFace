@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign.python;
+package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +29,8 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class ScanResult {
+public class ScanFacesResult {
 
-    private ScanBox box;
+    private FacesBox box;
     private List<Double> embedding = new ArrayList<>();
 }

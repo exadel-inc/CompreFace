@@ -14,19 +14,15 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.dto.ui;
+package com.exadel.frs.core.trainservice.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
+import java.util.List;
+import lombok.Value;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class FaceResponseDto {
+@Value
+public class FacePrediction {
 
-    private String image_id;
-    private String subject;
+    FacesBox box;
+    List<FaceResponse> faces;
 }

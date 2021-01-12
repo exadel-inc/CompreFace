@@ -31,9 +31,9 @@ import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
 import java.io.IOException;
 import java.util.List;
 import lombok.val;
@@ -46,7 +46,7 @@ import org.springframework.mock.web.MockMultipartFile;
 class ScanServiceImplTest {
 
     @Mock
-    private FacesClient scanFacesClient;
+    private FacesApiClient scanFacesFeignClient;
 
     @Mock
     private FaceDao faceDao;
@@ -69,16 +69,16 @@ class ScanServiceImplTest {
     private static final String MODEL_KEY = "modelKey";
     private static final double THRESHOLD = 1.0;
     private static final double EMBEDDING = 100500;
-    private static final ScanResult SCAN_RESULT = new ScanResult().setEmbedding(List.of(EMBEDDING));
+    private static final ScanFacesResult SCAN_RESULT = new ScanFacesResult().setEmbedding(List.of(EMBEDDING));
 
     @Test
     void scanAndSaveFace() throws IOException {
-        val scanResponse = new ScanResponse().setResult(List.of(SCAN_RESULT));
+        val scanResponse = new ScanFacesResponse().setResult(List.of(SCAN_RESULT));
         val embeddings = new Embedding(List.of(EMBEDDING), null);
         val face = new Face();
         face.setEmbedding(embeddings);
 
-        when(scanFacesClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
+        when(scanFacesFeignClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
                 .thenReturn(scanResponse);
 
         when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
@@ -90,24 +90,24 @@ class ScanServiceImplTest {
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(new FaceBO(face.getFaceName(), face.getId()));
 
-        verify(scanFacesClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
+        verify(scanFacesFeignClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
         verify(faceDao).addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY);
-        verifyNoMoreInteractions(scanFacesClient, faceDao);
+        verifyNoMoreInteractions(scanFacesFeignClient, faceDao);
     }
 
     @Test
     void tooManyFacesScan() {
-        val scanResponse = new ScanResponse().setResult(List.of(SCAN_RESULT, SCAN_RESULT));
+        val scanResponse = new ScanFacesResponse().setResult(List.of(SCAN_RESULT, SCAN_RESULT));
 
-        when(scanFacesClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
+        when(scanFacesFeignClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
                 .thenReturn(scanResponse);
 
         assertThatThrownBy(() ->
                 scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY)
         ).isInstanceOf(TooManyFacesException.class);
 
-        verify(scanFacesClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
+        verify(scanFacesFeignClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
         verifyNoInteractions(faceDao);
-        verifyNoMoreInteractions(scanFacesClient);
+        verifyNoMoreInteractions(scanFacesFeignClient);
     }
 }

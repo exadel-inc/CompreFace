@@ -14,15 +14,28 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.exception;
+package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.NO_FACES_FOUND;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
-public class NoFacesFoundException extends BasicException {
+@Data
+@Accessors(chain = true)
+public class FacesBox {
 
-    private static final String MESSAGE = "No face is found in the given image";
+    @JsonProperty(value = "probability")
+    private Double probability;
 
-    public NoFacesFoundException() {
-        super(NO_FACES_FOUND, MESSAGE);
-    }
+    @JsonProperty(value = "x_max")
+    private Integer xMax;
+
+    @JsonProperty(value = "y_max")
+    private Integer yMax;
+
+    @JsonProperty(value = "x_min")
+    private Integer xMin;
+
+    @JsonProperty(value = "y_min")
+    private Integer yMin;
 }

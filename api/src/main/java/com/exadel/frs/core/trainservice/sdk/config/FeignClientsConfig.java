@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.feign;
+package com.exadel.frs.core.trainservice.sdk.config;
 
 import static com.exadel.frs.core.trainservice.system.global.EnvironmentProperties.ServerType.PYTHON;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
 import com.exadel.frs.core.trainservice.system.global.EnvironmentProperties;
 import feign.Feign;
 import feign.Logger;
@@ -29,16 +29,16 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class ClientsConfig {
+public class FeignClientsConfig {
 
     private final EnvironmentProperties properties;
 
     @Bean
-    public FacesClient getScanFacesClient() {
+    public FacesFeignClient getScanFacesClient() {
         return Feign.builder()
                     .encoder(new SpringFormEncoder())
                     .decoder(new JacksonDecoder())
                     .logLevel(Logger.Level.FULL)
-                    .target(FacesClient.class, properties.getServers().get(PYTHON).getUrl());
+                    .target(FacesFeignClient.class, properties.getServers().get(PYTHON).getUrl());
     }
 }

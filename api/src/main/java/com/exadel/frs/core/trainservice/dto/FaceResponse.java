@@ -14,21 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.mapper;
+package com.exadel.frs.core.trainservice.dto;
 
-import com.exadel.frs.core.trainservice.cache.FaceBO;
-import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
-import java.util.List;
-import java.util.Set;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Value;
 
-@Mapper
-public interface FaceMapper {
+@Value
+public class FaceResponse {
 
-    @Mapping(source = "imageId", target = "image_id")
-    @Mapping(source = "name", target = "subject")
-    FaceResponseDto toResponseDto(FaceBO faces);
+    @JsonProperty("face_name")
+    String faceName;
 
-    List<FaceResponseDto> toResponseDto(Set<FaceBO> faces);
+    float similarity;
 }

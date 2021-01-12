@@ -20,22 +20,19 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.system.feign.python.FacePrediction;
-import com.exadel.frs.core.trainservice.system.feign.python.FaceResponse;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
+import com.exadel.frs.core.trainservice.dto.FacePrediction;
+import com.exadel.frs.core.trainservice.dto.FaceResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
-import feign.FeignException;
 import io.swagger.annotations.ApiParam;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -51,11 +48,11 @@ import org.springframework.web.multipart.MultipartFile;
 public class RecognizeController {
 
     private final FaceClassifierPredictor classifierPredictor;
-    private final FacesClient client;
+    private final FacesApiClient client;
     private final ImageExtensionValidator imageValidator;
 
     @PostMapping(value = "/faces/recognize")
-    public ResponseEntity recognize(
+    public Map<String, List<FacePrediction>> recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey,
@@ -73,24 +70,18 @@ public class RecognizeController {
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false)
             final Double detProbThreshold
-            ) {
+    ) {
         imageValidator.validate(file);
 
-        ScanResponse scanResponse;
-        try {
-            scanResponse = client.scanFaces(file, limit, detProbThreshold);
-        } catch (FeignException.BadRequest e) {
-            return ResponseEntity.status(HttpStatus.OK)
-                                 .body(Map.of("result", Collections.EMPTY_LIST));
-        }
+        ScanFacesResponse scanFacesResponse = client.scanFaces(file, limit, detProbThreshold);
         val results = new ArrayList<FacePrediction>();
 
-        for (val scanResult : scanResponse.getResult()) {
+        for (val scanResult : scanFacesResponse.getResult()) {
             val predictions = classifierPredictor.predict(
                     apiKey,
                     scanResult.getEmbedding().stream()
-                                             .mapToDouble(d -> d)
-                                             .toArray(),
+                              .mapToDouble(d -> d)
+                              .toArray(),
                     predictionCount
             );
 
@@ -114,7 +105,6 @@ public class RecognizeController {
             results.add(result);
         }
 
-        return ResponseEntity.status(HttpStatus.OK)
-                             .body(Map.of("result", results));
+        return Map.of("result", results);
     }
 }

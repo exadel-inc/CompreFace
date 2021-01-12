@@ -20,11 +20,9 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
-import com.exadel.frs.core.trainservice.exception.NoFacesFoundException;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
-import feign.FeignException;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -38,7 +36,7 @@ public class ScanServiceImpl implements ScanService {
     public static final int MAX_FACES_TO_SAVE = 1;
     public static final int MAX_FACES_TO_RECOGNIZE = 2;
 
-    private final FacesClient facesClient;
+    private final FacesApiClient facesApiClient;
     private final FaceDao faceDao;
     private final FaceCacheProvider faceCacheProvider;
 
@@ -49,13 +47,8 @@ public class ScanServiceImpl implements ScanService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        ScanResponse scanResponse;
-        try {
-            scanResponse = facesClient.scanFaces(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold);
-        } catch (FeignException.BadRequest e) {
-            throw new NoFacesFoundException();
-        }
-        val result = scanResponse.getResult();
+        ScanFacesResponse scanFacesResponse = facesApiClient.scanFaces(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold);
+        val result = scanFacesResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {
             throw new TooManyFacesException();
@@ -65,7 +58,7 @@ public class ScanServiceImpl implements ScanService {
                               .findFirst().orElseThrow()
                               .getEmbedding();
 
-        val embeddingToSave = new Embedding(embedding, scanResponse.getCalculatorVersion());
+        val embeddingToSave = new Embedding(embedding, scanFacesResponse.getCalculatorVersion());
 
         return faceCacheProvider.getOrLoad(modelKey).addFace(
                 faceDao.addNewFace(embeddingToSave, file, faceName, modelKey)
