@@ -14,12 +14,11 @@
  * permissions and limitations under the License.
  */
 
-import { Environment } from './interface';
+package com.exadel.frs.core.trainservice.enums;
 
-export const environment: Environment = {
-  production: true,
-  basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
-  adminApiUrl: '/admin/',
-  userApiUrl: '/api/v1/',
-  buildNumber: '0.5.0',
-};
+public interface EnumCode {
+
+    void setCode(String code);
+
+    String getCode();
+}

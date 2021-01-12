@@ -23,8 +23,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.dao.ModelDao;
 import com.exadel.frs.core.trainservice.entity.Model;
+import com.exadel.frs.core.trainservice.enums.ModelType;
+import com.exadel.frs.core.trainservice.repository.ModelRepository;
+import java.util.Optional;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,12 +36,13 @@ import org.mockito.Mock;
 class ModelServiceTest {
 
     @Mock
-    private ModelDao modelDao;
+    private ModelRepository modelRepository;
 
     @InjectMocks
     private ModelService modelService;
 
     private static final String MODEL_KEY = "model_key";
+    private static final ModelType MODEL_TYPE = ModelType.RECOGNITION;
 
     @BeforeEach
     void setUp() {
@@ -48,27 +51,27 @@ class ModelServiceTest {
 
     @Test
     void validateModelKeyOkValidationResult() {
-        when(modelDao.findByApiKey(MODEL_KEY)).thenReturn(new Model());
+        when(modelRepository.findByApiKeyAndType(MODEL_KEY, MODEL_TYPE)).thenReturn(Optional.of(new Model()));
 
-        val actual = modelService.validateModelKey(MODEL_KEY);
+        val actual = modelService.validateModelKey(MODEL_KEY, MODEL_TYPE);
 
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(OK);
 
-        verify(modelDao).findByApiKey(MODEL_KEY);
-        verifyNoMoreInteractions(modelDao);
+        verify(modelRepository).findByApiKeyAndType(MODEL_KEY, MODEL_TYPE);
+        verifyNoMoreInteractions(modelRepository);
     }
 
     @Test
     void validateModelKeyForbiddenValidationResult() {
-        when(modelDao.findByApiKey(MODEL_KEY)).thenReturn(null);
+        when(modelRepository.findByApiKeyAndType(MODEL_KEY, MODEL_TYPE)).thenReturn(Optional.empty());
 
-        val actual = modelService.validateModelKey(MODEL_KEY);
+        val actual = modelService.validateModelKey(MODEL_KEY, MODEL_TYPE);
 
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(FORBIDDEN);
 
-        verify(modelDao).findByApiKey(MODEL_KEY);
-        verifyNoMoreInteractions(modelDao);
+        verify(modelRepository).findByApiKeyAndType(MODEL_KEY, MODEL_TYPE);
+        verifyNoMoreInteractions(modelRepository);
     }
 }

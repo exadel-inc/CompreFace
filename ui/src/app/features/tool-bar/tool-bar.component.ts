@@ -14,6 +14,11 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { first } from 'rxjs/operators';
+
+import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 
 @Component({
   selector: 'app-tool-bar',
@@ -27,11 +32,33 @@ export class ToolBarComponent {
   @Input() isUserInfoAvailable: boolean;
   @Output() logout = new EventEmitter();
   @Output() signUp = new EventEmitter();
+  @Output() changePassword = new EventEmitter();
+
+  constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
   goSignUp() {
     this.signUp.emit();
   }
+
   doLogout() {
     this.logout.emit();
+  }
+
+  onChangePassword() {
+    const dialog = this.dialog.open(ChangePasswordDialogComponent, {
+      width: '350px',
+      data: {
+        entityType: this.translate.instant('applications.header.title'),
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe(result => {
+        if (result) {
+          this.changePassword.emit(result);
+        }
+      });
   }
 }

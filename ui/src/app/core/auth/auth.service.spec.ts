@@ -86,4 +86,16 @@ describe('AuthService', () => {
     const request = httpMock.expectOne(`${environment.adminApiUrl}${API.Register}`);
     expect(request.request.method).toBe('POST');
   });
+
+  it('be able to change password', () => {
+    const payload = {
+      oldPassword: 'password1',
+      newPassword: 'password2',
+    };
+
+    service.changePassword(payload.oldPassword, payload.newPassword).subscribe();
+
+    const request = httpMock.expectOne(`${environment.adminApiUrl}${API.ChangePassword}`);
+    expect(request.request.method).toBe('PUT');
+  });
 });

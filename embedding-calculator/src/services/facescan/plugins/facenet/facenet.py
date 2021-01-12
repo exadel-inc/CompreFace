@@ -41,7 +41,6 @@ _FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')
 
 
 class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
-    BATCH_SIZE = 25
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
     BOX_MARGIN = 32

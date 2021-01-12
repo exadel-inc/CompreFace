@@ -1,6 +1,7 @@
 {
   "common": {
     "capital": {
+      "change":"ZMIANA",
       "create": "STWÓRZ",
       "cancel": "ANULUJ",
       "yes": "TAK",
@@ -37,8 +38,13 @@
     "login": "ZALOGUJ",
     "sign_up": "ZAREJESTRUJ"
   },
+  "change_password": {
+    "old_password": "Stare hasło",
+    "new_password": "Nowe hasło"
+  },
   "toolbar": {
     "logout": "Wyloguj",
+    "change_password": "Zmień hasło",
     "user_avatar_info": "Awatar użytkownika",
     "logo": "Logo CompreFace"
   },
@@ -153,7 +159,8 @@
     "incorrect_credentials": "Email lub hasło są niepoprawne.",
     "already_in_use": "Ten email jest już w użyciu.",
     "new_account_confirm_email": "Utworzyłeś nowe konto, potwierdź swój adres e-mail",
-    "new_account_login": "Utworzyłeś nowe konto, zaloguj się na swoje konto"
+    "new_account_login": "Utworzyłeś nowe konto, zaloguj się na swoje konto",
+    "change_password_success": "Hasło zostało pomyślnie zmienione"
   },
   "application_user_list": {
     "invitation_sent": "Zaproszenie zostało wysłane do {{userEmail}}"

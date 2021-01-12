@@ -14,12 +14,16 @@
  * permissions and limitations under the License.
  */
 
-import { Environment } from './interface';
+package com.exadel.frs.core.trainservice.exception;
 
-export const environment: Environment = {
-  production: true,
-  basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
-  adminApiUrl: '/admin/',
-  userApiUrl: '/api/v1/',
-  buildNumber: '0.5.0',
-};
+import static com.exadel.frs.core.trainservice.handler.ExceptionCode.INCORRECT_MODEL_TYPE;
+import static java.lang.String.format;
+
+public class IncorrectModelTypeException extends BasicException {
+
+    public static final String MODEL_TYPE_NOT_EXISTS_MESSAGE = "Model type %s does not exists";
+
+    public IncorrectModelTypeException(final String modelType) {
+        super(INCORRECT_MODEL_TYPE, format(MODEL_TYPE_NOT_EXISTS_MESSAGE, modelType));
+    }
+}

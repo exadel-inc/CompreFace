@@ -14,12 +14,17 @@
  * permissions and limitations under the License.
  */
 
-import { Environment } from './interface';
+package com.exadel.frs.core.trainservice.helpers;
 
-export const environment: Environment = {
-  production: true,
-  basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
-  adminApiUrl: '/admin/',
-  userApiUrl: '/api/v1/',
-  buildNumber: '0.5.0',
-};
+import com.exadel.frs.core.trainservice.enums.ModelType;
+import com.exadel.frs.core.trainservice.exception.IncorrectModelTypeException;
+import javax.persistence.Converter;
+
+@Converter
+public class ModelTypeConverter extends EnumCodeConverter<ModelType> {
+
+    @Override
+    public ModelType convertToEntityAttribute(String code) {
+        return super.convertToEntityAttribute(code, ModelType.values(), new IncorrectModelTypeException(code));
+    }
+}

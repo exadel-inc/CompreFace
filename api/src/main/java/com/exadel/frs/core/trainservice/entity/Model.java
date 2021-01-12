@@ -17,7 +17,10 @@
 package com.exadel.frs.core.trainservice.entity;
 
 import static javax.persistence.GenerationType.SEQUENCE;
+import com.exadel.frs.core.trainservice.enums.ModelType;
+import com.exadel.frs.core.trainservice.helpers.ModelTypeConverter;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -47,4 +50,7 @@ public class Model {
 
     @Column(name = "api_key")
     private String apiKey;
+
+    @Convert(converter = ModelTypeConverter.class)
+    private ModelType type;
 }

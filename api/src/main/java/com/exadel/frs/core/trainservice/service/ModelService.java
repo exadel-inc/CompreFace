@@ -18,8 +18,9 @@ package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.enums.ValidationResult.FORBIDDEN;
 import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
-import com.exadel.frs.core.trainservice.dao.ModelDao;
+import com.exadel.frs.core.trainservice.enums.ModelType;
 import com.exadel.frs.core.trainservice.enums.ValidationResult;
+import com.exadel.frs.core.trainservice.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,9 +28,9 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ModelService {
 
-    private final ModelDao modelDao;
+    private final ModelRepository modelRepository;
 
-    public ValidationResult validateModelKey(final String modelKey) {
-        return (modelDao.findByApiKey(modelKey) != null) ? OK : FORBIDDEN;
+    public ValidationResult validateModelKey(final String modelKey, ModelType type) {
+        return modelRepository.findByApiKeyAndType(modelKey, type).isPresent() ? OK : FORBIDDEN;
     }
 }
