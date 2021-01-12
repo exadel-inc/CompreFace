@@ -25,7 +25,7 @@ export const createModel = createAction('[Model] Create Model', props<Partial<Mo
 export const createModelSuccess = createAction('[Model] Create Model Success', props<{ model: Model }>());
 export const createModelFail = createAction('[Model] Create Model Fail', props<{ error: any }>());
 
-export const updateModel = createAction('[Model] Update Model', props<ModelUpdate>());
+export const updateModel = createAction('[Model] Update Model', props<Partial<ModelUpdate>>());
 export const updateModelSuccess = createAction('[Model] Update Model Success', props<{ model: Model }>());
 export const updateModelFail = createAction('[Model] Update Model Fail', props<{ error: any }>());
 

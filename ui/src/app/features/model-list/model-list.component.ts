@@ -28,6 +28,7 @@ import { Routes } from '../../data/enums/routers-url.enum';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
+import {ModelCreateDialogComponent} from '../mode-create-dialog/model-create-dialog.component';
 
 @Component({
   selector: 'app-model-list',
@@ -44,6 +45,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   columns = [
     { title: 'name', property: 'name' },
     { title: 'apiKey', property: 'apiKey' },
+    { title: 'type', property: 'type' },
     { title: 'copyKey', property: 'copyKey' },
     { title: 'actions', property: 'id' },
   ];
@@ -101,7 +103,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
       width: '400px',
       data: {
         entityType: this.translate.instant('models.header'),
-        entityName: model.name,
+        entityName: model.name
       },
     });
 
@@ -125,7 +127,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   }
 
   onCreateNewModel(): void {
-    const dialog = this.dialog.open(CreateDialogComponent, {
+    const dialog = this.dialog.open(ModelCreateDialogComponent, {
       width: '300px',
       data: {
         entityType: this.translate.instant('models.header'),
@@ -135,9 +137,9 @@ export class ModelListComponent implements OnInit, OnDestroy {
     dialog
       .afterClosed()
       .pipe(first())
-      .subscribe(name => {
-        if (name) {
-          this.modelListFacade.createModel(name);
+      .subscribe((data) => {
+        if (data && data.entityName && data.serviceType) {
+          this.modelListFacade.createModel(data.entityName ,data.serviceType);
         }
       });
   }

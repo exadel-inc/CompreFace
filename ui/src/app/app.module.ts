@@ -46,10 +46,11 @@ import { SnackBarModule } from './features/snackbar/snackbar.module';
 import { ToolBarModule } from './features/tool-bar/tool-bar.module';
 import { AppStoreModule } from './store/app-store.module';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
+import {MatSelectModule} from '@angular/material/select';
 
 @NgModule({
   declarations: [AppComponent, MainLayoutComponent, CreateDialogComponent, EditDialogComponent, AlertComponent, DeleteDialogComponent],
-  imports: [
+imports: [
     BrowserModule,
     CommonModule,
     MatToolbarModule,
@@ -73,13 +74,14 @@ import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
     BreadcrumbsModule,
     BreadcrumbsContainerModule,
     TranslateModule.forRoot({
-      loader: {
+    loader: {
         provide: TranslateLoader,
         useFactory: (http: HttpClient) => new TranslateHttpLoader(http),
         deps: [HttpClient],
-      },
+    },
     }),
-  ],
+    MatSelectModule,
+],
   providers: [
     FormBuilder,
     {

@@ -29,9 +29,9 @@ export class ModelService {
     return this.http.get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`);
   }
 
-  public create(applicationId: string, name: string): Observable<Model> {
+  public create(applicationId: string, name: string, type:string): Observable<Model> {
     name = name.trim();
-    return this.http.post<Model>(`${environment.adminApiUrl}app/${applicationId}/model`, { name });
+    return this.http.post<Model>(`${environment.adminApiUrl}app/${applicationId}/model`, { name, type });
   }
 
   public update(applicationId: string, modelId: string, name: string): Observable<Model> {
