@@ -24,18 +24,19 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
 import { ModelTableComponent } from './model-table.component';
-import {ModelCreateDialogComponent} from '../mode-create-dialog/model-create-dialog.component';
-import {MatFormFieldModule} from '@angular/material/form-field';
-import {FormsModule} from '@angular/forms';
-import {MatOptionModule} from '@angular/material/core';
-import {MatSelectModule} from '@angular/material/select';
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatInputModule} from '@angular/material/input';
+import { ModelCreateDialogComponent } from '../mode-create-dialog/model-create-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [ModelTableComponent, ModelCreateDialogComponent],
   exports: [ModelTableComponent],
-  imports: [CommonModule,
+  imports: [
+    CommonModule,
     MatButtonModule,
     MatTableModule,
     MatIconModule,
@@ -48,6 +49,7 @@ import {MatInputModule} from '@angular/material/input';
     MatOptionModule,
     MatSelectModule,
     MatDialogModule,
-    MatInputModule],
+    MatInputModule,
+  ],
 })
 export class ModelTableModule {}

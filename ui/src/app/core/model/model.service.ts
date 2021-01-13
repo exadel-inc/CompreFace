@@ -29,7 +29,7 @@ export class ModelService {
     return this.http.get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`);
   }
 
-  public create(applicationId: string, name: string, type:string): Observable<Model> {
+  public create(applicationId: string, name: string, type: string): Observable<Model> {
     name = name.trim();
     return this.http.post<Model>(`${environment.adminApiUrl}app/${applicationId}/model`, { name, type });
   }

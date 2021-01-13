@@ -16,20 +16,24 @@
 
 <h1 mat-dialog-title>{{ 'common.create' | translate }} {{ data.entityType }}</h1>
 <div mat-dialog-content>
-    <mat-form-field>
-        <input matInput [(ngModel)]="data.entityName" placeholder="{{ 'common.name' | translate }}"/>
-    </mat-form-field>
-    <mat-form-field>
-        <mat-select [(ngModel)]="data.serviceType" placeholder="{{ 'common.type' | translate }}" >
-            <mat-option *ngFor="let type of typeValues" [value]="type">{{type}}</mat-option>
-        </mat-select>
-    </mat-form-field>
+  <mat-form-field>
+    <input matInput [(ngModel)]="data.entityName" placeholder="{{ 'common.name' | translate }}" />
+  </mat-form-field>
+  <mat-form-field>
+    <mat-select [(ngModel)]="data.serviceType" placeholder="{{ 'common.type' | translate }}">
+      <mat-option *ngFor="let type of typeValues" [value]="type">{{ type }}</mat-option>
+    </mat-select>
+  </mat-form-field>
 </div>
 <div mat-dialog-actions>
-    <button class="button-cancel" mat-flat-button
-            (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
-    <button class="button-create" mat-flat-button [mat-dialog-close]="data" cdkFocusInitial
-            [disabled]="!data.entityName || !data.serviceType">
-        {{ 'common.capital.create' | translate }}
-    </button>
+  <button class="button-cancel" mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
+  <button
+    class="button-create"
+    mat-flat-button
+    [mat-dialog-close]="data"
+    cdkFocusInitial
+    [disabled]="!data.entityName || !data.serviceType"
+  >
+    {{ 'common.capital.create' | translate }}
+  </button>
 </div>

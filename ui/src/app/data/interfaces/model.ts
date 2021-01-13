@@ -36,5 +36,5 @@ export interface ModelUpdate {
   name: string;
   applicationId: string;
   modelId: string;
-  serviceType: string
+  serviceType: string;
 }

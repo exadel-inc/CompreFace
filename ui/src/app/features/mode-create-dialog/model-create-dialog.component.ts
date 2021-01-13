@@ -13,18 +13,18 @@
  * or implied. See the License for the specific language go verning
  * permissions and limitations under the License.
  */
-import {Component, Inject} from '@angular/core';
-import {CreateDialogComponent} from '../create-dialog/create-dialog.component';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-model-create-dialog',
   templateUrl: './model-create-dialog.component.html',
-  styleUrls: ['../create-dialog/create-dialog.component.scss','./model-create-dialog.component.scss'],
+  styleUrls: ['../create-dialog/create-dialog.component.scss', './model-create-dialog.component.scss'],
 })
 export class ModelCreateDialogComponent extends CreateDialogComponent {
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     super(dialogRef, data);
   }
-  typeValues = ['RECOGNITION' , 'DETECTION'];
+  typeValues = ['RECOGNITION', 'DETECTION'];
 }

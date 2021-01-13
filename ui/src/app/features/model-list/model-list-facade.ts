@@ -69,7 +69,7 @@ export class ModelListFacade implements IFacade {
       createModel({
         applicationId: this.selectedApplicationId,
         name,
-        serviceType
+        serviceType,
       })
     );
   }
@@ -79,7 +79,7 @@ export class ModelListFacade implements IFacade {
       updateModel({
         applicationId: this.selectedApplicationId,
         modelId,
-        name
+        name,
       })
     );
   }

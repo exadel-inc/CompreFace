@@ -32,14 +32,7 @@ describe('ModelTableComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ModelTableComponent, TranslatePipe],
-        imports: [
-          MatTableModule,
-          MatButtonModule,
-          MatIconModule,
-          MatMenuModule,
-          MatTooltipModule,
-          TruncateModule,
-        ],
+        imports: [MatTableModule, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule, TruncateModule],
         providers: [
           {
             provide: TranslateService,
