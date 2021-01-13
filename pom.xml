@@ -37,6 +37,7 @@
         <logstash-logback-encoder.version>5.3</logstash-logback-encoder.version>
         <hibernate-types.version>2.9.13</hibernate-types.version>
         <nd4j.version>1.0.0-beta7</nd4j.version>
+        <quartz.version>2.3.0</quartz.version>
     </properties>
 
     <dependencies>
@@ -149,6 +150,11 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-validation</artifactId>
                 <version>${spring.boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.quartz-scheduler</groupId>
+                <artifactId>quartz</artifactId>
+                <version>${quartz.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

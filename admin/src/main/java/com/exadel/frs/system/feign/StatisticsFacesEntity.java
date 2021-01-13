@@ -10,13 +10,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StatisticsFacesEntity {
 
-    @JsonProperty("user_guid")
+    @JsonProperty("install_guid")
     private String userGuid;
 
     @JsonProperty("collection_guid")
     private String collectionGuid;
 
-    @JsonProperty("number_of_faces")
-    private int numberOfFaces;
-
+    @JsonProperty("faces_range")
+    private String range;
 }

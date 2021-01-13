@@ -106,7 +106,6 @@ public class UserService {
                        .credentialsNonExpired(true)
                        .enabled(isAccountEnabled)
                        .globalRole(USER)
-                       .allowStatistics(userCreateDto.isAllowStatistics())
                        .build();
 
         if (isMailServerEnabled) {

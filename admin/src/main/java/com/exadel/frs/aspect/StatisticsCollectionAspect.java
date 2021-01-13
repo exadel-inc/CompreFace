@@ -2,17 +2,19 @@ package com.exadel.frs.aspect;
 
 import com.exadel.frs.annotation.CollectStatistics;
 import com.exadel.frs.entity.User;
+import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.enums.StatisticsType;
 import com.exadel.frs.exception.ApperyServiceException;
-import com.exadel.frs.helpers.SecurityUtils;
+import com.exadel.frs.repository.InstallInfoRepository;
+import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import feign.FeignException;
-import io.micrometer.core.instrument.util.StringUtils;
-import lombok.AllArgsConstructor;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
@@ -23,13 +25,14 @@ import org.springframework.stereotype.Component;
 @Aspect
 @Component
 @RequiredArgsConstructor
-@AllArgsConstructor
 @Slf4j
 public class StatisticsCollectionAspect {
 
     @Value("${app.feign.appery-io.api-key}")
     private String statisticsApiKey;
     private final ApperyStatisticsClient apperyStatisticsClient;
+    private final InstallInfoRepository installInfoRepository;
+    private final UserRepository userRepository;
 
     @SneakyThrows
     @AfterReturning(pointcut = "@annotation(com.exadel.frs.annotation.CollectStatistics)", returning = "result")
@@ -40,10 +43,10 @@ public class StatisticsCollectionAspect {
 
         User user;
 
-        if (SecurityUtils.isAnonymousUser()) {
+        user = userRepository.findByGlobalRole(GlobalRole.OWNER);
+
+        if (Objects.isNull(user)) {
             user = (User) result;
-        } else {
-            user = SecurityUtils.getPrincipal();
         }
 
         if (!user.isAllowStatistics()) {
@@ -58,7 +61,10 @@ public class StatisticsCollectionAspect {
         StatisticsType statisticsType = collectStatistics.type();
 
         try {
-            apperyStatisticsClient.create(statisticsApiKey, new StatisticsGeneralEntity(user.getGuid(), statisticsType));
+            apperyStatisticsClient.create(
+                    statisticsApiKey,
+                    new StatisticsGeneralEntity(installInfoRepository.findInstallInfo().getInstallGuid(), statisticsType)
+            );
         } catch (FeignException exception) {
             throw new ApperyServiceException();
         }
