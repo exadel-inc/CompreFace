@@ -13,26 +13,24 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 
 import { Application } from '../../data/interfaces/application';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ApplicationHeaderFacade } from './application-header.facade';
-import { Role } from 'src/app/data/enums/role.enum';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-header',
   templateUrl: './application-header.component.html',
   styleUrls: ['./application-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-
 export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   app$: Observable<Application>;
   userRole$: Observable<string | null>;
@@ -40,7 +38,7 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
   maxHeaderLinkLength = 25;
   userRoleEnum = Role;
 
-  constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog, private translate: TranslateService) { }
+  constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog, private translate: TranslateService) {}
 
   ngOnInit() {
     this.applicationHeaderFacade.initSubscriptions();
@@ -59,14 +57,17 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
       data: {
         entityType: this.translate.instant('applications.header.title'),
         entityName: name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(result => {
-      if (result) {
-        this.applicationHeaderFacade.rename(result);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe(result => {
+        if (result) {
+          this.applicationHeaderFacade.rename(result);
+        }
+      });
   }
 
   delete(name: string) {
@@ -75,13 +76,16 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
       data: {
         entityType: this.translate.instant('applications.header.title'),
         entityName: name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(result => {
-      if (result) {
-        this.applicationHeaderFacade.delete();
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe(result => {
+        if (result) {
+          this.applicationHeaderFacade.delete();
+        }
+      });
   }
 }

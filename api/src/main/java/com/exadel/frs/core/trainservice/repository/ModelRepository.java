@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.repository;
 
 import com.exadel.frs.core.trainservice.entity.Model;
+import com.exadel.frs.core.trainservice.enums.ModelType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -26,5 +27,5 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional("tmPg")
 public interface ModelRepository extends JpaRepository<Model, Long> {
 
-    Optional<Model> findByApiKey(String apiKey);
+    Optional<Model> findByApiKeyAndType(String apiKey, ModelType type);
 }

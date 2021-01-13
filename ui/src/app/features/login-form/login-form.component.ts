@@ -13,19 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
-import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
+import { environment } from '../../../environments/environment';
+import { Routes } from '../../data/enums/routers-url.enum';
 import { User } from '../../data/interfaces/user';
 import { AppState } from '../../store';
 import { logIn, resetErrorMessage } from '../../store/auth/action';
 import { selectAuthState } from '../../store/auth/selectors';
-import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login-form',
@@ -37,7 +36,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   user: User;
   getState: Observable<any>;
   isLoading = false;
-  ROUTERS_URL = ROUTERS_URL;
+  routes = Routes;
   stateSubscription: Subscription;
   env = environment;
 
@@ -51,7 +50,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       password: new FormControl(null, [Validators.required]),
     });
 
-    this.stateSubscription = this.getState.subscribe((state) => {
+    this.stateSubscription = this.getState.subscribe(state => {
       this.isLoading = state.isLoading;
     });
   }

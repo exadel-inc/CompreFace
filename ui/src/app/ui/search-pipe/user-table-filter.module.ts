@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
 
-import {NgModule} from '@angular/core';
-import {UserTableFilterPipe} from './user-table-filter.pipe';
+import { UserTableFilterPipe } from './user-table-filter.pipe';
 
 @NgModule({
   declarations: [UserTableFilterPipe],
-  exports: [UserTableFilterPipe]
+  exports: [UserTableFilterPipe],
 })
 export class UserTablePipeModule {}

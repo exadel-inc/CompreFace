@@ -15,8 +15,8 @@
  */
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
 import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
+import { BreadcrumbsContainerComponent } from './breadcrumbs.container.component';
 
 describe('Breadcrumbs.ContainerComponent', () => {
   let component: BreadcrumbsContainerComponent;

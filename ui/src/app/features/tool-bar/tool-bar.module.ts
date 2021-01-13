@@ -13,23 +13,35 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ToolBarComponent } from './tool-bar.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+
+import { ToolBarComponent } from './tool-bar.component';
 import { ToolBarContainerComponent } from './tool-bar.container.component';
 import { ToolBarFacade } from './tool-bar.facade';
+import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
+import { ChangePasswordDialogModule } from '../change-password-dialog/change-password-dialog.module';
 
 @NgModule({
   declarations: [ToolBarContainerComponent, ToolBarComponent],
   exports: [ToolBarContainerComponent, ToolBarComponent],
-  imports: [CommonModule, MatToolbarModule, MatButtonModule, MatMenuModule, MatIconModule, RouterModule, TranslateModule],
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatIconModule,
+    RouterModule,
+    TranslateModule,
+    ChangePasswordDialogModule
+  ],
   providers: [ToolBarFacade],
+  entryComponents: [ChangePasswordDialogComponent]
 })
 export class ToolBarModule {}

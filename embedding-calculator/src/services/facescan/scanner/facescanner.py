@@ -18,7 +18,7 @@ from typing import List
 import numpy as np
 
 from src.services.dto.bounding_box import BoundingBoxDTO
-from src.services.dto.scanned_face import ScannedFace
+from src.services.dto.plugin_result import FaceDTO, EmbeddingDTO
 from src.services.imgtools.types import Array3D
 from src.services.facescan.plugins.managers import plugin_manager
 
@@ -35,7 +35,7 @@ class FaceScanner(ABC):
         return cls.instance
 
     @abstractmethod
-    def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
+    def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[FaceDTO]:
         """ Find face bounding boxes and calculate embeddings"""
         raise NotImplementedError
 
@@ -73,8 +73,10 @@ class ScannerWithPluggins(FaceScanner):
 class MockScanner(FaceScanner):
     ID = 'MockScanner'
 
-    def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[ScannedFace]:
-        return [ScannedFace(box=BoundingBoxDTO(0, 0, 0, 0, 0), embedding=np.random.rand(1), img=img, face_img=img)]
+    def scan(self, img: Array3D, det_prob_threshold: float = None) -> List[FaceDTO]:
+        return [FaceDTO(box=BoundingBoxDTO(0, 0, 0, 0, 0),
+                        plugins_dto=[EmbeddingDTO(embedding=np.random.rand(1))],
+                        img=img, face_img=img)]
 
     def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
         return [BoundingBoxDTO(0, 0, 0, 0, 0)]

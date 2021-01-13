@@ -1,5 +1,5 @@
 ARG GPU_IDX
-ARG BASE_IMAGE=${GPU_IDX:+exadel/compreface-core-cuda:101-py37}
+ARG BASE_IMAGE=${GPU_IDX:+exadel/compreface-core-cuda:100-py37}
 FROM ${BASE_IMAGE:-python:3.7-slim}
 
 RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
@@ -29,7 +29,7 @@ ARG GPU_IDX=-1
 ENV GPU_IDX=$GPU_IDX INTEL_OPTIMIZATION=$INTEL_OPTIMIZATION
 ARG FACE_DETECTION_PLUGIN="facenet.FaceDetector"
 ARG CALCULATION_PLUGIN="facenet.Calculator"
-ARG EXTRA_PLUGINS=""
+ARG EXTRA_PLUGINS="facenet.LandmarksDetector"
 ENV FACE_DETECTION_PLUGIN=$FACE_DETECTION_PLUGIN CALCULATION_PLUGIN=$CALCULATION_PLUGIN \
     EXTRA_PLUGINS=$EXTRA_PLUGINS
 COPY src src

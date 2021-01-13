@@ -13,10 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp } from './selectors';
-import { Application } from '../../data/interfaces/application';
 import { Role } from 'src/app/data/enums/role.enum';
+
+import { Application } from '../../data/interfaces/application';
+import { selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp } from './selectors';
 
 describe('ApplicationSelectors', () => {
   it('selectCurrentAppId', () => {
@@ -52,13 +52,13 @@ describe('ApplicationSelectors', () => {
     const app1 = {
       id: 2,
       name: 'name1',
-      role: Role.ADMINISTRATOR,
+      role: Role.Administrator,
     };
 
     const app2 = {
       id: 2,
       name: 'name1',
-      role: Role.OWNER,
+      role: Role.Owner,
     };
     expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMINISTRATOR');
     expect(selectUserRollForSelectedApp.projector(app2)).toBe('OWNER');

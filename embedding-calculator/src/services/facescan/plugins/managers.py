@@ -19,7 +19,7 @@ from types import ModuleType
 from cached_property import cached_property
 
 from src import constants
-from src.services.facescan.plugins import base
+from src.services.facescan.plugins import base, mixins
 
 
 ML_MODEL_SEPARATOR = '@'
@@ -68,19 +68,19 @@ class PluginManager:
         return plugins
 
     @cached_property
-    def detector(self) -> base.BaseFaceDetector:
+    def detector(self) -> mixins.FaceDetectorMixin:
         return [pl for pl in self.plugins
-                if isinstance(pl, base.BaseFaceDetector)][0]
+                if isinstance(pl, mixins.FaceDetectorMixin)][0]
 
     @cached_property
-    def calculator(self) -> base.BaseCalculator:
+    def calculator(self) -> mixins.CalculatorMixin:
         return [pl for pl in self.plugins
-                if isinstance(pl, base.BaseCalculator)][0]
+                if isinstance(pl, mixins.CalculatorMixin)][0]
 
     @cached_property
     def face_plugins(self) -> List[base.BasePlugin]:
         return [pl for pl in self.plugins
-                if not isinstance(pl, base.BaseFaceDetector)]
+                if not isinstance(pl, mixins.FaceDetectorMixin)]
 
     def filter_face_plugins(self, slugs: List[str]) -> List[base.BasePlugin]:
         return [pl for pl in self.face_plugins

@@ -15,10 +15,9 @@
   -->
 
 <div class="demo-page container">
-    <app-spinner *ngIf="(isPending$ | async); else appLoginForm"></app-spinner>
+  <app-spinner *ngIf="isPending$ | async; else appLoginForm"></app-spinner>
 
-    <ng-template #appLoginForm >
-        <app-face-recognition-container [title]="('demo.title' | translate)">
-        </app-face-recognition-container>
-    </ng-template>
+  <ng-template #appLoginForm>
+    <app-face-recognition-container [title]="'demo.title' | translate"> </app-face-recognition-container>
+  </ng-template>
 </div>

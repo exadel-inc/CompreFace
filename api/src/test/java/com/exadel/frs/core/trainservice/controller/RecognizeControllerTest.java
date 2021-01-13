@@ -20,17 +20,16 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.config.repository.NotificationConfig;
-import com.exadel.frs.core.trainservice.config.repository.Notifier;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanBox;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import java.util.List;
 import lombok.val;
@@ -53,16 +52,10 @@ class RecognizeControllerTest {
     private FaceClassifierPredictor predictor;
 
     @MockBean
-    private FacesClient client;
+    private ImageExtensionValidator validator;
 
     @MockBean
-    private ImageExtensionValidator imageValidator;
-
-    @MockBean
-    private Notifier notifier;
-
-    @MockBean
-    private NotificationConfig notificationConfig;
+    private FacesApiClient client;
 
     private static final String MODEL_KEY = "model_key";
     private static final String API_KEY = MODEL_KEY;
@@ -70,15 +63,16 @@ class RecognizeControllerTest {
     @Test
     void recognize() throws Exception {
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
-        val scanResponse = new ScanResponse().setResult(
-                List.of(new ScanResult()
+        val scanResponse = new ScanFacesResponse().setResult(
+                List.of(new ScanFacesResult()
                         .setEmbedding(List.of(1.0))
-                        .setBox(new ScanBox().setProbability(1D))
+                        .setBox(new FacesBox().setProbability(1D))
                 )
         );
 
         when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
+        doNothing().when(validator).validate(mockFile);
 
         mockMvc.perform(
                 multipart(API_V1 + "/faces/recognize")

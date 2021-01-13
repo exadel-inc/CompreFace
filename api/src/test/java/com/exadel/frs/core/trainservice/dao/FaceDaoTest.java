@@ -130,19 +130,27 @@ class FaceDaoTest {
     @Test
     void addFaceFile() throws IOException {
         val embeddingNumbers = List.of(100500D);
-        val embeddings = new Face.Embedding(embeddingNumbers, "1.0");
+        val embedding = new Face.Embedding(embeddingNumbers, "1.0");
         val faceName = "faceName";
         val modelKey = "modelKey";
         val faceId = "507f1f77bcf86cd799439011";
-
+        val expected = Face.builder()
+                           .faceName(faceName)
+                           .apiKey(modelKey)
+                           .embedding(embedding)
+                           .build();
         val mockFile = new MockMultipartFile("mockFile", faceId.getBytes());
         when(imageProperties.isSaveImagesToDB()).thenReturn(true);
+        when(facesRepository.save(any(Face.class))).thenReturn(expected);
 
-        faceDao.addNewFace(embeddings, mockFile, faceName, modelKey);
+        val actual = faceDao.addNewFace(embedding, mockFile, faceName, modelKey);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getFaceName()).isEqualTo(faceName);
+        assertThat(actual.getApiKey()).isEqualTo(modelKey);
+        assertThat(actual.getEmbedding().getEmbeddings()).isEqualTo(embeddingNumbers);
 
         verify(imagesRepository).save(any(Image.class));
-        verify(facesRepository).save(any(Face.class));
         verifyNoMoreInteractions(imagesRepository);
-        verifyNoMoreInteractions(facesRepository);
     }
 }

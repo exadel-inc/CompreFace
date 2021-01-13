@@ -13,18 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { Model } from 'src/app/data/interfaces/model';
 import { AppState } from 'src/app/store';
 import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
 import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
-import { map } from 'rxjs/operators';
-import { Role } from 'src/app/data/enums/role.enum';
 import { selectCurrentUserRole } from 'src/app/store/user/selectors';
 
 @Injectable()
@@ -33,26 +32,25 @@ export class ModelListFacade implements IFacade {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   selectedApplication$: Observable<string>;
-
-  private currentArgsAndApplicationSubscription: Subscription;
   selectedApplicationId: string;
+  private selectedApplicationSubscription: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.models$ = this.store.select(selectModels);
     this.isLoading$ = this.store.select(selectPendingModel);
     this.selectedApplication$ = this.store.select(selectCurrentAppId);
     this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
-      map(([applicationRole, globalRole]) => {
+      map(([applicationRole, globalRole]) =>
         // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        return globalRole !== Role.USER ? globalRole : applicationRole;
-      })
+        globalRole !== Role.User ? globalRole : applicationRole
+      )
     );
   }
 
   initSubscriptions(): void {
-    this.currentArgsAndApplicationSubscription = combineLatest([this.selectedApplication$]).subscribe((ObservableResult) => {
-      if (ObservableResult[0] !== null) {
-        this.selectedApplicationId = ObservableResult[0];
+    this.selectedApplicationSubscription = this.selectedApplication$.subscribe(result => {
+      if (result !== null) {
+        this.selectedApplicationId = result;
         this.loadModels();
       }
     });
@@ -95,6 +93,6 @@ export class ModelListFacade implements IFacade {
   }
 
   unsubscribe(): void {
-    this.currentArgsAndApplicationSubscription.unsubscribe();
+    this.selectedApplicationSubscription.unsubscribe();
   }
 }

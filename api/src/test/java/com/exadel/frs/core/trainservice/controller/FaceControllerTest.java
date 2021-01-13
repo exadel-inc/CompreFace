@@ -34,15 +34,13 @@ import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.config.repository.NotificationConfig;
-import com.exadel.frs.core.trainservice.config.repository.Notifier;
-import com.exadel.frs.core.trainservice.dto.ui.FaceResponseDto;
+import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
 import com.exadel.frs.core.trainservice.service.ScanService;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanBox;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -70,12 +68,6 @@ public class FaceControllerTest {
     private ScanService scanService;
 
     @MockBean
-    private NotificationConfig notificationConfig;
-
-    @MockBean
-    private Notifier notifier;
-
-    @MockBean
     private ImageExtensionValidator imageValidator;
 
     @MockBean
@@ -85,7 +77,7 @@ public class FaceControllerTest {
     private FaceClassifierPredictor predictor;
 
     @MockBean
-    private FacesClient client;
+    private FacesApiClient client;
 
     private static final String API_KEY = "model_key";
 
@@ -251,10 +243,10 @@ public class FaceControllerTest {
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
 
-        val scanResponse = new ScanResponse().setResult(
-                List.of(new ScanResult()
+        val scanResponse = new ScanFacesResponse().setResult(
+                List.of(new ScanFacesResult()
                         .setEmbedding(List.of(1.0))
-                        .setBox(new ScanBox().setProbability(1D))
+                        .setBox(new FacesBox().setProbability(1D))
                 )
         );
 

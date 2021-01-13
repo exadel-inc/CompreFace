@@ -18,14 +18,14 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import {Environment} from './interface';
+import { Environment } from './interface';
 
 export const environment: Environment = {
   production: false,
-  basicToken:  `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=`,
+  basicToken: `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=`,
   adminApiUrl: 'http://compreface-api:8080/admin/',
   userApiUrl: 'http://compreface-api:8080/api/v1/',
-  buildNumber: '0.0.0'
+  buildNumber: '0.0.0',
 };
 
 /*

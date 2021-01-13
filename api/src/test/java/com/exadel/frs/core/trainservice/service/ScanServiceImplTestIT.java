@@ -20,12 +20,11 @@ import static com.exadel.frs.core.trainservice.service.ScanServiceImpl.MAX_FACES
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
-import com.exadel.frs.core.trainservice.config.repository.Notifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.system.feign.python.FacesClient;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResponse;
-import com.exadel.frs.core.trainservice.system.feign.python.ScanResult;
-import com.exadel.frs.core.trainservice.system.global.ImageProperties;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import java.io.IOException;
 import java.util.List;
@@ -38,34 +37,31 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.multipart.MultipartFile;
 
 @DataJpaTest
-@Import({ScanServiceImpl.class, FacesClient.class, FaceDao.class, FaceCacheProvider.class, ImageProperties.class})
+@Import({ScanServiceImpl.class, FacesFeignClient.class, FaceDao.class, FaceCacheProvider.class})
 class ScanServiceImplTestIT {
 
     @Autowired
     private ScanServiceImpl scanService;
 
     @MockBean
-    private FacesClient facesClient;
-
-    @MockBean
-    private Notifier notifier;
+    private FacesApiClient facesFeignClient;
 
     private static final MultipartFile MULTIPART_FILE_DATA = new MultipartFileData("hex-string-1".getBytes(), "test", "application/json");
     private static final String FACE_NAME = "faceName";
     private static final String MODEL_KEY = "modelKey";
     private static final double THRESHOLD = 1.0;
     private static final double EMBEDDING = 100500;
-    private static final ScanResponse SCAN_RESULT = ScanResponse.builder()
-                                                                .calculatorVersion("1.0")
-                                                                .result(List.of(ScanResult.builder()
-                                                                                          .embedding(List.of(EMBEDDING))
-                                                                                          .build()
-                                                                ))
-                                                                .build();
+    private static final ScanFacesResponse SCAN_RESULT = ScanFacesResponse.builder()
+                                                                          .calculatorVersion("1.0")
+                                                                          .result(List.of(ScanFacesResult.builder()
+                                                                                                         .embedding(List.of(EMBEDDING))
+                                                                                                         .build()
+                                                                          ))
+                                                                          .build();
 
     @Test
     public void scanAndFaceTest() throws IOException {
-        when(facesClient.scanFaces(MULTIPART_FILE_DATA, MAX_FACES_TO_RECOGNIZE, THRESHOLD)).thenReturn(SCAN_RESULT);
+        when(facesFeignClient.scanFaces(MULTIPART_FILE_DATA, MAX_FACES_TO_RECOGNIZE, THRESHOLD)).thenReturn(SCAN_RESULT);
 
         val actual = scanService.scanAndSaveFace(MULTIPART_FILE_DATA, FACE_NAME, THRESHOLD, MODEL_KEY);
 

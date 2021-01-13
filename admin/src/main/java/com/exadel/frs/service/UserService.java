@@ -220,7 +220,6 @@ public class UserService {
         user.setLastName(userCreateDto.getLastName());
         user.setPassword(encoder.encode(userCreateDto.getPassword()));
         user.setGuid(UUID.randomUUID().toString());
-        user.setAllowStatistics(userCreateDto.isAllowStatistics());
 
         if (isMailServerEnabled) {
             user.setRegistrationToken(generateRegistrationToken());
@@ -258,8 +257,6 @@ public class UserService {
 
         if (newGlobalRole == OWNER) {
             currentUser.setGlobalRole(GlobalRole.ADMINISTRATOR);
-            user.setAllowStatistics(currentUser.isAllowStatistics());
-            currentUser.setAllowStatistics(false);
         }
 
         user.setGlobalRole(newGlobalRole);

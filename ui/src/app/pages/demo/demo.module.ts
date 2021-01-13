@@ -13,30 +13,26 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+
 import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
 import { SpinnerModule } from '../../features/spinner/spinner.module';
 import { DemoComponent } from './demo.component';
-import { RouterModule } from '@angular/router';
-import { DemoService } from './demo.service';
 import { DemoGuard } from './demo.guard';
+import { DemoService } from './demo.service';
 
 @NgModule({
-  declarations: [
-    DemoComponent
-  ],
+  declarations: [DemoComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([
-      { path: '', component: DemoComponent, canActivate: [ DemoGuard ] },
-    ]),
+    RouterModule.forChild([{ path: '', component: DemoComponent, canActivate: [DemoGuard] }]),
     TranslateModule,
     FaceRecognitionModule,
-    SpinnerModule
+    SpinnerModule,
   ],
-  providers: [ DemoService ]
+  providers: [DemoService],
 })
-export class DemoModule { }
+export class DemoModule {}

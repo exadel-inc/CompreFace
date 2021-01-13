@@ -16,15 +16,16 @@
 
 <div class="app-user-list">
   <div class="table-header-container">
-    <h3>{{'users.title' | translate}}</h3>
+    <h3>{{ 'users.title' | translate }}</h3>
     <form>
       <input
         matInput
         type="text"
         class="search-input"
         [(ngModel)]="search"
-        placeholder="{{'users.search.app_title' | translate}}"
-        [ngModelOptions]="{standalone: true}">
+        placeholder="{{ 'users.search.app_title' | translate }}"
+        [ngModelOptions]="{ standalone: true }"
+      />
       <mat-icon class="material-icons notranslate">search</mat-icon>
     </form>
   </div>
@@ -34,14 +35,17 @@
     [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
     [currentUserId]="currentUserId$ | async"
-    [tableConfig]="tableConfig$ | userTableFilter:search | async"
+    [tableConfig]="tableConfig$ | userTableFilter: search | async"
     [availableRoles]="availableRoles$ | async"
     [createMessage]="message"
     [searchText]="search"
     (changeRow)="onChange($event)"
-    (deleteUser)="onDelete($event)">
+    (deleteUser)="onDelete($event)"
+  >
   </app-user-table>
   <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
-    <button *ngIf="userRole !== roleEnum.USER" mat-button color="primary" (click)="onInviteUser();">{{'common.capital.add' | translate}}</button>
+    <button *ngIf="userRole !== roleEnum.User" mat-button color="primary" (click)="onInviteUser()">
+      {{ 'common.capital.add' | translate }}
+    </button>
   </div>
 </div>

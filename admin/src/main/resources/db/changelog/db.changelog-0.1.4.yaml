@@ -1,13 +1,21 @@
 databaseChangeLog:
   - changeSet:
-      id: update-without-organization
-      author: Aleksand Kurilo
+      id: model-type-column
+      author: Aliaksandr Pleski
       changes:
-        #add column global role to user table
+        # add column type to model table
         - addColumn:
-            tableName: user
+            tableName: model
             columns:
               - column:
-                  name: allow_statistics
-                  type: boolean
-                  defaultValueBoolean: false
+                  name: type
+                  type: varchar(1)
+
+        # set type of previously existed models
+        - sql:
+            sql: UPDATE  public.model  SET  type  = 'R'
+
+        # add not null constraint
+        - addNotNullConstraint:
+            tableName: model
+            columnName: type

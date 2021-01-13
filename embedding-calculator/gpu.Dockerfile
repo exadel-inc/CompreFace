@@ -1,7 +1,7 @@
 ARG UBUNTU_VERSION=18.04
 
 ARG ARCH=
-ARG CUDA=10.1
+ARG CUDA=10.0
 FROM nvidia/cuda${ARCH:+-$ARCH}:${CUDA}-base-ubuntu${UBUNTU_VERSION} as base
 # ARCH and CUDA are specified again because the FROM directive resets ARGs
 # (but their default value is retained if set previously)
@@ -65,6 +65,9 @@ RUN ${PYTHON} -m pip --no-cache-dir install --upgrade pip setuptools
 # Some TF tools expect a "python" binary
 RUN ln -s $(which $PYTHON) /usr/local/bin/python
 
+
+# Variables for Tensorflow
+ENV TF_FORCE_GPU_ALLOW_GROWTH=true
 
 # Variables for MXNET
 ENV MXNET_CPU_WORKER_NTHREADS=24

@@ -13,21 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {
-  logInSuccess,
-  logInFailure,
-  signUpFailure,
-  signUpSuccess
-} from './action';
-import { initialState, AuthReducer } from './reducers';
+import { logInFailure, logInSuccess, signUpFailure, signUpSuccess, changePasswordSuccess, changePasswordFailure } from './action';
+import { authReducer, initialState } from './reducers';
 
 describe('AuthReducer', () => {
-
   describe('LOGIN_SUCCESS action', () => {
     it('should set isAuthenticated to true, and loading false', () => {
       const action = logInSuccess();
-      const state = AuthReducer(initialState, action);
+      const state = authReducer(initialState, action);
 
       expect(state.errorMessage).toBe(null);
       expect(state.isLoading).toBe(false);
@@ -37,7 +30,7 @@ describe('AuthReducer', () => {
   describe('LOGIN_FAILURE action', () => {
     it('should set errorMessage to value, and loading false', () => {
       const action = logInFailure({ error: { error: {} } });
-      const state = AuthReducer(initialState, action);
+      const state = authReducer(initialState, action);
 
       expect(state.errorMessage).toBe('E-mail or Password is incorrect.');
       expect(state.isLoading).toBe(false);
@@ -46,8 +39,8 @@ describe('AuthReducer', () => {
 
   describe('SIGNUP_SUCCESS action', () => {
     it('should set successMessage to value, and loading false', () => {
-      const action = signUpSuccess({confirmationNeeded: false});
-      const state = AuthReducer(initialState, action);
+      const action = signUpSuccess({ confirmationNeeded: false });
+      const state = authReducer(initialState, action);
 
       expect(state.successMessage).toBe('You have created new account, please login into your account');
       expect(state.errorMessage).toBe(null);
@@ -58,9 +51,31 @@ describe('AuthReducer', () => {
   describe('SIGNUP_FAILURE action', () => {
     it('should set errorMessage to value, and loading false', () => {
       const action = signUpFailure({ error: {} });
-      const state = AuthReducer(initialState, action);
+      const state = authReducer(initialState, action);
 
       expect(state.errorMessage).toBe('This e-mail is already in use.');
+      expect(state.successMessage).toBe(null);
+      expect(state.isLoading).toBe(false);
+    });
+  });
+
+  describe('CHANGE_PASSWORD_SUCCESS action', () => {
+    it('should set successMessage to value, and loading false', () => {
+      const action = changePasswordSuccess();
+      const state = authReducer(initialState, action);
+
+      expect(state.errorMessage).toBe(null);
+      expect(state.successMessage).toBe('Password has successfully been changed');
+      expect(state.isLoading).toBe(false);
+    });
+  });
+
+  describe('CHANGE_PASSWORD_FAILURE action', () => {
+    it('should set successMessage to value, and loading false', () => {
+      const action = changePasswordFailure({ error: {} });
+      const state = authReducer(initialState, action);
+
+      expect(state.errorMessage).toBeUndefined();
       expect(state.successMessage).toBe(null);
       expect(state.isLoading).toBe(false);
     });

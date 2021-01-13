@@ -13,19 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ApplicationHeaderComponent } from './application-header.component';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
-import { EntityTitleModule } from '../entity-title/entity-title.module';
-import { ApplicationHeaderFacade } from './application-header.facade';
-import { SpinnerModule } from '../spinner/spinner.module';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
+import { RouterModule } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
+import { Subject } from 'rxjs';
+
+import { EntityTitleModule } from '../entity-title/entity-title.module';
+import { SpinnerModule } from '../spinner/spinner.module';
+import { ApplicationHeaderComponent } from './application-header.component';
+import { ApplicationHeaderFacade } from './application-header.facade';
 
 describe('ApplicationHeaderComponent', () => {
   let component: ApplicationHeaderComponent;

@@ -13,22 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {SignUpComponent} from './sign-up.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
+import { SignUpComponent } from './sign-up.component';
 
 describe('SignUpComponent', () => {
   let component: SignUpComponent;
   let fixture: ComponentFixture<SignUpComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SignUpComponent ],
-      schemas: [NO_ERRORS_SCHEMA]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [SignUpComponent],
+        schemas: [NO_ERRORS_SCHEMA],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SignUpComponent);

@@ -16,6 +16,8 @@
 
 package com.exadel.frs.core.trainservice.filter;
 
+import static com.exadel.frs.core.trainservice.enums.ModelType.DETECTION;
+import static com.exadel.frs.core.trainservice.enums.ModelType.RECOGNITION;
 import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.Collections.emptyList;
@@ -75,7 +77,8 @@ public class SecurityValidationFilter implements Filter {
         val httpRequest = (HttpServletRequest) servletRequest;
         val httpResponse = (HttpServletResponse) servletResponse;
 
-        if (!httpRequest.getRequestURI().matches("^/(swagger|webjars|v2).*$")) {
+        String requestURI = httpRequest.getRequestURI();
+        if (!requestURI.matches("^/(swagger|webjars|v2).*$")) {
             val headersMap =
                     list(httpRequest.getHeaderNames()).stream()
                                                       .collect(Collectors.<String, String, List<String>>toMap(
@@ -98,7 +101,8 @@ public class SecurityValidationFilter implements Filter {
 
                     return;
                 }
-                val validationResult = modelService.validateModelKey(key);
+                val modelType = requestURI.endsWith("/detection") ? DETECTION : RECOGNITION;
+                val validationResult = modelService.validateModelKey(key, modelType);
                 if (validationResult != OK) {
                     val objectResponseEntity = handler.handleDefinedExceptions(new ModelNotFoundException(key));
                     buildException(httpResponse, objectResponseEntity);

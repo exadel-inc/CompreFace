@@ -13,24 +13,24 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { TestBed } from '@angular/core/testing';
-import { AuthService } from './auth.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { environment } from '../../../environments/environment';
-import { API_URL } from '../../data/enums/api-url.enum';
+import { TestBed } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
 import { Router } from '@angular/router';
-import { provideMockStore } from '@ngrx/store/testing';
 import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
 import { of } from 'rxjs';
+
+import { environment } from '../../../environments/environment';
+import { API } from '../../data/enums/api-url.enum';
+import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
   let service: AuthService;
   let httpMock: HttpTestingController;
   const initialState = {
     isPending: false,
-    apiKey: null
+    apiKey: null,
   };
 
   beforeEach(() => {
@@ -48,9 +48,7 @@ describe('AuthService', () => {
           provide: Store,
           useValue: {
             dispatch: () => {},
-            select: () => {
-              return of(initialState);
-            },
+            select: () => of(initialState),
           },
         },
       ],
@@ -71,7 +69,7 @@ describe('AuthService', () => {
 
     service.logIn(dummyUser.firstName, dummyUser.password).subscribe();
 
-    const request = httpMock.expectOne(`${environment.adminApiUrl}${API_URL.LOGIN}`);
+    const request = httpMock.expectOne(`${environment.adminApiUrl}${API.Login}`);
     expect(request.request.method).toBe('POST');
   });
 
@@ -85,7 +83,19 @@ describe('AuthService', () => {
 
     service.signUp(dummyUser.firstName, dummyUser.password, dummyUser.email, dummyUser.lastName).subscribe();
 
-    const request = httpMock.expectOne(`${environment.adminApiUrl}${API_URL.REGISTER}`);
+    const request = httpMock.expectOne(`${environment.adminApiUrl}${API.Register}`);
     expect(request.request.method).toBe('POST');
+  });
+
+  it('be able to change password', () => {
+    const payload = {
+      oldPassword: 'password1',
+      newPassword: 'password2',
+    };
+
+    service.changePassword(payload.oldPassword, payload.newPassword).subscribe();
+
+    const request = httpMock.expectOne(`${environment.adminApiUrl}${API.ChangePassword}`);
+    expect(request.request.method).toBe('PUT');
   });
 });

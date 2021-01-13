@@ -1,6 +1,7 @@
 {
   "common": {
     "capital": {
+      "change":"CHANGE",
       "create": "CREATE",
       "cancel": "CANCEL",
       "yes": "YES",
@@ -37,8 +38,13 @@
     "login": "LOGIN",
     "sign_up": "SIGN UP"
   },
+  "change_password": {
+    "old_password": "Old password",
+    "new_password": "New Password"
+  },
   "toolbar": {
     "logout": "Logout",
+    "change_password": "Change password",
     "user_avatar_info": "User avatar",
     "logo": "CompreFace logo",
     "signup": "Sign Up"
@@ -148,7 +154,8 @@
     "link": "Try Demo"
   },
   "face_recognition_container": {
-    "file_size_error": "The photo size is more than 5 Mb"
+    "file_size_error": "The photo size is more than 5 Mb",
+    "file_unavailable_extension": "File {{filename}} has an unavailable extension"
   },
   "face_recognition": {
     "no_recognized": "No faces recognized",
@@ -158,7 +165,8 @@
     "incorrect_credentials": "E-mail or Password is incorrect.",
     "already_in_use": "This e-mail is already in use.",
     "new_account_confirm_email": "You have created new account, please confirm your email",
-    "new_account_login": "You have created new account, please login into your account"
+    "new_account_login": "You have created new account, please login into your account",
+    "change_password_success": "Password has successfully been changed"
   },
   "application_user_list": {
     "invitation_sent": "Invitation was sent to {{userEmail}}"

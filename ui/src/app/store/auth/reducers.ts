@@ -14,13 +14,17 @@
  * permissions and limitations under the License.
  */
 
-import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
+import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
 import {
   logInSuccess,
   logInFailure,
   signUpSuccess,
   signUpFailure,
-  logOut, resetErrorMessage
+  logOut,
+  resetErrorMessage,
+  changePassword,
+  changePasswordSuccess,
+  changePasswordFailure
 } from './action';
 
 export interface AuthState {
@@ -32,39 +36,54 @@ export interface AuthState {
 export const initialState: AuthState = {
   errorMessage: null,
   successMessage: null,
-  isLoading: false
+  isLoading: false,
 };
 
-const reducer: ActionReducer<AuthState> = createReducer(initialState,
-  on(logInSuccess, (state) => ({
+const reducer: ActionReducer<AuthState> = createReducer(
+  initialState,
+  on(logInSuccess, state => ({
     ...state,
     errorMessage: null,
-    isLoading: false
+    isLoading: false,
   })),
-  on(logInFailure, (state) => ({
+  on(logInFailure, state => ({
     ...state,
     errorMessage: 'E-mail or Password is incorrect.',
-    isLoading: false
+    isLoading: false,
   })),
-  on(signUpSuccess, (state) => ({
+  on(signUpSuccess, state => ({
     ...state,
     errorMessage: null,
     successMessage: 'You have created new account, please login into your account',
-    isLoading: false
+    isLoading: false,
   })),
-  on(signUpFailure, (state) => ({
+  on(signUpFailure, state => ({
     ...state,
     errorMessage: 'This e-mail is already in use.',
     successMessage: null,
-    isLoading: false
+    isLoading: false,
   })),
-  on(resetErrorMessage, (state) => ({
+  on(resetErrorMessage, state => ({
     ...state,
     errorMessage: null,
   })),
-  on(logOut, () => ({ ...initialState }))
+  on(logOut, () => ({ ...initialState })),
+  on(changePassword, state => ({
+    ...state,
+    isLoading: true
+  })),
+  on(changePasswordSuccess, state => ({
+    ...state,
+    errorMessage: null,
+    successMessage: 'Password has successfully been changed',
+    isLoading: false,
+  })),
+  on(changePasswordFailure, (state, { error }) => ({
+    ...state,
+    errorMessage: error.message,
+    successMessage: null,
+    isLoading: false
+  }))
 );
 
-export function AuthReducer(authState: AuthState, action: Action) {
-  return reducer(authState, action);
-}
+export const authReducer = (authState: AuthState, action: Action) => reducer(authState, action);

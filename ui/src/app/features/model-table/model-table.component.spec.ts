@@ -13,19 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
-import { MatIconModule } from '@angular/material/icon';
-
-import { ModelTableComponent } from './model-table.component';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
-xdescribe('ModelTableComponent', () => {
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { ModelTableComponent } from './model-table.component';
+
+describe('ModelTableComponent', () => {
   let component: ModelTableComponent;
   let fixture: ComponentFixture<ModelTableComponent>;
 
@@ -40,11 +39,11 @@ xdescribe('ModelTableComponent', () => {
           MatMenuModule,
           MatTooltipModule,
           TruncateModule,
+        ],
+        providers: [
           {
             provide: TranslateService,
-            useValue: {
-              get: () => {},
-            },
+            useValue: {},
           },
         ],
       }).compileComponents();
@@ -54,7 +53,6 @@ xdescribe('ModelTableComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ModelTableComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {

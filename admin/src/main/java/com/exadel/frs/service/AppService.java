@@ -155,7 +155,7 @@ public class AppService {
         val user = userService.getUser(userInviteDto.getUserEmail());
         val admin = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(admin, app);
+        authManager.verifyWritePrivilegesToApp(admin, app, true);
 
         val userAppRole = app.getUserAppRole(user.getId());
         if (userAppRole.isPresent()) {
@@ -196,7 +196,7 @@ public class AppService {
         val app = getApp(appGuid, userId);
         val user = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(user, app, true);
 
         val isSameName = app.getName().equals(appUpdateDto.getName());
         if (isNotTrue(isSameName)) {
@@ -211,7 +211,7 @@ public class AppService {
         val app = getApp(guid, adminId);
         val admin = userService.getUser(adminId);
 
-        authManager.verifyWritePrivilegesToApp(admin, app);
+        authManager.verifyWritePrivilegesToApp(admin, app, true);
 
         val userToUpdate = userService.getUserByGuid(userRoleUpdateDto.getUserId());
         if (userToUpdate.getId().equals(adminId)) {
@@ -254,7 +254,7 @@ public class AppService {
         val app = getApp(guid, userId);
         val user = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(user, app, true);
 
         app.setApiKey(UUID.randomUUID().toString());
 
@@ -266,7 +266,7 @@ public class AppService {
         val app = getApp(guid, userId);
         val user = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(user, app, true);
 
         appRepository.deleteById(app.getId());
     }
@@ -275,7 +275,7 @@ public class AppService {
         val app = getApp(appGuid);
         val user = userService.getUser(SecurityUtils.getPrincipalId());
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(user, app, true);
 
         val requestId = UUID.randomUUID();
         val id = ModelShareRequestId.builder()

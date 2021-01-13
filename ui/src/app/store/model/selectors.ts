@@ -25,18 +25,10 @@ const { selectAll } = modelAdapter.getSelectors();
 
 export const selectModels = createSelector(selectModelEntityState, selectAll);
 
-export const selectPendingModel = createSelector(
-  selectModelEntityState,
-  (state: ModelEntityState) => state.isPending
-);
+export const selectPendingModel = createSelector(selectModelEntityState, (state: ModelEntityState) => state.isPending);
 
-export const selectCurrentModelId = createSelector(
-  selectModelEntityState,
-  (state: ModelEntityState) => state.selectedModelId
-);
+export const selectCurrentModelId = createSelector(selectModelEntityState, (state: ModelEntityState) => state.selectedModelId);
 
-export const selectCurrentModel = createSelector(
-  selectModelEntityState,
-  selectCurrentModelId,
-  (models, selectedModelId) => models.entities ? models.entities[selectedModelId] : null
+export const selectCurrentModel = createSelector(selectModelEntityState, selectCurrentModelId, (models, selectedModelId) =>
+  models.entities ? models.entities[selectedModelId] : null
 );
