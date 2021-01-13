@@ -21,7 +21,7 @@
   </mat-form-field>
   <mat-form-field>
     <mat-select [(ngModel)]="data.serviceType" placeholder="{{ 'common.type' | translate }}">
-      <mat-option *ngFor="let type of typeValues" [value]="type">{{ type }}</mat-option>
+      <mat-option *ngFor="let type of keys(typeValues)" [value]="typeValues[type]">{{ typeValues[type] }}</mat-option>
     </mat-select>
   </mat-form-field>
 </div>
