@@ -1,16 +1,14 @@
 package com.exadel.frs.scheduler.job;
 
-import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Face;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.exception.ApperyServiceException;
-import com.exadel.frs.repository.AppRepository;
 import com.exadel.frs.repository.FacesRepository;
 import com.exadel.frs.repository.InstallInfoRepository;
+import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.feign.StatisticsFacesEntity;
 import feign.FeignException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,30 +25,26 @@ public class StatisticsJob implements Job {
     private final ApperyStatisticsClient apperyStatisticsClient;
     private final InstallInfoRepository installInfoRepository;
     private final FacesRepository facesRepository;
-    private final AppRepository appRepository;
+    private final ModelRepository modelRepository;
 
     @Override
     public void execute(final JobExecutionContext context) {
-        List<App> apps = appRepository.findAll();
-        List<Model> models = new ArrayList();
+        List<Model> models = modelRepository.findAll();
         Map<String, String> facesModelGuidAndRangeMap = new HashMap<>();
 
-        apps.stream()
-            .forEach(app -> models.addAll(app.getModels()));
-
-        models.stream()
-              .forEach(model -> {
-                  String apiKey = model.getApiKey();
-                  List<Face> faces = facesRepository.findByApiKey(apiKey);
-                  facesModelGuidAndRangeMap.put(model.getGuid(), getFacesRange(faces.size()));
-              });
+        for (Model model : models) {
+            String apiKey = model.getApiKey();
+            List<Face> faces = facesRepository.findByApiKey(apiKey);
+            facesModelGuidAndRangeMap.put(model.getGuid(), getFacesRange(faces.size()));
+        }
 
         try {
-            facesModelGuidAndRangeMap
-                    .forEach((collectionGuid, range) -> apperyStatisticsClient.create(
-                            statisticsApiKey,
-                            new StatisticsFacesEntity(installInfoRepository.findInstallInfo().getInstallGuid(), collectionGuid, range)
-                    ));
+            for (Map.Entry<String, String> modelRangeEntry : facesModelGuidAndRangeMap.entrySet()) {
+                apperyStatisticsClient.create(statisticsApiKey, new StatisticsFacesEntity(
+                        installInfoRepository.findTopByInstallGuid().getInstallGuid(),
+                        modelRangeEntry.getKey(), modelRangeEntry.getValue()
+                ));
+            }
         } catch (FeignException exception) {
             throw new ApperyServiceException();
         }

@@ -16,10 +16,15 @@
 
 package com.exadel.frs.repository;
 
-import com.exadel.frs.entity.InstallInfo;
+import com.exadel.frs.entity.Face;
+import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface InstallInfoRepository extends JpaRepository<InstallInfo, String> {
+@Repository
+@Transactional
+public interface FacesRepository extends JpaRepository<Face, Long> {
 
-    InstallInfo findTopByInstallGuid();
+    List<Face> findByApiKey(String modelApiKey);
 }

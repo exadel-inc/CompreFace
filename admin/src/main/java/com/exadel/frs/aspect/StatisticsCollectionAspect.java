@@ -63,7 +63,7 @@ public class StatisticsCollectionAspect {
         try {
             apperyStatisticsClient.create(
                     statisticsApiKey,
-                    new StatisticsGeneralEntity(installInfoRepository.findInstallInfo().getInstallGuid(), statisticsType)
+                    new StatisticsGeneralEntity(installInfoRepository.findTopByInstallGuid().getInstallGuid(), statisticsType)
             );
         } catch (FeignException exception) {
             throw new ApperyServiceException();
