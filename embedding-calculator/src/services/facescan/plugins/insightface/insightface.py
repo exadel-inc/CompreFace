@@ -59,21 +59,43 @@ class DetectionOnlyFaceAnalysis(FaceAnalysis):
 
 class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
     ml_models = (
-        ('retinaface_r50_v1', '1h5rHDGE7qXC3jZwphObh9mW55YQYKY8Y'),
+        ('retinaface_r50_v1', '1hvEv4xZP-_50cO7IYkH6sDUb_SC92wut'),
         ('retinaface_mnet025_v1', '1ggNFFqpe0abWz6V1A82rnxD6fyxB8W2c'),
         ('retinaface_mnet025_v2', '1EYTMxgcNdlvoL1fSC8N1zkaWrX75ZoNL'),
     )
 
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
     IMAGE_SIZE = 112
-    det_prob_threshold = 0.8
+    det_prob_threshold = 0.6
 
     @cached_property
     def _detection_model(self):
-        model_file = self.get_model_file(self.ml_model)
-        model = DetectionOnlyFaceAnalysis(model_file)
-        model.prepare(ctx_id=self._CTX_ID, nms=self._NMS)
-        return model
+        from modules import face_model
+        return face_model.Detector()
+
+    @cached_property
+    def _tvm_model(self):
+        import tvm
+        from tvm.contrib import graph_runtime
+        from src.services.facescan.plugins.insightface.detection import RetinaFace
+
+        ctx = tvm.cpu()
+        path = "/app/ml/models/retinaface_r50_v1/R50.x86.cpu"
+
+        # enable gpu
+        ctx = tvm.gpu(0)
+        path = path.replace('cpu', 'cuda')
+
+        loaded_json = open(f"{path}.json").read() #
+        loaded_lib = tvm.runtime.load_module(f"{path}.so") #
+        loaded_params = bytearray(open(f"{path}.params", "rb").read())
+
+        model = graph_runtime.create(loaded_json, loaded_lib, ctx)
+        model.load_params(loaded_params)
+
+        rf_model = RetinaFace(model)
+        rf_model.prepare()
+        return  rf_model
 
     def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
         if det_prob_threshold is None:
@@ -81,17 +103,28 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
         assert 0 <= det_prob_threshold <= 1
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         img = scaler.downscale_img(img)
-        results = self._detection_model.get(img, det_thresh=det_prob_threshold)
+
+        # tensorrt
+        # from modules import imagedata
+        # img = imagedata.ImageData(img)
+        # img.resize_image(mode='pad')
+
+
+        w, h, c = img.shape
+        img640 = np.full((640, 640, 3), 255, dtype=np.uint8)
+        img640[:w, :h, :] = img
+        bboxes, landmarks = self._tvm_model.detect(img640)
+
+        # bboxes, probs, landmarks, mask_probs = self._detection_model.detect(img.transformed_image, threshold=det_prob_threshold)
         boxes = []
-        for result in results:
-            downscaled_box_array = result.bbox.astype(np.int).flatten()
-            downscaled_box = BoundingBoxDTO(x_min=downscaled_box_array[0],
-                                            y_min=downscaled_box_array[1],
-                                            x_max=downscaled_box_array[2],
-                                            y_max=downscaled_box_array[3],
-                                            probability=result.det_score,
-                                            np_landmarks=result.landmark)
-            box = downscaled_box.scaled(scaler.upscale_coefficient)
+        for i, bbox in enumerate(bboxes):
+            box = BoundingBoxDTO(x_min=bbox[0],
+                                            y_min=bbox[1],
+                                            x_max=bbox[2],
+                                            y_max=bbox[3],
+                                            probability=bbox[4],
+                                            np_landmarks=landmarks[i])
+            box = box.scaled(scaler.upscale_coefficient)
             if box.probability <= det_prob_threshold:
                 logger.debug(f'Box Filtered out because below threshold ({det_prob_threshold}: {box})')
                 continue
@@ -117,14 +150,42 @@ class Calculator(InsightFaceMixin, mixins.CalculatorMixin, base.BasePlugin):
     DIFFERENCE_THRESHOLD = 400
 
     def calc_embedding(self, face_img: Array3D) -> Array3D:
-        return self._calculation_model.get_embedding(face_img).flatten()
+        if not isinstance(face_img, list):
+            face_img = [face_img]
+        for i, img in enumerate(face_img):
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            img = np.transpose(img, (2, 0, 1))
+            face_img[i] = img
+        face_img = np.stack(face_img)
+
+        self._tvm_model.run(data=face_img)
+        return self._tvm_model.get_output(0).asnumpy().flatten()
 
     @cached_property
     def _calculation_model(self):
-        model_file = self.get_model_file(self.ml_model)
-        model = face_recognition.FaceRecognition(
-            self.ml_model.name, True,  model_file)
-        model.prepare(ctx_id=self._CTX_ID)
+        from modules.model_zoo.getter import get_model
+        rec_model = get_model('arcface_r100_v1', backend_name='trt')
+        rec_model.prepare(ctx_id=0)
+        return rec_model
+
+    @cached_property
+    def _tvm_model(self):
+        import tvm
+        from tvm.contrib import graph_runtime
+
+        ctx = tvm.cpu()
+        path = "/app/ml/models/arcface_r100_v1/model.x86.cpu"
+
+        # enable gpu
+        ctx = tvm.gpu(0)
+        path = path.replace('cpu', 'cuda')
+
+        loaded_json = open(f"{path}.json").read() #
+        loaded_lib = tvm.runtime.load_module(f"{path}.so") #
+        loaded_params = bytearray(open(f"{path}.params", "rb").read())
+
+        model = graph_runtime.create(loaded_json, loaded_lib, ctx)
+        model.load_params(loaded_params)
         return model
 
 

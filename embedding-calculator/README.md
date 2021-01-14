@@ -154,7 +154,7 @@ There are two build arguments for optimization:
 ##### NVIDIA Runtime
 
 ```
-docker build -t ${registry}compreface-core-cuda:100-py37 --build-arg GPU_IDX=0 -f gpu.Dockerfile .
+docker build -t ${registry}compreface-core-cuda:100-py37 -f gpu.Dockerfile .
 ```
 
 Install the nvidia-docker2 package and dependencies on the host machine:

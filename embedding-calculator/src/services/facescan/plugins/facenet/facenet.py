@@ -151,3 +151,63 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
 
 class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):
     """ Extract landmarks from FaceDetector results."""
+
+
+
+class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
+
+    FACE_MIN_SIZE = 20
+    SCALE_FACTOR = 0.709
+    BOX_MARGIN = 32
+    IMAGE_SIZE = 160
+    IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
+
+    # detection settings
+    det_prob_threshold = 0.65
+    det_threshold_a = 0.9436513301
+    det_threshold_b = 0.7059968943
+    det_threshold_c = 0.5506904359
+
+    @cached_property
+    def _model(self):
+        from mtcnn import MTCNN
+        return MTCNN()
+
+    def crop_face(self, img: Array3D, box: BoundingBoxDTO) -> Array3D:
+        return squish_img(crop_img(img, box), (self.IMAGE_SIZE, self.IMAGE_SIZE))
+
+    def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
+        if det_prob_threshold is None:
+            det_prob_threshold = self.det_prob_threshold
+        assert 0 <= det_prob_threshold <= 1
+        scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
+        img = scaler.downscale_img(img)
+
+        detect_face_result = self._model.detect_faces(img)
+        print(detect_face_result)
+
+        img_size = np.asarray(img.shape)[0:2]
+        bounding_boxes = []
+
+        for result_item in detect_face_result:
+            margin = self.BOX_MARGIN / 2
+            bbox = result_item['box']
+            box = BoundingBoxDTO(
+                x_min=int(np.maximum(bbox[0] - margin, 0)),
+                y_min=int(np.maximum(bbox[1] - margin, 0)),
+                x_max=int(np.minimum(bbox[2] + margin, img_size[1])),
+                y_max=int(np.minimum(bbox[3] + margin, img_size[0])),
+                np_landmarks=np.array(list(result_item['keypoints'].values())),
+                probability=result_item['confidence']
+            )
+            logger.debug(f"Found: {box}")
+            bounding_boxes.append(box)
+
+        filtered_bounding_boxes = []
+        for box in bounding_boxes:
+            box = box.scaled(scaler.upscale_coefficient)
+            if box.probability <= det_prob_threshold:
+                logger.debug(f'Box filtered out because below threshold ({det_prob_threshold}): {box}')
+                continue
+            filtered_bounding_boxes.append(box)
+        return filtered_bounding_boxes
