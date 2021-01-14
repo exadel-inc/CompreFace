@@ -112,7 +112,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -144,15 +143,33 @@
             <artifactId>nd4j-native</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.nd4j</groupId>
-            <artifactId>nd4j-native</artifactId>
-            <classifier>linux-x86_64</classifier>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.nd4j</groupId>
+                    <artifactId>nd4j-native</artifactId>
+                    <classifier>linux-x86_64</classifier>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>avx2-support</id>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.nd4j</groupId>
+                        <artifactId>nd4j-native</artifactId>
+                        <classifier>linux-x86_64-avx2</classifier>
+                    </dependency>
+                </dependencies>
+        </profile>
+    </profiles>
 
     <properties>
         <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
