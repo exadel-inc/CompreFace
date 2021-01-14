@@ -16,7 +16,7 @@
 import { Component, Inject } from '@angular/core';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ServiceTypes } from '../../data/enums/model.enum'
+import { ServiceTypes } from '../../data/enums/model.enum';
 @Component({
   selector: 'app-model-create-dialog',
   templateUrl: './model-create-dialog.component.html',
@@ -26,6 +26,6 @@ export class ModelCreateDialogComponent extends CreateDialogComponent {
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     super(dialogRef, data);
   }
-  keys = Object.keys;
   typeValues = ServiceTypes;
+  typeValuesKeysArray = Object.keys(ServiceTypes);
 }
