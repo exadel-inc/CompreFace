@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class Configuration {
 
-    //@Bean
+    @Bean
     public Scheduler schedule() throws SchedulerException {
         SchedulerFactory schedulerFactory = new StdSchedulerFactory();
         Scheduler scheduler = schedulerFactory.getScheduler();

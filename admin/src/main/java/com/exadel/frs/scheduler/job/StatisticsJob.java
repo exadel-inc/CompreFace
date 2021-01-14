@@ -12,20 +12,31 @@ import feign.FeignException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
-@RequiredArgsConstructor
+@NoArgsConstructor
+@Component
 public class StatisticsJob implements Job {
 
     @Value("${app.feign.appery-io.api-key}")
     private String statisticsApiKey;
-    private final ApperyStatisticsClient apperyStatisticsClient;
-    private final InstallInfoRepository installInfoRepository;
-    private final FacesRepository facesRepository;
-    private final ModelRepository modelRepository;
+    private ApperyStatisticsClient apperyStatisticsClient;
+    private InstallInfoRepository installInfoRepository;
+    private FacesRepository facesRepository;
+    private ModelRepository modelRepository;
+
+    @Autowired
+    public StatisticsJob(final ApperyStatisticsClient apperyStatisticsClient, final InstallInfoRepository installInfoRepository, final FacesRepository facesRepository, final ModelRepository modelRepository) {
+        this.apperyStatisticsClient = apperyStatisticsClient;
+        this.installInfoRepository = installInfoRepository;
+        this.facesRepository = facesRepository;
+        this.modelRepository = modelRepository;
+    }
 
     @Override
     public void execute(final JobExecutionContext context) {
@@ -41,7 +52,7 @@ public class StatisticsJob implements Job {
         try {
             for (Map.Entry<String, String> modelRangeEntry : facesModelGuidAndRangeMap.entrySet()) {
                 apperyStatisticsClient.create(statisticsApiKey, new StatisticsFacesEntity(
-                        installInfoRepository.findTopByInstallGuid().getInstallGuid(),
+                        installInfoRepository.findAll().get(0).getInstallGuid(),
                         modelRangeEntry.getKey(), modelRangeEntry.getValue()
                 ));
             }

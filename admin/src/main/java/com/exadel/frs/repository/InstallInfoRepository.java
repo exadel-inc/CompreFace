@@ -21,5 +21,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface InstallInfoRepository extends JpaRepository<InstallInfo, String> {
 
-    InstallInfo findTopByInstallGuid();
 }
