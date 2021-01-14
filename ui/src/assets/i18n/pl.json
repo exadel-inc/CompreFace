@@ -12,6 +12,7 @@
     "fistName": "Imię",
     "create": "Stwórz",
     "name": "Nazwa",
+    "Type": "Rodzaj",
     "unknown_error": "Przepraszam, coś poszło nie tak"
   },
   "login": {
@@ -78,6 +79,7 @@
     "caption": "Tabela kolekcji twarzy",
     "title": "Modele",
     "name": "Nazwa",
+    "type": "Rodzaj",
     "api_key": "Klucz API",
     "create_model_info": " Stwórz pierwszy model, gdzie będziesz dodawał, rozpoznawał, usuwał twarze,\n gromadził modele twarzy, trenował modele i usuwał te wytrenowane.",
     "create_dialog": {
