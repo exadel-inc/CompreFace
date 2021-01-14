@@ -37,7 +37,7 @@ import { ChangePasswordDialogComponent } from './change-password-dialog.componen
     MatInputModule,
     MatDialogModule,
     MatButtonModule,
-    TranslateModule
+    TranslateModule,
   ],
   exports: [ChangePasswordDialogComponent],
 })

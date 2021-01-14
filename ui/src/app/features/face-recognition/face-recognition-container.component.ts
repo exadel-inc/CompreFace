@@ -57,8 +57,8 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
     if (!AVAILABLE_IMAGE_EXTENSIONS.includes(getFileExtension(file))) {
       this.snackBarService.openNotification({
         messageText: 'face_recognition_container.file_unavailable_extension',
-        messageOptions: {filename: file.name},
-        type: 'error'
+        messageOptions: { filename: file.name },
+        type: 'error',
       });
     } else if (file.size > MAX_IMAGE_SIZE) {
       this.snackBarService.openNotification({ messageText: 'face_recognition_container.file_size_error', type: 'error' });
