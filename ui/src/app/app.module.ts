@@ -46,6 +46,7 @@ import { SnackBarModule } from './features/snackbar/snackbar.module';
 import { ToolBarModule } from './features/tool-bar/tool-bar.module';
 import { AppStoreModule } from './store/app-store.module';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [AppComponent, MainLayoutComponent, CreateDialogComponent, EditDialogComponent, AlertComponent, DeleteDialogComponent],
@@ -79,6 +80,7 @@ import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
         deps: [HttpClient],
       },
     }),
+    MatSelectModule,
   ],
   providers: [
     FormBuilder,

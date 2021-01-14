@@ -11,6 +11,7 @@
       "delete": "DELETE"
     },
     "name": "Name",
+    "type": "Type",
     "create": "Create",
     "unknown_error": "Sorry, something went wrong"
   },
@@ -79,11 +80,12 @@
     "caption": "Table of face collections",
     "title": "Models",
     "name": "Name",
+    "type": "Type",
     "api_key": "API key",
-    "header": "Face Collection",
+    "header": "Service",
     "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
     "create_dialog": {
-      "title": "Create Face Collection",
+      "title": "Services",
       "name": "Name"
     },
     "select_menu": {
