@@ -4,7 +4,7 @@ LABEL intermidiate_frs=true
 COPY pom.xml .
 COPY api api
 COPY admin admin
-RUN mvn -B clean install -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.skip=true
+RUN mvn -B clean package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.skip=true
 
 FROM openjdk:11.0.8-jre-slim as frs_core
 ARG DIR=/workspace/compreface
