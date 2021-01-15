@@ -17,12 +17,20 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
+import static com.exadel.frs.core.trainservice.service.FaceService.MAX_FACES_TO_RECOGNIZE;
 import static java.util.UUID.randomUUID;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.PluginsVersions;
+import com.exadel.frs.core.trainservice.util.MultipartFileData;
+import java.io.IOException;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -33,8 +41,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.web.multipart.MultipartFile;
 
 @DataJpaTest
 @ExtendWith(SpringExtension.class)
@@ -46,6 +56,23 @@ public class FaceServiceTestIT {
 
     @Autowired
     private FaceService faceService;
+
+    @MockBean
+    private FacesApiClient facesApiClient;
+
+    private static final MultipartFile MULTIPART_FILE_DATA = new MultipartFileData("hex-string-1".getBytes(), "test", "application/json");
+    private static final String FACE_NAME = "faceName";
+    private static final double THRESHOLD = 1.0;
+    private static final double EMBEDDING = 100500;
+    private static final FindFacesResponse FIND_RESULT = FindFacesResponse.builder()
+                                                                          .pluginsVersions(PluginsVersions.builder()
+                                                                                                          .calculator("1.0")
+                                                                                                          .build())
+                                                                          .result(List.of(FindFacesResult.builder()
+                                                                                                         .embedding(new Double[]{EMBEDDING})
+                                                                                                         .build())
+                                                                          )
+                                                                          .build();
 
     private static final String MODEL_KEY = randomUUID().toString();
     private static final String MODEL_KEY_OTHER = randomUUID().toString();
@@ -121,6 +148,16 @@ public class FaceServiceTestIT {
         val actual = faceService.countFacesInModel(MODEL_KEY);
 
         assertThat(actual).isEqualTo(oneKeyFaces.size());
+    }
+
+    @Test
+    public void findAndSaveFaceTest() throws IOException {
+        when(facesApiClient.findFacesWithCalculator(MULTIPART_FILE_DATA, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null)).thenReturn(FIND_RESULT);
+
+        val actual = faceService.findAndSaveFace(MULTIPART_FILE_DATA, FACE_NAME, THRESHOLD, MODEL_KEY);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual.getName()).isEqualTo(FACE_NAME);
     }
 
     @AfterEach

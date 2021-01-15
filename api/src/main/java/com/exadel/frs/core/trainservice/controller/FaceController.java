@@ -30,7 +30,6 @@ import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.service.FaceService;
-import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
@@ -59,7 +58,6 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FaceController {
 
-    private final ScanService scanService;
     private final FaceService faceService;
     private final FaceMapper faceMapper;
     private final ImageExtensionValidator imageValidator;
@@ -84,7 +82,7 @@ public class FaceController {
             final String apiKey
     ) throws IOException {
         imageValidator.validate(file);
-        val face = scanService.scanAndSaveFace(file, faceName, detProbThreshold, apiKey);
+        val face = faceService.findAndSaveFace(file, faceName, detProbThreshold, apiKey);
 
         return faceMapper.toResponseDto(face);
     }
@@ -158,24 +156,24 @@ public class FaceController {
 
         val results = new ArrayList<FaceVerification>();
 
-        for (val scanResult : findFacesResponse.getResult()) {
+        for (val findResult : findFacesResponse.getResult()) {
             val prediction = classifierPredictor.verify(
                     apiKey,
-                    Stream.of(scanResult.getEmbedding())
+                    Stream.of(findResult.getEmbedding())
                           .mapToDouble(d -> d)
                           .toArray(),
                     image_id
             );
 
-            var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
+            var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
             inBoxProb = inBoxProb.setScale(5, HALF_UP);
-            scanResult.getBox().setProbability(inBoxProb.doubleValue());
+            findResult.getBox().setProbability(inBoxProb.doubleValue());
 
             var pred = BigDecimal.valueOf(prediction);
             pred = pred.setScale(5, HALF_UP);
 
             results.add(new FaceVerification(
-                    scanResult.getBox(),
+                    findResult.getBox(),
                     pred.floatValue()
             ));
         }

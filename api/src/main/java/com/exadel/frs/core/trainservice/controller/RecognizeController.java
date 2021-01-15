@@ -80,10 +80,10 @@ public class RecognizeController {
         FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, facePlugins);
         val results = new ArrayList<FacePrediction>();
 
-        for (val scanResult : findFacesResponse.getResult()) {
+        for (val findResult : findFacesResponse.getResult()) {
             val predictions = classifierPredictor.predict(
                     apiKey,
-                    Stream.of(scanResult.getEmbedding())
+                    Stream.of(findResult.getEmbedding())
                           .mapToDouble(d -> d)
                           .toArray(),
                     predictionCount
@@ -97,12 +97,12 @@ public class RecognizeController {
                 faces.add(new FaceResponse(prediction.getRight(), pred.floatValue()));
             }
 
-            var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
+            var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
             inBoxProb = inBoxProb.setScale(5, HALF_UP);
-            scanResult.getBox().setProbability(inBoxProb.doubleValue());
+            findResult.getBox().setProbability(inBoxProb.doubleValue());
 
             val result = new FacePrediction(
-                    scanResult.getBox(),
+                    findResult.getBox(),
                     faces
             );
 

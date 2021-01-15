@@ -74,12 +74,12 @@ public class MigrationComponent {
 
                 val faceEmbedding = new Embedding();
                 try {
-                    val scanResponse = migrationServerFeignClient.findFaces(file, 1, null, CALCULATOR_PLUGIN);
-                    val embeddings = scanResponse.getResult().stream()
-                                                 .findFirst().orElseThrow()
-                                                 .getEmbedding();
+                    val findFacesResponse = migrationServerFeignClient.findFaces(file, 1, null, CALCULATOR_PLUGIN);
+                    val embeddings = findFacesResponse.getResult().stream()
+                                                      .findFirst().orElseThrow()
+                                                      .getEmbedding();
                     faceEmbedding.setEmbeddings(Arrays.asList(embeddings));
-                    faceEmbedding.setCalculatorVersion(scanResponse.getPluginsVersions().getCalculator());
+                    faceEmbedding.setCalculatorVersion(findFacesResponse.getPluginsVersions().getCalculator());
                 } catch (FeignException.InternalServerError | FeignException.BadRequest error) {
                     log.error("Error during processing facename {} with id {}", face.getFaceName(), face.getId(), error);
                 }

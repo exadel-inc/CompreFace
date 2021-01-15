@@ -17,21 +17,34 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
+import static com.exadel.frs.core.trainservice.service.FaceService.MAX_FACES_TO_RECOGNIZE;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.PluginsVersions;
+import java.io.IOException;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.mock.web.MockMultipartFile;
 
 class FaceServiceTest {
 
@@ -41,11 +54,20 @@ class FaceServiceTest {
     @Mock
     private FaceCacheProvider faceCacheProvider;
 
+    @Mock
+    private FacesApiClient facesApiClient;
+
+    @Mock
+    private MockMultipartFile mockFile;
+
     @InjectMocks
     private FaceService faceService;
 
-    private static final String MODEL_KEY = "model_key";
-    private static final String API_KEY = MODEL_KEY;
+    private static final String FACE_NAME = "faceName";
+    private static final String MODEL_KEY = "modelKey";
+    private static final double THRESHOLD = 1.0;
+    private static final double EMBEDDING = 100500;
+    private static final FindFacesResult FIND_RESULT = FindFacesResult.builder().embedding(new Double[]{EMBEDDING}).build();
 
     @BeforeEach
     void setUp() {
@@ -55,21 +77,21 @@ class FaceServiceTest {
     @Test
     void findAllFaceNames() {
         val faces = List.of(
-                makeFace("A", API_KEY),
-                makeFace("B", API_KEY),
-                makeFace("C", API_KEY)
+                makeFace("A", MODEL_KEY),
+                makeFace("B", MODEL_KEY),
+                makeFace("C", MODEL_KEY)
         );
         val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        when(faceCacheProvider.getOrLoad(API_KEY))
+        when(faceCacheProvider.getOrLoad(MODEL_KEY))
                 .thenReturn(faceCollection);
 
-        val actual = faceService.findFaces(API_KEY);
+        val actual = faceService.findFaces(MODEL_KEY);
 
         assertThat(actual).isNotNull();
         assertThat(actual.size()).isEqualTo(faces.size());
 
-        verify(faceCacheProvider).getOrLoad(API_KEY);
+        verify(faceCacheProvider).getOrLoad(MODEL_KEY);
         verifyNoMoreInteractions(faceDao);
     }
 
@@ -77,16 +99,16 @@ class FaceServiceTest {
     void deleteFaceByName() {
         val faceName = "face_name";
 
-        faceService.deleteFaceByName(faceName, API_KEY);
+        faceService.deleteFaceByName(faceName, MODEL_KEY);
 
-        verify(faceDao).deleteFaceByName(faceName, API_KEY);
+        verify(faceDao).deleteFaceByName(faceName, MODEL_KEY);
     }
 
     @Test
     void deleteFaceById() {
         val faceId = randomUUID().toString();
 
-        faceService.deleteFaceById(faceId, API_KEY);
+        faceService.deleteFaceById(faceId, MODEL_KEY);
 
         verify(faceDao).deleteFaceById(faceId);
     }
@@ -94,31 +116,31 @@ class FaceServiceTest {
     @Test
     void deleteFacesByModel() {
         val faces = List.of(
-                makeFace("A", API_KEY),
-                makeFace("B", API_KEY),
-                makeFace("C", API_KEY)
+                makeFace("A", MODEL_KEY),
+                makeFace("B", MODEL_KEY),
+                makeFace("C", MODEL_KEY)
         );
         val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        when(faceCacheProvider.getOrLoad(API_KEY))
+        when(faceCacheProvider.getOrLoad(MODEL_KEY))
                 .thenReturn(faceCollection);
 
-        faceService.deleteFacesByModel(API_KEY);
+        faceService.deleteFacesByModel(MODEL_KEY);
 
-        verify(faceDao).deleteFacesByApiKey(API_KEY);
+        verify(faceDao).deleteFacesByApiKey(MODEL_KEY);
         verifyNoMoreInteractions(faceDao);
     }
 
     @Test
     void countFacesInModel() {
         val faces = List.of(
-                makeFace("A", API_KEY),
-                makeFace("B", API_KEY),
-                makeFace("C", API_KEY)
+                makeFace("A", MODEL_KEY),
+                makeFace("B", MODEL_KEY),
+                makeFace("C", MODEL_KEY)
         );
         val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        when(faceCacheProvider.getOrLoad(API_KEY))
+        when(faceCacheProvider.getOrLoad(MODEL_KEY))
                 .thenReturn(faceCollection);
 
         val actual = faceService.countFacesInModel(MODEL_KEY);
@@ -126,7 +148,51 @@ class FaceServiceTest {
         assertThat(actual).isNotNull();
         assertThat(actual).isEqualTo(faces.size());
 
-        verify(faceCacheProvider).getOrLoad(API_KEY);
+        verify(faceCacheProvider).getOrLoad(MODEL_KEY);
         verifyNoMoreInteractions(faceCacheProvider);
+    }
+
+    @Test
+    void findAndSaveFace() throws IOException {
+        val findFacesResponse = FindFacesResponse.builder()
+                                                 .result(List.of(FIND_RESULT))
+                                                 .pluginsVersions(PluginsVersions.builder().calculator("").build())
+                                                 .build();
+        val embeddings = new Face.Embedding(List.of(EMBEDDING), "");
+        val face = new Face();
+        face.setEmbedding(embeddings);
+        val expected = new FaceBO(face.getFaceName(), face.getId());
+        val faceCollection = mock(FaceCollection.class);
+
+        when(facesApiClient.findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null))
+                .thenReturn(findFacesResponse);
+        when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
+        when(faceCacheProvider.getOrLoad(MODEL_KEY)).thenReturn(faceCollection);
+        when(faceCollection.addFace(face)).thenReturn(expected);
+
+        val actual = faceService.findAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
+
+        assertThat(actual).isNotNull();
+        assertThat(actual).isEqualTo(expected);
+
+        verify(facesApiClient).findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null);
+        verify(faceDao).addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY);
+        verifyNoMoreInteractions(facesApiClient, faceDao);
+    }
+
+    @Test
+    void tooManyFacesFound() {
+        val findFacesResponse = FindFacesResponse.builder().result(List.of(FIND_RESULT, FIND_RESULT)).build();
+
+        when(facesApiClient.findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null))
+                .thenReturn(findFacesResponse);
+
+        assertThatThrownBy(() ->
+                faceService.findAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY)
+        ).isInstanceOf(TooManyFacesException.class);
+
+        verify(facesApiClient).findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null);
+        verifyNoInteractions(faceDao);
+        verifyNoMoreInteractions(facesApiClient);
     }
 }

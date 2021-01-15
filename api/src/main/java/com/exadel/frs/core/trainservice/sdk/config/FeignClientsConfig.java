@@ -34,7 +34,7 @@ public class FeignClientsConfig {
     private final EnvironmentProperties properties;
 
     @Bean
-    public FacesFeignClient getScanFacesClient() {
+    public FacesFeignClient getFacesClient() {
         return Feign.builder()
                     .encoder(new SpringFormEncoder())
                     .decoder(new JacksonDecoder())
