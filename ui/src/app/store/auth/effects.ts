@@ -34,7 +34,7 @@ import {
   signUpSuccess,
   changePassword,
   changePasswordSuccess,
-  changePasswordFailure
+  changePasswordFailure,
 } from './action';
 
 @Injectable()
@@ -142,7 +142,7 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   changePasswordSuccess$: Observable<any> = this.actions.pipe(
     ofType(changePasswordSuccess),
-    tap(() => this.snackBarService.openNotification({ messageText: 'auth.change_password_success'}))
+    tap(() => this.snackBarService.openNotification({ messageText: 'auth.change_password_success' }))
   );
 
   @Effect({ dispatch: false })

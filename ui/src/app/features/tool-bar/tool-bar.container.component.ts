@@ -53,6 +53,6 @@ export class ToolBarContainerComponent implements OnInit {
   }
 
   changePassword(payload: ChangePassword) {
-    this.toolBarFacade.changePassword(payload)
+    this.toolBarFacade.changePassword(payload);
   }
 }

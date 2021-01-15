@@ -1,7 +1,7 @@
 {
   "common": {
     "capital": {
-      "change":"ZMIANA",
+      "change": "ZMIANA",
       "create": "STWÓRZ",
       "cancel": "ANULUJ",
       "yes": "TAK",

@@ -19,5 +19,5 @@ export enum API {
   Register = 'user/register',
   Logout = 'oauth/logout',
   UserInfo = 'user/me',
-  ChangePassword = 'user/me/password'
+  ChangePassword = 'user/me/password',
 }

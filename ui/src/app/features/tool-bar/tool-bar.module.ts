@@ -39,9 +39,9 @@ import { ChangePasswordDialogModule } from '../change-password-dialog/change-pas
     MatIconModule,
     RouterModule,
     TranslateModule,
-    ChangePasswordDialogModule
+    ChangePasswordDialogModule,
   ],
   providers: [ToolBarFacade],
-  entryComponents: [ChangePasswordDialogComponent]
+  entryComponents: [ChangePasswordDialogComponent],
 })
 export class ToolBarModule {}

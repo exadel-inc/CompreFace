@@ -36,7 +36,7 @@ export class ChangePasswordDialogComponent implements OnInit {
     this.form = this.formBuilder.group({
       oldPassword: new FormControl(null, [Validators.required]),
       newPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
-      confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)])
+      confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
     });
 
     this.form.setValidators(this.passwordMatchValidator);
@@ -48,7 +48,7 @@ export class ChangePasswordDialogComponent implements OnInit {
     } else {
       return { passwordMismatch: true };
     }
-  };
+  }
 
   onCancelClick(): void {
     this.dialogRef.close();

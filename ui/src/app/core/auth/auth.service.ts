@@ -70,6 +70,6 @@ export class AuthService {
 
   changePassword(oldPassword: string, newPassword: string): Observable<any> {
     const url = `${environment.adminApiUrl}${API.ChangePassword}`;
-    return this.http.put(url, {oldPassword, newPassword}, { observe: 'response' });
+    return this.http.put(url, { oldPassword, newPassword }, { observe: 'response' });
   }
 }

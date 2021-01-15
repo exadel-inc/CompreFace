@@ -24,7 +24,7 @@ import {
   resetErrorMessage,
   changePassword,
   changePasswordSuccess,
-  changePasswordFailure
+  changePasswordFailure,
 } from './action';
 
 export interface AuthState {
@@ -70,7 +70,7 @@ const reducer: ActionReducer<AuthState> = createReducer(
   on(logOut, () => ({ ...initialState })),
   on(changePassword, state => ({
     ...state,
-    isLoading: true
+    isLoading: true,
   })),
   on(changePasswordSuccess, state => ({
     ...state,
@@ -82,7 +82,7 @@ const reducer: ActionReducer<AuthState> = createReducer(
     ...state,
     errorMessage: error.message,
     successMessage: null,
-    isLoading: false
+    isLoading: false,
   }))
 );
 

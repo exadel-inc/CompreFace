@@ -33,15 +33,7 @@ describe('ChangePasswordDialogComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ChangePasswordDialogComponent, TranslatePipe],
-        imports: [
-          FormsModule,
-          ReactiveFormsModule,
-          MatFormFieldModule,
-          MatIconModule,
-          MatInputModule,
-          MatDialogModule,
-          MatButtonModule
-        ],
+        imports: [FormsModule, ReactiveFormsModule, MatFormFieldModule, MatIconModule, MatInputModule, MatDialogModule, MatButtonModule],
         providers: [
           {
             provide: MatDialogRef,
