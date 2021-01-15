@@ -16,12 +16,12 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import lombok.Value;
 
 @Value
 public class FaceVerification {
 
-    FacesBox box;
+    FindFacesResult.FacesBox box;
     float similarity;
 }

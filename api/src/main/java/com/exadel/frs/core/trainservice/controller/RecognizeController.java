@@ -23,13 +23,14 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FacePrediction;
 import com.exadel.frs.core.trainservice.dto.FaceResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -69,19 +70,22 @@ public class RecognizeController {
             final Integer predictionCount,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false)
-            final Double detProbThreshold
+            final Double detProbThreshold,
+            @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
+            @RequestParam(value = "face_plugins", required = false)
+            final String facePlugins
     ) {
         imageValidator.validate(file);
 
-        ScanFacesResponse scanFacesResponse = client.scanFaces(file, limit, detProbThreshold);
+        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, facePlugins);
         val results = new ArrayList<FacePrediction>();
 
-        for (val scanResult : scanFacesResponse.getResult()) {
+        for (val scanResult : findFacesResponse.getResult()) {
             val predictions = classifierPredictor.predict(
                     apiKey,
-                    scanResult.getEmbedding().stream()
-                              .mapToDouble(d -> d)
-                              .toArray(),
+                    Stream.of(scanResult.getEmbedding())
+                          .mapToDouble(d -> d)
+                          .toArray(),
                     predictionCount
             );
 

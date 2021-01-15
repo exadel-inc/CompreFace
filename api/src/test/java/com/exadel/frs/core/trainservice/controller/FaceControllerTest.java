@@ -21,6 +21,7 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -37,9 +38,8 @@ import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -243,14 +243,15 @@ public class FaceControllerTest {
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
 
-        val scanResponse = new ScanFacesResponse().setResult(
-                List.of(new ScanFacesResult()
-                        .setEmbedding(List.of(1.0))
-                        .setBox(new FacesBox().setProbability(1D))
-                )
-        );
+        val findFacesResponse = FindFacesResponse.builder()
+                                                 .result(List.of(FindFacesResult.builder()
+                                                                                .embedding(new Double[]{1.0})
+                                                                                .box(new FindFacesResult.FacesBox().setProbability(1D))
+                                                                                .build()
+                                                 ))
+                                                 .build();
 
-        when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
+        when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
         when(predictor.verify(any(), any(), any())).thenReturn(1.0);
 
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
@@ -262,7 +263,7 @@ public class FaceControllerTest {
         ).andExpect(status().isOk());
 
         verify(imageValidator).validate(any());
-        verify(client).scanFaces(any(), any(), any());
+        verify(client).findFacesWithCalculator(any(), any(), any(), isNull());
         verify(predictor).verify(any(), any(), any());
         verifyNoMoreInteractions(imageValidator, client, predictor);
     }

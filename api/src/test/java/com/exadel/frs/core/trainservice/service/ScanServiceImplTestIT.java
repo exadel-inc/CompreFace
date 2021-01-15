@@ -23,8 +23,9 @@ import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.PluginsVersions;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import java.io.IOException;
 import java.util.List;
@@ -44,24 +45,26 @@ class ScanServiceImplTestIT {
     private ScanServiceImpl scanService;
 
     @MockBean
-    private FacesApiClient facesFeignClient;
+    private FacesApiClient facesApiClient;
 
     private static final MultipartFile MULTIPART_FILE_DATA = new MultipartFileData("hex-string-1".getBytes(), "test", "application/json");
     private static final String FACE_NAME = "faceName";
     private static final String MODEL_KEY = "modelKey";
     private static final double THRESHOLD = 1.0;
     private static final double EMBEDDING = 100500;
-    private static final ScanFacesResponse SCAN_RESULT = ScanFacesResponse.builder()
-                                                                          .calculatorVersion("1.0")
-                                                                          .result(List.of(ScanFacesResult.builder()
-                                                                                                         .embedding(List.of(EMBEDDING))
-                                                                                                         .build()
-                                                                          ))
+    private static final FindFacesResponse SCAN_RESULT = FindFacesResponse.builder()
+                                                                          .pluginsVersions(PluginsVersions.builder()
+                                                                                                          .calculator("1.0")
+                                                                                                          .build())
+                                                                          .result(List.of(FindFacesResult.builder()
+                                                                                                         .embedding(new Double[]{EMBEDDING})
+                                                                                                         .build())
+                                                                          )
                                                                           .build();
 
     @Test
     public void scanAndFaceTest() throws IOException {
-        when(facesFeignClient.scanFaces(MULTIPART_FILE_DATA, MAX_FACES_TO_RECOGNIZE, THRESHOLD)).thenReturn(SCAN_RESULT);
+        when(facesApiClient.findFacesWithCalculator(MULTIPART_FILE_DATA, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null)).thenReturn(SCAN_RESULT);
 
         val actual = scanService.scanAndSaveFace(MULTIPART_FILE_DATA, FACE_NAME, THRESHOLD, MODEL_KEY);
 

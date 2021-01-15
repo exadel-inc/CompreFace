@@ -22,8 +22,9 @@ import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import java.io.IOException;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -47,8 +48,8 @@ public class ScanServiceImpl implements ScanService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        ScanFacesResponse scanFacesResponse = facesApiClient.scanFaces(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold);
-        val result = scanFacesResponse.getResult();
+        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null);
+        val result = findFacesResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {
             throw new TooManyFacesException();
@@ -58,10 +59,10 @@ public class ScanServiceImpl implements ScanService {
                               .findFirst().orElseThrow()
                               .getEmbedding();
 
-        val embeddingToSave = new Embedding(embedding, scanFacesResponse.getCalculatorVersion());
+        val embeddingToSave = new Embedding(Arrays.asList(embedding), findFacesResponse.getPluginsVersions().getCalculator());
 
-        return faceCacheProvider.getOrLoad(modelKey).addFace(
-                faceDao.addNewFace(embeddingToSave, file, faceName, modelKey)
-        );
+        return faceCacheProvider
+                .getOrLoad(modelKey)
+                .addFace(faceDao.addNewFace(embeddingToSave, file, faceName, modelKey));
     }
 }

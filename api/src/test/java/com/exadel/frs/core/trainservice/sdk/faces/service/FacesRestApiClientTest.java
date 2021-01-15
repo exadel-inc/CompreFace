@@ -25,7 +25,6 @@ import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundExceptio
 import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import feign.FeignException;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -47,7 +46,7 @@ class FacesRestApiClientTest {
     @InjectMocks
     private FacesRestApiClient restApiClient;
 
-    static Stream<Arguments> verifyScanAndFindFacesExceptions() {
+    static Stream<Arguments> verifyFindFacesExceptions() {
         return Stream.of(
                 Arguments.of(FeignException.BadRequest.class, NoFacesFoundException.class),
                 Arguments.of(FeignException.class, FacesServiceException.class)
@@ -55,39 +54,7 @@ class FacesRestApiClientTest {
     }
 
     @ParameterizedTest
-    @MethodSource("verifyScanAndFindFacesExceptions")
-    void testScanFacesWithException(Class<? extends Exception> caughtClass, Class<? extends Exception> thrownClass) {
-        // given
-        MultipartFile photo = mock(MultipartFile.class);
-        Integer faceLimit = 1;
-        Double thresholdC = 1.0;
-        when(feignClient.scanFaces(photo, faceLimit, thresholdC)).thenThrow(caughtClass);
-
-        // when
-        Executable action = () -> restApiClient.scanFaces(photo, faceLimit, thresholdC);
-
-        // then
-        assertThrows(thrownClass, action);
-    }
-
-    @Test
-    void testScanFaces() {
-        // given
-        ScanFacesResponse expected = mock(ScanFacesResponse.class);
-        MultipartFile photo = mock(MultipartFile.class);
-        Integer faceLimit = 1;
-        Double thresholdC = 1.0;
-        when(feignClient.scanFaces(photo, faceLimit, thresholdC)).thenReturn(expected);
-
-        // when
-        ScanFacesResponse actual = restApiClient.scanFaces(photo, faceLimit, thresholdC);
-
-        // then
-        assertThat(actual, is(expected));
-    }
-
-    @ParameterizedTest
-    @MethodSource("verifyScanAndFindFacesExceptions")
+    @MethodSource("verifyFindFacesExceptions")
     void testFindFacesWithException(Class<? extends Exception> caughtClass, Class<? extends Exception> thrownClass) {
         // given
         MultipartFile photo = mock(MultipartFile.class);

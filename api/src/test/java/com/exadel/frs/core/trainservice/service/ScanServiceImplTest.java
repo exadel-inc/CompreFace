@@ -19,6 +19,7 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.core.trainservice.service.ScanServiceImpl.MAX_FACES_TO_RECOGNIZE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -32,8 +33,9 @@ import com.exadel.frs.core.trainservice.entity.Face;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.PluginsVersions;
 import java.io.IOException;
 import java.util.List;
 import lombok.val;
@@ -46,7 +48,7 @@ import org.springframework.mock.web.MockMultipartFile;
 class ScanServiceImplTest {
 
     @Mock
-    private FacesApiClient scanFacesFeignClient;
+    private FacesApiClient facesApiClient;
 
     @Mock
     private FaceDao faceDao;
@@ -69,45 +71,49 @@ class ScanServiceImplTest {
     private static final String MODEL_KEY = "modelKey";
     private static final double THRESHOLD = 1.0;
     private static final double EMBEDDING = 100500;
-    private static final ScanFacesResult SCAN_RESULT = new ScanFacesResult().setEmbedding(List.of(EMBEDDING));
+    private static final FindFacesResult SCAN_RESULT = FindFacesResult.builder().embedding(new Double[]{EMBEDDING}).build();
 
     @Test
     void scanAndSaveFace() throws IOException {
-        val scanResponse = new ScanFacesResponse().setResult(List.of(SCAN_RESULT));
-        val embeddings = new Embedding(List.of(EMBEDDING), null);
+        val findFacesResponse = FindFacesResponse.builder()
+                                                 .result(List.of(SCAN_RESULT))
+                                                 .pluginsVersions(PluginsVersions.builder().calculator("").build())
+                                                 .build();
+        val embeddings = new Embedding(List.of(EMBEDDING), "");
         val face = new Face();
         face.setEmbedding(embeddings);
+        val expected = new FaceBO(face.getFaceName(), face.getId());
+        val faceCollection = mock(FaceCollection.class);
 
-        when(scanFacesFeignClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
-                .thenReturn(scanResponse);
-
+        when(facesApiClient.findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null))
+                .thenReturn(findFacesResponse);
         when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
-
-        when(faceCacheProvider.getOrLoad(MODEL_KEY)).thenReturn(FaceCollection.buildFromFaces(List.of(face)));
+        when(faceCacheProvider.getOrLoad(MODEL_KEY)).thenReturn(faceCollection);
+        when(faceCollection.addFace(face)).thenReturn(expected);
 
         val actual = scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(new FaceBO(face.getFaceName(), face.getId()));
+        assertThat(actual).isEqualTo(expected);
 
-        verify(scanFacesFeignClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
+        verify(facesApiClient).findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null);
         verify(faceDao).addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY);
-        verifyNoMoreInteractions(scanFacesFeignClient, faceDao);
+        verifyNoMoreInteractions(facesApiClient, faceDao);
     }
 
     @Test
     void tooManyFacesScan() {
-        val scanResponse = new ScanFacesResponse().setResult(List.of(SCAN_RESULT, SCAN_RESULT));
+        val findFacesResponse = FindFacesResponse.builder().result(List.of(SCAN_RESULT, SCAN_RESULT)).build();
 
-        when(scanFacesFeignClient.scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD))
-                .thenReturn(scanResponse);
+        when(facesApiClient.findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null))
+                .thenReturn(findFacesResponse);
 
         assertThatThrownBy(() ->
                 scanService.scanAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY)
         ).isInstanceOf(TooManyFacesException.class);
 
-        verify(scanFacesFeignClient).scanFaces(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD);
+        verify(facesApiClient).findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null);
         verifyNoInteractions(faceDao);
-        verifyNoMoreInteractions(scanFacesFeignClient);
+        verifyNoMoreInteractions(facesApiClient);
     }
 }

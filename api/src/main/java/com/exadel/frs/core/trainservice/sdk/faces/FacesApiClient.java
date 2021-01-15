@@ -2,7 +2,6 @@ package com.exadel.frs.core.trainservice.sdk.faces;
 
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -10,10 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FacesApiClient {
 
-    ScanFacesResponse scanFaces(
+    FindFacesResponse findFacesWithCalculator(
             MultipartFile photo,
             Integer faceLimit,
-            Double thresholdC);
+            Double thresholdC,
+            String facePlugins);
 
     FindFacesResponse findFaces(
             MultipartFile photo,

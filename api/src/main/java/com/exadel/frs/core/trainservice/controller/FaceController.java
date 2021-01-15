@@ -28,7 +28,7 @@ import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.mapper.FaceMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -153,16 +154,16 @@ public class FaceController {
     ) {
         imageValidator.validate(file);
 
-        ScanFacesResponse scanFacesResponse = client.scanFaces(file, limit, detProbThreshold);
+        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, null);
 
         val results = new ArrayList<FaceVerification>();
 
-        for (val scanResult : scanFacesResponse.getResult()) {
+        for (val scanResult : findFacesResponse.getResult()) {
             val prediction = classifierPredictor.verify(
                     apiKey,
-                    scanResult.getEmbedding().stream()
-                              .mapToDouble(d -> d)
-                              .toArray(),
+                    Stream.of(scanResult.getEmbedding())
+                          .mapToDouble(d -> d)
+                          .toArray(),
                     image_id
             );
 

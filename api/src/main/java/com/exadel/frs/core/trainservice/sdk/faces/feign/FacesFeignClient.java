@@ -18,23 +18,12 @@ package com.exadel.frs.core.trainservice.sdk.faces.feign;
 
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FacesFeignClient {
-
-    @RequestLine("POST /scan_faces")
-    @Headers("Content-Type: multipart/form-data")
-    ScanFacesResponse scanFaces(
-            @Param(value = "file")
-                    MultipartFile photo,
-            @Param(value = "limit")
-                    Integer faceLimit,
-            @Param(value = "det_prob_threshold")
-                    Double thresholdC);
 
     @RequestLine("POST /find_faces")
     @Headers("Content-Type: multipart/form-data")

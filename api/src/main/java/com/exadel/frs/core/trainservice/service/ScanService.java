@@ -20,6 +20,7 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
+// FIXME move it to 'FaceService'
 public interface ScanService {
 
     FaceBO scanAndSaveFace(

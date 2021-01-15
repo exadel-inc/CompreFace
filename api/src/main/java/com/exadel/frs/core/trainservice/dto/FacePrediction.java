@@ -16,13 +16,13 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import java.util.List;
 import lombok.Value;
 
 @Value
 public class FacePrediction {
 
-    FacesBox box;
+    FindFacesResult.FacesBox box;
     List<FaceResponse> faces;
 }

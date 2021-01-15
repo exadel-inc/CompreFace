@@ -16,11 +16,16 @@
 package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class FindFacesResult {
 
     private Integer[] age;
@@ -29,6 +34,25 @@ public class FindFacesResult {
     private FacesBox box;
     @JsonProperty(value = "execution_time")
     private ExecutionTime executionTime;
+
+    @Data
+    @Accessors(chain = true)
+    public static class FacesBox {
+
+        private Double probability;
+
+        @JsonProperty(value = "x_max")
+        private Integer xMax;
+
+        @JsonProperty(value = "y_max")
+        private Integer yMax;
+
+        @JsonProperty(value = "x_min")
+        private Integer xMin;
+
+        @JsonProperty(value = "y_min")
+        private Integer yMin;
+    }
 
     @Data
     @NoArgsConstructor
