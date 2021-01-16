@@ -15,6 +15,7 @@
  */
 package com.exadel.frs.core.trainservice.sdk.faces.service;
 
+import static com.exadel.frs.core.trainservice.sdk.faces.service.FacesRestApiClient.CALCULATOR_PLUGIN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -85,6 +86,48 @@ class FacesRestApiClientTest {
 
         // then
         assertThat(actual, is(expected));
+    }
+
+    static Stream<Arguments> verifyFindFacesWithCalculator() {
+        return Stream.of(
+                Arguments.of(null, CALCULATOR_PLUGIN),
+                Arguments.of("", CALCULATOR_PLUGIN),
+                Arguments.of("age,gender", CALCULATOR_PLUGIN + ",age,gender"),
+                Arguments.of(CALCULATOR_PLUGIN + ",age,gender", CALCULATOR_PLUGIN + ",age,gender")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyFindFacesWithCalculator")
+    void testFindFacesWithCalculator(String inPlugins, String outPlugins) {
+        // given
+        FindFacesResponse expected = mock(FindFacesResponse.class);
+        MultipartFile photo = mock(MultipartFile.class);
+        Integer faceLimit = 1;
+        Double thresholdC = 1.0;
+        when(feignClient.findFaces(photo, faceLimit, thresholdC, outPlugins)).thenReturn(expected);
+
+        // when
+        FindFacesResponse actual = restApiClient.findFacesWithCalculator(photo, faceLimit, thresholdC, inPlugins);
+
+        // then
+        assertThat(actual, is(expected));
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyFindFacesExceptions")
+    void testFindFacesWithCalculatorWithException(Class<? extends Exception> caughtClass, Class<? extends Exception> thrownClass) {
+        // given
+        MultipartFile photo = mock(MultipartFile.class);
+        Integer faceLimit = 1;
+        Double thresholdC = 1.0;
+        when(feignClient.findFaces(photo, faceLimit, thresholdC, CALCULATOR_PLUGIN)).thenThrow(caughtClass);
+
+        // when
+        Executable action = () -> restApiClient.findFacesWithCalculator(photo, faceLimit, thresholdC, null);
+
+        // then
+        assertThrows(thrownClass, action);
     }
 
     @Test

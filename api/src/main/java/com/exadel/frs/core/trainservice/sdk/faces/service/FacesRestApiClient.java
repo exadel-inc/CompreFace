@@ -22,6 +22,18 @@ public class FacesRestApiClient implements FacesApiClient {
     private final FacesFeignClient feignClient;
 
     @Override
+    public FindFacesResponse findFaces(final MultipartFile photo, final Integer faceLimit, final Double thresholdC,
+                                       final String facePlugins) {
+        try {
+            return feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins);
+        } catch (FeignException.BadRequest ex) {
+            throw new NoFacesFoundException();
+        } catch (FeignException e) {
+            throw new FacesServiceException(e.getMessage());
+        }
+    }
+
+    @Override
     public FindFacesResponse findFacesWithCalculator(final MultipartFile photo, final Integer faceLimit, final Double thresholdC,
                                                      final String facePlugins) {
         try {
@@ -37,18 +49,6 @@ public class FacesRestApiClient implements FacesApiClient {
             }
 
             return feignClient.findFaces(photo, faceLimit, thresholdC, finalFacePlugins);
-        } catch (FeignException.BadRequest ex) {
-            throw new NoFacesFoundException();
-        } catch (FeignException e) {
-            throw new FacesServiceException(e.getMessage());
-        }
-    }
-
-    @Override
-    public FindFacesResponse findFaces(final MultipartFile photo, final Integer faceLimit, final Double thresholdC,
-                                       final String facePlugins) {
-        try {
-            return feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins);
         } catch (FeignException.BadRequest ex) {
             throw new NoFacesFoundException();
         } catch (FeignException e) {
