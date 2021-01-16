@@ -3,6 +3,7 @@
     "capital": {
       "change": "CHANGE",
       "create": "CREATE",
+      "clone": "CLONE",
       "cancel": "CANCEL",
       "yes": "YES",
       "add": "ADD",
@@ -90,6 +91,7 @@
     },
     "select_menu": {
       "edit": "EDIT",
+      "clone": "CLONE",
       "delete": "DELETE",
       "test": "TEST"
     },

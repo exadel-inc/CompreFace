@@ -28,6 +28,7 @@ import { TableComponent } from '../table/table.component';
 export class ModelTableComponent extends TableComponent {
   @Input() userRole: string;
   @Output() copyApiKey = new EventEmitter<string>();
+  @Output() clone = new EventEmitter<Model>();
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();

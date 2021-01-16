@@ -39,6 +39,11 @@ export class ModelService {
     return this.http.put<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${modelId}`, { name });
   }
 
+  public clone(applicationId: string, modelId: string, name: string): Observable<Model> {
+    name = name.trim();
+    return this.http.post<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${modelId}`, { name });
+  }
+
   public delete(applicationId: string, modelId: string): Observable<Model> {
     return this.http.delete<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${modelId}`);
   }
