@@ -55,6 +55,23 @@ export class FaceRecognitionService {
       );
   }
 
+  detection(file: any, apiKey: string): Observable<any> {
+    const url = `${environment.userApiUrl}/faces/detection`;
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http
+      .post(url, formData, {
+        headers: { 'x-api-key': apiKey },
+      })
+      .pipe(
+        map(data => ({
+          data,
+          request: this.createUIRequest(url, { 'x-api-key': apiKey }),
+        }))
+      );
+  }
+
   getAllFaces(model: Model): Observable<any> {
     return this.http.get(`${environment.userApiUrl}faces`, { headers: { 'x-api-key': model.apiKey } });
   }
