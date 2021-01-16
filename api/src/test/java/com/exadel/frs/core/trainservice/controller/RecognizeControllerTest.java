@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
@@ -66,7 +67,7 @@ class RecognizeControllerTest {
         val findFacesResponse = FindFacesResponse.builder()
                                                  .result(List.of(FindFacesResult.builder()
                                                                                 .embedding(new Double[]{1.0})
-                                                                                .box(new FindFacesResult.FacesBox().setProbability(1D))
+                                                                                .box(new FacesBox().setProbability(1D))
                                                                                 .build()
                                                  ))
                                                  .build();

@@ -26,7 +26,7 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.mapper.FaceMapper;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.service.FaceService;
@@ -59,7 +59,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FaceController {
 
     private final FaceService faceService;
-    private final FaceMapper faceMapper;
+    private final FacesMapper faceMapper;
     private final ImageExtensionValidator imageValidator;
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;

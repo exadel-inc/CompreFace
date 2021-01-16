@@ -16,12 +16,14 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
 @Value
-public class FaceVerification {
+public class FaceSimilarityDto {
 
-    FacesBox box;
+    @JsonProperty("face_name")
+    String faceName;
+
     float similarity;
 }

@@ -13,17 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 package com.exadel.frs.core.trainservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Value;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
-public class FaceResponse {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class FacesRecognitionResponseDto {
 
-    @JsonProperty("face_name")
-    String faceName;
-
-    float similarity;
+    @JsonProperty(value = "plugins_versions")
+    private PluginsVersionsDto pluginsVersions;
+    private List<FacePredictionResultDto> result;
 }

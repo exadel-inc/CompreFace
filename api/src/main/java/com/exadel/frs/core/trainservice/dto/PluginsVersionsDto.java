@@ -13,15 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 package com.exadel.frs.core.trainservice.dto;
 
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Value
-public class FaceVerification {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PluginsVersionsDto {
 
-    FacesBox box;
-    float similarity;
+    private String age;
+    private String gender;
+    private String detector;
+    private String calculator;
 }

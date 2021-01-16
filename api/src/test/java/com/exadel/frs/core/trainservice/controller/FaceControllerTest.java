@@ -39,6 +39,7 @@ import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.service.FaceService;
@@ -255,7 +256,7 @@ public class FaceControllerTest {
         val findFacesResponse = FindFacesResponse.builder()
                                                  .result(List.of(FindFacesResult.builder()
                                                                                 .embedding(new Double[]{1.0})
-                                                                                .box(new FindFacesResult.FacesBox().setProbability(1D))
+                                                                                .box(new FacesBox().setProbability(1D))
                                                                                 .build()
                                                  ))
                                                  .build();
