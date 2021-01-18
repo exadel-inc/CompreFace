@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
+package com.exadel.frs.core.trainservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

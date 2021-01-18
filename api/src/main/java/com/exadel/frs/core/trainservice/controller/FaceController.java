@@ -26,11 +26,10 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.mapper.FaceMapper;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.service.FaceService;
-import com.exadel.frs.core.trainservice.service.ScanService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.io.IOException;
@@ -39,6 +38,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -58,9 +58,8 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class FaceController {
 
-    private final ScanService scanService;
     private final FaceService faceService;
-    private final FaceMapper faceMapper;
+    private final FacesMapper faceMapper;
     private final ImageExtensionValidator imageValidator;
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;
@@ -83,7 +82,7 @@ public class FaceController {
             final String apiKey
     ) throws IOException {
         imageValidator.validate(file);
-        val face = scanService.scanAndSaveFace(file, faceName, detProbThreshold, apiKey);
+        val face = faceService.findAndSaveFace(file, faceName, detProbThreshold, apiKey);
 
         return faceMapper.toResponseDto(face);
     }
@@ -153,28 +152,28 @@ public class FaceController {
     ) {
         imageValidator.validate(file);
 
-        ScanFacesResponse scanFacesResponse = client.scanFaces(file, limit, detProbThreshold);
+        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, null);
 
         val results = new ArrayList<FaceVerification>();
 
-        for (val scanResult : scanFacesResponse.getResult()) {
+        for (val findResult : findFacesResponse.getResult()) {
             val prediction = classifierPredictor.verify(
                     apiKey,
-                    scanResult.getEmbedding().stream()
-                              .mapToDouble(d -> d)
-                              .toArray(),
+                    Stream.of(findResult.getEmbedding())
+                          .mapToDouble(d -> d)
+                          .toArray(),
                     image_id
             );
 
-            var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
+            var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
             inBoxProb = inBoxProb.setScale(5, HALF_UP);
-            scanResult.getBox().setProbability(inBoxProb.doubleValue());
+            findResult.getBox().setProbability(inBoxProb.doubleValue());
 
             var pred = BigDecimal.valueOf(prediction);
             pred = pred.setScale(5, HALF_UP);
 
             results.add(new FaceVerification(
-                    scanResult.getBox(),
+                    findResult.getBox(),
                     pred.floatValue()
             ));
         }

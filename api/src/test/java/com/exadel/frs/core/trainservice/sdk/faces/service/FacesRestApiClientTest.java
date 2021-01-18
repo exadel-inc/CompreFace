@@ -15,6 +15,7 @@
  */
 package com.exadel.frs.core.trainservice.sdk.faces.service;
 
+import static com.exadel.frs.core.trainservice.sdk.faces.service.FacesRestApiClient.CALCULATOR_PLUGIN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -25,7 +26,6 @@ import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundExceptio
 import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import feign.FeignException;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ class FacesRestApiClientTest {
     @InjectMocks
     private FacesRestApiClient restApiClient;
 
-    static Stream<Arguments> verifyScanAndFindFacesExceptions() {
+    static Stream<Arguments> verifyFindFacesExceptions() {
         return Stream.of(
                 Arguments.of(FeignException.BadRequest.class, NoFacesFoundException.class),
                 Arguments.of(FeignException.class, FacesServiceException.class)
@@ -55,39 +55,7 @@ class FacesRestApiClientTest {
     }
 
     @ParameterizedTest
-    @MethodSource("verifyScanAndFindFacesExceptions")
-    void testScanFacesWithException(Class<? extends Exception> caughtClass, Class<? extends Exception> thrownClass) {
-        // given
-        MultipartFile photo = mock(MultipartFile.class);
-        Integer faceLimit = 1;
-        Double thresholdC = 1.0;
-        when(feignClient.scanFaces(photo, faceLimit, thresholdC)).thenThrow(caughtClass);
-
-        // when
-        Executable action = () -> restApiClient.scanFaces(photo, faceLimit, thresholdC);
-
-        // then
-        assertThrows(thrownClass, action);
-    }
-
-    @Test
-    void testScanFaces() {
-        // given
-        ScanFacesResponse expected = mock(ScanFacesResponse.class);
-        MultipartFile photo = mock(MultipartFile.class);
-        Integer faceLimit = 1;
-        Double thresholdC = 1.0;
-        when(feignClient.scanFaces(photo, faceLimit, thresholdC)).thenReturn(expected);
-
-        // when
-        ScanFacesResponse actual = restApiClient.scanFaces(photo, faceLimit, thresholdC);
-
-        // then
-        assertThat(actual, is(expected));
-    }
-
-    @ParameterizedTest
-    @MethodSource("verifyScanAndFindFacesExceptions")
+    @MethodSource("verifyFindFacesExceptions")
     void testFindFacesWithException(Class<? extends Exception> caughtClass, Class<? extends Exception> thrownClass) {
         // given
         MultipartFile photo = mock(MultipartFile.class);
@@ -118,6 +86,48 @@ class FacesRestApiClientTest {
 
         // then
         assertThat(actual, is(expected));
+    }
+
+    static Stream<Arguments> verifyFindFacesWithCalculator() {
+        return Stream.of(
+                Arguments.of(null, CALCULATOR_PLUGIN),
+                Arguments.of("", CALCULATOR_PLUGIN),
+                Arguments.of("age,gender", CALCULATOR_PLUGIN + ",age,gender"),
+                Arguments.of(CALCULATOR_PLUGIN + ",age,gender", CALCULATOR_PLUGIN + ",age,gender")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyFindFacesWithCalculator")
+    void testFindFacesWithCalculator(String inPlugins, String outPlugins) {
+        // given
+        FindFacesResponse expected = mock(FindFacesResponse.class);
+        MultipartFile photo = mock(MultipartFile.class);
+        Integer faceLimit = 1;
+        Double thresholdC = 1.0;
+        when(feignClient.findFaces(photo, faceLimit, thresholdC, outPlugins)).thenReturn(expected);
+
+        // when
+        FindFacesResponse actual = restApiClient.findFacesWithCalculator(photo, faceLimit, thresholdC, inPlugins);
+
+        // then
+        assertThat(actual, is(expected));
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyFindFacesExceptions")
+    void testFindFacesWithCalculatorWithException(Class<? extends Exception> caughtClass, Class<? extends Exception> thrownClass) {
+        // given
+        MultipartFile photo = mock(MultipartFile.class);
+        Integer faceLimit = 1;
+        Double thresholdC = 1.0;
+        when(feignClient.findFaces(photo, faceLimit, thresholdC, CALCULATOR_PLUGIN)).thenThrow(caughtClass);
+
+        // when
+        Executable action = () -> restApiClient.findFacesWithCalculator(photo, faceLimit, thresholdC, null);
+
+        // then
+        assertThrows(thrownClass, action);
     }
 
     @Test

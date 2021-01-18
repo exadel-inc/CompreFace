@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
 @Value
-public class FaceResponse {
+public class FaceSimilarityDto {
 
     @JsonProperty("face_name")
     String faceName;

@@ -21,6 +21,6 @@ import lombok.Value;
 @Value
 public class FaceBO {
 
-    private String name;
-    private String imageId;
+    String name;
+    String imageId;
 }

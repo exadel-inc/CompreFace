@@ -18,8 +18,9 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -43,6 +44,7 @@ public class DetectionController {
 
     private final FacesApiClient client;
     private final ImageExtensionValidator imageValidator;
+    private final FacesMapper mapper;
 
     @PostMapping(value = "/faces/detection")
     @ResponseStatus(HttpStatus.OK)
@@ -54,7 +56,7 @@ public class DetectionController {
                     value = "Api key of application and model",
                     required = true)
     })
-    public FindFacesResponse detect(
+    public FacesDetectionResponseDto detect(
             @ApiParam(value = "Image for recognizing", required = true)
             @RequestParam
             final MultipartFile file,
@@ -71,6 +73,7 @@ public class DetectionController {
     ) {
         imageValidator.validate(file);
 
-        return client.findFaces(file, limit, detProbThreshold, facePlugins);
+        return mapper.toFacesDetectionResponseDto(
+                client.findFaces(file, limit, detProbThreshold, facePlugins));
     }
 }

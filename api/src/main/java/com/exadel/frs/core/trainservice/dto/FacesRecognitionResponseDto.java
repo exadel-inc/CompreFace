@@ -13,22 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package com.exadel.frs.core.trainservice.dto;
 
-package com.exadel.frs.core.trainservice.mapper;
-
-import com.exadel.frs.core.trainservice.cache.FaceBO;
-import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
-import java.util.Set;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Mapper
-public interface FaceMapper {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class FacesRecognitionResponseDto {
 
-    @Mapping(source = "imageId", target = "image_id")
-    @Mapping(source = "name", target = "subject")
-    FaceResponseDto toResponseDto(FaceBO faces);
-
-    List<FaceResponseDto> toResponseDto(Set<FaceBO> faces);
+    @JsonProperty(value = "plugins_versions")
+    private PluginsVersionsDto pluginsVersions;
+    private List<FacePredictionResultDto> result;
 }

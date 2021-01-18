@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.component.migration;
 
+import static com.exadel.frs.core.trainservice.sdk.faces.service.FacesRestApiClient.CALCULATOR_PLUGIN;
 import com.exadel.frs.core.trainservice.entity.Face.Embedding;
 import com.exadel.frs.core.trainservice.entity.Image;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
@@ -24,6 +25,7 @@ import com.exadel.frs.core.trainservice.sdk.config.FeignClientFactory;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import feign.FeignException;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -72,12 +74,12 @@ public class MigrationComponent {
 
                 val faceEmbedding = new Embedding();
                 try {
-                    val scanResponse = migrationServerFeignClient.scanFaces(file, 1, null);
-                    val embeddings = scanResponse.getResult().stream()
-                                                 .findFirst().orElseThrow()
-                                                 .getEmbedding();
-                    faceEmbedding.setEmbeddings(embeddings);
-                    faceEmbedding.setCalculatorVersion(scanResponse.getCalculatorVersion());
+                    val findFacesResponse = migrationServerFeignClient.findFaces(file, 1, null, CALCULATOR_PLUGIN);
+                    val embeddings = findFacesResponse.getResult().stream()
+                                                      .findFirst().orElseThrow()
+                                                      .getEmbedding();
+                    faceEmbedding.setEmbeddings(Arrays.asList(embeddings));
+                    faceEmbedding.setCalculatorVersion(findFacesResponse.getPluginsVersions().getCalculator());
                 } catch (FeignException.InternalServerError | FeignException.BadRequest error) {
                     log.error("Error during processing facename {} with id {}", face.getFaceName(), face.getId(), error);
                 }

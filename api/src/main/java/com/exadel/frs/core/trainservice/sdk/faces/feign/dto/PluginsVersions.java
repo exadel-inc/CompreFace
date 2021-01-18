@@ -15,11 +15,15 @@
  */
 package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class PluginsVersions {
 
     private String age;

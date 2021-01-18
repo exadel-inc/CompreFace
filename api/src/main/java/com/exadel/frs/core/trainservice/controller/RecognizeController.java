@@ -20,16 +20,15 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.dto.FacePrediction;
-import com.exadel.frs.core.trainservice.dto.FaceResponse;
+import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;
+import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.stream.Stream;
 import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -50,9 +49,10 @@ public class RecognizeController {
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;
     private final ImageExtensionValidator imageValidator;
+    private final FacesMapper mapper;
 
     @PostMapping(value = "/faces/recognize")
-    public Map<String, List<FacePrediction>> recognize(
+    public FacesRecognitionResponseDto recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER)
             final String apiKey,
@@ -69,42 +69,40 @@ public class RecognizeController {
             final Integer predictionCount,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false)
-            final Double detProbThreshold
+            final Double detProbThreshold,
+            @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
+            @RequestParam(value = "face_plugins", required = false)
+            final String facePlugins
     ) {
         imageValidator.validate(file);
 
-        ScanFacesResponse scanFacesResponse = client.scanFaces(file, limit, detProbThreshold);
-        val results = new ArrayList<FacePrediction>();
+        val findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, facePlugins);
+        val facesRecognitionDto = mapper.toFacesRecognitionResponseDto(findFacesResponse);
 
-        for (val scanResult : scanFacesResponse.getResult()) {
+        for (val findResult : facesRecognitionDto.getResult()) {
             val predictions = classifierPredictor.predict(
                     apiKey,
-                    scanResult.getEmbedding().stream()
-                              .mapToDouble(d -> d)
-                              .toArray(),
+                    Stream.of(findResult.getEmbedding())
+                          .mapToDouble(d -> d)
+                          .toArray(),
                     predictionCount
             );
 
-            val faces = new ArrayList<FaceResponse>();
+            val faces = new ArrayList<FaceSimilarityDto>();
 
             for (val prediction : predictions) {
                 var pred = BigDecimal.valueOf(prediction.getLeft());
                 pred = pred.setScale(5, HALF_UP);
-                faces.add(new FaceResponse(prediction.getRight(), pred.floatValue()));
+                faces.add(new FaceSimilarityDto(prediction.getRight(), pred.floatValue()));
             }
 
-            var inBoxProb = BigDecimal.valueOf(scanResult.getBox().getProbability());
+            var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
             inBoxProb = inBoxProb.setScale(5, HALF_UP);
-            scanResult.getBox().setProbability(inBoxProb.doubleValue());
+            findResult.getBox().setProbability(inBoxProb.doubleValue());
 
-            val result = new FacePrediction(
-                    scanResult.getBox(),
-                    faces
-            );
-
-            results.add(result);
+            findResult.setFaces(faces);
         }
 
-        return Map.of("result", results);
+        return facesRecognitionDto;
     }
 }

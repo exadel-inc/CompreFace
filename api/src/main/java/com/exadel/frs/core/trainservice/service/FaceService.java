@@ -20,15 +20,26 @@ import static java.util.stream.Collectors.toSet;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
 public class FaceService {
 
+    private static final int MAX_FACES_TO_SAVE = 1;
+    public static final int MAX_FACES_TO_RECOGNIZE = 2;
+
+    private final FacesApiClient facesApiClient;
     private final FaceDao faceDao;
     private final FaceCacheProvider faceCacheProvider;
 
@@ -62,5 +73,29 @@ public class FaceService {
 
     public int countFacesInModel(final String modelKey) {
         return faceCacheProvider.getOrLoad(modelKey).getFaces().size();
+    }
+
+    public FaceBO findAndSaveFace(
+            final MultipartFile file,
+            final String faceName,
+            final Double detProbThreshold,
+            final String modelKey
+    ) throws IOException {
+        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null);
+        val result = findFacesResponse.getResult();
+
+        if (result.size() > MAX_FACES_TO_SAVE) {
+            throw new TooManyFacesException();
+        }
+
+        val embedding = result.stream()
+                              .findFirst().orElseThrow()
+                              .getEmbedding();
+
+        val embeddingToSave = new Face.Embedding(Arrays.asList(embedding), findFacesResponse.getPluginsVersions().getCalculator());
+
+        return faceCacheProvider
+                .getOrLoad(modelKey)
+                .addFace(faceDao.addNewFace(embeddingToSave, file, faceName, modelKey));
     }
 }

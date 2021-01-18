@@ -2,7 +2,6 @@ package com.exadel.frs.core.trainservice.sdk.faces;
 
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -10,16 +9,34 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface FacesApiClient {
 
-    ScanFacesResponse scanFaces(
-            MultipartFile photo,
-            Integer faceLimit,
-            Double thresholdC);
-
+    /**
+     * Calls /find_faces endpoint of Faces API
+     *
+     * @param photo       - A picture with at least one face
+     * @param faceLimit   - The limit of faces that you want recognized. Value of 0 represents no limit
+     * @param thresholdC  - The minimum required confidence that a found face is actually a face
+     * @param facePlugins - Comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes
+     * @return result of the operation
+     */
     FindFacesResponse findFaces(
             MultipartFile photo,
             Integer faceLimit,
             Double thresholdC,
             String facePlugins);
 
+    /**
+     * Calls /find_faces endpoint of Faces API with 'calculator' plugin always on
+     */
+    FindFacesResponse findFacesWithCalculator(
+            MultipartFile photo,
+            Integer faceLimit,
+            Double thresholdC,
+            String facePlugins);
+
+    /**
+     * Calls /status endpoint of Faces API
+     *
+     * @return result of operation
+     */
     FacesStatusResponse getStatus();
 }

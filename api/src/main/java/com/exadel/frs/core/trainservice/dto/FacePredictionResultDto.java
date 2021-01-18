@@ -16,13 +16,17 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
 import java.util.List;
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-@Value
-public class FacePrediction {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class FacePredictionResultDto extends FindFacesResultDto {
 
-    FacesBox box;
-    List<FaceResponse> faces;
+    List<FaceSimilarityDto> faces;
 }

@@ -21,6 +21,7 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
@@ -38,9 +40,9 @@ import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.ScanFacesResult;
-import com.exadel.frs.core.trainservice.service.ScanService;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
@@ -51,6 +53,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -64,8 +67,8 @@ public class FaceControllerTest {
     @MockBean
     private FacesRepository facesRepository;
 
-    @MockBean
-    private ScanService scanService;
+    @SpyBean
+    private FaceService faceService;
 
     @MockBean
     private ImageExtensionValidator imageValidator;
@@ -82,8 +85,12 @@ public class FaceControllerTest {
     private static final String API_KEY = "model_key";
 
     @Test
-    void scanFaces() throws Exception {
+    void findAndSaveFaces() throws Exception {
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
+
+        doReturn(new FaceBO("name", "id"))
+                .when(faceService)
+                .findAndSaveFace(any(), any(), any(), any());
 
         mockMvc.perform(
                 multipart(API_V1 + "/faces")
@@ -93,12 +100,12 @@ public class FaceControllerTest {
         ).andExpect(status().isCreated());
 
         verify(imageValidator).validate(any());
-        verify(scanService).scanAndSaveFace(any(), any(), any(), any());
-        verifyNoMoreInteractions(imageValidator, scanService);
+        verify(faceService).findAndSaveFace(any(), any(), any(), any());
+        verifyNoMoreInteractions(imageValidator, faceService);
     }
 
     @Test
-    void scanFacesForFirstItemWithEmptyRetrain() throws Exception {
+    void findAndSaveFacesForFirstItemWithEmptyRetrain() throws Exception {
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
 
         val faceCollection = FaceCollection.buildFromFaces(List.of(
@@ -108,6 +115,9 @@ public class FaceControllerTest {
         doReturn(faceCollection)
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
+        doReturn(new FaceBO("name", "id"))
+                .when(faceService)
+                .findAndSaveFace(any(), any(), any(), any());
 
         mockMvc.perform(
                 multipart(API_V1 + "/faces")
@@ -117,8 +127,8 @@ public class FaceControllerTest {
         ).andExpect(status().isCreated());
 
         verify(imageValidator).validate(any());
-        verify(scanService).scanAndSaveFace(any(), any(), any(), any());
-        verifyNoMoreInteractions(imageValidator, scanService);
+        verify(faceService).findAndSaveFace(any(), any(), any(), any());
+        verifyNoMoreInteractions(imageValidator, faceService);
     }
 
     @Test
@@ -243,14 +253,15 @@ public class FaceControllerTest {
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
 
-        val scanResponse = new ScanFacesResponse().setResult(
-                List.of(new ScanFacesResult()
-                        .setEmbedding(List.of(1.0))
-                        .setBox(new FacesBox().setProbability(1D))
-                )
-        );
+        val findFacesResponse = FindFacesResponse.builder()
+                                                 .result(List.of(FindFacesResult.builder()
+                                                                                .embedding(new Double[]{1.0})
+                                                                                .box(new FacesBox().setProbability(1D))
+                                                                                .build()
+                                                 ))
+                                                 .build();
 
-        when(client.scanFaces(any(), any(), any())).thenReturn(scanResponse);
+        when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
         when(predictor.verify(any(), any(), any())).thenReturn(1.0);
 
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
@@ -262,7 +273,7 @@ public class FaceControllerTest {
         ).andExpect(status().isOk());
 
         verify(imageValidator).validate(any());
-        verify(client).scanFaces(any(), any(), any());
+        verify(client).findFacesWithCalculator(any(), any(), any(), isNull());
         verify(predictor).verify(any(), any(), any());
         verifyNoMoreInteractions(imageValidator, client, predictor);
     }

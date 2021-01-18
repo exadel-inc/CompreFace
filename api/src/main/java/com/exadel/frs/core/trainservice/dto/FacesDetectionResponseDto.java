@@ -13,19 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package com.exadel.frs.core.trainservice.dto;
 
-package com.exadel.frs.core.trainservice.service;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import com.exadel.frs.core.trainservice.cache.FaceBO;
-import java.io.IOException;
-import org.springframework.web.multipart.MultipartFile;
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class FacesDetectionResponseDto {
 
-public interface ScanService {
-
-    FaceBO scanAndSaveFace(
-            final MultipartFile file,
-            final String faceName,
-            final Double detProbThreshold,
-            final String modelKey
-    ) throws IOException;
+    @JsonProperty(value = "plugins_versions")
+    private PluginsVersionsDto pluginsVersions;
+    private List<FindFacesResultDto> result;
 }
