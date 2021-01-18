@@ -14,6 +14,10 @@ app:
           client-secret: password
           refresh-token-validity: ${COMMON_REFRESH_TOKEN_VALIDITY:1209600}
           resource-ids: authorization
+  feign:
+    appery-io:
+      url: https://api.appery.io/rest/1/db/collections
+      api-key: ${APPERY_API_KEY}
 
 spring:
   profiles:
@@ -62,6 +66,20 @@ spring:
         auth: true
   main:
     allow-bean-definition-overriding: true
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: always
+    properties:
+      org.quartz:
+        scheduler:
+          instanceName: statistics scheduler
+          instanceId: AUTO
+        jobStore:
+          driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+        threadPool:
+          # thread pool capacity (default is 10)
+          threadCount: 1
 
 security:
   signing-key: MaYzkSjmkzPC57L

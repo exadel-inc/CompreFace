@@ -14,17 +14,13 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs;
+package com.exadel.frs.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import com.exadel.frs.entity.InstallInfo;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@EnableFeignClients
-@SpringBootApplication
-public class FrsApplication {
+@Repository
+public interface InstallInfoRepository extends JpaRepository<InstallInfo, String> {
 
-    public static void main(String[] args) {
-        SpringApplication.run(FrsApplication.class, args);
-    }
-}
+} 

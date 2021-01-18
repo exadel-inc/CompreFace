@@ -14,17 +14,17 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs;
+package com.exadel.frs.repository;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.openfeign.EnableFeignClients;
+import com.exadel.frs.entity.Face;
+import java.util.List;
+import javax.transaction.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-@EnableFeignClients
-@SpringBootApplication
-public class FrsApplication {
+@Repository
+@Transactional
+public interface FacesRepository extends JpaRepository<Face, Long> {
 
-    public static void main(String[] args) {
-        SpringApplication.run(FrsApplication.class, args);
-    }
+    List<Face> findByApiKey(String modelApiKey);
 }

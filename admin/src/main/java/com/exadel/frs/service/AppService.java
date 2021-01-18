@@ -19,8 +19,10 @@ package com.exadel.frs.service;
 import static com.exadel.frs.enums.AppRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.AppRole.OWNER;
 import static com.exadel.frs.enums.GlobalRole.USER;
+import static com.exadel.frs.enums.StatisticsType.APP_CREATE;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import com.exadel.frs.annotation.CollectStatistics;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
@@ -171,6 +173,7 @@ public class AppService {
         return savedApp.getUserAppRole(user.getId()).orElseThrow();
     }
 
+    @CollectStatistics(type = APP_CREATE)
     public App createApp(final AppCreateDto appCreateDto, final Long userId) {
         verifyNameIsUnique(appCreateDto.getName());
 
