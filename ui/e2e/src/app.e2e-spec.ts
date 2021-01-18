@@ -26,7 +26,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('frs-client-fe app is running!');
+    expect(page.getTitleText()).toEqual('compreface app is running!');
   });
 
   afterEach(async () => {

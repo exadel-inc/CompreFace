@@ -23,6 +23,10 @@
 </div>
 
 <div class="face-result">
-  <app-recognition-result *ngIf="isLoaded$ | async" [file]="file$ | async" [requestInfo]="requestInfo$ | async" [printData]="data$ | async">
+  <app-recognition-result
+    [isLoaded]="isLoaded$ | async"
+    [file]="file$ | async"
+    [requestInfo]="requestInfo$ | async"
+    [printData]="data$ | async">
   </app-recognition-result>
 </div>

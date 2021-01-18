@@ -13,7 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
@@ -26,15 +27,21 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ApplicationHeaderFacade } from './application-header.facade';
 
 @Component({
-  selector: 'app-application-header',
-  templateUrl: './application-header.component.html',
-  styleUrls: ['./application-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-application-header-container',
+  template: `<app-application-header
+    class="app-list-container__header"
+    [app]="app$ | async"
+    [isLoading]="isLoading$ | async"
+    [userRole]="userRole$ | async"
+    (rename)="rename($event)"
+    (delete)="delete($event)"
+  >
+  </app-application-header>`,
 })
-export class ApplicationHeaderComponent implements OnInit, OnDestroy {
+export class ApplicationHeaderContainerComponent implements OnInit {
   app$: Observable<Application>;
   userRole$: Observable<string | null>;
-  loading$: Observable<boolean>;
+  isLoading$: Observable<boolean>;
   maxHeaderLinkLength = 25;
   userRoleEnum = Role;
 
@@ -44,14 +51,10 @@ export class ApplicationHeaderComponent implements OnInit, OnDestroy {
     this.applicationHeaderFacade.initSubscriptions();
     this.app$ = this.applicationHeaderFacade.app$;
     this.userRole$ = this.applicationHeaderFacade.userRole$;
-    this.loading$ = this.applicationHeaderFacade.loading$;
+    this.isLoading$ = this.applicationHeaderFacade.isLoadingAppList$;
   }
 
-  ngOnDestroy(): void {
-    this.applicationHeaderFacade.unsubscribe();
-  }
-
-  rename(name: string) {
+  rename(name: string): void {
     const dialog = this.dialog.open(EditDialogComponent, {
       width: '300px',
       data: {

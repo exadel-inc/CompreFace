@@ -13,6 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { combineLatest, Observable, Subscription } from 'rxjs';
@@ -24,32 +25,28 @@ import { Application } from '../../data/interfaces/application';
 import { IFacade } from '../../data/interfaces/IFacade';
 import { AppState } from '../../store';
 import { deleteApplication, updateApplication } from '../../store/application/action';
-import {
-  selectCurrentApp,
-  selectCurrentAppId,
-  selectIsPendingApplicationList,
-  selectUserRollForSelectedApp,
-} from '../../store/application/selectors';
+import { selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp } from '../../store/application/selectors';
+import { selectIsLoadingApplicationList } from '../../store/user/selectors';
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {
   selectedId$: Observable<string | null>;
   selectedId: string | null;
-  loading$: Observable<boolean>;
+  isLoadingAppList$: Observable<boolean>;
   userRole$: Observable<string | null>;
   app$: Observable<Application>;
   appIdSub: Subscription;
 
   constructor(private store: Store<AppState>) {
-    this.app$ = this.store.select(selectCurrentApp);
-    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
-      map(([applicationRole, globalRole]) =>
+    this.app$ = store.select(selectCurrentApp);
+    this.selectedId$ = store.select(selectCurrentAppId);
+    this.isLoadingAppList$ = store.select(selectIsLoadingApplicationList);
+    this.userRole$ = combineLatest([store.select(selectUserRollForSelectedApp), store.select(selectCurrentUserRole)]).pipe(
+      map(([applicationRole, organizationRole]) =>
         // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        globalRole !== Role.User.toString() ? Role.Owner.toString() : applicationRole
+        organizationRole !== Role.User ? Role.Owner : applicationRole
       )
     );
-    this.selectedId$ = this.store.select(selectCurrentAppId);
-    this.loading$ = this.store.select(selectIsPendingApplicationList);
   }
 
   initSubscriptions() {

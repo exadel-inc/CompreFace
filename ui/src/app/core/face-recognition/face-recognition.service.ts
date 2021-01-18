@@ -20,6 +20,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { Model } from '../../data/interfaces/model';
+import { UIRequestOptions } from '../../data/interfaces/ui-request-options';
 
 @Injectable({
   providedIn: 'root',
@@ -50,7 +51,7 @@ export class FaceRecognitionService {
       .pipe(
         map(data => ({
           data,
-          request: this.createUIRequest(url, { 'x-api-key': apiKey }),
+          request: this.createUIRequest(url, { apiKey, file }),
         }))
       );
   }
@@ -89,19 +90,10 @@ export class FaceRecognitionService {
    * @param params url parameters.
    * @private
    */
-  private createUIRequest(url: string, options = {}, params = {}): any {
+  private createUIRequest(url: string, options = {} as UIRequestOptions, params = {}): string {
     const parsedParams = Object.keys(params).length ? `?${new URLSearchParams(params).toString()}` : '';
+    const { apiKey, file: { name: fname } } = options;
 
-    return {
-      /* eslint-disable @typescript-eslint/naming-convention */
-      Headers: {
-        'Content-Type': 'multipart/form-data',
-        Origin: window.location.origin,
-        Referer: `${window.location.origin}${parsedParams}`,
-        Host: `${window.location.host}:${window.location.port}`,
-        ...options,
-      },
-      /* eslint-enable @typescript-eslint/naming-convention */
-    };
+    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "file=@${fname}"`;
   }
 }
