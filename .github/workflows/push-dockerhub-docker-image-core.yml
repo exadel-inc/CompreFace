@@ -16,10 +16,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: docker login
         env:
-          DOCKER_USER: ${{secrets.DOCKER_USER}}
-          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+          DOCKER_USER: ${{secrets.DOCKER_HUB_LOGIN}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PASSWORD}}
         run: |
-          docker login -u $DOCKER_HUB_LOGIN -p $DOCKER_HUB_PASSWORD 
+          docker login -u $DOCKER_USER -p $DOCKER_PASSWORD 
       - name: Build the Docker image
         working-directory: ./embedding-calculator/
         run: |
