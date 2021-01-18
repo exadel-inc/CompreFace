@@ -18,6 +18,7 @@ import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-recognition.helpers';
+import { ServiceTypes } from '../../../data/enums/model.enum';
 
 @Component({
   selector: 'app-recognition-result',
@@ -28,6 +29,7 @@ export class RecognitionResultComponent implements OnDestroy {
   @Input() pending = true;
   @Input() file: File;
   @Input() requestInfo: any;
+  @Input() serviceType: string;
   // Handle input changes and update image.
   @Input() set printData(value: any) {
     if (this.printSubscription) {
@@ -67,7 +69,7 @@ export class RecognitionResultComponent implements OnDestroy {
     }));
   }
 
-  private createImage(ctx, box, face) {
+  private createRecognitionImage(ctx, box, face) {
     ctx.beginPath();
     ctx.strokeStyle = 'green';
     ctx.moveTo(box.x_min, box.y_min);
@@ -85,20 +87,61 @@ export class RecognitionResultComponent implements OnDestroy {
     ctx.fillText(face.face_name, box.x_min + 10, box.y_min - 5);
   }
 
+  private createDetectionImage(ctx, box) {
+    ctx.beginPath();
+    ctx.strokeStyle = 'green';
+    ctx.moveTo(box.x_min, box.y_min);
+    ctx.lineTo(box.x_max, box.y_min);
+    ctx.lineTo(box.x_max, box.y_max);
+    ctx.lineTo(box.x_min, box.y_max);
+    ctx.lineTo(box.x_min, box.y_min);
+    ctx.stroke();
+    ctx.fillStyle = 'green';
+    ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
+    ctx.fillStyle = 'white';
+    ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
+    ctx.fillText(box.probability, box.x_min + 10, box.y_max + 20);
+  }
+
   /*
    * Make canvas and draw face and info on image.
    *
    * @preparedData prepared box data and faces.
    */
   drawCanvas(preparedData) {
+    switch (this.serviceType) {
+      case ServiceTypes.Recognition:
+        this.drawRecognitionCanvas(preparedData);
+        break;
+
+      case ServiceTypes.Detection:
+        this.drawDetectionCanvas(preparedData);
+        break;
+    }
+  }
+
+  drawRecognitionCanvas(data) {
     const img = new Image();
     const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
     img.onload = () => {
       ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
-      for (const value of preparedData) {
+      for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const resultFace = value.faces.length > 0 ? value.faces[0] : { face_name: undefined, similarity: 0 };
-        this.createImage(ctx, value.box, resultFace);
+        this.createRecognitionImage(ctx, value.box, resultFace);
+      }
+    };
+    img.src = URL.createObjectURL(this.file);
+  }
+
+  drawDetectionCanvas(data) {
+    const img = new Image();
+    const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
+      for (const value of data) {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        this.createDetectionImage(ctx, value.box);
       }
     };
     img.src = URL.createObjectURL(this.file);

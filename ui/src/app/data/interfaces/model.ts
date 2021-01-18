@@ -18,6 +18,7 @@ export interface Model {
   id: string;
   name: string;
   serviceType: string;
+  readonly type: string;
   accessLevel: string;
   relations: {
     id: string;
