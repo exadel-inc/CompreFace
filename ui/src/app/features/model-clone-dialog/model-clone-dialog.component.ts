@@ -28,7 +28,6 @@ export class ModelCloneDialogComponent {
   constructor(public dialogRef: MatDialogRef<ModelCloneDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   get isCloneDisabled(): boolean {
-    console.log(this.initialName?.length);
     return this.initialName ? this.initialName.length < 3 : true;
   }
 }
