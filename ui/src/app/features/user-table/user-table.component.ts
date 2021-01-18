@@ -62,6 +62,7 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
     const deletion: UserDeletion = {
       userToDelete: user,
       deleterUserId: this.currentUserId,
+      isDeleteHimSelf: user.id === this.currentUserId,
     };
     this.deleteUser.emit(deletion);
   }

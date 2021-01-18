@@ -121,6 +121,7 @@
       "warn_hint_anyway": "Możesz go usunąć jeżeli chcesz.",
       "warn_hint_owner": "W tym przypadku zostaniesz właścicielem tych aplikacji",
       "warn_hint_new_owner": "W tym przypadku włąścicielem aplikacji będzię: ",
+      "warn_hint_replace_to_owner": "W tym przypadku WŁAŚCICIELEM aplikacji będzie WŁAŚCICIEL globalny",
       "default_confirmation": "{{type}} {{name}} i wszystkie powiązane dane zostaną usunięte.\nJesteś pewien?"
     },
     "add_users_title": "Dodaj użytkowników do CompreFace",
