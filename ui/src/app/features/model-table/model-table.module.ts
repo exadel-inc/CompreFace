@@ -25,6 +25,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
 import { ModelTableComponent } from './model-table.component';
 import { ModelCreateDialogComponent } from '../mode-create-dialog/model-create-dialog.component';
+import { ModelCloneDialogComponent } from '../model-clone-dialog/model-clone-dialog.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
@@ -33,7 +34,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
-  declarations: [ModelTableComponent, ModelCreateDialogComponent],
+  declarations: [ModelTableComponent, ModelCreateDialogComponent, ModelCloneDialogComponent],
   exports: [ModelTableComponent],
   imports: [
     CommonModule,

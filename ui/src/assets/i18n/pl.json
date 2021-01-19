@@ -3,6 +3,7 @@
     "capital": {
       "change": "ZMIANA",
       "create": "STWÓRZ",
+      "clone": "KLON",
       "cancel": "ANULUJ",
       "yes": "TAK",
       "add": "DODAJ",
@@ -88,6 +89,7 @@
     },
     "select_menu": {
       "edit": "EDYTUJ",
+      "clone": "KLON",
       "delete": "USUŃ",
       "test": "TEST"
     },
