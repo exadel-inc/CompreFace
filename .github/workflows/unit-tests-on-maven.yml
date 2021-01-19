@@ -16,4 +16,4 @@ jobs:
         with:
           java-version: 1.11
       - name: Maven Package
-        run: mvn -B clean packag
+        run: mvn -B clean package
