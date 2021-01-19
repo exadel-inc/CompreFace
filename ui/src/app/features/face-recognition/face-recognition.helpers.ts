@@ -36,6 +36,40 @@ export const getImageSize = (file: File): Observable<ImageSize> =>
   });
 
 /**
+ * Beautify the result JSON format
+ *
+ * @param value String
+ * @returns string
+ * @example
+ * {
+    "result": [
+      {
+        "box": {
+          ...
+        },
+        "faces": [
+          {
+            ...
+          }
+        ]
+      }
+    ]
+  }
+  change to
+  {
+  "result": [ {
+      "box": {
+        ...
+        },
+      "faces": [ {
+        ...
+        } ]
+    } ]
+}
+ */
+export const resultRecognitionFormatter = (value: string): string => value.replace(/(\[\n\s+)/g,'[ ').replace(/(\s+\])/g,' ]');
+
+/**
  * Get file extension.
  *
  * @param file File.

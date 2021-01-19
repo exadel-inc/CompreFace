@@ -24,6 +24,7 @@
     [userRole]="userRole$ | async"
     [tableConfig]="tableConfig$ | async"
     (copyApiKey)="copyApiKey($event)"
+    (clone)="clone($event)"
     (edit)="edit($event)"
     (delete)="delete($event)"
     (test)="test($event)"

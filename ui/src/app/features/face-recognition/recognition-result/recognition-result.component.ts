@@ -13,38 +13,55 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, ElementRef, Input, OnDestroy, ViewChild } from '@angular/core';
+
+import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { getImageSize, ImageSize, recalculateFaceCoordinate } from '../face-recognition.helpers';
 import { ServiceTypes } from '../../../data/enums/model.enum';
+import { getImageSize, ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter } from '../face-recognition.helpers';
+import { RequestResult } from '../../../data/interfaces/response-result';
+import { RequestInfo } from '../../../data/interfaces/request-info';
 
 @Component({
   selector: 'app-recognition-result',
   templateUrl: './recognition-result.component.html',
   styleUrls: ['./recognition-result.component.scss'],
 })
-export class RecognitionResultComponent implements OnDestroy {
-  @Input() pending = true;
+export class RecognitionResultComponent implements OnChanges, OnDestroy {
   @Input() file: File;
-  @Input() requestInfo: any;
+  @Input() requestInfo: RequestInfo;
+  @Input() printData: RequestResult;
+  @Input() isLoaded: boolean;
   @Input() serviceType: string;
-  // Handle input changes and update image.
-  @Input() set printData(value: any) {
-    if (this.printSubscription) {
-      this.printSubscription.unsubscribe();
-    }
 
-    if (value) {
-      this.printSubscription = this.printResult(value).subscribe();
+
+  @ViewChild('canvasElement') set canvasElement(canvas: ElementRef) {
+    if (canvas) {
+      this.myCanvas = canvas;
+
+      if (this.printSubscription) {
+        this.printSubscription.unsubscribe();
+      }
+
+      if (this.printData && this.myCanvas) {
+        this.printSubscription = this.printResult(this.printData).subscribe();
+      }
     }
-  }
-  @ViewChild('canvasElement', { static: true }) myCanvas: ElementRef;
+  };
 
   canvasSize: ImageSize = { width: 500, height: null };
+  myCanvas: ElementRef;
   faceDescriptionHeight = 25;
+  formattedResult: string;
+
   private printSubscription: Subscription;
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes?.requestInfo?.currentValue) {
+        this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
+    }
+  }
 
   ngOnDestroy() {
     if (this.printSubscription) {
@@ -62,6 +79,7 @@ export class RecognitionResultComponent implements OnDestroy {
       map(preparedImageData => this.drawCanvas(preparedImageData))
     );
   }
+
   private prepareForDraw(size, rawData): Observable<any> {
     return rawData.map(value => ({
       box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),

@@ -14,21 +14,15 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="face-uploader">
-  <app-drag-n-drop (upload)="recognizeFace($event)"> </app-drag-n-drop>
+<h1 mat-dialog-title>Clone {{ data.entityType }}</h1>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput [(ngModel)]="initialName" placeholder="{{ 'common.name' | translate }}" />
+  </mat-form-field>
 </div>
-
-<div class="recognition-loading" *ngIf="pending$ | async">
-  <app-spinner></app-spinner>
-</div>
-
-<div class="face-result">
-  <app-recognition-result
-    [isLoaded]="isLoaded$ | async"
-    [file]="file$ | async"
-    [requestInfo]="requestInfo$ | async"
-    [printData]="data$ | async"
-    [serviceType]="type"
-  >
-  </app-recognition-result>
+<div mat-dialog-actions>
+  <button class="button-cancel" mat-button cdkFocusInitial (click)="dialogRef.close()">{{ 'common.capital.cancel' | translate }}</button>
+  <button class="button-create" mat-button [mat-dialog-close]="data.entityName" [disabled]="isCloneDisabled">
+    {{ 'common.capital.clone' | translate }}
+  </button>
 </div>

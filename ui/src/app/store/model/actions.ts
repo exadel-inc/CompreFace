@@ -29,6 +29,10 @@ export const updateModel = createAction('[Model] Update Model', props<Partial<Mo
 export const updateModelSuccess = createAction('[Model] Update Model Success', props<{ model: Model }>());
 export const updateModelFail = createAction('[Model] Update Model Fail', props<{ error: any }>());
 
+export const cloneModel = createAction('[Model] Clone Model', props<Partial<ModelUpdate>>());
+export const cloneModelSuccess = createAction('[Model] Clone Model Success', props<{ model: Model }>());
+export const cloneModelFail = createAction('[Model] Clone Model Fail', props<{ error: any }>());
+
 export const deleteModel = createAction('[Model] Delete Model', props<Partial<ModelUpdate>>());
 export const deleteModelSuccess = createAction('[Model] Delete Model Success', props<{ modelId: string }>());
 export const deleteModelFail = createAction('[Model] Delete Model Fail', props<{ error: any }>());

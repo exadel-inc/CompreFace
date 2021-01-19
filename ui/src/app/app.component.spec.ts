@@ -58,9 +58,4 @@ describe('AppComponent', () => {
   it('should create the app', () => {
     expect(component).toBeDefined();
   });
-
-  it(`should have as title 'frs-client-fe'`, () => {
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('frs-client-fe');
-  });
 });

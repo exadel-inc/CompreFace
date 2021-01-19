@@ -22,7 +22,7 @@ import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { Model } from 'src/app/data/interfaces/model';
 import { AppState } from 'src/app/store';
 import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
-import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
+import { createModel, cloneModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
 import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
 import { selectCurrentUserRole } from 'src/app/store/user/selectors';
 
@@ -70,6 +70,16 @@ export class ModelListFacade implements IFacade {
         applicationId: this.selectedApplicationId,
         name,
         serviceType,
+      })
+    );
+  }
+
+  cloneModel(modelId: string, name: string): void {
+    this.store.dispatch(
+      cloneModel({
+        applicationId: this.selectedApplicationId,
+        modelId,
+        name,
       })
     );
   }

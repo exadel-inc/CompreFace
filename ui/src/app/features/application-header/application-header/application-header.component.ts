@@ -13,24 +13,33 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Role } from 'src/app/data/enums/role.enum';
-import { Model } from 'src/app/data/interfaces/model';
 
-import { TableComponent } from '../table/table.component';
+import { Application } from '../../../data/interfaces/application';
 
 @Component({
-  selector: 'app-model-table',
-  templateUrl: './model-table.component.html',
-  styleUrls: ['./model-table.component.scss'],
+  selector: 'app-application-header',
+  templateUrl: './application-header.component.html',
+  styleUrls: ['./application-header.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ModelTableComponent extends TableComponent {
+export class ApplicationHeaderComponent {
+  @Input() app: Application;
+  @Input() isLoading: boolean;
   @Input() userRole: string;
-  @Output() copyApiKey = new EventEmitter<string>();
-  @Output() clone = new EventEmitter<Model>();
-  @Output() edit = new EventEmitter<Model>();
-  @Output() delete = new EventEmitter<Model>();
-  @Output() test = new EventEmitter<Model>();
-  roleEnum = Role;
+  @Output() rename = new EventEmitter();
+  @Output() delete = new EventEmitter();
+
+  maxHeaderLinkLength = 25;
+  userRoleEnum = Role;
+
+  onRename(name: string): void {
+    this.rename.emit(name);
+  }
+
+  onDelete(name: string): void {
+    this.delete.emit(name);
+  }
 }

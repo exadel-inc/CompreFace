@@ -13,20 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 
-import { AuthService } from './core/auth/auth.service';
-import { AppState } from './store';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  selector: 'app-model-clone-dialog',
+  templateUrl: './model-clone-dialog.component.html',
+  styleUrls: ['./model-clone-dialog.component.scss'],
 })
-export class AppComponent {
-  constructor(auth: AuthService, store: Store<AppState>, private translate: TranslateService) {
-    translate.setDefaultLang('en');
+export class ModelCloneDialogComponent {
+  initialName: string;
+
+  constructor(public dialogRef: MatDialogRef<ModelCloneDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  get isCloneDisabled(): boolean {
+    return this.initialName ? this.initialName.length < 3 : true;
   }
 }

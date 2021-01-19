@@ -66,6 +66,10 @@
           <button mat-menu-item (click)="test.emit(element)">
             <span>{{ 'models.select_menu.test' | translate }}</span>
           </button>
+          <!-- NOTE: this functionality is temporarily disabled -->
+          <button mat-menu-item (click)="clone.emit(element)" disabled>
+            <span>{{ 'models.select_menu.clone' | translate }}</span>
+          </button>
         </mat-menu>
       </ng-container>
     </td>

@@ -15,19 +15,19 @@
   -->
 
 <div class="application-header">
-  <app-spinner *ngIf="loading$ | async"></app-spinner>
+  <app-spinner *ngIf="isLoading"></app-spinner>
   <mat-card class="application-header_left-coll">
-    <div *ngIf="app$ | async as app">
+    <div *ngIf="app">
       <h3 class="title">{{ 'applications.header.title' | translate }}</h3>
       <div class="name-wrapper">
         <div class="name-item" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxHeaderLinkLength">
           {{ app.name | truncate: maxHeaderLinkLength }}
         </div>
-        <div *ngIf="userRole$ | async as userRole">
-          <button *ngIf="userRole === userRoleEnum.Owner" mat-button type="button" color="primary" (click)="rename(app.name)">
+        <div *ngIf="!isLoading && userRole">
+          <button *ngIf="userRole === userRoleEnum.Owner" mat-button type="button" color="primary" (click)="onRename(app.name)">
             {{ 'applications.header.edit' | translate }}
           </button>
-          <button *ngIf="userRole === userRoleEnum.Owner" mat-button type="button" color="primary" (click)="delete(app.name)">
+          <button *ngIf="userRole === userRoleEnum.Owner" mat-button type="button" color="primary" (click)="onDelete(app.name)">
             {{ 'applications.header.delete' | translate }}
           </button>
         </div>

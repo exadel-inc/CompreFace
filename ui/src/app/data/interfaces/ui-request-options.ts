@@ -13,20 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { TranslateService } from '@ngx-translate/core';
 
-import { AuthService } from './core/auth/auth.service';
-import { AppState } from './store';
-
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
-})
-export class AppComponent {
-  constructor(auth: AuthService, store: Store<AppState>, private translate: TranslateService) {
-    translate.setDefaultLang('en');
+  export interface UIRequestOptions {
+    apiKey: string;
+    file: File;
   }
-}

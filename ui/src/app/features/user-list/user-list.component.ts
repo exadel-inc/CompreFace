@@ -23,7 +23,6 @@ import { AppUser } from 'src/app/data/interfaces/app-user';
 
 import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
 
@@ -47,13 +46,9 @@ export class UserListComponent implements OnInit, OnDestroy {
   messageHeader: string;
   message: string;
   translate: TranslateService;
+  selectedOption = 'deleter';
 
-  constructor(
-    private userListFacade: UserListFacade,
-    private snackBarService: SnackBarService,
-    public dialog: MatDialog,
-    translate: TranslateService
-  ) {
+  constructor(private userListFacade: UserListFacade, public dialog: MatDialog, translate: TranslateService) {
     userListFacade.initSubscriptions();
     this.translate = translate;
   }
@@ -101,15 +96,20 @@ export class UserListComponent implements OnInit, OnDestroy {
               data: {
                 entityType: this.translate.instant('users.user'),
                 entity: deletion.userToDelete,
-                options: { name: this.orgOwnerEmail, value: 'owner' },
+                options: [
+                  { name: email, value: 'deleter' },
+                  { name: this.orgOwnerEmail, value: 'owner' },
+                ],
                 isOrganizationOwner: email === this.orgOwnerEmail,
+                selectedOption: deletion.isDeleteHimSelf ? 'owner' : this.selectedOption,
                 isSystemUser: true,
+                isDeleteHimSelf: deletion.isDeleteHimSelf,
               },
             })
             .afterClosed()
         ),
         filter((isClosed: boolean) => isClosed),
-        tap(() => this.userListFacade.deleteUser(deletion))
+        tap(() => this.userListFacade.deleteUser(deletion, this.selectedOption))
       )
       .subscribe();
   }
