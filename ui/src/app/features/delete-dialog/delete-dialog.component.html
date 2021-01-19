@@ -35,12 +35,21 @@
           </p>
           <p>
             {{ 'org_users.delete_dialog.warn_hint_anyway' | translate }}
-            <ng-container *ngIf="data.isOrganizationOwner; else userListText">
-              {{ 'org_users.delete_dialog.warn_hint_owner' | translate }}
+            <ng-container *ngIf="data.isDeleteHimSelf; else replaceToOwner">
+              {{ 'org_users.delete_dialog.warn_hint_replace_to_owner' | translate }}
             </ng-container>
+            <ng-template #replaceToOwner>
+              <ng-container *ngIf="data.isOrganizationOwner; else userListText">
+                {{ 'org_users.delete_dialog.warn_hint_owner' | translate }}
+              </ng-container>
+            </ng-template>
             <ng-template #userListText>
-              {{ 'org_users.delete_dialog.warn_hint_new_owner' | translate }}<br />
-              {{ data.options.name }}
+              {{ 'org_users.delete_dialog.warn_hint_new_owner' | translate }}
+              <mat-radio-group aria-labelledby="delete-radio-group" [(ngModel)]="data.selectedOption">
+                <mat-radio-button class="delete-radio-button" *ngFor="let option of data.options" [value]="option.value">
+                  {{ option.name }}
+                </mat-radio-button>
+              </mat-radio-group>
             </ng-template>
           </p>
         </ng-container>

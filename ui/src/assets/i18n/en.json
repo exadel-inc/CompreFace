@@ -125,6 +125,7 @@
       "warn_hint_anyway": "You can delete him anyway.",
       "warn_hint_owner": "In this case you will become the OWNER of these applications.",
       "warn_hint_new_owner": "In this case the owner of this applications will be: ",
+      "warn_hint_replace_to_owner": "In this case, the OWNER of the application will be the global OWNER",
       "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
     },
     "add_users_title": "Add users to the CompreFace",
