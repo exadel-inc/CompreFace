@@ -13,10 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { AppUser } from './app-user';
 
-export interface UserDeletion {
-  deleterUserId: string;
-  userToDelete: AppUser;
-  isDeleteHimSelf: boolean;
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
+@Component({
+  selector: 'app-model-clone-dialog',
+  templateUrl: './model-clone-dialog.component.html',
+  styleUrls: ['./model-clone-dialog.component.scss'],
+})
+export class ModelCloneDialogComponent {
+  initialName: string;
+
+  constructor(public dialogRef: MatDialogRef<ModelCloneDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  get isCloneDisabled(): boolean {
+    return this.initialName ? this.initialName.length < 3 : true;
+  }
 }

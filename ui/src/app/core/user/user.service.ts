@@ -39,8 +39,8 @@ export class UserService {
     return this.http.put<AppUser>(`${environment.adminApiUrl}user/global/role`, { userId, role }, { withCredentials: false });
   }
 
-  delete(userId: string) {
-    return this.http.delete(`${environment.adminApiUrl}user/${userId}?replacer=owner`);
+  delete(userId: string, newOwner: string) {
+    return this.http.delete(`${environment.adminApiUrl}user/${userId}?replacer=${newOwner}`);
   }
 
   fetchAvailableRoles(): Observable<string[]> {

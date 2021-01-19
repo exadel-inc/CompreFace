@@ -25,6 +25,9 @@ import {
   createModel,
   createModelFail,
   createModelSuccess,
+  cloneModel,
+  cloneModelFail,
+  cloneModelSuccess,
   deleteModel,
   deleteModelFail,
   deleteModelSuccess,
@@ -56,8 +59,8 @@ export class ModelEffects {
     ofType(createModel),
     switchMap(action =>
       this.modelService.create(action.applicationId, action.name, action.serviceType).pipe(
-        map(model => createModelSuccess({model})),
-        catchError(error => of(createModelFail({error})))
+        map(model => createModelSuccess({ model })),
+        catchError(error => of(createModelFail({ error })))
       )
     )
   );
@@ -69,6 +72,17 @@ export class ModelEffects {
       this.modelService.update(action.applicationId, action.modelId, action.name).pipe(
         map(model => updateModelSuccess({ model })),
         catchError(error => of(updateModelFail({ error })))
+      )
+    )
+  );
+
+  @Effect()
+  cloneModel$ = this.actions.pipe(
+    ofType(cloneModel),
+    switchMap(action =>
+      this.modelService.clone(action.applicationId, action.modelId, action.name).pipe(
+        map(model => cloneModelSuccess({ model })),
+        catchError(error => of(cloneModelFail({ error })))
       )
     )
   );
@@ -86,7 +100,7 @@ export class ModelEffects {
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(loadModelsFail, createModelFail, updateModelFail, deleteModelFail),
+    ofType(loadModelsFail, createModelFail, cloneModelFail, updateModelFail, deleteModelFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })

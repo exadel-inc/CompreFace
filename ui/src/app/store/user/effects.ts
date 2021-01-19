@@ -80,8 +80,8 @@ export class UserListEffect {
   @Effect()
   deleteUser$ = this.actions.pipe(
     ofType(deleteUser),
-    switchMap(({ userId, deleterUserId }) =>
-      this.userService.delete(userId).pipe(
+    switchMap(({ userId, deleterUserId, newOwner }) =>
+      this.userService.delete(userId, newOwner).pipe(
         switchMap(() => {
           if (deleterUserId === userId) {
             this.authService.logOut();

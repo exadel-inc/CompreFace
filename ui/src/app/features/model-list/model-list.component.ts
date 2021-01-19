@@ -21,7 +21,6 @@ import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
-import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
 import { Routes } from '../../data/enums/routers-url.enum';
@@ -29,6 +28,7 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
 import { ModelCreateDialogComponent } from '../mode-create-dialog/model-create-dialog.component';
+import { ModelCloneDialogComponent } from '../model-clone-dialog/model-clone-dialog.component';
 
 @Component({
   selector: 'app-model-list',
@@ -94,6 +94,25 @@ export class ModelListComponent implements OnInit, OnDestroy {
       .subscribe(name => {
         if (name) {
           this.modelListFacade.renameModel(model.id, name);
+        }
+      });
+  }
+
+  clone(model: Model) {
+    const dialog = this.dialog.open(ModelCloneDialogComponent, {
+      width: '400px',
+      data: {
+        entityType: this.translate.instant('models.header'),
+        entityName: model.name,
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe(name => {
+        if (name) {
+          this.modelListFacade.cloneModel(model.id, name);
         }
       });
   }
