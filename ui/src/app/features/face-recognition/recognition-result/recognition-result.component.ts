@@ -118,7 +118,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
     ctx.fillStyle = 'white';
     ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
-    ctx.fillText(box.probability, box.x_min + 10, box.y_max + 20);
+    ctx.fillText(box.probability.toFixed(4), box.x_min + 10, box.y_max + 20);
   }
 
   /*

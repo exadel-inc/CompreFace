@@ -57,7 +57,7 @@ export class FaceRecognitionService {
   }
 
   detection(file: any, apiKey: string): Observable<any> {
-    const url = `${environment.userApiUrl}/faces/detection`;
+    const url = `${environment.userApiUrl}faces/detection`;
     const formData = new FormData();
     formData.append('file', file);
 
@@ -68,7 +68,7 @@ export class FaceRecognitionService {
       .pipe(
         map(data => ({
           data,
-          request: this.createUIRequest(url, { 'x-api-key': apiKey }),
+          request: this.createUIRequest(url, { apiKey, file }),
         }))
       );
   }
@@ -91,9 +91,7 @@ export class FaceRecognitionService {
    * @private
    */
   private createUIRequest(url: string, options = {} as UIRequestOptions, params = {}): string {
-    const parsedParams = Object.keys(params).length ? `?${new URLSearchParams(params).toString()}` : '';
     const { apiKey, file: { name: fname } } = options;
-
     return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "file=@${fname}"`;
   }
 }
