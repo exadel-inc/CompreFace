@@ -8,7 +8,7 @@ Run `npm install`
 
 Run `npm start` the web app will be available at http://localhost:4200
 
-_NOTE_: you will need the API to be up and running. Instructions to do this can be found in the README in `/dev` folder.
+_NOTE_: you will need the API to be up and running. Instructions to up this can be found in the README file in `/dev` folder.
 
 ## Code scaffolding
 
