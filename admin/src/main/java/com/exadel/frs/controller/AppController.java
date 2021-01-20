@@ -21,7 +21,6 @@ import static org.springframework.http.HttpStatus.CREATED;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
-import com.exadel.frs.dto.ui.ModelShareResponseDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
@@ -187,20 +186,6 @@ public class AppController {
         val userAppRole = appService.updateUserAppRole(userRoleUpdateDto, guid, SecurityUtils.getPrincipalId());
 
         return userAppRoleMapper.toUserRoleResponseDto(userAppRole);
-    }
-
-    @GetMapping("/app/{guid}/model/request")
-    @ApiOperation("Request for the model to be shared.")
-    public ModelShareResponseDto modelShareRequest(
-            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String guid
-    ) {
-        val requestId = appService.generateUuidToRequestModelShare(guid);
-
-        return ModelShareResponseDto.builder()
-                                    .modelRequestUuid(requestId)
-                                    .build();
     }
 
     @DeleteMapping("/app/{guid}/user/{userGuid}")

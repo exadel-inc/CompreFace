@@ -71,11 +71,6 @@ public class App {
     @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Model> models = new ArrayList<>();
 
-    @ToString.Exclude
-    @Builder.Default
-    @OneToMany(mappedBy = "app", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ModelShareRequest> modelShareRequests = new ArrayList<>();
-
     public Optional<UserAppRole> getOwner() {
         return userAppRoles
                 .stream()

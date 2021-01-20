@@ -16,28 +16,24 @@
 
 package com.exadel.frs.service;
 
-import static com.exadel.frs.enums.AppModelAccess.READONLY;
 import static java.util.UUID.randomUUID;
+
 import com.exadel.frs.dto.ui.ModelCreateDto;
-import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.AppModel;
 import com.exadel.frs.entity.Model;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.ModelNotFoundException;
-import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.ModelRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
+
+import org.springframework.stereotype.Service;
+
 import java.util.List;
+
 import javax.transaction.Transactional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.val;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -45,8 +41,6 @@ public class ModelService {
 
     private final ModelRepository modelRepository;
     private final AppService appService;
-    private final ModelShareRequestRepository modelShareRequestRepository;
-    private final AppModelRepository appModelRepository;
     private final AuthorizationManager authManager;
     private final UserService userService;
 
@@ -140,34 +134,4 @@ public class ModelService {
         modelRepository.deleteById(model.getId());
     }
 
-    @Transactional
-    public App share(
-            final ModelShareDto modelShare,
-            final String appGuid,
-            final String modelGuid
-    ) {
-        verifyShareRequest(modelShare);
-
-        val modelBeingShared = getModel(appGuid, modelGuid, SecurityUtils.getPrincipalId());
-        val user = userService.getUser(SecurityUtils.getPrincipalId());
-
-        authManager.verifyWritePrivilegesToApp(user, modelBeingShared.getApp());
-
-        val modelShareRequest = modelShareRequestRepository.findModelShareRequestByRequestId(modelShare.getRequestId());
-        if (modelShareRequest == null) {
-            throw new ModelShareRequestNotFoundException(modelShare.getRequestId());
-        }
-        val appFromRequest = modelShareRequest.getApp();
-
-        appModelRepository.save(new AppModel(appFromRequest, modelBeingShared, READONLY));
-        modelShareRequestRepository.delete(modelShareRequest);
-
-        return appFromRequest;
-    }
-
-    private void verifyShareRequest(final ModelShareDto modelShare) {
-        if (modelShare.getRequestId() == null) {
-            throw new EmptyRequiredFieldException("requestId");
-        }
-    }
 }

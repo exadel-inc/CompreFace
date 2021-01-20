@@ -24,5 +24,4 @@ public class ModelResponseDto {
     private String id;
     private String name;
     private String apiKey;
-    private String accessLevel;
 }

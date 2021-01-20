@@ -159,7 +159,7 @@ public class FaceController {
         try {
             scanResponse = client.scanFaces(file, limit, detProbThreshold);
         } catch (FeignException.BadRequest e) {
-            return Map.of("result", Collections.EMPTY_LIST);
+            return Map.of("result", Collections.emptyList());
         }
 
         val results = new ArrayList<FaceVerification>();

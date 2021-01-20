@@ -39,7 +39,6 @@ import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
-import com.exadel.frs.entity.ModelShareRequest;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.entity.UserAppRoleId;
@@ -50,7 +49,6 @@ import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
@@ -63,10 +61,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 class AppServiceTest {
 
@@ -77,9 +71,6 @@ class AppServiceTest {
 
     @Mock
     private AppRepository appRepositoryMock;
-
-    @Mock
-    private ModelShareRequestRepository modelShareRequestRepositoryMock;
 
     @Mock
     private AuthorizationManager authManagerMock;
@@ -690,36 +681,6 @@ class AppServiceTest {
 
         verify(authManagerMock).verifyReadPrivilegesToApp(user, app);
         verifyNoMoreInteractions(authManagerMock);
-    }
-
-    @Test
-    void successGenerateUuidToRequestModelShare() {
-        val user = user(USER_ID, GlobalRole.OWNER);
-
-        val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
-
-        val authentication = Mockito.mock(Authentication.class);
-        val securityContext = Mockito.mock(SecurityContext.class);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
-        when(authentication.getPrincipal()).thenReturn(User.builder()
-                                                           .id(USER_ID)
-                                                           .build()
-        );
-        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
-
-        val actual = appService.generateUuidToRequestModelShare(APPLICATION_GUID);
-
-        assertThat(actual).isNotNull();
-
-        verify(authManagerMock).verifyWritePrivilegesToApp(user, app);
-        verify(modelShareRequestRepositoryMock).save(any(ModelShareRequest.class));
-        verifyNoMoreInteractions(authManagerMock, modelShareRequestRepositoryMock);
     }
 
     @Test

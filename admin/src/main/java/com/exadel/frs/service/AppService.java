@@ -26,8 +26,6 @@ import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.ModelShareRequest;
-import com.exadel.frs.entity.ModelShareRequestId;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.entity.UserAppRole;
 import com.exadel.frs.enums.AppRole;
@@ -36,9 +34,7 @@ import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
-import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +50,6 @@ public class AppService {
 
     private final AppRepository appRepository;
     private final UserService userService;
-    private final ModelShareRequestRepository modelShareRequestRepository;
     private final AuthorizationManager authManager;
 
     public App getApp(final String appGuid) {
@@ -269,25 +264,4 @@ public class AppService {
         appRepository.deleteById(app.getId());
     }
 
-    public UUID generateUuidToRequestModelShare(final String appGuid) {
-        val app = getApp(appGuid);
-        val user = userService.getUser(SecurityUtils.getPrincipalId());
-
-        authManager.verifyWritePrivilegesToApp(user, app);
-
-        val requestId = UUID.randomUUID();
-        val id = ModelShareRequestId.builder()
-                                    .appId(app.getId())
-                                    .requestId(requestId)
-                                    .build();
-
-        val shareRequest = ModelShareRequest.builder()
-                                            .app(app)
-                                            .id(id)
-                                            .build();
-
-        modelShareRequestRepository.save(shareRequest);
-
-        return requestId;
-    }
 }
