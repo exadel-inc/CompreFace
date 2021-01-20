@@ -22,7 +22,6 @@ import { ModelService } from './model.service';
 
 describe('ModelService', () => {
   let httpMock: HttpTestingController;
-  // @ts-ignore
   const mockModels: Model[] = [
     {
       id: '0',
