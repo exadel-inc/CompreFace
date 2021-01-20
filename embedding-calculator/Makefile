@@ -1,6 +1,12 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := default
-.PHONY := default up
+.PHONY := default up build-images build-cuda
+
+IMAGE := exadel/comrepafe-core
+VERSION ?= dev
+INSIGHTFACE_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector \
+                          --build-arg CALCULATION_PLUGIN=insightface.Calculator \
+                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector
 
 define get_from_remote_tgz
 	mkdir -p $(2)
@@ -19,10 +25,15 @@ endef
 default:
 	pytest src tools
 	python -m pylama --options pylama.ini src tools
-	docker build -t embedding-calculator --build-arg SCANNER=Facenet2018,InsightFace .
+	docker build . -t $(IMAGE):$(VERSION)
 
 build-cuda:
-	docker build -t exadel/compreface-core-cuda:100-py37 -f gpu.Dockerfile .
+	docker build . --file gpu.Dockerfile --tag $(IMAGE):base-cuda100-py37
+
+build-images: build-cuda
+	docker build . -t $(IMAGE):$(VERSION)
+	docker build . -t $(IMAGE):$(VERSION)-insightface $(INSIGHTFACE_BUILD_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-insightface-gpu $(INSIGHTFACE_BUILD_ARGS) --build-arg GPU_IDX=0
 
 up:
 	docker run -p3000:3000 embedding-calculator
