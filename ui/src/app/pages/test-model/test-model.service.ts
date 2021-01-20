@@ -32,12 +32,14 @@ export class TestModelPageService {
   private modelSub: Subscription;
   private appId: string;
   private modelId: string;
+  private type: string;
 
   constructor(private router: Router, private route: ActivatedRoute, private store: Store<AppState>) {}
 
   initUrlBindingStreams() {
     this.appId = this.route.snapshot.queryParams.app;
     this.modelId = this.route.snapshot.queryParams.model;
+    this.type = this.route.snapshot.queryParams.type;
 
     if (this.appId && this.modelId) {
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
@@ -56,6 +58,10 @@ export class TestModelPageService {
     } else {
       this.router.navigate([Routes.Home]);
     }
+  }
+
+  getServiceType() {
+    return this.type;
   }
 
   fetchModels() {
