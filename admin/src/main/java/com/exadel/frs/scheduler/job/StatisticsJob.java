@@ -34,6 +34,17 @@ public class StatisticsJob extends QuartzJobBean {
     private FacesRepository facesRepository;
     private ModelRepository modelRepository;
 
+    private List<Range> ranges = List.of(
+                Range.between(1, 10),
+                Range.between(10, 50),
+                Range.between(50, 200),
+                Range.between(500, 2000),
+                between(2000, 10000),
+                between(10000, 50000),
+                between(50000, 200000),
+                between(200000, 1000000)
+    );
+
     @Autowired
     public StatisticsJob(final ApperyStatisticsClient apperyStatisticsClient, final InstallInfoRepository installInfoRepository, final FacesRepository facesRepository, final ModelRepository modelRepository) {
         this.apperyStatisticsClient = apperyStatisticsClient;
@@ -69,17 +80,6 @@ public class StatisticsJob extends QuartzJobBean {
         if (facesCount == 0) {
             return "0";
         }
-
-        List<Range> ranges = List.of(
-                Range.between(1, 10),
-                Range.between(10, 50),
-                Range.between(50, 200),
-                Range.between(500, 2000),
-                between(2000, 10000),
-                between(10000, 50000),
-                between(50000, 200000),
-                between(200000, 1000000)
-        );
 
         for (Range range : ranges) {
             if (range.contains(facesCount)) {

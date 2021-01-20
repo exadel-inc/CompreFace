@@ -16,5 +16,14 @@ databaseChangeLog:
             constraintName: install_guid
             tableName: install_info
 
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: allow_statistics
+                  type: boolean
+
         - sql:
             sql: INSERT into install_info(install_guid) values(uuid_generate_v1());
+        - sql:
+            sql: UPDATE public.user SET allow_statistics = FALSE;

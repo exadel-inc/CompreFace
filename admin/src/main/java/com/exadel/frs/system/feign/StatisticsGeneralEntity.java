@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StatisticsGeneralEntity {
 
-    @JsonProperty("user_guid")
+    @JsonProperty("install_guid")
     private String userGuid;
+
     @JsonProperty("action_name")
     private StatisticsType actionName;
 
