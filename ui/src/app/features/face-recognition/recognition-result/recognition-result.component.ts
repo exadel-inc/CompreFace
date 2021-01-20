@@ -135,30 +135,32 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     }
   }
 
-  drawRecognitionCanvas(data) {
+  createImage(drow){
     const img = new Image();
     const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
     img.onload = () => {
       ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
+      drow(img, ctx)
+    };
+    img.src = URL.createObjectURL(this.file);
+  }
+
+  drawRecognitionCanvas(data) {
+    this.createImage((img, ctx)=>{
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const resultFace = value.faces.length > 0 ? value.faces[0] : { face_name: undefined, similarity: 0 };
         this.createRecognitionImage(ctx, value.box, resultFace);
       }
-    };
-    img.src = URL.createObjectURL(this.file);
+    })
   }
 
   drawDetectionCanvas(data) {
-    const img = new Image();
-    const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
+    this.createImage((img, ctx)=>{
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         this.createDetectionImage(ctx, value.box);
       }
-    };
-    img.src = URL.createObjectURL(this.file);
+    })
   }
 }
