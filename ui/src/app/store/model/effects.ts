@@ -58,7 +58,7 @@ export class ModelEffects {
   createModel$ = this.actions.pipe(
     ofType(createModel),
     switchMap(action =>
-      this.modelService.create(action.applicationId, action.name, action.serviceType).pipe(
+      this.modelService.create(action.model.applicationId, action.model.name, action.model.type).pipe(
         map(model => createModelSuccess({ model })),
         catchError(error => of(createModelFail({ error })))
       )

@@ -27,14 +27,14 @@ import { TestModelPageService } from './test-model.service';
 })
 export class TestModelComponent implements OnInit, OnDestroy {
   modelLoading$: Observable<boolean>;
-  serviceType: string;
+  type: string;
 
   constructor(private modelService: TestModelPageService, private store: Store<any>) {}
 
   ngOnInit() {
     this.modelService.initUrlBindingStreams();
     this.modelLoading$ = this.store.select(selectPendingModel);
-    this.serviceType = this.modelService.getServiceType();
+    this.type = this.modelService.getServiceType();
   }
 
   ngOnDestroy(): void {

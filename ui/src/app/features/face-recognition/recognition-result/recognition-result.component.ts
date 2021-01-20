@@ -33,8 +33,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   @Input() requestInfo: RequestInfo;
   @Input() printData: RequestResult;
   @Input() isLoaded: boolean;
-  @Input() serviceType: string;
-
+  @Input() type: string;
 
   @ViewChild('canvasElement') set canvasElement(canvas: ElementRef) {
     if (canvas) {
@@ -48,7 +47,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
         this.printSubscription = this.printResult(this.printData).subscribe();
       }
     }
-  };
+  }
 
   canvasSize: ImageSize = { width: 500, height: null };
   myCanvas: ElementRef;
@@ -59,7 +58,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
-        this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
+      this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
     }
   }
 
@@ -88,24 +87,24 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   }
 
   private createRecognitionImage(ctx, box, face) {
-    ctx.beginPath();
-    ctx.strokeStyle = 'green';
-    ctx.moveTo(box.x_min, box.y_min);
-    ctx.lineTo(box.x_max, box.y_min);
-    ctx.lineTo(box.x_max, box.y_max);
-    ctx.lineTo(box.x_min, box.y_max);
-    ctx.lineTo(box.x_min, box.y_min);
-    ctx.stroke();
+    ctx = this.createDefaultImage(ctx, box);
     ctx.fillStyle = 'green';
     ctx.fillRect(box.x_min, box.y_min - this.faceDescriptionHeight, box.x_max - box.x_min, this.faceDescriptionHeight);
     ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
     ctx.fillStyle = 'white';
-    ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
     ctx.fillText(face.similarity, box.x_min + 10, box.y_max + 20);
     ctx.fillText(face.face_name, box.x_min + 10, box.y_min - 5);
   }
 
   private createDetectionImage(ctx, box) {
+    ctx = this.createDefaultImage(ctx, box);
+    ctx.fillStyle = 'green';
+    ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
+    ctx.fillStyle = 'white';
+    ctx.fillText(box.probability.toFixed(4), box.x_min + 10, box.y_max + 20);
+  }
+
+  private createDefaultImage(ctx, box) {
     ctx.beginPath();
     ctx.strokeStyle = 'green';
     ctx.moveTo(box.x_min, box.y_min);
@@ -114,11 +113,9 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     ctx.lineTo(box.x_min, box.y_max);
     ctx.lineTo(box.x_min, box.y_min);
     ctx.stroke();
-    ctx.fillStyle = 'green';
-    ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
-    ctx.fillStyle = 'white';
     ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
-    ctx.fillText(box.probability.toFixed(4), box.x_min + 10, box.y_max + 20);
+
+    return ctx;
   }
 
   /*
@@ -127,7 +124,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
    * @preparedData prepared box data and faces.
    */
   drawCanvas(preparedData) {
-    switch (this.serviceType) {
+    switch (this.type) {
       case ServiceTypes.Recognition:
         this.drawRecognitionCanvas(preparedData);
         break;

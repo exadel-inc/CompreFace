@@ -27,8 +27,7 @@ describe('ModelService', () => {
     {
       id: '0',
       name: 'Model 1',
-      serviceType:"RECOGNITION",
-      type:"RECOGNITION",
+      type: 'RECOGNITION',
       accessLevel: 'OWNER/TRAIN/READONLY',
       relations: [
         {
@@ -46,8 +45,7 @@ describe('ModelService', () => {
     {
       id: '1',
       name: 'Model 2',
-      serviceType:"RECOGNITION",
-      type:"RECOGNITION",
+      type: 'RECOGNITION',
       accessLevel: 'OWNER/TRAIN/READONLY',
       relations: [
         {
@@ -89,7 +87,7 @@ describe('ModelService', () => {
 
   it('should return created model', () => {
     const service: ModelService = TestBed.inject(ModelService);
-    service.create('app_0', 'new model' , 'RECOGNITION').subscribe(data => {
+    service.create('app_0', 'new model', 'RECOGNITION').subscribe(data => {
       expect(data.name).toEqual('new model');
       expect(data.relations[0].id).toEqual('app_0');
     });
