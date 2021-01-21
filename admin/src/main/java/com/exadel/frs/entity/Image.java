@@ -14,22 +14,42 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
+import javax.persistence.*;
+
+@Entity
+@Table
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserCreateDto {
+@AllArgsConstructor
+@Accessors(chain = true)
+@Builder
+public class Image {
 
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String password;
-    private boolean allowStatistics;
+    public Image(Image image) {
+        this.id = image.id;
+        this.rawImg = image.rawImg;
+        this.faceImg = image.faceImg;
+        this.face = image.face;
+    }
+
+    @Id
+    private String id;
+
+    @Column(name = "raw_img_fs")
+    private byte[] rawImg;
+
+    @Column(name = "face_img_fs")
+    private byte[] faceImg;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    private Face face;
 }

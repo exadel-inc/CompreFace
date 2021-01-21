@@ -18,10 +18,8 @@ package com.exadel.frs.controller;
 
 import static com.exadel.frs.system.global.Constants.GUID_EXAMPLE;
 import static org.springframework.http.HttpStatus.CREATED;
-import com.exadel.frs.dto.ui.ModelCreateDto;
-import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.dto.ui.ModelShareDto;
-import com.exadel.frs.dto.ui.ModelUpdateDto;
+
+import com.exadel.frs.dto.ui.*;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.MlModelMapper;
 import com.exadel.frs.service.ModelService;
@@ -97,6 +95,28 @@ public class ModelController {
         return modelMapper.toResponseDto(
                 modelService.createModel(modelCreateDto, appGuid, SecurityUtils.getPrincipalId()), appGuid
         );
+    }
+
+    @PostMapping("/model/{guid}")
+    @ApiOperation(value = "Clone model data")
+    @ApiResponses({
+            @ApiResponse(code = 400, message = "Field name cannot be empty | Application access type to model is not correct")
+    })
+    public ModelResponseDto cloneModel(
+            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String appGuid,
+            @ApiParam(value = "GUID of model that needs to be cloned", required = true, example = GUID_EXAMPLE)
+            @PathVariable
+            final String guid,
+            @ApiParam(value = "Model data", required = true)
+            @Valid
+            @RequestBody
+            final ModelCloneDto modelCloneDto) {
+
+        var clonedModel = modelService.cloneModel(modelCloneDto, appGuid, guid, SecurityUtils.getPrincipalId());
+
+        return modelMapper.toResponseDto(clonedModel, appGuid);
     }
 
     @PutMapping("/model/{guid}")

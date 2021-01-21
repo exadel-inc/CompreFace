@@ -18,22 +18,22 @@ package com.exadel.frs.service;
 
 import static com.exadel.frs.enums.AppModelAccess.READONLY;
 import static java.util.UUID.randomUUID;
+
+import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.AppModel;
-import com.exadel.frs.entity.Model;
+import com.exadel.frs.entity.*;
 import com.exadel.frs.enums.ModelType;
 import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.ModelNotFoundException;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.helpers.SecurityUtils;
-import com.exadel.frs.repository.AppModelRepository;
-import com.exadel.frs.repository.ModelRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
+import com.exadel.frs.repository.*;
 import com.exadel.frs.system.security.AuthorizationManager;
+
+import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +50,8 @@ public class ModelService {
     private final AppModelRepository appModelRepository;
     private final AuthorizationManager authManager;
     private final UserService userService;
+    private final FacesRepository facesRepository;
+    private final ImagesRepository imagesRepository;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -98,6 +100,73 @@ public class ModelService {
                          .build();
 
         return modelRepository.save(model);
+    }
+
+    @Transactional
+    public Model cloneModel(
+            final ModelCloneDto modelCloneDto,
+            final String appGuid,
+            final String modelGuid,
+            final Long userId
+    ) {
+        val user = userService.getUser(userId);
+        val model = getModel(appGuid, modelGuid, userId);
+
+        authManager.verifyWritePrivilegesToApp(user, model.getApp());
+
+        verifyNameIsUnique(modelCloneDto.getName(), model.getApp().getId());
+
+        val clone = new Model(model);
+        clone.setId(null);
+        clone.setName(modelCloneDto.getName());
+
+        val clonedModel = modelRepository.save(clone);
+
+        List<AppModel> clonedAppModelAccessList = cloneAppModels(model, clonedModel);
+        clonedModel.setAppModelAccess(clonedAppModelAccessList);
+
+        val faces = facesRepository.findByApiKey(model.getApiKey());
+        cloneFaces(clone, faces);
+
+        return clonedModel;
+    }
+
+    private List<AppModel> cloneAppModels(final Model model, final Model clonedModel) {
+        val cloneAppModelAccessList = new ArrayList<AppModel>();
+        for (val appModel : model.getAppModelAccess()) {
+            AppModel cloneAppModelAccess = new AppModel(appModel);
+            cloneAppModelAccess.setId(new AppModelId(clonedModel.getApp().getId(), clonedModel.getId()));
+            cloneAppModelAccess.setModel(clonedModel);
+
+            cloneAppModelAccessList.add(cloneAppModelAccess);
+        }
+        return cloneAppModelAccessList;
+    }
+
+    private void cloneFaces(final Model clone, final List<Face> faces) {
+        val cloneFaces = new ArrayList<Face>();
+        val cloneImages = new ArrayList<Image>();
+
+        for (val face : faces) {
+            val cloneFace = new Face(face);
+            cloneFace.setId(randomUUID().toString());
+            cloneFace.setApiKey(clone.getApiKey());
+
+            cloneFaces.add(cloneFace);
+
+            val images = imagesRepository.findByFaceId(face.getId());
+
+            for (val image : images) {
+                val cloneImage = new Image(image);
+                cloneImage.setId(null);
+                cloneImage.setFace(cloneFace);
+
+                cloneImages.add(cloneImage);
+            }
+        }
+
+        imagesRepository.saveAll(cloneImages);
+        facesRepository.saveAll(cloneFaces);
     }
 
     public Model updateModel(
