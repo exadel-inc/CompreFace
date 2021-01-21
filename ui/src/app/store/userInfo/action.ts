@@ -16,9 +16,15 @@
 import { createAction, props } from '@ngrx/store';
 
 import { User } from '../../data/interfaces/user';
+import { EditUserInfo } from '../../data/interfaces/edit-user-info';
+import { UserInfo } from '../../data/interfaces/user-info';
 
 export const updateUserInfo = createAction('[User] Login Success', props<{ isAuthenticated?: boolean }>());
 export const resetUserInfo = createAction('[User] Update Token');
 export const getUserInfo = createAction('[User] Get User Info');
 export const getUserInfoSuccess = createAction('[User] Get User Info Success', props<{ user: User }>());
-export const getUserInfoFail = createAction('[User] Get User Info Fail', props<{ errorMessage: string }>());
+export const getUserInfoFail = createAction('[User] Get User Info Fail', props<{ error: any }>());
+
+export const editUserInfo = createAction('[User/API] Update User Info', props<EditUserInfo>());
+export const editUserInfoSuccess = createAction('[User/API] Update User Info Success', props<UserInfo>());
+export const editUserInfoFail = createAction('[User/API] Update User Info Fail', props<{ error: any }>());

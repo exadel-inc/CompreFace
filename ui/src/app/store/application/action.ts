@@ -16,6 +16,7 @@
 
 import { createAction, props } from '@ngrx/store';
 import { Application } from 'src/app/data/interfaces/application';
+import { UserInfo } from '../../data/interfaces/user-info';
 
 export const loadApplications = createAction('[Application] Load Applications');
 export const loadApplicationsSuccess = createAction('[Application] Load Applications Success', props<{ applications: Application[] }>());
@@ -34,3 +35,5 @@ export const deleteApplicationSuccess = createAction('[Application] Delete Appli
 export const deleteApplicationFail = createAction('[Application] Delete Application Fail', props<{ error: any }>());
 
 export const setSelectedAppIdEntityAction = createAction('[Application] Set Selected Id Applications', props<{ selectedAppId }>());
+
+export const refreshApplication = createAction('[Application] Refresh Application', props<UserInfo>());
