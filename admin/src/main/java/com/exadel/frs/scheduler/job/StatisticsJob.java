@@ -36,13 +36,14 @@ public class StatisticsJob extends QuartzJobBean {
 
     private List<Range> ranges = List.of(
                 Range.between(1, 10),
-                Range.between(10, 50),
-                Range.between(50, 200),
-                Range.between(500, 2000),
-                between(2000, 10000),
-                between(10000, 50000),
-                between(50000, 200000),
-                between(200000, 1000000)
+                Range.between(11, 50),
+                Range.between(51, 200),
+                Range.between(201, 500),
+                Range.between(501, 2000),
+                between(2001, 10000),
+                between(10001, 50000),
+                between(50001, 200000),
+                between(200001, 1000000)
     );
 
     @Autowired
@@ -87,6 +88,6 @@ public class StatisticsJob extends QuartzJobBean {
             }
         }
 
-        return "1000000+";
+        return "1000001+";
     }
 }
