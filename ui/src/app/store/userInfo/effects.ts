@@ -16,14 +16,17 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { UserInfoService } from '../../core/user-info/user-info.service';
-import { getUserInfo, getUserInfoFail, getUserInfoSuccess } from './action';
+import { SnackBarService } from '../../features/snackbar/snackbar.service';
+import { refreshUserName } from '../user/action';
+import { refreshApplication } from '../application/action';
+import { getUserInfo, getUserInfoFail, getUserInfoSuccess, editUserInfo, editUserInfoSuccess, editUserInfoFail } from './action';
 
 @Injectable()
 export class UserInfoEffect {
-  constructor(private actions: Actions, private userInfoService: UserInfoService) {}
+  constructor(private actions: Actions, private userInfoService: UserInfoService, private snackBarService: SnackBarService) {}
 
   @Effect()
   getUser$ = this.actions.pipe(
@@ -31,8 +34,31 @@ export class UserInfoEffect {
     switchMap(() =>
       this.userInfoService.get().pipe(
         map(user => getUserInfoSuccess({ user })),
-        catchError(e => of(getUserInfoFail({ errorMessage: e })))
+        catchError(error => of(getUserInfoFail({ error })))
       )
     )
+  );
+
+  @Effect()
+  editUserInfo$ = this.actions.pipe(
+    ofType(editUserInfo),
+    switchMap(({ firstName, lastName }) =>
+      this.userInfoService.editUserInfo(firstName, lastName).pipe(
+        switchMap(userInfo => [editUserInfoSuccess(userInfo), refreshUserName(userInfo), refreshApplication(userInfo)]),
+        catchError(error => of(editUserInfoFail({ error })))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  editUserInfoSuccess$ = this.actions.pipe(
+    ofType(editUserInfoSuccess),
+    tap(() => this.snackBarService.openNotification({ messageText: 'org_users.edit_user_info' }))
+  );
+
+  @Effect({ dispatch: false })
+  showError$ = this.actions.pipe(
+    ofType(getUserInfoFail, editUserInfoFail),
+    tap(action => this.snackBarService.openHttpError(action.error))
   );
 }

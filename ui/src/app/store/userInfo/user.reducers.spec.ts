@@ -29,6 +29,8 @@ describe('userInfoReducer', () => {
           userId: '',
           lastName: '',
           password: '',
+          ids: [],
+          entities: null,
         },
         action
       );

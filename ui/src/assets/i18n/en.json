@@ -47,6 +47,7 @@
   "toolbar": {
     "logout": "Logout",
     "change_password": "Change password",
+    "user_info": "Change profile",
     "user_avatar_info": "User avatar",
     "logo": "CompreFace logo",
     "signup": "Sign Up"
@@ -129,7 +130,8 @@
       "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
     },
     "add_users_title": "Add users to the CompreFace",
-    "add_users_info": "You can add other users to the CompreFace application. They need to register and login to CompreFace. After registration and login users will appear automatically in the users' table."
+    "add_users_info": "You can add other users to the CompreFace application. They need to register and login to CompreFace. After registration and login users will appear automatically in the users' table.",
+    "edit_user_info": "User info has been successfully updated"
   },
   "app_users": {
     "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",

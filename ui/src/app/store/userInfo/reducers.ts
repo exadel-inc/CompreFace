@@ -14,11 +14,23 @@
  * permissions and limitations under the License.
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 
 import { User } from '../../data/interfaces/user';
-import { getUserInfoSuccess, resetUserInfo, updateUserInfo } from './action';
+import { getUserInfoSuccess, resetUserInfo, updateUserInfo, editUserInfoSuccess } from './action';
 
-export const initialState: User = {
+export interface EditUserInfoEntityState extends EntityState<User> {
+  guid: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  avatar: string;
+  userId: string;
+}
+
+export const userInfoAdapter: EntityAdapter<User> = createEntityAdapter<User>();
+const initialState: EditUserInfoEntityState = userInfoAdapter.getInitialState({
   guid: null,
   email: null,
   password: null,
@@ -26,13 +38,16 @@ export const initialState: User = {
   lastName: null,
   avatar: null,
   userId: null,
-};
+});
 
-const reducer: ActionReducer<User> = createReducer(
+const reducer: ActionReducer<EditUserInfoEntityState> = createReducer(
   initialState,
   on(updateUserInfo, (state, action) => ({ ...state, ...action })),
   on(resetUserInfo, () => ({ ...initialState })),
-  on(getUserInfoSuccess, (state, action) => ({ ...state, ...action.user }))
+  on(getUserInfoSuccess, (state, action) => ({ ...state, ...action.user })),
+  on(editUserInfoSuccess, (state, { userId, firstName, lastName }) =>
+    userInfoAdapter.updateOne({ id: userId, changes: { firstName, lastName } }, { ...state })
+  )
 );
 
-export const userInfoReducer = (userInfoState: User, action: Action) => reducer(userInfoState, action);
+export const userInfoReducer = (userInfoState: EditUserInfoEntityState, action: Action) => reducer(userInfoState, action);

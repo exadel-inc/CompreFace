@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { API } from '../../data/enums/api-url.enum';
 import { User } from '../../data/interfaces/user';
+import { UserInfo } from '../../data/interfaces/user-info';
 
 @Injectable({
   providedIn: 'root',
@@ -27,7 +28,11 @@ import { User } from '../../data/interfaces/user';
 export class UserInfoService {
   constructor(private http: HttpClient) {}
 
-  public get(): Observable<User> {
+  get(): Observable<User> {
     return this.http.get<User>(`${environment.adminApiUrl}${API.UserInfo}`);
+  }
+
+  editUserInfo(firstName: string, lastName: string): Observable<UserInfo> {
+    return this.http.put<UserInfo>(`${environment.adminApiUrl}user/update`, { firstName, lastName });
   }
 }

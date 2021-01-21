@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 
 import { ToolBarFacade } from './tool-bar.facade';
 import { ChangePassword } from '../../data/interfaces/change-password';
+import { EditUserInfo } from '../../data/interfaces/edit-user-info';
 
 @Component({
   selector: 'app-tool-bar-container',
@@ -28,6 +29,7 @@ import { ChangePassword } from '../../data/interfaces/change-password';
     (logout)="logout()"
     (signUp)="goSignUp()"
     (changePassword)="changePassword($event)"
+    (editUserInfo)="editUserInfo($event)"
   >
   </app-tool-bar>`,
 })
@@ -54,5 +56,9 @@ export class ToolBarContainerComponent implements OnInit {
 
   changePassword(payload: ChangePassword) {
     this.toolBarFacade.changePassword(payload);
+  }
+
+  editUserInfo(payload: EditUserInfo) {
+    this.toolBarFacade.editUserInfo(payload);
   }
 }
