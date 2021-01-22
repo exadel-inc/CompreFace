@@ -17,19 +17,16 @@
 package com.exadel.frs.entity;
 
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
-import java.util.List;
+import lombok.*;
+import lombok.experimental.Accessors;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import java.util.List;
 
 @Entity
 @Table
