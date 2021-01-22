@@ -65,6 +65,7 @@ public class User implements UserDetails {
     private boolean accountNonLocked;
     private boolean credentialsNonExpired;
     private boolean enabled;
+    private boolean allowStatistics;
     @Convert(converter = GlobalRoleConverter.class)
     private GlobalRole globalRole;
 

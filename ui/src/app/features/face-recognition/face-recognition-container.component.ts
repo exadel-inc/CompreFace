@@ -39,6 +39,9 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   @Input()
   title: string;
 
+  @Input()
+  type: string;
+
   constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
 
   ngOnInit() {

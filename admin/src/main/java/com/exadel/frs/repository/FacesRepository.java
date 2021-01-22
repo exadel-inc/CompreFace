@@ -14,22 +14,23 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.repository;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserCreateDto {
+import com.exadel.frs.entity.Face;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String password;
-    private boolean allowStatistics;
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+
+@Repository
+@Transactional
+public interface FacesRepository extends JpaRepository<Face, Long> {
+
+    List<Face> findByApiKey(String modelApiKey);
+
 }

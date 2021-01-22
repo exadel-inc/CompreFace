@@ -126,8 +126,10 @@ class ModelControllerTest {
         val expectedContent = "{\"message\":\"Model name cannot be empty\",\"code\":26}";
         val bodyWithEmptyName = new ModelCreateDto();
         bodyWithEmptyName.setName("");
+        bodyWithEmptyName.setType("RECOGNITION");
 
         val bodyWithNoName = new ModelCreateDto();
+        bodyWithNoName.setType("RECOGNITION");
 
         val createNewModelRequest = post("/app/" + APP_GUID + "/model")
                 .with(csrf())
@@ -191,6 +193,7 @@ class ModelControllerTest {
     void shouldReturnCreatedModel() throws Exception {
         val createDto = new ModelCreateDto();
         createDto.setName(MODEL_NAME);
+        createDto.setType("RECOGNITION");
 
         val createRequest = post("/app/" + APP_GUID + "/model")
                 .with(csrf())

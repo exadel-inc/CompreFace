@@ -21,15 +21,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserCreateDto {
+public class ModelCloneDto {
 
-    private String email;
-    private String firstName;
-    private String lastName;
-    private String password;
-    private boolean allowStatistics;
+    @NotBlank(message = "Model name cannot be empty")
+    private String name;
+
 }

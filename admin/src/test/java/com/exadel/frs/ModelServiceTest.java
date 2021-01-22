@@ -16,11 +16,13 @@
 
 package com.exadel.frs;
 
+import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -28,22 +30,30 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
+import com.exadel.frs.entity.Image;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.repository.AppModelRepository;
+import com.exadel.frs.repository.FacesRepository;
+import com.exadel.frs.repository.ImagesRepository;
 import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -65,6 +75,8 @@ class ModelServiceTest {
     private ModelShareRequestRepository modelShareRequestRepository;
     private AppModelRepository appModelRepository;
     private UserService userServiceMock;
+    private FacesRepository facesRepositoryMock;
+    private ImagesRepository imagesRepositoryMock;
 
     private AuthorizationManager authManager;
 
@@ -75,13 +87,17 @@ class ModelServiceTest {
         appModelRepository = mock(AppModelRepository.class);
         authManager = mock(AuthorizationManager.class);
         userServiceMock = mock(UserService.class);
+        facesRepositoryMock = mock(FacesRepository.class);
+        imagesRepositoryMock = mock(ImagesRepository.class);
         modelService = new ModelService(
                 modelRepositoryMock,
                 appServiceMock,
                 modelShareRequestRepository,
                 appModelRepository,
                 authManager,
-                userServiceMock
+                userServiceMock,
+                facesRepositoryMock,
+                imagesRepositoryMock
         );
     }
 
@@ -146,6 +162,7 @@ class ModelServiceTest {
     void successCreateModel() {
         val modelCreateDto = ModelCreateDto.builder()
                                            .name("model-name")
+                                           .type("RECOGNITION")
                                            .build();
 
         val app = App.builder()
@@ -188,6 +205,85 @@ class ModelServiceTest {
 
         assertThatThrownBy(() ->
                 modelService.createModel(modelCreateDto, APPLICATION_GUID, USER_ID)
+        ).isInstanceOf(NameIsNotUniqueException.class);
+    }
+
+    @Test
+    void successCloneModel() {
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
+
+        val modelCloneDto = ModelCloneDto.builder()
+                .name("name_of_clone")
+                .build();
+
+        val app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
+
+        val repoModel = Model.builder()
+                .id(MODEL_ID)
+                .name("name")
+                .guid(MODEL_GUID)
+                .app(app)
+                .build();
+        repoModel.addAppModelAccess(app, AppModelAccess.READONLY);
+
+        val cloneModel = Model.builder()
+                .id(new Random().nextLong())
+                .name("name_of_clone")
+                .apiKey(randomUUID().toString())
+                .guid(randomUUID().toString())
+                .app(app)
+                .build();
+
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
+        when(modelRepositoryMock.save(any(Model.class))).thenReturn(cloneModel);
+        when(imagesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
+        when(facesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+
+        val clonedModel = modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
+
+        verify(modelRepositoryMock).findByGuid(MODEL_GUID);
+        verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
+        verify(modelRepositoryMock).save(any(Model.class));
+        verify(imagesRepositoryMock).saveAll(anyList());
+        verify(facesRepositoryMock).saveAll(anyList());
+        verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
+        verify(authManager).verifyWritePrivilegesToApp(user, app);
+
+        assertThat(clonedModel.getId(), not(repoModel.getId()));
+        assertThat(clonedModel.getName(), is(modelCloneDto.getName()));
+    }
+
+    @Test
+    void failCloneModelNameIsNotUnique() {
+        val modelCloneDto = ModelCloneDto.builder()
+                .name("new_name")
+                .build();
+
+        val app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
+
+        val repoModel = Model.builder()
+                .id(MODEL_ID)
+                .name("name")
+                .guid(MODEL_GUID)
+                .app(app)
+                .build();
+
+        when(modelRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(anyString())).thenReturn(app);
+        when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
+
+        assertThatThrownBy(() ->
+                modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID)
         ).isInstanceOf(NameIsNotUniqueException.class);
     }
 
