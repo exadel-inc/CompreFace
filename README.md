@@ -90,45 +90,9 @@ CompreFace:
  - Includes a UI panel with roles for access control
  - Starts quickly with one docker command
 
+## To get started
 
-## Getting started
-
-#### To get started (Linux, MacOS):
-1. Install Docker and Docker-Compose
-2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
-3. Unzip the archive
-4. Run command: _docker-compose up -d_
-5. Open in your browser: http://localhost:8000/login
-
-#### Getting started for Contributors:
-
-1. Install Docker and Docker-Compose
-2. Clone repository
-3. Open dev folder
-4. Run command: _docker-compose up --build_
-5. Open in your browser: http://localhost:8000/login
-
-#### To get started (Windows):
-1. Install Docker
-2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
-3. Unzip the archive
-4. Run Docker
-5. Windows search bar-> cmd->in the Command prompt-> cd ->paste the path to the extracted zip folder
-6. Run command: _docker-compose up -d_
-7. Open http://localhost:8000/login
-
-** Tips for Windows** (use Git Bash terminal)
-
-1. Turn of the git autocrlf with command: _git config --global core.autocrlf false_
-2. Make sure all your containers are down: _$ docker ps_
-3. In case some containers are working, they should be stopped: _$ docker-compose down_
-4. Clean all local datebases and images: _docker system prune --volumes_
-5. Last line in /dev/start.sh file change to _docker-compose -f docker-compose.yml up --remove-orphans --build_
-6. Go to Dev folder cd dev
-7. Run _sh start.sh_ and make sure http://localhost:8000/ starts
-8. Stopped all containers: $ docker-compose down
-9. Run _sh start--dev.sh_ and make sure http://localhost:4200/ starts
-
+[Contribution guidelines to build and start the project](dev/README.md)
 
 ## Simple tutorial of usage
 

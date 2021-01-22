@@ -1,22 +1,25 @@
 # CompreFace
 
-## Local start all in prod mode
+#### To get started:
 
-Run script to start docker container:
+1. Install Docker and Docker-Compose
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Run command: _docker-compose up -d_
 
-- `./scripts/start.sh` for unix OS
-- `.\scripts\startWin.sh` for Win OS
+#### Getting started for Contributors:
 
-Go to http://localhost:8000/
+1. Install Docker and Docker-Compose
+2. Clone repository
+3. Open dev folder
+4. Run command: _docker-compose up --build_
 
 #### How to start for UI development:
 
-(only for first time run)
+Open a new terminal window and run next commands:
 
 - Run `cd ui`
-- Run `npm install`
-
-- Run `cd ../dev`
-- Run `start.sh` to start docker container with backend and UI application in live reload mode
+- Run `npm install` (only for first time run)
+- Run `npm start`
 
 Go to http://localhost:4200/ and you can sign up with any credentials
