@@ -33,6 +33,7 @@ import {
   updateApplicationSuccess,
   refreshApplication,
 } from './action';
+import { selectAll } from './selectors';
 
 export const applicationAdapter: EntityAdapter<Application> = createEntityAdapter<Application>();
 
@@ -63,11 +64,10 @@ const reducer: ActionReducer<AppEntityState> = createReducer(
   on(deleteApplicationSuccess, (state, { id }) => applicationAdapter.removeOne(id, { ...state, isPending: false })),
   on(setSelectedAppIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId })),
   on(refreshApplication, (state, { userId, lastName, firstName }) => {
-    const appToUpdate = Object.values(state.entities).find(app => app.owner.userId === userId);
-    return applicationAdapter.updateOne(
-      { id: appToUpdate.id, changes: { ...appToUpdate, owner: { userId, firstName, lastName } } },
-      { ...state, isPending: false }
-    );
+    const appsToUpdate = selectAll(state)
+      .filter(app => app.owner.userId === userId)
+      .map(app => ({ id: app.id, changes: { ...app, owner: { userId, firstName, lastName } } }));
+    return applicationAdapter.updateMany(appsToUpdate, { ...state, isPending: false });
   })
 );
 

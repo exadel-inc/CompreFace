@@ -20,7 +20,7 @@ import { Application } from '../../data/interfaces/application';
 import { AppEntityState, applicationAdapter } from './reducers';
 
 export const selectApplicationEntityState = createFeatureSelector<EntityState<Application>>('application');
-const { selectEntities, selectIds, selectAll } = applicationAdapter.getSelectors();
+export const { selectEntities, selectAll } = applicationAdapter.getSelectors();
 
 export const selectApplicationById = (id: string) =>
   createSelector(selectApplicationEntityState, selectEntities, appsDictionary => appsDictionary[id]);
