@@ -16,6 +16,7 @@
 
 import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
 import {
+  logIn,
   logInSuccess,
   logInFailure,
   signUpSuccess,
@@ -25,17 +26,14 @@ import {
   changePassword,
   changePasswordSuccess,
   changePasswordFailure,
+  signUp,
 } from './action';
 
 export interface AuthState {
-  errorMessage: string | null;
-  successMessage: string | null;
   isLoading: boolean;
 }
 
 export const initialState: AuthState = {
-  errorMessage: null,
-  successMessage: null,
   isLoading: false,
 };
 
@@ -43,29 +41,30 @@ const reducer: ActionReducer<AuthState> = createReducer(
   initialState,
   on(logInSuccess, state => ({
     ...state,
-    errorMessage: null,
     isLoading: false,
   })),
   on(logInFailure, state => ({
     ...state,
-    errorMessage: 'E-mail or Password is incorrect.',
     isLoading: false,
+  })),
+  on(logIn, state => ({
+    ...state,
+    isLoading: true,
+  })),
+  on(signUp, state => ({
+    ...state,
+    isLoading: true,
   })),
   on(signUpSuccess, state => ({
     ...state,
-    errorMessage: null,
-    successMessage: 'You have created new account, please login into your account',
     isLoading: false,
   })),
   on(signUpFailure, state => ({
     ...state,
-    errorMessage: 'This e-mail is already in use.',
-    successMessage: null,
     isLoading: false,
   })),
   on(resetErrorMessage, state => ({
     ...state,
-    errorMessage: null,
   })),
   on(logOut, () => ({ ...initialState })),
   on(changePassword, state => ({
@@ -74,14 +73,10 @@ const reducer: ActionReducer<AuthState> = createReducer(
   })),
   on(changePasswordSuccess, state => ({
     ...state,
-    errorMessage: null,
-    successMessage: 'Password has successfully been changed',
     isLoading: false,
   })),
   on(changePasswordFailure, (state, { error }) => ({
     ...state,
-    errorMessage: error.message,
-    successMessage: null,
     isLoading: false,
   }))
 );

@@ -39,7 +39,6 @@ import { ModelCloneDialogComponent } from '../model-clone-dialog/model-clone-dia
 export class ModelListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
-  errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
   roleEnum = Role;
   columns = [

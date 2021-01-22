@@ -22,12 +22,12 @@ export interface RequestResult {
       x_min: number;
       y_max: number;
       y_min: number;
-    },
+    };
     faces: [
       {
         face_name: string;
         similarity: number;
       }
-    ]
-  }
+    ];
+  };
 }

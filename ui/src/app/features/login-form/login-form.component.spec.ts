@@ -33,7 +33,7 @@ import { LoginFormComponent } from './login-form.component';
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
   let fixture: ComponentFixture<LoginFormComponent>;
-  const initialState = { isAuthenticated: false, errorMessage: 'some error message', successMessage: 'some success message' };
+  const initialState = { isAuthenticated: false };
 
   beforeEach(
     waitForAsync(() => {

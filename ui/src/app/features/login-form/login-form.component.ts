@@ -66,7 +66,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       email: this.user.email.trim(),
       password: this.user.password.trim(),
     };
-    this.isLoading = true;
     this.store.dispatch(logIn(payload));
   }
 }

@@ -81,7 +81,6 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
       firstName: this.user.firstName.trim(),
       lastName: this.user.lastName.trim(),
     };
-    this.isLoading = true;
     this.store.dispatch(signUp(payload));
   }
 }
