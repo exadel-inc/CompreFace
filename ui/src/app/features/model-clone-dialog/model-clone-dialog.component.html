@@ -22,7 +22,7 @@
 </div>
 <div mat-dialog-actions>
   <button class="button-cancel" mat-button cdkFocusInitial (click)="dialogRef.close()">{{ 'common.capital.cancel' | translate }}</button>
-  <button class="button-create" mat-button [mat-dialog-close]="data.entityName" [disabled]="isCloneDisabled">
+  <button class="button-create" mat-button [mat-dialog-close]="initialName" [disabled]="isCloneDisabled">
     {{ 'common.capital.clone' | translate }}
   </button>
 </div>
