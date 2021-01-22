@@ -1,29 +1,13 @@
 databaseChangeLog:
   - changeSet:
-      id: create-organization-table
-      author: Pavel Nikolaichik
+      id: update-without-organization
+      author: Aleksand Kurilo
       changes:
-        #organization
-        - createTable:
-            tableName: install_info
-            columns:
-              - column:
-                  name: install_guid
-                  type: varchar(36)
-
-        - addUniqueConstraint:
-            columnNames: install_guid
-            constraintName: install_guid
-            tableName: install_info
-
+        #add column global role to user table
         - addColumn:
             tableName: user
             columns:
               - column:
                   name: allow_statistics
                   type: boolean
-
-        - sql:
-            sql: INSERT into install_info(install_guid) values(uuid_generate_v1());
-        - sql:
-            sql: UPDATE public.user SET allow_statistics = FALSE;
+                  defaultValueBoolean: false

@@ -64,12 +64,14 @@ export class ModelListFacade implements IFacade {
     );
   }
 
-  createModel(name: string, serviceType: string): void {
+  createModel(name: string, type: string): void {
     this.store.dispatch(
       createModel({
-        applicationId: this.selectedApplicationId,
-        name,
-        serviceType,
+        model: {
+          applicationId: this.selectedApplicationId,
+          name,
+          type,
+        },
       })
     );
   }

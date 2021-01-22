@@ -14,27 +14,22 @@
  * permissions and limitations under the License.
  */
 
-export interface Model {
-  id: string;
-  name: string;
-  type: string;
-  accessLevel: string;
-  relations: {
-    id: string;
-    shareMode: string;
-  }[];
-  owner: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-  role: string;
-  apiKey?: string;
-}
+package com.exadel.frs.dto.ui;
 
-export interface ModelUpdate {
-  name: string;
-  applicationId: string;
-  modelId: string;
-  type: string;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+public class ModelCloneDto {
+
+    @NotBlank(message = "Model name cannot be empty")
+    private String name;
+
 }

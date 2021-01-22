@@ -14,27 +14,20 @@
  * permissions and limitations under the License.
  */
 
-export interface Model {
-  id: string;
-  name: string;
-  type: string;
-  accessLevel: string;
-  relations: {
-    id: string;
-    shareMode: string;
-  }[];
-  owner: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-  role: string;
-  apiKey?: string;
-}
+package com.exadel.frs.repository;
 
-export interface ModelUpdate {
-  name: string;
-  applicationId: string;
-  modelId: string;
-  type: string;
+import com.exadel.frs.entity.Face;
+import com.exadel.frs.entity.Image;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
+import java.util.List;
+
+@Repository
+@Transactional
+public interface ImagesRepository extends JpaRepository<Image, String> {
+
+    List<Image> findByFaceId(String modelApiKey);
+
 }

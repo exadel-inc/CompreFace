@@ -258,6 +258,8 @@ public class UserService {
 
         if (newGlobalRole == OWNER) {
             currentUser.setGlobalRole(GlobalRole.ADMINISTRATOR);
+            user.setAllowStatistics(currentUser.isAllowStatistics());
+            currentUser.setAllowStatistics(false);
         }
 
         user.setGlobalRole(newGlobalRole);

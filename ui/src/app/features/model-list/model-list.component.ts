@@ -141,6 +141,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
       queryParams: {
         app: this.modelListFacade.selectedApplicationId,
         model: model.id,
+        type: model.type,
       },
     });
   }
@@ -157,8 +158,8 @@ export class ModelListComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(first())
       .subscribe(data => {
-        if (data && data.entityName && data.serviceType) {
-          this.modelListFacade.createModel(data.entityName, data.serviceType);
+        if (data && data.entityName && data.type) {
+          this.modelListFacade.createModel(data.entityName, data.type);
         }
       });
   }
