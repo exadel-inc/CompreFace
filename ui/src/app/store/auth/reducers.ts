@@ -39,46 +39,19 @@ export const initialState: AuthState = {
 
 const reducer: ActionReducer<AuthState> = createReducer(
   initialState,
-  on(logInSuccess, state => ({
-    ...state,
-    isLoading: false,
-  })),
-  on(logInFailure, state => ({
-    ...state,
-    isLoading: false,
-  })),
-  on(logIn, state => ({
+
+  on(logIn, signUp, changePassword, state => ({
     ...state,
     isLoading: true,
   })),
-  on(signUp, state => ({
-    ...state,
-    isLoading: true,
-  })),
-  on(signUpSuccess, state => ({
-    ...state,
-    isLoading: false,
-  })),
-  on(signUpFailure, state => ({
+  on(logInSuccess, logInFailure, signUpFailure, changePasswordSuccess, signUpSuccess, changePasswordFailure, state => ({
     ...state,
     isLoading: false,
   })),
   on(resetErrorMessage, state => ({
     ...state,
   })),
-  on(logOut, () => ({ ...initialState })),
-  on(changePassword, state => ({
-    ...state,
-    isLoading: true,
-  })),
-  on(changePasswordSuccess, state => ({
-    ...state,
-    isLoading: false,
-  })),
-  on(changePasswordFailure, (state, { error }) => ({
-    ...state,
-    isLoading: false,
-  }))
+  on(logOut, () => ({ ...initialState }))
 );
 
 export const authReducer = (authState: AuthState, action: Action) => reducer(authState, action);

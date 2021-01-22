@@ -24,7 +24,7 @@ import { SignUp } from '../../data/interfaces/sign-up';
 import { User } from '../../data/interfaces/user';
 import { AppState } from '../../store';
 import { resetErrorMessage, signUp } from '../../store/auth/action';
-import { selectAuthState } from '../../store/auth/selectors';
+import { selectLoadingState } from '../../store/auth/selectors';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -34,10 +34,9 @@ import { selectAuthState } from '../../store/auth/selectors';
 export class SignUpFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
-  getState: Observable<any>;
+  isLoading$: Observable<boolean>;
   isLoading = false;
   routes = Routes;
-  stateSubscription: Subscription;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value) {
@@ -48,7 +47,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   };
 
   constructor(private store: Store<AppState>) {
-    this.getState = this.store.select(selectAuthState);
+    this.isLoading$ = this.store.select(selectLoadingState);
   }
 
   ngOnInit() {
@@ -62,15 +61,10 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
       },
       { validators: this.passwordMatchValidator }
     );
-
-    this.stateSubscription = this.getState.subscribe(state => {
-      this.isLoading = state.isLoading;
-    });
   }
 
   ngOnDestroy() {
     this.store.dispatch(resetErrorMessage());
-    this.stateSubscription.unsubscribe();
   }
 
   onSubmit() {

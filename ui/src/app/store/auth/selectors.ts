@@ -13,8 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { createFeatureSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { AuthState } from './reducers';
 
 export const selectAuthState = createFeatureSelector<AuthState>('auth');
+export const selectLoadingState = createSelector(selectAuthState, (state: AuthState) => state.isLoading);
