@@ -58,6 +58,7 @@ public class Model {
         this.apiKey = randomUUID().toString();
         this.app = model.getApp();
         this.appModelAccess = model.appModelAccess;
+        this.type = model.type;
     }
 
     @Id
