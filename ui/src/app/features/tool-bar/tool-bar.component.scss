@@ -20,12 +20,16 @@
 .mat-toolbar {
   background-color: $primary;
   color: $white;
+  position: fixed;
+  top: 0;
+  z-index: 102;
 }
 
 .mat-toolbar-row {
   justify-content: space-between;
 
-  .logo, .logo img {
+  .logo,
+  .logo img {
     height: 90%;
     margin: 3px 0;
     flex-grow: 3;
@@ -74,4 +78,11 @@
 
 .user-info-name {
   margin-right: 10px;
+}
+
+.user-signup-button {
+  color: $white;
+  display: inline;
+  font-weight: 500;
+  width: auto;
 }

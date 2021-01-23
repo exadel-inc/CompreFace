@@ -13,19 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
-import {NgModule} from '@angular/core';
-import {StoreModule} from '@ngrx/store';
-import {UserInfoReducer} from './reducers';
-import {EffectsModule} from '@ngrx/effects';
-import {UserInfoEffect} from './effects';
+import { UserInfoEffect } from './effects';
+import { userInfoReducer } from './reducers';
 
 @NgModule({
   declarations: [],
-  imports: [
-    EffectsModule.forFeature([UserInfoEffect]),
-    StoreModule.forFeature('userInfo', UserInfoReducer),
-  ],
+  imports: [EffectsModule.forFeature([UserInfoEffect]), StoreModule.forFeature('userInfo', userInfoReducer)],
 })
-export class UserInfoStoreModule {
-}
+export class UserInfoStoreModule {}

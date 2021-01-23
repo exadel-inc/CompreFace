@@ -10,7 +10,8 @@
       "delete": "DELETE"
     },
     "name": "Name",
-    "create": "Create"
+    "create": "Create",
+    "unknown_error": "Sorry, something went wrong"
   },
   "login": {
     "title": "Login",
@@ -39,7 +40,8 @@
   "toolbar": {
     "logout": "Logout",
     "user_avatar_info": "User avatar",
-    "logo": "CompreFace logo"
+    "logo": "CompreFace logo",
+    "signup": "Sign Up"
   },
   "applications": {
     "caption": "Table of applications",
@@ -146,7 +148,8 @@
     "link": "Try Demo"
   },
   "face_recognition_container": {
-    "file_size_error": "The photo size is more than 5 Mb"
+    "file_size_error": "The photo size is more than 5 Mb",
+    "file_unavailable_extension": "File {{filename}} has an unavailable extension"
   },
   "face_recognition": {
     "no_recognized": "No faces recognized",
@@ -159,6 +162,6 @@
     "new_account_login": "You have created new account, please login into your account"
   },
   "application_user_list": {
-    "invitation_sent": "Invitation was sent to {{email}}"
+    "invitation_sent": "Invitation was sent to {{userEmail}}"
   }
 }

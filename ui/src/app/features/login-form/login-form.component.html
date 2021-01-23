@@ -15,37 +15,45 @@
   -->
 
 <div class="logo">
-  <img src="assets/img/face-recognition-logo.svg" class="logo-img" alt="">
+  <img src="assets/img/compreface_login_logo.svg" class="logo-img" alt="log-in-logo" />
 </div>
 <mat-card class="login-card">
   <mat-card-header>
-    <mat-card-title>{{'login.title' | translate}}</mat-card-title>
+    <mat-card-title>{{ 'login.title' | translate }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
       <mat-form-field class="login-full-width">
         <mat-error class="error-wrapper">
-          <span>{{'login.email_hint' | translate}}</span>
+          <span>{{ 'login.email_hint' | translate }}</span>
           <mat-icon>warning</mat-icon>
         </mat-error>
-        <input matInput placeholder="{{'login.email' | translate}}" formControlName="email" name="email" required>
+        <input matInput placeholder="{{ 'login.email' | translate }}" formControlName="email" name="email" required />
       </mat-form-field>
 
       <mat-form-field class="login-full-width">
         <mat-error class="error-wrapper">
-          <span>{{'login.password_hint' | translate}}</span>
+          <span>{{ 'login.password_hint' | translate }}</span>
           <mat-icon>warning</mat-icon>
         </mat-error>
-        <input matInput placeholder="{{'login.password' | translate}}" formControlName="password" type="password" name="password" required>
+        <input
+          matInput
+          placeholder="{{ 'login.password' | translate }}"
+          formControlName="password"
+          type="password"
+          name="password"
+          required
+        />
       </mat-form-field>
     </form>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button color="primary" [routerLink]="[ROUTERS_URL.SIGN_UP]">{{'login.sign_up' | translate}}</button>
-    <button mat-button type="submit" color="primary" form="loginForm"
-      [disabled]="form.invalid || isLoading">{{'login.login' | translate}}</button>
+    <button mat-button color="primary" [routerLink]="[routes.SignUp]">{{ 'login.sign_up' | translate }}</button>
+    <button mat-button type="submit" color="primary" form="loginForm" [disabled]="form.invalid || isLoading">
+      {{ 'login.login' | translate }}
+    </button>
   </mat-card-actions>
 </mat-card>
 <div class="footer">
-  <span class="mat-caption">build version: {{env.buildNumber}}</span>
+  <span class="mat-caption">build version: {{ env.buildNumber }}</span>
 </div>

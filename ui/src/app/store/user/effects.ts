@@ -13,10 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { loadApplications } from 'src/app/store/application/action';
+import { fetchRolesEntityAction, loadRolesEntityAction } from 'src/app/store/role/actions';
 import {
   addUsersEntityAction,
   deleteUser,
@@ -28,14 +33,10 @@ import {
   updateUserRoleSuccessAction,
   updateUserRoleWithRefreshAction,
 } from 'src/app/store/user/action';
-import { loadApplications } from 'src/app/store/application/action';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { AppUser } from 'src/app/data/interfaces/app-user';
-import { fetchRolesEntityAction, loadRolesEntityAction } from 'src/app/store/role/actions';
-import { of } from 'rxjs';
-import { SnackBarService } from '../../features/snackbar/snackbar.service';
-import { AppState } from '../index';
+
+import { AppState } from '..';
 import { AuthService } from '../../core/auth/auth.service';
+import { SnackBarService } from '../../features/snackbar/snackbar.service';
 
 @Injectable()
 export class UserListEffect {
@@ -50,7 +51,7 @@ export class UserListEffect {
   @Effect()
   fetchUserList = this.actions.pipe(
     ofType(loadUsersEntityAction),
-    switchMap((action) => this.userService.getAll()),
+    switchMap(action => this.userService.getAll()),
     map((users: AppUser[]) => addUsersEntityAction({ users }))
   );
 
@@ -59,8 +60,8 @@ export class UserListEffect {
     ofType(updateUserRoleAction),
     switchMap(({ user }) =>
       this.userService.updateRole(user.id, user.role).pipe(
-        map((res) => updateUserRoleSuccessAction({ user: res })),
-        catchError((error) => of(updateUserRoleFailAction({ error })))
+        map(res => updateUserRoleSuccessAction({ user: res })),
+        catchError(error => of(updateUserRoleFailAction({ error })))
       )
     )
   );
@@ -70,8 +71,8 @@ export class UserListEffect {
     ofType(updateUserRoleWithRefreshAction),
     switchMap(({ user }) =>
       this.userService.updateRole(user.id, user.role).pipe(
-        switchMap((res) => [updateUserRoleSuccessAction({ user: res }), loadUsersEntityAction()]),
-        catchError((error) => of(updateUserRoleFailAction({ error })))
+        switchMap(res => [updateUserRoleSuccessAction({ user: res }), loadUsersEntityAction()]),
+        catchError(error => of(updateUserRoleFailAction({ error })))
       )
     )
   );
@@ -79,20 +80,16 @@ export class UserListEffect {
   @Effect()
   deleteUser$ = this.actions.pipe(
     ofType(deleteUser),
-    switchMap(({ userId, newOwner, deleterUserId }) =>
-      this.userService.delete(userId, newOwner).pipe(
+    switchMap(({ userId, deleterUserId }) =>
+      this.userService.delete(userId).pipe(
         switchMap(() => {
           if (deleterUserId === userId) {
             this.authService.logOut();
             return [];
           }
-          return [
-            deleteUserSuccess({ userId }),
-            loadApplications(),
-            loadUsersEntityAction(),
-            catchError((error) => of(deleteUserFail({ error }))),
-          ];
-        })
+          return [deleteUserSuccess({ userId }), loadApplications(), loadUsersEntityAction()];
+        }),
+        catchError(error => of(deleteUserFail({ error })))
       )
     )
   );
@@ -100,7 +97,7 @@ export class UserListEffect {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(deleteUserFail, updateUserRoleFailAction),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
   );
@@ -110,7 +107,7 @@ export class UserListEffect {
     ofType(loadRolesEntityAction),
     switchMap(() => this.userService.fetchAvailableRoles()),
     // workaround until backend doesnt support available roles call
-    catchError((x) => of(['OWNER', 'ADMIN', 'USER'])),
-    map((rolesArray) => fetchRolesEntityAction({ role: { id: 0, accessLevels: rolesArray } }))
+    catchError(x => of(['OWNER', 'ADMIN', 'USER'])),
+    map(rolesArray => fetchRolesEntityAction({ role: { id: 0, accessLevels: rolesArray } }))
   );
 }

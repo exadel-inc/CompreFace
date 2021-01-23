@@ -14,11 +14,11 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
-import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Role } from 'src/app/data/enums/role.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
-import { TableComponent } from '../table/table.component';
 import { UserDeletion } from '../../data/interfaces/user-deletion';
+import { TableComponent } from '../table/table.component';
 
 @Component({
   selector: 'app-user-table',
@@ -52,8 +52,8 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   isRoleChangeAllowed(user: AppUser): boolean {
     return (
       user.userId !== this.currentUserId &&
-      this.userRole !== Role.USER &&
-      user.role !== Role.OWNER &&
+      this.userRole !== Role.User &&
+      user.role !== Role.Owner &&
       this.availableRoles.indexOf(user.role) > -1
     );
   }

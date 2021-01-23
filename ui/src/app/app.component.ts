@@ -13,21 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { AppState } from './store';
+import { TranslateService } from '@ngx-translate/core';
+
 import { AuthService } from './core/auth/auth.service';
-import {TranslateService} from '@ngx-translate/core';
+import { AppState } from './store';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  title = 'frs-client-fe';
-
   constructor(auth: AuthService, store: Store<AppState>, private translate: TranslateService) {
     translate.setDefaultLang('en');
   }

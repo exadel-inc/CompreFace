@@ -13,14 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { RouterReducerState } from '@ngrx/router-store';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {RouterStateUrl} from './reducer';
-import {RouterReducerState} from '@ngrx/router-store';
+import { RouterStateUrl } from './reducer';
 
 export const selectRouterState = createFeatureSelector<RouterReducerState<RouterStateUrl>>('router');
 
-export const SelectRouterIdParam = createSelector(
-  selectRouterState,
-  ({ state }) => state.params.id || null
-  );
+export const selectRouterIdParam = createSelector(selectRouterState, ({ state }) => state.params.id || null);

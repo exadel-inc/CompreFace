@@ -13,22 +13,32 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createAction, props } from '@ngrx/store';
-import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Role } from 'src/app/data/enums/role.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
-export const loadAppUserEntityAction = createAction('[App-User/API] Load App Users', props<{
-  applicationId: string
-}>());
+export const loadAppUserEntityAction = createAction(
+  '[App-User/API] Load App Users',
+  props<{
+    applicationId: string;
+  }>()
+);
 export const addAppUserEntityAction = createAction('[App-User/API] Add App Users', props<{ users: AppUser[] }>());
+export const inviteAppUserAction = createAction(
+  '[App-User/API] Invite User To Application',
+  props<{ applicationId: string; userEmail: string; role: Role }>()
+);
+export const inviteAppUserActionSuccess = createAction('[App-User/API] Invite User To Application Success', props<{ userEmail: string }>());
+export const inviteAppUserActionFail = createAction('[App-User/API] Invite User To Application Fail', props<{ error: any }>());
 export const updateAppUserRoleAction = createAction(
   '[App-User/API] Update App User',
-  props<{ applicationId: string; user: { id: string, role: Role } }>()
+  props<{ applicationId: string; user: { id: string; role: Role } }>()
 );
 export const updateAppUserRoleSuccessAction = createAction('[App-User/API] Update App User Role Success', props<{ user: AppUser }>());
 export const updateAppUserRoleFailAction = createAction('[App-User/API] Update App User Role Failed)', props<{ error: any }>());
-export const deleteUserFromApplication = createAction('[App-User] Delete User From Application',
-  props<{ userId: string; applicationId: string }>());
+export const deleteUserFromApplication = createAction(
+  '[App-User] Delete User From Application',
+  props<{ userId: string; applicationId: string }>()
+);
 export const deleteUserFromApplicationSuccess = createAction('[App-User] Delete User From Application Success', props<{ id: string }>());
 export const deleteUserFromApplicationFail = createAction('[App-User] Delete User From Application Fail', props<{ error: any }>());

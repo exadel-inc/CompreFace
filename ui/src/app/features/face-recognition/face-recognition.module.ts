@@ -13,27 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
-import { FaceRecognitionContainerComponent } from './face-recognition-container.component';
+import { NgModule } from '@angular/core';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { TranslateModule } from '@ngx-translate/core';
+
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
-import { RecognitionResultComponent } from './recognition-result/recognition-result.component';
+import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
 import { SpinnerModule } from '../spinner/spinner.module';
-import {MatExpansionModule} from '@angular/material/expansion';
-import {TranslateModule} from '@ngx-translate/core';
+import { FaceRecognitionContainerComponent } from './face-recognition-container.component';
+import { RecognitionResultComponent } from './recognition-result/recognition-result.component';
 
 @NgModule({
   declarations: [FaceRecognitionContainerComponent, RecognitionResultComponent],
-  imports: [
-    CommonModule,
-    DragNDropModule,
-    SpinnerModule,
-    MatExpansionModule,
-    TranslateModule
-  ],
-  providers: [ FaceRecognitionService ],
-  exports: [FaceRecognitionContainerComponent]
+  imports: [CommonModule, DragNDropModule, SpinnerModule, MatExpansionModule, TranslateModule],
+  providers: [FaceRecognitionService],
+  exports: [FaceRecognitionContainerComponent],
 })
-export class FaceRecognitionModule { }
+export class FaceRecognitionModule {}

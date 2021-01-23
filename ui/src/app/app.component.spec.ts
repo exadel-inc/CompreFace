@@ -13,14 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { TestBed, waitForAsync, ComponentFixture } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AppComponent } from './app.component';
 import { HttpClient } from '@angular/common/http';
-import { provideMockStore } from '@ngrx/store/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { FormBuilder } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { TranslateService } from '@ngx-translate/core';
+
+import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
   let component: AppComponent;
@@ -57,10 +57,5 @@ describe('AppComponent', () => {
 
   it('should create the app', () => {
     expect(component).toBeDefined();
-  });
-
-  it(`should have as title 'frs-client-fe'`, () => {
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('frs-client-fe');
   });
 });

@@ -14,13 +14,13 @@
  * permissions and limitations under the License.
  */
 
-import {Environment} from './interface';
+import { Environment } from './interface';
 
 export const environment: Environment = {
   production: false,
-  basicToken:  `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=`,
+  basicToken: `Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=`,
   // local mock server:
   adminApiUrl: '/admin/',
   userApiUrl: '/api/v1/',
-  buildNumber: 'local'
+  buildNumber: 'local',
 };

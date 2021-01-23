@@ -13,21 +13,20 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ApplicationUserListComponent } from './application-user-list.component';
+import { FormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { of, Subscription } from 'rxjs';
+import { SnackBarModule } from 'src/app/features/snackbar/snackbar.module';
+
+import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
 import { SpinnerModule } from '../spinner/spinner.module';
 import { UserTableModule } from '../user-table/user-table.module';
 import { ApplicationUserListFacade } from './application-user-list-facade';
-import { of, Subscription } from 'rxjs';
-import { MatDialog } from '@angular/material/dialog';
-import { InviteUserModule } from '../invite-user/invite-user.module';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
-import { MatInputModule } from '@angular/material/input';
-import { SnackBarModule } from 'src/app/features/snackbar/snackbar.module';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { ApplicationUserListComponent } from './application-user-list.component';
 
 describe('ApplicationUserListComponent', () => {
   let component: ApplicationUserListComponent;
@@ -37,16 +36,7 @@ describe('ApplicationUserListComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ApplicationUserListComponent, TranslatePipe],
-        imports: [
-          SpinnerModule,
-          UserTableModule,
-          InviteUserModule,
-          NoopAnimationsModule,
-          FormsModule,
-          UserTablePipeModule,
-          MatInputModule,
-          SnackBarModule,
-        ],
+        imports: [SpinnerModule, UserTableModule, NoopAnimationsModule, FormsModule, UserTablePipeModule, MatInputModule, SnackBarModule],
         providers: [
           {
             provide: MatDialog,
@@ -65,10 +55,9 @@ describe('ApplicationUserListComponent', () => {
                   },
                 },
               ]),
-              selectedOrganization$: of([{}]),
               isLoading$: of([{}]),
               availableRoles$: of([{}]),
-              unsubscribe() {},
+              unsubscribe: () => {},
             },
           },
           { provide: TranslateService, useValue: {} },

@@ -15,10 +15,10 @@
  */
 import { Component, Input } from '@angular/core';
 
+import { Routes } from '../../data/enums/routers-url.enum';
 import { Application } from '../../data/interfaces/application';
-import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
-import { BreadcrumbsFacade } from './breadcrumbs.facade';
 import { Model } from '../../data/interfaces/model';
+import { BreadcrumbsFacade } from './breadcrumbs.facade';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -26,7 +26,7 @@ import { Model } from '../../data/interfaces/model';
   styleUrls: ['./breadcrumbs.component.scss'],
 })
 export class BreadcrumbsComponent {
-  ROUTERS_URL = ROUTERS_URL;
+  routes = Routes;
   maxNameLength = 30;
   @Input() model: Model;
   @Input() app: Application;

@@ -52,9 +52,9 @@
     <td mat-cell *matCellDef="let element">
       <mat-icon
         *ngIf="
-          (element.userId === this.currentUserId && element.role !== roleEnum.OWNER) ||
-          (userRole === roleEnum.ADMINISTRATOR && element.role !== roleEnum.OWNER) ||
-          (userRole === roleEnum.OWNER && element.role !== roleEnum.OWNER)
+          (element.userId === this.currentUserId && element.role !== roleEnum.Owner) ||
+          (userRole === roleEnum.Administrator && element.role !== roleEnum.Owner) ||
+          (userRole === roleEnum.Owner && element.role !== roleEnum.Owner)
         "
         (click)="delete(element)"
         title="remove user"

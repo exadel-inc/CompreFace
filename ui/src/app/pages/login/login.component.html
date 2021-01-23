@@ -15,13 +15,13 @@
   -->
 
 <div class="login-form-container">
-  <app-spinner *ngIf="(isPending$ | async); else loginContent"></app-spinner>
+  <app-spinner *ngIf="isPending$ | async; else loginContent"></app-spinner>
 
   <ng-template #loginContent>
     <app-login-form class="login-form-item"></app-login-form>
 
-    <div class="demo-page-link" *ngIf="(isDemoPageAvailable$ | async)">
-      <a mat-raised-button [routerLink]="[ROUTERS_URL.DEMO]">{{'demo.link' | translate}}</a>
+    <div class="demo-page-link" *ngIf="isDemoPageAvailable$ | async">
+      <a mat-raised-button [routerLink]="[routes.Demo]">{{ 'demo.link' | translate }}</a>
     </div>
   </ng-template>
 </div>

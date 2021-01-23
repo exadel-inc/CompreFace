@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "frs-client-fe": {
+    "compreface": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,24 +17,16 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/frs-client-fe",
+            "outputPath": "dist/compreface",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.app.json",
             "aot": true,
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "src/styles.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/styles/"
-              ]
+              "includePaths": ["src/styles/"]
             },
             "scripts": []
           },
@@ -49,7 +41,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -128,27 +119,27 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "frs-client-fe:build"
+            "browserTarget": "compreface:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "frs-client-fe:build:production"
+              "browserTarget": "compreface:build:production"
             },
             "dev": {
-              "browserTarget": "frs-client-fe:build:dev"
+              "browserTarget": "compreface:build:dev"
             },
             "qa": {
-              "browserTarget": "frs-client-fe:build:qa"
+              "browserTarget": "compreface:build:qa"
             },
             "local": {
-              "browserTarget": "frs-client-fe:build:local"
+              "browserTarget": "compreface:build:local"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "frs-client-fe:build"
+            "browserTarget": "compreface:build"
           }
         },
         "test": {
@@ -158,51 +149,36 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
             "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["./node_modules/@angular/material/prebuilt-themes/indigo-pink.css", "src/styles.scss"],
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "src/styles/"
-              ]
+              "includePaths": ["src/styles/"]
             },
             "scripts": []
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "lintFilePatterns": ["src/**/*.ts", "src/**/*.html"]
           }
         },
         "e2e": {
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "frs-client-fe:serve"
+            "devServerTarget": "compreface:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "frs-client-fe:serve:production"
+              "devServerTarget": "compreface:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "frs-client-fe",
+  "defaultProject": "compreface",
   "cli": {
     "defaultCollection": "@ngrx/schematics"
   }

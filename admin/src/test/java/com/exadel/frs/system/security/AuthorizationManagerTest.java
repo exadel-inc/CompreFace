@@ -19,8 +19,13 @@ package com.exadel.frs.system.security;
 import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.GlobalRole.OWNER;
 import static com.exadel.frs.enums.GlobalRole.USER;
-import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.entity.App;
 import com.exadel.frs.entity.Model;
@@ -32,10 +37,16 @@ import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Stream;
 import lombok.val;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 class AuthorizationManagerTest {
 
@@ -46,6 +57,7 @@ class AuthorizationManagerTest {
     private static final long GLOBAL_ADMIN_ID = 2L;
     private static final long GLOBAL_OWNER_ID = 3L;
     private static final long GLOBAL_USER_APP_USER_ID = 5L;
+    private static final long GLOBAL_USER_APP_ANOTHER_USER_ID = 55L;
     private static final long GLOBAL_USER_APP_ADMIN_ID = 6L;
     private static final long GLOBAL_USER_APP_OWNER_ID = 7L;
     private static final long GLOBAL_ADMIN_APP_USER_ID = 8L;
@@ -117,65 +129,9 @@ class AuthorizationManagerTest {
         @Test
         void userWithAnyRoleToAppCanReadApp() {
             // exclude global user
-            for (User user : users.subList(1,users.size())) {
+            for (User user : users.subList(1, users.size())) {
                 authManager.verifyReadPrivilegesToApp(user, application);
             }
-        }
-
-        @Test
-        void globalOwnerAndGlobalAdminNotInvitedToAppCanWriteApp() {
-            assertThatCode(() -> {
-                val globalAdmin = getUser(GLOBAL_ADMIN_ID);
-
-                authManager.verifyWritePrivilegesToApp(globalAdmin, application);
-            }).doesNotThrowAnyException();
-
-            assertThatCode(() -> {
-                val globalOwner = getUser(GLOBAL_OWNER_ID);
-
-                authManager.verifyWritePrivilegesToApp(globalOwner, application);
-            }).doesNotThrowAnyException();
-        }
-
-        @Test
-        void appUserCanWriteAppIfTheyAreGlobalWriters() {
-            assertThatCode(() -> {
-                val globalAdminAppUser = getUser(GLOBAL_ADMIN_APP_USER_ID);
-
-                authManager.verifyWritePrivilegesToApp(globalAdminAppUser, application);
-            }).doesNotThrowAnyException();
-
-            assertThatCode(() -> {
-                val globalOwnerAppUser = getUser(GLOBAL_OWNER_APP_USER_ID);
-
-                authManager.verifyWritePrivilegesToApp(globalOwnerAppUser, application);
-            }).doesNotThrowAnyException();
-        }
-
-        @Test
-        void appUserCannotWriteApp() {
-            assertThatThrownBy(() -> {
-                val globalUserAppUser = getUser(GLOBAL_USER_APP_USER_ID);
-
-                authManager.verifyWritePrivilegesToApp(globalUserAppUser, application);
-            }).isInstanceOf(InsufficientPrivilegesException.class);
-        }
-
-        @Test
-        void appAdminAndAppOwnerCanWriteApp() {
-            val globalUserAppAdmin = getUser(GLOBAL_USER_APP_ADMIN_ID);
-            val globalUserAppOwner = getUser(GLOBAL_USER_APP_OWNER_ID);
-            val globalAdminAppAdmin = getUser(GLOBAL_ADMIN_APP_ADMIN_ID);
-            val globalAdminAppOwner = getUser(GLOBAL_ADMIN_APP_OWNER_ID);
-            val globalOwnerAppAdmin = getUser(GLOBAL_OWNER_APP_ADMIN_ID);
-            val globalOwnerAppOwner = getUser(GLOBAL_ADMIN_APP_OWNER_ID);
-
-            authManager.verifyWritePrivilegesToApp(globalUserAppAdmin, application);
-            authManager.verifyWritePrivilegesToApp(globalUserAppOwner, application);
-            authManager.verifyWritePrivilegesToApp(globalAdminAppAdmin, application);
-            authManager.verifyWritePrivilegesToApp(globalAdminAppOwner, application);
-            authManager.verifyWritePrivilegesToApp(globalOwnerAppAdmin, application);
-            authManager.verifyWritePrivilegesToApp(globalOwnerAppOwner, application);
         }
     }
 
@@ -305,6 +261,165 @@ class AuthorizationManagerTest {
         assertThatThrownBy(() -> authManager.verifyAppHasTheModel(
                 APP_GUID, strangeModel
         )).isInstanceOf(ModelDoesNotBelongToAppException.class);
+    }
+
+    static Stream<Arguments> verifyUserDeletionFromAppGlobalProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_ADMIN_APP_USER_ID, GLOBAL_USER_APP_ADMIN_ID),
+                Arguments.of(GLOBAL_ADMIN_APP_USER_ID, GLOBAL_USER_APP_USER_ID),
+                Arguments.of(GLOBAL_OWNER_APP_USER_ID, GLOBAL_USER_APP_ADMIN_ID),
+                Arguments.of(GLOBAL_OWNER_APP_USER_ID, GLOBAL_USER_APP_USER_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyUserDeletionFromAppGlobalProvider")
+    void testVerifyUserDeletionFromAppByAllowedGlobalUser(Long deleterId, Long deletionSubjectId) {
+        // given
+        val deleter = getUser(deleterId);
+        val deletionSubject = getUser(deletionSubjectId);
+        val spyApp = spy(application);
+
+        // when
+        authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), spyApp);
+
+        // then
+        verify(spyApp, times(0)).getUserAppRole(deleterId);
+    }
+
+    static Stream<Arguments> verifyUserDeletionFromAppGlobalNotAllowedProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_OWNER_APP_USER_ID, GLOBAL_USER_APP_OWNER_ID),
+                Arguments.of(GLOBAL_ADMIN_APP_USER_ID, GLOBAL_USER_APP_OWNER_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyUserDeletionFromAppGlobalNotAllowedProvider")
+    void testVerifyUserDeletionFromAppByGlobalUserNotAllowed(Long deleterId, Long deletionSubjectId) {
+        // given
+        val deleter = getUser(deleterId);
+        val deletionSubject = getUser(deletionSubjectId);
+        val spyApp = spy(application);
+        when(spyApp.getOwner()).thenReturn(Optional.of(UserAppRole.builder()
+                                                                  .user(deletionSubject)
+                                                                  .build()));
+
+        // when
+        Executable action = () -> authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), spyApp);
+
+        // then
+        assertThrows(InsufficientPrivilegesException.class, action);
+    }
+
+    static Stream<Arguments> verifyUserDeletionFromAppGlobalUserProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_USER_APP_ADMIN_ID, GLOBAL_USER_APP_ADMIN_ID),
+                Arguments.of(GLOBAL_USER_APP_OWNER_ID, GLOBAL_USER_APP_ADMIN_ID),
+                Arguments.of(GLOBAL_USER_APP_OWNER_ID, GLOBAL_USER_APP_USER_ID),
+                Arguments.of(GLOBAL_USER_APP_USER_ID, GLOBAL_USER_APP_USER_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyUserDeletionFromAppGlobalUserProvider")
+    void testVerifyUserDeletionFromAppByAllowedAppUser(Long deleterId, Long deletionSubjectId) {
+        // given
+        val deleter = getUser(deleterId);
+        val deletionSubject = getUser(deletionSubjectId);
+        val spyApp = spy(application);
+
+        // when
+        authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), spyApp);
+
+        // then
+        verify(spyApp, times(1)).getUserAppRole(deleter.getId());
+    }
+
+    static Stream<Arguments> verifyUserDeletionFromAppByNotAllowedAppUserProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_USER_APP_OWNER_ID, GLOBAL_USER_APP_OWNER_ID),
+                Arguments.of(GLOBAL_USER_APP_ADMIN_ID, GLOBAL_USER_APP_USER_ID),
+                Arguments.of(GLOBAL_USER_APP_ADMIN_ID, GLOBAL_USER_APP_OWNER_ID),
+                Arguments.of(GLOBAL_USER_APP_USER_ID, GLOBAL_USER_APP_ADMIN_ID),
+                Arguments.of(GLOBAL_USER_APP_USER_ID, GLOBAL_USER_APP_OWNER_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyUserDeletionFromAppByNotAllowedAppUserProvider")
+    void testVerifyUserDeletionFromAppByNotAllowedAppUser(Long deleterId, Long deletionSubjectId) {
+        // given
+        val deleter = getUser(deleterId);
+        val deletionSubject = getUser(deletionSubjectId);
+
+        // when
+        Executable exec = () -> authManager.verifyUserDeletionFromApp(deleter, deletionSubject.getGuid(), application);
+
+        // then
+        assertThrows(InsufficientPrivilegesException.class, exec);
+    }
+
+    static Stream<Arguments> verifyWritePrivilegesToAppByGlobalUsersProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_ADMIN_APP_USER_ID),
+                Arguments.of(GLOBAL_OWNER_APP_USER_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyWritePrivilegesToAppByGlobalUsersProvider")
+    void testVerifyWritePrivilegesToAppByGlobalUsers(Long userId) {
+        // given
+        val user = getUser(userId);
+        val spyApp = spy(application);
+
+        // when
+        authManager.verifyWritePrivilegesToApp(user, spyApp);
+
+        // then
+        verifyNoInteractions(spyApp);
+    }
+
+    static Stream<Arguments> verifyWritePrivilegesToAppByAllowedAppUsersProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_USER_APP_OWNER_ID),
+                Arguments.of(GLOBAL_USER_APP_ADMIN_ID)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyWritePrivilegesToAppByAllowedAppUsersProvider")
+    void testVerifyWritePrivilegesToAppByAllowedAppUsers(Long userId) {
+        // given
+        val user = getUser(userId);
+        val spyApp = spy(application);
+
+        // when
+        authManager.verifyWritePrivilegesToApp(user, spyApp);
+
+        // then
+        verify(spyApp, times(1)).getUserAppRole(userId);
+    }
+
+    static Stream<Arguments> verifyWritePrivilegesToAppByNotAllowedAppUsersProvider() {
+        return Stream.of(
+                Arguments.of(GLOBAL_USER_APP_USER_ID, false),
+                Arguments.of(GLOBAL_USER_APP_ADMIN_ID, true)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("verifyWritePrivilegesToAppByNotAllowedAppUsersProvider")
+    void testVerifyWritePrivilegesToAppByNotAllowedAppUsers(Long userId, boolean adminDenied) {
+        // given
+        val user = getUser(userId);
+
+        // when
+        Executable action = () -> authManager.verifyWritePrivilegesToApp(user, application, adminDenied);
+
+        // then
+        assertThrows(InsufficientPrivilegesException.class, action);
     }
 
     private User getUser(final Long id) {

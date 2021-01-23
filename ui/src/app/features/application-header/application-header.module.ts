@@ -14,24 +14,24 @@
  * permissions and limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ApplicationHeaderComponent} from './application-header.component';
-import {RouterModule} from '@angular/router';
-import {MatButtonModule} from '@angular/material/button';
-import {EntityTitleModule} from '../entity-title/entity-title.module';
-import {ApplicationHeaderFacade} from './application-header.facade';
-import {SpinnerModule} from '../spinner/spinner.module';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslateModule} from '@ngx-translate/core';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { EntityTitleModule } from '../entity-title/entity-title.module';
+import { SpinnerModule } from '../spinner/spinner.module';
+import { ApplicationHeaderComponent } from './application-header/application-header.component';
+import { ApplicationHeaderContainerComponent } from './application-header.container.component';
+import { ApplicationHeaderFacade } from './application-header.facade';
 
 @NgModule({
-  declarations: [ApplicationHeaderComponent],
-  exports: [
-    ApplicationHeaderComponent
-  ],
+  declarations: [ApplicationHeaderComponent, ApplicationHeaderContainerComponent],
+  exports: [ApplicationHeaderComponent, ApplicationHeaderContainerComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -41,9 +41,8 @@ import {TranslateModule} from '@ngx-translate/core';
     MatCardModule,
     TruncateModule,
     MatTooltipModule,
-    TranslateModule
+    TranslateModule,
   ],
   providers: [ApplicationHeaderFacade],
 })
-export class ApplicationHeaderModule {
-}
+export class ApplicationHeaderModule {}

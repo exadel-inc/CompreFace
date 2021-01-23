@@ -17,9 +17,7 @@
 package com.exadel.frs.entity;
 
 import static com.exadel.frs.enums.AppRole.OWNER;
-import static java.lang.String.valueOf;
 import com.exadel.frs.enums.AppRole;
-import com.exadel.frs.exception.UserDoesNotExistException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -88,11 +86,6 @@ public class App {
                 .stream()
                 .filter(userAppRole -> userAppRole.getId().getUserId().equals(userId))
                 .findFirst();
-    }
-
-    public UserAppRole getUserAppRoleOrThrow(Long userId) {
-        return getUserAppRole(userId)
-                .orElseThrow(() -> new UserDoesNotExistException(valueOf(userId)));
     }
 
     public void addUserAppRole(User user, AppRole role) {

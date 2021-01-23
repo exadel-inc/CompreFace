@@ -14,8 +14,7 @@
  * permissions and limitations under the License.
  */
 
-export interface Organization {
-  id: string;
-  name: string;
-  role: string;
-}
+  export interface UIRequestOptions {
+    apiKey: string;
+    file: File;
+  }
