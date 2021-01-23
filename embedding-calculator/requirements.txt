@@ -73,7 +73,7 @@ SQLAlchemy==1.3.4
 StrEnum==0.4.0
 sympy==1.4
 tensorboard==1.15.0
-tensorflow==1.15.4
+tensorflow==2.4.0
 tensorflow-estimator==1.15.1
 termcolor==1.1.0
 toolz==0.10.0
