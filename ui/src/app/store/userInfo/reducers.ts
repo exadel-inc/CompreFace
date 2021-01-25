@@ -16,7 +16,7 @@
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
 import { User } from '../../data/interfaces/user';
-import { getUserInfoSuccess, resetUserInfo, updateUserInfo } from './action';
+import { getUserInfoSuccess, resetUserInfo, updateUserInfo, editUserInfoSuccess } from './action';
 
 export const initialState: User = {
   guid: null,
@@ -32,7 +32,8 @@ const reducer: ActionReducer<User> = createReducer(
   initialState,
   on(updateUserInfo, (state, action) => ({ ...state, ...action })),
   on(resetUserInfo, () => ({ ...initialState })),
-  on(getUserInfoSuccess, (state, action) => ({ ...state, ...action.user }))
+  on(getUserInfoSuccess, (state, action) => ({ ...state, ...action.user })),
+  on(editUserInfoSuccess, (state, userInfo) => ({ ...state, ...userInfo }))
 );
 
 export const userInfoReducer = (userInfoState: User, action: Action) => reducer(userInfoState, action);
