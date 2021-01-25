@@ -33,9 +33,9 @@ import {
   updateApplicationSuccess,
   refreshApplication,
 } from './action';
-import { selectAll } from './selectors';
 
 export const applicationAdapter: EntityAdapter<Application> = createEntityAdapter<Application>();
+export const { selectEntities, selectAll } = applicationAdapter.getSelectors();
 
 export interface AppEntityState extends EntityState<Application> {
   // additional entities state properties
