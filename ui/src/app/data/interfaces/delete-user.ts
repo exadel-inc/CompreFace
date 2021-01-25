@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-export interface DeleteUser {
+export interface DeleteUserParams {
   userId: string;
   deleterUserId: string;
   newOwner?: string;

@@ -16,7 +16,7 @@
 
 import { createAction, props } from '@ngrx/store';
 import { AppUser } from 'src/app/data/interfaces/app-user';
-import { DeleteUser } from '../../data/interfaces/delete-user';
+import { DeleteUserParams } from '../../data/interfaces/delete-user';
 import { UpdateUserRole } from '../../data/interfaces/update-user-role';
 import { UserInfo } from '../../data/interfaces/user-info';
 
@@ -29,7 +29,7 @@ export const updateUserRoleWithRefreshAction = createAction('[User/API] Update U
 export const updateUserRoleSuccessAction = createAction('[User/API] Update User Role Success', props<{ user: AppUser }>());
 export const updateUserRoleFailAction = createAction('[User/API] Update User Role Failed)', props<{ error: any }>());
 
-export const deleteUser = createAction('[User/API] Delete User', props<DeleteUser>());
+export const deleteUser = createAction('[User/API] Delete User', props<DeleteUserParams>());
 export const deleteUserSuccess = createAction('[User/API] Delete User Success', props<{ userId: string }>());
 export const deleteUserFail = createAction('[User/API] Delete User Fail', props<{ error: any }>());
 

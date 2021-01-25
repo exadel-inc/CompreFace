@@ -51,7 +51,7 @@ export const initialState: AppEntityState = applicationAdapter.getInitialState({
 
 const reducer: ActionReducer<AppEntityState> = createReducer(
   initialState,
-  on(loadApplications, createApplication, updateApplication, deleteApplication, refreshApplication, state => ({
+  on(loadApplications, createApplication, updateApplication, deleteApplication, state => ({
     ...state,
     isPending: true,
   })),

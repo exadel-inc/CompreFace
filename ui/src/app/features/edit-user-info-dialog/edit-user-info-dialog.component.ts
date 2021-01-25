@@ -42,10 +42,6 @@ export class EditUserInfoDialogComponent implements OnInit {
     });
   }
 
-  get isRenameDisabled(): any {
-    return this.firstName === this.form.get('firstName').value && this.lastName === this.form.get('lastName').value;
-  }
-
   onCancelClick(): void {
     this.dialogRef.close();
   }
