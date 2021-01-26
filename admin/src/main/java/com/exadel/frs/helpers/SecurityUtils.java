@@ -30,4 +30,8 @@ public final class SecurityUtils {
     public Long getPrincipalId() {
         return getPrincipal().getId();
     }
+
+    public boolean isAnonymousUser() {
+        return !SecurityContextHolder.getContext().getAuthentication().isAuthenticated();
+    }
 }

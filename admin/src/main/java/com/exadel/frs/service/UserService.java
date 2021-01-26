@@ -19,10 +19,12 @@ package com.exadel.frs.service;
 import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
 import static com.exadel.frs.enums.GlobalRole.OWNER;
 import static com.exadel.frs.enums.GlobalRole.USER;
+import static com.exadel.frs.enums.StatisticsType.USER_CREATE;
 import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import com.exadel.frs.annotation.CollectStatistics;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
@@ -86,6 +88,7 @@ public class UserService {
     }
 
     @Transactional
+    @CollectStatistics(type = USER_CREATE)
     public User createUser(final UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
@@ -203,6 +206,7 @@ public class UserService {
         return userRepository.existsByGuid(DEMO_GUID);
     }
 
+    @CollectStatistics(type = USER_CREATE)
     public User updateDemoUser(UserCreateDto userCreateDto) {
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
@@ -234,6 +238,7 @@ public class UserService {
         updateAppsConsumer.accept(userBeingDeleted, newOwner);
     }
 
+    @Transactional
     public User updateUserGlobalRole(final UserRoleUpdateDto userRoleUpdateDto, final Long currentUserId) {
         val currentUser = getUser(currentUserId);
 
@@ -260,6 +265,7 @@ public class UserService {
         user.setGlobalRole(newGlobalRole);
 
         userRepository.save(user);
+        userRepository.save(currentUser);
 
         return user;
     }
