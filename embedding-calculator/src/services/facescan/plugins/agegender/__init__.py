@@ -12,21 +12,4 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-import os
-from importlib.util import find_spec
-
-modules_by_lib = {
-    'tensorflow': ('facenet', 'agegender'),
-    'mxnet': ('insightface',)
-}
-modules_to_skip = []
-for lib, modules in modules_by_lib.items():
-    if find_spec(lib) is None:
-        modules_to_skip.extend(modules)
-
-
-def pytest_ignore_collect(path):
-    _, tail = os.path.split(path)
-    for module in modules_to_skip:
-        if tail.startswith(module):
-            return True
+requirements = ('tensorflow~=1.15.4',)
