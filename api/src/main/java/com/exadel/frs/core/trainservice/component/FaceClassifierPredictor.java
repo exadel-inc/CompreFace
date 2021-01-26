@@ -41,4 +41,8 @@ public class FaceClassifierPredictor {
     public Double verify(final String modelKey, final double[] input, final String imageId) {
         return classifier.verify(input, modelKey, imageId);
     }
+
+    public Double verify(final String modelKey, final double[] firstEmbedding, final double[] secondEmbedding) {
+        return classifier.verify(modelKey, firstEmbedding, secondEmbedding);
+    }
 }
