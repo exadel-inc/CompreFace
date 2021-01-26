@@ -43,10 +43,10 @@ import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
