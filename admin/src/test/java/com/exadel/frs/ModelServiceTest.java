@@ -34,16 +34,13 @@ import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.Image;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.AppModelAccess;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.repository.AppModelRepository;
 import com.exadel.frs.repository.FacesRepository;
 import com.exadel.frs.repository.ImagesRepository;
 import com.exadel.frs.repository.ModelRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
@@ -72,8 +69,6 @@ class ModelServiceTest {
     private AppService appServiceMock;
     private ModelRepository modelRepositoryMock;
     private ModelService modelService;
-    private ModelShareRequestRepository modelShareRequestRepository;
-    private AppModelRepository appModelRepository;
     private UserService userServiceMock;
     private FacesRepository facesRepositoryMock;
     private ImagesRepository imagesRepositoryMock;
@@ -83,8 +78,6 @@ class ModelServiceTest {
     ModelServiceTest() {
         modelRepositoryMock = mock(ModelRepository.class);
         appServiceMock = mock(AppService.class);
-        modelShareRequestRepository = mock(ModelShareRequestRepository.class);
-        appModelRepository = mock(AppModelRepository.class);
         authManager = mock(AuthorizationManager.class);
         userServiceMock = mock(UserService.class);
         facesRepositoryMock = mock(FacesRepository.class);
@@ -92,8 +85,6 @@ class ModelServiceTest {
         modelService = new ModelService(
                 modelRepositoryMock,
                 appServiceMock,
-                modelShareRequestRepository,
-                appModelRepository,
                 authManager,
                 userServiceMock,
                 facesRepositoryMock,
