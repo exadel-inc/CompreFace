@@ -14,7 +14,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.List;
 
@@ -25,7 +24,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
@@ -67,9 +65,7 @@ public class VerifyControllerTest {
                         .file(firstFile)
                         .file(secondFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
-        )
-                .andDo(print())
-                .andExpect(status().isOk());
+        ).andExpect(status().isOk());
 
         verify(validator, times(2)).validate(any());
         verify(client, times(2)).findFacesWithCalculator(any(), any(), any(), isNull());
