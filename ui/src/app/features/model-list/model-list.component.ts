@@ -39,7 +39,6 @@ import { ModelCloneDialogComponent } from '../model-clone-dialog/model-clone-dia
 export class ModelListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
-  errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
   roleEnum = Role;
   columns = [
@@ -101,10 +100,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   clone(model: Model) {
     const dialog = this.dialog.open(ModelCloneDialogComponent, {
       width: '400px',
-      data: {
-        entityType: this.translate.instant('models.header'),
-        entityName: model.name,
-      },
+      data: { entityType: this.translate.instant('models.header') },
     });
 
     dialog

@@ -16,7 +16,7 @@ import os
 from importlib.util import find_spec
 
 modules_by_lib = {
-    'tensorflow': ('facenet', 'rude_carnie'),
+    'tensorflow': ('facenet', 'agegender'),
     'mxnet': ('insightface',)
 }
 modules_to_skip = []

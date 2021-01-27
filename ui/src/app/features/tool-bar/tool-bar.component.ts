@@ -19,6 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { first } from 'rxjs/operators';
 
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
+import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';
 
 @Component({
   selector: 'app-tool-bar',
@@ -33,6 +34,7 @@ export class ToolBarComponent {
   @Output() logout = new EventEmitter();
   @Output() signUp = new EventEmitter();
   @Output() changePassword = new EventEmitter();
+  @Output() editUserInfo = new EventEmitter();
 
   constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
@@ -58,6 +60,22 @@ export class ToolBarComponent {
       .subscribe(result => {
         if (result) {
           this.changePassword.emit(result);
+        }
+      });
+  }
+
+  onEditUserInfo() {
+    const dialog = this.dialog.open(EditUserInfoDialogComponent, {
+      width: '300px',
+      data: { userName: this.userName },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(first())
+      .subscribe(result => {
+        if (result) {
+          this.editUserInfo.emit(result);
         }
       });
   }

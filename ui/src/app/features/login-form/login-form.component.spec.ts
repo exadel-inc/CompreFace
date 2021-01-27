@@ -33,7 +33,7 @@ import { LoginFormComponent } from './login-form.component';
 describe('LoginFormComponent', () => {
   let component: LoginFormComponent;
   let fixture: ComponentFixture<LoginFormComponent>;
-  const initialState = { isAuthenticated: false, errorMessage: 'some error message', successMessage: 'some success message' };
+  const initialState = { isAuthenticated: false };
 
   beforeEach(
     waitForAsync(() => {
@@ -74,7 +74,6 @@ describe('LoginFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginFormComponent);
     component = fixture.componentInstance;
-    component.stateSubscription = new Subscription();
   });
 
   it('should create', () => {

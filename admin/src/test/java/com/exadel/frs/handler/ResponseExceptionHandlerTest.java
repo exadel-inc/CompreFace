@@ -20,6 +20,7 @@ import static com.exadel.frs.handler.ExceptionCode.UNDEFINED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import com.exadel.frs.EmbeddedPostgreSQLTest;
 import com.exadel.frs.dto.ExceptionResponseDto;
 import com.exadel.frs.exception.AccessDeniedException;
 import com.exadel.frs.exception.BasicException;
@@ -33,7 +34,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 
 @SpringBootTest
-class ResponseExceptionHandlerTest {
+class ResponseExceptionHandlerTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private ResponseExceptionHandler exceptionHandler;

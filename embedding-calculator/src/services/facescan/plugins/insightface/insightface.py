@@ -59,7 +59,7 @@ class DetectionOnlyFaceAnalysis(FaceAnalysis):
 
 class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
     ml_models = (
-        ('retinaface_r50_v1', '1h5rHDGE7qXC3jZwphObh9mW55YQYKY8Y'),
+        ('retinaface_r50_v1', '1hvEv4xZP-_50cO7IYkH6sDUb_SC92wut'),
         ('retinaface_mnet025_v1', '1ggNFFqpe0abWz6V1A82rnxD6fyxB8W2c'),
         ('retinaface_mnet025_v2', '1EYTMxgcNdlvoL1fSC8N1zkaWrX75ZoNL'),
     )
@@ -142,8 +142,8 @@ class GenderAgeDetector(InsightFaceMixin, base.BasePlugin):
 
     GENDERS = ('female', 'male')
 
-    def __call__(self, face_img: Array3D):
-        gender, age = self._genderage_model.get(face_img)
+    def __call__(self, face: plugin_result.FaceDTO):
+        gender, age = self._genderage_model.get(face._face_img)
         return GenderAgeDTO(gender=self.GENDERS[int(gender)], age=(age, age))
 
     @cached_property

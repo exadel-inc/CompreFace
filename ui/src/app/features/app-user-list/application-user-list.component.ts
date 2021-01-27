@@ -39,7 +39,6 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   availableRoles$: Observable<string[]>;
-  errorMessage: string;
   availableEmails$: Observable<string[]>;
   message: string;
   search = '';

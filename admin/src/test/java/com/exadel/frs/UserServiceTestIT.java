@@ -40,7 +40,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestPropertySource(properties = "spring.mail.enable=true")
-class UserServiceTestIT {
+class UserServiceTestIT extends EmbeddedPostgreSQLTest {
 
     private static final String ENABLED_USER_EMAIL = "enabled_user@email.com";
     private static final String DISABLED_USER_EMAIL = "disabled_user@email.com";
@@ -48,9 +48,6 @@ class UserServiceTestIT {
     private static final String USER_EMAIL_2 = "user_2@email.com";
     private static final String USER_GUID = "testUserGuid";
     private static final String USER_EMAIL_PART = "user";
-
-    @MockBean
-    private SpringLiquibase springLiquibase;
 
     @MockBean
     private EmailSender emailSender;
