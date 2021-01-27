@@ -94,7 +94,7 @@ export class AuthEffects {
   signUp$: Observable<any> = this.actions.pipe(
     ofType(signUp),
     switchMap(payload =>
-      this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName).pipe(
+      this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName, payload.isAllowStatistics).pipe(
         map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
         catchError(error => observableOf(signUpFailure(error)))
       )

@@ -19,4 +19,5 @@ export interface SignUp {
   firstName: string;
   lastName: string;
   password: string;
+  isAllowStatistics?: boolean;
 }
