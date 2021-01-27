@@ -1,6 +1,5 @@
 package com.exadel.frs.scheduler.job;
 
-import static org.apache.commons.lang3.Range.between;
 import com.exadel.frs.entity.Face;
 import com.exadel.frs.entity.Model;
 import com.exadel.frs.entity.User;
@@ -13,10 +12,6 @@ import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.feign.StatisticsFacesEntity;
 import feign.FeignException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.Range;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +20,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
+import static org.apache.commons.lang3.Range.between;
 
 @NoArgsConstructor
 @Component
