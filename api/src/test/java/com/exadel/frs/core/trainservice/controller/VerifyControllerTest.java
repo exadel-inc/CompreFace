@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import java.util.List;
 
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
@@ -56,21 +58,22 @@ public class VerifyControllerTest {
                 .build();
 
         when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
-        when(predictor.verify(anyString(), any(), any(double[].class))).thenReturn(1.0);
 
-        val firstFile = new MockMultipartFile("firstFile", "test data".getBytes());
-        val secondFile = new MockMultipartFile("secondFile", "test data".getBytes());
+        val firstFile = new MockMultipartFile("processFile", "test data".getBytes());
+        val secondFile = new MockMultipartFile("checkFile", "test data".getBytes());
 
         mockMvc.perform(
                 multipart(API_V1 + "/verify")
                         .file(firstFile)
                         .file(secondFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
-        ).andExpect(status().isOk());
+        )
+                .andDo(print())
+                .andExpect(status().isOk());
 
         verify(validator, times(2)).validate(any());
         verify(client, times(2)).findFacesWithCalculator(any(), any(), any(), isNull());
-        verify(predictor, times(2)).verify(anyString(), any(), any(double[].class));
+        verify(predictor).verify(anyString(), any(), any(double[].class));
         verifyNoMoreInteractions(validator, client, predictor);
     }
 }

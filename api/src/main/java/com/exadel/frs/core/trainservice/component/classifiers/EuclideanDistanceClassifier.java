@@ -61,9 +61,9 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     @Override
-    public Double verify(String apiKey, double[] firstEmbedding, double[] secondEmbedding) {
-        INDArray firstFace = create(firstEmbedding);
-        INDArray secondFace = create(secondEmbedding);
+    public Double verify(String apiKey, double[] processFileEmbedding, double[] checkFileEmbedding) {
+        INDArray firstFace = create(processFileEmbedding);
+        INDArray secondFace = create(checkFileEmbedding);
         double[] probabilities = recognize(firstFace, secondFace);
         return probabilities[0];
     }
