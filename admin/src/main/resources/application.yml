@@ -17,7 +17,7 @@ app:
   feign:
     appery-io:
       url: https://api.appery.io/rest/1/db/collections
-      api-key: ${APPERY_API_KEY}
+      api-key: ${APPERY_API_KEY:#{null}}
 
 spring:
   profiles:
