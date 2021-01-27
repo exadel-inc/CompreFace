@@ -90,9 +90,33 @@ CompreFace:
  - Includes a UI panel with roles for access control
  - Starts quickly with one docker command
 
-## To get started
+## Getting started
 
-[Contribution guidelines to build and start the project](dev/README.md)
+#### To get started:
+
+1. Install Docker and Docker-Compose
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Run command: _docker-compose up -d_
+
+### To get started (Windows):
+
+1. Install Docker
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Run Docker
+5. Windows search bar-> cmd->in the Command prompt-> cd ->paste the path to the extracted zip folder
+6. Run command: docker-compose up -d
+7. Open http://localhost:8000/login
+
+** Tips for Windows** (use Git Bash terminal)
+
+1. Turn of the git autocrlf with command: git config --global core.autocrlf false
+2. Make sure all your containers are down: $ docker ps
+3. In case some containers are working, they should be stopped: $ docker-compose down
+4. Clean all local datebases and images: docker system prune --volumes
+5. Go to Dev folder cd dev
+6. Run sh start.sh and make sure http://localhost:4200/ starts
 
 ## Simple tutorial of usage
 

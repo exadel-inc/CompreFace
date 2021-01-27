@@ -1,12 +1,5 @@
 # CompreFace
 
-#### To get started:
-
-1. Install Docker and Docker-Compose
-2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
-3. Unzip the archive
-4. Run command: _docker-compose up -d_
-
 #### Getting started for Contributors:
 
 1. Install Docker and Docker-Compose
