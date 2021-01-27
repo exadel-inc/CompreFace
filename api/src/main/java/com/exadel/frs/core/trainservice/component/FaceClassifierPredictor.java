@@ -42,7 +42,7 @@ public class FaceClassifierPredictor {
         return classifier.verify(input, modelKey, imageId);
     }
 
-    public Double verify(final String modelKey, final double[] processFileEmbedding, final double[] checkFileEmbedding) {
-        return classifier.verify(modelKey, processFileEmbedding, checkFileEmbedding);
+    public Double verify(final double[] processFileEmbedding, final double[][] checkFileEmbedding) {
+        return classifier.verify(processFileEmbedding, checkFileEmbedding);
     }
 }

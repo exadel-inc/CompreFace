@@ -69,7 +69,7 @@ public class VerifyControllerTest {
 
         verify(validator, times(2)).validate(any());
         verify(client, times(2)).findFacesWithCalculator(any(), any(), any(), isNull());
-        verify(predictor).verify(anyString(), any(), any(double[].class));
+        verify(predictor).verify(any(), any(double[][].class));
         verifyNoMoreInteractions(validator, client, predictor);
     }
 }

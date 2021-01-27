@@ -20,7 +20,8 @@ import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.ma
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.stream.Collectors.toList;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -261,7 +262,7 @@ public class FaceControllerTest {
                                                  .build();
 
         when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
-        when(predictor.verify(anyString(), any(), anyString())).thenReturn(1.0);
+        when(predictor.verify(any(), any(), any())).thenReturn(1.0);
 
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
 
@@ -273,7 +274,7 @@ public class FaceControllerTest {
 
         verify(imageValidator).validate(any());
         verify(client).findFacesWithCalculator(any(), any(), any(), isNull());
-        verify(predictor).verify(anyString(), any(), anyString());
+        verify(predictor).verify(any(), any(), any());
         verifyNoMoreInteractions(imageValidator, client, predictor);
     }
 }

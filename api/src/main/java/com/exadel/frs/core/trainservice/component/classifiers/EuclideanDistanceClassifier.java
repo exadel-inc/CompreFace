@@ -61,7 +61,7 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     @Override
-    public Double verify(String apiKey, double[] processFileEmbedding, double[] checkFileEmbedding) {
+    public Double verify(double[] processFileEmbedding, double[][] checkFileEmbedding) {
         INDArray firstFace = create(processFileEmbedding);
         INDArray secondFace = create(checkFileEmbedding);
         double[] probabilities = recognize(firstFace, secondFace);

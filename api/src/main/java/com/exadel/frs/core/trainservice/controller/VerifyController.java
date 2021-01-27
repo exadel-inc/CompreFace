@@ -66,7 +66,7 @@ public class VerifyController {
                 .collect(Collectors.toList());
 
         return Map.of("result", Collections.singletonList(
-                getResult(apiKey, findFacesResults.get(0), findFacesResults.get(1)))
+                getResult(findFacesResults.get(0), findFacesResults.get(1)))
         );
     }
 
@@ -83,7 +83,7 @@ public class VerifyController {
         return findFacesResponse.getResult().get(0);
     }
 
-    private FaceVerification getResult(String apiKey, FindFacesResult processFileResult, FindFacesResult checkFileResult) {
+    private FaceVerification getResult(FindFacesResult processFileResult, FindFacesResult checkFileResult) {
         // replace original probability value with scaled to (5, HALF_UP)
         double inBoxProbDouble = BigDecimal
                 .valueOf(processFileResult.getBox().getProbability())
@@ -91,10 +91,17 @@ public class VerifyController {
         checkFileResult.getBox().setProbability(inBoxProbDouble);
 
         // find prediction
+        // To calculate euclidean distance we need one one-ranked array (based on process file) and one two-ranked array
+        // (based on check file) that will be used as reference to check processed file
         Function<Double[], double[]> toPrimitiveDouble = source -> Arrays.stream(source).mapToDouble(d -> d).toArray();
-        Double prediction = classifierPredictor.verify(apiKey,
+        double[] checkFilePrimitiveDouble = toPrimitiveDouble.apply(checkFileResult.getEmbedding());
+        double[][] twoRankedEmbeddings = new double[1][checkFilePrimitiveDouble.length];
+        System.arraycopy(checkFilePrimitiveDouble, 0, twoRankedEmbeddings[0], 0, checkFilePrimitiveDouble.length);
+
+        Double prediction = classifierPredictor.verify(
                 toPrimitiveDouble.apply(processFileResult.getEmbedding()),
-                toPrimitiveDouble.apply(checkFileResult.getEmbedding()));
+                twoRankedEmbeddings
+                );
 
         // compose new result
         return new FaceVerification(

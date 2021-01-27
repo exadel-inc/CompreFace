@@ -26,5 +26,5 @@ public interface Classifier extends Serializable {
 
     Double verify(double[] input, String apiKey, String imageId);
 
-    Double verify(String apiKey, double[] processFileEmbedding, double[] checkFileEmbedding);
+    Double verify(double[] processFileEmbedding, double[][] checkFileEmbedding);
 }
