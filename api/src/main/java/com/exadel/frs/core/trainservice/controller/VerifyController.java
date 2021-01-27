@@ -65,7 +65,6 @@ public class VerifyController {
                 .map(file -> getFaceResult(file, limit, detProbThreshold))
                 .collect(Collectors.toList());
 
-        // add 2 combinations into results
         return Map.of("result", Collections.singletonList(
                 getResult(apiKey, findFacesResults.get(0), findFacesResults.get(1)))
         );
