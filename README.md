@@ -375,6 +375,13 @@ Response body on success:
           "similarity": <similarity1>,
           "subject": <subject1>	
         },
+      "landmarks": [
+        [144,158],
+        [218,159],
+        [182,185],
+        [154,229],
+        [207,228]
+      ],
         ...
       ]
     }
