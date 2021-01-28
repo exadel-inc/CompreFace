@@ -46,7 +46,7 @@ public class DetectionController {
     private final ImageExtensionValidator imageValidator;
     private final FacesMapper mapper;
 
-    @PostMapping(value = "/faces/detection")
+    @PostMapping(value = "/detection")
     @ResponseStatus(HttpStatus.OK)
     @ApiImplicitParams({
             @ApiImplicitParam(
