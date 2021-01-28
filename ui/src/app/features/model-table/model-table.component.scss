@@ -17,8 +17,58 @@
 caption {
   display: none;
 }
-
 .mat-cell:first-child {
-  width: 40%;
-  padding-right: 10px;
+  padding-right: 0;
+}
+
+th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+  padding-left: 0;
+}
+
+.content-column{
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: 0.02em;
+
+  .title-container{
+    display: flex;
+    align-items: center;
+    .title-item{
+      margin-right: 8px;
+    }
+
+    .name-title{
+      font-size: 18px;
+      line-height: 125%;
+      font-weight: 600;
+      color: rgba(34, 34, 34, 0.8);
+    }
+
+    .type-title{
+      font-size: 12px;
+      line-height: 18px;
+    }
+
+    .recognition{
+      color: #192AC4;
+    }
+
+    .detection{
+      color: #F98D10;
+    }
+
+    .verification{
+      color: #8F38D3;
+    }
+  }
+
+  .api-key-label{
+    line-height: 125%;
+    font-size: 14px;
+    color: rgba(34, 34, 34, 0.45);
+  }
+
+  .copy-icon{
+    color: #0082CA;
+  }
 }
