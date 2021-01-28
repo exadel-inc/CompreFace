@@ -24,6 +24,7 @@ import {
   updateUserRoleAction,
   updateUserRoleFailAction,
   updateUserRoleSuccessAction,
+  refreshUserName,
 } from './action';
 
 export interface AppUserEntityState extends EntityState<AppUser> {
@@ -53,7 +54,10 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
       { ...state, isPending: false }
     )
   ),
-  on(updateUserRoleFailAction, state => ({ ...state, isPending: false }))
+  on(updateUserRoleFailAction, state => ({ ...state, isPending: false })),
+  on(refreshUserName, (state, { userId, firstName, lastName }) =>
+    userAdapter.updateOne({ id: userId, changes: { firstName, lastName } }, { ...state })
+  )
 );
 
 export const appUserReducer = (appUserState: AppUserEntityState, action: Action) => reducer(appUserState, action);

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-  export interface UIRequestOptions {
-    apiKey: string;
-    file: File;
-  }
+export interface UIRequestOptions {
+  apiKey: string;
+  file: File;
+}

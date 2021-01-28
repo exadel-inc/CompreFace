@@ -86,5 +86,10 @@ class PluginManager:
         return [pl for pl in self.face_plugins
                 if slugs is None or pl.slug in slugs]
 
+    def get_plugin_by_class(self, plugin_class: Type):
+        for plugin in self.plugins:
+            if isinstance(plugin, plugin_class):
+                return plugin
+
 
 plugin_manager = PluginManager()

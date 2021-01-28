@@ -33,11 +33,14 @@
       </ng-container>
     </div>
     <mat-menu #menu="matMenu">
-      <button mat-menu-item (click)="doLogout()">
-        <span>{{ 'toolbar.logout' | translate }}</span>
+      <button mat-menu-item (click)="onEditUserInfo()">
+        <span>{{ 'toolbar.user_info' | translate }}</span>
       </button>
       <button mat-menu-item (click)="onChangePassword()">
         <span>{{ 'toolbar.change_password' | translate }}</span>
+      </button>
+      <button mat-menu-item (click)="doLogout()">
+        <span>{{ 'toolbar.logout' | translate }}</span>
       </button>
     </mat-menu>
   </mat-toolbar-row>

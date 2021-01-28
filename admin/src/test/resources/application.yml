@@ -20,6 +20,8 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 10MB
+  flyway:
+    enabled: false
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}

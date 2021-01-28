@@ -23,6 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.cookie;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.EmbeddedPostgreSQLTest;
 import com.exadel.frs.FrsApplication;
 import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
@@ -52,7 +53,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @WebAppConfiguration
 @SpringBootTest(classes = FrsApplication.class)
-class OAuthMvcTest {
+class OAuthMvcTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private WebApplicationContext wac;

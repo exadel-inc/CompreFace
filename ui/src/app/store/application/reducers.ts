@@ -31,9 +31,11 @@ import {
   updateApplication,
   updateApplicationFail,
   updateApplicationSuccess,
+  refreshApplication,
 } from './action';
 
 export const applicationAdapter: EntityAdapter<Application> = createEntityAdapter<Application>();
+export const { selectEntities, selectAll } = applicationAdapter.getSelectors();
 
 export interface AppEntityState extends EntityState<Application> {
   // additional entities state properties
@@ -49,7 +51,10 @@ export const initialState: AppEntityState = applicationAdapter.getInitialState({
 
 const reducer: ActionReducer<AppEntityState> = createReducer(
   initialState,
-  on(loadApplications, createApplication, updateApplication, deleteApplication, state => ({ ...state, isPending: true })),
+  on(loadApplications, createApplication, updateApplication, deleteApplication, state => ({
+    ...state,
+    isPending: true,
+  })),
   on(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail, state => ({ ...state, isPending: false })),
   on(createApplicationSuccess, (state, { application }) => applicationAdapter.addOne(application, { ...state, isPending: false })),
   on(loadApplicationsSuccess, (state, { applications }) => applicationAdapter.setAll(applications, { ...state, isPending: false })),
@@ -57,7 +62,13 @@ const reducer: ActionReducer<AppEntityState> = createReducer(
     applicationAdapter.updateOne({ id: application.id, changes: application }, { ...state, isPending: false })
   ),
   on(deleteApplicationSuccess, (state, { id }) => applicationAdapter.removeOne(id, { ...state, isPending: false })),
-  on(setSelectedAppIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId }))
+  on(setSelectedAppIdEntityAction, (state, { selectedAppId }) => ({ ...state, selectedAppId })),
+  on(refreshApplication, (state, { userId, lastName, firstName }) => {
+    const appsToUpdate = selectAll(state)
+      .filter(app => app.owner.userId === userId)
+      .map(app => ({ id: app.id, changes: { ...app, owner: { userId, firstName, lastName } } }));
+    return applicationAdapter.updateMany(appsToUpdate, { ...state, isPending: false });
+  })
 );
 
 export const applicationReducer = (appState: AppEntityState, action: Action) => reducer(appState, action);

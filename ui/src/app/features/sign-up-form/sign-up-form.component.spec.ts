@@ -67,7 +67,6 @@ describe('SignUpFormComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SignUpFormComponent);
     component = fixture.componentInstance;
-    component.stateSubscription = new Subscription();
   });
 
   it('should create', () => {

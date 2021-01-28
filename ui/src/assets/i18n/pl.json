@@ -47,6 +47,7 @@
   "toolbar": {
     "logout": "Wyloguj",
     "change_password": "Zmień hasło",
+    "user_info": "Zmień profil",
     "user_avatar_info": "Awatar użytkownika",
     "logo": "Logo CompreFace"
   },
@@ -127,7 +128,8 @@
       "default_confirmation": "{{type}} {{name}} i wszystkie powiązane dane zostaną usunięte.\nJesteś pewien?"
     },
     "add_users_title": "Dodaj użytkowników do CompreFace",
-    "add_users_info": "Możesz dodawać innych użytkowników do aplikacji. Użytkownicy muszą się zarejestrować i zalogować do CompreFace. Po rejestracji i zalogowaniu użytkownicy pojawią się na liście użytkowników."
+    "add_users_info": "Możesz dodawać innych użytkowników do aplikacji. Użytkownicy muszą się zarejestrować i zalogować do CompreFace. Po rejestracji i zalogowaniu użytkownicy pojawią się na liście użytkowników.",
+    "edit_user_info": "Informacje o użytkowniku zostały pomyślnie zaktualizowane"
   },
   "app_users": {
     "add_users_info": "Użytkownik powinien być zaproszony z domyślnej orgaznizacji by pojawić się w liście użytkowników.\n* Właściciel i Administratorzy domyślnej organizacji mają dostęp do każdej aplikacji bez potrzeby ich zapraszania.",
