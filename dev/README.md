@@ -7,6 +7,15 @@
 3. Open dev folder
 4. Run command: _docker-compose up --build_
 
+#### Tips for Windows (use Git Bash terminal)
+
+1. Turn of the git autocrlf with command: git config --global core.autocrlf false
+2. Make sure all your containers are down: $ docker ps
+3. In case some containers are working, they should be stopped: $ docker-compose down
+4. Clean all local datebases and images: docker system prune --volumes
+5. Go to Dev folder cd dev
+6. Run sh start.sh and make sure http://localhost:4200/ starts
+
 #### How to start for UI development:
 
 Open a new terminal window and run next commands:
