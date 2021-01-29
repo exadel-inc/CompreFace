@@ -44,7 +44,7 @@
 
   <ng-container matColumnDef="test">
     <td mat-cell *matCellDef="let element">
-      <button mat-raised-button color="accent" (click)="test.emit(element)">
+      <button mat-raised-button color="accent" class="special-test-button-color" (click)="test.emit(element)">
         <span>{{ 'models.select_menu.test' | translate }}</span>
       </button>
     </td>
