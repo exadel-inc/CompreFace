@@ -29,4 +29,5 @@ import lombok.NoArgsConstructor;
 public class FacePredictionResultDto extends FindFacesResultDto {
 
     List<FaceSimilarityDto> faces;
+    List<List<Integer>> landmarks;
 }
