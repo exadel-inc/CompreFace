@@ -4,23 +4,21 @@ on:
   workflow_dispatch:
     inputs:
       version:
-        description: Version
-        default: v1.0.0
+        description: Version (e.g., 0.4.1)
         required: true
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v2
-     - name: docker login
+     - name: Build the Docker image and push
        env:
+         VERSION: ${{ github.event.inputs.version }}
          DOCKER_USER: ${{secrets.DOCKER_HUB_LOGIN}}
          DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PWD}}
-       run: |
-         docker login -u "${DOCKER_HUB_LOGIN}" -p "${DOCKER_HUB_PWD}"
-     - name: Build the Docker image
+         DOCKER_REGISTRY: ${{secrets.DOCKER_HUB_LOGIN}}/
        working-directory: ./embedding-calculator/
        run: |
-         make build-images VERSION={{ github.event.inputs.version }}
-     - name: Docker Push
-       run: docker push exadel/compreface-core
+         make build-images
+         docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}"
+         docker push ${DOCKER_REGISTRY}compreface-core
