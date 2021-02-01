@@ -16,13 +16,15 @@
 
 package com.exadel.frs.core.trainservice.filter;
 
-import static com.exadel.frs.core.trainservice.enums.ModelType.DETECTION;
-import static com.exadel.frs.core.trainservice.enums.ModelType.RECOGNITION;
+import static com.exadel.frs.core.trainservice.enums.ModelType.*;
 import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.list;
 import static java.util.function.Function.identity;
+
+import com.exadel.frs.core.trainservice.enums.ModelType;
 import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
 import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
 import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
@@ -101,7 +103,7 @@ public class SecurityValidationFilter implements Filter {
 
                     return;
                 }
-                val modelType = requestURI.endsWith("/detection") ? DETECTION : RECOGNITION;
+                val modelType = getModelTypeByUrl(requestURI);
                 val validationResult = modelService.validateModelKey(key, modelType);
                 if (validationResult != OK) {
                     val objectResponseEntity = handler.handleDefinedExceptions(new ModelNotFoundException(key));
@@ -130,5 +132,15 @@ public class SecurityValidationFilter implements Filter {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().append(objectMapper.writeValueAsString(responseEntity.getBody()));
         response.getWriter().flush();
+    }
+
+    private ModelType getModelTypeByUrl(String url) {
+        if (url.endsWith("/detection")) {
+            return DETECTION;
+        } else if (url.endsWith("/verify")) {
+            return url.contains(API_V1 + "/faces") ? RECOGNITION : VERIFY;
+        } else {
+            return RECOGNITION;
+        }
     }
 }

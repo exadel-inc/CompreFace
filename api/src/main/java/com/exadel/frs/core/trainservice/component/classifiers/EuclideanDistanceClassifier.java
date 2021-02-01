@@ -61,6 +61,14 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     @Override
+    public Double verify(double[] processFileEmbedding, double[][] checkFileEmbedding) {
+        INDArray firstFace = create(processFileEmbedding);
+        INDArray secondFace = create(checkFileEmbedding);
+        double[] probabilities = recognize(firstFace, secondFace);
+        return probabilities[0];
+    }
+
+    @Override
     public Double verify(final double[] input, final String apiKey, final String imageId) {
         val inputFace = create(input);
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
