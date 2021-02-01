@@ -356,7 +356,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&predic
 | limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
 | det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 | prediction_count | param       | integer | optional | maximum number of predictions per faces. Default value: 1    |
-| face_plugins     | param       | string  | optional | comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. calculator,gender - returns only embedding and gender for each face.    |
+| face_plugins     | param       | string  | optional | comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. calculator,gender,age - returns embedding, gender and age for each face.    |
 
 Response body on success:
 ```
@@ -382,6 +382,11 @@ Response body on success:
         [154,229],
         [207,228]
       ],
+      "age": [
+          25,
+          32
+      ],
+      "gender": "male",
         ...
       ]
     }
