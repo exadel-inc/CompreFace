@@ -68,7 +68,7 @@ class DetectionControllerTest {
 
         // when
         mockMvc.perform(
-                multipart(API_V1 + "/faces/detection")
+                multipart(API_V1 + "/detection")
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
@@ -94,7 +94,7 @@ class DetectionControllerTest {
 
         // when
         mockMvc.perform(
-                multipart(API_V1 + "/faces/detection")
+                multipart(API_V1 + "/detection")
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
@@ -113,7 +113,7 @@ class DetectionControllerTest {
 
         // when
         mockMvc.perform(
-                multipart(API_V1 + "/faces/detection")
+                multipart(API_V1 + "/detection")
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
