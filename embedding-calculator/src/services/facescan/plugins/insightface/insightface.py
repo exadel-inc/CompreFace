@@ -13,10 +13,10 @@
 #  permissions and limitations under the License.
 
 import logging
+import functools
 from typing import List, Tuple
 
 import attr
-import cv2
 import numpy as np
 import mxnet as mx
 from cached_property import cached_property
@@ -59,9 +59,9 @@ class DetectionOnlyFaceAnalysis(FaceAnalysis):
 
 class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
     ml_models = (
-        ('retinaface_r50_v1', '1hvEv4xZP-_50cO7IYkH6sDUb_SC92wut'),
         ('retinaface_mnet025_v1', '1ggNFFqpe0abWz6V1A82rnxD6fyxB8W2c'),
         ('retinaface_mnet025_v2', '1EYTMxgcNdlvoL1fSC8N1zkaWrX75ZoNL'),
+        ('retinaface_r50_v1', '1hvEv4xZP-_50cO7IYkH6sDUb_SC92wut'),
     )
 
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
@@ -106,10 +106,10 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
 
 class Calculator(InsightFaceMixin, mixins.CalculatorMixin, base.BasePlugin):
     ml_models = (
+        ('arcface_mobilefacenet', '17TpxpyHuUc1ZTm3RIbfvhnBcZqhyKszV'),
         ('arcface_r100_v1', '11xFaEHIQLNze3-2RUV1cQfT-q6PKKfYp'),
         ('arcface_resnet34', '1ECp5XrLgfEAnwyTYFEhJgIsOAw6KaHa7'),
         ('arcface_resnet50', '1a9nib4I9OIVORwsqLB0gz0WuLC32E8gf'),
-        ('arcface_mobilefacenet', '17TpxpyHuUc1ZTm3RIbfvhnBcZqhyKszV'),
         ('arcface-r50-msfdrop75', '1gNuvRNHCNgvFtz7SjhW82v2-znlAYaRO'),
         ('arcface-r100-msfdrop75', '1lAnFcBXoMKqE-SkZKTmi6MsYAmzG0tFw'),
     )
@@ -123,7 +123,7 @@ class Calculator(InsightFaceMixin, mixins.CalculatorMixin, base.BasePlugin):
     def _calculation_model(self):
         model_file = self.get_model_file(self.ml_model)
         model = face_recognition.FaceRecognition(
-            self.ml_model.name, True,  model_file)
+            self.ml_model.name, True, model_file)
         model.prepare(ctx_id=self._CTX_ID)
         return model
 
@@ -134,17 +134,18 @@ class GenderAgeDTO(JSONEncodable):
     age: Tuple[int, int]
 
 
-class GenderAgeDetector(InsightFaceMixin, base.BasePlugin):
-    slug = 'gender_age'
+class BaseGenderAge(InsightFaceMixin, base.BasePlugin):
     ml_models = (
         ('genderage_v1', '1J9hqSWqZz6YvMMNrDrmrzEW9anhvdKuC'),
     )
+    CACHE_FIELD = '_genderage_cached_result'
 
-    GENDERS = ('female', 'male')
-
-    def __call__(self, face: plugin_result.FaceDTO):
-        gender, age = self._genderage_model.get(face._face_img)
-        return GenderAgeDTO(gender=self.GENDERS[int(gender)], age=(age, age))
+    def _evaluate_model(self, face: plugin_result.FaceDTO):
+        cached_result = getattr(face, self.CACHE_FIELD, None)
+        if not cached_result:
+            cached_result = self._genderage_model.get(face._face_img)
+            setattr(face, self.CACHE_FIELD, cached_result)
+        return cached_result
 
     @cached_property
     def _genderage_model(self):
@@ -153,6 +154,23 @@ class GenderAgeDetector(InsightFaceMixin, base.BasePlugin):
             self.ml_model.name, True, model_file)
         model.prepare(ctx_id=self._CTX_ID)
         return model
+
+
+class GenderDetector(BaseGenderAge):
+    slug = "gender"
+    GENDERS = ('female', 'male')
+
+    def __call__(self, face: plugin_result.FaceDTO):
+        gender, age = self._evaluate_model(face)
+        return plugin_result.GenderDTO(gender=self.GENDERS[int(gender)])
+
+
+class AgeDetector(BaseGenderAge):
+    slug = "age"
+
+    def __call__(self, face: plugin_result.FaceDTO):
+        gender, age = self._evaluate_model(face)
+        return plugin_result.AgeDTO(age=(age, age))
 
 
 class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):

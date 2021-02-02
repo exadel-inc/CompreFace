@@ -21,6 +21,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -33,6 +35,7 @@ public class FindFacesResultDto {
     private FacesBox box;
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
+    private List<List<Integer>> landmarks;
 
     @Data
     @NoArgsConstructor

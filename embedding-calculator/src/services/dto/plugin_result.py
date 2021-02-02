@@ -14,13 +14,13 @@ class EmbeddingDTO(JSONEncodable):
 @attr.s(auto_attribs=True, frozen=True)
 class GenderDTO(JSONEncodable):
     gender: str
-    gender_probability: float = attr.ib(converter=float, default=None)
+    gender_probability: float = attr.ib(converter=float, default=1)
 
 
 @attr.s(auto_attribs=True, frozen=True)
 class AgeDTO(JSONEncodable):
     age: Tuple[int, int]
-    age_probability: float = attr.ib(converter=float, default=None)
+    age_probability: float = attr.ib(converter=float, default=1)
 
 
 @attr.s(auto_attribs=True, frozen=True)

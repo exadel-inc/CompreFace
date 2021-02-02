@@ -67,7 +67,7 @@ export const getImageSize = (file: File): Observable<ImageSize> =>
     } ]
 }
  */
-export const resultRecognitionFormatter = (value: string): string => value.replace(/(\[\n\s+)/g,'[ ').replace(/(\s+\])/g,' ]');
+export const resultRecognitionFormatter = (value: string): string => value.replace(/(\[\n\s+)/g, '[ ').replace(/(\s+\])/g, ' ]');
 
 /**
  * Get file extension.
@@ -76,7 +76,7 @@ export const resultRecognitionFormatter = (value: string): string => value.repla
  * @returns `string` File extension
  * @example getFileExtension(file) ==> 'jpeg'
  */
-export const getFileExtension = (file: File): string => file.name.slice((Math.max(0, file.name.lastIndexOf('.')) || Infinity) + 1);
+export const getFileExtension = (file: File): string => file.name.slice((Math.max(0, file.name.lastIndexOf('.')) || Infinity) + 1).toLowerCase();
 
 /**
  * Recalculate face coordinates according to canvas size (design).

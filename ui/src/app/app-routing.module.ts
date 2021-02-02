@@ -17,26 +17,31 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
+import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
+import { UserInfoResolver } from './core/user-info/user-info.resolver';
 
 const routes: Routes = [
   {
     path: '',
     component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
     children: [{ path: '', loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule) }],
   },
   {
     path: 'application',
     component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
     children: [{ path: '', loadChildren: () => import('./pages/application/application.module').then(m => m.ApplicationModule) }],
   },
   {
     path: 'test-model',
     component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
     children: [{ path: '', loadChildren: () => import('./pages/test-model/test-model.module').then(m => m.TestModelModule) }],
   },
   {
     path: 'demo',
-    component: MainLayoutComponent,
+    component: DemoLayoutComponent,
     children: [{ path: '', loadChildren: () => import('./pages/demo/demo.module').then(m => m.DemoModule) }],
   },
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },

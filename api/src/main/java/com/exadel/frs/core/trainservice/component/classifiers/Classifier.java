@@ -25,4 +25,6 @@ public interface Classifier extends Serializable {
     List<Pair<Double, String>> predict(double[] input, String apiKey, int resultCount);
 
     Double verify(double[] input, String apiKey, String imageId);
+
+    Double verify(double[] processFileEmbedding, double[][] checkFileEmbedding);
 }

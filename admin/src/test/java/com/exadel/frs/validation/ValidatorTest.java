@@ -17,6 +17,7 @@
 package com.exadel.frs.validation;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import com.exadel.frs.EmbeddedPostgreSQLTest;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import javax.validation.Validator;
 import lombok.val;
@@ -25,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-public class ValidatorTest {
+public class ValidatorTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private Validator validator;

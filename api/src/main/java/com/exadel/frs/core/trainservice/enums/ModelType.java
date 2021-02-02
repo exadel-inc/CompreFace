@@ -26,7 +26,8 @@ import lombok.Setter;
 public enum ModelType implements EnumCode {
 
     RECOGNITION("R"),
-    DETECTION("D");
+    DETECTION("D"),
+    VERIFY("V");
 
     @Getter
     @Setter

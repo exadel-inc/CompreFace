@@ -14,8 +14,6 @@
   ~ permissions and limitations under the License.
   -->
 
-<ng-container *ngIf="loggedUserId$ | async">
-  <app-tool-bar-container></app-tool-bar-container>
-  <router-outlet></router-outlet>
-  <app-footer></app-footer>
-</ng-container>
+<app-tool-bar-container></app-tool-bar-container>
+<router-outlet></router-outlet>
+<app-footer></app-footer>
