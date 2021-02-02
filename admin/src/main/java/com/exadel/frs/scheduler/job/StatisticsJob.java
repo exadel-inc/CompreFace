@@ -1,7 +1,6 @@
 package com.exadel.frs.scheduler.job;
 
-import com.exadel.frs.entity.Face;
-import com.exadel.frs.entity.Model;
+import com.exadel.frs.entity.ModelFaceProjection;
 import com.exadel.frs.entity.User;
 import com.exadel.frs.enums.GlobalRole;
 import com.exadel.frs.exception.ApperyServiceException;
@@ -21,9 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static org.apache.commons.lang3.Range.between;
@@ -79,20 +76,13 @@ public class StatisticsJob extends QuartzJobBean {
             return;
         }
 
-        List<Model> models = modelRepository.findAll();
-        Map<String, String> facesModelGuidAndRangeMap = new HashMap<>();
-
-        for (Model model : models) {
-            String apiKey = model.getApiKey();
-            List<Face> faces = facesRepository.findByApiKey(apiKey);
-            facesModelGuidAndRangeMap.put(model.getGuid(), getFacesRange(faces.size()));
-        }
+        List<ModelFaceProjection> modelFaces = modelRepository.getModelFacesCount();
+        String installGuid = installInfoRepository.findTopByOrderByInstallGuid().getInstallGuid();
 
         try {
-            for (Map.Entry<String, String> modelRangeEntry : facesModelGuidAndRangeMap.entrySet()) {
+            for (ModelFaceProjection modelFace : modelFaces) {
                 apperyStatisticsClient.create(statisticsApiKey, new StatisticsFacesEntity(
-                        installInfoRepository.findAll().get(0).getInstallGuid(),
-                        modelRangeEntry.getKey(), modelRangeEntry.getValue()
+                        installGuid, modelFace.getGuid(), getFacesRange((int) modelFace.getFacesCount())
                 ));
             }
         } catch (FeignException exception) {
