@@ -57,7 +57,7 @@ export class FaceRecognitionService {
   }
 
   detection(file: any, apiKey: string): Observable<any> {
-    const url = `${environment.userApiUrl}faces/detection`;
+    const url = `${environment.userApiUrl}detection`;
     const formData = new FormData();
     formData.append('file', file);
 
