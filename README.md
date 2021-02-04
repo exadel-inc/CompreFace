@@ -529,6 +529,58 @@ Response body on success:
 
 
 
+### Verify faces on two images
+
+Compare faces from given two images:
+* processFile - file to be verified
+* checkFile - reference file to check the processed file
+```http request
+curl  -X POST "http://localhost:8000/api/v1/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>" \
+-H "Content-Type: multipart/form-data" \
+-H "x-api-key: <faces_collection_api_key>" \
+-F checkFile=<local_check_file>
+-F processFile=<local_process_file>
+```
+
+
+| Element          | Description | Type    | Required | Notes                                                        |
+| ---------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
+| Content-Type     | header      | string  | required | multipart/form-data                                          |
+| x-api-key        | header      | string  | required | api key of the Face Collection, created by the user                    |
+| image_id         | variable    | UUID    | required | UUID of the verifying face                                   |
+| processFile      | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| checkFile        | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+
+Response body on success:
+```
+{
+  "result": [
+    {
+      "box": {
+        "probability": <probability>,
+        "x_max": <integer>,
+        "y_max": <integer>,
+        "x_min": <integer>,
+        "y_min": <integer>
+      },
+      "similarity": <similarity1>
+    },
+    ...
+  ]
+}
+```
+
+| Element                        | Type    | Description                                                  |
+| ------------------------------ | ------- | ------------------------------------------------------------ |
+| box                            | object  | list of parameters of the bounding box for this face (on processedImage) |
+| probability                    | float   | probability that a found face is actually a face (on processedImage)     |
+| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face (on processedImage)         |
+| similarity                     | float   | similarity between faces on given images                     |
+
+
+
 ## Contributing
 
 Contributions are welcome and greatly appreciated.
