@@ -19,7 +19,7 @@ services:
   compreface-admin:
     image: ${registry}compreface-admin:${ADMIN_VERSION}
     build:
-      context: ..
+      context: ../java
       dockerfile: dev/Dockerfile
       target: frs_crud
     container_name: "compreface-admin"
@@ -44,7 +44,7 @@ services:
   compreface-api:
     image: ${registry}compreface-api:${API_VERSION}
     build:
-      context: ..
+      context: ../java
       dockerfile: dev/Dockerfile
       target: frs_core
     container_name: "compreface-api"

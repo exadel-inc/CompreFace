@@ -8,10 +8,10 @@ RUN mvn -B clean package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.j
 
 FROM openjdk:11.0.8-jre-slim as frs_core
 ARG DIR=/workspace/compreface
-COPY --from=build ${DIR}/api/target/*.jar /home/app.jar
+COPY --from=build ${DIR}/java/api/target/*.jar /home/app.jar
 ENTRYPOINT ["sh","-c","java $API_JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /home/app.jar"]
 
 FROM openjdk:11.0.8-jre-slim as frs_crud
 ARG DIR=/workspace/compreface
-COPY --from=build ${DIR}/admin/target/*.jar /home/app.jar
+COPY --from=build ${DIR}/java/admin/target/*.jar /home/app.jar
 ENTRYPOINT ["sh","-c","java $ADMIN_JAVA_OPTS -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -jar /home/app.jar"]
