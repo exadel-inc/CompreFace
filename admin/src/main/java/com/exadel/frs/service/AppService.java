@@ -153,7 +153,7 @@ public class AppService {
         val user = userService.getUser(userInviteDto.getUserEmail());
         val admin = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(admin, app);
+        authManager.verifyWritePrivilegesToApp(admin, app, true);
 
         val userAppRole = app.getUserAppRole(user.getId());
         if (userAppRole.isPresent()) {
@@ -193,7 +193,7 @@ public class AppService {
         val app = getApp(appGuid, userId);
         val user = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(user, app, true);
 
         val isSameName = app.getName().equals(appUpdateDto.getName());
         if (isNotTrue(isSameName)) {
@@ -208,32 +208,31 @@ public class AppService {
         val app = getApp(guid, adminId);
         val admin = userService.getUser(adminId);
 
-        authManager.verifyWritePrivilegesToApp(admin, app);
+        authManager.verifyWritePrivilegesToApp(admin, app, true);
 
-        val user = userService.getUserByGuid(userRoleUpdateDto.getUserId());
-        if (user.getId().equals(adminId)) {
+        val userToUpdate = userService.getUserByGuid(userRoleUpdateDto.getUserId());
+        if (userToUpdate.getId().equals(adminId)) {
             throw new SelfRoleChangeException();
         }
 
-        val userAppRole = app.getUserAppRole(user.getId()).orElseThrow();
+        val userToUpdateAppRole = app.getUserAppRole(userToUpdate.getId()).orElseThrow();
         val newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
 
-        val currentUserRole = app.getUserAppRoleOrThrow(adminId);
+        val currentUserRole = app.getUserAppRole(adminId);
 
-        if (ADMINISTRATOR.equals(currentUserRole.getRole()) &&
-                (OWNER.equals(newAppRole)) || OWNER.equals(userAppRole.getRole())) {
+        if (userToUpdateAppRole.getRole().equals(OWNER)) {
             throw new InsufficientPrivilegesException();
         }
 
-        if (OWNER == newAppRole) {
+        if (newAppRole.equals(OWNER)) {
             app.getOwner().ifPresent(previousOwner -> previousOwner.setRole(ADMINISTRATOR));
         }
 
-        userAppRole.setRole(newAppRole);
+        userToUpdateAppRole.setRole(newAppRole);
 
         appRepository.save(app);
 
-        return userAppRole;
+        return userToUpdateAppRole;
     }
 
     public void deleteUserFromApp(final String userGuid, final String guid, final Long adminId) {
@@ -241,7 +240,7 @@ public class AppService {
         val app = getApp(guid, userId);
         val admin = userService.getUser(adminId);
 
-        authManager.verifyWritePrivilegesToApp(admin, app);
+        authManager.verifyUserDeletionFromApp(admin, userGuid, app);
 
         app.deleteUserAppRole(userGuid);
 
@@ -252,7 +251,7 @@ public class AppService {
         val app = getApp(guid, userId);
         val user = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(user, app, true);
 
         app.setApiKey(UUID.randomUUID().toString());
 
@@ -264,7 +263,7 @@ public class AppService {
         val app = getApp(guid, userId);
         val user = userService.getUser(userId);
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(user, app, true);
 
         appRepository.deleteById(app.getId());
     }
@@ -273,7 +272,7 @@ public class AppService {
         val app = getApp(appGuid);
         val user = userService.getUser(SecurityUtils.getPrincipalId());
 
-        authManager.verifyWritePrivilegesToApp(user, app);
+        authManager.verifyWritePrivilegesToApp(user, app, true);
 
         val requestId = UUID.randomUUID();
         val id = ModelShareRequestId.builder()

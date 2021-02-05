@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { Role } from 'src/app/data/enums/role.enum';
 
 import { ITableConfig } from '../../table/table.component';
-import { Role } from 'src/app/data/enums/role.enum';
 
 @Component({
   selector: 'app-application-list',
   templateUrl: './application-list.component.html',
   styleUrls: ['./application-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationListComponent {
-
   @Input() isLoading: boolean;
   @Input() tableConfig: ITableConfig;
   @Input() userRole: string;
@@ -33,5 +32,4 @@ export class ApplicationListComponent {
 
   @Output() selectApp = new EventEmitter();
   @Output() createApp = new EventEmitter();
-
 }

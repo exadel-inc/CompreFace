@@ -14,21 +14,28 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <div class="application-list">
-  <h3 *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{'applications.title' | translate}}</h3>
-  <ng-template #firstStepInfo><h3>{{'applications.first_steps_title' | translate}}</h3></ng-template>
+  <h3 *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{ 'applications.title' | translate }}</h3>
+  <ng-template #firstStepInfo
+    ><h3>{{ 'applications.first_steps_title' | translate }}</h3></ng-template
+  >
   <app-spinner *ngIf="isLoading"></app-spinner>
-  <app-table *ngIf="tableConfig.data.length > 0" class="app-table" [isLoading]="isLoading" [tableConfig]="tableConfig"
-    (changeRow)="selectApp.emit($event)">
+  <app-table
+    *ngIf="tableConfig.data.length > 0"
+    class="app-table"
+    [isLoading]="isLoading"
+    [tableConfig]="tableConfig"
+    (changeRow)="selectApp.emit($event)"
+  >
   </app-table>
   <div class="create-new-message" *ngIf="tableConfig.data.length === 0 && !isLoading">
     <mat-icon>info</mat-icon>
     <p>
-      {{'applications.first_steps_info' | translate}}
+      {{ 'applications.first_steps_info' | translate }}
     </p>
   </div>
   <div class="card-single-action-container">
-    <button *ngIf="userRole !== roleEnum.USER" mat-button color="primary" (click)="createApp.emit()">
-      {{'common.capital.create' | translate}}
+    <button *ngIf="userRole !== roleEnum.User" mat-button color="primary" (click)="createApp.emit()">
+      {{ 'common.capital.create' | translate }}
     </button>
   </div>
 </div>

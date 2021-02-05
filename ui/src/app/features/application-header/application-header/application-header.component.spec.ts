@@ -14,18 +14,15 @@
  * permissions and limitations under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { ApplicationHeaderComponent } from './application-header.component';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatButtonModule } from '@angular/material/button';
-import { EntityTitleModule } from '../entity-title/entity-title.module';
-import { ApplicationHeaderFacade } from './application-header.facade';
-import { SpinnerModule } from '../spinner/spinner.module';
 import { MatCardModule } from '@angular/material/card';
-import { MatDialog } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
+import { RouterModule } from '@angular/router';
+
+import { ApplicationHeaderComponent } from './application-header.component';
+import { EntityTitleModule } from '../../entity-title/entity-title.module';
+import { SpinnerModule } from '../../spinner/spinner.module';
 
 describe('ApplicationHeaderComponent', () => {
   let component: ApplicationHeaderComponent;
@@ -35,19 +32,6 @@ describe('ApplicationHeaderComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ApplicationHeaderComponent],
-        providers: [
-          {
-            provide: ApplicationHeaderFacade,
-            useValue: {
-              rename: () => {},
-              initSubscriptions: () => {},
-              unsubscribe: () => {},
-              app$: new Subject(),
-            },
-          },
-          { provide: MatDialog, useValue: {} },
-          { provide: TranslateService, useValue: {} },
-        ],
         imports: [CommonModule, RouterModule, MatButtonModule, SpinnerModule, EntityTitleModule, MatCardModule],
       }).compileComponents();
     })

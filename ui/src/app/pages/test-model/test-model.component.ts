@@ -13,16 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TestModelPageService} from './test-model.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectPendingModel } from '../../store/model/selectors';
 import { Observable } from 'rxjs';
+
+import { selectPendingModel } from '../../store/model/selectors';
+import { TestModelPageService } from './test-model.service';
 
 @Component({
   selector: 'app-test-model',
   templateUrl: './test-model.component.html',
-  styleUrls: ['./test-model.component.scss']
+  styleUrls: ['./test-model.component.scss'],
 })
 export class TestModelComponent implements OnInit, OnDestroy {
   modelLoading$: Observable<boolean>;

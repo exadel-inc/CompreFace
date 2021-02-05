@@ -13,24 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { OrganizationService } from './organization.service';
-
-@Component({
-  selector: 'app-organization',
-  templateUrl: './organization.component.html',
-  styleUrls: ['./organization.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class OrganizationComponent implements OnInit, OnDestroy {
-  constructor(private organizationService: OrganizationService) {}
-
-  ngOnInit() {
-    this.organizationService.initUrlBindingStreams();
-  }
-
-  ngOnDestroy() {
-    this.organizationService.unSubscribe();
+/* eslint-disable @typescript-eslint/naming-convention */
+export interface RequestResult {
+  box: {
+    probability: {
+      x_max: number;
+      x_min: number;
+      y_max: number;
+      y_min: number;
+    },
+    faces: [
+      {
+        face_name: string;
+        similarity: number;
+      }
+    ]
   }
 }

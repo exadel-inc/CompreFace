@@ -17,12 +17,13 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { Application } from '../../data/interfaces/application';
-import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 import { Model } from '../../data/interfaces/model';
+import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 
 @Component({
   selector: 'app-breadcrumbs-container',
   template: ` <app-breadcrumbs [model]="model$ | async" [app]="app$ | async"> </app-breadcrumbs>`,
+  styleUrls: ['./breadcrumbs.container.component.scss'],
 })
 export class BreadcrumbsContainerComponent implements OnInit {
   app$: Observable<Application>;

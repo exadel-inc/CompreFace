@@ -13,13 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { TestBed } from '@angular/core/testing';
-import { UserService } from './user.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { Role } from 'src/app/data/enums/role.enum';
+
 import { environment } from '../../../environments/environment';
 import { AppUser } from '../../data/interfaces/app-user';
-import { Role } from 'src/app/data/enums/role.enum';
+import { UserService } from './user.service';
 
 describe('UserService', () => {
   let service: UserService;
@@ -43,21 +43,19 @@ describe('UserService', () => {
     const mock = [
       {
         id: 0,
-        organizationId: 'ksdfklsn1111111',
         firstName: 'John',
         lastName: 'Malkovich',
-        role: Role.USER,
+        role: Role.User,
       },
       {
         id: 1,
-        organizationId: 'ksdfklsn1111111',
         firstName: 'Tony',
         lastName: 'Stark',
-        role: Role.ADMINISTRATOR,
+        role: Role.Administrator,
       },
     ];
 
-    service.getAll('organizationId').subscribe((data: AppUser[]) => {
+    service.getAll().subscribe((data: AppUser[]) => {
       expect(data[0].role).toBe(mock[0].role);
       expect(data[0].firstName).toBe(mock[0].firstName);
       expect(data[0].lastName).toBe(mock[0].lastName);
@@ -66,7 +64,7 @@ describe('UserService', () => {
       expect(data[1].lastName).toBe(mock[1].lastName);
     });
 
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/roles`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}user/roles`);
     expect(req.request.method).toBe('GET');
     req.flush(mock);
   });
@@ -74,19 +72,18 @@ describe('UserService', () => {
   it('should update user role', () => {
     const mock = {
       id: 'userId',
-      organizationId: 'ksdfklsn1111111',
       firstName: 'John',
       lastName: 'Malkovich',
-      role: Role.USER,
+      role: Role.User,
     };
 
-    service.updateRole('organizationId', 'userId', Role.USER).subscribe((data: AppUser) => {
+    service.updateRole('userId', Role.User).subscribe((data: AppUser) => {
       expect(data.role).toBe(mock.role);
       expect(data.firstName).toBe(mock.firstName);
       expect(data.lastName).toBe(mock.lastName);
     });
 
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/role`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}user/global/role`);
     expect(req.request.method).toBe('PUT');
     req.flush(mock);
   });

@@ -13,7 +13,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Observable } from 'rxjs';
 
 export interface ImageSize {
@@ -26,16 +25,58 @@ export interface ImageSize {
  *
  * @param file File.
  */
-export function getImageSize(file: File): Observable<ImageSize> {
-  return new Observable((subscriber) => {
+export const getImageSize = (file: File): Observable<ImageSize> =>
+  new Observable(subscriber => {
     const img = new Image();
     img.onload = () => {
-      subscriber.next({width: img.width, height: img.height});
+      subscriber.next({ width: img.width, height: img.height });
       subscriber.complete();
     };
     img.src = URL.createObjectURL(file);
   });
+
+/**
+ * Beautify the result JSON format
+ *
+ * @param value String
+ * @returns string
+ * @example
+ * {
+    "result": [
+      {
+        "box": {
+          ...
+        },
+        "faces": [
+          {
+            ...
+          }
+        ]
+      }
+    ]
+  }
+  change to
+  {
+  "result": [ {
+      "box": {
+        ...
+        },
+      "faces": [ {
+        ...
+        } ]
+    } ]
 }
+ */
+export const resultRecognitionFormatter = (value: string): string => value.replace(/(\[\n\s+)/g,'[ ').replace(/(\s+\])/g,' ]');
+
+/**
+ * Get file extension.
+ *
+ * @param file File.
+ * @returns `string` File extension
+ * @example getFileExtension(file) ==> 'jpeg'
+ */
+export const getFileExtension = (file: File): string => file.name.slice((Math.max(0, file.name.lastIndexOf('.')) || Infinity) + 1);
 
 /**
  * Recalculate face coordinates according to canvas size (design).
@@ -45,15 +86,17 @@ export function getImageSize(file: File): Observable<ImageSize> {
  * @param sizeToCalc Canvas size. (design size).
  * @param yAxisPadding padding to ensure capacity for text area on image.
  */
-export function recalculateFaceCoordinate(box: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number): any {
+export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number) => {
   const divideWidth = imageSize.width / sizeToCalc.width;
   const divideHeight = imageSize.height / sizeToCalc.height;
 
   return {
     ...box,
+    /* eslint-disable @typescript-eslint/naming-convention */
     x_max: box.x_max / divideWidth > sizeToCalc.width ? sizeToCalc.width : box.x_max / divideWidth,
     x_min: box.x_min / divideWidth,
-    y_max: box.y_max / divideHeight > sizeToCalc.height - yAxisPadding ? sizeToCalc.height - yAxisPadding :  box.y_max / divideHeight,
+    y_max: box.y_max / divideHeight > sizeToCalc.height - yAxisPadding ? sizeToCalc.height - yAxisPadding : box.y_max / divideHeight,
     y_min: box.y_min / divideHeight > yAxisPadding ? box.y_min / divideHeight : yAxisPadding,
+    /* eslint-enable @typescript-eslint/naming-convention */
   };
-}
+};

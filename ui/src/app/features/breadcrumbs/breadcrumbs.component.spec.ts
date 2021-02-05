@@ -13,37 +13,33 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {BreadcrumbsComponent} from './breadcrumbs.component';
-import {CommonModule} from '@angular/common';
-import {BreadcrumbsFacade} from './breadcrumbs.facade';
-import {RouterModule} from '@angular/router';
-import {RouterTestingModule} from '@angular/router/testing';
+import { CommonModule } from '@angular/common';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { BreadcrumbsComponent } from './breadcrumbs.component';
+import { BreadcrumbsFacade } from './breadcrumbs.facade';
 
 describe('BreadcrumbsComponent', () => {
   let component: BreadcrumbsComponent;
   let fixture: ComponentFixture<BreadcrumbsComponent>;
 
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      declarations: [ BreadcrumbsComponent ],
-      providers: [
-        {
-          provide: BreadcrumbsFacade,
-          useValue: {}
-        }
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [BreadcrumbsComponent],
+        providers: [
+          {
+            provide: BreadcrumbsFacade,
+            useValue: {},
+          },
         ],
-      imports: [
-        CommonModule,
-        RouterModule,
-        RouterTestingModule,
-        MatCardModule
-      ]
+        imports: [CommonModule, RouterModule, RouterTestingModule, MatCardModule],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BreadcrumbsComponent);

@@ -13,21 +13,20 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 
+import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
-import { UserDeletion } from '../../data/interfaces/user-deletion';
-import { TranslateService } from '@ngx-translate/core';
-import { Role } from 'src/app/data/enums/role.enum';
 
 @Component({
   selector: 'app-application-user-list',
@@ -65,20 +64,18 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.currentUserId$ = this.appUserListFacade.currentUserId$;
 
     this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(
-      map((users: AppUser[]) => {
-        return {
-          columns: [
-            { title: 'user', property: 'username' },
-            { title: 'role', property: 'role' },
-            { title: 'delete', property: 'delete' },
-          ],
-          data: users,
-        };
-      })
+      map((users: AppUser[]) => ({
+        columns: [
+          { title: 'user', property: 'username' },
+          { title: 'role', property: 'role' },
+          { title: 'delete', property: 'delete' },
+        ],
+        data: users,
+      }))
     );
     this.message = this.translate.instant('app_users.add_users_info');
     this.availableRoles$ = this.appUserListFacade.availableRoles$;
-    this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe((value) => (this.availableRoles = value));
+    this.availableRolesSubscription = this.appUserListFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
   }
 
   onChange(user: AppUser): void {
@@ -100,7 +97,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     dialog
       .afterClosed()
       .pipe(first())
-      .subscribe((result) => {
+      .subscribe(result => {
         if (result) {
           this.appUserListFacade.delete(deletion.userToDelete.userId);
         }
@@ -125,20 +122,9 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
     const dialogSubscription = dialog.afterClosed().subscribe(({ userEmail, role }) => {
       if (userEmail && role) {
-        this.appUserListFacade.inviteUser(userEmail, role).subscribe(() => this.openEmailNotification(userEmail));
+        this.appUserListFacade.inviteUser(userEmail, role);
         dialogSubscription.unsubscribe();
       }
-    });
-  }
-
-  private openEmailNotification(email: string): void {
-    if (!email) {
-      return;
-    }
-
-    this.snackBarService.openNotification({
-      messageText: 'application_user_list.invitation_sent',
-      messageOptions: { email },
     });
   }
 }

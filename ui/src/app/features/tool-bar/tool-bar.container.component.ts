@@ -15,26 +15,35 @@
  */
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { ToolBarFacade } from './tool-bar.facade';
 
 @Component({
   selector: 'app-tool-bar-container',
-  template: `
-    <app-tool-bar
-      [userAvatarInfo]="userAvatarInfo$ | async"
-      [userName]="userName$ | async"
-      (logout)="logout()">
-    </app-tool-bar>`,
+  template: ` <app-tool-bar
+    [userAvatarInfo]="userAvatarInfo$ | async"
+    [userName]="userName$ | async"
+    [isUserInfoAvailable]="isUserInfoAvailable$ | async"
+    (logout)="logout()"
+    (signUp)="goSignUp()"
+  >
+  </app-tool-bar>`,
 })
 export class ToolBarContainerComponent implements OnInit {
   userAvatarInfo$: Observable<string>;
   userName$: Observable<string>;
+  isUserInfoAvailable$: Observable<boolean>;
 
   constructor(private toolBarFacade: ToolBarFacade) {}
 
   ngOnInit() {
     this.userAvatarInfo$ = this.toolBarFacade.userAvatarInfo$;
     this.userName$ = this.toolBarFacade.userName$;
+    this.isUserInfoAvailable$ = this.toolBarFacade.isUserInfoAvailable$;
+  }
+
+  goSignUp() {
+    this.toolBarFacade.goSignUp();
   }
 
   logout() {

@@ -14,25 +14,25 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{actionType}} user</h1>
+<h1 mat-dialog-title>{{ actionType }} user</h1>
 <div mat-dialog-content>
   <form [formGroup]="form">
     <mat-form-field>
-      <input matInput placeholder="Email" name="email" formControlName="userEmail"  [matAutocomplete]="auto">
+      <input matInput placeholder="Email" name="email" formControlName="userEmail" [matAutocomplete]="auto" />
     </mat-form-field>
 
     <mat-form-field>
       <mat-select formControlName="role">
-        <mat-option *ngFor="let role of availableRoles" [value]="role">{{role}}</mat-option>
+        <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role }}</mat-option>
       </mat-select>
     </mat-form-field>
 
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{option}}</mat-option>
+      <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{ option }}</mat-option>
     </mat-autocomplete>
   </form>
 </div>
 <div mat-dialog-actions>
   <button mat-button (click)="onCancelClick()">cancel</button>
-  <button mat-button color="primary" [disabled]="!form.valid" (click)="onInviteClick()">{{actionType}}</button>
+  <button mat-button color="primary" [disabled]="!form.valid" (click)="onInviteClick()">{{ actionType }}</button>
 </div>

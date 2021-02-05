@@ -13,7 +13,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -39,7 +38,11 @@ export class SnackBarService {
   }
 
   openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
-    const errorMessage = message.error || message;
+    const errorMessage = message.error
+      ? message.error.error_description
+        ? message.error.error_description
+        : message.error
+      : this.translate.instant('common.unknown_error');
     const data = {
       message: errorMessage.message ? errorMessage.message : errorMessage,
       type: 'error',

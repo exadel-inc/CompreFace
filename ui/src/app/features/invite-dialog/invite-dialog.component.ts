@@ -13,19 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {Component, OnInit, Inject, ChangeDetectionStrategy} from '@angular/core';
-import {FormGroup, FormControl, Validators, FormBuilder} from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {EMAIL_REGEXP_PATTERN} from 'src/app/core/constants';
-import {Observable, combineLatest} from 'rxjs';
-import {startWith, map} from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { combineLatest, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
 @Component({
   selector: 'app-invite-dialog',
   templateUrl: './invite-dialog.component.html',
   styleUrls: ['./invite-dialog.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InviteDialogComponent implements OnInit {
   availableRoles: string[];
@@ -46,15 +45,12 @@ export class InviteDialogComponent implements OnInit {
   ngOnInit() {
     this.form = this.formBuilder.group({
       userEmail: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
-      role: new FormControl(this.availableRoles[0], [Validators.required])
+      role: new FormControl(this.availableRoles[0], [Validators.required]),
     });
 
     if (this.data.options$) {
-      this.filteredOptions$ = combineLatest(
-        [this.data.options$,
-        this.form.controls.userEmail.valueChanges.pipe(startWith(''))]
-      ).pipe(
-        map(([options, value]) => this.filter(options as string[], value)),
+      this.filteredOptions$ = combineLatest([this.data.options$, this.form.controls.userEmail.valueChanges.pipe(startWith(''))]).pipe(
+        map(([options, value]) => this.filter(options as string[], value))
       );
     }
   }
@@ -66,13 +62,13 @@ export class InviteDialogComponent implements OnInit {
   onInviteClick(): void {
     if (this.form.valid) {
       this.dialogRef.close({
-        ...this.form.value
+        ...this.form.value,
       });
     }
   }
 
   private filter(options: string[], value: string): string[] {
     const filterValue = value ? value.toLowerCase() : '';
-    return options ? options.filter(option => option && option.toLowerCase().indexOf(filterValue) === 0) : [''];
+    return options ? options.filter(option => option && option.toLowerCase().includes(filterValue)) : [''];
   }
 }

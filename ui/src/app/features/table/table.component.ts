@@ -13,8 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { ChangeDetectionStrategy, Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 export interface ITableConfig {
   columns: {
@@ -30,12 +29,12 @@ export interface ITableConfig {
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent implements OnInit {
+export class TableComponent {
   @Input() isLoading: boolean;
   @Input() set tableConfig(config: ITableConfig) {
     if (config) {
       this.columnsDefinition = config.columns;
-      this.displayedColumns = config.columns.map((column) => column.title);
+      this.displayedColumns = config.columns.map(column => column.title);
       this.data = config.data;
     }
   }
@@ -50,10 +49,6 @@ export class TableComponent implements OnInit {
   }[];
   displayedColumns: string[];
   data: any[];
-
-  constructor() {}
-
-  ngOnInit() {}
 
   change(element: any): void {
     this.changeRow.emit(element);

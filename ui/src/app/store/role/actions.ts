@@ -14,13 +14,13 @@
  * permissions and limitations under the License.
  */
 
-import {createAction, props} from '@ngrx/store';
-import {Role} from 'src/app/data/interfaces/role';
+import { createAction, props } from '@ngrx/store';
+import { Role } from 'src/app/data/interfaces/role';
 
-export const setPendingRoleEntityAction = createAction('[Role/API] Set Pending', props<{isPending: boolean}>());
+export const setPendingRoleEntityAction = createAction('[Role/API] Set Pending', props<{ isPending: boolean }>());
 
-export const loadRolesEntityAction  = createAction('[Role/API] Load Roles');
+export const loadRolesEntityAction = createAction('[Role/API] Load Roles');
 
 export const fetchRolesEntityAction = createAction('[Role/API] Add Roles', props<{ role: Role }>());
 
-export const updateRolesEntityAction = createAction('[Role/API] Update Roles', props<{id: number, role: Role}>());
+export const updateRolesEntityAction = createAction('[Role/API] Update Roles', props<{ id: number; role: Role }>());

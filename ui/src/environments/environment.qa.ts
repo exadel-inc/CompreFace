@@ -14,12 +14,12 @@
  * permissions and limitations under the License.
  */
 
-import {Environment} from './interface';
+import { Environment } from './interface';
 
 export const environment: Environment = {
   production: true,
   basicToken: 'Basic Q29tbW9uQ2xpZW50SWQ6cGFzc3dvcmQ=',
-  adminApiUrl: 'https://qa.frs.exadel.by/admin/',
-  userApiUrl: 'https://qa.frs.exadel.by/api/v1/',
-  buildNumber: '0.0.2'
+  adminApiUrl: '/admin/',
+  userApiUrl: '/api/v1/',
+  buildNumber: '0.0.2',
 };

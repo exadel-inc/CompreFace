@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { ApplicationService } from './application.service';
+import { TestBed } from '@angular/core/testing';
 import { Application } from 'src/app/data/interfaces/application';
+
 import { environment } from '../../../environments/environment';
+import { ApplicationService } from './application.service';
 
 describe('ApplicationService', () => {
   let service: ApplicationService;
@@ -39,62 +39,55 @@ describe('ApplicationService', () => {
   });
 
   it('should return set of applications', () => {
-    service.getAll('organizationId').subscribe((data: Application[]) => {
+    service.getAll().subscribe((data: Application[]) => {
       expect(data.length).toBe(2);
 
       expect(data[0].name).toBe('test-application-one');
-      expect(data[0].organizationId).toBe('organizationId');
 
       expect(data[1].name).toBe('test-application-two');
-      expect(data[1].organizationId).toBe('organizationId');
     });
 
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/apps`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}apps`);
     expect(req.request.method).toBe('GET');
     req.flush([
       {
         name: 'test-application-one',
         id: '0',
         owner: 'owner',
-        organizationId: 'organizationId',
       },
       {
         name: 'test-application-two',
         id: '1',
         owner: 'owner',
-        organizationId: 'organizationId',
       },
     ]);
   });
 
   it('should return set of applications', () => {
-    service.create('organizationId', 'new-app').subscribe((data: Application) => {
+    service.create('new-app').subscribe((data: Application) => {
       expect(data.name).toBe('new-app');
-      expect(data.organizationId).toBe('organizationId');
     });
 
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/organizationId/app`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}app`);
     expect(req.request.method).toBe('POST');
     req.flush({
       name: 'new-app',
       id: '2',
       owner: 'owner',
-      organizationId: 'organizationId',
     });
   });
 
   it('should rename application', () => {
-    service.put('orgId', 'appId', 'new name').subscribe((data: Application) => {
+    service.put('appId', 'new name').subscribe((data: Application) => {
       expect(data.name).toBe('new app');
     });
 
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/orgId/app/appId`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}app/appId`);
     expect(req.request.method).toBe('PUT');
     req.flush({
       name: 'new app',
       id: '2',
       owner: 'owner',
-      organizationId: 'orgId',
     });
   });
 });

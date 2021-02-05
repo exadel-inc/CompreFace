@@ -13,11 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Model } from 'src/app/data/interfaces/model';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Model } from 'src/app/data/interfaces/model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

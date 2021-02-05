@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { ModelService } from './model.service';
-import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { environment } from '../../../environments/environment';
 import { Model } from 'src/app/data/interfaces/model';
+
+import { environment } from '../../../environments/environment';
+import { ModelService } from './model.service';
 
 describe('ModelService', () => {
   let httpMock: HttpTestingController;
@@ -73,22 +73,22 @@ describe('ModelService', () => {
 
   it('should return models array', () => {
     const service: ModelService = TestBed.inject(ModelService);
-    service.getAll('0', '0').subscribe((data) => {
+    service.getAll('0').subscribe(data => {
       expect(data).toEqual(mockModels);
     });
 
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/0/app/0/models`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}app/0/models`);
     expect(req.request.method).toBe('GET');
     req.flush(mockModels);
   });
 
   it('should return created model', () => {
     const service: ModelService = TestBed.inject(ModelService);
-    service.create('0', 'app_0', 'new model').subscribe((data) => {
+    service.create('app_0', 'new model').subscribe(data => {
       expect(data.name).toEqual('new model');
       expect(data.relations[0].id).toEqual('app_0');
     });
-    const req = httpMock.expectOne(`${environment.adminApiUrl}org/0/app/app_0/model`);
+    const req = httpMock.expectOne(`${environment.adminApiUrl}app/app_0/model`);
     expect(req.request.method).toBe('POST');
     req.flush({
       id: '2',

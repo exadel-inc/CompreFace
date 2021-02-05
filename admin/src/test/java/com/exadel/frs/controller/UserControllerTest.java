@@ -253,7 +253,7 @@ public class UserControllerTest {
 
         mockMvc.perform(createRequest)
                .andExpect(status().isFound())
-               .andExpect(redirectedUrlPattern("https:/**"));
+               .andExpect(redirectedUrlPattern("http:/**"));
     }
 
     @Test

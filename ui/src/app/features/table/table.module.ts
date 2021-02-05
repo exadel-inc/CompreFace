@@ -13,24 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { NgModule } from '@angular/core';
-import { TableComponent } from './table.component';
-import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
-import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { NgModule } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
+
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { TableComponent } from './table.component';
 
 @NgModule({
   declarations: [TableComponent],
   exports: [TableComponent],
-  imports: [
-    CommonModule,
-    MatTableModule,
-    TruncateModule,
-    MatTooltipModule,
-    TranslateModule,
-  ],
+  imports: [CommonModule, MatTableModule, TruncateModule, MatTooltipModule, TranslateModule],
 })
 export class TableModule {}

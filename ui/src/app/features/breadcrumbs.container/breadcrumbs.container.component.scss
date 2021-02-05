@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,16 +14,16 @@
  * permissions and limitations under the License.
  */
 
-import {
-  EntityCollectionServiceBase,
-  EntityCollectionServiceElementsFactory
-} from '@ngrx/data';
-import {Organization} from '../../data/interfaces/organization';
-import {Injectable} from '@angular/core';
+@import 'media.scss';
 
-@Injectable()
-export class OrganizationEnService extends EntityCollectionServiceBase<Organization> {
-  constructor(serviceElementsFactory: EntityCollectionServiceElementsFactory) {
-    super('Organization', serviceElementsFactory);
+:host {
+  position: fixed;
+  top: 49px;
+  width: 100vw;
+  z-index: 102;
+  max-width: 1140px;
+
+  @include mobile-portrait {
+    max-width: 484px;
   }
 }

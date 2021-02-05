@@ -13,12 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { routerReducer, RouterReducerState } from '@ngrx/router-store';
 
-import {routerReducer, RouterReducerState} from '@ngrx/router-store';
-import {AuthReducer, AuthState} from './auth/reducers';
-import {RouterStateUrl} from './router/reducer';
-import {UserInfoReducer } from './userInfo/reducers';
 import { User } from '../data/interfaces/user';
+import { authReducer, AuthState } from './auth/reducers';
+import { RouterStateUrl } from './router/reducer';
+import { userInfoReducer } from './userInfo/reducers';
 
 export interface AppState {
   authState: AuthState;
@@ -29,7 +29,7 @@ export interface AppState {
 // feature reducer need to import into specific module on the page
 // this for shared reducers:
 export const sharedReducers = {
-  auth: AuthReducer,
+  auth: authReducer,
   router: routerReducer,
-  userInfo: UserInfoReducer,
+  userInfo: userInfoReducer,
 };

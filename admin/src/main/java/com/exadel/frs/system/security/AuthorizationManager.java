@@ -48,6 +48,10 @@ public class AuthorizationManager {
     }
 
     public void verifyWritePrivilegesToApp(final User user, final App app) {
+        verifyWritePrivilegesToApp(user, app, false);
+    }
+
+    public void verifyWritePrivilegesToApp(final User user, final App app, boolean adminDenied) {
         if (List.of(OWNER, ADMINISTRATOR).contains(user.getGlobalRole())) {
             return;
         }
@@ -56,9 +60,43 @@ public class AuthorizationManager {
                          .orElseThrow(InsufficientPrivilegesException::new)
                          .getRole();
 
-        if (AppRole.USER == appRole) {
+        if (AppRole.USER == appRole || (adminDenied && AppRole.ADMINISTRATOR == appRole)) {
             throw new InsufficientPrivilegesException();
         }
+    }
+
+    public void verifyUserDeletionFromApp(final User deleter, final String userGuid, final App app) {
+        if (List.of(OWNER, ADMINISTRATOR).contains(deleter.getGlobalRole())) {
+            if (isAppOwnerRemoval(userGuid, app)) {
+                throw new InsufficientPrivilegesException();
+            } else {
+                return;
+            }
+        }
+
+        AppRole appRole = app.getUserAppRole(deleter.getId())
+                             .orElseThrow(InsufficientPrivilegesException::new)
+                             .getRole();
+        boolean isSelfRemoval = userGuid.equals(deleter.getGuid());
+        if (
+                ((AppRole.USER == appRole || AppRole.ADMINISTRATOR == appRole) && !isSelfRemoval)
+                        || (AppRole.OWNER == appRole && isSelfRemoval)
+        ) {
+            throw new InsufficientPrivilegesException();
+        }
+    }
+
+    private boolean isAppOwnerRemoval(final String userGuid, final App app) {
+        boolean ownerRemoval = false;
+        val owner = app.getOwner();
+        if (owner.isPresent()) {
+            String ownerGuid = owner
+                    .get()
+                    .getUser()
+                    .getGuid();
+            ownerRemoval = userGuid.equals(ownerGuid);
+        }
+        return ownerRemoval;
     }
 
     public void verifyAppHasTheModel(final String appGuid, final Model model) {

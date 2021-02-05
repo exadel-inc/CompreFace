@@ -15,62 +15,75 @@
   -->
 
 <div class="logo">
-  <img src="assets/img/face-recognition-logo.svg" class="logo-img"  alt="">
+  <img src="assets/img/compreface_signup_logo.svg" class="logo-img" alt="sing-up-logo" />
 </div>
 <mat-card class="sign-up-card">
   <mat-card-header>
-    <mat-card-title>{{'registration.title' | translate}}</mat-card-title>
+    <mat-card-title>{{ 'registration.title' | translate }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
     <form class="sign-up-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
       <mat-form-field class="sign-up-full-width">
         <mat-error class="error-wrapper">
-          <span>{{'registration.name_restriction' | translate}}</span>
+          <span>{{ 'registration.name_restriction' | translate }}</span>
           <mat-icon>warning</mat-icon>
         </mat-error>
-        <input matInput placeholder="{{'registration.first_name' | translate}}" formControlName="firstName" name="firstName" required>
+        <input matInput placeholder="{{ 'registration.first_name' | translate }}" formControlName="firstName" name="firstName" required />
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
         <mat-error class="error-wrapper">
-          <span>{{'registration.last_name_restriction' | translate}}</span>
+          <span>{{ 'registration.last_name_restriction' | translate }}</span>
           <mat-icon>warning</mat-icon>
         </mat-error>
-        <input matInput placeholder="{{'registration.last_name' | translate}}" formControlName="lastName" name="lastName" required>
+        <input matInput placeholder="{{ 'registration.last_name' | translate }}" formControlName="lastName" name="lastName" required />
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
         <mat-error class="error-wrapper">
-          <span>{{'registration.email_hint' | translate}}"</span>
+          <span>{{ 'registration.email_hint' | translate }}"</span>
           <mat-icon>warning</mat-icon>
         </mat-error>
-        <input matInput placeholder="{{'registration.email' | translate}}" formControlName="email" name="email" type="email" required>
+        <input matInput placeholder="{{ 'registration.email' | translate }}" formControlName="email" name="email" type="email" required />
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
-        <mat-hint>{{'registration.password_restriction' | translate}}</mat-hint>
+        <mat-hint>{{ 'registration.password_restriction' | translate }}</mat-hint>
         <mat-error class="error-wrapper">
-          <span>{{'registration.password_restriction' | translate}}</span>
+          <span>{{ 'registration.password_restriction' | translate }}</span>
           <mat-icon>warning</mat-icon>
         </mat-error>
-        <input matInput placeholder="{{'registration.password' | translate}}" formControlName="password" type="password" name="password" required>
+        <input
+          matInput
+          placeholder="{{ 'registration.password' | translate }}"
+          formControlName="password"
+          type="password"
+          name="password"
+          required
+        />
       </mat-form-field>
       <mat-form-field class="sign-up-full-width">
-        <mat-hint>{{'registration.password_restriction' | translate}}</mat-hint>
+        <mat-hint>{{ 'registration.password_restriction' | translate }}</mat-hint>
         <mat-error class="error-wrapper">
-          <span>{{'registration.password_restriction' | translate}}</span>
+          <span>{{ 'registration.password_restriction' | translate }}</span>
           <mat-icon>warning</mat-icon>
         </mat-error>
-        <input matInput placeholder="{{'registration.confirm_password' | translate}}" formControlName="confirmPassword" type="password"
-          name="confirmPassword" required>
+        <input
+          matInput
+          placeholder="{{ 'registration.confirm_password' | translate }}"
+          formControlName="confirmPassword"
+          type="password"
+          name="confirmPassword"
+          required
+        />
       </mat-form-field>
-      <mat-error class="error-wrapper"
-        *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
-        <span>{{'registration.password_dont_match' | translate}}</span>
+      <mat-error class="error-wrapper" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
+        <span>{{ 'registration.password_dont_match' | translate }}</span>
         <mat-icon>warning</mat-icon>
       </mat-error>
     </form>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-button color="primary" [routerLink]="[ROUTERS_URL.LOGIN]">{{'registration.login' | translate}}</button>
-    <button mat-button type="submit" form="signUpForm" color="primary" [disabled]="form.invalid  || isLoading">
-      {{'registration.sign_up' | translate}}</button>
+    <button mat-button color="primary" [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</button>
+    <button mat-button type="submit" form="signUpForm" color="primary" [disabled]="form.invalid || isLoading">
+      {{ 'registration.sign_up' | translate }}
+    </button>
   </mat-card-actions>
 </mat-card>

@@ -1,0 +1,26 @@
+name: Docker Image Python push to Dockerhub
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version
+        default: v1.0.0
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     - name: docker login
+       env:
+         DOCKER_USER: ${{secrets.DOCKER_HUB_LOGIN}}
+         DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PWD}}
+       run: |
+         docker login -u "${DOCKER_HUB_LOGIN}" -p "${DOCKER_HUB_PWD}"
+     - name: Build the Docker image
+       working-directory: ./embedding-calculator/
+       run: |
+         make build-images VERSION={{ github.event.inputs.version }}
+     - name: Docker Push
+       run: docker push exadel/compreface-core

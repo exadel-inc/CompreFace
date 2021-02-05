@@ -13,14 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ApplicationService } from 'src/app/core/application/application.service';
-import { ROUTERS_URL } from 'src/app/data/enums/routers-url.enum';
+import { Routes } from 'src/app/data/enums/routers-url.enum';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import {
@@ -51,10 +50,10 @@ export class ApplicationListEffect {
   @Effect()
   loadApplications$ = this.actions.pipe(
     ofType(loadApplications),
-    switchMap((action) =>
+    switchMap(action =>
       this.applicationService.getAll().pipe(
-        map((applications) => loadApplicationsSuccess({ applications })),
-        catchError((error) => of(loadApplicationsFail({ error })))
+        map(applications => loadApplicationsSuccess({ applications })),
+        catchError(error => of(loadApplicationsFail({ error })))
       )
     )
   );
@@ -64,8 +63,8 @@ export class ApplicationListEffect {
     ofType(createApplication),
     switchMap(({ name }) =>
       this.applicationService.create(name).pipe(
-        map((application) => createApplicationSuccess({ application })),
-        catchError((error) => of(createApplicationFail({ error })))
+        map(application => createApplicationSuccess({ application })),
+        catchError(error => of(createApplicationFail({ error })))
       )
     )
   );
@@ -75,8 +74,8 @@ export class ApplicationListEffect {
     ofType(updateApplication),
     switchMap(({ id, name }) =>
       this.applicationService.put(id, name).pipe(
-        map((application) => updateApplicationSuccess({ application })),
-        catchError((error) => of(updateApplicationFail({ error })))
+        map(application => updateApplicationSuccess({ application })),
+        catchError(error => of(updateApplicationFail({ error })))
       )
     )
   );
@@ -84,13 +83,13 @@ export class ApplicationListEffect {
   @Effect()
   deleteApplication$ = this.actions.pipe(
     ofType(deleteApplication),
-    switchMap((app) =>
+    switchMap(app =>
       this.applicationService.delete(app.id).pipe(
         switchMap(() => {
-          this.router.navigate([`${ROUTERS_URL.HOME}`]);
+          this.router.navigate([`${Routes.Home}`]);
           return [deleteApplicationSuccess({ id: app.id }), setSelectedAppIdEntityAction({ selectedAppId: null })];
         }),
-        catchError((error) => of(deleteApplicationFail({ error })))
+        catchError(error => of(deleteApplicationFail({ error })))
       )
     )
   );
@@ -98,7 +97,7 @@ export class ApplicationListEffect {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(loadApplicationsFail, createApplicationFail, updateApplicationFail, deleteApplicationFail),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
   );

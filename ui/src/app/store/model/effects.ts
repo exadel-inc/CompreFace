@@ -43,10 +43,10 @@ export class ModelEffects {
   @Effect()
   loadModels$ = this.actions.pipe(
     ofType(loadModels),
-    switchMap((action) =>
+    switchMap(action =>
       this.modelService.getAll(action.applicationId).pipe(
-        map((models) => loadModelsSuccess({ models })),
-        catchError((error) => of(loadModelsFail({ error })))
+        map(models => loadModelsSuccess({ models })),
+        catchError(error => of(loadModelsFail({ error })))
       )
     )
   );
@@ -54,10 +54,10 @@ export class ModelEffects {
   @Effect()
   createModel$ = this.actions.pipe(
     ofType(createModel),
-    switchMap((action) =>
+    switchMap(action =>
       this.modelService.create(action.applicationId, action.name).pipe(
-        map((model) => createModelSuccess({ model })),
-        catchError((error) => of(createModelFail({ error })))
+        map(model => createModelSuccess({ model })),
+        catchError(error => of(createModelFail({ error })))
       )
     )
   );
@@ -65,10 +65,10 @@ export class ModelEffects {
   @Effect()
   updateModel$ = this.actions.pipe(
     ofType(updateModel),
-    switchMap((action) =>
+    switchMap(action =>
       this.modelService.update(action.applicationId, action.modelId, action.name).pipe(
-        map((model) => updateModelSuccess({ model })),
-        catchError((error) => of(updateModelFail({ error })))
+        map(model => updateModelSuccess({ model })),
+        catchError(error => of(updateModelFail({ error })))
       )
     )
   );
@@ -76,10 +76,10 @@ export class ModelEffects {
   @Effect()
   deleteModel$ = this.actions.pipe(
     ofType(deleteModel),
-    switchMap((action) =>
+    switchMap(action =>
       forkJoin([of(action.modelId), this.modelService.delete(action.applicationId, action.modelId)]).pipe(
         map(([modelId]) => deleteModelSuccess({ modelId })),
-        catchError((error) => of(deleteModelFail({ error })))
+        catchError(error => of(deleteModelFail({ error })))
       )
     )
   );
@@ -87,7 +87,7 @@ export class ModelEffects {
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
     ofType(loadModelsFail, createModelFail, updateModelFail, deleteModelFail),
-    tap((action) => {
+    tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
   );
