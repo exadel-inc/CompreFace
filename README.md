@@ -75,9 +75,10 @@ Our method is based on deep neural networks, which is one of the most popular fa
 Every user can create their own models and train them on different subsets of input data. 
 
 ## Screenshots
-<img src="https://user-images.githubusercontent.com/3736126/107061938-6a151080-67e1-11eb-95ba-c4dd43471f5b.png" alt="compreface-test-page" width=400px>
-<img src="https://user-images.githubusercontent.com/3736126/107063429-0f7cb400-67e3-11eb-9ecc-27a1a0955923.png" alt="compreface-main-page" width=400px>
-
+<p align="center">
+<img src="https://user-images.githubusercontent.com/3736126/107061938-6a151080-67e1-11eb-95ba-c4dd43471f5b.png" alt="compreface-test-page" width=390px style="padding: 10px;">
+<img src="https://user-images.githubusercontent.com/3736126/107063429-0f7cb400-67e3-11eb-9ecc-27a1a0955923.png" alt="compreface-main-page" width=390px style="padding: 10px;">
+</p>
 ## Feedback survey
 
 We are constantly improving our product. But for better understanding which features we should add or improve we need your help!
