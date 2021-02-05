@@ -3,7 +3,7 @@
 
 <p align="center">
     <a target="_blank" href="https://exadel.com/services/engineering/ai-machine-learning/compreface/">
-  <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="angular-logo" height="250px"/>
+  <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="compreface-logo" height="250px"/>
  </a>
   <br>
   <i>CompreFace is a free face recognition service that can be easily integrated into<br> any system without prior machine learning skills.
@@ -73,6 +73,10 @@
 CompreFace is an application for facial recognition that can be integrated as a standalone server or deployed on the cloud and can be set up and used without machine learning expertise.
 Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient API for model training and face recognition. We also provide an easy-to-understand roles system with which you can easily control who has access to the model.
 Every user can create their own models and train them on different subsets of input data. 
+
+## Screenshots
+<img src="https://user-images.githubusercontent.com/3736126/107061938-6a151080-67e1-11eb-95ba-c4dd43471f5b.png" alt="compreface-test-page" width=400px>
+<img src="https://user-images.githubusercontent.com/3736126/107063429-0f7cb400-67e3-11eb-9ecc-27a1a0955923.png" alt="compreface-main-page" width=400px>
 
 ## Feedback survey
 
