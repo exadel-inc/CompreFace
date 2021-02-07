@@ -19,7 +19,7 @@ from werkzeug.exceptions import BadRequest
 
 from src.constants import ENV
 from src.exceptions import NoFaceFoundError
-from src.services.facescan.plugins import managers
+from src.services.facescan.plugins import base, managers
 from src.services.facescan.scanner.facescanners import scanner
 from src.services.flask_.constants import ARG
 from src.services.flask_.needs_attached_file import needs_attached_file
@@ -33,9 +33,12 @@ def endpoints(app):
         available_plugins = {p.slug: str(p)
                              for p in managers.plugin_manager.plugins}
         calculator = managers.plugin_manager.calculator
-        return jsonify(status='OK', build_version=ENV.BUILD_VERSION,
-                       calculator_version=str(calculator),
-                       available_plugins=available_plugins)
+        return jsonify(
+            status='OK', build_version=ENV.BUILD_VERSION,
+            calculator_version=str(calculator),
+            similarity_coefficients=calculator.ml_model.similarity_coefficients,
+            available_plugins=available_plugins
+        )
 
     @app.route('/find_faces', methods=['POST'])
     @needs_attached_file

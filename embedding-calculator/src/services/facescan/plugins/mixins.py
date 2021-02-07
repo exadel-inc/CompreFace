@@ -15,7 +15,7 @@
 from time import time, sleep
 from abc import ABC, abstractmethod
 from contextlib import contextmanager
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 
 from src.services.dto.bounding_box import BoundingBoxDTO
 from src.services.dto import plugin_result
@@ -81,6 +81,8 @@ class FaceDetectorMixin(ABC):
 
 class CalculatorMixin(ABC):
     slug = 'calculator'
+    # args for init MLModel: model name, Goodle Drive fileID, similarity coefficients
+    ml_models: Tuple[Tuple[str, str, str], ...] = ()
 
     DIFFERENCE_THRESHOLD: float
 
@@ -88,6 +90,9 @@ class CalculatorMixin(ABC):
         return plugin_result.EmbeddingDTO(
             embedding=self.calc_embedding(face._face_img)
         )
+
+    def create_ml_model(self, *args):
+        return base.CalculatorModel(self, *args)
 
     @abstractmethod
     def calc_embedding(self, face_img: Array3D) -> Array3D:
