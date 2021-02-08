@@ -1,7 +1,8 @@
 package com.exadel.frs.annotation;
 
+import com.exadel.frs.commonservice.enums.StatisticsType;
+
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import com.exadel.frs.enums.StatisticsType;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

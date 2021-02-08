@@ -17,7 +17,8 @@
 package com.exadel.frs.core.trainservice.validation;
 
 import static com.google.common.io.Files.getFileExtension;
-import com.exadel.frs.core.trainservice.exception.FileExtensionException;
+
+import com.exadel.frs.commonservice.exception.FileExtensionException;
 import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

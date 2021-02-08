@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-app_model-table
+      author: Andrei Hayeuski
+      changes:
+        # app_model
+        - createTable:
+            tableName: app_model
+            columns:
+              - column:
+                  name: app_id
+                  type: bigint
+              - column:
+                  name: model_id
+                  type: bigint
+              - column:
+                  name: access_type
+                  type: varchar(1)
+
+        - addPrimaryKey:
+            columnNames: app_id, model_id
+            constraintName: pk_app_model
+            tableName: app_model
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: app_model
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: model_id
+            baseTableName: app_model
+            referencedColumnNames: id
+            referencedTableName: model
+            constraintName: fk_model_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addNotNullConstraint:
+            columnName: access_type
+            tableName: app_model

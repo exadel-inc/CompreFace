@@ -16,24 +16,29 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.exadel.frs.commonservice.enums.ValidationResult;
+import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.component.migration.MigrationComponent;
 import com.exadel.frs.core.trainservice.component.migration.MigrationStatusStorage;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
+import com.exadel.frs.core.trainservice.service.ModelService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.UUID;
+
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 @IntegrationTest
 @AutoConfigureMockMvc
-class MigrateControllerTest {
+class MigrateControllerTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -44,11 +49,16 @@ class MigrateControllerTest {
     @MockBean
     private MigrationComponent migrationComponent;
 
+    @MockBean
+    private ModelService modelService;
+
     private static final String URL = "migrate_url";
 
     @Test
     void migrate() throws Exception {
-        mockMvc.perform(post(API_V1 + "/migrate").param("url", URL))
+        when(modelService.validateModelKey(anyString(), any())).thenReturn(ValidationResult.OK);
+
+        mockMvc.perform(post(API_V1 + "/migrate").param("url", URL).header("x-api-key", UUID.randomUUID()))
                .andExpect(status().isOk())
                .andExpect(content().string("Migration started"));
 

@@ -1,7 +1,7 @@
 package com.exadel.frs.system.security.endpoint;
 
 import static com.exadel.frs.system.global.Constants.ACCESS_TOKEN_COOKIE_NAME;
-import com.exadel.frs.entity.User;
+import com.exadel.frs.commonservice.entity.User;
 import java.security.Principal;
 import java.util.Map;
 import lombok.val;

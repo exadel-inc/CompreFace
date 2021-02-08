@@ -16,8 +16,8 @@
 
 package com.exadel.frs.repository;
 
-import com.exadel.frs.entity.AppModel;
-import com.exadel.frs.entity.AppModelId;
+import com.exadel.frs.commonservice.entity.AppModel;
+import com.exadel.frs.commonservice.entity.AppModelId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AppModelRepository extends JpaRepository<AppModel, AppModelId> {

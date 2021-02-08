@@ -16,52 +16,68 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
-import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import com.exadel.frs.core.trainservice.entity.Face;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import com.exadel.frs.commonservice.entity.App;
+import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
 
-@DataJpaTest
-@ExtendWith(SpringExtension.class)
-public class FacesRepositoryTest {
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
+import static com.exadel.frs.core.trainservice.ItemsBuilder.*;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeModel;
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class FacesRepositoryTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private FacesRepository facesRepository;
+
+    @Autowired
+    private ModelRepository modelRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     private final static String MODEL_KEY = "model_key";
     private final static String MODEL_KEY_OTHER = "model_key_other";
-    private static final double EMBEDDING = 100500;
 
     @BeforeEach
     void setUp() {
-        val faceA = makeFace("A", MODEL_KEY);
-        val faceB = makeFace("B", MODEL_KEY_OTHER);
-        val faceC = makeFace("C", MODEL_KEY);
+        jdbcTemplate.execute("DELETE FROM face");
+        jdbcTemplate.execute("DELETE FROM model");
+        jdbcTemplate.execute("DELETE FROM app");
 
-        facesRepository.saveAll(List.of(faceA, faceB, faceC));
+        App app = makeApp(1L, MODEL_KEY);
+        jdbcTemplate.update("INSERT INTO App(id, name, guid, api_key) VALUES (?, ?, ?, ?)",
+                app.getId(),
+                app.getName(),
+                app.getGuid(),
+                app.getApiKey());
+
+        modelRepository.saveAll(List.of(
+                makeModel(MODEL_KEY, ModelType.RECOGNITION, app),
+                makeModel(MODEL_KEY_OTHER, ModelType.RECOGNITION, app)
+        ));
+
+        facesRepository.saveAll(List.of(
+                makeFace("A", MODEL_KEY),
+                makeFace("B", MODEL_KEY_OTHER),
+                makeFace("C", MODEL_KEY)
+        ));
     }
 
     @AfterEach
     public void cleanUp() {
         facesRepository.deleteAll();
-    }
-
-    public static Face makeFace(final String name, final String modelApiKey) {
-        return new Face()
-                .setFaceName(name)
-                .setApiKey(modelApiKey)
-                .setEmbedding(new Face.Embedding(List.of(EMBEDDING), null))
-                .setId(randomUUID().toString());
     }
 
     @Test

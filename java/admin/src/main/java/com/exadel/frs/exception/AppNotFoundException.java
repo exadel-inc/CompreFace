@@ -16,7 +16,9 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.APP_NOT_FOUND;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.handler.CrudExceptionCode.APP_NOT_FOUND;
 import static java.lang.String.format;
 
 public class AppNotFoundException extends BasicException {

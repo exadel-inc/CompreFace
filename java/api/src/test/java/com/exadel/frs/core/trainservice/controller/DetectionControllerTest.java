@@ -23,9 +23,12 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.exadel.frs.commonservice.exception.BasicException;
+import com.exadel.frs.commonservice.exception.FileExtensionException;
+import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
+import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.exception.BasicException;
-import com.exadel.frs.core.trainservice.exception.FileExtensionException;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.exception.FacesServiceException;
 import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundException;
@@ -37,16 +40,18 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 @IntegrationTest
 @AutoConfigureMockMvc
-class DetectionControllerTest {
+class DetectionControllerTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -98,6 +103,7 @@ class DetectionControllerTest {
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
+                .andDo(MockMvcResultHandlers.print())
                // then
                .andExpect(matcher);
     }

@@ -17,7 +17,7 @@
 package com.exadel.frs.mapper;
 
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
-import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.commonservice.entity.UserAppRole;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -16,9 +16,9 @@
 
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.handler.ExceptionCode.EMPTY_REQUIRED_FIELD;
-import static com.exadel.frs.handler.ExceptionCode.INCORRECT_USER_PASSWORD;
-import static com.exadel.frs.handler.ExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.EMPTY_REQUIRED_FIELD;
+import static com.exadel.frs.handler.CrudExceptionCode.INCORRECT_USER_PASSWORD;
+import static com.exadel.frs.handler.CrudExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
 import static com.exadel.frs.utils.TestUtils.buildUser;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;
@@ -42,14 +42,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
 import com.exadel.frs.dto.ui.ChangePasswordDto;
 import com.exadel.frs.dto.ui.UserAutocompleteDto;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserResponseDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.entity.User;
+import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.exception.AccessDeniedException;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.mapper.UserGlobalRoleMapper;

@@ -16,11 +16,12 @@
 
 package com.exadel.frs.utils;
 
-import static com.exadel.frs.handler.ExceptionCode.UNDEFINED;
+import static com.exadel.frs.handler.CrudExceptionCode.UNDEFINED;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
-import com.exadel.frs.dto.ExceptionResponseDto;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.exception.BasicException;
+
+import com.exadel.frs.commonservice.dto.ExceptionResponseDto;
+import com.exadel.frs.commonservice.exception.BasicException;
+import com.exadel.frs.commonservice.entity.User;
 import javax.sql.DataSource;
 import lombok.val;
 import org.springframework.core.io.ClassPathResource;

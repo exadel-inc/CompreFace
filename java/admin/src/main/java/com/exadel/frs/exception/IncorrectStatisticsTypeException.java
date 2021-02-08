@@ -1,6 +1,8 @@
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.INCORRECT_STATISTICS_ROLE;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.handler.CrudExceptionCode.INCORRECT_STATISTICS_ROLE;
 import static java.lang.String.format;
 
 public class IncorrectStatisticsTypeException extends BasicException {

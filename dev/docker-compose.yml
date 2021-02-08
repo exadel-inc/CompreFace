@@ -20,7 +20,7 @@ services:
     image: ${registry}compreface-admin:${ADMIN_VERSION}
     build:
       context: ../java
-      dockerfile: dev/Dockerfile
+      dockerfile: ../dev/Dockerfile
       target: frs_crud
     container_name: "compreface-admin"
     ports:
@@ -45,7 +45,7 @@ services:
     image: ${registry}compreface-api:${API_VERSION}
     build:
       context: ../java
-      dockerfile: dev/Dockerfile
+      dockerfile: ../dev/Dockerfile
       target: frs_core
     container_name: "compreface-api"
     ports:

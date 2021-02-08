@@ -16,10 +16,10 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.enums.ValidationResult.FORBIDDEN;
-import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
-import com.exadel.frs.core.trainservice.enums.ModelType;
-import com.exadel.frs.core.trainservice.enums.ValidationResult;
+import static com.exadel.frs.commonservice.enums.ValidationResult.FORBIDDEN;
+import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
+import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.commonservice.enums.ValidationResult;
 import com.exadel.frs.core.trainservice.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

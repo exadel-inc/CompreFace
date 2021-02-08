@@ -16,9 +16,10 @@
 
 package com.exadel.frs.core.trainservice.sdk.faces.exception;
 
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.FACES_SERVICE_EXCEPTION;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.FACES_SERVICE_EXCEPTION;
 import static java.lang.String.format;
-import com.exadel.frs.core.trainservice.exception.BasicException;
 
 public class FacesServiceException extends BasicException {
 

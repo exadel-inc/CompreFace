@@ -1,0 +1,45 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user_app_role-table
+      author: Andrei Hayeuski
+      changes:
+        # user_app_role
+        - createTable:
+            tableName: user_app_role
+            columns:
+              - column:
+                  name: app_id
+                  type: bigint
+              - column:
+                  name: user_id
+                  type: bigint
+              - column:
+                  name: role
+                  type: varchar(1)
+
+        - addPrimaryKey:
+            columnNames: app_id, user_id
+            constraintName: pk_user_app_role
+            tableName: user_app_role
+
+        - addNotNullConstraint:
+            tableName: user_app_role
+            columnName: role
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: user_app_role
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: user_app_role
+            referencedColumnNames: id
+            referencedTableName: user
+            constraintName: fk_user_id
+            onDelete: CASCADE
+            onUpdate: CASCADE

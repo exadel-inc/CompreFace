@@ -17,9 +17,9 @@
 package com.exadel.frs.core.trainservice.dao;
 
 import static java.util.UUID.randomUUID;
-import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.entity.Face.Embedding;
-import com.exadel.frs.core.trainservice.entity.Image;
+import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.commonservice.entity.Face.Embedding;
+import com.exadel.frs.commonservice.entity.Image;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.core.trainservice.system.global.ImageProperties;

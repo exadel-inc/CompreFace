@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.cache;
 
-import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeFace;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;

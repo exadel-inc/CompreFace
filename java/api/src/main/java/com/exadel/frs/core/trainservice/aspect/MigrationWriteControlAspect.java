@@ -16,8 +16,8 @@
 
 package com.exadel.frs.core.trainservice.aspect;
 
+import com.exadel.frs.commonservice.exception.MigrationExecutionException;
 import com.exadel.frs.core.trainservice.component.migration.MigrationStatusStorage;
-import com.exadel.frs.core.trainservice.exception.MigrationExecutionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

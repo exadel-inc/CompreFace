@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
-import com.exadel.frs.core.trainservice.entity.Image;
+import com.exadel.frs.commonservice.entity.Image;
 import javax.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

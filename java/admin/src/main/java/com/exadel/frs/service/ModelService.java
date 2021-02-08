@@ -16,17 +16,18 @@
 
 package com.exadel.frs.service;
 
-import static com.exadel.frs.enums.AppModelAccess.READONLY;
+import static com.exadel.frs.commonservice.enums.AppModelAccess.READONLY;
 import static java.util.UUID.randomUUID;
 
+import com.exadel.frs.commonservice.entity.*;
+import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
+import com.exadel.frs.commonservice.exception.ModelNotFoundException;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
-import com.exadel.frs.entity.*;
-import com.exadel.frs.enums.ModelType;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
-import com.exadel.frs.exception.ModelNotFoundException;
+import com.exadel.frs.commonservice.entity.*;
+import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.exception.ModelShareRequestNotFoundException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.helpers.SecurityUtils;

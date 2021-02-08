@@ -16,7 +16,9 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.USER_DOES_NOT_EXIST;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.handler.CrudExceptionCode.USER_DOES_NOT_EXIST;
 import static java.lang.String.format;
 
 public class UserDoesNotExistException extends BasicException {

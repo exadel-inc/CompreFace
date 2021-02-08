@@ -15,15 +15,18 @@
  */
 package com.exadel.frs.helpers;
 
-import static com.exadel.frs.enums.ModelType.DETECTION;
-import static com.exadel.frs.enums.ModelType.RECOGNITION;
+import static com.exadel.frs.commonservice.enums.ModelType.DETECTION;
+import static com.exadel.frs.commonservice.enums.ModelType.RECOGNITION;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import com.exadel.frs.enums.ModelType;
-import com.exadel.frs.exception.IncorrectModelTypeException;
+
+import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
+import com.exadel.frs.commonservice.enums.ModelType;
 import java.util.stream.Stream;
+
+import com.exadel.frs.commonservice.helpers.ModelTypeConverter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;

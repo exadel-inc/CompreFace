@@ -1,12 +1,37 @@
 spring:
   cache:
     type: none
+  flyway:
+    enabled: false
+  liquibase:
+    enabled: false
+  datasource-pg:
+    driver-class-name: org.postgresql.Driver
+    url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
+    username: ${POSTGRES_USERNAME:postgres}
+    password: ${POSTGRES_PASSWORD:postgres}
   jpa:
     properties:
       hibernate:
+        default_schema: public
+        jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
+        format_sql: true
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
 
 environment:
   servers:
     PYTHON:
       url: ${PYTHON_URL:http://compreface-core:3000}
+
+image:
+  types:
+    - tif
+    - tiff
+    - jpg
+    - jpeg
+    - png
+    - bmp
+    - ico
+    - gif
+    - webp
+  saveImagesToDB: ${SAVE_IMAGES_TO_DB:true}

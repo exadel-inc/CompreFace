@@ -16,7 +16,9 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.handler.CrudExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
 
 public class ConstraintViolationException extends BasicException {
 

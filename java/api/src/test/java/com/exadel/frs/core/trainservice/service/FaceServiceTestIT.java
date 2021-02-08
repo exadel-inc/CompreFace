@@ -16,40 +16,41 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static com.exadel.frs.core.trainservice.repository.FacesRepositoryTest.makeFace;
-import static com.exadel.frs.core.trainservice.service.FaceService.MAX_FACES_TO_RECOGNIZE;
-import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.toList;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
-import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
-import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.commonservice.entity.App;
+import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.core.trainservice.repository.ModelRepository;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.PluginsVersions;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
-import java.io.IOException;
-import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-@DataJpaTest
-@ExtendWith(SpringExtension.class)
-@Import({FaceService.class, FaceDao.class, FaceCacheProvider.class})
-public class FaceServiceTestIT {
+import java.io.IOException;
+import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
+
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeApp;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeFace;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeModel;
+import static com.exadel.frs.core.trainservice.service.FaceService.MAX_FACES_TO_RECOGNIZE;
+import static java.util.UUID.randomUUID;
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+public class FaceServiceTestIT extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private FacesRepository facesRepository;
@@ -59,6 +60,12 @@ public class FaceServiceTestIT {
 
     @MockBean
     private FacesApiClient facesApiClient;
+
+    @Autowired
+    private ModelRepository modelRepository;
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
     private static final MultipartFile MULTIPART_FILE_DATA = new MultipartFileData("hex-string-1".getBytes(), "test", "application/json");
     private static final String FACE_NAME = "faceName";
@@ -79,17 +86,29 @@ public class FaceServiceTestIT {
 
     @BeforeEach
     void setUp() {
-        val faceA = makeFace("A", MODEL_KEY);
-        val faceB = makeFace("B", MODEL_KEY_OTHER);
-        val faceC = makeFace("C", MODEL_KEY);
+        App app = makeApp(1L, MODEL_KEY);
+        jdbcTemplate.update("INSERT INTO App(id, name, guid, api_key) VALUES (?, ?, ?, ?)",
+                app.getId(),
+                app.getName(),
+                app.getGuid(),
+                app.getApiKey());
 
-        facesRepository.saveAll(List.of(faceA, faceB, faceC));
+        modelRepository.saveAll(List.of(
+                makeModel(MODEL_KEY, ModelType.RECOGNITION, app),
+                makeModel(MODEL_KEY_OTHER, ModelType.RECOGNITION, app)
+        ));
+
+        facesRepository.saveAll(List.of(
+                makeFace("A", MODEL_KEY),
+                makeFace("B", MODEL_KEY_OTHER),
+                makeFace("C", MODEL_KEY)
+        ));
     }
 
     @Test
     public void deleteFaceByGuid() {
-        val faces = facesRepository.findByApiKey(MODEL_KEY);
-        val face = faces.get(new Random().nextInt(faces.size()));
+        List<Face> faces = facesRepository.findByApiKey(MODEL_KEY);
+        Face face = faces.get(new Random().nextInt(faces.size()));
 
         faceService.deleteFaceById(face.getId(), MODEL_KEY);
 
@@ -164,5 +183,6 @@ public class FaceServiceTestIT {
     public void cleanUp() {
         faceService.deleteFacesByModel(MODEL_KEY);
         faceService.deleteFacesByModel(MODEL_KEY_OTHER);
+        jdbcTemplate.execute("DELETE FROM App");
     }
 }

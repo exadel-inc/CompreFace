@@ -16,7 +16,7 @@
 
 package com.exadel.frs.dto.ui;
 
-import com.exadel.frs.enums.ModelType;
+import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.validation.ValidEnum;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

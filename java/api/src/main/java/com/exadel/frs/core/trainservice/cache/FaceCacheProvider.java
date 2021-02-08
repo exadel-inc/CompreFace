@@ -18,7 +18,7 @@ package com.exadel.frs.core.trainservice.cache;
 
 import static com.exadel.frs.core.trainservice.cache.FaceCollection.buildFromFaces;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
+import com.exadel.frs.commonservice.entity.Face;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import java.util.List;

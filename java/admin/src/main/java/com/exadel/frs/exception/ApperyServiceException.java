@@ -1,6 +1,8 @@
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.APPERY_SERVICE_EXCEPTION;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.handler.CrudExceptionCode.APPERY_SERVICE_EXCEPTION;
 
 public class ApperyServiceException extends BasicException {
 

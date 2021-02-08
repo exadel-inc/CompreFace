@@ -1,9 +1,9 @@
 package com.exadel.frs.aspect;
 
 import com.exadel.frs.annotation.CollectStatistics;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.enums.GlobalRole;
-import com.exadel.frs.enums.StatisticsType;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.enums.GlobalRole;
+import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.exception.ApperyServiceException;
 import com.exadel.frs.repository.InstallInfoRepository;
 import com.exadel.frs.repository.UserRepository;

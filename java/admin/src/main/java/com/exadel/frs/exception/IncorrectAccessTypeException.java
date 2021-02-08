@@ -16,7 +16,9 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.INCORRECT_ACCESS_TYPE;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.INCORRECT_ACCESS_TYPE;
 import static java.lang.String.format;
 
 public class IncorrectAccessTypeException extends BasicException {

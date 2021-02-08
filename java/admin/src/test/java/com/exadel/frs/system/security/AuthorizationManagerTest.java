@@ -16,9 +16,9 @@
 
 package com.exadel.frs.system.security;
 
-import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
-import static com.exadel.frs.enums.GlobalRole.OWNER;
-import static com.exadel.frs.enums.GlobalRole.USER;
+import static com.exadel.frs.commonservice.enums.GlobalRole.ADMINISTRATOR;
+import static com.exadel.frs.commonservice.enums.GlobalRole.OWNER;
+import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.spy;
@@ -27,13 +27,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import com.exadel.frs.dto.ui.UserDeleteDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.Model;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.entity.UserAppRole;
-import com.exadel.frs.entity.UserAppRoleId;
-import com.exadel.frs.enums.AppRole;
-import com.exadel.frs.enums.GlobalRole;
+import com.exadel.frs.commonservice.entity.App;
+import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.entity.UserAppRole;
+import com.exadel.frs.commonservice.entity.UserAppRoleId;
+import com.exadel.frs.commonservice.enums.AppRole;
+import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.ModelDoesNotBelongToAppException;
 import java.util.List;

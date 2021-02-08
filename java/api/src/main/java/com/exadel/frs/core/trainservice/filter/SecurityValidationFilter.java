@@ -16,18 +16,19 @@
 
 package com.exadel.frs.core.trainservice.filter;
 
-import static com.exadel.frs.core.trainservice.enums.ModelType.*;
-import static com.exadel.frs.core.trainservice.enums.ValidationResult.OK;
+import static com.exadel.frs.commonservice.enums.ModelType.*;
+import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.list;
 import static java.util.function.Function.identity;
 
-import com.exadel.frs.core.trainservice.enums.ModelType;
-import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
-import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
-import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
+import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.commonservice.enums.ValidationResult;
+import com.exadel.frs.commonservice.exception.BadFormatModelKeyException;
+import com.exadel.frs.commonservice.exception.ModelNotFoundException;
+import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
 import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
@@ -103,8 +104,8 @@ public class SecurityValidationFilter implements Filter {
 
                     return;
                 }
-                val modelType = getModelTypeByUrl(requestURI);
-                val validationResult = modelService.validateModelKey(key, modelType);
+                ModelType modelType = getModelTypeByUrl(requestURI);
+                ValidationResult validationResult = modelService.validateModelKey(key, modelType);
                 if (validationResult != OK) {
                     val objectResponseEntity = handler.handleDefinedExceptions(new ModelNotFoundException(key));
                     buildException(httpResponse, objectResponseEntity);

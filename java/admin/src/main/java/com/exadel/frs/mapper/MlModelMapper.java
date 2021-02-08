@@ -17,9 +17,9 @@
 package com.exadel.frs.mapper;
 
 import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.entity.AppModel;
-import com.exadel.frs.entity.Model;
-import com.exadel.frs.enums.AppModelAccess;
+import com.exadel.frs.commonservice.entity.AppModel;
+import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.enums.AppModelAccess;
 import java.util.List;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

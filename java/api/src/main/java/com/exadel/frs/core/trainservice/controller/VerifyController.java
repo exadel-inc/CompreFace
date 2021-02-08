@@ -1,9 +1,9 @@
 package com.exadel.frs.core.trainservice.controller;
 
 
+import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundException;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;

@@ -1,6 +1,6 @@
 package com.exadel.frs.system.feign;
 
-import com.exadel.frs.enums.StatisticsType;
+import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -16,8 +16,8 @@
 
 package com.exadel.frs.repository;
 
-import com.exadel.frs.entity.User;
-import com.exadel.frs.enums.GlobalRole;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.enums.GlobalRole;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;

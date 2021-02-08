@@ -16,7 +16,9 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.EMAIL_ALREADY_REGISTERED;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.handler.CrudExceptionCode.EMAIL_ALREADY_REGISTERED;
 
 public class EmailAlreadyRegisteredException extends BasicException {
 

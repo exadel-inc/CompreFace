@@ -1,8 +1,8 @@
 package com.exadel.frs.scheduler.job;
 
-import com.exadel.frs.entity.ModelFaceProjection;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.enums.GlobalRole;
+import com.exadel.frs.commonservice.entity.ModelFaceProjection;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.exception.ApperyServiceException;
 import com.exadel.frs.repository.FacesRepository;
 import com.exadel.frs.repository.InstallInfoRepository;

@@ -16,8 +16,8 @@
 
 package com.exadel.frs.repository;
 
-import com.exadel.frs.entity.Model;
-import com.exadel.frs.entity.ModelFaceProjection;
+import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelFaceProjection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -35,7 +35,7 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     boolean existsByNameAndAppId(String name, Long appId);
 
-    @Query("SELECT new com.exadel.frs.entity.ModelFaceProjection(m.guid, count(f.id) as faces_count)\n" +
+    @Query("SELECT new com.exadel.frs.commonservice.entity.ModelFaceProjection(m.guid, count(f.id) as faces_count)\n" +
             "FROM Model m\n" +
             "LEFT JOIN Face f\n" +
             "ON m.apiKey=f.apiKey\n" +

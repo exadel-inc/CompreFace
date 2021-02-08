@@ -16,8 +16,8 @@
 
 package com.exadel.frs.core.trainservice.repository;
 
-import com.exadel.frs.core.trainservice.entity.Model;
-import com.exadel.frs.core.trainservice.enums.ModelType;
+import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.enums.ModelType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

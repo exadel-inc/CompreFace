@@ -16,9 +16,9 @@
 
 package com.exadel.frs;
 
-import static com.exadel.frs.enums.AppRole.OWNER;
-import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
-import static com.exadel.frs.enums.GlobalRole.USER;
+import static com.exadel.frs.commonservice.enums.AppRole.OWNER;
+import static com.exadel.frs.commonservice.enums.GlobalRole.ADMINISTRATOR;
+import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
 import static java.util.Collections.nCopies;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 import static org.apache.commons.lang3.RandomUtils.nextLong;
@@ -36,14 +36,14 @@ import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.Model;
-import com.exadel.frs.entity.ModelShareRequest;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.entity.UserAppRole;
-import com.exadel.frs.entity.UserAppRoleId;
-import com.exadel.frs.enums.AppRole;
-import com.exadel.frs.enums.GlobalRole;
+import com.exadel.frs.commonservice.entity.App;
+import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.entity.ModelShareRequest;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.entity.UserAppRole;
+import com.exadel.frs.commonservice.entity.UserAppRoleId;
+import com.exadel.frs.commonservice.enums.AppRole;
+import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.exception.SelfRoleChangeException;

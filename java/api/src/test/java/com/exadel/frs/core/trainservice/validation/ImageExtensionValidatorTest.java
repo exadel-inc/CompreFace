@@ -22,7 +22,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.exception.FileExtensionException;
+
+import com.exadel.frs.commonservice.exception.FileExtensionException;
 import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import java.util.List;
 import lombok.val;

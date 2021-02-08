@@ -17,9 +17,9 @@
 package com.exadel.frs.mapper;
 
 import com.exadel.frs.dto.ui.AppResponseDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.entity.UserAppRole;
+import com.exadel.frs.commonservice.entity.App;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.entity.UserAppRole;
 import java.util.List;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;

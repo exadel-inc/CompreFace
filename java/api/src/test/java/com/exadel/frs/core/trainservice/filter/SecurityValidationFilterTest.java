@@ -27,11 +27,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.core.trainservice.enums.ModelType;
-import com.exadel.frs.core.trainservice.enums.ValidationResult;
-import com.exadel.frs.core.trainservice.exception.BadFormatModelKeyException;
-import com.exadel.frs.core.trainservice.exception.ModelNotFoundException;
-import com.exadel.frs.core.trainservice.handler.ResponseExceptionHandler;
+
+import com.exadel.frs.commonservice.exception.BadFormatModelKeyException;
+import com.exadel.frs.commonservice.exception.ModelNotFoundException;
+import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
+import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.commonservice.enums.ValidationResult;
 import com.exadel.frs.core.trainservice.service.ModelService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;

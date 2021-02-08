@@ -2,34 +2,27 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>com.exadel</groupId>
         <artifactId>frs-java</artifactId>
+        <groupId>com.exadel</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>frs-crud-app</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${parent.version}</version>
     <description>Service for clients, apps, models handling for face recognition service</description>
-
-    <properties>
-        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
-    </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-dependencies</artifactId>
-                <version>${spring-cloud.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
+    <packaging>jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>com.exadel</groupId>
+            <artifactId>frs-common-app</artifactId>
+            <version>${parent.version}</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-logging</artifactId>
@@ -159,8 +152,6 @@
         <dependency>
             <groupId>io.zonky.test</groupId>
             <artifactId>embedded-database-spring-test</artifactId>
-            <version>1.6.2</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

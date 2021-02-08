@@ -46,7 +46,7 @@ public class DbConfig {
     public LocalContainerEntityManagerFactoryBean pgEntityManager(@Autowired DataSource dataSource) {
         final LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.exadel.frs.core.trainservice.entity");
+        em.setPackagesToScan("com.exadel.frs.commonservice.entity");
         val vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
         val properties = new HashMap<String, Object>();

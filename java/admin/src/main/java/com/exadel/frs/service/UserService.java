@@ -16,24 +16,24 @@
 
 package com.exadel.frs.service;
 
-import static com.exadel.frs.enums.GlobalRole.ADMINISTRATOR;
-import static com.exadel.frs.enums.GlobalRole.OWNER;
-import static com.exadel.frs.enums.GlobalRole.USER;
-import static com.exadel.frs.enums.StatisticsType.USER_CREATE;
+import static com.exadel.frs.commonservice.enums.GlobalRole.ADMINISTRATOR;
+import static com.exadel.frs.commonservice.enums.GlobalRole.OWNER;
+import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
+import static com.exadel.frs.commonservice.enums.StatisticsType.USER_CREATE;
 import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import com.exadel.frs.annotation.CollectStatistics;
+import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
 import com.exadel.frs.dto.ui.UserUpdateDto;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.enums.GlobalRole;
-import com.exadel.frs.enums.Replacer;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.enums.GlobalRole;
+import com.exadel.frs.commonservice.enums.Replacer;
 import com.exadel.frs.exception.EmailAlreadyRegisteredException;
-import com.exadel.frs.exception.EmptyRequiredFieldException;
 import com.exadel.frs.exception.IncorrectUserPasswordException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.InvalidEmailException;

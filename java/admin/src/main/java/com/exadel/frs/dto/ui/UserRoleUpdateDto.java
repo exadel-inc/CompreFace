@@ -16,7 +16,7 @@
 
 package com.exadel.frs.dto.ui;
 
-import com.exadel.frs.enums.GlobalRole;
+import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.validation.ValidEnum;
 import javax.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

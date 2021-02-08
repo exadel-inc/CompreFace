@@ -16,14 +16,15 @@
 
 package com.exadel.frs.handler;
 
-import static com.exadel.frs.handler.ExceptionCode.UNDEFINED;
+import static com.exadel.frs.handler.CrudExceptionCode.UNDEFINED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import com.exadel.frs.EmbeddedPostgreSQLTest;
-import com.exadel.frs.dto.ExceptionResponseDto;
+import com.exadel.frs.commonservice.dto.ExceptionResponseDto;
+import com.exadel.frs.commonservice.exception.BasicException;
+import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
 import com.exadel.frs.exception.AccessDeniedException;
-import com.exadel.frs.exception.BasicException;
 import java.util.stream.Stream;
 import lombok.val;
 import org.junit.jupiter.params.ParameterizedTest;

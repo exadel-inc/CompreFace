@@ -16,7 +16,9 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.USER_REGISTRATION_TOKEN_EXPIRED;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.handler.CrudExceptionCode.USER_REGISTRATION_TOKEN_EXPIRED;
 
 public class RegistrationTokenExpiredException extends BasicException {
 

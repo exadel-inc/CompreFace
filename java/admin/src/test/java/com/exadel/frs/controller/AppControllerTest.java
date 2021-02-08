@@ -16,8 +16,8 @@
 
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.enums.AppRole.OWNER;
-import static com.exadel.frs.enums.AppRole.USER;
+import static com.exadel.frs.commonservice.enums.AppRole.OWNER;
+import static com.exadel.frs.commonservice.enums.AppRole.USER;
 import static com.exadel.frs.utils.TestUtils.USER_ID;
 import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
 import static com.exadel.frs.utils.TestUtils.buildUndefinedExceptionResponse;
@@ -36,6 +36,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.exadel.frs.commonservice.exception.BasicException;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
@@ -43,11 +45,10 @@ import com.exadel.frs.dto.ui.ModelShareResponseDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.UserAppRole;
-import com.exadel.frs.enums.AppRole;
+import com.exadel.frs.commonservice.entity.App;
+import com.exadel.frs.commonservice.entity.UserAppRole;
+import com.exadel.frs.commonservice.enums.AppRole;
 import com.exadel.frs.exception.AppNotFoundException;
-import com.exadel.frs.exception.BasicException;
 import com.exadel.frs.mapper.AppMapper;
 import com.exadel.frs.mapper.UserAppRoleMapper;
 import com.exadel.frs.service.AppService;

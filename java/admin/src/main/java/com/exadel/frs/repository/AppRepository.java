@@ -16,7 +16,7 @@
 
 package com.exadel.frs.repository;
 
-import com.exadel.frs.entity.App;
+import com.exadel.frs.commonservice.entity.App;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

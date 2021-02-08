@@ -16,7 +16,9 @@
 
 package com.exadel.frs.exception;
 
-import static com.exadel.frs.handler.ExceptionCode.USER_ALREADY_HAS_ACCESS_TO_APP;
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.handler.CrudExceptionCode.USER_ALREADY_HAS_ACCESS_TO_APP;
 import static java.lang.String.format;
 
 public class UserAlreadyHasAccessToAppException extends BasicException {

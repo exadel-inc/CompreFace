@@ -16,10 +16,10 @@
 
 package com.exadel.frs.service;
 
-import static com.exadel.frs.enums.AppRole.ADMINISTRATOR;
-import static com.exadel.frs.enums.AppRole.OWNER;
-import static com.exadel.frs.enums.GlobalRole.USER;
-import static com.exadel.frs.enums.StatisticsType.APP_CREATE;
+import static com.exadel.frs.commonservice.enums.AppRole.ADMINISTRATOR;
+import static com.exadel.frs.commonservice.enums.AppRole.OWNER;
+import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
+import static com.exadel.frs.commonservice.enums.StatisticsType.APP_CREATE;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 import com.exadel.frs.annotation.CollectStatistics;
@@ -27,12 +27,12 @@ import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.entity.App;
-import com.exadel.frs.entity.ModelShareRequest;
-import com.exadel.frs.entity.ModelShareRequestId;
-import com.exadel.frs.entity.User;
-import com.exadel.frs.entity.UserAppRole;
-import com.exadel.frs.enums.AppRole;
+import com.exadel.frs.commonservice.entity.App;
+import com.exadel.frs.commonservice.entity.ModelShareRequest;
+import com.exadel.frs.commonservice.entity.ModelShareRequestId;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.entity.UserAppRole;
+import com.exadel.frs.commonservice.enums.AppRole;
 import com.exadel.frs.exception.AppNotFoundException;
 import com.exadel.frs.exception.InsufficientPrivilegesException;
 import com.exadel.frs.exception.NameIsNotUniqueException;

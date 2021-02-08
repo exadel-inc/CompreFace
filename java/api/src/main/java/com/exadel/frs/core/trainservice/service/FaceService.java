@@ -17,11 +17,12 @@
 package com.exadel.frs.core.trainservice.service;
 
 import static java.util.stream.Collectors.toSet;
+
+import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.exception.TooManyFacesException;
+import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import java.io.IOException;

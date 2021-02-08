@@ -16,8 +16,8 @@
 
 package com.exadel.frs.core.trainservice.cache;
 
-import com.exadel.frs.core.trainservice.entity.Face;
-import com.exadel.frs.core.trainservice.exception.ImageNotFoundException;
+import com.exadel.frs.commonservice.exception.ImageNotFoundException;
+import com.exadel.frs.commonservice.entity.Face;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import java.util.List;

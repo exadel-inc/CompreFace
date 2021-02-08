@@ -16,8 +16,8 @@
 
 package com.exadel.frs.repository;
 
-import com.exadel.frs.entity.ModelShareRequest;
-import com.exadel.frs.entity.ModelShareRequestId;
+import com.exadel.frs.commonservice.entity.ModelShareRequest;
+import com.exadel.frs.commonservice.entity.ModelShareRequestId;
 import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

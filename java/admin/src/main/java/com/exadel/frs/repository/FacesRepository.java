@@ -16,7 +16,7 @@
 
 package com.exadel.frs.repository;
 
-import com.exadel.frs.entity.Face;
+import com.exadel.frs.commonservice.entity.Face;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

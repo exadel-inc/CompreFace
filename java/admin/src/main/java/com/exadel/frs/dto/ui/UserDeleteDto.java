@@ -16,8 +16,8 @@
 
 package com.exadel.frs.dto.ui;
 
-import com.exadel.frs.entity.User;
-import com.exadel.frs.enums.Replacer;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.enums.Replacer;
 import java.util.function.BiConsumer;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -16,8 +16,10 @@
 
 package com.exadel.frs.core.trainservice.sdk.faces.exception;
 
-import static com.exadel.frs.core.trainservice.handler.ExceptionCode.NO_FACES_FOUND;
-import com.exadel.frs.core.trainservice.exception.BasicException;
+
+import com.exadel.frs.commonservice.exception.BasicException;
+
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.NO_FACES_FOUND;
 
 public class NoFacesFoundException extends BasicException {
 

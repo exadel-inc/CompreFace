@@ -16,7 +16,7 @@
 
 package com.exadel.frs.helpers;
 
-import com.exadel.frs.entity.User;
+import com.exadel.frs.commonservice.entity.User;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.core.context.SecurityContextHolder;
 
