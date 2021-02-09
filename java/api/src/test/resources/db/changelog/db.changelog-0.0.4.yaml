@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-model-table
+      author: Andrei Hayeuski
+      changes:
+        # model
+        - createTable:
+            tableName: model
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: guid
+                  type: varchar(36)
+              - column:
+                  name: app_id
+                  type: bigint
+              - column:
+                  name: api_key
+                  type: varchar(36)
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_model
+            tableName: model
+
+        - createSequence:
+            sequenceName: model_id_seq
+
+        - addNotNullConstraint:
+            tableName: model
+            columnName: name
+
+        - addNotNullConstraint:
+            tableName: model
+            columnName: guid
+
+        - addNotNullConstraint:
+            tableName: model
+            columnName: app_id
+
+        - addNotNullConstraint:
+            tableName: model
+            columnName: api_key
+
+        - addUniqueConstraint:
+            columnNames: name, app_id
+            constraintName: app_name_app_id_uindex
+            tableName: model
+
+        - addUniqueConstraint:
+            columnNames: api_key
+            constraintName: model_api_key_uindex
+            tableName: model
+
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: model_guid_uindex
+            tableName: model
+
+        - addForeignKeyConstraint:
+            baseColumnNames: app_id
+            baseTableName: model
+            referencedColumnNames: id
+            referencedTableName: app
+            constraintName: fk_app_id
+            onDelete: CASCADE
+            onUpdate: CASCADE

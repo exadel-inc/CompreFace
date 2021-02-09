@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: model-type-column
+      author: Aliaksandr Pleski
+      changes:
+        # add column type to model table
+        - addColumn:
+            tableName: model
+            columns:
+              - column:
+                  name: type
+                  type: varchar(1)
+
+        # set type of previously existed models
+        - sql:
+            sql: UPDATE  public.model  SET  type  = 'R'
+
+        # add not null constraint
+        - addNotNullConstraint:
+            tableName: model
+            columnName: type
