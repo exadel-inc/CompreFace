@@ -81,5 +81,8 @@ services:
       - "3300:3000"
     build:
       context: ../embedding-calculator
+      args:
+        - ENABLE_RECOGNITION_OPTIMIZATION=${enable_recognition_optimization}
+        - GPU_IDX=${GPU_IDX}
     environment:
       - ML_PORT=3000
