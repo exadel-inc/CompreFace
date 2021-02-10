@@ -28,10 +28,10 @@ import lombok.NoArgsConstructor;
 public class ChangePasswordDto {
 
     @NotEmpty(message = "Old Password cannot be empty")
-    @Size(min = 8, max = 255, message = "Field oldPassword must be more than 7 and less than 256 characters")
+    @Size(min = 8, max = 255, message = "Old Password must be more than 7 and less than 256 characters")
     private String oldPassword;
 
     @NotEmpty(message = "New Password cannot be empty")
-    @Size(min = 8, max = 255, message = "Field newPassword must be more than 7 and less than 256 characters")
+    @Size(min = 8, max = 255, message = "New Password must be more than 7 and less than 256 characters")
     private String newPassword;
 }
