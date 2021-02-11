@@ -47,6 +47,8 @@ services:
       context: ../java
       dockerfile: ../dev/Dockerfile
       target: frs_core
+      args:
+        - ND4J_CLASSIFIER=${ND4J_CLASSIFIER}
     container_name: "compreface-api"
     ports:
       - "8082:8080"
@@ -81,8 +83,5 @@ services:
       - "3300:3000"
     build:
       context: ../embedding-calculator
-      args:
-        - RECOGNITION_OPTIMIZATION=${RECOGNITION_OPTIMIZATION}
-        - GPU_IDX=${GPU_IDX}
     environment:
       - ML_PORT=3000
