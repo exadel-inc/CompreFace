@@ -82,7 +82,7 @@ services:
     build:
       context: ../embedding-calculator
       args:
-        - ENABLE_RECOGNITION_OPTIMIZATION=${enable_recognition_optimization}
+        - RECOGNITION_OPTIMIZATION=${RECOGNITION_OPTIMIZATION}
         - GPU_IDX=${GPU_IDX}
     environment:
       - ML_PORT=3000
