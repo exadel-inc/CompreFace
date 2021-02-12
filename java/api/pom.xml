@@ -138,7 +138,7 @@
         <dependency>
             <groupId>org.nd4j</groupId>
             <artifactId>nd4j-native</artifactId>
-            <classifier>linux-x86_64</classifier>
+            <classifier>${nd4j.classifier}</classifier>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -47,6 +47,8 @@ services:
       context: ../java
       dockerfile: ../dev/Dockerfile
       target: frs_core
+      args:
+        - ND4J_CLASSIFIER=${ND4J_CLASSIFIER}
     container_name: "compreface-api"
     ports:
       - "8082:8080"

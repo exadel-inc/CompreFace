@@ -44,6 +44,7 @@
         <hibernate-types.version>2.9.13</hibernate-types.version>
         <nd4j.version>1.0.0-beta7</nd4j.version>
         <maven.compiler.source>11</maven.compiler.source>
+        <nd4j.classifier>linux-x86_64</nd4j.classifier>
     </properties>
 
     <dependencyManagement>
@@ -149,7 +150,7 @@
                 <groupId>org.nd4j</groupId>
                 <artifactId>nd4j-native</artifactId>
                 <version>${nd4j.version}</version>
-                <classifier>linux-x86_64</classifier>
+                <classifier>${nd4j.classifier}</classifier>
             </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
