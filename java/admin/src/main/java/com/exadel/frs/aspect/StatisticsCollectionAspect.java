@@ -1,6 +1,7 @@
 package com.exadel.frs.aspect;
 
 import com.exadel.frs.annotation.CollectStatistics;
+import com.exadel.frs.commonservice.entity.InstallInfo;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.StatisticsType;
@@ -10,7 +11,6 @@ import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.system.feign.ApperyStatisticsClient;
 import com.exadel.frs.system.feign.StatisticsGeneralEntity;
 import feign.FeignException;
-import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +34,16 @@ public class StatisticsCollectionAspect {
     private final InstallInfoRepository installInfoRepository;
     private final UserRepository userRepository;
 
+    private InstallInfo installInfo;
+
+    private String getInstallGuid() {
+        if (installInfo == null) {
+            installInfo = installInfoRepository.findTopByOrderByInstallGuid();
+        }
+
+        return installInfo.getInstallGuid();
+    }
+
     @SneakyThrows
     @AfterReturning(pointcut = "@annotation(com.exadel.frs.annotation.CollectStatistics)", returning = "result")
     public void afterMethodInvocation(JoinPoint joinPoint, Object result) {
@@ -41,15 +51,9 @@ public class StatisticsCollectionAspect {
             return;
         }
 
-        User user;
+        User user = userRepository.findByGlobalRole(GlobalRole.OWNER);
 
-        user = userRepository.findByGlobalRole(GlobalRole.OWNER);
-
-        if (Objects.isNull(user)) {
-            user = (User) result;
-        }
-
-        if (!user.isAllowStatistics()) {
+        if (user == null || !user.isAllowStatistics()) {
             return;
         }
 
@@ -63,7 +67,7 @@ public class StatisticsCollectionAspect {
         try {
             apperyStatisticsClient.create(
                     statisticsApiKey,
-                    new StatisticsGeneralEntity(installInfoRepository.findAll().get(0).getInstallGuid(), statisticsType)
+                    new StatisticsGeneralEntity(getInstallGuid(), statisticsType)
             );
         } catch (FeignException exception) {
             throw new ApperyServiceException();
