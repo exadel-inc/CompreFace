@@ -6,8 +6,7 @@
   <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="compreface-logo" height="250px"/>
  </a>
   <br>
-  <i>CompreFace is a free face recognition solution that can be easily integrated into
-any IT system without prior machine learning skills
+  <i>CompreFace is a free face recognition solution that can be easily integrated into<br> any IT system without prior machine learning skills
      </i>
   <br>
 </p>
