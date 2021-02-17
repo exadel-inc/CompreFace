@@ -15,21 +15,35 @@
  */
 package com.exadel.frs.core.trainservice.dto;
 
-import com.exadel.frs.commonservice.dto.FindFacesResultDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FacesDetectionResponseDto {
+public class VerifyFacesResultDto {
 
-    @JsonProperty(value = "plugins_versions")
-    private PluginsVersionsDto pluginsVersions;
-    private List<FindFacesResultDto> result;
+    private Integer[] age;
+    private String gender;
+    private Double[] embedding;
+    private FacesBox box;
+    @JsonProperty(value = "execution_time")
+    private ExecutionTimeDto executionTime;
+    private List<List<Integer>> landmarks;
+
+    @Data
+    @NoArgsConstructor
+    public static class ExecutionTimeDto {
+
+        private Double age;
+        private Double gender;
+        private Double detector;
+        private Double calculator;
+    }
 }
