@@ -536,7 +536,7 @@ Compare faces from given two images:
 * processFile - file to be verified
 * checkFile - reference file to check the processed file
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>" \
+curl  -X POST "http://localhost:8000/api/v1/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F checkFile=<local_check_file>
@@ -544,15 +544,16 @@ curl  -X POST "http://localhost:8000/api/v1/verify?limit=<limit>&det_prob_thresh
 ```
 
 
-| Element          | Description | Type    | Required | Notes                                                        |
-| ---------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
-| Content-Type     | header      | string  | required | multipart/form-data                                          |
-| x-api-key        | header      | string  | required | api key of the Face Collection, created by the user                    |
-| image_id         | variable    | UUID    | required | UUID of the verifying face                                   |
-| processFile      | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
-| checkFile        | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
-| limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
-| det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+| Element             | Description | Type    | Required | Notes                                                        |
+| ------------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
+| Content-Type        | header      | string  | required | multipart/form-data                                          |
+| x-api-key           | header      | string  | required | api key of the Face Collection, created by the user                    |
+| image_id            | variable    | UUID    | required | UUID of the verifying face                                   |
+| processFile         | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| checkFile           | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| limit               | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+| face_plugins        | param       | string  | optional | comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. calculator,gender,age - returns embedding, gender and age for each face.    |
 
 Response body on success:
 ```
