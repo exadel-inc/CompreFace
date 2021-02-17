@@ -25,6 +25,7 @@ import { ServiceTypes } from '../../data/enums/model.enum';
 export class ModelCreateDialogComponent extends CreateDialogComponent {
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     super(dialogRef, data);
+    this.data.type = ServiceTypes.Recognition;
   }
   typeValues = ServiceTypes;
   typeValuesKeysArray = Object.keys(ServiceTypes);
