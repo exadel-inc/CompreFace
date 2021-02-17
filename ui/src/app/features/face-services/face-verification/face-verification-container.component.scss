@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,13 +14,14 @@
  * permissions and limitations under the License.
  */
 
-export interface UIRequestOptions {
-  apiKey: string;
-  file: File;
+@import "src/styles/colors";
+
+.face-result {
+  margin-bottom: 20px;
 }
 
-export interface UIDoubleFileRequestOptions {
-  apiKey: string;
-  processFile: File;
-  checkFile: File;
+.recognition-loading {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
 }

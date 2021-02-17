@@ -3,3 +3,8 @@ export enum ServiceTypes {
   Detection = 'DETECTION',
   Verify = 'VERIFY',
 }
+
+export enum VerificationServiceFields {
+  processFileData = 'processFileData',
+  checkFileData = 'checkFileData',
+}

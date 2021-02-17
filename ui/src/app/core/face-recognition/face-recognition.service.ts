@@ -20,7 +20,7 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { Model } from '../../data/interfaces/model';
-import { UIRequestOptions } from '../../data/interfaces/ui-request-options';
+import { UIDoubleFileRequestOptions, UIRequestOptions } from '../../data/interfaces/ui-request-options';
 
 @Injectable({
   providedIn: 'root',
@@ -73,6 +73,24 @@ export class FaceRecognitionService {
       );
   }
 
+  verification(processFile: any, checkFile: any, apiKey: string): Observable<any> {
+    const url = `${environment.userApiUrl}verify`;
+    const formData = new FormData();
+    formData.append('processFile', processFile);
+    formData.append('checkFile', checkFile);
+
+    return this.http
+      .post(url, formData, {
+        headers: { 'x-api-key': apiKey },
+      })
+      .pipe(
+        map(data => ({
+          data,
+          request: this.createUIDoubleFileRequest(url, { apiKey, processFile, checkFile }),
+        }))
+      );
+  }
+
   getAllFaces(model: Model): Observable<any> {
     return this.http.get(`${environment.userApiUrl}faces`, { headers: { 'x-api-key': model.apiKey } });
   }
@@ -91,7 +109,19 @@ export class FaceRecognitionService {
    * @private
    */
   private createUIRequest(url: string, options = {} as UIRequestOptions, params = {}): string {
-    const { apiKey, file: { name: fname } } = options;
+    const {
+      apiKey,
+      file: { name: fname },
+    } = options;
     return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "file=@${fname}"`;
+  }
+
+  private createUIDoubleFileRequest(url: string, options = {} as UIDoubleFileRequestOptions, params = {}): string {
+    const {
+      apiKey,
+      processFile: { name: ffname },
+      checkFile: { name: sfname },
+    } = options;
+    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "processFile=@${ffname}" \\\n "checkFile=@${sfname}"`;
   }
 }

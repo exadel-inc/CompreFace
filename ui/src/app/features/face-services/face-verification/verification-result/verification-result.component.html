@@ -1,0 +1,68 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<div class="result-container">
+  <div class="result-sections">
+    <div class="io-result-container">
+      <div class="result-section-image">
+        <div class="result-image">
+          <app-drag-n-drop
+            *ngIf="!checkFile; else checkFileBlock"
+            class="face-uploader"
+            (upload)="selectCheckFile.emit($event)"
+          ></app-drag-n-drop>
+          <ng-template #checkFileBlock
+            ><canvas *ngIf="printData || !processFile" #checkFileCanvasElement [width]="checkFileCanvasSize.width"></canvas
+          ></ng-template>
+        </div>
+      </div>
+      <div class="result-section-image">
+        <div class="face-uploader-tray"></div>
+        <div class="result-image">
+          <app-drag-n-drop
+            class="face-uploader"
+            *ngIf="!processFile; else processFileBlock"
+            (upload)="selectProcessFile.emit($event)"
+          ></app-drag-n-drop>
+          <ng-template #processFileBlock
+            ><canvas *ngIf="printData || !checkFile" #processFileCanvasElement [width]="processFileCanvasSize.width"></canvas
+          ></ng-template>
+        </div>
+      </div>
+    </div>
+    <ng-container *ngIf="isLoaded">
+      <div class="response-container">
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ 'test_model.request' | translate }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <textarea class="result-textarea" id="result-textarea-request" rows="5" disabled>{{ requestInfo.request }}</textarea>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              {{ 'test_model.response' | translate }}
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <textarea class="result-textarea" id="result-textarea-response" rows="16" disabled>{{ formattedResult }}</textarea>
+        </mat-expansion-panel>
+      </div>
+    </ng-container>
+  </div>
+</div>

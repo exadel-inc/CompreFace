@@ -25,6 +25,7 @@ import { AppUserStoreModule } from './app-user/app-user.module';
 import { ApplicationStoreModule } from './application/application.module';
 import { AuthEffects } from './auth/effects';
 import { DemoStoreModule } from './demo/demo.module';
+import { FaceVerificationStoreModule } from './face-verification/face-verification.module';
 import { FaceRecognitionStoreModule } from './face-recognition/face-recognition.module';
 import { ModelStoreModule } from './model/model.module';
 import { RoleStoreModule } from './role/role.module';
@@ -43,6 +44,7 @@ import { UserInfoStoreModule } from './userInfo/user-info.module';
     RoleStoreModule,
     ModelStoreModule,
     FaceRecognitionStoreModule,
+    FaceVerificationStoreModule,
     DemoStoreModule,
     AppUserStoreModule,
     StoreRouterConnectingModule.forRoot({
