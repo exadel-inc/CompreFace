@@ -3,7 +3,8 @@ package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.dto.FaceVerification;
+import com.exadel.frs.core.trainservice.dto.VerifyFacesResponse;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundException;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
@@ -39,30 +40,29 @@ public class VerifyController {
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;
     private final ImageExtensionValidator imageValidator;
+    private final FacesMapper mapper;
 
     @PostMapping(value = "/verify")
-    public Map<String, List<FaceVerification>> verify(
+    public Map<String, List<VerifyFacesResponse>> verify(
             @ApiParam(value = "Api key of application and model", required = true)
-            @RequestHeader(X_FRS_API_KEY_HEADER)
-            final String apiKey,
+            @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = "File to be verified", required = true)
-            @RequestParam
-            final MultipartFile processFile,
+            @RequestParam final MultipartFile processFile,
             @ApiParam(value = "Reference file to check the processed file", required = true)
-            @RequestParam
-            final MultipartFile checkFile,
+            @RequestParam final MultipartFile checkFile,
             @ApiParam(value = "Maximum number of faces to be verified")
             @RequestParam(defaultValue = "0", required = false)
-            @Min(value = 0, message = "Limit should be equal or greater than 0")
-            final Integer limit,
+            @Min(value = 0, message = "Limit should be equal or greater than 0") final Integer limit,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
-            @RequestParam(value = "det_prob_threshold", required = false)
-            final Double detProbThreshold
+            @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
+            @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
+            @RequestParam(value = "face_plugins", required = false)
+            final String facePlugins
     ) {
         // find FaceResult for each file
         List<FindFacesResult> findFacesResults = Stream.of(processFile, checkFile)
                 .parallel()
-                .map(file -> getFaceResult(file, limit, detProbThreshold))
+                .map(file -> getFaceResult(file, limit, detProbThreshold, facePlugins))
                 .collect(Collectors.toList());
 
         return Map.of("result", Collections.singletonList(
@@ -70,20 +70,20 @@ public class VerifyController {
         );
     }
 
-    private FindFacesResult getFaceResult(MultipartFile file, int limit, Double detProbThreshold) {
+    private FindFacesResult getFaceResult(MultipartFile file, int limit, Double detProbThreshold, String facePlugins) {
         imageValidator.validate(file);
-        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, null);
+        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, facePlugins);
 
         if (CollectionUtils.isEmpty(findFacesResponse.getResult())) {
             throw new NoFacesFoundException();
-        } else if  (findFacesResponse.getResult().size() > 1) {
+        } else if (findFacesResponse.getResult().size() > 1) {
             throw new TooManyFacesException();
         }
 
         return findFacesResponse.getResult().get(0);
     }
 
-    private FaceVerification getResult(FindFacesResult processFileResult, FindFacesResult checkFileResult) {
+    private VerifyFacesResponse getResult(FindFacesResult processFileResult, FindFacesResult checkFileResult) {
         // replace original probability value with scaled to (5, HALF_UP)
         double inBoxProbDouble = BigDecimal
                 .valueOf(processFileResult.getBox().getProbability())
@@ -101,11 +101,12 @@ public class VerifyController {
         Double prediction = classifierPredictor.verify(
                 toPrimitiveDouble.apply(processFileResult.getEmbedding()),
                 twoRankedEmbeddings
-                );
+        );
 
         // compose new result
-        return new FaceVerification(
-                processFileResult.getBox(),
+        return new VerifyFacesResponse(
+                mapper.toVerifyFacesResultDto(processFileResult),
+                mapper.toVerifyFacesResultDto(checkFileResult),
                 BigDecimal.valueOf(prediction).setScale(5, HALF_UP).floatValue()
         );
     }

@@ -15,6 +15,7 @@
  */
 package com.exadel.frs.core.trainservice.dto;
 
+import com.exadel.frs.commonservice.dto.FindFacesResultDto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;

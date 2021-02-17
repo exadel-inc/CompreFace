@@ -14,23 +14,14 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.dto.ui;
+package com.exadel.frs.core.trainservice.dto;
 
-import javax.validation.constraints.NotEmpty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Value;
 
-@Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class UserUpdateDto {
+@Value
+public class VerifyFacesResponse {
 
-    @NotEmpty(message = "User's first name is incorrect")
-    private String firstName;
-
-    @NotEmpty(message = "User's last name is incorrect")
-    private String lastName;
+    VerifyFacesResultDto processFileData;
+    VerifyFacesResultDto checkFileData;
+    float similarity;
 }

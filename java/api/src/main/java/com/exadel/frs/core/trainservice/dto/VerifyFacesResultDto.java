@@ -13,24 +13,37 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package com.exadel.frs.core.trainservice.dto;
 
-package com.exadel.frs.dto.ui;
-
-import javax.validation.constraints.NotEmpty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class UserUpdateDto {
+@AllArgsConstructor
+public class VerifyFacesResultDto {
 
-    @NotEmpty(message = "User's first name is incorrect")
-    private String firstName;
+    private Integer[] age;
+    private String gender;
+    private Double[] embedding;
+    private FacesBox box;
+    @JsonProperty(value = "execution_time")
+    private ExecutionTimeDto executionTime;
+    private List<List<Integer>> landmarks;
 
-    @NotEmpty(message = "User's last name is incorrect")
-    private String lastName;
+    @Data
+    @NoArgsConstructor
+    public static class ExecutionTimeDto {
+
+        private Double age;
+        private Double gender;
+        private Double detector;
+        private Double calculator;
+    }
 }

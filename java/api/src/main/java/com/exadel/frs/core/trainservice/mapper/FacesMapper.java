@@ -20,11 +20,14 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
+import com.exadel.frs.core.trainservice.dto.VerifyFacesResultDto;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import java.util.List;
-import java.util.Set;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+
+import java.util.List;
+import java.util.Set;
 
 @Mapper
 public interface FacesMapper {
@@ -38,4 +41,6 @@ public interface FacesMapper {
     FacesDetectionResponseDto toFacesDetectionResponseDto(FindFacesResponse facesResponse);
 
     FacesRecognitionResponseDto toFacesRecognitionResponseDto(FindFacesResponse facesResponse);
+
+    VerifyFacesResultDto toVerifyFacesResultDto(FindFacesResult facesResult);
 }
