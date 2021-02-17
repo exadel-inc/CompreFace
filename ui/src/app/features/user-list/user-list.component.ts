@@ -43,7 +43,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   currentUserId$: Observable<string>;
   currentUserEmail$: Observable<string>;
   orgOwnerEmail: string;
-  messageHeader: string;
   message: string;
   translate: TranslateService;
   selectedOption = 'deleter';
@@ -77,7 +76,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
     this.currentUserId$ = this.userListFacade.currentUserId$;
     this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
-    this.messageHeader = this.translate.instant('org_users.add_users_title');
     this.message = this.translate.instant('org_users.add_users_info');
   }
 
