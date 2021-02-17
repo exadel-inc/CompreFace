@@ -22,4 +22,5 @@ export interface User {
   userId: string;
   lastName: string;
   avatar?: string;
+  isAllowStatistics?: boolean;
 }
