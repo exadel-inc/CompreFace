@@ -38,7 +38,9 @@
     "last_name_restriction": "Nazwisko jest wymagane",
     "email_hint": "Email musi zawierać prawidłowy format",
     "login": "ZALOGUJ",
-    "sign_up": "ZAREJESTRUJ"
+    "sign_up": "ZAREJESTRUJ",
+    "statistics": "Zezwalaj na wysyłanie anonimowych statystyk dotyczących produktu",
+    "more_info": "Więcej informacji"
   },
   "change_password": {
     "old_password": "Stare hasło",
