@@ -28,9 +28,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class UserUpdateDto {
 
-    @NotEmpty(message = "First Name cannot be empty")
+    @NotEmpty(message = "User's first name is incorrect")
     private String firstName;
 
-    @NotEmpty(message = "Last Name cannot be empty")
+    @NotEmpty(message = "User's last name is incorrect")
     private String lastName;
 }
