@@ -25,6 +25,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { SignUpFormComponent } from './sign-up-form.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [SignUpFormComponent],
@@ -40,6 +41,7 @@ import { SignUpFormComponent } from './sign-up-form.component';
     MatButtonModule,
     MatIconModule,
     TranslateModule,
+    MatCheckboxModule,
   ],
 })
 export class SignUpFormModule {}

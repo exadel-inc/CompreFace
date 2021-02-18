@@ -38,7 +38,9 @@
     "last_name_restriction": "Last name is required",
     "email_hint": "Email should have correct format",
     "login": "LOGIN",
-    "sign_up": "SIGN UP"
+    "sign_up": "SIGN UP",
+    "statistics": "Allow to send anonymous statistics for product improvement",
+    "more_info": "More info"
   },
   "change_password": {
     "old_password": "Old password",
