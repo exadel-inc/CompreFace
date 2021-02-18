@@ -16,9 +16,7 @@
 
 <table *ngIf="!isLoading" mat-table [dataSource]="data">
   <caption>
-    {{
-      'users.caption' | translate
-    }}
+    {{ 'users.caption' | translate }}
   </caption>
 
   <!-- Position Column -->
@@ -67,7 +65,7 @@
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && (createHeader || createMessage) && !isLoading">
+<ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && createMessage && !isLoading">
   <h4>{{ messageHeader }}</h4>
   <div class="create-new-message">
     <mat-icon>info</mat-icon>

@@ -27,92 +27,89 @@ import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
 
 @Component({
-  selector: 'app-user-list-container',
-  templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-user-list-container',
+    templateUrl: './user-list.component.html',
+    styleUrls: ['./user-list.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserListComponent implements OnInit, OnDestroy {
-  tableConfig$: Observable<ITableConfig>;
-  isLoading$: Observable<boolean>;
-  userRole$: Observable<string>;
-  availableRoles: string[];
-  availableRoles$: Observable<string[]>;
-  search = '';
-  availableRolesSubscription: Subscription;
-  currentUserId$: Observable<string>;
-  currentUserEmail$: Observable<string>;
-  orgOwnerEmail: string;
-  message: string;
-  translate: TranslateService;
-  selectedOption = 'deleter';
+    tableConfig$: Observable<ITableConfig>;
+    isLoading$: Observable<boolean>;
+    userRole$: Observable<string>;
+    availableRoles: string[];
+    availableRoles$: Observable<string[]>;
+    search = '';
+    availableRolesSubscription: Subscription;
+    currentUserId$: Observable<string>;
+    currentUserEmail$: Observable<string>;
+    orgOwnerEmail: string;
+    message: string;
+    translate: TranslateService;
+    selectedOption = 'deleter';
 
-  constructor(private userListFacade: UserListFacade, public dialog: MatDialog, translate: TranslateService) {
-    userListFacade.initSubscriptions();
-    this.translate = translate;
-  }
+    constructor(private userListFacade: UserListFacade, public dialog: MatDialog, translate: TranslateService) {
+        userListFacade.initSubscriptions();
+        this.translate = translate;
+    }
 
-  ngOnInit() {
-    this.isLoading$ = this.userListFacade.isLoading$;
-    this.userRole$ = this.userListFacade.userRole$;
-    this.tableConfig$ = this.userListFacade.users$.pipe(
-      map((users: AppUser[]) => {
-        this.orgOwnerEmail = users.filter(user => user.role === Role.Owner).map(user => user.email)[0];
-        return {
-          columns: [
-            { title: 'user', property: 'username' },
-            {
-              title: 'role',
-              property: 'role',
-            },
-            { title: 'delete', property: 'delete' },
-          ],
-          data: users,
-        };
-      })
-    );
-
-    this.availableRoles$ = this.userListFacade.availableRoles$;
-    this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
-    this.currentUserId$ = this.userListFacade.currentUserId$;
-    this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
-    this.message = this.translate.instant('org_users.add_users_info');
-  }
-
-  onChange(user: AppUser): void {
-    this.userListFacade.updateUserRole(user.id, user.role);
-  }
-
-  onDelete(deletion: UserDeletion): void {
-    this.userListFacade.currentUserEmail$
-      .pipe(
-        take(1),
-        switchMap((email: string) =>
-          this.dialog
-            .open(DeleteDialogComponent, {
-              width: '400px',
-              data: {
-                entityType: this.translate.instant('users.user'),
-                entity: deletion.userToDelete,
-                options: [
-                  { name: email, value: 'deleter' },
-                  { name: this.orgOwnerEmail, value: 'owner' },
-                ],
-                isOrganizationOwner: email === this.orgOwnerEmail,
-                selectedOption: deletion.isDeleteHimSelf ? 'owner' : this.selectedOption,
-                isSystemUser: true,
-                isDeleteHimSelf: deletion.isDeleteHimSelf,
-              },
+    ngOnInit() {
+        this.isLoading$ = this.userListFacade.isLoading$;
+        this.userRole$ = this.userListFacade.userRole$;
+        this.tableConfig$ = this.userListFacade.users$.pipe(
+            map((users: AppUser[]) => {
+                this.orgOwnerEmail = users.filter(user => user.role === Role.Owner).map(user => user.email)[0];
+                return {
+                    columns: [
+                        { title: 'user', property: 'username' },
+                        { title: 'role', property: 'role' },
+                        { title: 'delete', property: 'delete' },
+                    ],
+                    data: users,
+                };
             })
-            .afterClosed()
-        ),
-        filter((isClosed: boolean) => isClosed),
-        tap(() => this.userListFacade.deleteUser(deletion, this.selectedOption))
-      )
-      .subscribe();
-  }
+        );
 
-  ngOnDestroy(): void {
-    this.availableRolesSubscription.unsubscribe();
-  }
+        this.availableRoles$ = this.userListFacade.availableRoles$;
+        this.availableRolesSubscription = this.userListFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
+        this.currentUserId$ = this.userListFacade.currentUserId$;
+        this.currentUserEmail$ = this.userListFacade.currentUserEmail$;
+        this.message = this.translate.instant('org_users.add_users_info');
+    }
+
+    onChange(user: AppUser): void {
+        this.userListFacade.updateUserRole(user.id, user.role);
+    }
+
+    onDelete(deletion: UserDeletion): void {
+        this.userListFacade.currentUserEmail$
+            .pipe(
+                take(1),
+                switchMap((email: string) =>
+                    this.dialog
+                        .open(DeleteDialogComponent, {
+                            width: '400px',
+                            data: {
+                                entityType: this.translate.instant('users.user'),
+                                entity: deletion.userToDelete,
+                                options: [
+                                    { name: email, value: 'deleter' },
+                                    { name: this.orgOwnerEmail, value: 'owner' },
+                                ],
+                                isOrganizationOwner: email === this.orgOwnerEmail,
+                                selectedOption: deletion.isDeleteHimSelf ? 'owner' : this.selectedOption,
+                                isSystemUser: true,
+                                isDeleteHimSelf: deletion.isDeleteHimSelf,
+                            },
+                        })
+                        .afterClosed()
+                ),
+                filter((isClosed: boolean) => isClosed),
+                tap(() => this.userListFacade.deleteUser(deletion, this.selectedOption))
+            )
+            .subscribe();
+    }
+
+    ngOnDestroy(): void {
+        this.availableRolesSubscription.unsubscribe();
+    }
 }
