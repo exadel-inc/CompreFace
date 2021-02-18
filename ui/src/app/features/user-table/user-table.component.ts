@@ -35,13 +35,11 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() availableRoles: string[];
   @Input() currentUserId: string;
   @Input() userRole: string;
-  @Input() createHeader: string;
   @Input() createMessage: string;
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
 
   ngOnInit() {
-    this.messageHeader = this.createHeader;
     this.message = this.createMessage;
   }
 
@@ -73,10 +71,8 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
 
   getMessageContent(): void {
     if (this.searchText.length) {
-      this.messageHeader = '';
       this.message = this.noResultMessage;
     } else {
-      this.messageHeader = this.createHeader;
       this.message = this.createMessage;
     }
   }
