@@ -8,9 +8,9 @@ services:
     image: postgres:11.5
     container_name: "compreface-postgres-db"
     environment:
-      - POSTGRES_USER=postgres
+      - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
-      - POSTGRES_DB=frs
+      - POSTGRES_DB=${postgres_db}
     volumes:
       - postgres-data:/var/lib/postgresql/data
 
@@ -18,8 +18,9 @@ services:
     image: ${registry}compreface-admin
     container_name: "compreface-admin"
     environment:
+      - POSTGRES_USERNAME=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
-      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
+      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/${postgres_db}
       - SPRING_PROFILES_ACTIVE=dev
       - ENABLE_EMAIL_SERVER=${enable_email_server}
       - EMAIL_HOST=${email_host}
@@ -37,8 +38,9 @@ services:
     depends_on:
       - compreface-postgres-db
     environment:
+      - POSTGRES_USERNAME=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
-      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/frs
+      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/${postgres_db}
       - SPRING_PROFILES_ACTIVE=dev
       - API_JAVA_OPTS=${compreface_api_java_options}
       - SAVE_IMAGES_TO_DB=${save_images_to_db}

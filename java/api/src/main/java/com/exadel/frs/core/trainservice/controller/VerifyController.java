@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -37,10 +38,18 @@ import static java.math.RoundingMode.HALF_UP;
 @Validated
 public class VerifyController {
 
+    public static final String CALCULATOR = "calculator";
+    public static final String RESULT = "result";
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;
     private final ImageExtensionValidator imageValidator;
     private final FacesMapper mapper;
+
+
+    private static final Consumer<VerifyFacesResponse> REMOVE_EMBEDDINGS = (vr) -> {
+        vr.getCheckFileData().setEmbedding(null);
+        vr.getProcessFileData().setEmbedding(null);
+    };
 
     @PostMapping(value = "/verify")
     public Map<String, List<VerifyFacesResponse>> verify(
@@ -56,29 +65,37 @@ public class VerifyController {
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false)
-            final String facePlugins
+            @RequestParam(value = "face_plugins", required = false) final String facePlugins
     ) {
+        validateProcessFile(processFile, limit, detProbThreshold, facePlugins);
         // find FaceResult for each file
         List<FindFacesResult> findFacesResults = Stream.of(processFile, checkFile)
                 .parallel()
                 .map(file -> getFaceResult(file, limit, detProbThreshold, facePlugins))
                 .collect(Collectors.toList());
 
-        return Map.of("result", Collections.singletonList(
+        Map<String, List<VerifyFacesResponse>> result = Map.of(RESULT, Collections.singletonList(
                 getResult(findFacesResults.get(0), findFacesResults.get(1)))
         );
+
+        validateResult(result, facePlugins);
+        return result;
+    }
+
+    private void validateProcessFile(MultipartFile processFile, Integer limit, Double detProbThreshold, String facePlugins) {
+        FindFacesResponse findFacesResponse = client.findFaces(processFile, limit, detProbThreshold, facePlugins);
+        if (CollectionUtils.isEmpty(findFacesResponse.getResult())) {
+            throw new NoFacesFoundException();
+        }
+
+        if (findFacesResponse.getResult().size() > 1) {
+            throw new TooManyFacesException();
+        }
     }
 
     private FindFacesResult getFaceResult(MultipartFile file, int limit, Double detProbThreshold, String facePlugins) {
         imageValidator.validate(file);
         FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, facePlugins);
-
-        if (CollectionUtils.isEmpty(findFacesResponse.getResult())) {
-            throw new NoFacesFoundException();
-        } else if (findFacesResponse.getResult().size() > 1) {
-            throw new TooManyFacesException();
-        }
 
         return findFacesResponse.getResult().get(0);
     }
@@ -109,6 +126,13 @@ public class VerifyController {
                 mapper.toVerifyFacesResultDto(checkFileResult),
                 BigDecimal.valueOf(prediction).setScale(5, HALF_UP).floatValue()
         );
+    }
+
+    private void validateResult(Map<String, List<VerifyFacesResponse>> result, String facePlugins) {
+        if (!facePlugins.contains(CALCULATOR)) {
+            List<VerifyFacesResponse> verifyFacesResponses = result.get(RESULT);
+            verifyFacesResponses.forEach(REMOVE_EMBEDDINGS);
+        }
     }
 
 }
