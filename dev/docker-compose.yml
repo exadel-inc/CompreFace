@@ -10,7 +10,7 @@ services:
     ports:
       - "6432:5432"
     environment:
-      - POSTGRES_USERNAME=${postgres_username}
+      - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_DB=${postgres_db}
     volumes:
@@ -27,7 +27,7 @@ services:
       - "8081:8080"
       - "5006:5005"
     environment:
-      - POSTGRES_USERNAME=${postgres_username}
+      - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/${postgres_db}
       - SPRING_PROFILES_ACTIVE=dev
@@ -57,7 +57,7 @@ services:
     depends_on:
       - compreface-postgres-db
     environment:
-      - POSTGRES_USERNAME=${postgres_username}
+      - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/${postgres_db}
       - SPRING_PROFILES_ACTIVE=dev

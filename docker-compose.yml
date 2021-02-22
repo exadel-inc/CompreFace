@@ -18,7 +18,7 @@ services:
     image: ${registry}compreface-admin
     container_name: "compreface-admin"
     environment:
-      - POSTGRES_USERNAME=${postgres_username}
+      - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/${postgres_db}
       - SPRING_PROFILES_ACTIVE=dev
@@ -38,7 +38,7 @@ services:
     depends_on:
       - compreface-postgres-db
     environment:
-      - POSTGRES_USERNAME=${postgres_username}
+      - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/${postgres_db}
       - SPRING_PROFILES_ACTIVE=dev

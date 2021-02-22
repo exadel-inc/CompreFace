@@ -23,7 +23,7 @@ spring:
   datasource-pg:
     driver-class-name: org.postgresql.Driver
     url: ${POSTGRES_URL:jdbc:postgresql://compreface-postgres-db:5432/frs}
-    username: ${POSTGRES_USERNAME:postgres}
+    username: ${POSTGRES_USER:postgres}
     password: ${POSTGRES_PASSWORD:postgres}
     hikari:
       maximum-pool-size: 3
