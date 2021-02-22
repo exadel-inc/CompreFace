@@ -14,7 +14,6 @@ services:
       - POSTGRES_PASSWORD=${postgres_password}
       - POSTGRES_DB=${postgres_db}
     volumes:
-      - ./init_db.sh:/docker-entrypoint-initdb.d/init_db.sh
       - postgres-data:/var/lib/postgresql/data
 
   compreface-admin:
