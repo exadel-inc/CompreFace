@@ -38,7 +38,9 @@
     "last_name_restriction": "Last name is required",
     "email_hint": "Email should have correct format",
     "login": "LOGIN",
-    "sign_up": "SIGN UP"
+    "sign_up": "SIGN UP",
+    "statistics": "Allow to send anonymous statistics for product improvement",
+    "more_info": "More info"
   },
   "change_password": {
     "old_password": "Old password",
@@ -58,7 +60,7 @@
     "first_steps_title": "Create Application",
     "name": "Name",
     "owner": "Owner",
-    "first_steps_info": "The first step in using face recognition service is to create an application. An application is where you can\n create and manage models.",
+    "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
     "create": {
       "title": "Create application"
     },
@@ -85,7 +87,7 @@
     "type": "Type",
     "api_key": "API key",
     "header": "Service",
-    "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
+    "create_model_info": "Create one of face recognition services: Face Recognition, Face Detection or Face Verification.",
     "create_dialog": {
       "title": "Services",
       "name": "Name"
@@ -129,12 +131,11 @@
       "warn_hint_replace_to_owner": "In this case, the OWNER of the application will be the global OWNER",
       "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
     },
-    "add_users_title": "Add users to the CompreFace",
-    "add_users_info": "You can add other users to the CompreFace application. They need to register and login to CompreFace. After registration and login users will appear automatically in the users' table.",
+    "add_users_info": " You are now the only CompreFace user. Once other users sign up, they will appear in this list. You, as an owner, will be able to give them rights to manage system or individual applications.",
     "edit_user_info": "User info has been successfully updated"
   },
   "app_users": {
-    "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",
+    "add_users_info": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
     "delete_dialog": {
       "title": "Delete user",
       "confirmation_question": "Are you sure you want to remove user {{name}} from {{application}}?"
