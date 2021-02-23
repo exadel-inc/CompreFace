@@ -18,7 +18,7 @@ import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleCh
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { ServiceTypes } from '../../../../data/enums/model.enum';
+import { ServiceTypes } from '../../../../data/enums/service-types.enum';
 import {
   getImageSize,
   ImageSize,

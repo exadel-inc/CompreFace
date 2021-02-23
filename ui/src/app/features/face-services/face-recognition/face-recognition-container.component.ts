@@ -37,7 +37,7 @@ import { SnackBarService } from '../../snackbar/snackbar.service';
 })
 export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   data$: Observable<any>;
-  file$: any;
+  file$: Observable<any>;
   requestInfo$: Observable<any>;
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;

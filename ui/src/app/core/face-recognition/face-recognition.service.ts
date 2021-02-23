@@ -20,8 +20,8 @@ import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { Model } from '../../data/interfaces/model';
-import { UIDoubleFileRequestOptions, UIRequestOptions } from '../../data/interfaces/ui-request-options';
-
+import { UIRequestOptions } from '../../data/interfaces/ui-request-options';
+import { UIDoubleFileRequestOptions } from '../../data/interfaces/ui-double-request-options';
 @Injectable({
   providedIn: 'root',
 })

@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
 
 import { selectPendingModel } from '../../store/model/selectors';
 import { TestModelPageService } from './test-model.service';
-import { ServiceTypes } from '../../data/enums/model.enum';
+import { ServiceTypes } from '../../data/enums/service-types.enum';
 
 @Component({
   selector: 'app-test-model',

@@ -13,8 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-export interface UIRequestOptions {
+export interface UIDoubleFileRequestOptions {
   apiKey: string;
-  file: File;
+  processFile: File;
+  checkFile: File;
 }

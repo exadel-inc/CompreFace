@@ -39,8 +39,7 @@ const reducerVerification: ActionReducer<FaceVerificationEntityState> = createRe
     return { ...state, ...action, isPending: false };
   }),
   on(verifyFaceSuccess, (state, action) => ({ ...state, ...action, isPending: false })),
-  on(verifyFaceReset, () => ({ ...initialStateVerification })),
-  on(verifyFaceReset, state => ({ ...state, isPending: false }))
+  on(verifyFaceReset, () => ({ ...initialStateVerification, isPending: false }))
 );
 
 export const faceVerificationReducer = (verificationState: FaceVerificationEntityState, action: Action) =>

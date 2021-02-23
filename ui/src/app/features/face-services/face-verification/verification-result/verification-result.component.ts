@@ -15,7 +15,7 @@
  */
 
 import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import {from, Observable, Subscription} from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
   getImageSize,
@@ -26,7 +26,7 @@ import {
 } from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
-import { VerificationServiceFields } from '../../../../data/enums/model.enum';
+import {VerificationServiceFields} from '../../../../data/enums/verification-service.enum';
 
 @Component({
   selector: 'app-verification-result',
@@ -95,6 +95,9 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   ngOnDestroy() {
     if (this.printSubscription1) {
       this.printSubscription1.unsubscribe();
+    }
+    if (this.printSubscription2) {
+      this.printSubscription2.unsubscribe();
     }
   }
 
