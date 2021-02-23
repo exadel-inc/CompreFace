@@ -67,7 +67,6 @@ public class VerifyController {
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
             @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins
     ) {
-        validateProcessFile(processFile, limit, detProbThreshold, facePlugins);
         // find FaceResult for each file
         List<FindFacesResult> findFacesResults = Stream.of(processFile, checkFile)
                 .parallel()
@@ -82,20 +81,15 @@ public class VerifyController {
         return result;
     }
 
-    private void validateProcessFile(MultipartFile processFile, Integer limit, Double detProbThreshold, String facePlugins) {
-        FindFacesResponse findFacesResponse = client.findFaces(processFile, limit, detProbThreshold, facePlugins);
-        if (CollectionUtils.isEmpty(findFacesResponse.getResult())) {
-            throw new NoFacesFoundException();
-        }
-
-        if (findFacesResponse.getResult().size() > 1) {
-            throw new TooManyFacesException();
-        }
-    }
-
     private FindFacesResult getFaceResult(MultipartFile file, int limit, Double detProbThreshold, String facePlugins) {
         imageValidator.validate(file);
         FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, facePlugins);
+
+        if (CollectionUtils.isEmpty(findFacesResponse.getResult())) {
+            throw new NoFacesFoundException();
+        } else if  (findFacesResponse.getResult().size() > 1) {
+            throw new TooManyFacesException();
+        }
 
         return findFacesResponse.getResult().get(0);
     }
