@@ -15,18 +15,13 @@
  */
 
 import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import {from, Observable, Subscription} from 'rxjs';
+import { from, Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import {
-  getImageSize,
-  ImageSize,
-  recalculateFaceCoordinate,
-  resultRecognitionFormatter,
-  createDefaultImage,
-} from '../../face-services.helpers';
+import { ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
-import {VerificationServiceFields} from '../../../../data/enums/verification-service.enum';
+import { VerificationServiceFields } from '../../../../data/enums/verification-service.enum';
+import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
 
 @Component({
   selector: 'app-verification-result',
@@ -85,6 +80,9 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
 
   private processFilePrintSub: Subscription;
   private checkFilePrintSub: Subscription;
+  private imgCanvas: ImageBitmap;
+
+  constructor(private loadingPhotoService: LoadingPhotoService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
@@ -102,13 +100,17 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   }
 
   printResult(canvas: ElementRef, canvasSize: any, file: any, data, key: string): Observable<any> {
-    return getImageSize(file).pipe(
-      tap(({ width, height }) => {
-        canvasSize.height = (height / width) * canvasSize.width;
+    return this.loadingPhotoService.loader(file).pipe(
+      tap((bitmap: ImageBitmap) => {
+        canvasSize.height = (bitmap.height / bitmap.width) * canvasSize.width;
         canvas.nativeElement.setAttribute('height', canvasSize.height);
+        this.imgCanvas = bitmap;
       }),
       map(imageSize => this.prepareForDraw(imageSize, data, canvasSize, key)),
-      map(preparedImageData => this.drawCanvas(canvas, preparedImageData, file, canvasSize))
+      map(preparedImageData => {
+        console.log();
+        return this.drawCanvas(canvas, preparedImageData, file, canvasSize);
+      })
     );
   }
 
@@ -136,7 +138,7 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
    * @preparedData prepared box data and faces.
    */
   drawCanvas(canvas, data, file, canvasSize) {
-    this.createImage(canvas, file, canvasSize, (img, ctx) => {
+    this.createImage(canvas, file, canvasSize, ctx => {
       if (!data) return;
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -146,12 +148,8 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   }
 
   createImage(canvas, file, canvasSize, draw) {
-    const img = new Image();
     const ctx: CanvasRenderingContext2D = canvas.nativeElement.getContext('2d');
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, canvasSize.width, canvasSize.height);
-      draw(img, ctx);
-    };
-    img.src = URL.createObjectURL(file);
+    ctx.drawImage(this.imgCanvas, 0, 0, canvasSize.width, canvasSize.height);
+    draw(ctx);
   }
 }

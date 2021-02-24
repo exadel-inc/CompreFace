@@ -19,15 +19,10 @@ import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
-import {
-  getImageSize,
-  ImageSize,
-  recalculateFaceCoordinate,
-  resultRecognitionFormatter,
-  createDefaultImage,
-} from '../../face-services.helpers';
+import { ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
+import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
 
 @Component({
   selector: 'app-recognition-result',
@@ -60,7 +55,10 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   faceDescriptionHeight = 25;
   formattedResult: string;
 
+  private imgCanvas: ImageBitmap;
   private printSubscription: Subscription;
+
+  constructor(private loadingPhotoService: LoadingPhotoService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
@@ -75,10 +73,11 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   }
 
   printResult(result: any): Observable<any> {
-    return getImageSize(this.file).pipe(
-      tap(({ width, height }) => {
-        this.canvasSize.height = (height / width) * this.canvasSize.width;
+    return this.loadingPhotoService.loader(this.file).pipe(
+      tap((bitmap: ImageBitmap) => {
+        this.canvasSize.height = (bitmap.height / bitmap.width) * this.canvasSize.width;
         this.myCanvas.nativeElement.setAttribute('height', this.canvasSize.height);
+        this.imgCanvas = bitmap;
       }),
       map(imageSize => this.prepareForDraw(imageSize, result)),
       map(preparedImageData => this.drawCanvas(preparedImageData))
@@ -128,17 +127,13 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   }
 
   createImage(drow) {
-    const img = new Image();
     const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
-      drow(img, ctx);
-    };
-    img.src = URL.createObjectURL(this.file);
+    ctx.drawImage(this.imgCanvas, 0, 0, this.canvasSize.width, this.canvasSize.height);
+    drow(ctx);
   }
 
   drawRecognitionCanvas(data) {
-    this.createImage((img, ctx) => {
+    this.createImage(ctx => {
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         const resultFace = value.faces.length > 0 ? value.faces[0] : { face_name: undefined, similarity: 0 };
@@ -148,7 +143,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   }
 
   drawDetectionCanvas(data) {
-    this.createImage((img, ctx) => {
+    this.createImage(ctx => {
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         this.createDetectionImage(ctx, value.box);
