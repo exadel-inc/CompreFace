@@ -46,11 +46,11 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
 
   @ViewChild('processFileCanvasElement') set processFileCanvasElement(canvas: ElementRef) {
     if (canvas) {
-      if (this.printSubscription1) {
-        this.printSubscription1.unsubscribe();
+      if (this.processFilePrintSub) {
+        this.processFilePrintSub.unsubscribe();
       }
       if (this.processFile) {
-        this.printSubscription1 = this.printResult(
+        this.processFilePrintSub = this.printResult(
           canvas,
           this.processFileCanvasSize,
           this.processFile,
@@ -63,11 +63,11 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
 
   @ViewChild('checkFileCanvasElement') set checkFileCanvasElement(canvas: ElementRef) {
     if (canvas) {
-      if (this.printSubscription2) {
-        this.printSubscription2.unsubscribe();
+      if (this.checkFilePrintSub) {
+        this.checkFilePrintSub.unsubscribe();
       }
       if (this.checkFile) {
-        this.printSubscription2 = this.printResult(
+        this.checkFilePrintSub = this.printResult(
           canvas,
           this.checkFileCanvasSize,
           this.checkFile,
@@ -83,8 +83,8 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   faceDescriptionHeight = 25;
   formattedResult: string;
 
-  private printSubscription1: Subscription;
-  private printSubscription2: Subscription;
+  private processFilePrintSub: Subscription;
+  private checkFilePrintSub: Subscription;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
@@ -93,11 +93,11 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.printSubscription1) {
-      this.printSubscription1.unsubscribe();
+    if (this.processFilePrintSub) {
+      this.processFilePrintSub.unsubscribe();
     }
-    if (this.printSubscription2) {
-      this.printSubscription2.unsubscribe();
+    if (this.checkFilePrintSub) {
+      this.checkFilePrintSub.unsubscribe();
     }
   }
 
