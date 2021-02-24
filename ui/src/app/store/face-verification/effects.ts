@@ -23,8 +23,7 @@ import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
-import { addFace, addFaceFail, addFaceSuccess, recognizeFace, recognizeFaceFail, recognizeFaceSuccess } from './actions';
-import { ServiceTypes } from '../../data/enums/service-types.enum';
+import { verifyFace, verifyFaceSuccess, verifyFaceFail } from './actions';
 @Injectable()
 export class FaceRecognitionEffects {
   constructor(
@@ -35,70 +34,35 @@ export class FaceRecognitionEffects {
   ) {}
 
   @Effect()
-  recognizeFace$ = this.actions.pipe(
-    ofType(recognizeFace),
+  verifyFace$ = this.actions.pipe(
+    ofType(verifyFace),
     withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey)),
     switchMap(([action, model, demoApiKey]) =>
-      iif(() => !!model, this.getEndpoint(action.file, model), this.recognizeFace(action.file, demoApiKey))
-    )
-  );
-
-  @Effect()
-  addFace$ = this.actions.pipe(
-    ofType(addFace),
-    switchMap(action =>
-      this.recognitionService.addFace(action.file, action.model).pipe(
-        map(model => addFaceSuccess({ model })),
-        catchError(error => of(addFaceFail({ error })))
+      iif(
+        () => !!model,
+        this.verificationFace(action.processFile, action.checkFile, model?.apiKey),
+        this.verificationFace(action.processFile, action.checkFile, demoApiKey)
       )
     )
   );
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(recognizeFaceFail, addFaceFail),
+    ofType(verifyFaceFail),
     tap(action => this.snackBarService.openHttpError(action.error))
   );
 
-  /**
-   * Method made to finish recognize face effect, and for better understanding (more readable code).
-   *
-   * @param file Image
-   * @param apiKey model api key
-   */
-  private recognizeFace(file, apiKey): Observable<Action> {
-    return this.recognitionService.recognize(file, apiKey).pipe(
+  private verificationFace(processFile, checkFile, apiKey): Observable<Action> {
+    return this.recognitionService.verification(processFile, checkFile, apiKey).pipe(
       map(({ data, request }) =>
-        recognizeFaceSuccess({
+        verifyFaceSuccess({
           model: data,
-          file,
+          processFile,
+          checkFile,
           request,
         })
       ),
-      catchError(error => of(recognizeFaceFail({ error })))
+      catchError(error => of(verifyFaceFail({ error })))
     );
-  }
-
-  private detectionFace(file, apiKey): Observable<Action> {
-    return this.recognitionService.detection(file, apiKey).pipe(
-      map(({ data, request }) =>
-        recognizeFaceSuccess({
-          model: data,
-          file,
-          request,
-        })
-      ),
-      catchError(error => of(recognizeFaceFail({ error })))
-    );
-  }
-
-  private getEndpoint(file, model) {
-    switch (model.type) {
-      case ServiceTypes.Recognition:
-        return this.recognizeFace(file, model?.apiKey);
-
-      case ServiceTypes.Detection:
-        return this.detectionFace(file, model?.apiKey);
-    }
   }
 }

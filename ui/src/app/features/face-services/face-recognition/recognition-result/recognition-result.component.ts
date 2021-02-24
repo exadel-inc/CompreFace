@@ -18,10 +18,16 @@ import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleCh
 import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
-import { ServiceTypes } from '../../../data/enums/model.enum';
-import { getImageSize, ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter } from '../face-recognition.helpers';
-import { RequestResult } from '../../../data/interfaces/response-result';
-import { RequestInfo } from '../../../data/interfaces/request-info';
+import { ServiceTypes } from '../../../../data/enums/service-types.enum';
+import {
+  getImageSize,
+  ImageSize,
+  recalculateFaceCoordinate,
+  resultRecognitionFormatter,
+  createDefaultImage,
+} from '../../face-services.helpers';
+import { RequestResult } from '../../../../data/interfaces/response-result';
+import { RequestInfo } from '../../../../data/interfaces/request-info';
 
 @Component({
   selector: 'app-recognition-result',
@@ -87,7 +93,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   }
 
   private createRecognitionImage(ctx, box, face) {
-    ctx = this.createDefaultImage(ctx, box);
+    ctx = createDefaultImage(ctx, box);
     ctx.fillStyle = 'green';
     ctx.fillRect(box.x_min, box.y_min - this.faceDescriptionHeight, box.x_max - box.x_min, this.faceDescriptionHeight);
     ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
@@ -97,25 +103,11 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   }
 
   private createDetectionImage(ctx, box) {
-    ctx = this.createDefaultImage(ctx, box);
+    ctx = createDefaultImage(ctx, box);
     ctx.fillStyle = 'green';
     ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
     ctx.fillStyle = 'white';
     ctx.fillText(box.probability.toFixed(4), box.x_min + 10, box.y_max + 20);
-  }
-
-  private createDefaultImage(ctx, box) {
-    ctx.beginPath();
-    ctx.strokeStyle = 'green';
-    ctx.moveTo(box.x_min, box.y_min);
-    ctx.lineTo(box.x_max, box.y_min);
-    ctx.lineTo(box.x_max, box.y_max);
-    ctx.lineTo(box.x_min, box.y_max);
-    ctx.lineTo(box.x_min, box.y_min);
-    ctx.stroke();
-    ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
-
-    return ctx;
   }
 
   /*

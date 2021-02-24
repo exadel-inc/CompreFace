@@ -20,7 +20,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
 
-import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
+import { FaceServicesModule } from '../../features/face-services/face-services.module';
 import { SpinnerModule } from '../../features/spinner/spinner.module';
 import { TestModelComponent } from './test-model.component';
 import { TestModelPageService } from './test-model.service';
@@ -32,7 +32,7 @@ import { TestModelPageService } from './test-model.service';
     BreadcrumbsContainerModule,
     RouterModule.forChild([{ path: '', component: TestModelComponent }]),
     MatCardModule,
-    FaceRecognitionModule,
+    FaceServicesModule,
     SpinnerModule,
     TranslateModule,
   ],

@@ -21,13 +21,20 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
 import { SpinnerModule } from '../spinner/spinner.module';
-import { FaceRecognitionContainerComponent } from './face-recognition-container.component';
-import { RecognitionResultComponent } from './recognition-result/recognition-result.component';
+import { FaceRecognitionContainerComponent } from './face-recognition/face-recognition-container.component';
+import { FaceVerificationContainerComponent } from './face-verification/face-verification-container.component';
+import { RecognitionResultComponent } from './face-recognition/recognition-result/recognition-result.component';
+import { VerificationResultComponent } from './face-verification/verification-result/verification-result.component';
 
 @NgModule({
-  declarations: [FaceRecognitionContainerComponent, RecognitionResultComponent],
+  declarations: [
+    FaceRecognitionContainerComponent,
+    FaceVerificationContainerComponent,
+    RecognitionResultComponent,
+    VerificationResultComponent,
+  ],
   imports: [CommonModule, DragNDropModule, SpinnerModule, MatExpansionModule, TranslateModule],
   providers: [FaceRecognitionService],
-  exports: [FaceRecognitionContainerComponent],
+  exports: [FaceRecognitionContainerComponent, FaceVerificationContainerComponent],
 })
-export class FaceRecognitionModule {}
+export class FaceServicesModule {}

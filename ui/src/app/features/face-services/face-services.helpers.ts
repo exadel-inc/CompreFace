@@ -76,7 +76,8 @@ export const resultRecognitionFormatter = (value: string): string => value.repla
  * @returns `string` File extension
  * @example getFileExtension(file) ==> 'jpeg'
  */
-export const getFileExtension = (file: File): string => file.name.slice((Math.max(0, file.name.lastIndexOf('.')) || Infinity) + 1).toLowerCase();
+export const getFileExtension = (file: File): string =>
+  file.name.slice((Math.max(0, file.name.lastIndexOf('.')) || Infinity) + 1).toLowerCase();
 
 /**
  * Recalculate face coordinates according to canvas size (design).
@@ -99,4 +100,18 @@ export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeTo
     y_min: box.y_min / divideHeight > yAxisPadding ? box.y_min / divideHeight : yAxisPadding,
     /* eslint-enable @typescript-eslint/naming-convention */
   };
+};
+
+export const createDefaultImage = (ctx, box) => {
+  ctx.beginPath();
+  ctx.strokeStyle = 'green';
+  ctx.moveTo(box.x_min, box.y_min);
+  ctx.lineTo(box.x_max, box.y_min);
+  ctx.lineTo(box.x_max, box.y_max);
+  ctx.lineTo(box.x_min, box.y_max);
+  ctx.lineTo(box.x_min, box.y_min);
+  ctx.stroke();
+  ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
+
+  return ctx;
 };

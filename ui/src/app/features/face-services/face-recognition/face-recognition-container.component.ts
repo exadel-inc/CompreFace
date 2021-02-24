@@ -18,11 +18,17 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
 
-import { AppState } from '../../store';
-import { recognizeFace, recognizeFaceReset } from '../../store/face-recognition/actions';
-import { selectFaceData, selectFile, selectRequest, selectStateReady, selectTestIsPending } from '../../store/face-recognition/selectors';
-import { getFileExtension } from './face-recognition.helpers';
-import { SnackBarService } from '../snackbar/snackbar.service';
+import { AppState } from '../../../store';
+import { recognizeFace, recognizeFaceReset } from '../../../store/face-recognition/actions';
+import {
+  selectFaceData,
+  selectFile,
+  selectRequest,
+  selectStateReady,
+  selectTestIsPending,
+} from '../../../store/face-recognition/selectors';
+import { getFileExtension } from '../face-services.helpers';
+import { SnackBarService } from '../../snackbar/snackbar.service';
 
 @Component({
   selector: 'app-face-recognition-container',

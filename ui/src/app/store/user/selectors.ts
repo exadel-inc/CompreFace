@@ -38,5 +38,8 @@ export const selectUsersWithOwnerApp = createSelector(selectUsers, selectApplica
   }))
 );
 
-export const selectIsLoadingApplicationList = createSelector(selectIsPendingApplicationList, selectCurrentUserRole,
-  (isPendingAppList, currentUserRole) => (!isPendingAppList && !currentUserRole));
+export const selectIsLoadingApplicationList = createSelector(
+  selectIsPendingApplicationList,
+  selectCurrentUserRole,
+  (isPendingAppList, currentUserRole) => !isPendingAppList && !currentUserRole
+);

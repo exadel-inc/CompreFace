@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 
-@import "colors.scss";
+import { FaceRecognitionEffects } from './effects';
+import { faceVerificationReducer } from './reducers';
 
-
-.face-uploader {
-  width: 80%;
-  margin: auto;
-}
-
-.face-result {
-  padding: 0 20px;
-  margin-bottom: 20px;
-}
-
-.recognition-loading {
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
-}
+@NgModule({
+  declarations: [],
+  imports: [EffectsModule.forFeature([FaceRecognitionEffects]), StoreModule.forFeature('faceVerification', faceVerificationReducer)],
+})
+export class FaceVerificationStoreModule {}

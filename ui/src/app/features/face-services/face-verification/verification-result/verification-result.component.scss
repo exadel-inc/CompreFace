@@ -14,10 +14,9 @@
  * permissions and limitations under the License.
  */
 
-@import "colors.scss";
+@import "src/styles/colors";
 
 .result-container {
-  padding: 25px 50px;
   position: relative;
   min-height: 350px;
   display: flex;
@@ -28,7 +27,6 @@
     display: flex;
     justify-content: center;
     flex-shrink: 1;
-    width: 100%;
     canvas {
       display: inline;
       min-width: 0;
@@ -42,8 +40,12 @@
     flex-direction: column;
     padding-bottom: 10px;
 
+    .io-result-container{
+      display: inline-flex;
+      flex-direction: row;
+    }
     .result-section-image {
-      flex-grow: 1;
+      flex: 1 1;
     }
 
     .result-textarea {
