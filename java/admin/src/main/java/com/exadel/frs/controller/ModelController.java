@@ -168,20 +168,4 @@ public class ModelController {
     ) {
         modelService.deleteModel(appGuid, guid, SecurityUtils.getPrincipalId());
     }
-
-    @PostMapping("/model/{guid}/share")
-    @ApiOperation("Sharing model with another application")
-    public void shareModel(
-            @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String appGuid,
-            @ApiParam(value = "GUID of the model being shared", required = true, example = GUID_EXAMPLE)
-            @PathVariable
-            final String guid,
-            @ApiParam(value = "GUID from model share request", required = true)
-            @RequestBody
-            final ModelShareDto modelShare
-    ) {
-        modelService.share(modelShare, appGuid, guid);
-    }
 }

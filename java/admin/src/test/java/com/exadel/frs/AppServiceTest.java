@@ -16,6 +16,32 @@
 
 package com.exadel.frs;
 
+import com.exadel.frs.commonservice.entity.*;
+import com.exadel.frs.commonservice.enums.AppRole;
+import com.exadel.frs.commonservice.enums.GlobalRole;
+import com.exadel.frs.dto.ui.AppCreateDto;
+import com.exadel.frs.dto.ui.AppUpdateDto;
+import com.exadel.frs.dto.ui.UserInviteDto;
+import com.exadel.frs.dto.ui.UserRoleUpdateDto;
+import com.exadel.frs.exception.InsufficientPrivilegesException;
+import com.exadel.frs.exception.NameIsNotUniqueException;
+import com.exadel.frs.exception.SelfRoleChangeException;
+import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
+import com.exadel.frs.repository.AppRepository;
+import com.exadel.frs.service.AppService;
+import com.exadel.frs.service.UserService;
+import com.exadel.frs.system.security.AuthorizationManager;
+import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
 import static com.exadel.frs.commonservice.enums.AppRole.OWNER;
 import static com.exadel.frs.commonservice.enums.GlobalRole.ADMINISTRATOR;
 import static com.exadel.frs.commonservice.enums.GlobalRole.USER;
@@ -25,47 +51,8 @@ import static org.apache.commons.lang3.RandomUtils.nextLong;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import com.exadel.frs.dto.ui.AppCreateDto;
-import com.exadel.frs.dto.ui.AppUpdateDto;
-import com.exadel.frs.dto.ui.UserInviteDto;
-import com.exadel.frs.dto.ui.UserRoleUpdateDto;
-import com.exadel.frs.commonservice.entity.App;
-import com.exadel.frs.commonservice.entity.Model;
-import com.exadel.frs.commonservice.entity.ModelShareRequest;
-import com.exadel.frs.commonservice.entity.User;
-import com.exadel.frs.commonservice.entity.UserAppRole;
-import com.exadel.frs.commonservice.entity.UserAppRoleId;
-import com.exadel.frs.commonservice.enums.AppRole;
-import com.exadel.frs.commonservice.enums.GlobalRole;
-import com.exadel.frs.exception.InsufficientPrivilegesException;
-import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.exception.SelfRoleChangeException;
-import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
-import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
-import com.exadel.frs.service.AppService;
-import com.exadel.frs.service.UserService;
-import com.exadel.frs.system.security.AuthorizationManager;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import lombok.val;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 class AppServiceTest {
 
@@ -76,9 +63,6 @@ class AppServiceTest {
 
     @Mock
     private AppRepository appRepositoryMock;
-
-    @Mock
-    private ModelShareRequestRepository modelShareRequestRepositoryMock;
 
     @Mock
     private AuthorizationManager authManagerMock;
@@ -96,10 +80,10 @@ class AppServiceTest {
 
     private User user(final Long id, final GlobalRole role) {
         return User.builder()
-                   .id(id)
-                   .guid(UUID.randomUUID().toString())
-                   .globalRole(role)
-                   .build();
+                .id(id)
+                .guid(UUID.randomUUID().toString())
+                .globalRole(role)
+                .build();
     }
 
     @Test
@@ -107,9 +91,9 @@ class AppServiceTest {
         val user = user(USER_ID, ADMINISTRATOR);
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
@@ -128,9 +112,9 @@ class AppServiceTest {
         val user = user(USER_ID, ADMINISTRATOR);
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         when(appRepositoryMock.findAll()).thenReturn(List.of(app));
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
@@ -145,9 +129,9 @@ class AppServiceTest {
         val user = user(USER_ID, USER);
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         when(appRepositoryMock.findAllByUserAppRoles_Id_UserId(USER_ID)).thenReturn(List.of(app));
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
@@ -160,8 +144,8 @@ class AppServiceTest {
     @Test
     void successCreateApp() {
         val appCreateDto = AppCreateDto.builder()
-                                       .name("appName")
-                                       .build();
+                .name("appName")
+                .build();
         val user = user(USER_ID, ADMINISTRATOR);
 
         when(userServiceMock.getUser(anyLong())).thenReturn(user);
@@ -182,8 +166,8 @@ class AppServiceTest {
     @Test
     void failCreateAppNameIsNotUnique() {
         val appCreateDto = AppCreateDto.builder()
-                                       .name("appName")
-                                       .build();
+                .name("appName")
+                .build();
 
         when(appRepositoryMock.existsByName(anyString())).thenReturn(true);
 
@@ -196,11 +180,11 @@ class AppServiceTest {
     @Test
     void successUpdateApp() {
         val appUpdateDto = AppUpdateDto.builder()
-                                       .name("appName")
-                                       .build();
+                .name("appName")
+                .build();
         val app = App.builder()
-                     .name("name")
-                     .build();
+                .name("name")
+                .build();
 
         val user = user(USER_ID, ADMINISTRATOR);
 
@@ -223,16 +207,16 @@ class AppServiceTest {
     @Test
     void failUpdateUserAppSelfRoleOwnerChange() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(AppRole.ADMINISTRATOR.toString())
-                                                 .build();
+                .userId("userGuid")
+                .role(AppRole.ADMINISTRATOR.toString())
+                .build();
         val user = user(USER_ID, USER);
         val admin = user(ADMIN_ID, USER);
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .build();
 
         app.addUserAppRole(user, AppRole.OWNER);
         app.addUserAppRole(admin, AppRole.ADMINISTRATOR);
@@ -258,15 +242,15 @@ class AppServiceTest {
     @Test
     void failUpdateAppSelfRoleChange() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(AppRole.USER.toString())
-                                                 .build();
+                .userId("userGuid")
+                .role(AppRole.USER.toString())
+                .build();
         val user = user(USER_ID, USER);
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
@@ -286,13 +270,13 @@ class AppServiceTest {
     @Test
     void failUpdateAppNameIsNotUnique() {
         val appUpdateDto = AppUpdateDto.builder()
-                                       .name("new_name")
-                                       .build();
+                .name("new_name")
+                .build();
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .build();
 
         when(appRepositoryMock.existsByName(anyString())).thenReturn(true);
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
@@ -307,9 +291,9 @@ class AppServiceTest {
     @Test
     void successRegenerateGuid() {
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .build();
 
         val user = user(USER_ID, USER);
 
@@ -332,16 +316,16 @@ class AppServiceTest {
         val models = nCopies(
                 3,
                 Model.builder()
-                     .apiKey("modelKey")
-                     .build()
+                        .apiKey("modelKey")
+                        .build()
         );
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .models(models)
-                     .build();
+                .id(APPLICATION_ID)
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .models(models)
+                .build();
 
         val user = user(USER_ID, USER);
 
@@ -362,9 +346,9 @@ class AppServiceTest {
         val user = user(USER_ID, USER);
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         app.addUserAppRole(user, OWNER);
 
@@ -387,31 +371,31 @@ class AppServiceTest {
         val user3Id = 3L;
 
         val user1 = User.builder()
-                        .id(user1Id)
-                        .firstName("Will")
-                        .lastName("Smith")
-                        .email("ws@example.com")
-                        .globalRole(USER)
-                        .build();
+                .id(user1Id)
+                .firstName("Will")
+                .lastName("Smith")
+                .email("ws@example.com")
+                .globalRole(USER)
+                .build();
         val user2 = User.builder()
-                        .id(user2Id)
-                        .firstName("Maria")
-                        .lastName("Smith")
-                        .email("sj@example.com")
-                        .globalRole(USER)
-                        .build();
+                .id(user2Id)
+                .firstName("Maria")
+                .lastName("Smith")
+                .email("sj@example.com")
+                .globalRole(USER)
+                .build();
         val user3 = User.builder()
-                        .id(user3Id)
-                        .firstName("Steve")
-                        .lastName("Jobs")
-                        .email("sj@example.com")
-                        .globalRole(USER)
-                        .build();
+                .id(user3Id)
+                .firstName("Steve")
+                .lastName("Jobs")
+                .email("sj@example.com")
+                .globalRole(USER)
+                .build();
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         app.addUserAppRole(user1, OWNER);
         app.addUserAppRole(user2, AppRole.USER);
@@ -433,23 +417,23 @@ class AppServiceTest {
     void successUserInvite() {
         val userEmail = "email";
         val userInviteDto = UserInviteDto.builder()
-                                         .userEmail("userEmail")
-                                         .role(AppRole.USER.toString())
-                                         .build();
+                .userEmail("userEmail")
+                .role(AppRole.USER.toString())
+                .build();
         val admin = user(USER_ID, ADMINISTRATOR);
 
         val userId = nextLong();
         val userRole = AppRole.USER;
         val user = User.builder()
-                       .id(userId)
-                       .email(userEmail)
-                       .globalRole(USER)
-                       .build();
+                .id(userId)
+                .email(userEmail)
+                .globalRole(USER)
+                .build();
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUser(anyString())).thenReturn(user);
@@ -472,21 +456,21 @@ class AppServiceTest {
 
         val userEmail = "email";
         val user = User.builder()
-                       .id(nextLong())
-                       .email(userEmail)
-                       .globalRole(USER)
-                       .build();
+                .id(nextLong())
+                .email(userEmail)
+                .globalRole(USER)
+                .build();
 
         val userRole = AppRole.OWNER;
         val userInviteDto = UserInviteDto.builder()
-                                         .userEmail(userEmail)
-                                         .role(userRole.toString())
-                                         .build();
+                .userEmail(userEmail)
+                .role(userRole.toString())
+                .build();
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         app.addUserAppRole(admin, userRole);
 
@@ -510,16 +494,16 @@ class AppServiceTest {
     @Test
     void failUserInviteUserAlreadyHasAccessToApp() {
         val userInviteDto = UserInviteDto.builder()
-                                         .userEmail("email")
-                                         .role(AppRole.USER.toString())
-                                         .build();
+                .userEmail("email")
+                .role(AppRole.USER.toString())
+                .build();
         val userId = nextLong();
         val admin = user(USER_ID, ADMINISTRATOR);
         val user = user(userId, USER);
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         app.addUserAppRole(user, AppRole.USER);
 
@@ -543,9 +527,9 @@ class AppServiceTest {
         val admin = user(USER_ID, USER);
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         app.addUserAppRole(user, AppRole.USER);
 
@@ -587,20 +571,20 @@ class AppServiceTest {
         val newOwner = user(2L, ADMINISTRATOR);
 
         when(app1.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
-                                                                        .role(OWNER)
-                                                                        .build())
+                .role(OWNER)
+                .build())
         );
         when(app2.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
-                                                                        .role(OWNER)
-                                                                        .build())
+                .role(OWNER)
+                .build())
         );
         when(app3.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
-                                                                        .role(AppRole.ADMINISTRATOR)
-                                                                        .build())
+                .role(AppRole.ADMINISTRATOR)
+                .build())
         );
         when(app4.getUserAppRole(1L)).thenReturn(Optional.of(UserAppRole.builder()
-                                                                        .role(AppRole.USER)
-                                                                        .build())
+                .role(AppRole.USER)
+                .build())
         );
 
         when(appRepositoryMock.findAllByUserAppRoles_Id_UserId(anyLong())).thenReturn(apps);
@@ -632,9 +616,9 @@ class AppServiceTest {
         val user = user(USER_ID, USER);
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         app.addUserAppRole(user, OWNER);
 
@@ -654,9 +638,9 @@ class AppServiceTest {
         val user = user(USER_ID, USER);
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
@@ -674,9 +658,9 @@ class AppServiceTest {
         val user = user(USER_ID, GlobalRole.OWNER);
 
         val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
 
         app.addUserAppRole(user, AppRole.USER);
 
@@ -692,58 +676,28 @@ class AppServiceTest {
     }
 
     @Test
-    void successGenerateUuidToRequestModelShare() {
-        val user = user(USER_ID, GlobalRole.OWNER);
-
-        val app = App.builder()
-                     .id(APPLICATION_ID)
-                     .guid(APPLICATION_GUID)
-                     .build();
-
-        val authentication = Mockito.mock(Authentication.class);
-        val securityContext = Mockito.mock(SecurityContext.class);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        SecurityContextHolder.setContext(securityContext);
-
-        when(authentication.getPrincipal()).thenReturn(User.builder()
-                                                           .id(USER_ID)
-                                                           .build()
-        );
-        when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
-        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
-
-        val actual = appService.generateUuidToRequestModelShare(APPLICATION_GUID);
-
-        assertThat(actual).isNotNull();
-
-        verify(authManagerMock).verifyWritePrivilegesToApp(user, app, true);
-        verify(modelShareRequestRepositoryMock).save(any(ModelShareRequest.class));
-        verifyNoMoreInteractions(authManagerMock, modelShareRequestRepositoryMock);
-    }
-
-    @Test
     void successUpdateUserAppRole() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(ADMINISTRATOR.toString())
-                                                 .build();
+                .userId("userGuid")
+                .role(ADMINISTRATOR.toString())
+                .build();
         val user = user(USER_ID, USER);
         val admin = user(ADMIN_ID, USER);
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .userAppRoles(List.of(
-                             UserAppRole.builder()
-                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
-                                        .role(AppRole.USER)
-                                        .build(),
-                             UserAppRole.builder()
-                                        .id(new UserAppRoleId(ADMIN_ID, APPLICATION_ID))
-                                        .role(AppRole.ADMINISTRATOR)
-                                        .build()
-                     ))
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .userAppRoles(List.of(
+                        UserAppRole.builder()
+                                .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                .role(AppRole.USER)
+                                .build(),
+                        UserAppRole.builder()
+                                .id(new UserAppRoleId(ADMIN_ID, APPLICATION_ID))
+                                .role(AppRole.ADMINISTRATOR)
+                                .build()
+                ))
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
@@ -761,22 +715,22 @@ class AppServiceTest {
     @Test
     void successUpdateUserAppRoleByGlobalAdmin() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(ADMINISTRATOR.toString())
-                                                 .build();
+                .userId("userGuid")
+                .role(ADMINISTRATOR.toString())
+                .build();
         val user = user(USER_ID, USER);
         val admin = user(ADMIN_ID, USER);
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .userAppRoles(List.of(
-                             UserAppRole.builder()
-                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
-                                        .role(AppRole.USER)
-                                        .build()
-                     ))
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .userAppRoles(List.of(
+                        UserAppRole.builder()
+                                .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                .role(AppRole.USER)
+                                .build()
+                ))
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
@@ -794,22 +748,22 @@ class AppServiceTest {
     @Test
     void failUpdateOwnerAppRoleByAdmin() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(ADMINISTRATOR.toString())
-                                                 .build();
+                .userId("userGuid")
+                .role(ADMINISTRATOR.toString())
+                .build();
         val user = user(USER_ID, USER);
         val admin = user(ADMIN_ID, USER);
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .userAppRoles(List.of(
-                             UserAppRole.builder()
-                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
-                                        .role(OWNER)
-                                        .build()
-                     ))
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .userAppRoles(List.of(
+                        UserAppRole.builder()
+                                .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                .role(OWNER)
+                                .build()
+                ))
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
@@ -828,22 +782,22 @@ class AppServiceTest {
     @Test
     void successUpdateAppRoleToOwnerByAdmin() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(OWNER.toString())
-                                                 .build();
+                .userId("userGuid")
+                .role(OWNER.toString())
+                .build();
         val user = user(USER_ID, USER);
         val admin = user(ADMIN_ID, ADMINISTRATOR);
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .userAppRoles(List.of(
-                             UserAppRole.builder()
-                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
-                                        .role(AppRole.USER)
-                                        .build()
-                     ))
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .userAppRoles(List.of(
+                        UserAppRole.builder()
+                                .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                .role(AppRole.USER)
+                                .build()
+                ))
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
@@ -860,22 +814,22 @@ class AppServiceTest {
     @Test
     void successUpdateAppRoleToOwnerByGlobalOwner() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(OWNER.toString())
-                                                 .build();
+                .userId("userGuid")
+                .role(OWNER.toString())
+                .build();
         val user = user(USER_ID, USER);
         val admin = user(ADMIN_ID, GlobalRole.OWNER);
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .userAppRoles(List.of(
-                             UserAppRole.builder()
-                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
-                                        .role(AppRole.USER)
-                                        .build()
-                     ))
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .userAppRoles(List.of(
+                        UserAppRole.builder()
+                                .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                .role(AppRole.USER)
+                                .build()
+                ))
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);
@@ -893,26 +847,26 @@ class AppServiceTest {
     @Test
     void successUpdateAppRoleToOwnerByAppOwner() {
         val userRoleUpdateDto = UserRoleUpdateDto.builder()
-                                                 .userId("userGuid")
-                                                 .role(OWNER.toString())
-                                                 .build();
+                .userId("userGuid")
+                .role(OWNER.toString())
+                .build();
         val user = user(USER_ID, USER);
         val admin = user(ADMIN_ID, USER);
 
         val app = App.builder()
-                     .name("name")
-                     .guid(APPLICATION_GUID)
-                     .userAppRoles(List.of(
-                             UserAppRole.builder()
-                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
-                                        .role(AppRole.USER)
-                                        .build(),
-                             UserAppRole.builder()
-                                        .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
-                                        .role(AppRole.OWNER)
-                                        .build()
-                     ))
-                     .build();
+                .name("name")
+                .guid(APPLICATION_GUID)
+                .userAppRoles(List.of(
+                        UserAppRole.builder()
+                                .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                .role(AppRole.USER)
+                                .build(),
+                        UserAppRole.builder()
+                                .id(new UserAppRoleId(USER_ID, APPLICATION_ID))
+                                .role(AppRole.OWNER)
+                                .build()
+                ))
+                .build();
 
         when(appRepositoryMock.findByGuid(APPLICATION_GUID)).thenReturn(Optional.of(app));
         when(userServiceMock.getUserByGuid(any())).thenReturn(user);

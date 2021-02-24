@@ -16,14 +16,12 @@
 
 package com.exadel.frs.controller;
 
-import static com.exadel.frs.utils.TestUtils.buildExceptionResponse;
 import static com.exadel.frs.utils.TestUtils.buildUser;
 import static java.util.UUID.randomUUID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -36,10 +34,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelResponseDto;
-import com.exadel.frs.dto.ui.ModelShareDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.mapper.MlModelMapper;
@@ -101,23 +97,6 @@ class ModelControllerTest {
                .andExpect(content().string(expectedContent));
 
         mockMvc.perform(updateRequest.content(mapper.writeValueAsString(bodyWithNoName)))
-               .andExpect(status().isBadRequest())
-               .andExpect(content().string(expectedContent));
-    }
-
-    @Test
-    void shareModelShouldReturnErrorMessageWhenRequestIdIsMissing() throws Exception {
-        doCallRealMethod().when(modelService).share(any(), any(), any());
-        val expectedContent = mapper.writeValueAsString(buildExceptionResponse(new EmptyRequiredFieldException("requestId")));
-
-        val url = "/app/" + APP_GUID + "/model/" + MODEL_GUID + "/share";
-        val requestToShareModel = post(url)
-                .with(csrf())
-                .with(user(buildUser()))
-                .contentType(APPLICATION_JSON)
-                .content(mapper.writeValueAsString(new ModelShareDto()));
-
-        mockMvc.perform(requestToShareModel)
                .andExpect(status().isBadRequest())
                .andExpect(content().string(expectedContent));
     }

@@ -40,15 +40,14 @@ import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserAlreadyHasAccessToAppException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.repository.AppRepository;
-import com.exadel.frs.repository.ModelShareRequestRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +55,6 @@ public class AppService {
 
     private final AppRepository appRepository;
     private final UserService userService;
-    private final ModelShareRequestRepository modelShareRequestRepository;
     private final AuthorizationManager authManager;
 
     public App getApp(final String appGuid) {
@@ -221,7 +219,6 @@ public class AppService {
         val userToUpdateAppRole = app.getUserAppRole(userToUpdate.getId()).orElseThrow();
         val newAppRole = AppRole.valueOf(userRoleUpdateDto.getRole());
 
-        val currentUserRole = app.getUserAppRole(adminId);
 
         if (userToUpdateAppRole.getRole().equals(OWNER)) {
             throw new InsufficientPrivilegesException();
@@ -269,27 +266,5 @@ public class AppService {
         authManager.verifyWritePrivilegesToApp(user, app, true);
 
         appRepository.deleteById(app.getId());
-    }
-
-    public UUID generateUuidToRequestModelShare(final String appGuid) {
-        val app = getApp(appGuid);
-        val user = userService.getUser(SecurityUtils.getPrincipalId());
-
-        authManager.verifyWritePrivilegesToApp(user, app, true);
-
-        val requestId = UUID.randomUUID();
-        val id = ModelShareRequestId.builder()
-                                    .appId(app.getId())
-                                    .requestId(requestId)
-                                    .build();
-
-        val shareRequest = ModelShareRequest.builder()
-                                            .app(app)
-                                            .id(id)
-                                            .build();
-
-        modelShareRequestRepository.save(shareRequest);
-
-        return requestId;
     }
 }

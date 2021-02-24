@@ -41,7 +41,6 @@ import com.exadel.frs.commonservice.exception.BasicException;
 import com.exadel.frs.dto.ui.AppCreateDto;
 import com.exadel.frs.dto.ui.AppResponseDto;
 import com.exadel.frs.dto.ui.AppUpdateDto;
-import com.exadel.frs.dto.ui.ModelShareResponseDto;
 import com.exadel.frs.dto.ui.UserInviteDto;
 import com.exadel.frs.dto.ui.UserRoleResponseDto;
 import com.exadel.frs.dto.ui.UserRoleUpdateDto;
@@ -57,7 +56,6 @@ import com.exadel.frs.system.security.config.ResourceServerConfig;
 import com.exadel.frs.system.security.config.WebSecurityConfig;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
-import java.util.UUID;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -346,26 +344,6 @@ class AppControllerTest {
         mockMvc.perform(request)
                .andExpect(status().isOk())
                .andExpect(content().string(mapper.writeValueAsString(userRoleResponseDto)));
-    }
-
-    @Test
-    public void shouldReturnModelShare() throws Exception {
-        val request = get("/app/" + APP_GUID + "/model/request")
-                .with(csrf())
-                .with(user(buildUser()))
-                .contentType(MediaType.APPLICATION_JSON);
-
-        val uuid = UUID.randomUUID();
-
-        val expectedResult = ModelShareResponseDto.builder()
-                                                  .modelRequestUuid(uuid)
-                                                  .build();
-
-        when(appService.generateUuidToRequestModelShare(eq(APP_GUID))).thenReturn(uuid);
-
-        mockMvc.perform(request)
-               .andExpect(status().isOk())
-               .andExpect(content().string(mapper.writeValueAsString(expectedResult)));
     }
 
     @Test

@@ -1,5 +1,13 @@
 databaseChangeLog:
   - changeSet:
+      id: drop-model-share-request-table
+      author: Eugene Savko
+      changes:
+        #drop model_share_request table
+        - dropTable:
+            cascadeConstraints: true
+            tableName: model_share_request
+  - changeSet:
       id: create-organization-table
       author: Pavel Nikolaichik
       changes:
