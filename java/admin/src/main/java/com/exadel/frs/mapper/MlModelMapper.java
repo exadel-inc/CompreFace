@@ -30,18 +30,7 @@ import org.mapstruct.Named;
 public interface MlModelMapper {
 
     @Mapping(source = "guid", target = "id")
-    @Mapping(source = "model", target = "accessLevel", qualifiedByName = "getAccessLevel")
     ModelResponseDto toResponseDto(Model model, @Context String appGuid);
 
     List<ModelResponseDto> toResponseDto(List<Model> model, @Context String appGuid);
-
-    @Named("getAccessLevel")
-    default AppModelAccess getAccessLevel(Model model, @Context String appGuid) {
-        if (model.getApp().getGuid().equals(appGuid)) {
-            return AppModelAccess.OWNER;
-        }
-        return model.getAppModel(appGuid)
-                    .map(AppModel::getAccessType)
-                    .orElse(null);
-    }
 }
