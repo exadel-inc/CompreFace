@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { from, Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs';
+import { first, map, tap } from 'rxjs/operators';
 import { ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
@@ -28,7 +28,7 @@ import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.
   templateUrl: './verification-result.component.html',
   styleUrls: ['./verification-result.component.scss'],
 })
-export class VerificationResultComponent implements OnChanges, OnDestroy {
+export class VerificationResultComponent implements OnChanges {
   @Input() processFile: File;
   @Input() checkFile: File;
   @Input() requestInfo: RequestInfo;
@@ -40,36 +40,18 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   @Output() selectCheckFile = new EventEmitter();
 
   @ViewChild('processFileCanvasElement') set processFileCanvasElement(canvas: ElementRef) {
-    if (canvas) {
-      if (this.processFilePrintSub) {
-        this.processFilePrintSub.unsubscribe();
-      }
-      if (this.processFile) {
-        this.processFilePrintSub = this.printResult(
-          canvas,
-          this.processFileCanvasSize,
-          this.processFile,
-          this.printData,
-          VerificationServiceFields.processFileData
-        ).subscribe();
-      }
+    if (canvas && this.processFile) {
+      this.printResult(canvas, this.processFileCanvasSize, this.processFile, this.printData, VerificationServiceFields.processFileData)
+        .pipe(first())
+        .subscribe();
     }
   }
 
   @ViewChild('checkFileCanvasElement') set checkFileCanvasElement(canvas: ElementRef) {
-    if (canvas) {
-      if (this.checkFilePrintSub) {
-        this.checkFilePrintSub.unsubscribe();
-      }
-      if (this.checkFile) {
-        this.checkFilePrintSub = this.printResult(
-          canvas,
-          this.checkFileCanvasSize,
-          this.checkFile,
-          this.printData,
-          VerificationServiceFields.checkFileData
-        ).subscribe();
-      }
+    if (canvas && this.checkFile) {
+      this.printResult(canvas, this.checkFileCanvasSize, this.checkFile, this.printData, VerificationServiceFields.checkFileData)
+        .pipe(first())
+        .subscribe();
     }
   }
 
@@ -78,8 +60,6 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   faceDescriptionHeight = 25;
   formattedResult: string;
 
-  private processFilePrintSub: Subscription;
-  private checkFilePrintSub: Subscription;
   private imgCanvas: ImageBitmap;
 
   constructor(private loadingPhotoService: LoadingPhotoService) {}
@@ -87,15 +67,6 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
       this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.processFilePrintSub) {
-      this.processFilePrintSub.unsubscribe();
-    }
-    if (this.checkFilePrintSub) {
-      this.checkFilePrintSub.unsubscribe();
     }
   }
 
@@ -107,10 +78,7 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
         this.imgCanvas = bitmap;
       }),
       map(imageSize => this.prepareForDraw(imageSize, data, canvasSize, key)),
-      map(preparedImageData => {
-        console.log();
-        return this.drawCanvas(canvas, preparedImageData, file, canvasSize);
-      })
+      map(preparedImageData => this.drawCanvas(canvas, preparedImageData, file, canvasSize))
     );
   }
 

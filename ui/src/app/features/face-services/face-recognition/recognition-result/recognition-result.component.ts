@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable } from 'rxjs';
+import { first, map, tap } from 'rxjs/operators';
 
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
 import { ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
@@ -29,7 +29,7 @@ import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.
   templateUrl: './recognition-result.component.html',
   styleUrls: ['./recognition-result.component.scss'],
 })
-export class RecognitionResultComponent implements OnChanges, OnDestroy {
+export class RecognitionResultComponent implements OnChanges {
   @Input() file: File;
   @Input() requestInfo: RequestInfo;
   @Input() printData: RequestResult;
@@ -40,12 +40,8 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     if (canvas) {
       this.myCanvas = canvas;
 
-      if (this.printSubscription) {
-        this.printSubscription.unsubscribe();
-      }
-
       if (this.printData && this.myCanvas) {
-        this.printSubscription = this.printResult(this.printData).subscribe();
+        this.printResult(this.printData).pipe(first()).subscribe();
       }
     }
   }
@@ -56,19 +52,12 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   formattedResult: string;
 
   private imgCanvas: ImageBitmap;
-  private printSubscription: Subscription;
 
   constructor(private loadingPhotoService: LoadingPhotoService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
       this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.printSubscription) {
-      this.printSubscription.unsubscribe();
     }
   }
 

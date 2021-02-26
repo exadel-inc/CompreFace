@@ -22,42 +22,36 @@ import { Observable } from 'rxjs';
 import { decode } from 'tiff';
 import TiffIfd from 'tiff/lib/tiffIfd';
 
-interface IImageData {
-  data: Uint8ClampedArray;
-  height: number;
-  width: number;
-}
-
 @Injectable({
   providedIn: 'root',
 })
 export class LoadingPhotoService {
   constructor(private http: HttpClient) {}
 
-  public tiffConvertor(url: string): Observable<ImageBitmap> {
+  tiffConvertor(url: string): Observable<ImageBitmap> {
     return this.http.get(url, { responseType: 'arraybuffer' }).pipe(
       map((array: ArrayBuffer) => {
         const ifd: TiffIfd = decode(array)[0];
-        const imageData: IImageData = new ImageData(ifd.width, ifd.height);
+        const imageData: ImageData = new ImageData(ifd.width, ifd.height);
 
         for (let i = 0; i < ifd.data.length; i++) {
           imageData.data[i] = ifd.data[i];
         }
 
-        return imageData as IImageData;
+        return imageData as ImageData;
       }),
-      switchMap(async (imageData: IImageData) => (await createImageBitmap(imageData)) as ImageBitmap)
+      switchMap(async (imageData: ImageData) => (await createImageBitmap(imageData)) as ImageBitmap)
     );
   }
 
-  public createImage(url: string): Observable<ImageBitmap> {
+  createImage(url: string): Observable<ImageBitmap> {
     return this.http
       .get(url, { responseType: 'blob' })
       .pipe(switchMap(async (blob: Blob) => (await createImageBitmap(blob)) as ImageBitmap));
   }
 
-  public loader(file: File): Observable<ImageBitmap> {
-    const type: string = 'image/tiff';
+  loader(file: File): Observable<ImageBitmap> {
+    const type = 'image/tiff';
     const url: string = URL.createObjectURL(file);
 
     return file.type === type ? this.tiffConvertor(url) : this.createImage(url);
