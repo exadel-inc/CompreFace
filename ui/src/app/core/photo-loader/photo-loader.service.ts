@@ -26,6 +26,22 @@ import TiffIfd from 'tiff/lib/tiffIfd';
   providedIn: 'root',
 })
 export class LoadingPhotoService {
+  private type: string[] = [
+    'image/bmp',
+    'image/gif',
+    'image/jpeg',
+    'image/png',
+    'image/tiff',
+    'image/vnd.wap.wbmp',
+    'image/webp',
+    'image/x-icon',
+    'image/x-jng',
+  ];
+
+  get imageType(): string[] {
+    return this.type;
+  }
+
   constructor(private http: HttpClient) {}
 
   tiffConvertor(url: string): Observable<ImageBitmap> {
@@ -51,8 +67,12 @@ export class LoadingPhotoService {
   }
 
   loader(file: File): Observable<ImageBitmap> {
-    const type = 'image/tiff';
+    const checkImageType: boolean = this.imageType.includes(file.type);
+
+    if (!checkImageType) return;
+
     const url: string = URL.createObjectURL(file);
+    const type = 'image/tiff';
 
     return file.type === type ? this.tiffConvertor(url) : this.createImage(url);
   }
