@@ -67,7 +67,7 @@ class ScannerWithPluggins(FaceScanner):
 
     @property
     def difference_threshold(self):
-        return plugin_manager.calculator.DIFFERENCE_THRESHOLD
+        return plugin_manager.calculator.ml_model.difference_threshold
 
 
 class MockScanner(FaceScanner):
