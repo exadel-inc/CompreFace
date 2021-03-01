@@ -20,7 +20,6 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { UserService } from 'src/app/core/user/user.service';
 import { AppUser } from 'src/app/data/interfaces/app-user';
-import { loadApplications } from 'src/app/store/application/action';
 import { fetchRolesEntityAction, loadRolesEntityAction } from 'src/app/store/role/actions';
 import {
   addUsersEntityAction,
@@ -87,7 +86,7 @@ export class UserListEffect {
             this.authService.logOut();
             return [];
           }
-          return [deleteUserSuccess({ userId }), loadApplications(), loadUsersEntityAction()];
+          return [deleteUserSuccess({ userId }), loadUsersEntityAction()];
         }),
         catchError(error => of(deleteUserFail({ error })))
       )
