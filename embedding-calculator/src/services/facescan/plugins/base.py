@@ -83,6 +83,7 @@ class CalculatorModel(MLModel):
     # used to convert euclidean distance to similarity [0.0..1.0]
     # E.g. algorithm: (tanh((first_coef - distance) * second_coef) + 1) / 2
     similarity_coefficients: Tuple[float, float] = (0, 1)
+    difference_threshold: float = 0.4
 
 
 class BasePlugin(ABC):

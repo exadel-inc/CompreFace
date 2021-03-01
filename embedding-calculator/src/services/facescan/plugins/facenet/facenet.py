@@ -107,12 +107,11 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
 class Calculator(mixins.CalculatorMixin, base.BasePlugin):
     ml_models = (
         # VGGFace2 training set, 0.9965 LFW accuracy
-        ('20180402-114759', '1im5Qq006ZEV_tViKh3cgia_Q4jJ13bRK', (1.1, 2.5)),
+        ('20180402-114759', '1im5Qq006ZEV_tViKh3cgia_Q4jJ13bRK', (1.1, 2.5), 0.4),
         # CASIA-WebFace training set, 0.9905 LFW accuracy
-        ('20180408-102900', '100w4JIUz44Tkwte9F-wEH0DOFsY-bPaw', (1.1, 2.5)),
+        ('20180408-102900', '100w4JIUz44Tkwte9F-wEH0DOFsY-bPaw', (1.1, 2.5), 0.4),
     )
     BATCH_SIZE = 25
-    DIFFERENCE_THRESHOLD = 0.4
 
     @property
     def ml_model_file(self):
