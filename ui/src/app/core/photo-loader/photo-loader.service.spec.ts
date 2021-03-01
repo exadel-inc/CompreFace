@@ -44,13 +44,13 @@ describe('LoadingPhotoService', () => {
     });
   });
 
-  it('should be type check that is not included in list for example - image/x-jg', () => {
+  it('should be type check that is not included in list for example: image/x-jg', () => {
     const file = new File([''], 'image', { type: 'image/x-jg' });
 
     expect(service.loader(file)).toBeUndefined();
   });
 
-  it('should be type check that is not included in list for example - text/html', () => {
+  it('should be type check that is not included in list for example: text/html', () => {
     const file = new File([''], 'text', { type: 'text/html' });
 
     expect(service.loader(file)).toBeUndefined();
