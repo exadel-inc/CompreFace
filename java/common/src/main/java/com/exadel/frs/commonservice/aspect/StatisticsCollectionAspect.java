@@ -1,15 +1,15 @@
-package com.exadel.frs.aspect;
+package com.exadel.frs.commonservice.aspect;
 
-import com.exadel.frs.annotation.CollectStatistics;
+import com.exadel.frs.commonservice.annotation.CollectStatistics;
 import com.exadel.frs.commonservice.entity.InstallInfo;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.StatisticsType;
-import com.exadel.frs.exception.ApperyServiceException;
-import com.exadel.frs.repository.InstallInfoRepository;
-import com.exadel.frs.repository.UserRepository;
-import com.exadel.frs.system.feign.ApperyStatisticsClient;
-import com.exadel.frs.system.feign.StatisticsGeneralEntity;
+import com.exadel.frs.commonservice.exception.ApperyServiceException;
+import com.exadel.frs.commonservice.repository.InstallInfoRepository;
+import com.exadel.frs.commonservice.repository.UserRepository;
+import com.exadel.frs.commonservice.system.feign.ApperyStatisticsClient;
+import com.exadel.frs.commonservice.system.feign.StatisticsGeneralEntity;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -45,13 +45,16 @@ public class StatisticsCollectionAspect {
     }
 
     @SneakyThrows
-    @AfterReturning(pointcut = "@annotation(com.exadel.frs.annotation.CollectStatistics)", returning = "result")
+    @AfterReturning(pointcut = "@annotation(com.exadel.frs.commonservice.annotation.CollectStatistics)", returning = "result")
     public void afterMethodInvocation(JoinPoint joinPoint, Object result) {
+        log.info("Request to send statistics in background");
+
         if (StringUtils.isEmpty(statisticsApiKey)) {
             return;
         }
 
         User user = userRepository.findByGlobalRole(GlobalRole.OWNER);
+        log.info("Owner user: {}", user);
 
         if (user == null || !user.isAllowStatistics()) {
             return;

@@ -18,7 +18,7 @@ package com.exadel.frs.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
-import static com.exadel.frs.handler.CrudExceptionCode.INCORRECT_USER_PASSWORD;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.INCORRECT_USER_PASSWORD;
 
 public class IncorrectUserPasswordException extends BasicException {
 

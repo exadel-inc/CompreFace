@@ -1,4 +1,4 @@
-package com.exadel.frs.system.feign;
+package com.exadel.frs.commonservice.system.feign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package com.exadel.frs.system.feign;
+package com.exadel.frs.commonservice.system.feign;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

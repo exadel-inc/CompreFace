@@ -16,10 +16,12 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 @Value
-public class VerifyFacesResponse {
+@EqualsAndHashCode(callSuper = true)
+public class VerifyFacesResponse extends FaceProcessResponse {
 
     VerifyFacesResultDto processFileData;
     VerifyFacesResultDto checkFileData;

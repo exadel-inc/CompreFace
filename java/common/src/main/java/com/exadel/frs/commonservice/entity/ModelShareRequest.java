@@ -23,12 +23,12 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@EqualsAndHashCode(of = {"app", "requestId"})
+@EqualsAndHashCode(of = {"app", "requestTime"})
 public class ModelShareRequest {
 
     @EmbeddedId
@@ -39,5 +39,6 @@ public class ModelShareRequest {
     private App app;
 
     @CreationTimestamp
+    @Column(name = "request_time")
     private LocalDateTime requestTime;
 }

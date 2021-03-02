@@ -16,16 +16,13 @@
 
 package com.exadel.frs;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.when;
+import com.exadel.frs.commonservice.entity.User;
+import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
-import com.exadel.frs.repository.UserRepository;
 import com.exadel.frs.service.UserService;
-import java.util.UUID;
-import liquibase.integration.spring.SpringLiquibase;
+import javassist.NotFoundException;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +33,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
@@ -48,6 +52,7 @@ class UserServiceTestIT extends EmbeddedPostgreSQLTest {
     private static final String USER_EMAIL_2 = "user_2@email.com";
     private static final String USER_GUID = "testUserGuid";
     private static final String USER_EMAIL_PART = "user";
+    public static final String USER_WITH_THIS_EMAIL_NOT_FOUND = "user with this email not found: ";
 
     @MockBean
     private EmailSender emailSender;
@@ -77,10 +82,11 @@ class UserServiceTestIT extends EmbeddedPostgreSQLTest {
     }
 
     @Test
-    void getEnabledUserByEmailThrowsExceptionIfUserIsDisabled() {
+    void getEnabledUserByEmailThrowsExceptionIfUserIsDisabled() throws NotFoundException {
         createUser(DISABLED_USER_EMAIL);
 
-        val disabledUser = userRepository.findByEmail(DISABLED_USER_EMAIL).get();
+        Optional<User> byEmail = userRepository.findByEmail(DISABLED_USER_EMAIL);
+        val disabledUser = byEmail.orElseThrow(() -> new NotFoundException(USER_WITH_THIS_EMAIL_NOT_FOUND + DISABLED_USER_EMAIL));
 
         assertThat(disabledUser).isNotNull();
         assertThat(disabledUser.isEnabled()).isFalse();
@@ -107,9 +113,10 @@ class UserServiceTestIT extends EmbeddedPostgreSQLTest {
     }
 
     @Test
-    void getUserByGuidReturnsUser() {
+    void getUserByGuidReturnsUser() throws NotFoundException {
         createUser(USER_EMAIL);
-        val createdUser = userRepository.findByEmail(USER_EMAIL).get();
+        Optional<User> byEmail = userRepository.findByEmail(USER_EMAIL);
+        val createdUser = byEmail.orElseThrow(()->new NotFoundException(USER_WITH_THIS_EMAIL_NOT_FOUND+USER_EMAIL));
 
         val actual = userService.getUserByGuid(createdUser.getGuid());
 
@@ -149,11 +156,11 @@ class UserServiceTestIT extends EmbeddedPostgreSQLTest {
 
     private void createUser(final String email) {
         val user = UserCreateDto.builder()
-                                .email(email)
-                                .firstName("first_name")
-                                .lastName("last_name")
-                                .password("password")
-                                .build();
+                .email(email)
+                .firstName("first_name")
+                .lastName("last_name")
+                .password("password")
+                .build();
 
         userService.createUser(user);
     }

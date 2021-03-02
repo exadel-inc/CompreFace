@@ -18,7 +18,7 @@ package com.exadel.frs.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
-import static com.exadel.frs.handler.CrudExceptionCode.INVALID_EMAIL_FORMAT;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.INVALID_EMAIL_FORMAT;
 
 public class InvalidEmailException extends BasicException {
 

@@ -1,6 +1,6 @@
-package com.exadel.frs.scheduler.config;
+package com.exadel.frs.commonservice.scheduler.config;
 
-import com.exadel.frs.scheduler.job.StatisticsJob;
+import com.exadel.frs.commonservice.scheduler.job.StatisticsJob;
 import org.quartz.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

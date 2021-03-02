@@ -2,7 +2,7 @@ package com.exadel.frs.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
-import static com.exadel.frs.handler.CrudExceptionCode.INCORRECT_STATISTICS_ROLE;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.INCORRECT_STATISTICS_ROLE;
 import static java.lang.String.format;
 
 public class IncorrectStatisticsTypeException extends BasicException {

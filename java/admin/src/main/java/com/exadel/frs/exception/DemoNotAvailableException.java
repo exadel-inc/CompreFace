@@ -18,11 +18,11 @@ package com.exadel.frs.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
-import static com.exadel.frs.handler.CrudExceptionCode.DEMO_MODEL_NOT_AVAILABLE;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.DEMO_MODEL_NOT_AVAILABLE;
 
 public class DemoNotAvailableException extends BasicException {
 
-    public static final String MESSAGE = "The Demo model is not available more!";
+    public static final String MESSAGE = "The Demo model is not available any more!";
 
     public DemoNotAvailableException() {
         super(DEMO_MODEL_NOT_AVAILABLE, MESSAGE);
