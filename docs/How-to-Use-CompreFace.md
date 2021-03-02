@@ -1,3 +1,5 @@
+# How to Use CompreFace
+
 
 **Step 1.** You need to sign up for the system and log in into the account you’ve just created or use the one you already have. After that, the system redirects you to the main page.
 
@@ -60,7 +62,7 @@ async function saveNewImageToFaceCollection() {
     formData.append("photo", photo);
 
     try {
-        let r = await fetch('http://localhost:8000/api/v1/faces/?subject=`${name}`', {method: "POST", body: formData});
+        let r = await fetch('http://localhost:8000/api/v1/recognition/faces/?subject=`${name}`', {method: "POST", body: formData});
     } catch (e) {
         console.log('Houston, we have a problem...:', e);
     }
@@ -73,7 +75,7 @@ This function sends the image to our server and shows results in a text area:
 function recognizeFace(input) {
 
     async function getData() {
-        let response = await fetch('http://localhost:8000/api/v1/faces/recognize')
+        let response = await fetch('http://localhost:8000/api/v1/recognition/recognize')
         let data = await response.json()
         return data
     }

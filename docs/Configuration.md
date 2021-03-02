@@ -1,3 +1,4 @@
+# Configuration
 
 In the [release](https://github.com/exadel-inc/CompreFace/releases) archive and all custom builds there is a `.env` file with 
 configuration options for CompreFace. For production systems 

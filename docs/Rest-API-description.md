@@ -1,3 +1,5 @@
+# Rest API description
+
 ## Table Of Contents
 
 + [Face Recognition Service Endpoints](#face-recognition-service-endpoints)
@@ -70,7 +72,7 @@ curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&
 | face_plugins     | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
 
 Response body on success:
-```
+```json
 {
   "result" : [ {
     "age" : [ 25, 32 ],
@@ -106,13 +108,13 @@ Response body on success:
 
 | Element                        | Type    | Description                                                  |
 | ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | array   | detected age range. Return only if [age plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | string  | detected gender. Return only if [gender plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled         |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled      |
+| age                            | array   | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | string  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | box                            | object  | list of parameters of the bounding box for this face         |
 | probability                    | float   | probability that a found face is actually a face             |
 | x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled      |
+| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | faces                          | list    | list of similar faces with size of <prediction_count> order by similarity |
 | similarity                     | float   | similarity that on that image predicted person               |
 | subject                        | string  | name of the subject in Face Collection                       |
@@ -271,18 +273,18 @@ Response body on success:
 
 | Element                        | Type    | Description                                                  |
 | ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | array   | detected age range. Return only if [age plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | string  | detected gender. Return only if [gender plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled         |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled      |
+| age                            | array   | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | string  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | box                            | object  | list of parameters of the bounding box for this face         |
 | probability                    | float   | probability that a found face is actually a face             |
 | x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled      |
+| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | similarity                     | float   | similarity that on that image predicted person               |
 | execution_time                 | object  | execution time of all plugins                       |
 | plugins_versions               | object  | contains information about plugin versions                       |
 
-## Face Detection Dervice
+## Face Detection Service
 
 To detect faces from the uploaded image:
 
@@ -337,13 +339,13 @@ Response body on success:
 
 | Element                        | Type    | Description                                                  |
 | ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | array   | detected age range. Return only if [age plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | string  | detected gender. Return only if [gender plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled         |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled      |
+| age                            | array   | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | string  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | box                            | object  | list of parameters of the bounding box for this face (on processedImage) |
 | probability                    | float   | probability that a found face is actually a face (on processedImage)     |
 | x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face (on processedImage)         |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled      |
+| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | execution_time                 | object  | execution time of all plugins                       |
 | plugins_versions               | object  | contains information about plugin versions                       |
 
@@ -428,13 +430,13 @@ Response body on success:
 | ------------------------------ | ------- | ------------------------------------------------------------ |
 | source_image_face              | object  | additional info about source image face |
 | face_matches                   | array   | result of face verification |
-| age                            | array   | detected age range. Return only if [age plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | string  | detected gender. Return only if [gender plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled         |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled      |
+| age                            | array   | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | string  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | box                            | object  | list of parameters of the bounding box for this face         |
 | probability                    | float   | probability that a found face is actually a face             |
 | x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](docs/Face-services-and-plugins.md#face-plugins) is enabled      |
+| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | similarity                     | float   | similarity between this face and the face on the source image               |
 | execution_time                 | object  | execution time of all plugins                       |
 | plugins_versions               | object  | contains information about plugin versions                       |

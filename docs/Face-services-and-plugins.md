@@ -1,3 +1,5 @@
+# Face Services and Plugins
+
 CompreFace supports these face services and plugins:
 * Face recognition service (Face identification)
 * Face detection service
@@ -7,7 +9,7 @@ CompreFace supports these face services and plugins:
 * Landmarks detection plugin
 * Calculator plugin
 
-### Services
+## Services
 
 To use face service you need to create it in an application on UI. The type of service depends on your application needs. Each service has its own REST API context and there is no possibility to change the service type after creation. Here is a short description of each of them:
 * Face recognition service is used for face identification. This means that you first need to upload known faces to faces collection and then recognize unknown faces among them. When you upload an unknown face, the service returns the most similar faces to it. Also, face recognition service supports verify endpoint to check if this person from face collection is the correct one. The possible cases include:
@@ -23,14 +25,14 @@ To use face service you need to create it in an application on UI. The type of s
   * get landmark information to know where customers look at
   * gather statistics on how many customers in the store
 
-### Face plugins
+##  Face plugins
 
 Face plugins could be used with any of the face services. By default, face services return only bounding boxes and similarity if 
 applicable. To add more information in response you can add face plugins in your request. To add a plugin you need to list 
 comma-separated needed plugins in the query `plugins` parameter. This parameter is supported by all face recognition services.
 Example:
 ```shell
-curl  -X POST "http://localhost:8000/api/v1/faces/recognize?plugins=age,gender,landmarks" \
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?plugins=age,gender,landmarks" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_recognition_api_key>" \
 -F file=<local_file>

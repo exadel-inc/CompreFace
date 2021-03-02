@@ -51,7 +51,7 @@
     * [Custom Builds](/docs/Custom-builds.md)
     * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
   * [Contributing](#contributing)
-  * [License info](#license)
+  * [License info](#license-info)
 
 
 # Overview
