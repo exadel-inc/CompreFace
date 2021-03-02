@@ -18,7 +18,7 @@ package com.exadel.frs.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
-import static com.exadel.frs.handler.CrudExceptionCode.UNREACHABLE_EMAIL_ADDRESS;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.UNREACHABLE_EMAIL_ADDRESS;
 
 public class UnreachableEmailException extends BasicException {
 

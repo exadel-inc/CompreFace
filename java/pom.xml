@@ -18,9 +18,9 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>common</module>
         <module>admin</module>
         <module>api</module>
-        <module>common</module>
     </modules>
 
     <properties>

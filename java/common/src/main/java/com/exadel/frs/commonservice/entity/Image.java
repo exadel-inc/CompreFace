@@ -25,7 +25,7 @@ import lombok.experimental.Accessors;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

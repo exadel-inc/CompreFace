@@ -19,6 +19,8 @@ package com.exadel.frs.core.trainservice.repository;
 import com.exadel.frs.commonservice.entity.App;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.commonservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import lombok.val;
 import org.junit.jupiter.api.AfterEach;
@@ -32,7 +34,6 @@ import java.util.List;
 import java.util.Random;
 
 import static com.exadel.frs.core.trainservice.ItemsBuilder.*;
-import static com.exadel.frs.core.trainservice.ItemsBuilder.makeModel;
 import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 

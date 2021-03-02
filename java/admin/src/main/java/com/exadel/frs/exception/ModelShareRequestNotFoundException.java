@@ -20,7 +20,7 @@ import com.exadel.frs.commonservice.exception.BasicException;
 
 import java.util.UUID;
 
-import static com.exadel.frs.handler.CrudExceptionCode.MODEL_SHARE_REQUEST_NOT_FOUND;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.MODEL_SHARE_REQUEST_NOT_FOUND;
 import static java.lang.String.format;
 
 public class ModelShareRequestNotFoundException extends BasicException {

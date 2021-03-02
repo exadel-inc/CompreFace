@@ -23,7 +23,7 @@ import lombok.*;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

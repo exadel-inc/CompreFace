@@ -18,10 +18,12 @@ package com.exadel.frs.core.trainservice.controller;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+
+import com.exadel.frs.commonservice.annotation.CollectStatistics;
+import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
-import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
+import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.service.FaceProcessService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiParam;
@@ -42,9 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Validated
 public class DetectionController {
 
-    private final FacesApiClient client;
-    private final ImageExtensionValidator imageValidator;
-    private final FacesMapper mapper;
+    private final FaceProcessService detectionService;
 
     @PostMapping(value = "/detection")
     @ResponseStatus(HttpStatus.OK)
@@ -56,6 +56,7 @@ public class DetectionController {
                     value = "Api key of application and model",
                     required = true)
     })
+    @CollectStatistics(type = StatisticsType.FACE_DETECTION_CREATE)
     public FacesDetectionResponseDto detect(
             @ApiParam(value = "Image for recognizing", required = true)
             @RequestParam
@@ -71,9 +72,13 @@ public class DetectionController {
             @RequestParam(value = "face_plugins", required = false)
             final String facePlugins
     ) {
-        imageValidator.validate(file);
-
-        return mapper.toFacesDetectionResponseDto(
-                client.findFaces(file, limit, detProbThreshold, facePlugins));
+        ProcessImageParams processImageParams = ProcessImageParams
+                .builder()
+                .file(file)
+                .limit(limit)
+                .detProbThreshold(detProbThreshold)
+                .facePlugins(facePlugins)
+                .build();
+        return (FacesDetectionResponseDto) detectionService.processImage(processImageParams);
     }
 }

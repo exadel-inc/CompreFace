@@ -14,18 +14,14 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.repository;
+package com.exadel.frs.commonservice.repository;
 
-import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.commonservice.entity.InstallInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Repository
-@Transactional
-public interface FacesRepository extends JpaRepository<Face, Long> {
+public interface InstallInfoRepository extends JpaRepository<InstallInfo, String> {
 
-    List<Face> findByApiKey(String modelApiKey);
-}
+    InstallInfo findTopByOrderByInstallGuid();
+} 

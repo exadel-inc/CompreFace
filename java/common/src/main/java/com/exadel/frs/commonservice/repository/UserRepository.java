@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.repository;
+package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
@@ -23,7 +23,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
