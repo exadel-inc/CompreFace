@@ -104,6 +104,10 @@ gender recognition
 7. Open http://localhost:8000/login
 
 
+# Documentation
+
+More documentation is available [here] (/docs)
+
 # Contributing
 
 Contributions are welcome and greatly appreciated.
