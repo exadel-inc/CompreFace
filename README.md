@@ -106,7 +106,7 @@ gender recognition
 
 # Documentation
 
-More documentation is available [here] (/docs)
+More documentation is available [here](/docs)
 
 # Contributing
 
