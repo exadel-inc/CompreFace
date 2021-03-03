@@ -21,4 +21,5 @@ jobs:
        run: |
          make build-images
          docker login -u "${DOCKER_USER}" -p "${DOCKER_PASSWORD}"
-         docker push ${DOCKER_REGISTRY}compreface-core
+         docker push --all-tags ${DOCKER_REGISTRY}compreface-core
+         
