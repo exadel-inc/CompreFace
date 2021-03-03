@@ -42,8 +42,6 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;
   stateSubscription: Subscription;
-  processFile: File;
-  checkFile: File;
   @Input()
   title: string;
 
@@ -64,22 +62,13 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
 
   processFileUpload(file) {
     if (this.validateImage(file)) {
-      this.processFile = file;
-      this.verifyFace();
+      this.store.dispatch(verifyFaceSaveToStore({ processFile: file }));
     }
   }
 
   checkFileUpload(file) {
     if (this.validateImage(file)) {
-      this.checkFile = file;
-      this.verifyFace();
-    }
-  }
-
-  verifyFace() {
-    this.store.dispatch(verifyFaceSaveToStore({ processFile: this.processFile, checkFile: this.checkFile }));
-    if (this.processFile && this.checkFile) {
-      this.store.dispatch(verifyFace({ processFile: this.processFile, checkFile: this.checkFile }));
+      this.store.dispatch(verifyFaceSaveToStore({ checkFile: file }));
     }
   }
 

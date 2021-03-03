@@ -20,13 +20,15 @@
       <div class="result-section-image">
         <div class="result-image">
           <app-drag-n-drop
-            *ngIf="!checkFile; else checkFileBlock"
+            [style.display]="files.checkFile ? 'none' : 'block'"
             class="face-uploader"
             (upload)="selectCheckFile.emit($event)"
           ></app-drag-n-drop>
-          <ng-template #checkFileBlock
-            ><canvas *ngIf="printData || !processFile" #checkFileCanvasElement [width]="checkFileCanvasSize.width"></canvas
-          ></ng-template>
+          <canvas
+            #checkFileCanvasElement
+            [style.display]="!files.checkFile ? 'none' : 'block'"
+            [width]="checkFileCanvasSize.width"
+          ></canvas>
         </div>
       </div>
       <div class="result-section-image">
@@ -34,12 +36,14 @@
         <div class="result-image">
           <app-drag-n-drop
             class="face-uploader"
-            *ngIf="!processFile; else processFileBlock"
+            [style.display]="files.processFile ? 'none' : 'block'"
             (upload)="selectProcessFile.emit($event)"
           ></app-drag-n-drop>
-          <ng-template #processFileBlock
-            ><canvas *ngIf="printData || !checkFile" #processFileCanvasElement [width]="processFileCanvasSize.width"></canvas
-          ></ng-template>
+          <canvas
+            [style.display]="!files.processFile ? 'none' : 'block'"
+            #processFileCanvasElement
+            [width]="processFileCanvasSize.width"
+          ></canvas>
         </div>
       </div>
     </div>

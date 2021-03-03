@@ -18,11 +18,11 @@
   <div class="recognition-loading" *ngIf="pending$ | async">
     <app-spinner></app-spinner>
   </div>
+
   <app-verification-result
     [pending]="pending$ | async"
     [isLoaded]="isLoaded$ | async"
-    [processFile]="processFile"
-    [checkFile]="checkFile"
+    [files]="files$ | async"
     [requestInfo]="requestInfo$ | async"
     [printData]="data$ | async"
     (selectProcessFile)="processFileUpload($event)"
