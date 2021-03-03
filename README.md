@@ -128,7 +128,7 @@ For java just import dev/team_codestyle.xml file in your IntelliJ IDEA.
 
 ### Report Bugs
 
-Please report any bugs here://github.com/exadel-inc/CompreFace/issues.
+Please report any bugs [here](https://github.com/exadel-inc/CompreFace/issues).
 
 If you are reporting a bug, please specify:
 

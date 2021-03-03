@@ -289,7 +289,7 @@ Response body on success:
 To detect faces from the uploaded image:
 
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/detection?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
+curl  -X POST "http://localhost:8000/api/v1/detection/detect?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
 -F file=<local_file>
@@ -354,7 +354,7 @@ Response body on success:
 
 To compare faces from given two images:
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/verification?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
+curl  -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
 -F source_image=<local_check_file>
