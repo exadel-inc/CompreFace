@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,38 +14,26 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
+import { Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-.app-user-list {
-  position: relative;
-}
+@Pipe({
+  name: 'modelTableFilter',
+})
+export class ModelTableFilterPipe implements PipeTransform {
+  transform(value: Observable<any>, search: string): Observable<any> {
+    if (!search.trim()) {
+      return value;
+    }
 
-app-spinner {
-  position: absolute;
-  left: 40%;
-}
-
-.table-header-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  padding-right: 16px;
-  align-items: center;
-
-  h3 {
-    margin: 0;
+    return value.pipe(
+      map(e => {
+        e.data = e.data.filter(row =>
+          (row.name.toLocaleLowerCase() + ' ' + row.type.toLocaleLowerCase()).includes(search.toLocaleLowerCase())
+        );
+        return e;
+      })
+    );
   }
-}
-
-.add-model-button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  .mat-button {
-    margin-top: 10px;
-  }
-}
-
-mat-form-field {
-  margin-top: -25px;
 }
