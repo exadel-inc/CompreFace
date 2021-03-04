@@ -47,6 +47,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
+import org.springframework.util.StringUtils;
 
 public class SecurityValidationFilterTest {
 
@@ -125,15 +126,16 @@ public class SecurityValidationFilterTest {
 
     @Test
     public void testDoFilterWithNonExistentApiKey() throws IOException, ServletException {
+        ModelType modelType = any(ModelType.class);
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
-        when(modelService.validateModelKey(anyString(), any(ModelType.class))).thenReturn(ValidationResult.FORBIDDEN);
+        when(modelService.validateModelKey(anyString(), modelType)).thenReturn(ValidationResult.FORBIDDEN);
         when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
         verify(httpServletResponse).setStatus(
-                exceptionHandler.handleDefinedExceptions(new ModelNotFoundException(VALID_API_KEY))
+                exceptionHandler.handleDefinedExceptions(new ModelNotFoundException(VALID_API_KEY, StringUtils.capitalize(modelType.name())))
                                 .getStatusCode()
                                 .value()
         );

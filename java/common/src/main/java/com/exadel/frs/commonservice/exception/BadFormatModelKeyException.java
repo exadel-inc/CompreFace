@@ -20,7 +20,7 @@ import static com.exadel.frs.commonservice.handler.CommonExceptionCode.VALIDATIO
 
 public class BadFormatModelKeyException extends BasicException {
 
-    private static final String MESSAGE = "Model key should be UUID";
+    private static final String MESSAGE = "Service API key should be UUID";
 
     public BadFormatModelKeyException() {
         super(VALIDATION_CONSTRAINT_VIOLATION, MESSAGE);

@@ -34,6 +34,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class ModelService {
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
-                .orElseThrow(() -> new ModelNotFoundException(modelGuid));
+                .orElseThrow(() -> new ModelNotFoundException(modelGuid, ""));
     }
 
     private void verifyNameIsUnique(final String name, final Long appId) {
