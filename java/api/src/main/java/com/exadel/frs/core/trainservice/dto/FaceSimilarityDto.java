@@ -16,10 +16,14 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Value;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 @Value
+@JsonInclude(NON_NULL)
 public class FaceSimilarityDto {
 
     @JsonProperty("face_name")
