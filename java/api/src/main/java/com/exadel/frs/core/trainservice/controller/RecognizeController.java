@@ -16,14 +16,11 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import com.exadel.frs.commonservice.annotation.CollectStatistics;
-import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +40,6 @@ public class RecognizeController {
     private final FaceProcessService recognitionService;
 
     @PostMapping(value = "/faces/recognize")
-    @CollectStatistics(type = StatisticsType.FACE_RECOGNITION_CREATE)
     public FacesRecognitionResponseDto recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,

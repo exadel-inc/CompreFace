@@ -38,7 +38,7 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
     private final FacesMapper mapper;
 
     @Override
-    public FaceProcessResponse processImage(ProcessImageParams processImageParams) {
+    public VerifyFacesResponse processImage(ProcessImageParams processImageParams) {
         Map<String, MultipartFile> fileMap = (Map<String, MultipartFile>) processImageParams.getFile();
         List<FindFacesResult> findFacesResults = Stream.of(fileMap.get("processFile"), fileMap.get("checkFile"))
                 .parallel()

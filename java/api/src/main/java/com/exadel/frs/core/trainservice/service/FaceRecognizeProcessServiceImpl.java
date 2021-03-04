@@ -30,7 +30,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
     private final FacesMapper mapper;
 
     @Override
-    @CollectStatistics(type = StatisticsType.FACE_RECOGNITION_CREATE)
     public FacesRecognitionResponseDto processImage(ProcessImageParams processImageParams) {
         MultipartFile file = (MultipartFile) processImageParams.getFile();
         imageValidator.validate(file);

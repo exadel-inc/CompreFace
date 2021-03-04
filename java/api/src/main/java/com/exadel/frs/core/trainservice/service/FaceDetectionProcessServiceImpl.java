@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.core.trainservice.dto.FaceProcessResponse;
+import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
@@ -18,7 +19,7 @@ public class FaceDetectionProcessServiceImpl implements FaceProcessService {
     private final FacesMapper mapper;
 
     @Override
-    public FaceProcessResponse processImage(ProcessImageParams processImageParams) {
+    public FacesDetectionResponseDto processImage(ProcessImageParams processImageParams) {
         MultipartFile file = (MultipartFile) processImageParams.getFile();
         imageValidator.validate(file);
 
