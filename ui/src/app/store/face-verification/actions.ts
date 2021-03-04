@@ -13,10 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { createAction, props } from '@ngrx/store';
-
-export const verifyFace = createAction('[Model] Face Verification');
 export const verifyFaceSaveToStore = createAction('[Model] Face Verification Save', props<{ processFile?: any; checkFile?: any }>());
 export const verifyFaceSuccess = createAction('[Model] Face Verification Success', props<{ model: any; request: any }>());
 export const verifyFaceFail = createAction('[Model] Face Verification Fail', props<{ error: any }>());

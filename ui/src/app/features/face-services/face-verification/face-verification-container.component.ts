@@ -13,13 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
 
 import { AppState } from '../../../store';
-import { verifyFaceReset, verifyFace, verifyFaceSaveToStore } from '../../../store/face-verification/actions';
+import { verifyFaceReset, verifyFaceSaveToStore } from '../../../store/face-verification/actions';
 import {
   selectFaceData,
   selectFiles,
@@ -41,9 +41,6 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
   requestInfo$: Observable<any>;
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;
-  stateSubscription: Subscription;
-  @Input()
-  title: string;
 
   constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
 
@@ -57,7 +54,6 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.store.dispatch(verifyFaceReset());
-    this.stateSubscription.unsubscribe();
   }
 
   processFileUpload(file) {
