@@ -127,7 +127,7 @@ public class SecurityValidationFilterTest {
     public void testDoFilterWithNonExistentApiKey() throws IOException, ServletException {
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
-        when(modelService.validateModelKey(anyString(), any(ModelType.class))).thenReturn(ValidationResult.FORBIDDEN);
+        when(modelService.validateModelKey(anyString(), eq(ModelType.RECOGNITION))).thenReturn(ValidationResult.FORBIDDEN);
         when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
