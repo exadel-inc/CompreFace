@@ -21,8 +21,7 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.enumeration;
 import static java.util.Collections.singletonList;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -126,16 +125,15 @@ public class SecurityValidationFilterTest {
 
     @Test
     public void testDoFilterWithNonExistentApiKey() throws IOException, ServletException {
-        ModelType modelType = any(ModelType.class);
         when(httpServletRequest.getHeaderNames()).thenReturn(enumeration(singletonList(X_FRS_API_KEY_HEADER)));
         when(httpServletRequest.getHeaders(X_FRS_API_KEY_HEADER)).thenReturn(enumeration(singletonList(VALID_API_KEY)));
-        when(modelService.validateModelKey(anyString(), modelType)).thenReturn(ValidationResult.FORBIDDEN);
+        when(modelService.validateModelKey(anyString(), eq(ModelType.RECOGNITION))).thenReturn(ValidationResult.FORBIDDEN);
         when(exceptionHandler.handleDefinedExceptions(any())).thenCallRealMethod();
 
         securityValidationFilter.doFilter(httpServletRequest, httpServletResponse, filterChain);
 
         verify(httpServletResponse).setStatus(
-                exceptionHandler.handleDefinedExceptions(new ModelNotFoundException(VALID_API_KEY, StringUtils.capitalize(modelType.name())))
+                exceptionHandler.handleDefinedExceptions(new ModelNotFoundException(VALID_API_KEY, StringUtils.capitalize(ModelType.RECOGNITION.name().toLowerCase())))
                                 .getStatusCode()
                                 .value()
         );
