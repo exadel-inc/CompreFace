@@ -38,9 +38,9 @@ import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.AppModelAccess;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.repository.FacesRepository;
+import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.repository.ImagesRepository;
-import com.exadel.frs.repository.ModelRepository;
+import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
@@ -168,7 +168,7 @@ class ModelServiceTest {
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
-        modelService.createModel(modelCreateDto, APPLICATION_GUID, USER_ID);
+        modelService.createRecognitionModel(modelCreateDto, APPLICATION_GUID, USER_ID);
 
         val varArgs = ArgumentCaptor.forClass(Model.class);
         verify(modelRepositoryMock).existsByNameAndAppId("model-name", APPLICATION_ID);
@@ -195,7 +195,7 @@ class ModelServiceTest {
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
-                modelService.createModel(modelCreateDto, APPLICATION_GUID, USER_ID)
+                modelService.createRecognitionModel(modelCreateDto, APPLICATION_GUID, USER_ID)
         ).isInstanceOf(NameIsNotUniqueException.class);
     }
 

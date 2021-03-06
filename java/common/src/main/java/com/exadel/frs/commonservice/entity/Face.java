@@ -29,7 +29,7 @@ import javax.persistence.Table;
 import java.util.List;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

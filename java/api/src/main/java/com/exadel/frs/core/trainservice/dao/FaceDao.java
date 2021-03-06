@@ -20,11 +20,13 @@ import static java.util.UUID.randomUUID;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.entity.Face.Embedding;
 import com.exadel.frs.commonservice.entity.Image;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
@@ -49,10 +51,8 @@ public class FaceDao {
     }
 
     public Face deleteFaceById(final String faceId) {
-        val foundFace = facesRepository.findById(faceId);
-        foundFace.ifPresent(face -> {
-            facesRepository.delete(face);
-        });
+        Optional<Face> foundFace = facesRepository.findById(faceId);
+        foundFace.ifPresent(facesRepository::delete);
 
         return foundFace.orElse(null);
     }

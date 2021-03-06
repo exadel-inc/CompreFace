@@ -19,7 +19,7 @@ package com.exadel.frs.core.trainservice.component.migration;
 import static com.exadel.frs.core.trainservice.sdk.faces.service.FacesRestApiClient.CALCULATOR_PLUGIN;
 import com.exadel.frs.commonservice.entity.Face.Embedding;
 import com.exadel.frs.commonservice.entity.Image;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.core.trainservice.sdk.config.FeignClientFactory;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;

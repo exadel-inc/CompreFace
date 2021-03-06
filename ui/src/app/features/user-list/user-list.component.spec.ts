@@ -24,7 +24,7 @@ import { of, Subscription } from 'rxjs';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 import { UserTableModule } from 'src/app/features/user-table/user-table.module';
 
-import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
+import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { UserListFacade } from './user-list-facade';
@@ -43,7 +43,7 @@ describe('UserListComponent', () => {
           UserTableModule,
           SpinnerModule,
           FormsModule,
-          UserTablePipeModule,
+          TablePipeModule,
           MatInputModule,
           MatDialogModule,
           InviteDialogModule,

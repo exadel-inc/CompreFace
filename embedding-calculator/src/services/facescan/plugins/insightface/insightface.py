@@ -106,15 +106,13 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
 
 class Calculator(InsightFaceMixin, mixins.CalculatorMixin, base.BasePlugin):
     ml_models = (
-        ('arcface_mobilefacenet', '17TpxpyHuUc1ZTm3RIbfvhnBcZqhyKszV'),
-        ('arcface_r100_v1', '11xFaEHIQLNze3-2RUV1cQfT-q6PKKfYp'),
+        ('arcface_mobilefacenet', '17TpxpyHuUc1ZTm3RIbfvhnBcZqhyKszV', None, 200),
+        ('arcface_r100_v1', '11xFaEHIQLNze3-2RUV1cQfT-q6PKKfYp', None, 400),
         ('arcface_resnet34', '1ECp5XrLgfEAnwyTYFEhJgIsOAw6KaHa7'),
         ('arcface_resnet50', '1a9nib4I9OIVORwsqLB0gz0WuLC32E8gf'),
         ('arcface-r50-msfdrop75', '1gNuvRNHCNgvFtz7SjhW82v2-znlAYaRO'),
         ('arcface-r100-msfdrop75', '1lAnFcBXoMKqE-SkZKTmi6MsYAmzG0tFw'),
     )
-
-    DIFFERENCE_THRESHOLD = 400
 
     def calc_embedding(self, face_img: Array3D) -> Array3D:
         return self._calculation_model.get_embedding(face_img).flatten()

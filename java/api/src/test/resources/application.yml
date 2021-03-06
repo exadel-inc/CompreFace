@@ -35,3 +35,9 @@ image:
     - gif
     - webp
   saveImagesToDB: ${SAVE_IMAGES_TO_DB:true}
+
+app:
+  feign:
+    appery-io:
+      url: https://localhost/rest/1/db/collections
+      api-key: ${APPERY_API_KEY:#{null}}

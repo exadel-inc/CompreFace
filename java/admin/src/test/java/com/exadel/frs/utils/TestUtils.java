@@ -16,7 +16,7 @@
 
 package com.exadel.frs.utils;
 
-import static com.exadel.frs.handler.CrudExceptionCode.UNDEFINED;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.UNDEFINED;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphabetic;
 
 import com.exadel.frs.commonservice.dto.ExceptionResponseDto;

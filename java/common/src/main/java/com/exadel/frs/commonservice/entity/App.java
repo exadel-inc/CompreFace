@@ -27,7 +27,7 @@ import java.util.Optional;
 import static com.exadel.frs.commonservice.enums.AppRole.OWNER;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -41,6 +41,7 @@ public class App {
     private Long id;
     private String name;
     private String guid;
+    @Column(name = "api_key")
     private String apiKey;
 
     @ToString.Exclude

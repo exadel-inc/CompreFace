@@ -17,8 +17,6 @@
 package com.exadel.frs.core.trainservice.config.repository;
 
 import com.zaxxer.hikari.HikariDataSource;
-import java.util.HashMap;
-import javax.sql.DataSource;
 import lombok.val;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,8 +31,12 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import javax.sql.DataSource;
+import java.util.HashMap;
+
 @Configuration
-@EnableJpaRepositories(basePackages = "com.exadel.frs.core.trainservice.repository",
+@EnableJpaRepositories(basePackages = {"com.exadel.frs.core.trainservice.repository",
+        "com.exadel.frs.commonservice.repository"},
         entityManagerFactoryRef = "emPg",
         transactionManagerRef = "tmPg")
 public class DbConfig {

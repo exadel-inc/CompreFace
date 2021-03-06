@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"app", "model"})
@@ -50,6 +50,7 @@ public class AppModel {
     private Model model;
 
     @Convert(converter = ModelAccessTypeConverter.class)
+    @Column(name = "access_type")
     private AppModelAccess accessType;
 
     public AppModel(App app, Model model, AppModelAccess accessType) {

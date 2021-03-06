@@ -16,14 +16,16 @@
 
 package com.exadel.frs.commonservice.exception;
 
+import com.exadel.frs.commonservice.enums.ModelType;
+
 import static com.exadel.frs.commonservice.handler.CommonExceptionCode.MODEL_NOT_FOUND;
 import static java.lang.String.format;
 
 public class ModelNotFoundException extends BasicException {
 
-    private static final String MESSAGE = "Model %s not found";
+    private static final String MESSAGE = "%s service with API Key %s not found";
 
-    public ModelNotFoundException(String modelId) {
-        super(MODEL_NOT_FOUND, format(MESSAGE, modelId));
+    public ModelNotFoundException(String modelId, String serviceName) {
+        super(MODEL_NOT_FOUND, format(MESSAGE, serviceName, modelId));
     }
 }

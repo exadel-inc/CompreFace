@@ -14,14 +14,26 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.repository;
+import { Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import com.exadel.frs.commonservice.entity.InstallInfo;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+@Pipe({
+  name: 'modelTableFilter',
+})
+export class ModelTableFilterPipe implements PipeTransform {
+  transform(value: Observable<any>, search: string): Observable<any> {
+    if (!search.trim()) {
+      return value;
+    }
 
-@Repository
-public interface InstallInfoRepository extends JpaRepository<InstallInfo, String> {
-
-    InstallInfo findTopByOrderByInstallGuid();
-} 
+    return value.pipe(
+      map(e => {
+        e.data = e.data.filter(row =>
+          (row.name.toLocaleLowerCase() + ' ' + row.type.toLocaleLowerCase()).includes(search.toLocaleLowerCase())
+        );
+        return e;
+      })
+    );
+  }
+}

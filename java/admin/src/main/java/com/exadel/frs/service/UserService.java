@@ -24,7 +24,7 @@ import static com.exadel.frs.system.global.Constants.DEMO_GUID;
 import static com.exadel.frs.validation.EmailValidator.isInvalid;
 import static org.apache.commons.lang3.BooleanUtils.isNotTrue;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import com.exadel.frs.annotation.CollectStatistics;
+import com.exadel.frs.commonservice.annotation.CollectStatistics;
 import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
 import com.exadel.frs.dto.ui.UserCreateDto;
 import com.exadel.frs.dto.ui.UserDeleteDto;
@@ -41,13 +41,14 @@ import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.SelfRoleChangeException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
-import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -59,6 +60,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @EnableScheduling
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
@@ -90,6 +92,7 @@ public class UserService {
     @Transactional
     @CollectStatistics(type = USER_CREATE)
     public User createUser(final UserCreateDto userCreateDto) {
+        log.info("Create new user with userCreateDto: {}", userCreateDto);
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
         validateUserCreateDto(userCreateDto);
@@ -105,6 +108,7 @@ public class UserService {
                        .accountNonLocked(true)
                        .credentialsNonExpired(true)
                        .enabled(isAccountEnabled)
+                       .allowStatistics(userCreateDto.isAllowStatistics())
                        .globalRole(USER)
                        .build();
 
@@ -208,6 +212,7 @@ public class UserService {
 
     @CollectStatistics(type = USER_CREATE)
     public User updateDemoUser(UserCreateDto userCreateDto) {
+        log.info("Demo user update with userCreateDto: {}", userCreateDto);
         val isMailServerEnabled = Boolean.valueOf(env.getProperty("spring.mail.enable"));
 
         validateUserCreateDto(userCreateDto);
