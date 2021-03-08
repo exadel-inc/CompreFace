@@ -26,8 +26,8 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class FaceSimilarityDto {
 
-    @JsonProperty("face_name")
-    String faceName;
+    @JsonProperty("subject")
+    String subject;
 
     float similarity;
 }
