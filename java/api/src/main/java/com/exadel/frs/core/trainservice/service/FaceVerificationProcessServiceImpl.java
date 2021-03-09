@@ -2,7 +2,6 @@ package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.dto.FaceProcessResponse;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.dto.VerifyFacesResponse;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
@@ -48,6 +47,15 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
         VerifyFacesResponse result = getResult(findFacesResults.get(0), findFacesResults.get(1));
 
         validateResult(result, processImageParams.getFacePlugins());
+        return cleanupResult(result, !processImageParams.getStatus());
+    }
+
+    private VerifyFacesResponse cleanupResult(VerifyFacesResponse result, boolean shouldClean) {
+        if (shouldClean) {
+            result.getProcessFileData().setExecutionTime(null);
+            result.getCheckFileData().setExecutionTime(null);
+        }
+
         return result;
     }
 

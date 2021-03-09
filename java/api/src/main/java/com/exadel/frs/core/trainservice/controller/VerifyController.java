@@ -8,6 +8,7 @@ import com.exadel.frs.core.trainservice.dto.VerifyFacesResponse;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +44,8 @@ public class VerifyController {
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins
+            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins,
+            @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
     ) {
         Map<String, MultipartFile> fileMap = Map.of("processFile", processFile, "checkFile", checkFile);
         ProcessImageParams processImageParams = ProcessImageParams
@@ -53,6 +55,7 @@ public class VerifyController {
                 .limit(limit)
                 .detProbThreshold(detProbThreshold)
                 .facePlugins(facePlugins)
+                .status(status)
                 .build();
         return Map.of(RESULT, Collections.singletonList(
                 (VerifyFacesResponse) verificationService.processImage(processImageParams)

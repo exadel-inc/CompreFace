@@ -1,7 +1,5 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.commonservice.annotation.CollectStatistics;
-import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
@@ -16,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 import static java.math.RoundingMode.HALF_UP;
@@ -60,6 +60,15 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
             findResult.getBox().setProbability(inBoxProb.doubleValue());
 
             findResult.setFaces(faces);
+        }
+
+        return cleanupResult(facesRecognitionDto, !processImageParams.getStatus());
+    }
+
+    private FacesRecognitionResponseDto cleanupResult(FacesRecognitionResponseDto facesRecognitionDto, boolean shouldClean) {
+        if (shouldClean) {
+            facesRecognitionDto.setPluginsVersions(null);
+            facesRecognitionDto.getResult().forEach(r -> r.setExecutionTime(null));
         }
 
         return facesRecognitionDto;
