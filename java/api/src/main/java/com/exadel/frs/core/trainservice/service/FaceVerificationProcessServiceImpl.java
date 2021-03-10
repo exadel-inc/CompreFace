@@ -2,7 +2,6 @@ package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
-import com.exadel.frs.core.trainservice.dto.FaceProcessResponse;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.dto.VerifyFacesResponse;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
@@ -30,7 +29,6 @@ import static java.math.RoundingMode.HALF_UP;
 @Service("verificationService")
 @RequiredArgsConstructor
 public class FaceVerificationProcessServiceImpl implements FaceProcessService {
-    public static final String CALCULATOR = "calculator";
     public static final String RESULT = "result";
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;
@@ -47,7 +45,16 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
 
         VerifyFacesResponse result = getResult(findFacesResults.get(0), findFacesResults.get(1));
 
-        validateResult(result, processImageParams.getFacePlugins());
+        VerifyFacesResponse response = result.prepareResponse(result, processImageParams.getFacePlugins());
+        return cleanupResult(response, !processImageParams.getStatus());
+    }
+
+    private VerifyFacesResponse cleanupResult(VerifyFacesResponse result, boolean shouldClean) {
+        if (shouldClean) {
+            result.getProcessFileData().setExecutionTime(null);
+            result.getCheckFileData().setExecutionTime(null);
+        }
+
         return result;
     }
 
@@ -93,12 +100,5 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
                 mapper.toVerifyFacesResultDto(checkFileResult),
                 BigDecimal.valueOf(prediction).setScale(5, HALF_UP).floatValue()
         );
-    }
-
-    private void validateResult(VerifyFacesResponse result, String facePlugins) {
-        if (!facePlugins.contains(CALCULATOR)) {
-            result.getProcessFileData().setEmbedding(null);
-            result.getCheckFileData().setEmbedding(null);
-        }
     }
 }

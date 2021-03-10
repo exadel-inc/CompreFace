@@ -18,6 +18,7 @@ package com.exadel.frs.core.trainservice.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -34,4 +35,14 @@ public class FacesRecognitionResponseDto extends FaceProcessResponse {
     @JsonProperty(value = "plugins_versions")
     private PluginsVersionsDto pluginsVersions;
     private List<FacePredictionResultDto> result;
+
+    @Override
+    public FacesRecognitionResponseDto prepareResponse(FaceProcessResponse response, String facePlugins) {
+        FacesRecognitionResponseDto responseDto = (FacesRecognitionResponseDto) response;
+        if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
+            responseDto.getResult().forEach(r -> r.setEmbedding(null));
+        }
+
+        return responseDto;
+    }
 }
