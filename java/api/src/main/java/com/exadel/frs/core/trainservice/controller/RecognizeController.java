@@ -39,7 +39,7 @@ public class RecognizeController {
 
     private final FaceProcessService recognitionService;
 
-    @PostMapping(value = "/faces/recognize")
+    @PostMapping(value = "/recognition/recognize")
     public FacesRecognitionResponseDto recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,

@@ -46,7 +46,7 @@ public class DetectionController {
 
     private final FaceProcessService detectionService;
 
-    @PostMapping(value = "/detection")
+    @PostMapping(value = "/detection/detect")
     @ResponseStatus(HttpStatus.OK)
     @ApiImplicitParams({
             @ApiImplicitParam(

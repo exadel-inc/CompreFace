@@ -29,7 +29,7 @@ public class VerifyController {
 
     private final FaceProcessService verificationService;
 
-    @PostMapping(value = "/verify")
+    @PostMapping(value = "/verification/verify")
     public Map<String, List<VerifyFacesResponse>> verify(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
