@@ -138,7 +138,7 @@ public class SecurityValidationFilter implements Filter {
     }
 
     private ModelType getModelTypeByUrl(String url) {
-        if (url.endsWith("/detection")) {
+        if (url.endsWith("/detect")) {
             return DETECTION;
         } else if (url.endsWith("/verify")) {
             return url.contains(API_V1 + "/faces") ? RECOGNITION : VERIFY;

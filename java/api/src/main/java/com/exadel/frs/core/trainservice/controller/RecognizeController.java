@@ -54,7 +54,8 @@ public class RecognizeController {
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false) final String facePlugins
+            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins,
+            @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
     ) {
         ProcessImageParams processImageParams = ProcessImageParams
                 .builder()
@@ -63,6 +64,7 @@ public class RecognizeController {
                 .limit(limit)
                 .detProbThreshold(detProbThreshold)
                 .facePlugins(facePlugins)
+                .status(status)
                 .additionalParams(Collections.singletonMap("predictionCount", predictionCount))
                 .build();
         return (FacesRecognitionResponseDto) recognitionService.processImage(processImageParams);
