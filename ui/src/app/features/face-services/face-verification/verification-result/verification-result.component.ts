@@ -15,7 +15,7 @@
  */
 
 import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import {from, Observable, Subscription} from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
   getImageSize,
@@ -26,7 +26,7 @@ import {
 } from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
-import {VerificationServiceFields} from '../../../../data/enums/verification-service.enum';
+import { VerificationServiceFields } from '../../../../data/enums/verification-service.enum';
 
 @Component({
   selector: 'app-verification-result',
@@ -34,48 +34,20 @@ import {VerificationServiceFields} from '../../../../data/enums/verification-ser
   styleUrls: ['./verification-result.component.scss'],
 })
 export class VerificationResultComponent implements OnChanges, OnDestroy {
-  @Input() processFile: File;
-  @Input() checkFile: File;
   @Input() requestInfo: RequestInfo;
   @Input() printData: RequestResult;
-  @Input() files: Observable<any>;
+  @Input() files: any;
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
   @Output() selectProcessFile = new EventEmitter();
   @Output() selectCheckFile = new EventEmitter();
 
   @ViewChild('processFileCanvasElement') set processFileCanvasElement(canvas: ElementRef) {
-    if (canvas) {
-      if (this.processFilePrintSub) {
-        this.processFilePrintSub.unsubscribe();
-      }
-      if (this.processFile) {
-        this.processFilePrintSub = this.printResult(
-          canvas,
-          this.processFileCanvasSize,
-          this.processFile,
-          this.printData,
-          VerificationServiceFields.processFileData
-        ).subscribe();
-      }
-    }
+    this.processFileCanvasLink = canvas;
   }
 
   @ViewChild('checkFileCanvasElement') set checkFileCanvasElement(canvas: ElementRef) {
-    if (canvas) {
-      if (this.checkFilePrintSub) {
-        this.checkFilePrintSub.unsubscribe();
-      }
-      if (this.checkFile) {
-        this.checkFilePrintSub = this.printResult(
-          canvas,
-          this.checkFileCanvasSize,
-          this.checkFile,
-          this.printData,
-          VerificationServiceFields.checkFileData
-        ).subscribe();
-      }
-    }
+    this.checkFileCanvasLink = canvas;
   }
 
   processFileCanvasSize: ImageSize = { width: 500, height: null };
@@ -85,10 +57,38 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
 
   private processFilePrintSub: Subscription;
   private checkFilePrintSub: Subscription;
+  private processFileCanvasLink: any = null;
+  private checkFileCanvasLink: any = null;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
       this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
+    }
+
+    if (changes?.files?.currentValue) {
+      if (changes.files.currentValue.checkFile) {
+        this.refreshCanvas(
+          this.checkFileCanvasLink,
+          this.checkFilePrintSub,
+          this.checkFileCanvasSize,
+          changes.files.currentValue.checkFile,
+          this.printData,
+          VerificationServiceFields.checkFileData
+        );
+      }
+    }
+
+    if (changes?.files?.currentValue) {
+      if (changes.files.currentValue.processFile) {
+        this.refreshCanvas(
+          this.processFileCanvasLink,
+          this.processFilePrintSub,
+          this.processFileCanvasSize,
+          changes.files.currentValue.processFile,
+          this.printData,
+          VerificationServiceFields.processFileData
+        );
+      }
     }
   }
 
@@ -110,6 +110,11 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
       map(imageSize => this.prepareForDraw(imageSize, data, canvasSize, key)),
       map(preparedImageData => this.drawCanvas(canvas, preparedImageData, file, canvasSize))
     );
+  }
+
+  private refreshCanvas(canvas, printSub, canvasSize, file, data, field) {
+    printSub && printSub.unsubscribe();
+    printSub = this.printResult(canvas, canvasSize, file, data, field).subscribe();
   }
 
   private prepareForDraw(size, rawData, canvasSize, key): Observable<any> {
