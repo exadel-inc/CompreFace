@@ -22,6 +22,7 @@ import tensorflow as tf
 from tensorflow.python.platform import gfile
 from cached_property import cached_property
 from facenet.src.align import detect_face
+from facenet.src.facenet import prewhiten
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBoxDTO
@@ -106,12 +107,11 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
 class Calculator(mixins.CalculatorMixin, base.BasePlugin):
     ml_models = (
         # VGGFace2 training set, 0.9965 LFW accuracy
-        ('20180402-114759', '1im5Qq006ZEV_tViKh3cgia_Q4jJ13bRK'),
+        ('20180402-114759', '1im5Qq006ZEV_tViKh3cgia_Q4jJ13bRK', (1.1, 2.5), 0.4),
         # CASIA-WebFace training set, 0.9905 LFW accuracy
-        ('20180408-102900', '100w4JIUz44Tkwte9F-wEH0DOFsY-bPaw'),
+        ('20180408-102900', '100w4JIUz44Tkwte9F-wEH0DOFsY-bPaw', (1.1, 2.5), 0.4),
     )
     BATCH_SIZE = 25
-    DIFFERENCE_THRESHOLD = 0.2
 
     @property
     def ml_model_file(self):
@@ -132,18 +132,19 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
 
     def _calculate_embeddings(self, cropped_images):
         """Run forward pass to calculate embeddings"""
+        prewhitened_images = [prewhiten(img) for img in cropped_images]
         calc_model = self._embedding_calculator
         graph_images_placeholder = calc_model.graph.get_tensor_by_name("input:0")
         graph_embeddings = calc_model.graph.get_tensor_by_name("embeddings:0")
         graph_phase_train_placeholder = calc_model.graph.get_tensor_by_name("phase_train:0")
         embedding_size = graph_embeddings.get_shape()[1]
-        image_count = len(cropped_images)
+        image_count = len(prewhitened_images)
         batches_per_epoch = int(math.ceil(1.0 * image_count / self.BATCH_SIZE))
         embeddings = np.zeros((image_count, embedding_size))
         for i in range(batches_per_epoch):
             start_index = i * self.BATCH_SIZE
             end_index = min((i + 1) * self.BATCH_SIZE, image_count)
-            feed_dict = {graph_images_placeholder: cropped_images, graph_phase_train_placeholder: False}
+            feed_dict = {graph_images_placeholder: prewhitened_images, graph_phase_train_placeholder: False}
             embeddings[start_index:end_index, :] = calc_model.sess.run(
                 graph_embeddings, feed_dict=feed_dict)
         return embeddings

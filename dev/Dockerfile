@@ -1,10 +1,12 @@
 FROM maven:3.6.3-jdk-11-slim as build
+ARG ND4J_CLASSIFIER
 WORKDIR /workspace/compreface
 LABEL intermidiate_frs=true
 COPY pom.xml .
 COPY api api
 COPY admin admin
-RUN mvn -B clean package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.skip=true
+COPY common common
+RUN mvn -B clean package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.skip=true -Dnd4j.classifier=$ND4J_CLASSIFIER
 
 FROM openjdk:11.0.8-jre-slim as frs_core
 ARG DIR=/workspace/compreface

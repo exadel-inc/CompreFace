@@ -17,11 +17,13 @@ import logging
 import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Tuple, Optional
+from typing import Any, Tuple, Optional
 from zipfile import ZipFile
 
 import attr
 import gdown
+from cached_property import cached_property
+
 from src.services.dto.json_encodable import JSONEncodable
 from src.services.dto import plugin_result
 
@@ -34,13 +36,7 @@ MODELS_ROOT = os.path.expanduser(os.path.join('~', '.models'))
 class MLModel:
     plugin: 'BasePlugin'
     name: str
-    is_default: bool = False
-
-    def __attrs_post_init__(self):
-        """ Set first model as default """
-        if not self.name:
-            self.name = self.plugin.ml_models[0][0]
-            self.is_default = True
+    google_drive_id: str
 
     def __str__(self):
         return self.name
@@ -60,21 +56,17 @@ class MLModel:
             logger.debug(f'Already exists {self.plugin} model {self.name}')
             return
         logger.debug(f'Getting {self.plugin} model {self.name}')
-        url = dict(self.plugin.ml_models)[self.name]
         with tempfile.NamedTemporaryFile() as tmpfile:
-            self._download(url, tmpfile)
+            self._download(self.url, tmpfile)
             self._extract(tmpfile.name)
+
+    @property
+    def url(self):
+        return f'https://drive.google.com/uc?id={self.google_drive_id}'
 
     @classmethod
     def _download(cls, url: str, output):
-        return gdown.download(cls._prepare_url(url), output)
-
-    @staticmethod
-    def _prepare_url(url) -> str:
-        """ Convert Google Drive fileId to url """
-        if not url.startswith('http') and len(url) < 40:
-            return f'https://drive.google.com/uc?id={url}'
-        return url
+        return gdown.download(url, output)
 
     def _extract(self, filename: str):
         os.makedirs(self.path, exist_ok=True)
@@ -86,10 +78,18 @@ class MLModel:
                 file_path.write_bytes(zf.read(info))
 
 
+@attr.s(auto_attribs=True)
+class CalculatorModel(MLModel):
+    # used to convert euclidean distance to similarity [0.0..1.0]
+    # E.g. algorithm: (tanh((first_coef - distance) * second_coef) + 1) / 2
+    similarity_coefficients: Tuple[float, float] = (0, 1)
+    difference_threshold: float = 0.4
+
+
 class BasePlugin(ABC):
-    # pairs of model name and Google Drive fileID or URL to file
+    # args for init MLModel: model name, Goodle Drive fileID
     ml_models: Tuple[Tuple[str, str], ...] = ()
-    ml_model: Optional[MLModel] = None
+    ml_model_name: str = None
 
     def __new__(cls, ml_model_name: str = None):
         """
@@ -98,14 +98,23 @@ class BasePlugin(ABC):
         """
         if not hasattr(cls, 'instance'):
             cls.instance = super(BasePlugin, cls).__new__(cls)
-            if cls.instance.ml_models:
-                cls.instance.ml_model = MLModel(cls.instance, ml_model_name)
+            cls.instance.ml_model_name = ml_model_name
         return cls.instance
 
     @property
     @abstractmethod
     def slug(self):
         pass
+
+    def create_ml_model(self, *args):
+        """ Create MLModel instance by arguments following plugin settings """
+        return MLModel(self, *args)
+
+    @cached_property
+    def ml_model(self) -> Optional[MLModel]:
+        for ml_model_args in self.ml_models:
+            if not self.ml_model_name or self.ml_model_name == ml_model_args[0]:
+                return self.create_ml_model(*ml_model_args)
 
     @property
     def backend(self) -> str:
@@ -116,8 +125,8 @@ class BasePlugin(ABC):
         return f'{self.backend}.{self.__class__.__name__}'
 
     def __str__(self):
-        if self.ml_model and not self.ml_model.is_default:
-            return f'{self.name}@{self.ml_model.name}'
+        if self.ml_model and self.ml_model_name:
+            return f'{self.name}@{self.ml_model_name}'
         else:
             return self.name
 

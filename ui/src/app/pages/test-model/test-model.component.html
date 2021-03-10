@@ -20,6 +20,9 @@
   </div>
 
   <mat-card>
-    <app-face-recognition-container [type]="type"> </app-face-recognition-container>
+    <ng-container [ngSwitch]="type">
+      <app-face-verification-container *ngSwitchCase="verification"></app-face-verification-container>
+      <app-face-recognition-container *ngSwitchDefault [type]="type"></app-face-recognition-container>
+    </ng-container>
   </mat-card>
 </div>

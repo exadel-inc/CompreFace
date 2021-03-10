@@ -19,6 +19,7 @@ import { Observable } from 'rxjs';
 
 import { selectPendingModel } from '../../store/model/selectors';
 import { TestModelPageService } from './test-model.service';
+import { ServiceTypes } from '../../data/enums/service-types.enum';
 
 @Component({
   selector: 'app-test-model',
@@ -28,6 +29,7 @@ import { TestModelPageService } from './test-model.service';
 export class TestModelComponent implements OnInit, OnDestroy {
   modelLoading$: Observable<boolean>;
   type: string;
+  verification: string = ServiceTypes.Verify;
 
   constructor(private modelService: TestModelPageService, private store: Store<any>) {}
 

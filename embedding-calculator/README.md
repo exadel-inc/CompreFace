@@ -97,7 +97,8 @@ Pass to `EXTRA_PLUGINS` comma-separated names of plugins.
 |------------------------------------|----------------|-------------|------------|-------------|
 | agegender.AgeDetector              | age            | agegender   | Tensorflow |             |
 | agegender.GenderDetector           | gender         | agegender   | Tensorflow |             |
-| insightface.GenderAgeDetector      | gender_age     | insightface | MXNet      |      +      |
+| insightface.AgeDetector            | age            | insightface | MXNet      |      +      |
+| insightface.GenderDetector         | gender         | insightface | MXNet      |      +      |
 | facenet.LandmarksDetector          | landmarks      | Facenet     | Tensorflow |      +      |
 | insightface.LandmarksDetector      | landmarks      | insightface | MXNet      |      +      |
 | insightface.Landmarks2d106Detector | landmarks2d106 | insightface | MXNet      |      +      |
@@ -160,9 +161,11 @@ sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 
-Run with enabled gpu
+Build and run with enabled gpu
 ```
-$ docker run -p 3000:3000 --gpus all embedding-calculator-gpu
+docker build . -t embedding-calculator-cuda -f gpu.Dockerfile
+docker build . -t embedding-calculator-gpu --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=embedding-calculator-cuda
+docker run -p 3000:3000 --gpus all embedding-calculator-gpu
 ```
 
 # Tools

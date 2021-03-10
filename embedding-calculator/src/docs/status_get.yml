@@ -20,6 +20,12 @@ responses:
             calculator:
               type: string
               example: facenet.Calculator
+        similarity_coefficients:
+          type: array
+          example: [1.1, 2.5]
+        calculator_version:
+          type: string
+          example: facenet.Calculator
         status:
           type: string
           example: OK

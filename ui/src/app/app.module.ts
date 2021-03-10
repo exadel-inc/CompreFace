@@ -46,10 +46,20 @@ import { SnackBarModule } from './features/snackbar/snackbar.module';
 import { ToolBarModule } from './features/tool-bar/tool-bar.module';
 import { AppStoreModule } from './store/app-store.module';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
+import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { MatSelectModule } from '@angular/material/select';
+import { UserInfoResolver } from './core/user-info/user-info.resolver';
 
 @NgModule({
-  declarations: [AppComponent, MainLayoutComponent, CreateDialogComponent, EditDialogComponent, AlertComponent, DeleteDialogComponent],
+  declarations: [
+    AppComponent,
+    MainLayoutComponent,
+    DemoLayoutComponent,
+    CreateDialogComponent,
+    EditDialogComponent,
+    AlertComponent,
+    DeleteDialogComponent,
+  ],
   imports: [
     BrowserModule,
     CommonModule,
@@ -84,6 +94,7 @@ import { MatSelectModule } from '@angular/material/select';
   ],
   providers: [
     FormBuilder,
+    UserInfoResolver,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,

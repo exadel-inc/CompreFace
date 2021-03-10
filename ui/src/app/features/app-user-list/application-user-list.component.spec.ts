@@ -22,7 +22,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { of, Subscription } from 'rxjs';
 import { SnackBarModule } from 'src/app/features/snackbar/snackbar.module';
 
-import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
+import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 import { SpinnerModule } from '../spinner/spinner.module';
 import { UserTableModule } from '../user-table/user-table.module';
 import { ApplicationUserListFacade } from './application-user-list-facade';
@@ -36,7 +36,7 @@ describe('ApplicationUserListComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ApplicationUserListComponent, TranslatePipe],
-        imports: [SpinnerModule, UserTableModule, NoopAnimationsModule, FormsModule, UserTablePipeModule, MatInputModule, SnackBarModule],
+        imports: [SpinnerModule, UserTableModule, NoopAnimationsModule, FormsModule, TablePipeModule, MatInputModule, SnackBarModule],
         providers: [
           {
             provide: MatDialog,

@@ -17,6 +17,8 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MainLayoutComponent } from './main-layout.component';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 
 describe('MainLayoutComponent', () => {
   let component: MainLayoutComponent;
@@ -26,6 +28,15 @@ describe('MainLayoutComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [MainLayoutComponent],
+        providers: [
+          {
+            provide: Store,
+            useValue: {
+              dispatch: () => {},
+              select: () => of({}),
+            },
+          },
+        ],
         schemas: [NO_ERRORS_SCHEMA],
       }).compileComponents();
     })

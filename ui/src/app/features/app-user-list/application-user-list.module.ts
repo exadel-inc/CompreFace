@@ -22,7 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 
-import { UserTablePipeModule } from '../../ui/search-pipe/user-table-filter.module';
+import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
 import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
 import { UserTableModule } from '../user-table/user-table.module';
@@ -38,7 +38,7 @@ import { ApplicationUserListComponent } from './application-user-list.component'
     UserTableModule,
     SpinnerModule,
     FormsModule,
-    UserTablePipeModule,
+    TablePipeModule,
     MatInputModule,
     MatButtonModule,
     InviteDialogModule,

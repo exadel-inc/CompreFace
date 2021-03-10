@@ -60,6 +60,7 @@
     + [Delete all examples of the face by name](#delete-all-examples-of-the-face-by-name)
     + [Delete an example of the face by ID](#delete-an-example-of-the-face-by-id)
     + [Verify faces from given image](#verify-faces-from-given-image)
+    + [Verify faces on two images](#verify-faces-on-two-images)
   * [Contributing](#contributing)
     + [Formatting standards](#formatting-standards)
     + [Report Bugs](#report-bugs)
@@ -90,45 +91,24 @@ CompreFace:
  - Includes a UI panel with roles for access control
  - Starts quickly with one docker command
 
-
 ## Getting started
 
-#### To get started (Linux, MacOS):
+#### To get started:
+
 1. Install Docker and Docker-Compose
 2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
 3. Unzip the archive
 4. Run command: _docker-compose up -d_
-5. Open in your browser: http://localhost:8000/login
-
-#### Getting started for Contributors:
-
-1. Install Docker and Docker-Compose
-2. Clone repository
-3. Open dev folder
-4. Run command: _docker-compose up --build_
-5. Open in your browser: http://localhost:8000/login
 
 #### To get started (Windows):
+
 1. Install Docker
 2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
 3. Unzip the archive
 4. Run Docker
 5. Windows search bar-> cmd->in the Command prompt-> cd ->paste the path to the extracted zip folder
-6. Run command: _docker-compose up -d_
+6. Run command: docker-compose up -d
 7. Open http://localhost:8000/login
-
-** Tips for Windows** (use Git Bash terminal)
-
-1. Turn of the git autocrlf with command: _git config --global core.autocrlf false_
-2. Make sure all your containers are down: _$ docker ps_
-3. In case some containers are working, they should be stopped: _$ docker-compose down_
-4. Clean all local datebases and images: _docker system prune --volumes_
-5. Last line in /dev/start.sh file change to _docker-compose -f docker-compose.yml up --remove-orphans --build_
-6. Go to Dev folder cd dev
-7. Run _sh start.sh_ and make sure http://localhost:8000/ starts
-8. Stopped all containers: $ docker-compose down
-9. Run _sh start--dev.sh_ and make sure http://localhost:4200/ starts
-
 
 ## Simple tutorial of usage
 
@@ -341,7 +321,7 @@ Response body on success:
 
 Recognizes faces from the uploaded image.
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>" \
+curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
@@ -356,6 +336,7 @@ curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&predic
 | limit            | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
 | det_prob_ threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 | prediction_count | param       | integer | optional | maximum number of predictions per faces. Default value: 1    |
+| face_plugins     | param       | string  | optional | comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. calculator,gender,age - returns embedding, gender and age for each face.    |
 
 Response body on success:
 ```
@@ -374,6 +355,18 @@ Response body on success:
           "similarity": <similarity1>,
           "subject": <subject1>	
         },
+      "landmarks": [
+        [144,158],
+        [218,159],
+        [182,185],
+        [154,229],
+        [207,228]
+      ],
+      "age": [
+          25,
+          32
+      ],
+      "gender": "male",
         ...
       ]
     }
@@ -385,10 +378,11 @@ Response body on success:
 | ------------------------------ | ------- | ------------------------------------------------------------ |
 | box                            | object  | list of parameters of the bounding box for this face         |
 | probability                    | float   | probability that a found face is actually a face             |
-| x_max, y_max, x_min, y_min | integer | coordinates of the frame containing the face                 |
+| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
 | faces                          | list    | list of similar faces with size of <prediction_count> order by similarity |
-| similarity                     | float   | similarity that on that image predicted person              |
-| subject                        | string  | name of the subject in Face Collection                                 |
+| similarity                     | float   | similarity that on that image predicted person               |
+| subject                        | string  | name of the subject in Face Collection                       |
+| landmarks                      | list    | list of the coordinates of the frame containing the face-landmarks |
 
 
 
@@ -533,6 +527,59 @@ Response body on success:
 | x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
 | similarity                     | float   | similarity that on that image predicted person               |
 | subject                        | string  | name of the subject in Face Collection                       |
+
+
+
+### Verify faces on two images
+
+Compare faces from given two images:
+* processFile - file to be verified
+* checkFile - reference file to check the processed file
+```http request
+curl  -X POST "http://localhost:8000/api/v1/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
+-H "Content-Type: multipart/form-data" \
+-H "x-api-key: <faces_collection_api_key>" \
+-F checkFile=<local_check_file>
+-F processFile=<local_process_file>
+```
+
+
+| Element             | Description | Type    | Required | Notes                                                        |
+| ------------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
+| Content-Type        | header      | string  | required | multipart/form-data                                          |
+| x-api-key           | header      | string  | required | api key of the Face Collection, created by the user                    |
+| image_id            | variable    | UUID    | required | UUID of the verifying face                                   |
+| processFile         | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| checkFile           | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| limit               | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
+| det_prob_ threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+| face_plugins        | param       | string  | optional | comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. calculator,gender,age - returns embedding, gender and age for each face.    |
+
+Response body on success:
+```
+{
+  "result": [
+    {
+      "box": {
+        "probability": <probability>,
+        "x_max": <integer>,
+        "y_max": <integer>,
+        "x_min": <integer>,
+        "y_min": <integer>
+      },
+      "similarity": <similarity1>
+    },
+    ...
+  ]
+}
+```
+
+| Element                        | Type    | Description                                                  |
+| ------------------------------ | ------- | ------------------------------------------------------------ |
+| box                            | object  | list of parameters of the bounding box for this face (on processedImage) |
+| probability                    | float   | probability that a found face is actually a face (on processedImage)     |
+| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face (on processedImage)         |
+| similarity                     | float   | similarity between faces on given images                     |
 
 
 

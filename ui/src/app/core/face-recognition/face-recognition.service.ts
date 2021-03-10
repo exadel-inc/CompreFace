@@ -21,7 +21,7 @@ import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { Model } from '../../data/interfaces/model';
 import { UIRequestOptions } from '../../data/interfaces/ui-request-options';
-
+import { UIDoubleFileRequestOptions } from '../../data/interfaces/ui-double-request-options';
 @Injectable({
   providedIn: 'root',
 })
@@ -57,7 +57,7 @@ export class FaceRecognitionService {
   }
 
   detection(file: any, apiKey: string): Observable<any> {
-    const url = `${environment.userApiUrl}faces/detection`;
+    const url = `${environment.userApiUrl}detection`;
     const formData = new FormData();
     formData.append('file', file);
 
@@ -69,6 +69,24 @@ export class FaceRecognitionService {
         map(data => ({
           data,
           request: this.createUIRequest(url, { apiKey, file }),
+        }))
+      );
+  }
+
+  verification(processFile: any, checkFile: any, apiKey: string): Observable<any> {
+    const url = `${environment.userApiUrl}verify`;
+    const formData = new FormData();
+    formData.append('processFile', processFile);
+    formData.append('checkFile', checkFile);
+
+    return this.http
+      .post(url, formData, {
+        headers: { 'x-api-key': apiKey },
+      })
+      .pipe(
+        map(data => ({
+          data,
+          request: this.createUIDoubleFileRequest(url, { apiKey, processFile, checkFile }),
         }))
       );
   }
@@ -91,7 +109,19 @@ export class FaceRecognitionService {
    * @private
    */
   private createUIRequest(url: string, options = {} as UIRequestOptions, params = {}): string {
-    const { apiKey, file: { name: fname } } = options;
+    const {
+      apiKey,
+      file: { name: fname },
+    } = options;
     return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "file=@${fname}"`;
+  }
+
+  private createUIDoubleFileRequest(url: string, options = {} as UIDoubleFileRequestOptions, params = {}): string {
+    const {
+      apiKey,
+      processFile: { name: ffname },
+      checkFile: { name: sfname },
+    } = options;
+    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "processFile=@${ffname}" \\\n "checkFile=@${sfname}"`;
   }
 }
