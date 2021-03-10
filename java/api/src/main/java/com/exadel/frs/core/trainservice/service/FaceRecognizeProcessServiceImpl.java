@@ -1,7 +1,5 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.commonservice.annotation.CollectStatistics;
-import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
@@ -62,6 +60,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
             findResult.setFaces(faces);
         }
 
-        return facesRecognitionDto;
+        return facesRecognitionDto.prepareResponse(facesRecognitionDto, processImageParams.getFacePlugins());
     }
 }

@@ -68,7 +68,7 @@ public class DetectionController {
             @RequestParam(value = "det_prob_threshold", required = false)
             final Double detProbThreshold,
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false)
+            @RequestParam(value = "face_plugins", required = false, defaultValue = "")
             final String facePlugins
     ) {
         ProcessImageParams processImageParams = ProcessImageParams

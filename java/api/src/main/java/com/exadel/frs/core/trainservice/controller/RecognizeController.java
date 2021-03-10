@@ -54,7 +54,7 @@ public class RecognizeController {
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false) final String facePlugins
+            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins
     ) {
         ProcessImageParams processImageParams = ProcessImageParams
                 .builder()
