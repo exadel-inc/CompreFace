@@ -107,6 +107,9 @@
       "title": "Delete model",
       "warn_information": "and all related data will be deleted.",
       "confirmation_question": "Are you sure?"
+    },
+    "search": {
+      "title": "Search model"
     }
   },
   "users": {

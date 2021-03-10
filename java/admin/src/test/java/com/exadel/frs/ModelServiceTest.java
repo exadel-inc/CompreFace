@@ -168,7 +168,7 @@ class ModelServiceTest {
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
-        modelService.createModel(modelCreateDto, APPLICATION_GUID, USER_ID);
+        modelService.createRecognitionModel(modelCreateDto, APPLICATION_GUID, USER_ID);
 
         val varArgs = ArgumentCaptor.forClass(Model.class);
         verify(modelRepositoryMock).existsByNameAndAppId("model-name", APPLICATION_ID);
@@ -195,7 +195,7 @@ class ModelServiceTest {
         when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
-                modelService.createModel(modelCreateDto, APPLICATION_GUID, USER_ID)
+                modelService.createRecognitionModel(modelCreateDto, APPLICATION_GUID, USER_ID)
         ).isInstanceOf(NameIsNotUniqueException.class);
     }
 

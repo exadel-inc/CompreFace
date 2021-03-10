@@ -1,7 +1,5 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.commonservice.annotation.CollectStatistics;
-import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
@@ -30,7 +28,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
     private final FacesMapper mapper;
 
     @Override
-    @CollectStatistics(type = StatisticsType.FACE_RECOGNITION_CREATE)
     public FacesRecognitionResponseDto processImage(ProcessImageParams processImageParams) {
         MultipartFile file = (MultipartFile) processImageParams.getFile();
         imageValidator.validate(file);
@@ -60,7 +57,7 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
             inBoxProb = inBoxProb.setScale(5, HALF_UP);
             findResult.getBox().setProbability(inBoxProb.doubleValue());
 
-            findResult.setFaces(faces);
+            findResult.setSubjects(faces);
         }
 
         return facesRecognitionDto;

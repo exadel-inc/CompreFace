@@ -15,14 +15,27 @@
   -->
 
 <div class="model-list">
+  <div class="header-section">
   <h3>{{ 'models.create_dialog.title' | translate }}</h3>
+  <form class="search-input">
+    <input
+            matInput
+            type="text"
+            class="search-input"
+            [(ngModel)]="search"
+            [ngModelOptions]="{ standalone: true }"
+            placeholder="{{ 'models.search.title' | translate }}"
+    />
+    <mat-icon class="material-icons notranslate"> search </mat-icon>
+  </form>
+  </div>
   <app-spinner *ngIf="isLoading$ | async">></app-spinner>
   <app-model-table
     *ngIf="(tableConfig$ | async)?.data.length > 0"
     class="app-table"
     [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
-    [tableConfig]="tableConfig$ | async"
+    [tableConfig]="tableConfig$ | modelTableFilter: search | async"
     (copyApiKey)="copyApiKey($event)"
     (clone)="clone($event)"
     (edit)="edit($event)"

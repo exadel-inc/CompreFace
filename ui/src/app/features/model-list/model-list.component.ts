@@ -46,6 +46,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     { title: 'test', property: 'test' },
     { title: 'actions', property: 'id' },
   ];
+  search = '';
 
   constructor(
     private modelListFacade: ModelListFacade,

@@ -16,16 +16,20 @@
 package com.exadel.frs.core.trainservice.dto;
 
 import com.exadel.frs.commonservice.dto.FindFacesResultDto;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 import lombok.*;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonInclude(NON_NULL)
 public class FacesDetectionResponseDto extends FaceProcessResponse {
 
     @JsonProperty(value = "plugins_versions")

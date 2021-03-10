@@ -56,7 +56,6 @@ public class DetectionController {
                     value = "Api key of application and model",
                     required = true)
     })
-    @CollectStatistics(type = StatisticsType.FACE_DETECTION_CREATE)
     public FacesDetectionResponseDto detect(
             @ApiParam(value = "Image for recognizing", required = true)
             @RequestParam

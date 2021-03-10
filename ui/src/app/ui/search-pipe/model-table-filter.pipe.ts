@@ -14,25 +14,26 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.dto;
+import { Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import java.util.List;
+@Pipe({
+  name: 'modelTableFilter',
+})
+export class ModelTableFilterPipe implements PipeTransform {
+  transform(value: Observable<any>, search: string): Observable<any> {
+    if (!search.trim()) {
+      return value;
+    }
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@JsonInclude(NON_NULL)
-public class FacePredictionResultDto extends FindFacesResultDto {
-
-    List<FaceSimilarityDto> subjects;
-    List<List<Integer>> landmarks;
+    return value.pipe(
+      map(e => {
+        e.data = e.data.filter(row =>
+          (row.name.toLocaleLowerCase() + ' ' + row.type.toLocaleLowerCase()).includes(search.toLocaleLowerCase())
+        );
+        return e;
+      })
+    );
+  }
 }
