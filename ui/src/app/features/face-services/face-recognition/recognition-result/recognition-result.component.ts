@@ -88,7 +88,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   private prepareForDraw(size, rawData): Observable<any> {
     return rawData.map(value => ({
       box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),
-      faces: value.faces,
+      subjects: value.subjects,
     }));
   }
 
