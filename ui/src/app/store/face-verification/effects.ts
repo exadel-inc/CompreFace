@@ -23,7 +23,8 @@ import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
-import { verifyFace, verifyFaceSuccess, verifyFaceFail } from './actions';
+import { selectFiles } from './selectors';
+import { verifyFaceSaveToStore, verifyFaceSuccess, verifyFaceFail } from './actions';
 @Injectable()
 export class FaceRecognitionEffects {
   constructor(
@@ -34,16 +35,20 @@ export class FaceRecognitionEffects {
   ) {}
 
   @Effect()
-  verifyFace$ = this.actions.pipe(
-    ofType(verifyFace),
-    withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey)),
-    switchMap(([action, model, demoApiKey]) =>
-      iif(
-        () => !!model,
-        this.verificationFace(action.processFile, action.checkFile, model?.apiKey),
-        this.verificationFace(action.processFile, action.checkFile, demoApiKey)
-      )
-    )
+  verifyFaceSaveToStore$ = this.actions.pipe(
+    ofType(verifyFaceSaveToStore),
+    withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey), this.store.select(selectFiles)),
+    switchMap(([action, model, demoApiKey, files]) => {
+      if (files.processFile && files.checkFile) {
+        return iif(
+          () => !!model,
+          this.verificationFace(files.processFile, files.checkFile, model?.apiKey),
+          this.verificationFace(files.processFile, files.checkFile, demoApiKey)
+        );
+      } else {
+        return [];
+      }
+    })
   );
 
   @Effect({ dispatch: false })
@@ -57,8 +62,6 @@ export class FaceRecognitionEffects {
       map(({ data, request }) =>
         verifyFaceSuccess({
           model: data,
-          processFile,
-          checkFile,
           request,
         })
       ),

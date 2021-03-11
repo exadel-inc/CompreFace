@@ -19,6 +19,7 @@ package com.exadel.frs.core.trainservice.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import org.springframework.util.StringUtils;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
@@ -30,4 +31,21 @@ public class VerifyFacesResponse extends FaceProcessResponse {
     VerifyFacesResultDto processFileData;
     VerifyFacesResultDto checkFileData;
     float similarity;
+
+    @Override
+    public VerifyFacesResponse prepareResponse(FaceProcessResponse response, ProcessImageParams processImageParams) {
+        VerifyFacesResponse result = (VerifyFacesResponse) response;
+        String facePlugins = processImageParams.getFacePlugins();
+        if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
+            result.getProcessFileData().setEmbedding(null);
+            result.getCheckFileData().setEmbedding(null);
+        }
+
+        if (!processImageParams.getStatus()) {
+            result.getProcessFileData().setExecutionTime(null);
+            result.getCheckFileData().setExecutionTime(null);
+        }
+
+        return result;
+    }
 }

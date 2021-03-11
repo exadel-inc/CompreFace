@@ -33,6 +33,6 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class FacePredictionResultDto extends FindFacesResultDto {
 
-    List<FaceSimilarityDto> faces;
+    List<FaceSimilarityDto> subjects;
     List<List<Integer>> landmarks;
 }
