@@ -19,10 +19,11 @@ import { Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
-import { ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
+import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
+import { ImageSize } from '../../../../data/interfaces/image';
 
 @Component({
   selector: 'app-recognition-result',
@@ -50,7 +51,6 @@ export class RecognitionResultComponent implements OnChanges {
   myCanvas: ElementRef;
   faceDescriptionHeight = 25;
   formattedResult: string;
-
   private imgCanvas: ImageBitmap;
 
   constructor(private loadingPhotoService: LoadingPhotoService) {}
@@ -76,7 +76,7 @@ export class RecognitionResultComponent implements OnChanges {
   private prepareForDraw(size, rawData): Observable<any> {
     return rawData.map(value => ({
       box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),
-      faces: value.faces,
+      faces: value.subjects,
     }));
   }
 
@@ -87,7 +87,7 @@ export class RecognitionResultComponent implements OnChanges {
     ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
     ctx.fillStyle = 'white';
     ctx.fillText(face.similarity, box.x_min + 10, box.y_max + 20);
-    ctx.fillText(face.face_name, box.x_min + 10, box.y_min - 5);
+    ctx.fillText(face.subject, box.x_min + 10, box.y_min - 5);
   }
 
   private createDetectionImage(ctx, box) {
@@ -115,17 +115,17 @@ export class RecognitionResultComponent implements OnChanges {
     }
   }
 
-  createImage(drow) {
+  createImage(draw) {
     const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
     ctx.drawImage(this.imgCanvas, 0, 0, this.canvasSize.width, this.canvasSize.height);
-    drow(ctx);
+    draw(ctx);
   }
 
   drawRecognitionCanvas(data) {
     this.createImage(ctx => {
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        const resultFace = value.faces.length > 0 ? value.faces[0] : { face_name: undefined, similarity: 0 };
+        const resultFace = value.faces.length > 0 ? value.faces[0] : { subject: undefined, similarity: 0 };
         this.createRecognitionImage(ctx, value.box, resultFace);
       }
     });

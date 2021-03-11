@@ -14,10 +14,8 @@
  * permissions and limitations under the License.
  */
 
-export interface ImageSize {
-  width: any;
-  height: any;
-}
+import { ImageSize } from '../../data/interfaces/image';
+
 /**
  * Beautify the result JSON format
  *
