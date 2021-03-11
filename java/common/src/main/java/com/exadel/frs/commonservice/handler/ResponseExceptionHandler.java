@@ -17,10 +17,7 @@
 package com.exadel.frs.commonservice.handler;
 
 import com.exadel.frs.commonservice.dto.ExceptionResponseDto;
-import com.exadel.frs.commonservice.exception.BasicException;
-import com.exadel.frs.commonservice.exception.ConstraintViolationException;
-import com.exadel.frs.commonservice.exception.DemoNotAvailableException;
-import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
+import com.exadel.frs.commonservice.exception.*;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpHeaders;
@@ -36,6 +33,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import static com.exadel.frs.commonservice.handler.CommonExceptionCode.*;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @ControllerAdvice
@@ -100,6 +98,11 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(DemoNotAvailableException.class)
     public ResponseEntity<ExceptionResponseDto> handleDemoNotAvailableException(final DemoNotAvailableException ex) {
         return ResponseEntity.status(NOT_FOUND).body(ExceptionResponseDto.builder().code(NOT_FOUND.value()).message(DemoNotAvailableException.MESSAGE).build());
+    }
+
+    @ExceptionHandler(IncorrectPredictionCountException.class)
+    public ResponseEntity<ExceptionResponseDto> handleIncorrectPredictionCountException(final DemoNotAvailableException ex) {
+        return ResponseEntity.status(NOT_FOUND).body(ExceptionResponseDto.builder().code(BAD_REQUEST.value()).message(IncorrectPredictionCountException.INCORRECT_PREDICTION_MESSAGE).build());
     }
 
     @Override
