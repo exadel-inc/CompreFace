@@ -77,7 +77,7 @@
       <mat-checkbox formControlName="isAllowStatistics" class="sign-up-full-width" *ngIf="isDemoPageAvailable$ | async">
         <small
           >{{ 'statistics' | translate }}<br />
-           <a href="https://github.com/exadel-inc/CompreFace">{{ "more_info" | translate }}</a></small
+          <a href="https://github.com/exadel-inc/CompreFace">{{ 'more_info' | translate }}</a></small
         >
       </mat-checkbox>
       <mat-error class="error-wrapper" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">

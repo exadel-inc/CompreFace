@@ -14,27 +14,23 @@
  * permissions and limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Observable } from 'rxjs';
+import { first, map, tap } from 'rxjs/operators';
 
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
-import {
-  getImageSize,
-  ImageSize,
-  recalculateFaceCoordinate,
-  resultRecognitionFormatter,
-  createDefaultImage,
-} from '../../face-services.helpers';
+import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
+import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
+import { ImageSize } from '../../../../data/interfaces/image';
 
 @Component({
   selector: 'app-recognition-result',
   templateUrl: './recognition-result.component.html',
   styleUrls: ['./recognition-result.component.scss'],
 })
-export class RecognitionResultComponent implements OnChanges, OnDestroy {
+export class RecognitionResultComponent implements OnChanges {
   @Input() file: File;
   @Input() requestInfo: RequestInfo;
   @Input() printData: RequestResult;
@@ -45,12 +41,8 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     if (canvas) {
       this.myCanvas = canvas;
 
-      if (this.printSubscription) {
-        this.printSubscription.unsubscribe();
-      }
-
       if (this.printData && this.myCanvas) {
-        this.printSubscription = this.printResult(this.printData).subscribe();
+        this.printResult(this.printData).pipe(first()).subscribe();
       }
     }
   }
@@ -59,8 +51,9 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   myCanvas: ElementRef;
   faceDescriptionHeight = 25;
   formattedResult: string;
+  private imgCanvas: ImageBitmap;
 
-  private printSubscription: Subscription;
+  constructor(private loadingPhotoService: LoadingPhotoService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
@@ -68,17 +61,12 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     }
   }
 
-  ngOnDestroy() {
-    if (this.printSubscription) {
-      this.printSubscription.unsubscribe();
-    }
-  }
-
   printResult(result: any): Observable<any> {
-    return getImageSize(this.file).pipe(
-      tap(({ width, height }) => {
-        this.canvasSize.height = (height / width) * this.canvasSize.width;
+    return this.loadingPhotoService.loader(this.file).pipe(
+      tap((bitmap: ImageBitmap) => {
+        this.canvasSize.height = (bitmap.height / bitmap.width) * this.canvasSize.width;
         this.myCanvas.nativeElement.setAttribute('height', this.canvasSize.height);
+        this.imgCanvas = bitmap;
       }),
       map(imageSize => this.prepareForDraw(imageSize, result)),
       map(preparedImageData => this.drawCanvas(preparedImageData))
@@ -99,7 +87,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
     ctx.fillStyle = 'white';
     ctx.fillText(face.similarity, box.x_min + 10, box.y_max + 20);
-    ctx.fillText(face.face_name, box.x_min + 10, box.y_min - 5);
+    ctx.fillText(face.subject, box.x_min + 10, box.y_min - 5);
   }
 
   private createDetectionImage(ctx, box) {
@@ -113,7 +101,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
   /*
    * Make canvas and draw face and info on image.
    *
-   * @preparedData prepared box data and faces.
+   * @preparedData prepared box data and subjects.
    */
   drawCanvas(preparedData) {
     switch (this.type) {
@@ -127,28 +115,24 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     }
   }
 
-  createImage(drow) {
-    const img = new Image();
+  createImage(draw) {
     const ctx: CanvasRenderingContext2D = this.myCanvas.nativeElement.getContext('2d');
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, this.canvasSize.width, this.canvasSize.height);
-      drow(img, ctx);
-    };
-    img.src = URL.createObjectURL(this.file);
+    ctx.drawImage(this.imgCanvas, 0, 0, this.canvasSize.width, this.canvasSize.height);
+    draw(ctx);
   }
 
   drawRecognitionCanvas(data) {
-    this.createImage((img, ctx) => {
+    this.createImage(ctx => {
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        const resultFace = value.faces.length > 0 ? value.faces[0] : { face_name: undefined, similarity: 0 };
+        const resultFace = value.subjects.length > 0 ? value.subjects[0] : { subject: undefined, similarity: 0 };
         this.createRecognitionImage(ctx, value.box, resultFace);
       }
     });
   }
 
   drawDetectionCanvas(data) {
-    this.createImage((img, ctx) => {
+    this.createImage(ctx => {
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         this.createDetectionImage(ctx, value.box);
