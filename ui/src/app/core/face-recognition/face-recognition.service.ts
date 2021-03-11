@@ -34,13 +34,13 @@ export class FaceRecognitionService {
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('subject', file.name);
-    return this.http.post(`${environment.userApiUrl}faces`, formData, {
+    return this.http.post(`${environment.userApiUrl}recognition/faces`, formData, {
       headers: { 'x-api-key': model.apiKey },
     });
   }
 
   recognize(file: any, apiKey: string): Observable<any> {
-    const url = `${environment.userApiUrl}faces/recognize`;
+    const url = `${environment.userApiUrl}recognition/recognize`;
     const formData = new FormData();
     formData.append('file', file);
 
@@ -57,7 +57,7 @@ export class FaceRecognitionService {
   }
 
   detection(file: any, apiKey: string): Observable<any> {
-    const url = `${environment.userApiUrl}detection`;
+    const url = `${environment.userApiUrl}detection/detect`;
     const formData = new FormData();
     formData.append('file', file);
 
@@ -74,7 +74,7 @@ export class FaceRecognitionService {
   }
 
   verification(processFile: any, checkFile: any, apiKey: string): Observable<any> {
-    const url = `${environment.userApiUrl}verify`;
+    const url = `${environment.userApiUrl}verification/verify`;
     const formData = new FormData();
     formData.append('processFile', processFile);
     formData.append('checkFile', checkFile);
@@ -92,7 +92,7 @@ export class FaceRecognitionService {
   }
 
   getAllFaces(model: Model): Observable<any> {
-    return this.http.get(`${environment.userApiUrl}faces`, { headers: { 'x-api-key': model.apiKey } });
+    return this.http.get(`${environment.userApiUrl}recognition/faces`, { headers: { 'x-api-key': model.apiKey } });
   }
 
   train(model: Model): Observable<any> {

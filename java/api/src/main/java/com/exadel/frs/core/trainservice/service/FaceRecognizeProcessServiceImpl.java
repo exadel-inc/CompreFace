@@ -60,6 +60,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
             findResult.setSubjects(faces);
         }
 
-        return facesRecognitionDto;
+        return facesRecognitionDto.prepareResponse(facesRecognitionDto, processImageParams);
     }
 }

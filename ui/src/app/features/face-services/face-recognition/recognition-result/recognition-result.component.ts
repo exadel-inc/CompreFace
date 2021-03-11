@@ -76,7 +76,7 @@ export class RecognitionResultComponent implements OnChanges {
   private prepareForDraw(size, rawData): Observable<any> {
     return rawData.map(value => ({
       box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),
-      faces: value.subjects,
+      subjects: value.subjects,
     }));
   }
 
@@ -101,7 +101,7 @@ export class RecognitionResultComponent implements OnChanges {
   /*
    * Make canvas and draw face and info on image.
    *
-   * @preparedData prepared box data and faces.
+   * @preparedData prepared box data and subjects.
    */
   drawCanvas(preparedData) {
     switch (this.type) {
@@ -125,7 +125,7 @@ export class RecognitionResultComponent implements OnChanges {
     this.createImage(ctx => {
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        const resultFace = value.faces.length > 0 ? value.faces[0] : { subject: undefined, similarity: 0 };
+        const resultFace = value.subjects.length > 0 ? value.subjects[0] : { subject: undefined, similarity: 0 };
         this.createRecognitionImage(ctx, value.box, resultFace);
       }
     });

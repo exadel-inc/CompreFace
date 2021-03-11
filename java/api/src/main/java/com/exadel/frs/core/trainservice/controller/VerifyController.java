@@ -29,7 +29,7 @@ public class VerifyController {
 
     private final FaceProcessService verificationService;
 
-    @PostMapping(value = "/verify")
+    @PostMapping(value = "/verification/verify")
     public Map<String, List<VerifyFacesResponse>> verify(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
@@ -43,7 +43,9 @@ public class VerifyController {
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins
+            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated, true - both fields included")
+            @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
     ) {
         Map<String, MultipartFile> fileMap = Map.of("processFile", processFile, "checkFile", checkFile);
         ProcessImageParams processImageParams = ProcessImageParams
@@ -53,6 +55,7 @@ public class VerifyController {
                 .limit(limit)
                 .detProbThreshold(detProbThreshold)
                 .facePlugins(facePlugins)
+                .status(status)
                 .build();
         return Map.of(RESULT, Collections.singletonList(
                 (VerifyFacesResponse) verificationService.processImage(processImageParams)
