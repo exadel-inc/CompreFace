@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.exception;
+package com.exadel.frs.commonservice.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 

@@ -19,6 +19,7 @@ package com.exadel.frs.commonservice.handler;
 import com.exadel.frs.commonservice.dto.ExceptionResponseDto;
 import com.exadel.frs.commonservice.exception.BasicException;
 import com.exadel.frs.commonservice.exception.ConstraintViolationException;
+import com.exadel.frs.commonservice.exception.DemoNotAvailableException;
 import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -94,6 +95,11 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Undefined exception occurred", ex);
 
         return ResponseEntity.status(UNDEFINED.getHttpStatus()).body(buildBody());
+    }
+
+    @ExceptionHandler(DemoNotAvailableException.class)
+    public ResponseEntity<ExceptionResponseDto> handleDemoNotAvailableException(final DemoNotAvailableException ex) {
+        return ResponseEntity.status(NOT_FOUND).body(ExceptionResponseDto.builder().code(NOT_FOUND.value()).message(DemoNotAvailableException.MESSAGE).build());
     }
 
     @Override
