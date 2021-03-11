@@ -44,7 +44,7 @@ public class VerifyController {
             @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
             @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins,
-            @ApiParam(value = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated")
+            @ApiParam(value = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated, true - both fields included")
             @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
     ) {
         Map<String, MultipartFile> fileMap = Map.of("processFile", processFile, "checkFile", checkFile);

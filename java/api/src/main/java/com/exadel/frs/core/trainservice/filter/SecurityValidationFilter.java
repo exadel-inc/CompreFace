@@ -19,6 +19,7 @@ package com.exadel.frs.core.trainservice.filter;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.enums.ValidationResult;
 import com.exadel.frs.commonservice.exception.BadFormatModelKeyException;
+import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
 import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
 import com.exadel.frs.core.trainservice.service.ModelService;
@@ -138,12 +139,14 @@ public class SecurityValidationFilter implements Filter {
     }
 
     private ModelType getModelTypeByUrl(String url) {
-        if (url.endsWith("/detect")) {
+        if (url.contains(API_V1 + "/detection")) {
             return DETECTION;
-        } else if (url.endsWith("/verify")) {
-            return url.contains(API_V1 + "/faces") ? RECOGNITION : VERIFY;
-        } else {
+        } else if (url.contains(API_V1 + "/verification")) {
+            return VERIFY;
+        } else if (url.contains(API_V1 + "/recognition")) {
             return RECOGNITION;
         }
+
+        throw new IncorrectModelTypeException(url.substring(API_V1.length()));
     }
 }

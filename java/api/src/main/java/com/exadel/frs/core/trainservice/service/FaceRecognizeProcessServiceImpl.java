@@ -60,16 +60,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
             findResult.setSubjects(faces);
         }
 
-        FacesRecognitionResponseDto responseDto = facesRecognitionDto.prepareResponse(facesRecognitionDto, processImageParams.getFacePlugins());
-        return cleanupResult(responseDto, !processImageParams.getStatus());
-    }
-
-    private FacesRecognitionResponseDto cleanupResult(FacesRecognitionResponseDto facesRecognitionDto, boolean shouldClean) {
-        if (shouldClean) {
-            facesRecognitionDto.setPluginsVersions(null);
-            facesRecognitionDto.getResult().forEach(r -> r.setExecutionTime(null));
-        }
-
-        return facesRecognitionDto;
+        return facesRecognitionDto.prepareResponse(facesRecognitionDto, processImageParams);
     }
 }

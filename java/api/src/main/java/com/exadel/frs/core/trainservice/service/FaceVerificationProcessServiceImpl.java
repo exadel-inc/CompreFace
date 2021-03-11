@@ -45,17 +45,7 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
 
         VerifyFacesResponse result = getResult(findFacesResults.get(0), findFacesResults.get(1));
 
-        VerifyFacesResponse response = result.prepareResponse(result, processImageParams.getFacePlugins());
-        return cleanupResult(response, !processImageParams.getStatus());
-    }
-
-    private VerifyFacesResponse cleanupResult(VerifyFacesResponse result, boolean shouldClean) {
-        if (shouldClean) {
-            result.getProcessFileData().setExecutionTime(null);
-            result.getCheckFileData().setExecutionTime(null);
-        }
-
-        return result;
+        return result.prepareResponse(result, processImageParams);
     }
 
     private FindFacesResult getFaceResult(MultipartFile file, int limit, Double detProbThreshold, String facePlugins) {

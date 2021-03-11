@@ -38,10 +38,16 @@ public class FacesDetectionResponseDto extends FaceProcessResponse {
     private List<FindFacesResultDto> result;
 
     @Override
-    public FacesDetectionResponseDto prepareResponse(FaceProcessResponse response, String facePlugins) {
+    public FacesDetectionResponseDto prepareResponse(FaceProcessResponse response, ProcessImageParams processImageParams) {
         FacesDetectionResponseDto responseDto = (FacesDetectionResponseDto) response;
+        String facePlugins = processImageParams.getFacePlugins();
         if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
             ((FacesDetectionResponseDto) response).getResult().forEach(r -> r.setEmbedding(null));
+        }
+
+        if (!processImageParams.getStatus()) {
+            responseDto.setPluginsVersions(null);
+            responseDto.getResult().forEach(r -> r.setExecutionTime(null));
         }
 
         return responseDto;
