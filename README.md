@@ -110,6 +110,10 @@ CompreFace:
 6. Run command: docker-compose up -d
 7. Open http://localhost:8000/login
 
+## Getting started for devs
+
+Follow this link: https://github.com/exadel-inc/CompreFace/tree/develop/dev
+
 ## Simple tutorial of usage
 
 Step 1. You need to sign up to the system (First user in CompareFace admin has Owner role, but it is possible to change the role) and then LogIn with created account or just use the existing one. After that system redirects you to the main page.
