@@ -1,15 +1,15 @@
-package com.exadel.frs.scheduler.job;
+package com.exadel.frs.commonservice.scheduler.job;
 
 import com.exadel.frs.commonservice.entity.ModelFaceProjection;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
-import com.exadel.frs.exception.ApperyServiceException;
-import com.exadel.frs.repository.FacesRepository;
-import com.exadel.frs.repository.InstallInfoRepository;
-import com.exadel.frs.repository.ModelRepository;
-import com.exadel.frs.repository.UserRepository;
-import com.exadel.frs.system.feign.ApperyStatisticsClient;
-import com.exadel.frs.system.feign.StatisticsFacesEntity;
+import com.exadel.frs.commonservice.system.feign.ApperyStatisticsClient;
+import com.exadel.frs.commonservice.system.feign.StatisticsFacesEntity;
+import com.exadel.frs.commonservice.exception.ApperyServiceException;
+import com.exadel.frs.commonservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.repository.InstallInfoRepository;
+import com.exadel.frs.commonservice.repository.ModelRepository;
+import com.exadel.frs.commonservice.repository.UserRepository;
 import feign.FeignException;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.Range;

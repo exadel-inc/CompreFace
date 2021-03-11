@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import com.exadel.frs.EmbeddedPostgreSQLTest;
 import com.exadel.frs.FrsApplication;
-import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.service.UserService;
 import java.util.UUID;
 import javax.servlet.http.Cookie;

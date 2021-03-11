@@ -35,12 +35,15 @@ import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import java.util.List;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.StringUtils;
 
 @IntegrationTest
 @AutoConfigureMockMvc
@@ -76,10 +79,17 @@ class RecognizeControllerTest {
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
         doNothing().when(validator).validate(mockFile);
 
-        mockMvc.perform(
+        MvcResult mvcResult = mockMvc.perform(
                 multipart(API_V1 + "/faces/recognize")
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
-        ).andExpect(status().isOk());
+        ).andExpect(status().isOk())
+                .andReturn();
+        String result = mvcResult.getResponse().getContentAsString();
+
+        Assertions.assertNotEquals(result.contains("faces"), true);
+        Assertions.assertNotEquals(result.contains("face_name"), true);
+        Assertions.assertTrue(result.contains("subject"));
+        Assertions.assertTrue(result.contains("subjects"));
     }
 }

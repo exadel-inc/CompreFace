@@ -14,45 +14,40 @@
  * permissions and limitations under the License.
  */
 
-import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
-import { ImageSize, recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
+import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import {
+  getImageSize,
+  ImageSize,
+  recalculateFaceCoordinate,
+  resultRecognitionFormatter,
+  createDefaultImage,
+} from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { VerificationServiceFields } from '../../../../data/enums/verification-service.enum';
-import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
 
 @Component({
   selector: 'app-verification-result',
   templateUrl: './verification-result.component.html',
   styleUrls: ['./verification-result.component.scss'],
 })
-export class VerificationResultComponent implements OnChanges {
-  @Input() processFile: File;
-  @Input() checkFile: File;
+export class VerificationResultComponent implements OnChanges, OnDestroy {
   @Input() requestInfo: RequestInfo;
   @Input() printData: RequestResult;
-  @Input() files: Observable<any>;
+  @Input() files: any;
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
   @Output() selectProcessFile = new EventEmitter();
   @Output() selectCheckFile = new EventEmitter();
 
   @ViewChild('processFileCanvasElement') set processFileCanvasElement(canvas: ElementRef) {
-    if (canvas && this.processFile) {
-      this.printResult(canvas, this.processFileCanvasSize, this.processFile, this.printData, VerificationServiceFields.processFileData)
-        .pipe(first())
-        .subscribe();
-    }
+    this.processFileCanvasLink = canvas;
   }
 
   @ViewChild('checkFileCanvasElement') set checkFileCanvasElement(canvas: ElementRef) {
-    if (canvas && this.checkFile) {
-      this.printResult(canvas, this.checkFileCanvasSize, this.checkFile, this.printData, VerificationServiceFields.checkFileData)
-        .pipe(first())
-        .subscribe();
-    }
+    this.checkFileCanvasLink = canvas;
   }
 
   processFileCanvasSize: ImageSize = { width: 500, height: null };
@@ -60,26 +55,66 @@ export class VerificationResultComponent implements OnChanges {
   faceDescriptionHeight = 25;
   formattedResult: string;
 
-  private imgCanvas: ImageBitmap;
-
-  constructor(private loadingPhotoService: LoadingPhotoService) {}
+  private processFilePrintSub: Subscription;
+  private checkFilePrintSub: Subscription;
+  private processFileCanvasLink: any = null;
+  private checkFileCanvasLink: any = null;
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
       this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
     }
+
+    if (changes?.files?.currentValue) {
+      if (changes.files.currentValue.checkFile) {
+        this.refreshCanvas(
+          this.checkFileCanvasLink,
+          this.checkFilePrintSub,
+          this.checkFileCanvasSize,
+          changes.files.currentValue.checkFile,
+          this.printData,
+          VerificationServiceFields.checkFileData
+        );
+      }
+    }
+
+    if (changes?.files?.currentValue) {
+      if (changes.files.currentValue.processFile) {
+        this.refreshCanvas(
+          this.processFileCanvasLink,
+          this.processFilePrintSub,
+          this.processFileCanvasSize,
+          changes.files.currentValue.processFile,
+          this.printData,
+          VerificationServiceFields.processFileData
+        );
+      }
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.processFilePrintSub) {
+      this.processFilePrintSub.unsubscribe();
+    }
+    if (this.checkFilePrintSub) {
+      this.checkFilePrintSub.unsubscribe();
+    }
   }
 
   printResult(canvas: ElementRef, canvasSize: any, file: any, data, key: string): Observable<any> {
-    return this.loadingPhotoService.loader(file).pipe(
-      tap((bitmap: ImageBitmap) => {
-        canvasSize.height = (bitmap.height / bitmap.width) * canvasSize.width;
+    return getImageSize(file).pipe(
+      tap(({ width, height }) => {
+        canvasSize.height = (height / width) * canvasSize.width;
         canvas.nativeElement.setAttribute('height', canvasSize.height);
-        this.imgCanvas = bitmap;
       }),
       map(imageSize => this.prepareForDraw(imageSize, data, canvasSize, key)),
       map(preparedImageData => this.drawCanvas(canvas, preparedImageData, file, canvasSize))
     );
+  }
+
+  private refreshCanvas(canvas, printSub, canvasSize, file, data, field) {
+    printSub && printSub.unsubscribe();
+    printSub = this.printResult(canvas, canvasSize, file, data, field).subscribe();
   }
 
   private prepareForDraw(size, rawData, canvasSize, key): Observable<any> {
@@ -106,7 +141,7 @@ export class VerificationResultComponent implements OnChanges {
    * @preparedData prepared box data and faces.
    */
   drawCanvas(canvas, data, file, canvasSize) {
-    this.createImage(canvas, file, canvasSize, ctx => {
+    this.createImage(canvas, file, canvasSize, (img, ctx) => {
       if (!data) return;
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -116,8 +151,12 @@ export class VerificationResultComponent implements OnChanges {
   }
 
   createImage(canvas, file, canvasSize, draw) {
+    const img = new Image();
     const ctx: CanvasRenderingContext2D = canvas.nativeElement.getContext('2d');
-    ctx.drawImage(this.imgCanvas, 0, 0, canvasSize.width, canvasSize.height);
-    draw(ctx);
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvasSize.width, canvasSize.height);
+      draw(img, ctx);
+    };
+    img.src = URL.createObjectURL(file);
   }
 }

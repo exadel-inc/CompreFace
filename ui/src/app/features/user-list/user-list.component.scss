@@ -35,21 +35,4 @@ app-spinner {
   h3 {
     margin: 0;
   }
-
-  form {
-    display: flex;
-    height: 32px;
-    margin-left: 16px;
-    flex-grow: 2;
-    align-items: center;
-    align-self: center;
-    background-color: $super-light-gray;
-
-    input {
-      padding-left: 8px;
-      flex-grow: 2;
-      height: 32px;
-      min-width:0;
-    }
-  }
 }

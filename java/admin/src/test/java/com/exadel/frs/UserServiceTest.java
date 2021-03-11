@@ -43,7 +43,7 @@ import com.exadel.frs.exception.InvalidEmailException;
 import com.exadel.frs.exception.RegistrationTokenExpiredException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.EmailSender;
-import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.commonservice.repository.UserRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;

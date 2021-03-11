@@ -1,4 +1,4 @@
-package com.exadel.frs.annotation;
+package com.exadel.frs.commonservice.annotation;
 
 import com.exadel.frs.commonservice.enums.StatisticsType;
 

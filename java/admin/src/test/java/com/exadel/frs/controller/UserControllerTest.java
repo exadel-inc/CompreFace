@@ -17,8 +17,8 @@
 package com.exadel.frs.controller;
 
 import static com.exadel.frs.commonservice.handler.CommonExceptionCode.EMPTY_REQUIRED_FIELD;
-import static com.exadel.frs.handler.CrudExceptionCode.INCORRECT_USER_PASSWORD;
-import static com.exadel.frs.handler.CrudExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.INCORRECT_USER_PASSWORD;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
 import static com.exadel.frs.utils.TestUtils.buildUser;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.is;

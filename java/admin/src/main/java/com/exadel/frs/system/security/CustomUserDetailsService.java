@@ -16,7 +16,7 @@
 
 package com.exadel.frs.system.security;
 
-import com.exadel.frs.repository.UserRepository;
+import com.exadel.frs.commonservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

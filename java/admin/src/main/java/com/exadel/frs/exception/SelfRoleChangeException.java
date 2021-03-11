@@ -18,7 +18,7 @@ package com.exadel.frs.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
-import static com.exadel.frs.handler.CrudExceptionCode.SELF_ROLE_CHANGE;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.SELF_ROLE_CHANGE;
 
 public class SelfRoleChangeException extends BasicException {
 

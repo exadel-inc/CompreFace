@@ -188,7 +188,7 @@ class ModelControllerTest {
         val responseDto = new ModelResponseDto();
         responseDto.setName(MODEL_NAME);
 
-        when(modelService.createModel(any(ModelCreateDto.class), eq(APP_GUID), anyLong())).thenReturn(model);
+        when(modelService.createRecognitionModel(any(ModelCreateDto.class), eq(APP_GUID), anyLong())).thenReturn(model);
         when(modelMapper.toResponseDto(any(Model.class), eq(APP_GUID))).thenReturn(responseDto);
 
         mockMvc.perform(createRequest)

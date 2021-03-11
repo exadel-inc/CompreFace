@@ -19,14 +19,14 @@ package com.exadel.frs.core.trainservice.service;
 import static com.exadel.frs.commonservice.enums.ValidationResult.FORBIDDEN;
 import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.enums.ModelType;
-import com.exadel.frs.core.trainservice.repository.ModelRepository;
+
 import java.util.Optional;
+
+import com.exadel.frs.commonservice.repository.ModelRepository;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

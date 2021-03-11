@@ -16,9 +16,9 @@
 import { NgModule } from '@angular/core';
 
 import { UserTableFilterPipe } from './user-table-filter.pipe';
-
+import { ModelTableFilterPipe } from './model-table-filter.pipe';
 @NgModule({
-  declarations: [UserTableFilterPipe],
-  exports: [UserTableFilterPipe],
+  declarations: [UserTableFilterPipe, ModelTableFilterPipe],
+  exports: [UserTableFilterPipe, ModelTableFilterPipe],
 })
-export class UserTablePipeModule {}
+export class TablePipeModule {}

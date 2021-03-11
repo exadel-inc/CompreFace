@@ -1,4 +1,4 @@
-package com.exadel.frs.system.feign;
+package com.exadel.frs.commonservice.system.feign;
 
 import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.fasterxml.jackson.annotation.JsonProperty;

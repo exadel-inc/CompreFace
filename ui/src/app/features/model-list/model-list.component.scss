@@ -17,6 +17,17 @@
 .model-list {
   position: relative;
 
+  .header-section {
+    display: inline-flex;
+    margin-bottom: 25px;
+    align-items: center;
+    align-self: center;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
   app-spinner {
     position: absolute;
     left: 40%;

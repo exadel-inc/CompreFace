@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.handler;
+package com.exadel.frs.commonservice.handler;
 
 import com.exadel.frs.commonservice.handler.HttpExceptionCode;
 import lombok.AllArgsConstructor;

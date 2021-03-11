@@ -16,10 +16,16 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 @Value
-public class VerifyFacesResponse {
+@EqualsAndHashCode(callSuper = true)
+@JsonInclude(NON_NULL)
+public class VerifyFacesResponse extends FaceProcessResponse {
 
     VerifyFacesResultDto processFileData;
     VerifyFacesResultDto checkFileData;

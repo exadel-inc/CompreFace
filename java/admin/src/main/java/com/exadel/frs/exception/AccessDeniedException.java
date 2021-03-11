@@ -18,7 +18,7 @@ package com.exadel.frs.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
-import static com.exadel.frs.handler.CrudExceptionCode.APP_ACCESS_DENIED;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.APP_ACCESS_DENIED;
 
 public class AccessDeniedException extends BasicException {
 
