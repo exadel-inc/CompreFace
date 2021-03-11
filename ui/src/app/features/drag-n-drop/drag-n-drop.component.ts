@@ -27,7 +27,6 @@ export class DragNDropComponent {
   @Input() label: string;
   @Input() model: any;
   @Output() upload: EventEmitter<File> = new EventEmitter();
-  private file: any;
 
   constructor(private translate: TranslateService) {
     // Set the default title and label. But leave possibility to set another title and label.

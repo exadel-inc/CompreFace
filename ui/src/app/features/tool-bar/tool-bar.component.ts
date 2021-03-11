@@ -16,7 +16,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { first } from 'rxjs/operators';
+import { filter, finalize, first } from 'rxjs/operators';
 
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';
@@ -56,12 +56,11 @@ export class ToolBarComponent {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(result => {
-        if (result) {
-          this.changePassword.emit(result);
-        }
-      });
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(result => this.changePassword.emit(result));
   }
 
   onEditUserInfo() {
@@ -72,11 +71,10 @@ export class ToolBarComponent {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(result => {
-        if (result) {
-          this.editUserInfo.emit(result);
-        }
-      });
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(result => this.editUserInfo.emit(result));
   }
 }

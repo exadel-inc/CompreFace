@@ -18,8 +18,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { first } from 'rxjs/operators';
-import { Role } from 'src/app/data/enums/role.enum';
+import { filter, finalize, first } from 'rxjs/operators';
 
 import { Application } from '../../data/interfaces/application';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
@@ -43,7 +42,6 @@ export class ApplicationHeaderContainerComponent implements OnInit {
   userRole$: Observable<string | null>;
   isLoading$: Observable<boolean>;
   maxHeaderLinkLength = 25;
-  userRoleEnum = Role;
 
   constructor(private applicationHeaderFacade: ApplicationHeaderFacade, private dialog: MatDialog, private translate: TranslateService) {}
 
@@ -65,12 +63,11 @@ export class ApplicationHeaderContainerComponent implements OnInit {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(result => {
-        if (result) {
-          this.applicationHeaderFacade.rename(result);
-        }
-      });
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(result => this.applicationHeaderFacade.rename(result));
   }
 
   delete(name: string) {
@@ -84,11 +81,10 @@ export class ApplicationHeaderContainerComponent implements OnInit {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(result => {
-        if (result) {
-          this.applicationHeaderFacade.delete();
-        }
-      });
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.applicationHeaderFacade.delete());
   }
 }
