@@ -13,27 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Observable } from 'rxjs';
 
-export interface ImageSize {
-  width: any;
-  height: any;
-}
-
-/**
- * Get image size.
- *
- * @param file File.
- */
-export const getImageSize = (file: File): Observable<ImageSize> =>
-  new Observable(subscriber => {
-    const img = new Image();
-    img.onload = () => {
-      subscriber.next({ width: img.width, height: img.height });
-      subscriber.complete();
-    };
-    img.src = URL.createObjectURL(file);
-  });
+import { ImageSize } from '../../data/interfaces/image';
 
 /**
  * Beautify the result JSON format

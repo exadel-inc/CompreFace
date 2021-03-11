@@ -37,6 +37,7 @@
     "@ngx-translate/http-loader": "^6.0.0",
     "jasmine-marbles": "^0.6.0",
     "rxjs": "~6.6.3",
+    "tiff": "^4.3.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
   },
