@@ -35,7 +35,7 @@ import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 @Component
 public class EuclideanDistanceClassifier implements Classifier {
 
-    public static final int ALLOWED_NEGATIVE_PREDICTION_COUNT = -1;
+    public static final int PREDICTION_COUNT_INFINITY = -1;
     private final FaceCacheProvider faceCacheProvider;
 
     @Autowired
@@ -65,7 +65,7 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     private int getPredictionCount(int resultCount, int[] argSort) {
-        if (resultCount == ALLOWED_NEGATIVE_PREDICTION_COUNT) {
+        if (resultCount == PREDICTION_COUNT_INFINITY) {
             resultCount = argSort.length;
         }
 
