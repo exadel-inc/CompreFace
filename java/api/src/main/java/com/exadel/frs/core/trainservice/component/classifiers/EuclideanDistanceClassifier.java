@@ -16,23 +16,26 @@
 
 package com.exadel.frs.core.trainservice.component.classifiers;
 
-import static java.lang.Math.min;
-import static java.util.Arrays.sort;
-import static org.nd4j.linalg.factory.Nd4j.create;
-import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.google.common.primitives.Doubles;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.Math.min;
+import static java.util.Arrays.sort;
+import static org.nd4j.linalg.factory.Nd4j.create;
+import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
+
 @Component
 public class EuclideanDistanceClassifier implements Classifier {
 
+    public static final int ALLOWED_NEGATIVE_PREDICTION_COUNT = -1;
     private final FaceCacheProvider faceCacheProvider;
 
     @Autowired
@@ -49,8 +52,9 @@ public class EuclideanDistanceClassifier implements Classifier {
             val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
             val argSort = argSort(probabilities);
             val facesMap = faceCollection.getFacesMap().inverse();
+            int predictionCount = getPredictionCount(resultCount, argSort);
 
-            for (int i = 0; i < min(resultCount, argSort.length); i++) {
+            for (int i = 0; i < min(predictionCount, argSort.length); i++) {
                 val face = facesMap.get(argSort[i]);
                 val prob = probabilities[argSort[i]];
 
@@ -58,6 +62,14 @@ public class EuclideanDistanceClassifier implements Classifier {
             }
         }
         return result;
+    }
+
+    private int getPredictionCount(int resultCount, int[] argSort) {
+        if (resultCount == ALLOWED_NEGATIVE_PREDICTION_COUNT) {
+            resultCount = argSort.length;
+        }
+
+        return resultCount;
     }
 
     @Override
