@@ -24,9 +24,9 @@ export interface RequestResult {
         y_max: number;
         y_min: number;
       };
-      faces: [
+      subjects: [
         {
-          face_name: string;
+          subject: string;
           similarity: number;
         }
       ];
@@ -40,9 +40,9 @@ export interface RequestResult {
         y_max: number;
         y_min: number;
       };
-      faces: [
+      subjects: [
         {
-          face_name: string;
+          subject: string;
           similarity: number;
         }
       ];

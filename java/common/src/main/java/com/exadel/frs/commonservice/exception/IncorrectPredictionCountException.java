@@ -14,25 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.dto;
+package com.exadel.frs.commonservice.exception;
 
-import java.util.List;
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.INCORRECT_MODEL_TYPE;
+import static java.lang.String.format;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+public class IncorrectPredictionCountException extends BasicException {
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+    public static final String INCORRECT_PREDICTION_MESSAGE = "Prediction count should be any positive number or -1";
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-@JsonInclude(NON_NULL)
-public class FacePredictionResultDto extends FindFacesResultDto {
-
-    List<FaceSimilarityDto> subjects;
-    List<List<Integer>> landmarks;
+    public IncorrectPredictionCountException() {
+        super(INCORRECT_MODEL_TYPE, INCORRECT_PREDICTION_MESSAGE);
+    }
 }

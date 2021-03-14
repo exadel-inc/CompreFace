@@ -13,5 +13,6 @@ public class ProcessImageParams {
     private Integer limit;
     private Double detProbThreshold;
     private String facePlugins;
+    private Boolean status;
     private Map<String, Object> additionalParams;
 }

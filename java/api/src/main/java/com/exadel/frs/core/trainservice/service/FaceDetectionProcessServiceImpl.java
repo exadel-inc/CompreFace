@@ -1,6 +1,5 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.dto.FaceProcessResponse;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
@@ -23,7 +22,8 @@ public class FaceDetectionProcessServiceImpl implements FaceProcessService {
         MultipartFile file = (MultipartFile) processImageParams.getFile();
         imageValidator.validate(file);
 
-        return mapper.toFacesDetectionResponseDto(
+        FacesDetectionResponseDto facesDetectionResponseDto = mapper.toFacesDetectionResponseDto(
                 client.findFaces(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins()));
+        return facesDetectionResponseDto.prepareResponse(facesDetectionResponseDto, processImageParams);
     }
 }

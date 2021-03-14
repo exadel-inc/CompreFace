@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.exception;
+package com.exadel.frs.commonservice.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
@@ -26,5 +26,10 @@ public class DemoNotAvailableException extends BasicException {
 
     public DemoNotAvailableException() {
         super(DEMO_MODEL_NOT_AVAILABLE, MESSAGE);
+    }
+
+    @Override
+    public synchronized Throwable fillInStackTrace() {
+        return this;
     }
 }
