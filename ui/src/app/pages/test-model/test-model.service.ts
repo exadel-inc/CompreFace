@@ -22,7 +22,7 @@ import { filter, take } from 'rxjs/operators';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { AppState } from '../../store';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
-import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/actions';
+import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
 import { selectModels } from '../../store/model/selectors';
 import { getUserInfo } from '../../store/userInfo/action';
 

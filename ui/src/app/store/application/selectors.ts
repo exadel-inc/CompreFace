@@ -13,11 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { EntityState } from '@ngrx/entity';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import {EntityState} from '@ngrx/entity';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
 
-import { Application } from '../../data/interfaces/application';
-import { AppEntityState, selectEntities, selectAll } from './reducers';
+import {Application} from '../../data/interfaces/application';
+import {AppEntityState, selectAll, selectEntities} from './reducers';
 
 export const selectApplicationEntityState = createFeatureSelector<EntityState<Application>>('application');
 
@@ -35,3 +35,4 @@ export const selectCurrentApp = createSelector(selectApplicationEntityState, sel
 export const selectUserRollForSelectedApp = createSelector(selectCurrentApp, app => (app ? app.role : null));
 
 export const selectIsPendingApplicationList = createSelector(selectApplicationEntityState, (state: AppEntityState) => state.isPending);
+

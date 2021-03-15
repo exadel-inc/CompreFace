@@ -24,18 +24,21 @@ export const loadAppUserEntityAction = createAction(
   }>()
 );
 export const addAppUserEntityAction = createAction('[App-User/API] Add App Users', props<{ users: AppUser[] }>());
-export const inviteAppUserAction = createAction(
+
+export const inviteAppUser = createAction(
   '[App-User/API] Invite User To Application',
   props<{ applicationId: string; userEmail: string; role: Role }>()
 );
-export const inviteAppUserActionSuccess = createAction('[App-User/API] Invite User To Application Success', props<{ userEmail: string }>());
-export const inviteAppUserActionFail = createAction('[App-User/API] Invite User To Application Fail', props<{ error: any }>());
-export const updateAppUserRoleAction = createAction(
+export const inviteAppUserSuccess = createAction('[App-User/API] Invite User To Application Success', props<{ userEmail: string }>());
+export const inviteAppUserFail = createAction('[App-User/API] Invite User To Application Fail', props<{ error: any }>());
+
+export const updateAppUserRole = createAction(
   '[App-User/API] Update App User',
   props<{ applicationId: string; user: { id: string; role: Role } }>()
 );
-export const updateAppUserRoleSuccessAction = createAction('[App-User/API] Update App User Role Success', props<{ user: AppUser }>());
-export const updateAppUserRoleFailAction = createAction('[App-User/API] Update App User Role Failed)', props<{ error: any }>());
+export const updateAppUserRoleSuccess = createAction('[App-User/API] Update App User Role Success', props<{ user: AppUser }>());
+export const updateAppUserRoleFail = createAction('[App-User/API] Update App User Role Failed)', props<{ error: any }>());
+
 export const deleteUserFromApplication = createAction(
   '[App-User] Delete User From Application',
   props<{ userId: string; applicationId: string }>()

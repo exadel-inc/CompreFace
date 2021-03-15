@@ -23,10 +23,10 @@ import {
   deleteUserFromApplicationFail,
   deleteUserFromApplicationSuccess,
   loadAppUserEntityAction,
-  updateAppUserRoleAction,
-  updateAppUserRoleFailAction,
-  updateAppUserRoleSuccessAction,
-} from './actions';
+  updateAppUserRole,
+  updateAppUserRoleFail,
+  updateAppUserRoleSuccess,
+} from './action';
 
 export interface AppUserEntityState extends EntityState<AppUser> {
   isPending: boolean;
@@ -40,14 +40,13 @@ const initialState: AppUserEntityState = appUserAdapter.getInitialState({
 
 const reducer: ActionReducer<AppUserEntityState> = createReducer(
   initialState,
-  on(loadAppUserEntityAction, deleteUserFromApplication, state => ({ ...state, isPending: true })),
+  on(loadAppUserEntityAction, deleteUserFromApplication, updateAppUserRole, state => ({ ...state, isPending: true })),
   on(deleteUserFromApplicationFail, state => ({ ...state, isPending: false })),
   on(addAppUserEntityAction, (state, { users }) => {
     const newState = { ...state, isPending: false };
     return appUserAdapter.setAll(users, newState);
   }),
-  on(updateAppUserRoleAction, state => ({ ...state, isPending: true })),
-  on(updateAppUserRoleSuccessAction, (state, { user }) =>
+  on(updateAppUserRoleSuccess, (state, { user }) =>
     appUserAdapter.updateOne(
       {
         id: user.userId,
@@ -58,7 +57,7 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
       { ...state, isPending: false }
     )
   ),
-  on(updateAppUserRoleFailAction, state => ({ ...state, isPending: false })),
+  on(updateAppUserRoleFail, state => ({ ...state, isPending: false })),
   on(deleteUserFromApplicationSuccess, (state, { id }) => appUserAdapter.removeOne(id, { ...state, isPending: false }))
 );
 

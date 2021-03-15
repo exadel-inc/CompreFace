@@ -17,7 +17,7 @@ import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 import { Role } from 'src/app/data/interfaces/role';
 
-import { fetchRolesEntityAction, loadRolesEntityAction, setPendingRoleEntityAction } from './actions';
+import { fetchRolesEntity, loadRolesEntity, setPendingRoleEntity } from './action';
 
 export interface RoleEntityState extends EntityState<Role> {
   isPending: boolean;
@@ -30,9 +30,9 @@ export const initialState: RoleEntityState = roleAdapter.getInitialState({
 
 const reducer: ActionReducer<RoleEntityState> = createReducer(
   initialState,
-  on(loadRolesEntityAction, state => ({ ...state, isPending: true })),
-  on(setPendingRoleEntityAction, (state, { isPending }) => ({ ...state, isPending })),
-  on(fetchRolesEntityAction, (state, { role }) => {
+  on(loadRolesEntity, state => ({ ...state, isPending: true })),
+  on(setPendingRoleEntity, (state, { isPending }) => ({ ...state, isPending })),
+  on(fetchRolesEntity, (state, { role }) => {
     const newState = roleAdapter.removeAll(state);
     newState.isPending = false;
     return roleAdapter.addOne({ id: 0, accessLevels: role.accessLevels }, newState);
