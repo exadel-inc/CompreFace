@@ -15,9 +15,10 @@
  */
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { Location } from '@angular/common';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of as observableOf } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
@@ -36,6 +37,8 @@ import {
   changePasswordSuccess,
   changePasswordFailure,
 } from './action';
+import { selectNavigationId } from '../router/selectors';
+import { Store } from '@ngrx/store';
 
 @Injectable()
 export class AuthEffects {
@@ -43,7 +46,9 @@ export class AuthEffects {
     private actions: Actions,
     private authService: AuthService,
     private router: Router,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private location: Location,
+    private store: Store<any>
   ) {}
 
   // Listen for the 'LOGIN' action
@@ -62,8 +67,13 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
-    tap(() => {
-      this.router.navigateByUrl(Routes.Home);
+    withLatestFrom(this.store.select(selectNavigationId), this.store.select(selectNavigationId)),
+    tap(([, navigationId]) => {
+      if (navigationId > 1) {
+        this.location.back();
+      } else {
+        this.router.navigateByUrl(Routes.Home);
+      }
     })
   );
 

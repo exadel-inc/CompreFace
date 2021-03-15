@@ -19,5 +19,5 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { RouterStateUrl } from './reducer';
 
 export const selectRouterState = createFeatureSelector<RouterReducerState<RouterStateUrl>>('router');
-
 export const selectRouterIdParam = createSelector(selectRouterState, ({ state }) => state.params.id || null);
+export const selectNavigationId = createSelector(selectRouterState, state => (state ? state.navigationId : null));
