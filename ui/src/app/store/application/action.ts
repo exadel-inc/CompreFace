@@ -19,6 +19,7 @@ import { Application } from 'src/app/data/interfaces/application';
 import { UserInfo } from '../../data/interfaces/user-info';
 
 export const loadApplications = createAction('[Application] Load Applications');
+export const loadApplicationsNotLoader = createAction('[Application] Load not loader Applications');
 export const loadApplicationsSuccess = createAction('[Application] Load Applications Success', props<{ applications: Application[] }>());
 export const loadApplicationsFail = createAction('[Application] Load Applications Fail', props<{ error: any }>());
 

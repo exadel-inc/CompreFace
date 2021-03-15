@@ -31,6 +31,7 @@ import {
   deleteApplicationSuccess,
   loadApplications,
   loadApplicationsFail,
+  loadApplicationsNotLoader,
   loadApplicationsSuccess,
   setSelectedAppIdEntityAction,
   updateApplication,
@@ -49,8 +50,8 @@ export class ApplicationListEffect {
 
   @Effect()
   loadApplications$ = this.actions.pipe(
-    ofType(loadApplications),
-    switchMap(action =>
+    ofType(loadApplications, loadApplicationsNotLoader),
+    switchMap(() =>
       this.applicationService.getAll().pipe(
         map(applications => loadApplicationsSuccess({ applications })),
         catchError(error => of(loadApplicationsFail({ error })))
