@@ -54,7 +54,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping(API_V1 + "/faces")
+@RequestMapping(API_V1 + "/recognition/faces")
 @RequiredArgsConstructor
 public class FaceController {
 

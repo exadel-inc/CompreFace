@@ -13,8 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { createAction, props } from '@ngrx/store';
-export const verifyFaceSaveToStore = createAction('[Model] Face Verification Save', props<{ processFile?: any; checkFile?: any }>());
-export const verifyFaceSuccess = createAction('[Model] Face Verification Success', props<{ model: any; request: any }>());
-export const verifyFaceFail = createAction('[Model] Face Verification Fail', props<{ error: any }>());
-export const verifyFaceReset = createAction('[Model] Face Verification Reset');
+
+package com.exadel.frs.commonservice.exception;
+
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.INCORRECT_MODEL_TYPE;
+import static java.lang.String.format;
+
+public class IncorrectPredictionCountException extends BasicException {
+
+    public static final String INCORRECT_PREDICTION_MESSAGE = "Prediction count should be any positive number or -1";
+
+    public IncorrectPredictionCountException() {
+        super(INCORRECT_MODEL_TYPE, INCORRECT_PREDICTION_MESSAGE);
+    }
+}

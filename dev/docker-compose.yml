@@ -37,7 +37,6 @@ services:
       - EMAIL_FROM=${email_from}
       - EMAIL_PASSWORD=${email_password}
       - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
-      - APPERY_API_KEY=${appery_api_key}
     depends_on:
       - compreface-postgres-db
       - compreface-api
@@ -69,8 +68,6 @@ services:
     build:
       context: ../ui
       dockerfile: docker-prod/Dockerfile
-    volumes:
-      - ${compreface-fe-volume}
     container_name: "compreface-ui"
     ports:
       - "8000:80"

@@ -1,4 +1,4 @@
 export enum VerificationServiceFields {
-    processFileData = 'processFileData',
-    checkFileData = 'checkFileData',
+  processFileData = 'processFileData',
+  checkFileData = 'checkFileData',
 }
