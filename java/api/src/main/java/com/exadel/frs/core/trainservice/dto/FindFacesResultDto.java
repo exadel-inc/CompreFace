@@ -15,6 +15,7 @@
  */
 package com.exadel.frs.core.trainservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,10 +24,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(NON_NULL)
 public class FindFacesResultDto {
 
     private Integer[] age;
@@ -39,6 +43,7 @@ public class FindFacesResultDto {
 
     @Data
     @NoArgsConstructor
+    @JsonInclude(NON_NULL)
     public static class ExecutionTimeDto {
 
         private Double age;

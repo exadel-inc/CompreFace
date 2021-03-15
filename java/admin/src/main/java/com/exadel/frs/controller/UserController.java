@@ -33,7 +33,7 @@ import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
 import com.exadel.frs.commonservice.enums.Replacer;
 import com.exadel.frs.exception.AccessDeniedException;
-import com.exadel.frs.exception.DemoNotAvailableException;
+import com.exadel.frs.commonservice.exception.DemoNotAvailableException;
 import com.exadel.frs.exception.UserDoesNotExistException;
 import com.exadel.frs.helpers.SecurityUtils;
 import com.exadel.frs.mapper.UserGlobalRoleMapper;

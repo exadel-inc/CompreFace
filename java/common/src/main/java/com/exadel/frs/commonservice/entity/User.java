@@ -31,7 +31,7 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -45,18 +45,27 @@ public class User implements UserDetails {
     private Long id;
     private String email;
     private String password;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
     private String guid;
+    @Column(name = "registration_token")
     private String registrationToken;
     @CreationTimestamp
+    @Column(name = "reg_time")
     private LocalDateTime regTime;
+    @Column(name = "account_non_expired")
     private boolean accountNonExpired;
+    @Column(name = "account_non_locked")
     private boolean accountNonLocked;
+    @Column(name = "credentials_non_expired")
     private boolean credentialsNonExpired;
     private boolean enabled;
+    @Column(name = "allow_statistics")
     private boolean allowStatistics;
     @Convert(converter = GlobalRoleConverter.class)
+    @Column(name = "global_role")
     private GlobalRole globalRole;
 
     @ToString.Exclude

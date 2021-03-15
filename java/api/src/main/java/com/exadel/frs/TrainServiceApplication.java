@@ -19,7 +19,9 @@ package com.exadel.frs;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
+@EnableFeignClients(basePackages = "com.exadel.frs.commonservice.system.feign")
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class TrainServiceApplication {
 

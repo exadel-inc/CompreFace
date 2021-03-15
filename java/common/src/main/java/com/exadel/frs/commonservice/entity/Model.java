@@ -29,7 +29,7 @@ import java.util.Optional;
 import static java.util.UUID.randomUUID;
 
 @Entity
-@Table
+@Table(schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

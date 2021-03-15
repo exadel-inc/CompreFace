@@ -17,17 +17,22 @@
 package com.exadel.frs.core.trainservice.dto;
 
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonInclude(NON_NULL)
 public class FacePredictionResultDto extends FindFacesResultDto {
 
-    List<FaceSimilarityDto> faces;
+    List<FaceSimilarityDto> subjects;
     List<List<Integer>> landmarks;
 }

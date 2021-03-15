@@ -16,20 +16,25 @@
 
 package com.exadel.frs.service;
 
+import com.exadel.frs.commonservice.annotation.CollectStatistics;
 import com.exadel.frs.commonservice.entity.*;
 import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.commonservice.enums.StatisticsType;
+import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
+import com.exadel.frs.commonservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.repository.FacesRepository;
 import com.exadel.frs.repository.ImagesRepository;
-import com.exadel.frs.repository.ModelRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -39,8 +44,8 @@ import static java.util.UUID.randomUUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ModelService {
-
     private final ModelRepository modelRepository;
     private final AppService appService;
     private final AuthorizationManager authManager;
@@ -50,7 +55,7 @@ public class ModelService {
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
-                .orElseThrow(() -> new ModelNotFoundException(modelGuid));
+                .orElseThrow(() -> new ModelNotFoundException(modelGuid, ""));
     }
 
     private void verifyNameIsUnique(final String name, final Long appId) {
@@ -78,23 +83,48 @@ public class ModelService {
         return modelRepository.findAllByAppId(app.getId());
     }
 
-    public Model createModel(final ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {
-        val app = appService.getApp(appGuid);
-        val user = userService.getUser(userId);
+    private Model createModel(final ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {
+        App app = appService.getApp(appGuid);
+        User user = userService.getUser(userId);
 
         authManager.verifyWritePrivilegesToApp(user, app);
 
         verifyNameIsUnique(modelCreateDto.getName(), app.getId());
 
-        val model = Model.builder()
+        log.info("model type: {}", modelCreateDto.getType());
+
+        return modelRepository.save(buildModel(modelCreateDto, app));
+    }
+
+    public Model buildModel(ModelCreateDto modelCreateDto, App app) {
+        return Model.builder()
                 .name(modelCreateDto.getName())
                 .guid(randomUUID().toString())
                 .apiKey(randomUUID().toString())
                 .app(app)
                 .type(ModelType.valueOf(modelCreateDto.getType()))
                 .build();
+    }
 
-        return modelRepository.save(model);
+    @CollectStatistics(type = StatisticsType.FACE_RECOGNITION_CREATE)
+    public Model createRecognitionModel(ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {
+        Model model = createModel(modelCreateDto, appGuid, userId);
+        log.info("recognition model created: {} ", model);
+        return model;
+    }
+
+    @CollectStatistics(type = StatisticsType.FACE_VERIFICATION_CREATE)
+    public Model createVerificationModel(ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {
+        Model model = createModel(modelCreateDto, appGuid, userId);
+        log.info("verification model created: {}", model);
+        return model;
+    }
+
+    @CollectStatistics(type = StatisticsType.FACE_DETECTION_CREATE)
+    public Model createDetectionModel(ModelCreateDto modelCreateDto, final String appGuid, final Long userId) {
+        Model model = createModel(modelCreateDto, appGuid, userId);
+        log.info("detection model created: {}", model);
+        return model;
     }
 
     @Transactional

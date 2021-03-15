@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.entity.Image;
-import com.exadel.frs.core.trainservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import java.io.IOException;

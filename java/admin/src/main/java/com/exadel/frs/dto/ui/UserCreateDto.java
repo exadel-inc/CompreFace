@@ -31,5 +31,5 @@ public class UserCreateDto {
     private String firstName;
     private String lastName;
     private String password;
-    private boolean allowStatistics;
+    private boolean allowStatistics = true;
 }

@@ -20,12 +20,14 @@ import static com.exadel.frs.commonservice.enums.ValidationResult.FORBIDDEN;
 import static com.exadel.frs.commonservice.enums.ValidationResult.OK;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.enums.ValidationResult;
-import com.exadel.frs.core.trainservice.repository.ModelRepository;
+import com.exadel.frs.commonservice.repository.ModelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional("tmPg")
 public class ModelService {
 
     private final ModelRepository modelRepository;

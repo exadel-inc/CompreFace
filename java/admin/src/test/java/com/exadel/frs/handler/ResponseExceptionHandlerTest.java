@@ -16,7 +16,7 @@
 
 package com.exadel.frs.handler;
 
-import static com.exadel.frs.handler.CrudExceptionCode.UNDEFINED;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.UNDEFINED;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;

@@ -18,7 +18,7 @@ package com.exadel.frs.exception;
 
 import com.exadel.frs.commonservice.exception.BasicException;
 
-import static com.exadel.frs.handler.CrudExceptionCode.INSUFFICIENT_PRIVILEGES;
+import static com.exadel.frs.commonservice.handler.CrudExceptionCode.INSUFFICIENT_PRIVILEGES;
 
 public class InsufficientPrivilegesException extends BasicException {
 
