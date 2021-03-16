@@ -27,12 +27,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class FaceClassifierPredictor {
 
-    private Classifier classifier;
-
-    @Autowired
-    private FaceClassifierPredictor(final Classifier classifier) {
-        this.classifier = classifier;
-    }
+    private final Classifier classifier;
 
     public List<Pair<Double, String>> predict(final String modelKey, final double[] input, final int resultCount) {
         return classifier.predict(input, modelKey, resultCount);

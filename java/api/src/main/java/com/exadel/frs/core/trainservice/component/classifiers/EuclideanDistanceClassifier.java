@@ -16,19 +16,21 @@
 
 package com.exadel.frs.core.trainservice.component.classifiers;
 
-import static java.lang.Math.min;
-import static java.util.Arrays.sort;
-import static org.nd4j.linalg.factory.Nd4j.create;
-import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.google.common.primitives.Doubles;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.Math.min;
+import static java.util.Arrays.sort;
+import static org.nd4j.linalg.factory.Nd4j.create;
+import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 
 @Component
 public class EuclideanDistanceClassifier implements Classifier {
@@ -70,6 +72,10 @@ public class EuclideanDistanceClassifier implements Classifier {
 
     @Override
     public Double verify(final double[] input, final String apiKey, final String imageId) {
+        if (input == null) {
+            return (double) 0;
+        }
+
         val inputFace = create(input);
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
 

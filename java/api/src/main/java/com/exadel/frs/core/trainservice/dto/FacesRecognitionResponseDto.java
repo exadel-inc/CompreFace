@@ -37,18 +37,21 @@ public class FacesRecognitionResponseDto extends FaceProcessResponse {
     private List<FacePredictionResultDto> result;
 
     @Override
-    public FacesRecognitionResponseDto prepareResponse(FaceProcessResponse response, ProcessImageParams processImageParams) {
-        FacesRecognitionResponseDto responseDto = (FacesRecognitionResponseDto) response;
+    public FacesRecognitionResponseDto prepareResponse(ProcessImageParams processImageParams) {
+        if (this.getResult()==null || this.getResult().isEmpty()){
+            return this;
+        }
+
         String facePlugins = processImageParams.getFacePlugins();
         if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
-            responseDto.getResult().forEach(r -> r.setEmbedding(null));
+            this.getResult().forEach(r -> r.setEmbedding(null));
         }
 
         if (!processImageParams.getStatus()) {
-            responseDto.setPluginsVersions(null);
-            responseDto.getResult().forEach(r -> r.setExecutionTime(null));
+            this.setPluginsVersions(null);
+            this.getResult().forEach(r -> r.setExecutionTime(null));
         }
 
-        return responseDto;
+        return this;
     }
 }

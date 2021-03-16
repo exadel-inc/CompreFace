@@ -24,6 +24,7 @@ import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
 import com.exadel.frs.core.trainservice.service.FaceRecognizeProcessServiceImpl;
 import com.exadel.frs.core.trainservice.service.FaceService;
+import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -47,7 +48,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 public class FaceController {
 
     private final FaceService faceService;
-    private final FaceProcessService recognitionService;
+    private final ImageExtensionValidator imageValidator;
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
@@ -62,6 +63,7 @@ public class FaceController {
             @ApiParam(value = "api key", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey
     ) throws IOException {
+        imageValidator.validate(file);
         return faceService.findAndSaveFace(file, faceName, detProbThreshold, apiKey);
     }
 
@@ -102,7 +104,7 @@ public class FaceController {
     }
 
     @PostMapping(value = "/{image_id}/verify")
-    public FacesRecognitionResponseDto recognize(
+    public Map<String, List<FaceVerification>> recognize(
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = "A picture with one face (accepted formats: jpeg, png).", required = true)
@@ -118,8 +120,8 @@ public class FaceController {
             @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins,
             @ApiParam(value = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated, true - both fields included")
             @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
-
     ) {
+        imageValidator.validate(file);
         ProcessImageParams processImageParams = ProcessImageParams.builder()
                 .additionalParams(Map.of("image_id", image_id))
                 .apiKey(apiKey)
@@ -129,6 +131,6 @@ public class FaceController {
                 .limit(limit)
                 .status(status)
                 .build();
-        return (FacesRecognitionResponseDto)recognitionService.processImage(processImageParams);
+        return faceService.verifyFace(processImageParams);
     }
 }

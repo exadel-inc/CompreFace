@@ -40,15 +40,4 @@ public class FindFacesResultDto {
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
     private List<List<Integer>> landmarks;
-
-    @Data
-    @NoArgsConstructor
-    @JsonInclude(NON_NULL)
-    public static class ExecutionTimeDto {
-
-        private Double age;
-        private Double gender;
-        private Double detector;
-        private Double calculator;
-    }
 }

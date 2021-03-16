@@ -20,18 +20,17 @@ import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
+import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.dto.PluginsVersionsDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.PluginsVersions;
-import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +45,7 @@ import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FaceService {
 
     private static final int MAX_FACES_TO_SAVE = 1;
@@ -54,7 +54,6 @@ public class FaceService {
     private final FacesApiClient facesApiClient;
     private final FaceDao faceDao;
     private final FaceCacheProvider faceCacheProvider;
-    private final ImageExtensionValidator imageValidator;
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;
     private final FacesMapper faceMapper;
@@ -71,6 +70,8 @@ public class FaceService {
                 .stream()
                 .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
                 .collect(toSet());
+        log.info("faceMapper: {}", faceMapper);
+
         return faceMapper.toResponseDto(collect);
     }
 
@@ -100,7 +101,6 @@ public class FaceService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        imageValidator.validate(file);
         FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null);
         val result = findFacesResponse.getResult();
 
@@ -117,17 +117,24 @@ public class FaceService {
         FaceBO faceBO = faceCacheProvider
                 .getOrLoad(modelKey)
                 .addFace(faceDao.addNewFace(embeddingToSave, file, faceName, modelKey));
-        return faceMapper.toResponseDto(faceBO);
+        FaceResponseDto faceResponseDto = faceMapper.toResponseDto(faceBO);
+        if (faceResponseDto == null) {
+            faceResponseDto = new FaceResponseDto();
+        }
+
+        return faceResponseDto;
     }
 
     public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {
         MultipartFile file = (MultipartFile) processImageParams.getFile();
-        imageValidator.validate(file);
 
         FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        if (findFacesResponse == null) {
+            return Map.of("result", Collections.emptyList());
+        }
 
         val results = new ArrayList<FaceVerification>();
-
+        FaceCollection orLoad = faceCacheProvider.getOrLoad(processImageParams.getApiKey());
         for (val findResult : findFacesResponse.getResult()) {
             val prediction = classifierPredictor.verify(
                     processImageParams.getApiKey(),
@@ -144,7 +151,22 @@ public class FaceService {
             var pred = BigDecimal.valueOf(prediction);
             pred = pred.setScale(5, HALF_UP);
 
-            PluginsVersions pluginsVersions = findFacesResponse.getPluginsVersions();
+            FaceVerification faceVerification = FaceVerification
+                    .builder()
+                    .box(findResult.getBox())
+                    .similarity(pred.floatValue())
+                    .embedding(findResult.getEmbedding())
+                    .executionTime(findResult.getExecutionTime())
+                    .age(findResult.getAge())
+                    .gender(findResult.getGender())
+                    .landmarks(findResult.getLandmarks())
+                    .build();
+            if (orLoad != null && orLoad.getFacesMap() != null && orLoad.getFacesMap().inverse() != null && orLoad.getFacesMap().inverse().get(0) != null) {
+                faceVerification.setSubject(orLoad.getFacesMap().inverse().get(0).getName());
+            }
+
+            results.add(faceVerification.prepareResponse(processImageParams));
+
         }
 
         return Map.of("result", results);
