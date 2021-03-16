@@ -161,12 +161,12 @@ public class FaceService {
                     .gender(findResult.getGender())
                     .landmarks(findResult.getLandmarks())
                     .build();
-            if (orLoad != null && orLoad.getFacesMap() != null && orLoad.getFacesMap().inverse() != null && orLoad.getFacesMap().inverse().get(0) != null) {
-                faceVerification.setSubject(orLoad.getFacesMap().inverse().get(0).getName());
-            }
 
             results.add(faceVerification.prepareResponse(processImageParams));
+        }
 
+        if (orLoad != null && orLoad.getFacesMap() != null && orLoad.getFacesMap().inverse() != null && orLoad.getFacesMap().inverse().get(0) != null) {
+            results.forEach(r -> r.setSubject(orLoad.getFacesMap().inverse().get(0).getName()));
         }
 
         return Map.of("result", results);
