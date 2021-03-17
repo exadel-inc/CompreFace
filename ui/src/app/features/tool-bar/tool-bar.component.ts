@@ -16,7 +16,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, finalize, first } from 'rxjs/operators';
+import { filter, first } from 'rxjs/operators';
 
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';

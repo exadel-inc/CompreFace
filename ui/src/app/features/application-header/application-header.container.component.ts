@@ -18,7 +18,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { filter, finalize, first } from 'rxjs/operators';
+import { filter, first } from 'rxjs/operators';
 
 import { Application } from '../../data/interfaces/application';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
