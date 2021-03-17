@@ -166,7 +166,7 @@ The following JavaScript code example allows to add new face to Face Collection.
     formData.append("photo", photo);
 
     try {
-       let r = await fetch('http://localhost:8000/api/v1/faces/?subject=`${name}`', {method: "POST", body: formData});
+       let r = await fetch('http://localhost:8000/api/v1/recognition/faces/?subject=`${name}`', {method: "POST", body: formData});
      } catch(e) {
        console.log('Houston, we have a problem...:', e);
     }
@@ -293,7 +293,7 @@ By using the created API key, the user can add an image as an example of the fac
 Creates an example of the face by saving images. To train the system, you can add as many images as you want.
 
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
+curl  -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F file=@<local_file> 
@@ -325,7 +325,7 @@ Response body on success:
 
 Recognizes faces from the uploaded image.
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/faces/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
@@ -395,7 +395,7 @@ Response body on success:
 Retrieves a list of images saved in a Face Collection
 
 ```http request
-curl  -X GET "http://localhost:8000/api/v1/faces" \
+curl  -X GET "http://localhost:8000/api/v1/recognition/faces" \
 -H "x-api-key: <faces_collection_api_key>" \
 ```
 
@@ -429,7 +429,7 @@ Response body on success:
 Deletes all image examples of the <subject>.
 
 ```http request
-curl  -X DELETE "http://localhost:8000/api/v1/faces?subject=<subject>" \
+curl  -X DELETE "http://localhost:8000/api/v1/recognition/faces?subject=<subject>" \
 -H "x-api-key: <faces_collection_api_key>"
 ```
 
@@ -461,7 +461,7 @@ Response body on success:
 Deletes an image by ID.
 
 ```http request
-curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
+curl  -X DELETE "http://localhost:8000/api/v1/recognition/faces/<image_id>" \
 -H "x-api-key: <faces_collection_api_key>"
 ```
 
@@ -489,7 +489,7 @@ Response body on success:
 
 Compares faces from the uploaded image with face in saved image id.
 ```http request
-curl  -X POST "http://localhost:8000/api/v1/faces/<image_id>/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>" \
+curl  -X POST "http://localhost:8000/api/v1/recognition/faces/<image_id>/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_collection_api_key>" \
 -F file=<local_file>
