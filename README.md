@@ -113,6 +113,9 @@ gender recognition
 7. Run command: `docker-compose up -d`
 8. Open http://localhost:8000/login
 
+### To get started for Developers: 
+
+More documentation is available [here](/dev/README.md)
 
 # Documentation
 
