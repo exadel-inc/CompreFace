@@ -16,8 +16,7 @@
 
 package com.exadel.frs.core.trainservice.filter;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 import static java.util.Collections.emptyEnumeration;
 import static java.util.Collections.enumeration;
 import static java.util.Collections.singletonList;
@@ -79,7 +78,7 @@ public class SecurityValidationFilterTest {
         filterChain = mock(FilterChain.class);
 
         when(httpServletResponse.getWriter()).thenReturn(new PrintWriter(new StringWriter()));
-        when(httpServletRequest.getRequestURI()).thenReturn(API_V1);
+        when(httpServletRequest.getRequestURI()).thenReturn(API_V1+ RECOGNIZE);
     }
 
     @Test

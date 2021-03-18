@@ -16,12 +16,48 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
+import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
-import lombok.Value;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.util.StringUtils;
 
-@Value
-public class FaceVerification {
+import java.util.List;
 
-    FacesBox box;
-    float similarity;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+
+@AllArgsConstructor
+@JsonInclude(NON_NULL)
+@Builder
+@Data
+@EqualsAndHashCode(callSuper = false)
+public class FaceVerification extends FaceProcessResponse {
+
+    private FacesBox box;
+    private String subject;
+    private float similarity;
+    private List<List<Integer>> landmarks;
+    private Integer[] age;
+    private String gender;
+    private Double[] embedding;
+    @JsonProperty(value = "execution_time")
+    private ExecutionTimeDto executionTime;
+
+    @Override
+    public FaceVerification prepareResponse(ProcessImageParams processImageParams) {
+        String facePlugins = processImageParams.getFacePlugins();
+        if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
+            this.setEmbedding(null);
+        }
+
+        if (!processImageParams.getStatus()) {
+            this.setExecutionTime(null);
+        }
+
+        return this;
+    }
 }

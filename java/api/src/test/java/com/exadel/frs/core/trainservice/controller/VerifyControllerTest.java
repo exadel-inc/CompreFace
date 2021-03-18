@@ -62,7 +62,7 @@ public class VerifyControllerTest extends EmbeddedPostgreSQLTest {
         val secondFile = new MockMultipartFile("checkFile", "test data".getBytes());
 
         mockMvc.perform(
-                multipart(API_V1 + "/verify")
+                multipart(API_V1 + "/verification/verify")
                         .file(firstFile)
                         .file(secondFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)

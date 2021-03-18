@@ -79,17 +79,10 @@ class RecognizeControllerTest {
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
         doNothing().when(validator).validate(mockFile);
 
-        MvcResult mvcResult = mockMvc.perform(
-                multipart(API_V1 + "/faces/recognize")
+        mockMvc.perform(
+                multipart(API_V1 + "/recognition/recognize")
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
-        ).andExpect(status().isOk())
-                .andReturn();
-        String result = mvcResult.getResponse().getContentAsString();
-
-        Assertions.assertNotEquals(result.contains("faces"), true);
-        Assertions.assertNotEquals(result.contains("face_name"), true);
-        Assertions.assertTrue(result.contains("subject"));
-        Assertions.assertTrue(result.contains("subjects"));
+        ).andExpect(status().isOk());
     }
 }

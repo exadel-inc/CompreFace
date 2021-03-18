@@ -41,6 +41,9 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
         val findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         val facesRecognitionDto = mapper.toFacesRecognitionResponseDto(findFacesResponse);
+        if (facesRecognitionDto == null) {
+            return FacesRecognitionResponseDto.builder().build();
+        }
 
         for (val findResult : facesRecognitionDto.getResult()) {
             val predictions = classifierPredictor.predict(
@@ -66,6 +69,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
             findResult.setSubjects(faces);
         }
 
-        return facesRecognitionDto.prepareResponse(facesRecognitionDto, processImageParams);
+        return facesRecognitionDto.prepareResponse(processImageParams);
     }
 }

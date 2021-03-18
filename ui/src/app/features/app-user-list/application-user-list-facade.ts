@@ -33,7 +33,6 @@ import { loadRolesEntityAction } from 'src/app/store/role/actions';
 import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
-import { AppUserService } from '../../core/app-user/app-user.service';
 import { loadUsersEntityAction } from '../../store/user/action';
 import { selectCurrentUserRole, selectUsers } from '../../store/user/selectors';
 import { Role } from 'src/app/data/enums/role.enum';
@@ -53,7 +52,7 @@ export class ApplicationUserListFacade implements IFacade {
   userGlobalRole$: Observable<Role>;
   applicationRole$: Observable<string>;
 
-  constructor(private store: Store<AppState>, private userService: AppUserService) {
+  constructor(private store: Store<AppState>) {
     this.appUsers$ = this.store.select(selectAppUsers);
     this.availableEmails$ = combineLatest([this.store.select(selectUsers), this.appUsers$]).pipe(
       map(([users, appUsers]) =>
