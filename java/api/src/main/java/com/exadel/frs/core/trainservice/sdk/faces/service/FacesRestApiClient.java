@@ -9,6 +9,7 @@ import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,6 +25,7 @@ public class FacesRestApiClient implements FacesApiClient {
     @Override
     public FindFacesResponse findFaces(final MultipartFile photo, final Integer faceLimit, final Double thresholdC,
                                        final String facePlugins) {
+        getStatus();
         try {
             return feignClient.findFaces(photo, faceLimit, thresholdC, facePlugins);
         } catch (FeignException.BadRequest ex) {
@@ -36,6 +38,7 @@ public class FacesRestApiClient implements FacesApiClient {
     @Override
     public FindFacesResponse findFacesWithCalculator(final MultipartFile photo, final Integer faceLimit, final Double thresholdC,
                                                      final String facePlugins) {
+        getStatus();
         try {
             String finalFacePlugins;
             if (StringUtils.isNotBlank(facePlugins)) {
@@ -57,6 +60,7 @@ public class FacesRestApiClient implements FacesApiClient {
     }
 
     @Override
+    @Cacheable("status")
     public FacesStatusResponse getStatus() {
         try {
             return feignClient.getStatus();

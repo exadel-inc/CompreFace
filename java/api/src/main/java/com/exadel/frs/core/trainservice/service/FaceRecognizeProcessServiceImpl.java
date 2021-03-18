@@ -7,9 +7,12 @@ import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,12 +24,14 @@ import static java.math.RoundingMode.HALF_UP;
 
 @Service("recognitionService")
 @RequiredArgsConstructor
+@Slf4j
 public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;
     private final ImageExtensionValidator imageValidator;
     private final FacesMapper mapper;
+    private final CacheManager cacheManager;
 
     @Override
     public FacesRecognitionResponseDto processImage(ProcessImageParams processImageParams) {
@@ -38,7 +43,7 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
         MultipartFile file = (MultipartFile) processImageParams.getFile();
         imageValidator.validate(file);
-
+        client.getStatus();
         val findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         val facesRecognitionDto = mapper.toFacesRecognitionResponseDto(findFacesResponse);
 

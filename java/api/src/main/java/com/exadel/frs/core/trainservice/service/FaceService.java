@@ -82,6 +82,7 @@ public class FaceService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
+        facesApiClient.getStatus();
         FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null);
         val result = findFacesResponse.getResult();
 
