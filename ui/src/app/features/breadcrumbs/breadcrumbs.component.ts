@@ -18,7 +18,6 @@ import { Component, Input } from '@angular/core';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
-import { BreadcrumbsFacade } from './breadcrumbs.facade';
 
 @Component({
   selector: 'app-breadcrumbs',
@@ -30,6 +29,4 @@ export class BreadcrumbsComponent {
   maxNameLength = 30;
   @Input() model: Model;
   @Input() app: Application;
-
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {}
 }

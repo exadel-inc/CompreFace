@@ -14,9 +14,9 @@
  * permissions and limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
+import { Observable } from 'rxjs';
+import { first, map, tap } from 'rxjs/operators';
 import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
 import { RequestResult } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
@@ -29,7 +29,7 @@ import { ImageSize } from '../../../../data/interfaces/image';
   templateUrl: './verification-result.component.html',
   styleUrls: ['./verification-result.component.scss'],
 })
-export class VerificationResultComponent implements OnChanges, OnDestroy {
+export class VerificationResultComponent implements OnChanges {
   @Input() requestInfo: RequestInfo;
   @Input() printData: RequestResult;
   @Input() files: any;
@@ -51,13 +51,12 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
   faceDescriptionHeight = 25;
   formattedResult: string;
 
-  private processFilePrintSub: Subscription;
-  private checkFilePrintSub: Subscription;
   private processFileCanvasLink: any = null;
   private checkFileCanvasLink: any = null;
   private imgCanvas: ImageBitmap;
 
   constructor(private loadingPhotoService: LoadingPhotoService) {}
+
   ngOnChanges(changes: SimpleChanges) {
     if (changes?.requestInfo?.currentValue) {
       this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
@@ -67,7 +66,6 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
       if (changes.files.currentValue.checkFile) {
         this.refreshCanvas(
           this.checkFileCanvasLink,
-          this.checkFilePrintSub,
           this.checkFileCanvasSize,
           changes.files.currentValue.checkFile,
           this.printData,
@@ -80,22 +78,12 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
       if (changes.files.currentValue.processFile) {
         this.refreshCanvas(
           this.processFileCanvasLink,
-          this.processFilePrintSub,
           this.processFileCanvasSize,
           changes.files.currentValue.processFile,
           this.printData,
           VerificationServiceFields.processFileData
         );
       }
-    }
-  }
-
-  ngOnDestroy() {
-    if (this.processFilePrintSub) {
-      this.processFilePrintSub.unsubscribe();
-    }
-    if (this.checkFilePrintSub) {
-      this.checkFilePrintSub.unsubscribe();
     }
   }
 
@@ -111,9 +99,8 @@ export class VerificationResultComponent implements OnChanges, OnDestroy {
     );
   }
 
-  private refreshCanvas(canvas, printSub, canvasSize, file, data, field) {
-    printSub && printSub.unsubscribe();
-    printSub = this.printResult(canvas, canvasSize, file, data, field).subscribe();
+  private refreshCanvas(canvas, canvasSize, file, data, field) {
+    this.printResult(canvas, canvasSize, file, data, field).pipe(first()).subscribe();
   }
 
   private prepareForDraw(size, rawData, canvasSize, key): Observable<any> {
