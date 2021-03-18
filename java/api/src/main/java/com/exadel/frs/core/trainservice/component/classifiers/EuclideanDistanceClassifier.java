@@ -35,6 +35,7 @@ import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 @Component
 public class EuclideanDistanceClassifier implements Classifier {
 
+    public static final int PREDICTION_COUNT_INFINITY = -1;
     private final FaceCacheProvider faceCacheProvider;
 
     @Autowired
@@ -51,8 +52,9 @@ public class EuclideanDistanceClassifier implements Classifier {
             val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
             val argSort = argSort(probabilities);
             val facesMap = faceCollection.getFacesMap().inverse();
+            int predictionCount = getPredictionCount(resultCount, argSort);
 
-            for (int i = 0; i < min(resultCount, argSort.length); i++) {
+            for (int i = 0; i < min(predictionCount, argSort.length); i++) {
                 val face = facesMap.get(argSort[i]);
                 val prob = probabilities[argSort[i]];
 
@@ -60,6 +62,14 @@ public class EuclideanDistanceClassifier implements Classifier {
             }
         }
         return result;
+    }
+
+    private int getPredictionCount(int resultCount, int[] argSort) {
+        if (resultCount == PREDICTION_COUNT_INFINITY) {
+            resultCount = argSort.length;
+        }
+
+        return resultCount;
     }
 
     @Override

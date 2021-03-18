@@ -1,5 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
+import com.exadel.frs.commonservice.exception.IncorrectPredictionCountException;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
@@ -29,6 +30,12 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
     @Override
     public FacesRecognitionResponseDto processImage(ProcessImageParams processImageParams) {
+        Object predictionCountObj = processImageParams.getAdditionalParams().get("predictionCount");
+        Integer predictionCount = (Integer) predictionCountObj;
+        if (predictionCount == 0 || predictionCount < -1) {
+            throw new IncorrectPredictionCountException();
+        }
+
         MultipartFile file = (MultipartFile) processImageParams.getFile();
         imageValidator.validate(file);
 
@@ -39,13 +46,12 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
         }
 
         for (val findResult : facesRecognitionDto.getResult()) {
-            Object predictionCount = processImageParams.getAdditionalParams().get("predictionCount");
             val predictions = classifierPredictor.predict(
                     processImageParams.getApiKey(),
                     Stream.of(findResult.getEmbedding())
                             .mapToDouble(d -> d)
                             .toArray(),
-                    (Integer) predictionCount
+                    predictionCount
             );
 
             val faces = new ArrayList<FaceSimilarityDto>();

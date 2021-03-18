@@ -1,18 +1,19 @@
 
-<h1 align="center">CompreFace - open-source face recognition system from Exadel</h1>
+<h1 align="center">CompreFace is a free and open-source face recognition system from Exadel</h1>
 
 <p align="center">
-    <a target="_blank" href="https://exadel.com/services/engineering/ai-machine-learning/compreface/">
+    <a target="_blank" href="https://exadel.com/solutions/compreface/">
   <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="angular-logo" height="250px"/>
  </a>
   <br>
-  <i>CompreFace is a free face recognition service that can be easily integrated into<br> any system without prior machine learning skills.
+  <i>CompreFace can be easily integrated into any system without prior machine learning skills. CompreFace provides REST API for face 
+recognition, face verification, face detection, landmark detection, age, and gender recognition and is easily deployed with docker
      </i>
   <br>
 </p>
 
 <p align="center">
-  <a href="https://exadel.com/services/engineering/ai-machine-learning/compreface/"><strong>Official website</strong></a>
+  <a href="https://exadel.com/solutions/compreface/"><strong>Official website</strong></a>
   <br>
 </p>
 
@@ -37,78 +38,80 @@
 </p>
 <hr>
 
-# CompreFace
+# Table Of Contents
 
- [CompreFace](#compreface)
   * [Overview](#overview)
+  * [Screenshots](#screenshots)
+  * [Feedback survey](#feedback-survey)
   * [Features](#features)
-  * [Getting started](#getting-started)
-  * [Simple tutorial of usage](#simple-tutorial-of-usage)
-  * [How it works](#how-it-works)
-    + [ML technologies](#ml-technologies)
-    + [Used ML Papers and Algorithms](#used-ml-papers-and-algorithms)
-  * [Technologies](#technologies)
-    + [Architecture diagram](#architecture-diagram)
-    + [Database](#database)
-    + [Admin server](#admin-server)
-    + [API server](#api-server)
-    + [Embedding server](#embedding-server)
-  * [Rest API description](#rest-api-description)
-    + [Add an example of the face](#add-an-example-of-the-face)
-    + [Recognize faces from given image](#recognize-faces-from-given-image)
-    + [List of all saved faces](#list-of-all-saved-faces)
-    + [Delete all examples of the face by name](#delete-all-examples-of-the-face-by-name)
-    + [Delete an example of the face by ID](#delete-an-example-of-the-face-by-id)
-    + [Verify faces from given image](#verify-faces-from-given-image)
-    + [Verify faces on two images](#verify-faces-on-two-images)
+  * [Getting Started with CompreFace](#getting-started-with-compreface)
+  * [Documentation](/docs)
+    * [How to Use CompreFace](/docs/How-to-Use-CompreFace.md)
+    * [Face Services and Plugins](/docs/Face-services-and-plugins.md)
+    * [Rest API Description](/docs/Rest-API-description.md)
+    * [Configuration](/docs/Configuration.md)
+    * [Architecture and Scalability](/docs/Architecture-and-scalability.md)
+    * [Custom Builds](/docs/Custom-builds.md)
+    * [User Roles System](/docs/User-Roles-System.md)
+    * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
   * [Contributing](#contributing)
-    + [Formatting standards](#formatting-standards)
-    + [Report Bugs](#report-bugs)
-    + [Submit Feedback](#submit-feedback)
-  * [License info](#license)
+  * [License info](#license-info)
 
 
+# Overview
 
-## Overview
+CompreFace is a free and open-source face detection and recognition GitHub project. Essentially, it is a docker-based application that can be used as a standalone server or deployed in the cloud. You don’t need prior machine learning skills to set up and use CompreFace.
 
-CompreFace is docker-based application for facial recognition that can be integrated as a standalone server or deployed on the cloud and can be set up and used without machine learning expertise.
-Our method is based on deep neural networks, which is one of the most popular facial recognition methods and provides a convenient REST API for Face Collection training and face recognition. We also provide a roles system with which you can easily control who has access to the Face Collection.
-Every user can create their own models and train them on different subsets of input data. 
+CompreFace provides REST API for face recognition, face verification, face detection, landmark detection, age, and gender recognition. The solution also features a role management system that allows you to easily control who has access to your Face Recognition Services.
 
-## Feedback survey
+CompreFace is delivered as a docker-compose config and supports different models that work on CPU and GPU. Our solution is based on state-of-the-art methods and libraries like FaceNet and InsightFace.
 
-We are constantly improving our product. But for better understanding which features we should add or improve we need your help!
-Feedback form is totally anonymous, it will take just 2 minutes of your time to answer the questions:
+# Screenshots
+<p align="center">
+<img src="https://user-images.githubusercontent.com/3736126/107061938-6a151080-67e1-11eb-95ba-c4dd43471f5b.png" alt="compreface-test-page" width=390px style="padding: 10px;">
+<img src="https://user-images.githubusercontent.com/3736126/107063429-0f7cb400-67e3-11eb-9ecc-27a1a0955923.png" alt="compreface-main-page" width=390px style="padding: 10px;">
+</p>
+
+# Feedback survey
+
+We need your help to better understand which features we should add to the service and how we can improve it further! Our feedback form is totally anonymous, and answering the questions will take just 2 minutes of your time:
 https://forms.gle/ybAEPc3XmzEcpv4M8
 
-## Features
+# Features
 
-The system can accurately identify people even when it is only given one example of their face.
-CompreFace:
- - Uses open-source code and operates fully on-premises for data security 
- - Can be set up and used without machine learning expertise
- - Uses one of the most popular face recognition methods for highest accuracy 
- - Includes a UI panel with roles for access control
- - Starts quickly with one docker command
+The system can accurately identify people even when it has only “seen” their photo once. Technology-wise, CompreFace has several advantages over similar free face recognition solutions. CompreFace:
 
-## Getting started
+- Supports many face recognition services: face identification, face verification, face detection, landmark detection, and age and 
+gender recognition
+- Supports both CPU and GPU and is easy to scale up
+- Is open source and self-hosted, which gives you additional guarantees for data security
+- Can be deployed either in the cloud or on premises
+- Can be set up and used without machine learning expertise
+- Uses FaceNet and InsightFace libraries, which use state-of-the-art face recognition methods
+- Features a UI panel for convenient user roles and access management
+- Starts quickly with just one docker command
 
-#### To get started:
 
-1. Install Docker and Docker-Compose
+# Getting Started with CompreFace
+
+### To get started (Linux, MacOS):
+
+1. Install Docker and Docker Compose
 2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
 3. Unzip the archive
-4. Run command: _docker-compose up -d_
+4. Open the terminal in this folder and run this command: `docker-compose up -d`
+5. Open the service in your browser: http://localhost:8000/login
 
-#### To get started (Windows):
+### To get started (Windows):
 
-1. Install Docker
+1. Install Docker Desktop
 2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
 3. Unzip the archive
 4. Run Docker
-5. Windows search bar-> cmd->in the Command prompt-> cd ->paste the path to the extracted zip folder
-6. Run command: docker-compose up -d
-7. Open http://localhost:8000/login
+5. Open Command prompt (write `cmd` in windows search bar)
+6. Open folder where you extracted zip archive (Write `cd path_of_the_folder`, press enter).
+7. Run command: `docker-compose up -d`
+8. Open http://localhost:8000/login
 
 ## Getting started for devs
 
@@ -221,13 +224,11 @@ Recognizing the person in the photo. We calculate Euclidean distance using [Nd4j
 * [FaceNet](https://github.com/davidsandberg/facenet)
 * Euclidean distance
 
+### To get started for Developers: 
 
+More documentation is available [here](/dev/README.md)
 
-### Used ML Papers and Algorithms
-
-* **FaceNet: A Unified Embedding for Face Recognition and Clustering** 
-  Florian Schroff, Dmitry Kalenichenko, James Philbin 
-  (Submitted on 17 Jun 2015)
+# Documentation
 
 * **Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Neural Networks**
   Kaipeng Zhang, Zhanpeng Zhang, Zhifeng Li, Yu Qiao 
@@ -561,7 +562,7 @@ curl  -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&de
 | limit               | param       | integer | optional | maximum number of faces with best similarity in result. Value of 0 represents no limit. Default value: 0 |
 | det_prob_ threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 | face_plugins        | param       | string  | optional | comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. calculator,gender,age - returns embedding, gender and age for each face.    |
-| status             | param       | boolean | optional | Special parameter to show execution_time and plugin_version fields. Empty or false value - both fields eliminated, true - both fields included |
+| status              | param       | boolean | optional | Special parameter to show execution_time and plugin_version fields. Empty or false value - both fields eliminated, true - both fields included |
 
 Response body on success:
 ```
@@ -596,39 +597,38 @@ Response body on success:
 Contributions are welcome and greatly appreciated.
 After creating your first contributing Pull Request you will receive a request to sign our Contributor License Agreement by commenting your PR with a special message.
 
+More documentation is available [here](/docs)
 
+# Contributing
 
+We want to improve our open-source face recognition solution, so your contributions are welcome and greatly appreciated. After creating your first contributing pull request, you will receive a request to sign our Contributor License Agreement by commenting your pull request with a special message.
 
 ### Formatting standards
 
-For java just import dev/team_codestyle.xml file in your IntelliJ IDEA
-
-
+For java just import dev/team_codestyle.xml file in your IntelliJ IDEA.
 
 ### Report Bugs
 
-Report bugs at https://github.com/exadel-inc/CompreFace/issues.
+Please report any bugs [here](https://github.com/exadel-inc/CompreFace/issues).
 
-If you are reporting a bug, please include:
+If you are reporting a bug, please specify:
 
-* Your operating system name and version.
-* Any details about your local setup that might be helpful in troubleshooting.
-* Detailed steps to reproduce the bug.
-
+- Your operating system name and version
+- Any details about your local setup that might be helpful in troubleshooting
+- Detailed steps to reproduce the bug
 
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/exadel-inc/CompreFace/issues. 
+The best way to send us feedback is to file an issue at https://github.com/exadel-inc/CompreFace/issues.
 
 If you are proposing a feature, please:
 
-* Explain in detail how it should work.
-* Keep the scope as narrow as possible, to make it easier to implement.
+- Explain in detail how it should work.
+- Keep the scope as narrow as possible to make it easier to implement.
 
 
+# License info
 
-## License info
-
-CompreFace is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
+CompreFace is open-source real-time facial recognition software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
 
