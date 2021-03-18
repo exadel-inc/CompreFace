@@ -24,6 +24,6 @@ public class FaceDetectionProcessServiceImpl implements FaceProcessService {
 
         FacesDetectionResponseDto facesDetectionResponseDto = mapper.toFacesDetectionResponseDto(
                 client.findFaces(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins()));
-        return facesDetectionResponseDto.prepareResponse(facesDetectionResponseDto, processImageParams);
+        return facesDetectionResponseDto.prepareResponse(processImageParams);
     }
 }

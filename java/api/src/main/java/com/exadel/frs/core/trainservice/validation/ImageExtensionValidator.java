@@ -23,6 +23,8 @@ import com.exadel.frs.core.trainservice.system.global.ImageProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 @Component
@@ -37,12 +39,11 @@ public class ImageExtensionValidator {
         }
 
         val formats = imageProperties.getTypes();
-        val isWrongFormat = !formats.contains(
-                getFileExtension(file.getOriginalFilename().toLowerCase())
-        );
+        String originalFilename = file.getOriginalFilename();
+        val isWrongFormat = StringUtils.isEmpty(originalFilename) || !formats.contains(getFileExtension(originalFilename.toLowerCase()));
 
         if (isWrongFormat) {
-            throw new FileExtensionException(file.getOriginalFilename());
+            throw new FileExtensionException(originalFilename);
         }
     }
 }

@@ -16,25 +16,36 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static java.util.stream.Collectors.toSet;
-
+import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
+import com.exadel.frs.core.trainservice.cache.FaceCollection;
+import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
+import com.exadel.frs.core.trainservice.dto.FaceVerification;
+import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Stream;
+
+import static java.math.RoundingMode.HALF_UP;
+import static java.util.stream.Collectors.toSet;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class FaceService {
 
     private static final int MAX_FACES_TO_SAVE = 1;
@@ -43,25 +54,33 @@ public class FaceService {
     private final FacesApiClient facesApiClient;
     private final FaceDao faceDao;
     private final FaceCacheProvider faceCacheProvider;
+    private final FaceClassifierPredictor classifierPredictor;
+    private final FacesApiClient client;
+    private final FacesMapper faceMapper;
 
-    public Set<FaceBO> findFaces(final String apiKey) {
-        return faceCacheProvider.getOrLoad(apiKey).getFaces();
+    public List<FaceResponseDto> findFaces(final String apiKey) {
+        Set<FaceBO> faces = faceCacheProvider.getOrLoad(apiKey).getFaces();
+        return faceMapper.toResponseDto(faces);
     }
 
-    public Set<FaceBO> deleteFaceByName(final String faceName, final String apiKey) {
+    public List<FaceResponseDto> deleteFaceByName(final String faceName, final String apiKey) {
         val faces = faceCacheProvider.getOrLoad(apiKey);
 
-        return faceDao.deleteFaceByName(faceName, apiKey)
-                      .stream()
-                      .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
-                      .collect(toSet());
+        Set<FaceBO> collect = faceDao.deleteFaceByName(faceName, apiKey)
+                .stream()
+                .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
+                .collect(toSet());
+        log.info("faceMapper: {}", faceMapper);
+
+        return faceMapper.toResponseDto(collect);
     }
 
-    public FaceBO deleteFaceById(final String id, final String apiKey) {
+    public FaceResponseDto deleteFaceById(final String id, final String apiKey) {
         val collection = faceCacheProvider.getOrLoad(apiKey);
         val face = faceDao.deleteFaceById(id);
         if (face != null) {
-            return collection.removeFace(face.getId(), face.getFaceName());
+            FaceBO faceBO = collection.removeFace(face.getId(), face.getFaceName());
+            return faceMapper.toResponseDto(faceBO);
         }
 
         return null;
@@ -76,7 +95,7 @@ public class FaceService {
         return faceCacheProvider.getOrLoad(modelKey).getFaces().size();
     }
 
-    public FaceBO findAndSaveFace(
+    public FaceResponseDto findAndSaveFace(
             final MultipartFile file,
             final String faceName,
             final Double detProbThreshold,
@@ -90,13 +109,66 @@ public class FaceService {
         }
 
         val embedding = result.stream()
-                              .findFirst().orElseThrow()
-                              .getEmbedding();
+                .findFirst().orElseThrow()
+                .getEmbedding();
 
         val embeddingToSave = new Face.Embedding(Arrays.asList(embedding), findFacesResponse.getPluginsVersions().getCalculator());
 
-        return faceCacheProvider
+        FaceBO faceBO = faceCacheProvider
                 .getOrLoad(modelKey)
                 .addFace(faceDao.addNewFace(embeddingToSave, file, faceName, modelKey));
+        FaceResponseDto faceResponseDto = faceMapper.toResponseDto(faceBO);
+        if (faceResponseDto == null) {
+            faceResponseDto = new FaceResponseDto();
+        }
+
+        return faceResponseDto;
+    }
+
+    public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {
+        MultipartFile file = (MultipartFile) processImageParams.getFile();
+
+        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        if (findFacesResponse == null) {
+            return Map.of("result", Collections.emptyList());
+        }
+
+        val results = new ArrayList<FaceVerification>();
+        FaceCollection orLoad = faceCacheProvider.getOrLoad(processImageParams.getApiKey());
+        for (val findResult : findFacesResponse.getResult()) {
+            val prediction = classifierPredictor.verify(
+                    processImageParams.getApiKey(),
+                    Stream.of(findResult.getEmbedding())
+                            .mapToDouble(d -> d)
+                            .toArray(),
+                    String.valueOf(processImageParams.getAdditionalParams().get("image_id"))
+            );
+
+            var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
+            inBoxProb = inBoxProb.setScale(5, HALF_UP);
+            findResult.getBox().setProbability(inBoxProb.doubleValue());
+
+            var pred = BigDecimal.valueOf(prediction);
+            pred = pred.setScale(5, HALF_UP);
+
+            FaceVerification faceVerification = FaceVerification
+                    .builder()
+                    .box(findResult.getBox())
+                    .similarity(pred.floatValue())
+                    .embedding(findResult.getEmbedding())
+                    .executionTime(findResult.getExecutionTime())
+                    .age(findResult.getAge())
+                    .gender(findResult.getGender())
+                    .landmarks(findResult.getLandmarks())
+                    .build();
+
+            results.add(faceVerification.prepareResponse(processImageParams));
+        }
+
+        if (orLoad != null && orLoad.getFacesMap() != null && orLoad.getFacesMap().inverse() != null && orLoad.getFacesMap().inverse().get(0) != null) {
+            results.forEach(r -> r.setSubject(orLoad.getFacesMap().inverse().get(0).getName()));
+        }
+
+        return Map.of("result", results);
     }
 }

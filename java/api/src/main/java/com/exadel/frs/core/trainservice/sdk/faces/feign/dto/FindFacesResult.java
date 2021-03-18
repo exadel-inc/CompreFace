@@ -15,6 +15,7 @@
  */
 package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
+import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -38,17 +39,6 @@ public class FindFacesResult {
     private Double[] embedding;
     private FacesBox box;
     @JsonProperty(value = "execution_time")
-    private ExecutionTime executionTime;
+    private ExecutionTimeDto executionTime;
     private List<List<Integer>> landmarks;
-
-    @Data
-    @NoArgsConstructor
-    @JsonInclude(NON_NULL)
-    public static class ExecutionTime {
-
-        private Double age;
-        private Double gender;
-        private Double detector;
-        private Double calculator;
-    }
 }

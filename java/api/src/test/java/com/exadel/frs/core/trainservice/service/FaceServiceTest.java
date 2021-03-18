@@ -32,8 +32,11 @@ import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
+import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
@@ -45,6 +48,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 
 class FaceServiceTest {
@@ -57,6 +63,12 @@ class FaceServiceTest {
 
     @Mock
     private FacesApiClient facesApiClient;
+
+    @Spy
+    private FacesMapper facesMapper;
+
+    @Mock
+    private FaceClassifierPredictor classifierPredictor;
 
     @Mock
     private MockMultipartFile mockFile;
@@ -90,7 +102,6 @@ class FaceServiceTest {
         val actual = faceService.findFaces(MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.size()).isEqualTo(faces.size());
 
         verify(faceCacheProvider).getOrLoad(MODEL_KEY);
         verifyNoMoreInteractions(faceDao);
@@ -174,7 +185,7 @@ class FaceServiceTest {
         val actual = faceService.findAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(expected);
+        assertThat(actual).isEqualTo(new FaceResponseDto(expected.getName(), expected.getImageId()));
 
         verify(facesApiClient).findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null);
         verify(faceDao).addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY);
