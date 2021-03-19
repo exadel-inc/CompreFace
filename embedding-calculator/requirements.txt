@@ -44,7 +44,7 @@ numpy==1.16.4
 opencv-python==4.1.0.25
 packaging==19.2
 pandas==0.24.2
-Pillow==6.2.2
+Pillow==8.1.1
 pluggy==0.13.0
 protobuf==3.8.0
 py==1.8.0
