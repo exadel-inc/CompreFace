@@ -57,5 +57,6 @@ services:
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}
     container_name: "compreface-core"
+    runtime: nvidia
     environment:
       - ML_PORT=3000
