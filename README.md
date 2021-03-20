@@ -49,6 +49,7 @@ recognition, face verification, face detection, landmark detection, age, and gen
     * [How to Use CompreFace](/docs/How-to-Use-CompreFace.md)
     * [Face Services and Plugins](/docs/Face-services-and-plugins.md)
     * [Rest API Description](/docs/Rest-API-description.md)
+    * [Face Recognition Similarity Threshold](/docs/Face-Recognition-Similarity-Threshold.md)
     * [Configuration](/docs/Configuration.md)
     * [Architecture and Scalability](/docs/Architecture-and-scalability.md)
     * [Custom Builds](/docs/Custom-builds.md)
