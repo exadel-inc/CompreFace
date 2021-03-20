@@ -6,7 +6,7 @@ IMAGE := ${DOCKER_REGISTRY}compreface-core
 CUDA_IMAGE = $(IMAGE):base-cuda100-py37
 VERSION = 0.5
 
-MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v2 \
+MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1 \
                           --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface_mobilefacenet \
                           --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
 
@@ -41,11 +41,11 @@ build-cuda:
 	docker build . --file gpu.Dockerfile --tag $(CUDA_IMAGE)
 
 build-images: build-cuda
-	docker build . -t $(IMAGE):$(VERSION)-facenet --build-arg SKIP_TESTS=true
-	docker build . -t $(IMAGE):$(VERSION)-mobilenet $(MOBILENET_BUILD_ARGS) --build-arg SKIP_TESTS=true
-	docker build . -t $(IMAGE):$(VERSION)-mobilenet-gpu $(MOBILENET_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE) --build-arg SKIP_TESTS=true
-	docker build . -t $(IMAGE):$(VERSION)-arcface-r100 $(ARCFACE_r100_BUILD_ARGS) --build-arg SKIP_TESTS=true
-	docker build . -t $(IMAGE):$(VERSION)-arcface-r100-gpu $(ARCFACE_r100_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE) --build-arg SKIP_TESTS=true
+	docker build . -t $(IMAGE):$(VERSION)-facenet
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet $(MOBILENET_BUILD_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet-gpu $(MOBILENET_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE)
+	docker build . -t $(IMAGE):$(VERSION)-arcface-r100 $(ARCFACE_r100_BUILD_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-arcface-r100-gpu $(ARCFACE_r100_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE)
 
 up:
 	docker run -p3000:3000 embedding-calculator
