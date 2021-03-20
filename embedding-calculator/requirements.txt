@@ -23,7 +23,7 @@ ImageHash==4.0
 imageio==2.8.0
 importlib-metadata==0.23
 itsdangerous==1.1.0
-Jinja2==2.10.1
+Jinja2==2.11.3
 joblib==0.13.2
 jsonschema==3.0.1
 Keras-Applications==1.0.8
