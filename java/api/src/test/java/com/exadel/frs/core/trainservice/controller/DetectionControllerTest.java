@@ -53,6 +53,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 @AutoConfigureMockMvc
 class DetectionControllerTest extends EmbeddedPostgreSQLTest {
 
+    public static final String DETECT = "/detection/detect";
     @Autowired
     private MockMvc mockMvc;
 
@@ -73,7 +74,7 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
 
         // when
         mockMvc.perform(
-                multipart(API_V1 + "/detection")
+                multipart(API_V1 + DETECT)
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
@@ -99,7 +100,7 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
 
         // when
         mockMvc.perform(
-                multipart(API_V1 + "/detection")
+                multipart(API_V1 + DETECT)
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
@@ -119,7 +120,7 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
 
         // when
         mockMvc.perform(
-                multipart(API_V1 + "/detection")
+                multipart(API_V1 + DETECT)
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )

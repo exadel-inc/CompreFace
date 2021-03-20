@@ -18,7 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
 import { ITableConfig } from 'src/app/features/table/table.component';
@@ -88,12 +88,11 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(name => {
-        if (name) {
-          this.modelListFacade.renameModel(model.id, name);
-        }
-      });
+      .pipe(
+        first(),
+        filter(name => name)
+      )
+      .subscribe(name => this.modelListFacade.renameModel(model.id, name));
   }
 
   clone(model: Model) {
@@ -104,12 +103,11 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(name => {
-        if (name) {
-          this.modelListFacade.cloneModel(model.id, name);
-        }
-      });
+      .pipe(
+        first(),
+        filter(name => name)
+      )
+      .subscribe(name => this.modelListFacade.cloneModel(model.id, name));
   }
 
   delete(model: Model) {
@@ -123,12 +121,11 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(result => {
-        if (result) {
-          this.modelListFacade.deleteModel(model.id);
-        }
-      });
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.modelListFacade.deleteModel(model.id));
   }
 
   test(model: Model) {
@@ -151,12 +148,11 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(data => {
-        if (data && data.entityName && data.type) {
-          this.modelListFacade.createModel(data.entityName, data.type);
-        }
-      });
+      .pipe(
+        first(),
+        filter(data => data && data.entityName && data.type)
+      )
+      .subscribe(data => this.modelListFacade.createModel(data.entityName, data.type));
   }
 
   ngOnDestroy(): void {
