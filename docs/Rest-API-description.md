@@ -70,7 +70,7 @@ curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&
 | det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 | prediction_count   | param       | integer | optional | maximum number of subject predictions per face. It returns the most similar subjects. Default value: 1    |
 | face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | Special parameter to show execution_time and plugin_version fields. Empty or false value - both fields eliminated, true - both fields included |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
 
 Response body on success:
 ```json
@@ -237,7 +237,7 @@ limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins
 | file               | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
 | det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 | face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | Special parameter to show execution_time and plugin_version fields. Empty or false value - both fields eliminated, true - both fields included |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
 
 Response body on success:
 ```json
@@ -307,7 +307,7 @@ curl  -X POST "http://localhost:8000/api/v1/detection/detect?limit=<limit>&det_p
 | limit              | param       | integer | optional | maximum number of faces on the image to be recognized. It recognizes the biggest faces first. Value of 0 represents no limit. Default value: 0 |
 | det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0 |
 | face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | Special parameter to show execution_time and plugin_version fields. Empty or false value - both fields eliminated, true - both fields included |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
 
 Response body on success:
 ```json
@@ -376,7 +376,7 @@ curl  -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&pr
 | det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
 | prediction_count   | param       | integer | optional | maximum number of subject predictions per face. It returns the most similar subjects. Default value: 1    |
 | face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | Special parameter to show execution_time and plugin_version fields. Empty or false value - both fields eliminated, true - both fields included |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
 
 Response body on success:
 ```json
