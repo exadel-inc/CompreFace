@@ -19,14 +19,12 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
-import { Routes } from '../../data/enums/routers-url.enum';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   private authService: AuthService;
 
-  constructor(private injector: Injector, private router: Router) {
+  constructor(private injector: Injector) {
     this.authService = this.injector.get(AuthService);
   }
 
@@ -34,15 +32,8 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError(
         (response: any): Observable<HttpEvent<any>> => {
-          if (response instanceof HttpErrorResponse) {
-            switch (response.status) {
-              case 401:
-                this.authService.logOut();
-                break;
-              case 400:
-                this.router.navigateByUrl(Routes.Home);
-                break;
-            }
+          if (response instanceof HttpErrorResponse && response.status === 401) {
+            this.authService.logOut();
           }
           return throwError(response);
         }

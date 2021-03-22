@@ -19,6 +19,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
+import { ApplicationPageGuard } from './core/guards/applicationPage.guard';
 
 const routes: Routes = [
   {
@@ -29,6 +30,7 @@ const routes: Routes = [
   },
   {
     path: 'application',
+    canActivate: [ApplicationPageGuard],
     component: MainLayoutComponent,
     resolve: [UserInfoResolver],
     children: [{ path: '', loadChildren: () => import('./pages/application/application.module').then(m => m.ApplicationModule) }],

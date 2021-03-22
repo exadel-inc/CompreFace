@@ -68,13 +68,7 @@ export class AuthEffects {
   logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
     withLatestFrom(this.store.select(selectNavigationId)),
-    tap(([, navigationId]) => {
-      if (navigationId > 1) {
-        this.location.back();
-      } else {
-        this.router.navigateByUrl(Routes.Home);
-      }
-    })
+    tap(() => this.router.navigateByUrl(Routes.Home))
   );
 
   @Effect({ dispatch: false })
