@@ -19,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -39,31 +40,30 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
 
     @Override
     public VerifyFacesResponse processImage(ProcessImageParams processImageParams) {
-        Map<String, MultipartFile> fileMap = (Map<String, MultipartFile>) processImageParams.getFile();
-        List<FindFacesResponse> findFacesResults = Stream.of(fileMap.get("processFile"), fileMap.get("checkFile"))
-                .parallel()
-                .map(file -> getFaceResult(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins()))
-                .collect(Collectors.toList());
-
+        List<FindFacesResponse> findFacesResults = getFaceResult(processImageParams);
         VerifyFacesResponse result = getResult(findFacesResults.get(0), findFacesResults.get(1));
-
         return result.prepareResponse(processImageParams);
     }
 
-    private FindFacesResponse getFaceResult(MultipartFile file, int limit, Double detProbThreshold, String facePlugins) {
-        imageValidator.validate(file);
-        if (detProbThreshold == null && StringUtils.isEmpty(facePlugins)) {
-            facePlugins = null;
+    private List<FindFacesResponse> getFaceResult(ProcessImageParams processImageParams) {
+        Map<String, MultipartFile> fileMap = (Map<String, MultipartFile>) processImageParams.getFile();
+        MultipartFile processFile = fileMap.get("processFile");
+        MultipartFile checkFile = fileMap.get("checkFile");
+        imageValidator.validate(processFile);
+        imageValidator.validate(checkFile);
+        if (processImageParams.getDetProbThreshold() == null && StringUtils.isEmpty(processImageParams.getFacePlugins())) {
+            processImageParams.setFacePlugins(null);
         }
-        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, facePlugins);
 
-        if (findFacesResponse == null || CollectionUtils.isEmpty(findFacesResponse.getResult())) {
+        FindFacesResponse processFileResponse = client.findFacesWithCalculator(processFile, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        if (processFileResponse == null || CollectionUtils.isEmpty(processFileResponse.getResult())) {
             throw new NoFacesFoundException();
-        } else if (findFacesResponse.getResult().size() > 1) {
+        } else if (processFileResponse.getResult().size() > 1) {
             throw new TooManyFacesException();
         }
 
-        return findFacesResponse;
+        FindFacesResponse checkFileResponse = client.findFacesWithCalculator(checkFile, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        return List.of(processFileResponse,checkFileResponse);
     }
 
     private VerifyFacesResponse getResult(FindFacesResponse processFileResult, FindFacesResponse checkFileResult) {

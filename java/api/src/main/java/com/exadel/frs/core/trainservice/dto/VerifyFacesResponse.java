@@ -19,18 +19,20 @@ package com.exadel.frs.core.trainservice.dto;
 import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.*;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-@Value
+@Getter
+@Setter
+@ToString
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
 public class VerifyFacesResponse extends FaceProcessResponse {
 
     @JsonProperty("source_image_face")
@@ -51,6 +53,7 @@ public class VerifyFacesResponse extends FaceProcessResponse {
         if (!processImageParams.getStatus()) {
             this.getProcessFileData().setExecutionTime(null);
             this.faceMatches.forEach(fm -> fm.setExecutionTime(null));
+            this.setPluginsVersions(null);
         }
 
         return this;
