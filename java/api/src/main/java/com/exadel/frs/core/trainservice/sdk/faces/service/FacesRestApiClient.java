@@ -59,7 +59,7 @@ public class FacesRestApiClient implements FacesApiClient {
     }
 
     @Override
-    @Cacheable("status")
+    @Cacheable(value = "status", unless = "#result==null")
     public FacesStatusResponse getStatus() {
         try {
             return feignClient.getStatus();
