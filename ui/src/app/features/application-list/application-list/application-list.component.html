@@ -14,16 +14,29 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <div class="application-list">
-  <h3 *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{ 'applications.title' | translate }}</h3>
-  <ng-template #firstStepInfo
-    ><h3>{{ 'applications.first_steps_title' | translate }}</h3></ng-template
-  >
+  <div class="table-header-container">
+    <h3 *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{ 'applications.title' | translate }}</h3>
+    <form class="search-input">
+      <input
+        matInput
+        type="text"
+        class="search-input"
+        [(ngModel)]="search"
+        [ngModelOptions]="{ standalone: true }"
+        placeholder="{{ 'applications.search.title' | translate }}"
+      />
+      <mat-icon class="material-icons notranslate"> search </mat-icon>
+    </form>
+    <ng-template #firstStepInfo
+      ><h3>{{ 'applications.first_steps_title' | translate }}</h3>
+    </ng-template>
+  </div>
   <app-spinner *ngIf="isLoading"></app-spinner>
   <app-table
     *ngIf="tableConfig.data.length > 0"
     class="app-table"
     [isLoading]="isLoading"
-    [tableConfig]="tableConfig"
+    [tableConfig]="tableConfig | applicationTableFilter: search"
     (changeRow)="selectApp.emit($event)"
   >
   </app-table>

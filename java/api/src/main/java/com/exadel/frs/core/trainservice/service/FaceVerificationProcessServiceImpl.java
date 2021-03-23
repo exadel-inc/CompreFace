@@ -45,7 +45,7 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
 
         VerifyFacesResponse result = getResult(findFacesResults.get(0), findFacesResults.get(1));
 
-        return result.prepareResponse(result, processImageParams);
+        return result.prepareResponse(processImageParams);
     }
 
     private FindFacesResult getFaceResult(MultipartFile file, int limit, Double detProbThreshold, String facePlugins) {

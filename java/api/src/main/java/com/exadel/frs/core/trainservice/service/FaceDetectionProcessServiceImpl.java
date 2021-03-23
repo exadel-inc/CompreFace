@@ -23,6 +23,6 @@ public class FaceDetectionProcessServiceImpl implements FaceProcessService {
         imageValidator.validate(file);
         FacesDetectionResponseDto facesDetectionResponseDto = mapper.toFacesDetectionResponseDto(
                 client.findFaces(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins()));
-        return facesDetectionResponseDto.prepareResponse(facesDetectionResponseDto, processImageParams);
+        return facesDetectionResponseDto.prepareResponse(processImageParams);
     }
 }

@@ -14,18 +14,21 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.dto;
+import { Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Value;
+@Pipe({
+  name: 'applicationTableFilter',
+})
+export class ApplicationTableFilterPipe implements PipeTransform {
+  transform(value, search: string) {
+    if (!search.trim()) {
+      return value;
+    }
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-
-@Value
-@JsonInclude(NON_NULL)
-public class FaceSimilarityDto {
-
-    String subject;
-
-    float similarity;
+    let result = Object.assign({}, value);
+    result.data = value.data.filter(row => row.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+    return result;
+  }
 }

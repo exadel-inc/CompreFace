@@ -21,4 +21,5 @@ public class Constants {
     public static final String X_FRS_API_KEY_HEADER = "x-api-key";
     public static final String API_V1 = "/api/v1";
     public static final String CALCULATOR_PLUGIN = "calculator";
+    public static final String RECOGNIZE = "/recognition/recognize";
 }

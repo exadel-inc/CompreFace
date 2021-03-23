@@ -7,6 +7,8 @@ services:
   compreface-postgres-db:
     image: postgres:11.5
     container_name: "compreface-postgres-db"
+    ports:
+      - "6432:5432"
     environment:
       - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
@@ -16,7 +18,14 @@ services:
 
   compreface-admin:
     image: ${registry}compreface-admin:${ADMIN_VERSION}
+    build:
+      context: ../java
+      dockerfile: ../dev/Dockerfile
+      target: frs_crud
     container_name: "compreface-admin"
+    ports:
+      - "8081:8080"
+      - "5006:5005"
     environment:
       - POSTGRES_USER=${postgres_username}
       - POSTGRES_PASSWORD=${postgres_password}
@@ -34,7 +43,16 @@ services:
 
   compreface-api:
     image: ${registry}compreface-api:${API_VERSION}
+    build:
+      context: ../java
+      dockerfile: ../dev/Dockerfile
+      target: frs_core
+      args:
+        - ND4J_CLASSIFIER=${ND4J_CLASSIFIER}
     container_name: "compreface-api"
+    ports:
+      - "8082:8080"
+      - "5005:5005"
     depends_on:
       - compreface-postgres-db
     environment:
@@ -47,6 +65,9 @@ services:
 
   compreface-fe:
     image: ${registry}compreface-fe:${FE_VERSION}
+    build:
+      context: ../ui
+      dockerfile: docker-prod/Dockerfile
     container_name: "compreface-ui"
     ports:
       - "8000:80"
@@ -57,5 +78,15 @@ services:
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}
     container_name: "compreface-core"
+    ports:
+      - "3300:3000"
+    runtime: nvidia
+    build:
+      context: ../embedding-calculator
+      args:
+        - FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1
+        - CALCULATION_PLUGIN=insightface.Calculator@arcface_r100_v1
+        - EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
+        - GPU_IDX=0
     environment:
       - ML_PORT=3000

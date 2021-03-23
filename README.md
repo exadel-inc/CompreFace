@@ -49,6 +49,7 @@ recognition, face verification, face detection, landmark detection, age, and gen
     * [How to Use CompreFace](/docs/How-to-Use-CompreFace.md)
     * [Face Services and Plugins](/docs/Face-services-and-plugins.md)
     * [Rest API Description](/docs/Rest-API-description.md)
+    * [Face Recognition Similarity Threshold](/docs/Face-Recognition-Similarity-Threshold.md)
     * [Configuration](/docs/Configuration.md)
     * [Architecture and Scalability](/docs/Architecture-and-scalability.md)
     * [Custom Builds](/docs/Custom-builds.md)
@@ -113,9 +114,9 @@ gender recognition
 7. Run command: `docker-compose up -d`
 8. Open http://localhost:8000/login
 
-### To get started for Developers: 
+### Getting started for devs
 
-More documentation is available [here](/dev/README.md)
+Follow this link: https://github.com/exadel-inc/CompreFace/tree/develop/dev
 
 # Documentation
 
@@ -123,7 +124,8 @@ More documentation is available [here](/docs)
 
 # Contributing
 
-We want to improve our open-source face recognition solution, so your contributions are welcome and greatly appreciated. After creating your first contributing pull request, you will receive a request to sign our Contributor License Agreement by commenting your pull request with a special message.
+We want to improve our open-source face recognition solution, so your contributions are welcome and greatly appreciated. 
+After creating your first contributing pull request, you will receive a request to sign our Contributor License Agreement by commenting your pull request with a special message.
 
 ### Formatting standards
 

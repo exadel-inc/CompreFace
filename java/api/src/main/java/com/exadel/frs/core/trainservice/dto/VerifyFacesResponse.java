@@ -33,19 +33,18 @@ public class VerifyFacesResponse extends FaceProcessResponse {
     float similarity;
 
     @Override
-    public VerifyFacesResponse prepareResponse(FaceProcessResponse response, ProcessImageParams processImageParams) {
-        VerifyFacesResponse result = (VerifyFacesResponse) response;
+    public VerifyFacesResponse prepareResponse(ProcessImageParams processImageParams) {
         String facePlugins = processImageParams.getFacePlugins();
         if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
-            result.getProcessFileData().setEmbedding(null);
-            result.getCheckFileData().setEmbedding(null);
+            this.getProcessFileData().setEmbedding(null);
+            this.getCheckFileData().setEmbedding(null);
         }
 
         if (!processImageParams.getStatus()) {
-            result.getProcessFileData().setExecutionTime(null);
-            result.getCheckFileData().setExecutionTime(null);
+            this.getProcessFileData().setExecutionTime(null);
+            this.getCheckFileData().setExecutionTime(null);
         }
 
-        return result;
+        return this;
     }
 }
