@@ -43,7 +43,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
         MultipartFile file = (MultipartFile) processImageParams.getFile();
         imageValidator.validate(file);
-        client.getStatus();
         val findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         val facesRecognitionDto = mapper.toFacesRecognitionResponseDto(findFacesResponse);
 

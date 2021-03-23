@@ -54,7 +54,6 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
             facePlugins = null;
         }
 
-        client.getStatus();
         FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, limit, detProbThreshold, facePlugins);
 
         if (findFacesResponse == null || CollectionUtils.isEmpty(findFacesResponse.getResult())) {
