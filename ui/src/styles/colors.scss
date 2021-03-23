@@ -14,13 +14,14 @@
  * permissions and limitations under the License.
  */
 
-$red: #f24747;
-$green: #6cd465;
+$red: #FF6B6B; // icons, accent labels, accent text labels, accent borders, accent notification bar
+$green: #27C224; // accent buttons
 $white: #fff;
-$black: #212121;
-$pale-gray: #eee;
-$primary: #035eb8;
-$primary-light: #5688ea;
+$black: #222222; // titles,
+$pale-gray: rgba(34, 34, 34, 0.45); // plain text labels, plain texts, plain form borders
+$primary: #0082CA; // general buttons, accent text labels
+$primary-light: #0082CA, 2%; // accent borders,
+$light-blue: #40BFEF; //information tooltips
 $basic: #fff;
 $hovered: #fafafa;
 $accent: #328afb;
@@ -29,7 +30,10 @@ $secondaryText: #757575;
 $disabled: #bdbdbd;
 $normal-gray: #999999;
 $dark-gray: #bdbdbd;
-$super-light-gray: #eeeeee;
-$super-dark-gray: #314354;
+$super-light-gray: #E5E5E5; // background
+$light-gray: rgba(34, 34, 34, 0.45);
 $blue-gray: #647687;
-$orange: #ffa500;
+$super-dark-gray: #222222, 80%; // sub titles, icons
+$orange: #F98D10, 100%; // labels
+$purple: #8F38D3, 100%; // labels
+$dark-blue: #192AC3, 100%; // labels
