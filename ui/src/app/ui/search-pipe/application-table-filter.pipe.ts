@@ -13,13 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { NgModule } from '@angular/core';
 
-import { UserTableFilterPipe } from './user-table-filter.pipe';
-import { ModelTableFilterPipe } from './model-table-filter.pipe';
-import { ApplicationTableFilterPipe } from './application-table-filter.pipe';
-@NgModule({
-  declarations: [UserTableFilterPipe, ModelTableFilterPipe, ApplicationTableFilterPipe],
-  exports: [UserTableFilterPipe, ModelTableFilterPipe, ApplicationTableFilterPipe],
+import { Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+@Pipe({
+  name: 'applicationTableFilter',
 })
-export class TablePipeModule {}
+export class ApplicationTableFilterPipe implements PipeTransform {
+  transform(value, search: string) {
+    if (!search.trim()) {
+      return value;
+    }
+
+    let result = Object.assign({}, value);
+    result.data = value.data.filter(row => row.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+    return result;
+  }
+}

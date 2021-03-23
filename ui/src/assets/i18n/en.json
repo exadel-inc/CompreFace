@@ -78,6 +78,9 @@
         "rename": "RENAME",
         "name": "Name"
       }
+    },
+    "search": {
+      "title": "Search Application"
     }
   },
   "models": {

@@ -29,4 +29,17 @@
       padding: 25px 20px 0 0;
     }
   }
+
+  .table-header-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding-right: 16px;
+    align-items: center;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
 }
