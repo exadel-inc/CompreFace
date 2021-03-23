@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package com.exadel.frs.commonservice.dto;
+package com.exadel.frs.core.trainservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -24,14 +24,10 @@ import lombok.NoArgsConstructor;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Data
-@Builder
+@Builder(builderMethodName = "FaceMatchBuilder")
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
-public class PluginsVersionsDto {
-
-    private String age;
-    private String gender;
-    private String detector;
-    private String calculator;
+public class FaceMatch extends VerifyFacesResultDto {
+    float similarity;
 }

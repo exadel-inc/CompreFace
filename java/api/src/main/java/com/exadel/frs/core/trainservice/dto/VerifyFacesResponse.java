@@ -16,33 +16,44 @@
 
 package com.exadel.frs.core.trainservice.dto;
 
+import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.EqualsAndHashCode;
-import lombok.Value;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-@Value
+@Getter
+@Setter
+@ToString
 @EqualsAndHashCode(callSuper = true)
 @JsonInclude(NON_NULL)
+@NoArgsConstructor
+@AllArgsConstructor
 public class VerifyFacesResponse extends FaceProcessResponse {
 
+    @JsonProperty("source_image_face")
     VerifyFacesResultDto processFileData;
-    VerifyFacesResultDto checkFileData;
-    float similarity;
+    @JsonProperty("face_matches")
+    List<FaceMatch> faceMatches;
+    @JsonProperty(value = "plugins_versions")
+    PluginsVersionsDto pluginsVersions;
 
     @Override
     public VerifyFacesResponse prepareResponse(ProcessImageParams processImageParams) {
         String facePlugins = processImageParams.getFacePlugins();
         if (StringUtils.isEmpty(facePlugins) || !facePlugins.contains(CALCULATOR)) {
             this.getProcessFileData().setEmbedding(null);
-            this.getCheckFileData().setEmbedding(null);
+            this.faceMatches.forEach(fm -> fm.setEmbedding(null));
         }
 
         if (!processImageParams.getStatus()) {
             this.getProcessFileData().setExecutionTime(null);
-            this.getCheckFileData().setExecutionTime(null);
+            this.faceMatches.forEach(fm -> fm.setExecutionTime(null));
+            this.setPluginsVersions(null);
         }
 
         return this;
