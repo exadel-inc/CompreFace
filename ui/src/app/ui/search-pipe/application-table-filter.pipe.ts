@@ -27,10 +27,8 @@ export class ApplicationTableFilterPipe implements PipeTransform {
       return value;
     }
 
-    let result =  Object.assign({}, value);
-        result.data = value.data.filter(row =>
-          (row.name.toLocaleLowerCase())    .includes(search.toLocaleLowerCase())
-        );
+    let result = Object.assign({}, value);
+    result.data = value.data.filter(row => row.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
     return result;
   }
 }

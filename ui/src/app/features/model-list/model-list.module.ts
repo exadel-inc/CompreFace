@@ -23,14 +23,24 @@ import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
 import { ModelTableModule } from '../model-table/model-table.module';
 import { ModelListFacade } from './model-list-facade';
 import { ModelListComponent } from './model-list.component';
-import {TablePipeModule} from '../../ui/search-pipe/table-filter.module';
-import {FormsModule} from '@angular/forms';
-import {MatInputModule} from '@angular/material/input';
+import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
+import { FormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [ModelListComponent],
   exports: [ModelListComponent],
   providers: [ModelListFacade],
-  imports: [CommonModule, SpinnerModule, MatButtonModule, MatIconModule, ModelTableModule, TranslateModule, TablePipeModule, FormsModule, MatInputModule],
+  imports: [
+    CommonModule,
+    SpinnerModule,
+    MatButtonModule,
+    MatIconModule,
+    ModelTableModule,
+    TranslateModule,
+    TablePipeModule,
+    FormsModule,
+    MatInputModule,
+  ],
 })
 export class ModelListModule {}
