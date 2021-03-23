@@ -18,6 +18,7 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.exception.FacesServiceException;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.google.common.primitives.Doubles;
 import lombok.RequiredArgsConstructor;
@@ -110,7 +111,7 @@ public class EuclideanDistanceClassifier implements Classifier {
     private INDArray calculateSimilarities(INDArray distance) {
         FacesStatusResponse status = facesApiClient.getStatus();
         if (status == null || status.getSimilarityCoefficients() == null || status.getSimilarityCoefficients().isEmpty()) {
-            return tanh(distance.rsubi(1.1).muli(2.5), false).addi(1).divi(2);
+            throw new FacesServiceException("No status information received");
         }
 
         List<Double> coefficients = status.getSimilarityCoefficients();

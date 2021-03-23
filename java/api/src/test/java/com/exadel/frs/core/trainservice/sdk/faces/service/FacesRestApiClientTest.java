@@ -15,7 +15,7 @@
  */
 package com.exadel.frs.core.trainservice.sdk.faces.service;
 
-import static com.exadel.frs.core.trainservice.sdk.faces.service.FacesRestApiClient.CALCULATOR_PLUGIN;
+import static com.exadel.frs.core.trainservice.system.global.Constants.CALCULATOR_PLUGIN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;

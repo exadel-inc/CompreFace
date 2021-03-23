@@ -21,7 +21,6 @@ import com.exadel.frs.commonservice.entity.Image;
 import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.core.trainservice.sdk.config.FeignClientFactory;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import feign.FeignException;
@@ -34,7 +33,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
-import static com.exadel.frs.core.trainservice.sdk.faces.service.FacesRestApiClient.CALCULATOR_PLUGIN;
+import static com.exadel.frs.core.trainservice.system.global.Constants.CALCULATOR_PLUGIN;
 
 @Component
 @RequiredArgsConstructor
@@ -45,7 +44,6 @@ public class MigrationComponent {
     private final MigrationStatusStorage migrationStatusStorage;
     private final FacesRepository facesRepository;
     private final ImagesRepository imagesRepository;
-    private final FacesApiClient facesRestApiClient;
 
     @SneakyThrows
     @Async
@@ -67,7 +65,6 @@ public class MigrationComponent {
     private void processFaces(final String url) {
         val migrationServerFeignClient = feignClientFactory.getFeignClient(FacesFeignClient.class, url);
         val migrationCalculatorVersion = migrationServerFeignClient.getStatus().getCalculatorVersion();
-        facesRestApiClient.getStatus();
         log.info("Calculating embedding for faces");
         val all = facesRepository.findAll();
         for (val face : all) {

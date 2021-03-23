@@ -7,12 +7,10 @@ import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -31,7 +29,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
     private final FacesApiClient client;
     private final ImageExtensionValidator imageValidator;
     private final FacesMapper mapper;
-    private final CacheManager cacheManager;
 
     @Override
     public FacesRecognitionResponseDto processImage(ProcessImageParams processImageParams) {
