@@ -101,6 +101,12 @@ CompreFace:
 
 ## Getting Started with CompreFace
 
+#### Requirements
+
+1. Docker and Docker compose (or Docker Desktop)
+2. CompreFace could be run on most modern computers with [x86 processor](https://en.wikipedia.org/wiki/X86) and [AVX support](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions).
+   To check AVX support on Linux run `lscpu | grep avx` command
+
 #### To get started (Linux, MacOS):
 
 1. Install Docker and Docker Compose
