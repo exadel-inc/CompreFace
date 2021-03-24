@@ -27,6 +27,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.SOURCE_IMAGE;
+import static com.exadel.frs.core.trainservice.system.global.Constants.TARGET_IMAGE;
 import static java.math.RoundingMode.HALF_UP;
 
 @Service("verificationService")
@@ -40,30 +42,30 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
 
     @Override
     public VerifyFacesResponse processImage(ProcessImageParams processImageParams) {
-        List<FindFacesResponse> findFacesResults = getFaceResult(processImageParams);
-        VerifyFacesResponse result = getResult(findFacesResults.get(0), findFacesResults.get(1));
+        List<FindFacesResponse> facesResults = getFaceResult(processImageParams);
+        VerifyFacesResponse result = getResult(facesResults.get(0), facesResults.get(1));
         return result.prepareResponse(processImageParams);
     }
 
     private List<FindFacesResponse> getFaceResult(ProcessImageParams processImageParams) {
         Map<String, MultipartFile> fileMap = (Map<String, MultipartFile>) processImageParams.getFile();
-        MultipartFile processFile = fileMap.get("processFile");
-        MultipartFile checkFile = fileMap.get("checkFile");
-        imageValidator.validate(processFile);
-        imageValidator.validate(checkFile);
+        MultipartFile sourceImage = fileMap.get(SOURCE_IMAGE);
+        MultipartFile targetImage = fileMap.get(TARGET_IMAGE);
+        imageValidator.validate(sourceImage);
+        imageValidator.validate(targetImage);
         if (processImageParams.getDetProbThreshold() == null && StringUtils.isEmpty(processImageParams.getFacePlugins())) {
             processImageParams.setFacePlugins(null);
         }
 
-        FindFacesResponse processFileResponse = client.findFacesWithCalculator(processFile, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
-        if (processFileResponse == null || CollectionUtils.isEmpty(processFileResponse.getResult())) {
+        FindFacesResponse sourceImageResponse = client.findFacesWithCalculator(sourceImage, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        if (sourceImageResponse == null || CollectionUtils.isEmpty(sourceImageResponse.getResult())) {
             throw new NoFacesFoundException();
-        } else if (processFileResponse.getResult().size() > 1) {
+        } else if (sourceImageResponse.getResult().size() > 1) {
             throw new TooManyFacesException();
         }
 
-        FindFacesResponse checkFileResponse = client.findFacesWithCalculator(checkFile, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
-        return List.of(processFileResponse,checkFileResponse);
+        FindFacesResponse targetImageResponse = client.findFacesWithCalculator(targetImage, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        return List.of(sourceImageResponse, targetImageResponse);
     }
 
     private VerifyFacesResponse getResult(FindFacesResponse processFileResult, FindFacesResponse checkFileResult) {
