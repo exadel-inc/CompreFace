@@ -49,7 +49,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
 
     # detection settings
-    det_prob_threshold = 0.65
+    det_prob_threshold = 0.85
     det_threshold_a = 0.9436513301
     det_threshold_b = 0.7059968943
     det_threshold_c = 0.5506904359
