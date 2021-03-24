@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.exadel.frs.core.trainservice.service.FaceVerificationProcessServiceImpl.RESULT;
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 
 @RestController
 @RequestMapping(API_V1)
@@ -32,9 +31,9 @@ public class VerifyController {
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = "File to be verified", required = true)
-            @RequestParam(name = "source_image") final MultipartFile sourceImage,
+            @RequestParam(name = SOURCE_IMAGE) final MultipartFile sourceImage,
             @ApiParam(value = "Reference file to check the processed file", required = true)
-            @RequestParam(name = "target_image") final MultipartFile targetImage,
+            @RequestParam(name = TARGET_IMAGE) final MultipartFile targetImage,
             @ApiParam(value = "Maximum number of faces to be verified")
             @RequestParam(defaultValue = "0", required = false)
             @Min(value = 0, message = "Limit should be equal or greater than 0") final Integer limit,
@@ -45,7 +44,7 @@ public class VerifyController {
             @ApiParam(value = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated, true - both fields included")
             @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
     ) {
-        Map<String, MultipartFile> fileMap = Map.of("processFile", sourceImage, "checkFile", targetImage);
+        Map<String, MultipartFile> fileMap = Map.of(SOURCE_IMAGE, sourceImage, TARGET_IMAGE, targetImage);
         ProcessImageParams processImageParams = ProcessImageParams
                 .builder()
                 .apiKey(apiKey)
