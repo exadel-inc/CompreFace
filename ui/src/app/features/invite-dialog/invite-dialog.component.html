@@ -33,6 +33,6 @@
   </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onCancelClick()">cancel</button>
-  <button mat-button color="primary" [disabled]="!form.valid" (click)="onInviteClick()">{{ actionType }}</button>
+  <button mat-flat-button (click)="onCancelClick()">cancel</button>
+  <button mat-flat-button color="primary" [disabled]="!form.valid" (click)="onInviteClick()">{{ actionType }}</button>
 </div>
