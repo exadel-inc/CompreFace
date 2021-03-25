@@ -19,10 +19,7 @@ package com.exadel.frs.core.trainservice.controller;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
-import com.exadel.frs.core.trainservice.service.FaceProcessService;
-import com.exadel.frs.core.trainservice.service.FaceRecognizeProcessServiceImpl;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
@@ -108,7 +105,7 @@ public class FaceController {
             @ApiParam(value = "Api key of application and model", required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = "A picture with one face (accepted formats: jpeg, png).", required = true)
-            @RequestParam final MultipartFile file,
+            @RequestParam(value = "file") final MultipartFile file,
             @ApiParam(value = "Maximum number of faces to be verified")
             @RequestParam(defaultValue = "0", required = false)
             @Min(value = 0, message = "Limit should be equal or greater than 0") final Integer limit,

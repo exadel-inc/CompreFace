@@ -31,14 +31,15 @@ import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class FaceControllerTest extends EmbeddedPostgreSQLTest {
 
+    public static final String INCORRECT_PART_NAME = "File";
     @Autowired
     private MockMvc mockMvc;
 
@@ -273,5 +275,20 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
         verify(imageValidator).validate(any());
         verify(client).findFacesWithCalculator(any(), any(), any(), anyString());
         verifyNoMoreInteractions(imageValidator, client, predictor);
+    }
+
+    @Test
+    void verifyFacesWithIncorrectPartName() throws Exception {
+        val faceA = makeFace("A", API_KEY);
+
+        val mockFile = new MockMultipartFile("file", "test data".getBytes());
+
+        MvcResult mvcResult = mockMvc.perform(
+                multipart(API_V1 + "/recognition/faces/" + faceA.getId() + "/verify")
+                        .file(INCORRECT_PART_NAME, mockFile.getBytes())
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        ).andExpect(status().isBadRequest()).andReturn();
+
+        Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("Required part "));
     }
 }
