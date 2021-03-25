@@ -61,7 +61,7 @@ python-dateutil==2.8.0
 python-dotenv==0.10.3
 pytz==2019.1
 PyWavelets==1.0.3
-PyYAML==5.1
+PyYAML==5.4
 requests==2.22.0
 scikit-image==0.15.0
 scikit-learn==0.21.2
