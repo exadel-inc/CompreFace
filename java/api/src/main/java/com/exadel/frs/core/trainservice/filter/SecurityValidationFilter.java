@@ -99,6 +99,7 @@ public class SecurityValidationFilter implements Filter {
                     if (key.length() < 36) {
                         throw new IllegalArgumentException("UUID length is incorrect");
                     }
+
                     UUID.fromString(key);
                 } catch (Exception e) {
                     val objectResponseEntity = handler.handleDefinedExceptions(new BadFormatModelKeyException());
@@ -122,6 +123,7 @@ public class SecurityValidationFilter implements Filter {
                 return;
             }
         }
+
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

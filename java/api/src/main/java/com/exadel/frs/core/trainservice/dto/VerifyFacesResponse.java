@@ -39,7 +39,7 @@ public class VerifyFacesResponse extends FaceProcessResponse {
     VerifyFacesResultDto processFileData;
     @JsonProperty("face_matches")
     List<FaceMatch> faceMatches;
-    @JsonProperty(value = "plugins_versions")
+    @JsonProperty("plugins_versions")
     PluginsVersionsDto pluginsVersions;
 
     @Override
