@@ -69,9 +69,12 @@ export class AuthService {
     return this.http.post(url, body, { observe: 'response' });
   }
 
-  logOut() {
+  logOut(): void {
+    const url: string = this.router.url;
+    const queryParam = url === Routes.Login ? {} : { queryParams: { redirect: url } };
+
     this.clearUserToken();
-    this.router.navigateByUrl(Routes.Login);
+    this.router.navigate([Routes.Login], { ...queryParam });
   }
 
   changePassword(oldPassword: string, newPassword: string): Observable<any> {
