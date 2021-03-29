@@ -47,7 +47,7 @@ limitations under the License.
     </p>
   </div>
   <div class="card-single-action-container">
-    <button *ngIf="userRole !== roleEnum.User" mat-button color="primary" (click)="createApp.emit()">
+    <button *ngIf="userRole !== roleEnum.User" mat-flat-button color="primary" (click)="createApp.emit()">
       {{ 'common.capital.create' | translate }}
     </button>
   </div>

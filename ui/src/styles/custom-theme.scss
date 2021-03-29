@@ -1,0 +1,124 @@
+@import '~@angular/material/theming';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import 'colors.scss';
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+$typography: mat-typography-config(
+        $font-family: "Poppins, sans-serif",
+        $headline: mat-typography-level(28px, 35px, 600), // .mat-headline
+        $title: mat-typography-level(22px, 28px, 600), // .mat-title
+        $subheading-2: mat-typography-level(22px, 27px, 600),  // .mat-subheading-2
+        $subheading-1: mat-typography-level(18px, 22.5px, 600), // .mat-subheading-1
+        $body-1: mat-typography-level(16px, 22.5px, 400), // .mat-body-1
+        $body-2: mat-typography-level(14px, 20px, 400), // .mat-body-2
+        $caption: mat-typography-level(12px, 17px, 400), // .mat-caption
+        $button: mat-typography-level(16px, 19px, 500),
+);
+
+$primary_palette: (
+        Main: $primary,
+        Light: $primary,
+        Dark: #28002f,
+        contrast: (
+                Main: #f5f5f5,
+                Light: #000,
+                Dark: #fff
+        ));
+$accent_palette: (
+        Main: $green,
+        Light: $green,
+        Dark: #be6500,
+        contrast: (
+                Main: #fff,
+                Light: #fff,
+                Dark: #fff
+        ));
+$warn: (
+        Main: $red,
+        Light: $red,
+        Dark: #be6500,
+        contrast: (
+                Main: #fff,
+                Light: #fff,
+                Dark: #fff
+        ));
+
+$custom-theme-primary: mat-palette($primary_palette, Main, Light, Dark);
+$custom-theme-accent: mat-palette($accent_palette, Main, Light, Dark);
+$custom-theme-warn: mat-palette($warn, Main, Light, Dark);
+
+$custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
+
+@mixin cust-theme($theme) {
+  $config: mat-get-color-config($theme);
+  $primary_: map-get($theme, primary);
+  $accent_: map-get($theme, accent);
+  $warn_: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  body {
+    background-color: $super-light-gray;
+  }
+
+  a {
+    color: $primary;
+    text-decoration: none;
+  }
+
+  p{
+    color: $pale-gray;
+  }
+
+  .mat-toolbar {
+    background: $white;
+    color: mat-color($foreground, text);
+
+    &.mat-primary {
+      @include _mat-toolbar-color($primary_);
+    }
+
+    &.mat-accent {
+      @include _mat-toolbar-color($accent_);
+    }
+
+    &.mat-warn {
+      @include _mat-toolbar-color($warn_);
+    }
+
+    @include _mat-toolbar-form-field-overrides;
+  }
+
+  .mat-sidenav {
+    background-color: mat-color($background, app-bar);
+    color: mat-color($foreground, text);
+
+    &[color="primary"] {
+      @include _mat-toolbar-color($primary_);
+    }
+
+    &[color="accent"] {
+      @include _mat-toolbar-color($accent_);
+    }
+
+    &[color="warn"] {
+      @include _mat-toolbar-color($warn_);
+    }
+  }
+
+  .mat-headline, .mat-title, .mat-subheading-2, .mat-subheading-1{
+    color: $black;
+  }
+
+  .mat-body-1, .mat-body-2, .mat-caption {
+    color: $pale-gray;
+  }
+}
+
+@include angular-material-typography($typography);
+@include mat-core($typography);
+@include angular-material-theme($custom-theme);

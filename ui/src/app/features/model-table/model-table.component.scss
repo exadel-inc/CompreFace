@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
+@import 'colors.scss';
 caption {
   display: none;
 }
@@ -50,15 +50,15 @@ th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:
     }
 
     .recognition{
-      color: #192AC4;
+      color: $dark-blue;
     }
 
     .detection{
-      color: #F98D10;
+      color: $orange;
     }
 
     .verify{
-      color: #8F38D3;
+      color: $purple;
     }
   }
 
@@ -69,10 +69,6 @@ th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:
   }
 
   .copy-icon{
-    color: #0082CA;
+    color: $primary;
   }
-}
-// !!! DELETE ME AFTER REDIESIGN !!!
-button.special-test-button-color.mat-raised-button.mat-accent{
-  background-color: #27C224;
 }
