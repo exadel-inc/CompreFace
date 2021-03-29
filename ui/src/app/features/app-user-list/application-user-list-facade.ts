@@ -16,24 +16,24 @@
 
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { AppState } from 'src/app/store';
+import { deleteUserFromApplication, inviteAppUser, loadAppUserEntityAction, updateAppUserRole } from 'src/app/store/app-user/action';
 import {
-  deleteUserFromApplication,
-  inviteAppUserAction,
-  loadAppUserEntityAction,
-  updateAppUserRoleAction,
-} from 'src/app/store/app-user/actions';
-import { selectAppUserIsPending, selectAppUsers } from 'src/app/store/app-user/selectors';
+  selectAppUsers,
+  selectAvailableEmails,
+  selectAvailableRoles,
+  selectIsApplicationLoading,
+  selectUserRole,
+} from 'src/app/store/app-user/selectors';
 import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
-import { loadRolesEntityAction } from 'src/app/store/role/actions';
-import { selectAllRoles, selectIsPendingRoleStore } from 'src/app/store/role/selectors';
+import { loadRolesEntity } from 'src/app/store/role/action';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
-import { loadUsersEntityAction } from '../../store/user/action';
+import { AppUserService } from '../../core/app-user/app-user.service';
+import { loadUsersEntity } from '../../store/user/action';
 import { selectCurrentUserRole, selectUsers } from '../../store/user/selectors';
 import { Role } from 'src/app/data/enums/role.enum';
 
@@ -54,54 +54,13 @@ export class ApplicationUserListFacade implements IFacade {
 
   constructor(private store: Store<AppState>) {
     this.appUsers$ = this.store.select(selectAppUsers);
-    this.availableEmails$ = combineLatest([this.store.select(selectUsers), this.appUsers$]).pipe(
-      map(([users, appUsers]) =>
-        users.map(user => {
-          if (appUsers.every(appUser => appUser.id !== user.id)) {
-            return user.email;
-          }
-        })
-      )
-    );
-
+    this.availableEmails$ = this.store.select(selectAvailableEmails);
     this.userGlobalRole$ = this.store.select(selectCurrentUserRole);
     this.applicationRole$ = this.store.select(selectUserRollForSelectedApp);
-    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.userGlobalRole$]).pipe(
-      map(([applicationRole, globalRole]) => {
-        // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        if (globalRole !== Role.User) {
-          if (globalRole === Role.Owner) {
-            return globalRole;
-          }
-
-          if (globalRole === Role.Administrator) {
-            return applicationRole === Role.Owner ? applicationRole : globalRole;
-          }
-        }
-        return applicationRole === Role.Owner ? applicationRole : globalRole;
-      })
-    );
-
+    this.userRole$ = this.store.select(selectUserRole);
     this.currentUserId$ = this.store.select(selectUserId);
-    const allRoles$ = this.store.select(selectAllRoles);
-
-    this.availableRoles$ = combineLatest([allRoles$, this.userRole$, this.applicationRole$, this.userGlobalRole$]).pipe(
-      map(([allRoles, userRole, applicationRole, globalRole]) => {
-        if (globalRole === Role.Owner || applicationRole === Role.Owner) {
-          return allRoles;
-        } else if (globalRole === Role.Administrator) {
-          return allRoles;
-        } else {
-          const roleIndex = allRoles.indexOf(userRole);
-          return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
-        }
-      })
-    );
-
-    const usersLoading$ = this.store.select(selectAppUserIsPending);
-    const roleLoading$ = this.store.select(selectIsPendingRoleStore);
-
-    this.isLoading$ = combineLatest([usersLoading$, roleLoading$]).pipe(map(observResults => !(!observResults[0] && !observResults[1])));
+    this.availableRoles$ = this.store.select(selectAvailableRoles);
+    this.isLoading$ = this.store.select(selectIsApplicationLoading);
   }
 
   initSubscriptions(): void {
@@ -120,13 +79,13 @@ export class ApplicationUserListFacade implements IFacade {
         applicationId: this.selectedApplicationId,
       })
     );
-    this.store.dispatch(loadRolesEntityAction());
-    this.store.dispatch(loadUsersEntityAction());
+    this.store.dispatch(loadRolesEntity());
+    this.store.dispatch(loadUsersEntity());
   }
 
   updateUserRole(id: string, role: Role): void {
     this.store.dispatch(
-      updateAppUserRoleAction({
+      updateAppUserRole({
         applicationId: this.selectedApplicationId,
         user: {
           id,
@@ -138,7 +97,7 @@ export class ApplicationUserListFacade implements IFacade {
 
   inviteUser(email: string, role: Role): void {
     this.store.dispatch(
-      inviteAppUserAction({
+      inviteAppUser({
         applicationId: this.selectedApplicationId,
         userEmail: email,
         role,

@@ -13,8 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 import { createAction, props } from '@ngrx/store';
-export const verifyFaceSaveToStore = createAction('[Model] Face Verification Save', props<{ processFile?: any; checkFile?: any }>());
-export const verifyFaceSuccess = createAction('[Model] Face Verification Success', props<{ model: any; request: any }>());
-export const verifyFaceFail = createAction('[Model] Face Verification Fail', props<{ error: any }>());
-export const verifyFaceReset = createAction('[Model] Face Verification Reset');
+import { Role } from 'src/app/data/interfaces/role';
+
+export const setPendingRoleEntity = createAction('[Role/API] Set Pending', props<{ isPending: boolean }>());
+
+export const loadRolesEntity = createAction('[Role/API] Load Roles');
+
+export const fetchRolesEntity = createAction('[Role/API] Add Roles', props<{ role: Role }>());
+
+export const updateRolesEntity = createAction('[Role/API] Update Roles', props<{ id: number; role: Role }>());

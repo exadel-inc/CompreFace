@@ -37,7 +37,7 @@ import {
   updateModel,
   updateModelFail,
   updateModelSuccess,
-} from './actions';
+} from './action';
 
 @Injectable()
 export class ModelEffects {

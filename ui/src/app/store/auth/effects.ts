@@ -26,15 +26,15 @@ import { resetUserInfo } from '../userInfo/action';
 import {
   clearUserToken,
   logIn,
-  logInFailure,
+  logInFail,
   logInSuccess,
   logOut,
   signUp,
-  signUpFailure,
+  signUpFail,
   signUpSuccess,
   changePassword,
   changePasswordSuccess,
-  changePasswordFailure,
+  changePasswordFail,
 } from './action';
 
 @Injectable()
@@ -53,7 +53,7 @@ export class AuthEffects {
     switchMap(action =>
       this.authService.logIn(action.email, action.password).pipe(
         map(() => logInSuccess()),
-        catchError(error => observableOf(logInFailure(error)))
+        catchError(error => observableOf(logInFail(error)))
       )
     )
   );
@@ -69,7 +69,7 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(logInFailure, signUpFailure),
+    ofType(logInFail, signUpFail),
     tap(action => {
       if (action.error && action.error.error_description === 'Bad credentials') {
         this.snackBarService.openNotification({ messageText: 'auth.incorrect_credentials', type: 'error' });
@@ -96,7 +96,7 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName, payload.isAllowStatistics).pipe(
         map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
-        catchError(error => observableOf(signUpFailure(error)))
+        catchError(error => observableOf(signUpFail(error)))
       )
     )
   );
@@ -110,7 +110,7 @@ export class AuthEffects {
   );
 
   @Effect({ dispatch: false })
-  signUpFailure$: Observable<any> = this.actions.pipe(ofType(signUpFailure));
+  signUpFailure$: Observable<any> = this.actions.pipe(ofType(signUpFail));
 
   @Effect()
   logOut$: Observable<any> = this.actions.pipe(
@@ -134,7 +134,7 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.changePassword(payload.oldPassword, payload.newPassword).pipe(
         map(() => changePasswordSuccess()),
-        catchError(error => observableOf(changePasswordFailure(error)))
+        catchError(error => observableOf(changePasswordFail(error)))
       )
     )
   );
@@ -147,7 +147,7 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   changePasswordFailure$: Observable<any> = this.actions.pipe(
-    ofType(changePasswordFailure),
+    ofType(changePasswordFail),
     tap(action => this.snackBarService.openHttpError(action))
   );
 }

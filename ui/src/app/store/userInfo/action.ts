@@ -21,6 +21,7 @@ import { UserInfo } from '../../data/interfaces/user-info';
 
 export const updateUserInfo = createAction('[User] Login Success', props<{ isAuthenticated?: boolean }>());
 export const resetUserInfo = createAction('[User] Update Token');
+
 export const getUserInfo = createAction('[User] Get User Info');
 export const getUserInfoSuccess = createAction('[User] Get User Info Success', props<{ user: User }>());
 export const getUserInfoFail = createAction('[User] Get User Info Fail', props<{ error: any }>());
