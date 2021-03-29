@@ -23,7 +23,7 @@ import static java.lang.String.format;
 
 public class FacesServiceException extends BasicException {
 
-    private static final String MESSAGE = "Error during communication with Faces Service: %s";
+    private static final String MESSAGE = "Error during synchronization between servers: %s";
 
     public FacesServiceException(final String message) {
         super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));

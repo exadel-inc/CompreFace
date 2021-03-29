@@ -19,8 +19,7 @@ import { HttpClient } from '@angular/common/http';
 import { map, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { decode } from 'tiff';
-import TiffIfd from 'tiff/lib/tiffIfd';
+import { decode, decodeImage, IFD, toRGBA8 } from 'utif';
 
 @Injectable({
   providedIn: 'root',
@@ -47,12 +46,14 @@ export class LoadingPhotoService {
   tiffConvertor(url: string): Observable<ImageBitmap> {
     return this.http.get(url, { responseType: 'arraybuffer' }).pipe(
       map((array: ArrayBuffer) => {
-        const ifd: TiffIfd = decode(array)[0];
+        const ifd: IFD = decode(array)[0];
+
+        decodeImage(array, ifd);
+
+        const rgba: Uint8Array = toRGBA8(ifd);
         const imageData: ImageData = new ImageData(ifd.width, ifd.height);
 
-        for (let i = 0; i < ifd.data.length; i++) {
-          imageData.data[i] = ifd.data[i];
-        }
+        rgba.forEach((value: number, index: number) => (imageData.data[index] = value));
 
         return imageData as ImageData;
       }),

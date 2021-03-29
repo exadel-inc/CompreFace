@@ -14,13 +14,21 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.commonservice.dto;
+import { Pipe, PipeTransform } from '@angular/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import lombok.Value;
+@Pipe({
+  name: 'applicationTableFilter',
+})
+export class ApplicationTableFilterPipe implements PipeTransform {
+  transform(value, search: string) {
+    if (!search.trim()) {
+      return value;
+    }
 
-@Value
-public class FaceVerification {
-
-    FacesBox box;
-    float similarity;
+    let result = Object.assign({}, value);
+    result.data = value.data.filter(row => row.name.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
+    return result;
+  }
 }

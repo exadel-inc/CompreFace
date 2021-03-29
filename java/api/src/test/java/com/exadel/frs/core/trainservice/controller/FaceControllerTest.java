@@ -16,25 +16,8 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.ItemsBuilder.makeFace;
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import static java.util.stream.Collectors.toList;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
-import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
@@ -47,10 +30,8 @@ import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import lombok.val;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -58,11 +39,28 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeFace;
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static java.util.stream.Collectors.toList;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
 @AutoConfigureMockMvc
 public class FaceControllerTest extends EmbeddedPostgreSQLTest {
 
+    public static final String INCORRECT_PART_NAME = "File";
     @Autowired
     private MockMvc mockMvc;
 
@@ -90,12 +88,12 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
     void findAndSaveFaces() throws Exception {
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
 
-        doReturn(new FaceBO("name", "id"))
+        doReturn(new FaceResponseDto("id", "name"))
                 .when(faceService)
                 .findAndSaveFace(any(), any(), any(), any());
 
         mockMvc.perform(
-                multipart(API_V1 + "/faces")
+                multipart(API_V1 + "/recognition/faces")
                         .file(mockFile)
                         .param("subject", "name")
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
@@ -117,12 +115,12 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
         doReturn(faceCollection)
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
-        doReturn(new FaceBO("name", "id"))
+        doReturn(new FaceResponseDto("id", "name"))
                 .when(faceService)
                 .findAndSaveFace(any(), any(), any(), any());
 
         mockMvc.perform(
-                multipart(API_V1 + "/faces")
+                multipart(API_V1 + "/recognition/faces")
                         .file(mockFile)
                         .param("subject", "name")
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
@@ -150,27 +148,27 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .getOrLoad(API_KEY);
 
         val expectedFaces = faces.stream()
-                                 .map(face -> FaceResponseDto.builder()
-                                                             .image_id(face.getId())
-                                                             .subject(face.getFaceName())
-                                                             .build()
-                                 )
-                                 .collect(toList());
+                .map(face -> FaceResponseDto.builder()
+                        .image_id(face.getId())
+                        .subject(face.getFaceName())
+                        .build()
+                )
+                .collect(toList());
 
         val expectedContent = new ObjectMapper().writeValueAsString(Map.of("faces", expectedFaces));
 
-        mockMvc.perform(get(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
-               .andExpect(status().isOk())
-               .andExpect(content().json(expectedContent));
+        mockMvc.perform(get(API_V1 + "/recognition/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedContent));
     }
 
     @Test
     public void findAllShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
         val expectedContent = "{\"message\":\"" + String.format("Missing header: %s", X_FRS_API_KEY_HEADER) + "\",\"code\":20}";
 
-        mockMvc.perform(get(API_V1 + "/faces"))
-               .andExpect(status().isBadRequest())
-               .andExpect(content().string(expectedContent));
+        mockMvc.perform(get(API_V1 + "/recognition/faces"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(expectedContent));
     }
 
     @Test
@@ -185,7 +183,7 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
 
-        mockMvc.perform(delete(API_V1 + "/faces/" + face.getId())
+        mockMvc.perform(delete(API_V1 + "/recognition/faces/" + face.getId())
                 .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk());
     }
@@ -204,17 +202,17 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .getOrLoad(API_KEY);
 
         val expectedFaces = List.of(FaceResponseDto.builder()
-                                                   .image_id(face.getId())
-                                                   .subject(face.getFaceName())
-                                                   .build());
+                .image_id(face.getId())
+                .subject(face.getFaceName())
+                .build());
         val expectedContent = new ObjectMapper().writeValueAsString(expectedFaces);
 
-        mockMvc.perform(delete(API_V1 + "/faces")
+        mockMvc.perform(delete(API_V1 + "/recognition/faces")
                 .header(X_FRS_API_KEY_HEADER, API_KEY)
                 .param("subject", faceName)
         )
-               .andExpect(status().isOk())
-               .andExpect(content().json(expectedContent));
+                .andExpect(status().isOk())
+                .andExpect(content().json(expectedContent));
     }
 
     @Test
@@ -230,17 +228,17 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .when(faceCacheProvider)
                 .getOrLoad(API_KEY);
 
-        mockMvc.perform(delete(API_V1 + "/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
-               .andExpect(status().isOk());
+        mockMvc.perform(delete(API_V1 + "/recognition/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void deleteFacesByModelFacesShouldReturnBadRequestWhenApiKeyIsMissing() throws Exception {
         val expectedContent = "{\"message\":\"" + String.format("Missing header: %s", X_FRS_API_KEY_HEADER) + "\",\"code\":20}";
 
-        mockMvc.perform(delete(API_V1 + "/faces"))
-               .andExpect(status().isBadRequest())
-               .andExpect(content().string(expectedContent));
+        mockMvc.perform(delete(API_V1 + "/recognition/faces"))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string(expectedContent));
     }
 
     @Test
@@ -256,27 +254,41 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .getOrLoad(API_KEY);
 
         val findFacesResponse = FindFacesResponse.builder()
-                                                 .result(List.of(FindFacesResult.builder()
-                                                                                .embedding(new Double[]{1.0})
-                                                                                .box(new FacesBox().setProbability(1D))
-                                                                                .build()
-                                                 ))
-                                                 .build();
+                .result(List.of(FindFacesResult.builder()
+                        .embedding(new Double[]{1.0})
+                        .box(new FacesBox().setProbability(1D))
+                        .build()
+                ))
+                .build();
 
         when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
-        when(predictor.verify(any(), any(), any())).thenReturn(1.0);
+        when(predictor.verify(any(), any(), any())).thenReturn(eq(0.0));
 
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
 
         mockMvc.perform(
-                multipart(API_V1 + "/faces/" + faceA.getId() + "/verify")
+                multipart(API_V1 + "/recognition/faces/" + faceA.getId() + "/verify")
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk());
 
         verify(imageValidator).validate(any());
-        verify(client).findFacesWithCalculator(any(), any(), any(), isNull());
-        verify(predictor).verify(any(), any(), any());
+        verify(client).findFacesWithCalculator(any(), any(), any(), anyString());
         verifyNoMoreInteractions(imageValidator, client, predictor);
+    }
+
+    @Test
+    void verifyFacesWithIncorrectPartName() throws Exception {
+        val faceA = makeFace("A", API_KEY);
+
+        val mockFile = new MockMultipartFile("file", "test data".getBytes());
+
+        MvcResult mvcResult = mockMvc.perform(
+                multipart(API_V1 + "/recognition/faces/" + faceA.getId() + "/verify")
+                        .file(INCORRECT_PART_NAME, mockFile.getBytes())
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        ).andExpect(status().isBadRequest()).andReturn();
+
+        Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("Required part "));
     }
 }

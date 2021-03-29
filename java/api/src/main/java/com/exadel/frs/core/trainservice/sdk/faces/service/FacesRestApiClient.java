@@ -9,14 +9,16 @@ import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.exadel.frs.core.trainservice.system.global.Constants.CALCULATOR_PLUGIN;
 
 @AllArgsConstructor
 @Component
 public class FacesRestApiClient implements FacesApiClient {
 
-    public static final String CALCULATOR_PLUGIN = "calculator";
     private static final String COMMA = ",";
 
     private final FacesFeignClient feignClient;
@@ -57,6 +59,7 @@ public class FacesRestApiClient implements FacesApiClient {
     }
 
     @Override
+    @Cacheable(value = "status", unless = "#result==null or #result==error")
     public FacesStatusResponse getStatus() {
         try {
             return feignClient.getStatus();

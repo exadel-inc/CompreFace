@@ -47,6 +47,7 @@ public class StatisticsCollectionAspect {
     @SneakyThrows
     @AfterReturning(pointcut = "@annotation(com.exadel.frs.commonservice.annotation.CollectStatistics)", returning = "result")
     public void afterMethodInvocation(JoinPoint joinPoint, Object result) {
+        log.info("Request to send statistics in background");
         if (StringUtils.isEmpty(statisticsApiKey)) {
             log.info("Appery API key is empty, statistics wasn't send");
             return;

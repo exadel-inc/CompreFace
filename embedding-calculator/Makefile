@@ -5,9 +5,17 @@ SHELL := /bin/bash
 IMAGE := ${DOCKER_REGISTRY}compreface-core
 CUDA_IMAGE = $(IMAGE):base-cuda100-py37
 
-INSIGHTFACE_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector \
-                          --build-arg CALCULATION_PLUGIN=insightface.Calculator \
-                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector
+MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1 \
+                          --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface_mobilefacenet \
+                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
+
+ARCFACE_r100_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1 \
+                          --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface-r100-msfdrop75 \
+                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
+
+FACENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=facenet.FaceDetector \
+                          --build-arg CALCULATION_PLUGIN=facenet.Calculator \
+                          --build-arg EXTRA_PLUGINS=facenet.LandmarksDetector,agegender.GenderDetector,agegender.AgeDetector
 
 define get_from_remote_tgz
 	mkdir -p $(2)
@@ -33,8 +41,10 @@ build-cuda:
 
 build-images: build-cuda
 	docker build . -t $(IMAGE):$(VERSION)-facenet
-	docker build . -t $(IMAGE):$(VERSION)-insightface $(INSIGHTFACE_BUILD_ARGS)
-	docker build . -t $(IMAGE):$(VERSION)-insightface-gpu $(INSIGHTFACE_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE)
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet $(MOBILENET_BUILD_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet-gpu $(MOBILENET_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE)
+	docker build . -t $(IMAGE):$(VERSION)-arcface-r100 $(ARCFACE_r100_BUILD_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-arcface-r100-gpu $(ARCFACE_r100_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE)
 
 up:
 	docker run -p3000:3000 embedding-calculator
