@@ -26,11 +26,26 @@ import { TableModule } from '../table/table.module';
 import { ApplicationListContainerComponent } from './application-list-container.component';
 import { ApplicationListFacade } from './application-list-facade';
 import { ApplicationListComponent } from './application-list/application-list.component';
+import { FormsModule } from '@angular/forms';
+import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [ApplicationListContainerComponent, ApplicationListComponent],
   exports: [ApplicationListContainerComponent],
   providers: [ApplicationListFacade],
-  imports: [CommonModule, TableModule, SpinnerModule, MatButtonModule, SnackBarModule, MatCardModule, MatIconModule, TranslateModule],
+  imports: [
+    CommonModule,
+    TableModule,
+    SpinnerModule,
+    MatButtonModule,
+    SnackBarModule,
+    MatCardModule,
+    MatIconModule,
+    TranslateModule,
+    FormsModule,
+    TablePipeModule,
+    MatInputModule,
+  ],
 })
 export class ApplicationListModule {}

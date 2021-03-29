@@ -26,10 +26,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingRequestHeaderException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import static com.exadel.frs.commonservice.handler.CommonExceptionCode.*;
@@ -80,7 +83,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
         val sb = new StringBuilder();
         for (val violation : e.getConstraintViolations()) {
-            sb.append(e.getMessage());
+            sb.append(violation.getMessage());
             sb.append("; ");
         }
 
@@ -115,6 +118,39 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
                 .build();
 
         return ResponseEntity.status(NOT_FOUND).body(body);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("400 bad request. Request part is missing: {}", ex.getRequestPartName());
+        var exception = new MissingRequestPartException(ex.getRequestPartName());
+        val body = ExceptionResponseDto.builder()
+                .code(exception.getExceptionCode().getCode())
+                .message(exception.getMessage())
+                .build();
+        return ResponseEntity.status(BAD_REQUEST).body(body);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("400 bad request. Request param is missing: {}", ex.getParameterName());
+        var exception = new MissingRequestParamException(ex.getParameterName());
+        val body = ExceptionResponseDto.builder()
+                .code(exception.getExceptionCode().getCode())
+                .message(exception.getMessage())
+                .build();
+        return ResponseEntity.status(BAD_REQUEST).body(body);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        log.error("400 bad request. Path variable is missing: {}", ex.getVariableName());
+        BasicException exception = new MissingPathVarException(ex.getVariableName());
+        val body = ExceptionResponseDto.builder()
+                .code(exception.getExceptionCode().getCode())
+                .message(exception.getMessage())
+                .build();
+        return ResponseEntity.status(BAD_REQUEST).body(body);
     }
 
     private BasicException getException(final FieldError fieldError) {

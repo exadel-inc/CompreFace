@@ -20,6 +20,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+import java.util.Map;
+
 @Data
 @Accessors(chain = true)
 public class FacesStatusResponse {
@@ -32,4 +35,10 @@ public class FacesStatusResponse {
 
     @JsonProperty(value = "status")
     private String status;
+
+    @JsonProperty(value = "similarity_coefficients")
+    private List<Double> similarityCoefficients;
+
+    @JsonProperty(value = "available_plugins")
+    private Map<String, String> availablePlugins;
 }

@@ -1,21 +1,22 @@
 # How to Use CompreFace
 
+**Step 1.** Install and run CompreFace using our [Getting Started guide](../README.md#getting-started-with-compreface)
 
-**Step 1.** You need to sign up for the system and log in into the account you’ve just created or use the one you already have. After that, the system redirects you to the main page.
+**Step 2.** You need to sign up for the system and log in into the account you’ve just created or use the one you already have. After that, the system redirects you to the main page.
 
-**Step 2.** Create an application (left section) using the "Create" link at the bottom of the page. An application is where you can create and manage your Face Collections.
+**Step 3.** Create an application (left section) using the "Create" link at the bottom of the page. An application is where you can create and manage your Face Collections.
 
-**Step 3.** Enter your application by clicking on its name. Here you will have two options: you can either add new users and manage 
+**Step 4.** Enter your application by clicking on its name. Here you will have two options: you can either add new users and manage 
 their access roles or create new [Face Services](Face-services-and-plugins.md).
 
-**Step 4.** To recognize subjects among the known subjects, you need to create Face Recognition Service. After creating a new Face 
+**Step 5.** To recognize subjects among the known subjects, you need to create Face Recognition Service. After creating a new Face 
 Service, you will see it in the Services List with an appropriate name and API key.
 
-**Step 5.** To add known subjects to your Face Collection of Face Recognition Service, you can use REST API. 
+**Step 6.** To add known subjects to your Face Collection of Face Recognition Service, you can use REST API. 
 Once you’ve uploaded all known faces, you can test the collection using REST API or the TEST page. 
 We recommend that you use an image size no higher than 5MB, as it could slow down the request process. The supported image formats include JPEG/PNG/JPG/ICO/BMP/GIF/TIF/TIFF.
 
-**Step 6.** Upload your photo and let our open-source face recognition system match the image against the Face Collection. If you use a 
+**Step 7.** Upload your photo and let our open-source face recognition system match the image against the Face Collection. If you use a 
 UI for face recognition, you will see the original picture with marks near every face. If you use REST API, you will receive a response in JSON format.
 
 JSON contains an array of objects that represent each recognized face. Each object has the following fields:

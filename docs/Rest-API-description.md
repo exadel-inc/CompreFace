@@ -87,7 +87,7 @@ Response body on success:
       "y_min" : 295
     },
     "landmarks" : [ [ 814, 713 ], [ 1104, 829 ], [ 832, 937 ], [ 704, 1030 ], [ 1017, 1133 ] ],
-    "faces" : [ {
+    "subjects" : [ {
       "similarity" : 0.97858,
       "subject" : "subject1"
     } ],
@@ -116,7 +116,7 @@ Response body on success:
 | probability                    | float   | probability that a found face is actually a face             |
 | x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
 | landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| faces                          | list    | list of similar faces with size of <prediction_count> order by similarity |
+| subjects                       | list    | list of similar subjects with size of <prediction_count> order by similarity |
 | similarity                     | float   | similarity that on that image predicted person               |
 | subject                        | string  | name of the subject in Face Collection                       |
 | execution_time                 | object  | execution time of all plugins                       |

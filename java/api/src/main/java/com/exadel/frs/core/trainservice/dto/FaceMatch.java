@@ -13,19 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package com.exadel.frs.core.trainservice.dto;
 
-package com.exadel.frs.core.trainservice.sdk.faces.exception;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import com.exadel.frs.commonservice.exception.BasicException;
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
-import static com.exadel.frs.commonservice.handler.CommonExceptionCode.FACES_SERVICE_EXCEPTION;
-import static java.lang.String.format;
-
-public class FacesServiceException extends BasicException {
-
-    private static final String MESSAGE = "Error during synchronization between servers: %s";
-
-    public FacesServiceException(final String message) {
-        super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));
-    }
+@Data
+@Builder(builderMethodName = "FaceMatchBuilder")
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonInclude(NON_NULL)
+public class FaceMatch extends VerifyFacesResultDto {
+    float similarity;
 }

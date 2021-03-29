@@ -9,6 +9,7 @@ import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +22,7 @@ import static java.math.RoundingMode.HALF_UP;
 
 @Service("recognitionService")
 @RequiredArgsConstructor
+@Slf4j
 public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
     private final FaceClassifierPredictor classifierPredictor;
@@ -38,7 +40,6 @@ public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
         MultipartFile file = (MultipartFile) processImageParams.getFile();
         imageValidator.validate(file);
-
         val findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         val facesRecognitionDto = mapper.toFacesRecognitionResponseDto(findFacesResponse);
         if (facesRecognitionDto == null) {
