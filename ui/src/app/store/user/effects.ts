@@ -34,7 +34,7 @@ import {
 
 import { AuthService } from '../../core/auth/auth.service';
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
-import { loadApplicationsNotLoader } from '../application/action';
+import { loadApplications } from '../application/action';
 
 @Injectable()
 export class UserListEffect {
@@ -84,7 +84,7 @@ export class UserListEffect {
             this.authService.logOut();
             return [];
           }
-          return [deleteUserSuccess({ userId }), loadApplicationsNotLoader(), loadUsersEntityAction()];
+          return [deleteUserSuccess({ userId }), loadApplications(), loadUsersEntityAction()];
         }),
         catchError(error => of(deleteUserFail({ error })))
       )

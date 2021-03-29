@@ -70,7 +70,6 @@ export class AppUserEffects {
     switchMap(action =>
       this.appUserService.deleteUser(action.applicationId, action.userId).pipe(
         map(() => deleteUserFromApplicationSuccess({ id: action.userId })),
-        tap(() => this.router.navigateByUrl(Routes.Home)),
         catchError(error => of(deleteUserFromApplicationFail({ error })))
       )
     )
