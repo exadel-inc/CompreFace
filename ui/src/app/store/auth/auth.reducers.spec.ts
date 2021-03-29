@@ -13,16 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {
-  logInFailure,
-  logInSuccess,
-  signUpFailure,
-  signUpSuccess,
-  changePasswordSuccess,
-  changePasswordFailure,
-  logIn,
-  signUp,
-} from './action';
+import { logInFail, logInSuccess, signUpFail, signUpSuccess, changePasswordSuccess, changePasswordFail, logIn, signUp } from './action';
 import { authReducer, initialState } from './reducers';
 
 describe('AuthReducer', () => {
@@ -37,7 +28,7 @@ describe('AuthReducer', () => {
 
   describe('LOGIN_FAILURE action', () => {
     it('should set loading to false', () => {
-      const action = logInFailure({ error: { error: {} } });
+      const action = logInFail({ error: { error: {} } });
       const state = authReducer(initialState, action);
       expect(state.isLoading).toBe(false);
     });
@@ -62,7 +53,7 @@ describe('AuthReducer', () => {
 
   describe('SIGNUP_FAILURE action', () => {
     it('should set loading to false', () => {
-      const action = signUpFailure({ error: {} });
+      const action = signUpFail({ error: {} });
       const state = authReducer(initialState, action);
 
       expect(state.isLoading).toBe(false);
@@ -89,7 +80,7 @@ describe('AuthReducer', () => {
 
   describe('CHANGE_PASSWORD_FAILURE action', () => {
     it('should loading false', () => {
-      const action = changePasswordFailure({ error: {} });
+      const action = changePasswordFail({ error: {} });
       const state = authReducer(initialState, action);
 
       expect(state.isLoading).toBe(false);

@@ -23,7 +23,7 @@ import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
-import { addFace, addFaceFail, addFaceSuccess, recognizeFace, recognizeFaceFail, recognizeFaceSuccess } from './actions';
+import { addFace, addFaceFail, addFaceSuccess, recognizeFace, recognizeFaceFail, recognizeFaceSuccess } from './action';
 import { ServiceTypes } from '../../data/enums/service-types.enum';
 @Injectable()
 export class FaceRecognitionEffects {
