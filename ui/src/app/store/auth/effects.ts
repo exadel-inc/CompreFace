@@ -17,7 +17,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of as observableOf } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
@@ -36,6 +36,8 @@ import {
   changePasswordSuccess,
   changePasswordFail,
 } from './action';
+import { Store } from '@ngrx/store';
+import { selectQueryParams } from '../router/selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -43,7 +45,8 @@ export class AuthEffects {
     private actions: Actions,
     private authService: AuthService,
     private router: Router,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private store: Store<any>
   ) {}
 
   // Listen for the 'LOGIN' action
@@ -62,9 +65,12 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
-    tap(() => {
-      this.router.navigateByUrl(Routes.Home);
-    })
+    withLatestFrom(this.store.select(selectQueryParams)),
+    map(([, queryParams]) => {
+      const { redirect } = queryParams;
+      return redirect;
+    }),
+    tap(redirect => this.router.navigateByUrl(redirect || Routes.Home))
   );
 
   @Effect({ dispatch: false })

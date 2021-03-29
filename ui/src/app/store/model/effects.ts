@@ -20,6 +20,8 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ModelService } from 'src/app/core/model/model.service';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
+import { Router } from '@angular/router';
+import { Routes } from '../../data/enums/routers-url.enum';
 
 import {
   createModel,
@@ -41,7 +43,12 @@ import {
 
 @Injectable()
 export class ModelEffects {
-  constructor(private actions: Actions, private modelService: ModelService, private snackBarService: SnackBarService) {}
+  constructor(
+    private actions: Actions,
+    private modelService: ModelService,
+    private snackBarService: SnackBarService,
+    private router: Router
+  ) {}
 
   @Effect()
   loadModels$ = this.actions.pipe(
@@ -103,6 +110,15 @@ export class ModelEffects {
     ofType(loadModelsFail, createModelFail, cloneModelFail, updateModelFail, deleteModelFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
+    })
+  );
+
+  //Listen for the 'loadModelsFail'
+  @Effect({ dispatch: false })
+  loadFail$ = this.actions.pipe(
+    ofType(loadModelsFail),
+    tap(() => {
+      this.router.navigateByUrl(Routes.Home);
     })
   );
 }
