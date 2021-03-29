@@ -66,7 +66,10 @@ export class AuthEffects {
   logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
     withLatestFrom(this.store.select(selectQueryParams)),
-    map(([, redirect]) => redirect),
+    map(([, queryParams]) => {
+      const { redirect } = queryParams;
+      return redirect;
+    }),
     tap(redirect => this.router.navigateByUrl(redirect || Routes.Home))
   );
 

@@ -21,5 +21,5 @@ import { RouterStateUrl } from './reducer';
 export const selectRouterState = createFeatureSelector<RouterReducerState<RouterStateUrl>>('router');
 
 export const selectQueryParams = createSelector(selectRouterState, (routerState: RouterReducerState<RouterStateUrl>) =>
-  routerState ? routerState.state.queryParams?.redirect : null
+  routerState ? routerState.state.queryParams : null
 );
