@@ -20,7 +20,7 @@ import static com.exadel.frs.commonservice.handler.CommonExceptionCode.TOO_MANY_
 
 public class TooManyFacesException extends BasicException {
 
-    private static final String MESSAGE = "More than one face in the image";
+    private static final String MESSAGE = "More than one face in the source image";
 
     public TooManyFacesException() {
         super(TOO_MANY_FACES, MESSAGE);

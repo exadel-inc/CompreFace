@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.mapper;
 
+import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
@@ -23,6 +24,7 @@ import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.VerifyFacesResultDto;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.PluginsVersions;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -43,4 +45,6 @@ public interface FacesMapper {
     FacesRecognitionResponseDto toFacesRecognitionResponseDto(FindFacesResponse facesResponse);
 
     VerifyFacesResultDto toVerifyFacesResultDto(FindFacesResult facesResult);
+
+    PluginsVersionsDto toPluginVersionsDto(PluginsVersions pluginsVersions);
 }

@@ -78,6 +78,9 @@
         "rename": "RENAME",
         "name": "Name"
       }
+    },
+    "search": {
+      "title": "Search Application"
     }
   },
   "models": {
@@ -109,7 +112,7 @@
       "confirmation_question": "Are you sure?"
     },
     "search": {
-      "title": "Search model"
+      "title": "Search Service"
     }
   },
   "users": {

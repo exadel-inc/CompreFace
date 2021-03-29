@@ -17,11 +17,14 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
+import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.core.trainservice.sdk.faces.exception.FacesServiceException;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.google.common.primitives.Doubles;
+import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -33,15 +36,12 @@ import static org.nd4j.linalg.factory.Nd4j.create;
 import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 
 @Component
+@RequiredArgsConstructor
 public class EuclideanDistanceClassifier implements Classifier {
 
     public static final int PREDICTION_COUNT_INFINITY = -1;
     private final FaceCacheProvider faceCacheProvider;
-
-    @Autowired
-    private EuclideanDistanceClassifier(final FaceCacheProvider faceCacheProvider) {
-        this.faceCacheProvider = faceCacheProvider;
-    }
+    private final FacesApiClient facesApiClient;
 
     @Override
     public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
@@ -82,6 +82,10 @@ public class EuclideanDistanceClassifier implements Classifier {
 
     @Override
     public Double verify(final double[] input, final String apiKey, final String imageId) {
+        if (input == null) {
+            return (double) 0;
+        }
+
         val inputFace = create(input);
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
 
@@ -109,7 +113,13 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     private INDArray calculateSimilarities(INDArray distance) {
-        return tanh(distance.rsubi(1.1).muli(2.5), false).addi(1).divi(2);
+        FacesStatusResponse status = facesApiClient.getStatus();
+        if (status == null || status.getSimilarityCoefficients() == null || status.getSimilarityCoefficients().isEmpty()) {
+            throw new FacesServiceException("No status information received");
+        }
+
+        List<Double> coefficients = status.getSimilarityCoefficients();
+        return tanh(distance.rsubi(coefficients.get(0)).muli(coefficients.get(1)), false).addi(1).divi(2);
     }
 
     private static INDArray euclidean_distance(final INDArray newFace, INDArray existingFaces) {

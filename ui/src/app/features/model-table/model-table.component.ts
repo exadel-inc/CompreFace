@@ -16,7 +16,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
-
+import { ServiceTypes } from '../../data/enums/service-types.enum';
 import { TableComponent } from '../table/table.component';
 
 @Component({
@@ -33,4 +33,5 @@ export class ModelTableComponent extends TableComponent {
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();
   roleEnum = Role;
+  types = ServiceTypes;
 }

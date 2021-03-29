@@ -106,12 +106,12 @@ class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):
 
 class Calculator(InsightFaceMixin, mixins.CalculatorMixin, base.BasePlugin):
     ml_models = (
-        ('arcface_mobilefacenet', '17TpxpyHuUc1ZTm3RIbfvhnBcZqhyKszV', None, 200),
-        ('arcface_r100_v1', '11xFaEHIQLNze3-2RUV1cQfT-q6PKKfYp', None, 400),
-        ('arcface_resnet34', '1ECp5XrLgfEAnwyTYFEhJgIsOAw6KaHa7'),
-        ('arcface_resnet50', '1a9nib4I9OIVORwsqLB0gz0WuLC32E8gf'),
-        ('arcface-r50-msfdrop75', '1gNuvRNHCNgvFtz7SjhW82v2-znlAYaRO'),
-        ('arcface-r100-msfdrop75', '1lAnFcBXoMKqE-SkZKTmi6MsYAmzG0tFw'),
+        ('arcface_mobilefacenet', '17TpxpyHuUc1ZTm3RIbfvhnBcZqhyKszV', (12.7874291, 0.3528025085), 200),
+        ('arcface_r100_v1', '11xFaEHIQLNze3-2RUV1cQfT-q6PKKfYp', (27.0423974, 0.2139696109), 400),
+        ('arcface_resnet34', '1ECp5XrLgfEAnwyTYFEhJgIsOAw6KaHa7', (26.6226162, 0.2103656437), 400),
+        ('arcface_resnet50', '1a9nib4I9OIVORwsqLB0gz0WuLC32E8gf', (26.42131675, 0.1980283865), 400),
+        ('arcface-r50-msfdrop75', '1gNuvRNHCNgvFtz7SjhW82v2-znlAYaRO', (28.11479765, 0.1928978565), 400),
+        ('arcface-r100-msfdrop75', '1lAnFcBXoMKqE-SkZKTmi6MsYAmzG0tFw', (27.6630733, 0.219274095), 400),
     )
 
     def calc_embedding(self, face_img: Array3D) -> Array3D:
