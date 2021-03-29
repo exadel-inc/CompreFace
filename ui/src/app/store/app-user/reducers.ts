@@ -41,7 +41,7 @@ const initialState: AppUserEntityState = appUserAdapter.getInitialState({
 const reducer: ActionReducer<AppUserEntityState> = createReducer(
   initialState,
   on(loadAppUserEntityAction, deleteUserFromApplication, updateAppUserRole, state => ({ ...state, isPending: true })),
-  on(deleteUserFromApplicationFail, state => ({ ...state, isPending: false })),
+  on(deleteUserFromApplicationFail, updateAppUserRoleFail, state => ({ ...state, isPending: false })),
   on(addAppUserEntityAction, (state, { users }) => {
     const newState = { ...state, isPending: false };
     return appUserAdapter.setAll(users, newState);
@@ -57,7 +57,6 @@ const reducer: ActionReducer<AppUserEntityState> = createReducer(
       { ...state, isPending: false }
     )
   ),
-  on(updateAppUserRoleFail, state => ({ ...state, isPending: false })),
   on(deleteUserFromApplicationSuccess, (state, { id }) => appUserAdapter.removeOne(id, { ...state, isPending: false }))
 );
 

@@ -26,13 +26,9 @@ import {
   selectAvailableEmails,
   selectAvailableRoles,
   selectIsApplicationLoading,
-  selectUserRole
+  selectUserRole,
 } from 'src/app/store/app-user/selectors';
-import {
-  selectCurrentApp,
-  selectUserRollForSelectedApp,
-
-} from 'src/app/store/application/selectors';
+import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
 import { loadRolesEntity } from 'src/app/store/role/action';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 

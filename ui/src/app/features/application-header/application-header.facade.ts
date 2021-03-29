@@ -21,9 +21,9 @@ import { Application } from '../../data/interfaces/application';
 import { IFacade } from '../../data/interfaces/IFacade';
 import { AppState } from '../../store';
 import { deleteApplication, updateApplication } from '../../store/application/action';
-import { selectCurrentApp, selectCurrentAppId} from '../../store/application/selectors';
+import { selectCurrentApp, selectCurrentAppId } from '../../store/application/selectors';
 import { selectIsLoadingApplicationList } from '../../store/user/selectors';
-import {selectUserRole} from '../../store/app-user/selectors';
+import { selectUserRole } from '../../store/app-user/selectors';
 
 @Injectable()
 export class ApplicationHeaderFacade implements IFacade {
