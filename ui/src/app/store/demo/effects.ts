@@ -20,7 +20,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { DemoService } from '../../pages/demo/demo.service';
-import { loadDemoApiKeyAction, loadDemoApiKeyFailAction, loadDemoApiKeySuccessAction } from './actions';
+import { loadDemoApiKey, loadDemoApiKeyFail, loadDemoApiKeySuccess } from './action';
 
 @Injectable()
 export class DemoEffects {
@@ -28,14 +28,14 @@ export class DemoEffects {
 
   @Effect()
   loadDemoApiKey$ = this.actions.pipe(
-    ofType(loadDemoApiKeyAction),
+    ofType(loadDemoApiKey),
     switchMap(() =>
       this.demoService.getModel().pipe(
-        map(data => loadDemoApiKeySuccessAction(data)),
+        map(data => loadDemoApiKeySuccess(data)),
         catchError(
           (response: any): Observable<any> => {
             if (response instanceof HttpErrorResponse) {
-              return of(loadDemoApiKeyFailAction());
+              return of(loadDemoApiKeyFail());
             }
 
             return throwError(response);

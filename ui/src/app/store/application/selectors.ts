@@ -17,7 +17,7 @@ import { EntityState } from '@ngrx/entity';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 import { Application } from '../../data/interfaces/application';
-import { AppEntityState, selectEntities, selectAll } from './reducers';
+import { AppEntityState, selectAll, selectEntities } from './reducers';
 
 export const selectApplicationEntityState = createFeatureSelector<EntityState<Application>>('application');
 

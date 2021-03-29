@@ -20,6 +20,8 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ModelService } from 'src/app/core/model/model.service';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
+import { Router } from '@angular/router';
+import { Routes } from '../../data/enums/routers-url.enum';
 
 import {
   createModel,
@@ -37,9 +39,7 @@ import {
   updateModel,
   updateModelFail,
   updateModelSuccess,
-} from './actions';
-import { Router } from '@angular/router';
-import { Routes } from '../../data/enums/routers-url.enum';
+} from './action';
 
 @Injectable()
 export class ModelEffects {

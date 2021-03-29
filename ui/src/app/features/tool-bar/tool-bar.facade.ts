@@ -20,7 +20,7 @@ import { Observable } from 'rxjs';
 import { Routes } from 'src/app/data/enums/routers-url.enum';
 import { logOut, changePassword } from 'src/app/store/auth/action';
 import { editUserInfo } from 'src/app/store/userInfo/action';
-import { loadDemoApiKeySuccessAction } from 'src/app/store/demo/actions';
+import { loadDemoApiKeySuccess } from 'src/app/store/demo/action';
 import { selectDemoPageAvailability } from 'src/app/store/demo/selectors';
 import { selectUserAvatar, selectUserName } from 'src/app/store/userInfo/selectors';
 
@@ -41,7 +41,7 @@ export class ToolBarFacade {
   }
 
   goSignUp() {
-    this.store.dispatch(loadDemoApiKeySuccessAction(null));
+    this.store.dispatch(loadDemoApiKeySuccess(null));
     this.router.navigateByUrl(Routes.SignUp);
   }
 

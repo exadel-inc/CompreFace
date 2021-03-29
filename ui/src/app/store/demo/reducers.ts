@@ -15,7 +15,7 @@
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import { loadDemoApiKeyAction, loadDemoApiKeyFailAction, loadDemoApiKeySuccessAction, setDemoKeyPendingAction } from './actions';
+import { loadDemoApiKey, loadDemoApiKeyFail, loadDemoApiKeySuccess, setDemoKeyPending } from './action';
 
 export interface DemoEntityState {
   isPending: boolean;
@@ -29,10 +29,9 @@ export const initialState: DemoEntityState = {
 
 const reducer: ActionReducer<DemoEntityState> = createReducer(
   initialState,
-  on(loadDemoApiKeyAction, state => ({ ...state, isPending: true })),
-  on(loadDemoApiKeySuccessAction, (state, { apiKey }) => ({ ...state, apiKey, isPending: false })),
-  on(loadDemoApiKeyFailAction, state => ({ ...state, isPending: false })),
-  on(setDemoKeyPendingAction, state => ({ ...state, isPending: true }))
+  on(loadDemoApiKey, setDemoKeyPending, state => ({ ...state, isPending: true })),
+  on(loadDemoApiKeySuccess, (state, { apiKey }) => ({ ...state, apiKey, isPending: false })),
+  on(loadDemoApiKeyFail, state => ({ ...state, isPending: false }))
 );
 
 export const demoReducer = (demoState: DemoEntityState, action: Action) => reducer(demoState, action);
