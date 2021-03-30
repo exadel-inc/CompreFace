@@ -75,9 +75,9 @@
         />
       </mat-form-field>
       <mat-checkbox formControlName="isAllowStatistics" class="sign-up-full-width" *ngIf="isDemoPageAvailable$ | async">
-        <small
-          >{{ 'registration.statistics' | translate }}<br />
-          <a href="https://github.com/exadel-inc/CompreFace">{{ 'registration.more_info' | translate }}</a></small
+        <span
+           class="white-space-fix">{{ 'registration.statistics' | translate }}
+          <a href="https://github.com/exadel-inc/CompreFace">{{ 'registration.more_info' | translate }}</a></span
         >
       </mat-checkbox>
       <mat-error class="error-wrapper" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
@@ -87,8 +87,8 @@
     </form>
   </mat-card-content>
   <mat-card-actions>
-    <button mat-flat-button color="primary" [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</button>
-    <button mat-flat-button type="submit" form="signUpForm" color="primary" [disabled]="form.invalid || (isLoading$ | async)">
+    <button mat-button color="primary" [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</button>
+    <button mat-button type="submit" form="signUpForm" color="primary" [disabled]="form.invalid || (isLoading$ | async)">
       {{ 'registration.sign_up' | translate }}
     </button>
   </mat-card-actions>
