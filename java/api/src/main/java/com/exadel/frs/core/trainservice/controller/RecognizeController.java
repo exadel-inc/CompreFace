@@ -49,8 +49,7 @@ public class RecognizeController {
             @RequestParam(defaultValue = "0", required = false)
             @Min(value = 0, message = "Limit should be equal or greater than 0") final Integer limit,
             @ApiParam(value = "Maximum number of predictions per faces")
-            @RequestParam(defaultValue = "1", name = "prediction_count", required = false)
-            @Min(value = 1, message = "prediction_count should be equal or greater than 1") final Integer predictionCount,
+            @RequestParam(defaultValue = "1", name = "prediction_count", required = false) final Integer predictionCount,
             @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
             @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
             @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
