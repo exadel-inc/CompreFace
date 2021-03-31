@@ -14,24 +14,3 @@
  * permissions and limitations under the License.
  */
 
-@import 'media.scss';
-@import 'colors.scss';
-
-.message {
-  color: $white;
-}
-
-// todo fix ::ng-deep
-::ng-deep .app-snackbar-panel {
-  &.info {
-    background-color: $green;
-  }
-
-  &.error {
-    background-color: $red;
-  }
-
-  &.warning {
-    background-color: $orange;
-  }
-}

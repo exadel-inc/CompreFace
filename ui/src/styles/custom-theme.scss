@@ -54,6 +54,7 @@ $custom-theme-warn: mat-palette($warn, Main, Light, Dark);
 $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
 
 @mixin cust-theme($theme) {
+  $found: map-get($theme, font-family);
   $config: mat-get-color-config($theme);
   $primary_: map-get($theme, primary);
   $accent_: map-get($theme, accent);
@@ -117,7 +118,20 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   .mat-body-1, .mat-body-2, .mat-caption {
     color: $pale-gray;
   }
+
+  .mat-snack-bar-container {
+
+    &.info {
+      background: mat-color($accent_);
+    }
+
+    &.error {
+      background: mat-color($warn_);
+    }
+  }
 }
+
+
 
 @include angular-material-typography($typography);
 @include mat-core($typography);

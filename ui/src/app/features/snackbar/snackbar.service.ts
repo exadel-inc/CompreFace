@@ -37,7 +37,7 @@ export class SnackBarService {
     this.openSnackBar(data, duration);
   }
 
-  openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
+  openHttpError(message: HttpErrorResponse, duration: number = 108000): void {
     const errorMessage = message.error
       ? message.error.error_description
         ? message.error.error_description
@@ -56,7 +56,7 @@ export class SnackBarService {
       duration,
       data,
       verticalPosition: 'top',
-      panelClass: ['app-snackbar-panel', data.type],
+      panelClass: [data.type],
     });
   }
 }
