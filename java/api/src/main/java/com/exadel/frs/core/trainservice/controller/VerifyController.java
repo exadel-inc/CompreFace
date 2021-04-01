@@ -28,21 +28,21 @@ public class VerifyController {
 
     @PostMapping(value = "/verification/verify")
     public Map<String, List<VerifyFacesResponse>> verify(
-            @ApiParam(value = "Api key of application and model", required = true)
+            @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = "File to be verified", required = true)
+            @ApiParam(value = SOURCE_IMAGE_DESC, required = true)
             @RequestParam(name = SOURCE_IMAGE) final MultipartFile sourceImage,
-            @ApiParam(value = "Reference file to check the processed file", required = true)
+            @ApiParam(value = TARGET_IMAGE_DESC, required = true)
             @RequestParam(name = TARGET_IMAGE) final MultipartFile targetImage,
-            @ApiParam(value = "Maximum number of faces to be verified")
-            @RequestParam(defaultValue = "0", required = false)
-            @Min(value = 0, message = "Limit should be equal or greater than 0") final Integer limit,
-            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
-            @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
-            @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins,
-            @ApiParam(value = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated, true - both fields included")
-            @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
+            @ApiParam(value = LIMIT_DESC)
+            @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false)
+            @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC)
+            @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC)
+            @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC)
+            @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status
     ) {
         Map<String, MultipartFile> fileMap = Map.of(SOURCE_IMAGE, sourceImage, TARGET_IMAGE, targetImage);
         ProcessImageParams processImageParams = ProcessImageParams
