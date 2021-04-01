@@ -13,4 +13,29 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import './src/styles/custom-theme';
 
+$font-family: mat-font-family($typography);
+
+::ng-deep {
+
+  .mat-snack-bar-container {
+    font-family: $font-family;
+    border-radius: 12px !important;
+    padding: 18px 26px;
+
+    .message {
+      display: flex;
+
+      &--icons {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .material-icons {
+    font-size: 21px;
+  }
+}

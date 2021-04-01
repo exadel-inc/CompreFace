@@ -53,7 +53,7 @@ $custom-theme-warn: mat-palette($warn, Main, Light, Dark);
 
 $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
 
-@mixin cust-theme($theme) {
+@mixin custom-theme($theme, ) {
   $found: map-get($theme, font-family);
   $config: mat-get-color-config($theme);
   $primary_: map-get($theme, primary);
@@ -120,6 +120,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .mat-snack-bar-container {
+    color: $white;
 
     &.info {
       background: mat-color($accent_);

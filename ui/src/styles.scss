@@ -19,7 +19,7 @@
 @import 'colors.scss';
 
 @import './styles/custom-theme.scss';
-@include cust-theme($custom-theme);
+@include custom-theme($custom-theme);
 
 body,
 html {
