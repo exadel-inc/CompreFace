@@ -130,6 +130,11 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
       background: mat-color($warn_);
     }
   }
+
+  .mat-checkbox-label,
+  .mat-card-actions {
+    color: $pale-gray;
+  }
 }
 
 

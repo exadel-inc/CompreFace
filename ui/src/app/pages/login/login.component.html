@@ -14,14 +14,26 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="login-form-container">
-  <app-spinner *ngIf="isPending$ | async; else loginContent"></app-spinner>
+<div class="login-form">
 
-  <ng-template #loginContent>
-    <app-login-form class="login-form-item"></app-login-form>
+  <div class="form-container">
 
-    <div class="demo-page-link" *ngIf="isDemoPageAvailable$ | async">
-      <a mat-raised-button [routerLink]="[routes.Demo]">{{ 'demo.link' | translate }}</a>
-    </div>
-  </ng-template>
+    <app-spinner *ngIf="isPending$ | async; else loginContent"></app-spinner>
+
+    <ng-template #loginContent>
+
+      <app-login-form></app-login-form>
+
+      <div class="form-container--footer">
+        <span class="mat-caption">build version: {{ env.buildNumber }}</span>
+
+        <div class="demo-page-link" *ngIf="isDemoPageAvailable$ | async">
+          <a mat-raised-button [routerLink]="[routes.Demo]">{{ 'demo.link' | translate }}</a>
+        </div>
+      </div>
+
+    </ng-template>
+
+  </div>
+
 </div>

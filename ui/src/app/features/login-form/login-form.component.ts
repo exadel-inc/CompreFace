@@ -16,10 +16,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
-import { environment } from '../../../environments/environment';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { User } from '../../data/interfaces/user';
 import { AppState } from '../../store';
@@ -36,7 +35,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
   user: User;
   isLoading$: Observable<boolean>;
   routes = Routes;
-  env = environment;
 
   constructor(private store: Store<AppState>) {
     this.isLoading$ = this.store.select(selectLoadingState);

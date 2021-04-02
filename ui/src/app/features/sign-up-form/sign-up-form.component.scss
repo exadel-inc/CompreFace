@@ -14,41 +14,12 @@
  * permissions and limitations under the License.
  */
 
-@import "colors.scss";
+@import 'forms';
 
-.logo-img {
-  width: 100%;
-}
+.sign-up-card {
+  @include form-card();
 
-.mat-card-header {
-  // workaround: mat-card-header-text can not be selected (
-  margin-left: -16px;
-}
-
-.sign-up {
-  &-full-width {
-    width: 100%;
-    margin-bottom: 10px;
+  .form--input-wrapper {
+    display: flex;
   }
-}
-
-.alert-danger {
-  background-color: $red;
-  color: $white;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.mat-card-actions {
-  display: flex;
-  justify-content: space-between;
-}
-
-.error-wrapper {
-  display: flex;
-  justify-content: space-between;
-}
-
-.white-space-fix {
-  white-space: normal;
 }

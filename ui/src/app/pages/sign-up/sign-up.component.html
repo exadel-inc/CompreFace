@@ -13,7 +13,15 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
+<div class="sign-up-form">
 
-<div class="sign-up-form-container">
-  <app-sign-up-form class="sign-up-form-item"></app-sign-up-form>
+  <div class="form-container">
+
+    <app-sign-up-form></app-sign-up-form>
+
+    <div class="form-container--footer">
+      <span class="mat-caption">build version: {{ env.buildNumber }}</span>
+    </div>
+
+  </div>
 </div>

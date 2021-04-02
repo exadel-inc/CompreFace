@@ -13,16 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import "forms";
 
 .sign-up-form {
-  &-container {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-  }
-
-  &-item {
-    width: 300px;
-  }
+  @include form-container-center();
 }
