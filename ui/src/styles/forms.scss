@@ -20,31 +20,15 @@ $border-radius-container: 12px;
 $font-size-link: 12px;
 
 @mixin reset-form-card() {
-  $padding-reset: 0 !important;
-  $margin-reset: 0 !important;
-
   .mat-card-content,
   .mat-card-actions,
   .mat-card-title {
-    padding: $padding-reset;
-    margin: $margin-reset;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   ::ng-deep .mat-card-header-text {
-    margin: $margin-reset;
-  }
-}
-
-@mixin mat-checkbox() {
-  ::ng-deep {
-    .mat-checkbox-layout {
-      white-space: normal;
-    }
-    .mat-checkbox-label {
-      margin: 14px 0;
-      font-size: $font-size-link;
-      line-height: 13.5px;
-    }
+    margin: 0 !important;
   }
 }
 
@@ -69,7 +53,6 @@ $font-size-link: 12px;
 
 @mixin form-card() {
   @include reset-form-card();
-  @include mat-checkbox();
   padding: $padding-container;
   border-radius: $border-radius-container;
 

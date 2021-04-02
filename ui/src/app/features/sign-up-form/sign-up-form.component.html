@@ -23,20 +23,22 @@
   </mat-card-header>
   <mat-card-content>
     <form class="form-card--form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'registration.first_name' | translate }}</mat-label>
-        <mat-error class="error-wrapper">
-          <span>{{ 'registration.name_restriction' | translate }}</span>
-        </mat-error>
-        <input matInput formControlName="firstName" name="firstName" required />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>{{ 'registration.last_name' | translate }}</mat-label>
-        <mat-error class="error-wrapper">
-          <span>{{ 'registration.last_name_restriction' | translate }}</span>
-        </mat-error>
-        <input matInput formControlName="lastName" name="lastName" required />
-      </mat-form-field >
+      <div class="mat-input-wrapper">
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'registration.first_name' | translate }}</mat-label>
+          <mat-error class="error-wrapper">
+            <span>{{ 'registration.name_restriction' | translate }}</span>
+          </mat-error>
+          <input matInput formControlName="firstName" name="firstName" required />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ 'registration.last_name' | translate }}</mat-label>
+          <mat-error class="error-wrapper">
+            <span>{{ 'registration.last_name_restriction' | translate }}</span>
+          </mat-error>
+          <input matInput formControlName="lastName" name="lastName" required />
+        </mat-form-field >
+      </div>
       <mat-form-field appearance="outline">
         <mat-label>{{ 'registration.email' | translate }}</mat-label>
         <mat-error class="error-wrapper">

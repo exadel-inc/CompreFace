@@ -19,7 +19,24 @@
 .sign-up-card {
   @include form-card();
 
-  .form--input-wrapper {
+  .mat-input-wrapper {
     display: flex;
+    justify-content: space-between;
+
+    ::ng-deep .mat-form-field {
+      width: 170px !important;
+    }
+  }
+
+  ::ng-deep {
+    .mat-checkbox-layout {
+      white-space: normal;
+    }
+
+    .mat-checkbox-label {
+      margin: 14px 0;
+      font-size: $font-size-link;
+      line-height: 13.5px;
+    }
   }
 }
