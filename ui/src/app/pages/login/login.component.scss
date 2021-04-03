@@ -27,12 +27,11 @@
     }
 
     .demo-btn-wrapper {
-      padding: 0 20px;
+      padding: 0 $padding-RL;
+
       .demo-btn {
         @include form-btn();
       }
     }
-
-
   }
 }

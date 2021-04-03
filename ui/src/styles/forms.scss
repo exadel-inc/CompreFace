@@ -15,7 +15,9 @@
  */
 
 $width-container: 420px;
-$padding-container: 49px 32px;
+$min-width-container: 320px;
+$padding-RL: 32px;
+$padding-container: 49px $padding-RL;
 $border-radius-container: 12px;
 $font-size-link: 12px;
 
@@ -41,7 +43,7 @@ $font-size-link: 12px;
 @mixin form-wrapper() {
   width: 100%;
   max-width: $width-container;
-  min-width: 320px;
+  min-width: $min-width-container;
   text-align: center;
 }
 
