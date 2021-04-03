@@ -14,8 +14,9 @@
  * permissions and limitations under the License.
  */
 
-@import 'forms';
+@import 'forms.scss';
 
 .login-card {
   @include form-card();
 }
+

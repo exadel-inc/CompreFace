@@ -73,7 +73,7 @@
       </mat-error>
     </form>
   </mat-card-content>
-  <mat-card-actions class="form-card--btn-container">
+  <mat-card-actions class="form-card--btn-wrapper">
     <button class="btn" mat-flat-button type="submit" form="signUpForm" color="primary" [disabled]="form.invalid || (isLoading$ | async)">
       {{ 'registration.sign_up' | translate }}
     </button>

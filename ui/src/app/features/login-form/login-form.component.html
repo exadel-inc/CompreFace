@@ -39,7 +39,7 @@
       </mat-form-field>
     </form>
   </mat-card-content>
-  <mat-card-actions class="form-card--btn-container">
+  <mat-card-actions class="form-card--btn-wrapper">
     <button class="btn" mat-flat-button type="submit" color="primary" form="loginForm" [disabled]="form.invalid || (isLoading$ | async)">
       {{ 'login.login' | translate }}
     </button>

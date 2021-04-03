@@ -15,25 +15,16 @@
   -->
 
 <div class="login-form">
-
-  <div class="form-container">
-
+  <div class="login-form--wrapper">
     <app-spinner *ngIf="isPending$ | async; else loginContent"></app-spinner>
-
     <ng-template #loginContent>
-
       <app-login-form></app-login-form>
-
-      <div class="form-container--footer">
-        <span class="mat-caption">build version: {{ env.buildNumber }}</span>
-
-        <div class="demo-page-link" *ngIf="isDemoPageAvailable$ | async">
-          <a mat-raised-button [routerLink]="[routes.Demo]">{{ 'demo.link' | translate }}</a>
-        </div>
-      </div>
-
     </ng-template>
-
+    <div class="build-version">
+      <span class="mat-caption">build version: {{ env.buildNumber }}</span>
+    </div>
+    <div class="demo-btn-wrapper" *ngIf="isDemoPageAvailable$ | async">
+      <button class="demo-btn" mat-stroked-button color="primary" [routerLink]="[routes.Demo]">{{ 'demo.link' | translate }}</button>
+    </div>
   </div>
-
 </div>

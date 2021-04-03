@@ -13,8 +13,26 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import "forms";
+@import 'mixins.scss';
+@import 'forms.scss';
 
 .login-form {
-  @include form-container-center();
+  @include wrapper-center();
+
+  &--wrapper {
+    @include form-wrapper();
+
+    .build-version {
+      margin: 16px 0;
+    }
+
+    .demo-btn-wrapper {
+      padding: 0 20px;
+      .demo-btn {
+        @include form-btn();
+      }
+    }
+
+
+  }
 }

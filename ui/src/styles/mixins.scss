@@ -14,39 +14,10 @@
  * permissions and limitations under the License.
  */
 
-@import 'forms.scss';
-@import 'media.scss';
-
-.sign-up-card {
-  @include form-card();
-
-  .mat-input-wrapper {
-    display: flex;
-    justify-content: space-between;
-
-    @include mobile-portrait {
-      flex-direction: column;
-    }
-
-    ::ng-deep .mat-form-field {
-      width: 170px !important;
-
-      @include mobile-portrait {
-        width: 100% !important;
-      }
-    }
-  }
-
-  ::ng-deep {
-    .mat-checkbox-layout {
-      white-space: normal;
-      text-align: left;
-    }
-
-    .mat-checkbox-label {
-      margin: 12px 0;
-      font-size: $font-size-link;
-      line-height: 13.5px;
-    }
-  }
+@mixin wrapper-center() {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }

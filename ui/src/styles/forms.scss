@@ -32,23 +32,17 @@ $font-size-link: 12px;
   }
 }
 
-@mixin form-container-center() {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+@mixin form-btn() {
+  width: 100%;
+  padding: 12px 0;
+  line-height: 22px;
+}
 
-  .form-container {
-    width: 100%;
-    max-width: $width-container;
-    min-width: 320px;
-
-    &--footer {
-      margin-top: 16px;
-      text-align: center;
-    }
-  }
+@mixin form-wrapper() {
+  width: 100%;
+  max-width: $width-container;
+  min-width: 320px;
+  text-align: center;
 }
 
 @mixin form-card() {
@@ -74,13 +68,11 @@ $font-size-link: 12px;
       width: 100%;
     }
 
-    &--btn-container {
+    &--btn-wrapper {
       text-align: center;
 
       .btn {
-        width: 100%;
-        padding: 12px 0;
-        line-height: 22px;
+        @include form-btn();
       }
 
       .link {
