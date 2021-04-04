@@ -39,7 +39,7 @@
     "email_hint": "Email should have correct format",
     "login": "LOGIN",
     "sign_up": "SIGN UP",
-    "statistics": "Allow to send anonymous statistics for product improvement",
+    "statistics": "Allow to send anonymous statistics for product improvement.",
     "more_info": "More info"
   },
   "change_password": {
