@@ -29,7 +29,9 @@ import { ServiceTypes } from '../../data/enums/service-types.enum';
 export class TestModelComponent implements OnInit, OnDestroy {
   modelLoading$: Observable<boolean>;
   type: string;
-  verification: string = ServiceTypes.Verify;
+  verification: string = Object.keys(ServiceTypes)
+    .find(key => ServiceTypes[key] === ServiceTypes.Verify)
+    .toUpperCase();
 
   constructor(private modelService: TestModelPageService, private store: Store<any>) {}
 
