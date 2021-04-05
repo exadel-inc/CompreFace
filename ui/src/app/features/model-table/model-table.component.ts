@@ -34,4 +34,8 @@ export class ModelTableComponent extends TableComponent {
   @Output() test = new EventEmitter<Model>();
   roleEnum = Role;
   types = ServiceTypes;
+
+  getKeyType(type: string): string {
+    return Object.keys(this.types).find(key => this.types[key] === type) || '';
+  }
 }
