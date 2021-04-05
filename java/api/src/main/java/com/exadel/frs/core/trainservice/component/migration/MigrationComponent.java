@@ -20,7 +20,6 @@ import com.exadel.frs.commonservice.entity.Face.Embedding;
 import com.exadel.frs.commonservice.entity.Image;
 import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
-import com.exadel.frs.core.trainservice.sdk.config.FeignClientFactory;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import feign.FeignException;
@@ -40,17 +39,17 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.CALCULATO
 @Slf4j
 public class MigrationComponent {
 
-    private final FeignClientFactory feignClientFactory;
     private final MigrationStatusStorage migrationStatusStorage;
     private final FacesRepository facesRepository;
     private final ImagesRepository imagesRepository;
+    private final FacesFeignClient feignClient;
 
     @SneakyThrows
     @Async
-    public void migrate(final String url) {
+    public void migrate() {
         try {
             log.info("Migrating...");
-            processFaces(url);
+            processFaces();
             log.info("Calculating embedding for faces finished");
 
             log.info("Migration successfully finished");
@@ -62,20 +61,22 @@ public class MigrationComponent {
         }
     }
 
-    private void processFaces(final String url) {
-        val migrationServerFeignClient = feignClientFactory.getFeignClient(FacesFeignClient.class, url);
-        val migrationCalculatorVersion = migrationServerFeignClient.getStatus().getCalculatorVersion();
+    private void processFaces() {
+        val migrationCalculatorVersion = feignClient.getStatus().getCalculatorVersion();
         log.info("Calculating embedding for faces");
         val all = facesRepository.findAll();
         for (val face : all) {
             log.info("Processing facename {} with id {}", face.getFaceName(), face.getId());
             if (!migrationCalculatorVersion.equals(face.getEmbedding().getCalculatorVersion())) {
                 val image = imagesRepository.findById(face.getId()).orElse(new Image());
+                if (image.getRawImg() == null) {
+                    continue;
+                }
                 val file = new MultipartFileData(image.getRawImg(), face.getFaceName(), null);
 
                 val faceEmbedding = new Embedding();
                 try {
-                    val findFacesResponse = migrationServerFeignClient.findFaces(file, 1, null, CALCULATOR_PLUGIN);
+                    val findFacesResponse = feignClient.findFaces(file, 1, null, CALCULATOR_PLUGIN);
                     val embeddings = findFacesResponse.getResult().stream()
                             .findFirst().orElseThrow()
                             .getEmbedding();
