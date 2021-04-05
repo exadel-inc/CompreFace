@@ -36,6 +36,6 @@ export class ModelTableComponent extends TableComponent {
   types = ServiceTypes;
 
   getKeyType(type: string): string {
-    return Object.keys(this.types).find(key => this.types[key] === type);
+    return Object.keys(this.types).find(key => this.types[key] === type) || '';
   }
 }
