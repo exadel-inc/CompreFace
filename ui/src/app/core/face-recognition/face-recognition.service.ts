@@ -15,6 +15,7 @@
  */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -22,6 +23,8 @@ import { environment } from '../../../environments/environment';
 import { Model } from '../../data/interfaces/model';
 import { UIRequestOptions } from '../../data/interfaces/ui-request-options';
 import { UIDoubleFileRequestOptions } from '../../data/interfaces/ui-double-request-options';
+import { RequestResultVerification } from '../../data/interfaces/response-result';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -73,20 +76,26 @@ export class FaceRecognitionService {
       );
   }
 
-  verification(processFile: any, checkFile: any, apiKey: string): Observable<any> {
+  verification(
+    sourceImage: File,
+    targetImage: File,
+    apiKey: string
+  ): Observable<{ data: { result: RequestResultVerification }; request: string }> {
     const url = `${environment.userApiUrl}verification/verify`;
-    const formData = new FormData();
-    formData.append('processFile', processFile);
-    formData.append('checkFile', checkFile);
+    const formData: FormData = new FormData();
+
+    formData.append('source_image', sourceImage);
+    formData.append('target_image', targetImage);
 
     return this.http
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
       })
       .pipe(
+        map(data => data as { result: RequestResultVerification }),
         map(data => ({
           data,
-          request: this.createUIDoubleFileRequest(url, { apiKey, processFile, checkFile }),
+          request: this.createUIDoubleFileRequest(url, { apiKey, sourceImage, targetImage }),
         }))
       );
   }
@@ -119,8 +128,8 @@ export class FaceRecognitionService {
   private createUIDoubleFileRequest(url: string, options = {} as UIDoubleFileRequestOptions, params = {}): string {
     const {
       apiKey,
-      processFile: { name: ffname },
-      checkFile: { name: sfname },
+      sourceImage: { name: ffname },
+      targetImage: { name: sfname },
     } = options;
     return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "processFile=@${ffname}" \\\n "checkFile=@${sfname}"`;
   }
