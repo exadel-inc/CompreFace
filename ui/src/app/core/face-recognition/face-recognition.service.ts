@@ -80,7 +80,7 @@ export class FaceRecognitionService {
     sourceImage: File,
     targetImage: File,
     apiKey: string
-  ): Observable<{ data: { result: RequestResultVerification[] }; request: string }> {
+  ): Observable<{ data: { result: RequestResultVerification }; request: string }> {
     const url = `${environment.userApiUrl}verification/verify`;
     const formData: FormData = new FormData();
 
@@ -92,7 +92,7 @@ export class FaceRecognitionService {
         headers: { 'x-api-key': apiKey },
       })
       .pipe(
-        map(data => data as { result: RequestResultVerification[] }),
+        map(data => data as { result: RequestResultVerification }),
         map(data => ({
           data,
           request: this.createUIDoubleFileRequest(url, { apiKey, sourceImage, targetImage }),
