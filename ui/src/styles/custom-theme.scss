@@ -1,3 +1,19 @@
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
 @import '~@angular/material/theming';
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 @import 'colors.scss';
@@ -53,7 +69,8 @@ $custom-theme-warn: mat-palette($warn, Main, Light, Dark);
 
 $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
 
-@mixin cust-theme($theme) {
+@mixin custom-theme($theme, ) {
+  $found: map-get($theme, font-family);
   $config: mat-get-color-config($theme);
   $primary_: map-get($theme, primary);
   $accent_: map-get($theme, accent);
@@ -116,6 +133,27 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
   .mat-body-1, .mat-body-2, .mat-caption {
     color: $pale-gray;
+  }
+
+  .mat-snack-bar-container {
+    color: $white;
+
+    &.info {
+      background: mat-color($accent_);
+    }
+
+    &.error {
+      background: mat-color($warn_);
+    }
+  }
+
+  .mat-checkbox-label,
+  .mat-card-actions {
+    color: $pale-gray;
+  }
+
+  .mat-primary {
+    border-color: mat-color($primary_) !important;
   }
 }
 

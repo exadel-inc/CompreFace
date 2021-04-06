@@ -14,15 +14,17 @@
  * permissions and limitations under the License.
  */
 
-.sign-up-form {
-  &-container {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-  }
+@import 'mixins.scss';
+@import 'forms.scss';
 
-  &-item {
-    width: 300px;
+.sign-up-form {
+  @include wrapper-center();
+
+  &--wrapper {
+    @include form-wrapper();
+
+    .build-version {
+      margin: 16px 0;
+    }
   }
 }

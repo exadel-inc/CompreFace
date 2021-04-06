@@ -20,10 +20,11 @@
     "title": "Login",
     "email": "Email",
     "password": "Password",
-    "sign_up": "SIGN UP",
+    "no_account": "Do not have an account?",
+    "sign_up": "Sign Up",
     "email_hint": "Email should have correct format",
     "password_hint": "Password is required",
-    "login": "LOGIN"
+    "login": "Login"
   },
   "registration": {
     "title": "Sign up",
@@ -37,8 +38,9 @@
     "name_restriction": "First name is required",
     "last_name_restriction": "Last name is required",
     "email_hint": "Email should have correct format",
-    "login": "LOGIN",
-    "sign_up": "SIGN UP",
+    "login": "Login",
+    "have_account": "Already have an account?",
+    "sign_up": "Sign Up",
     "statistics": "Allow to send anonymous statistics for product improvement",
     "more_info": "More info"
   },
