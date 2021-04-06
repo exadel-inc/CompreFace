@@ -54,6 +54,7 @@ recognition, face verification, face detection, landmark detection, age, and gen
     * [Configuration](/docs/Configuration.md)
     * [Architecture and Scalability](/docs/Architecture-and-scalability.md)
     * [Custom Builds](/docs/Custom-builds.md)
+    * [Face data migration](/docs/Face-data-migration.md)
     * [User Roles System](/docs/User-Roles-System.md)
     * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
   * [Contributing](#contributing)
