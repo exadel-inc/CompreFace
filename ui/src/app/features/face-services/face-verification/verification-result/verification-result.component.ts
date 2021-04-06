@@ -18,7 +18,7 @@ import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Outp
 import { Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
-import { RequestResult } from '../../../../data/interfaces/response-result';
+import { RequestResultVerification } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { VerificationServiceFields } from '../../../../data/enums/verification-service.enum';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
@@ -31,7 +31,7 @@ import { ImageSize } from '../../../../data/interfaces/image';
 })
 export class VerificationResultComponent implements OnChanges {
   @Input() requestInfo: RequestInfo;
-  @Input() printData: RequestResult;
+  @Input() printData: RequestResultVerification;
   @Input() files: any;
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
@@ -69,7 +69,7 @@ export class VerificationResultComponent implements OnChanges {
           this.checkFileCanvasSize,
           changes.files.currentValue.checkFile,
           this.printData,
-          VerificationServiceFields.checkFileData
+          VerificationServiceFields.CheckFileData
         );
       }
     }
@@ -81,7 +81,7 @@ export class VerificationResultComponent implements OnChanges {
           this.processFileCanvasSize,
           changes.files.currentValue.processFile,
           this.printData,
-          VerificationServiceFields.processFileData
+          VerificationServiceFields.ProcessFileData
         );
       }
     }
@@ -106,11 +106,15 @@ export class VerificationResultComponent implements OnChanges {
   private prepareForDraw(size, rawData, canvasSize, key): Observable<any> {
     return (
       rawData &&
-      rawData.map(value => ({
-        box: recalculateFaceCoordinate(value[key].box, size, canvasSize, this.faceDescriptionHeight),
+      this.getBox(rawData, key).map(value => ({
+        box: recalculateFaceCoordinate(value.box, size, canvasSize, this.faceDescriptionHeight),
         similarity: value.similarity,
       }))
     );
+  }
+
+  private getBox(rawData, key) {
+    return rawData.reduce((arr, value) => (value[key] instanceof Array ? [...arr, ...value[key]] : [...arr, value[key]]), []);
   }
 
   private createVerificationImage(ctx, box, face) {

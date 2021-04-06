@@ -20,7 +20,7 @@ import { first, map, tap } from 'rxjs/operators';
 
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
 import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
-import { RequestResult } from '../../../../data/interfaces/response-result';
+import { RequestResultRecognition } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
 import { ImageSize } from '../../../../data/interfaces/image';
@@ -33,7 +33,7 @@ import { ImageSize } from '../../../../data/interfaces/image';
 export class RecognitionResultComponent implements OnChanges {
   @Input() file: File;
   @Input() requestInfo: RequestInfo;
-  @Input() printData: RequestResult;
+  @Input() printData: RequestResultRecognition;
   @Input() isLoaded: boolean;
   @Input() type: string;
 
