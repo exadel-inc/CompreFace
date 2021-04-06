@@ -15,7 +15,7 @@
   -->
 <mat-card class="sign-up-card">
   <div class="form-card--logo">
-    <img src="assets/img/compreface-logo.svg" class="logo-img" alt="log-in-logo" />
+    <img src="assets/img/compreface-logo-login.svg" class="logo-img" alt="log-in-logo" />
   </div>
   <mat-card-header class="form-card--title">
     <mat-card-title>{{ 'registration.title' | translate }}</mat-card-title>
@@ -62,11 +62,13 @@
         <input matInput formControlName="confirmPassword" type="password" name="confirmPassword" required
         />
       </mat-form-field>
+
       <mat-checkbox formControlName="isAllowStatistics" *ngIf="isDemoPageAvailable$ | async">
         <span class="form-checkbox">{{ 'registration.statistics' | translate }}
           <a href="https://github.com/exadel-inc/CompreFace">{{ 'registration.more_info' | translate }}</a>
         </span>
       </mat-checkbox>
+
       <mat-error class="error-wrapper" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
         <span>{{ 'registration.password_dont_match' | translate }}</span>
       </mat-error>
