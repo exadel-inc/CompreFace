@@ -25,6 +25,7 @@ from src.services.flask_.constants import ARG
 from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import Constants
+import base64
 
 
 def endpoints(app):
@@ -47,8 +48,14 @@ def endpoints(app):
         face_plugins = managers.plugin_manager.filter_face_plugins(
             _get_face_plugin_names()
         )
+
+        if ARG.FILE_BASE64 in request.values:
+            rawfile = base64.b64decode(request.values[ARG.FILE_BASE64])
+        else:
+            rawfile = request.files['file']
+
         faces = detector(
-            img=read_img(request.files['file']),
+            img=read_img(rawfile),
             det_prob_threshold=_get_det_prob_threshold(),
             face_plugins=face_plugins
         )
@@ -59,8 +66,13 @@ def endpoints(app):
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
     def scan_faces_post():
+        if ARG.FILE_BASE64 in request.values:
+            rawfile = base64.b64decode(request.values[ARG.FILE_BASE64])
+        else:
+            rawfile = request.files['file']
+
         faces = scanner.scan(
-            img=read_img(request.files['file']),
+            img=read_img(rawfile),
             det_prob_threshold=_get_det_prob_threshold()
         )
         faces = _limit(faces, request.values.get(ARG.LIMIT))
