@@ -88,7 +88,7 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
         // compose new result
         return new VerifyFacesResponse(
                 mapper.toVerifyFacesResultDto(sourceFacesResult),
-                checkFileResult.getResult().stream().map(r -> getFaceMatch(r, classifierPredictor.verify(
+                processFileResult.getResult().stream().map(r -> getFaceMatch(r, classifierPredictor.verify(
                         toPrimitiveDouble.apply(r.getEmbedding()),
                         twoRankedEmbeddings
                 ))).collect(Collectors.toList()),
