@@ -24,12 +24,18 @@
         <span>{{ 'toolbar.signup' | translate }}</span>
       </button>
       <ng-container *ngIf="!isUserInfoAvailable">
-        <span class="user-info-name">{{ userName }}</span>
-        <span class="avatar-wrapper">
-          <button mat-icon-button [matMenuTriggerFor]="menu">
-            <img [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
-          </button>
-        </span>
+
+        <button mat-button [matMenuTriggerFor]="menu">
+          <img [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
+          <span class="user-info-name">{{ userName }}</span>
+          <mat-icon>keyboard_arrow_down</mat-icon>
+        </button>
+
+        <!--keyboard_arrow_up-->
+
+       <!-- <span class="avatar-wrapper">
+          <button mat-icon-button [matMenuTriggerFor]="menu"></button>
+        </span>-->
       </ng-container>
     </div>
     <mat-menu #menu="matMenu">
