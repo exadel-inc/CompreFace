@@ -17,67 +17,43 @@
 @import 'colors.scss';
 @import 'media.scss';
 
-.mat-toolbar {
+.header {
   position: fixed;
   top: 0;
   z-index: 102;
-}
 
-.mat-toolbar-row {
-  justify-content: space-between;
-
-  .logo,
-  .logo img {
-    margin: 3px 0;
-    flex-grow: 3;
-  }
-}
-
-.avatar-wrapper {
-  flex-grow: 1;
-  text-align: right;
-
-  button {
-    width: 50px;
-    height: 50px;
-    overflow: hidden;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-}
-
-.mat-button-focus-overlay {
-  background: none;
-}
-
-.mat-flat-button {
-  box-shadow: none;
-  background: none;
-  text-decoration: underline;
-
-  &:hover {
-    color: $hovered;
-  }
-
-  @include mobile-portrait {
+  .container {
     padding: 0;
-    min-width: 55px;
+    justify-content: space-between;
+  }
+
+  &--logo {
+
+    .logo {
+      display: flex;
+    }
+  }
+
+  &--user-info {
+    .btn {
+      padding: 0;
+      display: flex;
+      align-items: center;
+      color: $black;
+      font-weight: 500;
+
+      &--img {
+        margin: 0 4px 0 0;
+      }
+
+      &--icon {
+        margin: 0;
+        width: 18px;
+        height: 18px;
+        font-size: 21px;
+        color: black;
+      }
+    }
   }
 }
 
-.page-name {
-  text-transform: capitalize;
-}
-
-.user-info-name {
-  margin-right: 10px;
-}
-
-.user-signup-button {
-  display: inline;
-  font-weight: 500;
-  width: auto;
-}

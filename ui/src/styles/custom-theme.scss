@@ -117,6 +117,12 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   .mat-body-1, .mat-body-2, .mat-caption {
     color: $pale-gray;
   }
+
+  .mat-menu-content {
+    .mat-menu-item {
+      color: mat-color($warn_);
+    }
+  }
 }
 
 @include angular-material-typography($typography);

@@ -14,31 +14,32 @@
   ~ permissions and limitations under the License.
   -->
 
-<mat-toolbar>
+<mat-toolbar class="header">
   <mat-toolbar-row class="container">
-    <a class="logo" [routerLink]="'/'">
-      <img src="assets/img/face-recognition-logo.svg" alt="{{ 'toolbar.logo' | translate }}" />
-    </a>
-    <div class="user-info-container">
-      <button mat-menu-item (click)="goSignUp()" class="user-signup-button" *ngIf="isUserInfoAvailable">
-        <span>{{ 'toolbar.signup' | translate }}</span>
-      </button>
-      <ng-container *ngIf="!isUserInfoAvailable">
 
-        <button mat-button [matMenuTriggerFor]="menu">
-          <img [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
-          <span class="user-info-name">{{ userName }}</span>
-          <mat-icon>keyboard_arrow_down</mat-icon>
+    <div class="header--logo">
+      <a class="logo" [routerLink]="'/'">
+        <img src="assets/img/face-recognition-logo.svg" alt="{{ 'toolbar.logo' | translate }}" />
+      </a>
+    </div>
+
+    <div class="header--user-info">
+      <ng-container *ngIf="isUserInfoAvailable">
+        <button class="btn" mat-flat-button (click)="goSignUp()">
+          <span>{{ 'toolbar.signup' | translate }}</span>
         </button>
+      </ng-container>
 
-        <!--keyboard_arrow_up-->
-
-       <!-- <span class="avatar-wrapper">
-          <button mat-icon-button [matMenuTriggerFor]="menu"></button>
-        </span>-->
+      <ng-container *ngIf="!isUserInfoAvailable">
+        <button class="btn" mat-flat-button [matMenuTriggerFor]="menu" #notificationMenuBtn>
+          <img class="btn--img" [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
+          <span>{{ userName }}</span>
+          <mat-icon class="btn--icon">keyboard_arrow_down</mat-icon><!--keyboard_arrow_up-->
+        </button>
       </ng-container>
     </div>
-    <mat-menu #menu="matMenu">
+
+    <mat-menu #menu="matMenu" xPosition="before" [overlapTrigger]="false" (ss)="closed">
       <button mat-menu-item (click)="onEditUserInfo()">
         <span>{{ 'toolbar.user_info' | translate }}</span>
       </button>
@@ -49,5 +50,6 @@
         <span>{{ 'toolbar.logout' | translate }}</span>
       </button>
     </mat-menu>
+
   </mat-toolbar-row>
 </mat-toolbar>
