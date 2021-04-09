@@ -58,32 +58,28 @@ export class VerificationResultComponent implements OnChanges {
   constructor(private loadingPhotoService: LoadingPhotoService) {}
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes?.requestInfo?.currentValue) {
-      this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
+    if (!changes?.files?.currentValue) return;
+
+    this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
+
+    if (changes.files.currentValue.checkFile) {
+      this.refreshCanvas(
+        this.checkFileCanvasLink,
+        this.checkFileCanvasSize,
+        changes.files.currentValue.checkFile,
+        this.printData,
+        VerificationServiceFields.CheckFileData
+      );
     }
 
-    if (changes?.files?.currentValue) {
-      if (changes.files.currentValue.checkFile) {
-        this.refreshCanvas(
-          this.checkFileCanvasLink,
-          this.checkFileCanvasSize,
-          changes.files.currentValue.checkFile,
-          this.printData,
-          VerificationServiceFields.CheckFileData
-        );
-      }
-    }
-
-    if (changes?.files?.currentValue) {
-      if (changes.files.currentValue.processFile) {
-        this.refreshCanvas(
-          this.processFileCanvasLink,
-          this.processFileCanvasSize,
-          changes.files.currentValue.processFile,
-          this.printData,
-          VerificationServiceFields.ProcessFileData
-        );
-      }
+    if (changes.files.currentValue.processFile) {
+      this.refreshCanvas(
+        this.processFileCanvasLink,
+        this.processFileCanvasSize,
+        changes.files.currentValue.processFile,
+        this.printData,
+        VerificationServiceFields.ProcessFileData
+      );
     }
   }
 
@@ -118,11 +114,16 @@ export class VerificationResultComponent implements OnChanges {
   }
 
   private createVerificationImage(ctx, box, face) {
+    const description = face.similarity ? this.faceDescriptionHeight : null;
+
     ctx = createDefaultImage(ctx, box);
     ctx.fillStyle = 'green';
-    ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
-    ctx.fillStyle = 'white';
-    ctx.fillText(face.similarity, box.x_min + 10, box.y_max + 20);
+    ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, description);
+
+    if (!!description) {
+      ctx.fillStyle = 'white';
+      ctx.fillText(face.similarity, box.x_min + 10, box.y_max + 20);
+    }
   }
 
   /*
