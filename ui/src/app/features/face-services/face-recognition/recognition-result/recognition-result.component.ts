@@ -19,7 +19,13 @@ import { Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
-import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
+import {
+  resultRecognitionFormatter,
+  createDefaultImage,
+  recalculateFaceCoordinateLandmarks,
+  createDefaultImageLandmarks,
+  recalculateFaceCoordinate,
+} from '../../face-services.helpers';
 import { RequestResultRecognition } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
@@ -75,6 +81,9 @@ export class RecognitionResultComponent implements OnChanges {
 
   private prepareForDraw(size, rawData): Observable<any> {
     return rawData.map(value => ({
+      landmarks: value.landmarks
+        ? recalculateFaceCoordinateLandmarks(value.landmarks, size, this.canvasSize, this.faceDescriptionHeight)
+        : undefined,
       box: recalculateFaceCoordinate(value.box, size, this.canvasSize, this.faceDescriptionHeight),
       subjects: value.subjects,
     }));
@@ -90,9 +99,11 @@ export class RecognitionResultComponent implements OnChanges {
     ctx.fillText(face.subject, box.x_min + 10, box.y_min - 5);
   }
 
-  private createDetectionImage(ctx, box) {
+  private createDetectionImage(ctx, box, landmarks) {
+    const sizeLandmark = landmarks.length === 5 ? 3 : 1;
     ctx = createDefaultImage(ctx, box);
     ctx.fillStyle = 'green';
+    landmarks.forEach(val => createDefaultImageLandmarks(ctx, val, sizeLandmark));
     ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, this.faceDescriptionHeight);
     ctx.fillStyle = 'white';
     ctx.fillText(box.probability.toFixed(4), box.x_min + 10, box.y_max + 20);
@@ -135,7 +146,7 @@ export class RecognitionResultComponent implements OnChanges {
     this.createImage(ctx => {
       for (const value of data) {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        this.createDetectionImage(ctx, value.box);
+        this.createDetectionImage(ctx, value.box, value.landmarks);
       }
     });
   }

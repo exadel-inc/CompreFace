@@ -83,6 +83,24 @@ export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeTo
   };
 };
 
+/**
+ * Recalculate face coordinates according to canvas size (design).
+ *
+ * @param landmarks Face coordinates from BE.
+ * @param imageSize Size of image.
+ * @param sizeToCalc Canvas size. (design size).
+ * @param yAxisPadding padding to ensure capacity for text area on image.
+ */
+export const recalculateFaceCoordinateLandmarks = (landmarks: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number) => {
+  const divideWidth = imageSize.width / sizeToCalc.width;
+  const divideHeight = imageSize.height / sizeToCalc.height;
+
+  return landmarks.map(val => [
+    val[0] / divideWidth > sizeToCalc.width ? sizeToCalc.width : val[0] / divideWidth,
+    val[1] / divideHeight > sizeToCalc.height - yAxisPadding ? sizeToCalc.height - yAxisPadding : val[1] / divideHeight,
+  ]);
+};
+
 export const createDefaultImage = (ctx, box) => {
   ctx.beginPath();
   ctx.strokeStyle = 'green';
@@ -93,6 +111,16 @@ export const createDefaultImage = (ctx, box) => {
   ctx.lineTo(box.x_min, box.y_min);
   ctx.stroke();
   ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
+
+  return ctx;
+};
+
+export const createDefaultImageLandmarks = (ctx, box, sizeLandmark) => {
+  ctx.beginPath();
+  ctx.arc(box[0], box[1], sizeLandmark, 0, Math.PI * 2, false);
+  ctx.fill();
+  ctx.closePath();
+  ctx.stroke();
 
   return ctx;
 };
