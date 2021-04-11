@@ -31,15 +31,14 @@
       </ng-container>
 
       <ng-container *ngIf="!isUserInfoAvailable">
-        <button class="btn" mat-flat-button [matMenuTriggerFor]="menu" #notificationMenuBtn>
+        <button class="btn" mat-flat-button [matMenuTriggerFor]="menu" (menuClosed)="changeArrowIcon()" (menuOpened)="changeArrowIcon()">
           <img class="btn--img" [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
           <span>{{ userName }}</span>
-          <mat-icon class="btn--icon">keyboard_arrow_down</mat-icon><!--keyboard_arrow_up-->
+          <mat-icon class="btn--icon">{{ openMenu ? 'keyboard_arrow_down': 'keyboard_arrow_up' }}</mat-icon>
         </button>
       </ng-container>
     </div>
-
-    <mat-menu #menu="matMenu" xPosition="before" [overlapTrigger]="false" (ss)="closed">
+    <mat-menu #menu="matMenu" xPosition="before" [overlapTrigger]="false">
       <button mat-menu-item (click)="onEditUserInfo()">
         <span>{{ 'toolbar.user_info' | translate }}</span>
       </button>

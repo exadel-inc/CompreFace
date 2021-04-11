@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, first } from 'rxjs/operators';
@@ -27,7 +27,7 @@ import { MatMenuTrigger } from '@angular/material/menu';
   styleUrls: ['./tool-bar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToolBarComponent implements OnInit {
+export class ToolBarComponent {
   @Input() userAvatarInfo: string;
   @Input() userName: string;
   @Input() isUserInfoAvailable: boolean;
@@ -36,12 +36,12 @@ export class ToolBarComponent implements OnInit {
   @Output() changePassword = new EventEmitter();
   @Output() editUserInfo = new EventEmitter();
 
-  @Input() ss: any;
+  openMenu = false;
 
   constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
-  ngOnInit(): void {
-    console.log(this.ss);
+  changeArrowIcon(): void {
+    this.openMenu = !this.openMenu;
   }
 
   goSignUp() {
