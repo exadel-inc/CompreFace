@@ -100,7 +100,7 @@ export class RecognitionResultComponent implements OnChanges {
   }
 
   private createDetectionImage(ctx, box, landmarks) {
-    const sizeLandmark = landmarks.length === 5 ? 3 : 1;
+    const sizeLandmark = landmarks.length <= 5 ? 3 : 1;
     ctx = createDefaultImage(ctx, box);
     ctx.fillStyle = 'green';
     landmarks.forEach(val => createDefaultImageLandmarks(ctx, val, sizeLandmark));

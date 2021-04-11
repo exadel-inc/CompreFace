@@ -91,7 +91,12 @@ export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeTo
  * @param sizeToCalc Canvas size. (design size).
  * @param yAxisPadding padding to ensure capacity for text area on image.
  */
-export const recalculateFaceCoordinateLandmarks = (landmarks: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number) => {
+export const recalculateFaceCoordinateLandmarks = (
+  landmarks: [number[]],
+  imageSize: ImageSize,
+  sizeToCalc: ImageSize,
+  yAxisPadding: number
+) => {
   const divideWidth = imageSize.width / sizeToCalc.width;
   const divideHeight = imageSize.height / sizeToCalc.height;
 
