@@ -122,7 +122,14 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     color: $pale-gray;
   }
 
+  .mat-menu-content {
+    .mat-menu-item {
+      color: mat-color($warn_);
+    }
+  }
+
   .mat-snack-bar-container {
+    @include mat-elevation(0);
     color: $white;
 
     &.info {
@@ -144,7 +151,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .mat-card:not([class*=mat-elevation-z]){
-    box-shadow: none;
+    @include mat-elevation(0);
   }
 
   .mat-card {
