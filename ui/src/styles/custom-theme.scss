@@ -10,7 +10,7 @@
 $typography: mat-typography-config(
         $font-family: "Poppins, sans-serif",
         $headline: mat-typography-level(28px, 35px, 600), // .mat-headline
-        $title: mat-typography-level(22px, 28px, 600), // .mat-title
+        $title: mat-typography-level(24px, 30px, 600), // .mat-title
         $subheading-2: mat-typography-level(22px, 27px, 600),  // .mat-subheading-2
         $subheading-1: mat-typography-level(18px, 22.5px, 600), // .mat-subheading-1
         $body-1: mat-typography-level(16px, 22.5px, 400), // .mat-body-1
@@ -110,12 +110,29 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     }
   }
 
-  .mat-headline, .mat-title, .mat-subheading-2, .mat-subheading-1{
+  .mat-headline, .mat-title{
     color: $black;
+  }
+
+  .mat-subheading-2, .mat-subheading-1{
+    color: $dark-gray;
   }
 
   .mat-body-1, .mat-body-2, .mat-caption {
     color: $pale-gray;
+  }
+
+  .mat-card:not([class*=mat-elevation-z]){
+    box-shadow: none;
+  }
+
+  .mat-card {
+    border-radius: 12px !important;
+    padding: 24px !important;
+  }
+
+  th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    padding-left: 4px !important;
   }
 }
 

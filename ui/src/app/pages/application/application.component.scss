@@ -61,6 +61,7 @@
 .grid-container {
   display: flex;
   justify-content: space-between;
+  flex-direction: row;
 
   mat-card {
     width: 49%;
@@ -73,4 +74,15 @@
     flex-direction: column;
     justify-content: space-between;
   }
+}
+
+@include tablet-landscape {
+  .grid-container{
+    flex-direction: column !important;
+
+    mat-card {
+      width: 100% !important;
+    }
+  }
+
 }

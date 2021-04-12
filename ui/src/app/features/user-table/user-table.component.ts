@@ -19,6 +19,8 @@ import { AppUser } from 'src/app/data/interfaces/app-user';
 
 import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { TableComponent } from '../table/table.component';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-user-table',
@@ -38,6 +40,12 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() createMessage: string;
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
+
+  constructor(private matIconRegistry: MatIconRegistry, private domSanitzer: DomSanitizer) {
+    super();
+    this.matIconRegistry.addSvgIcon('edit', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/edit.svg'));
+    this.matIconRegistry.addSvgIcon('trash', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/trash.svg'));
+  }
 
   ngOnInit() {
     this.message = this.createMessage;
