@@ -23,7 +23,7 @@
 .container {
   height: 100%;
   min-height: 650px;
-  padding-top: 20px;
+  padding-top: 48px;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
@@ -38,9 +38,24 @@
   display: flex;
   justify-content: space-between;
 
+  @include tablet-portrait{
+    flex-direction: column;
+  }
+  @include mobile{
+    flex-direction: column;
+  }
+
   mat-card {
     width: 49%;
     transform: perspective(1px);
+    @include mobile {
+      width: 99%;
+      margin-bottom: 15px;
+    }
+    @include tablet-portrait{
+      width: 99%;
+      margin-bottom: 20px;
+    }
   }
 
   app-application-list-container,
@@ -49,6 +64,8 @@
     flex-direction: column;
     justify-content: space-between;
   }
+
+
 }
 
 .no-organisations {

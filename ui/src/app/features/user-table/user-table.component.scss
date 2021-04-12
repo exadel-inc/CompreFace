@@ -16,6 +16,7 @@
 
 mat-icon {
   cursor: pointer;
+  width: 18px;
 }
 
 .create-new-message {
@@ -28,4 +29,16 @@ mat-icon {
 
 caption{
   display: none;
+}
+
+tr.mat-header-row {
+  display: none !important;
+}
+
+tr.mat-row {
+  height: 75px !important;
+}
+
+.name-label{
+  margin: 0 0 4px 0;
 }

@@ -44,6 +44,7 @@ body {
   margin-right: auto;
   margin-left: auto;
   flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 mat-card {
@@ -83,7 +84,7 @@ app-table, app-user-table, app-model-table {
 
 @include tablet-portrait {
   .container {
-    max-width: 720px;
+    max-width: 100%;
   }
 }
 
@@ -163,5 +164,13 @@ form.search-input {
   padding: 8px 8px 8px 6px;
   mat-icon{
     color: rgba(34, 34, 34, 0.45);
+  }
+  input{
+    width: 100%;
+    border: 0;
+    font: inherit;
+    &:focus{
+      outline-width: 0
+    }
   }
 }
