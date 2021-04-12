@@ -57,6 +57,21 @@ $font-size-link: 12px;
   }
 
   .form-card {
+
+    ::ng-deep {
+
+      .mat-checkbox-layout {
+        white-space: normal;
+        text-align: left;
+      }
+
+      .mat-checkbox-label {
+        margin: 12px 0;
+        font-size: $font-size-link;
+        line-height: 13.5px;
+      }
+    }
+
     &--logo {
       display: flex;
       justify-content: center;

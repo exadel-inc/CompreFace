@@ -57,6 +57,7 @@
     "signup": "Sign Up"
   },
   "applications": {
+    "build": "build version",
     "caption": "Table of applications",
     "title": "Applications",
     "first_steps_title": "Create Application",

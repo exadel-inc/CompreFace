@@ -54,6 +54,7 @@ $custom-theme-warn: mat-palette($warn, Main, Light, Dark);
 $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
 
 @mixin custom-theme($theme, ) {
+  $font-family: mat-font-family($typography);
   $config: mat-get-color-config($theme);
   $primary_: map-get($theme, primary);
   $accent_: map-get($theme, accent);
@@ -132,6 +133,24 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     @include mat-elevation(0);
     color: $white;
 
+    font-family: $font-family;
+    border-radius: 12px !important;
+    padding: 18px 26px;
+
+    .message {
+      display: flex;
+
+      &--icons {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+      }
+    }
+
+    .material-icons {
+      font-size: 21px;
+    }
+
     &.info {
       background: mat-color($accent_);
     }
@@ -161,6 +180,18 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
   th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
     padding-left: 4px !important;
+  }
+
+  .mat-input-wrapper {
+
+    .mat-form-field {
+
+      width: 170px !important;
+
+      @include mobile-portrait {
+        width: 100% !important;
+      }
+    }
   }
 }
 

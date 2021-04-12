@@ -18,7 +18,6 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-snackbar',
-  styleUrls: ['./snackbar.component.scss'],
   templateUrl: './snackbar.component.html',
 })
 export class AppSnackBarComponent {
