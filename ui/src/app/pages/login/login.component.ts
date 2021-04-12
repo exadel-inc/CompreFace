@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { loadDemoApiKeyAction } from '../../store/demo/actions';
 import { selectDemoPageAvailability, selectDemoPending } from '../../store/demo/selectors';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
@@ -30,6 +31,7 @@ export class LoginComponent implements OnInit {
   routes = Routes;
   isPending$: Observable<boolean>;
   isDemoPageAvailable$: Observable<boolean>;
+  env = environment;
 
   constructor(private store: Store) {
     this.isPending$ = this.store.select(selectDemoPending);

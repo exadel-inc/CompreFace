@@ -10,7 +10,7 @@
 $typography: mat-typography-config(
         $font-family: "Poppins, sans-serif",
         $headline: mat-typography-level(28px, 35px, 600), // .mat-headline
-        $title: mat-typography-level(24px, 30px, 600), // .mat-title
+        $title: mat-typography-level(22px, 28px, 600), // .mat-title
         $subheading-2: mat-typography-level(22px, 27px, 600),  // .mat-subheading-2
         $subheading-1: mat-typography-level(18px, 22.5px, 600), // .mat-subheading-1
         $body-1: mat-typography-level(16px, 22.5px, 400), // .mat-body-1
@@ -53,7 +53,7 @@ $custom-theme-warn: mat-palette($warn, Main, Light, Dark);
 
 $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
 
-@mixin cust-theme($theme) {
+@mixin custom-theme($theme, ) {
   $config: mat-get-color-config($theme);
   $primary_: map-get($theme, primary);
   $accent_: map-get($theme, accent);
@@ -120,6 +120,27 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
   .mat-body-1, .mat-body-2, .mat-caption {
     color: $pale-gray;
+  }
+
+  .mat-snack-bar-container {
+    color: $white;
+
+    &.info {
+      background: mat-color($accent_);
+    }
+
+    &.error {
+      background: mat-color($warn_);
+    }
+  }
+
+  .mat-checkbox-label,
+  .mat-card-actions {
+    color: $pale-gray;
+  }
+
+  .mat-primary {
+    border-color: mat-color($primary_) !important;
   }
 
   .mat-card:not([class*=mat-elevation-z]){
