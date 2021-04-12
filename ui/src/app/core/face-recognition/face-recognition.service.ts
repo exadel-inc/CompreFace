@@ -131,6 +131,6 @@ export class FaceRecognitionService {
       sourceImage: { name: ffname },
       targetImage: { name: sfname },
     } = options;
-    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "source_image=@${ffname}" \\\n"target_image=@${sfname}"`;
+    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "source_image=@${ffname}" \\\n-F "target_image=@${sfname}"`;
   }
 }
