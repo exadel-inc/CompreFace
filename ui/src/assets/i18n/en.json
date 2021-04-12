@@ -80,7 +80,8 @@
       }
     },
     "search": {
-      "title": "Search Application"
+      "title": "Search Application",
+      "no_result_message": "No matches found"
     }
   },
   "models": {

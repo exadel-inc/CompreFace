@@ -29,7 +29,7 @@ import { TableComponent } from '../table/table.component';
 export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
   messageHeader: string;
   message: string;
-  noResultMessage = 'No matches found';
+  noResultMessage = 'applications.search.no_result_message';
   roleEnum = Role;
 
   @Input() availableRoles: string[];

@@ -54,3 +54,11 @@
   flex-direction: column;
   align-items: flex-end;
 }
+
+.create-new-message {
+  display: flex;
+  align-items: center;
+  mat-icon {
+    padding-right: 15px;
+  }
+}
