@@ -16,25 +16,23 @@
 
 <mat-toolbar class="header">
   <mat-toolbar-row class="container">
-
     <div class="header--logo">
       <a class="logo" [routerLink]="'/'">
-        <img src="assets/img/face-recognition-logo.svg" alt="{{ 'toolbar.logo' | translate }}" />
+        <img class="main-img" src="assets/img/face-recognition-logo.svg" alt="{{ 'toolbar.logo' | translate }}" />
+        <img class="mobile-img" src="assets/img/face-recognition-logo-mobile.svg" alt="{{ 'toolbar.logo' | translate }}" />
       </a>
     </div>
-
     <div class="header--user-info">
       <ng-container *ngIf="isUserInfoAvailable">
         <button class="btn" mat-flat-button (click)="goSignUp()">
           <span>{{ 'toolbar.signup' | translate }}</span>
         </button>
       </ng-container>
-
       <ng-container *ngIf="!isUserInfoAvailable">
         <button class="btn" mat-flat-button [matMenuTriggerFor]="menu" (menuClosed)="changeArrowIcon()" (menuOpened)="changeArrowIcon()">
           <img class="btn--img" [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
           <span>{{ userName }}</span>
-          <mat-icon class="btn--icon">{{ openMenu ? 'keyboard_arrow_down': 'keyboard_arrow_up' }}</mat-icon>
+          <mat-icon class="btn--icon">{{ openMenu ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
         </button>
       </ng-container>
     </div>
@@ -49,6 +47,5 @@
         <span>{{ 'toolbar.logout' | translate }}</span>
       </button>
     </mat-menu>
-
   </mat-toolbar-row>
 </mat-toolbar>

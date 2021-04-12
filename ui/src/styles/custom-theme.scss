@@ -129,6 +129,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .mat-snack-bar-container {
+    @include mat-elevation(0);
     color: $white;
 
     &.info {
@@ -150,7 +151,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .mat-card:not([class*=mat-elevation-z]){
-    box-shadow: none;
+    @include mat-elevation(0);
   }
 
   .mat-card {

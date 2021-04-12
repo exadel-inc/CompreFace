@@ -23,7 +23,6 @@
   z-index: 102;
 
   .container {
-    padding: 0;
     justify-content: space-between;
   }
 
@@ -31,6 +30,20 @@
 
     .logo {
       display: flex;
+
+      .main-img {
+
+        @include mobile-portrait {
+          display: none;
+        }
+      }
+      .mobile-img {
+        display: none;
+
+        @include mobile-portrait {
+          display: block;
+        }
+      }
     }
   }
 
