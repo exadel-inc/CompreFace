@@ -13,47 +13,39 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-<div class="logo">
-  <img src="assets/img/compreface_login_logo.svg" class="logo-img" alt="log-in-logo" />
-</div>
 <mat-card class="login-card">
-  <mat-card-header>
+  <div class="form-card--logo">
+    <img src="assets/img/compreface-logo-login.svg" class="logo-img" alt="log-in-logo" />
+  </div>
+  <mat-card-header class="form-card--title">
     <mat-card-title>{{ 'login.title' | translate }}</mat-card-title>
   </mat-card-header>
   <mat-card-content>
-    <form class="login-form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
-      <mat-form-field class="login-full-width">
+    <form class="form-card--form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'login.email' | translate }}</mat-label>
         <mat-error class="error-wrapper">
           <span>{{ 'login.email_hint' | translate }}</span>
-          <mat-icon>warning</mat-icon>
         </mat-error>
-        <input matInput placeholder="{{ 'login.email' | translate }}" formControlName="email" name="email" required />
+        <input matInput formControlName="email" name="email" required />
       </mat-form-field>
-
-      <mat-form-field class="login-full-width">
+      <mat-form-field appearance="outline">
+        <mat-label>{{ 'login.password' | translate }}</mat-label>
         <mat-error class="error-wrapper">
           <span>{{ 'login.password_hint' | translate }}</span>
-          <mat-icon>warning</mat-icon>
         </mat-error>
-        <input
-          matInput
-          placeholder="{{ 'login.password' | translate }}"
-          formControlName="password"
-          type="password"
-          name="password"
-          required
-        />
+        <input matInput formControlName="password" type="password" name="password" required />
       </mat-form-field>
     </form>
   </mat-card-content>
-  <mat-card-actions>
-    <button mat-flat-button color="primary" [routerLink]="[routes.SignUp]">{{ 'login.sign_up' | translate }}</button>
-    <button mat-flat-button type="submit" color="primary" form="loginForm" [disabled]="form.invalid || (isLoading$ | async)">
+  <mat-card-actions class="form-card--btn-wrapper">
+    <button class="btn" mat-flat-button type="submit" color="primary" form="loginForm" [disabled]="form.invalid || (isLoading$ | async)">
       {{ 'login.login' | translate }}
     </button>
+    <div class="link">
+      <span >{{ 'login.no_account' | translate }}
+        <a color="primary" [routerLink]="[routes.SignUp]">{{ 'login.sign_up' | translate }}</a>
+      </span>
+    </div>
   </mat-card-actions>
 </mat-card>
-<div class="footer">
-  <span class="mat-caption">build version: {{ env.buildNumber }}</span>
-</div>

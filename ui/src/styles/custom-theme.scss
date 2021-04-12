@@ -53,7 +53,7 @@ $custom-theme-warn: mat-palette($warn, Main, Light, Dark);
 
 $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
 
-@mixin cust-theme($theme) {
+@mixin custom-theme($theme, ) {
   $config: mat-get-color-config($theme);
   $primary_: map-get($theme, primary);
   $accent_: map-get($theme, accent);
@@ -110,8 +110,12 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     }
   }
 
-  .mat-headline, .mat-title, .mat-subheading-2, .mat-subheading-1{
+  .mat-headline, .mat-title{
     color: $black;
+  }
+
+  .mat-subheading-2, .mat-subheading-1{
+    color: $dark-gray;
   }
 
   .mat-body-1, .mat-body-2, .mat-caption {
@@ -122,6 +126,40 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     .mat-menu-item {
       color: mat-color($warn_);
     }
+  }
+
+  .mat-snack-bar-container {
+    color: $white;
+
+    &.info {
+      background: mat-color($accent_);
+    }
+
+    &.error {
+      background: mat-color($warn_);
+    }
+  }
+
+  .mat-checkbox-label,
+  .mat-card-actions {
+    color: $pale-gray;
+  }
+
+  .mat-primary {
+    border-color: mat-color($primary_) !important;
+  }
+
+  .mat-card:not([class*=mat-elevation-z]){
+    box-shadow: none;
+  }
+
+  .mat-card {
+    border-radius: 12px !important;
+    padding: 24px !important;
+  }
+
+  th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+    padding-left: 4px !important;
   }
 }
 

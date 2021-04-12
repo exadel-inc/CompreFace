@@ -14,31 +14,10 @@
  * permissions and limitations under the License.
  */
 
-mat-icon {
-  cursor: pointer;
-  width: 18px;
-}
-
-.create-new-message {
+@mixin wrapper-center() {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  mat-icon {
-    padding-right: 15px;
-  }
-}
-
-caption{
-  display: none;
-}
-
-tr.mat-header-row {
-  display: none !important;
-}
-
-tr.mat-row {
-  height: 75px !important;
-}
-
-.name-label{
-  margin: 0 0 4px 0;
+  justify-content: center;
+  height: 100%;
 }

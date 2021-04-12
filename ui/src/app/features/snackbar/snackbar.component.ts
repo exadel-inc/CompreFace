@@ -25,6 +25,15 @@ export class AppSnackBarComponent {
   public type: string;
   public message: string;
 
+  public get icons(): string {
+    switch (this.type) {
+      case 'error':
+        return 'error_outline';
+      case 'info':
+        return 'task_alt';
+    }
+  }
+
   constructor(@Inject(MAT_SNACK_BAR_DATA) data: { type: string; message: string }) {
     this.type = data.type;
     this.message = data.message;

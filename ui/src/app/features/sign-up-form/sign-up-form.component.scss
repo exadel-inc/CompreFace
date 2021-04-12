@@ -13,38 +13,39 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import 'forms.scss';
+@import 'media.scss';
 
-@import "colors.scss";
+.sign-up-card {
+  @include form-card();
 
-.logo-img {
-  width: 100%;
-}
+  .mat-input-wrapper {
+    display: flex;
+    justify-content: space-between;
 
-.mat-card-header {
-  // workaround: mat-card-header-text can not be selected (
-  margin-left: -16px;
-}
+    @include mobile-portrait {
+      flex-direction: column;
+    }
 
-.sign-up {
-  &-full-width {
-    width: 100%;
-    margin-bottom: 10px;
+    ::ng-deep .mat-form-field {
+      width: 170px !important;
+
+      @include mobile-portrait {
+        width: 100% !important;
+      }
+    }
   }
-}
 
-.alert-danger {
-  background-color: $red;
-  color: $white;
-  padding: 10px;
-  margin-bottom: 10px;
-}
+  ::ng-deep {
+    .mat-checkbox-layout {
+      white-space: normal;
+      text-align: left;
+    }
 
-.mat-card-actions {
-  display: flex;
-  justify-content: space-between;
-}
-
-.error-wrapper {
-  display: flex;
-  justify-content: space-between;
+    .mat-checkbox-label {
+      margin: 12px 0;
+      font-size: $font-size-link;
+      line-height: 13.5px;
+    }
+  }
 }
