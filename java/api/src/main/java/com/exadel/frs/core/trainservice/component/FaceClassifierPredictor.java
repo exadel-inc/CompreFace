@@ -20,7 +20,6 @@ import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -37,7 +36,7 @@ public class FaceClassifierPredictor {
         return classifier.verify(input, modelKey, imageId);
     }
 
-    public Double verify(final double[] processFileEmbedding, final double[][] checkFileEmbedding) {
-        return classifier.verify(processFileEmbedding, checkFileEmbedding);
+    public double[] verify(final double[] sourceImageEmbedding, final double[][] targetImageEmbedding) {
+        return classifier.verify(sourceImageEmbedding, targetImageEmbedding);
     }
 }
