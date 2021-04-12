@@ -16,9 +16,17 @@
 
 @import 'mixins.scss';
 @import 'forms.scss';
+@import 'media.scss';
 
 .sign-up-form {
   @include wrapper-center();
+
+  .container {
+    padding: 0;
+    @include mobile-portrait {
+      padding: 16px;
+    }
+  }
 
   &--wrapper {
     @include form-wrapper();

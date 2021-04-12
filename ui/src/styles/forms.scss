@@ -14,11 +14,12 @@
  * permissions and limitations under the License.
  */
 
+@import 'media.scss';
+
 $width-container: 420px;
 $min-width-container: 320px;
 $padding-RL: 32px;
 $padding-container: 49px $padding-RL;
-$border-radius-container: 12px;
 $font-size-link: 12px;
 
 @mixin reset-form-card() {
@@ -49,14 +50,21 @@ $font-size-link: 12px;
 
 @mixin form-card() {
   @include reset-form-card();
-  padding: $padding-container;
-  border-radius: $border-radius-container;
+  padding: $padding-container !important;
+
+  @include mobile-portrait {
+    padding: 34px 24px !important;
+  }
 
   .form-card {
     &--logo {
       display: flex;
       justify-content: center;
       margin-bottom: 32px;
+
+      img {
+        min-width: 240px;
+      }
     }
 
     &--title {

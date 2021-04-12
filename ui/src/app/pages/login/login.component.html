@@ -15,7 +15,7 @@
   -->
 
 <div class="login-form">
-  <div class="login-form--wrapper">
+  <div class="login-form--wrapper container">
     <app-spinner *ngIf="isPending$ | async; else loginContent"></app-spinner>
     <ng-template #loginContent>
       <app-login-form></app-login-form>
