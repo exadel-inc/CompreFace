@@ -49,10 +49,7 @@ def endpoints(app):
             _get_face_plugin_names()
         )
 
-        if ARG.FILE_BASE64 in request.values:
-            rawfile = base64.b64decode(request.values[ARG.FILE_BASE64])
-        else:
-            rawfile = request.files['file']
+        rawfile = base64.b64decode(request.get_json())
 
         faces = detector(
             img=read_img(rawfile),
