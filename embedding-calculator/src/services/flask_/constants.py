@@ -19,4 +19,3 @@ class ARG:
     LIMIT = 'limit'
     DET_PROB_THRESHOLD = 'det_prob_threshold'
     FACE_PLUGINS = 'face_plugins'
-    FILE_BASE64 = 'file_base64'
