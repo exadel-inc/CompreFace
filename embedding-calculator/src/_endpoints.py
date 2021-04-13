@@ -66,7 +66,6 @@ def endpoints(app):
         face_plugins = managers.plugin_manager.filter_face_plugins(
             _get_face_plugin_names()
         )
-
         faces = detector(
             img=read_img(request.files['file']),
             det_prob_threshold=_get_det_prob_threshold(),
