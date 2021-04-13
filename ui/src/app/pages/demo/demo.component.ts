@@ -18,6 +18,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { selectDemoPending } from '../../store/demo/selectors';
+import { ServiceTypes } from '../../data/enums/service-types.enum';
 
 @Component({
   selector: 'app-demo',
@@ -26,6 +27,8 @@ import { selectDemoPending } from '../../store/demo/selectors';
 })
 export class DemoComponent implements OnInit {
   isPending$: Observable<any>;
+  type: string = ServiceTypes.Recognition;
+
   constructor(private store: Store<any>) {}
 
   ngOnInit() {

@@ -15,15 +15,14 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export interface RequestResult {
-  processFileData: {
+export interface RequestResultRecognition {
+  result: {
     box: {
-      probability: {
-        x_max: number;
-        x_min: number;
-        y_max: number;
-        y_min: number;
-      };
+      probability: number;
+      x_max: number;
+      x_min: number;
+      y_max: number;
+      y_min: number;
       subjects: [
         {
           subject: string;
@@ -32,21 +31,32 @@ export interface RequestResult {
       ];
     };
   };
-  checkFileData: {
-    box: {
-      probability: {
-        x_max: number;
-        x_min: number;
-        y_max: number;
-        y_min: number;
+}
+
+export interface RequestResultVerification {
+  result: [
+    {
+      source_image_face: {
+        box: {
+          probability: number;
+          x_max: number;
+          y_max: number;
+          x_min: number;
+          y_min: number;
+        };
       };
-      subjects: [
+      face_matches: [
         {
-          subject: string;
+          box: {
+            probability: number;
+            x_max: number;
+            y_max: number;
+            x_min: number;
+            y_min: number;
+          };
           similarity: number;
         }
       ];
-    };
-  };
-  similarity?: number;
+    }
+  ];
 }
