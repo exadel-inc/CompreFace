@@ -42,14 +42,13 @@ def endpoints(app):
         )
 
     @app.route('/find_faces_base64', methods=['POST'])
-    @needs_attached_file
     def find_faces_base64_post():
         detector = managers.plugin_manager.detector
         face_plugins = managers.plugin_manager.filter_face_plugins(
             _get_face_plugin_names()
         )
 
-        rawfile = base64.b64decode(request.get_json())
+        rawfile = base64.b64decode(request.get_json()["file"])
 
         faces = detector(
             img=read_img(rawfile),
