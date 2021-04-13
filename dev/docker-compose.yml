@@ -82,5 +82,21 @@ services:
       - "3300:3000"
     build:
       context: ../embedding-calculator
+      args:
+        - FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1
+        - CALCULATION_PLUGIN=insightface.Calculator@arcface_mobilefacenet
+        - EXTRA_PLUGINS=insightface.Landmarks2d106Detector,insightface.GenderDetector,insightface.AgeDetector
+#        - BASE_IMAGE=compreface-core-base:base-cuda100-py37
+#        - GPU_IDX=0
     environment:
       - ML_PORT=3000
+
+#  compreface-core:
+##    image: ${registry}compreface-core:0.5-facenet
+#    image: ${registry}compreface-core:landmarks106
+#    container_name: "compreface-core"
+#    ports:
+#      - "3300:3000"
+#    runtime: nvidia
+#    environment:
+#      - ML_PORT=3000

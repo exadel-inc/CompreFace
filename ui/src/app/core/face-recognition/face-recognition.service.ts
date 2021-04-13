@@ -68,7 +68,7 @@ export class FaceRecognitionService {
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        params: { face_plugins: 'landmarks' },
+        params: { face_plugins: 'landmarks2d106' },
       })
       .pipe(
         map(data => ({
