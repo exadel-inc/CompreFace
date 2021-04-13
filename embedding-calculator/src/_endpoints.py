@@ -41,9 +41,9 @@ def endpoints(app):
             available_plugins=available_plugins
         )
 
-    @app.route('/find_faces', methods=['POST'])
+    @app.route('/find_faces_base64', methods=['POST'])
     @needs_attached_file
-    def find_faces_post():
+    def find_faces_base64_post():
         detector = managers.plugin_manager.detector
         face_plugins = managers.plugin_manager.filter_face_plugins(
             _get_face_plugin_names()
@@ -63,16 +63,28 @@ def endpoints(app):
         faces = _limit(faces, request.values.get(ARG.LIMIT))
         return jsonify(plugins_versions=plugins_versions, result=faces)
 
+    @app.route('/find_faces', methods=['POST'])
+    @needs_attached_file
+    def find_faces_post():
+        detector = managers.plugin_manager.detector
+        face_plugins = managers.plugin_manager.filter_face_plugins(
+            _get_face_plugin_names()
+        )
+
+        faces = detector(
+            img=read_img(request.files['file']),
+            det_prob_threshold=_get_det_prob_threshold(),
+            face_plugins=face_plugins
+        )
+        plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
+        faces = _limit(faces, request.values.get(ARG.LIMIT))
+        return jsonify(plugins_versions=plugins_versions, result=faces)
+
     @app.route('/scan_faces', methods=['POST'])
     @needs_attached_file
     def scan_faces_post():
-        if ARG.FILE_BASE64 in request.values:
-            rawfile = base64.b64decode(request.values[ARG.FILE_BASE64])
-        else:
-            rawfile = request.files['file']
-
         faces = scanner.scan(
-            img=read_img(rawfile),
+            img=read_img(request.files['file']),
             det_prob_threshold=_get_det_prob_threshold()
         )
         faces = _limit(faces, request.values.get(ARG.LIMIT))
