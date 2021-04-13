@@ -38,11 +38,11 @@
   display: flex;
   justify-content: space-between;
 
-  @include tablet-portrait{
+  @include tablet-portrait {
     flex-direction: column;
   }
 
-  @include mobile{
+  @include mobile {
     flex-direction: column;
   }
 
@@ -55,7 +55,7 @@
       margin-bottom: 15px;
     }
 
-    @include tablet-portrait{
+    @include tablet-portrait {
       width: 99%;
       margin-bottom: 20px;
     }
