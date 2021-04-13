@@ -76,3 +76,11 @@ th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:
 button.special-test-button-color.mat-raised-button.mat-accent{
   background-color: #27C224;
 }
+
+.create-new-message {
+  display: flex;
+  align-items: center;
+  mat-icon {
+    padding-right: 15px;
+  }
+}

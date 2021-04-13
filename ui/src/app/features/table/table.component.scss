@@ -29,3 +29,11 @@
 caption {
   display: none;
 }
+
+.create-new-message {
+  display: flex;
+  align-items: center;
+  mat-icon {
+    padding-right: 15px;
+  }
+}

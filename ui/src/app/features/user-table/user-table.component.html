@@ -68,7 +68,6 @@
 </table>
 
 <ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && createMessage && !isLoading">
-  <h4>{{ messageHeader }}</h4>
   <div class="create-new-message">
     <mat-icon>info</mat-icon>
     <p>{{ message }}</p>

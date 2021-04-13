@@ -27,9 +27,8 @@ import { TableComponent } from '../table/table.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
-  messageHeader: string;
   message: string;
-  noResultMessage = 'No matches found';
+  noResultMessage: string;
   roleEnum = Role;
 
   @Input() availableRoles: string[];
