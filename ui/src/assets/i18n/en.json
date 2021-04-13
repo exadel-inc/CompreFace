@@ -9,7 +9,8 @@
       "add": "ADD",
       "rename": "RENAME",
       "edit": "EDIT",
-      "delete": "DELETE"
+      "delete": "DELETE",
+      "ok": "OK"
     },
     "name": "Name",
     "type": "Type",

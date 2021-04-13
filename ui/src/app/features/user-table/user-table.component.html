@@ -36,21 +36,6 @@
     <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.role' | translate }}</th>
     <td mat-cell *matCellDef="let element">
       <mat-icon svgIcon="edit"></mat-icon>
-
-      <!--      <mat-form-field>-->
-      <!--        <mat-select-->
-      <!--          *ngIf="isRoleChangeAllowed(element); else disabledRole"-->
-      <!--          [value]="element.role"-->
-      <!--          (selectionChange)="changeRole($event, element)"-->
-      <!--        >-->
-      <!--          <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role }}</mat-option>-->
-      <!--        </mat-select>-->
-      <!--        <ng-template #disabledRole>-->
-      <!--          <mat-select disabled [(value)]="element.role">-->
-      <!--            <mat-option [value]="element.role">{{ element.role }}</mat-option>-->
-      <!--          </mat-select>-->
-      <!--        </ng-template>-->
-      <!--      </mat-form-field>-->
     </td>
   </ng-container>
 

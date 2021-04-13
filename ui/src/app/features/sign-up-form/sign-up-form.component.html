@@ -36,7 +36,7 @@
             <span>{{ 'registration.last_name_restriction' | translate }}</span>
           </mat-error>
           <input matInput formControlName="lastName" name="lastName" required />
-        </mat-form-field >
+        </mat-form-field>
       </div>
       <mat-form-field appearance="outline">
         <mat-label>{{ 'registration.email' | translate }}</mat-label>
@@ -59,12 +59,12 @@
         <mat-error class="error-wrapper">
           <span>{{ 'registration.password_restriction' | translate }}</span>
         </mat-error>
-        <input matInput formControlName="confirmPassword" type="password" name="confirmPassword" required
-        />
+        <input matInput formControlName="confirmPassword" type="password" name="confirmPassword" required />
       </mat-form-field>
 
       <mat-checkbox formControlName="isAllowStatistics" *ngIf="isDemoPageAvailable$ | async">
-        <span class="form-checkbox">{{ 'registration.statistics' | translate }}
+        <span class="form-checkbox"
+          >{{ 'registration.statistics' | translate }}
           <a href="https://github.com/exadel-inc/CompreFace">{{ 'registration.more_info' | translate }}</a>
         </span>
       </mat-checkbox>
@@ -79,7 +79,8 @@
       {{ 'registration.sign_up' | translate }}
     </button>
     <div class="link">
-      <span >{{ 'registration.have_account' | translate }}
+      <span
+        >{{ 'registration.have_account' | translate }}
         <a color="primary" [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</a>
       </span>
     </div>
