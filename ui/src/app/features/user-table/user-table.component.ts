@@ -21,6 +21,7 @@ import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { TableComponent } from '../table/table.component';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-user-table',
@@ -29,9 +30,7 @@ import { DomSanitizer } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
-  messageHeader: string;
   message: string;
-  noResultMessage = 'No matches found';
   roleEnum = Role;
 
   @Input() availableRoles: string[];
@@ -41,8 +40,8 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
 
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitzer: DomSanitizer) {
-    super();
+  constructor(private matIconRegistry: MatIconRegistry, private domSanitzer: DomSanitizer, translate: TranslateService) {
+    super(translate);
     this.matIconRegistry.addSvgIcon('edit', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/edit.svg'));
     this.matIconRegistry.addSvgIcon('trash', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/trash.svg'));
   }
@@ -53,15 +52,6 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
 
   ngOnChanges(): void {
     this.getMessageContent();
-  }
-
-  isRoleChangeAllowed(user: AppUser): boolean {
-    return (
-      user.userId !== this.currentUserId &&
-      this.userRole !== Role.User &&
-      user.role !== Role.Owner &&
-      this.availableRoles.indexOf(user.role) > -1
-    );
   }
 
   delete(user: AppUser): void {

@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface ITableConfig {
   columns: {
@@ -49,6 +50,11 @@ export class TableComponent {
   }[];
   displayedColumns: string[];
   data: any[];
+  noResultMessage: string;
+
+  constructor(private translate: TranslateService) {
+    this.noResultMessage = this.translate.instant('users.search.no_results');
+  }
 
   change(element: any): void {
     this.changeRow.emit(element);

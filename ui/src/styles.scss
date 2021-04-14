@@ -151,6 +151,15 @@ app-table, app-user-table, app-model-table {
   margin: 30px 0;
 }
 
+.create-new-message {
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    padding-right: 15px;
+  }
+}
+
 form.search-input {
   display: flex;
   height: 32px;
