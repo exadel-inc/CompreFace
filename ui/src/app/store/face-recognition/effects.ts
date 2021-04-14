@@ -16,14 +16,14 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
-import { iif, Observable, of } from 'rxjs';
+import { defer, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
-import { addFace, addFaceFail, addFaceSuccess, recognizeFace, recognizeFaceFail, recognizeFaceSuccess } from './actions';
+import { addFace, addFaceFail, addFaceSuccess, recognizeFace, recognizeFaceFail, recognizeFaceSuccess } from './action';
 import { ServiceTypes } from '../../data/enums/service-types.enum';
 @Injectable()
 export class FaceRecognitionEffects {
@@ -39,7 +39,7 @@ export class FaceRecognitionEffects {
     ofType(recognizeFace),
     withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey)),
     switchMap(([action, model, demoApiKey]) =>
-      iif(() => !!model, this.getEndpoint(action.file, model), this.recognizeFace(action.file, demoApiKey))
+      defer(() => (!!model ? this.getEndpoint(action.file, model) : this.recognizeFace(action.file, demoApiKey)))
     )
   );
 

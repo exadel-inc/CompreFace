@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
 import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
 
 import { AppState } from '../../../store';
-import { verifyFaceReset, verifyFaceSaveToStore } from '../../../store/face-verification/actions';
+import { verifyFaceReset, verifyFace } from '../../../store/face-verification/action';
 import {
   selectFaceData,
   selectFiles,
@@ -58,13 +58,13 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
 
   processFileUpload(file) {
     if (this.validateImage(file)) {
-      this.store.dispatch(verifyFaceSaveToStore({ processFile: file }));
+      this.store.dispatch(verifyFace({ processFile: file }));
     }
   }
 
   checkFileUpload(file) {
     if (this.validateImage(file)) {
-      this.store.dispatch(verifyFaceSaveToStore({ checkFile: file }));
+      this.store.dispatch(verifyFace({ checkFile: file }));
     }
   }
 

@@ -16,6 +16,7 @@
 
 package com.exadel.frs.dto.ui;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,5 +32,6 @@ public class UserCreateDto {
     private String firstName;
     private String lastName;
     private String password;
-    private boolean allowStatistics = true;
+    @JsonProperty(defaultValue = "true")
+    private boolean isAllowStatistics;
 }

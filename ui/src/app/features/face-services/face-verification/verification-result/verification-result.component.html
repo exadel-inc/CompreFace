@@ -18,20 +18,6 @@
   <div class="result-sections">
     <div class="io-result-container">
       <div class="result-section-image">
-        <div class="result-image">
-          <app-drag-n-drop
-            [style.display]="files.checkFile ? 'none' : 'block'"
-            class="face-uploader"
-            (upload)="selectCheckFile.emit($event)"
-          ></app-drag-n-drop>
-          <canvas
-            #checkFileCanvasElement
-            [style.display]="!files.checkFile ? 'none' : 'block'"
-            [width]="checkFileCanvasSize.width"
-          ></canvas>
-        </div>
-      </div>
-      <div class="result-section-image">
         <div class="face-uploader-tray"></div>
         <div class="result-image">
           <app-drag-n-drop
@@ -43,6 +29,20 @@
             [style.display]="!files.processFile ? 'none' : 'block'"
             #processFileCanvasElement
             [width]="processFileCanvasSize.width"
+          ></canvas>
+        </div>
+      </div>
+      <div class="result-section-image">
+        <div class="result-image">
+          <app-drag-n-drop
+            [style.display]="files.checkFile ? 'none' : 'block'"
+            class="face-uploader"
+            (upload)="selectCheckFile.emit($event)"
+          ></app-drag-n-drop>
+          <canvas
+            #checkFileCanvasElement
+            [style.display]="!files.checkFile ? 'none' : 'block'"
+            [width]="checkFileCanvasSize.width"
           ></canvas>
         </div>
       </div>

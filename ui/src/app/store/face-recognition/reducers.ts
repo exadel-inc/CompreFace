@@ -15,7 +15,7 @@
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import { recognizeFace, recognizeFaceFail, recognizeFaceReset, recognizeFaceSuccess } from './actions';
+import { recognizeFace, recognizeFaceFail, recognizeFaceReset, recognizeFaceSuccess } from './action';
 
 export interface FaceRecognitionEntityState {
   isPending: boolean;

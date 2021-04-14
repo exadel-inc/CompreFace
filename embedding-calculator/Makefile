@@ -3,7 +3,7 @@ SHELL := /bin/bash
 .PHONY := default up build-images build-cuda
 
 IMAGE := ${DOCKER_REGISTRY}compreface-core
-CUDA_IMAGE = $(IMAGE):base-cuda100-py37
+CUDA_IMAGE = $(IMAGE)-base:base-cuda100-py37
 
 MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1 \
                           --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface_mobilefacenet \

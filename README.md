@@ -45,6 +45,7 @@ recognition, face verification, face detection, landmark detection, age, and gen
   * [Feedback survey](#feedback-survey)
   * [Features](#features)
   * [Getting Started with CompreFace](#getting-started-with-compreface)
+  * [CompreFace SDKs](#compreFace-SDKs)
   * [Documentation](/docs)
     * [How to Use CompreFace](/docs/How-to-Use-CompreFace.md)
     * [Face Services and Plugins](/docs/Face-services-and-plugins.md)
@@ -53,6 +54,7 @@ recognition, face verification, face detection, landmark detection, age, and gen
     * [Configuration](/docs/Configuration.md)
     * [Architecture and Scalability](/docs/Architecture-and-scalability.md)
     * [Custom Builds](/docs/Custom-builds.md)
+    * [Face data migration](/docs/Face-data-migration.md)
     * [User Roles System](/docs/User-Roles-System.md)
     * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
   * [Contributing](#contributing)
@@ -123,6 +125,12 @@ gender recognition
 ### Getting started for devs
 
 Follow this link: https://github.com/exadel-inc/CompreFace/tree/develop/dev
+
+# CompreFace SDKs
+
+| SDK        | Repository   | 
+| ---------- | ------ | 
+| JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk   |
 
 # Documentation
 

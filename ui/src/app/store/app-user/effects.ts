@@ -28,14 +28,14 @@ import {
   deleteUserFromApplication,
   deleteUserFromApplicationFail,
   deleteUserFromApplicationSuccess,
-  inviteAppUserAction,
-  inviteAppUserActionFail,
-  inviteAppUserActionSuccess,
+  inviteAppUser,
+  inviteAppUserFail,
+  inviteAppUserSuccess,
   loadAppUserEntityAction,
-  updateAppUserRoleAction,
-  updateAppUserRoleFailAction,
-  updateAppUserRoleSuccessAction,
-} from './actions';
+  updateAppUserRole,
+  updateAppUserRoleFail,
+  updateAppUserRoleSuccess,
+} from './action';
 
 @Injectable()
 export class AppUserEffects {
@@ -47,7 +47,7 @@ export class AppUserEffects {
   ) {}
 
   @Effect()
-  loadAppUsers = this.actions.pipe(
+  loadAppUsers$ = this.actions.pipe(
     ofType(loadAppUserEntityAction),
     switchMap(action => this.appUserService.getAll(action.applicationId)),
     map(users => addAppUserEntityAction({ users }))
@@ -55,11 +55,11 @@ export class AppUserEffects {
 
   @Effect()
   updateUserRole$ = this.actions.pipe(
-    ofType(updateAppUserRoleAction),
+    ofType(updateAppUserRole),
     switchMap(({ applicationId, user }) =>
       this.appUserService.update(applicationId, user.id, user.role).pipe(
-        switchMap(res => [updateAppUserRoleSuccessAction({ user: res }), loadApplications(), loadAppUserEntityAction({ applicationId })]),
-        catchError(error => of(updateAppUserRoleFailAction({ error })))
+        switchMap(res => [updateAppUserRoleSuccess({ user: res }), loadApplications(), loadAppUserEntityAction({ applicationId })]),
+        catchError(error => of(updateAppUserRoleFail({ error })))
       )
     )
   );
@@ -70,7 +70,6 @@ export class AppUserEffects {
     switchMap(action =>
       this.appUserService.deleteUser(action.applicationId, action.userId).pipe(
         map(() => deleteUserFromApplicationSuccess({ id: action.userId })),
-        tap(() => this.router.navigateByUrl(Routes.Home)),
         catchError(error => of(deleteUserFromApplicationFail({ error })))
       )
     )
@@ -78,21 +77,21 @@ export class AppUserEffects {
 
   @Effect()
   inviteAppUser$ = this.actions.pipe(
-    ofType(inviteAppUserAction),
+    ofType(inviteAppUser),
     switchMap(action =>
       this.appUserService.inviteUser(action.applicationId, action.userEmail, action.role).pipe(
         switchMap(() => [
           loadAppUserEntityAction({ applicationId: action.applicationId }),
-          inviteAppUserActionSuccess({ userEmail: action.userEmail }),
+          inviteAppUserSuccess({ userEmail: action.userEmail }),
         ]),
-        catchError(error => of(inviteAppUserActionFail({ error })))
+        catchError(error => of(inviteAppUserFail({ error })))
       )
     )
   );
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction, inviteAppUserActionFail),
+    ofType(deleteUserFromApplicationFail, updateAppUserRoleFail, inviteAppUserFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
@@ -100,7 +99,7 @@ export class AppUserEffects {
 
   @Effect({ dispatch: false })
   addUser$ = this.actions.pipe(
-    ofType(inviteAppUserActionSuccess),
+    ofType(inviteAppUserSuccess),
     tap(action => {
       this.snackBarService.openNotification({
         messageText: 'application_user_list.invitation_sent',

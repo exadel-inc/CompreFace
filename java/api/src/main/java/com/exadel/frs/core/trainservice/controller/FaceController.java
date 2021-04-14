@@ -34,8 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -51,33 +50,33 @@ public class FaceController {
     @ResponseStatus(CREATED)
     @PostMapping
     public FaceResponseDto addFaces(
-            @ApiParam(value = "A picture with at least one face (accepted formats: jpeg, png).", required = true)
+            @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true)
             @RequestParam final MultipartFile file,
-            @ApiParam(value = "Person's name to whom the face belongs to.", required = true)
-            @RequestParam("subject") final String faceName,
-            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
-            @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
-            @ApiParam(value = "api key", required = true)
+            @ApiParam(value = SUBJECT_DESC, required = true)
+            @RequestParam(SUBJECT) final String subject,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC)
+            @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey
     ) throws IOException {
         imageValidator.validate(file);
-        return faceService.findAndSaveFace(file, faceName, detProbThreshold, apiKey);
+        return faceService.findAndSaveFace(file, subject, detProbThreshold, apiKey);
     }
 
     @GetMapping
     public Map<String, List<FaceResponseDto>> findFacesByModel(
-            @ApiParam(value = "api key", required = true)
+            @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey
     ) {
-        return Map.of("faces", faceService.findFaces(apiKey));
+        return Map.of(SUBJECTS, faceService.findFaces(apiKey));
     }
 
     @WriteEndpoint
     @DeleteMapping
     public List<FaceResponseDto> deleteFaces(
-            @ApiParam(value = "Person's name to whom the face belongs to.", required = true)
-            @RequestParam(name = "subject", required = false) final String subject,
-            @ApiParam(value = "api key", required = true)
+            @ApiParam(value = SUBJECT_DESC, required = true)
+            @RequestParam(name = SUBJECT, required = false) final String subject,
+            @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey
     ) {
         val faces = new ArrayList<FaceResponseDto>();
@@ -94,7 +93,7 @@ public class FaceController {
     @DeleteMapping("/{image_id}")
     public FaceResponseDto deleteFaceById(
             @PathVariable final String image_id,
-            @ApiParam(value = "api key", required = true)
+            @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey
     ) {
         return faceService.deleteFaceById(image_id, apiKey);
@@ -102,25 +101,25 @@ public class FaceController {
 
     @PostMapping(value = "/{image_id}/verify")
     public Map<String, List<FaceVerification>> recognize(
-            @ApiParam(value = "Api key of application and model", required = true)
+            @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = "A picture with one face (accepted formats: jpeg, png).", required = true)
-            @RequestParam(value = "file") final MultipartFile file,
-            @ApiParam(value = "Maximum number of faces to be verified")
-            @RequestParam(defaultValue = "0", required = false)
-            @Min(value = 0, message = "Limit should be equal or greater than 0") final Integer limit,
-            @ApiParam(value = "Image Id from collection to compare with face.", required = true)
+            @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true)
+            @RequestParam final MultipartFile file,
+            @ApiParam(value = LIMIT_DESC)
+            @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false)
+            @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = IMAGE_ID_DESC, required = true)
             @PathVariable final String image_id,
-            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
-            @RequestParam(value = "det_prob_threshold", required = false) final Double detProbThreshold,
-            @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins,
-            @ApiParam(value = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated, true - both fields included")
-            @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC)
+            @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC)
+            @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC)
+            @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status
     ) {
         imageValidator.validate(file);
         ProcessImageParams processImageParams = ProcessImageParams.builder()
-                .additionalParams(Map.of("image_id", image_id))
+                .additionalParams(Map.of(IMAGE_ID, image_id))
                 .apiKey(apiKey)
                 .detProbThreshold(detProbThreshold)
                 .file(file)

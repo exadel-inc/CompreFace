@@ -48,15 +48,14 @@ public class StatisticsCollectionAspect {
     @AfterReturning(pointcut = "@annotation(com.exadel.frs.commonservice.annotation.CollectStatistics)", returning = "result")
     public void afterMethodInvocation(JoinPoint joinPoint, Object result) {
         log.info("Request to send statistics in background");
-        if (StringUtils.isEmpty(statisticsApiKey)) {
-            log.info("Appery API key is empty, statistics wasn't send");
+        User user = userRepository.findByGlobalRole(GlobalRole.OWNER);
+        if (user == null || !user.isAllowStatistics()) {
+            log.info("Statistic is disabled by user, statistics wasn't send");
             return;
         }
 
-        User user = userRepository.findByGlobalRole(GlobalRole.OWNER);
-
-        if (user == null || !user.isAllowStatistics()) {
-            log.info("Statistic is disabled by user, statistics wasn't send");
+        if (StringUtils.isEmpty(statisticsApiKey)) {
+            log.info("Appery API key is empty, statistics wasn't send");
             return;
         }
 

@@ -18,14 +18,14 @@ import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
 import {
   logIn,
   logInSuccess,
-  logInFailure,
+  logInFail,
   signUpSuccess,
-  signUpFailure,
+  signUpFail,
   logOut,
   resetErrorMessage,
   changePassword,
   changePasswordSuccess,
-  changePasswordFailure,
+  changePasswordFail,
   signUp,
 } from './action';
 
@@ -44,7 +44,7 @@ const reducer: ActionReducer<AuthState> = createReducer(
     ...state,
     isLoading: true,
   })),
-  on(logInSuccess, logInFailure, signUpFailure, changePasswordSuccess, signUpSuccess, changePasswordFailure, state => ({
+  on(logInSuccess, logInFail, signUpFail, changePasswordSuccess, signUpSuccess, changePasswordFail, state => ({
     ...state,
     isLoading: false,
   })),

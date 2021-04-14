@@ -19,7 +19,7 @@ import { Observable } from 'rxjs';
 import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
 
 import { AppState } from '../../../store';
-import { recognizeFace, recognizeFaceReset } from '../../../store/face-recognition/actions';
+import { recognizeFace, recognizeFaceReset } from '../../../store/face-recognition/action';
 import {
   selectFaceData,
   selectFile,

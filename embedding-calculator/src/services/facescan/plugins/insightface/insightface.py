@@ -186,7 +186,7 @@ class Landmarks2d106DTO(plugin_result.LandmarksDTO):
 
 class Landmarks2d106Detector(InsightFaceMixin, mixins.LandmarksDetectorMixin,
                               base.BasePlugin):
-    slug = 'landmark2d106'
+    slug = 'landmarks2d106'
     ml_models = (
         ('2d106det', '1MBWbTEYRhZFzj_O2f2Dc6fWGXFWtbMFw'),
     )

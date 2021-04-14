@@ -1,5 +1,8 @@
 package com.exadel.frs.core.trainservice.service;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.SOURCE_IMAGE;
+import static com.exadel.frs.core.trainservice.system.global.Constants.TARGET_IMAGE;
+import static java.math.RoundingMode.HALF_UP;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FaceMatch;
@@ -9,27 +12,21 @@ import com.exadel.frs.core.trainservice.dto.VerifyFacesResultDto;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundException;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import static com.exadel.frs.core.trainservice.system.global.Constants.SOURCE_IMAGE;
-import static com.exadel.frs.core.trainservice.system.global.Constants.TARGET_IMAGE;
-import static java.math.RoundingMode.HALF_UP;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service("verificationService")
 @RequiredArgsConstructor
@@ -68,35 +65,48 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
         return List.of(sourceImageResponse, targetImageResponse);
     }
 
-    private VerifyFacesResponse getResult(FindFacesResponse processFileResult, FindFacesResponse checkFileResult) {
+    private VerifyFacesResponse getResult(FindFacesResponse sourceImageResult, FindFacesResponse targetImageResult) {
         // replace original probability value with scaled to (5, HALF_UP)
-        FindFacesResult sourceFacesResult = processFileResult.getResult().get(0);
-        double inBoxProbDouble = BigDecimal
-                .valueOf(sourceFacesResult.getBox().getProbability())
-                .setScale(5, HALF_UP).doubleValue();
-        FindFacesResult targetFacesResult = checkFileResult.getResult().get(0);
-        targetFacesResult.getBox().setProbability(inBoxProbDouble);
+        FindFacesResult sourceFacesResult = sourceImageResult.getResult().get(0);
+        roundProbability(sourceFacesResult.getBox());
+        List<FindFacesResult> targetFacesResults = targetImageResult.getResult();
+        targetFacesResults.forEach(result -> roundProbability(result.getBox()));
 
-        // find prediction
-        // To calculate euclidean distance we need one one-ranked array (based on process file) and one two-ranked array
-        // (based on check file) that will be used as reference to check processed file
+        // Get embeddings
         Function<Double[], double[]> toPrimitiveDouble = source -> Arrays.stream(source).mapToDouble(d -> d).toArray();
-        double[] checkFilePrimitiveDouble = toPrimitiveDouble.apply(targetFacesResult.getEmbedding());
-        double[][] twoRankedEmbeddings = new double[1][checkFilePrimitiveDouble.length];
-        System.arraycopy(checkFilePrimitiveDouble, 0, twoRankedEmbeddings[0], 0, checkFilePrimitiveDouble.length);
+        double[] sourceImageEmbedding = toPrimitiveDouble.apply(sourceFacesResult.getEmbedding());
+        double[][] targetImageEmbeddings = targetFacesResults.stream()
+                                 .map(FindFacesResult::getEmbedding)
+                                 .map(toPrimitiveDouble)
+                                 .toArray(double[][]::new);
+
+        double[] similarities = classifierPredictor.verify(sourceImageEmbedding, targetImageEmbeddings);
+
+        List<FaceMatch> faceMatches = new ArrayList<>();
+        int similarityNumber = 0;
+        for (FindFacesResult targetFacesResult : targetFacesResults) {
+            double similarity = similarities[similarityNumber];
+            FaceMatch faceMatch = getFaceMatch(targetFacesResult, similarity);
+            faceMatches.add(faceMatch);
+            similarityNumber++;
+        }
 
         // compose new result
         return new VerifyFacesResponse(
                 mapper.toVerifyFacesResultDto(sourceFacesResult),
-                checkFileResult.getResult().stream().map(r -> getFaceMatch(r, classifierPredictor.verify(
-                        toPrimitiveDouble.apply(r.getEmbedding()),
-                        twoRankedEmbeddings
-                ))).collect(Collectors.toList()),
-                mapper.toPluginVersionsDto(processFileResult.getPluginsVersions())
+                faceMatches,
+                mapper.toPluginVersionsDto(sourceImageResult.getPluginsVersions())
         );
     }
 
-    private FaceMatch getFaceMatch(FindFacesResult targetFacesResult, Double prediction) {
+    private void roundProbability(FacesBox facesBox) {
+        double rounded = BigDecimal
+                .valueOf(facesBox.getProbability())
+                .setScale(5, HALF_UP).doubleValue();
+        facesBox.setProbability(rounded);
+    }
+
+    private FaceMatch getFaceMatch(FindFacesResult targetFacesResult, Double similarity) {
         VerifyFacesResultDto verifyFacesResultDto = mapper.toVerifyFacesResultDto(targetFacesResult);
         FaceMatch faceMatch = new FaceMatch();
         faceMatch.setBox(verifyFacesResultDto.getBox());
@@ -105,7 +115,7 @@ public class FaceVerificationProcessServiceImpl implements FaceProcessService {
         faceMatch.setAge(verifyFacesResultDto.getAge());
         faceMatch.setGender(verifyFacesResultDto.getGender());
         faceMatch.setLandmarks(verifyFacesResultDto.getLandmarks());
-        faceMatch.setSimilarity(BigDecimal.valueOf(prediction).setScale(5, HALF_UP).floatValue());
+        faceMatch.setSimilarity(BigDecimal.valueOf(similarity).setScale(5, HALF_UP).floatValue());
         return faceMatch;
     }
 }

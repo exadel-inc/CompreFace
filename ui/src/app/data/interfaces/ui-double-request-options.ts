@@ -15,6 +15,6 @@
  */
 export interface UIDoubleFileRequestOptions {
   apiKey: string;
-  processFile: File;
-  checkFile: File;
+  sourceImage: File;
+  targetImage: File;
 }
