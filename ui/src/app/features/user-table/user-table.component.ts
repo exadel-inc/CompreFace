@@ -28,7 +28,6 @@ import { TableComponent } from '../table/table.component';
 })
 export class UserTableComponent extends TableComponent implements OnInit, OnChanges {
   message: string;
-  noResultMessage: string;
   roleEnum = Role;
 
   @Input() availableRoles: string[];
