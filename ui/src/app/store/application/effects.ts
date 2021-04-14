@@ -50,7 +50,7 @@ export class ApplicationListEffect {
   @Effect()
   loadApplications$ = this.actions.pipe(
     ofType(loadApplications),
-    switchMap(action =>
+    switchMap(() =>
       this.applicationService.getAll().pipe(
         map(applications => loadApplicationsSuccess({ applications })),
         catchError(error => of(loadApplicationsFail({ error })))

@@ -16,27 +16,21 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-
-import com.exadel.frs.commonservice.annotation.CollectStatistics;
-import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiParam;
-import javax.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.validation.constraints.Min;
+
+import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 
 @RestController
 @RequestMapping(API_V1)
@@ -57,20 +51,17 @@ public class DetectionController {
                     required = true)
     })
     public FacesDetectionResponseDto detect(
-            @ApiParam(value = "Image for recognizing", required = true)
-            @RequestParam
-            final MultipartFile file,
-            @ApiParam(value = "Maximum number of faces to be recognized")
-            @RequestParam(defaultValue = "0", required = false)
-            @Min(value = 0, message = "Limit should be equal or greater than 0")
-            final Integer limit,
-            @ApiParam(value = "The minimal percent confidence that found face is actually a face.")
-            @RequestParam(value = "det_prob_threshold", required = false)
-            final Double detProbThreshold,
-            @ApiParam(value = "Comma-separated types of face plugins. Empty value - face plugins disabled, returns only bounding boxes")
-            @RequestParam(value = "face_plugins", required = false, defaultValue = "") final String facePlugins,
-            @ApiParam(value = "Special parameter to show execution_time and plugin_version fields. Empty value - both fields eliminated, true - both fields included")
-            @RequestParam(value = "status", required = false, defaultValue = "false") final Boolean status
+            @ApiParam(value = IMAGE_FILE_DESC, required = true)
+            @RequestParam final MultipartFile file,
+            @ApiParam(value = LIMIT_DESC)
+            @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false)
+            @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC)
+            @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC)
+            @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC)
+            @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status
     ) {
         ProcessImageParams processImageParams = ProcessImageParams
                 .builder()

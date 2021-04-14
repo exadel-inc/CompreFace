@@ -15,7 +15,7 @@
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import { verifyFaceFail, verifyFaceReset, verifyFaceSaveToStore, verifyFaceSuccess } from './actions';
+import { verifyFaceFail, verifyFaceReset, verifyFace, verifyFaceSuccess } from './action';
 export interface FaceVerificationEntityState {
   isPending: boolean;
   model: any;
@@ -34,10 +34,7 @@ const initialStateVerification: FaceVerificationEntityState = {
 
 const reducerVerification: ActionReducer<FaceVerificationEntityState> = createReducer(
   initialStateVerification,
-  on(verifyFaceSaveToStore, (state, action) => {
-    return { ...state, ...action, isPending: false };
-  }),
-  on(verifyFaceSuccess, (state, action) => ({ ...state, ...action, isPending: false })),
+  on(verifyFace, verifyFaceSuccess, (state, action) => ({ ...state, ...action, isPending: false })),
   on(verifyFaceReset, verifyFaceFail, () => ({ ...initialStateVerification }))
 );
 

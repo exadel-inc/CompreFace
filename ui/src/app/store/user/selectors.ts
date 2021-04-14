@@ -15,9 +15,11 @@
  */
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { selectApplications, selectIsPendingApplicationList } from '../application/selectors';
+import { selectApplications, selectIsPendingApplicationList, selectUserRollForSelectedApp } from '../application/selectors';
 import { selectUserId } from '../userInfo/selectors';
 import { AppUserEntityState, userAdapter } from './reducers';
+import { selectAllRoles, selectIsPendingRoleStore } from '../role/selectors';
+import { Role } from '../../data/enums/role.enum';
 
 export const selectUserEntityState = createFeatureSelector<AppUserEntityState>('user');
 const { selectEntities, selectAll } = userAdapter.getSelectors();
@@ -42,4 +44,19 @@ export const selectIsLoadingApplicationList = createSelector(
   selectIsPendingApplicationList,
   selectCurrentUserRole,
   (isPendingAppList, currentUserRole) => !isPendingAppList && !currentUserRole
+);
+
+export const selectAvailableRoles = createSelector(selectAllRoles, selectCurrentUserRole, (allRoles, currentUserRole) => {
+  const roleIndex = allRoles.indexOf(currentUserRole);
+  return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
+});
+
+export const selectIsUserLoading = createSelector(
+  selectIsPendingUserStore,
+  selectIsPendingRoleStore,
+  (isPendingUserStore, isPendingRoleStore) => !(!isPendingUserStore && !isPendingRoleStore)
+);
+
+export const selectUserRole = createSelector(selectUserRollForSelectedApp, selectCurrentUserRole, (applicationRole, organizationRole) =>
+  organizationRole !== Role.User ? Role.Owner : applicationRole
 );

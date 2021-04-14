@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.exception.IncorrectPredictionCountException;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
+import com.exadel.frs.core.trainservice.dto.FacePredictionResultDto;
 import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
@@ -18,6 +19,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.PREDICTION_COUNT;
 import static java.math.RoundingMode.HALF_UP;
 
 @Service("recognitionService")
@@ -26,50 +28,49 @@ import static java.math.RoundingMode.HALF_UP;
 public class FaceRecognizeProcessServiceImpl implements FaceProcessService {
 
     private final FaceClassifierPredictor classifierPredictor;
-    private final FacesApiClient client;
-    private final ImageExtensionValidator imageValidator;
-    private final FacesMapper mapper;
+    private final FacesApiClient facesApiClient;
+    private final ImageExtensionValidator imageExtensionValidator;
+    private final FacesMapper facesMapper;
 
     @Override
     public FacesRecognitionResponseDto processImage(ProcessImageParams processImageParams) {
-        Object predictionCountObj = processImageParams.getAdditionalParams().get("predictionCount");
+        Object predictionCountObj = processImageParams.getAdditionalParams().get(PREDICTION_COUNT);
         Integer predictionCount = (Integer) predictionCountObj;
         if (predictionCount == 0 || predictionCount < -1) {
             throw new IncorrectPredictionCountException();
         }
 
         MultipartFile file = (MultipartFile) processImageParams.getFile();
-        imageValidator.validate(file);
-        val findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
-        val facesRecognitionDto = mapper.toFacesRecognitionResponseDto(findFacesResponse);
+        imageExtensionValidator.validate(file);
+        val findFacesResponse = facesApiClient.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        val facesRecognitionDto = facesMapper.toFacesRecognitionResponseDto(findFacesResponse);
         if (facesRecognitionDto == null) {
             return FacesRecognitionResponseDto.builder().build();
         }
 
+        String apiKey = processImageParams.getApiKey();
         for (val findResult : facesRecognitionDto.getResult()) {
-            val predictions = classifierPredictor.predict(
-                    processImageParams.getApiKey(),
-                    Stream.of(findResult.getEmbedding())
-                            .mapToDouble(d -> d)
-                            .toArray(),
-                    predictionCount
-            );
-
-            val faces = new ArrayList<FaceSimilarityDto>();
-
-            for (val prediction : predictions) {
-                var pred = BigDecimal.valueOf(prediction.getLeft());
-                pred = pred.setScale(5, HALF_UP);
-                faces.add(new FaceSimilarityDto(prediction.getRight(), pred.floatValue()));
-            }
-
-            var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
-            inBoxProb = inBoxProb.setScale(5, HALF_UP);
-            findResult.getBox().setProbability(inBoxProb.doubleValue());
+            final ArrayList<FaceSimilarityDto> faces = processFaceResult(predictionCount, apiKey, findResult);
 
             findResult.setSubjects(faces);
         }
 
         return facesRecognitionDto.prepareResponse(processImageParams);
+    }
+
+    private ArrayList<FaceSimilarityDto> processFaceResult(Integer predictionCount, String apiKey, FacePredictionResultDto findResult) {
+        double[] input = Stream.of(findResult.getEmbedding()).mapToDouble(d -> d).toArray();
+        val predictions = classifierPredictor.predict(apiKey, input, predictionCount);
+        val faces = new ArrayList<FaceSimilarityDto>();
+        for (val prediction : predictions) {
+            var pred = BigDecimal.valueOf(prediction.getLeft());
+            pred = pred.setScale(5, HALF_UP);
+            faces.add(new FaceSimilarityDto(prediction.getRight(), pred.floatValue()));
+        }
+
+        var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
+        inBoxProb = inBoxProb.setScale(5, HALF_UP);
+        findResult.getBox().setProbability(inBoxProb.doubleValue());
+        return faces;
     }
 }

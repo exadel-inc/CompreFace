@@ -19,6 +19,9 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { Model } from 'src/app/data/interfaces/model';
 
 import { modelAdapter, ModelEntityState } from './reducers';
+import { Role } from '../../data/enums/role.enum';
+import { selectUserRollForSelectedApp } from '../application/selectors';
+import { selectCurrentUserRole } from '../user/selectors';
 
 export const selectModelEntityState = createFeatureSelector<EntityState<Model>>('model');
 const { selectAll } = modelAdapter.getSelectors();
@@ -31,4 +34,8 @@ export const selectCurrentModelId = createSelector(selectModelEntityState, (stat
 
 export const selectCurrentModel = createSelector(selectModelEntityState, selectCurrentModelId, (models, selectedModelId) =>
   models.entities ? models.entities[selectedModelId] : null
+);
+
+export const selectUserRole = createSelector(selectUserRollForSelectedApp, selectCurrentUserRole, (applicationRole, globalRole) =>
+  globalRole !== Role.User ? globalRole : applicationRole
 );

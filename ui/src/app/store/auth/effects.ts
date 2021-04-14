@@ -17,7 +17,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of as observableOf } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
@@ -26,16 +26,18 @@ import { resetUserInfo } from '../userInfo/action';
 import {
   clearUserToken,
   logIn,
-  logInFailure,
+  logInFail,
   logInSuccess,
   logOut,
   signUp,
-  signUpFailure,
+  signUpFail,
   signUpSuccess,
   changePassword,
   changePasswordSuccess,
-  changePasswordFailure,
+  changePasswordFail,
 } from './action';
+import { Store } from '@ngrx/store';
+import { selectQueryParams } from '../router/selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -43,7 +45,8 @@ export class AuthEffects {
     private actions: Actions,
     private authService: AuthService,
     private router: Router,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private store: Store<any>
   ) {}
 
   // Listen for the 'LOGIN' action
@@ -53,7 +56,7 @@ export class AuthEffects {
     switchMap(action =>
       this.authService.logIn(action.email, action.password).pipe(
         map(() => logInSuccess()),
-        catchError(error => observableOf(logInFailure(error)))
+        catchError(error => observableOf(logInFail(error)))
       )
     )
   );
@@ -62,14 +65,17 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
-    tap(() => {
-      this.router.navigateByUrl(Routes.Home);
-    })
+    withLatestFrom(this.store.select(selectQueryParams)),
+    map(([, queryParams]) => {
+      const { redirect } = queryParams;
+      return redirect;
+    }),
+    tap(redirect => this.router.navigateByUrl(redirect || Routes.Home))
   );
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(logInFailure, signUpFailure),
+    ofType(logInFail, signUpFail),
     tap(action => {
       if (action.error && action.error.error_description === 'Bad credentials') {
         this.snackBarService.openNotification({ messageText: 'auth.incorrect_credentials', type: 'error' });
@@ -96,7 +102,7 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName, payload.isAllowStatistics).pipe(
         map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
-        catchError(error => observableOf(signUpFailure(error)))
+        catchError(error => observableOf(signUpFail(error)))
       )
     )
   );
@@ -110,7 +116,7 @@ export class AuthEffects {
   );
 
   @Effect({ dispatch: false })
-  signUpFailure$: Observable<any> = this.actions.pipe(ofType(signUpFailure));
+  signUpFailure$: Observable<any> = this.actions.pipe(ofType(signUpFail));
 
   @Effect()
   logOut$: Observable<any> = this.actions.pipe(
@@ -134,7 +140,7 @@ export class AuthEffects {
     switchMap(payload =>
       this.authService.changePassword(payload.oldPassword, payload.newPassword).pipe(
         map(() => changePasswordSuccess()),
-        catchError(error => observableOf(changePasswordFailure(error)))
+        catchError(error => observableOf(changePasswordFail(error)))
       )
     )
   );
@@ -147,7 +153,7 @@ export class AuthEffects {
 
   @Effect({ dispatch: false })
   changePasswordFailure$: Observable<any> = this.actions.pipe(
-    ofType(changePasswordFailure),
+    ofType(changePasswordFail),
     tap(action => this.snackBarService.openHttpError(action))
   );
 }
