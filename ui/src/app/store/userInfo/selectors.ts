@@ -24,6 +24,6 @@ export const selectUserId = createSelector(selectUserInfoState, userInfo => user
 export const selectUserEmail = createSelector(selectUserInfoState, userInfo => userInfo.email);
 
 // TODO: move default avatar to backend response
-export const selectUserAvatar = createSelector(selectUserInfoState, userInfo => userInfo.avatar || 'assets/img/avatar.png');
+export const selectUserAvatar = createSelector(selectUserInfoState, userInfo => userInfo.avatar || 'assets/img/avatar.svg');
 
 export const selectUserName = createSelector(selectUserInfoState, userInfo => userInfo.firstName + ' ' + userInfo.lastName);

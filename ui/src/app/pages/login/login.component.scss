@@ -14,20 +14,25 @@
  * permissions and limitations under the License.
  */
 
+@import 'mixins.scss';
+@import 'forms.scss';
+
 .login-form {
-  &-container {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+  @include wrapper-center();
 
-    .demo-page-link {
-      padding-top: 15px;
+  &--wrapper {
+    @include form-wrapper();
+
+    .build-version {
+      margin: 16px 0;
     }
-  }
 
-  &-item {
-    width: 300px;
+    .demo-btn-wrapper {
+      padding: 0 $padding-RL;
+
+      .demo-btn {
+        @include form-btn();
+      }
+    }
   }
 }

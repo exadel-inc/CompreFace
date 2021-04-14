@@ -19,9 +19,20 @@ import { RouterModule } from '@angular/router';
 
 import { SignUpFormModule } from '../../features/sign-up-form/sign-up-form.module';
 import { SignUpComponent } from './sign-up.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [SignUpComponent],
-  imports: [CommonModule, RouterModule.forChild([{ path: '', component: SignUpComponent }]), SignUpFormModule],
+  imports: [
+    CommonModule,
+    RouterModule.forChild([
+      {
+        path: '',
+        component: SignUpComponent,
+      },
+    ]),
+    SignUpFormModule,
+    TranslateModule,
+  ],
 })
 export class SignUpModule {}

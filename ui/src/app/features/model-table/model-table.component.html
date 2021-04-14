@@ -31,7 +31,9 @@
     >
       <div class="title-container">
         <span class="title-item name-title">{{ element.name | truncate: maxElementLength }}</span
-        ><span class="title-item type-title" [ngClass]="element.type | lowercase">{{ getKeyType(element.type) | uppercase | truncate: maxElementLength }}</span>
+        ><span class="title-item type-title" [ngClass]="element.type | lowercase">{{
+          types[element.type | titlecase] | truncate: maxElementLength
+        }}</span>
       </div>
       <div>
         <span class="api-key-label">API-Key: </span><span class="api-key-value">{{ element.apiKey }}</span>

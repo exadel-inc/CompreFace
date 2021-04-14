@@ -24,10 +24,10 @@
           {{ app.name | truncate: maxHeaderLinkLength }}
         </div>
         <div *ngIf="!isLoading && userRole">
-          <button *ngIf="userRole === userRoleEnum.Owner" mat-button type="button" color="primary" (click)="onRename(app.name)">
+          <button *ngIf="userRole === userRoleEnum.Owner" mat-flat-button type="button" color="primary" (click)="onRename(app.name)">
             {{ 'applications.header.edit' | translate }}
           </button>
-          <button *ngIf="userRole === userRoleEnum.Owner" mat-button type="button" color="primary" (click)="onDelete(app.name)">
+          <button *ngIf="userRole === userRoleEnum.Owner" mat-flat-button type="button" color="primary" (click)="onDelete(app.name)">
             {{ 'applications.header.delete' | translate }}
           </button>
         </div>

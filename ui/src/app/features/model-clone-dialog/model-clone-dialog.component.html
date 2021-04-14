@@ -21,8 +21,10 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-button cdkFocusInitial (click)="dialogRef.close()">{{ 'common.capital.cancel' | translate }}</button>
-  <button class="button-create" mat-button [mat-dialog-close]="initialName" [disabled]="isCloneDisabled">
+  <button class="button-cancel" mat-flat-button cdkFocusInitial (click)="dialogRef.close()">
+    {{ 'common.capital.cancel' | translate }}
+  </button>
+  <button class="button-create" mat-flat-button [mat-dialog-close]="initialName" [disabled]="isCloneDisabled">
     {{ 'common.capital.clone' | translate }}
   </button>
 </div>

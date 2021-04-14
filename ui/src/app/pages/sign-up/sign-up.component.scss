@@ -14,15 +14,25 @@
  * permissions and limitations under the License.
  */
 
+@import 'mixins.scss';
+@import 'forms.scss';
+@import 'media.scss';
+
 .sign-up-form {
-  &-container {
-    display: flex;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
+  @include wrapper-center();
+
+  .container {
+    padding: 0;
+    @include mobile-portrait {
+      padding: 16px;
+    }
   }
 
-  &-item {
-    width: 300px;
+  &--wrapper {
+    @include form-wrapper();
+
+    .build-version {
+      margin: 16px 0;
+    }
   }
 }

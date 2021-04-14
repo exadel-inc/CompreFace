@@ -18,12 +18,20 @@ import { MAT_SNACK_BAR_DATA } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-snackbar',
-  styleUrls: ['./snackbar.component.scss'],
   templateUrl: './snackbar.component.html',
 })
 export class AppSnackBarComponent {
   public type: string;
   public message: string;
+
+  public get icons(): string {
+    switch (this.type) {
+      case 'error':
+        return 'error_outline';
+      case 'info':
+        return 'task_alt';
+    }
+  }
 
   constructor(@Inject(MAT_SNACK_BAR_DATA) data: { type: string; message: string }) {
     this.type = data.type;

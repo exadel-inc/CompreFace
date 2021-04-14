@@ -23,10 +23,10 @@
   width: 100%;
   height: 120px;
   text-align: center;
-  border: dashed 1px $secondaryText;
+  border: dashed 1px $primary-light;
   position: relative;
   margin: 0 auto;
-  background-color: $pale-gray;
+  background-color: $primary-phantom-light;
 
   &-icon {
     margin-right: 20px;

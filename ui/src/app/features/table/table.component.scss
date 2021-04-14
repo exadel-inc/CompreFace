@@ -13,6 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import 'colors.scss';
 
 :host {
   min-height: 425px;
@@ -26,6 +27,26 @@
   }
 }
 
+thead {
+  display: none;
+}
+
 caption {
   display: none;
+}
+
+tr.mat-header-row {
+  display: none !important;
+}
+
+tr.mat-row {
+  height: 75px !important;
+}
+
+.application-name-label {
+  margin: 0 0 4px 0;
+}
+
+.application-owner-label {
+  color: $black;
 }

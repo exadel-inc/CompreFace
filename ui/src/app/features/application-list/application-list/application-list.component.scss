@@ -13,8 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@import 'colors.scss';
+@import "media.scss";
+
 .application-list {
   position: relative;
+
+  .mat-title {
+    flex-basis: 160px;
+  }
+
+  .search-input{
+    margin: 5px auto;
+    order: 1;
+    flex: 1 0 100%;
+  }
 
   app-spinner {
     position: absolute;
@@ -32,9 +45,9 @@
 
   .table-header-container {
     display: flex;
+    flex-wrap: wrap;
     flex-direction: row;
-    justify-content: space-around;
-    padding-right: 16px;
+    justify-content: space-between;
     align-items: center;
 
     h3 {
@@ -42,4 +55,32 @@
     }
   }
 
+  .custom-create-button {
+    flex-basis: 112px;
+    line-height: 27px;
+    display: inline-flex;
+    align-items: center;
+    flex-direction: row;
+    color: $primary;
+    margin-left: 5px;
+    padding: 0;
+
+    mat-icon {
+      width: 13.5px;
+      height: 27px;
+    }
+
+    span {
+      margin-left: 5px;
+    }
+  }
 }
+
+@include desktop {
+  .search-input {
+    flex-basis: 188px !important;
+    order: 0 !important;
+    margin: 0 !important;
+  }
+}
+

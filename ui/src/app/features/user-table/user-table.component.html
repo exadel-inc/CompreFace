@@ -24,26 +24,18 @@
   <!-- Position Column -->
   <ng-container matColumnDef="user">
     <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.user' | translate }}</th>
-    <td mat-cell *matCellDef="let element">{{ element.firstName }} {{ element.lastName }}</td>
+    <td mat-cell *matCellDef="let element">
+      <div class="mat-subheading-1 name-label">{{ element.firstName }} {{ element.lastName }}</div>
+      <div class="mat-body-2">
+        <span>{{ element.role | titlecase }}</span>
+      </div>
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="role">
     <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.role' | translate }}</th>
     <td mat-cell *matCellDef="let element">
-      <mat-form-field>
-        <mat-select
-          *ngIf="isRoleChangeAllowed(element); else disabledRole"
-          [value]="element.role"
-          (selectionChange)="changeRole($event, element)"
-        >
-          <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role }}</mat-option>
-        </mat-select>
-        <ng-template #disabledRole>
-          <mat-select disabled [(value)]="element.role">
-            <mat-option [value]="element.role">{{ element.role }}</mat-option>
-          </mat-select>
-        </ng-template>
-      </mat-form-field>
+      <mat-icon svgIcon="edit"></mat-icon>
     </td>
   </ng-container>
 
@@ -57,9 +49,8 @@
           (userRole === roleEnum.Owner && element.role !== roleEnum.Owner)
         "
         (click)="delete(element)"
-        title="remove user"
-        >delete_outline</mat-icon
-      >
+        svgIcon="trash"
+      ></mat-icon>
     </td>
   </ng-container>
 
@@ -71,6 +62,6 @@
   <h4>{{ messageHeader }}</h4>
   <div class="create-new-message">
     <mat-icon>info</mat-icon>
-    <p>{{ message }}</p>
+    <p class="mat-caption">{{ message }}</p>
   </div>
 </ng-container>
