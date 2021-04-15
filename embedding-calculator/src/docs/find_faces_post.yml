@@ -4,16 +4,16 @@ summary: 'Find faces in the given image and return their bounding boxes.'
 description: 'Returns bounding boxes of detected faces on the image.'
 operationId: findFacesPost
 consumes:
-  - multipart/form-data
+  - application/json
 produces:
   - application/json
 parameters:
-  - in: formData
+  - in: body
     name: file
     type: file
     required: 'true'
     description: 'A picture with at least one face.'
-  - in: formData
+  - in: query
     name: limit
     description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
     type: integer
