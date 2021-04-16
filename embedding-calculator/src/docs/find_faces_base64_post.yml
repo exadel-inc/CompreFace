@@ -4,11 +4,11 @@ summary: 'Find faces in the given image in BASE64 format and return their boundi
 description: 'Returns bounding boxes of detected faces on the image.'
 operationId: findFacesBase64Post
 consumes:
-  - multipart/form-data
+  - application/json
 produces:
   - application/json
 parameters:
-  - in: formData
+  - in: body
     name: file
     type: file
     required: 'true'
@@ -18,7 +18,7 @@ parameters:
     description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
     type: integer
     default: 0
-  - in: formData
+  - in: query
     name: det_prob_threshold
     description: 'The minimum required confidence that a found face is actually a face. Decrease this value if faces are not detected. Valid values are in the range (0;1).'
     type: float
