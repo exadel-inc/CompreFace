@@ -32,7 +32,7 @@
       <div class="title-container">
         <span class="title-item name-title">{{ element.name | truncate: maxElementLength }}</span
         ><span class="title-item type-title" [ngClass]="element.type | lowercase">{{
-          types[element.type | titlecase] | truncate: maxElementLength
+          (getKeyType(element.type) | uppercase) | truncate: maxElementLength
         }}</span>
       </div>
       <div class="mat-body-2 key-container">
@@ -75,3 +75,10 @@
 
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+
+<ng-container *ngIf="data.length < 1 && !isLoading">
+  <div class="create-new-message">
+    <mat-icon>info</mat-icon>
+    <p class="mat-caption">{{ 'users.search.no_results' | translate }}</p>
+  </div>
+</ng-container>

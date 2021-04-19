@@ -13,7 +13,7 @@ we recommend looking through them and set up CompreFace accordingly
 * `email_username` - a username of email provider for authentication. It should be set if `enable_email_server` variable is true
 * `email_password` - a password of email provider for authentication. It should be set if `enable_email_server` variable is true
 * `email_from` - this value will see users in `from` fields when they receive emails from CompreFace. Corresponds to `From` field in rfc2822. Optional, if not set, then `email_username` will be used instead
-* `save_images_to_db` - should the CompreFace save photos to the database. Learn more about why you could need to save photos to the database.
+* `save_images_to_db` - should the CompreFace save photos to the database. Be careful, [migrations](Face-data-migration.md) could be run only if this value is `true`
 * `compreface_api_java_options` - java options of compreface-api container
 * `compreface_admin_java_options` - java options of compreface-admin container
 * `ADMIN_VERSION` - docker image tag of compreface-admin container

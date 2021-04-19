@@ -22,6 +22,7 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
+import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
@@ -29,6 +30,8 @@ import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -57,6 +60,7 @@ public class FaceService {
     private final FaceClassifierPredictor classifierPredictor;
     private final FacesApiClient client;
     private final FacesMapper faceMapper;
+    private final EuclideanDistanceClassifier classifier;
 
     public List<FaceResponseDto> findFaces(final String apiKey) {
         Set<FaceBO> faces = faceCacheProvider.getOrLoad(apiKey).getFaces();
@@ -102,17 +106,21 @@ public class FaceService {
             final String modelKey
     ) throws IOException {
         FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null);
-        val result = findFacesResponse.getResult();
+        List<FindFacesResult> result = findFacesResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {
             throw new TooManyFacesException();
         }
 
-        val embedding = result.stream()
+        Double[] embedding = result.stream()
                 .findFirst().orElseThrow()
                 .getEmbedding();
 
-        val embeddingToSave = new Face.Embedding(Arrays.asList(embedding), findFacesResponse.getPluginsVersions().getCalculator());
+        double[] normalized = classifier.normalizeOne(Arrays.stream(embedding).mapToDouble(d -> d).toArray());
+
+        List<Double> normalizedList = Arrays.stream(normalized).boxed().collect(Collectors.toList());
+
+        Face.Embedding embeddingToSave = new Face.Embedding(normalizedList, findFacesResponse.getPluginsVersions().getCalculator());
 
         FaceBO faceBO = faceCacheProvider
                 .getOrLoad(modelKey)

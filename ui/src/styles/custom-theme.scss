@@ -203,6 +203,17 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
     padding-right: 0!important;
   }
+
+  .mat-checkbox-layout {
+    white-space: normal !important;
+    text-align: left;
+  }
+
+  .mat-checkbox-label {
+    margin: 12px 0;
+    font-size: 12px;
+    line-height: 13.5px;
+  }
 }
 
 @include angular-material-typography($typography);
