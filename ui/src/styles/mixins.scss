@@ -26,10 +26,6 @@
 @mixin header-bar-layout() {
   position: relative;
 
-  .mat-title {
-    //flex-basis: 160px;
-  }
-
   .search-input {
     margin: 5px auto;
     order: 1;
