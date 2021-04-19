@@ -191,6 +191,17 @@ app-table, app-user-table, app-model-table {
   }
 }
 
+.create-new-message {
+  display: flex;
+  align-items: center;
+  .message-icon {
+    color: $pale-gray ;
+  }
+  mat-icon {
+    padding-right: 15px;
+  }
+}
+
 form.search-input {
   display: flex;
   height: 32px;
