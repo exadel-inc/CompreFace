@@ -18,11 +18,27 @@
   display: flex;
   justify-content: space-between;
 
+  .name-item {
+    h1 {
+      margin: 0;
+    }
+  }
+
   .name-wrapper,
   .api-key-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  mat-icon {
+    margin-left: 22px;
+    cursor: pointer;
+    width: 18px;
+  }
+
+  mat-card {
+    padding: 20px 24px !important;
   }
 
   &_left-coll {

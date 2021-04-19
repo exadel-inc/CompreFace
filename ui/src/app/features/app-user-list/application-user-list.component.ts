@@ -27,6 +27,8 @@ import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component'
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
+import {MatIconRegistry} from '@angular/material/icon';
+import {DomSanitizer} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-application-user-list',
@@ -51,8 +53,11 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     private appUserListFacade: ApplicationUserListFacade,
     private dialog: MatDialog,
     private snackBarService: SnackBarService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private matIconRegistry: MatIconRegistry,
+    private domSanitzer: DomSanitizer
   ) {
+    this.matIconRegistry.addSvgIcon('add_new', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/add.svg'));
     appUserListFacade.initSubscriptions();
   }
 

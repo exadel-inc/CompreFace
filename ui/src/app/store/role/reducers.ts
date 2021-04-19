@@ -33,7 +33,7 @@ const reducer: ActionReducer<RoleEntityState> = createReducer(
   on(loadRolesEntity, state => ({ ...state, isPending: true })),
   on(setPendingRoleEntity, (state, { isPending }) => ({ ...state, isPending })),
   on(fetchRolesEntity, (state, { role }) => {
-    return roleAdapter.setOne({ id: 0, accessLevels: role.accessLevels }, {...state, isPending: false});
+    return roleAdapter.setOne({ id: 0, accessLevels: role.accessLevels }, { ...state, isPending: false });
   })
 );
 

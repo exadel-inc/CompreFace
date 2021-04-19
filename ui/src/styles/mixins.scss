@@ -13,6 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import 'media.scss';
 
 @mixin wrapper-center() {
   display: flex;
@@ -20,4 +21,43 @@
   align-items: center;
   justify-content: center;
   height: 100%;
+}
+
+@mixin header-bar-layout() {
+  position: relative;
+
+  .mat-title {
+    //flex-basis: 160px;
+  }
+
+  .search-input {
+    margin: 5px auto;
+    order: 1;
+    flex: 1 0 100%;
+    @include desktop {
+      flex-basis: 188px !important;
+      order: 0 !important;
+      margin: 0 0 0 5px !important;
+    }
+  }
+
+  app-spinner {
+    position: absolute;
+    left: 40%
+  }
+}
+
+@mixin common-header() {
+  .table-header-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 25px;
+
+    h3 {
+      margin: 0;
+    }
+  }
 }

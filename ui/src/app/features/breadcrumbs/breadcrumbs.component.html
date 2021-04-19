@@ -14,10 +14,10 @@
   ~ permissions and limitations under the License.
   -->
 
-<mat-card *ngIf="app" class="breadcrumbs">
+<div *ngIf="app" class="mat-body-2 breadcrumbs">
   <div *ngIf="model; else onlyApp" class="breadcrumbs">
     <a class="breadcrumbs-link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
-    <div class="separator">/</div>
+     <div class="separator">/</div>
     <a
       class="breadcrumbs-link"
       [routerLink]="[routes.Application]"
@@ -39,4 +39,4 @@
       {{ app.name | truncate: maxNameLength }}
     </div>
   </ng-template>
-</mat-card>
+</div>

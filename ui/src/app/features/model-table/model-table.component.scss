@@ -14,9 +14,12 @@
  * permissions and limitations under the License.
  */
 @import 'colors.scss';
+@import "media.scss";
+
 caption {
   display: none;
 }
+
 .mat-cell:first-child {
   padding-right: 0;
 }
@@ -25,50 +28,145 @@ th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:
   padding-left: 0;
 }
 
-.content-column{
+tr.mat-row, tr.mat-footer-row {
+  height: 80px;
+}
+
+.content-column {
   font-style: normal;
   font-weight: normal;
   letter-spacing: 0.02em;
 
-  .title-container{
+  .title-container {
     display: flex;
     align-items: center;
-    .title-item{
+
+    .title-item {
       margin-right: 8px;
     }
 
-    .name-title{
+    .name-title {
       font-size: 18px;
       line-height: 125%;
       font-weight: 600;
       color: rgba(34, 34, 34, 0.8);
     }
 
-    .type-title{
+    .type-title {
       font-size: 12px;
       line-height: 18px;
     }
 
-    .recognition{
+    .recognition {
       color: $dark-blue;
     }
 
-    .detection{
+    .detection {
       color: $orange;
     }
 
-    .verify{
+    .verify {
       color: $purple;
     }
   }
 
-  .api-key-label{
+  .api-key-label {
     line-height: 125%;
     font-size: 14px;
     color: rgba(34, 34, 34, 0.45);
   }
 
-  .copy-icon{
+  .copy-icon {
     color: $primary;
+  }
+}
+
+.special-test-button-color {
+  font-size: 12px !important;
+  line-height: 14px !important;
+  border-radius: 2px !important;
+  text-transform: lowercase;
+
+  &:first-letter {
+    text-transform: capitalize;
+  }
+}
+
+.mat-raised-button {
+  box-sizing: border-box !important;
+  width: 58px !important;
+  line-height: 24px !important;
+  box-shadow: none !important;
+  border-radius: 2px !important;
+  min-width: 50px !important;
+}
+
+.mat-icon-button {
+  padding: 0;
+  min-width: 0;
+  width: 25px;
+}
+
+.more-button {
+  .mat-icon-button {
+    height: 24px;
+    line-height: 24px;
+  }
+}
+
+.key-container {
+  display: flex;
+  align-items: center;
+  .api-key-value {
+    margin-left: 5px;
+  }
+
+  .mat-icon-button {
+    height: 28px;
+    line-height: 28px;
+  }
+
+  .copy-icon {
+    .material-icons {
+      font-size: 14px;
+    }
+
+    .mat-icon {
+      line-height: 10px;
+      width: 14px;
+      height: 14px;
+    }
+
+    .mat-icon-button {
+      height: 28px;
+      line-height: 28px;
+    }
+  }
+}
+
+@include mobile {
+  .api-key-value {
+    display: inline-block;
+    width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .copy-icon {
+    .material-icons {
+      font-size: 24px !important;
+    }
+
+    .mat-icon {
+      line-height: 20px !important;
+      width: 24px!important;
+      height: 24px!important;
+    }
+
+    .mat-icon-button {
+      height: 45px;
+      line-height: 45px!important;
+    }
   }
 }

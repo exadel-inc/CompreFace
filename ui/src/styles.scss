@@ -37,6 +37,27 @@ body {
   }
 }
 
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $special-light-gray;
+  border-radius: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $special-gray;
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $special-dark-gray;
+}
+
 .container {
   width: 100%;
   padding-right: 16px;
@@ -151,6 +172,25 @@ app-table, app-user-table, app-model-table {
   margin: 30px 0;
 }
 
+.header-bar-layout {
+  position: relative;
+
+  .mat-title {
+    flex-basis: 160px;
+  }
+
+  .search-input {
+    margin: 5px auto;
+    order: 1;
+    flex: 1 0 100%;
+  }
+
+  app-spinner {
+    position: absolute;
+    left: 40%
+  }
+}
+
 form.search-input {
   display: flex;
   height: 32px;
@@ -172,5 +212,25 @@ form.search-input {
     &:focus{
       outline-width: 0
     }
+  }
+}
+
+.custom-create-button{
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-direction: row  !important;
+  flex-basis: 112px  !important;
+  line-height: 27px  !important;
+  color: $primary  !important;
+  margin-left: 5px  !important;
+  padding: 0  !important;
+
+  mat-icon{
+    width: 13.5px  !important;
+    height: 27px  !important;
+  }
+
+  span {
+    margin-left: 5px;
   }
 }

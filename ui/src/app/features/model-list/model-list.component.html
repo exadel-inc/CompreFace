@@ -15,32 +15,38 @@
   -->
 
 <div class="model-list">
-  <div class="header-section">
-    <h3>{{ 'models.create_dialog.title' | translate }}</h3>
+  <div class="table-header-container">
+    <h3 class="mat-title">{{ 'models.create_dialog.title' | translate }}</h3>
     <form class="search-input">
       <input
-        matInput
-        type="text"
-        class="search-input"
-        [(ngModel)]="search"
-        [ngModelOptions]="{ standalone: true }"
-        placeholder="{{ 'models.search.title' | translate }}"
+          matInput
+          type="text"
+          class="search-input"
+          [(ngModel)]="search"
+          [ngModelOptions]="{ standalone: true }"
+          placeholder="{{ 'models.search.title' | translate }}"
       />
-      <mat-icon class="material-icons notranslate"> search </mat-icon>
+      <mat-icon class="material-icons notranslate"> search</mat-icon>
     </form>
+    <ng-container *ngIf="userRole$ | async as userRole">
+      <div class="mat-button custom-create-button" *ngIf="userRole !== roleEnum.User" (click)="onCreateNewModel()">
+        <mat-icon svgIcon="add_new"></mat-icon>
+        <span>{{ 'applications.create.button' | translate }}</span>
+      </div>
+    </ng-container>
   </div>
   <app-spinner *ngIf="isLoading$ | async">></app-spinner>
   <app-model-table
-    *ngIf="(tableConfig$ | async)?.data.length > 0"
-    class="app-table"
-    [isLoading]="isLoading$ | async"
-    [userRole]="userRole$ | async"
-    [tableConfig]="tableConfig$ | modelTableFilter: search | async"
-    (copyApiKey)="copyApiKey($event)"
-    (clone)="clone($event)"
-    (edit)="edit($event)"
-    (delete)="delete($event)"
-    (test)="test($event)"
+      *ngIf="(tableConfig$ | async)?.data.length > 0"
+      class="app-table"
+      [isLoading]="isLoading$ | async"
+      [userRole]="userRole$ | async"
+      [tableConfig]="tableConfig$ | modelTableFilter: search | async"
+      (copyApiKey)="copyApiKey($event)"
+      (clone)="clone($event)"
+      (edit)="edit($event)"
+      (delete)="delete($event)"
+      (test)="test($event)"
   >
   </app-model-table>
   <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
@@ -49,9 +55,4 @@
       {{ 'models.create_model_info' | translate }}
     </p>
   </div>
-</div>
-<div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
-  <button *ngIf="userRole !== roleEnum.User" mat-flat-button color="primary" (click)="onCreateNewModel()">
-    {{ 'common.capital.create' | translate }}
-  </button>
 </div>

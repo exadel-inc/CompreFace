@@ -13,20 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import 'colors.scss';
+@import "media.scss";
+@import "mixins.scss";
 
 .model-list {
-  position: relative;
-
-  .header-section {
-    display: inline-flex;
-    margin-bottom: 25px;
-    align-items: center;
-    align-self: center;
-
-    h3 {
-      margin: 0;
-    }
-  }
+  @include common-header();
+  @include header-bar-layout();
 
   app-spinner {
     position: absolute;
@@ -38,19 +31,4 @@
     height: 295px;
     overflow-x: hidden;
   }
-
-  .create-new-message {
-    display: flex;
-    min-height: 345px;
-
-    mat-icon {
-      padding: 25px 20px 0 0
-    }
-  }
-}
-
-.add-model-button-container {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
 }
