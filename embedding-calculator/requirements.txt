@@ -47,7 +47,7 @@ pandas==0.24.2
 Pillow==6.2.2
 pluggy==0.13.0
 protobuf==3.8.0
-py==1.8.0
+py==1.10.0
 pycodestyle==2.5.0
 pydocstyle==5.0.2
 pyflakes==2.1.1
