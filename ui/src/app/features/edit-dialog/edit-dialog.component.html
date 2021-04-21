@@ -21,8 +21,8 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
-  <button class="button-create" mat-button [mat-dialog-close]="data.entityName" cdkFocusInitial [disabled]="isRenameDisabled">
+  <button class="button-cancel" mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
+  <button class="button-create" mat-flat-button [mat-dialog-close]="data.entityName" cdkFocusInitial [disabled]="isRenameDisabled">
     {{ 'common.capital.rename' | translate }}
   </button>
 </div>

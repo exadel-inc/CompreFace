@@ -15,7 +15,7 @@ limitations under the License.
 -->
 <div class="application-list">
   <div class="table-header-container">
-    <h3 *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{ 'applications.title' | translate }}</h3>
+    <h3 class="mat-title" *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{ 'applications.title' | translate }}</h3>
     <form class="search-input">
       <input
         matInput
@@ -30,6 +30,10 @@ limitations under the License.
     <ng-template #firstStepInfo
       ><h3>{{ 'applications.first_steps_title' | translate }}</h3>
     </ng-template>
+    <div *ngIf="userRole !== roleEnum.User" (click)="createApp.emit()" class="mat-button custom-create-button">
+      <mat-icon svgIcon="add_new"></mat-icon>
+      <span>{{ 'applications.create.button' | translate }}</span>
+    </div>
   </div>
   <app-spinner *ngIf="isLoading"></app-spinner>
   <app-table
@@ -45,10 +49,5 @@ limitations under the License.
     <p>
       {{ 'applications.first_steps_info' | translate }}
     </p>
-  </div>
-  <div class="card-single-action-container">
-    <button *ngIf="userRole !== roleEnum.User" mat-button color="primary" (click)="createApp.emit()">
-      {{ 'common.capital.create' | translate }}
-    </button>
   </div>
 </div>

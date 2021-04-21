@@ -1,0 +1,91 @@
+tags:
+  - Core
+summary: 'Find faces in the given image in BASE64 format and return their bounding boxes.'
+description: 'Returns bounding boxes of detected faces on the image.'
+operationId: findFacesBase64Post
+consumes:
+  - application/json
+produces:
+  - application/json
+parameters:
+  - in: body
+    name: file
+    type: file
+    required: 'true'
+    description: 'A picture with at least one face in BASE64 format.'
+  - in: query
+    name: limit
+    description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
+    type: integer
+    default: 0
+  - in: query
+    name: det_prob_threshold
+    description: 'The minimum required confidence that a found face is actually a face. Decrease this value if faces are not detected. Valid values are in the range (0;1).'
+    type: float
+  - in: query
+    name: face_plugins
+    description: 'Comma-separated slugs of face plugins. Empty value - face plugins disabled, returns only bounding boxes. E.g. `calculator,gender` - returns only embedding and gender for each face.'
+    type: string
+responses:
+  '200':
+    description: 'Face scan completed with plugins `age,gender,landmarks`'
+    schema:
+      type: object
+      properties:
+        plugins_versions:
+          type: object
+          properties:
+            age:
+              type: string
+              example: agegender.AgeDetector
+            gender:
+              type: string
+              example: agegender.GenderDetector
+            detector:
+              type: string
+              example: facenet.FaceDetector
+        result:
+          type: array
+          items:
+            type: object
+            properties:
+              age:
+                type: array
+                example: [25, 32]
+              box:
+                type: object
+                properties:
+                  x_min:
+                    type: integer
+                    example: 141
+                  x_max:
+                    type: integer
+                    example: 192
+                  y_min:
+                    type: integer
+                    example: 57
+                  y_max:
+                    type: integer
+                    example: 94
+                  probability:
+                    type: number
+                    format: float
+                    example: 0.9581532
+              gender:
+                type: string
+                example: "male"
+              landmarks:
+                type: array
+                example: [[53, 904], [117, 907], [82, 948], [52, 969], [113,972]]
+              execution_time:
+                type: object
+                properties:
+                  age:
+                    type: integer
+                    example: 28
+                  gender:
+                    type: integer
+                    example: 15
+                  detector:
+                    type: integer
+                    example: 58

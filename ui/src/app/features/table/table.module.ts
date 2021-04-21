@@ -21,10 +21,11 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
 import { TableComponent } from './table.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [TableComponent],
   exports: [TableComponent],
-  imports: [CommonModule, MatTableModule, TruncateModule, MatTooltipModule, TranslateModule],
+  imports: [CommonModule, MatTableModule, TruncateModule, MatTooltipModule, TranslateModule, MatIconModule],
 })
 export class TableModule {}

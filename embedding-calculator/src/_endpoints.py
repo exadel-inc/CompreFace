@@ -25,6 +25,7 @@ from src.services.flask_.constants import ARG
 from src.services.flask_.needs_attached_file import needs_attached_file
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import Constants
+import base64
 
 
 def endpoints(app):
@@ -39,6 +40,24 @@ def endpoints(app):
             similarity_coefficients=calculator.ml_model.similarity_coefficients,
             available_plugins=available_plugins
         )
+
+    @app.route('/find_faces_base64', methods=['POST'])
+    def find_faces_base64_post():
+        detector = managers.plugin_manager.detector
+        face_plugins = managers.plugin_manager.filter_face_plugins(
+            _get_face_plugin_names()
+        )
+
+        rawfile = base64.b64decode(request.get_json()["file"])
+
+        faces = detector(
+            img=read_img(rawfile),
+            det_prob_threshold=_get_det_prob_threshold(),
+            face_plugins=face_plugins
+        )
+        plugins_versions = {p.slug: str(p) for p in [detector] + face_plugins}
+        faces = _limit(faces, request.values.get(ARG.LIMIT))
+        return jsonify(plugins_versions=plugins_versions, result=faces)
 
     @app.route('/find_faces', methods=['POST'])
     @needs_attached_file

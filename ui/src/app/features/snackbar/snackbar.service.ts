@@ -56,7 +56,7 @@ export class SnackBarService {
       duration,
       data,
       verticalPosition: 'top',
-      panelClass: ['app-snackbar-panel', data.type],
+      panelClass: [data.type],
     });
   }
 }

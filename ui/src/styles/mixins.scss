@@ -14,26 +14,10 @@
  * permissions and limitations under the License.
  */
 
-@import 'media.scss';
-@import 'colors.scss';
-
-.message {
-  // todo fix font-family
-  font-family: 'Roboto', sans-serif;
-  color: $white;
-}
-
-// todo fix ::ng-deep
-::ng-deep .app-snackbar-panel {
-  &.info {
-    background-color: $green;
-  }
-
-  &.error {
-    background-color: $red;
-  }
-
-  &.warning {
-    background-color: $orange;
-  }
+@mixin wrapper-center() {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
 }

@@ -45,7 +45,8 @@ public class EuclideanDistanceClassifier implements Classifier {
 
     @Override
     public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
-        val inputFace = create(input);
+        INDArray inputFace = create(input);
+        inputFace = normalizeOne(inputFace);
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
         val result = new ArrayList<Pair<Double, String>>();
         if (faceCollection.getEmbeddings() != null && faceCollection.getEmbeddings().length() > 0) {
@@ -73,11 +74,11 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     @Override
-    public Double verify(double[] processFileEmbedding, double[][] checkFileEmbedding) {
-        INDArray firstFace = create(processFileEmbedding);
-        INDArray secondFace = create(checkFileEmbedding);
-        double[] probabilities = recognize(firstFace, secondFace);
-        return probabilities[0];
+    public double[] verify(double[] sourceImageEmbedding, double[][] targetImageEmbedding) {
+        final INDArray sourceNormalized = normalizeOne(create(sourceImageEmbedding));
+        final INDArray targetNormalized = normalize(create(targetImageEmbedding));
+
+        return recognize(sourceNormalized, targetNormalized);
     }
 
     @Override
@@ -86,7 +87,8 @@ public class EuclideanDistanceClassifier implements Classifier {
             return (double) 0;
         }
 
-        val inputFace = create(input);
+        val inputFace = normalize(create(input));
+        
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
 
         val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
@@ -100,10 +102,17 @@ public class EuclideanDistanceClassifier implements Classifier {
         return embeddings.divi(embeddings1Norm);
     }
 
-    private INDArray normalize(final INDArray embeddings) {
-        val embeddings1Norm = embeddings.norm2(1);
+    public double[] normalizeOne(final double[] rawEmbeddings) {
+        INDArray embeddings = create(rawEmbeddings);
+        embeddings = normalizeOne(embeddings);
 
-        return embeddings.divi(embeddings1Norm);
+        return embeddings.toDoubleVector();
+    }
+
+    private INDArray normalize(final INDArray embeddings) {
+        val embeddingsNorm = embeddings.norm2(1);
+
+        return embeddings.transposei().divi(embeddingsNorm).transposei();
     }
 
     private double[] recognize(final INDArray newFace, final INDArray existingFaces) {

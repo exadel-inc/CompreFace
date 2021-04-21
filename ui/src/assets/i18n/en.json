@@ -9,7 +9,8 @@
       "add": "ADD",
       "rename": "RENAME",
       "edit": "EDIT",
-      "delete": "DELETE"
+      "delete": "DELETE",
+      "ok": "OK"
     },
     "name": "Name",
     "type": "Type",
@@ -20,10 +21,11 @@
     "title": "Login",
     "email": "Email",
     "password": "Password",
-    "sign_up": "SIGN UP",
+    "no_account": "Do not have an account?",
+    "sign_up": "Sign Up",
     "email_hint": "Email should have correct format",
     "password_hint": "Password is required",
-    "login": "LOGIN"
+    "login": "Login"
   },
   "registration": {
     "title": "Sign up",
@@ -37,8 +39,9 @@
     "name_restriction": "First name is required",
     "last_name_restriction": "Last name is required",
     "email_hint": "Email should have correct format",
-    "login": "LOGIN",
-    "sign_up": "SIGN UP",
+    "login": "Login",
+    "have_account": "Already have an account?",
+    "sign_up": "Sign Up",
     "statistics": "Allow to send anonymous statistics for product improvement",
     "more_info": "More info"
   },
@@ -55,6 +58,7 @@
     "signup": "Sign Up"
   },
   "applications": {
+    "build": "build version",
     "caption": "Table of applications",
     "title": "Applications",
     "first_steps_title": "Create Application",
@@ -62,7 +66,8 @@
     "owner": "Owner",
     "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
     "create": {
-      "title": "Create application"
+      "title": "Create application",
+      "button": "Create New"
     },
     "header": {
       "title": "Application",

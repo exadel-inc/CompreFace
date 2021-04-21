@@ -1,4 +1,4 @@
 export enum VerificationServiceFields {
-  processFileData = 'processFileData',
-  checkFileData = 'checkFileData',
+  ProcessFileData = 'source_image_face',
+  CheckFileData = 'face_matches',
 }
