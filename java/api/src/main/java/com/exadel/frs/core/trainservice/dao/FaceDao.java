@@ -22,7 +22,7 @@ import com.exadel.frs.commonservice.entity.Face.Embedding;
 import com.exadel.frs.commonservice.entity.Image;
 import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.core.trainservice.repository.ImagesRepository;
-import com.exadel.frs.core.trainservice.system.global.ImageProperties;
+import com.exadel.frs.commonservice.system.global.ImageProperties;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;

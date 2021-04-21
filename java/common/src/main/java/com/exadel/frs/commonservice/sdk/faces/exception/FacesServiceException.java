@@ -14,23 +14,18 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.global;
+package com.exadel.frs.commonservice.sdk.faces.exception;
 
-import java.util.List;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import com.exadel.frs.commonservice.exception.BasicException;
 
-@Component
-@ConfigurationProperties(prefix = "image")
-@Data
-public class ImageProperties {
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.FACES_SERVICE_EXCEPTION;
+import static java.lang.String.format;
 
-    @NotNull
-    @Size(min = 1)
-    private final List types;
+public class FacesServiceException extends BasicException {
 
-    private boolean saveImagesToDB;
+    private static final String MESSAGE = "Error during synchronization between servers: %s";
+
+    public FacesServiceException(final String message) {
+        super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));
+    }
 }

@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.faces.exception;
+package com.exadel.frs.commonservice.sdk.faces.exception;
 
 
 import com.exadel.frs.commonservice.exception.BasicException;

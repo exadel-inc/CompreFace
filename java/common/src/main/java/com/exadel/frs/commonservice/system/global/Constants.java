@@ -13,21 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.exadel.frs.commonservice.system.global;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class PluginsVersions {
+public class Constants {
 
-    private String age;
-    private String gender;
-    private String detector;
-    private String calculator;
+    public static final String CALCULATOR_PLUGIN = "calculator";
+
 }

@@ -7,7 +7,7 @@ import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
