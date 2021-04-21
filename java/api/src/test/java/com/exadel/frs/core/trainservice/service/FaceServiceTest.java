@@ -21,6 +21,7 @@ import static com.exadel.frs.core.trainservice.service.FaceService.MAX_FACES_TO_
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -33,6 +34,7 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
+import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
@@ -67,6 +69,9 @@ class FaceServiceTest {
 
     @Mock
     private FaceClassifierPredictor classifierPredictor;
+
+    @Mock
+    private EuclideanDistanceClassifier euclideanDistanceClassifier;
 
     @Mock
     private MockMultipartFile mockFile;
@@ -174,6 +179,8 @@ class FaceServiceTest {
         val expected = new FaceBO(face.getFaceName(), face.getId());
         val faceCollection = mock(FaceCollection.class);
 
+        double[] embeddingsArray = new double[] {EMBEDDING};
+        when(euclideanDistanceClassifier.normalizeOne(any())).thenReturn(embeddingsArray);
         when(facesApiClient.findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null))
                 .thenReturn(findFacesResponse);
         when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
