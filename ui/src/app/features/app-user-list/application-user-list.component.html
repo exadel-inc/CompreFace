@@ -29,7 +29,7 @@
       <mat-icon class="material-icons notranslate">search</mat-icon>
     </form>
     <ng-container *ngIf="userRole$ | async as userRole">
-      <div class="mat-button custom-create-button" *ngIf="userRole !== roleEnum.User" (click)="onInviteUser()">
+      <div class="custom-create-button" *ngIf="userRole !== roleEnum.User" (click)="onInviteUser()">
         <mat-icon svgIcon="add_new"></mat-icon>
         <span>{{ 'applications.create.add_button' | translate }}</span>
       </div>

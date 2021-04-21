@@ -57,3 +57,33 @@
     }
   }
 }
+
+@mixin xl-icon-size($size: 40px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+@mixin lg-icon-size($size: 27px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+@mixin md-icon-size($size: 20px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+@mixin sm-icon-size($size: 14px) {
+  font-size: $size;
+  height: $size;
+  width: $size;
+  line-height: $size;
+}
+
+

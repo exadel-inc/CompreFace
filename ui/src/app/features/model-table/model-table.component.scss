@@ -15,6 +15,7 @@
  */
 @import 'colors.scss';
 @import "media.scss";
+@import "mixins.scss";
 
 caption {
   display: none;
@@ -82,24 +83,27 @@ tr.mat-row, tr.mat-footer-row {
 }
 
 .special-test-button-color {
-  font-size: 12px !important;
-  line-height: 14px !important;
-  border-radius: 2px !important;
+  width: 58px;
+  min-width: 50px;
+  padding: 5px 16px;
+  border: none;
+  border-radius: 2px;
+  box-sizing: border-box ;
+  box-shadow: none;
   text-transform: lowercase;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 14px ;
+  background-color: $green;
+  color: white;
+  cursor: pointer;
 
   &:first-letter {
     text-transform: capitalize;
   }
 }
 
-.mat-raised-button {
-  box-sizing: border-box !important;
-  width: 58px !important;
-  line-height: 24px !important;
-  box-shadow: none !important;
-  border-radius: 2px !important;
-  min-width: 50px !important;
-}
 
 .mat-icon-button {
   padding: 0;
@@ -109,8 +113,7 @@ tr.mat-row, tr.mat-footer-row {
 
 .more-button {
   .mat-icon-button {
-    height: 24px;
-    line-height: 24px;
+    @include md-icon-size()
   }
 }
 
@@ -122,8 +125,7 @@ tr.mat-row, tr.mat-footer-row {
   }
 
   .mat-icon-button {
-    height: 28px;
-    line-height: 28px;
+    @include lg-icon-size()
   }
 
   .copy-icon {
@@ -132,14 +134,11 @@ tr.mat-row, tr.mat-footer-row {
     }
 
     .mat-icon {
-      line-height: 10px;
-      width: 14px;
-      height: 14px;
+      @include sm-icon-size();
     }
 
     .mat-icon-button {
-      height: 28px;
-      line-height: 28px;
+      @include lg-icon-size()
     }
   }
 }
@@ -159,14 +158,11 @@ tr.mat-row, tr.mat-footer-row {
     }
 
     .mat-icon {
-      line-height: 20px !important;
-      width: 24px!important;
-      height: 24px!important;
+      @include lg-icon-size()
     }
 
     .mat-icon-button {
-      height: 45px;
-      line-height: 45px!important;
+      @include xl-icon-size();
     }
   }
 }

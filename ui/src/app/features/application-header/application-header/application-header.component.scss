@@ -13,6 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import "mixins.scss";
 
 .application-header {
   display: flex;
@@ -34,7 +35,7 @@
   mat-icon {
     margin-left: 22px;
     cursor: pointer;
-    width: 18px;
+    @include md-icon-size();
   }
 
   mat-card {

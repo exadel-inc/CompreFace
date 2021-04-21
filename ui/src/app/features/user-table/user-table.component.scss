@@ -14,10 +14,11 @@
  * permissions and limitations under the License.
  */
 @import 'colors.scss';
+@import "mixins.scss";
 
 mat-icon {
   cursor: pointer;
-  width: 18px;
+  @include md-icon-size()
 }
 
 caption {

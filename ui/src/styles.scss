@@ -17,6 +17,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'media.scss';
 @import 'colors.scss';
+@import "mixins.scss";
 
 @import './styles/custom-theme.scss';
 @include custom-theme($custom-theme);
@@ -194,9 +195,11 @@ app-table, app-user-table, app-model-table {
 .create-new-message {
   display: flex;
   align-items: center;
+
   .message-icon {
     color: $pale-gray ;
   }
+
   mat-icon {
     padding-right: 15px;
   }
@@ -213,9 +216,11 @@ form.search-input {
   box-sizing: border-box;
   border-radius: 4px;
   padding: 8px 8px 8px 6px;
+
   mat-icon{
     color: rgba(34, 34, 34, 0.45);
   }
+
   input{
     width: 100%;
     border: 0;
@@ -226,19 +231,21 @@ form.search-input {
   }
 }
 
-.custom-create-button{
-  display: inline-flex !important;
-  align-items: center !important;
-  flex-direction: row  !important;
-  flex-basis: 112px  !important;
-  line-height: 27px  !important;
-  color: $primary  !important;
-  margin-left: 5px  !important;
-  padding: 0  !important;
+.custom-create-button {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row;
+  flex-basis: 117px;
+  line-height: 27px;
+  color: $primary;
+  margin-left: 5px;
+  padding: 0;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
 
-  mat-icon{
-    width: 13.5px  !important;
-    height: 27px  !important;
+  mat-icon {
+    @include sm-icon-size()
   }
 
   span {

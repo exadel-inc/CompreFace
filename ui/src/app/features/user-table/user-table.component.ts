@@ -44,7 +44,12 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
 
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitzer: DomSanitizer, private dialog: MatDialog, private translate: TranslateService) {
+  constructor(
+    private matIconRegistry: MatIconRegistry,
+    private domSanitzer: DomSanitizer,
+    private dialog: MatDialog,
+    private translate: TranslateService
+  ) {
     super();
     this.matIconRegistry.addSvgIcon('edit', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/edit.svg'));
     this.matIconRegistry.addSvgIcon('trash', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/trash.svg'));

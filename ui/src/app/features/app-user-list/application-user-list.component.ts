@@ -27,8 +27,8 @@ import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component'
 import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
-import {MatIconRegistry} from '@angular/material/icon';
-import {DomSanitizer} from '@angular/platform-browser';
+import { MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-application-user-list',
