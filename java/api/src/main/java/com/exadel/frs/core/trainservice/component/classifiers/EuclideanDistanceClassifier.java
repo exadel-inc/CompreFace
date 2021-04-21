@@ -17,9 +17,9 @@
 package com.exadel.frs.core.trainservice.component.classifiers;
 
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.exception.FacesServiceException;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.exception.FacesServiceException;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
 import com.google.common.primitives.Doubles;
 import lombok.RequiredArgsConstructor;
 import lombok.val;

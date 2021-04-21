@@ -14,23 +14,22 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.global;
+package com.exadel.frs.commonservice.sdk.config;
 
-import java.util.List;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import feign.Feign;
+import feign.Logger;
+import feign.form.spring.SpringFormEncoder;
+import feign.jackson.JacksonDecoder;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "image")
-@Data
-public class ImageProperties {
+public class FeignClientFactory {
 
-    @NotNull
-    @Size(min = 1)
-    private final List types;
-
-    private boolean saveImagesToDB;
+    public <T> T getFeignClient(Class<T> clazz, String clientUrl) {
+        return Feign.builder()
+                    .encoder(new SpringFormEncoder())
+                    .decoder(new JacksonDecoder())
+                    .logLevel(Logger.Level.FULL)
+                    .target(clazz, clientUrl);
+    }
 }

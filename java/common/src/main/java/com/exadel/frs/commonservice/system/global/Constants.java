@@ -14,18 +14,10 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.faces.exception;
+package com.exadel.frs.commonservice.system.global;
 
+public class Constants {
 
-import com.exadel.frs.commonservice.exception.BasicException;
+    public static final String CALCULATOR_PLUGIN = "calculator";
 
-import static com.exadel.frs.commonservice.handler.CommonExceptionCode.NO_FACES_FOUND;
-
-public class NoFacesFoundException extends BasicException {
-
-    private static final String MESSAGE = "No face is found in the given image";
-
-    public NoFacesFoundException() {
-        super(NO_FACES_FOUND, MESSAGE);
-    }
 }

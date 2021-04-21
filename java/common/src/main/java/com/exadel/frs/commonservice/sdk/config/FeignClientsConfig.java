@@ -14,11 +14,11 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.config;
+package com.exadel.frs.commonservice.sdk.config;
 
-import static com.exadel.frs.core.trainservice.system.global.EnvironmentProperties.ServerType.PYTHON;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
-import com.exadel.frs.core.trainservice.system.global.EnvironmentProperties;
+import static com.exadel.frs.commonservice.system.global.EnvironmentProperties.ServerType.PYTHON;
+import com.exadel.frs.commonservice.sdk.faces.feign.FacesFeignClient;
+import com.exadel.frs.commonservice.system.global.EnvironmentProperties;
 import feign.Feign;
 import feign.Logger;
 import feign.form.spring.SpringFormEncoder;

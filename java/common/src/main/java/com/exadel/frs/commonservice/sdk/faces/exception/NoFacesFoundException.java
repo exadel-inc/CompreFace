@@ -14,22 +14,18 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.config;
+package com.exadel.frs.commonservice.sdk.faces.exception;
 
-import feign.Feign;
-import feign.Logger;
-import feign.form.spring.SpringFormEncoder;
-import feign.jackson.JacksonDecoder;
-import org.springframework.stereotype.Component;
 
-@Component
-public class FeignClientFactory {
+import com.exadel.frs.commonservice.exception.BasicException;
 
-    public <T> T getFeignClient(Class<T> clazz, String clientUrl) {
-        return Feign.builder()
-                    .encoder(new SpringFormEncoder())
-                    .decoder(new JacksonDecoder())
-                    .logLevel(Logger.Level.FULL)
-                    .target(clazz, clientUrl);
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.NO_FACES_FOUND;
+
+public class NoFacesFoundException extends BasicException {
+
+    private static final String MESSAGE = "No face is found in the given image";
+
+    public NoFacesFoundException() {
+        super(NO_FACES_FOUND, MESSAGE);
     }
 }

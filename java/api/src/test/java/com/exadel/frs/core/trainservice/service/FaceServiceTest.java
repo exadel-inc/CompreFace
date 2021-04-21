@@ -37,10 +37,10 @@ import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.PluginsVersions;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
 import java.io.IOException;
 import java.util.List;
 import lombok.val;
@@ -49,8 +49,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 
 class FaceServiceTest {
