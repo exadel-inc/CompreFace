@@ -179,8 +179,7 @@ class FaceServiceTest {
         val expected = new FaceBO(face.getFaceName(), face.getId());
         val faceCollection = mock(FaceCollection.class);
 
-        double[] embeddingsArray = new double[] {EMBEDDING};
-        when(euclideanDistanceClassifier.normalizeOne(any())).thenReturn(embeddingsArray);
+        when(euclideanDistanceClassifier.normalizeOne(any())).thenReturn(new double[] {EMBEDDING});
         when(facesApiClient.findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null))
                 .thenReturn(findFacesResponse);
         when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);

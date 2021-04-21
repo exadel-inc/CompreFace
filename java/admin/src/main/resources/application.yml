@@ -106,6 +106,10 @@ registration:
     scheduler:
       period: 300000
 
+# "environment" and "image" blocks should be same in those files:
+#    * api/src/main/resources/application.properties
+#    * admin/src/main/resources/application.properties
+
 image:
   types:
     - tif
