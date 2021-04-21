@@ -57,6 +57,7 @@ public class VerifyControllerTest extends EmbeddedPostgreSQLTest {
                 .build();
 
         when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(predictor.verify(any(), any())).thenReturn(new double[] {100d});
 
         val firstFile = new MockMultipartFile("source_image", "test data".getBytes());
         val secondFile = new MockMultipartFile("target_image", "test data".getBytes());
