@@ -16,20 +16,16 @@
 
 package com.exadel.frs.commonservice.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public enum GlobalRole implements EnumCode {
 
     OWNER("O"),
     ADMINISTRATOR("A"),
     USER("U");
 
-    @Getter
-    @Setter
-    private String code;
+    private final String code;
 }

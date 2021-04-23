@@ -21,6 +21,7 @@ import static com.exadel.frs.core.trainservice.service.FaceService.MAX_FACES_TO_
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -33,6 +34,8 @@ import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
+import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
+import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
@@ -49,8 +52,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.stubbing.Answer;
 import org.springframework.mock.web.MockMultipartFile;
 
 class FaceServiceTest {
@@ -72,6 +74,9 @@ class FaceServiceTest {
 
     @Mock
     private MockMultipartFile mockFile;
+
+    @Mock
+    private EuclideanDistanceClassifier classifier;
 
     @InjectMocks
     private FaceService faceService;
@@ -181,6 +186,7 @@ class FaceServiceTest {
         when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
         when(faceCacheProvider.getOrLoad(MODEL_KEY)).thenReturn(faceCollection);
         when(faceCollection.addFace(face)).thenReturn(expected);
+        when(classifier.normalizeOne(any())).thenAnswer(invocation -> invocation.getArguments()[0]);
 
         val actual = faceService.findAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
 

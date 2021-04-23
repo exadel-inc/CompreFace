@@ -23,8 +23,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Objects;
 
-import static org.apache.commons.lang3.Range.between;
-
 @NoArgsConstructor
 @Component
 public class StatisticsJob extends QuartzJobBean {
@@ -32,30 +30,29 @@ public class StatisticsJob extends QuartzJobBean {
     @Value("${app.feign.appery-io.api-key}")
     private String statisticsApiKey;
     private ApperyStatisticsClient apperyStatisticsClient;
+
     private InstallInfoRepository installInfoRepository;
-    private FacesRepository facesRepository;
     private ModelRepository modelRepository;
     private UserRepository userRepository;
 
-    private List<Range> ranges = List.of(
+    private final List<Range<Integer>> ranges = List.of(
             Range.between(1, 10),
             Range.between(11, 50),
             Range.between(51, 200),
             Range.between(201, 500),
             Range.between(501, 2000),
-            between(2001, 10000),
-            between(10001, 50000),
-            between(50001, 200000),
-            between(200001, 1000000)
+            Range.between(2001, 10000),
+            Range.between(10001, 50000),
+            Range.between(50001, 200000),
+            Range.between(200001, 1000000)
     );
 
     @Autowired
     public StatisticsJob(final ApperyStatisticsClient apperyStatisticsClient, final InstallInfoRepository installInfoRepository,
-                         final FacesRepository facesRepository, final ModelRepository modelRepository,
+                         final ModelRepository modelRepository,
                          final UserRepository userRepository) {
         this.apperyStatisticsClient = apperyStatisticsClient;
         this.installInfoRepository = installInfoRepository;
-        this.facesRepository = facesRepository;
         this.modelRepository = modelRepository;
         this.userRepository = userRepository;
     }
@@ -95,7 +92,7 @@ public class StatisticsJob extends QuartzJobBean {
             return "0";
         }
 
-        for (Range range : ranges) {
+        for (Range<Integer> range : ranges) {
             if (range.contains(facesCount)) {
                 return range.getMinimum() + "-" + range.getMaximum();
             }

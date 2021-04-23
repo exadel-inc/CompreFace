@@ -16,8 +16,8 @@
 
 package com.exadel.frs.core.trainservice.cache;
 
-import com.exadel.frs.commonservice.exception.ImageNotFoundException;
 import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.commonservice.exception.ImageNotFoundException;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import java.util.List;
@@ -62,7 +62,7 @@ public class FaceCollection {
     }
 
     public static FaceCollection buildFromFaces(final List<Face> faces) {
-        if (faces.size() < 1) {
+        if (faces.isEmpty()) {
             return new FaceCollection(HashBiMap.create(), null, new AtomicInteger());
         }
 
@@ -82,7 +82,7 @@ public class FaceCollection {
         return new FaceCollection(HashBiMap.create(facesMap), indArray, index);
     }
 
-    synchronized public FaceBO addFace(final Face face) {
+    public synchronized FaceBO addFace(final Face face) {
         val cachedFace = new FaceBO(face.getFaceName(), face.getId());
         facesMap.put(cachedFace, size.get());
         val faceEmbeddings = face.getEmbedding().getEmbeddings()
@@ -104,7 +104,7 @@ public class FaceCollection {
         return cachedFace;
     }
 
-    synchronized public FaceBO removeFace(final String imageId, final String faceName) {
+    public synchronized FaceBO removeFace(final String imageId, final String faceName) {
         if (facesMap.size() == 0) {
             return null;
         }
@@ -131,11 +131,11 @@ public class FaceCollection {
         return faceToDelete;
     }
 
-    synchronized public Set<FaceBO> getFaces() {
+    public synchronized Set<FaceBO> getFaces() {
         return facesMap.keySet();
     }
 
-    synchronized public INDArray getEmbeddingsByImageId(String imageId) {
+    public synchronized INDArray getEmbeddingsByImageId(String imageId) {
         val index = facesMap.get(facesMap.keySet().stream()
                                          .filter(face -> face.getImageId().equals(imageId))
                                          .findFirst()

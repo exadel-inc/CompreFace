@@ -16,20 +16,16 @@
 
 package com.exadel.frs.commonservice.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public enum AppModelAccess implements EnumCode {
 
     OWNER("O"),
     READONLY("R"),
     TRAIN("T");
 
-    @Getter
-    @Setter
-    private String code;
+    private final String code;
 }

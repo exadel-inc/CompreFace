@@ -1,12 +1,10 @@
 package com.exadel.frs.commonservice.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public enum StatisticsType {
 
     USER_CREATE("UC"),
@@ -15,7 +13,5 @@ public enum StatisticsType {
     FACE_RECOGNITION_CREATE("RC"),
     FACE_VERIFICATION_CREATE("VC");
 
-    @Getter
-    @Setter
-    private String code;
+    private final String code;
 }

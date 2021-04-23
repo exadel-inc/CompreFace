@@ -16,20 +16,16 @@
 
 package com.exadel.frs.commonservice.enums;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public enum ModelType implements EnumCode {
 
     RECOGNITION("R"),
     DETECTION("D"),
     VERIFY("V");
 
-    @Getter
-    @Setter
-    private String code;
+    private final String code;
 }

@@ -18,7 +18,5 @@ package com.exadel.frs.commonservice.enums;
 
 public interface EnumCode {
 
-    void setCode(String code);
-
     String getCode();
 }
