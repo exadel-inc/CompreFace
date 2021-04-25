@@ -16,7 +16,7 @@ jobs:
          VERSION: ${{ github.event.inputs.version }}
          DOCKER_USER: ${{secrets.DOCKER_HUB_LOGIN}}
          DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PWD}}
-         DOCKER_REGISTRY: ${{secrets.DOCKER_HUB_LOGIN}}/
+         DOCKER_REGISTRY: exadel/
        working-directory: ./embedding-calculator/
        run: |
          make build-images
