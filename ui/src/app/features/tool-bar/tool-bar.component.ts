@@ -13,13 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, first } from 'rxjs/operators';
-
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';
+import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-tool-bar',
@@ -36,7 +36,13 @@ export class ToolBarComponent {
   @Output() changePassword = new EventEmitter();
   @Output() editUserInfo = new EventEmitter();
 
+  openMenu = false;
+
   constructor(private dialog: MatDialog, private translate: TranslateService) {}
+
+  changeArrowIcon(): void {
+    this.openMenu = !this.openMenu;
+  }
 
   goSignUp() {
     this.signUp.emit();

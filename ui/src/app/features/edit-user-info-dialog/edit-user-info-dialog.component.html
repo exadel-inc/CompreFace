@@ -35,8 +35,8 @@
   </form>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
-  <button class="button-create" color="primary" mat-button (click)="onChangeClick()" [disabled]="!form.valid">
+  <button class="button-cancel" mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
+  <button class="button-create" color="primary" mat-flat-button (click)="onChangeClick()" [disabled]="!form.valid">
     {{ 'common.capital.rename' | translate }}
   </button>
 </div>

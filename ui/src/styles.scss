@@ -18,6 +18,9 @@
 @import 'media.scss';
 @import 'colors.scss';
 
+@import './styles/custom-theme.scss';
+@include custom-theme($custom-theme);
+
 body,
 html {
   height: 100%;
@@ -28,16 +31,9 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 
   h3 {
-    font-weight: 400;
     margin-top: 0;
-    font-family: Roboto Regular, "Helvetica Neue", sans-serif;
-  }
-
-  h4 {
-    font-family: Roboto Regular, "Helvetica Neue", sans-serif;
   }
 }
 
@@ -48,33 +44,11 @@ body {
   margin-right: auto;
   margin-left: auto;
   flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 mat-card {
   box-sizing: border-box;
-  font-family: Roboto Regular, "Helvetica Neue", sans-serif;
-}
-
-
-
-.mat-raised-button {
-  &.mat-primary {
-    background-color: $primary;
-
-    &:hover {
-      background-color: $primary-light;
-    }
-  }
-}
-
-.mat-flat-button {
-  &.mat-accent {
-    background-color: $green;
-  }
-
-  &:hover {
-    background-color: lighten($green, 10%);
-  }
 }
 
 .btn-block {
@@ -110,7 +84,7 @@ app-table, app-user-table, app-model-table {
 
 @include tablet-portrait {
   .container {
-    max-width: 720px;
+    max-width: 100%;
   }
 }
 
@@ -122,23 +96,13 @@ app-table, app-user-table, app-model-table {
 
 @include desktop {
   .container {
-    max-width: 1140px;
+    max-width: 1180px;
   }
 }
 
 .app-table {
   table {
     width: 100%;
-
-    th {
-      font-size: 15px;
-      color: black;
-      font-weight: 600;
-    }
-
-    .mat-header-cell {
-      font-family: Roboto Regular, "Helvetica Neue", sans-serif;
-    }
 
     .mat-form-field {
       width: 80%;
@@ -168,71 +132,14 @@ app-table, app-user-table, app-model-table {
   display: none;
 }
 
-.mat-select-arrow {
-  color: black;
-}
-
-.mat-button.mat-primary,
-.mat-icon-button.mat-primary,
-.mat-stroked-button.mat-primary {
-  color: $accent;
-}
-
-.mat-button.mat-primary[disabled],
-.mat-icon-button.mat-primary[disabled] {
-  color: $disabled;
-}
-
 .mat-form-field-appearance-legacy {
   .mat-hint,
   .mat-error {
     font-size: 12px;
   }
-
-  .mat-hint,
-  .mat-form-field-label {
-    color: $secondaryText;
-  }
-
-  .mat-form-field-underline {
-    background-color: $disabled;
-  }
 }
 
 .mat-input-element {
-  color: $primaryText !important;
-  font-size: 16px !important;
-  caret-color: $accent;
-}
-
-.mat-form-field {
-  .mat-form-field-label {
-    color: $secondaryText;
-  }
-
-  &.mat-form-field-invalid {
-    .mat-input-element {
-      caret-color: $red;
-    }
-
-    .mat-form-field-ripple {
-      background-color: $red;
-    }
-
-    .mat-form-field-label {
-      color: $red;
-    }
-  }
-
-  &.mat-focused {
-    .mat-form-field-ripple {
-      background-color: $accent;
-    }
-
-    .mat-form-field-label {
-      color: $accent;
-    }
-  }
 }
 
 .mat-error {
@@ -240,8 +147,17 @@ app-table, app-user-table, app-model-table {
 }
 
 .separate-line {
-  border: 1px solid $normal-gray;
+  border: 1px solid $light-blue;
   margin: 30px 0;
+}
+
+.create-new-message {
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    padding-right: 15px;
+  }
 }
 
 form.search-input {
@@ -252,11 +168,18 @@ form.search-input {
   align-items: center;
   align-self: center;
   border: 1px solid rgba(34, 34, 34, 0.1);
-  color: rgba(34, 34, 34, 0.1) ;
   box-sizing: border-box;
   border-radius: 4px;
   padding: 8px 8px 8px 6px;
   mat-icon{
     color: rgba(34, 34, 34, 0.45);
+  }
+  input{
+    width: 100%;
+    border: 0;
+    font: inherit;
+    &:focus{
+      outline-width: 0
+    }
   }
 }

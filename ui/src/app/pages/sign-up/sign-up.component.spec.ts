@@ -15,6 +15,7 @@
  */
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { SignUpComponent } from './sign-up.component';
 
@@ -26,6 +27,7 @@ describe('SignUpComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [SignUpComponent],
+        imports: [TranslateModule.forRoot()],
         schemas: [NO_ERRORS_SCHEMA],
       }).compileComponents();
     })
