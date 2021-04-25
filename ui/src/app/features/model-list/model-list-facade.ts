@@ -15,16 +15,13 @@
  */
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { combineLatest, Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Role } from 'src/app/data/enums/role.enum';
+import { Observable, Subscription } from 'rxjs';
 import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { Model } from 'src/app/data/interfaces/model';
 import { AppState } from 'src/app/store';
-import { selectCurrentAppId, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
-import { createModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/actions';
-import { selectModels, selectPendingModel } from 'src/app/store/model/selectors';
-import { selectCurrentUserRole } from 'src/app/store/user/selectors';
+import { selectCurrentAppId } from 'src/app/store/application/selectors';
+import { createModel, cloneModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/action';
+import { selectModels, selectPendingModel, selectUserRole } from 'src/app/store/model/selectors';
 
 @Injectable()
 export class ModelListFacade implements IFacade {
@@ -39,12 +36,7 @@ export class ModelListFacade implements IFacade {
     this.models$ = this.store.select(selectModels);
     this.isLoading$ = this.store.select(selectPendingModel);
     this.selectedApplication$ = this.store.select(selectCurrentAppId);
-    this.userRole$ = combineLatest([this.store.select(selectUserRollForSelectedApp), this.store.select(selectCurrentUserRole)]).pipe(
-      map(([applicationRole, globalRole]) =>
-        // the global role (if OWNER or ADMINISTRATOR) should prevail on the application role
-        globalRole !== Role.User ? globalRole : applicationRole
-      )
-    );
+    this.userRole$ = this.store.select(selectUserRole);
   }
 
   initSubscriptions(): void {
@@ -64,10 +56,23 @@ export class ModelListFacade implements IFacade {
     );
   }
 
-  createModel(name: string): void {
+  createModel(name: string, type: string): void {
     this.store.dispatch(
       createModel({
+        model: {
+          applicationId: this.selectedApplicationId,
+          name,
+          type,
+        },
+      })
+    );
+  }
+
+  cloneModel(modelId: string, name: string): void {
+    this.store.dispatch(
+      cloneModel({
         applicationId: this.selectedApplicationId,
+        modelId,
         name,
       })
     );

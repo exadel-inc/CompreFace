@@ -14,6 +14,7 @@
 
 import colorsys
 import logging
+from itertools import repeat
 import random
 import string
 from pathlib import Path
@@ -48,7 +49,7 @@ def _bright_color_gen():
     yield _to_rgb255(Color('#ffad65'))
     yield _to_rgb255(Color('#fd63b0'))
     while True:
-        h, s, l_ = random.random(), 0.5 + random.random() / 2.0, 0.4 + random.random() / 5.0
+        h, s, l_ = random.random(), 0.5 + random.random() / 2.0, 0.4 + random.random() / 5.0 # NOSONAR: safe pseudorandom usage
         r, g, b = [int(256 * i) for i in colorsys.hls_to_rgb(h, s, l_)]
         yield r, g, b
 
@@ -75,7 +76,7 @@ def _get_font(size):
 
 
 def _get_filepath(filepath):
-    _filename = ''.join(random.choice(string.ascii_letters) for i in range(16))
+    _filename = ''.join(random.choice(string.ascii_letters) for _ in range(16)) # NOSONAR: safe pseudorandom usage
     if isinstance(filepath, str):
         _filename, filepath = filepath, None
     return filepath or TMP_DIR / f"{_filename}.png"
@@ -109,41 +110,44 @@ def save_img(img: Array3D,
     img = scaler.downscale_img(img)
     pil_img = Image.fromarray(img, 'RGB')
     img_draw = ImageDraw.Draw(pil_img)
-    noses_given = noses is not None
     noses = [scaler.downscale_nose(nose) for nose in noses or ()]
     boxes = [box.scaled(scaler.downscale_coefficient) for box in boxes or ()]
-    boxes = sorted(boxes, key=lambda box: (box.x_min, box.y_min))
+    boxes = sorted(boxes, key=lambda box: (box.x_min, box.y_min), reverse=True)
 
-    draw_boxes = []
+    # draw all boxes if no noses in image
+    if not noses:
+        color_iter = _bright_color_gen()
+        for i, box in enumerate(boxes):
+            _draw_detection_box(text=str(i + 1), box=box, color=next(color_iter))
+        pil_img.save(filepath, 'PNG')
+        return
+
     draw_error_boxes = []
     draw_boxnoses = []
-    for box in boxes:
-        dot_drawn = False
-        if noses:
-            nearest_nose_idx = get_nearest_point_idx(box.center, noses)
-            nearest_nose = noses[nearest_nose_idx]
-            if box.is_point_inside(nearest_nose):
-                draw_boxnoses.append((box, nearest_nose))
-                noses.pop(nearest_nose_idx)
-                dot_drawn = True
-        if noses_given and not dot_drawn:
+    while boxes and noses:
+        box = boxes.pop()
+        nearest_nose_idx = get_nearest_point_idx(box.center, noses)
+        nearest_nose = noses[nearest_nose_idx]
+        if box.is_point_inside(nearest_nose):
+            draw_boxnoses.append((box, nearest_nose))
+            noses.pop(nearest_nose_idx)
+        else:
             draw_error_boxes.append(box)
-        if not noses_given:
-            draw_boxes.append(box)
+    # add the rest of boxes to errors
+    draw_error_boxes.extend(boxes)
 
-    color_iter = _bright_color_gen()
     no_errors_found = len(noses) == 0 and len(draw_error_boxes) == 0
-    for i, boxnose in enumerate(draw_boxnoses):
-        box, nose = boxnose
-        color = next(color_iter) if no_errors_found else green_color
+    color_iter = _bright_color_gen() if no_errors_found else repeat(green_color)
+    for i, (box, nose) in enumerate(draw_boxnoses):
+        color = next(color_iter)
         _draw_detection_box(text=str(i + 1), box=box, color=color)
         _draw_dot(img_draw, xy=nose, radius=radius, color=color)
-    for i, box in enumerate(draw_boxes):
-        color = next(color_iter) if no_errors_found else green_color
-        _draw_detection_box(text=str(i + 1), box=box, color=color)
+        for point in box.landmarks:
+            _draw_dot(img_draw, xy=point, radius=2, color=green_color)
     for box in draw_error_boxes:
         _draw_detection_box(text='Error', box=box, color=error_color)
     for nose in noses:
-        _draw_cross(img_draw, xy=nose, half_length=cross_half_length, color=error_color, width=error_line_width)
+        _draw_cross(img_draw, xy=nose, half_length=cross_half_length,
+                    color=error_color, width=error_line_width)
 
     pil_img.save(filepath, 'PNG')

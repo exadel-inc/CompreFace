@@ -1,6 +1,21 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := default
-.PHONY := default up
+.PHONY := default up build-images build-cuda
+
+IMAGE := ${DOCKER_REGISTRY}compreface-core
+CUDA_IMAGE = $(IMAGE)-base:base-cuda100-py37
+
+MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1 \
+                          --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface_mobilefacenet \
+                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
+
+ARCFACE_r100_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1 \
+                          --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface-r100-msfdrop75 \
+                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
+
+FACENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=facenet.FaceDetector \
+                          --build-arg CALCULATION_PLUGIN=facenet.Calculator \
+                          --build-arg EXTRA_PLUGINS=facenet.LandmarksDetector,agegender.GenderDetector,agegender.AgeDetector
 
 define get_from_remote_tgz
 	mkdir -p $(2)
@@ -19,7 +34,17 @@ endef
 default:
 	pytest src tools
 	python -m pylama --options pylama.ini src tools
-	docker build -t embedding-calculator --build-arg SCANNER=Facenet2018,InsightFace .
+	docker build . -t $(IMAGE):$(VERSION)
+
+build-cuda:
+	docker build . --file gpu.Dockerfile --tag $(CUDA_IMAGE)
+
+build-images: build-cuda
+	docker build . -t $(IMAGE):$(VERSION)-facenet
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet $(MOBILENET_BUILD_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet-gpu $(MOBILENET_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE)
+	docker build . -t $(IMAGE):$(VERSION)-arcface-r100 $(ARCFACE_r100_BUILD_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-arcface-r100-gpu $(ARCFACE_r100_BUILD_ARGS) --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=$(CUDA_IMAGE)
 
 up:
 	docker run -p3000:3000 embedding-calculator

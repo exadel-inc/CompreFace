@@ -15,12 +15,15 @@
  */
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
 import { Model } from '../../data/interfaces/model';
 import { UIRequestOptions } from '../../data/interfaces/ui-request-options';
+import { UIDoubleFileRequestOptions } from '../../data/interfaces/ui-double-request-options';
+import { RequestResultVerification } from '../../data/interfaces/response-result';
 
 @Injectable({
   providedIn: 'root',
@@ -34,13 +37,13 @@ export class FaceRecognitionService {
     const formData = new FormData();
     formData.append('file', file, file.name);
     formData.append('subject', file.name);
-    return this.http.post(`${environment.userApiUrl}faces`, formData, {
+    return this.http.post(`${environment.userApiUrl}recognition/faces`, formData, {
       headers: { 'x-api-key': model.apiKey },
     });
   }
 
   recognize(file: any, apiKey: string): Observable<any> {
-    const url = `${environment.userApiUrl}faces/recognize`;
+    const url = `${environment.userApiUrl}recognition/recognize`;
     const formData = new FormData();
     formData.append('file', file);
 
@@ -56,8 +59,49 @@ export class FaceRecognitionService {
       );
   }
 
+  detection(file: any, apiKey: string): Observable<any> {
+    const url = `${environment.userApiUrl}detection/detect`;
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.http
+      .post(url, formData, {
+        headers: { 'x-api-key': apiKey },
+      })
+      .pipe(
+        map(data => ({
+          data,
+          request: this.createUIRequest(url, { apiKey, file }),
+        }))
+      );
+  }
+
+  verification(
+    sourceImage: File,
+    targetImage: File,
+    apiKey: string
+  ): Observable<{ data: { result: RequestResultVerification }; request: string }> {
+    const url = `${environment.userApiUrl}verification/verify`;
+    const formData: FormData = new FormData();
+
+    formData.append('source_image', sourceImage);
+    formData.append('target_image', targetImage);
+
+    return this.http
+      .post(url, formData, {
+        headers: { 'x-api-key': apiKey },
+      })
+      .pipe(
+        map(data => data as { result: RequestResultVerification }),
+        map(data => ({
+          data,
+          request: this.createUIDoubleFileRequest(url, { apiKey, sourceImage, targetImage }),
+        }))
+      );
+  }
+
   getAllFaces(model: Model): Observable<any> {
-    return this.http.get(`${environment.userApiUrl}faces`, { headers: { 'x-api-key': model.apiKey } });
+    return this.http.get(`${environment.userApiUrl}recognition/faces`, { headers: { 'x-api-key': model.apiKey } });
   }
 
   train(model: Model): Observable<any> {
@@ -74,9 +118,19 @@ export class FaceRecognitionService {
    * @private
    */
   private createUIRequest(url: string, options = {} as UIRequestOptions, params = {}): string {
-    const parsedParams = Object.keys(params).length ? `?${new URLSearchParams(params).toString()}` : '';
-    const { apiKey, file: { name: fname } } = options;
-
+    const {
+      apiKey,
+      file: { name: fname },
+    } = options;
     return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "file=@${fname}"`;
+  }
+
+  private createUIDoubleFileRequest(url: string, options = {} as UIDoubleFileRequestOptions, params = {}): string {
+    const {
+      apiKey,
+      sourceImage: { name: ffname },
+      targetImage: { name: sfname },
+    } = options;
+    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "source_image=@${ffname}" \\\n-F "target_image=@${sfname}"`;
   }
 }

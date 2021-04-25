@@ -24,7 +24,7 @@ import { Routes } from '../../data/enums/routers-url.enum';
 import { User } from '../../data/interfaces/user';
 import { AppState } from '../../store';
 import { logIn, resetErrorMessage } from '../../store/auth/action';
-import { selectAuthState } from '../../store/auth/selectors';
+import { selectLoadingState } from '../../store/auth/selectors';
 
 @Component({
   selector: 'app-login-form',
@@ -34,14 +34,12 @@ import { selectAuthState } from '../../store/auth/selectors';
 export class LoginFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
-  getState: Observable<any>;
-  isLoading = false;
+  isLoading$: Observable<boolean>;
   routes = Routes;
-  stateSubscription: Subscription;
   env = environment;
 
   constructor(private store: Store<AppState>) {
-    this.getState = this.store.select(selectAuthState);
+    this.isLoading$ = this.store.select(selectLoadingState);
   }
 
   ngOnInit() {
@@ -49,15 +47,10 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
       password: new FormControl(null, [Validators.required]),
     });
-
-    this.stateSubscription = this.getState.subscribe(state => {
-      this.isLoading = state.isLoading;
-    });
   }
 
   ngOnDestroy() {
     this.store.dispatch(resetErrorMessage());
-    this.stateSubscription.unsubscribe();
   }
 
   onSubmit() {
@@ -66,7 +59,6 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       email: this.user.email.trim(),
       password: this.user.password.trim(),
     };
-    this.isLoading = true;
     this.store.dispatch(logIn(payload));
   }
 }

@@ -1,0 +1,16 @@
+<div class="face-result">
+  <div class="recognition-loading" *ngIf="pending$ | async">
+    <app-spinner></app-spinner>
+  </div>
+
+  <app-verification-result
+    [pending]="pending$ | async"
+    [isLoaded]="isLoaded$ | async"
+    [files]="files$ | async"
+    [requestInfo]="requestInfo$ | async"
+    [printData]="data$ | async"
+    (selectProcessFile)="processFileUpload($event)"
+    (selectCheckFile)="checkFileUpload($event)"
+  >
+  </app-verification-result>
+</div>

@@ -18,12 +18,15 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Routes } from 'src/app/data/enums/routers-url.enum';
-import { logOut } from 'src/app/store/auth/action';
-import { loadDemoApiKeySuccessAction } from 'src/app/store/demo/actions';
+import { logOut, changePassword } from 'src/app/store/auth/action';
+import { editUserInfo } from 'src/app/store/userInfo/action';
+import { loadDemoApiKeySuccess } from 'src/app/store/demo/action';
 import { selectDemoPageAvailability } from 'src/app/store/demo/selectors';
 import { selectUserAvatar, selectUserName } from 'src/app/store/userInfo/selectors';
 
 import { AppState } from '../../store';
+import { ChangePassword } from '../../data/interfaces/change-password';
+import { EditUserInfo } from '../../data/interfaces/edit-user-info';
 
 @Injectable()
 export class ToolBarFacade {
@@ -38,11 +41,19 @@ export class ToolBarFacade {
   }
 
   goSignUp() {
-    this.store.dispatch(loadDemoApiKeySuccessAction(null));
+    this.store.dispatch(loadDemoApiKeySuccess(null));
     this.router.navigateByUrl(Routes.SignUp);
   }
 
   logout() {
     this.store.dispatch(logOut());
+  }
+
+  changePassword(payload: ChangePassword) {
+    this.store.dispatch(changePassword(payload));
+  }
+
+  editUserInfo(payload: EditUserInfo) {
+    this.store.dispatch(editUserInfo(payload));
   }
 }

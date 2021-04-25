@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-without-organization
+      author: Aleksand Kurilo
+      changes:
+        #add column global role to user table
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: allow_statistics
+                  type: boolean
+                  defaultValueBoolean: false

@@ -24,7 +24,9 @@ import { SignUp } from '../../data/interfaces/sign-up';
 import { User } from '../../data/interfaces/user';
 import { AppState } from '../../store';
 import { resetErrorMessage, signUp } from '../../store/auth/action';
-import { selectAuthState } from '../../store/auth/selectors';
+import { selectLoadingState } from '../../store/auth/selectors';
+import { selectDemoPageAvailability } from '../../store/demo/selectors';
+import { loadDemoApiKey } from '../../store/demo/action';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -34,10 +36,12 @@ import { selectAuthState } from '../../store/auth/selectors';
 export class SignUpFormComponent implements OnInit, OnDestroy {
   form: FormGroup;
   user: User;
-  getState: Observable<any>;
+  isLoading$: Observable<boolean>;
+  isDemoPageAvailable$: Observable<boolean>;
   isLoading = false;
   routes = Routes;
   stateSubscription: Subscription;
+  isFirstRegistration: boolean;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value) {
@@ -48,7 +52,8 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   };
 
   constructor(private store: Store<AppState>) {
-    this.getState = this.store.select(selectAuthState);
+    this.isLoading$ = this.store.select(selectLoadingState);
+    this.isDemoPageAvailable$ = this.store.select(selectDemoPageAvailability);
   }
 
   ngOnInit() {
@@ -59,12 +64,14 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
         email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
         password: new FormControl(null, [Validators.required, Validators.minLength(8)]),
         confirmPassword: new FormControl(null, [Validators.required, Validators.minLength(8)]),
+        isAllowStatistics: new FormControl(true),
       },
       { validators: this.passwordMatchValidator }
     );
 
-    this.stateSubscription = this.getState.subscribe(state => {
-      this.isLoading = state.isLoading;
+    this.store.dispatch(loadDemoApiKey());
+    this.stateSubscription = this.isDemoPageAvailable$.subscribe(isDemoPageAvailable => {
+      this.isFirstRegistration = isDemoPageAvailable;
     });
   }
 
@@ -81,7 +88,9 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
       firstName: this.user.firstName.trim(),
       lastName: this.user.lastName.trim(),
     };
-    this.isLoading = true;
+    if (this.isFirstRegistration) {
+      payload.isAllowStatistics = this.user.isAllowStatistics;
+    }
     this.store.dispatch(signUp(payload));
   }
 }

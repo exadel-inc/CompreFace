@@ -14,6 +14,6 @@
  * permissions and limitations under the License.
  */
 
-export const EMAIL_REGEXP_PATTERN = '\\S+@\\S+\\.\\S+';
+export const EMAIL_REGEXP_PATTERN = '^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$';
 export const MAX_IMAGE_SIZE = 5000000;
 export const AVAILABLE_IMAGE_EXTENSIONS: string[] = ['jpeg', 'jpg', 'ico', 'png', 'bmp', 'gif', 'tif', 'tiff', 'webp'];

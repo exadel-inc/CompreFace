@@ -1,0 +1,103 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-user-table
+      author: Andrei Hayeuski
+      changes:
+        - sql:
+            comment: Enable uuid ossp extention
+            sql: CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
+
+        # user
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: email
+                  type: varchar(63)
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: first_name
+                  type: varchar(63)
+              - column:
+                  name: last_name
+                  type: varchar(63)
+              - column:
+                  name: account_non_expired
+                  type: boolean
+              - column:
+                  name: account_non_locked
+                  type: boolean
+              - column:
+                  name: credentials_non_expired
+                  type: boolean
+              - column:
+                  name: enabled
+                  type: boolean
+              - column:
+                  name: registration_token
+                  type: varchar(36)
+              - column:
+                  name: guid
+                  type: varchar(36)
+              - column:
+                  name: reg_time
+                  type: timestamp
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_user
+            tableName: user
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: email
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: password
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: first_name
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: last_name
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: guid
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: account_non_expired
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: account_non_locked
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: credentials_non_expired
+
+        - addNotNullConstraint:
+            tableName: user
+            columnName: enabled
+
+        - createSequence:
+            sequenceName: user_id_seq
+
+        - addUniqueConstraint:
+            columnNames: email
+            constraintName: user_email_uindex
+            tableName: user
+
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: user_guid_uindex
+            tableName: user

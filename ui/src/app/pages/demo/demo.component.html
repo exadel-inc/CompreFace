@@ -18,6 +18,6 @@
   <app-spinner *ngIf="isPending$ | async; else appLoginForm"></app-spinner>
 
   <ng-template #appLoginForm>
-    <app-face-recognition-container [title]="'demo.title' | translate"> </app-face-recognition-container>
+    <app-face-recognition-container [title]="'demo.title' | translate" [type]="type"></app-face-recognition-container>
   </ng-template>
 </div>

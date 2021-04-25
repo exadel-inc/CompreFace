@@ -25,5 +25,5 @@ export const selectFile = createSelector(selectTestEntityState, state => state.f
 export const selectStateReady = createSelector(selectTestEntityState, state => !state.isPending && !!state?.model?.result[0]);
 export const selectRequest = createSelector(selectTestEntityState, state => ({
   request: state.request,
-  response: JSON.stringify(state.model, undefined, 2)
+  response: JSON.stringify(state.model, undefined, 2),
 }));

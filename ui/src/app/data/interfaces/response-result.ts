@@ -15,19 +15,48 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
-export interface RequestResult {
-  box: {
-    probability: {
+export interface RequestResultRecognition {
+  result: {
+    box: {
+      probability: number;
       x_max: number;
       x_min: number;
       y_max: number;
       y_min: number;
-    },
-    faces: [
-      {
-        face_name: string;
-        similarity: number;
-      }
-    ]
-  }
+      subjects: [
+        {
+          subject: string;
+          similarity: number;
+        }
+      ];
+    };
+  };
+}
+
+export interface RequestResultVerification {
+  result: [
+    {
+      source_image_face: {
+        box: {
+          probability: number;
+          x_max: number;
+          y_max: number;
+          x_min: number;
+          y_min: number;
+        };
+      };
+      face_matches: [
+        {
+          box: {
+            probability: number;
+            x_max: number;
+            y_max: number;
+            x_min: number;
+            y_min: number;
+          };
+          similarity: number;
+        }
+      ];
+    }
+  ];
 }

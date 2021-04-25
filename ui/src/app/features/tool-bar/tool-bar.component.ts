@@ -14,6 +14,12 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
+import { filter, first } from 'rxjs/operators';
+
+import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
+import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';
 
 @Component({
   selector: 'app-tool-bar',
@@ -27,11 +33,48 @@ export class ToolBarComponent {
   @Input() isUserInfoAvailable: boolean;
   @Output() logout = new EventEmitter();
   @Output() signUp = new EventEmitter();
+  @Output() changePassword = new EventEmitter();
+  @Output() editUserInfo = new EventEmitter();
+
+  constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
   goSignUp() {
     this.signUp.emit();
   }
+
   doLogout() {
     this.logout.emit();
+  }
+
+  onChangePassword() {
+    const dialog = this.dialog.open(ChangePasswordDialogComponent, {
+      width: '350px',
+      data: {
+        entityType: this.translate.instant('applications.header.title'),
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(result => this.changePassword.emit(result));
+  }
+
+  onEditUserInfo() {
+    const dialog = this.dialog.open(EditUserInfoDialogComponent, {
+      width: '300px',
+      data: { userName: this.userName },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(result => this.editUserInfo.emit(result));
   }
 }

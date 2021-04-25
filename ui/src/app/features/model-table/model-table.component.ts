@@ -16,7 +16,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
-
+import { ServiceTypes } from '../../data/enums/service-types.enum';
 import { TableComponent } from '../table/table.component';
 
 @Component({
@@ -28,8 +28,14 @@ import { TableComponent } from '../table/table.component';
 export class ModelTableComponent extends TableComponent {
   @Input() userRole: string;
   @Output() copyApiKey = new EventEmitter<string>();
+  @Output() clone = new EventEmitter<Model>();
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();
   roleEnum = Role;
+  types = ServiceTypes;
+
+  getKeyType(type: string): string {
+    return Object.keys(this.types).find(key => this.types[key] === type) || '';
+  }
 }

@@ -20,7 +20,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { DemoService } from './demo.service';
-import { loadDemoApiKeySuccessAction, setDemoKeyPendingAction } from '../../store/demo/actions';
+import { loadDemoApiKeySuccess, setDemoKeyPending } from '../../store/demo/action';
 
 @Injectable({
   providedIn: 'root',
@@ -32,13 +32,13 @@ export class DemoGuard implements CanActivate {
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    this.store.dispatch(setDemoKeyPendingAction());
+    this.store.dispatch(setDemoKeyPending());
 
     return this.demoService.getModel().pipe(
       catchError(() => of(null)),
       map(data => {
         if (data?.apiKey) {
-          this.store.dispatch(loadDemoApiKeySuccessAction(data));
+          this.store.dispatch(loadDemoApiKeySuccess(data));
           return true;
         } else {
           this.router.navigate([Routes.Home]);

@@ -17,7 +17,7 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { filter, first, map, takeWhile } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 
@@ -39,7 +39,6 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   availableRoles$: Observable<string[]>;
-  errorMessage: string;
   availableEmails$: Observable<string[]>;
   message: string;
   search = '';
@@ -96,12 +95,11 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
     dialog
       .afterClosed()
-      .pipe(first())
-      .subscribe(result => {
-        if (result) {
-          this.appUserListFacade.delete(deletion.userToDelete.userId);
-        }
-      });
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.appUserListFacade.delete(deletion.userToDelete.userId));
   }
 
   ngOnDestroy(): void {
@@ -120,11 +118,11 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
       },
     });
 
-    const dialogSubscription = dialog.afterClosed().subscribe(({ userEmail, role }) => {
-      if (userEmail && role) {
+    dialog
+      .afterClosed()
+      .pipe(takeWhile(({ userEmail, role }) => userEmail && role))
+      .subscribe(({ userEmail, role }) => {
         this.appUserListFacade.inviteUser(userEmail, role);
-        dialogSubscription.unsubscribe();
-      }
-    });
+      });
   }
 }

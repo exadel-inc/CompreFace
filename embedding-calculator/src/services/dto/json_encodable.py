@@ -16,4 +16,4 @@ class JSONEncodable:
     def to_json(self):
         if hasattr(self, 'dto'):
             return self.dto.to_json()
-        return self.__dict__
+        return {k: v for k, v in self.__dict__.items() if not k.startswith('_')}

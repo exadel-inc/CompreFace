@@ -1,0 +1,72 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-app-table
+      author: Andrei Hayeuski
+      changes:
+        # app
+        - createTable:
+            tableName: app
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: guid
+                  type: varchar(36)
+              - column:
+                  name: organization_id
+                  type: bigint
+              - column:
+                  name: api_key
+                  type: varchar(36)
+
+        - addNotNullConstraint:
+            tableName: app
+            columnName: name
+
+        - addNotNullConstraint:
+            tableName: app
+            columnName: guid
+
+        - addNotNullConstraint:
+            tableName: app
+            columnName: organization_id
+
+        - addNotNullConstraint:
+            tableName: app
+            columnName: api_key
+
+        - addUniqueConstraint:
+            columnNames: name, organization_id
+            constraintName: app_name_organization_id_uindex
+            tableName: app
+
+        - addUniqueConstraint:
+            columnNames: api_key
+            constraintName: app_api_key_uindex
+            tableName: app
+
+        - addUniqueConstraint:
+            columnNames: guid
+            constraintName: app_guid_uindex
+            tableName: app
+
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_app
+            tableName: app
+
+        - addForeignKeyConstraint:
+            baseColumnNames: organization_id
+            baseTableName: app
+            referencedColumnNames: id
+            referencedTableName: organization
+            constraintName: fk_organization_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+
+        - createSequence:
+            sequenceName: app_id_seq

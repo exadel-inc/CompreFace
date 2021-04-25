@@ -18,7 +18,7 @@ from src.services.facescan.scanner.facescanners import TESTED_SCANNERS, id_2_fac
 from src.services.utils.pyutils import Constants, get_env_split, get_env_bool
 
 
-class ENV_BENCHMARK(Constants):
+class ENV_BENCHMARK(Constants): # NOSONAR
     SCANNERS = get_env_split('SCANNERS', ' '.join(s.ID for s in TESTED_SCANNERS))
     LOGGING_LEVEL_NAME = ENV_MAIN.LOGGING_LEVEL_NAME
     DRY_RUN = get_env_bool('DRY_RUN')

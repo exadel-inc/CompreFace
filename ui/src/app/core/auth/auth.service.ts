@@ -24,6 +24,7 @@ import { environment } from '../../../environments/environment';
 import { API } from '../../data/enums/api-url.enum';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { AppState } from '../../store';
+import { SignUp } from '../../data/interfaces/sign-up';
 
 @Injectable({
   providedIn: 'root',
@@ -58,13 +59,26 @@ export class AuthService {
     return this.http.delete(url, { headers: { Authorization: environment.basicToken } });
   }
 
-  signUp(firstName: string, password: string, email: string, lastName: string): Observable<any> {
+  signUp(firstName: string, password: string, email: string, lastName: string, isAllowStatistics?: boolean): Observable<any> {
     const url = `${environment.adminApiUrl}${API.Register}`;
-    return this.http.post(url, { email, password, firstName, lastName }, { observe: 'response' });
+    const body: SignUp = { email, password, firstName, lastName };
+
+    if (isAllowStatistics !== undefined) {
+      body.isAllowStatistics = isAllowStatistics;
+    }
+    return this.http.post(url, body, { observe: 'response' });
   }
 
-  logOut() {
+  logOut(): void {
+    const url: string = this.router.url;
+    const queryParam = url === Routes.Login ? {} : { queryParams: { redirect: url } };
+
     this.clearUserToken();
-    this.router.navigateByUrl(Routes.Login);
+    this.router.navigate([Routes.Login], { ...queryParam });
+  }
+
+  changePassword(oldPassword: string, newPassword: string): Observable<any> {
+    const url = `${environment.adminApiUrl}${API.ChangePassword}`;
+    return this.http.put(url, { oldPassword, newPassword }, { observe: 'response' });
   }
 }

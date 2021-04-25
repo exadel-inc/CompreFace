@@ -17,7 +17,7 @@
 <div class="user-list">
   <div class="table-header-container">
     <h3>{{ 'users.title' | translate }}</h3>
-    <form>
+    <form class="search-input">
       <input
         matInput
         type="text"
@@ -37,7 +37,6 @@
     [availableRoles]="availableRoles$ | async"
     [currentUserId]="currentUserId$ | async"
     [userRole]="userRole$ | async"
-    [createHeader]="messageHeader"
     [createMessage]="message"
     [searchText]="search"
     (changeRow)="onChange($event)"

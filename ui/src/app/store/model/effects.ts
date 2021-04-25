@@ -20,11 +20,16 @@ import { forkJoin, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ModelService } from 'src/app/core/model/model.service';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
+import { Router } from '@angular/router';
+import { Routes } from '../../data/enums/routers-url.enum';
 
 import {
   createModel,
   createModelFail,
   createModelSuccess,
+  cloneModel,
+  cloneModelFail,
+  cloneModelSuccess,
   deleteModel,
   deleteModelFail,
   deleteModelSuccess,
@@ -34,11 +39,16 @@ import {
   updateModel,
   updateModelFail,
   updateModelSuccess,
-} from './actions';
+} from './action';
 
 @Injectable()
 export class ModelEffects {
-  constructor(private actions: Actions, private modelService: ModelService, private snackBarService: SnackBarService) {}
+  constructor(
+    private actions: Actions,
+    private modelService: ModelService,
+    private snackBarService: SnackBarService,
+    private router: Router
+  ) {}
 
   @Effect()
   loadModels$ = this.actions.pipe(
@@ -55,7 +65,7 @@ export class ModelEffects {
   createModel$ = this.actions.pipe(
     ofType(createModel),
     switchMap(action =>
-      this.modelService.create(action.applicationId, action.name).pipe(
+      this.modelService.create(action.model.applicationId, action.model.name, action.model.type).pipe(
         map(model => createModelSuccess({ model })),
         catchError(error => of(createModelFail({ error })))
       )
@@ -74,6 +84,17 @@ export class ModelEffects {
   );
 
   @Effect()
+  cloneModel$ = this.actions.pipe(
+    ofType(cloneModel),
+    switchMap(action =>
+      this.modelService.clone(action.applicationId, action.modelId, action.name).pipe(
+        map(model => cloneModelSuccess({ model })),
+        catchError(error => of(cloneModelFail({ error })))
+      )
+    )
+  );
+
+  @Effect()
   deleteModel$ = this.actions.pipe(
     ofType(deleteModel),
     switchMap(action =>
@@ -86,9 +107,18 @@ export class ModelEffects {
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(loadModelsFail, createModelFail, updateModelFail, deleteModelFail),
+    ofType(loadModelsFail, createModelFail, cloneModelFail, updateModelFail, deleteModelFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
+    })
+  );
+
+  //Listen for the 'loadModelsFail'
+  @Effect({ dispatch: false })
+  loadFail$ = this.actions.pipe(
+    ofType(loadModelsFail),
+    tap(() => {
+      this.router.navigateByUrl(Routes.Home);
     })
   );
 }
