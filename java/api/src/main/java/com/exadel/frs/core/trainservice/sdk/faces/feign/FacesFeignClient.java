@@ -23,7 +23,6 @@ import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FacesFeignClient {
@@ -42,7 +41,7 @@ public interface FacesFeignClient {
 
     @RequestLine("POST /find_faces_base64")
     @Headers("Content-Type: " + MediaType.APPLICATION_JSON_VALUE)
-    FindFacesResponse findFacesBase64(@RequestBody FindFacesRequest findFacesRequest);
+    FindFacesResponse findFacesBase64(FindFacesRequest findFacesRequest);
 
     @RequestLine("GET /status")
     @Headers("Content-Type: multipart/form-data")
