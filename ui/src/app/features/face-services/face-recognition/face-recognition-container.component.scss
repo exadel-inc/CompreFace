@@ -14,18 +14,7 @@
  * permissions and limitations under the License.
  */
 
-@import "src/styles/colors";
-
-
-.face-uploader {
-  width: 80%;
-  margin: auto;
-}
-
-.face-result {
-  padding: 0 20px;
-  margin-bottom: 20px;
-}
+@import 'colors.scss';
 
 .recognition-loading {
   display: flex;

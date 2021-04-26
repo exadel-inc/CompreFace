@@ -33,8 +33,8 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate | titlecase }}</button>
-  <button class="button-create" mat-raised-button color="primary" [mat-dialog-close]="role" cdkFocusInitial [disabled]="!role.id">
+  <button mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate | titlecase }}</button>
+  <button mat-raised-button color="primary" [mat-dialog-close]="role" cdkFocusInitial [disabled]="!role.id">
     {{ 'common.capital.save' | translate | titlecase }}
   </button>
 </div>

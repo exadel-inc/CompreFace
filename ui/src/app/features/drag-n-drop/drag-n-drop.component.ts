@@ -13,7 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  Renderer2,
+  ViewChild
+} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -21,17 +31,32 @@ import { TranslateService } from '@ngx-translate/core';
   templateUrl: './drag-n-drop.component.html',
   styleUrls: ['./drag-n-drop.component.scss'],
 })
-export class DragNDropComponent {
+export class DragNDropComponent implements OnInit, AfterViewInit {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
   @Input() model: any;
+  @Input('viewComponentColumn')
+  set view(val: boolean) {
+    this.viewColumn = true;
+  };
   @Output() upload: EventEmitter<File> = new EventEmitter();
 
-  constructor(private translate: TranslateService) {
+  private viewColumn: boolean = false
+
+  constructor(private translate: TranslateService, private renderer: Renderer2, private elementRef: ElementRef<HTMLElement>) {}
+
+  ngOnInit(): void {
     // Set the default title and label. But leave possibility to set another title and label.
     this.title = this.translate.instant('dnd.title');
     this.label = this.translate.instant('dnd.label');
+  }
+
+  ngAfterViewInit(): void {
+    const nativeElement: ChildNode  = this.elementRef.nativeElement.firstChild;
+    const classValue = this.view ? 'dropzone-row' : 'dropzone-column';
+
+    this.renderer.addClass(nativeElement, classValue)
   }
 
   /**

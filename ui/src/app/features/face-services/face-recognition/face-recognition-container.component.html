@@ -15,7 +15,7 @@
   -->
 
 <div class="face-uploader">
-  <app-drag-n-drop (upload)="recognizeFace($event)"> </app-drag-n-drop>
+  <app-drag-n-drop (upload)="recognizeFace($event)"></app-drag-n-drop>
 </div>
 
 <div class="recognition-loading" *ngIf="pending$ | async">

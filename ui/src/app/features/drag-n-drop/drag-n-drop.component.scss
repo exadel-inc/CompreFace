@@ -14,31 +14,11 @@
  * permissions and limitations under the License.
  */
 
-@import '../../../styles/colors';
+@import 'colors.scss';
 
-.dropzone {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 120px;
-  text-align: center;
-  border: dashed 1px $primary-light;
-  position: relative;
-  margin: 0 auto;
-  background-color: $primary-phantom-light;
+$border-radius: 12px;
 
-  &-icon {
-    margin-right: 20px;
-  }
-
-  &-content {
-    max-width: 85%;
-    h4 {
-      margin: 0 auto 10px;
-    }
-  }
-
+@mixin dropzone {
   input {
     opacity: 0;
     position: absolute;
@@ -47,22 +27,70 @@
     height: 100%;
     top: 0;
     left: 0;
-  }
-
-  label {
-    color: black;
-    width: 183px;
-    height: 44px;
-    padding: 8px;
+    cursor: pointer;
   }
 }
 
-.mat-button {
-  float: right;
-  font-size: 20px;
+@mixin dropzone-container($data: column) {
+  .dropzone-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    width: 100%;
+    border: dashed 2px $light-gray;
+    border-radius: $border-radius;
+
+    .icon {
+      margin-right: 21px;
+      width: 53px;
+      height: 48px;
+    }
+
+    .content {
+      max-width: 556px;
+      transition: .2s;
+
+      .title {
+        margin-bottom: 8px;
+        font-size: 22px;
+        line-height: 125%;
+        font-weight: 600;
+      }
+
+      .label {
+        color: $light-gray;
+        font-size: 16px;
+        line-height: 140%;
+      }
+    }
+  }
+
+  &:hover &--container {
+    transition: .2s;
+    background-color: $special-light-blue;
+    border-color: $special-blue;
+  }
 }
 
-canvas {
-  width: 100%;
-  height: 1000px;
+.dropzone {
+
+  &-column {
+    position: relative;
+    padding: 24px;
+    background-color: $white;
+    border-radius: $border-radius;
+    @include dropzone;
+  }
+
+  &-row {
+    position: relative;
+    padding: 24px;
+    background-color: $white;
+    border-radius: $border-radius;
+    @include dropzone;
+  }
 }
+
+
+

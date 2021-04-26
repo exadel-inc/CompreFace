@@ -24,6 +24,7 @@
             class="face-uploader"
             [style.display]="files.processFile ? 'none' : 'block'"
             (upload)="selectProcessFile.emit($event)"
+            viewComponentColumn
           ></app-drag-n-drop>
           <canvas
             [style.display]="!files.processFile ? 'none' : 'block'"
@@ -38,6 +39,7 @@
             [style.display]="files.checkFile ? 'none' : 'block'"
             class="face-uploader"
             (upload)="selectCheckFile.emit($event)"
+            viewComponentColumn
           ></app-drag-n-drop>
           <canvas
             #checkFileCanvasElement
@@ -55,7 +57,7 @@
               {{ 'test_model.request' | translate }}
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <textarea class="result-textarea" id="result-textarea-request" rows="5" disabled>{{ requestInfo.request }}</textarea>
+          <pre>{{ requestInfo.request }}</pre>
         </mat-expansion-panel>
 
         <mat-expansion-panel>
@@ -64,7 +66,7 @@
               {{ 'test_model.response' | translate }}
             </mat-panel-title>
           </mat-expansion-panel-header>
-          <textarea class="result-textarea" id="result-textarea-response" rows="16" disabled>{{ formattedResult }}</textarea>
+          <pre>{{ formattedResult }}</pre>
         </mat-expansion-panel>
       </div>
     </ng-container>
