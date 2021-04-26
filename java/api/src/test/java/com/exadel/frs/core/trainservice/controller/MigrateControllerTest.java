@@ -52,18 +52,16 @@ class MigrateControllerTest extends EmbeddedPostgreSQLTest {
     @MockBean
     private ModelService modelService;
 
-    private static final String URL = "migrate_url";
-
     @Test
     void migrate() throws Exception {
         when(modelService.validateModelKey(anyString(), any())).thenReturn(ValidationResult.OK);
 
-        mockMvc.perform(post(API_V1 + "/migrate").param("url", URL).header("x-api-key", UUID.randomUUID()))
+        mockMvc.perform(post(API_V1 + "/migrate"))
                .andExpect(status().isOk())
                .andExpect(content().string("Migration started"));
 
         verify(migrationStatusStorage).startMigration();
-        verify(migrationComponent).migrate(URL);
+        verify(migrationComponent).migrate();
         verifyNoMoreInteractions(migrationStatusStorage);
         verifyNoMoreInteractions(migrationComponent);
     }

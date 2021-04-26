@@ -28,7 +28,6 @@ follow this rules:
   mobile
 - Do not take blindly the most accurate model. The accuracy is not so different between models, but the required hardware resources
   could differ dramatically
-  
 
 ## How to run custom-builds
 
@@ -36,14 +35,15 @@ Running custom-build is very similar to running the default build - all you need
 `docker-compose up -d`.
 
 Things to consider:
-- If you run CompreFace from custom-build folder, it will create new docker volume, so you won't see your saved information. To run 
-  custom-build with your previously saved information, you need to copy files from custom-build to folder with original build (and 
-  replace the original files)
-- In the most face recognition models are not interchangeable, this means that all you saved examples from old build won't work on new 
-  builds. We are thinking about adding migration process in one of the next releases, but for now the only solution is to reload all the 
-  faces.
-- Do not run two instances of CompreFace simultaneously without changing the port. To change the port go to `docker-compose` file and 
-  change the post for `compreface-fe` container.
+- If you run CompreFace from the custom-build folder, it will create a new docker volume, 
+  so you won't see your saved information. To run  custom-build with your previously saved information, 
+  you need to copy files from custom-build to folder with the original build (and replace the original files)
+- In most cases, face recognition models are not interchangeable, 
+  this means that all you saved examples from the old build won't work on new builds.
+  See [migrations documentation](Face-data-migration.md) to know what is the options.
+- Do not run two instances of CompreFace simultaneously without changing the port. 
+  To change the port go to `docker-compose` file and change the post for `compreface-fe` container.
+
   
 ## How to build your own custom-build
 
@@ -70,6 +70,7 @@ compreface-core:
         - FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1
         - CALCULATION_PLUGIN=insightface.Calculator@arcface_r100_v1
         - EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
+        - BASE_IMAGE=compreface-core-base:base-cuda100-py37
         - GPU_IDX=0
     environment:
       - ML_PORT=3000

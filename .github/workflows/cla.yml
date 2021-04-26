@@ -18,6 +18,6 @@ jobs:
           PERSONAL_ACCESS_TOKEN : ${{ secrets.PERSONAL_ACCESS_TOKEN }}
         with:
           path-to-signatures: 'signatures/cla.json'
-          path-to-cla-document: 'https://github.com/exadel-inc/CompreFace/blob/develop/CLA.md'
+          path-to-cla-document: 'https://github.com/exadel-inc/CompreFace/blob/master/CLA.md'
           branch: 'CLA-signatures'
           allowlist: bot*

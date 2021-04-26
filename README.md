@@ -45,6 +45,7 @@ recognition, face verification, face detection, landmark detection, age, and gen
   * [Feedback survey](#feedback-survey)
   * [Features](#features)
   * [Getting Started with CompreFace](#getting-started-with-compreface)
+  * [CompreFace SDKs](#compreFace-SDKs)
   * [Documentation](/docs)
     * [How to Use CompreFace](/docs/How-to-Use-CompreFace.md)
     * [Face Services and Plugins](/docs/Face-services-and-plugins.md)
@@ -53,6 +54,7 @@ recognition, face verification, face detection, landmark detection, age, and gen
     * [Configuration](/docs/Configuration.md)
     * [Architecture and Scalability](/docs/Architecture-and-scalability.md)
     * [Custom Builds](/docs/Custom-builds.md)
+    * [Face data migration](/docs/Face-data-migration.md)
     * [User Roles System](/docs/User-Roles-System.md)
     * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
   * [Contributing](#contributing)
@@ -124,6 +126,12 @@ gender recognition
 
 Follow this link: https://github.com/exadel-inc/CompreFace/tree/develop/dev
 
+# CompreFace SDKs
+
+| SDK        | Repository   | 
+| ---------- | ------ | 
+| JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk   |
+
 # Documentation
 
 More documentation is available [here](/docs)
@@ -161,4 +169,3 @@ If you are proposing a feature, please:
 # License info
 
 CompreFace is open-source real-time facial recognition software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
-
