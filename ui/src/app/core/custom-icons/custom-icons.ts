@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,34 +14,16 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
-
-.mat-dialog-title, .mat-dialog-content {
-  text-align: center;
+// Adding the name of the icons from assets/img/icons
+export enum Icons {
+  Add = 'add_new',
+  BodyScan = 'body-scan',
+  Close = 'close',
+  Edit = 'edit',
+  Info = 'info_new',
+  Profile = 'profile',
+  Search = 'search',
+  Trash = 'trash',
+  Upload = 'upload',
+  Warning = 'warning',
 }
-
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: column
-}
-
-.alert {
-  &-info {
-    background-color: $green;
-    color: $white
-  }
-
-  &-warning {
-    background-color: $pale-gray;
-  }
-
-  &-error {
-    background-color: $red;
-    color: $white
-  }
-}
-
-button {
-  color: $white;
-}
-

@@ -75,7 +75,7 @@ export class ApplicationListContainerComponent implements OnInit {
 
   onCreateNewApp(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
-      width: '300px',
+      width: '420px',
       data: {
         entityType: this.translate.instant('applications.header.title'),
         name: '',

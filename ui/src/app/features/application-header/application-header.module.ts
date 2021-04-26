@@ -28,6 +28,7 @@ import { SpinnerModule } from '../spinner/spinner.module';
 import { ApplicationHeaderComponent } from './application-header/application-header.component';
 import { ApplicationHeaderContainerComponent } from './application-header.container.component';
 import { ApplicationHeaderFacade } from './application-header.facade';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [ApplicationHeaderComponent, ApplicationHeaderContainerComponent],
@@ -42,6 +43,7 @@ import { ApplicationHeaderFacade } from './application-header.facade';
     TruncateModule,
     MatTooltipModule,
     TranslateModule,
+    MatIconModule,
   ],
   providers: [ApplicationHeaderFacade],
 })

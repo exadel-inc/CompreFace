@@ -23,11 +23,9 @@
 .container {
   height: 100%;
   min-height: 650px;
-  padding-top: 48px;
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  margin-top: 62px;
 
   @include mobile {
     height: auto;

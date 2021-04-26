@@ -19,6 +19,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from './core/auth/auth.service';
 import { AppState } from './store';
+import { CustomIconsService } from './core/custom-icons/custom-icons.service';
 
 @Component({
   selector: 'app-root',
@@ -26,7 +27,13 @@ import { AppState } from './store';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  constructor(auth: AuthService, store: Store<AppState>, private translate: TranslateService) {
+  constructor(
+    auth: AuthService,
+    store: Store<AppState>,
+    private translate: TranslateService,
+    private customIconsService: CustomIconsService
+  ) {
     translate.setDefaultLang('en');
+    customIconsService.registerIcons();
   }
 }

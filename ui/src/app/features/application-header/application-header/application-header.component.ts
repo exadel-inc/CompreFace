@@ -18,6 +18,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { Role } from 'src/app/data/enums/role.enum';
 
 import { Application } from '../../../data/interfaces/application';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-application-header',
@@ -34,6 +35,8 @@ export class ApplicationHeaderComponent {
 
   maxHeaderLinkLength = 25;
   userRoleEnum = Role;
+
+  constructor(private dialog: MatDialog) {}
 
   onRename(name: string): void {
     this.rename.emit(name);

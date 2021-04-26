@@ -15,8 +15,8 @@
   -->
 
 <div class="model-list">
-  <div class="header-section">
-    <h3>{{ 'models.create_dialog.title' | translate }}</h3>
+  <div class="table-header-container">
+    <h3 class="mat-title">{{ 'models.create_dialog.title' | translate }}</h3>
     <form class="search-input">
       <input
         matInput
@@ -26,8 +26,14 @@
         [ngModelOptions]="{ standalone: true }"
         placeholder="{{ 'models.search.title' | translate }}"
       />
-      <mat-icon class="material-icons notranslate"> search </mat-icon>
+      <mat-icon class="material-icons notranslate"> search</mat-icon>
     </form>
+    <ng-container *ngIf="userRole$ | async as userRole">
+      <div class="custom-create-button" *ngIf="userRole !== roleEnum.User" (click)="onCreateNewModel()">
+        <mat-icon svgIcon="add_new"></mat-icon>
+        <span>{{ 'applications.create.button' | translate }}</span>
+      </div>
+    </ng-container>
   </div>
   <app-spinner *ngIf="isLoading$ | async">></app-spinner>
   <app-model-table
@@ -44,14 +50,7 @@
   >
   </app-model-table>
   <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
-    <mat-icon>info</mat-icon>
-    <p>
-      {{ 'models.create_model_info' | translate }}
-    </p>
+    <mat-icon svgIcon="info_new"></mat-icon>
+    <p class="mat-caption">{{ 'models.create_model_info' | translate }}</p>
   </div>
-</div>
-<div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
-  <button *ngIf="userRole !== roleEnum.User" mat-flat-button color="primary" (click)="onCreateNewModel()">
-    {{ 'common.capital.create' | translate }}
-  </button>
 </div>

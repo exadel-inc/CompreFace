@@ -14,34 +14,24 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
+.layout {
+  display: grid;
+  grid-template-rows: 64px 1fr 50px;
+  grid-template-areas: "header" "main" "footer";
+  height: 100%;
+  overflow-y: hidden;
 
-.mat-dialog-title, .mat-dialog-content {
-  text-align: center;
-}
-
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: column
-}
-
-.alert {
-  &-info {
-    background-color: $green;
-    color: $white
+  &--header {
+    grid-area: header;
   }
 
-  &-warning {
-    background-color: $pale-gray;
+  &--main {
+    grid-area: main;
+    padding: 48px 0;
+    overflow: auto;
   }
 
-  &-error {
-    background-color: $red;
-    color: $white
+  &--footer {
+    grid-area: footer;
   }
 }
-
-button {
-  color: $white;
-}
-

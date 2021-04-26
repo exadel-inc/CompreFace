@@ -17,6 +17,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'media.scss';
 @import 'colors.scss';
+@import 'mixins.scss';
+@import 'layout.scss';
 
 @import './styles/custom-theme.scss';
 @include custom-theme($custom-theme);
@@ -35,6 +37,27 @@ body {
   h3 {
     margin-top: 0;
   }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $special-light-gray;
+  border-radius: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $special-gray;
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $special-dark-gray;
 }
 
 .container {
@@ -62,11 +85,10 @@ mat-card {
 }
 
 app-table, app-user-table, app-model-table {
-  overflow-y: auto;
+  overflow: auto;
   display: block;
   min-height: 425px;
   height: 425px;
-  margin-bottom: 50px;
 }
 
 @include mobile {
@@ -111,9 +133,6 @@ app-table, app-user-table, app-model-table {
 }
 
 .app-page {
-  height: auto;
-  margin-bottom: 60px;
-  padding-bottom: 3rem;
 
   .card-single-action-container {
     position: fixed;
@@ -139,9 +158,6 @@ app-table, app-user-table, app-model-table {
   }
 }
 
-.mat-input-element {
-}
-
 .mat-error {
   color: $red;
 }
@@ -151,12 +167,39 @@ app-table, app-user-table, app-model-table {
   margin: 30px 0;
 }
 
+.header-bar-layout {
+  position: relative;
+
+  .mat-title {
+    flex-basis: 160px;
+  }
+
+  .search-input {
+    margin: 5px auto;
+    order: 1;
+    flex: 1 0 100%;
+  }
+
+  app-spinner {
+    position: absolute;
+    left: 40%
+  }
+}
+
 .create-new-message {
   display: flex;
   align-items: center;
 
-  mat-icon {
-    padding-right: 15px;
+  .mat-icon {
+    display: flex;
+    align-items: center;
+    width: auto;
+    margin-right: 6px;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 
@@ -171,9 +214,11 @@ form.search-input {
   box-sizing: border-box;
   border-radius: 4px;
   padding: 8px 8px 8px 6px;
+
   mat-icon{
     color: rgba(34, 34, 34, 0.45);
   }
+
   input{
     width: 100%;
     border: 0;
@@ -181,5 +226,27 @@ form.search-input {
     &:focus{
       outline-width: 0
     }
+  }
+}
+
+.custom-create-button {
+  display: inline-flex;
+  align-items: center;
+  flex-direction: row;
+  flex-basis: 117px;
+  line-height: 27px;
+  color: $primary;
+  margin-left: 5px;
+  padding: 0;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.02em;
+
+  mat-icon {
+    @include sm-icon-size()
+  }
+
+  span {
+    margin-left: 5px;
   }
 }
