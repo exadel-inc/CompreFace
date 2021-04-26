@@ -10,6 +10,7 @@ import java.util.Map;
 public class ProcessImageParams {
     private String apiKey;
     private Object file;
+    private String imageBase64;
     private Integer limit;
     private Double detProbThreshold;
     private String facePlugins;
