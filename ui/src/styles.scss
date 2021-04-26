@@ -17,7 +17,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import 'media.scss';
 @import 'colors.scss';
-@import "mixins.scss";
+@import 'mixins.scss';
+@import 'layout.scss';
 
 @import './styles/custom-theme.scss';
 @include custom-theme($custom-theme);
@@ -84,11 +85,10 @@ mat-card {
 }
 
 app-table, app-user-table, app-model-table {
-  overflow-y: auto;
+  overflow: auto;
   display: block;
   min-height: 425px;
   height: 425px;
-  margin-bottom: 50px;
 }
 
 @include mobile {
@@ -133,9 +133,6 @@ app-table, app-user-table, app-model-table {
 }
 
 .app-page {
-  height: auto;
-  margin-bottom: 60px;
-  padding-bottom: 3rem;
 
   .card-single-action-container {
     position: fixed;
@@ -159,9 +156,6 @@ app-table, app-user-table, app-model-table {
   .mat-error {
     font-size: 12px;
   }
-}
-
-.mat-input-element {
 }
 
 .mat-error {
@@ -196,12 +190,16 @@ app-table, app-user-table, app-model-table {
   display: flex;
   align-items: center;
 
-  .message-icon {
-    color: $pale-gray ;
-  }
+  .mat-icon {
+    display: flex;
+    align-items: center;
+    width: auto;
+    margin-right: 6px;
 
-  mat-icon {
-    padding-right: 15px;
+    svg {
+      width: 14px;
+      height: 14px;
+    }
   }
 }
 

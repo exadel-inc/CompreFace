@@ -47,9 +47,9 @@ import { ToolBarModule } from './features/tool-bar/tool-bar.module';
 import { AppStoreModule } from './store/app-store.module';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
-import { MatSelectModule } from '@angular/material/select';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
 import { RoleEditDialogComponent } from './features/role-edit-dialog/role-edit-dialog.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [

@@ -14,7 +14,9 @@
  * permissions and limitations under the License.
  */
 
+import { Role } from '../enums/role.enum';
+
 export interface UserRole {
   id: string;
-  role: string;
+  role: Role;
 }

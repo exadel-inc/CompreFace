@@ -18,9 +18,7 @@
 @import 'media.scss';
 
 .header {
-  position: fixed;
-  top: 0;
-  z-index: 102;
+  height: 100%;
 
   .container {
     justify-content: space-between;

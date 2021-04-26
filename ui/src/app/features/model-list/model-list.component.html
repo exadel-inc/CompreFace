@@ -50,9 +50,7 @@
   >
   </app-model-table>
   <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
-    <mat-icon>info</mat-icon>
-    <p>
-      {{ 'models.create_model_info' | translate }}
-    </p>
+    <mat-icon svgIcon="info_new"></mat-icon>
+    <p class="mat-caption">{{ 'models.create_model_info' | translate }}</p>
   </div>
 </div>

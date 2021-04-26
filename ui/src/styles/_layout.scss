@@ -13,20 +13,25 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'colors.scss';
-@import "media.scss";
-@import "mixins.scss";
 
-.model-list {
-  @include common-header();
-  @include header-bar-layout();
+.layout {
+  display: grid;
+  grid-template-rows: 64px 1fr 50px;
+  grid-template-areas: "header" "main" "footer";
+  height: 100%;
+  overflow-y: hidden;
 
-  app-spinner {
-    position: absolute;
-    left: 40%;
+  &--header {
+    grid-area: header;
   }
 
-  .app-table {
-    overflow-x: hidden;
+  &--main {
+    grid-area: main;
+    padding: 48px 0;
+    overflow: auto;
+  }
+
+  &--footer {
+    grid-area: footer;
   }
 }

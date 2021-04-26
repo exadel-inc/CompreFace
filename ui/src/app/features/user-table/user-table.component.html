@@ -60,7 +60,7 @@
 
 <ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && createMessage && !isLoading">
   <div class="create-new-message">
-    <mat-icon class="message-icon">info</mat-icon>
+    <mat-icon svgIcon="info_new" inline="true"></mat-icon>
     <p class="mat-caption">{{ message }}</p>
   </div>
 </ng-container>

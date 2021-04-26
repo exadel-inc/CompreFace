@@ -21,7 +21,6 @@
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-  margin-top: 120px;
 
   .header-container {
     width: 100%;
@@ -47,13 +46,29 @@
   mat-card {
     width: 49%;
     transform: perspective(1px);
+
     @include mobile {
       width: 99%;
-      margin-bottom: 15px;
+
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
     }
+
+    @include tablet {
+      width: 99%;
+
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
+    }
+
     @include tablet-portrait{
       width: 99%;
-      margin-bottom: 20px;
+
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
     }
   }
 

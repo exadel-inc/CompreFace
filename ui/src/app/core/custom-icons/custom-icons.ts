@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,20 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'colors.scss';
-@import "media.scss";
-@import "mixins.scss";
 
-.model-list {
-  @include common-header();
-  @include header-bar-layout();
-
-  app-spinner {
-    position: absolute;
-    left: 40%;
-  }
-
-  .app-table {
-    overflow-x: hidden;
-  }
+// Adding the name of the icons from assets/img/icons
+export enum Icons {
+  Add = 'add_new',
+  BodyScan = 'body-scan',
+  Close = 'close',
+  Edit = 'edit',
+  Info = 'info_new',
+  Profile = 'profile',
+  Search = 'search',
+  Trash = 'trash',
+  Upload = 'upload',
+  Warning = 'warning',
 }

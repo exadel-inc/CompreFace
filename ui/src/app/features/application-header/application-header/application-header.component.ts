@@ -18,8 +18,6 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from 
 import { Role } from 'src/app/data/enums/role.enum';
 
 import { Application } from '../../../data/interfaces/application';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
@@ -38,10 +36,7 @@ export class ApplicationHeaderComponent {
   maxHeaderLinkLength = 25;
   userRoleEnum = Role;
 
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitzer: DomSanitizer, private dialog: MatDialog) {
-    this.matIconRegistry.addSvgIcon('edit', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/edit.svg'));
-    this.matIconRegistry.addSvgIcon('trash', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/trash.svg'));
-  }
+  constructor(private dialog: MatDialog) {}
 
   onRename(name: string): void {
     this.rename.emit(name);

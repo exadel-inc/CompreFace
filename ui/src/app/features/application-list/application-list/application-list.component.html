@@ -45,7 +45,7 @@ limitations under the License.
   >
   </app-table>
   <div class="create-new-message" *ngIf="tableConfig.data.length === 0 && !isLoading">
-    <mat-icon>info</mat-icon>
+    <mat-icon svgIcon="info_new" inline="true"></mat-icon>
     <p>
       {{ 'applications.first_steps_info' | translate }}
     </p>
