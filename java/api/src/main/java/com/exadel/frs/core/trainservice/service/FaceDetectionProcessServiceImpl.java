@@ -20,12 +20,20 @@ public class FaceDetectionProcessServiceImpl implements FaceProcessService {
 
     @Override
     public FacesDetectionResponseDto processImage(ProcessImageParams processImageParams) {
-        MultipartFile file = (MultipartFile) processImageParams.getFile();
-        imageExtensionValidator.validate(file);
         Integer limit = processImageParams.getLimit();
         Double detProbThreshold = processImageParams.getDetProbThreshold();
         String facePlugins = processImageParams.getFacePlugins();
-        FindFacesResponse findFacesResponse = facesApiClient.findFaces(file, limit, detProbThreshold, facePlugins);
+        FindFacesResponse findFacesResponse;
+
+        if (processImageParams.getFile() != null) {
+            MultipartFile file = (MultipartFile) processImageParams.getFile();
+            imageExtensionValidator.validate(file);
+            findFacesResponse = facesApiClient.findFaces(file, limit, detProbThreshold, facePlugins);
+        } else {
+            imageExtensionValidator.validateBase64(processImageParams.getImageBase64());
+            findFacesResponse = facesApiClient.findFacesBase64(processImageParams.getImageBase64(), limit, detProbThreshold, facePlugins);
+        }
+
         FacesDetectionResponseDto facesDetectionResponseDto = facesMapper.toFacesDetectionResponseDto(findFacesResponse);
         return facesDetectionResponseDto.prepareResponse(processImageParams);
     }

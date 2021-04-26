@@ -20,14 +20,17 @@ import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.dto.VerifyRequest;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -99,8 +102,9 @@ public class FaceController {
         return faceService.deleteFaceById(image_id, apiKey);
     }
 
-    @PostMapping(value = "/{image_id}/verify")
-    public Map<String, List<FaceVerification>> recognize(
+    @PostMapping(value = "/{image_id}/verify",
+                 consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Map<String, List<FaceVerification>> recognizeFile(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true)
@@ -126,6 +130,28 @@ public class FaceController {
                 .facePlugins(facePlugins)
                 .limit(limit)
                 .status(status)
+                .build();
+        return faceService.verifyFace(processImageParams);
+    }
+
+    @PostMapping(value = "/{image_id}/verify",
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public Map<String, List<FaceVerification>> recognizeBase64(
+            @ApiParam(value = API_KEY_DESC, required = true)
+            @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = IMAGE_ID_DESC, required = true)
+            @PathVariable final String image_id,
+            @RequestBody @Valid VerifyRequest verifyRequest
+            ) {
+        imageValidator.validateBase64(verifyRequest.getImageAsBase64());
+        ProcessImageParams processImageParams = ProcessImageParams.builder()
+                .additionalParams(Map.of(IMAGE_ID, image_id))
+                .apiKey(apiKey)
+                .detProbThreshold(verifyRequest.getDetProbThreshold())
+                .imageBase64(verifyRequest.getImageAsBase64())
+                .facePlugins(verifyRequest.getFacePlugins())
+                .limit(verifyRequest.getLimit())
+                .status(verifyRequest.getStatus())
                 .build();
         return faceService.verifyFace(processImageParams);
     }
