@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,34 +14,9 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
+import { Role } from '../enums/role.enum';
 
-.mat-dialog-title, .mat-dialog-content {
-  text-align: center;
+export interface UserRole {
+  id: string;
+  role: Role;
 }
-
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: column
-}
-
-.alert {
-  &-info {
-    background-color: $green;
-    color: $white
-  }
-
-  &-warning {
-    background-color: $pale-gray;
-  }
-
-  &-error {
-    background-color: $red;
-    color: $white
-  }
-}
-
-button {
-  color: $white;
-}
-

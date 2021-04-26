@@ -23,6 +23,7 @@ import { RouterModule } from '@angular/router';
 import { ApplicationHeaderComponent } from './application-header.component';
 import { EntityTitleModule } from '../../entity-title/entity-title.module';
 import { SpinnerModule } from '../../spinner/spinner.module';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('ApplicationHeaderComponent', () => {
   let component: ApplicationHeaderComponent;
@@ -32,7 +33,7 @@ describe('ApplicationHeaderComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ApplicationHeaderComponent],
-        imports: [CommonModule, RouterModule, MatButtonModule, SpinnerModule, EntityTitleModule, MatCardModule],
+        imports: [CommonModule, RouterModule, MatButtonModule, SpinnerModule, EntityTitleModule, MatCardModule, MatDialogModule],
       }).compileComponents();
     })
   );

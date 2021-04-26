@@ -19,9 +19,10 @@ import { AppUser } from 'src/app/data/interfaces/app-user';
 
 import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { TableComponent } from '../table/table.component';
-import { MatIconRegistry } from '@angular/material/icon';
-import { DomSanitizer } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
+import { RoleEditDialogComponent } from '../role-edit-dialog/role-edit-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UserRole } from '../../data/interfaces/user-role';
 
 @Component({
   selector: 'app-user-table',
@@ -41,10 +42,8 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
 
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitzer: DomSanitizer, private translate: TranslateService) {
+  constructor(private dialog: MatDialog, private translate: TranslateService) {
     super();
-    this.matIconRegistry.addSvgIcon('edit', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/edit.svg'));
-    this.matIconRegistry.addSvgIcon('trash', this.domSanitzer.bypassSecurityTrustResourceUrl('assets/img/icons/trash.svg'));
   }
 
   ngOnInit() {
@@ -56,6 +55,33 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
     this.getMessageContent();
   }
 
+  isRoleChangeAllowed(user: AppUser): boolean {
+    return (
+      user.userId !== this.currentUserId &&
+      this.userRole !== Role.User &&
+      user.role !== Role.Owner &&
+      this.availableRoles.indexOf(user.role) > -1
+    );
+  }
+
+  onEditAppRole(element): void {
+    const dialog = this.dialog.open(RoleEditDialogComponent, {
+      width: '420px',
+      data: {
+        element,
+        isRoleChangeAllowed: this.isRoleChangeAllowed.bind(this),
+        availableRoles: this.availableRoles,
+      },
+    });
+
+    const dialogSubscription = dialog.afterClosed().subscribe((data: UserRole) => {
+      if (data) {
+        this.change(data);
+        dialogSubscription.unsubscribe();
+      }
+    });
+  }
+
   delete(user: AppUser): void {
     const deletion: UserDeletion = {
       userToDelete: user,
@@ -63,10 +89,6 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
       isDeleteHimSelf: user.id === this.currentUserId,
     };
     this.deleteUser.emit(deletion);
-  }
-
-  changeRole(event: any, element: AppUser): void {
-    this.change({ id: element.id, role: event.value });
   }
 
   getMessageContent(): void {

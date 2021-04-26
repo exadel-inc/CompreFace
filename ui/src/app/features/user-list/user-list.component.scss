@@ -15,6 +15,7 @@
  */
 
 @import 'colors.scss';
+@import "mixins.scss";
 
 .user-list {
   position: relative;
@@ -25,14 +26,4 @@ app-spinner {
   left: 40%;
 }
 
-.table-header-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  padding-right: 16px;
-  align-items: center;
-
-  h3 {
-    margin: 0;
-  }
-}
+@include common-header();

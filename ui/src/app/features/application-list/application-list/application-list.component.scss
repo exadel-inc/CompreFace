@@ -15,72 +15,9 @@
  */
 @import 'colors.scss';
 @import "media.scss";
+@import "mixins.scss";
 
 .application-list {
-  position: relative;
-
-  .mat-title {
-    flex-basis: 160px;
-  }
-
-  .search-input{
-    margin: 5px auto;
-    order: 1;
-    flex: 1 0 100%;
-  }
-
-  app-spinner {
-    position: absolute;
-    left: 40%
-  }
-
-  .create-new-message {
-    padding-left: 20px;
-    display: flex;
-
-    mat-icon {
-      padding: 25px 20px 0 0;
-    }
-  }
-
-  .table-header-container {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-
-    h3 {
-      margin: 0;
-    }
-  }
-
-  .custom-create-button {
-    flex-basis: 112px;
-    line-height: 27px;
-    display: inline-flex;
-    align-items: center;
-    flex-direction: row;
-    color: $primary;
-    margin-left: 5px;
-    padding: 0;
-
-    mat-icon {
-      width: 13.5px;
-      height: 27px;
-    }
-
-    span {
-      margin-left: 5px;
-    }
-  }
+  @include common-header();
+  @include header-bar-layout();
 }
-
-@include desktop {
-  .search-input {
-    flex-basis: 188px !important;
-    order: 0 !important;
-    margin: 0 !important;
-  }
-}
-

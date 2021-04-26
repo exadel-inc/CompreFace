@@ -15,15 +15,17 @@
  */
 
 .breadcrumbs {
-  display: flex;
-  margin-bottom: 20px;
-  margin-top: 15px;
+  margin-bottom: 24px;
 
-  &-link {
-    margin-right: 8px;
-  }
+  &--container {
+    display: flex;
 
-  .separator {
-    margin-right: 8px;
+    .link {
+      margin-right: 8px;
+    }
+
+    .separator {
+      margin-right: 8px;
+    }
   }
 }
