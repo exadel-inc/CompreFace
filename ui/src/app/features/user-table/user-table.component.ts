@@ -66,7 +66,7 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
 
   onEditAppRole(element): void {
     const dialog = this.dialog.open(RoleEditDialogComponent, {
-      width: '420px',
+      panelClass: 'custom-mat-dialog',
       data: {
         element,
         isRoleChangeAllowed: this.isRoleChangeAllowed.bind(this),

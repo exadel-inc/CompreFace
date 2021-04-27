@@ -1,17 +1,17 @@
 {
   "common": {
     "capital": {
-      "change": "CHANGE",
-      "create": "CREATE",
-      "clone": "CLONE",
-      "cancel": "CANCEL",
-      "save": "SAVE",
-      "yes": "YES",
-      "add": "ADD",
-      "rename": "RENAME",
-      "edit": "EDIT",
-      "delete": "DELETE",
-      "ok": "OK"
+      "change": "Change",
+      "create": "Create",
+      "clone": "Clone",
+      "cancel": "Cancel",
+      "save": "Save",
+      "yes": "Yes",
+      "add": "Add",
+      "rename": "Rename",
+      "edit": "Edit",
+      "delete": "Delete",
+      "ok": "Ok"
     },
     "name": "Name",
     "type": "Type",
@@ -74,8 +74,8 @@
     },
     "header": {
       "title": "Application",
-      "edit": "EDIT",
-      "delete": "DELETE",
+      "edit": "Edit",
+      "delete": "Delete",
       "delete_dialog": {
         "title": "Delete application",
         "warn_information": "and all related data will be deleted",
@@ -83,7 +83,7 @@
       },
       "edit_dialog": {
         "title": "Edit application",
-        "rename": "RENAME",
+        "rename": "Rename",
         "name": "Name"
       }
     },
@@ -104,15 +104,15 @@
       "name": "Name"
     },
     "select_menu": {
-      "edit": "EDIT",
-      "clone": "CLONE",
-      "delete": "DELETE",
-      "test": "TEST"
+      "edit": "Edit",
+      "clone": "Clone",
+      "delete": "Delete",
+      "test": "Test"
     },
     "edit_dialog": {
-      "title": "EDIT MODEL",
+      "title": "Edit Model",
       "name": "Name",
-      "rename": "RENAME"
+      "rename": "Rename"
     },
     "delete_dialog": {
       "title": "Delete model",

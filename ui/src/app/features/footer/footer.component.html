@@ -16,8 +16,6 @@
 
 <mat-toolbar>
   <mat-toolbar-row class="container">
-    <span>
-      <span class="mat-caption">build version: {{ env.buildNumber }}</span>
-    </span>
+    <span class="mat-caption">{{ 'applications.build' | translate }} {{ env.buildNumber }}</span>
   </mat-toolbar-row>
 </mat-toolbar>

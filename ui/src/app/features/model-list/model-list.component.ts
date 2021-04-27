@@ -79,7 +79,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
   edit(model: Model) {
     const dialog = this.dialog.open(EditDialogComponent, {
-      width: '400px',
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('models.header'),
         entityName: model.name,
@@ -97,7 +97,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
   clone(model: Model) {
     const dialog = this.dialog.open(ModelCloneDialogComponent, {
-      width: '400px',
+      panelClass: 'custom-mat-dialog',
       data: { entityType: this.translate.instant('models.header') },
     });
 
@@ -112,7 +112,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
   delete(model: Model) {
     const dialog = this.dialog.open(DeleteDialogComponent, {
-      width: '400px',
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('models.header'),
         entityName: model.name,
@@ -140,7 +140,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
   onCreateNewModel(): void {
     const dialog = this.dialog.open(ModelCreateDialogComponent, {
-      width: '300px',
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('models.header'),
       },

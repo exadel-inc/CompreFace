@@ -190,19 +190,12 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
   .mat-input-wrapper {
     .mat-form-field {
-
       width: 170px !important;
 
       @include mobile-portrait {
         width: 100% !important;
       }
     }
-  }
-
-  .mat-dialog-container{
-    border-radius: 12px !important;
-    min-width: 420px;
-    padding: 32px !important;
   }
 
   th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
@@ -255,6 +248,38 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
       &:not([class*=mat-elevation-z]) {
         @include mat-elevation(0);
+      }
+    }
+  }
+
+  .custom-mat-dialog {
+    width: 420px;
+
+    .mat-dialog {
+      &-container {
+        border-radius: 12px;
+        padding: 32px;
+      }
+
+      &-content {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        .mat-form-field {
+          width: 100%;
+        }
+      }
+
+      &-actions {
+        justify-content: space-between;
+
+        button {
+          margin: 0 !important;
+          padding: 12px 32px;
+          line-height: 16px;
+        }
       }
     }
   }

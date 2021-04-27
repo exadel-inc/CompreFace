@@ -13,27 +13,3 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-@import 'colors.scss';
-
-.mat-form-field {
-  width: 100%;
-}
-
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.button-create {
-  color: $white;
-}
-
-h1 {
-  text-transform: capitalize;
-}
-
-button {
-  text-transform: uppercase;
-}

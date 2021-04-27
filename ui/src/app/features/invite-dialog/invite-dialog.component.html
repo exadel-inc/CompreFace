@@ -14,14 +14,16 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{ actionType }} user</h1>
+<h1 mat-dialog-title>{{ 'common.capital.add' | translate }} {{ 'users.user' | translate }}</h1>
 <div mat-dialog-content>
   <form [formGroup]="form">
-    <mat-form-field>
-      <input matInput placeholder="Email" name="email" formControlName="userEmail" [matAutocomplete]="auto" />
+    <mat-form-field appearance="outline" hideRequiredMarker>
+      <mat-label>Email</mat-label>
+      <input matInput name="email" formControlName="userEmail" [matAutocomplete]="auto" required />
     </mat-form-field>
 
-    <mat-form-field>
+    <mat-form-field appearance="outline" hideRequiredMarker>
+      <mat-label>Email</mat-label>
       <mat-select formControlName="role">
         <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role }}</mat-option>
       </mat-select>
@@ -33,6 +35,6 @@
   </form>
 </div>
 <div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()">cancel</button>
-  <button mat-flat-button color="primary" [disabled]="!form.valid" (click)="onInviteClick()">{{ actionType }}</button>
+  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
 </div>

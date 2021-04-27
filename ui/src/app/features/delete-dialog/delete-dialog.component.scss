@@ -13,29 +13,3 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-@import 'colors.scss';
-
-.mat-form-field {
-  width: 100%
-}
-
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.button-create {
-  color: $white;
-}
-
-.delete-radio-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 10px;
-}
-
-.delete-radio-button {
-  margin: 5px;
-}

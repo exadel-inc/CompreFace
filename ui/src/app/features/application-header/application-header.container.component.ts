@@ -54,7 +54,7 @@ export class ApplicationHeaderContainerComponent implements OnInit {
 
   rename(name: string): void {
     const dialog = this.dialog.open(EditDialogComponent, {
-      width: '300px',
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('applications.header.title'),
         entityName: name,
@@ -72,7 +72,7 @@ export class ApplicationHeaderContainerComponent implements OnInit {
 
   delete(name: string) {
     const dialog = this.dialog.open(DeleteDialogComponent, {
-      width: '400px',
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('applications.header.title'),
         entityName: name,

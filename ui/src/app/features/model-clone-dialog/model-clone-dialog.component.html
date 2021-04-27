@@ -14,17 +14,18 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>Clone {{ data.entityType }}</h1>
+<h1 mat-dialog-title>{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
 <div mat-dialog-content>
-  <mat-form-field>
-    <input matInput [(ngModel)]="initialName" placeholder="{{ 'common.name' | translate }}" />
+  <mat-form-field appearance="outline" hideRequiredMarker>
+    <mat-label>{{ 'common.name' | translate }}</mat-label>
+    <input matInput [(ngModel)]="initialName" required />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-flat-button cdkFocusInitial (click)="dialogRef.close()">
+  <button mat-flat-button cdkFocusInitial (click)="dialogRef.close()">
     {{ 'common.capital.cancel' | translate }}
   </button>
-  <button class="button-create" mat-flat-button [mat-dialog-close]="initialName" [disabled]="isCloneDisabled">
+  <button mat-flat-button color="primary" [mat-dialog-close]="initialName" [disabled]="isCloneDisabled">
     {{ 'common.capital.clone' | translate }}
   </button>
 </div>

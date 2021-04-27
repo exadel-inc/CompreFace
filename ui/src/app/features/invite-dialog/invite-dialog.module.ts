@@ -24,6 +24,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
 import { InviteDialogComponent } from './invite-dialog.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [InviteDialogComponent],
@@ -37,6 +38,7 @@ import { InviteDialogComponent } from './invite-dialog.component';
     MatDialogModule,
     MatButtonModule,
     MatAutocompleteModule,
+    TranslateModule,
   ],
   exports: [InviteDialogComponent],
 })
