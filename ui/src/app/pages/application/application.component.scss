@@ -34,7 +34,6 @@
 .grid-container {
   display: flex;
   justify-content: space-between;
-  margin-top: 24px;
 
   @include tablet-portrait{
     flex-direction: column;
@@ -88,5 +87,4 @@
       width: 100% !important;
     }
   }
-
 }

@@ -19,8 +19,8 @@
 @import 'colors.scss';
 @import 'mixins.scss';
 @import 'layout.scss';
+@import 'custom-theme.scss';
 
-@import './styles/custom-theme.scss';
 @include custom-theme($custom-theme);
 
 body,
@@ -41,6 +41,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 /* Track */

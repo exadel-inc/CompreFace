@@ -14,61 +14,53 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="result-container">
-  <div class="result-sections">
-    <div class="io-result-container">
-      <div class="result-section-image">
-        <div class="face-uploader-tray"></div>
-        <div class="result-image">
-          <app-drag-n-drop
-            class="face-uploader"
-            [style.display]="files.processFile ? 'none' : 'block'"
-            (upload)="selectProcessFile.emit($event)"
-            viewComponentColumn
-          ></app-drag-n-drop>
-          <canvas
-            [style.display]="!files.processFile ? 'none' : 'block'"
-            #processFileCanvasElement
-            [width]="processFileCanvasSize.width"
-          ></canvas>
-        </div>
-      </div>
-      <div class="result-section-image">
-        <div class="result-image">
-          <app-drag-n-drop
-            [style.display]="files.checkFile ? 'none' : 'block'"
-            class="face-uploader"
-            (upload)="selectCheckFile.emit($event)"
-            viewComponentColumn
-          ></app-drag-n-drop>
-          <canvas
-            #checkFileCanvasElement
-            [style.display]="!files.checkFile ? 'none' : 'block'"
-            [width]="checkFileCanvasSize.width"
-          ></canvas>
-        </div>
-      </div>
-    </div>
-    <ng-container *ngIf="isLoaded">
-      <div class="response-container">
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              {{ 'test_model.request' | translate }}
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <pre>{{ requestInfo.request }}</pre>
-        </mat-expansion-panel>
-
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              {{ 'test_model.response' | translate }}
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <pre>{{ formattedResult }}</pre>
-        </mat-expansion-panel>
-      </div>
-    </ng-container>
+<div class="result">
+  <div class="process-img">
+    <app-drag-n-drop
+      [style.display]="files.processFile ? 'none' : 'block'"
+      (upload)="selectProcessFile.emit($event)"
+      viewComponentColumn
+    ></app-drag-n-drop>
+    <mat-card [style.display]="!files.processFile ? 'none' : 'block'">
+      <canvas #processFileCanvasElement [width]="processFileCanvasSize.width"></canvas>
+    </mat-card>
   </div>
+  <div class="check-img">
+    <app-drag-n-drop
+      [style.display]="files.checkFile ? 'none' : 'block'"
+      (upload)="selectCheckFile.emit($event)"
+      viewComponentColumn
+    ></app-drag-n-drop>
+    <mat-card [style.display]="!files.checkFile ? 'none' : 'block'">
+      <canvas #checkFileCanvasElement [width]="checkFileCanvasSize.width"></canvas>
+    </mat-card>
+  </div>
+  <ng-container *ngIf="isLoaded">
+    <div class="request">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ 'test_model.request' | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="content">
+          <pre>{{ requestInfo.request }}</pre>
+        </div>
+      </mat-expansion-panel>
+    </div>
+    <div class="response">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ 'test_model.response' | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="content">
+          <pre>{{ formattedResult }}</pre>
+        </div>
+      </mat-expansion-panel>
+    </div>
+  </ng-container>
+
 </div>
+

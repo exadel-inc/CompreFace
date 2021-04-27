@@ -14,11 +14,75 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
+@import "colors.scss";
 
 $border-radius: 12px;
 
-@mixin dropzone {
+@mixin content($max-width, $margin-title) {
+  .content {
+    max-width: $max-width;
+
+    .title {
+      margin-bottom: $margin-title;
+      font-size: 22px;
+      line-height: 125%;
+      font-weight: 600;
+    }
+
+    .label {
+      color: $light-gray;
+      white-space: pre-line;
+      font-size: 16px;
+      line-height: 140%;
+    }
+  }
+}
+
+.dropzone {
+  position: relative;
+  padding: 24px;
+  background-color: $white;
+  border-radius: $border-radius;
+
+  &--container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border: dashed 2px $light-gray;
+    border-radius: $border-radius;
+    transition: .2s;
+
+    &.column {
+      padding: 55px 0 24px;
+      flex-direction: column;
+      text-align: center;
+
+      @include content(400px, 16px);
+
+      .icon {
+        margin-bottom: 48px;
+      }
+    }
+
+    &.row {
+      padding: 16px 0;
+      flex-direction: row;
+      text-align: left;
+
+      @include content(556px, 8px);
+
+      .icon {
+        margin-right: 21px;
+      }
+    }
+
+    .icon {
+      width: 53px;
+      height: 48px;
+    }
+  }
+
   input {
     opacity: 0;
     position: absolute;
@@ -29,42 +93,6 @@ $border-radius: 12px;
     left: 0;
     cursor: pointer;
   }
-}
-
-@mixin dropzone-container($data: column) {
-  .dropzone-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 20px 0;
-    width: 100%;
-    border: dashed 2px $light-gray;
-    border-radius: $border-radius;
-
-    .icon {
-      margin-right: 21px;
-      width: 53px;
-      height: 48px;
-    }
-
-    .content {
-      max-width: 556px;
-      transition: .2s;
-
-      .title {
-        margin-bottom: 8px;
-        font-size: 22px;
-        line-height: 125%;
-        font-weight: 600;
-      }
-
-      .label {
-        color: $light-gray;
-        font-size: 16px;
-        line-height: 140%;
-      }
-    }
-  }
 
   &:hover &--container {
     transition: .2s;
@@ -72,25 +100,5 @@ $border-radius: 12px;
     border-color: $special-blue;
   }
 }
-
-.dropzone {
-
-  &-column {
-    position: relative;
-    padding: 24px;
-    background-color: $white;
-    border-radius: $border-radius;
-    @include dropzone;
-  }
-
-  &-row {
-    position: relative;
-    padding: 24px;
-    background-color: $white;
-    border-radius: $border-radius;
-    @include dropzone;
-  }
-}
-
 
 

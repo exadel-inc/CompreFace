@@ -123,9 +123,15 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     color: $pale-gray;
   }
 
-  .mat-menu-content {
-    .mat-menu-item {
-      color: mat-color($warn_);
+  .mat-menu {
+    &-content {
+      .mat-menu-item {
+        color: mat-color($warn_);
+      }
+    }
+
+    &-panel {
+      @include mat-elevation(0);
     }
   }
 
@@ -183,7 +189,6 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .mat-input-wrapper {
-
     .mat-form-field {
 
       width: 170px !important;
@@ -204,15 +209,54 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     padding-right: 0!important;
   }
 
-  .mat-checkbox-layout {
-    white-space: normal !important;
-    text-align: left;
+  .mat-checkbox {
+    &-layout {
+      white-space: normal !important;
+      text-align: left;
+    }
+
+    &-label {
+      margin: 12px 0;
+      font-size: 12px;
+      line-height: 13.5px;
+    }
   }
 
-  .mat-checkbox-label {
-    margin: 12px 0;
-    font-size: 12px;
-    line-height: 13.5px;
+  .mat-expansion {
+    &-indicator::after {
+      border-width: 0 3px 3px 0 !important;
+      padding: 4px !important;
+      color: $black;
+    }
+
+    &-panel {
+      border-radius: 12px !important;
+
+      &-header {
+        height: 60px;
+        font-weight: 600;
+        font-size: 22px;
+        color: $black;
+      }
+
+      &-body {
+        font-size: 14px;
+        color: $light-gray;
+
+        .content {
+          max-height: 450px;
+          overflow: auto;
+
+          pre {
+            margin: 0;
+          }
+        }
+      }
+
+      &:not([class*=mat-elevation-z]) {
+        @include mat-elevation(0);
+      }
+    }
   }
 }
 

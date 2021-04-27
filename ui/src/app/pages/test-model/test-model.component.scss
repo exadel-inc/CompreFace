@@ -14,19 +14,8 @@
  * permissions and limitations under the License.
  */
 
-@import 'media.scss';
-@import 'colors.scss';
-
-.container {
+.test-model {
   display: flex;
   flex-direction: column;
   flex-wrap: nowrap;
-
-  .header-container {
-    width: 100%;
-
-    @include mobile {
-      height: auto;
-    }
-  }
 }

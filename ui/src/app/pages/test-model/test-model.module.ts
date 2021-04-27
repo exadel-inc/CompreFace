@@ -24,6 +24,7 @@ import { FaceServicesModule } from '../../features/face-services/face-services.m
 import { SpinnerModule } from '../../features/spinner/spinner.module';
 import { TestModelComponent } from './test-model.component';
 import { TestModelPageService } from './test-model.service';
+import { ApplicationHeaderModule } from '../../features/application-header/application-header.module';
 
 @NgModule({
   declarations: [TestModelComponent],
@@ -35,6 +36,7 @@ import { TestModelPageService } from './test-model.service';
     FaceServicesModule,
     SpinnerModule,
     TranslateModule,
+    ApplicationHeaderModule,
   ],
   providers: [TestModelPageService],
 })

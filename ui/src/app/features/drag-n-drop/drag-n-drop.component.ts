@@ -13,17 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-  Renderer2,
-  ViewChild
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, Renderer2, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
@@ -37,12 +27,15 @@ export class DragNDropComponent implements OnInit, AfterViewInit {
   @Input() label: string;
   @Input() model: any;
   @Input('viewComponentColumn')
+  get view() {
+    return this.viewColumn;
+  }
   set view(val: boolean) {
     this.viewColumn = true;
-  };
+  }
   @Output() upload: EventEmitter<File> = new EventEmitter();
 
-  private viewColumn: boolean = false
+  viewColumn = false;
 
   constructor(private translate: TranslateService, private renderer: Renderer2, private elementRef: ElementRef<HTMLElement>) {}
 
@@ -53,10 +46,10 @@ export class DragNDropComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    const nativeElement: ChildNode  = this.elementRef.nativeElement.firstChild;
-    const classValue = this.view ? 'dropzone-row' : 'dropzone-column';
+    const nativeElement: ChildNode = this.elementRef.nativeElement.firstChild.firstChild;
+    const classValue = this.viewColumn ? 'column' : 'row';
 
-    this.renderer.addClass(nativeElement, classValue)
+    this.renderer.addClass(nativeElement, classValue);
   }
 
   /**
