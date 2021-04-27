@@ -5,6 +5,7 @@
       "create": "CREATE",
       "clone": "CLONE",
       "cancel": "CANCEL",
+      "save": "SAVE",
       "yes": "YES",
       "add": "ADD",
       "rename": "RENAME",
@@ -61,13 +62,15 @@
     "build": "build version",
     "caption": "Table of applications",
     "title": "Applications",
+    "placeholder": "Enter App name",
     "first_steps_title": "Create Application",
-    "name": "Name",
+    "name": "App Name",
     "owner": "Owner",
     "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
     "create": {
       "title": "Create application",
-      "button": "Create New"
+      "button": "Create New",
+      "add_button": "User New"
     },
     "header": {
       "title": "Application",
@@ -125,6 +128,7 @@
     "title": "Users",
     "user": "User",
     "role": "Role",
+    "user_role": "User Role",
     "search": {
       "org_title": "Search User",
       "app_title": "Search User",

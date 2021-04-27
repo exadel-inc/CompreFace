@@ -115,11 +115,11 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     color: $black;
   }
 
-  .mat-subheading-2, .mat-subheading-1{
+  .mat-subheading-2, .mat-subheading-1, .mat-body-1, .mat-body-2{
     color: $dark-gray;
   }
 
-  .mat-body-1, .mat-body-2, .mat-caption {
+   .mat-caption {
     color: $pale-gray;
   }
 
@@ -192,6 +192,16 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
         width: 100% !important;
       }
     }
+  }
+
+  .mat-dialog-container{
+    border-radius: 12px !important;
+    min-width: 420px;
+    padding: 32px !important;
+  }
+
+  th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+    padding-right: 0!important;
   }
 
   .mat-checkbox-layout {

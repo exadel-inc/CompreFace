@@ -16,7 +16,7 @@
 
 <div class="app-user-list">
   <div class="table-header-container">
-    <h3>{{ 'users.title' | translate }}</h3>
+    <h3 class="mat-title">{{ 'users.title' | translate }}</h3>
     <form class="search-input">
       <input
         matInput
@@ -28,6 +28,12 @@
       />
       <mat-icon class="material-icons notranslate">search</mat-icon>
     </form>
+    <ng-container *ngIf="userRole$ | async as userRole">
+      <div class="custom-create-button" *ngIf="userRole !== roleEnum.User" (click)="onInviteUser()">
+        <mat-icon svgIcon="add_new"></mat-icon>
+        <span>{{ 'applications.create.add_button' | translate }}</span>
+      </div>
+    </ng-container>
   </div>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-user-table
@@ -43,9 +49,4 @@
     (deleteUser)="onDelete($event)"
   >
   </app-user-table>
-  <div class="add-model-button-container" *ngIf="userRole$ | async as userRole">
-    <button *ngIf="userRole !== roleEnum.User" mat-flat-button color="primary" (click)="onInviteUser()">
-      {{ 'common.capital.add' | translate }}
-    </button>
-  </div>
 </div>

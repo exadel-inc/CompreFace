@@ -18,18 +18,13 @@
   <app-spinner *ngIf="isLoading"></app-spinner>
   <mat-card class="application-header_left-coll">
     <div *ngIf="app">
-      <h3 class="title">{{ 'applications.header.title' | translate }}</h3>
       <div class="name-wrapper">
         <div class="name-item" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxHeaderLinkLength">
-          {{ app.name | truncate: maxHeaderLinkLength }}
+          <h1 class="mat-headline">{{ app.name | truncate: maxHeaderLinkLength }}</h1>
         </div>
         <div *ngIf="!isLoading && userRole">
-          <button *ngIf="userRole === userRoleEnum.Owner" mat-flat-button type="button" color="primary" (click)="onRename(app.name)">
-            {{ 'applications.header.edit' | translate }}
-          </button>
-          <button *ngIf="userRole === userRoleEnum.Owner" mat-flat-button type="button" color="primary" (click)="onDelete(app.name)">
-            {{ 'applications.header.delete' | translate }}
-          </button>
+          <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="edit" (click)="onRename(app.name)"></mat-icon>
+          <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="trash" (click)="onDelete(app.name)"></mat-icon>
         </div>
       </div>
     </div>

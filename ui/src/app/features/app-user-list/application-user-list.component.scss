@@ -15,26 +15,17 @@
  */
 
 @import 'colors.scss';
+@import "mixins.scss";
 
 .app-user-list {
   position: relative;
+  @include common-header();
+  @include header-bar-layout();
 }
 
 app-spinner {
   position: absolute;
   left: 40%;
-}
-
-.table-header-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  padding-right: 16px;
-  align-items: center;
-  margin-bottom: 10px;
-  h3 {
-    margin: 0;
-  }
 }
 
 .add-model-button-container {

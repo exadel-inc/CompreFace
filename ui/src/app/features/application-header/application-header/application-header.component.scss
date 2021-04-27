@@ -13,16 +13,33 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import "mixins.scss";
 
 .application-header {
   display: flex;
   justify-content: space-between;
+
+  .name-item {
+    h1 {
+      margin: 0;
+    }
+  }
 
   .name-wrapper,
   .api-key-wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  mat-icon {
+    margin-left: 22px;
+    cursor: pointer;
+    @include md-icon-size();
+  }
+
+  mat-card {
+    padding: 20px 24px !important;
   }
 
   &_left-coll {

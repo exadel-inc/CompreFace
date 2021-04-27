@@ -17,9 +17,6 @@
 @import 'media.scss';
 
 :host {
-  position: fixed;
-  top: 49px;
-  width: 100vw;
   z-index: 102;
   max-width: 1140px;
 
