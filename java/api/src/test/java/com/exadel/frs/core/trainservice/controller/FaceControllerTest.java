@@ -16,13 +16,19 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
+import com.exadel.frs.commonservice.entity.App;
+import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.commonservice.entity.Model;
+import com.exadel.frs.commonservice.enums.ModelType;
+import com.exadel.frs.commonservice.handler.CommonExceptionCode;
 import com.exadel.frs.commonservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
-import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
+import com.exadel.frs.core.trainservice.repository.AppRepository;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
@@ -31,58 +37,97 @@ import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.exadel.frs.core.trainservice.ItemsBuilder.makeFace;
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeModel;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import static java.util.stream.Collectors.toList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @IntegrationTest
 @AutoConfigureMockMvc
-public class FaceControllerTest extends EmbeddedPostgreSQLTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class FaceControllerTest extends EmbeddedPostgreSQLTest {
 
-    public static final String INCORRECT_PART_NAME = "File";
+    private static final String INCORRECT_PART_NAME = "File";
+    private static final String API_KEY = "model_key";
+
     @Autowired
-    private MockMvc mockMvc;
+    ObjectMapper objectMapper;
 
-    @MockBean
-    private FacesRepository facesRepository;
+    @Autowired
+    ModelRepository modelRepository;
+
+    @Autowired
+    AppRepository appRepository;
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @Autowired
+    FacesRepository facesRepository;
+
+    @Autowired
+    FaceCacheProvider faceCacheProvider;
 
     @SpyBean
-    private FaceService faceService;
+    FaceService faceService;
 
     @MockBean
-    private ImageExtensionValidator imageValidator;
+    ImageExtensionValidator imageValidator;
 
     @MockBean
-    private FaceCacheProvider faceCacheProvider;
+    FaceClassifierPredictor predictor;
 
     @MockBean
-    private FaceClassifierPredictor predictor;
+    FacesApiClient client;
 
-    @MockBean
-    private FacesApiClient client;
+    private App app;
+    private Model model;
 
-    private static final String API_KEY = "model_key";
+    @BeforeAll
+    public void setUpAppAndModel() {
+        app = App.builder()
+                .name("App" + System.currentTimeMillis())
+                .guid(UUID.randomUUID().toString())
+                .apiKey(API_KEY)
+                .build();
+        appRepository.save(app);
+
+        model = makeModel(API_KEY, ModelType.RECOGNITION, app);
+        modelRepository.save(model);
+    }
+
+    @AfterAll
+    public void clearAppAndModel() {
+        appRepository.delete(app);
+        modelRepository.delete(model);
+    }
+
+    @BeforeEach
+    public void beforeEach() {
+        // clear data after each test
+        facesRepository.deleteFacesByApiKey(API_KEY);
+        faceCacheProvider.invalidate(API_KEY);
+    }
 
     @Test
     void findAndSaveFaces() throws Exception {
@@ -106,64 +151,114 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
 
     @Test
     void findAndSaveFacesForFirstItemWithEmptyRetrain() throws Exception {
-        val mockFile = new MockMultipartFile("file", "test data".getBytes());
-
-        val faceCollection = FaceCollection.buildFromFaces(List.of(
-                makeFace("A", API_KEY)
-        ));
-
-        doReturn(faceCollection)
-                .when(faceCacheProvider)
-                .getOrLoad(API_KEY);
         doReturn(new FaceResponseDto("id", "name"))
                 .when(faceService)
                 .findAndSaveFace(any(), any(), any(), any());
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognition/faces")
-                        .file(mockFile)
+                        .file(new MockMultipartFile("file", "test data".getBytes()))
                         .param("subject", "name")
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isCreated());
 
         verify(imageValidator).validate(any());
         verify(faceService).findAndSaveFace(any(), any(), any(), any());
+
         verifyNoMoreInteractions(imageValidator, faceService);
     }
 
     @Test
-    public void findAllShouldReturnResponseAsExpected() throws Exception {
-        val faces = List.of(
-                makeFace("A", API_KEY),
-                makeFace("B", API_KEY)
+    void subjectUpdateHappyPath() throws Exception {
+        final String oldSubject = "name1";
+        final String newSubject = "new_subj";
+
+        saveFaces(
+                makeFace(oldSubject, API_KEY),
+                makeFace(oldSubject, API_KEY),
+                makeFace("name2", API_KEY)
         );
 
-        val faceCollection = FaceCollection.buildFromFaces(faces);
-
-        doReturn(faces)
-                .when(facesRepository)
-                .findByApiKey(API_KEY);
-        doReturn(faceCollection)
-                .when(faceCacheProvider)
-                .getOrLoad(API_KEY);
-
-        val expectedFaces = faces.stream()
-                .map(face -> FaceResponseDto.builder()
-                        .image_id(face.getId())
-                        .subject(face.getFaceName())
-                        .build()
-                )
-                .collect(toList());
-
-        val expectedContent = new ObjectMapper().writeValueAsString(Map.of("faces", expectedFaces));
-
-        mockMvc.perform(get(API_V1 + "/recognition/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
+        mockMvc.perform(put(API_V1 + "/recognition/faces")
+                .param("subject", oldSubject)
+                .header(X_FRS_API_KEY_HEADER, API_KEY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("subject", newSubject)))
+        )
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedContent));
+                .andExpect(jsonPath("$.updated", Matchers.is(2)));
+
+        // make sure cache has been updated (invalidated?)
+        assertThat(
+                faceCacheProvider
+                        .getOrLoad(API_KEY)
+                        .getFaces()
+                        .stream()
+                        .filter(f -> newSubject.equals(f.getName()))
+                        .count(),
+                Matchers.is(2L)
+        );
     }
 
     @Test
-    public void findAllShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
+    void subjectUpdateErrorWhenUpdatingWithEmptySubj() throws Exception {
+        mockMvc.perform(put(API_V1 + "/recognition/faces")
+                .param("subject", "any")
+                .header(X_FRS_API_KEY_HEADER, API_KEY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("subject", ""))) // empty new subj
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", Matchers.is(CommonExceptionCode.VALIDATION_CONSTRAINT_VIOLATION.getCode())));
+    }
+
+    @Test
+    void subjectUpdateErrorWhenNoQuerySubj() throws Exception {
+        mockMvc.perform(put(API_V1 + "/recognition/faces")
+                .header(X_FRS_API_KEY_HEADER, API_KEY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("subject", "any")))
+        )
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code", Matchers.is(CommonExceptionCode.MISSING_REQUEST_PARAMETER.getCode())));
+    }
+
+    @Test
+    void subjectUpdateErrorWhenUpdatingNonExistingSubject() throws Exception {
+        final String nameToUpdate = "name1";
+
+        saveFaces(
+                makeFace("B", API_KEY),
+                makeFace("B", API_KEY)
+        );
+
+        mockMvc.perform(put(API_V1 + "/recognition/faces")
+                .param("subject", nameToUpdate)
+                .header(X_FRS_API_KEY_HEADER, API_KEY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(Map.of("subject", "new_name")))
+        )
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.code", Matchers.is(CommonExceptionCode.FACE_NOT_FOUND.getCode())));
+    }
+
+    @Test
+    void findAllShouldReturnResponseAsExpected() throws Exception {
+        val expected = saveFaces(
+                makeFace("A", API_KEY),
+                makeFace("B", API_KEY)
+        )
+                .stream()
+                .map(face -> new FaceResponseDto(face.getId(), face.getFaceName()))
+                .collect(Collectors.toList());
+
+        mockMvc.perform(get(API_V1 + "/recognition/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
+                .andExpect(status().isOk())
+                .andExpect(content().json(objectMapper.writeValueAsString(Map.of("faces", expected))));
+    }
+
+    @Test
+    void findAllShouldReturnBadRequestWhenAppGuidIsMissing() throws Exception {
         val expectedContent = "{\"message\":\"" + String.format("Missing header: %s", X_FRS_API_KEY_HEADER) + "\",\"code\":20}";
 
         mockMvc.perform(get(API_V1 + "/recognition/faces"))
@@ -172,92 +267,63 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
     }
 
     @Test
-    public void deleteFacesByIdShouldReturnResponseAsExpected() throws Exception {
-        val face = makeFace("A", API_KEY);
-        val faceCollection = FaceCollection.buildFromFaces(List.of(face));
+    void deleteFacesByIdShouldReturnResponseAsExpected() throws Exception {
+        List<Face> faces = saveFaces(makeFace("A", API_KEY));
 
-        doReturn(Optional.of(face))
-                .when(facesRepository)
-                .findById(face.getId());
-        doReturn(faceCollection)
-                .when(faceCacheProvider)
-                .getOrLoad(API_KEY);
-
-        mockMvc.perform(delete(API_V1 + "/recognition/faces/" + face.getId())
-                .header(X_FRS_API_KEY_HEADER, API_KEY)
-        ).andExpect(status().isOk());
+        mockMvc.perform(delete(API_V1 + "/recognition/faces/" + faces.iterator().next().getId())
+                .header(X_FRS_API_KEY_HEADER, API_KEY))
+                .andExpect(status().isOk());
     }
 
     @Test
-    public void deleteFacesByNameShouldReturnResponseAsExpected() throws Exception {
-        val faceName = "faceName";
-        val face = makeFace(faceName, API_KEY);
-        val faceCollection = FaceCollection.buildFromFaces(List.of(face));
+    void deleteFacesByNameShouldReturnResponseAsExpected() throws Exception {
+        Face face = saveFaces(makeFace("face_name", API_KEY)).iterator().next();
 
-        doReturn(List.of(face))
-                .when(facesRepository)
-                .deleteByApiKeyAndFaceName(API_KEY, faceName);
-        doReturn(faceCollection)
-                .when(faceCacheProvider)
-                .getOrLoad(API_KEY);
+        val expectedFaces = Collections.singletonList(new FaceResponseDto(face.getId(), face.getFaceName()));
 
-        val expectedFaces = List.of(FaceResponseDto.builder()
-                .image_id(face.getId())
-                .subject(face.getFaceName())
-                .build());
-        val expectedContent = new ObjectMapper().writeValueAsString(expectedFaces);
-
-        mockMvc.perform(delete(API_V1 + "/recognition/faces")
-                .header(X_FRS_API_KEY_HEADER, API_KEY)
-                .param("subject", faceName)
-        )
+        mockMvc.perform(delete(API_V1 + "/recognition/faces").header(X_FRS_API_KEY_HEADER, API_KEY).param("subject", face.getFaceName()))
                 .andExpect(status().isOk())
-                .andExpect(content().json(expectedContent));
+                .andExpect(content().json(objectMapper.writeValueAsString(expectedFaces)));
     }
 
     @Test
-    public void deleteFacesByModelShouldReturnResponseAsExpected() throws Exception {
-        val faces = List.of(
+    void deleteFacesByModelShouldReturnResponseAsExpected() throws Exception {
+        saveFaces(
                 makeFace("A", API_KEY),
                 makeFace("B", API_KEY),
                 makeFace("C", API_KEY)
         );
-        val faceCollection = FaceCollection.buildFromFaces(faces);
-
-        doReturn(faceCollection)
-                .when(faceCacheProvider)
-                .getOrLoad(API_KEY);
 
         mockMvc.perform(delete(API_V1 + "/recognition/faces").header(X_FRS_API_KEY_HEADER, API_KEY))
                 .andExpect(status().isOk());
     }
 
     @Test
-    public void deleteFacesByModelFacesShouldReturnBadRequestWhenApiKeyIsMissing() throws Exception {
-        val expectedContent = "{\"message\":\"" + String.format("Missing header: %s", X_FRS_API_KEY_HEADER) + "\",\"code\":20}";
-
+    void deleteFacesByModelFacesShouldReturnBadRequestWhenApiKeyIsMissing() throws Exception {
         mockMvc.perform(delete(API_V1 + "/recognition/faces"))
                 .andExpect(status().isBadRequest())
-                .andExpect(content().string(expectedContent));
+                .andExpect(jsonPath("$.message", Matchers.is(String.format("Missing header: %s", X_FRS_API_KEY_HEADER))))
+                .andExpect(jsonPath("$.code", Matchers.is(CommonExceptionCode.MISSING_REQUEST_HEADER.getCode())));
     }
 
     @Test
     void verifyFaces() throws Exception {
         val faceA = makeFace("A", API_KEY);
-        val faceB = makeFace("B", API_KEY);
-        val faceC = makeFace("C", API_KEY);
-        val faces = List.of(faceA, faceB, faceC);
-        val faceCollection = FaceCollection.buildFromFaces(faces);
 
-        doReturn(faceCollection)
-                .when(faceCacheProvider)
-                .getOrLoad(API_KEY);
+        saveFaces(
+                faceA,
+                makeFace("B", API_KEY),
+                makeFace("C", API_KEY)
+        );
 
-        val findFacesResponse = FindFacesResponse.builder()
-                .result(List.of(FindFacesResult.builder()
-                        .embedding(new Double[]{1.0})
-                        .box(new FacesBox().setProbability(1D))
-                        .build()
+        val findFacesResponse = FindFacesResponse
+                .builder()
+                .result(List.of(
+                        FindFacesResult
+                                .builder()
+                                .embedding(new Double[]{1.0})
+                                .box(new FacesBox().setProbability(1D))
+                                .build()
                 ))
                 .build();
 
@@ -290,5 +356,9 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
         ).andExpect(status().isBadRequest()).andReturn();
 
         Assertions.assertTrue(mvcResult.getResponse().getContentAsString().contains("Required part "));
+    }
+
+    private List<Face> saveFaces(Face... faces) {
+        return facesRepository.saveAll(Arrays.asList(faces));
     }
 }

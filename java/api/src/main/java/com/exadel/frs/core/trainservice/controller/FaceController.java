@@ -20,17 +20,19 @@ import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.dto.UpdateSubjectDto;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -79,14 +81,28 @@ public class FaceController {
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey
     ) {
-        val faces = new ArrayList<FaceResponseDto>();
         if (isBlank(subject)) {
             faceService.deleteFacesByModel(apiKey);
+            return Collections.emptyList();
         } else {
-            faces.addAll(faceService.deleteFaceByName(subject, apiKey));
+            return faceService.deleteFaceByName(subject, apiKey);
         }
+    }
 
-        return faces;
+    @WriteEndpoint
+    @PutMapping
+    public Map<String, Object> updateSubject(
+            @ApiParam(value = SUBJECT_DESC, required = true)
+            @RequestParam(name = SUBJECT) final @NotBlank String subject,
+            @ApiParam(value = API_KEY_DESC, required = true)
+            @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = "New " + SUBJECT_DESC, required = true)
+            @Valid @RequestBody final UpdateSubjectDto request
+    ) {
+        return Map.of(
+                "updated",
+                faceService.updateSubject(apiKey, subject, request.getSubject())
+        );
     }
 
     @WriteEndpoint

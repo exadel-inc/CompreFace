@@ -16,8 +16,6 @@
 
 package com.exadel.frs.commonservice.exception;
 
-import com.exadel.frs.commonservice.enums.ModelType;
-
 import static com.exadel.frs.commonservice.handler.CommonExceptionCode.MODEL_NOT_FOUND;
 import static java.lang.String.format;
 

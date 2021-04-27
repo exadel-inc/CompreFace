@@ -25,7 +25,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(schema = "public")
+@Table(name = "app_model", schema = "public")
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"app", "model"})

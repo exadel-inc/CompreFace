@@ -1,6 +1,5 @@
 package com.exadel.frs.commonservice.exception;
 
-import com.exadel.frs.commonservice.handler.CommonExceptionCode;
 import com.exadel.frs.commonservice.handler.HttpExceptionCode;
 import lombok.Getter;
 
