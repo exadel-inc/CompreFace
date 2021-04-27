@@ -23,6 +23,7 @@ import feign.Feign;
 import feign.Logger;
 import feign.form.spring.SpringFormEncoder;
 import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
@@ -36,7 +37,7 @@ public class FeignClientsConfig {
     @Bean
     public FacesFeignClient getFacesClient() {
         return Feign.builder()
-                    .encoder(new SpringFormEncoder())
+                    .encoder(new SpringFormEncoder(new JacksonEncoder()))
                     .decoder(new JacksonDecoder())
                     .logLevel(Logger.Level.FULL)
                     .target(FacesFeignClient.class, properties.getServers().get(PYTHON).getUrl());

@@ -134,9 +134,14 @@ public class FaceService {
     }
 
     public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {
-        MultipartFile file = (MultipartFile) processImageParams.getFile();
+        FindFacesResponse findFacesResponse;
+        if (processImageParams.getFile() != null) {
+            MultipartFile file = (MultipartFile) processImageParams.getFile();
+           findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        } else {
+            findFacesResponse = client.findFacesBase64WithCalculator(processImageParams.getImageBase64(), processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        }
 
-        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         if (findFacesResponse == null) {
             return Map.of("result", Collections.emptyList());
         }
