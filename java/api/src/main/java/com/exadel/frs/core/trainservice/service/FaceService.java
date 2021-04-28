@@ -16,7 +16,10 @@
 
 package com.exadel.frs.core.trainservice.service;
 
+import static java.math.RoundingMode.HALF_UP;
+import static java.util.stream.Collectors.toSet;
 import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.commonservice.exception.SubjectNotFoundException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
@@ -31,20 +34,21 @@ import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.stream.Stream;
-
-import static java.math.RoundingMode.HALF_UP;
-import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
@@ -71,9 +75,9 @@ public class FaceService {
         val faces = faceCacheProvider.getOrLoad(apiKey);
 
         Set<FaceBO> collect = faceDao.deleteFaceByName(faceName, apiKey)
-                .stream()
-                .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
-                .collect(toSet());
+                                     .stream()
+                                     .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
+                                     .collect(toSet());
         log.info("faceMapper: {}", faceMapper);
 
         return faceMapper.toResponseDto(collect);
@@ -88,6 +92,27 @@ public class FaceService {
         }
 
         return null;
+    }
+
+    public int updateSubject(final String apiKey, final String oldSubject, final String newSubject) {
+        Set<FaceBO> faces = faceCacheProvider
+                .getOrLoad(apiKey)
+                .getFaces();
+
+        boolean oldSubjectExists = faces
+                .stream()
+                .anyMatch(f -> f.getName().equalsIgnoreCase(oldSubject));
+
+        if (!oldSubjectExists) {
+            throw new SubjectNotFoundException(oldSubject);
+        }
+
+        int updated = faceDao.updateSubject(apiKey, oldSubject, newSubject);
+        log.debug("Updated {} face names {} --> {} for apiKey [{}]", updated, oldSubject, newSubject, apiKey);
+        // think about it
+        faceCacheProvider.invalidate(apiKey);
+
+        return updated;
     }
 
     public void deleteFacesByModel(final String modelKey) {

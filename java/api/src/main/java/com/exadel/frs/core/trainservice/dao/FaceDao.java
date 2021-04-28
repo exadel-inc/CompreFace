@@ -37,13 +37,15 @@ import org.springframework.web.multipart.MultipartFile;
 public class FaceDao {
 
     private final FacesRepository facesRepository;
-
     private final ImagesRepository imagesRepository;
-
     private final ImageProperties imageProperties;
 
     public List<Face> findAllFacesByApiKey(final String modelApiKey) {
         return facesRepository.findByApiKey(modelApiKey);
+    }
+
+    public int updateSubject(final String apiKey, String oldSubject, String newSubject) {
+        return facesRepository.updateSubject(apiKey, oldSubject, newSubject);
     }
 
     public List<Face> deleteFaceByName(final String faceName, final String modelApiKey) {

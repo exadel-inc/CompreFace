@@ -16,8 +16,20 @@
 
 package com.exadel.frs.commonservice.handler;
 
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.MISSING_REQUEST_HEADER;
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.UNDEFINED;
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.VALIDATION_CONSTRAINT_VIOLATION;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import com.exadel.frs.commonservice.dto.ExceptionResponseDto;
-import com.exadel.frs.commonservice.exception.*;
+import com.exadel.frs.commonservice.exception.BasicException;
+import com.exadel.frs.commonservice.exception.ConstraintViolationException;
+import com.exadel.frs.commonservice.exception.DemoNotAvailableException;
+import com.exadel.frs.commonservice.exception.EmptyRequiredFieldException;
+import com.exadel.frs.commonservice.exception.IncorrectPredictionCountException;
+import com.exadel.frs.commonservice.exception.MissingPathVarException;
+import com.exadel.frs.commonservice.exception.MissingRequestParamException;
+import com.exadel.frs.commonservice.exception.MissingRequestPartException;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.http.HttpHeaders;
@@ -35,10 +47,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import static com.exadel.frs.commonservice.handler.CommonExceptionCode.*;
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-
 @ControllerAdvice
 @Slf4j
 public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
@@ -52,7 +60,6 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(buildBody(ex));
     }
 
-
     @ExceptionHandler(value = {MissingRequestHeaderException.class})
     public ResponseEntity<ExceptionResponseDto> handleMissingRequestHeader(final MissingRequestHeaderException e) {
         return handleMissingRequestHeader(e.getHeaderName());
@@ -61,7 +68,8 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponseDto> handleMissingRequestHeader(final String headerName) {
         log.error("Missing header exception: " + headerName);
 
-        return ResponseEntity.status(MISSING_REQUEST_HEADER.getHttpStatus())
+        return ResponseEntity
+                .status(MISSING_REQUEST_HEADER.getHttpStatus())
                 .body(buildBody(MISSING_REQUEST_HEADER.getCode(), "Missing header: " + headerName));
     }
 
@@ -87,7 +95,8 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
             sb.append("; ");
         }
 
-        return ResponseEntity.status(VALIDATION_CONSTRAINT_VIOLATION.getHttpStatus())
+        return ResponseEntity
+                .status(VALIDATION_CONSTRAINT_VIOLATION.getHttpStatus())
                 .body(buildBody(VALIDATION_CONSTRAINT_VIOLATION.getCode(), sb.toString()));
     }
 
@@ -95,68 +104,84 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<ExceptionResponseDto> handleUndefinedExceptions(final Exception ex) {
         log.error("Undefined exception occurred", ex);
 
-        return ResponseEntity.status(UNDEFINED.getHttpStatus()).body(buildBody());
+        return ResponseEntity
+                .status(UNDEFINED.getHttpStatus())
+                .body(buildBody());
     }
 
     @ExceptionHandler(DemoNotAvailableException.class)
     public ResponseEntity<ExceptionResponseDto> handleDemoNotAvailableException(final DemoNotAvailableException ex) {
-        return ResponseEntity.status(NOT_FOUND).body(ExceptionResponseDto.builder().code(NOT_FOUND.value()).message(DemoNotAvailableException.MESSAGE).build());
+        return ResponseEntity.status(NOT_FOUND)
+                             .body(ExceptionResponseDto
+                                     .builder()
+                                     .code(NOT_FOUND.value())
+                                     .message(DemoNotAvailableException.MESSAGE)
+                                     .build()
+                             );
     }
 
     @ExceptionHandler(IncorrectPredictionCountException.class)
-    public ResponseEntity<ExceptionResponseDto> handleIncorrectPredictionCountException(final DemoNotAvailableException ex) {
-        return ResponseEntity.status(NOT_FOUND).body(ExceptionResponseDto.builder().code(BAD_REQUEST.value()).message(IncorrectPredictionCountException.INCORRECT_PREDICTION_MESSAGE).build());
+    public ResponseEntity<ExceptionResponseDto> handleIncorrectPredictionCountException(final IncorrectPredictionCountException ex) {
+        return ResponseEntity.status(NOT_FOUND)
+                             .body(ExceptionResponseDto
+                                     .builder()
+                                     .code(BAD_REQUEST.value())
+                                     .message(IncorrectPredictionCountException.INCORRECT_PREDICTION_MESSAGE)
+                                     .build()
+                             );
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error("404 error has occurred", ex);
 
-        val body = ExceptionResponseDto.builder()
-                .code(UNDEFINED.getCode())
-                .message(ex.getMessage() != null ? ex.getMessage() : "No message available")
-                .build();
-
-        return ResponseEntity.status(NOT_FOUND).body(body);
+        return ResponseEntity
+                .status(NOT_FOUND)
+                .body(ExceptionResponseDto
+                        .builder()
+                        .code(UNDEFINED.getCode())
+                        .message(ex.getMessage() != null ? ex.getMessage() : "No message available")
+                        .build()
+                );
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestPart(MissingServletRequestPartException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error("400 bad request. Request part is missing: {}", ex.getRequestPartName());
-        var exception = new MissingRequestPartException(ex.getRequestPartName());
-        val body = ExceptionResponseDto.builder()
-                .code(exception.getExceptionCode().getCode())
-                .message(exception.getMessage())
-                .build();
-        return ResponseEntity.status(BAD_REQUEST).body(body);
+
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(buildBody(new MissingRequestPartException(ex.getRequestPartName())));
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error("400 bad request. Request param is missing: {}", ex.getParameterName());
-        var exception = new MissingRequestParamException(ex.getParameterName());
-        val body = ExceptionResponseDto.builder()
-                .code(exception.getExceptionCode().getCode())
-                .message(exception.getMessage())
-                .build();
-        return ResponseEntity.status(BAD_REQUEST).body(body);
+
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(buildBody(new MissingRequestParamException(ex.getParameterName())));
     }
 
     @Override
     protected ResponseEntity<Object> handleMissingPathVariable(MissingPathVariableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         log.error("400 bad request. Path variable is missing: {}", ex.getVariableName());
-        BasicException exception = new MissingPathVarException(ex.getVariableName());
-        val body = ExceptionResponseDto.builder()
-                .code(exception.getExceptionCode().getCode())
-                .message(exception.getMessage())
-                .build();
-        return ResponseEntity.status(BAD_REQUEST).body(body);
+
+        return ResponseEntity
+                .status(BAD_REQUEST)
+                .body(buildBody(new MissingPathVarException(ex.getVariableName())));
     }
 
-    private BasicException getException(final FieldError fieldError) {
+    private static BasicException getException(final FieldError fieldError) {
         BasicException basicException;
 
-        switch (fieldError.getCode()) {
+        final String code = fieldError.getCode();
+
+        if (code == null) {
+            return new BasicException(UNDEFINED, "");
+        }
+
+        switch (code) {
             case "NotBlank":
             case "ValidEnum":
                 basicException = new ConstraintViolationException(fieldError.getDefaultMessage());
@@ -175,25 +200,25 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         return basicException;
     }
 
-    private ExceptionResponseDto buildBody(final BasicException ex) {
-        return ExceptionResponseDto.builder()
-                .code(ex.getExceptionCode().getCode())
-                .message(ex.getMessage())
-                .build();
+    private static ExceptionResponseDto buildBody(final BasicException ex) {
+        return buildBody(
+                ex.getExceptionCode().getCode(),
+                ex.getMessage()
+        );
     }
 
-    private ExceptionResponseDto buildBody(Integer code, String message) {
-        return ExceptionResponseDto.builder()
+    private static ExceptionResponseDto buildBody() {
+        return buildBody(
+                UNDEFINED.getCode(),
+                "Something went wrong, please try again"
+        );
+    }
+
+    private static ExceptionResponseDto buildBody(Integer code, String message) {
+        return ExceptionResponseDto
+                .builder()
                 .code(code)
                 .message(message)
                 .build();
     }
-
-    private ExceptionResponseDto buildBody() {
-        return ExceptionResponseDto.builder()
-                .code(UNDEFINED.getCode())
-                .message("Something went wrong, please try again")
-                .build();
-    }
-
 }

@@ -17,6 +17,7 @@ spring:
         jdbc.lob.non_contextual_creation: true # fix for Caused by: java.sql.SQLFeatureNotSupportedException: Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented.
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQL10Dialect
+    show_sql: true
 
 environment:
   servers:
@@ -41,3 +42,8 @@ app:
     appery-io:
       url: https://localhost/rest/1/db/collections
       api-key: ${APPERY_API_KEY:#{null}}
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.hibernate.type: TRACE
