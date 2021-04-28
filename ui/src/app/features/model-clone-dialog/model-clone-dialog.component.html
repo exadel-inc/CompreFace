@@ -16,9 +16,9 @@
 
 <h1 mat-dialog-title>{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
 <div mat-dialog-content>
-  <mat-form-field appearance="outline" hideRequiredMarker>
+  <mat-form-field appearance="outline">
     <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="initialName" required />
+    <input matInput [(ngModel)]="initialName" />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>

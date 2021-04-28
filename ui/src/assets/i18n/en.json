@@ -14,6 +14,7 @@
       "ok": "Ok"
     },
     "name": "Name",
+    "email": "Email",
     "type": "Type",
     "create": "Create",
     "unknown_error": "Sorry, something went wrong"
@@ -151,6 +152,9 @@
   },
   "app_users": {
     "add_users_info": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
+    "add_user_dialog": {
+      "email_hint": "Email is required"
+    },
     "delete_dialog": {
       "title": "Delete user",
       "confirmation_question": "Are you sure you want to remove user {{name}} from {{application}}?"

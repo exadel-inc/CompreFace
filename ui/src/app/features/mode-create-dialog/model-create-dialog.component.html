@@ -16,13 +16,13 @@
 
 <h1 mat-dialog-title>{{ 'common.create' | translate }} {{ data.entityType }}</h1>
 <div mat-dialog-content>
-  <mat-form-field appearance="outline" hideRequiredMarker>
+  <mat-form-field appearance="outline">
     <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="data.entityName" required />
+    <input matInput [(ngModel)]="data.entityName" />
   </mat-form-field>
-  <mat-form-field appearance="outline" hideRequiredMarker>
+  <mat-form-field appearance="outline">
     <mat-label>{{ 'common.type' | translate }}</mat-label>
-    <mat-select [(ngModel)]="data.type" required>
+    <mat-select [(ngModel)]="data.type">
       <mat-option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</mat-option>
     </mat-select>
   </mat-form-field>

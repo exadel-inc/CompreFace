@@ -17,13 +17,16 @@
 <h1 mat-dialog-title>{{ 'common.capital.add' | translate }} {{ 'users.user' | translate }}</h1>
 <div mat-dialog-content>
   <form [formGroup]="form">
-    <mat-form-field appearance="outline" hideRequiredMarker>
-      <mat-label>Email</mat-label>
-      <input matInput name="email" formControlName="userEmail" [matAutocomplete]="auto" required />
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'common.email' | translate }}</mat-label>
+      <mat-error>
+        <span>{{ 'app_users.add_user_dialog.email_hint' | translate }}</span>
+      </mat-error>
+      <input matInput name="email" formControlName="userEmail" [matAutocomplete]="auto" />
     </mat-form-field>
 
-    <mat-form-field appearance="outline" hideRequiredMarker>
-      <mat-label>Email</mat-label>
+    <mat-form-field appearance="outline">
+      <mat-label>{{ 'common.type' | translate }}</mat-label>
       <mat-select formControlName="role">
         <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role }}</mat-option>
       </mat-select>

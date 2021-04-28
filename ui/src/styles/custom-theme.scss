@@ -237,7 +237,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
         color: $light-gray;
 
         .content {
-          max-height: 450px;
+          height: 450px;
           overflow: auto;
 
           pre {

@@ -23,40 +23,40 @@
   <mat-card-content>
     <form class="form-card--form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
       <div class="mat-input-wrapper">
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" hideRequiredMarker>
           <mat-label>{{ 'registration.first_name' | translate }}</mat-label>
-          <mat-error class="error-wrapper">
+          <mat-error>
             <span>{{ 'registration.name_restriction' | translate }}</span>
           </mat-error>
           <input matInput formControlName="firstName" name="firstName" required />
         </mat-form-field>
-        <mat-form-field appearance="outline">
+        <mat-form-field appearance="outline" hideRequiredMarker>
           <mat-label>{{ 'registration.last_name' | translate }}</mat-label>
-          <mat-error class="error-wrapper">
+          <mat-error>
             <span>{{ 'registration.last_name_restriction' | translate }}</span>
           </mat-error>
           <input matInput formControlName="lastName" name="lastName" required />
         </mat-form-field>
       </div>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" hideRequiredMarker>
         <mat-label>{{ 'registration.email' | translate }}</mat-label>
-        <mat-error class="error-wrapper">
+        <mat-error>
           <span>{{ 'registration.email_hint' | translate }}</span>
         </mat-error>
         <input matInput formControlName="email" name="email" type="email" required />
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" hideRequiredMarker>
         <mat-label>{{ 'registration.password' | translate }}</mat-label>
         <mat-hint>{{ 'registration.password_restriction' | translate }}</mat-hint>
-        <mat-error class="error-wrapper">
+        <mat-error>
           <span>{{ 'registration.password_restriction' | translate }}</span>
         </mat-error>
         <input matInput formControlName="password" type="password" name="password" required />
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" hideRequiredMarker>
         <mat-label>{{ 'registration.confirm_password' | translate }}</mat-label>
         <mat-hint>{{ 'registration.password_restriction' | translate }}</mat-hint>
-        <mat-error class="error-wrapper">
+        <mat-error>
           <span>{{ 'registration.password_restriction' | translate }}</span>
         </mat-error>
         <input matInput formControlName="confirmPassword" type="password" name="confirmPassword" required />
@@ -69,7 +69,7 @@
         </span>
       </mat-checkbox>
 
-      <mat-error class="error-wrapper" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
+      <mat-error *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
         <span>{{ 'registration.password_dont_match' | translate }}</span>
       </mat-error>
     </form>
