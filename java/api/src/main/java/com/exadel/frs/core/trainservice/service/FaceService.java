@@ -19,7 +19,7 @@ package com.exadel.frs.core.trainservice.service;
 import static java.math.RoundingMode.HALF_UP;
 import static java.util.stream.Collectors.toSet;
 import com.exadel.frs.commonservice.entity.Face;
-import com.exadel.frs.commonservice.exception.FaceNotFoundException;
+import com.exadel.frs.commonservice.exception.SubjectNotFoundException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
@@ -104,7 +104,7 @@ public class FaceService {
                 .anyMatch(f -> f.getName().equalsIgnoreCase(oldSubject));
 
         if (!oldSubjectExists) {
-            throw new FaceNotFoundException(oldSubject);
+            throw new SubjectNotFoundException(oldSubject);
         }
 
         int updated = faceDao.updateSubject(apiKey, oldSubject, newSubject);

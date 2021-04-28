@@ -52,7 +52,8 @@ public enum CommonExceptionCode implements HttpExceptionCode {
     INCORRECT_ARGUMENT(36, BAD_REQUEST),
 
     FACES_SERVICE_EXCEPTION(41, INTERNAL_SERVER_ERROR),
-    FACE_NOT_FOUND(42, NOT_FOUND),
+    // subject == face name
+    SUBJECT_NOT_FOUND(42, NOT_FOUND),
 
     UNDEFINED(0, BAD_REQUEST);
 

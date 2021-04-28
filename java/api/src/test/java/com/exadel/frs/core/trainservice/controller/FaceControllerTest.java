@@ -239,7 +239,7 @@ class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .content(objectMapper.writeValueAsString(Map.of("subject", "new_name")))
         )
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.code", Matchers.is(CommonExceptionCode.FACE_NOT_FOUND.getCode())));
+                .andExpect(jsonPath("$.code", Matchers.is(CommonExceptionCode.SUBJECT_NOT_FOUND.getCode())));
     }
 
     @Test
