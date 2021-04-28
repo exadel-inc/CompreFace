@@ -35,12 +35,14 @@ public interface FacesRepository extends JpaRepository<Face, Long> {
     List<Face> deleteByApiKeyAndFaceName(String modelApiKey, String faceName);
 
     @Modifying
+    @Query("update Face set faceName =?3 where apiKey =?1 and faceName = ?2")
+    int updateSubject(String apiKey, String oldSubject, String newSubject);
+
+    @Modifying
     @Query("delete from Face where apiKey = ?1")
     void deleteFacesByApiKey(String modelApiKey);
 
     int countByApiKey(String modelApiKey);
 
     Optional<Face> findById(String id);
-
-    List<Face> findByIdIn(List<String> ids);
 }

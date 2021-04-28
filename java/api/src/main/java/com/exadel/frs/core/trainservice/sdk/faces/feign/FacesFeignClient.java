@@ -17,10 +17,12 @@
 package com.exadel.frs.core.trainservice.sdk.faces.feign;
 
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
+import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesRequest;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import org.springframework.http.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface FacesFeignClient {
@@ -36,6 +38,10 @@ public interface FacesFeignClient {
                     Double thresholdC,
             @Param(value = "face_plugins")
                     String facePlugins);
+
+    @RequestLine("POST /find_faces_base64")
+    @Headers("Content-Type: " + MediaType.APPLICATION_JSON_VALUE)
+    FindFacesResponse findFacesBase64(FindFacesRequest findFacesRequest);
 
     @RequestLine("GET /status")
     @Headers("Content-Type: multipart/form-data")

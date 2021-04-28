@@ -16,14 +16,13 @@
 
 package com.exadel.frs.commonservice.exception;
 
-import static com.exadel.frs.commonservice.handler.CommonExceptionCode.MODEL_NOT_FOUND;
-import static java.lang.String.format;
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.UNAVAILABLE_FILE_EXTENSION;
 
-public class ModelNotFoundException extends BasicException {
+public class InvalidBase64Exception extends BasicException {
 
-    private static final String MESSAGE = "%s service with API Key %s not found";
+    private static final String MESSAGE = "Provided value is not Base64";
 
-    public ModelNotFoundException(String modelId, String serviceName) {
-        super(MODEL_NOT_FOUND, format(MESSAGE, serviceName, modelId));
+    public InvalidBase64Exception() {
+        super(UNAVAILABLE_FILE_EXTENSION, MESSAGE);
     }
 }
