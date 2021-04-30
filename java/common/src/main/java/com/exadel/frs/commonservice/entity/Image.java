@@ -31,6 +31,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Accessors(chain = true)
 @Builder
+@Deprecated
 public class Image {
 
     public Image(Image image) {
@@ -46,6 +47,7 @@ public class Image {
     @Column(name = "raw_img_fs")
     private byte[] rawImg;
 
+    // seems useless
     @Column(name = "face_img_fs")
     private byte[] faceImg;
 

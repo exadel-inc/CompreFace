@@ -130,7 +130,13 @@ public class FaceService {
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null);
+        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(
+                file,
+                MAX_FACES_TO_RECOGNIZE,
+                detProbThreshold,
+                null
+        );
+
         List<FindFacesResult> result = findFacesResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {
@@ -142,7 +148,6 @@ public class FaceService {
                 .getEmbedding();
 
         double[] normalized = classifier.normalizeOne(Arrays.stream(embedding).mapToDouble(d -> d).toArray());
-
         List<Double> normalizedList = Arrays.stream(normalized).boxed().collect(Collectors.toList());
 
         Face.Embedding embeddingToSave = new Face.Embedding(normalizedList, findFacesResponse.getPluginsVersions().getCalculator());

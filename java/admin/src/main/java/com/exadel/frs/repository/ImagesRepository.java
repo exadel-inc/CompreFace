@@ -19,14 +19,12 @@ package com.exadel.frs.repository;
 import com.exadel.frs.commonservice.entity.Image;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
-@Transactional
 public interface ImagesRepository extends JpaRepository<Image, String> {
 
-    List<Image> findByFaceId(String modelApiKey);
+    List<Image> findByFaceId(String faceId);
 
 }

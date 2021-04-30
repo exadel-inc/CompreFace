@@ -37,6 +37,7 @@ import java.util.List;
 @Builder
 @EqualsAndHashCode(of = "id")
 @TypeDef(name = "jsonb", typeClass = JsonBinaryType.class)
+@Deprecated
 public class Face {
 
     public Face(Face face) {

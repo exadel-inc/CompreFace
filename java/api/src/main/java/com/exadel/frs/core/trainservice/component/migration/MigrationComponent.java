@@ -27,10 +27,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.CALCULATOR_PLUGIN;
 
@@ -43,6 +45,10 @@ public class MigrationComponent {
     private final FacesRepository facesRepository;
     private final ImagesRepository imagesRepository;
     private final FacesFeignClient feignClient;
+
+    private final JdbcTemplate jdbcTemplate;
+    private final SubjectMigrationService subjectMigrationService;
+
 
     @SneakyThrows
     @Async
@@ -59,6 +65,50 @@ public class MigrationComponent {
         } finally {
             migrationStatusStorage.finishMigration();
         }
+    }
+
+    @SneakyThrows
+    @Async
+    public void migrateSubject() {
+        try {
+            log.info("Migrating face/image --> subject/img...");
+            processSubjects();
+            log.info("Migration successfully finished");
+        } catch (Exception e) {
+            log.info("Migration finished with exception");
+            throw e;
+        } finally {
+            migrationStatusStorage.finishMigration();
+        }
+    }
+
+    private void processSubjects() {
+        final String sql = "select " +
+                "   f.id as face_id, " +
+                "   f.face_name, " +
+                "   f.api_key " +
+                "from " +
+                "   face f " +
+                "where " +
+                "   migrated = ?";
+
+
+        // just as wrapper to bypass immutable variables inside closure
+        final var counter = new AtomicInteger(0);
+
+        long start = System.currentTimeMillis();
+        jdbcTemplate.query(sql, new Object[]{false}, rs -> {
+            final var apiKey = rs.getString("api_key");
+            final var faceId = rs.getString("face_id");
+            final var faceName = rs.getString("face_name");
+
+            subjectMigrationService.doFaceMigrationInTransaction(apiKey, faceId, faceName);
+            counter.incrementAndGet();
+
+            log.debug("{} face(s) done", counter.get());
+        });
+
+        log.info("Total records: {} in {}ms", counter.get(), (System.currentTimeMillis() - start));
     }
 
     private void processFaces() {

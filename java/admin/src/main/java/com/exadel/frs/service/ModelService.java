@@ -20,7 +20,6 @@ import com.exadel.frs.commonservice.annotation.CollectStatistics;
 import com.exadel.frs.commonservice.entity.*;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.enums.StatisticsType;
-import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
 import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
@@ -34,7 +33,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
