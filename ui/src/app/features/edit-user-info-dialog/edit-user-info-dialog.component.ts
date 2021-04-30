@@ -21,7 +21,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 @Component({
   selector: 'app-edit-user-info-dialog',
   templateUrl: './edit-user-info-dialog.component.html',
-  styleUrls: ['./edit-user-info-dialog.component.scss'],
 })
 export class EditUserInfoDialogComponent implements OnInit {
   form: FormGroup;

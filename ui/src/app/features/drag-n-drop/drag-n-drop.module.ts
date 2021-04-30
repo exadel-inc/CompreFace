@@ -19,11 +19,11 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { DragNDropComponent } from './drag-n-drop.component';
 import { DragNDropDirective } from './drag-n-drop.directive';
-import {MatIconModule} from "@angular/material/icon";
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [DragNDropComponent, DragNDropDirective],
   exports: [DragNDropComponent],
-    imports: [CommonModule, TranslateModule, MatIconModule],
+  imports: [CommonModule, TranslateModule, MatIconModule],
 })
 export class DragNDropModule {}
