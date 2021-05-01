@@ -17,6 +17,7 @@ import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -26,11 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-import java.util.stream.Collectors;
-
-import static com.exadel.frs.core.trainservice.system.global.Constants.SOURCE_IMAGE;
-import static com.exadel.frs.core.trainservice.system.global.Constants.TARGET_IMAGE;
-import static java.math.RoundingMode.HALF_UP;
 
 @Service("verificationService")
 @RequiredArgsConstructor
