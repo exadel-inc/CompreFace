@@ -13,7 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'colors.scss';
+
+@import "colors.scss";
 @import "media.scss";
 @import "mixins.scss";
 
@@ -21,148 +22,106 @@ caption {
   display: none;
 }
 
-.mat-cell:first-child {
-  padding-right: 0;
-}
+.mat {
 
-th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
-  padding-left: 0;
-}
-
-tr.mat-row, tr.mat-footer-row {
-  height: 80px;
-}
-
-.content-column {
-  font-style: normal;
-  font-weight: normal;
-  letter-spacing: 0.02em;
-
-  .title-container {
-    display: flex;
-    align-items: center;
-
-    .title-item {
-      margin-right: 8px;
-    }
-
-    .name-title {
-      font-size: 18px;
-      line-height: 125%;
-      font-weight: 600;
-      color: rgba(34, 34, 34, 0.8);
-    }
-
-    .type-title {
-      font-size: 12px;
-      line-height: 18px;
-    }
-
-    .recognition {
-      color: $dark-blue;
-    }
-
-    .detection {
-      color: $orange;
-    }
-
-    .verify {
-      color: $purple;
-    }
+  &-cell {
+    padding: 16px 0;
   }
 
-  .api-key-label {
-    line-height: 125%;
-    font-size: 14px;
-    color: rgba(34, 34, 34, 0.45);
-  }
+  &-column {
 
-  .copy-icon {
-    color: $primary;
-  }
-}
+    &-content {
+      padding-right: 18px;
+      width: 100%;
 
-.special-test-button-color {
-  width: 58px;
-  min-width: 50px;
-  padding: 5px 16px;
-  border: none;
-  border-radius: 2px;
-  box-sizing: border-box ;
-  box-shadow: none;
-  text-transform: lowercase;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 14px ;
-  background-color: $green;
-  color: white;
-  cursor: pointer;
+      .content--wrapper {
+        display: flex;
+        align-items: center;
 
-  &:first-letter {
-    text-transform: capitalize;
-  }
-}
+        &_name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-weight: 600;
+          font-size: 18px;
+          line-height: 125%;
+        }
 
+        &_type {
+          margin-left: 8px;
+          font-size: 12px;
+          line-height: 18px;
+        }
 
-.mat-icon-button {
-  padding: 0;
-  min-width: 0;
-  width: 25px;
-}
+        &_key {
+          margin-top: 7px;
+          margin-right: 10px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          font-size: 14px;
+          line-height: 125%;
 
-.more-button {
-  .mat-icon-button {
-    @include md-icon-size()
-  }
-}
+          .title {
+            color: $light-gray;
+          }
 
-.key-container {
-  display: flex;
-  align-items: center;
-  .api-key-value {
-    margin-left: 5px;
-  }
+          .key {
+            color: $black;
+          }
+        }
 
-  .mat-icon-button {
-    @include lg-icon-size()
-  }
+        &_btn {
+          width: 12px;
+          height: 13px;
 
-  .copy-icon {
-    .material-icons {
-      font-size: 14px;
+          mat-icon {
+            display: flex;
+          }
+        }
+
+        .recognition {
+          color: $dark-blue;
+        }
+
+        .detection {
+          color: $orange;
+        }
+
+        .verify {
+          color: $purple;
+        }
+      }
     }
 
-    .mat-icon {
-      @include sm-icon-size();
+    &-test {
+      text-align: center;
+      width: 58px;
+
+      .test {
+
+        &--btn {
+          min-width: 0;
+          font-size: 12px;
+          line-height: 14px;
+          padding: 5px 14px;
+          border-radius: 2px;
+        }
+      }
     }
 
-    .mat-icon-button {
-      @include lg-icon-size()
-    }
-  }
-}
+    &-actions {
+      text-align: center;
+      width: 30px;
 
-@include mobile {
-  .api-key-value {
-    display: inline-block;
-    width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+      .actions--btn {
+        width: 30px;
 
-  .copy-icon {
-    .material-icons {
-      font-size: 24px !important;
-    }
-
-    .mat-icon {
-      @include lg-icon-size()
-    }
-
-    .mat-icon-button {
-      @include xl-icon-size();
+        mat-icon {
+          height: 18px;
+          width: 4px;
+        }
+      }
     }
   }
 }

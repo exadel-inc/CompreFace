@@ -15,11 +15,7 @@
   -->
 
 <table mat-table *ngIf="!isLoading" [dataSource]="data">
-  <caption>
-    {{
-      'applications.caption' | translate
-    }}
-  </caption>
+  <caption>{{ 'applications.caption' | translate }}</caption>
 
   <!-- Position Column -->
   <ng-container matColumnDef="Name">
@@ -31,9 +27,10 @@
       matTooltip="{{ element.name.length >= maxElementLength ? element.name : '' }}"
       [matTooltipDisabled]="disableToolTip(element.name.length >= maxElementLength ? element.name : '')"
     >
-      <div class="mat-subheading-1 application-name-label">{{ element.name | truncate: maxElementLength }}</div>
+      <div class="mat-subheading-1 application-name-label">{{ element.name }}</div>
       <div class="mat-body-2">
-        <span>{{ 'applications.owner' | translate }}: </span><span class="application-owner-label">{{ element.owner }}</span>
+        <span>{{ 'applications.owner' | translate }}: </span>
+        <span class="application-owner-label">{{ element.owner }}</span>
       </div>
     </td>
   </ng-container>

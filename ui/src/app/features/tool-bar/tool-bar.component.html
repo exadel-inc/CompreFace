@@ -29,7 +29,7 @@
         </button>
       </ng-container>
       <ng-container *ngIf="!isUserInfoAvailable">
-        <button class="btn" mat-flat-button [matMenuTriggerFor]="menu" (menuClosed)="changeArrowIcon()" (menuOpened)="changeArrowIcon()">
+        <button class="btn" mat-flat-button disableRipple [matMenuTriggerFor]="menu" (menuClosed)="changeArrowIcon()" (menuOpened)="changeArrowIcon()">
           <img class="btn--img" [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
           <span>{{ userName }}</span>
           <mat-icon class="btn--icon">{{ openMenu ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
