@@ -32,7 +32,6 @@ import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

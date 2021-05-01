@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.exception.IncorrectPredictionCountException;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.dto.FacePredictionResultDto;
 import com.exadel.frs.core.trainservice.dto.FaceSimilarityDto;

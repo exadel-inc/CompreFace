@@ -17,6 +17,7 @@
 package com.exadel.frs.commonservice.sdk.faces.feign;
 
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesRequest;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import feign.Headers;
 import feign.Param;

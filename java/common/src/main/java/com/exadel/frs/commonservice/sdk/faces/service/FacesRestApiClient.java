@@ -4,6 +4,7 @@ import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.exception.FacesServiceException;
 import com.exadel.frs.commonservice.sdk.faces.exception.NoFacesFoundException;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesRequest;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.FacesFeignClient;
 import com.exadel.frs.commonservice.system.global.Constants;
