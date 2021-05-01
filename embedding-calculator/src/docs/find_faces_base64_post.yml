@@ -1,18 +1,18 @@
 tags:
   - Core
-summary: 'Find faces in the given image and return their bounding boxes.'
+summary: 'Find faces in the given image in BASE64 format and return their bounding boxes.'
 description: 'Returns bounding boxes of detected faces on the image.'
-operationId: findFacesPost
+operationId: findFacesBase64Post
 consumes:
-  - multipart/form-data
+  - application/json
 produces:
   - application/json
 parameters:
-  - in: formData
+  - in: body
     name: file
     type: file
     required: 'true'
-    description: 'A picture with at least one face.'
+    description: 'A picture with at least one face in BASE64 format.'
   - in: query
     name: limit
     description: 'The limit of faces that you want recognized. Value of 0 represents no limit.'
