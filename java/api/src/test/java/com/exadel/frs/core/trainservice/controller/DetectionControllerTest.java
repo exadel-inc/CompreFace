@@ -26,13 +26,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.exadel.frs.commonservice.exception.BasicException;
 import com.exadel.frs.commonservice.exception.FileExtensionException;
-import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.exception.FacesServiceException;
-import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundException;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.exception.FacesServiceException;
+import com.exadel.frs.commonservice.sdk.faces.exception.NoFacesFoundException;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import java.util.stream.Stream;
 import lombok.val;
@@ -40,7 +39,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;

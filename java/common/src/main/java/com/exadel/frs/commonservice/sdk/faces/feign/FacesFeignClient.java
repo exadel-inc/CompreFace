@@ -14,10 +14,10 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.faces.feign;
+package com.exadel.frs.commonservice.sdk.faces.feign;
 
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;

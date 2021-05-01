@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
+package com.exadel.frs.commonservice.sdk.faces.feign.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;

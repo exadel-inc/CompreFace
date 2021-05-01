@@ -3,10 +3,10 @@ package com.exadel.frs.core.trainservice.controller;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.val;
 import org.junit.jupiter.api.Test;
@@ -57,6 +57,7 @@ public class VerifyControllerTest extends EmbeddedPostgreSQLTest {
                 .build();
 
         when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(predictor.verify(any(), any())).thenReturn(new double[] {100d});
 
         val firstFile = new MockMultipartFile("source_image", "test data".getBytes());
         val secondFile = new MockMultipartFile("target_image", "test data".getBytes());
