@@ -87,7 +87,7 @@ public class EuclideanDistanceClassifier implements Classifier {
             return (double) 0;
         }
 
-        val inputFace = normalize(create(input));
+        val inputFace = normalizeOne(create(input));
         
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
 
