@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.dto;
 
 import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
+import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -46,6 +47,8 @@ public class FaceVerification extends FaceProcessResponse {
     private Double[] embedding;
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
+    @JsonProperty("plugins_versions")
+    PluginsVersionsDto pluginsVersions;
 
     @Override
     public FaceVerification prepareResponse(ProcessImageParams processImageParams) {

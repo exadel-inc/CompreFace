@@ -16,6 +16,7 @@
 
 package com.exadel.frs.core.trainservice.service;
 
+import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
@@ -82,6 +83,7 @@ public class FaceService {
     public FaceResponseDto deleteFaceById(final String id, final String apiKey) {
         val collection = faceCacheProvider.getOrLoad(apiKey);
         val face = faceDao.deleteFaceById(id);
+
         if (face != null) {
             FaceBO faceBO = collection.removeFace(face.getId(), face.getFaceName());
             return faceMapper.toResponseDto(faceBO);
@@ -136,13 +138,18 @@ public class FaceService {
     public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {
         MultipartFile file = (MultipartFile) processImageParams.getFile();
 
-        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+        FindFacesResponse findFacesResponse = client.findFacesWithCalculator(file,
+                processImageParams.getLimit(),
+                processImageParams.getDetProbThreshold(),
+                processImageParams.getFacePlugins());
         if (findFacesResponse == null) {
             return Map.of("result", Collections.emptyList());
         }
 
         val results = new ArrayList<FaceVerification>();
         FaceCollection orLoad = faceCacheProvider.getOrLoad(processImageParams.getApiKey());
+        PluginsVersionsDto pluginsVersionsDto = faceMapper.toPluginVersionsDto(findFacesResponse.getPluginsVersions());
+
         for (val findResult : findFacesResponse.getResult()) {
             val prediction = classifierPredictor.verify(
                     processImageParams.getApiKey(),
@@ -152,22 +159,27 @@ public class FaceService {
                     String.valueOf(processImageParams.getAdditionalParams().get("image_id"))
             );
 
-            var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
-            inBoxProb = inBoxProb.setScale(5, HALF_UP);
-            findResult.getBox().setProbability(inBoxProb.doubleValue());
+            val inBoxProb = BigDecimal
+                    .valueOf(findResult.getBox().getProbability())
+                    .setScale(5, HALF_UP)
+                    .doubleValue();
+            findResult.getBox().setProbability(inBoxProb);
 
-            var pred = BigDecimal.valueOf(prediction);
-            pred = pred.setScale(5, HALF_UP);
+            val pred = BigDecimal
+                    .valueOf(prediction)
+                    .setScale(5, HALF_UP)
+                    .floatValue();
 
             FaceVerification faceVerification = FaceVerification
                     .builder()
                     .box(findResult.getBox())
-                    .similarity(pred.floatValue())
+                    .similarity(pred)
                     .embedding(findResult.getEmbedding())
                     .executionTime(findResult.getExecutionTime())
                     .age(findResult.getAge())
                     .gender(findResult.getGender())
                     .landmarks(findResult.getLandmarks())
+                    .pluginsVersions(pluginsVersionsDto)
                     .build();
 
             results.add(faceVerification.prepareResponse(processImageParams));
