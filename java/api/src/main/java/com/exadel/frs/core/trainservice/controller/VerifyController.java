@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.exadel.frs.commonservice.system.global.Constants.DET_PROB_THRESHOLD;
 import static com.exadel.frs.core.trainservice.service.FaceVerificationProcessServiceImpl.RESULT;
 import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 

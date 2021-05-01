@@ -1,6 +1,7 @@
 package com.exadel.frs.commonservice.sdk.faces.feign.dto;
 
-import com.exadel.frs.core.trainservice.system.global.Constants;
+
+import com.exadel.frs.commonservice.system.global.Constants;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;

@@ -19,5 +19,7 @@ package com.exadel.frs.commonservice.system.global;
 public class Constants {
 
     public static final String CALCULATOR_PLUGIN = "calculator";
+    public static final String DET_PROB_THRESHOLD = "det_prob_threshold";
+    public static final String FACE_PLUGINS = "face_plugins";
 
 }
