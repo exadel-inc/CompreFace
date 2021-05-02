@@ -15,8 +15,6 @@
  */
 
 @import "colors.scss";
-@import "media.scss";
-@import "mixins.scss";
 
 caption {
   display: none;
@@ -115,6 +113,9 @@ caption {
       width: 30px;
 
       .actions--btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         width: 30px;
 
         mat-icon {
