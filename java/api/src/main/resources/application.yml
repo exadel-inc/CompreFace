@@ -76,6 +76,10 @@ spring:
       enabled: true
     livereload:
       enabled: false
+#  datasource-pg:
+#    url: jdbc:postgresql://hrkv042.kh.exadel.ua:6432/frs
+#    username: postgres
+#    password: postgres
 
 swagger:
   info:
