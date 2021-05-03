@@ -18,13 +18,16 @@ package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.dto.RecognizeRequest;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import java.util.Collections;
 
@@ -39,7 +42,7 @@ public class RecognizeController {
 
     private final FaceProcessService recognitionService;
 
-    @PostMapping(value = "/recognition/recognize")
+    @PostMapping(value = "/recognition/recognize", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FacesRecognitionResponseDto recognize(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
@@ -68,6 +71,26 @@ public class RecognizeController {
                 .status(status)
                 .additionalParams(Collections.singletonMap(PREDICTION_COUNT, predictionCount))
                 .build();
+
+        return (FacesRecognitionResponseDto) recognitionService.processImage(processImageParams);
+    }
+
+    @PostMapping(value = "/recognition/recognize", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public FacesRecognitionResponseDto recognizeBase64(
+            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @RequestBody @Valid RecognizeRequest recognizeRequest) {
+
+        ProcessImageParams processImageParams = ProcessImageParams
+                .builder()
+                .apiKey(apiKey)
+                .imageBase64(recognizeRequest.getImageAsBase64())
+                .limit(recognizeRequest.getLimit())
+                .detProbThreshold(recognizeRequest.getDetProbThreshold())
+                .facePlugins(recognizeRequest.getFacePlugins())
+                .status(recognizeRequest.getStatus())
+                .additionalParams(Collections.singletonMap(PREDICTION_COUNT, recognizeRequest.getPredictionCount()))
+                .build();
+
         return (FacesRecognitionResponseDto) recognitionService.processImage(processImageParams);
     }
 }

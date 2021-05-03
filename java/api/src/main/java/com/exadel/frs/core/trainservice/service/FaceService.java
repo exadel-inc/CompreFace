@@ -19,6 +19,8 @@ package com.exadel.frs.core.trainservice.service;
 import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
@@ -30,9 +32,6 @@ import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -42,6 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.math.RoundingMode.HALF_UP;
@@ -102,12 +102,41 @@ public class FaceService {
     }
 
     public FaceResponseDto findAndSaveFace(
+            final String base64photo,
+            final String faceName,
+            final Double detProbThreshold,
+            final String modelKey
+    ) throws IOException {
+        FindFacesResponse findFacesResponse = facesApiClient.findFacesBase64WithCalculator(
+                base64photo,
+                MAX_FACES_TO_RECOGNIZE,
+                detProbThreshold,
+                null
+        );
+
+        return findAndSaveFace(Base64.getDecoder().decode(base64photo), faceName, modelKey, findFacesResponse);
+    }
+
+    public FaceResponseDto findAndSaveFace(
             final MultipartFile file,
             final String faceName,
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null);
+        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(
+                file,
+                MAX_FACES_TO_RECOGNIZE,
+                detProbThreshold,
+                null
+        );
+
+        return findAndSaveFace(file.getBytes(), faceName, modelKey, findFacesResponse);
+    }
+
+    private FaceResponseDto findAndSaveFace(byte[] content,
+                                            String faceName,
+                                            String modelKey,
+                                            FindFacesResponse findFacesResponse) throws IOException {
         List<FindFacesResult> result = findFacesResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {
@@ -122,24 +151,24 @@ public class FaceService {
 
         List<Double> normalizedList = Arrays.stream(normalized).boxed().collect(Collectors.toList());
 
-        Face.Embedding embeddingToSave = new Face.Embedding(normalizedList, findFacesResponse.getPluginsVersions().getCalculator());
+        var embeddingToSave = new Face.Embedding(
+                normalizedList,
+                findFacesResponse.getPluginsVersions().getCalculator()
+        );
 
         FaceBO faceBO = faceCacheProvider
                 .getOrLoad(modelKey)
-                .addFace(faceDao.addNewFace(embeddingToSave, file, faceName, modelKey));
-        FaceResponseDto faceResponseDto = faceMapper.toResponseDto(faceBO);
-        if (faceResponseDto == null) {
-            faceResponseDto = new FaceResponseDto();
-        }
+                .addFace(faceDao.addNewFace(embeddingToSave, content, faceName, modelKey));
 
-        return faceResponseDto;
+        return Optional.ofNullable(faceMapper.toResponseDto(faceBO))
+                .orElse(new FaceResponseDto());
     }
 
     public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {
         FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
-           findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         } else {
             findFacesResponse = client.findFacesBase64WithCalculator(processImageParams.getImageBase64(), processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         }

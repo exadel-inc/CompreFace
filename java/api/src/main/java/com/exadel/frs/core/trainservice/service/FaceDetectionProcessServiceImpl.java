@@ -23,8 +23,8 @@ public class FaceDetectionProcessServiceImpl implements FaceProcessService {
         Integer limit = processImageParams.getLimit();
         Double detProbThreshold = processImageParams.getDetProbThreshold();
         String facePlugins = processImageParams.getFacePlugins();
-        FindFacesResponse findFacesResponse;
 
+        FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
             imageExtensionValidator.validate(file);
