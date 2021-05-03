@@ -25,7 +25,6 @@
       <div class="user--role mat-body-2">{{ element.role | titlecase }}</div>
     </td>
   </ng-container>
-
   <ng-container matColumnDef="role">
     <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.role' | translate }}</th>
     <td mat-cell *matCellDef="let element">
@@ -34,7 +33,6 @@
       </button>
     </td>
   </ng-container>
-
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef scope="col"></th>
     <td mat-cell *matCellDef="let element">
@@ -48,17 +46,15 @@
         </button>
       </ng-template>
       <ng-template #notActive>
-        <button class="custom-btn-icon disabled">
+        <button class="custom-btn-icon disabled" disabled>
           <mat-icon svgIcon="trash_not_active"></mat-icon>
         </button>
       </ng-template>
     </td>
   </ng-container>
-
   <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-
 <ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && createMessage && !isLoading">
   <div class="create-new-message">
     <mat-icon svgIcon="info_new" inline="true"></mat-icon>
