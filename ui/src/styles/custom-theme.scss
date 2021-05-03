@@ -261,6 +261,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
     .mat-dialog {
       &-container {
+        @include mat-elevation(0);
         border-radius: 12px;
         padding: 32px;
       }
@@ -276,8 +277,17 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
         }
       }
 
+      &-title {
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
       &-actions {
         justify-content: space-between;
+
+        .color-red {
+          color: mat-color($warn_);
+        }
 
         button {
           margin: 0 !important;
@@ -286,6 +296,10 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
         }
       }
     }
+  }
+
+  .cdk-overlay-backdrop {
+    background-color: rgba(34, 34, 34, 0.45);
   }
 }
 

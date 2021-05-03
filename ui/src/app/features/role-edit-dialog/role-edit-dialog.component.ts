@@ -20,7 +20,6 @@ import { UserRole } from '../../data/interfaces/user-role';
 @Component({
   selector: 'app-create-dialog',
   templateUrl: './role-edit-dialog.component.html',
-  styleUrls: ['./role-edit-dialog.component.scss'],
 })
 export class RoleEditDialogComponent {
   constructor(public dialogRef: MatDialogRef<RoleEditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
