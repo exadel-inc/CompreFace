@@ -185,7 +185,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
-    padding-left: 4px !important;
+    padding: 16px 8px 16px 4px !important;
   }
 
   .mat-input-wrapper {
@@ -299,7 +299,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .cdk-overlay-backdrop {
-    background-color: rgba(34, 34, 34, 0.45);
+    background-color: $light-gray;
   }
 }
 

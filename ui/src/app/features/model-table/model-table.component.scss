@@ -15,16 +15,13 @@
  */
 
 @import "colors.scss";
+@import "mixins.scss";
 
 caption {
   display: none;
 }
 
 .mat {
-
-  &-cell {
-    padding: 16px 0;
-  }
 
   &-column {
 
@@ -35,6 +32,10 @@ caption {
       .content--wrapper {
         display: flex;
         align-items: center;
+
+        &:nth-child(2n) {
+          margin-top: 7px;
+        }
 
         &_name {
           white-space: nowrap;
@@ -52,7 +53,6 @@ caption {
         }
 
         &_key {
-          margin-top: 7px;
           margin-right: 10px;
           white-space: nowrap;
           overflow: hidden;
@@ -75,6 +75,7 @@ caption {
 
           mat-icon {
             display: flex;
+            @include sm-icon-size();
           }
         }
 
@@ -119,8 +120,7 @@ caption {
         width: 30px;
 
         mat-icon {
-          height: 18px;
-          width: 4px;
+          @include md-icon-size();
         }
       }
     }
