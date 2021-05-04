@@ -14,15 +14,15 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="application-header">
+<div class="app-header">
   <app-spinner *ngIf="isLoading"></app-spinner>
-  <mat-card class="application-header_left-coll">
+  <mat-card>
     <div *ngIf="app">
-      <div class="name-wrapper">
-        <div class="name-item" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxHeaderLinkLength">
-          <h1 class="mat-headline">{{ app.name | truncate: maxHeaderLinkLength }}</h1>
+      <div class="app-header--wrapper">
+        <div class="app-header--wrapper_name" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxHeaderLinkLength">
+          <h1 class="mat-headline">{{ app.name }}</h1>
         </div>
-        <div *ngIf="!isLoading && userRole">
+        <div class="app-header--wrapper_buttons" *ngIf="!isLoading && userRole">
           <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="edit" (click)="onRename(app.name)"></mat-icon>
           <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="trash" (click)="onDelete(app.name)"></mat-icon>
         </div>
