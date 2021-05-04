@@ -39,9 +39,13 @@ public interface FacesFeignClient {
             @Param(value = "face_plugins")
                     String facePlugins);
 
-    @RequestLine("POST /find_faces_base64")
+    @RequestLine("POST /find_faces_base64?limit={limit}&det_prob_threshold={threshold}&face_plugins={plugins}")
     @Headers("Content-Type: " + MediaType.APPLICATION_JSON_VALUE)
-    FindFacesResponse findFacesBase64(FindFacesRequest findFacesRequest);
+    FindFacesResponse findFacesBase64(
+            FindFacesRequest request,
+            @Param(value = "limit") Integer faceLimit,
+            @Param(value = "threshold") Double thresholdC,
+            @Param(value = "plugins") String facePlugins);
 
     @RequestLine("GET /status")
     @Headers("Content-Type: multipart/form-data")

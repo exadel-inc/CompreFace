@@ -139,7 +139,8 @@ public class FaceController {
             @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status
     ) {
         imageValidator.validate(file);
-        ProcessImageParams processImageParams = ProcessImageParams.builder()
+
+        var processImageParams = ProcessImageParams.builder()
                 .additionalParams(Map.of(IMAGE_ID, image_id))
                 .apiKey(apiKey)
                 .detProbThreshold(detProbThreshold)
@@ -148,6 +149,7 @@ public class FaceController {
                 .limit(limit)
                 .status(status)
                 .build();
+
         return faceService.verifyFace(processImageParams);
     }
 
@@ -159,7 +161,7 @@ public class FaceController {
 
         imageValidator.validateBase64(verifyRequest.getImageAsBase64());
 
-        ProcessImageParams processImageParams = ProcessImageParams.builder()
+        var processImageParams = ProcessImageParams.builder()
                 .additionalParams(Map.of(IMAGE_ID, image_id))
                 .apiKey(apiKey)
                 .detProbThreshold(verifyRequest.getDetProbThreshold())
@@ -168,6 +170,7 @@ public class FaceController {
                 .limit(verifyRequest.getLimit())
                 .status(verifyRequest.getStatus())
                 .build();
+
         return faceService.verifyFace(processImageParams);
     }
 }
