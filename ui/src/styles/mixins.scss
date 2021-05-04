@@ -86,4 +86,10 @@
   line-height: $size;
 }
 
+@mixin not-break-string() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 

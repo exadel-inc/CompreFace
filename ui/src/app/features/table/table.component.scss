@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 @import "colors.scss";
+@import "mixins.scss";
 
 thead, caption {
   display: none;
@@ -34,15 +35,11 @@ thead, caption {
       .app {
 
         &--title {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include not-break-string();
         }
 
         &--name {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include not-break-string();
 
           &_label {
             color: $light-gray;

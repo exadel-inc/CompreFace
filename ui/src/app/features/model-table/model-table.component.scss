@@ -33,9 +33,7 @@ caption {
         align-items: center;
 
         &_name {
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include not-break-string();
         }
 
         &_type {
@@ -44,9 +42,7 @@ caption {
 
         &_key {
           margin-right: 10px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          @include not-break-string();
 
           .title {
             color: $light-gray;
@@ -61,7 +57,7 @@ caption {
           width: 12px;
           height: 13px;
 
-          mat-icon {
+          .mat-icon {
             display: flex;
             @include sm-icon-size();
           }
