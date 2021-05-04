@@ -111,16 +111,24 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     }
   }
 
-  .mat-headline, .mat-title{
+  .mat-headline,
+  .mat-title{
     color: $black;
   }
 
-  .mat-subheading-2, .mat-subheading-1, .mat-body-1, .mat-body-2{
+  .mat-subheading-1,
+  .mat-subheading-2,
+  .mat-body-1,
+  .mat-body-2{
     color: $dark-gray;
   }
 
+  .mat-subheading-1 {
+    margin-bottom: 7px;
+  }
+
    .mat-caption {
-    color: $pale-gray;
+     color: $pale-gray;
   }
 
   .mat-menu {
@@ -184,7 +192,9 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     padding: 24px !important;
   }
 
-  th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type,
+  td.mat-footer-cell:first-of-type {
     padding: 16px 8px 16px 4px !important;
   }
 
@@ -198,7 +208,9 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     }
   }
 
-  th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type,
+  td.mat-footer-cell:last-of-type {
     padding-right: 0!important;
   }
 

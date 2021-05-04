@@ -251,20 +251,3 @@ form.search-input {
     margin-left: 5px;
   }
 }
-
-.custom-btn-icon {
-  padding: 0;
-  vertical-align: middle;
-  border: none;
-  background: transparent;
-  cursor: pointer;
-
-  &.disabled {
-    cursor: default;
-  }
-
-  mat-icon {
-    width: 20px;
-    height: 20px;
-  }
-}

@@ -13,40 +13,46 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'colors.scss';
+@import "colors.scss";
 
-:host {
-  min-height: 425px;
-
-  table {
-    width: 100%;
-  }
-
-  .mat-row {
-    cursor: pointer;
-  }
-}
-
-thead {
+thead, caption {
   display: none;
 }
 
-caption {
-  display: none;
-}
+.mat {
 
-tr.mat-header-row {
-  display: none !important;
-}
+  &-header-row {
+    display: none;
+  }
 
-tr.mat-row {
-  height: 75px !important;
-}
+  &-column {
 
-.application-name-label {
-  margin: 0 0 4px 0;
-}
+    &-name {
+      overflow: hidden;
+      cursor: pointer;
 
-.application-owner-label {
-  color: $black;
+      .app {
+
+        &--title {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        &--name {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+
+          &_label {
+            color: $light-gray;
+          }
+
+          &_owner {
+            color: $black;
+          }
+        }
+      }
+    }
+  }
 }

@@ -18,7 +18,7 @@
   <caption>{{ 'models.caption' | translate }}</caption>
   <ng-container matColumnDef="content">
     <td mat-cell *matCellDef="let element">
-      <div class="content--wrapper">
+      <div class="content--wrapper mat-subheading-1">
         <span
           class="content--wrapper_name"
           matTooltip="{{ element.name }}"
@@ -26,7 +26,7 @@
         >
           {{ element.name }}
         </span>
-        <span class="content--wrapper_type" [ngClass]="element.type | lowercase">
+        <span class="content--wrapper_type mat-caption" [ngClass]="element.type | lowercase">
           {{ getKeyType(element.type) | titlecase }}
         </span>
       </div>

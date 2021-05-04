@@ -26,30 +26,20 @@ caption {
   &-column {
 
     &-content {
-      padding-right: 18px;
       width: 100%;
 
       .content--wrapper {
         display: flex;
         align-items: center;
 
-        &:nth-child(2n) {
-          margin-top: 7px;
-        }
-
         &_name {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          font-weight: 600;
-          font-size: 18px;
-          line-height: 125%;
         }
 
         &_type {
           margin-left: 8px;
-          font-size: 12px;
-          line-height: 18px;
         }
 
         &_key {
@@ -57,8 +47,6 @@ caption {
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          font-size: 14px;
-          line-height: 125%;
 
           .title {
             color: $light-gray;
@@ -119,7 +107,7 @@ caption {
         justify-content: center;
         width: 30px;
 
-        mat-icon {
+        .mat-icon {
           @include md-icon-size();
         }
       }
