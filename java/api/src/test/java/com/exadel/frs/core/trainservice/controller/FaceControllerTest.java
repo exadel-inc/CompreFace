@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.commonservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
@@ -33,6 +34,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -40,6 +43,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 import java.util.Map;
@@ -50,11 +54,10 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static java.util.stream.Collectors.toList;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.hamcrest.Matchers.*;
 
 @IntegrationTest
 @AutoConfigureMockMvc
@@ -241,8 +244,9 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .andExpect(content().string(expectedContent));
     }
 
-    @Test
-    void verifyFaces() throws Exception {
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void verifyFaces(boolean status) throws Exception {
         val faceA = makeFace("A", API_KEY);
         val faceB = makeFace("B", API_KEY);
         val faceC = makeFace("C", API_KEY);
@@ -259,22 +263,29 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
                         .box(new FacesBox().setProbability(1D))
                         .build()
                 ))
+                .pluginsVersions(PluginsVersions.builder().calculator("fake_calc").detector("detector").build())
                 .build();
 
-        when(client.findFacesWithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(client.findFacesWithCalculator(any(), any(), any(), anyString())).thenReturn(findFacesResponse);
         when(predictor.verify(any(), any(), any())).thenReturn(eq(0.0));
 
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
 
-        mockMvc.perform(
+        ResultActions result = mockMvc.perform(
                 multipart(API_V1 + "/recognition/faces/" + faceA.getId() + "/verify")
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
+                        .param("status", Boolean.toString(status))
         ).andExpect(status().isOk());
+
+        if (status) {
+            result.andExpect(jsonPath("$.result[0].plugins_versions.calculator", is("fake_calc")));
+        } else {
+            result.andExpect(jsonPath("$.result[0].plugins_versions").doesNotExist());
+        }
 
         verify(imageValidator).validate(any());
         verify(client).findFacesWithCalculator(any(), any(), any(), anyString());
-        verifyNoMoreInteractions(imageValidator, client, predictor);
     }
 
     @Test

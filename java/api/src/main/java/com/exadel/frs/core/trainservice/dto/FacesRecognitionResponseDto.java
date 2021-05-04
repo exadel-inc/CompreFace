@@ -47,7 +47,7 @@ public class FacesRecognitionResponseDto extends FaceProcessResponse {
             this.getResult().forEach(r -> r.setEmbedding(null));
         }
 
-        if (!processImageParams.getStatus()) {
+        if (Boolean.FALSE.equals(processImageParams.getStatus())) {
             this.setPluginsVersions(null);
             this.getResult().forEach(r -> r.setExecutionTime(null));
         }

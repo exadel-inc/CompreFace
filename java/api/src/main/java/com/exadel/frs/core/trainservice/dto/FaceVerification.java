@@ -57,7 +57,8 @@ public class FaceVerification extends FaceProcessResponse {
             this.setEmbedding(null);
         }
 
-        if (!processImageParams.getStatus()) {
+        if (Boolean.FALSE.equals(processImageParams.getStatus())) {
+            this.setPluginsVersions(null);
             this.setExecutionTime(null);
         }
 
