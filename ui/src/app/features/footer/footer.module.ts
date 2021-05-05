@@ -19,10 +19,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { FooterComponent } from './footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [FooterComponent],
   exports: [FooterComponent],
-  imports: [CommonModule, MatToolbarModule, MatButtonModule],
+  imports: [CommonModule, MatToolbarModule, MatButtonModule, TranslateModule],
 })
 export class FooterModule {}

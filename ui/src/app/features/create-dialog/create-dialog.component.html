@@ -18,19 +18,12 @@
 <div mat-dialog-content>
   <mat-form-field appearance="outline">
     <mat-label>{{ 'applications.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="data.entityName" placeholder="{{ 'applications.placeholder' | translate }}" />
+    <input matInput [(ngModel)]="data.entityName" />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate | titlecase }}</button>
-  <button
-    class="button-create"
-    mat-raised-button
-    color="primary"
-    [mat-dialog-close]="data.entityName"
-    cdkFocusInitial
-    [disabled]="!data.entityName"
-  >
+  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate | titlecase }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data.entityName" [disabled]="!data.entityName">
     {{ 'common.capital.create' | translate | titlecase }}
   </button>
 </div>

@@ -1,19 +1,20 @@
 {
   "common": {
     "capital": {
-      "change": "CHANGE",
-      "create": "CREATE",
-      "clone": "CLONE",
-      "cancel": "CANCEL",
-      "save": "SAVE",
-      "yes": "YES",
-      "add": "ADD",
-      "rename": "RENAME",
-      "edit": "EDIT",
-      "delete": "DELETE",
-      "ok": "OK"
+      "change": "Change",
+      "create": "Create",
+      "clone": "Clone",
+      "cancel": "Cancel",
+      "save": "Save",
+      "yes": "Yes",
+      "add": "Add",
+      "rename": "Rename",
+      "edit": "Edit",
+      "delete": "Delete",
+      "ok": "Ok"
     },
     "name": "Name",
+    "email": "Email",
     "type": "Type",
     "create": "Create",
     "unknown_error": "Sorry, something went wrong"
@@ -29,7 +30,7 @@
     "login": "Login"
   },
   "registration": {
-    "title": "Sign up",
+    "title": "Sign Up",
     "first_name": "First Name",
     "last_name": "Last Name",
     "email": "Email",
@@ -74,16 +75,16 @@
     },
     "header": {
       "title": "Application",
-      "edit": "EDIT",
-      "delete": "DELETE",
+      "edit": "Edit",
+      "delete": "Delete",
       "delete_dialog": {
-        "title": "Delete application",
+        "title": "Application Delete",
         "warn_information": "and all related data will be deleted",
         "confirmation_question": "Are you sure"
       },
       "edit_dialog": {
         "title": "Edit application",
-        "rename": "RENAME",
+        "rename": "Rename",
         "name": "Name"
       }
     },
@@ -104,18 +105,18 @@
       "name": "Name"
     },
     "select_menu": {
-      "edit": "EDIT",
-      "clone": "CLONE",
-      "delete": "DELETE",
-      "test": "TEST"
+      "edit": "Edit",
+      "clone": "Clone",
+      "delete": "Delete",
+      "test": "Test"
     },
     "edit_dialog": {
-      "title": "EDIT MODEL",
+      "title": "Edit Model",
       "name": "Name",
-      "rename": "RENAME"
+      "rename": "Rename"
     },
     "delete_dialog": {
-      "title": "Delete model",
+      "title": "Model Delete",
       "warn_information": "and all related data will be deleted.",
       "confirmation_question": "Are you sure?"
     },
@@ -137,8 +138,8 @@
   },
   "org_users": {
     "delete_dialog": {
-      "title": "Delete {{type}}",
-      "confirmation_question": "Are you sure you want to remove user {{name}} {{lastName}}?",
+      "title": "{{type}} Delete",
+      "confirmation_question": "Are you sure you want to delete {{name}} {{lastName}} from your project?",
       "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
       "warn_hint_anyway": "You can delete him anyway.",
       "warn_hint_owner": "In this case you will become the OWNER of these applications.",
@@ -151,8 +152,11 @@
   },
   "app_users": {
     "add_users_info": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
+    "add_user_dialog": {
+      "email_hint": "Email is required"
+    },
     "delete_dialog": {
-      "title": "Delete user",
+      "title": "User Delete",
       "confirmation_question": "Are you sure you want to remove user {{name}} from {{application}}?"
     }
   },

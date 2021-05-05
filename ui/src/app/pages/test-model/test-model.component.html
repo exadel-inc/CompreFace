@@ -14,15 +14,12 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="container">
-  <div class="header-container">
+<div class="test-model">
+  <div class="container">
     <app-breadcrumbs-container></app-breadcrumbs-container>
-  </div>
-
-  <mat-card>
     <ng-container [ngSwitch]="type">
       <app-face-verification-container *ngSwitchCase="verification"></app-face-verification-container>
       <app-face-recognition-container *ngSwitchDefault [type]="type"></app-face-recognition-container>
     </ng-container>
-  </mat-card>
+  </div>
 </div>

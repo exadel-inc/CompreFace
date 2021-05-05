@@ -22,16 +22,16 @@
   </mat-card-header>
   <mat-card-content>
     <form class="form-card--form" [formGroup]="form" (ngSubmit)="onSubmit()" id="loginForm">
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" hideRequiredMarker>
         <mat-label>{{ 'login.email' | translate }}</mat-label>
-        <mat-error class="error-wrapper">
+        <mat-error>
           <span>{{ 'login.email_hint' | translate }}</span>
         </mat-error>
         <input matInput formControlName="email" name="email" required />
       </mat-form-field>
-      <mat-form-field appearance="outline">
+      <mat-form-field appearance="outline" hideRequiredMarker>
         <mat-label>{{ 'login.password' | translate }}</mat-label>
-        <mat-error class="error-wrapper">
+        <mat-error>
           <span>{{ 'login.password_hint' | translate }}</span>
         </mat-error>
         <input matInput formControlName="password" type="password" name="password" required />

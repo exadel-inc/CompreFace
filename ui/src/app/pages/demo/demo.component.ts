@@ -23,7 +23,6 @@ import { ServiceTypes } from '../../data/enums/service-types.enum';
 @Component({
   selector: 'app-demo',
   templateUrl: './demo.component.html',
-  styleUrls: ['./demo.component.scss'],
 })
 export class DemoComponent implements OnInit {
   isPending$: Observable<any>;

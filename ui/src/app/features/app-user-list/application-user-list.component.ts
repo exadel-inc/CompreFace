@@ -83,9 +83,7 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
   onDelete(deletion: UserDeletion): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
-      width: '400px',
-      disableClose: true,
-      hasBackdrop: true,
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('users.user'),
         entityName: `${deletion.userToDelete.firstName} ${deletion.userToDelete.lastName}`,
@@ -109,12 +107,10 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
 
   onInviteUser(): void {
     const dialog = this.dialog.open(InviteDialogComponent, {
-      disableClose: true,
-      hasBackdrop: true,
+      panelClass: 'custom-mat-dialog',
       data: {
         availableRoles: this.availableRoles,
         options$: this.availableEmails$,
-        actionType: 'add',
       },
     });
 

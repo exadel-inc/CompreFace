@@ -123,9 +123,15 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     color: $pale-gray;
   }
 
-  .mat-menu-content {
-    .mat-menu-item {
-      color: mat-color($warn_);
+  .mat-menu {
+    &-content {
+      .mat-menu-item {
+        color: mat-color($warn_);
+      }
+    }
+
+    &-panel {
+      @include mat-elevation(0);
     }
   }
 
@@ -183,9 +189,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .mat-input-wrapper {
-
     .mat-form-field {
-
       width: 170px !important;
 
       @include mobile-portrait {
@@ -194,25 +198,108 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     }
   }
 
-  .mat-dialog-container{
-    border-radius: 12px !important;
-    min-width: 420px;
-    padding: 32px !important;
-  }
-
   th.mat-header-cell:last-of-type, td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type {
     padding-right: 0!important;
   }
 
-  .mat-checkbox-layout {
-    white-space: normal !important;
-    text-align: left;
+  .mat-checkbox {
+    &-layout {
+      white-space: normal !important;
+      text-align: left;
+    }
+
+    &-label {
+      margin: 12px 0;
+      font-size: 12px;
+      line-height: 13.5px;
+    }
   }
 
-  .mat-checkbox-label {
-    margin: 12px 0;
-    font-size: 12px;
-    line-height: 13.5px;
+  .mat-expansion {
+    &-indicator::after {
+      border-width: 0 3px 3px 0 !important;
+      padding: 4px !important;
+      color: $black;
+    }
+
+    &-panel {
+      border-radius: 12px !important;
+
+      &-header {
+        height: 60px;
+        font-weight: 600;
+        font-size: 22px;
+        color: $black;
+      }
+
+      &-body {
+        font-size: 14px;
+        color: $light-gray;
+
+        .content {
+          height: 450px;
+          overflow: auto;
+
+          pre {
+            margin: 0;
+          }
+        }
+      }
+
+      &:not([class*=mat-elevation-z]) {
+        @include mat-elevation(0);
+      }
+    }
+  }
+
+  .mat-form-field {
+    line-height: 1.35;
+  }
+
+  .custom-mat-dialog {
+    width: 420px;
+
+    .mat-dialog {
+      &-container {
+        @include mat-elevation(0);
+        border-radius: 12px;
+        padding: 32px;
+      }
+
+      &-content {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        .mat-form-field {
+          width: 100%;
+        }
+      }
+
+      &-title {
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      &-actions {
+        justify-content: space-between;
+
+        .color-red {
+          color: mat-color($warn_);
+        }
+
+        button {
+          margin: 0 !important;
+          padding: 12px 32px;
+          line-height: 16px;
+        }
+      }
+    }
+  }
+
+  .cdk-overlay-backdrop {
+    background-color: rgba(34, 34, 34, 0.45);
   }
 }
 

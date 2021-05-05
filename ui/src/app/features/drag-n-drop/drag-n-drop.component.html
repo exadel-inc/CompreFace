@@ -14,14 +14,15 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="dropzone" appDnd (fileDropped)="onFileDropped($event)">
-  <div class="dropzone-icon">
-    <img src="../../../assets/dnd/tmp-upload-file.svg" alt="" />
+<div class="dropzone mat-body-1" appDnd (fileDropped)="onFileDropped($event)">
+  <div class="dropzone--container">
+    <div class="icon">
+      <mat-icon svgIcon="upload" inline="true"></mat-icon>
+    </div>
+    <div class="content">
+      <div class="title">{{ title }}</div>
+      <div class="label">{{ label }}</div>
+    </div>
+    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
   </div>
-  <div class="dropzone-content">
-    <h4>{{ title }}</h4>
-    <label>{{ label }}</label>
-  </div>
-
-  <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
 </div>

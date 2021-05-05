@@ -14,47 +14,42 @@
  * permissions and limitations under the License.
  */
 
-@import "src/styles/colors";
+@import "media.scss";
 
-.result-container {
-  padding: 25px 50px;
-  position: relative;
-  min-height: 350px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.result {
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  grid-gap: 20px;
+  grid-template-areas:"process-img process-img" "request response";
 
-  .result-image {
-    display: flex;
-    justify-content: center;
-    flex-shrink: 1;
-    width: 100%;
-    canvas {
-      display: inline;
-      min-width: 0;
-      min-height: 0;
-    }
+  @include mobile-portrait {
+    grid-template-columns: 1fr;
+    grid-template-areas:"process-img" "request" "response";
   }
 
-  .result-sections {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding-bottom: 10px;
+  @include mobile {
+    grid-template-columns: 1fr;
+    grid-template-areas:"process-img" "request" "response";
+  }
 
-    .result-section-image {
-      flex-grow: 1;
-    }
+  .process-img {
+    grid-area: process-img;
+    text-align: center;
+  }
 
-    .result-textarea {
-      border: none;
-      resize: none;
-      width: 100%;
-      background-color: $white;
-    }
+  .request {
+    grid-area: request;
+    min-width: 100%;
+  }
 
-    mat-expansion-panel {
-      margin: 10px;
-    }
+  .response {
+    grid-area: response;
+    min-width: 100%;
+  }
+
+  canvas {
+    max-width: 100%;
   }
 }

@@ -24,6 +24,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 import { InviteDialogComponent } from './invite-dialog.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('InviteDialogComponent', () => {
   let component: InviteDialogComponent;
@@ -43,6 +44,7 @@ describe('InviteDialogComponent', () => {
           MatButtonModule,
           MatAutocompleteModule,
           NoopAnimationsModule,
+          TranslateModule.forRoot(),
         ],
         providers: [
           {

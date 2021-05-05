@@ -23,7 +23,6 @@ import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 @Component({
   selector: 'app-invite-dialog',
   templateUrl: './invite-dialog.component.html',
-  styleUrls: ['./invite-dialog.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class InviteDialogComponent implements OnInit {

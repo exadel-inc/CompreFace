@@ -14,11 +14,7 @@
  * permissions and limitations under the License.
  */
 
-@import "src/styles/colors";
-
-.face-result {
-  margin-bottom: 20px;
-}
+@import 'colors.scss';
 
 .recognition-loading {
   display: flex;

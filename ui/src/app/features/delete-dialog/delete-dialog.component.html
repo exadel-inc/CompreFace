@@ -14,8 +14,8 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{ 'org_users.delete_dialog.title' | translate: { type: data.entityType } }}</h1>
-<div mat-dialog-content>
+<h1 mat-dialog-title style="text-align: center">{{ 'org_users.delete_dialog.title' | translate: { type: data.entityType } }}</h1>
+<div class="mat-body-1" mat-dialog-content style="text-align: center">
   <ng-container [ngSwitch]="data.entityType.toLowerCase()">
     <ng-container *ngSwitchCase="'user'">
       <p *ngIf="!data.isSystemUser; else notFromSystem">
@@ -69,6 +69,6 @@
   </ng-container>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-flat-button [mat-dialog-close]="false">{{ 'common.capital.cancel' | translate }}</button>
-  <button class="button-create" mat-flat-button [mat-dialog-close]="true" cdkFocusInitial>{{ 'common.capital.yes' | translate }}</button>
+  <button class="color-red" mat-flat-button [mat-dialog-close]="true">{{ 'common.capital.delete' | translate }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="false" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
 </div>

@@ -14,9 +14,9 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 class="mat-title" mat-dialog-title>{{ data.element.firstName }} {{ data.element.lastName }}</h1>
+<h1 mat-dialog-title>{{ data.element.firstName }} {{ data.element.lastName }}</h1>
 <div mat-dialog-content>
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" hideRequiredMarker>
     <mat-label>{{ 'users.user_role' | translate }}</mat-label>
     <mat-select
       *ngIf="data.isRoleChangeAllowed(data.element); else disabledRole"
@@ -33,8 +33,8 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate | titlecase }}</button>
-  <button class="button-create" mat-raised-button color="primary" [mat-dialog-close]="role" cdkFocusInitial [disabled]="!role.id">
+  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate | titlecase }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="role" [disabled]="!role.id">
     {{ 'common.capital.save' | translate | titlecase }}
   </button>
 </div>
