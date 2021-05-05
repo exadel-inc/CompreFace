@@ -182,7 +182,7 @@ class FaceServiceTest {
         when(euclideanDistanceClassifier.normalizeOne(any())).thenReturn(new double[] {EMBEDDING});
         when(facesApiClient.findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null))
                 .thenReturn(findFacesResponse);
-        when(faceDao.addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY)).thenReturn(face);
+        when(faceDao.addNewFace(embeddings, mockFile.getBytes(), FACE_NAME, MODEL_KEY)).thenReturn(face);
         when(faceCacheProvider.getOrLoad(MODEL_KEY)).thenReturn(faceCollection);
         when(faceCollection.addFace(face)).thenReturn(expected);
 
@@ -192,7 +192,7 @@ class FaceServiceTest {
         assertThat(actual).isEqualTo(new FaceResponseDto(expected.getName(), expected.getImageId()));
 
         verify(facesApiClient).findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null);
-        verify(faceDao).addNewFace(embeddings, mockFile, FACE_NAME, MODEL_KEY);
+        verify(faceDao).addNewFace(embeddings, mockFile.getBytes(), FACE_NAME, MODEL_KEY);
         verifyNoMoreInteractions(facesApiClient, faceDao);
     }
 

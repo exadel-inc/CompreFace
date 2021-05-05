@@ -17,16 +17,18 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.commonservice.repository.FacesRepository;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
+import com.exadel.frs.core.trainservice.dto.AddFaceRequest;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
-import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
-import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.core.trainservice.dto.VerifyRequest;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,10 +39,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -84,13 +89,16 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
 
     private static final String API_KEY = "model_key";
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
     void findAndSaveFaces() throws Exception {
         val mockFile = new MockMultipartFile("file", "test data".getBytes());
 
         doReturn(new FaceResponseDto("id", "name"))
                 .when(faceService)
-                .findAndSaveFace(any(), any(), any(), any());
+                .findAndSaveFace(any(MultipartFile.class), any(), any(), any());
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognition/faces")
@@ -100,7 +108,29 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
         ).andExpect(status().isCreated());
 
         verify(imageValidator).validate(any());
-        verify(faceService).findAndSaveFace(any(), any(), any(), any());
+        verify(faceService).findAndSaveFace(any(MultipartFile.class), any(), any(), any());
+        verifyNoMoreInteractions(imageValidator, faceService);
+    }
+
+    @Test
+    void findAndSaveFacesBase64() throws Exception {
+        doReturn(new FaceResponseDto("id", "name"))
+                .when(faceService)
+                .findAndSaveFace(any(String.class), any(), any(), any());
+
+        AddFaceRequest addFaceRequest = new AddFaceRequest();
+        addFaceRequest.setSubject("subject");
+        addFaceRequest.setDetProbThreshold(1.3d);
+        addFaceRequest.setImageAsBase64(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE}));
+
+        mockMvc.perform(
+                post(API_V1 + "/recognition/faces")
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(addFaceRequest))
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        ).andExpect(status().isCreated());
+
+        verify(imageValidator).validateBase64(any());
+        verify(faceService).findAndSaveFace(any(String.class), any(), any(), any());
         verifyNoMoreInteractions(imageValidator, faceService);
     }
 
@@ -117,7 +147,7 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .getOrLoad(API_KEY);
         doReturn(new FaceResponseDto("id", "name"))
                 .when(faceService)
-                .findAndSaveFace(any(), any(), any(), any());
+                .findAndSaveFace(any(MultipartFile.class), any(), any(), any());
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognition/faces")
@@ -127,7 +157,7 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
         ).andExpect(status().isCreated());
 
         verify(imageValidator).validate(any());
-        verify(faceService).findAndSaveFace(any(), any(), any(), any());
+        verify(faceService).findAndSaveFace(any(MultipartFile.class), any(), any(), any());
         verifyNoMoreInteractions(imageValidator, faceService);
     }
 
@@ -274,6 +304,49 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
 
         verify(imageValidator).validate(any());
         verify(client).findFacesWithCalculator(any(), any(), any(), anyString());
+        verifyNoMoreInteractions(imageValidator, client, predictor);
+    }
+
+    @Test
+    void verifyFacesBase64() throws Exception {
+        val faceA = makeFace("A", API_KEY);
+        val faceB = makeFace("B", API_KEY);
+        val faceC = makeFace("C", API_KEY);
+        val faces = List.of(faceA, faceB, faceC);
+        val faceCollection = FaceCollection.buildFromFaces(faces);
+
+        doReturn(faceCollection)
+                .when(faceCacheProvider)
+                .getOrLoad(API_KEY);
+
+        val findFacesResponse = FindFacesResponse.builder()
+                .result(List.of(FindFacesResult.builder()
+                        .embedding(new Double[]{1.0})
+                        .box(new FacesBox().setProbability(1D))
+                        .build()
+                ))
+                .build();
+
+        when(client.findFacesBase64WithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(predictor.verify(any(), any(), any())).thenReturn(eq(0.0));
+
+        VerifyRequest request = VerifyRequest.builder()
+                .imageAsBase64(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}))
+                .limit(4)
+                .detProbThreshold(1.2)
+                .facePlugins("faceplug")
+                .status(true)
+                .build();
+
+        mockMvc.perform(
+                post(API_V1 + "/recognition/faces/" + faceA.getId() + "/verify")
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        ).andExpect(status().isOk());
+
+        verify(imageValidator).validateBase64(any());
+        verify(client).findFacesBase64WithCalculator(any(), any(), any(), anyString());
+
         verifyNoMoreInteractions(imageValidator, client, predictor);
     }
 
