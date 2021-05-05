@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+
 @RestController
-@RequestMapping("/consistence")
+@RequestMapping(API_V1 + "/consistence")
 @RequiredArgsConstructor
 public class ConsistenceController {
 
