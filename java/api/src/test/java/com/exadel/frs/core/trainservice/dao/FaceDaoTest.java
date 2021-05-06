@@ -139,11 +139,11 @@ class FaceDaoTest {
                            .apiKey(modelKey)
                            .embedding(embedding)
                            .build();
-        val mockFile = new MockMultipartFile("mockFile", faceId.getBytes());
+
         when(imageProperties.isSaveImagesToDB()).thenReturn(true);
         when(facesRepository.save(any(Face.class))).thenReturn(expected);
 
-        val actual = faceDao.addNewFace(embedding, mockFile, faceName, modelKey);
+        val actual = faceDao.addNewFace(embedding, faceId.getBytes(), faceName, modelKey);
 
         assertThat(actual).isNotNull();
         assertThat(actual.getFaceName()).isEqualTo(faceName);

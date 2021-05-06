@@ -14,12 +14,15 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.commonservice.system.global;
+package com.exadel.frs.commonservice.exception;
 
-public class Constants {
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.UNAVAILABLE_FILE_EXTENSION;
 
-    public static final String CALCULATOR_PLUGIN = "calculator";
-    public static final String DET_PROB_THRESHOLD = "det_prob_threshold";
-    public static final String FACE_PLUGINS = "face_plugins";
+public class InvalidBase64Exception extends BasicException {
 
+    private static final String MESSAGE = "Provided value is not Base64";
+
+    public InvalidBase64Exception() {
+        super(UNAVAILABLE_FILE_EXTENSION, MESSAGE);
+    }
 }

@@ -67,7 +67,7 @@ public class FaceDao {
 
     public Face addNewFace(
             final Embedding embeddings,
-            final MultipartFile file,
+            final byte[] content,
             final String faceName,
             final String modelKey
     ) throws IOException {
@@ -79,8 +79,8 @@ public class FaceDao {
 
         if (imageProperties.isSaveImagesToDB()) {
             val image = new Image()
-                    .setFaceImg(file.getBytes())
-                    .setRawImg(file.getBytes())
+                    .setFaceImg(content)
+                    .setRawImg(content)
                     .setFace(face);
 
             imagesRepository.save(image);
