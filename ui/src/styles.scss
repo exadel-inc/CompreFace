@@ -207,17 +207,16 @@ app-table, app-user-table, app-model-table {
 form.search-input {
   display: flex;
   height: 32px;
-  margin-left: 16px;
   flex-grow: 2;
   align-items: center;
   align-self: center;
-  border: 1px solid rgba(34, 34, 34, 0.1);
+  border: 1px solid $super-light-gray;
   box-sizing: border-box;
   border-radius: 4px;
   padding: 8px 8px 8px 6px;
 
-  mat-icon{
-    color: rgba(34, 34, 34, 0.45);
+  .mat-icon{
+    color: $light-gray;
   }
 
   input{
@@ -231,23 +230,14 @@ form.search-input {
 }
 
 .custom-create-button {
-  display: inline-flex;
-  align-items: center;
-  flex-direction: row;
-  flex-basis: 117px;
-  line-height: 27px;
   color: $primary;
-  margin-left: 5px;
-  padding: 0;
+  margin-left: 10px !important;
+  padding: 0 4px !important;
   font-weight: 600;
-  cursor: pointer;
   letter-spacing: 0.02em;
 
-  mat-icon {
+  .mat-icon {
+    margin-right: 5px;
     @include sm-icon-size()
-  }
-
-  span {
-    margin-left: 5px;
   }
 }

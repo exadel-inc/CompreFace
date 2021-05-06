@@ -134,7 +134,11 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   .mat-menu {
     &-content {
       .mat-menu-item {
-        color: mat-color($warn_);
+        color: $black;
+      }
+
+      .button-warn {
+        color: mat-color($warn_)
       }
     }
 
@@ -264,10 +268,6 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     }
   }
 
-  .mat-form-field {
-    line-height: 1.35;
-  }
-
   .mat-select-panel {
     &:not([class*=mat-elevation-z]) {
       @include mat-elevation(1);
@@ -306,6 +306,10 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
         .mat-form-field {
           width: 100%;
           font-weight: 500;
+
+          &-label-wrapper {
+            font-weight: 400;
+          }
         }
       }
 

@@ -28,7 +28,9 @@
   <ng-container matColumnDef="role">
     <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.role' | translate }}</th>
     <td mat-cell *matCellDef="let element">
-      <mat-icon svgIcon="edit" (click)="onEditAppRole(element)" style="cursor: pointer"></mat-icon>
+      <button mat-icon-button>
+        <mat-icon svgIcon="edit" (click)="onEditAppRole(element)"></mat-icon>
+      </button>
     </td>
   </ng-container>
   <ng-container matColumnDef="delete">
@@ -39,10 +41,14 @@
         (userRole === roleEnum.Owner && element.role !== roleEnum.Owner) then active else notActive"
       ></ng-container>
       <ng-template #active>
-        <mat-icon svgIcon="trash" (click)="delete(element)" style="cursor: pointer"></mat-icon>
+        <button mat-icon-button>
+          <mat-icon svgIcon="trash" (click)="delete(element)"></mat-icon>
+        </button>
       </ng-template>
       <ng-template #notActive>
-        <mat-icon svgIcon="trash_not_active"></mat-icon>
+        <button mat-icon-button disabled>
+          <mat-icon svgIcon="trash_not_active"></mat-icon>
+        </button>
       </ng-template>
     </td>
   </ng-container>

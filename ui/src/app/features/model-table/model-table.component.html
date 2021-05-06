@@ -35,8 +35,8 @@
           <span class="title">API-Key: </span>
           <span class="key">{{ element.apiKey }}</span>
         </div>
-        <button class="content--wrapper_btn" mat-icon-button disableRipple (click)="copyApiKey.emit(element.apiKey)">
-          <mat-icon svgIcon="copy" inline="true"></mat-icon>
+        <button class="content--wrapper_btn" mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
+          <mat-icon svgIcon="copy"></mat-icon>
         </button>
       </div>
     </td>
@@ -51,10 +51,10 @@
   <ng-container matColumnDef="actions">
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="userRole !== roleEnum.User">
-        <button class="actions--btn" disableRipple mat-icon-button [matMenuTriggerFor]="menu" aria-label="model actions">
+        <button class="actions--btn" mat-icon-button [matMenuTriggerFor]="menu" aria-label="model actions">
           <mat-icon svgIcon="more-vert_new" inline="true"></mat-icon>
         </button>
-        <mat-menu #menu="matMenu">
+        <mat-menu #menu="matMenu" xPosition="before">
           <button mat-menu-item (click)="edit.emit(element)">
             <span>{{ 'models.select_menu.edit' | translate }}</span>
           </button>

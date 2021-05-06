@@ -23,8 +23,12 @@
           <h1 class="mat-headline">{{ app.name }}</h1>
         </div>
         <div class="app-header--wrapper_buttons" *ngIf="!isLoading && userRole">
-          <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="edit" (click)="onRename(app.name)"></mat-icon>
-          <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="trash" (click)="onDelete(app.name)"></mat-icon>
+          <button mat-icon-button>
+            <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="edit" (click)="onRename(app.name)"></mat-icon>
+          </button>
+          <button mat-icon-button>
+            <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="trash" (click)="onDelete(app.name)"></mat-icon>
+          </button>
         </div>
       </div>
     </div>

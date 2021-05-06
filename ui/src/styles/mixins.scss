@@ -23,41 +23,6 @@
   height: 100%;
 }
 
-@mixin header-bar-layout() {
-  position: relative;
-
-  .search-input {
-    margin: 5px auto;
-    order: 1;
-    flex: 1 0 100%;
-    @include desktop {
-      flex-basis: 188px !important;
-      order: 0 !important;
-      margin: 0 0 0 5px !important;
-    }
-  }
-
-  app-spinner {
-    position: absolute;
-    left: 40%
-  }
-}
-
-@mixin common-header() {
-  .table-header-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    align-items: center;
-    margin-bottom: 25px;
-
-    h3 {
-      margin: 0;
-    }
-  }
-}
-
 @mixin xl-icon-size($size: 40px) {
   font-size: $size;
   height: $size;
@@ -90,6 +55,41 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+@mixin header-bar-layout() {
+  position: relative;
+
+  .search-input {
+    margin: 5px auto;
+    order: 1;
+    flex: 1 0 90%;
+    @include desktop {
+      flex-basis: 150px !important;
+      order: 0 !important;
+      margin: 0 0 0 5px !important;
+    }
+  }
+
+  app-spinner {
+    position: absolute;
+    left: 40%
+  }
+}
+
+@mixin common-header() {
+  .table-header-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 25px;
+
+    h3 {
+      margin: 10px;
+    }
+  }
 }
 
 

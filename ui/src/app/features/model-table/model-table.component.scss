@@ -41,7 +41,7 @@ caption {
         }
 
         &_key {
-          margin-right: 10px;
+          margin-right: 4px;
           @include not-break-string();
 
           .title {
@@ -54,11 +54,11 @@ caption {
         }
 
         &_btn {
-          width: 12px;
-          height: 13px;
+          width: 24px;
+          height: 24px;
+          line-height: 24px;
 
           .mat-icon {
-            display: flex;
             @include sm-icon-size();
           }
         }
@@ -95,13 +95,13 @@ caption {
 
     &-actions {
       text-align: center;
-      width: 30px;
+      width: 40px;
 
       .actions--btn {
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 30px;
+        width: 40px;
 
         .mat-icon {
           @include md-icon-size();

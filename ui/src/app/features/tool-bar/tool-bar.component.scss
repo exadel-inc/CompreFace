@@ -53,6 +53,8 @@
   &--user-info {
 
     .user-info--btn {
+      padding: 6px;
+      line-height: 24px;
 
       &_wrapper {
         max-width: 222px;
@@ -67,6 +69,7 @@
 
         .name {
           @include not-break-string();
+          margin-right: 4px;
         }
 
         .mat-icon {
