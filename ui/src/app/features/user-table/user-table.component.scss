@@ -13,26 +13,54 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'colors.scss';
-@import 'mixins.scss';
-
-mat-icon {
-  cursor: pointer;
-  @include md-icon-size()
-}
+@import "colors.scss";
+@import "mixins.scss";
 
 caption {
   display: none;
 }
 
-tr.mat-header-row {
-  display: none !important;
-}
+.mat {
 
-tr.mat-row {
-  height: 75px !important;
-}
+  &-header-row {
+    display: none;
+  }
 
-.name-label {
-  margin: 0 0 4px 0;
+  &-column {
+
+    &-user {
+      width: 100%;
+
+      .user {
+
+        &--name {
+          @include not-break-string();
+        }
+
+        &--role {
+          color: $light-gray;
+        }
+      }
+    }
+
+    &-role {
+      width: 44px;
+      text-align: center;
+
+      .mat-icon {
+        vertical-align: sub;
+        @include md-icon-size();
+      }
+    }
+
+    &-delete {
+      width: 44px;
+      text-align: center;
+
+      .mat-icon {
+        vertical-align: sub;
+        @include md-icon-size();
+      }
+    }
+  }
 }

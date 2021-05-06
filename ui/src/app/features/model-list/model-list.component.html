@@ -29,10 +29,10 @@
       <mat-icon class="material-icons notranslate"> search</mat-icon>
     </form>
     <ng-container *ngIf="userRole$ | async as userRole">
-      <div class="custom-create-button" *ngIf="userRole !== roleEnum.User" (click)="onCreateNewModel()">
+      <button class="custom-create-button" mat-flat-button *ngIf="userRole !== roleEnum.User" (click)="onCreateNewModel()">
         <mat-icon svgIcon="add_new"></mat-icon>
         <span>{{ 'applications.create.button' | translate }}</span>
-      </div>
+      </button>
     </ng-container>
   </div>
   <app-spinner *ngIf="isLoading$ | async">></app-spinner>

@@ -59,7 +59,7 @@ export class ApplicationListContainerComponent implements OnInit {
 
     this.tableConfig$ = this.applicationFacade.applications$.pipe(
       map(apps => ({
-        columns: [{ title: 'Name', property: 'name' }],
+        columns: [{ title: 'name', property: 'name' }],
         data: apps.map(app => ({ id: app.id, name: app.name, owner: `${app.owner.firstName} ${app.owner.lastName}` })),
       }))
     );

@@ -25,19 +25,17 @@
       matTooltip="{{ app.name }}"
       [matTooltipDisabled]="app.name.length <= maxNameLength"
     >
-      {{ app.name | truncate: maxNameLength }}
+      {{ app.name }}
     </a>
     <div class="separator">/</div>
-    <div class="link" matTooltip="{{ model.name }}" [matTooltipDisabled]="model.name.length <= maxNameLength">
-      {{ model.name | truncate: maxNameLength }}
-    </div>
+    <div class="link" matTooltip="{{ model.name }}" [matTooltipDisabled]="model.name.length <= maxNameLength">{{ model.name }}</div>
   </div>
   <ng-template #onlyApp>
     <div class="breadcrumbs--container">
       <a class="link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
       <div class="separator">/</div>
       <div class="link" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxNameLength">
-        {{ app.name | truncate: maxNameLength }}
+        {{ app.name }}
       </div>
     </div>
   </ng-template>

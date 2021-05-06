@@ -14,14 +14,19 @@
  * permissions and limitations under the License.
  */
 
+@import "mixins.scss";
+
 .breadcrumbs {
   margin-bottom: 24px;
 
   &--container {
     display: flex;
+    overflow: hidden;
 
     .link {
       margin-right: 8px;
+      max-width: 180px;
+      @include not-break-string();
     }
 
     .separator {

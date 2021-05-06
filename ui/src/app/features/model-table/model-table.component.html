@@ -14,51 +14,47 @@
   ~ permissions and limitations under the License.
   -->
 
-<table *ngIf="!isLoading" mat-table [dataSource]="data">
-  <caption>
-    {{
-      'models.caption' | translate
-    }}
-  </caption>
-
+<table class="table" *ngIf="!isLoading" mat-table [dataSource]="data" fixedLayout="true">
+  <caption>{{ 'models.caption' | translate }}</caption>
   <ng-container matColumnDef="content">
-    <td
-      mat-cell
-      *matCellDef="let element"
-      class="content-column"
-      matTooltip="{{ element.name }}"
-      [matTooltipDisabled]="disableToolTip(element.name)"
-    >
-      <div class="title-container">
-        <span class="title-item name-title">{{ element.name | truncate: maxElementLength }}</span
-        ><span class="title-item type-title" [ngClass]="element.type | lowercase">{{
-          getKeyType(element.type) | uppercase | truncate: maxElementLength
-        }}</span>
+    <td mat-cell *matCellDef="let element">
+      <div class="content--wrapper mat-subheading-1">
+        <span
+          class="content--wrapper_name"
+          matTooltip="{{ element.name }}"
+          [matTooltipDisabled]="disableToolTip(element.name)"
+        >
+          {{ element.name }}
+        </span>
+        <span class="content--wrapper_type mat-caption" [ngClass]="element.type | lowercase">
+          {{ getKeyType(element.type) | titlecase }}
+        </span>
       </div>
-      <div class="mat-body-2 key-container">
-        <span class="api-key-label">API-Key:</span><span class="api-key-value">{{ element.apiKey }}</span>
-        <button class="copy-icon" mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
-          <mat-icon>content_copy</mat-icon>
+      <div class="content--wrapper mat-body-2">
+        <div class="content--wrapper_key">
+          <span class="title">API-Key: </span>
+          <span class="key">{{ element.apiKey }}</span>
+        </div>
+        <button class="content--wrapper_btn" mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
+          <mat-icon svgIcon="copy"></mat-icon>
         </button>
       </div>
     </td>
   </ng-container>
-
   <ng-container matColumnDef="test">
     <td mat-cell *matCellDef="let element">
-      <button class="special-test-button-color" (click)="test.emit(element)">
+      <button class="test--btn" color="accent" mat-flat-button (click)="test.emit(element)">
         <span>{{ 'models.select_menu.test' | translate }}</span>
       </button>
     </td>
   </ng-container>
-
   <ng-container matColumnDef="actions">
-    <td mat-cell *matCellDef="let element" class="more-button">
+    <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="userRole !== roleEnum.User">
-        <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="model actions">
-          <mat-icon>more_vert</mat-icon>
+        <button class="actions--btn" mat-icon-button [matMenuTriggerFor]="menu" aria-label="model actions">
+          <mat-icon svgIcon="more-vert_new" inline="true"></mat-icon>
         </button>
-        <mat-menu #menu="matMenu">
+        <mat-menu #menu="matMenu" xPosition="before">
           <button mat-menu-item (click)="edit.emit(element)">
             <span>{{ 'models.select_menu.edit' | translate }}</span>
           </button>
@@ -72,10 +68,8 @@
       </ng-container>
     </td>
   </ng-container>
-
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-
 <ng-container *ngIf="data.length < 1 && !isLoading">
   <div class="create-new-message">
     <mat-icon svgIcon="info_new" inline="true"></mat-icon>

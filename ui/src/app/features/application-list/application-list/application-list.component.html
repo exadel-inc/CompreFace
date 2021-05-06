@@ -30,10 +30,10 @@ limitations under the License.
     <ng-template #firstStepInfo
       ><h3>{{ 'applications.first_steps_title' | translate }}</h3>
     </ng-template>
-    <div *ngIf="userRole !== roleEnum.User" (click)="createApp.emit()" class="custom-create-button">
+    <button class="custom-create-button" mat-flat-button *ngIf="userRole !== roleEnum.User" (click)="createApp.emit()">
       <mat-icon svgIcon="add_new"></mat-icon>
       <span>{{ 'applications.create.button' | translate }}</span>
-    </div>
+    </button>
   </div>
   <app-spinner *ngIf="isLoading"></app-spinner>
   <app-table
