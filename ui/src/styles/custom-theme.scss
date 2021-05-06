@@ -71,7 +71,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     text-decoration: none;
   }
 
-  p{
+  p {
     color: $pale-gray;
   }
 
@@ -268,14 +268,33 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     line-height: 1.35;
   }
 
+  .mat-select-panel {
+    &:not([class*=mat-elevation-z]) {
+      @include mat-elevation(1);
+    }
+  }
+
+  .mat-option {
+    font-size: initial;
+    font-weight: 500;
+  }
+
   .custom-mat-dialog {
     width: 420px;
 
     .mat-dialog {
       &-container {
         @include mat-elevation(0);
+        position: relative;
         border-radius: 12px;
         padding: 32px;
+
+        .button-cross {
+          @include sm-icon-size();
+          position: absolute;
+          top: 22px;
+          right: 22px;
+        }
       }
 
       &-content {
@@ -286,6 +305,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
         .mat-form-field {
           width: 100%;
+          font-weight: 500;
         }
       }
 

@@ -20,6 +20,7 @@ export enum Icons {
   BodyScan = 'body-scan',
   Close = 'close',
   Copy = 'copy',
+  Cross = 'cross_new',
   Edit = 'edit',
   Info = 'info_new',
   MoreVent = 'more-vert_new',

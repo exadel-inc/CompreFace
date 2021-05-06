@@ -27,19 +27,25 @@
 
   &--logo {
     display: flex;
-    line-height: 30px;
 
-    &_main {
-      @include mobile-portrait {
-        display: none;
+    &_link{
+      padding: 4px;
+      min-width: 0;
+
+      .logo-main {
+
+        @include mobile-portrait {
+          display: none;
+        }
       }
-    }
 
-    &_mobile {
-      display: none;
+      .logo-mobile {
+        display: none;
 
-      @include mobile-portrait {
-        display: block;
+        @include mobile-portrait {
+          margin: 0 !important;
+          display: flex;
+        }
       }
     }
   }

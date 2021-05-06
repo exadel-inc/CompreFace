@@ -16,9 +16,9 @@
 
 <h1 mat-dialog-title>{{ 'common.capital.clone' | translate }} {{ data.entityType }}</h1>
 <div mat-dialog-content>
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" floatLabel="always">
     <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="initialName" />
+    <input matInput [(ngModel)]="initialName" placeholder="{{ 'common.name' | translate }}" />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
@@ -29,3 +29,6 @@
     {{ 'common.capital.clone' | translate }}
   </button>
 </div>
+<button class="button-cross" mat-icon-button [mat-dialog-close]="initialName">
+  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
+</button>
