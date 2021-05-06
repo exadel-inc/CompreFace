@@ -14,57 +14,60 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
-@import 'media.scss';
+@import "media.scss";
+@import "mixins.scss";
 
 .header {
   height: 100%;
+  justify-content: center;
 
   .container {
     justify-content: space-between;
   }
 
   &--logo {
+    display: flex;
+    line-height: 30px;
 
-    .logo {
-      display: flex;
-
-      .main-img {
-
-        @include mobile-portrait {
-          display: none;
-        }
-      }
-      .mobile-img {
+    &_main {
+      @include mobile-portrait {
         display: none;
+      }
+    }
 
-        @include mobile-portrait {
-          display: block;
-        }
+    &_mobile {
+      display: none;
+
+      @include mobile-portrait {
+        display: block;
       }
     }
   }
 
   &--user-info {
-    .btn {
-      padding: 0;
-      display: flex;
-      align-items: center;
-      color: $black;
-      font-weight: 500;
 
-      &--img {
-        margin: 0 4px 0 0;
-      }
+    .user-info--btn {
 
-      &--icon {
-        margin: 0;
-        width: 16px;
-        height: 18px;
-        font-size: 21px;
-        color: black;
+      &_wrapper {
+        max-width: 222px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+
+        .avatar {
+          margin-right: 4px;
+        }
+
+        .name {
+          @include not-break-string();
+        }
+
+        .mat-icon {
+          @include md-icon-size();
+          width: 15px;
+        }
       }
     }
   }
 }
-

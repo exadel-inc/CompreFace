@@ -16,7 +16,7 @@ $typography: mat-typography-config(
         $body-1: mat-typography-level(16px, 22.5px, 400), // .mat-body-1
         $body-2: mat-typography-level(14px, 20px, 400), // .mat-body-2
         $caption: mat-typography-level(12px, 17px, 400), // .mat-caption
-        $button: mat-typography-level(16px, 19px, 500),
+        $button: mat-typography-level(16px, 19px, 500), // .mat-button
 );
 
 $primary_palette: (
@@ -139,7 +139,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     }
 
     &-panel {
-      @include mat-elevation(0);
+      @include mat-elevation(1);
     }
   }
 
