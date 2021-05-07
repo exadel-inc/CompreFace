@@ -86,23 +86,25 @@ public class MigrationComponent {
         final String sql = "select " +
                 "   f.id as face_id, " +
                 "   f.face_name, " +
-                "   f.api_key " +
+                "   f.api_key, " +
+                "   case when raw_img_fs is null then false else true end as has_image "+
                 "from " +
-                "   face f " +
+                "   face f inner join image i on f.id = i.face_id " +
                 "where " +
-                "   migrated = ?";
+                "   migrated = ? and face_name = ?";
 
 
         // just as wrapper to bypass immutable variables inside closure
         final var counter = new AtomicInteger(0);
 
         long start = System.currentTimeMillis();
-        jdbcTemplate.query(sql, new Object[]{false}, rs -> {
+        jdbcTemplate.query(sql, new Object[]{false, "lisan"}, rs -> {
             final var apiKey = rs.getString("api_key");
             final var faceId = rs.getString("face_id");
             final var faceName = rs.getString("face_name");
+            final var hasImage = rs.getBoolean("has_image");
 
-            subjectMigrationService.doFaceMigrationInTransaction(apiKey, faceId, faceName);
+            subjectMigrationService.doFaceMigrationInTransaction(apiKey, faceId, faceName, hasImage);
             counter.incrementAndGet();
 
             log.debug("{} face(s) done", counter.get());
