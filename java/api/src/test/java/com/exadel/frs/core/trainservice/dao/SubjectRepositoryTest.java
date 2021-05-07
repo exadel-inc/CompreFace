@@ -7,9 +7,12 @@ import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -43,19 +46,23 @@ class SubjectRepositoryTest extends EmbeddedPostgreSQLTest {
     private static Embedding embedding(Subject subject, String calc, Img img) {
         Embedding embedding = new Embedding();
         embedding.setCalculator(calc);
-        embedding.setEmbedding(new Double[]{1.1, 1.56});
+        embedding.setEmbedding(new double[]{1.1, 1.56});
         embedding.setSubject(subject);
         embedding.setImg(img);
 
         return embedding;
     }
 
-    private static Subject subject(String subjectName) {
+    private static Subject subject(String subjectName, String apiKey) {
         Subject subject = new Subject();
-        subject.setApiKey(UUID.randomUUID().toString());
+        subject.setApiKey(apiKey);
         subject.setSubjectName(subjectName);
 
         return subject;
+    }
+
+    private static Subject subject(String subjectName) {
+        return subject(subjectName, UUID.randomUUID().toString());
     }
 
     private static Img img(Subject subject) {
@@ -78,7 +85,7 @@ class SubjectRepositoryTest extends EmbeddedPostgreSQLTest {
         assertThat(embedding.getId(), notNullValue());
         assertThat(embedding.getEmbedding(), notNullValue());
 
-        assertThat(embeddingRepository.findBySubject(subject), hasSize(1));
+        assertThat(embeddingRepository.findBySubjectId(subject.getId()), hasSize(1));
     }
 
     @Test
@@ -89,9 +96,10 @@ class SubjectRepositoryTest extends EmbeddedPostgreSQLTest {
         Img img = imgRepository.save(img(subject));
         Embedding embedding2 = embeddingRepository.save(embedding(subject, "calc2", img));
 
-        assertThat(embedding2.getImg(), notNullValue());
+        assertThat(embeddingRepository.getUniqueCalculators(), hasItems("calc2", "FakeCalc1"));
+        Embedding fromDb = embeddingRepository.findById(embedding2.getId()).orElseThrow();
 
-        assertThat(embeddingRepository.getDistinctCalculators(), hasItems("calc2", "FakeCalc1"));
+        System.out.println(fromDb.getImg().getId());
     }
 
     @Test
@@ -109,5 +117,34 @@ class SubjectRepositoryTest extends EmbeddedPostgreSQLTest {
                 .collect(Collectors.toList());
 
         assertThat(result, containsInAnyOrder(ids));
+    }
+
+    @Test
+    void testGetBySubjectApiKey() {
+        int subjectCount = 5;
+        int embeddingsCountForEachSubject = 5;
+        String apiKey = UUID.randomUUID().toString();
+
+        UUID[] savedEmbeddingIds = IntStream.range(0, subjectCount)
+                .mapToObj(i -> subjectRepository.save(subject(RandomStringUtils.randomAlphabetic(10), apiKey)))
+                .flatMap(subject -> {
+                    List<UUID> embeddingIds = new ArrayList<>();
+                    for (int i = 0; i < embeddingsCountForEachSubject; i++) {
+                        Img img = imgRepository.save(img(subject));
+                        embeddingIds.add(embeddingRepository.save(embedding(subject, "calc1", img)).getId());
+                    }
+                    return embeddingIds.stream();
+                })
+                .toArray(UUID[]::new);
+
+        List<UUID> foundEmbeddingIds = embeddingRepository.findBySubjectApiKey(apiKey)
+                .stream()
+                .map(embedding -> {
+                    System.out.println(embedding.getImg().getId());
+                    return embedding.getId();
+                })
+                .collect(Collectors.toList());
+
+        assertThat(foundEmbeddingIds, containsInAnyOrder(savedEmbeddingIds));
     }
 }

@@ -17,14 +17,15 @@ import java.util.UUID;
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
 @TypeDefs(@TypeDef(name = "double-array", typeClass = DoubleArrayType.class))
+@NamedEntityGraph(name = "embedding-with-subject", attributeNodes = @NamedAttributeNode("subject"))
 public class Embedding {
 
     @Id
     @GeneratedValue
     private UUID id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "subject_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "subject_id", nullable = false)
     private Subject subject;
 
     @Type(type = "double-array")
@@ -33,7 +34,7 @@ public class Embedding {
             columnDefinition = "float8[]",
             nullable = false
     )
-    private Double[] embedding;
+    private double[] embedding;
 
     @Column(nullable = false)
     private String calculator;

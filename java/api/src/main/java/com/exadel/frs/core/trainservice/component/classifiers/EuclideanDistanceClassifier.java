@@ -25,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.ops.transforms.Transforms;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -32,8 +34,6 @@ import java.util.List;
 
 import static java.lang.Math.min;
 import static java.util.Arrays.sort;
-import static org.nd4j.linalg.factory.Nd4j.create;
-import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 
 @Component
 @RequiredArgsConstructor
@@ -45,7 +45,7 @@ public class EuclideanDistanceClassifier implements Classifier {
 
     @Override
     public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
-        INDArray inputFace = create(input);
+        INDArray inputFace = Nd4j.create(input);
         inputFace = normalizeOne(inputFace);
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
         val result = new ArrayList<Pair<Double, String>>();
@@ -75,8 +75,8 @@ public class EuclideanDistanceClassifier implements Classifier {
 
     @Override
     public double[] verify(double[] sourceImageEmbedding, double[][] targetImageEmbedding) {
-        final INDArray sourceNormalized = normalizeOne(create(sourceImageEmbedding));
-        final INDArray targetNormalized = normalize(create(targetImageEmbedding));
+        final INDArray sourceNormalized = normalizeOne(Nd4j.create(sourceImageEmbedding));
+        final INDArray targetNormalized = normalize(Nd4j.create(targetImageEmbedding));
 
         return recognize(sourceNormalized, targetNormalized);
     }
@@ -87,7 +87,7 @@ public class EuclideanDistanceClassifier implements Classifier {
             return (double) 0;
         }
 
-        val inputFace = normalize(create(input));
+        val inputFace = normalize(Nd4j.create(input));
         
         val faceCollection = faceCacheProvider.getOrLoad(apiKey);
 
@@ -103,7 +103,7 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     public double[] normalizeOne(final double[] rawEmbeddings) {
-        INDArray embeddings = create(rawEmbeddings);
+        INDArray embeddings = Nd4j.create(rawEmbeddings);
         embeddings = normalizeOne(embeddings);
 
         return embeddings.toDoubleVector();
@@ -128,7 +128,7 @@ public class EuclideanDistanceClassifier implements Classifier {
         }
 
         List<Double> coefficients = status.getSimilarityCoefficients();
-        return tanh(distance.rsubi(coefficients.get(0)).muli(coefficients.get(1)), false).addi(1).divi(2);
+        return Transforms.tanh(distance.rsubi(coefficients.get(0)).muli(coefficients.get(1)), false).addi(1).divi(2);
     }
 
     private static INDArray euclidean_distance(final INDArray newFace, INDArray existingFaces) {

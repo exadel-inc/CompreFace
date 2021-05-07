@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface SubjectRepository extends PagingAndSortingRepository<Subject, String> {
 
-   List<Subject> findByApiKey(String apiKey);
+    List<Subject> findByApiKey(String apiKey);
 
-   Optional<Subject> findBySubjectNameIgnoreCase(String subjectName);
+    Optional<Subject> findByApiKeyAndSubjectNameIgnoreCase(String apiKey, String subjectName);
 }
