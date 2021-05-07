@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.exception.ImageNotFoundException;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import lombok.AccessLevel;
@@ -11,10 +12,7 @@ import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
 import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -52,6 +50,15 @@ public class EmbeddingCollection {
 
     private int getSize() {
         return (int) embeddings.size(0);
+    }
+
+    /**
+     * Please, note, current method returns COPY! Each time you invoke it, memory consumed, be careful!
+     *
+     * @return copy of underlying embeddings array.
+     */
+    public INDArray getEmbeddings() {
+        return embeddings.dup();
     }
 
     public synchronized EmbeddingMeta addEmbedding(final Embedding embedding) {
@@ -94,5 +101,21 @@ public class EmbeddingCollection {
                 .forEach(e -> metaMap.replace(e.getKey(), e.getValue(), e.getValue() - 1));
 
         return metaKey;
+    }
+
+    public synchronized Optional<INDArray> getEmbeddingByImgId(UUID imgId) {
+        if (imgId == null) {
+            return Optional.empty();
+        }
+
+        var embeddingMeta = metaMap.keySet().stream()
+                .filter(em -> imgId.equals(em.getImgId()))
+                .findFirst()
+                .orElseThrow(() -> new ImageNotFoundException(imgId.toString()));
+
+        var index = metaMap.get(embeddingMeta);
+
+        // return copy
+        return Optional.of(embeddings.getRow(index).dup());
     }
 }
