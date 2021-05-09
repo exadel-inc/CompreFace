@@ -122,7 +122,7 @@ gender recognition
 7. Run command: `docker-compose up -d`
 8. Open http://localhost:8000/login
 
-### Getting started for devs
+### Getting started for contributors
 
 Follow this [link](/dev)
 
