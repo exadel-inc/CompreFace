@@ -124,7 +124,7 @@ gender recognition
 
 ### Getting started for devs
 
-Follow this link: https://github.com/exadel-inc/CompreFace/tree/develop/dev
+Follow this [link](/dev)
 
 # CompreFace SDKs
 
