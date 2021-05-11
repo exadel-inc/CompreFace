@@ -16,75 +16,61 @@
 
 @import "colors.scss";
 @import "mixins.scss";
-@import "media.scss";
-
-@mixin title {
-  margin: 0 16px 0 0;
-  white-space: nowrap;
-}
-
-@mixin form {
-  position: relative;
-
-  &_input {
-    padding: 8px 25px 8px 8px;
-    width: 100%;
-    border: 1px solid $super-light-gray;
-    border-radius: 4px;
-    font-size: 14px;
-    box-sizing: border-box;
-    outline-color: $primary;
-
-    &::placeholder {
-      color: $gray;
-    }
-  }
-
-  .mat-icon {
-    @include sm-icon-size();
-    position: absolute;
-    top: 50%;
-    right: 8px;
-    transform: translate(0, -50%);
-  }
-}
-
-@mixin btn {
-  padding: 0;
-
-  button {
-    padding: 10px 8px;
-    line-height: 10px;
-  }
-
-  .mat-icon {
-    @include sm-icon-size();
-    margin-right: 5px;
-  }
-
-  &_text {
-    color: $primary;
-  }
-}
 
 .app-search {
+  margin-bottom: 20px;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
 
   &--title {
-    @include title;
+    margin: 0 16px 0 0;
   }
 
   &--form {
-    @include form;
     flex-grow: 1;
+    position: relative;
+
+    &_input {
+      padding: 8px 25px 8px 8px;
+      width: 100%;
+      border: 1px solid $super-light-gray;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+      outline-color: $primary;
+
+      &::placeholder {
+        color: $gray;
+      }
+    }
+
+    .mat-icon {
+      @include sm-icon-size();
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translate(0, -50%);
+    }
   }
 
   &--btn {
-    @include btn;
     margin-left: 8px;
+    padding: 0;
+
+    button {
+      padding: 10px 8px;
+      line-height: 10px;
+    }
+
+    .mat-icon {
+      @include sm-icon-size();
+      margin-right: 5px;
+    }
+
+    &_text {
+      color: $primary;
+    }
   }
 }
