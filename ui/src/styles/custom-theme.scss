@@ -333,6 +333,10 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
           margin: 0 !important;
           padding: 12px 32px;
           line-height: 16px;
+
+          &[color="primary"] {
+            color: $white;
+          }
         }
       }
     }
@@ -340,6 +344,10 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
   .cdk-overlay-backdrop {
     background-color: $light-gray;
+  }
+
+  .mat-button-focus-overlay {
+    background-color: transparent;
   }
 }
 

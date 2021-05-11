@@ -30,6 +30,7 @@ import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
 import { UserTableModule } from '../user-table/user-table.module';
 import { UserListFacade } from './user-list-facade';
 import { UserListComponent } from './user-list.component';
+import { AppSearchTableModule } from '../app-search-table/app-search-table.module';
 
 @NgModule({
   declarations: [UserListComponent],
@@ -48,6 +49,7 @@ import { UserListComponent } from './user-list.component';
     MatButtonModule,
     TranslateModule,
     MatIconModule,
+    AppSearchTableModule,
   ],
   entryComponents: [InviteDialogComponent],
 })

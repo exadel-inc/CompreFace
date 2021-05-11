@@ -28,6 +28,7 @@ import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
 import { UserTableModule } from '../user-table/user-table.module';
 import { ApplicationUserListFacade } from './application-user-list-facade';
 import { ApplicationUserListComponent } from './application-user-list.component';
+import { AppSearchTableModule } from '../app-search-table/app-search-table.module';
 
 @NgModule({
   declarations: [ApplicationUserListComponent],
@@ -44,6 +45,7 @@ import { ApplicationUserListComponent } from './application-user-list.component'
     InviteDialogModule,
     TranslateModule,
     MatIconModule,
+    AppSearchTableModule,
   ],
   entryComponents: [InviteDialogComponent],
 })

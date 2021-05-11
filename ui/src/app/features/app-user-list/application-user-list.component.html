@@ -15,26 +15,16 @@
   -->
 
 <div class="app-user-list">
-  <div class="table-header-container">
-    <h3 class="mat-title">{{ 'users.title' | translate }}</h3>
-    <form class="search-input">
-      <input
-        matInput
-        type="text"
-        class="search-input"
-        [(ngModel)]="search"
-        placeholder="{{ 'users.search.app_title' | translate }}"
-        [ngModelOptions]="{ standalone: true }"
-      />
-      <mat-icon class="material-icons notranslate">search</mat-icon>
-    </form>
-    <ng-container *ngIf="userRole$ | async as userRole">
-      <button class="custom-create-button" mat-flat-button *ngIf="userRole !== roleEnum.User" (click)="onInviteUser()">
-        <mat-icon svgIcon="add_new"></mat-icon>
-        <span>{{ 'applications.create.add_button' | translate }}</span>
-      </button>
-    </ng-container>
-  </div>
+  <app-search-table
+    [currentRole]="userRole$ | async"
+    [requiredRole]="roleEnum.User"
+    (inputSearch)="onSearch($event)"
+    (modalWindow)="onInviteUser()"
+    title="{{ 'users.title' | translate }}"
+    buttonText="{{ 'applications.create.add_button' | translate }}"
+    searchPlaceholder="{{ 'users.search.app_title' | translate }}"
+  >
+  </app-search-table>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-user-table
     class="app-table"

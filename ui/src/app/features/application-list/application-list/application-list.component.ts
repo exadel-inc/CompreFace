@@ -16,6 +16,7 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { Role } from 'src/app/data/enums/role.enum';
 import { ITableConfig } from '../../table/table.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-list',
@@ -27,10 +28,23 @@ export class ApplicationListComponent {
   @Input() isLoading: boolean;
   @Input() tableConfig: ITableConfig;
   @Input() userRole: string;
-  roleEnum = Role;
 
   @Output() selectApp = new EventEmitter();
   @Output() createApp = new EventEmitter();
-  constructor() {}
+
+  roleEnum = Role;
   search = '';
+
+  constructor(private translate: TranslateService) {}
+
+  onSearch(event: string): void {
+    this.search = event;
+  }
+
+  searchTitle(): string {
+    const titleApp: string = this.translate.instant('applications.title');
+    const titleCreate: string = this.translate.instant('applications.first_steps_title');
+
+    return this.tableConfig.data.length > 0 ? titleApp : titleCreate;
+  }
 }
