@@ -13,14 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Observable, of } from 'rxjs';
-import { catchError, map } from 'rxjs/operators';
+import { defer, Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { Store } from '@ngrx/store';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { DemoService } from './demo.service';
 import { loadDemoApiKeySuccess, setDemoKeyPending } from '../../store/demo/action';
+import { DemoStatus } from '../../data/interfaces/demo';
 
 @Injectable({
   providedIn: 'root',
@@ -28,22 +29,28 @@ import { loadDemoApiKeySuccess, setDemoKeyPending } from '../../store/demo/actio
 export class DemoGuard implements CanActivate {
   constructor(private store: Store<any>, private router: Router, private demoService: DemoService) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
-  ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    this.store.dispatch(setDemoKeyPending());
-
+  getModel(): Observable<boolean> {
     return this.demoService.getModel().pipe(
       catchError(() => of(null)),
       map(data => {
         if (data?.apiKey) {
           this.store.dispatch(loadDemoApiKeySuccess(data));
           return true;
-        } else {
-          this.router.navigate([Routes.Home]);
-          return false;
         }
+        return false;
+      })
+    );
+  }
+
+  canActivate(): Observable<boolean> {
+    this.store.dispatch(setDemoKeyPending());
+
+    return this.demoService.getStatus().pipe(
+      catchError(() => of(null)),
+      map((data: DemoStatus) => data.demoFaceCollectionIsInconsistent),
+      switchMap((data: boolean) => defer(() => (data ? of(false) : this.getModel()))),
+      tap(data => {
+        if (!data) this.router.navigate([Routes.Home]);
       })
     );
   }

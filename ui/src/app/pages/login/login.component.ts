@@ -18,7 +18,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { Routes } from '../../data/enums/routers-url.enum';
-import { loadDemoApiKey } from '../../store/demo/action';
+import { loadDemoStatus } from '../../store/demo/action';
 import { selectDemoPageAvailability, selectDemoPending } from '../../store/demo/selectors';
 
 @Component({
@@ -37,6 +37,6 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.store.dispatch(loadDemoApiKey());
+    this.store.dispatch(loadDemoStatus());
   }
 }
