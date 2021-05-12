@@ -138,7 +138,6 @@ class SubjectRepositoryTest extends EmbeddedPostgreSQLTest {
                 .toArray(UUID[]::new);
 
         List<UUID> foundEmbeddingIds = embeddingRepository.findBySubjectApiKey(apiKey)
-                .stream()
                 .map(embedding -> {
                     System.out.println(embedding.getImg().getId());
                     return embedding.getId();

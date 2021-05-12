@@ -1,94 +1,78 @@
-/*
- * Copyright (c) 2020 the original author or authors
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
- * or implied. See the License for the specific language governing
- * permissions and limitations under the License.
- */
-
 package com.exadel.frs.core.trainservice.service;
 
-import static java.math.RoundingMode.HALF_UP;
-import static java.util.stream.Collectors.toSet;
 import com.exadel.frs.commonservice.entity.Face;
+import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.SubjectNotFoundException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
+import com.exadel.frs.core.trainservice.cache.SubjectCacheProvider;
+import com.exadel.frs.core.trainservice.cache.SubjectMeta;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
-import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
-import com.exadel.frs.core.trainservice.dao.FaceDao;
+import com.exadel.frs.core.trainservice.dao.SubjectDao;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
-import com.exadel.frs.core.trainservice.mapper.FacesMapper;
+import com.exadel.frs.core.trainservice.mapper.EmbeddingMapper;
 import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.math.RoundingMode.HALF_UP;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class FaceService {
+public class SubjectService {
 
     private static final int MAX_FACES_TO_SAVE = 1;
     public static final int MAX_FACES_TO_RECOGNIZE = 2;
 
+    private final SubjectDao subjectDao;
     private final FacesApiClient facesApiClient;
-    private final FaceDao faceDao;
-    private final FaceCacheProvider faceCacheProvider;
-    private final FaceClassifierPredictor classifierPredictor;
-    private final FacesApiClient client;
-    private final FacesMapper faceMapper;
+    private final SubjectCacheProvider subjectCacheProvider;
+    private final EmbeddingMapper subjectMapper;
+    private final FaceClassifierPredictor predictor;
     private final EuclideanDistanceClassifier classifier;
 
-    public List<FaceResponseDto> findFaces(final String apiKey) {
-        Set<FaceBO> faces = faceCacheProvider.getOrLoad(apiKey).getFaces();
-        return faceMapper.toResponseDto(faces);
+    public Collection<FaceResponseDto> findSubjectByApiKey(final String apiKey) {
+        Set<SubjectMeta> faces = subjectCacheProvider.getOrLoad(apiKey).getMetas();
+        return subjectMapper.toResponseDto(faces);
     }
 
-    public List<FaceResponseDto> deleteFaceByName(final String faceName, final String apiKey) {
-        val faces = faceCacheProvider.getOrLoad(apiKey);
+    public Collection<FaceResponseDto> deleteSubjectByName(final String apiKey, final String subjectName) {
+        final Optional<Subject> subjectOptional = subjectDao.deleteSubjectByName(apiKey, subjectName);
 
-        Set<FaceBO> collect = faceDao.deleteFaceByName(faceName, apiKey)
-                                     .stream()
-                                     .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
-                                     .collect(toSet());
-        log.info("faceMapper: {}", faceMapper);
+        if (subjectOptional.isPresent()) {
+            final Collection<SubjectMeta> metas = subjectCacheProvider
+                    .getOrLoad(apiKey)
+                    .removeSubject(subjectOptional.get().getId());
 
-        return faceMapper.toResponseDto(collect);
+            return subjectMapper.toResponseDto(metas);
+        }
+
+        return Collections.emptyList();
     }
 
-    public FaceResponseDto deleteFaceById(final String id, final String apiKey) {
-        val collection = faceCacheProvider.getOrLoad(apiKey);
-        val face = faceDao.deleteFaceById(id);
+    public FaceResponseDto removeSubjectImg(final String apiKey, final UUID imgId) {
+        subjectDao.removeSubjectImg(imgId)
+        val collection = subjectCacheProvider.getOrLoad(apiKey);
+        val face = faceDao.deleteFaceById(embeddingId);
         if (face != null) {
             FaceBO faceBO = collection.removeFace(face.getId(), face.getFaceName());
-            return faceMapper.toResponseDto(faceBO);
+            return subjectMapper.toResponseDto(faceBO);
         }
 
         return null;
@@ -155,7 +139,7 @@ public class FaceService {
         FaceBO faceBO = faceCacheProvider
                 .getOrLoad(modelKey)
                 .addFace(faceDao.addNewFace(embeddingToSave, file, faceName, modelKey));
-        FaceResponseDto faceResponseDto = faceMapper.toResponseDto(faceBO);
+        FaceResponseDto faceResponseDto = subjectMapper.toResponseDto(faceBO);
         if (faceResponseDto == null) {
             faceResponseDto = new FaceResponseDto();
         }
@@ -167,7 +151,7 @@ public class FaceService {
         FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
-           findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         } else {
             findFacesResponse = client.findFacesBase64WithCalculator(processImageParams.getImageBase64(), processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         }
@@ -179,7 +163,7 @@ public class FaceService {
         val results = new ArrayList<FaceVerification>();
         FaceCollection orLoad = faceCacheProvider.getOrLoad(processImageParams.getApiKey());
         for (val findResult : findFacesResponse.getResult()) {
-            val prediction = classifierPredictor.verify(
+            val prediction = predictor.verify(
                     processImageParams.getApiKey(),
                     Stream.of(findResult.getEmbedding())
                             .mapToDouble(d -> d)

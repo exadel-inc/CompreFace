@@ -25,6 +25,6 @@ public class Img {
     @JoinColumn(name = "subject_id")
     private Subject subject;
 
-    @OneToOne(mappedBy = "img", fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, mappedBy = "img")
     private Embedding embedding;
 }

@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.exception.ImageNotFoundException;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import lombok.AccessLevel;
@@ -10,41 +9,33 @@ import lombok.Getter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.indexing.NDArrayIndex;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class EmbeddingCollection {
+public class SubjectCollection {
 
     // embedding meta to index
-    private final BiMap<EmbeddingMeta, Integer> metaMap;
+    private final BiMap<SubjectMeta, Integer> metaMap;
     private INDArray embeddings;
 
-    public static EmbeddingCollection build(final List<Embedding> embeddings) {
-        if (CollectionUtils.isEmpty(embeddings)) {
-            return new EmbeddingCollection(
-                    HashBiMap.create(),
-                    Nd4j.create(new double[][]{})
-            );
-        }
+    public static SubjectCollection from(final Stream<Embedding> embeddings) {
+        final var rawEmbeddings = new LinkedList<double[]>();
+        final Map<SubjectMeta, Integer> metaMap = new HashMap<>();
 
-        final var rawEmbeddings = new double[embeddings.size()][];
-        final Map<EmbeddingMeta, Integer> metaMap = new HashMap<>();
+        var index = new AtomicInteger();
+        embeddings.forEach(embedding -> {
+            rawEmbeddings.add(embedding.getEmbedding());
+            metaMap.put(SubjectMeta.from(embedding), index.getAndIncrement());
+        });
 
-        var index = 0;
-        while (index < embeddings.size()) {
-            var embedding = embeddings.get(index);
-            rawEmbeddings[index] = embedding.getEmbedding();
-            metaMap.put(EmbeddingMeta.from(embedding), index);
-
-            index++;
-        }
-
-        return new EmbeddingCollection(
+        return new SubjectCollection(
                 HashBiMap.create(metaMap),
-                Nd4j.create(rawEmbeddings)
+                Nd4j.create(rawEmbeddings.toArray(double[][]::new))
         );
     }
 
@@ -53,7 +44,7 @@ public class EmbeddingCollection {
     }
 
     /**
-     * Please, note, current method returns COPY! Each time you invoke it, memory consumed, be careful!
+     * NOTE: current method returns COPY! Each time you invoke it, memory consumed, be careful!
      *
      * @return copy of underlying embeddings array.
      */
@@ -61,14 +52,25 @@ public class EmbeddingCollection {
         return embeddings.dup();
     }
 
-    public synchronized EmbeddingMeta addEmbedding(final Embedding embedding) {
+    public Set<SubjectMeta> getMetas() {
+        return Collections.unmodifiableSet(metaMap.keySet());
+    }
+
+    public synchronized void updateSubjectName(String oldSubjectName, String newSubjectName) {
+        metaMap.keySet()
+                .stream()
+                .filter(metaKey -> metaKey.getSubjectName().equals(oldSubjectName))
+                .forEach(metaKey -> metaMap.put(metaKey.withNewSubjectName(newSubjectName), metaMap.remove(metaKey)));
+    }
+
+    public synchronized SubjectMeta addEmbedding(final Embedding embedding) {
         embeddings = Nd4j.concat(
                 0,
                 embeddings,
                 Nd4j.create(new double[][]{embedding.getEmbedding()})
         );
 
-        final var metaKey = EmbeddingMeta.from(embedding);
+        final var metaKey = SubjectMeta.from(embedding);
         metaMap.put(
                 metaKey,
                 getSize() - 1
@@ -77,12 +79,20 @@ public class EmbeddingCollection {
         return metaKey;
     }
 
-    public synchronized EmbeddingMeta removeEmbedding(final String subjectName, final UUID imgId) {
+    public synchronized Collection<SubjectMeta> removeSubject(UUID subjectId) {
+        // not efficient at ALL! review current approach
+
+        return metaMap.keySet().stream()
+                .filter(meta -> meta.getSubjectId().equals(subjectId))
+                .peek(this::removeEmbedding) // <- rethink this
+                .collect(Collectors.toList());
+    }
+
+    public synchronized SubjectMeta removeEmbedding(SubjectMeta metaKey) {
         if (metaMap.isEmpty()) {
             return null;
         }
 
-        var metaKey = new EmbeddingMeta(subjectName, imgId);
         var index = metaMap.remove(metaKey);
 
         // remove embedding by concatenating sub lists [0, index) + [index + 1, size),
@@ -108,14 +118,11 @@ public class EmbeddingCollection {
             return Optional.empty();
         }
 
-        var embeddingMeta = metaMap.keySet().stream()
-                .filter(em -> imgId.equals(em.getImgId()))
+        // return row COPY
+        return metaMap.entrySet()
+                .stream()
+                .filter(entry -> imgId.equals(entry.getKey().getImgId()))
                 .findFirst()
-                .orElseThrow(() -> new ImageNotFoundException(imgId.toString()));
-
-        var index = metaMap.get(embeddingMeta);
-
-        // return copy
-        return Optional.of(embeddings.getRow(index).dup());
+                .map(entry -> embeddings.getRow(entry.getValue()).dup());
     }
 }
