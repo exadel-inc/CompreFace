@@ -133,7 +133,9 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
   .mat-menu {
     &-content {
+
       .mat-menu-item {
+        font-weight: 500;
         color: $black;
       }
 

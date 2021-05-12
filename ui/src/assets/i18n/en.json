@@ -71,7 +71,7 @@
     "create": {
       "title": "Create application",
       "button": "Create New",
-      "add_button": "Add User"
+      "add_button": "Create New"
     },
     "header": {
       "title": "Application",
@@ -134,6 +134,9 @@
       "org_title": "Search user",
       "app_title": "Search user",
       "no_results": "No matches found"
+    },
+    "create": {
+      "add_button": "Add User"
     }
   },
   "org_users": {
