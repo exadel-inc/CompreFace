@@ -81,6 +81,11 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.appUserListFacade.updateUserRole(user.id, user.role);
   }
 
+  onSearch(value: string) {
+    console.log('jlkjl');
+    this.search = value;
+  }
+
   onDelete(deletion: UserDeletion): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       panelClass: 'custom-mat-dialog',

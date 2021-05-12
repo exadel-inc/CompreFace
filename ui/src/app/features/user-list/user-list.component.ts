@@ -109,6 +109,10 @@ export class UserListComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  onSearch(event: string): void {
+    this.search = event;
+  }
+
   ngOnDestroy(): void {
     this.availableRolesSubscription.unsubscribe();
   }

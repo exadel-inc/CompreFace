@@ -14,27 +14,16 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <div class="application-list">
-  <div class="table-header-container">
-    <h3 class="mat-title" *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{ 'applications.title' | translate }}</h3>
-    <form class="search-input">
-      <input
-        matInput
-        type="text"
-        class="search-input"
-        [(ngModel)]="search"
-        [ngModelOptions]="{ standalone: true }"
-        placeholder="{{ 'applications.search.title' | translate }}"
-      />
-      <mat-icon class="material-icons notranslate"> search </mat-icon>
-    </form>
-    <ng-template #firstStepInfo
-      ><h3>{{ 'applications.first_steps_title' | translate }}</h3>
-    </ng-template>
-    <button class="custom-create-button" mat-flat-button *ngIf="userRole !== roleEnum.User" (click)="createApp.emit()">
-      <mat-icon svgIcon="add_new"></mat-icon>
-      <span>{{ 'applications.create.button' | translate }}</span>
-    </button>
-  </div>
+  <app-search-table
+    [currentRole]="userRole"
+    [requiredRole]="roleEnum.User"
+    (inputSearch)="onSearch($event)"
+    (modalWindow)="createApp.emit()"
+    [title]="searchTitle()"
+    buttonText="{{ 'applications.create.add_button' | translate }}"
+    searchPlaceholder="{{ 'applications.search.title' | translate }}"
+  >
+  </app-search-table>
   <app-spinner *ngIf="isLoading"></app-spinner>
   <app-table
     *ngIf="tableConfig.data.length > 0"

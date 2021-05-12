@@ -1,0 +1,76 @@
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+@import "colors.scss";
+@import "mixins.scss";
+
+.app-search {
+  margin-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+
+  &--title {
+    margin: 0 16px 0 0;
+  }
+
+  &--form {
+    flex-grow: 1;
+    position: relative;
+
+    &_input {
+      padding: 8px 25px 8px 8px;
+      width: 100%;
+      border: 1px solid $super-light-gray;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+      outline-color: $primary;
+
+      &::placeholder {
+        color: $gray;
+      }
+    }
+
+    .mat-icon {
+      @include sm-icon-size();
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      transform: translate(0, -50%);
+    }
+  }
+
+  &--btn {
+    margin-left: 8px;
+    padding: 0;
+
+    button {
+      padding: 10px 8px;
+      line-height: 10px;
+    }
+
+    .mat-icon {
+      @include sm-icon-size();
+      margin-right: 5px;
+    }
+
+    &_text {
+      color: $primary;
+    }
+  }
+}

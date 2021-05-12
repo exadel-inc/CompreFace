@@ -29,6 +29,7 @@ import { ApplicationListComponent } from './application-list/application-list.co
 import { FormsModule } from '@angular/forms';
 import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 import { MatInputModule } from '@angular/material/input';
+import { AppSearchTableModule } from '../app-search-table/app-search-table.module';
 
 @NgModule({
   declarations: [ApplicationListContainerComponent, ApplicationListComponent],
@@ -46,6 +47,7 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     TablePipeModule,
     MatInputModule,
+    AppSearchTableModule,
   ],
 })
 export class ApplicationListModule {}

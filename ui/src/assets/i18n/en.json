@@ -71,7 +71,7 @@
     "create": {
       "title": "Create application",
       "button": "Create New",
-      "add_button": "User New"
+      "add_button": "Create New"
     },
     "header": {
       "title": "Application",
@@ -89,7 +89,7 @@
       }
     },
     "search": {
-      "title": "Search Application"
+      "title": "Search application"
     }
   },
   "models": {
@@ -121,7 +121,7 @@
       "confirmation_question": "Are you sure?"
     },
     "search": {
-      "title": "Search Service"
+      "title": "Search service"
     }
   },
   "users": {
@@ -131,9 +131,12 @@
     "role": "Role",
     "user_role": "User Role",
     "search": {
-      "org_title": "Search User",
-      "app_title": "Search User",
+      "org_title": "Search user",
+      "app_title": "Search user",
       "no_results": "No matches found"
+    },
+    "create": {
+      "add_button": "Add User"
     }
   },
   "org_users": {

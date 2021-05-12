@@ -155,6 +155,10 @@ export class ModelListComponent implements OnInit, OnDestroy {
       .subscribe(data => this.modelListFacade.createModel(data.entityName, data.type));
   }
 
+  onSearch(event: string) {
+    this.search = event;
+  }
+
   ngOnDestroy(): void {
     this.modelListFacade.unsubscribe();
   }
