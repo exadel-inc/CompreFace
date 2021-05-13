@@ -20,9 +20,10 @@ import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.commonservice.system.global.Constants;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.dto.RecognizeRequest;
+import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
@@ -105,16 +106,16 @@ class RecognizeControllerTest {
         when(predictor.predict(any(), any(), anyInt())).thenReturn(List.of(Pair.of(1.0, "")));
         doNothing().when(validator).validateBase64(any());
 
-        RecognizeRequest request = new RecognizeRequest();
-        request.setImageAsBase64(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}));
-        request.setLimit(4);
-        request.setPredictionCount(44);
-        request.setDetProbThreshold(1.2);
-        request.setFacePlugins("faceplugin");
-        request.setStatus(false);
+        Base64File request = new Base64File();
+        request.setContent(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}));
 
         mockMvc.perform(
                 post(API_V1 + "/recognition/recognize")
+                        .queryParam("limit", "4")
+                        .queryParam(Constants.DET_PROB_THRESHOLD, "0.7")
+                        .queryParam(Constants.FACE_PLUGINS, "faceplug")
+                        .queryParam("status", "true")
+                        .queryParam("prediction_count", "44")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk());

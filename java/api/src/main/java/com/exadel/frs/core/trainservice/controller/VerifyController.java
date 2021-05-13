@@ -69,6 +69,10 @@ public class VerifyController {
     @PostMapping(value = "/verification/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, List<VerifyFacesResponse>> verifyBase64(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC) @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC) @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status,
             @RequestBody @Valid VerifySourceTargetRequest request) {
 
         Map<String, String> fileMap = Map.of(
@@ -80,10 +84,10 @@ public class VerifyController {
                 .builder()
                 .apiKey(apiKey)
                 .file(fileMap)
-                .limit(request.getLimit())
-                .detProbThreshold(request.getDetProbThreshold())
-                .facePlugins(request.getFacePlugins())
-                .status(request.getStatus())
+                .limit(limit)
+                .detProbThreshold(detProbThreshold)
+                .facePlugins(facePlugins)
+                .status(status)
                 .build();
 
         final VerifyFacesResponse response = (VerifyFacesResponse) verificationService.processImage(processImageParams);

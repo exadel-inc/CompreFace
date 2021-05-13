@@ -28,11 +28,12 @@ import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
+import com.exadel.frs.commonservice.system.global.Constants;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.dto.AddFaceRequest;
+import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.VerifyRequest;
 import com.exadel.frs.core.trainservice.repository.AppRepository;
@@ -163,14 +164,14 @@ class FaceControllerTest extends EmbeddedPostgreSQLTest {
                 .when(faceService)
                 .findAndSaveFace(any(String.class), any(), any(), any());
 
-        AddFaceRequest addFaceRequest = new AddFaceRequest();
-        addFaceRequest.setSubject("subject");
-        addFaceRequest.setDetProbThreshold(1.3d);
-        addFaceRequest.setImageAsBase64(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE}));
+        Base64File request = new Base64File();
+        request.setContent(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA, (byte) 0xFE, (byte) 0xBA, (byte) 0xBE}));
 
         mockMvc.perform(
                 post(API_V1 + "/recognition/faces")
-                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(addFaceRequest))
+                        .queryParam("subject", "subject")
+                        .queryParam(Constants.DET_PROB_THRESHOLD, "0.7")
+                        .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isCreated());
 
@@ -400,16 +401,14 @@ class FaceControllerTest extends EmbeddedPostgreSQLTest {
         when(client.findFacesBase64WithCalculator(any(), any(), any(), anyString())).thenReturn(findFacesResponse);
         when(predictor.verify(any(), any(), any())).thenReturn(eq(0.0));
 
-        VerifyRequest request = VerifyRequest.builder()
-                .imageAsBase64(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}))
-                .limit(4)
-                .detProbThreshold(1.2)
-                .facePlugins("faceplug")
-                .status(true)
-                .build();
+        Base64File request = new Base64File();
+        request.setContent(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}));
 
         mockMvc.perform(
                 post(API_V1 + "/recognition/faces/" + faceA.getId() + "/verify")
+                        .queryParam("limit", "4")
+                        .queryParam(Constants.DET_PROB_THRESHOLD, "0.7")
+                        .queryParam(Constants.FACE_PLUGINS, "faceplug")
                         .contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(request))
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk());

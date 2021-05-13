@@ -4,6 +4,7 @@ import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.commonservice.system.global.Constants;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
@@ -92,24 +93,24 @@ class VerifyControllerTest extends EmbeddedPostgreSQLTest {
                 ))
                 .build();
 
-        when(client.findFacesBase64WithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(client.findFacesBase64WithCalculator(any(), any(), any(), anyString())).thenReturn(findFacesResponse);
         when(predictor.verify(any(), any())).thenReturn(new double[]{100d});
 
         VerifySourceTargetRequest request = new VerifySourceTargetRequest();
         request.setSourceImageBase64(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}));
         request.setTargetImageBase64(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}));
-        request.setLimit(5);
-        request.setDetProbThreshold(1.45);
-        request.setStatus(true);
 
         mockMvc.perform(
                 post(API_V1 + "/verification/verify")
+                        .queryParam("limit", "4")
+                        .queryParam(Constants.DET_PROB_THRESHOLD, "0.7")
+                        .queryParam(Constants.FACE_PLUGINS, "faceplug")
                         .contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(request))
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk());
 
         verify(validator, times(2)).validateBase64(any());
-        verify(client, times(2)).findFacesBase64WithCalculator(any(), any(), any(), isNull());
+        verify(client, times(2)).findFacesBase64WithCalculator(any(), any(), any(), anyString());
         verify(predictor).verify(any(), any(double[][].class));
 
         verifyNoMoreInteractions(validator, client, predictor);
