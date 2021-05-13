@@ -82,7 +82,7 @@ public class FacesRestApiClient implements FacesApiClient {
                         new FindFacesRequest(imageAsBase64),
                         faceLimit,
                         thresholdC,
-                        facePlugins
+                        finalFacePlugins
                 );
             }
         } catch (FeignException.BadRequest ex) {
