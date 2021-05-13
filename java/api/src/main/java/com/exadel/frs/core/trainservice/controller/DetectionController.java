@@ -16,7 +16,7 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import com.exadel.frs.core.trainservice.dto.DetectRequest;
+import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
@@ -80,14 +80,19 @@ public class DetectionController {
                     value = "Api key of application and model",
                     required = true)
     })
-    public FacesDetectionResponseDto detectBase64(@Valid @RequestBody DetectRequest request) {
+    public FacesDetectionResponseDto detectBase64(
+            @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC) @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC) @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status,
+            @Valid @RequestBody Base64File request) {
         var processImageParams = ProcessImageParams
                 .builder()
-                .imageBase64(request.getImageAsBase64())
-                .limit(request.getLimit())
-                .detProbThreshold(request.getDetProbThreshold())
-                .facePlugins(request.getFacePlugins())
-                .status(request.getStatus())
+                .imageBase64(request.getContent())
+                .limit(limit)
+                .detProbThreshold(detProbThreshold)
+                .facePlugins(facePlugins)
+                .status(status)
                 .build();
 
         return (FacesDetectionResponseDto) detectionService.processImage(processImageParams);
