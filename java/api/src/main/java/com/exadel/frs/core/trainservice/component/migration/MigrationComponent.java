@@ -91,14 +91,14 @@ public class MigrationComponent {
                 "from " +
                 "   face f inner join image i on f.id = i.face_id " +
                 "where " +
-                "   migrated = ? and face_name = ?";
+                "   migrated = ? and api_key = ?";
 
 
         // just as wrapper to bypass immutable variables inside closure
         final var counter = new AtomicInteger(0);
 
         long start = System.currentTimeMillis();
-        jdbcTemplate.query(sql, new Object[]{false, "lisan"}, rs -> {
+        jdbcTemplate.query(sql, new Object[]{false, "001bb7fb-70df-479e-b6a6-0800078ba23a"}, rs -> {
             final var apiKey = rs.getString("api_key");
             final var faceId = rs.getString("face_id");
             final var faceName = rs.getString("face_name");

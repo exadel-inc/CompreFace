@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice.dto;
 
 import lombok.Value;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 
 @Value
@@ -13,6 +14,6 @@ public class EmbeddingInfo {
     @NotNull
     double[] embedding;
 
-    @NotNull
-    byte[] imgContent;
+    @Nullable
+    byte[] source;
 }

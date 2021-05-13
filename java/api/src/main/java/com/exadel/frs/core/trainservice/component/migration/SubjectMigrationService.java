@@ -40,8 +40,8 @@ public class SubjectMigrationService {
             imgId = UUID.randomUUID().toString();
             // create image
             jdbcTemplate.update(
-                    "insert into img(id, subject_id, content) select ?, ?, i.raw_img_fs from face f inner join image i on i.face_id = f.id where f.id = ?",
-                    imgId, subjectId, faceId
+                    "insert into img(id, content) select ?, i.raw_img_fs from face f inner join image i on i.face_id = f.id where f.id = ?",
+                    imgId, faceId
             );
         }
 

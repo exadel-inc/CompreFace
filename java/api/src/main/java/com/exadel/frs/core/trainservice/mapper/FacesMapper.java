@@ -34,8 +34,8 @@ import java.util.Set;
 @Mapper
 public interface FacesMapper {
 
-    @Mapping(source = "imageId", target = "image_id")
-    @Mapping(source = "name", target = "subject")
+    @Mapping(source = "imageId", target = "embeddingId")
+    @Mapping(source = "name", target = "subjectName")
     FaceResponseDto toResponseDto(FaceBO faces);
 
     List<FaceResponseDto> toResponseDto(Set<FaceBO> faces);

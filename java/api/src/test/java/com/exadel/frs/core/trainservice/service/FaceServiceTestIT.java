@@ -176,7 +176,7 @@ public class FaceServiceTestIT extends EmbeddedPostgreSQLTest {
         val actual = faceService.findAndSaveFace(MULTIPART_FILE_DATA, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual.getSubject()).isEqualTo(FACE_NAME);
+        assertThat(actual.getSubjectName()).isEqualTo(FACE_NAME);
     }
 
     @AfterEach

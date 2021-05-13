@@ -12,6 +12,7 @@ import org.nd4j.linalg.indexing.NDArrayIndex;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,11 +57,13 @@ public class SubjectCollection {
         return Collections.unmodifiableSet(metaMap.keySet());
     }
 
-    public synchronized void updateSubjectName(String oldSubjectName, String newSubjectName) {
-        metaMap.keySet()
+    public synchronized void updateSubjectName(String oldSubjectName, UUID newSubjectId, String newSubjectName) {
+        final List<SubjectMeta> metas = metaMap.keySet()
                 .stream()
                 .filter(metaKey -> metaKey.getSubjectName().equals(oldSubjectName))
-                .forEach(metaKey -> metaMap.put(metaKey.withNewSubjectName(newSubjectName), metaMap.remove(metaKey)));
+                .collect(Collectors.toList());
+
+        metas.forEach(metaKey -> metaMap.put(metaKey.withNewValues(newSubjectId, newSubjectName), metaMap.remove(metaKey)));
     }
 
     public synchronized SubjectMeta addEmbedding(final Embedding embedding) {
@@ -82,10 +85,17 @@ public class SubjectCollection {
     public synchronized Collection<SubjectMeta> removeSubject(UUID subjectId) {
         // not efficient at ALL! review current approach
 
-        return metaMap.keySet().stream()
+        final List<SubjectMeta> toRemove = metaMap.keySet().stream()
                 .filter(meta -> meta.getSubjectId().equals(subjectId))
-                .peek(this::removeEmbedding) // <- rethink this
                 .collect(Collectors.toList());
+
+        toRemove.forEach(this::removeEmbedding); // <- rethink it
+
+        return toRemove;
+    }
+
+    public synchronized SubjectMeta removeEmbedding(Embedding embedding) {
+        return removeEmbedding(SubjectMeta.from(embedding));
     }
 
     public synchronized SubjectMeta removeEmbedding(SubjectMeta metaKey) {
@@ -113,16 +123,30 @@ public class SubjectCollection {
         return metaKey;
     }
 
-    public synchronized Optional<INDArray> getEmbeddingByImgId(UUID imgId) {
-        if (imgId == null) {
+    public synchronized Optional<INDArray> getEmbeddingById(UUID embeddingId) {
+        return findByEmbeddingId(
+                embeddingId,
+                // return duplicated row
+                entry -> embeddings.getRow(entry.getValue()).dup()
+        );
+    }
+
+    public synchronized Optional<String> getSubjectNameByEmbeddingId(UUID embeddingId) {
+        return findByEmbeddingId(
+                embeddingId,
+                entry -> entry.getKey().getSubjectName()
+        );
+    }
+
+    private <T> Optional<T> findByEmbeddingId(UUID embeddingId, Function<Map.Entry<SubjectMeta, Integer>, T> func) {
+        if (embeddingId == null) {
             return Optional.empty();
         }
 
-        // return row COPY
         return metaMap.entrySet()
                 .stream()
-                .filter(entry -> imgId.equals(entry.getKey().getImgId()))
+                .filter(entry -> embeddingId.equals(entry.getKey().getEmbeddingId()))
                 .findFirst()
-                .map(entry -> embeddings.getRow(entry.getValue()).dup());
+                .map(func);
     }
 }

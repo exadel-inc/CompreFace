@@ -39,8 +39,10 @@ public class Embedding {
     @Column(nullable = false)
     private String calculator;
 
-    // Optional. There could be predefined embeddings without images as well as images without embeddings.
-    @OneToOne(fetch = FetchType.LAZY)
+    // Optional.
+    // There could be predefined embeddings without image (pre-inserted demo embeddings).
+    // There could multiple embeddings for same image (calculated with diff calculators).
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "img_id", referencedColumnName = "id")
     private Img img;
 }

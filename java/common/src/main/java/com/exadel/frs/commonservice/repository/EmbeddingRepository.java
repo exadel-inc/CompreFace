@@ -1,36 +1,53 @@
 package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.Subject;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
 
-    // consumer should be wrapped in Transactional
+    // Note: consumer should consume in transaction
     @EntityGraph("embedding-with-subject")
     Stream<Embedding> findBySubjectApiKey(String apiKey);
 
-    @EntityGraph("embedding-with-subject")
-    Optional<Embedding> findBySubjectApiKeyAndSubjectSubjectNameIgnoreCase(String apiKey, String subjectName);
+    @Transactional
+    default <T> T doWithEmbeddingsStream(String apiKey, Function<Stream<Embedding>, T> func) {
+        try (Stream<Embedding> stream = findBySubjectApiKey(apiKey)) {
+            return func.apply(stream);
+        }
+    }
 
     @Modifying
     @Query("delete from Embedding e where e.subject.id = :subjectId")
-    void deleteBySubjectId(@Param("subjectId") UUID subjectId);
+    int deleteBySubjectId(@Param("subjectId") UUID subjectId);
 
     @Modifying
     @Query("delete from Embedding e where e.subject.apiKey = :apiKey")
-    void deleteBySubjectApiKey(@Param("apiKey") String apiKey);
+    int deleteBySubjectApiKey(@Param("apiKey") String apiKey);
+
+    @Modifying
+    @Query("delete from Embedding e where e.subject.apiKey = :apiKey and e.id = :id")
+    int deleteBySubjectApiKeyAndId(@Param("apiKey") String apiKey, @Param("id") UUID embeddingId);
+
+    @Modifying
+    @Query("update Embedding e set e.subject = :toSubject where e.subject = :fromSubject")
+    int reassignEmbeddings(@Param("fromSubject") Subject fromSubject, @Param("toSubject") Subject toSubject);
 
     List<Embedding> findBySubjectId(UUID subjectId);
 
     @Query("select distinct(e.calculator) from Embedding e")
     List<String> getUniqueCalculators();
+
+    @Query("select count(e) from Embedding e where e.subject.apiKey = :apiKey")
+    int countByApiKey(@Param("apiKey") String apiKey);
 }

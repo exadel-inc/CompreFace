@@ -19,6 +19,10 @@ databaseChangeLog:
             columnNames: id
             constraintName: pk_subject
             tableName: subject
+        - addUniqueConstraint:
+            columnNames: api_key, subject_name
+            constraintName: api_key_subject_name_uindex
+            tableName: subject
   - changeSet:
       id: create-img-table
       author: Shymanski Siarhei
@@ -32,9 +36,6 @@ databaseChangeLog:
               - column:
                   name: content
                   type: bytea
-              - column:
-                  name: subject_id
-                  type: uuid
         - addPrimaryKey:
             columnNames: id
             constraintName: pk_img
@@ -42,14 +43,6 @@ databaseChangeLog:
         - addNotNullConstraint:
             tableName: img
             columnName: content
-        - addForeignKeyConstraint:
-            baseColumnNames: subject_id
-            baseTableName: img
-            referencedColumnNames: id
-            referencedTableName: subject
-            constraintName: fk_subject_id
-            onDelete: CASCADE
-            onUpdate: CASCADE
   - changeSet:
       id: create-embedding-table
       author: Shymanski Siarhei
@@ -72,6 +65,12 @@ databaseChangeLog:
               - column:
                   name: img_id
                   type: uuid
+        - addNotNullConstraint:
+            tableName: embedding
+            columnName: calculator
+        - addNotNullConstraint:
+            tableName: embedding
+            columnName: embedding
         - addPrimaryKey:
             columnNames: id
             constraintName: pk_embedding

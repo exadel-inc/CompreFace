@@ -12,6 +12,7 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+// Think about Subject as a collection of Embeddings
 public class Subject {
 
     @Id
@@ -21,6 +22,8 @@ public class Subject {
     @Column(name = "api_key")
     private String apiKey;
 
+    // String that identifies subject in unique way
+    // Could be guid, UUID - up to users
     @Column(name = "subject_name")
     private String subjectName;
 }

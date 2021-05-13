@@ -1,21 +1,23 @@
 package com.exadel.frs.core.trainservice.cache;
 
-import com.exadel.frs.core.trainservice.dao.SubjectDao;
+import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
 public class SubjectCacheProvider {
 
     private static final long CACHE_EXPIRATION = 60 * 60 * 24L;
-    private static final long CACHE_MAXIMUM_SIZE = 20;
+    private static final long CACHE_MAXIMUM_SIZE = 10;
 
-    private final SubjectDao subjectDao;
+    private final EmbeddingRepository embeddingRepository;
 
     private static final Cache<String, SubjectCollection> cache =
             CacheBuilder.newBuilder()
@@ -26,11 +28,16 @@ public class SubjectCacheProvider {
     public SubjectCollection getOrLoad(final String apiKey) {
         var result = cache.getIfPresent(apiKey);
         if (result == null) {
-            result = subjectDao.doWithEmbeddingsStream(apiKey, SubjectCollection::from);
+            result = embeddingRepository.doWithEmbeddingsStream(apiKey, SubjectCollection::from);
             cache.put(apiKey, result);
         }
 
         return result;
+    }
+
+    public void ifPresent(String apiKey, Consumer<SubjectCollection> consumer) {
+        Optional.ofNullable(cache.getIfPresent(apiKey))
+                .ifPresent(consumer);
     }
 
     public void invalidate(final String apiKey) {
