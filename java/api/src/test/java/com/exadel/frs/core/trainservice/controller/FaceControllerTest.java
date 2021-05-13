@@ -23,31 +23,25 @@ import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.handler.CommonExceptionCode;
 import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
-import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.AddFaceRequest;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
-import com.exadel.frs.core.trainservice.repository.AppRepository;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesBox;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.dto.VerifyRequest;
+import com.exadel.frs.core.trainservice.repository.AppRepository;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,13 +52,9 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,13 +63,12 @@ import static com.exadel.frs.core.trainservice.ItemsBuilder.makeModel;
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.hamcrest.Matchers.*;
 
 @IntegrationTest
 @AutoConfigureMockMvc
@@ -147,9 +136,6 @@ class FaceControllerTest extends EmbeddedPostgreSQLTest {
         facesRepository.deleteFacesByApiKey(API_KEY);
         faceCacheProvider.invalidate(API_KEY);
     }
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Test
     void findAndSaveFaces() throws Exception {
@@ -396,14 +382,11 @@ class FaceControllerTest extends EmbeddedPostgreSQLTest {
     @Test
     void verifyFacesBase64() throws Exception {
         val faceA = makeFace("A", API_KEY);
-        val faceB = makeFace("B", API_KEY);
-        val faceC = makeFace("C", API_KEY);
-        val faces = List.of(faceA, faceB, faceC);
-        val faceCollection = FaceCollection.buildFromFaces(faces);
-
-        doReturn(faceCollection)
-                .when(faceCacheProvider)
-                .getOrLoad(API_KEY);
+        saveFaces(
+                faceA,
+                makeFace("B", API_KEY),
+                makeFace("C", API_KEY)
+        );
 
         val findFacesResponse = FindFacesResponse.builder()
                 .result(List.of(FindFacesResult.builder()
@@ -411,9 +394,10 @@ class FaceControllerTest extends EmbeddedPostgreSQLTest {
                         .box(new FacesBox().setProbability(1D))
                         .build()
                 ))
+                .pluginsVersions(PluginsVersions.builder().calculator("fake_calc").detector("detector").build())
                 .build();
 
-        when(client.findFacesBase64WithCalculator(any(), any(), any(), isNull())).thenReturn(findFacesResponse);
+        when(client.findFacesBase64WithCalculator(any(), any(), any(), anyString())).thenReturn(findFacesResponse);
         when(predictor.verify(any(), any(), any())).thenReturn(eq(0.0));
 
         VerifyRequest request = VerifyRequest.builder()
@@ -432,8 +416,6 @@ class FaceControllerTest extends EmbeddedPostgreSQLTest {
 
         verify(imageValidator).validateBase64(any());
         verify(client).findFacesBase64WithCalculator(any(), any(), any(), anyString());
-
-        verifyNoMoreInteractions(imageValidator, client, predictor);
     }
 
     @Test

@@ -16,8 +16,6 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import static java.math.RoundingMode.HALF_UP;
-import static java.util.stream.Collectors.toSet;
 import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.exception.SubjectNotFoundException;
@@ -35,19 +33,6 @@ import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResult;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
@@ -88,9 +73,9 @@ public class FaceService {
         val faces = faceCacheProvider.getOrLoad(apiKey);
 
         Set<FaceBO> collect = faceDao.deleteFaceByName(faceName, apiKey)
-                                     .stream()
-                                     .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
-                                     .collect(toSet());
+                .stream()
+                .map(face -> faces.removeFace(face.getId(), face.getFaceName()))
+                .collect(toSet());
         log.info("faceMapper: {}", faceMapper);
 
         return faceMapper.toResponseDto(collect);
