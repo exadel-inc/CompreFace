@@ -14,18 +14,16 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.faces.exception;
+package com.exadel.frs.commonservice.system.global;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-import com.exadel.frs.commonservice.exception.BasicException;
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public class Constants {
 
-import static com.exadel.frs.commonservice.handler.CommonExceptionCode.NO_FACES_FOUND;
+    public static final String CALCULATOR_PLUGIN = "calculator";
+    public static final String DET_PROB_THRESHOLD = "det_prob_threshold";
+    public static final String FACE_PLUGINS = "face_plugins";
 
-public class NoFacesFoundException extends BasicException {
-
-    private static final String MESSAGE = "No face is found in the given image";
-
-    public NoFacesFoundException() {
-        super(NO_FACES_FOUND, MESSAGE);
-    }
 }

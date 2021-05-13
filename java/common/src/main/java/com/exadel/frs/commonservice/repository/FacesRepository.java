@@ -20,6 +20,7 @@ import com.exadel.frs.commonservice.entity.Face;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,9 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface FacesRepository extends JpaRepository<Face, Long> {
+
+    String FACENET = "Facenet2018";
+    String DEMO_API_KEY = "00000000-0000-0000-0000-000000000002";
 
     List<Face> findByApiKey(String modelApiKey);
 
@@ -45,4 +49,20 @@ public interface FacesRepository extends JpaRepository<Face, Long> {
     int countByApiKey(String modelApiKey);
 
     Optional<Face> findById(String id);
+
+    List<Face> findByIdIn(List<String> ids);
+
+    @Query(value = "SELECT CASE WHEN count(f) > 0 THEN true ELSE false END" +
+            " FROM face f" +
+            " WHERE f.embeddings->>'calculatorVersion' <> '" + FACENET + "'" +
+            " AND f.api_key = '" + DEMO_API_KEY + "'",
+            nativeQuery = true)
+    boolean isDemoFaceCollectionInconsistent();
+
+    @Query(value = "SELECT CASE WHEN count(f) > 0 THEN true ELSE false END" +
+            " FROM face f" +
+            " WHERE f.embeddings->>'calculatorVersion' <> :calculatorVersion" +
+            " AND f.api_key <> '" + DEMO_API_KEY + "'",
+            nativeQuery = true)
+    boolean isDbInconsistent(@Param("calculatorVersion") String calculatorVersion);
 }

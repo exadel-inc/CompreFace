@@ -1,7 +1,7 @@
-package com.exadel.frs.core.trainservice.sdk.faces;
+package com.exadel.frs.commonservice.sdk.faces;
 
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 /**

@@ -4,15 +4,12 @@ import com.exadel.frs.core.trainservice.dto.FaceProcessResponse;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
-
-import java.util.Base64;
 
 @Service("detectionService")
 @RequiredArgsConstructor
@@ -27,8 +24,8 @@ public class FaceDetectionProcessServiceImpl implements FaceProcessService {
         Integer limit = processImageParams.getLimit();
         Double detProbThreshold = processImageParams.getDetProbThreshold();
         String facePlugins = processImageParams.getFacePlugins();
-        FindFacesResponse findFacesResponse;
 
+        FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
             imageExtensionValidator.validate(file);

@@ -17,11 +17,10 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
+import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
-import com.exadel.frs.core.trainservice.dto.VerifyRequest;
-import com.exadel.frs.core.trainservice.dto.UpdateSubjectDto;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
@@ -38,6 +37,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static com.exadel.frs.commonservice.system.global.Constants.DET_PROB_THRESHOLD;
 import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -52,19 +52,40 @@ public class FaceController {
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
-    @PostMapping
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public FaceResponseDto addFaces(
-            @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true)
-            @RequestParam final MultipartFile file,
-            @ApiParam(value = SUBJECT_DESC, required = true)
-            @RequestParam(SUBJECT) final String subject,
-            @ApiParam(value = DET_PROB_THRESHOLD_DESC)
-            @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
-            @ApiParam(value = API_KEY_DESC, required = true)
-            @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey
+            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true) @RequestParam final MultipartFile file,
+            @ApiParam(value = SUBJECT_DESC, required = true) @RequestParam(SUBJECT) final String subject,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold
     ) throws IOException {
         imageValidator.validate(file);
-        return faceService.findAndSaveFace(file, subject, detProbThreshold, apiKey);
+
+        return faceService.findAndSaveFace(
+                file,
+                subject,
+                detProbThreshold,
+                apiKey
+        );
+    }
+
+    @WriteEndpoint
+    @ResponseStatus(CREATED)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public FaceResponseDto addFacesBase64(
+            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = SUBJECT_DESC) @RequestParam(value = SUBJECT) String subject,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @Valid @RequestBody Base64File request) throws IOException {
+
+        imageValidator.validateBase64(request.getContent());
+
+        return faceService.findAndSaveFace(
+                request.getContent(),
+                subject,
+                detProbThreshold,
+                apiKey
+        );
     }
 
     @GetMapping
@@ -118,26 +139,19 @@ public class FaceController {
     }
 
     @PostMapping(value = "/{image_id}/verify",
-                 consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Map<String, List<FaceVerification>> recognizeFile(
-            @ApiParam(value = API_KEY_DESC, required = true)
-            @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true)
-            @RequestParam final MultipartFile file,
-            @ApiParam(value = LIMIT_DESC)
-            @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false)
-            @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
-            @ApiParam(value = IMAGE_ID_DESC, required = true)
-            @PathVariable final String image_id,
-            @ApiParam(value = DET_PROB_THRESHOLD_DESC)
-            @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
-            @ApiParam(value = FACE_PLUGINS_DESC)
-            @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
-            @ApiParam(value = STATUS_DESC)
-            @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status
+            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final String image_id,
+            @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC) @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC) @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status,
+            @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true) @RequestParam final MultipartFile file
     ) {
         imageValidator.validate(file);
-        ProcessImageParams processImageParams = ProcessImageParams.builder()
+
+        var processImageParams = ProcessImageParams.builder()
                 .additionalParams(Map.of(IMAGE_ID, image_id))
                 .apiKey(apiKey)
                 .detProbThreshold(detProbThreshold)
@@ -146,28 +160,32 @@ public class FaceController {
                 .limit(limit)
                 .status(status)
                 .build();
+
         return faceService.verifyFace(processImageParams);
     }
 
-    @PostMapping(value = "/{image_id}/verify",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{image_id}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, List<FaceVerification>> recognizeBase64(
-            @ApiParam(value = API_KEY_DESC, required = true)
-            @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = IMAGE_ID_DESC, required = true)
-            @PathVariable final String image_id,
-            @RequestBody @Valid VerifyRequest verifyRequest
-            ) {
-        imageValidator.validateBase64(verifyRequest.getImageAsBase64());
-        ProcessImageParams processImageParams = ProcessImageParams.builder()
+            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final String image_id,
+            @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC) @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC) @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status,
+            @RequestBody @Valid Base64File request) {
+
+        imageValidator.validateBase64(request.getContent());
+
+        var processImageParams = ProcessImageParams.builder()
                 .additionalParams(Map.of(IMAGE_ID, image_id))
                 .apiKey(apiKey)
-                .detProbThreshold(verifyRequest.getDetProbThreshold())
-                .imageBase64(verifyRequest.getImageAsBase64())
-                .facePlugins(verifyRequest.getFacePlugins())
-                .limit(verifyRequest.getLimit())
-                .status(verifyRequest.getStatus())
+                .detProbThreshold(detProbThreshold)
+                .imageBase64(request.getContent())
+                .facePlugins(facePlugins)
+                .limit(limit)
+                .status(status)
                 .build();
+
         return faceService.verifyFace(processImageParams);
     }
 }

@@ -14,20 +14,18 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.commonservice.exception;
+package com.exadel.frs.commonservice.sdk.faces.exception;
 
-import static com.exadel.frs.commonservice.handler.CrudExceptionCode.DEMO_MODEL_NOT_AVAILABLE;
 
-public class DemoNotAvailableException extends BasicException {
+import com.exadel.frs.commonservice.exception.BasicException;
 
-    public static final String MESSAGE = "The Demo model is not available any more!";
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.NO_FACES_FOUND;
 
-    public DemoNotAvailableException() {
-        super(DEMO_MODEL_NOT_AVAILABLE, MESSAGE);
-    }
+public class NoFacesFoundException extends BasicException {
 
-    @Override
-    public synchronized Throwable fillInStackTrace() {
-        return this;
+    private static final String MESSAGE = "No face is found in the given image";
+
+    public NoFacesFoundException() {
+        super(NO_FACES_FOUND, MESSAGE);
     }
 }

@@ -15,39 +15,42 @@
  */
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
-import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.exadel.frs.commonservice.exception.BasicException;
 import com.exadel.frs.commonservice.exception.FileExtensionException;
-import com.exadel.frs.commonservice.handler.ResponseExceptionHandler;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.exception.FacesServiceException;
+import com.exadel.frs.commonservice.sdk.faces.exception.NoFacesFoundException;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.system.global.Constants;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.exception.FacesServiceException;
-import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundException;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
-import java.util.stream.Stream;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import java.util.Base64;
+import java.util.stream.Stream;
+
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @IntegrationTest
 @AutoConfigureMockMvc
@@ -62,6 +65,9 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
 
     @MockBean
     private FacesApiClient client;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     private static final String API_KEY = "api-key";
 
@@ -78,8 +84,8 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
-               // then
-               .andExpect(status().isBadRequest());
+                // then
+                .andExpect(status().isBadRequest());
     }
 
     static Stream<Arguments> verifyClientReturnsException() {
@@ -105,8 +111,8 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
                 .andDo(MockMvcResultHandlers.print())
-               // then
-               .andExpect(matcher);
+                // then
+                .andExpect(matcher);
     }
 
     @Test
@@ -124,7 +130,31 @@ class DetectionControllerTest extends EmbeddedPostgreSQLTest {
                         .file(mockFile)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         )
-               // then
-               .andExpect(status().isOk());
+                // then
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void testDetectBase64() throws Exception {
+        // given
+        val findResponse = new FindFacesResponse();
+        doNothing().when(validator).validateBase64(any());
+        when(client.findFacesBase64(any(), any(), any(), any())).thenReturn(findResponse);
+
+        Base64File request = new Base64File();
+        request.setContent(Base64.getEncoder().encodeToString(new byte[]{(byte) 0xCA}));
+
+        // when
+        mockMvc.perform(
+                post(API_V1 + DETECT)
+                        .queryParam("limit", "4")
+                        .queryParam(Constants.DET_PROB_THRESHOLD, "0.7")
+                        .queryParam(Constants.FACE_PLUGINS, "faceplug")
+                        .queryParam("status", "true")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE).content(objectMapper.writeValueAsString(request))
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        )
+                // then
+                .andExpect(status().isOk());
     }
 }

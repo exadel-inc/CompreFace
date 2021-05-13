@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.global;
+package com.exadel.frs.commonservice.system.global;
 
 import java.util.Map;
 import javax.validation.constraints.NotNull;
