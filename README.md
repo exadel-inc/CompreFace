@@ -42,10 +42,10 @@ recognition, face verification, face detection, landmark detection, age, and gen
 
   * [Overview](#overview)
   * [Screenshots](#screenshots)
-  * [Feedback survey](#feedback-survey)
+  * [News and updates](#news-and-updates)
   * [Features](#features)
   * [Getting Started with CompreFace](#getting-started-with-compreface)
-  * [CompreFace SDKs](#compreFace-SDKs)
+  * [CompreFace SDKs](#compreface-sdks)
   * [Documentation](/docs)
     * [How to Use CompreFace](/docs/How-to-Use-CompreFace.md)
     * [Face Services and Plugins](/docs/Face-services-and-plugins.md)
@@ -75,10 +75,9 @@ CompreFace is delivered as a docker-compose config and supports different models
 <img src="https://user-images.githubusercontent.com/3736126/107063429-0f7cb400-67e3-11eb-9ecc-27a1a0955923.png" alt="compreface-main-page" width=390px style="padding: 10px;">
 </p>
 
-# Feedback survey
+# News and updates
 
-We need your help to better understand which features we should add to the service and how we can improve it further! Our feedback form is totally anonymous, and answering the questions will take just 2 minutes of your time:
-https://forms.gle/ybAEPc3XmzEcpv4M8
+[Subscribe](https://exadel-7026941.hs-sites.com/en/en/compreface-news-and-updates) to CompreFace News and Updates to never miss new features and product improvements.
 
 # Features
 
