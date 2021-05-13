@@ -14,31 +14,23 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.system.global;
+package com.exadel.frs.commonservice.system.global;
 
-import java.util.Map;
+import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
-@Configuration
-@ConfigurationProperties(prefix = "environment")
+@Component
+@ConfigurationProperties(prefix = "image")
 @Data
-public class EnvironmentProperties {
+public class ImageProperties {
 
     @NotNull
     @Size(min = 1)
-    private final Map<ServerType, ServerInfo> servers;
+    private final List types;
 
-    @Data
-    public static final class ServerInfo {
-
-        private String url;
-    }
-
-    public enum ServerType {
-        PYTHON
-    }
+    private boolean saveImagesToDB;
 }

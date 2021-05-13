@@ -1,10 +1,10 @@
 package com.exadel.frs.core.trainservice.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiParam;
-import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.bind.annotation.RequestParam;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -13,8 +13,9 @@ import static com.exadel.frs.commonservice.system.global.Constants.DET_PROB_THRE
 import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 
 @Data
-@Builder
-public class VerifyRequest {
+@NoArgsConstructor
+public class RecognizeRequest {
+
     @JsonProperty("file")
     @NotNull
     @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true)
@@ -23,6 +24,11 @@ public class VerifyRequest {
     @Min(value = 0, message = LIMIT_MIN_DESC)
     @ApiParam(value = LIMIT_DESC)
     private Integer limit;
+
+    @JsonProperty(PREDICTION_COUNT_REQUEST_PARAM)
+    @Min(value = 1, message = PREDICTION_COUNT_MIN_DESC)
+    @ApiParam(value = PREDICTION_COUNT_DESC)
+    private Integer predictionCount;
 
     @JsonProperty(DET_PROB_THRESHOLD)
     @ApiParam(value = DET_PROB_THRESHOLD_DESC)

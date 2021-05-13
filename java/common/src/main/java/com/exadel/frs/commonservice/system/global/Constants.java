@@ -14,18 +14,12 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.core.trainservice.sdk.faces.exception;
+package com.exadel.frs.commonservice.system.global;
 
-import com.exadel.frs.commonservice.exception.BasicException;
+public class Constants {
 
-import static com.exadel.frs.commonservice.handler.CommonExceptionCode.FACES_SERVICE_EXCEPTION;
-import static java.lang.String.format;
+    public static final String CALCULATOR_PLUGIN = "calculator";
+    public static final String DET_PROB_THRESHOLD = "det_prob_threshold";
+    public static final String FACE_PLUGINS = "face_plugins";
 
-public class FacesServiceException extends BasicException {
-
-    private static final String MESSAGE = "Error during synchronization between servers: %s";
-
-    public FacesServiceException(final String message) {
-        super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));
-    }
 }

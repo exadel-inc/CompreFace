@@ -13,24 +13,21 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+package com.exadel.frs.commonservice.sdk.faces.feign.dto;
 
-package com.exadel.frs.core.trainservice.system.global;
-
-import java.util.List;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import lombok.NoArgsConstructor;
 
-@Component
-@ConfigurationProperties(prefix = "image")
 @Data
-public class ImageProperties {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class PluginsVersions {
 
-    @NotNull
-    @Size(min = 1)
-    private final List types;
-
-    private boolean saveImagesToDB;
+    private String age;
+    private String gender;
+    private String detector;
+    private String calculator;
 }

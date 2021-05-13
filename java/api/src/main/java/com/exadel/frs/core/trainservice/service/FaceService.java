@@ -18,9 +18,13 @@ package com.exadel.frs.core.trainservice.service;
 
 import static java.math.RoundingMode.HALF_UP;
 import static java.util.stream.Collectors.toSet;
+import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.exception.SubjectNotFoundException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
 import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.core.trainservice.cache.FaceCollection;
@@ -49,6 +53,15 @@ import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.math.RoundingMode.HALF_UP;
+import static java.util.stream.Collectors.toSet;
 
 @Service
 @RequiredArgsConstructor
@@ -86,6 +99,7 @@ public class FaceService {
     public FaceResponseDto deleteFaceById(final String id, final String apiKey) {
         val collection = faceCacheProvider.getOrLoad(apiKey);
         val face = faceDao.deleteFaceById(id);
+
         if (face != null) {
             FaceBO faceBO = collection.removeFace(face.getId(), face.getFaceName());
             return faceMapper.toResponseDto(faceBO);
@@ -125,12 +139,41 @@ public class FaceService {
     }
 
     public FaceResponseDto findAndSaveFace(
+            final String base64photo,
+            final String faceName,
+            final Double detProbThreshold,
+            final String modelKey
+    ) throws IOException {
+        FindFacesResponse findFacesResponse = facesApiClient.findFacesBase64WithCalculator(
+                base64photo,
+                MAX_FACES_TO_RECOGNIZE,
+                detProbThreshold,
+                null
+        );
+
+        return findAndSaveFace(Base64.getDecoder().decode(base64photo), faceName, modelKey, findFacesResponse);
+    }
+
+    public FaceResponseDto findAndSaveFace(
             final MultipartFile file,
             final String faceName,
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(file, MAX_FACES_TO_RECOGNIZE, detProbThreshold, null);
+        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(
+                file,
+                MAX_FACES_TO_RECOGNIZE,
+                detProbThreshold,
+                null
+        );
+
+        return findAndSaveFace(file.getBytes(), faceName, modelKey, findFacesResponse);
+    }
+
+    private FaceResponseDto findAndSaveFace(byte[] content,
+                                            String faceName,
+                                            String modelKey,
+                                            FindFacesResponse findFacesResponse) throws IOException {
         List<FindFacesResult> result = findFacesResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {
@@ -145,24 +188,24 @@ public class FaceService {
 
         List<Double> normalizedList = Arrays.stream(normalized).boxed().collect(Collectors.toList());
 
-        Face.Embedding embeddingToSave = new Face.Embedding(normalizedList, findFacesResponse.getPluginsVersions().getCalculator());
+        var embeddingToSave = new Face.Embedding(
+                normalizedList,
+                findFacesResponse.getPluginsVersions().getCalculator()
+        );
 
         FaceBO faceBO = faceCacheProvider
                 .getOrLoad(modelKey)
-                .addFace(faceDao.addNewFace(embeddingToSave, file, faceName, modelKey));
-        FaceResponseDto faceResponseDto = faceMapper.toResponseDto(faceBO);
-        if (faceResponseDto == null) {
-            faceResponseDto = new FaceResponseDto();
-        }
+                .addFace(faceDao.addNewFace(embeddingToSave, content, faceName, modelKey));
 
-        return faceResponseDto;
+        return Optional.ofNullable(faceMapper.toResponseDto(faceBO))
+                .orElse(new FaceResponseDto());
     }
 
     public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {
         FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
-           findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
+            findFacesResponse = client.findFacesWithCalculator(file, processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         } else {
             findFacesResponse = client.findFacesBase64WithCalculator(processImageParams.getImageBase64(), processImageParams.getLimit(), processImageParams.getDetProbThreshold(), processImageParams.getFacePlugins());
         }
@@ -173,6 +216,8 @@ public class FaceService {
 
         val results = new ArrayList<FaceVerification>();
         FaceCollection orLoad = faceCacheProvider.getOrLoad(processImageParams.getApiKey());
+        PluginsVersionsDto pluginsVersionsDto = faceMapper.toPluginVersionsDto(findFacesResponse.getPluginsVersions());
+
         for (val findResult : findFacesResponse.getResult()) {
             val prediction = classifierPredictor.verify(
                     processImageParams.getApiKey(),
@@ -182,22 +227,27 @@ public class FaceService {
                     String.valueOf(processImageParams.getAdditionalParams().get("image_id"))
             );
 
-            var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());
-            inBoxProb = inBoxProb.setScale(5, HALF_UP);
-            findResult.getBox().setProbability(inBoxProb.doubleValue());
+            val inBoxProb = BigDecimal
+                    .valueOf(findResult.getBox().getProbability())
+                    .setScale(5, HALF_UP)
+                    .doubleValue();
+            findResult.getBox().setProbability(inBoxProb);
 
-            var pred = BigDecimal.valueOf(prediction);
-            pred = pred.setScale(5, HALF_UP);
+            val pred = BigDecimal
+                    .valueOf(prediction)
+                    .setScale(5, HALF_UP)
+                    .floatValue();
 
             FaceVerification faceVerification = FaceVerification
                     .builder()
                     .box(findResult.getBox())
-                    .similarity(pred.floatValue())
+                    .similarity(pred)
                     .embedding(findResult.getEmbedding())
                     .executionTime(findResult.getExecutionTime())
                     .age(findResult.getAge())
                     .gender(findResult.getGender())
                     .landmarks(findResult.getLandmarks())
+                    .pluginsVersions(pluginsVersionsDto)
                     .build();
 
             results.add(faceVerification.prepareResponse(processImageParams));

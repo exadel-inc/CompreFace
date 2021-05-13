@@ -13,21 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-package com.exadel.frs.core.trainservice.sdk.faces.feign.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+package com.exadel.frs.commonservice.sdk.faces.exception;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class PluginsVersions {
+import com.exadel.frs.commonservice.exception.BasicException;
 
-    private String age;
-    private String gender;
-    private String detector;
-    private String calculator;
+import static com.exadel.frs.commonservice.handler.CommonExceptionCode.FACES_SERVICE_EXCEPTION;
+import static java.lang.String.format;
+
+public class FacesServiceException extends BasicException {
+
+    private static final String MESSAGE = "Error during synchronization between servers: %s";
+
+    public FacesServiceException(final String message) {
+        super(FACES_SERVICE_EXCEPTION, format(MESSAGE, message));
+    }
 }

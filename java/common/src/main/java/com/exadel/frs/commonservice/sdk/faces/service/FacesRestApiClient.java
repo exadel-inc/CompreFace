@@ -1,20 +1,19 @@
-package com.exadel.frs.core.trainservice.sdk.faces.service;
+package com.exadel.frs.commonservice.sdk.faces.service;
 
-import com.exadel.frs.core.trainservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.core.trainservice.sdk.faces.exception.FacesServiceException;
-import com.exadel.frs.core.trainservice.sdk.faces.exception.NoFacesFoundException;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.FacesFeignClient;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FacesStatusResponse;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesRequest;
-import com.exadel.frs.core.trainservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.exception.FacesServiceException;
+import com.exadel.frs.commonservice.sdk.faces.exception.NoFacesFoundException;
+import com.exadel.frs.commonservice.sdk.faces.feign.FacesFeignClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesRequest;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
+import com.exadel.frs.commonservice.system.global.Constants;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import static com.exadel.frs.core.trainservice.system.global.Constants.CALCULATOR_PLUGIN;
 
 @AllArgsConstructor
 @Component
@@ -39,12 +38,12 @@ public class FacesRestApiClient implements FacesApiClient {
     @Override
     public FindFacesResponse findFacesBase64(String imageAsBase64, Integer faceLimit, Double thresholdC, String facePlugins) {
         try {
-            return feignClient.findFacesBase64(FindFacesRequest.builder()
-            .imageAsBase64(imageAsBase64)
-            .facePlugins(facePlugins)
-            .detProbThreshold(thresholdC)
-            .limit(faceLimit)
-            .build());
+            return feignClient.findFacesBase64(
+                    new FindFacesRequest(imageAsBase64),
+                    faceLimit,
+                    thresholdC,
+                    facePlugins
+            );
         } catch (FeignException.BadRequest ex) {
             throw new NoFacesFoundException();
         } catch (FeignException e) {
@@ -67,24 +66,24 @@ public class FacesRestApiClient implements FacesApiClient {
         try {
             String finalFacePlugins;
             if (StringUtils.isNotBlank(facePlugins)) {
-                if (!facePlugins.contains(CALCULATOR_PLUGIN)) {
-                    finalFacePlugins = CALCULATOR_PLUGIN + COMMA + facePlugins;
+                if (!facePlugins.contains(Constants.CALCULATOR_PLUGIN)) {
+                    finalFacePlugins = Constants.CALCULATOR_PLUGIN + COMMA + facePlugins;
                 } else {
                     finalFacePlugins = facePlugins;
                 }
             } else {
-                finalFacePlugins = CALCULATOR_PLUGIN;
+                finalFacePlugins = Constants.CALCULATOR_PLUGIN;
             }
 
             if (photo != null) {
                 return feignClient.findFaces(photo, faceLimit, thresholdC, finalFacePlugins);
             } else {
-                return feignClient.findFacesBase64(FindFacesRequest.builder()
-                .imageAsBase64(imageAsBase64)
-                .facePlugins(facePlugins)
-                .detProbThreshold(thresholdC)
-                .limit(faceLimit)
-                .build());
+                return feignClient.findFacesBase64(
+                        new FindFacesRequest(imageAsBase64),
+                        faceLimit,
+                        thresholdC,
+                        facePlugins
+                );
             }
         } catch (FeignException.BadRequest ex) {
             throw new NoFacesFoundException();

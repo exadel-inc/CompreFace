@@ -22,6 +22,8 @@ import com.exadel.frs.commonservice.exception.BasicException;
 import com.exadel.frs.commonservice.exception.FileExtensionException;
 import com.exadel.frs.commonservice.exception.InvalidBase64Exception;
 import com.exadel.frs.core.trainservice.system.global.ImageProperties;
+import com.exadel.frs.commonservice.system.global.ImageProperties;
+import com.exadel.frs.commonservice.exception.InvalidBase64Exception;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.codec.binary.Base64;
