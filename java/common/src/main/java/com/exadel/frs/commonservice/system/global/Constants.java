@@ -16,6 +16,10 @@
 
 package com.exadel.frs.commonservice.system.global;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Constants {
 
     public static final String CALCULATOR_PLUGIN = "calculator";

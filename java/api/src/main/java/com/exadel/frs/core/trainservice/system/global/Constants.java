@@ -16,6 +16,10 @@
 
 package com.exadel.frs.core.trainservice.system.global;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Constants {
 
     public static final String X_FRS_API_KEY_HEADER = "x-api-key";

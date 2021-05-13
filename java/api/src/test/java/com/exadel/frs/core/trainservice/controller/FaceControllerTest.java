@@ -35,7 +35,6 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
-import com.exadel.frs.core.trainservice.dto.VerifyRequest;
 import com.exadel.frs.core.trainservice.repository.AppRepository;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
@@ -66,7 +65,6 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;

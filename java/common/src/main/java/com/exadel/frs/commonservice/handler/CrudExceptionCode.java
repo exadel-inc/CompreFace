@@ -16,7 +16,6 @@
 
 package com.exadel.frs.commonservice.handler;
 
-import com.exadel.frs.commonservice.handler.HttpExceptionCode;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
