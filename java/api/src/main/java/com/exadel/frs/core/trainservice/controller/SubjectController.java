@@ -22,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.*;
 
+import static com.exadel.frs.commonservice.system.global.Constants.DET_PROB_THRESHOLD;
 import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
@@ -129,22 +130,26 @@ public class SubjectController {
         return subjectService.verifyFace(processImageParams);
     }
 
-    @PostMapping(value = "/{embeddingId}/verify",
-            consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/{embeddingId}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
     public Map<String, List<FaceVerification>> recognizeBase64(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final UUID embeddingId,
-            @RequestBody @Valid VerifyRequest verifyRequest
+            @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC) @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC) @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status,
+            @RequestBody @Valid Base64File request
     ) {
-        imageValidator.validateBase64(verifyRequest.getImageAsBase64());
+        imageValidator.validateBase64(request.getContent());
+
         ProcessImageParams processImageParams = ProcessImageParams.builder()
                 .additionalParams(Map.of(IMAGE_ID, embeddingId))
                 .apiKey(apiKey)
-                .detProbThreshold(verifyRequest.getDetProbThreshold())
-                .imageBase64(verifyRequest.getImageAsBase64())
-                .facePlugins(verifyRequest.getFacePlugins())
-                .limit(verifyRequest.getLimit())
-                .status(verifyRequest.getStatus())
+                .detProbThreshold(detProbThreshold)
+                .imageBase64(request.getContent())
+                .facePlugins(facePlugins)
+                .limit(limit)
+                .status(status)
                 .build();
 
         return subjectService.verifyFace(processImageParams);
