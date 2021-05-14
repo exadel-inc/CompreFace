@@ -18,7 +18,10 @@ $red: #FF6B6B; // icons, accent labels, accent text labels, accent borders, acce
 $green: #27C224; // accent buttons
 $white: #fff;
 $black: #222222; // titles,
+$gray: rgba(34, 34, 34, 0.25); // placeholder search
 $dark-gray: rgba(34, 34, 34, 0.8); // subtitles
+$light-gray: rgba(34, 34, 34, 0.45); // border drag-n-drop
+$super-light-gray: rgba(34, 34, 34, 0.1); // border drag-n-drop
 $pale-gray: #979899; // plain text labels, plain texts, plain form borders
 $primary: #0082CA; // general buttons, accent text labels
 $primary-light: #7CBEE3; // accent borders,
@@ -32,3 +35,5 @@ $hovered: #fafafa;
 $special-light-gray:  rgba(78, 78, 78, 0.05);  //scrollbar Track
 $special-gray:  rgba(229, 229, 229, 1);  // scrollbar Handle
 $special-dark-gray:  rgb(173, 173, 173);  // scrollbar Handle on hover
+$special-light-blue:  rgba(0, 130, 202, 0.02);  // drag-n-drop hover
+$special-blue:  rgba(0, 130, 202, 0.5);  // drag-n-drop border hover

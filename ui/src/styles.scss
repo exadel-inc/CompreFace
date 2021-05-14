@@ -15,16 +15,15 @@
  */
 
 /* You can add global styles to this file, and also import other style files */
-@import 'media.scss';
-@import 'colors.scss';
-@import 'mixins.scss';
-@import 'layout.scss';
+@import "media.scss";
+@import "colors.scss";
+@import "mixins.scss";
+@import "layout.scss";
+@import "custom-theme.scss";
 
-@import './styles/custom-theme.scss';
 @include custom-theme($custom-theme);
 
-body,
-html {
+body, html {
   height: 100%;
 }
 
@@ -41,6 +40,7 @@ body {
 
 ::-webkit-scrollbar {
   width: 6px;
+  height: 6px;
 }
 
 /* Track */
@@ -147,7 +147,8 @@ app-table, app-user-table, app-model-table {
   overflow-y: hidden;
 }
 
-.mat-form-field-type-mat-select .mat-form-field-underline {
+.mat-form-field-type-mat-select,
+.mat-form-field-underline {
   display: none;
 }
 
@@ -167,25 +168,6 @@ app-table, app-user-table, app-model-table {
   margin: 30px 0;
 }
 
-.header-bar-layout {
-  position: relative;
-
-  .mat-title {
-    flex-basis: 160px;
-  }
-
-  .search-input {
-    margin: 5px auto;
-    order: 1;
-    flex: 1 0 100%;
-  }
-
-  app-spinner {
-    position: absolute;
-    left: 40%
-  }
-}
-
 .create-new-message {
   display: flex;
   align-items: center;
@@ -197,56 +179,9 @@ app-table, app-user-table, app-model-table {
     margin-right: 6px;
 
     svg {
-      width: 14px;
-      height: 14px;
+      @include sm-icon-size;
     }
   }
 }
 
-form.search-input {
-  display: flex;
-  height: 32px;
-  margin-left: 16px;
-  flex-grow: 2;
-  align-items: center;
-  align-self: center;
-  border: 1px solid rgba(34, 34, 34, 0.1);
-  box-sizing: border-box;
-  border-radius: 4px;
-  padding: 8px 8px 8px 6px;
 
-  mat-icon{
-    color: rgba(34, 34, 34, 0.45);
-  }
-
-  input{
-    width: 100%;
-    border: 0;
-    font: inherit;
-    &:focus{
-      outline-width: 0
-    }
-  }
-}
-
-.custom-create-button {
-  display: inline-flex;
-  align-items: center;
-  flex-direction: row;
-  flex-basis: 117px;
-  line-height: 27px;
-  color: $primary;
-  margin-left: 5px;
-  padding: 0;
-  font-weight: 600;
-  cursor: pointer;
-  letter-spacing: 0.02em;
-
-  mat-icon {
-    @include sm-icon-size()
-  }
-
-  span {
-    margin-left: 5px;
-  }
-}

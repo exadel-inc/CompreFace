@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 import com.exadel.frs.commonservice.exception.FileExtensionException;
-import com.exadel.frs.core.trainservice.system.global.ImageProperties;
+import com.exadel.frs.commonservice.system.global.ImageProperties;
 import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;

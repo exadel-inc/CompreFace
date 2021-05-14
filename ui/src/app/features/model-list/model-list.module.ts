@@ -26,6 +26,7 @@ import { ModelListComponent } from './model-list.component';
 import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 import { FormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
+import { AppSearchTableModule } from '../app-search-table/app-search-table.module';
 
 @NgModule({
   declarations: [ModelListComponent],
@@ -41,6 +42,7 @@ import { MatInputModule } from '@angular/material/input';
     TablePipeModule,
     FormsModule,
     MatInputModule,
+    AppSearchTableModule,
   ],
 })
 export class ModelListModule {}

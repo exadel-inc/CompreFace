@@ -105,3 +105,25 @@ registration:
     expires: 3600000
     scheduler:
       period: 300000
+
+# "environment" and "image" blocks should be same in those files:
+#    * api/src/main/resources/application.properties
+#    * admin/src/main/resources/application.properties
+
+image:
+  types:
+    - tif
+    - tiff
+    - jpg
+    - jpeg
+    - png
+    - bmp
+    - ico
+    - gif
+    - webp
+  saveImagesToDB: ${SAVE_IMAGES_TO_DB:true}
+
+environment:
+  servers:
+    PYTHON:
+      url: ${PYTHON_URL:http://compreface-core:3000}

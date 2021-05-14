@@ -7,11 +7,6 @@ spring:
 
 ---
 
-environment:
-  servers:
-    PYTHON:
-      url: ${PYTHON_URL:http://compreface-core:3000}
-
 spring:
   cache:
     jcache:
@@ -47,6 +42,15 @@ spring:
       enabled: true
       max-file-size: 10MB
       max-request-size: 10MB
+
+# "environment" and "image" blocks should be same in those files:
+#    * api/src/main/resources/application.properties
+#    * admin/src/main/resources/application.properties
+
+environment:
+  servers:
+    PYTHON:
+      url: ${PYTHON_URL:http://compreface-core:3000}
 
 image:
   types:

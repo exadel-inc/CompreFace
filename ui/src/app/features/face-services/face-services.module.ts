@@ -25,6 +25,7 @@ import { FaceRecognitionContainerComponent } from './face-recognition/face-recog
 import { FaceVerificationContainerComponent } from './face-verification/face-verification-container.component';
 import { RecognitionResultComponent } from './face-recognition/recognition-result/recognition-result.component';
 import { VerificationResultComponent } from './face-verification/verification-result/verification-result.component';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,7 @@ import { VerificationResultComponent } from './face-verification/verification-re
     RecognitionResultComponent,
     VerificationResultComponent,
   ],
-  imports: [CommonModule, DragNDropModule, SpinnerModule, MatExpansionModule, TranslateModule],
+  imports: [CommonModule, DragNDropModule, SpinnerModule, MatExpansionModule, TranslateModule, MatCardModule],
   providers: [FaceRecognitionService],
   exports: [FaceRecognitionContainerComponent, FaceVerificationContainerComponent],
 })

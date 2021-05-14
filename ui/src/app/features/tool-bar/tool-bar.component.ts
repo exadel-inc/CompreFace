@@ -13,13 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { filter, first } from 'rxjs/operators';
 import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
 import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';
-import { MatMenuTrigger } from '@angular/material/menu';
 
 @Component({
   selector: 'app-tool-bar',
@@ -54,7 +53,7 @@ export class ToolBarComponent {
 
   onChangePassword() {
     const dialog = this.dialog.open(ChangePasswordDialogComponent, {
-      width: '350px',
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('applications.header.title'),
       },
@@ -71,7 +70,7 @@ export class ToolBarComponent {
 
   onEditUserInfo() {
     const dialog = this.dialog.open(EditUserInfoDialogComponent, {
-      width: '300px',
+      panelClass: 'custom-mat-dialog',
       data: { userName: this.userName },
     });
 

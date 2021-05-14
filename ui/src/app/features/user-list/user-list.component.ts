@@ -87,7 +87,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         switchMap((email: string) =>
           this.dialog
             .open(DeleteDialogComponent, {
-              width: '400px',
+              panelClass: 'custom-mat-dialog',
               data: {
                 entityType: this.translate.instant('users.user'),
                 entity: deletion.userToDelete,
@@ -107,6 +107,10 @@ export class UserListComponent implements OnInit, OnDestroy {
         tap(() => this.userListFacade.deleteUser(deletion, this.selectedOption))
       )
       .subscribe();
+  }
+
+  onSearch(event: string): void {
+    this.search = event;
   }
 
   ngOnDestroy(): void {

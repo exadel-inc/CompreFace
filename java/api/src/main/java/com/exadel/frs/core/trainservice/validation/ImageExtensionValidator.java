@@ -16,18 +16,17 @@
 
 package com.exadel.frs.core.trainservice.validation;
 
-import static com.google.common.io.Files.getFileExtension;
-
-import com.exadel.frs.commonservice.exception.BasicException;
 import com.exadel.frs.commonservice.exception.FileExtensionException;
 import com.exadel.frs.commonservice.exception.InvalidBase64Exception;
-import com.exadel.frs.core.trainservice.system.global.ImageProperties;
+import com.exadel.frs.commonservice.system.global.ImageProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import static com.google.common.io.Files.getFileExtension;
 
 @Component
 @RequiredArgsConstructor

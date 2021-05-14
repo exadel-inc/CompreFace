@@ -15,40 +15,39 @@
  */
 @import "mixins.scss";
 
-.application-header {
-  display: flex;
-  justify-content: space-between;
+.app-header {
+  margin-bottom: 24px;
 
-  .name-item {
-    h1 {
-      margin: 0;
-    }
-  }
-
-  .name-wrapper,
-  .api-key-wrapper {
+  &--wrapper {
     display: flex;
     align-items: center;
     justify-content: space-between;
-  }
 
-  mat-icon {
-    margin-left: 22px;
-    cursor: pointer;
-    @include md-icon-size();
-  }
+    &_name {
+      overflow: hidden;
 
-  mat-card {
-    padding: 20px 24px !important;
-  }
+      .mat-headline {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
 
-  &_left-coll {
-    width: 100%;
-  }
+    &_buttons {
+      min-width: 64px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
 
-  &_right-coll {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
+      .mat-icon {
+        @include md-icon-size();
+        cursor: pointer;
+      }
+    }
+
+    .mat-card {
+      padding: 20px 24px;
+    }
   }
 }

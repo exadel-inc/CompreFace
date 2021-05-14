@@ -13,156 +13,100 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'colors.scss';
-@import "media.scss";
+
+@import "colors.scss";
 @import "mixins.scss";
 
 caption {
   display: none;
 }
 
-.mat-cell:first-child {
-  padding-right: 0;
-}
+.mat {
 
-th.mat-header-cell:first-of-type, td.mat-cell:first-of-type, td.mat-footer-cell:first-of-type {
-  padding-left: 0;
-}
+  &-column {
 
-tr.mat-row, tr.mat-footer-row {
-  height: 80px;
-}
+    &-content {
+      width: 100%;
 
-.content-column {
-  font-style: normal;
-  font-weight: normal;
-  letter-spacing: 0.02em;
+      .content--wrapper {
+        display: flex;
+        align-items: center;
 
-  .title-container {
-    display: flex;
-    align-items: center;
+        &_name {
+          @include not-break-string();
+        }
 
-    .title-item {
-      margin-right: 8px;
+        &_type {
+          margin-left: 8px;
+        }
+
+        &_key {
+          margin-right: 4px;
+          @include not-break-string();
+
+          .title {
+            color: $light-gray;
+          }
+
+          .key {
+            color: $black;
+          }
+        }
+
+        &_btn {
+          width: 24px;
+          height: 24px;
+          line-height: 24px;
+
+          .mat-icon {
+            @include sm-icon-size();
+          }
+        }
+
+        .recognition {
+          color: $dark-blue;
+        }
+
+        .detection {
+          color: $orange;
+        }
+
+        .verify {
+          color: $purple;
+        }
+      }
     }
 
-    .name-title {
-      font-size: 18px;
-      line-height: 125%;
-      font-weight: 600;
-      color: rgba(34, 34, 34, 0.8);
+    &-test {
+      text-align: center;
+      width: 58px;
+
+      .test {
+
+        &--btn {
+          min-width: 0;
+          font-size: 12px;
+          line-height: 14px;
+          padding: 5px 14px;
+          border-radius: 2px;
+        }
+      }
     }
 
-    .type-title {
-      font-size: 12px;
-      line-height: 18px;
-    }
+    &-actions {
+      text-align: center;
+      width: 40px;
 
-    .recognition {
-      color: $dark-blue;
-    }
+      .actions--btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
 
-    .detection {
-      color: $orange;
-    }
-
-    .verify {
-      color: $purple;
-    }
-  }
-
-  .api-key-label {
-    line-height: 125%;
-    font-size: 14px;
-    color: rgba(34, 34, 34, 0.45);
-  }
-
-  .copy-icon {
-    color: $primary;
-  }
-}
-
-.special-test-button-color {
-  width: 58px;
-  min-width: 50px;
-  padding: 5px 16px;
-  border: none;
-  border-radius: 2px;
-  box-sizing: border-box ;
-  box-shadow: none;
-  text-transform: lowercase;
-  font: inherit;
-  font-size: 12px;
-  font-weight: 500;
-  line-height: 14px ;
-  background-color: $green;
-  color: white;
-  cursor: pointer;
-
-  &:first-letter {
-    text-transform: capitalize;
-  }
-}
-
-
-.mat-icon-button {
-  padding: 0;
-  min-width: 0;
-  width: 25px;
-}
-
-.more-button {
-  .mat-icon-button {
-    @include md-icon-size()
-  }
-}
-
-.key-container {
-  display: flex;
-  align-items: center;
-  .api-key-value {
-    margin-left: 5px;
-  }
-
-  .mat-icon-button {
-    @include lg-icon-size()
-  }
-
-  .copy-icon {
-    .material-icons {
-      font-size: 14px;
-    }
-
-    .mat-icon {
-      @include sm-icon-size();
-    }
-
-    .mat-icon-button {
-      @include lg-icon-size()
-    }
-  }
-}
-
-@include mobile {
-  .api-key-value {
-    display: inline-block;
-    width: 120px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .copy-icon {
-    .material-icons {
-      font-size: 24px !important;
-    }
-
-    .mat-icon {
-      @include lg-icon-size()
-    }
-
-    .mat-icon-button {
-      @include xl-icon-size();
+        .mat-icon {
+          @include md-icon-size();
+        }
+      }
     }
   }
 }

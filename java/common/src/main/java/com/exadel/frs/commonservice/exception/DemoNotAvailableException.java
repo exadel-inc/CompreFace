@@ -16,8 +16,6 @@
 
 package com.exadel.frs.commonservice.exception;
 
-import com.exadel.frs.commonservice.exception.BasicException;
-
 import static com.exadel.frs.commonservice.handler.CrudExceptionCode.DEMO_MODEL_NOT_AVAILABLE;
 
 public class DemoNotAvailableException extends BasicException {

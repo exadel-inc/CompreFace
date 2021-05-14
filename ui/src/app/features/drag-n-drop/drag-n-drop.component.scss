@@ -14,28 +14,72 @@
  * permissions and limitations under the License.
  */
 
-@import '../../../styles/colors';
+@import "colors.scss";
+
+$border-radius: 12px;
+
+@mixin content($max-width, $margin-title) {
+  .content {
+    max-width: $max-width;
+
+    .title {
+      margin-bottom: $margin-title;
+      font-size: 22px;
+      line-height: 125%;
+      font-weight: 600;
+    }
+
+    .label {
+      color: $light-gray;
+      white-space: pre-line;
+      font-size: 16px;
+      line-height: 140%;
+    }
+  }
+}
 
 .dropzone {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 120px;
-  text-align: center;
-  border: dashed 1px $primary-light;
   position: relative;
-  margin: 0 auto;
-  background-color: $primary-phantom-light;
+  padding: 24px;
+  background-color: $white;
+  border-radius: $border-radius;
 
-  &-icon {
-    margin-right: 20px;
-  }
+  &--container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border: dashed 2px $light-gray;
+    border-radius: $border-radius;
+    transition: .2s;
 
-  &-content {
-    max-width: 85%;
-    h4 {
-      margin: 0 auto 10px;
+    &.column {
+      padding: 55px 0 24px;
+      flex-direction: column;
+      text-align: center;
+
+      @include content(400px, 16px);
+
+      .icon {
+        margin-bottom: 48px;
+      }
+    }
+
+    &.row {
+      padding: 16px 0;
+      flex-direction: row;
+      text-align: left;
+
+      @include content(556px, 8px);
+
+      .icon {
+        margin-right: 21px;
+      }
+    }
+
+    .icon {
+      width: 53px;
+      height: 48px;
     }
   }
 
@@ -47,22 +91,14 @@
     height: 100%;
     top: 0;
     left: 0;
+    cursor: pointer;
   }
 
-  label {
-    color: black;
-    width: 183px;
-    height: 44px;
-    padding: 8px;
+  &:hover &--container {
+    transition: .2s;
+    background-color: $special-light-blue;
+    border-color: $special-blue;
   }
 }
 
-.mat-button {
-  float: right;
-  font-size: 20px;
-}
 
-canvas {
-  width: 100%;
-  height: 1000px;
-}

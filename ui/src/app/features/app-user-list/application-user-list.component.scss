@@ -14,13 +14,8 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
-@import "mixins.scss";
-
 .app-user-list {
   position: relative;
-  @include common-header();
-  @include header-bar-layout();
 }
 
 app-spinner {

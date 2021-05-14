@@ -13,13 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'colors.scss';
-@import "media.scss";
-@import "mixins.scss";
 
 .model-list {
-  @include common-header();
-  @include header-bar-layout();
 
   app-spinner {
     position: absolute;

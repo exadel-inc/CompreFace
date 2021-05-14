@@ -20,6 +20,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { FooterComponent } from './footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
@@ -30,7 +31,7 @@ describe('FooterComponent', () => {
       TestBed.configureTestingModule({
         declarations: [FooterComponent],
         providers: [],
-        imports: [CommonModule, MatToolbarModule, MatButtonModule, BrowserAnimationsModule],
+        imports: [CommonModule, MatToolbarModule, MatButtonModule, BrowserAnimationsModule, TranslateModule.forRoot()],
       }).compileComponents();
     })
   );

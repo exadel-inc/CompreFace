@@ -15,20 +15,12 @@
   -->
 
 <div class="user-list">
-  <div class="table-header-container">
-    <h3 class="mat-title">{{ 'users.title' | translate }}</h3>
-    <form class="search-input">
-      <input
-        matInput
-        type="text"
-        class="search-input"
-        [(ngModel)]="search"
-        [ngModelOptions]="{ standalone: true }"
-        placeholder="{{ 'users.search.org_title' | translate }}"
-      />
-      <mat-icon class="material-icons notranslate"> search </mat-icon>
-    </form>
-  </div>
+  <app-search-table
+    (inputSearch)="onSearch($event)"
+    title="{{ 'users.title' | translate }}"
+    searchPlaceholder="{{ 'users.search.org_title' | translate }}"
+  >
+  </app-search-table>
   <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-user-table
     class="app-table"

@@ -14,15 +14,19 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>Edit {{ data.entityType }}</h1>
+<h1 mat-dialog-title>{{ 'common.capital.edit' | translate }} {{ data.entityType }}</h1>
 <div mat-dialog-content>
-  <mat-form-field>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>{{ 'common.name' | translate }}</mat-label>
     <input matInput [(ngModel)]="data.entityName" placeholder="{{ 'common.name' | translate }}" />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
-  <button class="button-create" mat-flat-button [mat-dialog-close]="data.entityName" cdkFocusInitial [disabled]="isRenameDisabled">
+  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data.entityName" cdkFocusInitial [disabled]="isRenameDisabled">
     {{ 'common.capital.rename' | translate }}
   </button>
 </div>
+<button class="button-cross" mat-icon-button (click)="onCancelClick()">
+  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
+</button>

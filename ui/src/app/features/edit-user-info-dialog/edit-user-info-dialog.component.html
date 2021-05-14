@@ -17,26 +17,29 @@
 <h1 mat-dialog-title>{{ 'toolbar.user_info' | translate }}</h1>
 <div mat-dialog-content>
   <form [formGroup]="form">
-    <mat-form-field>
-      <mat-error class="error-wrapper">
+    <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+      <mat-label>{{ 'registration.first_name' | translate }}</mat-label>
+      <mat-error>
         <span>{{ 'registration.name_restriction' | translate }}</span>
-        <mat-icon>warning</mat-icon>
       </mat-error>
-      <input matInput placeholder="{{ 'registration.first_name' | translate }}" formControlName="firstName" name="firstName" required />
+      <input matInput formControlName="firstName" name="firstName" placeholder="{{ 'registration.first_name' | translate }}" required />
     </mat-form-field>
 
-    <mat-form-field>
-      <mat-error class="error-wrapper">
+    <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
+      <mat-label>{{ 'registration.last_name' | translate }}</mat-label>
+      <mat-error>
         <span>{{ 'registration.last_name_restriction' | translate }}</span>
-        <mat-icon>warning</mat-icon>
       </mat-error>
-      <input matInput placeholder="{{ 'registration.last_name' | translate }}" formControlName="lastName" name="lastName" required />
+      <input matInput formControlName="lastName" name="lastName" placeholder="{{ 'registration.last_name' | translate }}" required />
     </mat-form-field>
   </form>
 </div>
 <div mat-dialog-actions>
-  <button class="button-cancel" mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
-  <button class="button-create" color="primary" mat-flat-button (click)="onChangeClick()" [disabled]="!form.valid">
+  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" (click)="onChangeClick()" [disabled]="!form.valid">
     {{ 'common.capital.rename' | translate }}
   </button>
 </div>
+<button class="button-cross" mat-icon-button (click)="onCancelClick()">
+  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
+</button>

@@ -14,49 +14,46 @@
  * permissions and limitations under the License.
  */
 
-@import "src/styles/colors";
+@import "media.scss";
 
-.result-container {
-  position: relative;
-  min-height: 350px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.result {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 100%;
+  grid-gap: 20px;
+  grid-template-areas:"process-img check-img" "request response";
 
-  .result-image {
-    display: flex;
-    justify-content: center;
-    flex-shrink: 1;
-    canvas {
-      display: inline;
-      min-width: 0;
-      min-height: 0;
-    }
+  @include mobile-portrait {
+    grid-template-columns: 1fr;
+    grid-template-areas:"process-img" " check-img" "request" "response";
   }
 
-  .result-sections {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    padding-bottom: 10px;
+  @include mobile {
+    grid-template-columns: 1fr;
+    grid-template-areas:"process-img" " check-img" "request" "response";
+  }
 
-    .io-result-container{
-      display: inline-flex;
-      flex-direction: row;
-    }
-    .result-section-image {
-      flex: 1 1;
-    }
+  .process-img {
+    grid-area: process-img;
+    text-align: center;
+  }
 
-    .result-textarea {
-      border: none;
-      resize: none;
-      width: 100%;
-      background-color: $white;
-    }
+  .check-img {
+    grid-area: check-img;
+    text-align: center;
+  }
 
-    mat-expansion-panel {
-      margin: 10px;
-    }
+  .request {
+    grid-area: request;
+    min-width: 100%;
+  }
+
+  .response {
+    grid-area: response;
+    min-width: 100%;
+  }
+
+  canvas {
+    max-width: 100%;
   }
 }

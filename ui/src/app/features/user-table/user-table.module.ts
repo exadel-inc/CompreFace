@@ -22,10 +22,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [UserTableComponent],
   exports: [UserTableComponent],
-  imports: [CommonModule, MatFormFieldModule, MatTableModule, MatSelectModule, MatIconModule, TranslateModule],
+  imports: [CommonModule, MatFormFieldModule, MatTableModule, MatSelectModule, MatIconModule, TranslateModule, MatButtonModule],
 })
 export class UserTableModule {}

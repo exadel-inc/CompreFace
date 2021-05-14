@@ -20,7 +20,6 @@ import { ServiceTypes } from '../../data/enums/service-types.enum';
 @Component({
   selector: 'app-model-create-dialog',
   templateUrl: './model-create-dialog.component.html',
-  styleUrls: ['../create-dialog/create-dialog.component.scss', './model-create-dialog.component.scss'],
 })
 export class ModelCreateDialogComponent extends CreateDialogComponent {
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
