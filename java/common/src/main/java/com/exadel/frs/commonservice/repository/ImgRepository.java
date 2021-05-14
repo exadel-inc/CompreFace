@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ImgRepository extends PagingAndSortingRepository<Img, UUID> {
@@ -22,4 +23,7 @@ public interface ImgRepository extends PagingAndSortingRepository<Img, UUID> {
     @Modifying
     @Query("delete from Img where id in (select distinct(i.id) from Img i join Embedding e on e.img.id = i.id where e.subject.apiKey = :apiKey)")
     void deleteBySubjectApiKey(@Param("apiKey") String apiKey);
+
+    @Query("select i from Img i join Embedding e on e.img.id = i.id where e.id = :embeddingId and e.subject.apiKey = :apiKey")
+    Optional<Img> getImgByEmbeddingId(@Param("apiKey") String apiKey, @Param("embeddingId") UUID embeddingId);
 }
