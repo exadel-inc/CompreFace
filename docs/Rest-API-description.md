@@ -9,7 +9,7 @@
     + [List Subjects](#list-subjects)
     + [Add an Example of a Subject](#add-an-example-of-a-subject)
     + [Recognize Faces from a Given Image](#recognize-faces-from-a-given-image)
-    + [List of All Saved Subjects](#list-of-all-saved-subjects)
+    + [List of All Saved Examples of the Subject](#list-of-all-saved-examples-of-the-subject)
     + [Delete All Examples of the Subject by Name](#delete-all-examples-of-the-subject-by-name)
     + [Delete an Example of the Subject by ID](#delete-an-example-of-the-subject-by-id)
     + [Direct Download an Image example of the Subject by ID](#direct-download-an-image-example-of-the-subject-by-id)
@@ -230,18 +230,20 @@ Response body on success:
 | plugins_versions               | object  | contains information about plugin versions                       |
 
 
-### List of All Saved Subjects
+### List of All Saved Examples of the Subject
 
 To retrieve a list of subjects saved in a Face Collection:
 
 ```http request
-curl -X GET "http://localhost:8000/api/v1/recognition/faces" \
+curl -X GET "http://localhost:8000/api/v1/recognition/faces?limit=<limit>&offset=<offset>" \
 -H "x-api-key: <service_api_key>" \
 ```
 
 | Element   | Description | Type   | Required | Notes                                     |
 | --------- | ----------- | ------ | -------- | ----------------------------------------- |
 | x-api-key | header      | string | required | api key of the Face recognition service, created by the user |
+| limit     | param       | string | required | maximum number of examples to return. Can be used for pagination |
+| offset    | param       | string | required | number of examples to skip. Can be used for pagination |
 
 Response body on success:
 
