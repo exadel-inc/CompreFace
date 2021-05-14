@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice.controller;
 
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
 import com.exadel.frs.core.trainservice.dto.*;
@@ -27,7 +28,7 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
-@RequestMapping(API_V1 + "/recognition/faces/subject")
+@RequestMapping(API_V1 + "/recognition/faces/subject") // TODO rm subject
 @RequiredArgsConstructor
 public class SubjectController {
 
@@ -38,7 +39,7 @@ public class SubjectController {
     @WriteEndpoint
     @ResponseStatus(CREATED)
     @PostMapping
-    public FaceResponseDto addFaces(
+    public FaceResponseDto addEmbedding(
             @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true) @RequestParam final MultipartFile file,
             @ApiParam(value = SUBJECT_DESC, required = true) @RequestParam(SUBJECT) final String subjectName,
             @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
@@ -54,6 +55,37 @@ public class SubjectController {
         );
 
         return new FaceResponseDto(pair.getRight().getId().toString(), subjectName);
+    }
+
+    @WriteEndpoint
+    @ResponseStatus(CREATED)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public FaceResponseDto addEmbeddingBase64(
+            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = SUBJECT_DESC) @RequestParam(value = SUBJECT) String subjectName,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @Valid @RequestBody Base64File request) {
+
+        imageValidator.validateBase64(request.getContent());
+
+        final Pair<Subject, Embedding> pair = subjectService.findAndSaveSubject(
+                request.getContent(),
+                subjectName,
+                detProbThreshold,
+                apiKey
+        );
+
+        return new FaceResponseDto(pair.getRight().getId().toString(), subjectName);
+    }
+
+    @GetMapping(value = "/{embeddingId}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public @ResponseBody
+    byte[] downloadImg(
+            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
+            @PathVariable final UUID embeddingId) {
+        return subjectService.getImg(apiKey, embeddingId)
+                .map(Img::getContent)
+                .orElse(new byte[]{});
     }
 
     @GetMapping
@@ -75,7 +107,7 @@ public class SubjectController {
         if (StringUtils.isBlank(subjectName)) {
             subjectService.deleteSubjectsByApiKey(apiKey);
         } else {
-            // TODO
+            // TODO do we really need to return all deleted embeddings?
             subjectService.deleteSubjectByName(apiKey, subjectName);
         }
 
@@ -97,7 +129,7 @@ public class SubjectController {
 
     @WriteEndpoint
     @DeleteMapping("/{embeddingId}")
-    public FaceResponseDto deleteFaceById(
+    public FaceResponseDto deleteEmbeddingById(
             @PathVariable final UUID embeddingId,
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey
     ) {

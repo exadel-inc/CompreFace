@@ -67,13 +67,13 @@ public class SubjectCollection {
     }
 
     public synchronized SubjectMeta addEmbedding(final Embedding embedding) {
+        final var metaKey = SubjectMeta.from(embedding);
+
         embeddings = Nd4j.concat(
                 0,
                 embeddings,
                 Nd4j.create(new double[][]{embedding.getEmbedding()})
         );
-
-        final var metaKey = SubjectMeta.from(embedding);
         metaMap.put(
                 metaKey,
                 getSize() - 1
@@ -89,7 +89,7 @@ public class SubjectCollection {
                 .filter(meta -> meta.getSubjectId().equals(subjectId))
                 .collect(Collectors.toList());
 
-        toRemove.forEach(this::removeEmbedding); // <- rethink it
+        toRemove.forEach(this::removeEmbedding); // <- rethink
 
         return toRemove;
     }

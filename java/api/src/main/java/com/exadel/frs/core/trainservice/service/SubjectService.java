@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
@@ -91,19 +92,52 @@ public class SubjectService {
     }
 
     public Pair<Subject, Embedding> findAndSaveSubject(
+            final String base64photo,
+            final String subjectName,
+            final Double detProbThreshold,
+            final String modelKey) {
+        var findFacesResponse = facesApiClient.findFacesBase64WithCalculator(
+                base64photo,
+                MAX_FACES_TO_RECOGNIZE,
+                detProbThreshold,
+                null
+        );
+
+        return findAndSaveSubject(
+                Base64.getDecoder().decode(base64photo),
+                subjectName,
+                modelKey,
+                findFacesResponse
+        );
+    }
+
+    public Pair<Subject, Embedding> findAndSaveSubject(
             final MultipartFile file,
             final String subjectName,
             final Double detProbThreshold,
             final String modelKey
     ) throws IOException {
-        FindFacesResponse findFacesResponse = facesApiClient.findFacesWithCalculator(
+        var findFacesResponse = facesApiClient.findFacesWithCalculator(
                 file,
                 MAX_FACES_TO_RECOGNIZE,
                 detProbThreshold,
                 null
         );
 
-        // if we are here, it means at least one face was found
+        return findAndSaveSubject(
+                file.getBytes(),
+                subjectName,
+                modelKey,
+                findFacesResponse
+        );
+    }
+
+    private Pair<Subject, Embedding> findAndSaveSubject(byte[] content,
+                                                        String subjectName,
+                                                        String modelKey,
+                                                        FindFacesResponse findFacesResponse) {
+
+        // if we are here => at least one face exists
         List<FindFacesResult> result = findFacesResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {
@@ -116,7 +150,7 @@ public class SubjectService {
         var embeddingToSave = new EmbeddingInfo(
                 findFacesResponse.getPluginsVersions().getCalculator(),
                 normalized,
-                file.getBytes()
+                content
         );
 
         final Pair<Subject, Embedding> pair = subjectDao.addEmbedding(modelKey, subjectName, embeddingToSave);
@@ -145,7 +179,8 @@ public class SubjectService {
         var results = new ArrayList<FaceVerification>();
 
         UUID embeddingId = (UUID) processImageParams.getAdditionalParams().get(Constants.IMAGE_ID);
-        final String subject = subjectCacheProvider
+
+        final String subjectName = subjectCacheProvider
                 .getOrLoad(processImageParams.getApiKey())
                 .getSubjectNameByEmbeddingId(embeddingId)
                 .orElse("");
@@ -173,7 +208,7 @@ public class SubjectService {
                     .age(findResult.getAge())
                     .gender(findResult.getGender())
                     .landmarks(findResult.getLandmarks())
-                    .subject(subject)
+                    .subject(subjectName)
                     .build()
                     .prepareResponse(processImageParams); // do some tricks with obj
 
@@ -181,5 +216,9 @@ public class SubjectService {
         }
 
         return Map.of("result", results);
+    }
+
+    public Optional<Img> getImg(String apiKey, UUID embeddingId) {
+        return subjectDao.getImg(apiKey, embeddingId);
     }
 }

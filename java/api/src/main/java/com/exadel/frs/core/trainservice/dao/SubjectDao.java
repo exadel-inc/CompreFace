@@ -184,4 +184,8 @@ public class SubjectDao {
 
         return embeddingRepository.save(embedding);
     }
+
+    public Optional<Img> getImg(String apiKey, UUID embeddingId) {
+        return imgRepository.getImgByEmbeddingId(apiKey, embeddingId);
+    }
 }

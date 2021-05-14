@@ -69,6 +69,8 @@ public class MigrateController {
         return ResponseEntity.ok("Subject migration started");
     }
 
+    // TODO remove below code later
+
     @Autowired
     ImgRepository imgRepository;
 

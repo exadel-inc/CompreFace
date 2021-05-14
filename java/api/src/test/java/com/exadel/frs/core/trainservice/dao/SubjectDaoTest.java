@@ -1,9 +1,9 @@
 package com.exadel.frs.core.trainservice.dao;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
-import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
@@ -30,9 +30,6 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
 
     @Autowired
     private EmbeddingRepository embeddingRepository;
-
-    @Autowired
-    private ImgRepository imgRepository;
 
     @Test
     void testIsAbleToInsertSubjectWithoutEmbedding() {
@@ -145,28 +142,17 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
 
         assertThat(embeddingRepository.getUniqueCalculators(), hasItems("calc1", "calc2"));
     }
-//
-//    @Test
-//    void testGetBySubjectApiKey() {
-//        int subjectCount = 3;
-//        int embeddingsCountForEachSubject = 3;
-//        String apiKey = UUID.randomUUID().toString();
-//
-//        List<UUID> savedEmbeddingIds = IntStream.range(0, subjectCount)
-//                .mapToObj(i -> subjectRepository.save(subject(RandomStringUtils.randomAlphabetic(10), apiKey)))
-//                .flatMap(subject -> {
-//                    List<UUID> embeddingIds = new ArrayList<>();
-//                    for (int i = 0; i < embeddingsCountForEachSubject; i++) {
-//                        Img img = imgRepository.save(img());
-//                        embeddingIds.add(embeddingRepository.save(embedding(subject, "calc1", img)).getId());
-//                    }
-//                    return embeddingIds.stream();
-//                }).collect(Collectors.toList());
-//
-//        for (UUID savedEmbeddingId : savedEmbeddingIds) {
-//            assertThat(embeddingRepository.findByIdAndSubjectApiKey(savedEmbeddingId, apiKey), notNullValue());
-//        }
-//    }
+
+    @Test
+    void testAbleToDownloadImg() {
+        final UUID apiKey = UUID.randomUUID();
+        final Subject subject = insertSubject(apiKey, "my_subj", null);
+        final Embedding embedding = subjectDao.addEmbedding(subject, new EmbeddingInfo("calc1", new double[]{1.1, 5.6}, img()));
+
+        final Optional<Img> img = subjectDao.getImg(apiKey.toString(), embedding.getId());
+        assertThat(img.isPresent(), is(true));
+        assertThat(img.get().getContent(), is(img()));
+    }
 
     private static byte[] img() {
         return new byte[]{
@@ -193,8 +179,8 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         );
 
         final Subject subject = pair.getLeft();
-
         assertThat(subject.getId(), notNullValue());
+
         if (embeddingInfo != null) {
             // should be saved embedding
             final Embedding embedding = pair.getRight();
