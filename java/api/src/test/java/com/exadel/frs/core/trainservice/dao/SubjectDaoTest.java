@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.dao;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
@@ -10,6 +11,8 @@ import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,12 +76,8 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         );
         assertThat(subject.getSubjectName(), is(oldSubjectName));
 
-        Optional<UUID> newSubjectIdOptional = subjectDao.updateSubjectName(subject.getApiKey(), oldSubjectName, newSubjectName);
-        assertThat(newSubjectIdOptional.isPresent(), is(true));
-
-        final UUID newSubjectId = newSubjectIdOptional.get();
-
-        assertThat(newSubjectId, is(subject.getId()));
+        boolean updated = subjectDao.updateSubjectName(subject.getApiKey(), oldSubjectName, newSubjectName);
+        assertThat(updated, is(true));
         assertThat(subjectRepository.findById(subject.getId()).orElseThrow().getSubjectName(), is(newSubjectName));
     }
 
@@ -92,8 +91,8 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         );
         assertThat(subject.getSubjectName(), is(oldSubjectName));
 
-        Optional<UUID> newSubjectIdOptional = subjectDao.updateSubjectName(subject.getApiKey(), oldSubjectName, oldSubjectName);
-        assertThat(newSubjectIdOptional.isEmpty(), is(true));
+        boolean updated = subjectDao.updateSubjectName(subject.getApiKey(), oldSubjectName, oldSubjectName);
+        assertThat(updated, is(false));
     }
 
     @Test
@@ -117,8 +116,8 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         );
         subjectDao.addEmbedding(subject2, new EmbeddingInfo("calc3", new double[]{2.2, 5.3}, img()));
 
-        Optional<UUID> newSubjectIdOptional = subjectDao.updateSubjectName(apiKey.toString(), subjectName1, subjectName2);
-        assertThat(newSubjectIdOptional.isPresent(), is(true));
+        boolean updated = subjectDao.updateSubjectName(apiKey.toString(), subjectName1, subjectName2);
+        assertThat(updated, is(true));
 
         // no old subject
         assertThat(subjectRepository.findByApiKeyAndSubjectNameIgnoreCase(apiKey.toString(), subjectName1).isEmpty(), is(true));
@@ -188,5 +187,22 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         }
 
         return subject;
+    }
+
+    @Test
+    void testFindBySubjectIdPage() {
+        UUID apiKey = UUID.randomUUID();
+
+        int count = 10;
+        for (int i = 0; i < count; i++) {
+            insertSubject(apiKey, "subject", new EmbeddingInfo("calc", new double[]{1.0, 2.0}, img()));
+        }
+
+        var size = 5;
+        final Page<EmbeddingProjection> page = subjectDao.findBySubjectApiKey(apiKey.toString(), PageRequest.of(0, size));
+
+        assertThat(page.getTotalElements(), is((long) count));
+        assertThat(page.getTotalPages(), is(count / size));
+        assertThat(page.getSize(), is(size));
     }
 }

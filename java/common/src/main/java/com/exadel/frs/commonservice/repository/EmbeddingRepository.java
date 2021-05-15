@@ -1,7 +1,10 @@
 package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Subject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -27,6 +30,8 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
         }
     }
 
+    List<Embedding> findBySubjectId(UUID subjectId);
+
     @Modifying
     @Query("delete from Embedding e where e.subject.id = :subjectId")
     int deleteBySubjectId(@Param("subjectId") UUID subjectId);
@@ -43,11 +48,17 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
     @Query("update Embedding e set e.subject = :toSubject where e.subject = :fromSubject")
     int reassignEmbeddings(@Param("fromSubject") Subject fromSubject, @Param("toSubject") Subject toSubject);
 
-    List<Embedding> findBySubjectId(UUID subjectId);
-
     @Query("select distinct(e.calculator) from Embedding e")
     List<String> getUniqueCalculators();
 
     @Query("select count(e) from Embedding e where e.subject.apiKey = :apiKey")
     int countByApiKey(@Param("apiKey") String apiKey);
+
+    @Query("select " +
+            " new com.exadel.frs.commonservice.entity.EmbeddingProjection(e.id, e.subject.subjectName)" +
+            " from " +
+            "   Embedding e " +
+            " where " +
+            "   e.subject.apiKey = :apiKey")
+    Page<EmbeddingProjection> findBySubjectApiKey(String apiKey, Pageable pageable);
 }

@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
@@ -8,7 +9,6 @@ import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.core.trainservice.cache.SubjectCacheProvider;
-import com.exadel.frs.core.trainservice.cache.SubjectMeta;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;
@@ -19,7 +19,10 @@ import com.exadel.frs.core.trainservice.system.global.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -43,28 +46,49 @@ public class SubjectService {
     private final FaceClassifierPredictor predictor;
     private final EuclideanDistanceClassifier classifier;
 
-    public Collection<SubjectMeta> findSubjects(final String apiKey) {
-        return subjectCacheProvider.getOrLoad(apiKey).getMetas();
+    public Collection<String> getSubjectsNames(final String apiKey) {
+        return subjectDao.getSubjectNames(apiKey);
+    }
+
+    public Subject createSubject(final String apiKey, final String subjectName) {
+        // subject is empty (without embeddings) no need to update cache
+        return subjectDao.createSubject(apiKey, subjectName);
+    }
+
+    public Page<EmbeddingProjection> listEmbeddings(final String apiKey, final Pageable pageable) {
+        return subjectDao.findBySubjectApiKey(apiKey, pageable);
     }
 
     public int deleteSubjectsByApiKey(final String apiKey) {
-        return subjectDao.deleteSubjectsByApiKey(apiKey);
+        int deletedCount = subjectDao.deleteSubjectsByApiKey(apiKey);
+        // we need invalidate cache
+        subjectCacheProvider.invalidate(apiKey);
+
+        return deletedCount;
     }
 
-    public Optional<Subject> deleteSubjectById(final String apiKey, final UUID subjectId) {
-        return subjectDao.deleteSubjectById(apiKey, subjectId);
+    public int removeAllSubjectEmbeddings(final String apiKey, final String subjectName) {
+        int removed = subjectDao.removeAllSubjectEmbeddings(apiKey, subjectName);
+        if (removed > 0) {
+            subjectCacheProvider.ifPresent(
+                    apiKey,
+                    c -> c.removeEmbeddingsBySubjectName(subjectName)
+            );
+        }
+
+        return removed;
     }
 
-    public Optional<Subject> deleteSubjectByName(final String apiKey, final String subjectName) {
-        final Optional<Subject> subjectOptional = subjectDao.deleteSubjectByName(apiKey, subjectName);
+    public Subject deleteSubjectByName(final String apiKey, final String subjectName) {
+        final Subject subject = subjectDao.deleteSubjectByName(apiKey, subjectName);
 
         // remove subject from cache if required
-        subjectOptional.ifPresent(subject -> subjectCacheProvider.ifPresent(
+        subjectCacheProvider.ifPresent(
                 apiKey,
-                c -> c.removeSubject(subject.getId())
-        ));
+                c -> c.removeEmbeddingsBySubjectName(subjectName)
+        );
 
-        return subjectOptional;
+        return subject;
     }
 
     public Optional<Embedding> removeSubjectEmbedding(final String apiKey, final UUID embeddingId) {
@@ -80,18 +104,25 @@ public class SubjectService {
     }
 
     public boolean updateSubjectName(final String apiKey, final String oldSubjectName, final String newSubjectName) {
-        final Optional<UUID> newSubjectIdOptional = subjectDao.updateSubjectName(apiKey, oldSubjectName, newSubjectName);
+        if (StringUtils.isEmpty(newSubjectName) || newSubjectName.equalsIgnoreCase(oldSubjectName)) {
+            // no need to update with empty or similar name
+            return false;
+        }
 
-        // update cache
-        newSubjectIdOptional.ifPresent(newSubjectId -> subjectCacheProvider.ifPresent(
-                apiKey,
-                c -> c.updateSubjectName(oldSubjectName, newSubjectId, newSubjectName)
-        ));
+        boolean updated = subjectDao.updateSubjectName(apiKey, oldSubjectName, newSubjectName);
 
-        return newSubjectIdOptional.isPresent();
+        if (updated) {
+            // update cache if required
+            subjectCacheProvider.ifPresent(
+                    apiKey,
+                    c -> c.updateSubjectName(oldSubjectName, newSubjectName)
+            );
+        }
+
+        return updated;
     }
 
-    public Pair<Subject, Embedding> findAndSaveSubject(
+    public Pair<Subject, Embedding> saveCalculatedEmbedding(
             final String base64photo,
             final String subjectName,
             final Double detProbThreshold,
@@ -103,7 +134,7 @@ public class SubjectService {
                 null
         );
 
-        return findAndSaveSubject(
+        return saveCalculatedEmbedding(
                 Base64.getDecoder().decode(base64photo),
                 subjectName,
                 modelKey,
@@ -111,7 +142,7 @@ public class SubjectService {
         );
     }
 
-    public Pair<Subject, Embedding> findAndSaveSubject(
+    public Pair<Subject, Embedding> saveCalculatedEmbedding(
             final MultipartFile file,
             final String subjectName,
             final Double detProbThreshold,
@@ -124,7 +155,7 @@ public class SubjectService {
                 null
         );
 
-        return findAndSaveSubject(
+        return saveCalculatedEmbedding(
                 file.getBytes(),
                 subjectName,
                 modelKey,
@@ -132,10 +163,10 @@ public class SubjectService {
         );
     }
 
-    private Pair<Subject, Embedding> findAndSaveSubject(byte[] content,
-                                                        String subjectName,
-                                                        String modelKey,
-                                                        FindFacesResponse findFacesResponse) {
+    private Pair<Subject, Embedding> saveCalculatedEmbedding(byte[] content,
+                                                             String subjectName,
+                                                             String modelKey,
+                                                             FindFacesResponse findFacesResponse) {
 
         // if we are here => at least one face exists
         List<FindFacesResult> result = findFacesResponse.getResult();

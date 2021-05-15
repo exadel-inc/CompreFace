@@ -23,7 +23,7 @@ public class Subject {
     private String apiKey;
 
     // String that identifies subject in unique way
-    // Could be guid, UUID - up to users
+    // Could be guid, UUID, user first + last name - up to cutomers
     @Column(name = "subject_name")
     private String subjectName;
 }

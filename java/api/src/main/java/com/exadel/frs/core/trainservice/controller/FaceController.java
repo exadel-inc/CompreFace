@@ -39,8 +39,9 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.springframework.http.HttpStatus.CREATED;
 
-@RestController
-@RequestMapping(API_V1 + "/recognition/faces")
+//@RestController
+//@RequestMapping(API_V1 + "/recognition/faces")
+@Deprecated
 @RequiredArgsConstructor
 public class FaceController {
 
@@ -50,7 +51,7 @@ public class FaceController {
     @WriteEndpoint
     @ResponseStatus(CREATED)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public FaceResponseDto addFaces(
+    public EmbeddingDto addFaces(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true) @RequestParam final MultipartFile file,
             @ApiParam(value = SUBJECT_DESC, required = true) @RequestParam(SUBJECT) final String subject,
@@ -69,7 +70,7 @@ public class FaceController {
     @WriteEndpoint
     @ResponseStatus(CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public FaceResponseDto addFacesBase64(
+    public EmbeddingDto addFacesBase64(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = SUBJECT_DESC) @RequestParam(value = SUBJECT) String subject,
             @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
@@ -86,7 +87,7 @@ public class FaceController {
     }
 
     @GetMapping
-    public Map<String, List<FaceResponseDto>> findFacesByModel(
+    public Map<String, List<EmbeddingDto>> findFacesByModel(
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey
     ) {
@@ -95,7 +96,7 @@ public class FaceController {
 
     @WriteEndpoint
     @DeleteMapping
-    public List<FaceResponseDto> deleteFaces(
+    public List<EmbeddingDto> deleteFaces(
             @ApiParam(value = SUBJECT_DESC, required = true)
             @RequestParam(name = SUBJECT, required = false) final String subject,
             @ApiParam(value = API_KEY_DESC, required = true)
@@ -109,25 +110,25 @@ public class FaceController {
         }
     }
 
-    @WriteEndpoint
-    @PutMapping
-    public Map<String, Object> updateSubject(
-            @ApiParam(value = SUBJECT_DESC, required = true)
-            @RequestParam(name = SUBJECT) final @NotBlank String subject,
-            @ApiParam(value = API_KEY_DESC, required = true)
-            @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = "New " + SUBJECT_DESC, required = true)
-            @Valid @RequestBody final UpdateSubjectDto request
-    ) {
-        return Map.of(
-                "updated",
-                faceService.updateSubject(apiKey, subject, request.getSubject())
-        );
-    }
+//    @WriteEndpoint
+//    @PutMapping
+//    public Map<String, Object> updateSubject(
+//            @ApiParam(value = SUBJECT_DESC, required = true)
+//            @RequestParam(name = SUBJECT) final @NotBlank String subject,
+//            @ApiParam(value = API_KEY_DESC, required = true)
+//            @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
+//            @ApiParam(value = "New " + SUBJECT_DESC, required = true)
+//            @Valid @RequestBody final UpdateSubjectDto request
+//    ) {
+//        return Map.of(
+//                "updated",
+//                faceService.updateSubject(apiKey, subject, request.getSubject())
+//        );
+//    }
 
     @WriteEndpoint
     @DeleteMapping("/{image_id}")
-    public FaceResponseDto deleteFaceById(
+    public EmbeddingDto deleteFaceById(
             @PathVariable final String image_id,
             @ApiParam(value = API_KEY_DESC, required = true)
             @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey

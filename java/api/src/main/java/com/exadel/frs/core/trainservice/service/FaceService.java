@@ -29,7 +29,7 @@ import com.exadel.frs.core.trainservice.cache.FaceCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
+import com.exadel.frs.core.trainservice.dto.EmbeddingDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
@@ -64,12 +64,12 @@ public class FaceService {
     private final FacesMapper faceMapper;
     private final EuclideanDistanceClassifier classifier;
 
-    public List<FaceResponseDto> findFaces(final String apiKey) {
+    public List<EmbeddingDto> findFaces(final String apiKey) {
         Set<FaceBO> faces = faceCacheProvider.getOrLoad(apiKey).getFaces();
         return faceMapper.toResponseDto(faces);
     }
 
-    public List<FaceResponseDto> deleteFaceByName(final String faceName, final String apiKey) {
+    public List<EmbeddingDto> deleteFaceByName(final String faceName, final String apiKey) {
         val faces = faceCacheProvider.getOrLoad(apiKey);
 
         Set<FaceBO> collect = faceDao.deleteFaceByName(faceName, apiKey)
@@ -81,7 +81,7 @@ public class FaceService {
         return faceMapper.toResponseDto(collect);
     }
 
-    public FaceResponseDto deleteFaceById(final String id, final String apiKey) {
+    public EmbeddingDto deleteFaceById(final String id, final String apiKey) {
         val collection = faceCacheProvider.getOrLoad(apiKey);
         val face = faceDao.deleteFaceById(id);
 
@@ -123,7 +123,7 @@ public class FaceService {
         return faceCacheProvider.getOrLoad(modelKey).getFaces().size();
     }
 
-    public FaceResponseDto findAndSaveFace(
+    public EmbeddingDto findAndSaveFace(
             final String base64photo,
             final String faceName,
             final Double detProbThreshold,
@@ -139,7 +139,7 @@ public class FaceService {
         return findAndSaveFace(Base64.getDecoder().decode(base64photo), faceName, modelKey, findFacesResponse);
     }
 
-    public FaceResponseDto findAndSaveFace(
+    public EmbeddingDto findAndSaveFace(
             final MultipartFile file,
             final String faceName,
             final Double detProbThreshold,
@@ -155,10 +155,10 @@ public class FaceService {
         return findAndSaveFace(file.getBytes(), faceName, modelKey, findFacesResponse);
     }
 
-    private FaceResponseDto findAndSaveFace(byte[] content,
-                                            String faceName,
-                                            String modelKey,
-                                            FindFacesResponse findFacesResponse) throws IOException {
+    private EmbeddingDto findAndSaveFace(byte[] content,
+                                         String faceName,
+                                         String modelKey,
+                                         FindFacesResponse findFacesResponse) throws IOException {
         List<FindFacesResult> result = findFacesResponse.getResult();
 
         if (result.size() > MAX_FACES_TO_SAVE) {
@@ -182,7 +182,7 @@ public class FaceService {
                 .addFace(faceDao.addNewFace(embeddingToSave, content, faceName, modelKey));
 
         return Optional.ofNullable(faceMapper.toResponseDto(faceBO))
-                .orElse(new FaceResponseDto());
+                .orElse(new EmbeddingDto());
     }
 
     public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {

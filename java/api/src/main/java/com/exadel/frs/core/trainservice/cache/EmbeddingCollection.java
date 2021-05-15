@@ -1,6 +1,7 @@
 package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.EmbeddingProjection;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import lombok.AccessLevel;
@@ -18,24 +19,23 @@ import java.util.stream.Stream;
 
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class SubjectCollection {
+public class EmbeddingCollection {
 
-    // embedding meta to index
-    private final BiMap<SubjectMeta, Integer> metaMap;
+    private final BiMap<EmbeddingProjection, Integer> projections2Index;
     private INDArray embeddings;
 
-    public static SubjectCollection from(final Stream<Embedding> embeddings) {
+    public static EmbeddingCollection from(final Stream<Embedding> embeddings) {
         final var rawEmbeddings = new LinkedList<double[]>();
-        final Map<SubjectMeta, Integer> metaMap = new HashMap<>();
+        final Map<EmbeddingProjection, Integer> projections2Index = new HashMap<>();
 
         var index = new AtomicInteger();
         embeddings.forEach(embedding -> {
             rawEmbeddings.add(embedding.getEmbedding());
-            metaMap.put(SubjectMeta.from(embedding), index.getAndIncrement());
+            projections2Index.put(EmbeddingProjection.from(embedding), index.getAndIncrement());
         });
 
-        return new SubjectCollection(
-                HashBiMap.create(metaMap),
+        return new EmbeddingCollection(
+                HashBiMap.create(projections2Index),
                 Nd4j.create(rawEmbeddings.toArray(double[][]::new))
         );
     }
@@ -53,40 +53,40 @@ public class SubjectCollection {
         return embeddings.dup();
     }
 
-    public Set<SubjectMeta> getMetas() {
-        return Collections.unmodifiableSet(metaMap.keySet());
+    public Set<EmbeddingProjection> getProjections() {
+        return Collections.unmodifiableSet(projections2Index.keySet());
     }
 
-    public synchronized void updateSubjectName(String oldSubjectName, UUID newSubjectId, String newSubjectName) {
-        final List<SubjectMeta> metas = metaMap.keySet()
+    public synchronized void updateSubjectName(String oldSubjectName, String newSubjectName) {
+        final List<EmbeddingProjection> projections = projections2Index.keySet()
                 .stream()
-                .filter(metaKey -> metaKey.getSubjectName().equals(oldSubjectName))
+                .filter(projection -> projection.getSubjectName().equals(oldSubjectName))
                 .collect(Collectors.toList());
 
-        metas.forEach(metaKey -> metaMap.put(metaKey.withNewValues(newSubjectId, newSubjectName), metaMap.remove(metaKey)));
+        projections.forEach(projection -> projections2Index.put(projection.withNewSubjectName(newSubjectName), projections2Index.remove(projection)));
     }
 
-    public synchronized SubjectMeta addEmbedding(final Embedding embedding) {
-        final var metaKey = SubjectMeta.from(embedding);
+    public synchronized EmbeddingProjection addEmbedding(final Embedding embedding) {
+        final var projection = EmbeddingProjection.from(embedding);
 
         embeddings = Nd4j.concat(
                 0,
                 embeddings,
                 Nd4j.create(new double[][]{embedding.getEmbedding()})
         );
-        metaMap.put(
-                metaKey,
+        projections2Index.put(
+                projection,
                 getSize() - 1
         );
 
-        return metaKey;
+        return projection;
     }
 
-    public synchronized Collection<SubjectMeta> removeSubject(UUID subjectId) {
+    public synchronized Collection<EmbeddingProjection> removeEmbeddingsBySubjectName(String subjectName) {
         // not efficient at ALL! review current approach
 
-        final List<SubjectMeta> toRemove = metaMap.keySet().stream()
-                .filter(meta -> meta.getSubjectId().equals(subjectId))
+        final List<EmbeddingProjection> toRemove = projections2Index.keySet().stream()
+                .filter(projection -> projection.getSubjectName().equals(subjectName))
                 .collect(Collectors.toList());
 
         toRemove.forEach(this::removeEmbedding); // <- rethink
@@ -94,16 +94,16 @@ public class SubjectCollection {
         return toRemove;
     }
 
-    public synchronized SubjectMeta removeEmbedding(Embedding embedding) {
-        return removeEmbedding(SubjectMeta.from(embedding));
+    public synchronized EmbeddingProjection removeEmbedding(Embedding embedding) {
+        return removeEmbedding(EmbeddingProjection.from(embedding));
     }
 
-    public synchronized SubjectMeta removeEmbedding(SubjectMeta metaKey) {
-        if (metaMap.isEmpty()) {
+    public synchronized EmbeddingProjection removeEmbedding(EmbeddingProjection projection) {
+        if (projections2Index.isEmpty()) {
             return null;
         }
 
-        var index = metaMap.remove(metaKey);
+        var index = projections2Index.remove(projection);
 
         // remove embedding by concatenating sub lists [0, index) + [index + 1, size),
         // thus size of resulting array is decreased by one
@@ -114,16 +114,16 @@ public class SubjectCollection {
         );
 
         // shifting (-1) all indexes, greater than current one
-        metaMap.entrySet()
+        projections2Index.entrySet()
                 .stream()
                 .filter(entry -> entry.getValue() > index)
                 .sorted(Map.Entry.comparingByValue())
-                .forEach(e -> metaMap.replace(e.getKey(), e.getValue(), e.getValue() - 1));
+                .forEach(e -> projections2Index.replace(e.getKey(), e.getValue(), e.getValue() - 1));
 
-        return metaKey;
+        return projection;
     }
 
-    public synchronized Optional<INDArray> getEmbeddingById(UUID embeddingId) {
+    public synchronized Optional<INDArray> getRawEmbeddingById(UUID embeddingId) {
         return findByEmbeddingId(
                 embeddingId,
                 // return duplicated row
@@ -138,12 +138,12 @@ public class SubjectCollection {
         );
     }
 
-    private <T> Optional<T> findByEmbeddingId(UUID embeddingId, Function<Map.Entry<SubjectMeta, Integer>, T> func) {
+    private <T> Optional<T> findByEmbeddingId(UUID embeddingId, Function<Map.Entry<EmbeddingProjection, Integer>, T> func) {
         if (embeddingId == null) {
             return Optional.empty();
         }
 
-        return metaMap.entrySet()
+        return projections2Index.entrySet()
                 .stream()
                 .filter(entry -> embeddingId.equals(entry.getKey().getEmbeddingId()))
                 .findFirst()

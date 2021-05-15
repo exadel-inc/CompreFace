@@ -17,6 +17,7 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.commonservice.entity.Embedding;
+import com.exadel.frs.commonservice.entity.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
@@ -94,7 +95,7 @@ public class MigrateController {
         long before = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         long start = System.currentTimeMillis();
         // TODO
-        SubjectCollection coll = subjectCacheProvider.getOrLoad(apiKey);
+        EmbeddingCollection coll = subjectCacheProvider.getOrLoad(apiKey);
         long after = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         log.debug("Build subject collection in {}ms, memory {}MB", (System.currentTimeMillis() - start), (after - before) / 1024 / 1024);
 
@@ -105,15 +106,15 @@ public class MigrateController {
         log.debug("Build faces collection in {}ms, memory {}MB", (System.currentTimeMillis() - start), (after - before) / 1024 / 1024);
 
         int index = 0;
-        SubjectMeta toRemove = null;
+        EmbeddingProjection toRemove = null;
         Integer toRemoveIndex = null;
 
-        SubjectMeta checkInc = null;
+        EmbeddingProjection checkInc = null;
         Integer checkIncIndex = null;
         INDArray checkArray = null;
 
         log.debug("Trying to compare all values...");
-        for (Map.Entry<SubjectMeta, Integer> entryOne : coll.getMetaMap().entrySet()) {
+        for (Map.Entry<EmbeddingProjection, Integer> entryOne : coll.getProjections2Index().entrySet()) {
             index++;
             Map.Entry<FaceBO, Integer> entryTwo = coll2.getFacesMap().entrySet().stream().filter(e -> e.getKey().getName().equals(entryOne.getKey().getSubjectName())).findFirst().orElseThrow();
 
@@ -150,12 +151,12 @@ public class MigrateController {
 
         log.debug("trying remove...");
         coll.removeEmbedding(toRemove);
-        if (coll.getMetaMap().get(checkInc) != checkIncIndex - 1) {
+        if (coll.getProjections2Index().get(checkInc) != checkIncIndex - 1) {
             throw new IllegalStateException("No index shift after remove!");
         }
 
         log.debug("trying find by img id...");
-        INDArray found = coll.getEmbeddingById(checkInc.getEmbeddingId()).orElseThrow(() -> new IllegalStateException("no embedding found by image"));
+        INDArray found = coll.getRawEmbeddingById(checkInc.getEmbeddingId()).orElseThrow(() -> new IllegalStateException("no embedding found by image"));
         compare(found.toDoubleVector(), checkArray.toDoubleVector());
 
         log.debug("SUCCESS!!!");

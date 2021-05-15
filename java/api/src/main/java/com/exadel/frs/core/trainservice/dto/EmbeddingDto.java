@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FaceResponseDto {
+public class EmbeddingDto {
 
     // As of backward compatibility we are not allowed to rename property 'image_id' --> 'embedding_id'
     // but, notice, actually it is Embedding.id

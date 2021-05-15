@@ -60,9 +60,6 @@ import static java.util.function.Function.identity;
 @Order(1)
 public class SecurityValidationFilter implements Filter {
 
-    public static final String DETECTION_SERVICE = "Detection";
-    public static final String RECOGNITION_SERVICE = "Recognition";
-    public static final String VERIFICATION_SERVICE = "Verification";
     public static final String VERIFICATION = "Verification";
     private final ModelService modelService;
     private final ResponseExceptionHandler handler;
@@ -83,7 +80,7 @@ public class SecurityValidationFilter implements Filter {
         val httpResponse = (HttpServletResponse) servletResponse;
 
         String requestURI = httpRequest.getRequestURI();
-        if (!requestURI.matches("^/(swagger|webjars|v2|api/v1/migrate|api/v1/consistence/status).*$")) {
+        if (!requestURI.matches("^/(swagger|webjars|static|v2|api/v1/migrate|api/v1/consistence/status).*$")) {
             val headersMap =
                     list(httpRequest.getHeaderNames()).stream()
                             .collect(Collectors.<String, String, List<String>>toMap(

@@ -19,23 +19,23 @@ public class SubjectCacheProvider {
 
     private final EmbeddingRepository embeddingRepository;
 
-    private static final Cache<String, SubjectCollection> cache =
+    private static final Cache<String, EmbeddingCollection> cache =
             CacheBuilder.newBuilder()
                     .expireAfterAccess(CACHE_EXPIRATION, TimeUnit.SECONDS)
                     .maximumSize(CACHE_MAXIMUM_SIZE)
                     .build();
 
-    public SubjectCollection getOrLoad(final String apiKey) {
+    public EmbeddingCollection getOrLoad(final String apiKey) {
         var result = cache.getIfPresent(apiKey);
         if (result == null) {
-            result = embeddingRepository.doWithEmbeddingsStream(apiKey, SubjectCollection::from);
+            result = embeddingRepository.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
             cache.put(apiKey, result);
         }
 
         return result;
     }
 
-    public void ifPresent(String apiKey, Consumer<SubjectCollection> consumer) {
+    public void ifPresent(String apiKey, Consumer<EmbeddingCollection> consumer) {
         Optional.ofNullable(cache.getIfPresent(apiKey))
                 .ifPresent(consumer);
     }

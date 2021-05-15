@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,6 +14,9 @@ import java.util.UUID;
 public interface SubjectRepository extends PagingAndSortingRepository<Subject, UUID> {
 
     List<Subject> findByApiKey(String apiKey);
+
+    @Query("select s.subjectName from Subject s where s.apiKey = :apiKey")
+    Collection<String> getSubjectNames(String apiKey);
 
     Optional<Subject> findByApiKeyAndSubjectNameIgnoreCase(String apiKey, String subjectName);
 

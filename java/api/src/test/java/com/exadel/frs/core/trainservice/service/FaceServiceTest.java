@@ -37,7 +37,7 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.commonservice.entity.Face;
-import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
+import com.exadel.frs.core.trainservice.dto.EmbeddingDto;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
@@ -189,7 +189,7 @@ class FaceServiceTest {
         val actual = faceService.findAndSaveFace(mockFile, FACE_NAME, THRESHOLD, MODEL_KEY);
 
         assertThat(actual).isNotNull();
-        assertThat(actual).isEqualTo(new FaceResponseDto(expected.getName(), expected.getImageId()));
+        assertThat(actual).isEqualTo(new EmbeddingDto(expected.getName(), expected.getImageId()));
 
         verify(facesApiClient).findFacesWithCalculator(mockFile, MAX_FACES_TO_RECOGNIZE, THRESHOLD, null);
         verify(faceDao).addNewFace(embeddings, mockFile.getBytes(), FACE_NAME, MODEL_KEY);

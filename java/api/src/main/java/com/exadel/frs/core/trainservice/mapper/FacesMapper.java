@@ -18,7 +18,7 @@ package com.exadel.frs.core.trainservice.mapper;
 
 import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.core.trainservice.cache.FaceBO;
-import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
+import com.exadel.frs.core.trainservice.dto.EmbeddingDto;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.VerifyFacesResultDto;
@@ -36,9 +36,9 @@ public interface FacesMapper {
 
     @Mapping(source = "imageId", target = "embeddingId")
     @Mapping(source = "name", target = "subjectName")
-    FaceResponseDto toResponseDto(FaceBO faces);
+    EmbeddingDto toResponseDto(FaceBO faces);
 
-    List<FaceResponseDto> toResponseDto(Set<FaceBO> faces);
+    List<EmbeddingDto> toResponseDto(Set<FaceBO> faces);
 
     FacesDetectionResponseDto toFacesDetectionResponseDto(FindFacesResponse facesResponse);
 
