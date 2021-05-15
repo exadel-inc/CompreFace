@@ -16,9 +16,9 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
+import com.exadel.frs.core.trainservice.dto.Base64File;
 import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
-import com.exadel.frs.core.trainservice.dto.RecognizeRequest;
 import com.exadel.frs.core.trainservice.service.FaceProcessService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -78,17 +78,22 @@ public class RecognizeController {
     @PostMapping(value = "/recognition/recognize", consumes = MediaType.APPLICATION_JSON_VALUE)
     public FacesRecognitionResponseDto recognizeBase64(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @RequestBody @Valid RecognizeRequest recognizeRequest) {
+            @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
+            @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
+            @ApiParam(value = FACE_PLUGINS_DESC) @RequestParam(value = FACE_PLUGINS, required = false, defaultValue = "") final String facePlugins,
+            @ApiParam(value = STATUS_DESC) @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status,
+            @ApiParam(value = PREDICTION_COUNT_DESC) @RequestParam(value = PREDICTION_COUNT_REQUEST_PARAM, required = false, defaultValue = PREDICTION_COUNT_DEFAULT_VALUE) @Min(value = 1, message = PREDICTION_COUNT_MIN_DESC) Integer predictionCount,
+            @RequestBody @Valid Base64File request) {
 
         ProcessImageParams processImageParams = ProcessImageParams
                 .builder()
                 .apiKey(apiKey)
-                .imageBase64(recognizeRequest.getImageAsBase64())
-                .limit(recognizeRequest.getLimit())
-                .detProbThreshold(recognizeRequest.getDetProbThreshold())
-                .facePlugins(recognizeRequest.getFacePlugins())
-                .status(recognizeRequest.getStatus())
-                .additionalParams(Collections.singletonMap(PREDICTION_COUNT, recognizeRequest.getPredictionCount()))
+                .imageBase64(request.getContent())
+                .limit(limit)
+                .detProbThreshold(detProbThreshold)
+                .facePlugins(facePlugins)
+                .status(status)
+                .additionalParams(Collections.singletonMap(PREDICTION_COUNT, predictionCount))
                 .build();
 
         return (FacesRecognitionResponseDto) recognitionService.processImage(processImageParams);
