@@ -30,6 +30,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
+import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
@@ -54,6 +56,7 @@ import java.util.Random;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 class ModelServiceTest {
 
@@ -72,6 +75,8 @@ class ModelServiceTest {
     private UserService userServiceMock;
     private FacesRepository facesRepositoryMock;
     private ImagesRepository imagesRepositoryMock;
+    private final SubjectRepository subjectRepositry;
+    private final JdbcTemplate jdbcTemplate;
 
     private AuthorizationManager authManager;
 
@@ -82,13 +87,18 @@ class ModelServiceTest {
         userServiceMock = mock(UserService.class);
         facesRepositoryMock = mock(FacesRepository.class);
         imagesRepositoryMock = mock(ImagesRepository.class);
+        subjectRepositry = mock(SubjectRepository.class);
+        jdbcTemplate = mock(JdbcTemplate.class);
+
         modelService = new ModelService(
                 modelRepositoryMock,
                 appServiceMock,
                 authManager,
                 userServiceMock,
                 facesRepositoryMock,
-                imagesRepositoryMock
+                imagesRepositoryMock,
+                subjectRepositry,
+                jdbcTemplate
         );
     }
 

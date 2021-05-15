@@ -67,7 +67,10 @@ public class EmbeddingCollection {
                 .filter(projection -> projection.getSubjectName().equals(oldSubjectName))
                 .collect(Collectors.toList());
 
-        projections.forEach(projection -> projection2Index.put(projection.withNewSubjectName(newSubjectName), projection2Index.remove(projection)));
+        projections.forEach(projection -> projection2Index.put(
+                projection.withNewSubjectName(newSubjectName),
+                projection2Index.remove(projection)
+        ));
     }
 
     public synchronized EmbeddingProjection addEmbedding(final Embedding embedding) {

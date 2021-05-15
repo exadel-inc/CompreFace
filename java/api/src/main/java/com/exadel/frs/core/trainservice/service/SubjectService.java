@@ -212,7 +212,7 @@ public class SubjectService {
         UUID embeddingId = (UUID) processImageParams.getAdditionalParams().get(Constants.IMAGE_ID);
 
         final String subjectName = embeddingCacheProvider
-                .getOrLoad(processImageParams.getApiKey())
+                .getOrLoad(processImageParams.getApiKey()) // do we really need to load cache here?
                 .getSubjectNameByEmbeddingId(embeddingId)
                 .orElse("");
 
