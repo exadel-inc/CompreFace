@@ -21,7 +21,7 @@ import { CanActivate, Router } from '@angular/router';
 import { Routes } from '../../data/enums/routers-url.enum';
 import { DemoService } from './demo.service';
 import { loadDemoApiKeySuccess, setDemoKeyPending } from '../../store/demo/action';
-import { DemoStatus } from '../../data/interfaces/demo';
+import { DemoStatus } from '../../data/interfaces/demo-status';
 
 @Injectable({
   providedIn: 'root',

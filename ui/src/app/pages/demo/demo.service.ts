@@ -19,7 +19,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
-import { DemoModel, DemoStatus } from '../../data/interfaces/demo';
+import { DemoModel } from '../../data/interfaces/demo-model';
+import { DemoStatus } from '../../data/interfaces/demo-status';
 
 @Injectable({
   providedIn: 'root',
