@@ -22,7 +22,7 @@ import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.Test;
 
-public class FaceCollectionTestIT {
+class FaceCollectionTestIT {
 
     private static final String COLLECTION_ID = "model_key";
 
@@ -44,7 +44,8 @@ public class FaceCollectionTestIT {
 
     @Test
     void testAdd() {
-        val faces = List.of(makeFace("A", COLLECTION_ID),
+        val faces = List.of(
+                makeFace("A", COLLECTION_ID),
                 makeFace("B", COLLECTION_ID),
                 makeFace("C", COLLECTION_ID));
         val faceCollection = FaceCollection.buildFromFaces(faces);

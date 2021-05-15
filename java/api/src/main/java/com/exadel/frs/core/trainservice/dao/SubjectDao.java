@@ -123,8 +123,6 @@ public class SubjectDao {
         return true;
     }
 
-    // Note: should be invoked in transaction
-
     @Transactional
     public int deleteSubjectsByApiKey(final String apiKey) {
         imgRepository.deleteBySubjectApiKey(apiKey);
@@ -132,12 +130,12 @@ public class SubjectDao {
         return subjectRepository.deleteByApiKey(apiKey);
     }
 
-    public int countSubjectsInModel(final String apiKey) {
-        return subjectRepository.countByApiKey(apiKey);
+    public Optional<Img> getImg(String apiKey, UUID embeddingId) {
+        return imgRepository.getImgByEmbeddingId(apiKey, embeddingId);
     }
 
-    public int countEmbeddingsInModel(final String apiKey) {
-        return embeddingRepository.countByApiKey(apiKey);
+    public Page<EmbeddingProjection> findBySubjectApiKey(String apiKey, Pageable pageable) {
+        return embeddingRepository.findBySubjectApiKey(apiKey, pageable);
     }
 
     @Transactional
@@ -195,13 +193,5 @@ public class SubjectDao {
         embedding.setImg(img);
 
         return embeddingRepository.save(embedding);
-    }
-
-    public Optional<Img> getImg(String apiKey, UUID embeddingId) {
-        return imgRepository.getImgByEmbeddingId(apiKey, embeddingId);
-    }
-
-    public Page<EmbeddingProjection> findBySubjectApiKey(String apiKey, Pageable pageable) {
-        return embeddingRepository.findBySubjectApiKey(apiKey, pageable);
     }
 }

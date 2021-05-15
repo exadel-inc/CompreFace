@@ -16,21 +16,21 @@
 
 package com.exadel.frs.core.trainservice.cache;
 
-import static com.exadel.frs.core.trainservice.ItemsBuilder.makeFace;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.dao.FaceDao;
-import java.util.List;
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-public class FaceCacheProviderTest {
+import java.util.List;
+
+import static com.exadel.frs.core.trainservice.ItemsBuilder.makeFace;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
+
+class FaceCacheProviderTest {
 
     @Mock
     private FaceDao faceDao;

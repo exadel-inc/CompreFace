@@ -51,6 +51,7 @@ import static java.util.stream.Collectors.toSet;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Deprecated
 public class FaceService {
 
     private static final int MAX_FACES_TO_SAVE = 1;
@@ -208,7 +209,7 @@ public class FaceService {
                     Stream.of(findResult.getEmbedding())
                             .mapToDouble(d -> d)
                             .toArray(),
-                    String.valueOf(processImageParams.getAdditionalParams().get("image_id"))
+                    UUID.fromString(String.valueOf(processImageParams.getAdditionalParams().get("image_id")))
             );
 
             val inBoxProb = BigDecimal

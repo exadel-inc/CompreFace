@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface ImgRepository extends PagingAndSortingRepository<Img, UUID> {
 
-    @Query("select count(e) from Embedding e join e.img image where image.id = :imgId")
+    @Query("select count(e) from Embedding e where e.img.id = :imgId")
     int countRelatedEmbeddings(@Param("imgId") UUID imgId);
 
     // Joins, are prohibited in a bulk HQL query. You can use sub-queries in the WHERE clause, and the sub-queries themselves can contain joins.

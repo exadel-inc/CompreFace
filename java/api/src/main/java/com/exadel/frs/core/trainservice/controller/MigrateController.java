@@ -85,7 +85,7 @@ public class MigrateController {
     FacesRepository facesRepository;
 
     @Autowired
-    SubjectCacheProvider subjectCacheProvider;
+    EmbeddingCacheProvider embeddingCacheProvider;
 
     @PostMapping(value = "/migrate/compare", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public void compare() {
@@ -95,7 +95,7 @@ public class MigrateController {
         long before = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         long start = System.currentTimeMillis();
         // TODO
-        EmbeddingCollection coll = subjectCacheProvider.getOrLoad(apiKey);
+        EmbeddingCollection coll = embeddingCacheProvider.getOrLoad(apiKey);
         long after = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
         log.debug("Build subject collection in {}ms, memory {}MB", (System.currentTimeMillis() - start), (after - before) / 1024 / 1024);
 
@@ -114,21 +114,21 @@ public class MigrateController {
         INDArray checkArray = null;
 
         log.debug("Trying to compare all values...");
-        for (Map.Entry<EmbeddingProjection, Integer> entryOne : coll.getProjections2Index().entrySet()) {
+        for (Map.Entry<Integer, EmbeddingProjection> entryOne : coll.getIndexMap().entrySet()) {
             index++;
-            Map.Entry<FaceBO, Integer> entryTwo = coll2.getFacesMap().entrySet().stream().filter(e -> e.getKey().getName().equals(entryOne.getKey().getSubjectName())).findFirst().orElseThrow();
+            Map.Entry<FaceBO, Integer> entryTwo = coll2.getFacesMap().entrySet().stream().filter(e -> e.getKey().getName().equals(entryOne.getValue().getSubjectName())).findFirst().orElseThrow();
 
             if (index == 117) {
-                toRemove = entryOne.getKey();
-                toRemoveIndex = entryOne.getValue();
+                toRemove = entryOne.getValue();
+                toRemoveIndex = entryOne.getKey();
             }
-            if (checkInc == null && toRemove != null && entryOne.getValue() > toRemoveIndex) {
-                checkInc = entryOne.getKey();
-                checkIncIndex = entryOne.getValue();
+            if (checkInc == null && toRemove != null && entryOne.getKey() > toRemoveIndex) {
+                checkInc = entryOne.getValue();
+                checkIncIndex = entryOne.getKey();
                 checkArray = coll.getEmbeddings().getRow(checkIncIndex);
             }
 
-            double[] oneDouble = coll.getEmbeddings().getRow(entryOne.getValue()).toDoubleVector();
+            double[] oneDouble = coll.getEmbeddings().getRow(entryOne.getKey()).toDoubleVector();
             double[] twoDouble = coll2.getEmbeddings().getRow(entryTwo.getValue()).toDoubleVector();
 
             compare(oneDouble, twoDouble);
@@ -151,7 +151,7 @@ public class MigrateController {
 
         log.debug("trying remove...");
         coll.removeEmbedding(toRemove);
-        if (coll.getProjections2Index().get(checkInc) != checkIncIndex - 1) {
+        if (coll.getIndexMap().get(checkIncIndex - 1).equals(checkInc)) {
             throw new IllegalStateException("No index shift after remove!");
         }
 

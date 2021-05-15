@@ -30,10 +30,10 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
+@Deprecated
 public class FaceDao {
 
     private final FacesRepository facesRepository;

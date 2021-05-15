@@ -51,9 +51,6 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
     @Query("select distinct(e.calculator) from Embedding e")
     List<String> getUniqueCalculators();
 
-    @Query("select count(e) from Embedding e where e.subject.apiKey = :apiKey")
-    int countByApiKey(@Param("apiKey") String apiKey);
-
     @Query("select " +
             " new com.exadel.frs.commonservice.entity.EmbeddingProjection(e.id, e.subject.subjectName)" +
             " from " +

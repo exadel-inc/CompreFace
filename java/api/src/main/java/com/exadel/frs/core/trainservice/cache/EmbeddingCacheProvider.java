@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 
 @Component
 @RequiredArgsConstructor
-public class SubjectCacheProvider {
+public class EmbeddingCacheProvider {
 
     private static final long CACHE_EXPIRATION = 60 * 60 * 24L;
     private static final long CACHE_MAXIMUM_SIZE = 10;

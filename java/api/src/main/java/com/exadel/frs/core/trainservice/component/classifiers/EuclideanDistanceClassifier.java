@@ -19,7 +19,7 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.exception.FacesServiceException;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
-import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
+import com.exadel.frs.core.trainservice.cache.EmbeddingCacheProvider;
 import com.google.common.primitives.Doubles;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -31,6 +31,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 import static java.lang.Math.min;
@@ -40,26 +42,29 @@ import static java.lang.Math.min;
 public class EuclideanDistanceClassifier implements Classifier {
 
     public static final int PREDICTION_COUNT_INFINITY = -1;
-    private final FaceCacheProvider faceCacheProvider;
+    private final EmbeddingCacheProvider embeddingCacheProvider;
     private final FacesApiClient facesApiClient;
 
     @Override
     public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
         INDArray inputFace = Nd4j.create(input);
         inputFace = normalizeOne(inputFace);
-        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
-        val result = new ArrayList<Pair<Double, String>>();
-        if (faceCollection.getEmbeddings() != null && faceCollection.getEmbeddings().length() > 0) {
-            val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
+
+        var embeddingCollection = embeddingCacheProvider.getOrLoad(apiKey);
+        final INDArray embeddings = embeddingCollection.getEmbeddings();
+
+        var result = new ArrayList<Pair<Double, String>>();
+        if (embeddings != null && embeddings.length() > 0) {
+            val probabilities = recognize(inputFace, embeddings);
             val sortedIndexes = sortedIndexes(probabilities);
-            val facesMap = faceCollection.getFacesMap().inverse();
+            val indexMap = embeddingCollection.getIndexMap();
             int predictionCount = getPredictionCount(resultCount, sortedIndexes);
 
             for (int i = 0; i < min(predictionCount, sortedIndexes.length); i++) {
-                val prob = probabilities[sortedIndexes[i]];
-                val face = facesMap.get(sortedIndexes[i]);
+                var prob = probabilities[sortedIndexes[i]];
+                var embedding = indexMap.get(sortedIndexes[i]);
 
-                result.add(Pair.of(prob, face.getName()));
+                result.add(Pair.of(prob, embedding.getSubjectName()));
             }
         }
         return result;
@@ -82,16 +87,22 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     @Override
-    public Double verify(final double[] input, final String apiKey, final String imageId) {
+    public Double verify(final double[] input, final String apiKey, final UUID embeddingId) {
         if (input == null) {
             return (double) 0;
         }
 
-        val inputFace = normalizeOne(Nd4j.create(input));
+        final Optional<INDArray> rawEmbeddingOptional = embeddingCacheProvider.getOrLoad(apiKey)
+                .getRawEmbeddingById(embeddingId);
 
-        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
+        if (rawEmbeddingOptional.isEmpty())  {
+            return (double) 0;
+        }
 
-        val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
+        var probabilities = recognize(
+                normalizeOne(Nd4j.create(input)),
+                rawEmbeddingOptional.get()
+        );
 
         return probabilities[0];
     }

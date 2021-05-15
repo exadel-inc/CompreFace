@@ -8,7 +8,7 @@ import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
-import com.exadel.frs.core.trainservice.cache.SubjectCacheProvider;
+import com.exadel.frs.core.trainservice.cache.EmbeddingCacheProvider;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;
@@ -42,7 +42,7 @@ public class SubjectService {
 
     private final SubjectDao subjectDao;
     private final FacesApiClient facesApiClient;
-    private final SubjectCacheProvider subjectCacheProvider;
+    private final EmbeddingCacheProvider embeddingCacheProvider;
     private final FaceClassifierPredictor predictor;
     private final EuclideanDistanceClassifier classifier;
 
@@ -62,7 +62,7 @@ public class SubjectService {
     public int deleteSubjectsByApiKey(final String apiKey) {
         int deletedCount = subjectDao.deleteSubjectsByApiKey(apiKey);
         // we need invalidate cache
-        subjectCacheProvider.invalidate(apiKey);
+        embeddingCacheProvider.invalidate(apiKey);
 
         return deletedCount;
     }
@@ -70,7 +70,7 @@ public class SubjectService {
     public int removeAllSubjectEmbeddings(final String apiKey, final String subjectName) {
         int removed = subjectDao.removeAllSubjectEmbeddings(apiKey, subjectName);
         if (removed > 0) {
-            subjectCacheProvider.ifPresent(
+            embeddingCacheProvider.ifPresent(
                     apiKey,
                     c -> c.removeEmbeddingsBySubjectName(subjectName)
             );
@@ -83,7 +83,7 @@ public class SubjectService {
         final Subject subject = subjectDao.deleteSubjectByName(apiKey, subjectName);
 
         // remove subject from cache if required
-        subjectCacheProvider.ifPresent(
+        embeddingCacheProvider.ifPresent(
                 apiKey,
                 c -> c.removeEmbeddingsBySubjectName(subjectName)
         );
@@ -95,7 +95,7 @@ public class SubjectService {
         final Optional<Embedding> embeddingOptional = subjectDao.removeSubjectEmbedding(apiKey, embeddingId);
 
         // remove embedding from cache if required
-        embeddingOptional.ifPresent(embedding -> subjectCacheProvider.ifPresent(
+        embeddingOptional.ifPresent(embedding -> embeddingCacheProvider.ifPresent(
                 apiKey,
                 c -> c.removeEmbedding(embedding)
         ));
@@ -113,7 +113,7 @@ public class SubjectService {
 
         if (updated) {
             // update cache if required
-            subjectCacheProvider.ifPresent(
+            embeddingCacheProvider.ifPresent(
                     apiKey,
                     c -> c.updateSubjectName(oldSubjectName, newSubjectName)
             );
@@ -186,7 +186,7 @@ public class SubjectService {
 
         final Pair<Subject, Embedding> pair = subjectDao.addEmbedding(modelKey, subjectName, embeddingToSave);
 
-        subjectCacheProvider.ifPresent(
+        embeddingCacheProvider.ifPresent(
                 modelKey,
                 subjectCollection -> subjectCollection.addEmbedding(pair.getRight())
         );
@@ -211,7 +211,7 @@ public class SubjectService {
 
         UUID embeddingId = (UUID) processImageParams.getAdditionalParams().get(Constants.IMAGE_ID);
 
-        final String subjectName = subjectCacheProvider
+        final String subjectName = embeddingCacheProvider
                 .getOrLoad(processImageParams.getApiKey())
                 .getSubjectNameByEmbeddingId(embeddingId)
                 .orElse("");
@@ -220,7 +220,7 @@ public class SubjectService {
             var prediction = predictor.verify(
                     processImageParams.getApiKey(),
                     Stream.of(findResult.getEmbedding()).mapToDouble(d -> d).toArray(),
-                    embeddingId.toString()
+                    embeddingId
             );
 
             var inBoxProb = BigDecimal.valueOf(findResult.getBox().getProbability());

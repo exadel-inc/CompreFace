@@ -81,19 +81,19 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         assertThat(subjectRepository.findById(subject.getId()).orElseThrow().getSubjectName(), is(newSubjectName));
     }
 
-    @Test
-    void testNotUpdatedWhenUpdateWithSameName() {
-        final String oldSubjectName = "oldSubjectName";
-
-        final Subject subject = insertSubject(
-                oldSubjectName,
-                new EmbeddingInfo("calc", new double[]{1.1, 5.6}, img())
-        );
-        assertThat(subject.getSubjectName(), is(oldSubjectName));
-
-        boolean updated = subjectDao.updateSubjectName(subject.getApiKey(), oldSubjectName, oldSubjectName);
-        assertThat(updated, is(false));
-    }
+//    @Test
+//    void testNotUpdatedWhenUpdateWithSameName() {
+//        final String oldSubjectName = "oldSubjectName";
+//
+//        final Subject subject = insertSubject(
+//                oldSubjectName,
+//                new EmbeddingInfo("calc", new double[]{1.1, 5.6}, img())
+//        );
+//        assertThat(subject.getSubjectName(), is(oldSubjectName));
+//
+//        boolean updated = subjectDao.updateSubjectName(subject.getApiKey(), oldSubjectName, oldSubjectName);
+//        assertThat(updated, is(false));
+//    }
 
     @Test
     void testReassignEmbeddings() {
@@ -121,7 +121,6 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
 
         // no old subject
         assertThat(subjectRepository.findByApiKeyAndSubjectNameIgnoreCase(apiKey.toString(), subjectName1).isEmpty(), is(true));
-        assertThat(embeddingRepository.countByApiKey(apiKey.toString()), is(5));
     }
 
     @Test
