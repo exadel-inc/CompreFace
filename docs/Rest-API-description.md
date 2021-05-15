@@ -3,11 +3,17 @@
 ## Table Of Contents
 
 + [Face Recognition Service Endpoints](#face-recognition-service-endpoints)
+    + [Add a Subject](#add-a-subject)
+    + [rename a Subject](#rename-a-subject)
+    + [delete a Subject](#delete-a-subject)
+    + [List Subjects](#list-subjects)
     + [Add an Example of a Subject](#add-an-example-of-a-subject)
     + [Recognize Faces from a Given Image](#recognize-faces-from-a-given-image)
-    + [List of All Saved Subjects](#list-of-all-saved-subjects)
+    + [List of All Saved Examples of the Subject](#list-of-all-saved-examples-of-the-subject)
     + [Delete All Examples of the Subject by Name](#delete-all-examples-of-the-subject-by-name)
     + [Delete an Example of the Subject by ID](#delete-an-example-of-the-subject-by-id)
+    + [Direct Download an Image example of the Subject by ID](#direct-download-an-image-example-of-the-subject-by-id)
+    + [Download an Image example of the Subject by ID](#download-an-image-example-of-the-subject-by-id)
     + [Verify Faces from a Given Image](#verify-faces-from-a-given-image)
 + [Face Detection Service](#face-detection-service)
 + [Face Verification Service](#face-verification-service)
@@ -15,6 +21,107 @@
 To know more about face services and face plugins visit [this page](Face-services-and-plugins.md).
 
 ## Face Recognition Service Endpoints
+
+### Add a Subject
+
+This creates a new subject in Face Collection. You need to add Face Examples to the subject before the system will be able to recognize 
+the subject. Creating a subject is an optional step, you can upload an example without existing subject, and a subject will be created 
+automatically.
+
+```shell
+curl -X POST "http://localhost:8000/api/v1/recognition/subject" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d '{"subject: <subject_name>"}'
+```
+| Element             | Description | Type   | Required | Notes                                                        |
+| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
+| Content-Type        | header      | string | required | application/json                                          |
+| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
+| subject             | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string                 |
+
+Response body on success:
+```json
+{
+  "subject": "<subject_name>"
+}
+```
+
+| Element  | Type   | Description                |
+| -------- | ------ | -------------------------- |
+| subject  | string | is the name of the subject |
+
+### rename a Subject
+
+This renames existing subject. 
+
+```shell
+curl -X PUT "http://localhost:8000/api/v1/recognition/subject/<subject>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d '{"subject: <subject_name>"}'
+```
+| Element             | Description | Type   | Required | Notes                                                        |
+| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
+| Content-Type        | header      | string | required | application/json                                          |
+| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
+| subject             | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string                 |
+
+Response body on success:
+```json
+{
+  "subject": "<subject_name>"
+}
+```
+
+| Element  | Type   | Description                |
+| -------- | ------ | -------------------------- |
+| subject  | string | is the name of the subject |
+
+### delete a Subject
+
+This deletes existing subject and all saved faces.  
+
+```shell
+curl -X DELETE "http://localhost:8000/api/v1/recognition/subject/<subject>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>"
+```
+| Element             | Description | Type   | Required | Notes                                                        |
+| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
+| Content-Type        | header      | string | required | application/json                                          |
+| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
+| subject             | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string                 |
+
+Response body is empty on success. The status code is 204.
+
+### List Subjects
+
+This returns all subject related to Face Collection.  
+
+```shell
+curl -X GET "http://localhost:8000/api/v1/recognition/subject/" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>"
+```
+| Element             | Description | Type   | Required | Notes                                                        |
+| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
+| Content-Type        | header      | string | required | application/json                                          |
+| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
+
+Response body on success:
+```json
+{
+  "subjects": [
+    "<subject_name1>",
+    "<subject_name2>"
+    ]
+}
+```
+
+| Element  | Type   | Description                |
+| -------- | ------ | -------------------------- |
+| subjects | array  | the list of subjects in Face Collection |
 
 ### Add an Example of a Subject
 
@@ -123,18 +230,20 @@ Response body on success:
 | plugins_versions               | object  | contains information about plugin versions                       |
 
 
-### List of All Saved Subjects
+### List of All Saved Examples of the Subject
 
 To retrieve a list of subjects saved in a Face Collection:
 
 ```http request
-curl -X GET "http://localhost:8000/api/v1/recognition/faces" \
+curl -X GET "http://localhost:8000/api/v1/recognition/faces?limit=<limit>&offset=<offset>" \
 -H "x-api-key: <service_api_key>" \
 ```
 
 | Element   | Description | Type   | Required | Notes                                     |
 | --------- | ----------- | ------ | -------- | ----------------------------------------- |
 | x-api-key | header      | string | required | api key of the Face recognition service, created by the user |
+| limit     | param       | string | required | maximum number of examples to return. Can be used for pagination |
+| offset    | param       | string | required | number of examples to skip. Can be used for pagination |
 
 Response body on success:
 
@@ -216,6 +325,37 @@ Response body on success:
 | subject  | string | <subject> of the person, whose picture was saved for this api key |
 
 
+### Direct Download an Image example of the Subject by ID
+
+You can paste this URL into the <img> html tag to show the image.
+
+```http request
+curl -X GET "http://localhost:8000/api/v1/recognition/<service_api_key>/faces/<image_id>/img"
+```
+
+| Element   | Description | Type   | Required | Notes                                     |
+| --------- | ----------- | ------ | -------- | ----------------------------------------- |
+| x-api-key | header      | string | required | api key of the Face recognition service, created by the user |
+| image_id  | variable    | UUID   | required | UUID of the saved image                 |
+
+Response body is binary image. 
+
+
+### Download an Image example of the Subject by ID
+
+To download an image example of the Subject by ID:
+
+```http request
+curl -X GET "http://localhost:8000/api/v1/recognition/faces/<image_id>/img"
+-H "x-api-key: <service_api_key>"
+```
+
+| Element   | Description | Type   | Required | Notes                                     |
+| --------- | ----------- | ------ | -------- | ----------------------------------------- |
+| x-api-key | header      | string | required | api key of the Face recognition service, created by the user |
+| image_id  | variable    | UUID   | required | UUID of the saved image                 |
+
+Response body is binary image.
 
 ### Verify Faces from a Given Image
 
