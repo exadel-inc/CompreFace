@@ -13,12 +13,12 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.IMAGE_WIT
 @NoArgsConstructor
 public class VerifySourceTargetRequest {
 
-    @JsonProperty("source")
+    @JsonProperty("source_image")
     @NotNull
     @ApiParam(value = "Source:" + IMAGE_WITH_ONE_FACE_DESC, required = true)
     private String sourceImageBase64;
 
-    @JsonProperty("target")
+    @JsonProperty("target_image")
     @NotNull
     @ApiParam(value = "Target:" + IMAGE_WITH_ONE_FACE_DESC, required = true)
     private String targetImageBase64;

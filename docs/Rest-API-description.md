@@ -381,52 +381,54 @@ curl  -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&pr
 Response body on success:
 ```json
 {
-  "source_image_face" : {
-    "age" : [ 25, 32 ],
-    "gender" : "female",
-    "embedding" : [ -0.0010271212086081505, "...", -0.008746841922402382 ],
-    "box" : {
-      "probability" : 0.9997453093528748,
-      "x_max" : 205,
-      "y_max" : 167,
-      "x_min" : 48,
-      "y_min" : 0
-    },
-    "landmarks" : [ [ 92, 44 ], [ 130, 68 ], [ 71, 76 ], [ 60, 104 ], [ 95, 125 ] ],
-    "execution_time" : {
-      "age" : 85.0,
-      "gender" : 51.0,
-      "detector" : 67.0,
-      "calculator" : 116.0
-    }
-  },
-  "face_matches": [
-    {
+  "result" : [{
+    "source_image_face" : {
       "age" : [ 25, 32 ],
       "gender" : "female",
-      "embedding" : [ -0.049007344990968704, "...", -0.01753818802535534 ],
+      "embedding" : [ -0.0010271212086081505, "...", -0.008746841922402382 ],
       "box" : {
-        "probability" : 0.99975,
-        "x_max" : 308,
-        "y_max" : 180,
-        "x_min" : 235,
-        "y_min" : 98
+        "probability" : 0.9997453093528748,
+        "x_max" : 205,
+        "y_max" : 167,
+        "x_min" : 48,
+        "y_min" : 0
       },
-      "landmarks" : [ [ 260, 129 ], [ 273, 127 ], [ 258, 136 ], [ 257, 150 ], [ 269, 148 ] ],
-      "similarity" : 0.97858,
+      "landmarks" : [ [ 92, 44 ], [ 130, 68 ], [ 71, 76 ], [ 60, 104 ], [ 95, 125 ] ],
       "execution_time" : {
-        "age" : 59.0,
-        "gender" : 30.0,
-        "detector" : 177.0,
-        "calculator" : 70.0
+        "age" : 85.0,
+        "gender" : 51.0,
+        "detector" : 67.0,
+        "calculator" : 116.0
       }
-    }],
-  "plugins_versions" : {
-    "age" : "agegender.AgeDetector",
-    "gender" : "agegender.GenderDetector",
-    "detector" : "facenet.FaceDetector",
-    "calculator" : "facenet.Calculator"
-  }
+    },
+    "face_matches": [
+      {
+        "age" : [ 25, 32 ],
+        "gender" : "female",
+        "embedding" : [ -0.049007344990968704, "...", -0.01753818802535534 ],
+        "box" : {
+          "probability" : 0.99975,
+          "x_max" : 308,
+          "y_max" : 180,
+          "x_min" : 235,
+          "y_min" : 98
+        },
+        "landmarks" : [ [ 260, 129 ], [ 273, 127 ], [ 258, 136 ], [ 257, 150 ], [ 269, 148 ] ],
+        "similarity" : 0.97858,
+        "execution_time" : {
+          "age" : 59.0,
+          "gender" : 30.0,
+          "detector" : 177.0,
+          "calculator" : 70.0
+        }
+      }],
+    "plugins_versions" : {
+      "age" : "agegender.AgeDetector",
+      "gender" : "agegender.GenderDetector",
+      "detector" : "facenet.FaceDetector",
+      "calculator" : "facenet.Calculator"
+    }
+  }]
 }
 ```
 

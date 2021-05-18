@@ -17,16 +17,18 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 @RequiredArgsConstructor
 public class ConsistenceController {
 
+    private final String FACENET = "Facenet2018";
+
     private final FacesRepository facesRepository;
     private final FacesApiClient facesApiClient;
     private final ImageProperties imageProperties;
 
     @GetMapping("/status")
     public VersionConsistenceDto getCheckDemo() {
-//        val calculatorVersion = facesApiClient.getStatus().getCalculatorVersion();
+        val calculatorVersion = facesApiClient.getStatus().getCalculatorVersion();
         return VersionConsistenceDto
                 .builder()
-                .demoFaceCollectionIsInconsistent(facesRepository.isDemoFaceCollectionInconsistent())
+                .demoFaceCollectionIsInconsistent(!FACENET.equals(calculatorVersion))
 //                .dbIsInconsistent(facesRepository.isDbInconsistent(calculatorVersion))
                 .saveImagesToDB(imageProperties.isSaveImagesToDB())
                 .build();
