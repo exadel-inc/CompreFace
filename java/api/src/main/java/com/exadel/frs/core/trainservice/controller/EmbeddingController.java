@@ -10,8 +10,10 @@ import com.exadel.frs.core.trainservice.dto.EmbeddingDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.EmbeddingMapper;
+import com.exadel.frs.core.trainservice.service.EmbeddingService;
 import com.exadel.frs.core.trainservice.service.SubjectService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -38,6 +40,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 @RequiredArgsConstructor
 public class EmbeddingController {
 
+    private final EmbeddingService embeddingService;
     private final SubjectService subjectService;
     private final ImageExtensionValidator imageValidator;
     private final EmbeddingMapper embeddingMapper;
@@ -88,17 +91,16 @@ public class EmbeddingController {
     byte[] downloadImg(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final UUID embeddingId) {
-        return subjectService.getImg(apiKey, embeddingId)
+        return embeddingService.getImg(apiKey, embeddingId)
                 .map(Img::getContent)
                 .orElse(new byte[]{});
     }
 
     @GetMapping
-    public Page<EmbeddingDto> listEmbeddings(
+    public Faces listEmbeddings(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
             Pageable pageable) {
-        return subjectService.listEmbeddings(apiKey, pageable)
-                .map(embeddingMapper::toResponseDto);
+        return new Faces(embeddingService.listEmbeddings(apiKey, pageable).map(embeddingMapper::toResponseDto));
     }
 
     @WriteEndpoint
@@ -134,7 +136,7 @@ public class EmbeddingController {
             @ApiParam(value = STATUS_DESC) @RequestParam(value = STATUS, required = false, defaultValue = STATUS_DEFAULT_VALUE) final Boolean status
     ) {
         imageValidator.validate(file);
-        ProcessImageParams processImageParams = ProcessImageParams.builder()
+        var processImageParams = ProcessImageParams.builder()
                 .additionalParams(Map.of(IMAGE_ID, embeddingId))
                 .apiKey(apiKey)
                 .detProbThreshold(detProbThreshold)
@@ -144,7 +146,10 @@ public class EmbeddingController {
                 .status(status)
                 .build();
 
-        return subjectService.verifyFace(processImageParams);
+        return Map.of(
+                "result",
+                subjectService.verifyFace(processImageParams)
+        );
     }
 
     @PostMapping(value = "/{embeddingId}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
@@ -159,7 +164,7 @@ public class EmbeddingController {
     ) {
         imageValidator.validateBase64(request.getContent());
 
-        ProcessImageParams processImageParams = ProcessImageParams.builder()
+        var processImageParams = ProcessImageParams.builder()
                 .additionalParams(Map.of(IMAGE_ID, embeddingId))
                 .apiKey(apiKey)
                 .detProbThreshold(detProbThreshold)
@@ -169,6 +174,38 @@ public class EmbeddingController {
                 .status(status)
                 .build();
 
-        return subjectService.verifyFace(processImageParams);
+        return Map.of(
+                "result",
+                subjectService.verifyFace(processImageParams)
+        );
+    }
+
+    @RequiredArgsConstructor
+    private static final class Faces {
+
+        private final Page<EmbeddingDto> source;
+
+        // As of backward compatibility we are not allowed to rename property 'faces' --> 'embedding'
+        public List<EmbeddingDto> getFaces() {
+            return source.getContent();
+        }
+
+        @JsonProperty("total_pages")
+        public int getTotalPages() {
+            return source.getTotalPages();
+        }
+
+        @JsonProperty("total_elements")
+        public long getTotalElements() {
+            return source.getTotalElements();
+        }
+
+        public int getNumber() {
+            return source.getNumber();
+        }
+
+        public int getSize() {
+            return source.getSize();
+        }
     }
 }

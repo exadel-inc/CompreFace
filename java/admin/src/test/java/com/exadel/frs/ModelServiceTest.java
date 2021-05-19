@@ -40,8 +40,6 @@ import com.exadel.frs.commonservice.entity.Model;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.AppModelAccess;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.commonservice.repository.FacesRepository;
-import com.exadel.frs.repository.ImagesRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.service.AppService;
 import com.exadel.frs.service.ModelService;
@@ -73,8 +71,6 @@ class ModelServiceTest {
     private ModelRepository modelRepositoryMock;
     private ModelService modelService;
     private UserService userServiceMock;
-    private FacesRepository facesRepositoryMock;
-    private ImagesRepository imagesRepositoryMock;
     private final SubjectRepository subjectRepositry;
     private final JdbcTemplate jdbcTemplate;
 
@@ -85,8 +81,6 @@ class ModelServiceTest {
         appServiceMock = mock(AppService.class);
         authManager = mock(AuthorizationManager.class);
         userServiceMock = mock(UserService.class);
-        facesRepositoryMock = mock(FacesRepository.class);
-        imagesRepositoryMock = mock(ImagesRepository.class);
         subjectRepositry = mock(SubjectRepository.class);
         jdbcTemplate = mock(JdbcTemplate.class);
 
@@ -95,8 +89,6 @@ class ModelServiceTest {
                 appServiceMock,
                 authManager,
                 userServiceMock,
-                facesRepositoryMock,
-                imagesRepositoryMock,
                 subjectRepositry,
                 jdbcTemplate
         );
@@ -243,8 +235,6 @@ class ModelServiceTest {
         when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
         when(modelRepositoryMock.save(any(Model.class))).thenReturn(cloneModel);
-        when(imagesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
-        when(facesRepositoryMock.saveAll(anyList())).thenReturn(new ArrayList<>());
         when(userServiceMock.getUser(USER_ID)).thenReturn(user);
 
         val clonedModel = modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
@@ -252,8 +242,6 @@ class ModelServiceTest {
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
         verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
         verify(modelRepositoryMock).save(any(Model.class));
-        verify(imagesRepositoryMock).saveAll(anyList());
-        verify(facesRepositoryMock).saveAll(anyList());
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
         verify(authManager).verifyWritePrivilegesToApp(user, app);
 

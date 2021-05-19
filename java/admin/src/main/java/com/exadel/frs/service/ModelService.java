@@ -21,14 +21,12 @@ import com.exadel.frs.commonservice.entity.*;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
-import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.repository.ImagesRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,13 +43,11 @@ import static java.util.UUID.randomUUID;
 @RequiredArgsConstructor
 @Slf4j
 public class ModelService {
+
     private final ModelRepository modelRepository;
     private final AppService appService;
     private final AuthorizationManager authManager;
     private final UserService userService;
-    private final FacesRepository facesRepository;
-    private final ImagesRepository imagesRepository;
-
     private final SubjectRepository subjectRepository;
     private final JdbcTemplate jdbcTemplate;
 
@@ -220,32 +216,6 @@ public class ModelService {
                     );
                 }
         );
-    }
-
-    private void cloneFaces(final Model clone, final List<Face> faces) {
-        val cloneFaces = new ArrayList<Face>();
-        val cloneImages = new ArrayList<Image>();
-
-        for (val face : faces) {
-            val cloneFace = new Face(face);
-            cloneFace.setId(randomUUID().toString());
-            cloneFace.setApiKey(clone.getApiKey());
-
-            cloneFaces.add(cloneFace);
-
-            val images = imagesRepository.findByFaceId(face.getId());
-
-            for (val image : images) {
-                val cloneImage = new Image(image);
-                cloneImage.setId(null);
-                cloneImage.setFace(cloneFace);
-
-                cloneImages.add(cloneImage);
-            }
-        }
-
-        imagesRepository.saveAll(cloneImages);
-        facesRepository.saveAll(cloneFaces);
     }
 
     public Model updateModel(

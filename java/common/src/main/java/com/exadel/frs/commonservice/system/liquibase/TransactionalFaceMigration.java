@@ -1,4 +1,4 @@
-package com.exadel.frs.core.trainservice.component.migration;
+package com.exadel.frs.commonservice.system.liquibase;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,33 +11,37 @@ import java.util.UUID;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class SubjectMigrationService {
+public class TransactionalFaceMigration {
 
     private final JdbcTemplate jdbcTemplate;
 
     @Transactional
     public void doFaceMigrationInTransaction(String apiKey, String faceId, String faceName, boolean hasImage) {
         // try to find existing subject by {api_key, ignore_case<subject_name>} pair
-        String subjectId = jdbcTemplate.query(
+        UUID subjectId = jdbcTemplate.query(
                 "select id from subject where api_key = ? and upper(subject_name) = upper(?)",
                 new Object[]{apiKey, faceName},
-                rs -> rs.next() ? rs.getString("id") : null
+                rs -> rs.next() ? rs.getObject("id", UUID.class) : null
         );
 
         // OneToOne -> OneToMany migration
         if (subjectId == null) {
             // subject not exists => we should insert it
-            jdbcTemplate.update("insert into subject(id, api_key, subject_name) values(?, ?, ?)", faceId, apiKey, faceName);
-            subjectId = faceId;
+            subjectId = UUID.fromString(faceId);
+
+            jdbcTemplate.update(
+                    "insert into subject(id, api_key, subject_name) values(?, ?, ?)",
+                    subjectId, apiKey, faceName
+            );
 
             log.debug("Inserted subject with id {}", subjectId);
         } else {
             // subject for current face already exists
         }
 
-        String imgId = null;
+        UUID imgId = null;
         if (Boolean.TRUE.equals(hasImage)) {
-            imgId = UUID.randomUUID().toString();
+            imgId = UUID.randomUUID();
             // create image
             jdbcTemplate.update(
                     "insert into img(id, content) select ?, i.raw_img_fs from face f inner join image i on i.face_id = f.id where f.id = ?",
@@ -49,10 +53,10 @@ public class SubjectMigrationService {
         jdbcTemplate.update(
                 "insert into embedding(id, subject_id, embedding, calculator, img_id) " +
                         "select " +
-                        "?, ?, array(select json_array_elements_text(f.embeddings -> 'embeddings'))::float8[], f.embeddings -> 'calculatorVersion', ? " +
+                        "?, ?, array(select json_array_elements_text(f.embeddings -> 'embeddings'))::float8[], f.embeddings ->> 'calculatorVersion', ? " +
                         "from face f " +
                         "where f.id = ?",
-                UUID.randomUUID().toString(), subjectId, imgId, faceId
+                UUID.randomUUID(), subjectId, imgId, faceId
         );
 
         // mark as migrated

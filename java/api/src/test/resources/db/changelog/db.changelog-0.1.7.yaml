@@ -1,7 +1,17 @@
 databaseChangeLog:
   - changeSet:
+      id: prepare-faces-to-migration
+      author: sshimansky@exadel.com
+      changes:
+        - addColumn:
+            tableName: face
+            columns:
+              name: migrated
+              type: boolean
+              defaultValueBoolean: false
+  - changeSet:
       id: create-subject-table
-      author: Shymanski Siarhei
+      author: sshimansky@exadel.com
       changes:
         - createTable:
             tableName: subject
@@ -23,9 +33,17 @@ databaseChangeLog:
             columnNames: api_key, subject_name
             constraintName: api_key_subject_name_uindex
             tableName: subject
+        - addForeignKeyConstraint:
+            baseColumnNames: api_key
+            baseTableName: face
+            referencedColumnNames: api_key
+            referencedTableName: model
+            constraintName: fk_subject_model_api_key
+            onDelete: CASCADE
+            onUpdate: CASCADE
   - changeSet:
       id: create-img-table
-      author: Shymanski Siarhei
+      author: sshimansky@exadel.com
       changes:
         - createTable:
             tableName: img
@@ -89,3 +107,8 @@ databaseChangeLog:
             referencedColumnNames: id
             referencedTableName: img
             constraintName: fk_img_id
+  - changeSet:
+      id: migrate-face-image
+      author: sshimansky@exadel.com
+      changes:
+        - customChange: { "class": "com.exadel.frs.commonservice.system.liquibase.FacesToSubjectsMigration" }

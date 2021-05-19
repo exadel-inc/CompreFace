@@ -2,14 +2,16 @@ package com.exadel.frs.commonservice.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import java.util.UUID;
 
+@Data
+@Accessors(chain = true)
+@NoArgsConstructor
 @Entity
 @Table(schema = "public")
-@Data
-@NoArgsConstructor
 public class Img {
 
     @Id

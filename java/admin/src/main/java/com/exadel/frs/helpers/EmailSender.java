@@ -18,8 +18,8 @@ package com.exadel.frs.helpers;
 
 import com.exadel.frs.exception.UnreachableEmailException;
 import javax.mail.internet.MimeMessage;
-import liquibase.util.StringUtils;
 import lombok.SneakyThrows;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;

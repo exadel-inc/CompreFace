@@ -16,23 +16,19 @@
 
 package com.exadel.frs.core.trainservice.component.migration;
 
-import com.exadel.frs.commonservice.entity.Face.Embedding;
-import com.exadel.frs.commonservice.entity.Image;
-import com.exadel.frs.commonservice.repository.FacesRepository;
-import com.exadel.frs.core.trainservice.repository.ImagesRepository;
 import com.exadel.frs.commonservice.sdk.faces.feign.FacesFeignClient;
+import com.exadel.frs.core.trainservice.service.EmbeddingService;
 import com.exadel.frs.core.trainservice.util.MultipartFileData;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Optional;
+import java.util.UUID;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.CALCULATOR_PLUGIN;
 
@@ -42,20 +38,15 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.CALCULATO
 public class MigrationComponent {
 
     private final MigrationStatusStorage migrationStatusStorage;
-    private final FacesRepository facesRepository;
-    private final ImagesRepository imagesRepository;
     private final FacesFeignClient feignClient;
-
-    private final JdbcTemplate jdbcTemplate;
-    private final SubjectMigrationService subjectMigrationService;
-
+    private final EmbeddingService embeddingService;
 
     @SneakyThrows
     @Async
     public void migrate() {
         try {
             log.info("Migrating...");
-            processFaces();
+            recalculateEmbeddingsWithOutdatedCalculator();
             log.info("Calculating embedding for faces finished");
 
             log.info("Migration successfully finished");
@@ -67,80 +58,46 @@ public class MigrationComponent {
         }
     }
 
-    @SneakyThrows
-    @Async
-    public void migrateSubject() {
-        try {
-            log.info("Migrating face/image --> subject/img...");
-            processSubjects();
-            log.info("Migration successfully finished");
-        } catch (Exception e) {
-            log.info("Migration finished with exception");
-            throw e;
-        } finally {
-            migrationStatusStorage.finishMigration();
-        }
-    }
+    int recalculateEmbeddingsWithOutdatedCalculator() {
+        var currentCalculator = feignClient.getStatus().getCalculatorVersion();
+        log.info("Embeddings migration for calculator version {}", currentCalculator);
 
-    private void processSubjects() {
-        final String sql = "select " +
-                "   f.id as face_id, " +
-                "   f.face_name, " +
-                "   f.api_key, " +
-                "   case when raw_img_fs is null then false else true end as has_image "+
-                "from " +
-                "   face f inner join image i on f.id = i.face_id " +
-                "where " +
-                "   migrated = ? and api_key = ?";
+        var toMigrate = embeddingService.getWithImgAndCalculatorNotEq(currentCalculator);
+        log.info("Found {} embeddings to migrate", toMigrate.size());
 
+        var recalculated = 0;
+        for (var embedding : toMigrate) {
+            log.info("Migrating embedding with id {}", embedding.getId());
 
-        // just as wrapper to bypass immutable variables inside closure
-        final var counter = new AtomicInteger(0);
+            final Optional<double[]> newEmbedding = embeddingService.getImg(embedding)
+                    .flatMap(img -> recalculate(embedding.getId(), img.getContent()));
 
-        long start = System.currentTimeMillis();
-        jdbcTemplate.query(sql, new Object[]{false, "001bb7fb-70df-479e-b6a6-0800078ba23a"}, rs -> {
-            final var apiKey = rs.getString("api_key");
-            final var faceId = rs.getString("face_id");
-            final var faceName = rs.getString("face_name");
-            final var hasImage = rs.getBoolean("has_image");
-
-            subjectMigrationService.doFaceMigrationInTransaction(apiKey, faceId, faceName, hasImage);
-            counter.incrementAndGet();
-
-            log.debug("{} face(s) done", counter.get());
-        });
-
-        log.info("Total records: {} in {}ms", counter.get(), (System.currentTimeMillis() - start));
-    }
-
-    private void processFaces() {
-        val migrationCalculatorVersion = feignClient.getStatus().getCalculatorVersion();
-        log.info("Calculating embedding for faces");
-        val all = facesRepository.findAll();
-        for (val face : all) {
-            log.info("Processing facename {} with id {}", face.getFaceName(), face.getId());
-            if (!migrationCalculatorVersion.equals(face.getEmbedding().getCalculatorVersion())) {
-                val image = imagesRepository.findById(face.getId()).orElse(new Image());
-                if (image.getRawImg() == null) {
-                    continue;
-                }
-                val file = new MultipartFileData(image.getRawImg(), face.getFaceName(), null);
-
-                val faceEmbedding = new Embedding();
-                try {
-                    val findFacesResponse = feignClient.findFaces(file, 1, null, CALCULATOR_PLUGIN);
-                    val embeddings = findFacesResponse.getResult().stream()
-                            .findFirst().orElseThrow()
-                            .getEmbedding();
-                    faceEmbedding.setEmbeddings(Arrays.asList(embeddings));
-                    faceEmbedding.setCalculatorVersion(findFacesResponse.getPluginsVersions().getCalculator());
-                } catch (FeignException.InternalServerError | FeignException.BadRequest error) {
-                    log.error("Error during processing facename {} with id {}", face.getFaceName(), face.getId(), error);
-                }
-
-                face.setEmbedding(faceEmbedding);
-                facesRepository.save(face);
+            if (newEmbedding.isPresent()) {
+                int updated = embeddingService.updateEmbedding(embedding.getId(), newEmbedding.get(), currentCalculator);
+                recalculated += updated;
             }
         }
+
+        return recalculated;
+    }
+
+    private Optional<double[]> recalculate(UUID embeddingId, byte[] content) {
+        try {
+            var findFacesResponse = feignClient.findFaces(
+                    new MultipartFileData(content, "recalculated", null),
+                    1,
+                    null,
+                    CALCULATOR_PLUGIN
+            );
+
+            return findFacesResponse.getResult().stream()
+                    .findFirst()
+                    .map(result -> ArrayUtils.toPrimitive(result.getEmbedding()));
+
+        } catch (FeignException.InternalServerError | FeignException.BadRequest error) {
+            log.error("Error during processing embedding with id " + embeddingId, error);
+        }
+
+        return Optional.empty();
     }
 }

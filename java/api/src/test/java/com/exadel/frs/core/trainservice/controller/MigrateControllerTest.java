@@ -28,8 +28,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.UUID;
-
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -57,8 +55,8 @@ class MigrateControllerTest extends EmbeddedPostgreSQLTest {
         when(modelService.validateModelKey(anyString(), any())).thenReturn(ValidationResult.OK);
 
         mockMvc.perform(post(API_V1 + "/migrate"))
-               .andExpect(status().isOk())
-               .andExpect(content().string("Migration started"));
+                .andExpect(status().isOk())
+                .andExpect(content().string("Migration started"));
 
         verify(migrationStatusStorage).startMigration();
         verify(migrationComponent).migrate();

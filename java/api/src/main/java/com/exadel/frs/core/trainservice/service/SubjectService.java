@@ -1,8 +1,6 @@
 package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
-import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
@@ -15,12 +13,11 @@ import com.exadel.frs.core.trainservice.dao.SubjectDao;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,6 +38,7 @@ public class SubjectService {
     public static final int MAX_FACES_TO_RECOGNIZE = 2;
 
     private final SubjectDao subjectDao;
+    private final FacesMapper facesMapper;
     private final FacesApiClient facesApiClient;
     private final EmbeddingCacheProvider embeddingCacheProvider;
     private final FaceClassifierPredictor predictor;
@@ -53,10 +51,6 @@ public class SubjectService {
     public Subject createSubject(final String apiKey, final String subjectName) {
         // subject is empty (without embeddings) no need to update cache
         return subjectDao.createSubject(apiKey, subjectName);
-    }
-
-    public Page<EmbeddingProjection> listEmbeddings(final String apiKey, final Pageable pageable) {
-        return subjectDao.findBySubjectApiKey(apiKey, pageable);
     }
 
     public int deleteSubjectsByApiKey(final String apiKey) {
@@ -80,7 +74,7 @@ public class SubjectService {
     }
 
     public Subject deleteSubjectByName(final String apiKey, final String subjectName) {
-        final Subject subject = subjectDao.deleteSubjectByName(apiKey, subjectName);
+        var subject = subjectDao.deleteSubjectByName(apiKey, subjectName);
 
         // remove subject from cache if required
         embeddingCacheProvider.ifPresent(
@@ -194,7 +188,7 @@ public class SubjectService {
         return pair;
     }
 
-    public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {
+    public List<FaceVerification> verifyFace(ProcessImageParams processImageParams) {
         FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
@@ -204,18 +198,18 @@ public class SubjectService {
         }
 
         if (findFacesResponse == null) {
-            return Map.of("result", Collections.emptyList());
+            return Collections.emptyList();
         }
 
-        var results = new ArrayList<FaceVerification>();
-
-        UUID embeddingId = (UUID) processImageParams.getAdditionalParams().get(Constants.IMAGE_ID);
+        var embeddingId = (UUID) processImageParams.getAdditionalParams().get(Constants.IMAGE_ID);
 
         final String subjectName = embeddingCacheProvider
                 .getOrLoad(processImageParams.getApiKey()) // do we really need to load cache here?
                 .getSubjectNameByEmbeddingId(embeddingId)
                 .orElse("");
 
+        var pluginsVersionsDto = facesMapper.toPluginVersionsDto(findFacesResponse.getPluginsVersions());
+        var results = new ArrayList<FaceVerification>();
         for (var findResult : findFacesResponse.getResult()) {
             var prediction = predictor.verify(
                     processImageParams.getApiKey(),
@@ -233,23 +227,20 @@ public class SubjectService {
             var faceVerification = FaceVerification
                     .builder()
                     .box(findResult.getBox())
+                    .subject(subjectName)
                     .similarity(pred.floatValue())
-                    .embedding(findResult.getEmbedding())
-                    .executionTime(findResult.getExecutionTime())
+                    .landmarks(findResult.getLandmarks())
                     .age(findResult.getAge())
                     .gender(findResult.getGender())
-                    .landmarks(findResult.getLandmarks())
-                    .subject(subjectName)
+                    .embedding(findResult.getEmbedding())
+                    .executionTime(findResult.getExecutionTime())
+                    .pluginsVersions(pluginsVersionsDto)
                     .build()
                     .prepareResponse(processImageParams); // do some tricks with obj
 
             results.add(faceVerification);
         }
 
-        return Map.of("result", results);
-    }
-
-    public Optional<Img> getImg(String apiKey, UUID embeddingId) {
-        return subjectDao.getImg(apiKey, embeddingId);
+        return results;
     }
 }

@@ -1,6 +1,6 @@
 package com.exadel.frs.core.trainservice.cache;
 
-import com.exadel.frs.commonservice.repository.EmbeddingRepository;
+import com.exadel.frs.core.trainservice.service.EmbeddingService;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class EmbeddingCacheProvider {
     private static final long CACHE_EXPIRATION = 60 * 60 * 24L;
     private static final long CACHE_MAXIMUM_SIZE = 10;
 
-    private final EmbeddingRepository embeddingRepository;
+    private final EmbeddingService embeddingService;
 
     private static final Cache<String, EmbeddingCollection> cache =
             CacheBuilder.newBuilder()
@@ -28,7 +28,7 @@ public class EmbeddingCacheProvider {
     public EmbeddingCollection getOrLoad(final String apiKey) {
         var result = cache.getIfPresent(apiKey);
         if (result == null) {
-            result = embeddingRepository.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
+            result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
             cache.put(apiKey, result);
         }
 

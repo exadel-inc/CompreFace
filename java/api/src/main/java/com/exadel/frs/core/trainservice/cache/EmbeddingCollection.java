@@ -35,7 +35,9 @@ public class EmbeddingCollection {
 
         return new EmbeddingCollection(
                 HashBiMap.create(projections2Index),
-                Nd4j.create(rawEmbeddings.toArray(double[][]::new))
+                rawEmbeddings.isEmpty()
+                        ? Nd4j.empty()
+                        : Nd4j.create(rawEmbeddings.toArray(double[][]::new))
         );
     }
 
@@ -49,6 +51,7 @@ public class EmbeddingCollection {
     }
 
     private int getSize() {
+        // should be invoked only if underlying array is not empty!
         return (int) embeddings.size(0);
     }
 
@@ -76,11 +79,12 @@ public class EmbeddingCollection {
     public synchronized EmbeddingProjection addEmbedding(final Embedding embedding) {
         final var projection = EmbeddingProjection.from(embedding);
 
-        embeddings = Nd4j.concat(
-                0,
-                embeddings,
-                Nd4j.create(new double[][]{embedding.getEmbedding()})
-        );
+        final INDArray array = Nd4j.create(new double[][]{embedding.getEmbedding()});
+
+        embeddings = embeddings.isEmpty()
+                ? array
+                : Nd4j.concat(0, embeddings, array);
+
         projection2Index.put(
                 projection,
                 getSize() - 1

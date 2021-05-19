@@ -4,6 +4,7 @@ import com.vladmihalcea.hibernate.type.array.DoubleArrayType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -11,11 +12,12 @@ import org.hibernate.annotations.TypeDefs;
 import javax.persistence.*;
 import java.util.UUID;
 
-@Entity
-@Table(schema = "public")
 @Data
+@Accessors(chain = true)
 @NoArgsConstructor
 @EqualsAndHashCode(of = "id")
+@Entity
+@Table(schema = "public")
 @TypeDefs(@TypeDef(name = "double-array", typeClass = DoubleArrayType.class))
 @NamedEntityGraph(name = "embedding-with-subject", attributeNodes = @NamedAttributeNode("subject"))
 public class Embedding {

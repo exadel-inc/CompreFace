@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.dao;
 
 import com.exadel.frs.commonservice.entity.Embedding;
-import com.exadel.frs.commonservice.entity.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.SubjectAlreadyExistsException;
@@ -12,8 +11,6 @@ import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
@@ -43,8 +40,9 @@ public class SubjectDao {
 
         final var subject = subjectOptional.get();
 
-        imgRepository.deleteBySubjectId(subject.getId());
+        // order is important
         embeddingRepository.deleteBySubjectId(subject.getId());
+        imgRepository.deleteBySubjectId(subject.getId());
         subjectRepository.delete(subject);
 
         return subject;
@@ -60,8 +58,10 @@ public class SubjectDao {
 
         final var subject = subjectOptional.get();
 
+        int deleted = embeddingRepository.deleteBySubjectId(subject.getId());
         imgRepository.deleteBySubjectId(subject.getId());
-        return embeddingRepository.deleteBySubjectId(subject.getId());
+
+        return deleted;
     }
 
     @Transactional
@@ -75,9 +75,8 @@ public class SubjectDao {
             embeddingRepository.delete(embedding);
 
             // in case it was embedding with img and no more embeddings were calculated for img, we should also remove img
-            UUID imgId = null;
             if (embedding.getImg() != null && embedding.getImg().getId() != null) {
-                imgId = embedding.getImg().getId();
+                UUID imgId = embedding.getImg().getId();
                 final int embeddingsWithImg = imgRepository.countRelatedEmbeddings(imgId);
                 if (embeddingsWithImg == 0) {
                     // no more embeddings calculated for img, no need to keep it
@@ -109,14 +108,20 @@ public class SubjectDao {
         );
 
         if (subjectWithNewName.isPresent()) {
-            // subject with such name already exists, we should try to reassign existing embeddings
+            // subject with such name already exists
 
             var targetSubject = subjectWithNewName.get();
-            embeddingRepository.reassignEmbeddings(sourceSubject, targetSubject);
-            subjectRepository.delete(sourceSubject);
+
+            if (sourceSubject.getId().equals(targetSubject.getId())) {
+                // we found same subject => simple name update during transaction close
+                sourceSubject.setSubjectName(newSubjectName);
+            } else {
+                // we should try to reassign existing embeddings
+                embeddingRepository.reassignEmbeddings(sourceSubject, targetSubject);
+                subjectRepository.delete(sourceSubject);
+            }
         } else {
             // no subject with new name => simple name update during transaction close
-
             sourceSubject.setSubjectName(newSubjectName);
         }
 
@@ -125,22 +130,10 @@ public class SubjectDao {
 
     @Transactional
     public int deleteSubjectsByApiKey(final String apiKey) {
-        imgRepository.deleteBySubjectApiKey(apiKey);
+        // order is important
         embeddingRepository.deleteBySubjectApiKey(apiKey);
+        imgRepository.deleteBySubjectApiKey(apiKey);
         return subjectRepository.deleteByApiKey(apiKey);
-    }
-
-    public Optional<Img> getImg(String apiKey, UUID embeddingId) {
-        return imgRepository.getImgByEmbeddingId(apiKey, embeddingId);
-    }
-
-    public Page<EmbeddingProjection> findBySubjectApiKey(String apiKey, Pageable pageable) {
-        return embeddingRepository.findBySubjectApiKey(apiKey, pageable);
-    }
-
-    @Transactional
-    public Embedding addEmbedding(final Subject subject, final EmbeddingInfo embeddingInfo) {
-        return saveEmbeddingInfo(subject, embeddingInfo);
     }
 
     public Subject createSubject(final String apiKey, final String subjectName) {
@@ -170,9 +163,9 @@ public class SubjectDao {
     }
 
     private Subject saveSubject(String apiKey, String subjectName) {
-        var subject = new Subject();
-        subject.setApiKey(apiKey);
-        subject.setSubjectName(subjectName);
+        var subject = new Subject()
+                .setApiKey(apiKey)
+                .setSubjectName(subjectName);
 
         return subjectRepository.save(subject);
     }

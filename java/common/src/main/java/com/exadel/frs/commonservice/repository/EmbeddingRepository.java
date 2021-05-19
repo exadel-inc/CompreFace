@@ -11,10 +11,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
@@ -23,33 +21,28 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
     @EntityGraph("embedding-with-subject")
     Stream<Embedding> findBySubjectApiKey(String apiKey);
 
-    @Transactional
-    default <T> T doWithEmbeddingsStream(String apiKey, Function<Stream<Embedding>, T> func) {
-        try (Stream<Embedding> stream = findBySubjectApiKey(apiKey)) {
-            return func.apply(stream);
-        }
-    }
-
     List<Embedding> findBySubjectId(UUID subjectId);
+
+    @Query("select e from Embedding e where e.img is not null and e.calculator <> :calculator")
+    List<Embedding> getWithImgAndCalculatorNotEq(@Param("calculator") String calculator);
+
+    @Modifying
+    @Query("update Embedding e set e.embedding = :embedding, e.calculator = :calculator where e.id = :embeddingId")
+    int updateEmbedding(@Param("embeddingId") UUID embeddingId,
+                        @Param("embedding") double[] embedding,
+                        @Param("calculator") String calculator);
 
     @Modifying
     @Query("delete from Embedding e where e.subject.id = :subjectId")
     int deleteBySubjectId(@Param("subjectId") UUID subjectId);
 
     @Modifying
-    @Query("delete from Embedding e where e.subject.apiKey = :apiKey")
+    @Query("delete from Embedding where id in (select distinct(e.id) from Embedding e where e.subject.apiKey = :apiKey)")
     int deleteBySubjectApiKey(@Param("apiKey") String apiKey);
-
-    @Modifying
-    @Query("delete from Embedding e where e.subject.apiKey = :apiKey and e.id = :id")
-    int deleteBySubjectApiKeyAndId(@Param("apiKey") String apiKey, @Param("id") UUID embeddingId);
 
     @Modifying
     @Query("update Embedding e set e.subject = :toSubject where e.subject = :fromSubject")
     int reassignEmbeddings(@Param("fromSubject") Subject fromSubject, @Param("toSubject") Subject toSubject);
-
-    @Query("select distinct(e.calculator) from Embedding e")
-    List<String> getUniqueCalculators();
 
     @Query("select " +
             " new com.exadel.frs.commonservice.entity.EmbeddingProjection(e.id, e.subject.subjectName)" +
@@ -58,4 +51,27 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
             " where " +
             "   e.subject.apiKey = :apiKey")
     Page<EmbeddingProjection> findBySubjectApiKey(String apiKey, Pageable pageable);
+
+    @Query("select distinct(e.calculator) from Embedding e")
+    List<String> getUniqueCalculators();
+
+    @Query("select " +
+            "   count(e) " +
+            " from " +
+            "   Embedding e " +
+            " where " +
+            "   e.subject.apiKey = :apiKey " +
+            "   and e.calculator <> :calculator")
+    Long countBySubjectApiKeyAndCalculatorNotEq(@Param("apiKey") String apiKey,
+                                                @Param("calculator") String calculator);
+
+    @Query("select " +
+            "   count(e) " +
+            " from " +
+            "   Embedding e " +
+            " where " +
+            "   e.subject.apiKey <> :apiKey " +
+            "   and e.calculator <> :calculator")
+    Long countBySubjectApiKeyNotEqAndCalculatorNotEq(@Param("apiKey") String apiKey,
+                                                     @Param("calculator") String calculator);
 }
