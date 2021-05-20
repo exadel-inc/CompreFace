@@ -14,42 +14,25 @@
  * permissions and limitations under the License.
  */
 
-package com.exadel.frs.commonservice.entity;
+package com.exadel.frs.core.trainservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 
-import javax.persistence.*;
-
-@Entity
-@Table(schema = "public")
 @Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Accessors(chain = true)
-@Builder
-public class Image {
+public class EmbeddingDto {
 
-    public Image(Image image) {
-        this.id = image.id;
-        this.rawImg = image.rawImg;
-        this.faceImg = image.faceImg;
-        this.face = image.face;
-    }
+    // As of backward compatibility we are not allowed to rename property 'image_id' --> 'embedding_id'
+    // but, notice, actually it is Embedding.id
+    @JsonProperty("image_id")
+    private String embeddingId;
 
-    @Id
-    private String id;
-
-    @Column(name = "raw_img_fs")
-    private byte[] rawImg;
-
-    @Column(name = "face_img_fs")
-    private byte[] faceImg;
-
-    @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
-    private Face face;
+    @JsonProperty("subject")
+    private String subjectName;
 }

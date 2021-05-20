@@ -20,25 +20,22 @@ import com.exadel.frs.commonservice.annotation.CollectStatistics;
 import com.exadel.frs.commonservice.entity.*;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.enums.StatisticsType;
-import com.exadel.frs.commonservice.exception.IncorrectModelTypeException;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
-import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
+import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
 import com.exadel.frs.exception.NameIsNotUniqueException;
-import com.exadel.frs.repository.ImagesRepository;
 import com.exadel.frs.system.security.AuthorizationManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.UUID.randomUUID;
 
@@ -46,12 +43,13 @@ import static java.util.UUID.randomUUID;
 @RequiredArgsConstructor
 @Slf4j
 public class ModelService {
+
     private final ModelRepository modelRepository;
     private final AppService appService;
     private final AuthorizationManager authManager;
     private final UserService userService;
-    private final FacesRepository facesRepository;
-    private final ImagesRepository imagesRepository;
+    private final SubjectRepository subjectRepository;
+    private final JdbcTemplate jdbcTemplate;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -150,8 +148,8 @@ public class ModelService {
         List<AppModel> clonedAppModelAccessList = cloneAppModels(model, clonedModel);
         clonedModel.setAppModelAccess(clonedAppModelAccessList);
 
-        val faces = facesRepository.findByApiKey(model.getApiKey());
-        cloneFaces(clone, faces);
+        // caution: time consuming operation
+        cloneSubjects(model.getApiKey(), clone.getApiKey());
 
         return clonedModel;
     }
@@ -168,30 +166,56 @@ public class ModelService {
         return cloneAppModelAccessList;
     }
 
-    private void cloneFaces(final Model clone, final List<Face> faces) {
-        val cloneFaces = new ArrayList<Face>();
-        val cloneImages = new ArrayList<Image>();
+    @Transactional
+    public void cloneSubjects(final String sourceApiKey, final String newApiKey) {
+        subjectRepository
+                .findByApiKey(sourceApiKey)
+                .forEach(subject -> cloneSubject(subject, newApiKey));
+    }
 
-        for (val face : faces) {
-            val cloneFace = new Face(face);
-            cloneFace.setId(randomUUID().toString());
-            cloneFace.setApiKey(clone.getApiKey());
+    private void cloneSubject(Subject subject, String newApiKey) {
+        var newSubjectId = UUID.randomUUID();
+        jdbcTemplate.update(
+                "insert into subject(id, api_key, subject_name) values (?, ?, ?)",
+                newSubjectId, newApiKey, subject.getSubjectName()
+        );
 
-            cloneFaces.add(cloneFace);
+        Map<UUID, UUID> sourceImgId2NewImgId = new HashMap<>();
+        jdbcTemplate.query(
+                "select i.id as img_id from embedding e inner join subject s on e.subject_id = s.id inner join img i on e.img_id = i.id where s.id = ?",
+                new Object[]{subject.getId()},
+                rs -> {
+                    var sourceImgId = rs.getObject("img_id", UUID.class);
+                    var newImgId = UUID.randomUUID();
+                    jdbcTemplate.update(
+                            "insert into img(id, content) select ?, i.content from img i where i.id = ?",
+                            newImgId, sourceImgId
+                    );
+                    sourceImgId2NewImgId.put(sourceImgId, newImgId);
+                }
+        );
 
-            val images = imagesRepository.findByFaceId(face.getId());
+        String sql = "select " +
+                "   e.id as embedding_id, " +
+                "   i.id as img_id " +
+                " from " +
+                "   embedding e left join img i on e.img_id = i.id " +
+                "   inner join subject s on s.id = e.subject_id " +
+                " where " +
+                "   s.id = ?";
 
-            for (val image : images) {
-                val cloneImage = new Image(image);
-                cloneImage.setId(null);
-                cloneImage.setFace(cloneFace);
-
-                cloneImages.add(cloneImage);
-            }
-        }
-
-        imagesRepository.saveAll(cloneImages);
-        facesRepository.saveAll(cloneFaces);
+        jdbcTemplate.query(
+                sql,
+                new Object[]{subject.getId()},
+                rc -> {
+                    var sourceEmbeddingId = rc.getObject("embedding_id", UUID.class);
+                    var sourceImgId = rc.getObject("img_id", UUID.class); // could be null (for demo embeddings)
+                    jdbcTemplate.update(
+                            "insert into embedding(id, subject_id, embedding, calculator, img_id) select ?, ?, e.embedding, e.calculator, ? from embedding e where e.id = ?",
+                            UUID.randomUUID(), newSubjectId, sourceImgId2NewImgId.get(sourceImgId), sourceEmbeddingId
+                    );
+                }
+        );
     }
 
     public Model updateModel(

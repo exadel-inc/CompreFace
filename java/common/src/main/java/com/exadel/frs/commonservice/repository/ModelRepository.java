@@ -17,14 +17,14 @@
 package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Model;
-import com.exadel.frs.commonservice.entity.ModelFaceProjection;
-import java.util.List;
-import java.util.Optional;
-
+import com.exadel.frs.commonservice.entity.ModelSubjectProjection;
 import com.exadel.frs.commonservice.enums.ModelType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ModelRepository extends JpaRepository<Model, Long> {
@@ -40,10 +40,11 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     boolean existsByNameAndAppId(String name, Long appId);
 
-    @Query("SELECT new com.exadel.frs.commonservice.entity.ModelFaceProjection(m.guid, count(f.id) as faces_count)\n" +
-            "FROM Model m\n" +
-            "LEFT JOIN Face f\n" +
-            "ON m.apiKey=f.apiKey\n" +
-            "GROUP BY m.guid")
-    List<ModelFaceProjection> getModelFacesCount();
+    @Query("SELECT " +
+            "   new com.exadel.frs.commonservice.entity.ModelSubjectProjection(m.guid, count(s.id)) " +
+            " FROM " +
+            "   Model m LEFT JOIN Subject s ON m.apiKey = s.apiKey " +
+            " GROUP BY " +
+            "   m.guid")
+    List<ModelSubjectProjection> getModelSubjectsCount();
 }

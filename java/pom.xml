@@ -45,10 +45,16 @@
         <nd4j.version>1.0.0-beta7</nd4j.version>
         <maven.compiler.source>11</maven.compiler.source>
         <nd4j.classifier>linux-x86_64</nd4j.classifier>
+        <liquibase.version>4.3.5</liquibase.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${liquibase.version}</version>
+            </dependency>
             <dependency>
                 <groupId>io.springfox</groupId>
                 <artifactId>springfox-swagger2</artifactId>
