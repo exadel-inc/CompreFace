@@ -80,7 +80,7 @@ public class SecurityValidationFilter implements Filter {
         val httpResponse = (HttpServletResponse) servletResponse;
 
         String requestURI = httpRequest.getRequestURI();
-        if (!requestURI.matches("^/(swagger|webjars|static|v2|api/v1/migrate|api/v1/consistence/status).*$")) {
+        if (!requestURI.matches("^/(swagger|webjars|v2|api/v1/migrate|api/v1/consistence/status|api/v1/static).*$")) {
             val headersMap =
                     list(httpRequest.getHeaderNames()).stream()
                             .collect(Collectors.<String, String, List<String>>toMap(

@@ -9,11 +9,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_KEY_DESC;
-import static com.exadel.frs.core.trainservice.system.global.Constants.IMAGE_ID_DESC;
+import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 
 @RestController
-@RequestMapping("/static")
+@RequestMapping(API_V1 + "/static")
 @RequiredArgsConstructor
 public class StaticController {
 
