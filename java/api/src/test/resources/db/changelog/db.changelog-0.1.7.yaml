@@ -35,7 +35,7 @@ databaseChangeLog:
             tableName: subject
         - addForeignKeyConstraint:
             baseColumnNames: api_key
-            baseTableName: face
+            baseTableName: subject
             referencedColumnNames: api_key
             referencedTableName: model
             constraintName: fk_subject_model_api_key
@@ -63,7 +63,7 @@ databaseChangeLog:
             columnName: content
   - changeSet:
       id: create-embedding-table
-      author: Shymanski Siarhei
+      author: sshimansky@exadel.com
       changes:
         - createTable:
             tableName: embedding
