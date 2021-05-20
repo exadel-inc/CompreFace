@@ -16,25 +16,28 @@
 
 package com.exadel.frs.core.trainservice.controller;
 
-import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import com.exadel.frs.core.trainservice.component.migration.MigrationComponent;
 import com.exadel.frs.core.trainservice.component.migration.MigrationStatusStorage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
+
 @RestController
 @RequestMapping(API_V1)
 @RequiredArgsConstructor
+@Slf4j
 public class MigrateController {
 
     private final MigrationComponent migrationComponent;
     private final MigrationStatusStorage migrationStatusStorage;
 
     @PostMapping(value = "/migrate")
-    public ResponseEntity migrate() {
+    public ResponseEntity<String> migrate() {
         migrationStatusStorage.startMigration();
         migrationComponent.migrate();
 

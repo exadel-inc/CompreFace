@@ -18,13 +18,15 @@ package com.exadel.frs.core.trainservice.component.classifiers;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 public interface Classifier extends Serializable {
 
     List<Pair<Double, String>> predict(double[] input, String apiKey, int resultCount);
 
-    Double verify(double[] input, String apiKey, String imageId);
+    Double verify(double[] input, String apiKey, UUID embeddingId);
 
     double[] verify(double[] sourceImageEmbedding, double[][] targetImageEmbedding);
 }

@@ -16,50 +16,55 @@
 
 package com.exadel.frs.core.trainservice.component.classifiers;
 
-import com.exadel.frs.core.trainservice.cache.FaceCacheProvider;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.exception.FacesServiceException;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesStatusResponse;
+import com.exadel.frs.core.trainservice.cache.EmbeddingCacheProvider;
 import com.google.common.primitives.Doubles;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.ops.transforms.Transforms;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.IntStream;
 
 import static java.lang.Math.min;
-import static java.util.Arrays.sort;
-import static org.nd4j.linalg.factory.Nd4j.create;
-import static org.nd4j.linalg.ops.transforms.Transforms.tanh;
 
 @Component
 @RequiredArgsConstructor
 public class EuclideanDistanceClassifier implements Classifier {
 
     public static final int PREDICTION_COUNT_INFINITY = -1;
-    private final FaceCacheProvider faceCacheProvider;
+    private final EmbeddingCacheProvider embeddingCacheProvider;
     private final FacesApiClient facesApiClient;
 
     @Override
     public List<Pair<Double, String>> predict(final double[] input, final String apiKey, final int resultCount) {
-        INDArray inputFace = create(input);
+        INDArray inputFace = Nd4j.create(input);
         inputFace = normalizeOne(inputFace);
-        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
-        val result = new ArrayList<Pair<Double, String>>();
-        if (faceCollection.getEmbeddings() != null && faceCollection.getEmbeddings().length() > 0) {
-            val probabilities = recognize(inputFace, faceCollection.getEmbeddings());
-            val argSort = argSort(probabilities);
-            val facesMap = faceCollection.getFacesMap().inverse();
-            int predictionCount = getPredictionCount(resultCount, argSort);
 
-            for (int i = 0; i < min(predictionCount, argSort.length); i++) {
-                val face = facesMap.get(argSort[i]);
-                val prob = probabilities[argSort[i]];
+        var embeddingCollection = embeddingCacheProvider.getOrLoad(apiKey);
+        final INDArray embeddings = embeddingCollection.getEmbeddings();
 
-                result.add(Pair.of(prob, face.getName()));
+        var result = new ArrayList<Pair<Double, String>>();
+        if (embeddings != null && embeddings.length() > 0) {
+            val probabilities = recognize(inputFace, embeddings);
+            val sortedIndexes = sortedIndexes(probabilities);
+            val indexMap = embeddingCollection.getIndexMap();
+            int predictionCount = getPredictionCount(resultCount, sortedIndexes);
+
+            for (int i = 0; i < min(predictionCount, sortedIndexes.length); i++) {
+                var prob = probabilities[sortedIndexes[i]];
+                var embedding = indexMap.get(sortedIndexes[i]);
+
+                result.add(Pair.of(prob, embedding.getSubjectName()));
             }
         }
         return result;
@@ -75,23 +80,29 @@ public class EuclideanDistanceClassifier implements Classifier {
 
     @Override
     public double[] verify(double[] sourceImageEmbedding, double[][] targetImageEmbedding) {
-        final INDArray sourceNormalized = normalizeOne(create(sourceImageEmbedding));
-        final INDArray targetNormalized = normalize(create(targetImageEmbedding));
+        final INDArray sourceNormalized = normalizeOne(Nd4j.create(sourceImageEmbedding));
+        final INDArray targetNormalized = normalize(Nd4j.create(targetImageEmbedding));
 
         return recognize(sourceNormalized, targetNormalized);
     }
 
     @Override
-    public Double verify(final double[] input, final String apiKey, final String imageId) {
+    public Double verify(final double[] input, final String apiKey, final UUID embeddingId) {
         if (input == null) {
             return (double) 0;
         }
 
-        val inputFace = normalizeOne(create(input));
-        
-        val faceCollection = faceCacheProvider.getOrLoad(apiKey);
+        final Optional<INDArray> rawEmbeddingOptional = embeddingCacheProvider.getOrLoad(apiKey)
+                .getRawEmbeddingById(embeddingId);
 
-        val probabilities = recognize(inputFace, faceCollection.getEmbeddingsByImageId(imageId));
+        if (rawEmbeddingOptional.isEmpty())  {
+            return (double) 0;
+        }
+
+        var probabilities = recognize(
+                normalizeOne(Nd4j.create(input)),
+                rawEmbeddingOptional.get()
+        );
 
         return probabilities[0];
     }
@@ -103,7 +114,7 @@ public class EuclideanDistanceClassifier implements Classifier {
     }
 
     public double[] normalizeOne(final double[] rawEmbeddings) {
-        INDArray embeddings = create(rawEmbeddings);
+        INDArray embeddings = Nd4j.create(rawEmbeddings);
         embeddings = normalizeOne(embeddings);
 
         return embeddings.toDoubleVector();
@@ -128,7 +139,7 @@ public class EuclideanDistanceClassifier implements Classifier {
         }
 
         List<Double> coefficients = status.getSimilarityCoefficients();
-        return tanh(distance.rsubi(coefficients.get(0)).muli(coefficients.get(1)), false).addi(1).divi(2);
+        return Transforms.tanh(distance.rsubi(coefficients.get(0)).muli(coefficients.get(1)), false).addi(1).divi(2);
     }
 
     private static INDArray euclidean_distance(final INDArray newFace, INDArray existingFaces) {
@@ -137,19 +148,17 @@ public class EuclideanDistanceClassifier implements Classifier {
         return existingFaces.norm2(1);
     }
 
-    private int[] argSort(final double[] a) {
-        val indexes = new Integer[a.length];
-        for (int i = 0; i < indexes.length; ++i) {
-            indexes[i] = i;
-        }
-
-        sort(indexes, (i1, i2) -> -Doubles.compare(a[i1], a[i2]));
-
-        val ret = new int[indexes.length];
-        for (int i = 0; i < ret.length; ++i) {
-            ret[i] = indexes[i];
-        }
-
-        return ret;
+    /**
+     * Create and sort array of indexes according highest probabilities.
+     *
+     * @param probabilities array of probability
+     * @return sorted array of indexes (highest probability index first)
+     */
+    private static int[] sortedIndexes(double[] probabilities) {
+        return IntStream.range(0, probabilities.length)
+                .boxed()
+                .sorted((index1, index2) -> -Doubles.compare(probabilities[index1], probabilities[index2]))
+                .mapToInt(index -> index)
+                .toArray();
     }
 }

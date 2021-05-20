@@ -1,11 +1,10 @@
 package com.exadel.frs.core.trainservice.controller;
 
-import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.system.global.ImageProperties;
 import com.exadel.frs.core.trainservice.dto.VersionConsistenceDto;
+import com.exadel.frs.core.trainservice.service.EmbeddingService;
 import lombok.RequiredArgsConstructor;
-import lombok.val;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,17 +16,18 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 @RequiredArgsConstructor
 public class ConsistenceController {
 
-    private final FacesRepository facesRepository;
+    private final EmbeddingService embeddingService;
     private final FacesApiClient facesApiClient;
     private final ImageProperties imageProperties;
 
     @GetMapping("/status")
     public VersionConsistenceDto getCheckDemo() {
-//        val calculatorVersion = facesApiClient.getStatus().getCalculatorVersion();
+        var calculatorVersion = facesApiClient.getStatus().getCalculatorVersion();
+
         return VersionConsistenceDto
                 .builder()
-                .demoFaceCollectionIsInconsistent(facesRepository.isDemoFaceCollectionInconsistent())
-//                .dbIsInconsistent(facesRepository.isDbInconsistent(calculatorVersion))
+                .demoFaceCollectionIsInconsistent(embeddingService.isDemoCollectionInconsistent())
+                .dbIsInconsistent(embeddingService.isDbInconsistent(calculatorVersion))
                 .saveImagesToDB(imageProperties.isSaveImagesToDB())
                 .build();
     }

@@ -1,15 +1,14 @@
 package com.exadel.frs.commonservice.scheduler.job;
 
-import com.exadel.frs.commonservice.entity.ModelFaceProjection;
+import com.exadel.frs.commonservice.entity.ModelSubjectProjection;
 import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.GlobalRole;
-import com.exadel.frs.commonservice.system.feign.ApperyStatisticsClient;
-import com.exadel.frs.commonservice.system.feign.StatisticsFacesEntity;
 import com.exadel.frs.commonservice.exception.ApperyServiceException;
-import com.exadel.frs.commonservice.repository.FacesRepository;
 import com.exadel.frs.commonservice.repository.InstallInfoRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.UserRepository;
+import com.exadel.frs.commonservice.system.feign.ApperyStatisticsClient;
+import com.exadel.frs.commonservice.system.feign.StatisticsFacesEntity;
 import feign.FeignException;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.Range;
@@ -33,7 +32,6 @@ public class StatisticsJob extends QuartzJobBean {
     private String statisticsApiKey;
     private ApperyStatisticsClient apperyStatisticsClient;
     private InstallInfoRepository installInfoRepository;
-    private FacesRepository facesRepository;
     private ModelRepository modelRepository;
     private UserRepository userRepository;
 
@@ -51,11 +49,10 @@ public class StatisticsJob extends QuartzJobBean {
 
     @Autowired
     public StatisticsJob(final ApperyStatisticsClient apperyStatisticsClient, final InstallInfoRepository installInfoRepository,
-                         final FacesRepository facesRepository, final ModelRepository modelRepository,
+                         final ModelRepository modelRepository,
                          final UserRepository userRepository) {
         this.apperyStatisticsClient = apperyStatisticsClient;
         this.installInfoRepository = installInfoRepository;
-        this.facesRepository = facesRepository;
         this.modelRepository = modelRepository;
         this.userRepository = userRepository;
     }
@@ -76,13 +73,13 @@ public class StatisticsJob extends QuartzJobBean {
             return;
         }
 
-        List<ModelFaceProjection> modelFaces = modelRepository.getModelFacesCount();
+        List<ModelSubjectProjection> projections = modelRepository.getModelSubjectsCount();
         String installGuid = installInfoRepository.findTopByOrderByInstallGuid().getInstallGuid();
 
         try {
-            for (ModelFaceProjection modelFace : modelFaces) {
+            for (ModelSubjectProjection projection : projections) {
                 apperyStatisticsClient.create(statisticsApiKey, new StatisticsFacesEntity(
-                        installGuid, modelFace.getGuid(), getFacesRange((int) modelFace.getFacesCount())
+                        installGuid, projection.getGuid(), getSubjectsRange(projection.getSubjectCount())
                 ));
             }
         } catch (FeignException exception) {
@@ -90,13 +87,13 @@ public class StatisticsJob extends QuartzJobBean {
         }
     }
 
-    private String getFacesRange(int facesCount) {
-        if (facesCount == 0) {
+    private String getSubjectsRange(Long subjectCount) {
+        if (subjectCount == 0) {
             return "0";
         }
 
         for (Range range : ranges) {
-            if (range.contains(facesCount)) {
+            if (range.contains(subjectCount)) {
                 return range.getMinimum() + "-" + range.getMaximum();
             }
         }

@@ -17,28 +17,16 @@
 package com.exadel.frs.core.trainservice.mapper;
 
 import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
-import com.exadel.frs.core.trainservice.cache.FaceBO;
-import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
-import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
-import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
-import com.exadel.frs.core.trainservice.dto.VerifyFacesResultDto;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
+import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
+import com.exadel.frs.core.trainservice.dto.FacesRecognitionResponseDto;
+import com.exadel.frs.core.trainservice.dto.VerifyFacesResultDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
-import java.util.List;
-import java.util.Set;
-
-@Mapper
+@Mapper(componentModel = "spring")
 public interface FacesMapper {
-
-    @Mapping(source = "imageId", target = "image_id")
-    @Mapping(source = "name", target = "subject")
-    FaceResponseDto toResponseDto(FaceBO faces);
-
-    List<FaceResponseDto> toResponseDto(Set<FaceBO> faces);
 
     FacesDetectionResponseDto toFacesDetectionResponseDto(FindFacesResponse facesResponse);
 

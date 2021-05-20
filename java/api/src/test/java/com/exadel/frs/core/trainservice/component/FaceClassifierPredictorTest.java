@@ -23,6 +23,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import com.exadel.frs.core.trainservice.component.classifiers.Classifier;
 import java.util.List;
+import java.util.UUID;
+
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,7 +67,7 @@ class FaceClassifierPredictorTest {
     @Test
     void verifyTest() {
         double[] input = new double[0];
-        val imageId = "imageId";
+        var imageId = UUID.randomUUID();
 
         val expected = 1d;
 
