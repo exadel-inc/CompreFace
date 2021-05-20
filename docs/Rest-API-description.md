@@ -24,10 +24,11 @@ To know more about face services and face plugins visit [this page](Face-service
 ## Face Recognition Service Endpoints
 
 ### Add a Subject
+```since 0.6 version```
 
 This creates a new subject in Face Collection. You need to add Face Examples to the subject before the system will be able to recognize 
 the subject. Creating a subject is an optional step, you can upload an example without existing subject, and a subject will be created 
-automatically. If subjct with such nama already exists - 400.  
+automatically. If subject with such name already exists - 400.  
 
 ```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/subjects" \
@@ -53,6 +54,7 @@ Response body on success:
 | subject  | string | is the name of the subject |
 
 ### Rename a Subject
+```since 0.6 version```
 
 This renames existing subject. If subject with provided name not found - 404. If new subject name already exists, all faces from old subject name are **reassigned** to subject with new name, old subjected removed.  
 
@@ -80,6 +82,7 @@ Response body on success:
 | updated  | boolean | failed or success |
 
 ### Delete a Subject
+```since 0.6 version```
 
 This deletes existing subject and all saved faces. If subject with provided name not found - 404.  
 
@@ -105,7 +108,8 @@ Response body on success:
 | -------- | ------ | -------------------------- |
 | subject  | string | is the name of the subject |
 
-### Delete all Subject for model key
+### Delete all Subjects for face recognition service
+```since 0.6 version```
 
 This deletes all existing subjects and all saved faces.
 
@@ -131,6 +135,7 @@ Response body on success:
 | deleted  | integer | number of deleted subjects |
 
 ### List Subjects
+```since 0.6 version```
 
 This returns all subject related to Face Collection.  
 
@@ -268,15 +273,15 @@ Response body on success:
 To retrieve a list of subjects saved in a Face Collection:
 
 ```http request
-curl -X GET "http://localhost:8000/api/v1/recognition/faces?pate=<page>&size=<size>" \
+curl -X GET "http://localhost:8000/api/v1/recognition/faces?page=<page>&size=<size>" \
 -H "x-api-key: <service_api_key>" \
 ```
 
 | Element   | Description | Type    | Required | Notes                                     |
 | --------- | ----------- | ------- | -------- | ----------------------------------------- |
 | x-api-key | header      | string  | required | api key of the Face recognition service, created by the user |
-| page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. |
-| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. |
+| page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. Since 0.6 version |
+| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. Since 0.6 version |
 
 Response body on success:
 
@@ -362,6 +367,7 @@ Response body on success:
 
 
 ### Direct Download an Image example of the Subject by ID
+```since 0.6 version```
 
 You can paste this URL into the <img> html tag to show the image.
 
@@ -378,6 +384,7 @@ Response body is binary image. Empty bytes if image not found.
 
 
 ### Download an Image example of the Subject by ID
+```since 0.6 version```
 
 To download an image example of the Subject by ID:
 
