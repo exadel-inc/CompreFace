@@ -3,6 +3,7 @@ package com.exadel.frs.core.trainservice.dao;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
+import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;
 import com.exadel.frs.commonservice.exception.SubjectAlreadyExistsException;
 import com.exadel.frs.commonservice.exception.SubjectNotFoundException;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
@@ -65,27 +66,25 @@ public class SubjectDao {
     }
 
     @Transactional
-    public Optional<Embedding> removeSubjectEmbedding(final String apiKey, final UUID embeddingId) {
-        final Optional<Embedding> embeddingOptional = embeddingRepository
+    public Embedding removeSubjectEmbedding(final String apiKey, final UUID embeddingId) {
+        var embedding = embeddingRepository
                 .findById(embeddingId)
-                .filter(embedding -> apiKey.equals(embedding.getSubject().getApiKey()));
+                .filter(e -> apiKey.equals(e.getSubject().getApiKey()))
+                .orElseThrow(() -> new EmbeddingNotFoundException(embeddingId));
 
-        if (embeddingOptional.isPresent()) {
-            final var embedding = embeddingOptional.get();
-            embeddingRepository.delete(embedding);
+        embeddingRepository.delete(embedding);
 
-            // in case it was embedding with img and no more embeddings were calculated for img, we should also remove img
-            if (embedding.getImg() != null && embedding.getImg().getId() != null) {
-                UUID imgId = embedding.getImg().getId();
-                final int embeddingsWithImg = imgRepository.countRelatedEmbeddings(imgId);
-                if (embeddingsWithImg == 0) {
-                    // no more embeddings calculated for img, no need to keep it
-                    imgRepository.deleteById(imgId);
-                }
+        // in case it was embedding with img and no more embeddings were calculated for img, we should also remove img
+        if (embedding.getImg() != null && embedding.getImg().getId() != null) {
+            UUID imgId = embedding.getImg().getId();
+            final int embeddingsWithImg = imgRepository.countRelatedEmbeddings(imgId);
+            if (embeddingsWithImg == 0) {
+                // no more embeddings calculated for img, no need to keep it
+                imgRepository.deleteById(imgId);
             }
         }
 
-        return embeddingOptional;
+        return embedding;
     }
 
     @Transactional

@@ -50,11 +50,10 @@ public class SubjectController {
     }
 
     @DeleteMapping("/{subject}")
-    public SubjectDto deleteSubject(
+    public void deleteSubject(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = SUBJECT_DESC, required = true) @PathVariable("subject") final String subjectName) {
-        var subject = subjectService.deleteSubjectByName(apiKey, subjectName);
-        return new SubjectDto(subject.getSubjectName());
+        subjectService.deleteSubjectByName(apiKey, subjectName);
     }
 
     @DeleteMapping

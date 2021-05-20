@@ -134,7 +134,7 @@ class SubjectServiceTest {
     void testRemoveSubjectEmbedding() {
         var embeddingId = UUID.randomUUID();
 
-        when(subjectDao.removeSubjectEmbedding(API_KEY, embeddingId)).thenReturn(Optional.of(new Embedding()));
+        when(subjectDao.removeSubjectEmbedding(API_KEY, embeddingId)).thenReturn(new Embedding());
 
         subjectService.removeSubjectEmbedding(API_KEY, embeddingId);
 
@@ -144,28 +144,32 @@ class SubjectServiceTest {
         verify(embeddingCacheProvider).ifPresent(eq(API_KEY), any());
     }
 
-    static Stream<Arguments> subjectNamePairs() {
+    static Stream<Arguments> subjectNamePairsFailed() {
         return Stream.of(
                 Arguments.of("old", "old"),
-                Arguments.of("old", "OLD"),
                 Arguments.of("old", ""),
                 Arguments.of("old", null)
         );
     }
 
     @ParameterizedTest
-    @MethodSource("subjectNamePairs")
+    @MethodSource("subjectNamePairsFailed")
     void testUpdateSubjectNameFailed(String oldSubjectName, String newSubjectName) {
         final boolean updated = subjectService.updateSubjectName(API_KEY, oldSubjectName, newSubjectName);
         assertThat(updated).isFalse();
         verifyNoInteractions(subjectDao, embeddingCacheProvider);
     }
 
-    @Test
-    void testUpdateSubjectNameSuccess() {
-        var oldSubjectName = "old";
-        var newSubjectName = "new";
+    static Stream<Arguments> subjectNamePairsSuccess() {
+        return Stream.of(
+                Arguments.of("old", "new"),
+                Arguments.of("old", "oLd")
+        );
+    }
 
+    @ParameterizedTest
+    @MethodSource("subjectNamePairsSuccess")
+    void testUpdateSubjectNameSuccess(String oldSubjectName, String newSubjectName) {
         when(subjectDao.updateSubjectName(API_KEY, oldSubjectName, newSubjectName)).thenReturn(true);
 
         final boolean updated = subjectService.updateSubjectName(API_KEY, oldSubjectName, newSubjectName);

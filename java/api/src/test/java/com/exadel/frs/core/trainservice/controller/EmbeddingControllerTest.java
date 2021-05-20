@@ -20,6 +20,7 @@ import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.EmbeddingProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
+import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.system.global.Constants;
@@ -191,8 +192,8 @@ class EmbeddingControllerTest extends EmbeddedPostgreSQLTest {
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.faces.length()", is(2)))
-                .andExpect(jsonPath("$.number", is(1))) // page number
-                .andExpect(jsonPath("$.size", is(10))) // page size
+                .andExpect(jsonPath("$.page_number", is(1))) // page number
+                .andExpect(jsonPath("$.page_size", is(10))) // page size
                 .andExpect(jsonPath("$.total_pages", is(2)))
                 .andExpect(jsonPath("$.total_elements", is(12)));
     }
@@ -228,13 +229,26 @@ class EmbeddingControllerTest extends EmbeddedPostgreSQLTest {
         embedding.setId(UUID.randomUUID());
 
         when(subjectService.removeSubjectEmbedding(API_KEY, embedding.getId()))
-                .thenReturn(Optional.of(embedding));
+                .thenReturn(embedding);
 
         mockMvc.perform(
                 delete(API_V1 + "/recognition/faces/{embeddingId}", embedding.getId())
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.image_id", is(embedding.getId().toString())));
+    }
+
+    @Test
+    void testDeleteEmbeddingByIdNotFound() throws Exception {
+        var embeddingId = UUID.randomUUID();
+
+        when(subjectService.removeSubjectEmbedding(API_KEY, embeddingId))
+                .thenThrow(new EmbeddingNotFoundException(embeddingId));
+
+        mockMvc.perform(
+                delete(API_V1 + "/recognition/faces/{embeddingId}", embeddingId)
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        ).andExpect(status().isNotFound());
     }
 
     @Test

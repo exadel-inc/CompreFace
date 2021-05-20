@@ -85,20 +85,20 @@ public class SubjectService {
         return subject;
     }
 
-    public Optional<Embedding> removeSubjectEmbedding(final String apiKey, final UUID embeddingId) {
-        final Optional<Embedding> embeddingOptional = subjectDao.removeSubjectEmbedding(apiKey, embeddingId);
+    public Embedding removeSubjectEmbedding(final String apiKey, final UUID embeddingId) {
+        var embedding = subjectDao.removeSubjectEmbedding(apiKey, embeddingId);
 
         // remove embedding from cache if required
-        embeddingOptional.ifPresent(embedding -> embeddingCacheProvider.ifPresent(
+        embeddingCacheProvider.ifPresent(
                 apiKey,
                 c -> c.removeEmbedding(embedding)
-        ));
+        );
 
-        return embeddingOptional;
+        return embedding;
     }
 
     public boolean updateSubjectName(final String apiKey, final String oldSubjectName, final String newSubjectName) {
-        if (StringUtils.isEmpty(newSubjectName) || newSubjectName.equalsIgnoreCase(oldSubjectName)) {
+        if (StringUtils.isEmpty(newSubjectName) || newSubjectName.equals(oldSubjectName)) {
             // no need to update with empty or similar name
             return false;
         }

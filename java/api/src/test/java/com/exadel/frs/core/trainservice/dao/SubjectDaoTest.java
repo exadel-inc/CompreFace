@@ -118,8 +118,8 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         var embedding2 = dbHelper.insertEmbeddingWithImg(subject, "calc2", new double[]{2.3, 3.4}, dbHelper.insertImg());
 
         var removed = subjectDao.removeSubjectEmbedding(subject.getApiKey(), embedding1.getId());
-        assertThat(removed).isPresent();
-        assertThat(removed.get().getId()).isEqualTo(embedding1.getId());
+        assertThat(removed).isNotNull();
+        assertThat(removed.getId()).isEqualTo(embedding1.getId());
 
         // embedding2 still exists
         assertThat(embeddingRepository.findById(embedding2.getId())).isPresent();
@@ -139,8 +139,8 @@ class SubjectDaoTest extends EmbeddedPostgreSQLTest {
         var embedding2 = dbHelper.insertEmbeddingWithImg(subject, "calc2", new double[]{2.3, 3.4}, img);
 
         var removed = subjectDao.removeSubjectEmbedding(subject.getApiKey(), embedding1.getId());
-        assertThat(removed).isPresent();
-        assertThat(removed.get().getId()).isEqualTo(embedding1.getId());
+        assertThat(removed).isNotNull();
+        assertThat(removed.getId()).isEqualTo(embedding1.getId());
 
         // embedding2 still exists
         assertThat(embeddingRepository.findById(embedding2.getId())).isPresent();

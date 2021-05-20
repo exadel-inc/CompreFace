@@ -120,9 +120,8 @@ public class EmbeddingController {
     public EmbeddingDto deleteEmbeddingById(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final UUID embeddingId) {
-        return subjectService.removeSubjectEmbedding(apiKey, embeddingId)
-                .map(embedding -> new EmbeddingDto(embeddingId.toString(), embedding.getSubject().getSubjectName()))
-                .orElse(new EmbeddingDto());
+        var embedding = subjectService.removeSubjectEmbedding(apiKey, embeddingId);
+        return new EmbeddingDto(embeddingId.toString(), embedding.getSubject().getSubjectName());
     }
 
     @PostMapping(value = "/{embeddingId}/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -200,10 +199,12 @@ public class EmbeddingController {
             return source.getTotalElements();
         }
 
+        @JsonProperty("page_number")
         public int getNumber() {
             return source.getNumber();
         }
 
+        @JsonProperty("page_size")
         public int getSize() {
             return source.getSize();
         }
