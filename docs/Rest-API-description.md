@@ -372,7 +372,7 @@ Response body on success:
 You can paste this URL into the <img> html tag to show the image.
 
 ```http request
-curl -X GET "http://localhost:8000/static/<service_api_key>/images/<image_id>"
+curl -X GET "http://localhost:8000/api/v1/static/<service_api_key>/images/<image_id>"
 ```
 
 | Element         | Description | Type   | Required | Notes                                     |
