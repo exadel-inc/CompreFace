@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  liquibase:
+    enabled: false # we have transitive liquibase dependencies in classpath, but no migrations exists for 'api' app
   profiles:
     active: prod
 
