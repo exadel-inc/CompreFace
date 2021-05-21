@@ -309,9 +309,9 @@ public class FaceControllerTest extends EmbeddedPostgreSQLTest {
         ).andExpect(status().isOk());
 
         if (status) {
-            result.andExpect(jsonPath("$.result[0].plugins_versions.calculator", is("fake_calc")));
+            result.andExpect(jsonPath("$.plugins_versions.calculator", is("fake_calc")));
         } else {
-            result.andExpect(jsonPath("$.result[0].plugins_versions").doesNotExist());
+            result.andExpect(jsonPath("$.plugins_versions").doesNotExist());
         }
 
         verify(imageValidator).validate(any());
