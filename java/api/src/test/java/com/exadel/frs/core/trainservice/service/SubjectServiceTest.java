@@ -30,7 +30,6 @@ import com.exadel.frs.core.trainservice.cache.EmbeddingCollection;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;
-import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import org.apache.commons.lang3.tuple.Pair;
@@ -48,9 +47,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -229,7 +226,7 @@ class SubjectServiceTest {
         when(classifierPredictor.verify(any(), any(), any()))
                 .thenReturn(0.0);
 
-        final List<FaceVerification> verifications = subjectService.verifyFace(
+        var result = subjectService.verifyFace(
                 ProcessImageParams.builder()
                         .apiKey(API_KEY)
                         .file(file)
@@ -240,16 +237,16 @@ class SubjectServiceTest {
                         .build()
         );
 
+        var verifications = result.getLeft();
         assertThat(verifications).hasSize(2);
-        verifications.forEach(verification -> {
-            if (status) {
-                assertThat(verification.getPluginsVersions()).isNotNull();
-                assertThat(verification.getExecutionTime()).isNotNull();
-            } else {
-                assertThat(verification.getPluginsVersions()).isNull();
-                assertThat(verification.getExecutionTime()).isNull();
-            }
-        });
+
+        if (status) {
+            verifications.forEach(v -> assertThat(v.getExecutionTime()).isNotNull());
+            assertThat(result.getRight()).isNotNull();
+        } else {
+            verifications.forEach(v -> assertThat(v.getExecutionTime()).isNull());
+            assertThat(result.getRight()).isNull();
+        }
     }
 
     private static FindFacesResponse findFacesResponse(int faceCount) {

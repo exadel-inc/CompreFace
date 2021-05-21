@@ -6,6 +6,7 @@ import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResult;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
 import com.exadel.frs.core.trainservice.cache.EmbeddingCacheProvider;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
@@ -13,7 +14,6 @@ import com.exadel.frs.core.trainservice.dao.SubjectDao;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
-import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,6 @@ public class SubjectService {
     public static final int MAX_FACES_TO_RECOGNIZE = 2;
 
     private final SubjectDao subjectDao;
-    private final FacesMapper facesMapper;
     private final FacesApiClient facesApiClient;
     private final EmbeddingCacheProvider embeddingCacheProvider;
     private final FaceClassifierPredictor predictor;
@@ -188,7 +187,7 @@ public class SubjectService {
         return pair;
     }
 
-    public List<FaceVerification> verifyFace(ProcessImageParams processImageParams) {
+    public Pair<List<FaceVerification>, PluginsVersions> verifyFace(ProcessImageParams processImageParams) {
         FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
@@ -198,7 +197,7 @@ public class SubjectService {
         }
 
         if (findFacesResponse == null) {
-            return Collections.emptyList();
+            return Pair.of(Collections.emptyList(), null);
         }
 
         var embeddingId = (UUID) processImageParams.getAdditionalParams().get(Constants.IMAGE_ID);
@@ -208,7 +207,6 @@ public class SubjectService {
                 .getSubjectNameByEmbeddingId(embeddingId)
                 .orElse("");
 
-        var pluginsVersionsDto = facesMapper.toPluginVersionsDto(findFacesResponse.getPluginsVersions());
         var results = new ArrayList<FaceVerification>();
         for (var findResult : findFacesResponse.getResult()) {
             var prediction = predictor.verify(
@@ -234,13 +232,15 @@ public class SubjectService {
                     .gender(findResult.getGender())
                     .embedding(findResult.getEmbedding())
                     .executionTime(findResult.getExecutionTime())
-                    .pluginsVersions(pluginsVersionsDto)
                     .build()
                     .prepareResponse(processImageParams); // do some tricks with obj
 
             results.add(faceVerification);
         }
 
-        return results;
+        return Pair.of(
+                results,
+                Boolean.TRUE.equals(processImageParams.getStatus()) ? findFacesResponse.getPluginsVersions() : null
+        );
     }
 }

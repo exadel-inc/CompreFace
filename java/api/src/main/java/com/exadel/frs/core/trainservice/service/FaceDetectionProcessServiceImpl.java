@@ -1,11 +1,10 @@
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.core.trainservice.dto.FaceProcessResponse;
+import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.dto.FacesDetectionResponseDto;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
-import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
