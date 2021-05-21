@@ -16,7 +16,6 @@
 
 package com.exadel.frs.core.trainservice.service;
 
-import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.commonservice.entity.Face;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
@@ -31,10 +30,10 @@ import com.exadel.frs.core.trainservice.dao.FaceDao;
 import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.dto.VerificationResult;
 import com.exadel.frs.core.trainservice.mapper.FacesMapper;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -164,7 +163,7 @@ public class FaceService {
                 .orElse(new FaceResponseDto());
     }
 
-    public Map<String, List<FaceVerification>> verifyFace(ProcessImageParams processImageParams) {
+    public VerificationResult verifyFace(ProcessImageParams processImageParams) {
         FindFacesResponse findFacesResponse;
         if (processImageParams.getFile() != null) {
             MultipartFile file = (MultipartFile) processImageParams.getFile();
@@ -174,12 +173,11 @@ public class FaceService {
         }
 
         if (findFacesResponse == null) {
-            return Map.of("result", Collections.emptyList());
+            return new VerificationResult(Collections.emptyList());
         }
 
-        val results = new ArrayList<FaceVerification>();
+        var results = new ArrayList<FaceVerification>();
         FaceCollection orLoad = faceCacheProvider.getOrLoad(processImageParams.getApiKey());
-        PluginsVersionsDto pluginsVersionsDto = faceMapper.toPluginVersionsDto(findFacesResponse.getPluginsVersions());
 
         for (val findResult : findFacesResponse.getResult()) {
             val prediction = classifierPredictor.verify(
@@ -210,7 +208,6 @@ public class FaceService {
                     .age(findResult.getAge())
                     .gender(findResult.getGender())
                     .landmarks(findResult.getLandmarks())
-                    .pluginsVersions(pluginsVersionsDto)
                     .build();
 
             results.add(faceVerification.prepareResponse(processImageParams));
@@ -220,6 +217,12 @@ public class FaceService {
             results.forEach(r -> r.setSubject(orLoad.getFacesMap().inverse().get(0).getName()));
         }
 
-        return Map.of("result", results);
+        var result = new VerificationResult(results);
+        if (Boolean.TRUE.equals(processImageParams.getStatus())) {
+            result.setPluginsVersions(faceMapper.toPluginVersionsDto(findFacesResponse.getPluginsVersions()));
+        }
+
+        return result;
     }
+
 }
