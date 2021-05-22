@@ -5,11 +5,9 @@ import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
-import com.exadel.frs.core.trainservice.dto.Base64File;
-import com.exadel.frs.core.trainservice.dto.EmbeddingDto;
-import com.exadel.frs.core.trainservice.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.dto.*;
 import com.exadel.frs.core.trainservice.mapper.EmbeddingMapper;
+import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import com.exadel.frs.core.trainservice.service.EmbeddingService;
 import com.exadel.frs.core.trainservice.service.SubjectService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
@@ -44,6 +42,7 @@ public class EmbeddingController {
     private final SubjectService subjectService;
     private final ImageExtensionValidator imageValidator;
     private final EmbeddingMapper embeddingMapper;
+    private final FacesMapper facesMapper;
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
@@ -125,7 +124,7 @@ public class EmbeddingController {
     }
 
     @PostMapping(value = "/{embeddingId}/verify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Map<String, List<FaceVerification>> recognizeFile(
+    public VerificationResult recognizeFile(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true) @RequestParam final MultipartFile file,
             @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
@@ -145,14 +144,15 @@ public class EmbeddingController {
                 .status(status)
                 .build();
 
-        return Map.of(
-                "result",
-                subjectService.verifyFace(processImageParams)
+        var pair = subjectService.verifyFace(processImageParams);
+        return new VerificationResult(
+                pair.getLeft(),
+                facesMapper.toPluginVersionsDto(pair.getRight())
         );
     }
 
     @PostMapping(value = "/{embeddingId}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, List<FaceVerification>> recognizeBase64(
+    public VerificationResult recognizeBase64(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final UUID embeddingId,
             @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
@@ -173,9 +173,10 @@ public class EmbeddingController {
                 .status(status)
                 .build();
 
-        return Map.of(
-                "result",
-                subjectService.verifyFace(processImageParams)
+        var pair = subjectService.verifyFace(processImageParams);
+        return new VerificationResult(
+                pair.getLeft(),
+                facesMapper.toPluginVersionsDto(pair.getRight())
         );
     }
 

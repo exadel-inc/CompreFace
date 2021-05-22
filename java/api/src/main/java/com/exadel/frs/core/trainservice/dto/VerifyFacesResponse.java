@@ -20,7 +20,6 @@ import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;

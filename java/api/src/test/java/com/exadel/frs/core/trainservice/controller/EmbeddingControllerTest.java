@@ -23,6 +23,7 @@ import com.exadel.frs.commonservice.entity.Subject;
 import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.PluginsVersions;
 import com.exadel.frs.commonservice.system.global.Constants;
 import com.exadel.frs.core.trainservice.EmbeddedPostgreSQLTest;
 import com.exadel.frs.core.trainservice.ItemsBuilder;
@@ -53,6 +54,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 import static com.exadel.frs.core.trainservice.system.global.Constants.X_FRS_API_KEY_HEADER;
@@ -256,31 +259,36 @@ class EmbeddingControllerTest extends EmbeddedPostgreSQLTest {
         var embeddingId = UUID.randomUUID();
         MockMultipartFile file = new MockMultipartFile("file", new byte[]{0xA});
 
+        int count = 4;
         when(subjectService.verifyFace(any()))
-                .thenReturn(List.of(
-                        FaceVerification.builder().build(),
-                        FaceVerification.builder().build()
-                ));
+                .thenReturn(verificationResult(count));
 
         mockMvc.perform(
                 multipart(API_V1 + "/recognition/faces/{embeddingId}/verify", embeddingId)
                         .file(file)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.length()", is(2)));
+                .andExpect(jsonPath("$.result.length()", is(count)));
 
         verify(imageValidator).validate(any());
+    }
+
+    private static Pair<List<FaceVerification>, PluginsVersions> verificationResult(int count) {
+        return Pair.of(
+                IntStream.range(0, count)
+                        .mapToObj(i -> FaceVerification.builder().subject("" + i).build())
+                        .collect(Collectors.toList()),
+                PluginsVersions.builder().calculator("calc").build()
+        );
     }
 
     @Test
     void verifyFacesBase64() throws Exception {
         var embeddingId = UUID.randomUUID();
 
+        int count = 5;
         when(subjectService.verifyFace(any()))
-                .thenReturn(List.of(
-                        FaceVerification.builder().build(),
-                        FaceVerification.builder().build()
-                ));
+                .thenReturn(verificationResult(count));
 
         final Base64File img = new Base64File();
         img.setContent(Base64.getEncoder().encodeToString(new byte[]{0xA}));
@@ -290,7 +298,7 @@ class EmbeddingControllerTest extends EmbeddedPostgreSQLTest {
                         .content(objectMapper.writeValueAsString(img)).contentType(MediaType.APPLICATION_JSON_VALUE)
                         .header(X_FRS_API_KEY_HEADER, API_KEY)
         ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.result.length()", is(2)));
+                .andExpect(jsonPath("$.result.length()", is(count)));
 
         verify(imageValidator).validateBase64(any());
     }
