@@ -68,7 +68,7 @@ export const getFileExtension = (file: File): string =>
  * @param sizeToCalc Canvas size. (design size).
  * @param yAxisPadding padding to ensure capacity for text area on image.
  */
-export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number) => {
+export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number = 25) => {
   const divideWidth = imageSize.width / sizeToCalc.width;
   const divideHeight = imageSize.height / sizeToCalc.height;
 

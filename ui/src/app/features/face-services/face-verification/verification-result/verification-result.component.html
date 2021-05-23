@@ -22,6 +22,14 @@
       viewComponentColumn
     ></app-drag-n-drop>
     <mat-card [style.display]="!files.processFile ? 'none' : 'block'">
+
+      <app-face-displaying
+        [file]="firstProcess | async"
+        [dataFrames]="firstProcessFrames | async"
+        [width]="500"
+      >
+      </app-face-displaying>
+
       <canvas #processFileCanvasElement [width]="processFileCanvasSize.width"></canvas>
     </mat-card>
   </div>
@@ -32,6 +40,14 @@
       viewComponentColumn
     ></app-drag-n-drop>
     <mat-card [style.display]="!files.checkFile ? 'none' : 'block'">
+
+      <app-face-displaying
+        [file]="secondProcess | async"
+        [dataFrames]="secondProcessFrames | async"
+        [width]="500"
+      >
+      </app-face-displaying>
+
       <canvas #checkFileCanvasElement [width]="checkFileCanvasSize.width"></canvas>
     </mat-card>
   </div>
@@ -61,6 +77,5 @@
       </mat-expansion-panel>
     </div>
   </ng-container>
-
 </div>
 

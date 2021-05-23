@@ -15,7 +15,7 @@
  */
 
 import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { first, map, tap } from 'rxjs/operators';
 import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
 import { RequestResultVerification } from '../../../../data/interfaces/response-result';
@@ -55,14 +55,31 @@ export class VerificationResultComponent implements OnChanges {
   private checkFileCanvasLink: any = null;
   private imgCanvas: ImageBitmap;
 
+  //New------------------------------------------------------------------------
+  firstProcess: BehaviorSubject<any>;
+  firstProcessFrames: BehaviorSubject<any>;
+
+  secondProcess: BehaviorSubject<any>;
+  secondProcessFrames: BehaviorSubject<any>;
+  //New------------------------------------------------------------------------
+
   constructor(private loadingPhotoService: LoadingPhotoService) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (!changes?.files?.currentValue) return;
 
+    //New------------------------------------------------------------------------
+    if (changes?.printData?.currentValue) {
+      this.firstProcessFrames = new BehaviorSubject(changes?.printData?.currentValue[0].face_matches);
+      this.secondProcessFrames = new BehaviorSubject([changes?.printData?.currentValue[0].source_image_face]);
+    }
+
     this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
 
     if (changes.files.currentValue.checkFile) {
+      //New------------------------------------------------------------------------
+      if (!this.secondProcess) this.secondProcess = new BehaviorSubject<any>(changes.files.currentValue.checkFile);
+
       this.refreshCanvas(
         this.checkFileCanvasLink,
         this.checkFileCanvasSize,
@@ -73,6 +90,9 @@ export class VerificationResultComponent implements OnChanges {
     }
 
     if (changes.files.currentValue.processFile) {
+      //New----------------------------------------------------------------------------------------------
+      if (!this.firstProcess) this.firstProcess = new BehaviorSubject<any>(changes.files.currentValue.processFile);
+
       this.refreshCanvas(
         this.processFileCanvasLink,
         this.processFileCanvasSize,
@@ -88,6 +108,7 @@ export class VerificationResultComponent implements OnChanges {
       tap((bitmap: ImageBitmap) => {
         canvasSize.height = (bitmap.height / bitmap.width) * canvasSize.width;
         canvas.nativeElement.setAttribute('height', canvasSize.height);
+        canvas.nativeElement.setAttribute('width', 500);
         this.imgCanvas = bitmap;
       }),
       map(imageSize => this.prepareForDraw(imageSize, data, canvasSize, key)),
