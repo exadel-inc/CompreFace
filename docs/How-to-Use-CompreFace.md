@@ -10,7 +10,7 @@
 their access roles or create new [Face Services](Face-services-and-plugins.md).
 
 **Step 5.** To recognize subjects among the known subjects, you need to create Face Recognition Service. After creating a new Face 
-Service, you will see it in the Services List with an appropriate name and API key.
+Service, you will see it in the Services List with an appropriate name and API key. After this step, you can look at our [demos](#demos).
 
 **Step 6.** To add known subjects to your Face Collection of Face Recognition Service, you can use REST API. 
 Once you’ve uploaded all known faces, you can test the collection using REST API or the TEST page. 
@@ -38,7 +38,7 @@ JSON contains an array of objects that represent each recognized face. Each obje
         "x_min": 319,
         "y_min": 55
       },
-      "faces": [
+      "subjects": [
         {
           "similarity": 0.99593,
           "subject": "lisan"
@@ -52,38 +52,75 @@ JSON contains an array of objects that represent each recognized face. Each obje
 }
 ```
 
+## Demos
+
+1. [tutorial_demo.html](./demos/tutorial_demo.html)
+
+This demo shows the most simple example of Face recognition service usage. 
+To run demo, just open html file in browser. 
+API key for this demo was created on **step 5** of [How to Use CompreFace](#how-to-use-compreface)
+
+2. [webcam_demo.html](./demos/webcam_demo.html)
+
+This demo shows the most simple webcam demo for Face recognition service.
+To run demo, just open html file in browser.
+API key for this demo was created on **step 5** of [How to Use CompreFace](#how-to-use-compreface)
+
+## Code Snippets
+
 Here is a JavaScript code snippet that loads a new image to your Face Collection:
 
 ```js
-async function saveNewImageToFaceCollection() {
-    let name = encodeURIComponent('John');
+function saveNewImageToFaceCollection(elem) {
+    let subject = encodeURIComponent(document.getElementById("subject").value);
+    let apiKey = document.getElementById("apiKey").value;
     let formData = new FormData();
-    let photo = document.getElementById("fileDropRef").files[0];
+    let photo = elem.files[0];
 
-    formData.append("photo", photo);
+    formData.append("file", photo);
 
-    try {
-        let r = await fetch('http://localhost:8000/api/v1/recognition/faces/?subject=`${name}`', {method: "POST", body: formData});
-    } catch (e) {
-        console.log('Houston, we have a problem...:', e);
-    }
+    fetch('http://localhost:8000/api/v1/recognition/faces/?subject=' + subject,
+        {
+            method: "POST",
+            headers: {
+                "x-api-key": apiKey
+            },
+            body: formData
+        }
+    ).then(r => r.json()).then(
+        function (data) {
+            console.log('New example was saved', data);
+        })
+        .catch(function (error) {
+            alert('Request failed: ' + JSON.stringify(error));
+        });
 }
 ```
 
 This function sends the image to our server and shows results in a text area:
 
 ```js
-function recognizeFace(input) {
+function recognizeFace(elem) {
+    let apiKey = document.getElementById("apiKey").value;
+    let formData = new FormData();
+    let photo = elem.files[0];
 
-    async function getData() {
-        let response = await fetch('http://localhost:8000/api/v1/recognition/recognize')
-        let data = await response.json()
-        return data
-    }
+    formData.append("file", photo);
 
-    let result = Promise.resolve(response)
-    result.then(data => {
-        document.getElementById("result-textarea-request").innerHTML = JSON.stringify(data);
-    });
+    fetch('http://localhost:8000/api/v1/recognition/recognize',
+        {
+            method: "POST",
+            headers: {
+                "x-api-key": apiKey
+            },
+            body: formData
+        }
+    ).then(r => r.json()).then(
+        function (data) {
+            document.getElementById("result").innerHTML = JSON.stringify(data);
+        })
+        .catch(function (error) {
+            alert('Request failed: ' + JSON.stringify(error));
+        });
 }
 ```
