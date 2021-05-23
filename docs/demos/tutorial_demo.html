@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script type="text/javascript">
+        function saveNewImageToFaceCollection(elem) {
+            let subject = encodeURIComponent(document.getElementById("subject").value);
+            let apiKey = document.getElementById("apiKey").value;
+            let formData = new FormData();
+            let photo = elem.files[0];
+
+            formData.append("file", photo);
+
+            fetch('http://localhost:8000/api/v1/recognition/faces/?subject=' + subject,
+                {
+                    method: "POST",
+                    headers: {
+                        "x-api-key": apiKey
+                    },
+                    body: formData
+                }
+            ).then(r => r.json()).then(
+                function (data) {
+                    console.log('New example was saved', data);
+                })
+                .catch(function (error) {
+                    alert('Request failed: ' + JSON.stringify(error));
+                });
+        }
+
+        function recognizeFace(elem) {
+            let apiKey = document.getElementById("apiKey").value;
+            let formData = new FormData();
+            let photo = elem.files[0];
+
+            formData.append("file", photo);
+
+            fetch('http://localhost:8000/api/v1/recognition/recognize',
+                {
+                    method: "POST",
+                    headers: {
+                        "x-api-key": apiKey
+                    },
+                    body: formData
+                }
+            ).then(r => r.json()).then(
+                function (data) {
+                    document.getElementById("result").innerHTML = JSON.stringify(data);
+                })
+                .catch(function (error) {
+                    alert('Request failed: ' + JSON.stringify(error));
+                });
+        }
+    </script>
+    <title>test</title>
+</head>
+<body>
+
+<label for="apiKey">API key:</label><input id="apiKey" />
+<div></div>
+<label for="subject">Subject:</label><input id="subject" />
+<div>Click to add photo:</div>
+<input type=file id="newFace" onchange="saveNewImageToFaceCollection(this)" />
+<div>Click to recognize photo</div>
+<input type=file id="recognizeFace" onchange="recognizeFace(this)" />
+<div>Result:</div>
+<div id="result"></div>
+
+
+</body>
+</html>
