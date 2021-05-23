@@ -13,7 +13,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { forkJoin, of } from 'rxjs';
@@ -40,7 +39,6 @@ import {
   updateModelFail,
   updateModelSuccess,
 } from './action';
-import { DemoService } from '../../pages/demo/demo.service';
 
 @Injectable()
 export class ModelEffects {
@@ -48,20 +46,18 @@ export class ModelEffects {
     private actions: Actions,
     private modelService: ModelService,
     private snackBarService: SnackBarService,
-    private router: Router,
-    private demoService: DemoService
+    private router: Router
   ) {}
 
   @Effect()
   loadModels$ = this.actions.pipe(
     ofType(loadModels),
-    switchMap(action => forkJoin([this.modelService.getAll(action.applicationId), this.demoService.getStatus()])),
-    // Don't show 'Demo recognition service' when we're using build the compreface-core:0.5.0-mobilenet
-    map(([models, demoStatus]) =>
-      demoStatus.demoFaceCollectionIsInconsistent ? models.filter(value => value.apiKey !== '00000000-0000-0000-0000-000000000002') : models
-    ),
-    map(models => loadModelsSuccess({ models })),
-    catchError(error => of(loadModelsFail({ error })))
+    switchMap(action =>
+      this.modelService.getAll(action.applicationId).pipe(
+        map(models => loadModelsSuccess({ models })),
+        catchError(error => of(loadModelsFail({ error })))
+      )
+    )
   );
 
   @Effect()

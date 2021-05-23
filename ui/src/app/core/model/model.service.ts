@@ -15,18 +15,39 @@
  */
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Model } from 'src/app/data/interfaces/model';
 import { environment } from 'src/environments/environment';
+import { map, switchMap } from 'rxjs/operators';
+import { DemoService } from '../../pages/demo/demo.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ModelService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private demoService: DemoService) {}
+
+  // Don't show 'Demo recognition service' when we're using build the compreface-core:0.5.0-mobilenet
+  getService(models: Model[]): Observable<Model[]> {
+    const apiKeyDemoService = '00000000-0000-0000-0000-000000000002';
+
+    return of(false).pipe(
+      switchMap(() =>
+        this.demoService
+          .getStatus()
+          .pipe(
+            map(({ demoFaceCollectionIsInconsistent }) =>
+              demoFaceCollectionIsInconsistent ? models.filter(model => model.apiKey !== apiKeyDemoService) : models
+            )
+          )
+      )
+    );
+  }
 
   getAll(applicationId: string): Observable<Model[]> {
-    return this.http.get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`);
+    return this.http
+      .get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`)
+      .pipe(switchMap(models => this.getService(models)));
   }
 
   create(applicationId: string, name: string, type: string): Observable<Model> {
