@@ -17,10 +17,7 @@
 package com.exadel.frs.core.trainservice.controller;
 
 import com.exadel.frs.core.trainservice.aspect.WriteEndpoint;
-import com.exadel.frs.core.trainservice.dto.Base64File;
-import com.exadel.frs.core.trainservice.dto.FaceResponseDto;
-import com.exadel.frs.core.trainservice.dto.FaceVerification;
-import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
+import com.exadel.frs.core.trainservice.dto.*;
 import com.exadel.frs.core.trainservice.service.FaceService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import io.swagger.annotations.ApiParam;
@@ -126,7 +123,7 @@ public class FaceController {
 
     @PostMapping(value = "/{image_id}/verify",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Map<String, List<FaceVerification>> recognizeFile(
+    public VerificationResult recognizeFile(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final String image_id,
             @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,
@@ -151,7 +148,7 @@ public class FaceController {
     }
 
     @PostMapping(value = "/{image_id}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Map<String, List<FaceVerification>> recognizeBase64(
+    public VerificationResult recognizeBase64(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
             @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final String image_id,
             @ApiParam(value = LIMIT_DESC) @RequestParam(defaultValue = LIMIT_DEFAULT_VALUE, required = false) @Min(value = 0, message = LIMIT_MIN_DESC) final Integer limit,

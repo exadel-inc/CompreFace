@@ -47,8 +47,6 @@ public class FaceVerification extends FaceProcessResponse {
     private Double[] embedding;
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
-    @JsonProperty("plugins_versions")
-    PluginsVersionsDto pluginsVersions;
 
     @Override
     public FaceVerification prepareResponse(ProcessImageParams processImageParams) {
@@ -58,7 +56,6 @@ public class FaceVerification extends FaceProcessResponse {
         }
 
         if (Boolean.FALSE.equals(processImageParams.getStatus())) {
-            this.setPluginsVersions(null);
             this.setExecutionTime(null);
         }
 
