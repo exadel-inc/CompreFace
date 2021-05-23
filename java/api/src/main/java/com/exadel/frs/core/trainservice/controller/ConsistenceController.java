@@ -17,7 +17,7 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.API_V1;
 @RequiredArgsConstructor
 public class ConsistenceController {
 
-    private final String FACENET = "Facenet2018";
+    private final String FACENET = "facenet.Calculator";
 
     private final FacesRepository facesRepository;
     private final FacesApiClient facesApiClient;
