@@ -28,7 +28,7 @@ export class ModelService {
   constructor(private http: HttpClient, private demoService: DemoService) {}
 
   // Don't show 'Demo recognition service' when we're using build the compreface-core:0.5.0-mobilenet
-  getService(models: Model[]): Observable<Model[]> {
+  filterModel(models: Model[]): Observable<Model[]> {
     const apiKeyDemoService = '00000000-0000-0000-0000-000000000002';
 
     return of(false).pipe(
@@ -47,7 +47,7 @@ export class ModelService {
   getAll(applicationId: string): Observable<Model[]> {
     return this.http
       .get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`)
-      .pipe(switchMap(models => this.getService(models)));
+      .pipe(switchMap(models => this.filterModel(models)));
   }
 
   create(applicationId: string, name: string, type: string): Observable<Model> {
