@@ -323,7 +323,7 @@ curl -X DELETE "http://localhost:8000/api/v1/recognition/faces?subject=<subject>
 | Element   | Description | Type   | Required | Notes                                                        |
 | --------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
 | x-api-key | header      | string | required | api key of the Face recognition service, created by the user                    |
-| subject   | param       | string | optional | is the name of the subject |
+| subject   | param       | string | optional | is the name subject. If this parameter is absent, all faces in Face Collection will be removed |
 
 Response body on success:
 ```
