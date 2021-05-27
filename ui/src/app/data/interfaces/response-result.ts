@@ -15,6 +15,14 @@
  */
 
 /* eslint-disable @typescript-eslint/naming-convention */
+export interface BoxSize {
+  probability: number;
+  x_max: number;
+  x_min: number;
+  y_max: number;
+  y_min: number;
+}
+
 export interface RequestResultRecognition {
   result: {
     box: {
@@ -33,30 +41,16 @@ export interface RequestResultRecognition {
   };
 }
 
+export interface SourceImageFace {
+  box: BoxSize;
+}
+
+export interface FaceMatches {
+  box: BoxSize;
+  similarity: number;
+}
+
 export interface RequestResultVerification {
-  result: [
-    {
-      source_image_face: {
-        box: {
-          probability: number;
-          x_max: number;
-          y_max: number;
-          x_min: number;
-          y_min: number;
-        };
-      };
-      face_matches: [
-        {
-          box: {
-            probability: number;
-            x_max: number;
-            y_max: number;
-            x_min: number;
-            y_min: number;
-          };
-          similarity: number;
-        }
-      ];
-    }
-  ];
+  source_image_face: SourceImageFace;
+  face_matches: FaceMatches[];
 }

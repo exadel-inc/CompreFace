@@ -77,8 +77,8 @@ export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeTo
     /* eslint-disable @typescript-eslint/naming-convention */
     x_max: box.x_max / divideWidth > sizeToCalc.width ? sizeToCalc.width : box.x_max / divideWidth,
     x_min: box.x_min / divideWidth,
-    y_max: box.y_max / divideHeight > sizeToCalc.height - yAxisPadding ? sizeToCalc.height - yAxisPadding : box.y_max / divideHeight,
-    y_min: box.y_min / divideHeight > yAxisPadding ? box.y_min / divideHeight : yAxisPadding,
+    y_max: box.y_max / divideHeight > sizeToCalc.height ? sizeToCalc.height : box.y_max / divideHeight,
+    y_min: box.y_min / divideHeight,
     /* eslint-enable @typescript-eslint/naming-convention */
   };
 };

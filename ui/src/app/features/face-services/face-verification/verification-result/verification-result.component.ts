@@ -13,158 +13,111 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 
-import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
-import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
-import { RequestResultVerification } from '../../../../data/interfaces/response-result';
+import { ReplaySubject, Subject } from 'rxjs';
+import { map, takeUntil, tap } from 'rxjs/operators';
+
+import { FaceMatches, RequestResultVerification, SourceImageFace } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
-import { VerificationServiceFields } from '../../../../data/enums/verification-service.enum';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
 import { ImageSize } from '../../../../data/interfaces/image';
+import { recalculateFaceCoordinate, resultRecognitionFormatter } from '../../face-services.helpers';
+
+enum PrintDataKeys {
+  SourceFace = 'source_image_face',
+  MatchesFace = 'face_matches',
+}
 
 @Component({
   selector: 'app-verification-result',
   templateUrl: './verification-result.component.html',
   styleUrls: ['./verification-result.component.scss'],
 })
-export class VerificationResultComponent implements OnChanges {
+export class VerificationResultComponent implements OnChanges, OnDestroy {
+  @Input() processFile: File;
+  @Input() checkFile: File;
+
   @Input() requestInfo: RequestInfo;
-  @Input() printData: RequestResultVerification;
-  @Input() files: any;
+  @Input() printData: RequestResultVerification[];
+
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
+
   @Output() selectProcessFile = new EventEmitter();
   @Output() selectCheckFile = new EventEmitter();
 
   @ViewChild('processFileCanvasElement') set processFileCanvasElement(canvas: ElementRef) {
     this.processFileCanvasLink = canvas;
   }
-
   @ViewChild('checkFileCanvasElement') set checkFileCanvasElement(canvas: ElementRef) {
     this.checkFileCanvasLink = canvas;
   }
 
-  processFileCanvasSize: ImageSize = { width: 500, height: null };
-  checkFileCanvasSize: ImageSize = { width: 500, height: null };
-  faceDescriptionHeight = 25;
+  private processFileCanvasLink: ElementRef;
+  private checkFileCanvasLink: ElementRef;
+  private unsubscribe: Subject<void> = new Subject();
+  private sizes: ReplaySubject<{ key: PrintDataKeys; img: ImageBitmap; sizeCanvas: ImageSize }> = new ReplaySubject();
+
+  widthCanvas = 500;
+  processFilePrintData: FaceMatches[];
+  checkFilePrintData: SourceImageFace[];
   formattedResult: string;
-
-  private processFileCanvasLink: any = null;
-  private checkFileCanvasLink: any = null;
-  private imgCanvas: ImageBitmap;
-
-  //New------------------------------------------------------------------------
-  firstProcess: BehaviorSubject<any>;
-  firstProcessFrames: BehaviorSubject<any>;
-
-  secondProcess: BehaviorSubject<any>;
-  secondProcessFrames: BehaviorSubject<any>;
-  //New------------------------------------------------------------------------
 
   constructor(private loadingPhotoService: LoadingPhotoService) {}
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (!changes?.files?.currentValue) return;
-
-    //New------------------------------------------------------------------------
-    if (changes?.printData?.currentValue) {
-      this.firstProcessFrames = new BehaviorSubject(changes?.printData?.currentValue[0].face_matches);
-      this.secondProcessFrames = new BehaviorSubject([changes?.printData?.currentValue[0].source_image_face]);
-    }
-
-    this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
-
-    if (changes.files.currentValue.checkFile) {
-      //New------------------------------------------------------------------------
-      if (!this.secondProcess) this.secondProcess = new BehaviorSubject<any>(changes.files.currentValue.checkFile);
-
-      this.refreshCanvas(
-        this.checkFileCanvasLink,
-        this.checkFileCanvasSize,
-        changes.files.currentValue.checkFile,
-        this.printData,
-        VerificationServiceFields.CheckFileData
-      );
-    }
-
-    if (changes.files.currentValue.processFile) {
-      //New----------------------------------------------------------------------------------------------
-      if (!this.firstProcess) this.firstProcess = new BehaviorSubject<any>(changes.files.currentValue.processFile);
-
-      this.refreshCanvas(
-        this.processFileCanvasLink,
-        this.processFileCanvasSize,
-        changes.files.currentValue.processFile,
-        this.printData,
-        VerificationServiceFields.ProcessFileData
-      );
-    }
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('processFile' in changes) this.loadPhoto(this.processFile, this.processFileCanvasLink, PrintDataKeys.SourceFace);
+    if ('checkFile' in changes) this.loadPhoto(this.checkFile, this.checkFileCanvasLink, PrintDataKeys.MatchesFace);
+    if ('printData' in changes) this.getFrames(this.printData);
+    if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 
-  printResult(canvas: ElementRef, canvasSize: any, file: any, data, key: string): Observable<any> {
-    return this.loadingPhotoService.loader(file).pipe(
-      tap((bitmap: ImageBitmap) => {
-        canvasSize.height = (bitmap.height / bitmap.width) * canvasSize.width;
-        canvas.nativeElement.setAttribute('height', canvasSize.height);
-        canvas.nativeElement.setAttribute('width', 500);
-        this.imgCanvas = bitmap;
-      }),
-      map(imageSize => this.prepareForDraw(imageSize, data, canvasSize, key)),
-      map(preparedImageData => this.drawCanvas(canvas, preparedImageData, file, canvasSize))
-    );
-  }
+  getFrames(printData: RequestResultVerification[]): void {
+    if (!printData) return;
 
-  private refreshCanvas(canvas, canvasSize, file, data, field) {
-    this.printResult(canvas, canvasSize, file, data, field).pipe(first()).subscribe();
-  }
-
-  private prepareForDraw(size, rawData, canvasSize, key): Observable<any> {
-    return (
-      rawData &&
-      this.getBox(rawData, key).map(value => ({
-        box: recalculateFaceCoordinate(value.box, size, canvasSize, this.faceDescriptionHeight),
-        similarity: value.similarity,
-      }))
-    );
-  }
-
-  private getBox(rawData, key) {
-    return rawData.reduce((arr, value) => (value[key] instanceof Array ? [...arr, ...value[key]] : [...arr, value[key]]), []);
-  }
-
-  private createVerificationImage(ctx, box, face) {
-    const description = face.similarity ? this.faceDescriptionHeight : null;
-
-    ctx = createDefaultImage(ctx, box);
-    ctx.fillStyle = 'green';
-    ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, description);
-
-    if (!!description) {
-      ctx.fillStyle = 'white';
-      ctx.fillText(face.similarity, box.x_min + 10, box.y_max + 20);
-    }
-  }
-
-  /*
-   * Make canvas and draw facanvasSizece and info on image.
-   *
-   * @preparedData prepared box data and faces.
-   */
-  drawCanvas(canvas, data, file, canvasSize) {
-    this.createImage(canvas, file, canvasSize, ctx => {
-      if (!data) return;
-      for (const value of data) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        this.createVerificationImage(ctx, value.box, value);
+    this.sizes.pipe(takeUntil(this.unsubscribe)).subscribe(size => {
+      switch (size.key) {
+        case PrintDataKeys.MatchesFace:
+          this.processFilePrintData = this.recalculateFrames(printData[0][size.key], size.img, size.sizeCanvas) as FaceMatches[];
+          return;
+        case PrintDataKeys.SourceFace:
+          this.checkFilePrintData = this.recalculateFrames([printData[0][size.key]], size.img, size.sizeCanvas) as SourceImageFace[];
+          return;
       }
     });
   }
 
-  createImage(canvas, file, canvasSize, draw) {
-    const ctx: CanvasRenderingContext2D = canvas.nativeElement.getContext('2d');
-    ctx.drawImage(this.imgCanvas, 0, 0, canvasSize.width, canvasSize.height);
-    draw(ctx);
+  recalculateFrames(data: any[], img, sizeCanvas): SourceImageFace[] | FaceMatches[] {
+    return data.map(val => ({ ...val, box: recalculateFaceCoordinate(val.box, img, sizeCanvas) }));
+  }
+
+  loadPhoto(file: File, canvas: ElementRef, key: PrintDataKeys): void {
+    if (!file) return;
+
+    this.loadingPhotoService
+      .loader(file)
+      .pipe(
+        takeUntil(this.unsubscribe),
+        map((img: ImageBitmap) => ({
+          img,
+          sizeCanvas: { width: this.widthCanvas, height: (img.height / img.width) * this.widthCanvas },
+        })),
+        tap(({ sizeCanvas }) => canvas.nativeElement.setAttribute('height', sizeCanvas.height))
+      )
+      .subscribe(value => {
+        this.displayPhoto(value.img, value.sizeCanvas, canvas);
+        this.sizes.next({ key, ...value });
+      });
+  }
+
+  displayPhoto(img: ImageBitmap, size: ImageSize, canvas: ElementRef): void {
+    const ctx = canvas.nativeElement.getContext('2d');
+    ctx.drawImage(img, 0, 0, size.width, size.height);
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 }

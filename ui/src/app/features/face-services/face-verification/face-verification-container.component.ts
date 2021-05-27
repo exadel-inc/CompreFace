@@ -21,14 +21,16 @@ import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constan
 import { AppState } from '../../../store';
 import { verifyFaceReset, verifyFace } from '../../../store/face-verification/action';
 import {
+  selectCheckFile,
   selectFaceData,
-  selectFiles,
+  selectProcessFile,
   selectRequest,
   selectStateReady,
   selectTestIsPending,
 } from '../../../store/face-verification/selectors';
 import { getFileExtension } from '../face-services.helpers';
 import { SnackBarService } from '../../snackbar/snackbar.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-face-verification-container',
@@ -36,8 +38,9 @@ import { SnackBarService } from '../../snackbar/snackbar.service';
   styleUrls: ['./face-verification-container.component.scss'],
 })
 export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
+  processFile$: Observable<any>;
+  checkFile$: Observable<any>;
   data$: Observable<any>;
-  files$: Observable<any>;
   requestInfo$: Observable<any>;
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;
@@ -45,8 +48,9 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
   constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
 
   ngOnInit() {
+    this.processFile$ = this.store.select(selectProcessFile).pipe(map(obj => obj.processFile));
+    this.checkFile$ = this.store.select(selectCheckFile).pipe(map(obj => obj.checkFile));
     this.data$ = this.store.select(selectFaceData);
-    this.files$ = this.store.select(selectFiles);
     this.requestInfo$ = this.store.select(selectRequest);
     this.pending$ = this.store.select(selectTestIsPending);
     this.isLoaded$ = this.store.select(selectStateReady);

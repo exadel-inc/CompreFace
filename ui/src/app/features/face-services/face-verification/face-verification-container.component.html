@@ -4,9 +4,10 @@
   </div>
 
   <app-verification-result
+    [processFile]="processFile$ | async"
+    [checkFile]="checkFile$ | async"
     [pending]="pending$ | async"
     [isLoaded]="isLoaded$ | async"
-    [files]="files$ | async"
     [requestInfo]="requestInfo$ | async"
     [printData]="data$ | async"
     (selectProcessFile)="processFileUpload($event)"

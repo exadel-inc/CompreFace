@@ -26,15 +26,15 @@ import { FaceVerificationContainerComponent } from './face-verification/face-ver
 import { RecognitionResultComponent } from './face-recognition/recognition-result/recognition-result.component';
 import { VerificationResultComponent } from './face-verification/verification-result/verification-result.component';
 import { MatCardModule } from '@angular/material/card';
-import { FaceDisplayingComponent } from './face-displaying/face-displaying.component';
+import { FaceServicesDirective } from './face-services.directive';
 
 @NgModule({
   declarations: [
     FaceRecognitionContainerComponent,
     FaceVerificationContainerComponent,
-    FaceDisplayingComponent,
     RecognitionResultComponent,
     VerificationResultComponent,
+    FaceServicesDirective,
   ],
   imports: [CommonModule, DragNDropModule, SpinnerModule, MatExpansionModule, TranslateModule, MatCardModule],
   providers: [FaceRecognitionService],
