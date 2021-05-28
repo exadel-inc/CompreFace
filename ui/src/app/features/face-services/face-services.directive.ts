@@ -32,7 +32,11 @@ import { BoxSize } from '../../data/interfaces/response-result';
   selector: '[appFrameTooltip]',
 })
 export class FaceServicesDirective implements OnChanges, AfterContentInit {
-  @Input('appFrameTooltip') dataFrames: any;
+  @Input() dataFrames: any;
+  @Input()
+  set framesQuantity(data: number) {
+    this.activeFrame = data > 1;
+  }
 
   @ContentChild('boxFace') boxFace: ElementRef;
   @ContentChild('boxInfo') boxInfo: ElementRef;
@@ -40,6 +44,15 @@ export class FaceServicesDirective implements OnChanges, AfterContentInit {
   private borderColor = 'rgba(255, 255, 255, 0.5)';
   private borderColorActive = '#40BFEF';
   private size: FrameSize;
+  private activeFrame = false;
+
+  @HostListener('mouseenter') onMouseEnter() {
+    if (this.activeFrame) this.styleActiveFrame();
+  }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    if (this.activeFrame) this.styleNotActiveFrame();
+  }
 
   constructor(private element: ElementRef, private renderer: Renderer2) {}
 
@@ -55,32 +68,34 @@ export class FaceServicesDirective implements OnChanges, AfterContentInit {
   }
 
   ngAfterContentInit(): void {
-    if (this.boxInfo) this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'none');
-
     this.addFrame(this.size);
-    this.renderer.setStyle(this.boxFace.nativeElement, 'borderColor', this.borderColor);
-    this.renderer.setStyle(this.element.nativeElement, 'zIndex', 1);
-  }
 
-  @HostListener('mouseenter') onMouseEnter() {
-    if (!!this.boxInfo) {
-      this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'block');
-      this.renderer.setStyle(this.boxFace.nativeElement, 'borderColor', this.borderColorActive);
-    }
-
-    this.renderer.setStyle(this.element.nativeElement, 'zIndex', 2);
-  }
-
-  @HostListener('mouseleave') onMouseLeave() {
-    this.renderer.setStyle(this.boxFace.nativeElement, 'borderColor', this.borderColor);
-    this.renderer.setStyle(this.element.nativeElement, 'zIndex', 1);
-
-    if (!!this.boxInfo) {
-      this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'none');
+    if (this.activeFrame) {
+      this.styleNotActiveFrame();
+    } else {
+      this.styleActiveFrame();
     }
   }
 
   addFrame(size: FrameSize): void {
     Object.keys(size).forEach(key => this.renderer.setStyle(this.element.nativeElement, key, `${size[key]}px`));
+  }
+
+  styleActiveFrame(): void {
+    this.renderer.setStyle(this.element.nativeElement, 'zIndex', 2);
+    this.renderer.setStyle(this.boxFace.nativeElement, 'borderColor', this.borderColorActive);
+
+    if (!!this.boxInfo) {
+      this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'block');
+    }
+  }
+
+  styleNotActiveFrame(): void {
+    this.renderer.setStyle(this.element.nativeElement, 'zIndex', 1);
+    this.renderer.setStyle(this.boxFace.nativeElement, 'borderColor', this.borderColor);
+
+    if (!!this.boxInfo) {
+      this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'none');
+    }
   }
 }

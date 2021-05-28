@@ -66,9 +66,8 @@ export const getFileExtension = (file: File): string =>
  * @param box Face coordinates from BE.
  * @param imageSize Size of image.
  * @param sizeToCalc Canvas size. (design size).
- * @param yAxisPadding padding to ensure capacity for text area on image.
  */
-export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number = 25) => {
+export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeToCalc: ImageSize) => {
   const divideWidth = imageSize.width / sizeToCalc.width;
   const divideHeight = imageSize.height / sizeToCalc.height;
 
@@ -81,18 +80,4 @@ export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeTo
     y_min: box.y_min / divideHeight,
     /* eslint-enable @typescript-eslint/naming-convention */
   };
-};
-
-export const createDefaultImage = (ctx, box) => {
-  ctx.beginPath();
-  ctx.strokeStyle = 'green';
-  ctx.moveTo(box.x_min, box.y_min);
-  ctx.lineTo(box.x_max, box.y_min);
-  ctx.lineTo(box.x_max, box.y_max);
-  ctx.lineTo(box.x_min, box.y_max);
-  ctx.lineTo(box.x_min, box.y_min);
-  ctx.stroke();
-  ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
-
-  return ctx;
 };

@@ -22,6 +22,7 @@ import { RequestResultRecognition } from '../../../../data/interfaces/response-r
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
 import { ImageSize } from '../../../../data/interfaces/image';
+import { ServiceTypes } from '../../../../data/enums/service-types.enum';
 import { recalculateFaceCoordinate, resultRecognitionFormatter } from '../../face-services.helpers';
 
 @Component({
@@ -32,7 +33,7 @@ import { recalculateFaceCoordinate, resultRecognitionFormatter } from '../../fac
 export class RecognitionResultComponent implements OnChanges, OnDestroy {
   @Input() file: File;
   @Input() requestInfo: RequestInfo;
-  @Input() printData: RequestResultRecognition;
+  @Input() printData: RequestResultRecognition[];
   @Input() isLoaded: boolean;
   @Input() type: string;
 
@@ -44,11 +45,12 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
 
   private myCanvas: ElementRef;
   private unsubscribe: Subject<void> = new Subject();
-  private sizes: ReplaySubject<any> = new ReplaySubject();
+  private sizes: ReplaySubject<{ img: ImageBitmap; sizeCanvas: ImageSize }> = new ReplaySubject();
 
-  filePrintData: any;
-  widthCanvas = 500;
   formattedResult: string;
+  filePrintData: RequestResultRecognition[];
+  widthCanvas = 500;
+  types = ServiceTypes;
 
   constructor(private loadingPhotoService: LoadingPhotoService) {}
 
@@ -58,7 +60,7 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 
-  getFrames(printData: any): void {
+  getFrames(printData: RequestResultRecognition[]): void {
     if (!printData) return;
 
     this.sizes.pipe(takeUntil(this.unsubscribe)).subscribe(size => {
@@ -66,8 +68,8 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
     });
   }
 
-  recalculateFrames(data: any[], img, sizeCanvas): any {
-    return data.map(val => ({ ...val, box: recalculateFaceCoordinate(val.box, img, sizeCanvas) }));
+  recalculateFrames<Type extends RequestResultRecognition[]>(data: Type, img, sizeCanvas): Type {
+    return data.map(val => ({ ...val, box: recalculateFaceCoordinate(val.box, img, sizeCanvas) })) as Type;
   }
 
   loadPhoto(file: File, canvas: ElementRef): void {
@@ -77,10 +79,13 @@ export class RecognitionResultComponent implements OnChanges, OnDestroy {
       .loader(file)
       .pipe(
         takeUntil(this.unsubscribe),
-        map((img: ImageBitmap) => ({
-          img,
-          sizeCanvas: { width: this.widthCanvas, height: (img.height / img.width) * this.widthCanvas },
-        })),
+        map(
+          (img: ImageBitmap) =>
+            ({
+              img,
+              sizeCanvas: { width: this.widthCanvas, height: (img.height / img.width) * this.widthCanvas },
+            } as { img: ImageBitmap; sizeCanvas: ImageSize })
+        ),
         tap(({ sizeCanvas }) => canvas.nativeElement.setAttribute('height', sizeCanvas.height))
       )
       .subscribe(value => {

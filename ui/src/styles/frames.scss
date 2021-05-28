@@ -14,6 +14,7 @@
 * permissions and limitations under the License.
 */
 @import "colors.scss";
+@import "mixins.scss";
 
 @mixin frames() {
 
@@ -23,13 +24,16 @@
 
     &--wrapper {
       position: relative;
+      line-height: 0;
 
       .face-box {
         position: absolute;
+        display: flex;
+        flex-direction: column;
 
         &--face {
           width: 100%;
-          height: 100%;
+          min-height: 100%;
           box-sizing: border-box;
           border: 4px solid;
           border-radius: 12px;
@@ -38,10 +42,9 @@
         &--info {
           position: relative;
           margin-top: 18px;
-          padding: 8px;
+          padding: 8px 20px;
           max-width: 170px;
-          min-width: 70px;
-          max-height: 80px;
+          width: fit-content;
           background-color: $light-blue;
           border-radius: 6px;
           color: $white;
@@ -60,7 +63,15 @@
             z-index: -1;
           }
 
+          &_name {
+            @include not-break-string;
+            font-weight: 600;
+            font-size: 16px;
+            line-height: 22px;
+          }
+
           &_similarity {
+            @include not-break-string;
             font-size: 14px;
             line-height: 14px;
           }

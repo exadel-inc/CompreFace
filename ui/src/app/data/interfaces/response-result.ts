@@ -23,22 +23,14 @@ export interface BoxSize {
   y_min: number;
 }
 
+export interface BoxSubjects {
+  subject: string;
+  similarity: number;
+}
+
 export interface RequestResultRecognition {
-  result: {
-    box: {
-      probability: number;
-      x_max: number;
-      x_min: number;
-      y_max: number;
-      y_min: number;
-      subjects: [
-        {
-          subject: string;
-          similarity: number;
-        }
-      ];
-    };
-  };
+  box: BoxSize;
+  subjects: BoxSubjects[];
 }
 
 export interface SourceImageFace {

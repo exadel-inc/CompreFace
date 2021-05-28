@@ -14,10 +14,6 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="recognition-loading" *ngIf="pending$ | async">
-  <app-spinner></app-spinner>
-</div>
-
 <app-recognition-result
   [isLoaded]="isLoaded$ | async"
   [file]="file$ | async"
@@ -28,3 +24,6 @@
 >
 </app-recognition-result>
 
+<div class="recognition-loading" *ngIf="pending$ | async">
+  <app-spinner></app-spinner>
+</div>
