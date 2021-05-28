@@ -41,8 +41,6 @@ export class FaceServicesDirective implements OnChanges, AfterContentInit {
   @ContentChild('boxFace') boxFace: ElementRef;
   @ContentChild('boxInfo') boxInfo: ElementRef;
 
-  private borderColor = 'rgba(255, 255, 255, 0.5)';
-  private borderColorActive = '#40BFEF';
   private size: FrameSize;
   private activeFrame = false;
 
@@ -83,19 +81,15 @@ export class FaceServicesDirective implements OnChanges, AfterContentInit {
 
   styleActiveFrame(): void {
     this.renderer.setStyle(this.element.nativeElement, 'zIndex', 2);
-    this.renderer.setStyle(this.boxFace.nativeElement, 'borderColor', this.borderColorActive);
+    this.renderer.addClass(this.boxFace.nativeElement, 'active-frame');
 
-    if (!!this.boxInfo) {
-      this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'block');
-    }
+    if (!!this.boxInfo) this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'block');
   }
 
   styleNotActiveFrame(): void {
     this.renderer.setStyle(this.element.nativeElement, 'zIndex', 1);
-    this.renderer.setStyle(this.boxFace.nativeElement, 'borderColor', this.borderColor);
+    this.renderer.removeClass(this.boxFace.nativeElement, 'active-frame');
 
-    if (!!this.boxInfo) {
-      this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'none');
-    }
+    if (!!this.boxInfo) this.renderer.setStyle(this.boxInfo.nativeElement, 'display', 'none');
   }
 }

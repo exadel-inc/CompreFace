@@ -37,6 +37,11 @@
           box-sizing: border-box;
           border: 4px solid;
           border-radius: 12px;
+          border-color: $transparent-gray;
+
+          &.active-frame {
+            border-color: $light-blue;
+          }
         }
 
         &--info {
@@ -58,7 +63,7 @@
             left: 50%;
             width: 24px;
             height: 24px;
-            background: #40BFEF;
+            background: $light-blue;
             transform: translate(-50%, -50%) rotate(45deg);
             z-index: -1;
           }
