@@ -11,6 +11,7 @@
     + [Verify Faces from a Given Image](#verify-faces-from-a-given-image)
 + [Face Detection Service](#face-detection-service)
 + [Face Verification Service](#face-verification-service)
++ [Base64 Support](#base64-support)
 
 To know more about face services and face plugins visit [this page](Face-services-and-plugins.md).
 
@@ -21,7 +22,7 @@ To know more about face services and face plugins visit [this page](Face-service
 This creates an example of the subject by saving images. You can add as many images as you want to train the system. Image should 
 contain only one face.
 
-```shell
+```http request
 curl -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
@@ -444,3 +445,63 @@ Response body on success:
 | similarity                     | float   | similarity between this face and the face on the source image               |
 | execution_time                 | object  | execution time of all plugins                       |
 | plugins_versions               | object  | contains information about plugin versions                       |
+
+
+## Base64 Support
+`since 0.5.1 version`
+
+Except `multipart/form-data`, all CompreFace endpoints, that require images as input, accept images in `Base64` format. 
+The base rule is to use `Content-Type: application/json` header and send JSON in the body. 
+The name of the JSON parameter coincides with the name of the `multipart/form-data` parameter.
+
+### Add an Example of a Subject, Base64
+Full description [here](#add-an-example-of-a-subject).
+
+```http request
+curl -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"file": "<base64_value>"}
+```
+
+### Recognize Faces from a Given Image, Base64
+Full description [here](#recognize-faces-from-a-given-image).
+
+```http request
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"file": "<base64_value>"}
+```
+
+### Verify Faces from a Given Image, Base64
+Full description [here](#verify-faces-from-a-given-image).
+
+```http request
+curl -X POST "http://localhost:8000/api/v1/recognition/faces/<image_id>/verify?
+limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"file": "<base64_value>"}
+```
+
+### Face Detection Service, Base64
+Full description [here](#face-detection-service).
+
+```http request
+curl  -X POST "http://localhost:8000/api/v1/detection/detect?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"file": "<base64_value>"}
+```
+
+### Face Verification Service, Base64
+Full description [here](#face-verification-service).
+
+```http request
+curl -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"source_image": "<source_image_base64_value>", "target_image": "<target_image_base64_value>"}
+```
+
