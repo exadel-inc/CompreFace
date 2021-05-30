@@ -61,12 +61,12 @@
         </mat-error>
         <input matInput formControlName="confirmPassword" type="password" name="confirmPassword" required />
       </mat-form-field>
-
-      <mat-checkbox formControlName="isAllowStatistics" *ngIf="isDemoPageAvailable$ | async">
-        <span class="form-checkbox"
-          >{{ 'registration.statistics' | translate }}
-          <a href="https://github.com/exadel-inc/CompreFace">{{ 'registration.more_info' | translate }}</a>
-        </span>
+      <mat-checkbox formControlName="isAllowStatistics" class="sign-up-full-width" *ngIf="isDemoPageAvailable$ | async">
+        <span
+           class="white-space-fix">{{ 'registration.statistics' | translate }}
+          <a href="https://github.com/exadel-inc/CompreFace/blob/master/docs/Gathering-anonymous-statistics.md">{{
+            'registration.more_info' | translate }}</a></span
+        >
       </mat-checkbox>
 
       <mat-error *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
