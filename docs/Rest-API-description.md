@@ -6,7 +6,7 @@
     + [Add a Subject](#add-a-subject)
     + [Rename a Subject](#rename-a-subject)
     + [Delete a Subject](#delete-a-subject)
-    + [Delete Subjects by Api Key](#delete-subjects-by-api-key)
+    + [Delete All Subjects](#delete-all-subjects)
     + [List Subjects](#list-subjects)
     + [Add an Example of a Subject](#add-an-example-of-a-subject)
     + [Recognize Faces from a Given Image](#recognize-faces-from-a-given-image)
@@ -27,9 +27,8 @@ To know more about face services and face plugins visit [this page](Face-service
 ### Add a Subject
 ```since 0.6 version```
 
-This creates a new subject in Face Collection. You need to add Face Examples to the subject before the system will be able to recognize 
-the subject. Creating a subject is an optional step, you can upload an example without existing subject, and a subject will be created 
-automatically. If subject with such name already exists - 400.  
+Create a new subject in Face Collection. Creating a subject is an optional step, 
+you can [upload an example](#add-an-example-of-a-subject) without an existing subject, and a subject will be created automatically.
 
 ```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/subjects" \
@@ -57,7 +56,8 @@ Response body on success:
 ### Rename a Subject
 ```since 0.6 version```
 
-This renames existing subject. If subject with provided name not found - 404. If new subject name already exists, all faces from old subject name are **reassigned** to subject with new name, old subjected removed.  
+Rename existing subject. If a new subject name already exists, 
+subjects are merged - all faces from the old subject name are **reassigned** to the subject with the new name, old subject removed.  
 
 ```shell
 curl -X PUT "http://localhost:8000/api/v1/recognition/subjects/<subject>" \
@@ -85,7 +85,7 @@ Response body on success:
 ### Delete a Subject
 ```since 0.6 version```
 
-This deletes existing subject and all saved faces. If subject with provided name not found - 404.  
+Delete existing subject and all saved faces.
 
 ```shell
 curl -X DELETE "http://localhost:8000/api/v1/recognition/subjects/<subject>" \
@@ -109,10 +109,10 @@ Response body on success:
 | -------- | ------ | -------------------------- |
 | subject  | string | is the name of the subject |
 
-### Delete all Subjects for face recognition service
+### Delete All Subjects
 ```since 0.6 version```
 
-This deletes all existing subjects and all saved faces.
+Delete all existing subjects and all saved faces.
 
 ```shell
 curl -X DELETE "http://localhost:8000/api/v1/recognition/subjects" \
