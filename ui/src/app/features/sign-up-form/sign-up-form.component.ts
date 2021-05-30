@@ -26,7 +26,7 @@ import { AppState } from '../../store';
 import { resetErrorMessage, signUp } from '../../store/auth/action';
 import { selectLoadingState } from '../../store/auth/selectors';
 import { selectDemoPageAvailability } from '../../store/demo/selectors';
-import { loadDemoApiKey } from '../../store/demo/action';
+import { loadDemoStatus } from '../../store/demo/action';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -69,7 +69,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
       { validators: this.passwordMatchValidator }
     );
 
-    this.store.dispatch(loadDemoApiKey());
+    this.store.dispatch(loadDemoStatus());
     this.stateSubscription = this.isDemoPageAvailable$.subscribe(isDemoPageAvailable => {
       this.isFirstRegistration = isDemoPageAvailable;
     });
