@@ -138,32 +138,16 @@ More documentation is available [here](/docs)
 # Contributing
 
 We want to improve our open-source face recognition solution, so your contributions are welcome and greatly appreciated. 
-After creating your first contributing pull request, you will receive a request to sign our Contributor License Agreement by commenting your pull request with a special message.
 
-### Formatting standards
+* Just use CompreFace and [report](https://github.com/exadel-inc/CompreFace/issues) ideas and bugs on GitHub
+* Share knowledge and experience via posting guides and articles, or just improve our [documentation](https://github.com/exadel-inc/CompreFace/tree/master/docs)
+* Create [SDKs](https://github.com/topics/compreface-sdk) for favorite programming language, we will add it to our documentation
+* Integrate CompreFace support to other platforms like [Home Assistant](https://www.home-assistant.io/) or [DreamFactory](https://www.dreamfactory.com/), we will add it to our documentation
+* [Contribute](CONTRIBUTING.md) code
+* Add [plugin](/docs/Face-services-and-plugins.md#face-plugins) to face services
+* And last, but not least, you can just give a star to our free facial recognition system on GitHub
 
-For java just import dev/team_codestyle.xml file in your IntelliJ IDEA.
-
-### Report Bugs
-
-Please report any bugs [here](https://github.com/exadel-inc/CompreFace/issues).
-
-If you are reporting a bug, please specify:
-
-- Your operating system name and version
-- Any details about your local setup that might be helpful in troubleshooting
-- Detailed steps to reproduce the bug
-
-
-### Submit Feedback
-
-The best way to send us feedback is to file an issue at https://github.com/exadel-inc/CompreFace/issues.
-
-If you are proposing a feature, please:
-
-- Explain in detail how it should work.
-- Keep the scope as narrow as possible to make it easier to implement.
-
+For more information, visit our [contributing](CONTRIBUTING.md) guide, or create a [discussion](https://github.com/exadel-inc/CompreFace/discussions).
 
 # License info
 
