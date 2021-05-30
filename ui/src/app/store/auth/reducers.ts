@@ -14,57 +14,44 @@
  * permissions and limitations under the License.
  */
 
-import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
+import { createReducer, on, Action, ActionReducer } from '@ngrx/store';
 import {
+  logIn,
   logInSuccess,
-  logInFailure,
+  logInFail,
   signUpSuccess,
-  signUpFailure,
-  logOut, resetErrorMessage
+  signUpFail,
+  logOut,
+  resetErrorMessage,
+  changePassword,
+  changePasswordSuccess,
+  changePasswordFail,
+  signUp,
 } from './action';
 
 export interface AuthState {
-  errorMessage: string | null;
-  successMessage: string | null;
   isLoading: boolean;
 }
 
 export const initialState: AuthState = {
-  errorMessage: null,
-  successMessage: null,
-  isLoading: false
+  isLoading: false,
 };
 
-const reducer: ActionReducer<AuthState> = createReducer(initialState,
-  on(logInSuccess, (state) => ({
+const reducer: ActionReducer<AuthState> = createReducer(
+  initialState,
+
+  on(logIn, signUp, changePassword, state => ({
     ...state,
-    errorMessage: null,
-    isLoading: false
+    isLoading: true,
   })),
-  on(logInFailure, (state) => ({
+  on(logInSuccess, logInFail, signUpFail, changePasswordSuccess, signUpSuccess, changePasswordFail, state => ({
     ...state,
-    errorMessage: 'E-mail or Password is incorrect.',
-    isLoading: false
+    isLoading: false,
   })),
-  on(signUpSuccess, (state) => ({
+  on(resetErrorMessage, state => ({
     ...state,
-    errorMessage: null,
-    successMessage: 'You have created new account, please login into your account',
-    isLoading: false
-  })),
-  on(signUpFailure, (state) => ({
-    ...state,
-    errorMessage: 'This e-mail is already in use.',
-    successMessage: null,
-    isLoading: false
-  })),
-  on(resetErrorMessage, (state) => ({
-    ...state,
-    errorMessage: null,
   })),
   on(logOut, () => ({ ...initialState }))
 );
 
-export function AuthReducer(authState: AuthState, action: Action) {
-  return reducer(authState, action);
-}
+export const authReducer = (authState: AuthState, action: Action) => reducer(authState, action);

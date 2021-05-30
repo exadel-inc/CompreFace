@@ -13,20 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.application-list {
-  position: relative;
 
-  app-spinner {
-    position: absolute;
-    left: 40%
-  }
-
-  .create-new-message {
-    padding-left: 20px;
-    display: flex;
-
-    mat-icon {
-      padding: 25px 20px 0 0;
-    }
-  }
+app-spinner {
+  position: absolute;
+  left: 40%;
 }

@@ -14,17 +14,23 @@
  * permissions and limitations under the License.
  */
 
+@import "mixins.scss";
+
 .breadcrumbs {
-  font-family: 'Roboto';
-  display: flex;
-  margin-bottom: 20px;
-  margin-top: 15px;
+  margin-bottom: 24px;
 
-  &-link {
-    margin-right: 8px;
-  }
+  &--container {
+    display: flex;
+    overflow: hidden;
 
-  .separator {
-    margin-right: 8px;
+    .link {
+      margin-right: 8px;
+      max-width: 180px;
+      @include not-break-string();
+    }
+
+    .separator {
+      margin-right: 8px;
+    }
   }
 }

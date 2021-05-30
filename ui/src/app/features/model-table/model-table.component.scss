@@ -14,14 +14,99 @@
  * permissions and limitations under the License.
  */
 
-table {
-  width: 100%;
+@import "colors.scss";
+@import "mixins.scss";
+
+caption {
+  display: none;
 }
 
-.mat-column-apiKey {
-  min-width: 340px;
-}
+.mat {
 
-.mat-column-actions {
-  max-width: 30px;
+  &-column {
+
+    &-content {
+      width: 100%;
+
+      .content--wrapper {
+        display: flex;
+        align-items: center;
+
+        &_name {
+          @include not-break-string();
+        }
+
+        &_type {
+          margin-left: 8px;
+        }
+
+        &_key {
+          margin-right: 4px;
+          @include not-break-string();
+
+          .title {
+            color: $light-gray;
+          }
+
+          .key {
+            color: $black;
+          }
+        }
+
+        &_btn {
+          width: 24px;
+          height: 24px;
+          line-height: 24px;
+
+          .mat-icon {
+            @include sm-icon-size();
+          }
+        }
+
+        .recognition {
+          color: $dark-blue;
+        }
+
+        .detection {
+          color: $orange;
+        }
+
+        .verify {
+          color: $purple;
+        }
+      }
+    }
+
+    &-test {
+      text-align: center;
+      width: 58px;
+
+      .test {
+
+        &--btn {
+          min-width: 0;
+          font-size: 12px;
+          line-height: 14px;
+          padding: 5px 14px;
+          border-radius: 2px;
+        }
+      }
+    }
+
+    &-actions {
+      text-align: center;
+      width: 40px;
+
+      .actions--btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+
+        .mat-icon {
+          @include md-icon-size();
+        }
+      }
+    }
+  }
 }

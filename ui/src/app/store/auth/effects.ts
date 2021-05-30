@@ -13,18 +13,31 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Observable, of as observableOf } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
 import { AuthService } from '../../core/auth/auth.service';
-import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
-import { resetUserInfo, updateUserInfo } from '../userInfo/action';
-import { logIn, logInFailure, logInSuccess, logOut, signUp, signUpFailure, signUpSuccess } from './action';
+import { Routes } from '../../data/enums/routers-url.enum';
+import { resetUserInfo } from '../userInfo/action';
+import {
+  clearUserToken,
+  logIn,
+  logInFail,
+  logInSuccess,
+  logOut,
+  signUp,
+  signUpFail,
+  signUpSuccess,
+  changePassword,
+  changePasswordSuccess,
+  changePasswordFail,
+} from './action';
+import { Store } from '@ngrx/store';
+import { selectQueryParams } from '../router/selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -33,46 +46,41 @@ export class AuthEffects {
     private authService: AuthService,
     private router: Router,
     private snackBarService: SnackBarService,
-  ) { }
+    private store: Store<any>
+  ) {}
 
   // Listen for the 'LOGIN' action
   @Effect()
-  LogIn = this.actions.pipe(
+  logIn$ = this.actions.pipe(
     ofType(logIn),
-    switchMap(action => {
-      return this.authService.logIn(action.email, action.password).pipe(
-        switchMap(res => {
-          this.authService.updateTokens(res.access_token, res.refresh_token);
-          return [
-            logInSuccess(),
-            updateUserInfo(
-              {
-                isAuthenticated: true,
-                firstName: res.firstName
-              })
-          ];
-        }),
-        catchError(error => observableOf(logInFailure(error)))
-      );
-    }));
+    switchMap(action =>
+      this.authService.logIn(action.email, action.password).pipe(
+        map(() => logInSuccess()),
+        catchError(error => observableOf(logInFail(error)))
+      )
+    )
+  );
 
   // Listen for the 'LogInSuccess' action
   @Effect({ dispatch: false })
-  LogInSuccess: Observable<any> = this.actions.pipe(
+  logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
-    tap(() => {
-      this.router.navigateByUrl(ROUTERS_URL.HOME);
-    })
+    withLatestFrom(this.store.select(selectQueryParams)),
+    map(([, queryParams]) => {
+      const { redirect } = queryParams;
+      return redirect;
+    }),
+    tap(redirect => this.router.navigateByUrl(redirect || Routes.Home))
   );
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(logInFailure, signUpFailure),
+    ofType(logInFail, signUpFail),
     tap(action => {
       if (action.error && action.error.error_description === 'Bad credentials') {
-        this.snackBarService.openError(null, 8000, 'E-mail or Password is incorrect.');
+        this.snackBarService.openNotification({ messageText: 'auth.incorrect_credentials', type: 'error' });
       } else if (action.error && action.error.code === 4) {
-        this.snackBarService.openError(null, 8000, 'This e-mail is already in use.');
+        this.snackBarService.openNotification({ messageText: 'auth.already_in_use', type: 'error' });
       } else {
         this.snackBarService.openHttpError(action.error);
       }
@@ -83,43 +91,69 @@ export class AuthEffects {
   showSuccess$ = this.actions.pipe(
     ofType(signUpSuccess),
     tap(action => {
-      const message = action.confirmationNeeded
-        ? 'You have created new account, please confirm your email'
-        : 'You have created new account, please login into your account';
-      this.snackBarService.openInfo(null, 8000, message);
-    }),
+      const message = action.confirmationNeeded ? 'auth.new_account_confirm_email' : 'auth.new_account_login';
+      this.snackBarService.openNotification({ messageText: message });
+    })
   );
 
   @Effect()
-  SignUp: Observable<any> = this.actions.pipe(
+  signUp$: Observable<any> = this.actions.pipe(
     ofType(signUp),
-    switchMap(payload => {
-      return this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName).pipe(
+    switchMap(payload =>
+      this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName, payload.isAllowStatistics).pipe(
         map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
-        catchError(error => observableOf(signUpFailure(error)))
-      );
-    }));
+        catchError(error => observableOf(signUpFail(error)))
+      )
+    )
+  );
 
   @Effect({ dispatch: false })
-  SignUpSuccess: Observable<any> = this.actions.pipe(
+  signUpSuccess$: Observable<any> = this.actions.pipe(
     ofType(signUpSuccess),
     tap(() => {
-      this.router.navigateByUrl(ROUTERS_URL.LOGIN);
+      this.router.navigateByUrl(Routes.Login);
     })
   );
 
   @Effect({ dispatch: false })
-  SignUpFailure: Observable<any> = this.actions.pipe(
-    ofType(signUpFailure)
+  signUpFailure$: Observable<any> = this.actions.pipe(ofType(signUpFail));
+
+  @Effect()
+  logOut$: Observable<any> = this.actions.pipe(
+    ofType(logOut),
+    switchMap(() => {
+      this.router.navigateByUrl(Routes.Login);
+
+      return [clearUserToken(), resetUserInfo()];
+    })
+  );
+
+  @Effect({ dispatch: false })
+  clearUserToken$: Observable<any> = this.actions.pipe(
+    ofType(clearUserToken),
+    switchMap(() => this.authService.clearUserToken())
   );
 
   @Effect()
-  public LogOut: Observable<any> = this.actions.pipe(
-    ofType(logOut),
-    map(() => {
-      this.authService.removeToken();
-      this.router.navigateByUrl(ROUTERS_URL.LOGIN);
-      return resetUserInfo();
-    })
+  changePassword$: Observable<any> = this.actions.pipe(
+    ofType(changePassword),
+    switchMap(payload =>
+      this.authService.changePassword(payload.oldPassword, payload.newPassword).pipe(
+        map(() => changePasswordSuccess()),
+        catchError(error => observableOf(changePasswordFail(error)))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  changePasswordSuccess$: Observable<any> = this.actions.pipe(
+    ofType(changePasswordSuccess),
+    tap(() => this.snackBarService.openNotification({ messageText: 'auth.change_password_success' }))
+  );
+
+  @Effect({ dispatch: false })
+  changePasswordFailure$: Observable<any> = this.actions.pipe(
+    ofType(changePasswordFail),
+    tap(action => this.snackBarService.openHttpError(action))
   );
 }

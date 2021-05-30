@@ -13,22 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {FooterComponent} from './footer.component';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatButtonModule} from '@angular/material/button';
+import { FooterComponent } from './footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 @NgModule({
   declarations: [FooterComponent],
-  exports: [
-    FooterComponent,
-  ],
-  imports: [
-    CommonModule,
-    MatToolbarModule,
-    MatButtonModule,
-  ]
+  exports: [FooterComponent],
+  imports: [CommonModule, MatToolbarModule, MatButtonModule, TranslateModule],
 })
-export class FooterModule { }
+export class FooterModule {}

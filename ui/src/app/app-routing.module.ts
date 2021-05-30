@@ -17,33 +17,40 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
+import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
+import { UserInfoResolver } from './core/user-info/user-info.resolver';
 
 const routes: Routes = [
   {
-    path: '', component: MainLayoutComponent,
-    children: [
-      { path: '', loadChildren: () => import('./pages/organization/organization.module').then(m => m.OrganizationModule) }
-    ]
+    path: '',
+    component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
+    children: [{ path: '', loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule) }],
   },
   {
-    path: 'application', component: MainLayoutComponent, children: [
-      { path: '', loadChildren: () => import('./pages/application/application.module').then(m => m.ApplicationModule) }
-    ]
+    path: 'application',
+    component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
+    children: [{ path: '', loadChildren: () => import('./pages/application/application.module').then(m => m.ApplicationModule) }],
   },
   {
-    path: 'test-model', component: MainLayoutComponent, children: [
-      { path: '', loadChildren: () => import('./pages/test-model/test-model.module').then(m => m.TestModelModule) }
-    ]
+    path: 'test-model',
+    component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
+    children: [{ path: '', loadChildren: () => import('./pages/test-model/test-model.module').then(m => m.TestModelModule) }],
+  },
+  {
+    path: 'demo',
+    component: DemoLayoutComponent,
+    children: [{ path: '', loadChildren: () => import('./pages/demo/demo.module').then(m => m.DemoModule) }],
   },
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
   { path: 'sign-up', loadChildren: () => import('./pages/sign-up/sign-up.module').then(m => m.SignUpModule) },
-  { path: '**', redirectTo: '/' }
+  { path: '**', redirectTo: '/' },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
+  exports: [RouterModule],
 })
-
-export class AppRoutingModule {
-}
+export class AppRoutingModule {}

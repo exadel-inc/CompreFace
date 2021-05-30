@@ -13,19 +13,32 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
-import {Component, OnInit} from '@angular/core';
+import { Routes } from '../../data/enums/routers-url.enum';
+import { loadDemoStatus } from '../../store/demo/action';
+import { selectDemoPageAvailability, selectDemoPending } from '../../store/demo/selectors';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss']
+  styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+  routes = Routes;
+  isPending$: Observable<boolean>;
+  isDemoPageAvailable$: Observable<boolean>;
+  env = environment;
 
-  constructor() { }
-
-  ngOnInit() {
+  constructor(private store: Store) {
+    this.isPending$ = this.store.select(selectDemoPending);
+    this.isDemoPageAvailable$ = this.store.select(selectDemoPageAvailability);
   }
 
+  ngOnInit() {
+    this.store.dispatch(loadDemoStatus());
+  }
 }

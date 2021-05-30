@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<h1 mat-dialog-title>{{ 'common.create' | translate }} {{ data.entityType }}</h1>
+<div mat-dialog-content>
+  <mat-form-field appearance="outline" floatLabel="always">
+    <mat-label>{{ 'common.name' | translate }}</mat-label>
+    <input matInput [(ngModel)]="data.entityName" placeholder="{{ 'common.name' | translate }}" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>{{ 'common.type' | translate }}</mat-label>
+    <mat-select [(ngModel)]="data.type">
+      <mat-option *ngFor="let type of typeValuesKeysArray" [value]="typeValues[type] | uppercase">{{ type | uppercase }}</mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
+  <button mat-flat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.entityName || !data.type">
+    {{ 'common.capital.create' | translate }}
+  </button>
+</div>
+<button class="button-cross" mat-icon-button (click)="onCancelClick()">
+  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
+</button>

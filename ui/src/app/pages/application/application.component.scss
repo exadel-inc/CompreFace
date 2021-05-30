@@ -31,44 +31,60 @@
   }
 }
 
-.app-list-container {
-  display: grid;
-  grid-template-columns: calc(50% - 20px) auto;
-  column-gap: 20px;
-  row-gap: 20px;
-
-  &__header {
-    grid-column: 1;
-    grid-row: 1;
-  }
-
-  &__users {
-    grid-column: 2;
-    grid-row: 1 / 3;
-
-    .app-table {
-      min-height: 600px;
-    }
-  }
-
-  &__models {
-    grid-column: 1;
-    grid-row: 2;
-  }
-}
-
 .grid-container {
   display: flex;
   justify-content: space-between;
 
-  mat-card {
-    width: 49%;
-    transform: perspective(1px)
+  @include tablet-portrait{
+    flex-direction: column;
+  }
+  @include mobile{
+    flex-direction: column;
   }
 
-  app-model-list, app-application-user-list {
+  mat-card {
+    width: 49%;
+    transform: perspective(1px);
+
+    @include mobile {
+      width: 99%;
+
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
+    }
+
+    @include tablet {
+      width: 99%;
+
+      &:not(:last-child) {
+        margin-bottom: 15px;
+      }
+    }
+
+    @include tablet-portrait{
+      width: 99%;
+
+      &:not(:last-child) {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  app-application-list-container,
+  app-user-list-container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between
+    justify-content: space-between;
+  }
+}
+
+@include tablet-landscape {
+  .grid-container{
+    flex-direction: column !important;
+
+    mat-card {
+      width: 100% !important;
+    }
   }
 }

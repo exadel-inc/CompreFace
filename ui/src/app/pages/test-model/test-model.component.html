@@ -14,19 +14,12 @@
   ~ permissions and limitations under the License.
   -->
 
-<div class="container">
-  <div class="header-container">
+<div class="test-model">
+  <div class="container">
     <app-breadcrumbs-container></app-breadcrumbs-container>
-  </div>
-
-  <div class="test-model-container">
-    <div class="test-model-loader"
-       *ngIf="modelLoading$ | async">
-      <app-spinner></app-spinner>
-    </div>
-
-    <!-- todo add container component -->
-    <app-face-recognition *ngIf="!(modelLoading$ | async)"></app-face-recognition>
+    <ng-container [ngSwitch]="type">
+      <app-face-verification-container *ngSwitchCase="verification"></app-face-verification-container>
+      <app-face-recognition-container *ngSwitchDefault [type]="type"></app-face-recognition-container>
+    </ng-container>
   </div>
 </div>
-

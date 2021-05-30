@@ -13,22 +13,39 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { Store } from '@ngrx/store';
+import { provideMockStore } from '@ngrx/store/testing';
+import { of } from 'rxjs';
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {LoginComponent} from './login.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
+import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
+  const initialState = {
+    isPending: false,
+  };
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ LoginComponent ],
-      schemas: [NO_ERRORS_SCHEMA]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [LoginComponent],
+        providers: [
+          provideMockStore(),
+          {
+            provide: Store,
+            useValue: {
+              select: () => of(initialState),
+              dispatch: () => {},
+            },
+          },
+        ],
+        schemas: [NO_ERRORS_SCHEMA],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginComponent);

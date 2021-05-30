@@ -13,24 +13,30 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {TestModelPageService} from './test-model.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { selectPendingModel } from '../../store/model/selectors';
 import { Observable } from 'rxjs';
+
+import { selectPendingModel } from '../../store/model/selectors';
+import { TestModelPageService } from './test-model.service';
+import { ServiceTypes } from '../../data/enums/service-types.enum';
 
 @Component({
   selector: 'app-test-model',
   templateUrl: './test-model.component.html',
-  styleUrls: ['./test-model.component.scss']
+  styleUrls: ['./test-model.component.scss'],
 })
 export class TestModelComponent implements OnInit, OnDestroy {
-  public modelLoading$: Observable<boolean>;
+  modelLoading$: Observable<boolean>;
+  type: string;
+  verification: string = ServiceTypes.Verification;
+
   constructor(private modelService: TestModelPageService, private store: Store<any>) {}
 
   ngOnInit() {
     this.modelService.initUrlBindingStreams();
     this.modelLoading$ = this.store.select(selectPendingModel);
+    this.type = this.modelService.getServiceType();
   }
 
   ngOnDestroy(): void {

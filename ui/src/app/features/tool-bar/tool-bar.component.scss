@@ -14,59 +14,69 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
-@import 'media.scss';
+@import "media.scss";
+@import "mixins.scss";
 
-.mat-toolbar {
-  background-color: $primary;
-  color: $white;
-}
+.header {
+  height: 100%;
+  justify-content: center;
 
-.mat-toolbar-row {
-  justify-content: space-between;
-
-  .logo, .logo img {
-    height: 90%;
-    margin: 3px 0;
-  }
-}
-
-.avatar-wrapper {
-  flex-grow: 1;
-  text-align: right;
-
-  button {
-    width: 50px;
-    height: 50px;
-    overflow: hidden;
+  .container {
+    justify-content: space-between;
   }
 
-  img {
-    max-width: 100%;
-    height: auto;
+  &--logo {
+    display: flex;
+
+    &_link{
+      padding: 4px;
+      min-width: 0;
+
+      .logo-main {
+
+        @include mobile-portrait {
+          display: none;
+        }
+      }
+
+      .logo-mobile {
+        display: none;
+
+        @include mobile-portrait {
+          margin: 0 !important;
+          display: flex;
+        }
+      }
+    }
   }
-}
 
-.mat-button-focus-overlay {
-  background: none;
-}
+  &--user-info {
 
-.mat-flat-button {
-  box-shadow: none;
-  background: none;
-  text-decoration: underline;
-  color: $basic;
+    .user-info--btn {
+      padding: 6px;
+      line-height: 24px;
 
-  &:hover {
-    color: $hovered;
+      &_wrapper {
+        max-width: 222px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+
+        .avatar {
+          margin-right: 4px;
+        }
+
+        .name {
+          @include not-break-string();
+          margin-right: 4px;
+        }
+
+        .mat-icon {
+          @include md-icon-size();
+          width: 15px;
+        }
+      }
+    }
   }
-
-  @include mobile-portrait {
-    padding: 0;
-    min-width: 55px;
-  }
-}
-
-.page-name {
-  text-transform: capitalize;
 }

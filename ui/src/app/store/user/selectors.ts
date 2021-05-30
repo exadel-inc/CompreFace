@@ -15,23 +15,48 @@
  */
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import { selectApplications } from '../application/selectors';
+import { selectApplications, selectIsPendingApplicationList, selectUserRollForSelectedApp } from '../application/selectors';
+import { selectUserId } from '../userInfo/selectors';
 import { AppUserEntityState, userAdapter } from './reducers';
+import { selectAllRoles, selectIsPendingRoleStore } from '../role/selectors';
+import { Role } from '../../data/enums/role.enum';
 
 export const selectUserEntityState = createFeatureSelector<AppUserEntityState>('user');
 const { selectEntities, selectAll } = userAdapter.getSelectors();
 
 export const selectUserById = (id: string) => createSelector(selectUserEntityState, selectEntities, usersDictionary => usersDictionary[id]);
 export const selectUsers = createSelector(selectUserEntityState, selectAll);
-export const selectIsPendingUserStore = createSelector(selectUserEntityState, (state) => state.isPending);
+export const selectIsPendingUserStore = createSelector(selectUserEntityState, state => state.isPending);
 
-export const selectUsersWithOwnerApp = createSelector(
-  selectUsers,
-  selectApplications,
-  (users, apps) => users.map(user => ({
+export const selectCurrentUserRole = createSelector(selectUsers, selectUserId, (users, userId) => {
+  const selectedUser = users.find(user => user.userId === userId);
+  return selectedUser && selectedUser.role;
+});
+
+export const selectUsersWithOwnerApp = createSelector(selectUsers, selectApplications, (users, apps) =>
+  users.map(user => ({
     ...user,
-    ownerOfApplications: apps
-      .filter(app => app.owner.userId === user.userId)
-      .map(app => app.name),
-  })),
+    ownerOfApplications: apps.filter(app => app.owner.userId === user.userId).map(app => app.name),
+  }))
+);
+
+export const selectIsLoadingApplicationList = createSelector(
+  selectIsPendingApplicationList,
+  selectCurrentUserRole,
+  (isPendingAppList, currentUserRole) => !isPendingAppList && !currentUserRole
+);
+
+export const selectAvailableRoles = createSelector(selectAllRoles, selectCurrentUserRole, (allRoles, currentUserRole) => {
+  const roleIndex = allRoles.indexOf(currentUserRole);
+  return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
+});
+
+export const selectIsUserLoading = createSelector(
+  selectIsPendingUserStore,
+  selectIsPendingRoleStore,
+  (isPendingUserStore, isPendingRoleStore) => !(!isPendingUserStore && !isPendingRoleStore)
+);
+
+export const selectUserRole = createSelector(selectUserRollForSelectedApp, selectCurrentUserRole, (applicationRole, organizationRole) =>
+  organizationRole !== Role.User ? Role.Owner : applicationRole
 );

@@ -13,47 +13,39 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TranslateService } from '@ngx-translate/core';
 
 import { AppSnackBarComponent } from './snackbar.component';
 
-const messageMap = {
-  'default-info': 'DEFAULT INFO MESSAGE',
-  'default-error': 'DEFAULT ERROR MESSAGE'
-};
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SnackBarService {
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar, private translate: TranslateService) {}
 
-  openInfo(messageCode: string, duration: number = 3000, message?: string): void {
+  openNotification({ messageText, messageOptions, type = 'info' }: { messageText: string; messageOptions?: any; type?: string }): void {
+    const message = this.translate.instant(messageText, messageOptions);
+    const duration = type === 'info' ? 3000 : 8000;
     const data = {
-      message: messageCode ? messageMap[messageCode] : message,
-      type: 'info'
-    };
-
-    this.openSnackBar(data, duration);
-  }
-
-  openError(messageCode: string, duration: number = 8000, message?: string): void {
-    const data = {
-      message: messageCode ? messageMap[messageCode] : message,
-      type: 'error'
+      message,
+      type,
     };
 
     this.openSnackBar(data, duration);
   }
 
   openHttpError(message: HttpErrorResponse, duration: number = 8000): void {
-    const errorMessage = message.error || message;
+    const errorMessage = message.error
+      ? message.error.error_description
+        ? message.error.error_description
+        : message.error
+      : this.translate.instant('common.unknown_error');
     const data = {
-      message: errorMessage.message,
-      type: 'error'
+      message: errorMessage.message ? errorMessage.message : errorMessage,
+      type: 'error',
     };
 
     this.openSnackBar(data, duration);
@@ -64,7 +56,7 @@ export class SnackBarService {
       duration,
       data,
       verticalPosition: 'top',
-      panelClass: ['app-snackbar-panel', data.type]
+      panelClass: [data.type],
     });
   }
 }

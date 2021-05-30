@@ -1,23 +1,14 @@
-# CompreFace
+# CompreFace frontend
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.19.
 
-## Local start all in prod mode
-Run script to start docker container:
-  * `./scripts/start.sh` for unix OS
-  * `.\scripts\startWin.sh` for Win OS
-  
-Go to http://localhost:8000/
+## quickstart
 
-#### How to start for UI development:  
-(only for first time run)
-- Run `cd ui`
-- Run `npm install`
+Run `npm install`
 
-- Run `cd ../dev`
-- Run `start--dev.sh` to start docker container with backend and UI application in live reload mode
+Run `npm start` the web app will be available at http://localhost:4200
 
-Go to http://localhost:4200/ and you can sign up with any credentials
+_NOTE_: you will need the API to be up and running. Instructions to up this can be found in the README file in `/dev` folder.
 
 ## Code scaffolding
 
@@ -46,7 +37,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 `core` folder with Global framework-based services \
 `data` global models, enums, classes, interfaces (user model, permissions, roles ect. NO Dto's data inside!!!!). Don't based on specific framework/plugin \
 `feature/containers` Feature specific smart/container components. Communicates with store through facade. Styles less.\
-`feature/compoentns` Feature specific dump/presentational components. Communicates with containers  through Input/Output. Logic less.\
+`feature/components` Feature specific dump/presentational components. Communicates with containers through Input/Output. Logic less.\
 `pages/` Page specific router modules (home, 404, login ect.) with component which are responsible for page layout and composition of features
 
 `store` Store folder. index.ts contains union store and reducers\
@@ -57,4 +48,3 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 `store/featureName/selectors` Selectors for feature state
 `store/featureName/reducers` Actions handler which directly changes store data. Pure function.\
 `store/featureName/feature-entitys.service.ts` service for access for entities https://ngrx.io/guide/data/entity-services
-

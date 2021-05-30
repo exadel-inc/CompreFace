@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: update-without-organization
+      author: Andrei Zelikov
+      changes:
+        #drop organization table
+        - dropTable:
+            cascadeConstraints: true
+            tableName: organization
+        #add column global role to user table
+        - addColumn:
+            tableName: user
+            columns:
+              - column:
+                  name: global_role
+                  type: varchar(1)
+        # set roles in new column
+        - sql:
+            sql: UPDATE  public.user  SET  global_role  = (SELECT role FROM public.user_organization_role WHERE user_id = public.user.id);
+        #drop user organization role table
+        - dropTable:
+            cascadeConstraints: true
+            tableName: user_organization_role
+        #drop organization_id column
+        - dropColumn:
+            tableName: app
+            columns:
+              - column:
+                  name: organization_id

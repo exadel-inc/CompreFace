@@ -23,36 +23,15 @@ app-spinner {
   left: 40%;
 }
 
-.table-header-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-
-  form {
-    width: 80%;
-    height: 35px;
-  }
-
-  input {
-    padding: 5px 30px 5px 5px;
-    background-color: #EEEEEE;
-    max-width: 385px;
-  }
-
-  i {
-    position: absolute;
-    right: 10px;
-    top: 2px;
-  }
-}
-
 .add-model-button-container {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  .mat-button {
+    margin-top: 10px;
+  }
 }
 
 mat-form-field {
   margin-top: -25px;
 }
-

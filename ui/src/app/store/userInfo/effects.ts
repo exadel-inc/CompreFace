@@ -13,30 +13,52 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
-import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
-import {of} from 'rxjs';
-import {switchMap, catchError} from 'rxjs/operators';
-import {
-  getUserInfo,
-  getUserInfoFail,
-  getUserInfoSuccess
-} from './action';
-import {UserInfoService} from '../../core/user-info/user-info.service';
+import { UserInfoService } from '../../core/user-info/user-info.service';
+import { SnackBarService } from '../../features/snackbar/snackbar.service';
+import { refreshUserName } from '../user/action';
+import { refreshApplication } from '../application/action';
+import { getUserInfo, getUserInfoFail, getUserInfoSuccess, editUserInfo, editUserInfoSuccess, editUserInfoFail } from './action';
 
 @Injectable()
 export class UserInfoEffect {
-  constructor(private actions: Actions, private userInfoService: UserInfoService) { }
+  constructor(private actions: Actions, private userInfoService: UserInfoService, private snackBarService: SnackBarService) {}
 
   @Effect()
   getUser$ = this.actions.pipe(
     ofType(getUserInfo),
-    switchMap(() => {
-      return this.userInfoService.get().pipe(
-        switchMap(user => [getUserInfoSuccess({ user })]),
-        catchError(e => of(getUserInfoFail({ errorMessage: e })))
-      );
-    })
+    switchMap(() =>
+      this.userInfoService.get().pipe(
+        map(user => getUserInfoSuccess({ user })),
+        catchError(error => of(getUserInfoFail({ error })))
+      )
+    )
+  );
+
+  @Effect()
+  editUserInfo$ = this.actions.pipe(
+    ofType(editUserInfo),
+    switchMap(({ firstName, lastName }) =>
+      this.userInfoService.editUserInfo(firstName, lastName).pipe(
+        switchMap(userInfo => [editUserInfoSuccess(userInfo), refreshUserName(userInfo), refreshApplication(userInfo)]),
+        catchError(error => of(editUserInfoFail({ error })))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
+  editUserInfoSuccess$ = this.actions.pipe(
+    ofType(editUserInfoSuccess),
+    tap(() => this.snackBarService.openNotification({ messageText: 'org_users.edit_user_info' }))
+  );
+
+  @Effect({ dispatch: false })
+  showError$ = this.actions.pipe(
+    ofType(getUserInfoFail, editUserInfoFail),
+    tap(action => this.snackBarService.openHttpError(action.error))
   );
 }

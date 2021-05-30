@@ -13,12 +13,58 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-import {createSelector, createFeatureSelector} from '@ngrx/store';
-import {AppUserEntityState, appUserAdapter} from './reducers';
+import { appUserAdapter, AppUserEntityState } from './reducers';
+import { selectCurrentUserRole, selectUsers } from '../user/selectors';
+import { Role } from '../../data/enums/role.enum';
+import { selectUserRollForSelectedApp } from '../application/selectors';
+import { selectAllRoles, selectIsPendingRoleStore } from '../role/selectors';
 
-const {selectAll} = appUserAdapter.getSelectors();
+const { selectAll } = appUserAdapter.getSelectors();
 
 export const selectAppUserEntityState = createFeatureSelector<AppUserEntityState>('app-user');
 export const selectAppUserIsPending = createSelector(selectAppUserEntityState, state => state.isPending);
 export const selectAppUsers = createSelector(selectAppUserEntityState, selectAll);
+export const selectAvailableEmails = createSelector(selectUsers, selectAppUsers, (users, appUsers) => {
+  let emails = [];
+  users.map(user => {
+    if (appUsers.every(appUser => appUser.id !== user.id)) {
+      emails.push(user.email);
+    }
+  });
+  return emails;
+});
+export const selectUserRole = createSelector(selectUserRollForSelectedApp, selectCurrentUserRole, (applicationRole, globalRole) => {
+  if (globalRole !== Role.User) {
+    if (globalRole === Role.Owner) {
+      return globalRole;
+    }
+
+    if (globalRole === Role.Administrator) {
+      return applicationRole === Role.Owner ? applicationRole : globalRole;
+    }
+  }
+  return applicationRole === Role.Owner ? applicationRole : globalRole;
+});
+export const selectAvailableRoles = createSelector(
+  selectAllRoles,
+  selectUserRole,
+  selectUserRollForSelectedApp,
+  selectCurrentUserRole,
+  (allRoles, userRole, applicationRole, globalRole) => {
+    if (globalRole === Role.Owner || applicationRole === Role.Owner) {
+      return allRoles;
+    } else if (globalRole === Role.Administrator) {
+      return allRoles;
+    } else {
+      const roleIndex = allRoles.indexOf(userRole);
+      return roleIndex !== -1 ? allRoles.slice(0, roleIndex + 1) : [];
+    }
+  }
+);
+export const selectIsApplicationLoading = createSelector(
+  selectAppUserIsPending,
+  selectIsPendingRoleStore,
+  (appUserIsPending, isPendingRoleStore) => !(!appUserIsPending && !isPendingRoleStore)
+);

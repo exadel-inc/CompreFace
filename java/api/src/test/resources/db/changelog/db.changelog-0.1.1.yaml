@@ -1,0 +1,27 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-image-table
+      author: Maryna Misachenka
+      changes:
+        # image
+        - createTable:
+            tableName: image
+            columns:
+              - column:
+                  name: face_id
+                  type: varchar(36)
+              - column:
+                  name: raw_img_fs
+                  type: bytea
+              - column:
+                  name: face_img_fs
+                  type: bytea
+
+        - addForeignKeyConstraint:
+            baseColumnNames: face_id
+            baseTableName: image
+            referencedColumnNames: id
+            referencedTableName: face
+            constraintName: fk_face_id
+            onDelete: CASCADE
+            onUpdate: CASCADE

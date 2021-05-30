@@ -14,22 +14,49 @@
   ~ permissions and limitations under the License.
   -->
 
-<mat-toolbar>
+<mat-toolbar class="header">
   <mat-toolbar-row class="container">
-    <a class="logo" [routerLink]="'/'">
-      <img src="assets/img/face-recognition-logo.svg" alt="">
-    </a>
-    <span class="avatar-wrapper">
-      <button mat-icon-button [matMenuTriggerFor]="menu">
-        <img [src]="userAvatarInfo$ | async" />
+    <div class="header--logo">
+      <a class="header--logo_link" mat-flat-button [routerLink]="'/'">
+        <img class="logo-main" src="assets/img/face-recognition-logo.svg" alt="{{ 'toolbar.logo' | translate }}" />
+        <img class="logo-mobile" src="assets/img/face-recognition-logo-mobile.svg" alt="{{ 'toolbar.logo' | translate }}" />
+      </a>
+    </div>
+    <div class="header--user-info">
+      <ng-container *ngIf="isUserInfoAvailable">
+        <button
+          class="user-info--btn"
+          mat-flat-button
+          (click)="goSignUp()"
+        >
+          <span>{{ 'toolbar.signup' | translate }}</span>
+        </button>
+      </ng-container>
+      <ng-container *ngIf="!isUserInfoAvailable">
+        <button
+          class="user-info--btn"
+          mat-flat-button
+          [matMenuTriggerFor]="menu"
+          (menuClosed)="changeArrowIcon()"
+          (menuOpened)="changeArrowIcon()"
+        >
+          <div class="user-info--btn_wrapper">
+            <img class="avatar" [src]="userAvatarInfo" alt="{{ 'toolbar.user_avatar_info' | translate }}" />
+            <span class="name">{{ userName }}</span>
+            <mat-icon inline="true">{{ openMenu ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+          </div>
+        </button>
+      </ng-container>
+    </div>
+    <mat-menu #menu="matMenu" xPosition="before" [overlapTrigger]="false">
+      <button mat-menu-item (click)="onEditUserInfo()">
+        <span>{{ 'toolbar.user_info' | translate }}</span>
       </button>
-    </span>
-    <mat-menu #menu="matMenu">
-<!--      <button mat-menu-item>-->
-<!--        <span>Account</span>-->
-<!--      </button>-->
-      <button mat-menu-item (click)="logout()">
-        <span>{{'toolbar.logout' | translate}}</span>
+      <button mat-menu-item (click)="onChangePassword()">
+        <span>{{ 'toolbar.change_password' | translate }}</span>
+      </button>
+      <button class="button-warn" mat-menu-item (click)="doLogout()">
+        <span>{{ 'toolbar.logout' | translate }}</span>
       </button>
     </mat-menu>
   </mat-toolbar-row>

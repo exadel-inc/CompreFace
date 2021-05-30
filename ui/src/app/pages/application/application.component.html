@@ -16,17 +16,17 @@
 
 <div class="container app-page">
   <div class="header-container">
-    <app-breadcrumbs></app-breadcrumbs>
+    <app-breadcrumbs-container></app-breadcrumbs-container>
   </div>
-  <div class="app-list-container">
-    <app-application-header class="app-list-container__header"></app-application-header>
 
-    <mat-card class="app-list-container__users">
-      <app-application-user-list></app-application-user-list>
-    </mat-card>
+  <app-application-header-container></app-application-header-container>
 
-    <mat-card class="app-list-container__models">
+  <div class="grid-container">
+    <mat-card>
       <app-model-list></app-model-list>
+    </mat-card>
+    <mat-card>
+      <app-application-user-list></app-application-user-list>
     </mat-card>
   </div>
 </div>

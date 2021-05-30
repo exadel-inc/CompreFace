@@ -13,35 +13,59 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Model} from 'src/app/data/interfaces/model';
-import {Observable} from 'rxjs';
-import {environment} from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { Model } from 'src/app/data/interfaces/model';
+import { environment } from 'src/environments/environment';
+import { map, switchMap } from 'rxjs/operators';
+import { DemoService } from '../../pages/demo/demo.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModelService {
+  constructor(private http: HttpClient, private demoService: DemoService) {}
 
-  constructor(private http: HttpClient) { }
+  // Don't show 'Demo recognition service' when we're using build the compreface-core:0.5.0-mobilenet
+  filterModel(models: Model[]): Observable<Model[]> {
+    const apiKeyDemoService = '00000000-0000-0000-0000-000000000002';
 
-  public getAll(organizationId: string, applicationId: string): Observable<Model[]> {
-    return this.http.get<Model[]>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/models`);
+    return of(false).pipe(
+      switchMap(() =>
+        this.demoService
+          .getStatus()
+          .pipe(
+            map(({ demoFaceCollectionIsInconsistent }) =>
+              demoFaceCollectionIsInconsistent ? models.filter(model => model.apiKey !== apiKeyDemoService) : models
+            )
+          )
+      )
+    );
   }
 
-  public create(organizationId: string, applicationId: string, name: string): Observable<Model> {
+  getAll(applicationId: string): Observable<Model[]> {
+    return this.http
+      .get<Model[]>(`${environment.adminApiUrl}app/${applicationId}/models`)
+      .pipe(switchMap(models => this.filterModel(models)));
+  }
+
+  create(applicationId: string, name: string, type: string): Observable<Model> {
     name = name.trim();
-    return this.http.post<Model>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/model`, { name });
+    return this.http.post<Model>(`${environment.adminApiUrl}app/${applicationId}/model`, { name, type });
   }
 
-  public update(organizationId: string, applicationId: string, modelId: string, name: string): Observable<Model> {
+  update(applicationId: string, modelId: string, name: string): Observable<Model> {
     name = name.trim();
-    return this.http.put<Model>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}`, { name });
+    return this.http.put<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${modelId}`, { name });
   }
 
-  public delete(organizationId: string, applicationId: string, modelId: string): Observable<Model> {
-    return this.http.delete<Model>(`${environment.adminApiUrl}org/${organizationId}/app/${applicationId}/model/${modelId}`);
+  clone(applicationId: string, modelId: string, name: string): Observable<Model> {
+    name = name.trim();
+    return this.http.post<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${modelId}`, { name });
+  }
+
+  delete(applicationId: string, modelId: string): Observable<Model> {
+    return this.http.delete<Model>(`${environment.adminApiUrl}app/${applicationId}/model/${modelId}`);
   }
 }

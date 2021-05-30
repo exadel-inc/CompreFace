@@ -17,6 +17,7 @@
 export interface Model {
   id: string;
   name: string;
+  type: string;
   accessLevel: string;
   relations: {
     id: string;
@@ -34,6 +35,6 @@ export interface Model {
 export interface ModelUpdate {
   name: string;
   applicationId: string;
-  organizationId: string;
   modelId: string;
+  type: string;
 }

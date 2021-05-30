@@ -13,18 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
 
-import {Component, OnInit} from '@angular/core';
+import { AppState } from '../../store/index';
+import { selectUserId } from '../../store/userInfo/selectors';
 
 @Component({
   selector: 'app-main-layout',
   templateUrl: './main-layout.component.html',
-  styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent implements OnInit {
+  loggedUserId$: Observable<string>;
 
-  constructor() { }
+  constructor(private store: Store<AppState>) {}
 
   ngOnInit() {
+    this.loggedUserId$ = this.store.select(selectUserId);
   }
 }

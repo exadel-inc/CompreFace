@@ -13,37 +13,40 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {ApplicationComponent} from './application.component';
-import {CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
-import {ApplicationPageService} from './application.service';
+import { ApplicationComponent } from './application.component';
+import { ApplicationPageService } from './application.service';
 
 describe('ApplicationComponent', () => {
   let component: ApplicationComponent;
   let fixture: ComponentFixture<ApplicationComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ ApplicationComponent ],
-      providers: [
-        {provide: ApplicationPageService, useValue: {
-            initUrlBindingStreams: () => {},
-            unSubscribe: () => {},
-          }}
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ApplicationComponent],
+        providers: [
+          {
+            provide: ApplicationPageService,
+            useValue: {
+              initUrlBindingStreams: () => {},
+              unSubscribe: () => {},
+            },
+          },
+        ],
+        schemas: [NO_ERRORS_SCHEMA],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ApplicationComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(component).toBeDefined();
   });
 });

@@ -1,0 +1,114 @@
+databaseChangeLog:
+  - changeSet:
+      id: prepare-faces-to-migration
+      author: sshimansky@exadel.com
+      changes:
+        - addColumn:
+            tableName: face
+            columns:
+              name: migrated
+              type: boolean
+              defaultValueBoolean: false
+  - changeSet:
+      id: create-subject-table
+      author: sshimansky@exadel.com
+      changes:
+        - createTable:
+            tableName: subject
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+              - column:
+                  name: api_key
+                  type: varchar(36)
+              - column:
+                  name: subject_name
+                  type: varchar(255)
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_subject
+            tableName: subject
+        - addUniqueConstraint:
+            columnNames: api_key, subject_name
+            constraintName: api_key_subject_name_uindex
+            tableName: subject
+        - addForeignKeyConstraint:
+            baseColumnNames: api_key
+            baseTableName: subject
+            referencedColumnNames: api_key
+            referencedTableName: model
+            constraintName: fk_subject_model_api_key
+            onDelete: CASCADE
+            onUpdate: CASCADE
+  - changeSet:
+      id: create-img-table
+      author: sshimansky@exadel.com
+      changes:
+        - createTable:
+            tableName: img
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+              - column:
+                  name: content
+                  type: bytea
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_img
+            tableName: img
+        - addNotNullConstraint:
+            tableName: img
+            columnName: content
+  - changeSet:
+      id: create-embedding-table
+      author: sshimansky@exadel.com
+      changes:
+        - createTable:
+            tableName: embedding
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+              - column:
+                  name: subject_id
+                  type: uuid
+              - column:
+                  name: embedding
+                  type: float8[]
+              - column:
+                  name: calculator
+                  type: varchar(255)
+              - column:
+                  name: img_id
+                  type: uuid
+        - addNotNullConstraint:
+            tableName: embedding
+            columnName: calculator
+        - addNotNullConstraint:
+            tableName: embedding
+            columnName: embedding
+        - addPrimaryKey:
+            columnNames: id
+            constraintName: pk_embedding
+            tableName: embedding
+        - addForeignKeyConstraint:
+            baseColumnNames: subject_id
+            baseTableName: embedding
+            referencedColumnNames: id
+            referencedTableName: subject
+            constraintName: fk_subject_id
+            onDelete: CASCADE
+            onUpdate: CASCADE
+        - addForeignKeyConstraint:
+            baseColumnNames: img_id
+            baseTableName: embedding
+            referencedColumnNames: id
+            referencedTableName: img
+            constraintName: fk_img_id
+  - changeSet:
+      id: migrate-face-image
+      author: sshimansky@exadel.com
+      changes:
+        - customChange: { "class": "com.exadel.frs.commonservice.system.liquibase.FacesToSubjectsMigration" }

@@ -13,48 +13,49 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { HttpClient } from '@angular/common/http';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { FormBuilder } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { provideMockStore } from '@ngrx/store/testing';
+import { TranslateService } from '@ngx-translate/core';
 
-import {TestBed, async} from '@angular/core/testing';
-import {RouterTestingModule} from '@angular/router/testing';
-import {AppComponent} from './app.component';
-import {HttpClient} from '@angular/common/http';
-import {Store} from '@ngrx/store';
-import {provideMockStore, MockStore} from '@ngrx/store/testing';
-import {AppState} from 'src/app/store';
-import {FormBuilder} from '@angular/forms';
+import { AppComponent } from './app.component';
 
 describe('AppComponent', () => {
-  let mockStore: MockStore<AppState>;
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      providers: [provideMockStore(),
-      {
-        provide: HttpClient,
-        useValue: {}
-      },
-      FormBuilder
-    ],
-      imports: [
-        RouterTestingModule
-      ],
-      declarations: [
-        AppComponent
-      ],
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        providers: [
+          provideMockStore(),
+          {
+            provide: HttpClient,
+            useValue: {},
+          },
+          FormBuilder,
+          {
+            provide: TranslateService,
+            useValue: {
+              setDefaultLang: () => {},
+            },
+          },
+        ],
+        imports: [RouterTestingModule],
+        declarations: [AppComponent],
+      }).compileComponents();
+    })
+  );
 
-    mockStore = TestBed.get(Store);
-  }));
-
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
+  beforeEach(() => {
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  // it(`should have as title 'frs-client-fe'`, () => {
-  //   const fixture = TestBed.createComponent(AppComponent);
-  //   const app = fixture.debugElement.componentInstance;
-  //   expect(app.title).toEqual('frs-client-fe');
-  // });
+  it('should create the app', () => {
+    expect(component).toBeDefined();
+  });
 });

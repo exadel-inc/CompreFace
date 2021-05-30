@@ -13,22 +13,34 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {MainLayoutComponent} from './main-layout.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
+import { MainLayoutComponent } from './main-layout.component';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
 
 describe('MainLayoutComponent', () => {
   let component: MainLayoutComponent;
   let fixture: ComponentFixture<MainLayoutComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ MainLayoutComponent ],
-      schemas: [NO_ERRORS_SCHEMA]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [MainLayoutComponent],
+        providers: [
+          {
+            provide: Store,
+            useValue: {
+              dispatch: () => {},
+              select: () => of({}),
+            },
+          },
+        ],
+        schemas: [NO_ERRORS_SCHEMA],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MainLayoutComponent);

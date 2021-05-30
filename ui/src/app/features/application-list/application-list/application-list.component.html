@@ -14,21 +14,27 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <div class="application-list">
-  <h3 *ngIf="tableConfig.data.length > 0; else firstStepInfo">{{'applications.title' | translate}}</h3>
-  <ng-template #firstStepInfo><h3>{{'applications.first_steps_title' | translate}}</h3></ng-template>
+  <app-search-table
+    [currentRole]="userRole"
+    [requiredRole]="roleEnum.User"
+    (inputSearch)="onSearch($event)"
+    (modalWindow)="createApp.emit()"
+    [title]="searchTitle()"
+    buttonText="{{ 'applications.create.add_button' | translate }}"
+    searchPlaceholder="{{ 'applications.search.title' | translate }}"
+  >
+  </app-search-table>
   <app-spinner *ngIf="isLoading"></app-spinner>
-  <app-table *ngIf="tableConfig.data.length > 0" class="app-table" [isLoading]="isLoading" [tableConfig]="tableConfig"
-    (changeRow)="selectApp.emit($event)">
+  <app-table
+    *ngIf="tableConfig.data.length > 0"
+    class="app-table"
+    [isLoading]="isLoading"
+    [tableConfig]="tableConfig | applicationTableFilter: search"
+    (changeRow)="selectApp.emit($event)"
+  >
   </app-table>
   <div class="create-new-message" *ngIf="tableConfig.data.length === 0 && !isLoading">
-    <mat-icon>info</mat-icon>
-    <p>
-      {{'applications.first_steps_info' | translate}}
-    </p>
-  </div>
-  <div class="card-single-action-container">
-    <button *ngIf="userRole !== roleEnum.USER" mat-button color="primary" (click)="createApp.emit()">
-      {{'common.capital.create' | translate}}
-    </button>
+    <mat-icon svgIcon="info_new" inline="true"></mat-icon>
+    <p class="mat-caption">{{ 'applications.first_steps_info' | translate }}</p>
   </div>
 </div>

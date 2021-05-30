@@ -1,0 +1,358 @@
+@import '~@angular/material/theming';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+@import 'colors.scss';
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+$typography: mat-typography-config(
+        $font-family: "Poppins, sans-serif",
+        $headline: mat-typography-level(28px, 35px, 600), // .mat-headline
+        $title: mat-typography-level(22px, 28px, 600), // .mat-title
+        $subheading-2: mat-typography-level(22px, 27px, 600),  // .mat-subheading-2
+        $subheading-1: mat-typography-level(18px, 22.5px, 600), // .mat-subheading-1
+        $body-1: mat-typography-level(16px, 22.5px, 400), // .mat-body-1
+        $body-2: mat-typography-level(14px, 20px, 400), // .mat-body-2
+        $caption: mat-typography-level(12px, 17px, 400), // .mat-caption
+        $button: mat-typography-level(16px, 19px, 500), // .mat-button
+);
+
+$primary_palette: (
+        Main: $primary,
+        Light: $primary,
+        Dark: #28002f,
+        contrast: (
+                Main: #f5f5f5,
+                Light: #000,
+                Dark: #fff
+        ));
+$accent_palette: (
+        Main: $green,
+        Light: $green,
+        Dark: #be6500,
+        contrast: (
+                Main: #fff,
+                Light: #fff,
+                Dark: #fff
+        ));
+$warn: (
+        Main: $red,
+        Light: $red,
+        Dark: #be6500,
+        contrast: (
+                Main: #fff,
+                Light: #fff,
+                Dark: #fff
+        ));
+
+$custom-theme-primary: mat-palette($primary_palette, Main, Light, Dark);
+$custom-theme-accent: mat-palette($accent_palette, Main, Light, Dark);
+$custom-theme-warn: mat-palette($warn, Main, Light, Dark);
+
+$custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $custom-theme-warn);
+
+@mixin custom-theme($theme, ) {
+  $font-family: mat-font-family($typography);
+  $config: mat-get-color-config($theme);
+  $primary_: map-get($theme, primary);
+  $accent_: map-get($theme, accent);
+  $warn_: map-get($theme, warn);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  body {
+    background-color: $super-light-gray;
+  }
+
+  a {
+    color: $primary;
+    text-decoration: none;
+  }
+
+  p {
+    color: $pale-gray;
+  }
+
+  .mat-toolbar {
+    background: $white;
+    color: mat-color($foreground, text);
+
+    &.mat-primary {
+      @include _mat-toolbar-color($primary_);
+    }
+
+    &.mat-accent {
+      @include _mat-toolbar-color($accent_);
+    }
+
+    &.mat-warn {
+      @include _mat-toolbar-color($warn_);
+    }
+
+    @include _mat-toolbar-form-field-overrides;
+  }
+
+  .mat-sidenav {
+    background-color: mat-color($background, app-bar);
+    color: mat-color($foreground, text);
+
+    &[color="primary"] {
+      @include _mat-toolbar-color($primary_);
+    }
+
+    &[color="accent"] {
+      @include _mat-toolbar-color($accent_);
+    }
+
+    &[color="warn"] {
+      @include _mat-toolbar-color($warn_);
+    }
+  }
+
+  .mat-headline,
+  .mat-title{
+    color: $black;
+  }
+
+  .mat-subheading-1,
+  .mat-subheading-2,
+  .mat-body-1,
+  .mat-body-2{
+    color: $dark-gray;
+  }
+
+  .mat-subheading-1 {
+    margin-bottom: 7px;
+  }
+
+   .mat-caption {
+     color: $pale-gray;
+  }
+
+  .mat-menu {
+    &-content {
+
+      .mat-menu-item {
+        font-weight: 500;
+        color: $black;
+      }
+
+      .button-warn {
+        color: mat-color($warn_)
+      }
+    }
+
+    &-panel {
+      @include mat-elevation(1);
+    }
+  }
+
+  .mat-snack-bar-container {
+    @include mat-elevation(0);
+    color: $white;
+
+    font-family: $font-family;
+    border-radius: 12px !important;
+    padding: 18px 26px;
+
+    .message {
+      display: flex;
+
+      &--icons {
+        display: flex;
+        align-items: center;
+        margin-right: 10px;
+      }
+    }
+
+    .material-icons {
+      font-size: 21px;
+    }
+
+    &.info {
+      background: mat-color($accent_);
+    }
+
+    &.error {
+      background: mat-color($warn_);
+    }
+  }
+
+  .mat-checkbox-label,
+  .mat-card-actions {
+    color: $pale-gray;
+  }
+
+  .mat-primary {
+    border-color: mat-color($primary_) !important;
+  }
+
+  .mat-card:not([class*=mat-elevation-z]){
+    @include mat-elevation(0);
+  }
+
+  .mat-card {
+    border-radius: 12px !important;
+    padding: 24px !important;
+  }
+
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type,
+  td.mat-footer-cell:first-of-type {
+    padding: 16px 8px 16px 4px !important;
+  }
+
+  .mat-input-wrapper {
+    .mat-form-field {
+      width: 170px !important;
+
+      @include mobile-portrait {
+        width: 100% !important;
+      }
+    }
+  }
+
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type,
+  td.mat-footer-cell:last-of-type {
+    padding-right: 0!important;
+  }
+
+  .mat-checkbox {
+    &-layout {
+      white-space: normal !important;
+      text-align: left;
+    }
+
+    &-label {
+      margin: 12px 0;
+      font-size: 12px;
+      line-height: 13.5px;
+    }
+  }
+
+  .mat-expansion {
+    &-indicator::after {
+      border-width: 0 3px 3px 0 !important;
+      padding: 4px !important;
+      color: $black;
+    }
+
+    &-panel {
+      border-radius: 12px !important;
+
+      &-header {
+        height: 60px;
+        font-weight: 600;
+        font-size: 22px;
+        color: $black;
+      }
+
+      &-body {
+        font-size: 14px;
+        color: $light-gray;
+
+        .content {
+          height: 450px;
+          overflow: auto;
+
+          pre {
+            margin: 0;
+          }
+        }
+      }
+
+      &:not([class*=mat-elevation-z]) {
+        @include mat-elevation(0);
+      }
+    }
+  }
+
+  .mat-form-field {
+    line-height: 1.35;
+  }
+
+  .mat-select-panel {
+    &:not([class*=mat-elevation-z]) {
+      @include mat-elevation(1);
+    }
+  }
+
+  .mat-option {
+    font-size: initial;
+    font-weight: 500;
+  }
+
+  .custom-mat-dialog {
+    width: 420px;
+
+    .mat-dialog {
+      &-container {
+        @include mat-elevation(0);
+        position: relative;
+        border-radius: 12px;
+        padding: 32px;
+
+        .button-cross {
+          @include sm-icon-size();
+          position: absolute;
+          top: 22px;
+          right: 22px;
+        }
+      }
+
+      &-content {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+
+        .mat-form-field {
+          width: 100%;
+          font-weight: 500;
+
+          &-label-wrapper {
+            font-weight: 400;
+          }
+        }
+      }
+
+      &-title {
+        overflow-x: auto;
+        overflow-y: hidden;
+      }
+
+      &-actions {
+        justify-content: space-between;
+
+        .color-red {
+          color: mat-color($warn_);
+        }
+
+        button {
+          margin: 0 !important;
+          padding: 12px 32px;
+          line-height: 16px;
+
+          &[color="primary"] {
+            color: $white;
+          }
+        }
+      }
+    }
+  }
+
+  .cdk-overlay-backdrop {
+    background-color: $light-gray;
+  }
+
+  .mat-button-focus-overlay {
+    background-color: transparent;
+  }
+}
+
+@include angular-material-typography($typography);
+@include mat-core($typography);
+@include angular-material-theme($custom-theme);

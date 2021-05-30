@@ -15,11 +15,15 @@
  */
 
 /* You can add global styles to this file, and also import other style files */
-@import 'media.scss';
-@import 'colors.scss';
+@import "media.scss";
+@import "colors.scss";
+@import "mixins.scss";
+@import "layout.scss";
+@import "custom-theme.scss";
 
-body,
-html {
+@include custom-theme($custom-theme);
+
+body, html {
   height: 100%;
 }
 
@@ -28,17 +32,32 @@ body {
   padding: 0;
   width: 100%;
   height: 100%;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
 
   h3 {
-    font-weight: 400;
     margin-top: 0;
-    font-family: Roboto Regular, "Helvetica Neue", sans-serif;
   }
+}
 
-  h4 {
-    font-family: Roboto Regular, "Helvetica Neue", sans-serif;
-  }
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: $special-light-gray;
+  border-radius: 4px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $special-gray;
+  border-radius: 4px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: $special-dark-gray;
 }
 
 .container {
@@ -48,33 +67,11 @@ body {
   margin-right: auto;
   margin-left: auto;
   flex-wrap: wrap;
+  box-sizing: border-box;
 }
 
 mat-card {
   box-sizing: border-box;
-  font-family: Roboto Regular, "Helvetica Neue", sans-serif;
-}
-
-
-
-.mat-raised-button {
-  &.mat-primary {
-    background-color: $primary;
-
-    &:hover {
-      background-color: $primary-light;
-    }
-  }
-}
-
-.mat-flat-button {
-  &.mat-accent {
-    background-color: $green;
-  }
-
-  &:hover {
-    background-color: lighten($green, 10%);
-  }
 }
 
 .btn-block {
@@ -88,22 +85,28 @@ mat-card {
 }
 
 app-table, app-user-table, app-model-table {
-  overflow-y: auto;
+  overflow: auto;
   display: block;
   min-height: 425px;
   height: 425px;
-  margin-bottom: 50px;
 }
 
 @include mobile {
   .container {
     max-width: 540px;
   }
+
+  .mat-column-apiKey.mat-cell {
+    max-width: $short-apiKey-length;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 @include tablet-portrait {
   .container {
-    max-width: 720px;
+    max-width: 100%;
   }
 }
 
@@ -115,24 +118,13 @@ app-table, app-user-table, app-model-table {
 
 @include desktop {
   .container {
-    max-width: 1140px;
+    max-width: 1180px;
   }
 }
 
 .app-table {
   table {
     width: 100%;
-
-    th {
-      font-size: 15px;
-      color: black;
-      font-weight: 600;
-    }
-
-    .mat-header-cell {
-      width: 50%;
-      font-family: Roboto Regular, "Helvetica Neue", sans-serif;
-    }
 
     .mat-form-field {
       width: 80%;
@@ -141,8 +133,6 @@ app-table, app-user-table, app-model-table {
 }
 
 .app-page {
-  height: auto;
-  margin-bottom: 60px;
 
   .card-single-action-container {
     position: fixed;
@@ -157,74 +147,15 @@ app-table, app-user-table, app-model-table {
   overflow-y: hidden;
 }
 
-.mat-form-field-type-mat-select .mat-form-field-underline {
+.mat-form-field-type-mat-select,
+.mat-form-field-underline {
   display: none;
-}
-
-.mat-select-arrow {
-  color: black;
-}
-
-.mat-button.mat-primary,
-.mat-icon-button.mat-primary,
-.mat-stroked-button.mat-primary {
-  color: $accent;
-}
-
-.mat-button.mat-primary[disabled],
-.mat-icon-button.mat-primary[disabled] {
-  color: $disabled;
 }
 
 .mat-form-field-appearance-legacy {
   .mat-hint,
   .mat-error {
     font-size: 12px;
-  }
-
-  .mat-hint,
-  .mat-form-field-label {
-    color: $secondaryText;
-  }
-
-  .mat-form-field-underline {
-    background-color: $disabled;
-  }
-}
-
-.mat-input-element {
-  color: $primaryText !important;
-  font-size: 16px !important;
-  caret-color: $accent;
-}
-
-.mat-form-field {
-  .mat-form-field-label {
-    color: $secondaryText;
-  }
-
-  &.mat-form-field-invalid {
-    .mat-input-element {
-      caret-color: $red;
-    }
-
-    .mat-form-field-ripple {
-      background-color: $red;
-    }
-
-    .mat-form-field-label {
-      color: $red;
-    }
-  }
-
-  &.mat-focused {
-    .mat-form-field-ripple {
-      background-color: $accent;
-    }
-
-    .mat-form-field-label {
-      color: $accent;
-    }
   }
 }
 
@@ -233,6 +164,24 @@ app-table, app-user-table, app-model-table {
 }
 
 .separate-line {
-  border: 1px solid $normal-gray;
+  border: 1px solid $light-blue;
   margin: 30px 0;
 }
+
+.create-new-message {
+  display: flex;
+  align-items: center;
+
+  .mat-icon {
+    display: flex;
+    align-items: center;
+    width: auto;
+    margin-right: 6px;
+
+    svg {
+      @include sm-icon-size;
+    }
+  }
+}
+
+

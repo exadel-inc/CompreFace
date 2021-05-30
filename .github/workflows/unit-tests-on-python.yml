@@ -1,0 +1,35 @@
+name: Unit tests on Python test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7]
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      working-directory: ./embedding-calculator/
+      run: |
+        sudo apt-get update && sudo apt-get install -y libjpeg-dev libpng-dev \
+          libtiff-dev libavformat-dev libpq-dev libfreeimage3
+        python -m pip install --upgrade pip
+        python -m pip --no-cache-dir install -r requirements.txt
+        python -m src.services.facescan.plugins.setup
+    - name: Test with pytest
+      working-directory: ./embedding-calculator/
+      run: |
+       pip install pytest
+       pip install pytest-cov
+       python -m pytest -m "not performance" ./src

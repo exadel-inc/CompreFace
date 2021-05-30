@@ -21,9 +21,8 @@ from sample_images.annotations import name_2_annotation, SAMPLE_IMAGES
 from src.constants import ENV_MAIN, LOGGING_LEVEL
 from src.exceptions import NoFaceFoundError
 from src.init_runtime import init_runtime
-from src.services.dto.scanned_face import ScannedFace
-from src.services.facescan.scanner.facescanner import FaceScanner
-from src.services.facescan.scanner.facescanners import id_2_face_scanner_cls
+from src.services.dto.plugin_result import FaceDTO
+from src.services.facescan.scanner.facescanners import scanner
 from src.services.facescan.scanner.test.calculate_errors import calculate_errors
 from src.services.imgtools.read_img import read_img
 from src.services.utils.pyutils import get_env, Constants, get_env_split, get_env_bool, s
@@ -33,7 +32,6 @@ logger = logging.getLogger(__name__)
 
 
 class ENV(Constants):
-    SCANNER = ENV_MAIN.SCANNER
     USE_REMOTE = get_env_bool('USE_REMOTE')
     ML_HOST = get_env('ML_HOST', 'localhost')
     ML_PORT = ENV_MAIN.ML_PORT
@@ -59,12 +57,11 @@ def _scan_faces_remote(ml_url: str, img_name: str):
     if res.status_code == 400 and NoFaceFoundError.description in res.json()['message']:
         return []
     assert res.status_code == 200, res.content
-    return [ScannedFace.from_request(r) for r in res.json()['result']]
+    return [FaceDTO.from_request(r) for r in res.json()['result']]
 
 
-def _scan_faces_local(scanner_id, img_name):
+def _scan_faces_local(img_name):
     img = read_img(IMG_DIR / img_name)
-    scanner: FaceScanner = id_2_face_scanner_cls[scanner_id]()
     return scanner.scan(img)
 
 
@@ -72,7 +69,7 @@ def _scan_faces(img_name: str):
     if ENV.USE_REMOTE:
         return _scan_faces_remote(ENV.ML_URL, img_name)
     else:
-        return _scan_faces_local(ENV.SCANNER, img_name)
+        return _scan_faces_local(img_name)
 
 
 def _calculate_errors(boxes, noses, img_name):

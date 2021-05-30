@@ -13,28 +13,24 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
 import { createAction, props } from '@ngrx/store';
 import { AppUser } from 'src/app/data/interfaces/app-user';
-import { Role } from 'src/app/data/enums/role.enum';
+import { DeleteUserParams } from '../../data/interfaces/delete-user';
+import { UpdateUserRole } from '../../data/interfaces/update-user-role';
+import { UserInfo } from '../../data/interfaces/user-info';
 
 export const setPending = createAction('[User/API] Set Pending', props<{ isPending: boolean }>());
-export const loadUsersEntityAction = createAction('[User/API] Load Users', props<{ organizationId: string }>());
-export const addUsersEntityAction = createAction('[User/API] Add Users', props<{ users: AppUser[] }>());
-export const updateUserRoleAction = createAction(
-  '[User/API] Update User Role',
-  props<{ organizationId: string; user: { id: string, role: Role } }>()
-);
-export const updateUserRoleWithRefreshAction = createAction(
-  '[User/API] Update User Role With Refresh',
-  props<{ organizationId: string; user: { id: string, role: Role } }>()
-);
-export const updateUserRoleSuccessAction = createAction('[User/API] Update User Role Success', props<{ user: AppUser }>());
-export const updateUserRoleFailAction = createAction('[User/API] Update User Role Failed)', props<{ error: any }>());
-export const deleteUser = createAction('[User/API] Delete User', props<{
-  userId: string,
-  deleterUserId: string,
-  organizationId: string,
-  newOwner?: string,
-}>());
+export const loadUsersEntity = createAction('[User/API] Load Users');
+export const addUsersEntity = createAction('[User/API] Add Users', props<{ users: AppUser[] }>());
+
+export const updateUserRole = createAction('[User/API] Update User Role', props<UpdateUserRole>());
+export const updateUserRoleWithRefresh = createAction('[User/API] Update User Role With Refresh', props<UpdateUserRole>());
+export const updateUserRoleSuccess = createAction('[User/API] Update User Role Success', props<{ user: AppUser }>());
+export const updateUserRoleFail = createAction('[User/API] Update User Role Failed)', props<{ error: any }>());
+
+export const deleteUser = createAction('[User/API] Delete User', props<DeleteUserParams>());
 export const deleteUserSuccess = createAction('[User/API] Delete User Success', props<{ userId: string }>());
 export const deleteUserFail = createAction('[User/API] Delete User Fail', props<{ error: any }>());
+
+export const refreshUserName = createAction('[User] Refresh User Name', props<UserInfo>());

@@ -13,38 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import 'forms.scss';
+@import 'media.scss';
 
-@import "colors.scss";
+.sign-up-card {
+  @include form-card();
 
-.logo-img {
-  width: 100%;
-}
+  .mat-input-wrapper {
+    display: flex;
+    justify-content: space-between;
 
-.mat-card-header {
-  // workaround: mat-card-header-text can not be selected (
-  margin-left: -16px;
-}
-
-.sign-up {
-  &-full-width {
-    width: 100%;
-    margin-bottom: 10px;
+    @include mobile-portrait {
+      flex-direction: column;
+    }
   }
-}
-
-.alert-danger {
-  background-color: $red;
-  color: $white;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.mat-card-actions {
-  display: flex;
-  justify-content: space-between;
-}
-
-.error-wrapper {
-  display: flex;
-  justify-content: space-between;
 }

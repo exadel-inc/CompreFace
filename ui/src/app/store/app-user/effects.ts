@@ -13,25 +13,29 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { AppUserService } from 'src/app/core/app-user/app-user.service';
+import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
-import {Injectable} from '@angular/core';
-import {Actions, Effect, ofType} from '@ngrx/effects';
-import {of} from 'rxjs';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {AppUserService} from 'src/app/core/app-user/app-user.service';
-import {SnackBarService} from 'src/app/features/snackbar/snackbar.service';
-import {loadApplications} from '../application/action';
-
+import { Routes } from '../../data/enums/routers-url.enum';
+import { loadApplications } from '../application/action';
 import {
   addAppUserEntityAction,
   deleteUserFromApplication,
   deleteUserFromApplicationFail,
   deleteUserFromApplicationSuccess,
+  inviteAppUser,
+  inviteAppUserFail,
+  inviteAppUserSuccess,
   loadAppUserEntityAction,
-  updateAppUserRoleAction,
-  updateAppUserRoleFailAction,
-  updateAppUserRoleSuccessAction,
-} from './actions';
+  updateAppUserRole,
+  updateAppUserRoleFail,
+  updateAppUserRoleSuccess,
+} from './action';
 
 @Injectable()
 export class AppUserEffects {
@@ -39,45 +43,68 @@ export class AppUserEffects {
     private actions: Actions,
     private appUserService: AppUserService,
     private snackBarService: SnackBarService,
-  ) {
-  }
+    private router: Router
+  ) {}
 
   @Effect()
-  loadAppUsers = this.actions.pipe(
+  loadAppUsers$ = this.actions.pipe(
     ofType(loadAppUserEntityAction),
-    switchMap(action => this.appUserService.getAll(action.organizationId, action.applicationId)),
-    map(users => addAppUserEntityAction({users}))
+    switchMap(action => this.appUserService.getAll(action.applicationId)),
+    map(users => addAppUserEntityAction({ users }))
   );
 
   @Effect()
   updateUserRole$ = this.actions.pipe(
-    ofType(updateAppUserRoleAction),
-    switchMap(({organizationId, applicationId, user}) =>
-      this.appUserService.update(organizationId, applicationId, user.id, user.role).pipe(
-        switchMap(res => [
-          updateAppUserRoleSuccessAction({user: res}),
-          loadApplications({organizationId})
-        ]),
-        catchError((error) => of(updateAppUserRoleFailAction({error})))
-      ))
+    ofType(updateAppUserRole),
+    switchMap(({ applicationId, user }) =>
+      this.appUserService.update(applicationId, user.id, user.role).pipe(
+        switchMap(res => [updateAppUserRoleSuccess({ user: res }), loadApplications(), loadAppUserEntityAction({ applicationId })]),
+        catchError(error => of(updateAppUserRoleFail({ error })))
+      )
+    )
   );
 
   @Effect()
   deleteAppUser$ = this.actions.pipe(
     ofType(deleteUserFromApplication),
-    switchMap((action =>
-      this.appUserService.deleteUser(action.organizationId, action.applicationId, action.userId).pipe(
-        map(() => deleteUserFromApplicationSuccess({id: action.userId})),
-        catchError(error => of(deleteUserFromApplicationFail({error}))),
-      )),
+    switchMap(action =>
+      this.appUserService.deleteUser(action.applicationId, action.userId).pipe(
+        map(() => deleteUserFromApplicationSuccess({ id: action.userId })),
+        catchError(error => of(deleteUserFromApplicationFail({ error })))
+      )
     )
   );
 
-  @Effect({dispatch: false})
+  @Effect()
+  inviteAppUser$ = this.actions.pipe(
+    ofType(inviteAppUser),
+    switchMap(action =>
+      this.appUserService.inviteUser(action.applicationId, action.userEmail, action.role).pipe(
+        switchMap(() => [
+          loadAppUserEntityAction({ applicationId: action.applicationId }),
+          inviteAppUserSuccess({ userEmail: action.userEmail }),
+        ]),
+        catchError(error => of(inviteAppUserFail({ error })))
+      )
+    )
+  );
+
+  @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(deleteUserFromApplicationFail, updateAppUserRoleFailAction),
+    ofType(deleteUserFromApplicationFail, updateAppUserRoleFail, inviteAppUserFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
+    })
+  );
+
+  @Effect({ dispatch: false })
+  addUser$ = this.actions.pipe(
+    ofType(inviteAppUserSuccess),
+    tap(action => {
+      this.snackBarService.openNotification({
+        messageText: 'application_user_list.invitation_sent',
+        messageOptions: { userEmail: action.userEmail },
+      });
     })
   );
 }

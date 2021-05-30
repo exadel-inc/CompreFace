@@ -13,110 +13,101 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Store} from '@ngrx/store';
-import {Injectable} from '@angular/core';
-import { merge } from 'rxjs';
-import {Actions, Effect, ofType} from '@ngrx/effects';
-import {UserService} from 'src/app/core/user/user.service';
+import { Injectable } from '@angular/core';
+import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
+import { of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { UserService } from 'src/app/core/user/user.service';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { loadApplications } from 'src/app/store/application/action';
+import { fetchRolesEntity, loadRolesEntity } from 'src/app/store/role/action';
 import {
-  addUsersEntityAction,
+  addUsersEntity,
   deleteUser,
   deleteUserFail,
   deleteUserSuccess,
-  loadUsersEntityAction,
-  updateUserRoleAction,
-  updateUserRoleFailAction,
-  updateUserRoleSuccessAction, updateUserRoleWithRefreshAction
+  loadUsersEntity,
+  updateUserRole,
+  updateUserRoleFail,
+  updateUserRoleSuccess,
+  updateUserRoleWithRefresh,
 } from 'src/app/store/user/action';
-import {loadApplications} from 'src/app/store/application/action';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {AppUser} from 'src/app/data/interfaces/app-user';
-import {fetchRolesEntityAction, loadRolesEntityAction} from 'src/app/store/role/actions';
-import {of} from 'rxjs';
-import {SnackBarService} from '../../features/snackbar/snackbar.service';
-import {OrganizationEnService} from '../organization/organization-entitys.service';
-import {AppState} from '../index';
-import {AuthService} from '../../core/auth/auth.service';
-import { loadOrganizations } from '../organization/action';
+
+import { AppState } from '..';
+import { AuthService } from '../../core/auth/auth.service';
+import { SnackBarService } from '../../features/snackbar/snackbar.service';
 
 @Injectable()
 export class UserListEffect {
-    constructor(
-        private actions: Actions,
-        private userService: UserService,
-        private authService: AuthService,
-        private organizationEnService: OrganizationEnService,
-        private snackBarService: SnackBarService,
-        private store: Store<AppState>
-    ) {
-    }
-
-    @Effect()
-    fetchUserList =
-        this.actions.pipe(
-            ofType(loadUsersEntityAction),
-            switchMap((action) => this.userService.getAll(action.organizationId)),
-            map((users: AppUser[]) => addUsersEntityAction({ users }))
-        );
+  constructor(
+    private actions: Actions,
+    private userService: UserService,
+    private authService: AuthService,
+    private snackBarService: SnackBarService,
+    private store: Store<AppState>
+  ) {}
 
   @Effect()
-  updateUserRole = this.actions.pipe(
-    ofType(updateUserRoleAction),
-    switchMap(({ organizationId, user }) =>
-      this.userService.updateRole(organizationId, user.id, user.role).pipe(
-        map(res => (updateUserRoleSuccessAction({user: res}))),
-        catchError((error) => of(updateUserRoleFailAction({ error })))
-      )));
+  fetchUserList$ = this.actions.pipe(
+    ofType(loadUsersEntity),
+    switchMap(action => this.userService.getAll()),
+    map((users: AppUser[]) => addUsersEntity({ users }))
+  );
 
   @Effect()
-  updateUserRoleWithRefresh = this.actions.pipe(
-    ofType(updateUserRoleWithRefreshAction),
-    switchMap(({ organizationId, user }) =>
-      this.userService.updateRole(organizationId, user.id, user.role).pipe(
-        switchMap((res) => merge(
-          of(updateUserRoleSuccessAction({user: res})),
-          of(loadUsersEntityAction({organizationId})),
-          of(loadOrganizations())
-        )),
-        catchError((error) => of(updateUserRoleFailAction({ error })))
-      )));
+  updateUserRole$ = this.actions.pipe(
+    ofType(updateUserRole),
+    switchMap(({ user }) =>
+      this.userService.updateRole(user.id, user.role).pipe(
+        map(res => updateUserRoleSuccess({ user: res })),
+        catchError(error => of(updateUserRoleFail({ error })))
+      )
+    )
+  );
 
-    @Effect()
-    deleteUser$ = this.actions.pipe(
-      ofType(deleteUser),
-      switchMap(({ organizationId, userId, newOwner, deleterUserId}) =>
-        this.userService.delete(organizationId, userId, newOwner).pipe(
-          switchMap(() => {
-            if (deleterUserId === userId) {
-                this.authService.logOut();
-                return [];
-            }
-            return [
-              deleteUserSuccess({ userId }),
-              loadApplications({ organizationId }),
-              loadUsersEntityAction({ organizationId }),
-              catchError(error => of(deleteUserFail({ error })))
-          ]; }),
-        )
-      ),
-    );
+  @Effect()
+  updateUserRoleWithRefresh$ = this.actions.pipe(
+    ofType(updateUserRoleWithRefresh),
+    switchMap(({ user }) =>
+      this.userService.updateRole(user.id, user.role).pipe(
+        switchMap(res => [updateUserRoleSuccess({ user: res }), loadUsersEntity()]),
+        catchError(error => of(updateUserRoleFail({ error })))
+      )
+    )
+  );
 
-    @Effect({ dispatch: false })
-    showError$ = this.actions.pipe(
-      ofType(deleteUserFail, updateUserRoleFailAction),
-      tap(action => {
-        this.snackBarService.openHttpError(action.error);
-      })
-    );
+  @Effect()
+  deleteUser$ = this.actions.pipe(
+    ofType(deleteUser),
+    switchMap(({ userId, deleterUserId, newOwner }) =>
+      this.userService.delete(userId, newOwner).pipe(
+        switchMap(() => {
+          if (deleterUserId === userId) {
+            this.authService.logOut();
+            return [];
+          }
+          return [deleteUserSuccess({ userId }), loadApplications(), loadUsersEntity()];
+        }),
+        catchError(error => of(deleteUserFail({ error })))
+      )
+    )
+  );
 
-    @Effect()
-    fetchAvailableRoles = this.actions
-        .pipe(
-            ofType(loadRolesEntityAction),
-            switchMap(() => this.userService.fetchAvailableRoles()),
-            // workaround until backend doesnt support available roles call
-            catchError(x => of(['OWNER', 'ADMIN', 'USER'])),
-            map((rolesArray) => fetchRolesEntityAction({ role: { id: 0, accessLevels: rolesArray } }))
-        );
+  @Effect({ dispatch: false })
+  showError$ = this.actions.pipe(
+    ofType(deleteUserFail, updateUserRoleFail),
+    tap(action => {
+      this.snackBarService.openHttpError(action.error);
+    })
+  );
 
+  @Effect()
+  fetchAvailableRoles$ = this.actions.pipe(
+    ofType(loadRolesEntity),
+    switchMap(() => this.userService.fetchAvailableRoles()),
+    // workaround until backend doesnt support available roles call
+    catchError(x => of(['OWNER', 'ADMIN', 'USER'])),
+    map(rolesArray => fetchRolesEntity({ role: { id: 0, accessLevels: rolesArray } }))
+  );
 }

@@ -1,423 +1,170 @@
-# CompreFace
 
-[![GitHub license](https://img.shields.io/github/license/exadel-inc/CompreFace)](https://www.apache.org/licenses/LICENSE-2.0) [![GitHub contributors](https://img.shields.io/github/contributors/exadel-inc/CompreFace)](https://github.com/exadel-inc/CompreFace/graphs/contributors)
+<h1 align="center">CompreFace is a free and open-source face recognition system from Exadel</h1>
 
+<p align="center">
+    <a target="_blank" href="https://exadel.com/solutions/compreface/">
+  <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="angular-logo" height="250px"/>
+ </a>
+  <br>
+  <i>CompreFace can be easily integrated into any system without prior machine learning skills. CompreFace provides REST API for face 
+recognition, face verification, face detection, landmark detection, age, and gender recognition and is easily deployed with docker
+     </i>
+  <br>
+</p>
 
+<p align="center">
+  <a href="https://exadel.com/solutions/compreface/"><strong>Official website</strong></a>
+  <br>
+</p>
 
- [CompreFace](#compreface)
+<p align="center">
+  <a href="#contributing">Contributing</a>
+  ·
+  <a href="https://github.com/exadel-inc/CompreFace/issues">Submit an Issue</a>
+  ·
+  <a href="https://exadel.com/news/tag/compreface/">Blog</a>
+  ·
+  <a href="https://gitter.im/CompreFace/community">Community chat</a>
+  <br>
+</p>
+
+<p align="center">
+  <a href="https://www.apache.org/licenses/LICENSE-2.0">
+    <img src="https://img.shields.io/github/license/exadel-inc/CompreFace" alt="GitHub license" />
+  </a>&nbsp;
+  <a href="https://github.com/exadel-inc/CompreFace/graphs/contributors">
+    <img src="https://img.shields.io/github/contributors/exadel-inc/CompreFace" alt="GitHub contributors" />
+  </a>&nbsp;
+</p>
+<hr>
+
+# Table Of Contents
+
   * [Overview](#overview)
+  * [Screenshots](#screenshots)
+  * [News and updates](#news-and-updates)
   * [Features](#features)
-  * [Getting started](#getting-started)
-  * [Simple tutorial of usage](#simple-tutorial-of-usage)
-  * [How it works](#how-it-works)
-    + [ML technologies](#ml-technologies)
-    + [Used ML Papers and Algorithms](#used-ml-papers-and-algorithms)
-  * [Technologies](#technologies)
-    + [Architecture diagram](#architecture-diagram)
-    + [Database](#database)
-    + [Platform server](#platform-server)
-    + [API server](#api-server)
-    + [Embedding server](#embedding-server)
-  * [Rest API description](#rest-api-description)
-    + [Add an example of the face](#add-an-example-of-the-face)
-    + [Recognize faces from given image](#recognize-faces-from-given-image)
-    + [List names of all saved faces](#list-names-of-all-saved-faces)
-    + [Delete all examples of the face by name](#delete-all-examples-of-the-face-by-name)
+  * [Getting Started with CompreFace](#getting-started-with-compreface)
+  * [CompreFace SDKs](#compreface-sdks)
+  * [Documentation](/docs)
+    * [How to Use CompreFace](/docs/How-to-Use-CompreFace.md)
+    * [Face Services and Plugins](/docs/Face-services-and-plugins.md)
+    * [Rest API Description](/docs/Rest-API-description.md)
+    * [Face Recognition Similarity Threshold](/docs/Face-Recognition-Similarity-Threshold.md)
+    * [Configuration](/docs/Configuration.md)
+    * [Architecture and Scalability](/docs/Architecture-and-scalability.md)
+    * [Custom Builds](/docs/Custom-builds.md)
+    * [Face data migration](/docs/Face-data-migration.md)
+    * [User Roles System](/docs/User-Roles-System.md)
+    * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
   * [Contributing](#contributing)
-    + [Formatting standards](#formatting-standards)
-    + [Report Bugs](#report-bugs)
-    + [Submit Feedback](#submit-feedback)
-  * [License info](#license)
+  * [License info](#license-info)
 
 
+# Overview
 
-## Overview
+CompreFace is a free and open-source face detection and recognition GitHub project. Essentially, it is a docker-based application that can be used as a standalone server or deployed in the cloud. You don’t need prior machine learning skills to set up and use CompreFace.
 
-CompreFace is the application for face recognition that can be integrated as a standalone server or deployed on cloud, and can be set up and used without machine learning knowledge. 
+CompreFace provides REST API for face recognition, face verification, face detection, landmark detection, age, and gender recognition. The solution also features a role management system that allows you to easily control who has access to your Face Recognition Services.
 
-We use one of the most popular face recognition methods based on [deep neural networks](#used-ml-papers-and-algorithms), and provide a convenient API for Face Collection training and face recognition. We also provide a convenient roles system with which you can easily control who has access to the Face Collection.
+CompreFace is delivered as a docker-compose config and supports different models that work on CPU and GPU. Our solution is based on state-of-the-art methods and libraries like FaceNet and InsightFace.
 
-Every user can create several Face Collections trained on different subsets of people. 
+# Screenshots
+<p align="center">
+<img src="https://user-images.githubusercontent.com/3736126/107061938-6a151080-67e1-11eb-95ba-c4dd43471f5b.png" alt="compreface-test-page" width=390px style="padding: 10px;">
+<img src="https://user-images.githubusercontent.com/3736126/107063429-0f7cb400-67e3-11eb-9ecc-27a1a0955923.png" alt="compreface-main-page" width=390px style="padding: 10px;">
+</p>
 
+# News and updates
 
+[Subscribe](https://exadel-7026941.hs-sites.com/en/en/compreface-news-and-updates) to CompreFace News and Updates to never miss new features and product improvements.
 
-## Features
+# Features
 
-The system shows sufficient accuracy even if only one example for each face is used.
+The system can accurately identify people even when it has only “seen” their photo once. Technology-wise, CompreFace has several advantages over similar free face recognition solutions. CompreFace:
 
-CompreFace is:
+- Supports many face recognition services: face identification, face verification, face detection, landmark detection, and age and 
+gender recognition
+- Supports both CPU and GPU and is easy to scale up
+- Is open source and self-hosted, which gives you additional guarantees for data security
+- Can be deployed either in the cloud or on premises
+- Can be set up and used without machine learning expertise
+- Uses FaceNet and InsightFace libraries, which use state-of-the-art face recognition methods
+- Features a UI panel for convenient user roles and access management
+- Starts quickly with just one docker command
 
-- opensource code and fully on-premise (security of your data)
-- can be set up and used without machine learning knowledge
-- used one of the most popular face recognition methods with high accuracy face recognizing
-- UI panel with roles for access control
-- fast start with one docker command
 
+# Getting Started with CompreFace
 
+### Requirements
 
-## Getting started
+1. Docker and Docker compose (or Docker Desktop)
+2. CompreFace could be run on most modern computers with [x86 processor](https://en.wikipedia.org/wiki/X86) and [AVX support](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions).
+   To check AVX support on Linux run `lscpu | grep avx` command
 
-To get started, perform the following steps:
+### To get started (Linux, MacOS):
 
-1. Install Docker
-1. Download archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
-1. Unzip archive
-1. Run command:
-`
-docker-compose up --build
-`
-1. Open http://localhost:8000/
+1. Install Docker and Docker Compose
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Open the terminal in this folder and run this command: `docker-compose up -d`
+5. Open the service in your browser: http://localhost:8000/login
 
+### To get started (Windows):
 
-** Tips for Windows**  (use Git Bash terminal)
-1. Turn of the git autocrlf with command:
-`git config --global core.autocrlf false`
-2. Make sure all your containers are down:
-`$ docker ps`
-3. In case some containers are working, they should be stopped:
-`$ docker-compose down`
-4. Clean all local datebases and images:
-`docker system prune --volumes`
-5. Last line in /dev/start.sh file change to 
-`docker-compose -f docker-compose.yml up --remove-orphans --build` 
-6. Go to Dev folder
-`cd dev`
-7. Run `sh start.sh` and make sure http://localhost:8000/ starts
-8. Stopped all containers:
-`$ docker-compose down`
-9. Run `sh start--dev.sh` and make sure http://localhost:4200/ starts
+1. Install Docker Desktop
+2. Download the archive from our latest release: https://github.com/exadel-inc/CompreFace/releases
+3. Unzip the archive
+4. Run Docker
+5. Open Command prompt (write `cmd` in windows search bar)
+6. Open folder where you extracted zip archive (Write `cd path_of_the_folder`, press enter).
+7. Run command: `docker-compose up -d`
+8. Open http://localhost:8000/login
 
+### Getting started for contributors
 
-## Simple tutorial of usage
+Follow this [link](/dev)
 
-1. Registration users in the app
-1. Creating applications, Face Collections, inviting users
-1. Integrating your app via API if need
-1. Images uploading, training a model with your own images by using the API key
-1. Send a new image to recognize the face on it.
+# CompreFace SDKs
 
-![how-it-works](https://user-images.githubusercontent.com/4942439/92221961-b3baa180-eeb7-11ea-89c9-af2bec2295fc.png)
+| SDK        | Repository   | 
+| ---------- | ------ | 
+| JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk   |
 
+# Documentation
 
+More documentation is available [here](/docs)
 
-## How it works
+# Contributing
 
-**Finding a face** 
-
-Detecting one or more faces in an image. Multi-task Cascaded Convolutional Neural Networks (MTCNN) was used for face recognition.
-
-**Posing and projecting faces** 
-
-Normalization of all found faces with rotate, scale and shear. 
-
-**Calculate embedding from faces**
-
-Calculating embedding and classifying the face based on extracted features. We took CNN for face recognition and the last 3 fully connected layers were removed. As a result, - NN calculates embedding. 
-
-**Use embedding for training model/recognize face using embedding**
-
-Recognizing the person in the photo. Haifengl/smile [LogisticRegression](http://haifengl.github.io/api/java/smile/classification/LogisticRegression.html) as a classifier was used.
-
-
-
-### ML technologies
-
-* [MTCNN (Multi-task Cascaded Convolutional Networks)](https://arxiv.org/pdf/1604.02878.pdf)
-* [FaceNet](https://github.com/davidsandberg/facenet)
-* Logistic Regression
-
-
-
-### Used ML Papers and Algorithms
-
-* **FaceNet: A Unified Embedding for Face Recognition and Clustering** 
-  Florian Schroff, Dmitry Kalenichenko, James Philbin 
-  (Submitted on 17 Jun 2015)
-
-* **Joint Face Detection and Alignment using Multi-task Cascaded Convolutional Neural Networks**
-  Kaipeng Zhang, Zhanpeng Zhang, Zhifeng Li, Yu Qiao 
-  (Submitted on 11 Apr 2016)
-
-* **Inception-v4, Inception-ResNet and the Impact of Residual Connections on Learning**
-  Christian Szegedy, Sergey Ioffe, Vincent Vanhoucke, Alex Alemi 
-  (Submitted on 23 Aug 2016)
-
-
-
-## Technologies
-
-### Architecture diagram
-
-
-
-![architecture](https://user-images.githubusercontent.com/3736126/93056370-0133cd00-f675-11ea-910a-f12881dfe758.png)
-
-
-
-### Database
-
-* PostgreSQL
-
-
-
-### Platform server
-
-* Java 11
-* Spring Boot
-
-  
-
-### API server
-
-* Java 11
-* Spring Boot
-* Haifengl/Smile
-
-
-
-### Embedding server
-
-* Python
-* [FaceNet](https://github.com/davidsandberg/facenet)
-* [InsightFace](https://github.com/deepinsight/insightface)
-* TensorFlow
-* SciPy
-* NumPy
-* OpenCV (for images resizing)
-
-
-
-## Rest API description
-
-By using the created API key, the user can add an image as an example of the face, retrieve a list of saved images, recognize a face from the uploaded image the Face Collection, and delete all examples of the face by the name.
-
-
-
-### Add an example of the face
-
-Creates an example of the face by saving images. To train the system, you can add as many images as you want.
-
-```http request
-curl  -X POST "http://localhost:8000/api/v1/faces/?subject=<face_name>" \
--H "Content-Type: multipart/form-data" \
--H "x-api-key: <model_api_key>" \
--F file=@<local_file> \
--F det_prob_threshold=@<det_prob_threshold> \
-```
-| Element             | Description | Type   | Required | Notes                                                        |
-| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| Content-Type        | header      | string | required | multipart/form-data                                          |
-| x-api-key           | header      | string | required | api key of the model, created by the user                    |
-| face_name           | param       | string | required | is the name you assign to the image you save                 |
-| file                | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
-| det_prob_ threshold | body        | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0 |
-
-Response body on success:
-
-
-```
-{
-  "image_id": "<UUID>",
-  "subject": "<face_name>"
-}
-```
-
-| Element  | Type   | Description                |
-| -------- | ------ | -------------------------- |
-| image_id | UUID   | UUID of uploaded image     |
-| subject  | string | <face_name> of saved image |
-
-
-
-### **Recognize a face**
-
-Recognizes faces from the uploaded images.
-```http request
-curl  -X POST "http://localhost:8000/api/v1/recognize" \
--H "Content-Type: multipart/form-data" \
--H "x-api-key: <model_api_key>" \
--F file=<local_file>
--F limit=<limit>
--F prediction_count=<prediction_count>
-```
-
-
-| Element          | Description | Type    | Required | Notes                                                        |
-| ---------------- | ----------- | ------- | -------- | ------------------------------------------------------------ |
-| Content-Type     | header      | string  | required | multipart/form-data                                          |
-| x-api-key        | header      | string  | required | api key of the model, created by the user                    |
-| file             | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
-| limit            | body        | integer | optional | maximum number of faces to be recognized. Value of 0 represents no limit. Default value: 0 |
-| prediction_count | body        | integer | optional | maximum number of predictions per faces. Default value: 1    |
-
-Response body on success:
-```
-{
-  "result": [
-    {
-      "box": {
-        "probability": <probability>,
-        "x_max": <integer>,
-        "y_max": <integer>,
-        "x_min": <integer>,
-        "y_min": <integer>
-      },
-      "faces": [
-        {
-          "similarity": <similarity1>,
-          "subject": <face_name1>	
-        },
-        ...
-      ]
-    }
-  ]
-}
-```
-
-| Element                        | Type    | Description                                                  |
-| ------------------------------ | ------- | ------------------------------------------------------------ |
-| box                            | object  | list of parameters of the bounding box for this face         |
-| probability                    | float   | probability that a found face is actually a face             |
-| x_max, y_max, x_min, y_min | integer | coordinates of the frame containing the face                 |
-| faces                          | list    | list of similar faces with size of <prediction_count> order by similarity |
-| similarity                     | float   | similarity that on that image predicted person              |
-| subject                        | string  | name of the subject in Face Collection                                 |
-
-
-
-### Get list of saved images
-
-Retrieves a list of images saved in a Face Collection
-
-```http request
-curl  -X GET "http://localhost:8000/api/v1/faces" \
--H "x-api-key: <model_api_key>" \
-```
-
-| Element   | Description | Type   | Required | Notes                                     |
-| --------- | ----------- | ------ | -------- | ----------------------------------------- |
-| x-api-key | header      | string | required | api key of the model, created by the user |
-
-Response body on success:
-
-```
-{
-  "faces": [
-    {
-      "image_id": <face_id>,
-      "subject": <face_name>
-    },
-    ...
-  ]
-}
-```
-
-| Element  | Type   | Description                                                  |
-| -------- | ------ | ------------------------------------------------------------ |
-| image_id | UUID   | UUID of the face                                             |
-| subject  | string | <face_name> of the person, whose picture was saved for this api key |
-
-
-
-### Delete examples of the face
-
-Deletes all image examples of the <face_name>.
-
-```http request
-curl  -X DELETE "http://localhost:8000/api/v1/faces/?subject=<face_name>" \
--H "x-api-key: <model_api_key>"
-```
-
-| Element   | Description | Type   | Required | Notes                                                        |
-| --------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| x-api-key | header      | string | required | api key of the model, created by the user                    |
-| face_name | param       | string | optional | is the name you assign to the image you save. **Caution!** If this parameter is absent, all faces in Face Collection will be removed |
-Response body on success:
-```
-[
-  {
-    "image_id": <face_id>,
-    "subject": <face_name>
-  },
-  ...
-]
-```
-
-| Element  | Type   | Description                                                  |
-| -------- | ------ | ------------------------------------------------------------ |
-| image_id | UUID   | UUID of the removed face                                     |
-| subject  | string | <face_name> of the person, whose picture was saved for this api key |
-
-
-
-### Delete examples of the face by ID
-
-Deletes image by ID.
-
-```http request
-curl  -X DELETE "http://localhost:8000/api/v1/faces/<image_id>" \
--H "x-api-key: <model_api_key>"
-```
-
-| Element   | Description | Type   | Required | Notes                                     |
-| --------- | ----------- | ------ | -------- | ----------------------------------------- |
-| x-api-key | header      | string | required | api key of the model, created by the user |
-| image_id  | variable    | UUID   | required | UUID of the removing face                 |
-Response body on success:
-```
-{
-  "image_id": <face_id>,
-  "subject": <face_name>
-}
-```
-
-| Element  | Type   | Description                                                  |
-| -------- | ------ | ------------------------------------------------------------ |
-| image_id | UUID   | UUID of the removed face                                     |
-| subject  | string | <face_name> of the person, whose picture was saved for this api key |
-
-
-
-## Contributing
-
-Contributions are welcomed and greatly appreciated.
-
-After creating your first contributing PR you will be requested to sign our 
-Contributor License Agreement by commenting your PR with a
-special message.
-
-
+We want to improve our open-source face recognition solution, so your contributions are welcome and greatly appreciated. 
+After creating your first contributing pull request, you will receive a request to sign our Contributor License Agreement by commenting your pull request with a special message.
 
 ### Formatting standards
 
-For java just import dev/team_codestyle.xml file in your IntelliJ IDEA
-
-
+For java just import dev/team_codestyle.xml file in your IntelliJ IDEA.
 
 ### Report Bugs
 
-Report bugs at https://github.com/exadel-inc/CompreFace/issues.
+Please report any bugs [here](https://github.com/exadel-inc/CompreFace/issues).
 
-If you are reporting a bug, please include:
+If you are reporting a bug, please specify:
 
-* Your operating system name and version.
-* Any details about your local setup that might be helpful in troubleshooting.
-* Detailed steps to reproduce the bug.
-
+- Your operating system name and version
+- Any details about your local setup that might be helpful in troubleshooting
+- Detailed steps to reproduce the bug
 
 
 ### Submit Feedback
 
-The best way to send feedback is to file an issue at https://github.com/exadel-inc/CompreFace/issues. 
+The best way to send us feedback is to file an issue at https://github.com/exadel-inc/CompreFace/issues.
 
 If you are proposing a feature, please:
 
-* Explain in detail how it should work.
-* Keep the scope as narrow as possible, to make it easier to implement.
+- Explain in detail how it should work.
+- Keep the scope as narrow as possible to make it easier to implement.
 
 
+# License info
 
-## License info
-
-CompreFace is Open Source software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).
-
+CompreFace is open-source real-time facial recognition software released under the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0.html).

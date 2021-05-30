@@ -13,9 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Input, Output} from '@angular/core';
-import {Observable} from 'rxjs';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 export interface ITableConfig {
   columns: {
@@ -29,9 +27,9 @@ export interface ITableConfig {
   selector: 'app-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableComponent implements OnInit {
+export class TableComponent {
   @Input() isLoading: boolean;
   @Input() set tableConfig(config: ITableConfig) {
     if (config) {
@@ -43,7 +41,7 @@ export class TableComponent implements OnInit {
 
   @Output() changeRow = new EventEmitter<any>();
 
-  maxElementLength = 10;
+  maxElementLength = 27;
 
   columnsDefinition: {
     title: string;
@@ -51,10 +49,6 @@ export class TableComponent implements OnInit {
   }[];
   displayedColumns: string[];
   data: any[];
-
-  constructor() { }
-
-  ngOnInit() { }
 
   change(element: any): void {
     this.changeRow.emit(element);

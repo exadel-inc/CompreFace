@@ -14,24 +14,37 @@
  * limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-
-import { ITableConfig } from '../../table/table.component';
 import { Role } from 'src/app/data/enums/role.enum';
+import { ITableConfig } from '../../table/table.component';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-application-list',
   templateUrl: './application-list.component.html',
   styleUrls: ['./application-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationListComponent {
-
   @Input() isLoading: boolean;
   @Input() tableConfig: ITableConfig;
   @Input() userRole: string;
-  roleEnum = Role;
 
   @Output() selectApp = new EventEmitter();
   @Output() createApp = new EventEmitter();
 
+  roleEnum = Role;
+  search = '';
+
+  constructor(private translate: TranslateService) {}
+
+  onSearch(event: string): void {
+    this.search = event;
+  }
+
+  searchTitle(): string {
+    const titleApp: string = this.translate.instant('applications.title');
+    const titleCreate: string = this.translate.instant('applications.first_steps_title');
+
+    return this.tableConfig.data.length > 0 ? titleApp : titleCreate;
+  }
 }

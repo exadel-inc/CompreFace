@@ -13,31 +13,28 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { CommonModule } from '@angular/common';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-import {FooterComponent} from './footer.component';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatButtonModule} from '@angular/material/button';
-import {CommonModule} from '@angular/common';
+import { FooterComponent } from './footer.component';
+import { TranslateModule } from '@ngx-translate/core';
 
 describe('FooterComponent', () => {
   let component: FooterComponent;
   let fixture: ComponentFixture<FooterComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ FooterComponent ],
-      providers: [],
-      imports: [
-        CommonModule,
-        MatToolbarModule,
-        MatButtonModule,
-        BrowserAnimationsModule,
-      ]
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [FooterComponent],
+        providers: [],
+        imports: [CommonModule, MatToolbarModule, MatButtonModule, BrowserAnimationsModule, TranslateModule.forRoot()],
+      }).compileComponents();
     })
-    .compileComponents();
-  }));
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(FooterComponent);

@@ -13,31 +13,31 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {AuthGuard} from '../../core/auth/auth.guard';
-import {TestModelComponent} from './test-model.component';
-import {MatCardModule} from '@angular/material/card';
-import {TestModelPageService} from './test-model.service';
-import { SpinnerModule } from '../../features/spinner/spinner.module';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { BreadcrumbsContainerModule } from 'src/app/features/breadcrumbs.container/breadcrumbs.container.module';
-import { FaceRecognitionModule } from '../../features/face-recognition/face-recognition.module';
+
+import { FaceServicesModule } from '../../features/face-services/face-services.module';
+import { SpinnerModule } from '../../features/spinner/spinner.module';
+import { TestModelComponent } from './test-model.component';
+import { TestModelPageService } from './test-model.service';
+import { ApplicationHeaderModule } from '../../features/application-header/application-header.module';
 
 @NgModule({
   declarations: [TestModelComponent],
   imports: [
     CommonModule,
     BreadcrumbsContainerModule,
-    RouterModule.forChild([
-      { path: '', component: TestModelComponent, canActivate: [ AuthGuard ] },
-    ]),
+    RouterModule.forChild([{ path: '', component: TestModelComponent }]),
     MatCardModule,
-    FaceRecognitionModule,
-    SpinnerModule
+    FaceServicesModule,
+    SpinnerModule,
+    TranslateModule,
+    ApplicationHeaderModule,
   ],
-  providers: [TestModelPageService]
+  providers: [TestModelPageService],
 })
-export class TestModelModule {
-}
+export class TestModelModule {}

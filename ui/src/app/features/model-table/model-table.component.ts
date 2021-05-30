@@ -13,24 +13,29 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Model } from 'src/app/data/interfaces/model';
-
-import { TableComponent } from '../table/table.component';
 import { Role } from 'src/app/data/enums/role.enum';
+import { Model } from 'src/app/data/interfaces/model';
+import { ServiceTypes } from '../../data/enums/service-types.enum';
+import { TableComponent } from '../table/table.component';
 
 @Component({
   selector: 'app-model-table',
   templateUrl: './model-table.component.html',
   styleUrls: ['./model-table.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModelTableComponent extends TableComponent {
   @Input() userRole: string;
   @Output() copyApiKey = new EventEmitter<string>();
+  @Output() clone = new EventEmitter<Model>();
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();
   roleEnum = Role;
+  types = ServiceTypes;
+
+  getKeyType(type: string): string {
+    return Object.keys(this.types).find(key => this.types[key] === type) || '';
+  }
 }

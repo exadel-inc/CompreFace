@@ -13,18 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
-import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
-import {AppUser} from 'src/app/data/interfaces/app-user';
 import {
+  addUsersEntity,
+  loadUsersEntity,
   setPending,
-  addUsersEntityAction,
-  updateUserRoleAction,
-  loadUsersEntityAction,
-  updateUserRoleFailAction, updateUserRoleSuccessAction
+  updateUserRole,
+  updateUserRoleFail,
+  updateUserRoleSuccess,
+  refreshUserName,
 } from './action';
-
-import {EntityState, createEntityAdapter, EntityAdapter} from '@ngrx/entity';
 
 export interface AppUserEntityState extends EntityState<AppUser> {
   isPending: boolean;
@@ -32,29 +33,29 @@ export interface AppUserEntityState extends EntityState<AppUser> {
 
 export const userAdapter: EntityAdapter<AppUser> = createEntityAdapter<AppUser>();
 const initialState: AppUserEntityState = userAdapter.getInitialState({
-  isPending: false
+  isPending: false,
 });
 
 const reducer: ActionReducer<AppUserEntityState> = createReducer(
   initialState,
-  on(loadUsersEntityAction, (state) => ({...state, isPending: true})),
-  on(setPending, (state, {isPending}) => ({...state, isPending})),
-  on(addUsersEntityAction, (state, {users}) => {
-    return userAdapter.setAll(users, {...state, isPending: false});
-  }),
-  on(updateUserRoleAction, (state) => ({...state, isPending: true})),
-  on(updateUserRoleAction, (state) => ({...state, isPending: true})),
-  on(updateUserRoleSuccessAction, (state, { user })  => {
-    return userAdapter.updateOne({
-      id: user.userId,
-      changes: {
-        role: user.role
-      }
-    }, {...state, isPending: false});
-  }),
-  on(updateUserRoleFailAction, (state)  => ({...state, isPending: false})),
+  on(loadUsersEntity, updateUserRole, state => ({ ...state, isPending: true })),
+  on(setPending, (state, { isPending }) => ({ ...state, isPending })),
+  on(addUsersEntity, (state, { users }) => userAdapter.setAll(users, { ...state, isPending: false })),
+  on(updateUserRoleSuccess, (state, { user }) =>
+    userAdapter.updateOne(
+      {
+        id: user.userId,
+        changes: {
+          role: user.role,
+        },
+      },
+      { ...state, isPending: false }
+    )
+  ),
+  on(updateUserRoleFail, state => ({ ...state, isPending: false })),
+  on(refreshUserName, (state, { userId, firstName, lastName }) =>
+    userAdapter.updateOne({ id: userId, changes: { firstName, lastName } }, { ...state })
+  )
 );
 
-export function AppUserReducer(appUserState: AppUserEntityState, action: Action) {
-  return reducer(appUserState, action);
-}
+export const appUserReducer = (appUserState: AppUserEntityState, action: Action) => reducer(appUserState, action);

@@ -13,25 +13,20 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
-import {Application} from '../../data/interfaces/application';
-import {ROUTERS_URL} from '../../data/enums/routers-url.enum';
-import {BreadcrumbsFacade} from './breadcrumbs.facade';
-import {Model} from '../../data/interfaces/model';
+import { Routes } from '../../data/enums/routers-url.enum';
+import { Application } from '../../data/interfaces/application';
+import { Model } from '../../data/interfaces/model';
 
 @Component({
   selector: 'app-breadcrumbs',
   templateUrl: './breadcrumbs.component.html',
-  styleUrls: ['./breadcrumbs.component.scss']
+  styleUrls: ['./breadcrumbs.component.scss'],
 })
 export class BreadcrumbsComponent {
-  ROUTERS_URL = ROUTERS_URL;
-  maxNameLength = 20;
+  routes = Routes;
+  maxNameLength = 30;
   @Input() model: Model;
-  @Input() orgId: string;
   @Input() app: Application;
-
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {
-  }
 }

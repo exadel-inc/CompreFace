@@ -13,15 +13,43 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import "colors.scss";
+@import "mixins.scss";
 
-:host {
-  min-height: 425px;
+thead, caption {
+  display: none;
+}
 
-  table {
-    width: 100%;
+.mat {
+
+  &-header-row {
+    display: none;
   }
 
-  .mat-row {
-    cursor: pointer;
+  &-column {
+
+    &-name {
+      overflow: hidden;
+      cursor: pointer;
+
+      .app {
+
+        &--title {
+          @include not-break-string();
+        }
+
+        &--name {
+          @include not-break-string();
+
+          &_label {
+            color: $light-gray;
+          }
+
+          &_owner {
+            color: $black;
+          }
+        }
+      }
+    }
   }
 }

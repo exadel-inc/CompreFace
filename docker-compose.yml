@@ -1,0 +1,61 @@
+version: '3.4'
+
+volumes:
+  postgres-data:
+
+services:
+  compreface-postgres-db:
+    image: postgres:11.5
+    container_name: "compreface-postgres-db"
+    environment:
+      - POSTGRES_USER=${postgres_username}
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_DB=${postgres_db}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  compreface-admin:
+    image: ${registry}compreface-admin:${ADMIN_VERSION}
+    container_name: "compreface-admin"
+    environment:
+      - POSTGRES_USER=${postgres_username}
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/${postgres_db}
+      - SPRING_PROFILES_ACTIVE=dev
+      - ENABLE_EMAIL_SERVER=${enable_email_server}
+      - EMAIL_HOST=${email_host}
+      - EMAIL_USERNAME=${email_username}
+      - EMAIL_FROM=${email_from}
+      - EMAIL_PASSWORD=${email_password}
+      - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
+    depends_on:
+      - compreface-postgres-db
+      - compreface-api
+
+  compreface-api:
+    image: ${registry}compreface-api:${API_VERSION}
+    container_name: "compreface-api"
+    depends_on:
+      - compreface-postgres-db
+    environment:
+      - POSTGRES_USER=${postgres_username}
+      - POSTGRES_PASSWORD=${postgres_password}
+      - POSTGRES_URL=jdbc:postgresql://${postgres_domain}:${postgres_port}/${postgres_db}
+      - SPRING_PROFILES_ACTIVE=dev
+      - API_JAVA_OPTS=${compreface_api_java_options}
+      - SAVE_IMAGES_TO_DB=${save_images_to_db}
+
+  compreface-fe:
+    image: ${registry}compreface-fe:${FE_VERSION}
+    container_name: "compreface-ui"
+    ports:
+      - "8000:80"
+    depends_on:
+      - compreface-api
+      - compreface-admin
+
+  compreface-core:
+    image: ${registry}compreface-core:${CORE_VERSION}
+    container_name: "compreface-core"
+    environment:
+      - ML_PORT=3000

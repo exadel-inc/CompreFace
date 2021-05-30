@@ -13,11 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { createEntityAdapter, EntityAdapter, EntityState } from '@ngrx/entity';
+import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
+import { Role } from 'src/app/data/interfaces/role';
 
-import {Role} from 'src/app/data/interfaces/role';
-import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {setPendingRoleEntityAction, fetchRolesEntityAction, loadRolesEntityAction} from './actions';
-import {createReducer, on, Action, ActionReducer} from '@ngrx/store';
+import { fetchRolesEntity, loadRolesEntity, setPendingRoleEntity } from './action';
 
 export interface RoleEntityState extends EntityState<Role> {
   isPending: boolean;
@@ -25,20 +25,16 @@ export interface RoleEntityState extends EntityState<Role> {
 
 const roleAdapter: EntityAdapter<Role> = createEntityAdapter<Role>();
 export const initialState: RoleEntityState = roleAdapter.getInitialState({
-  isPending: false
+  isPending: false,
 });
 
 const reducer: ActionReducer<RoleEntityState> = createReducer(
   initialState,
-  on(loadRolesEntityAction, (state) => ({ ...state, isPending: true })),
-  on(setPendingRoleEntityAction, (state, { isPending }) => ({ ...state, isPending })),
-  on(fetchRolesEntityAction, (state, { role }) => {
-    const newState = roleAdapter.removeAll(state);
-    newState.isPending = false;
-    return roleAdapter.addOne({ id: 0, accessLevels: role.accessLevels }, newState);
+  on(loadRolesEntity, state => ({ ...state, isPending: true })),
+  on(setPendingRoleEntity, (state, { isPending }) => ({ ...state, isPending })),
+  on(fetchRolesEntity, (state, { role }) => {
+    return roleAdapter.setOne({ id: 0, accessLevels: role.accessLevels }, { ...state, isPending: false });
   })
 );
 
-export function RoleReducer(roleState: RoleEntityState, action: Action) {
-  return reducer(roleState, action);
-}
+export const roleReducer = (roleState: RoleEntityState, action: Action) => reducer(roleState, action);

@@ -13,22 +13,25 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {LoginComponent} from './login.component';
-import {RouterModule} from '@angular/router';
-import {LoginGuard} from '../../core/auth/auth.guard';
-import {LoginFormModule} from '../../features/login-form/login-form.module';
+import { LoginFormModule } from '../../features/login-form/login-form.module';
+import { SpinnerModule } from '../../features/spinner/spinner.module';
+import { LoginComponent } from './login.component';
 
 @NgModule({
   declarations: [LoginComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([
-      {path: '', component: LoginComponent, canActivate: [LoginGuard]}
-    ]),
+    RouterModule.forChild([{ path: '', component: LoginComponent }]),
     LoginFormModule,
-  ]
+    TranslateModule,
+    SpinnerModule,
+    MatButtonModule,
+  ],
 })
-export class LoginModule { }
+export class LoginModule {}

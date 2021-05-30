@@ -13,22 +13,26 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {ToolBarComponent} from './tool-bar.component';
-import {MatToolbarModule} from '@angular/material/toolbar';
-import {MatButtonModule} from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatIconModule} from '@angular/material/icon';
-import {RouterModule} from '@angular/router';
-import {TranslateModule} from '@ngx-translate/core';
+import { ToolBarComponent } from './tool-bar.component';
+import { ToolBarContainerComponent } from './tool-bar.container.component';
+import { ToolBarFacade } from './tool-bar.facade';
+import { ChangePasswordDialogComponent } from '../change-password-dialog/change-password-dialog.component';
+import { ChangePasswordDialogModule } from '../change-password-dialog/change-password-dialog.module';
+import { EditUserInfoDialogComponent } from '../edit-user-info-dialog/edit-user-info-dialog.component';
+import { EditUserInfoDialogModule } from '../edit-user-info-dialog/edit-user-info-dialog.module';
 
 @NgModule({
-  declarations: [ToolBarComponent],
-  exports: [
-    ToolBarComponent,
-  ],
+  declarations: [ToolBarContainerComponent, ToolBarComponent],
+  exports: [ToolBarContainerComponent, ToolBarComponent],
   imports: [
     CommonModule,
     MatToolbarModule,
@@ -36,7 +40,11 @@ import {TranslateModule} from '@ngx-translate/core';
     MatMenuModule,
     MatIconModule,
     RouterModule,
-    TranslateModule
-  ]
+    TranslateModule,
+    ChangePasswordDialogModule,
+    EditUserInfoDialogModule,
+  ],
+  providers: [ToolBarFacade],
+  entryComponents: [ChangePasswordDialogComponent, EditUserInfoDialogComponent],
 })
-export class ToolBarModule { }
+export class ToolBarModule {}

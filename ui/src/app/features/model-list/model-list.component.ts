@@ -13,43 +13,47 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { first, map } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
+import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
-import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
+import { Routes } from '../../data/enums/routers-url.enum';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
-import { Role } from 'src/app/data/enums/role.enum';
-import { ROUTERS_URL } from '../../data/enums/routers-url.enum';
-import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
+import { ModelCreateDialogComponent } from '../mode-create-dialog/model-create-dialog.component';
+import { ModelCloneDialogComponent } from '../model-clone-dialog/model-clone-dialog.component';
 
 @Component({
   selector: 'app-model-list',
   templateUrl: './model-list.component.html',
   styleUrls: ['./model-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ModelListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
-  errorMessage: string;
   tableConfig$: Observable<ITableConfig>;
   roleEnum = Role;
   columns = [
-    { title: 'name', property: 'name' },
-    { title: 'apiKey', property: 'apiKey' },
+    { title: 'content', property: 'content' },
+    { title: 'test', property: 'test' },
     { title: 'actions', property: 'id' },
   ];
+  search = '';
 
-  constructor(private modelListFacade: ModelListFacade, public dialog: MatDialog, private router: Router,
-              private translate: TranslateService) {
+  constructor(
+    private modelListFacade: ModelListFacade,
+    public dialog: MatDialog,
+    private router: Router,
+    private translate: TranslateService
+  ) {
     this.modelListFacade.initSubscriptions();
   }
 
@@ -60,7 +64,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
       map(models => ({
         columns: this.columns,
         data: models,
-      })),
+      }))
     );
   }
 
@@ -75,59 +79,84 @@ export class ModelListComponent implements OnInit, OnDestroy {
 
   edit(model: Model) {
     const dialog = this.dialog.open(EditDialogComponent, {
-      width: '400px',
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('models.header'),
         entityName: model.name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(name => {
-      if (name) {
-        this.modelListFacade.renameModel(model.id, name);
-      }
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(name => name)
+      )
+      .subscribe(name => this.modelListFacade.renameModel(model.id, name));
+  }
+
+  clone(model: Model) {
+    const dialog = this.dialog.open(ModelCloneDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: { entityType: this.translate.instant('models.header') },
     });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(name => name)
+      )
+      .subscribe(name => this.modelListFacade.cloneModel(model.id, name));
   }
 
   delete(model: Model) {
     const dialog = this.dialog.open(DeleteDialogComponent, {
-      width: '400px',
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('models.header'),
         entityName: model.name,
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(result => {
-      if (result) {
-        this.modelListFacade.deleteModel(model.id);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.modelListFacade.deleteModel(model.id));
   }
 
   test(model: Model) {
-    this.router.navigate([ROUTERS_URL.TEST_MODEL], {
+    this.router.navigate([Routes.TestModel], {
       queryParams: {
-        org: this.modelListFacade.selectedOrganizationId,
         app: this.modelListFacade.selectedApplicationId,
-        model: model.id
-      }
+        model: model.id,
+        type: model.type,
+      },
     });
   }
 
   onCreateNewModel(): void {
-    const dialog = this.dialog.open(CreateDialogComponent, {
-      width: '300px',
+    const dialog = this.dialog.open(ModelCreateDialogComponent, {
+      panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('models.header'),
-      }
+      },
     });
 
-    dialog.afterClosed().pipe(first()).subscribe(name => {
-      if (name) {
-        this.modelListFacade.createModel(name);
-      }
-    });
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(data => data && data.entityName && data.type)
+      )
+      .subscribe(data => this.modelListFacade.createModel(data.entityName, data.type));
+  }
+
+  onSearch(event: string) {
+    this.search = event;
   }
 
   ngOnDestroy(): void {

@@ -13,13 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp } from './selectors';
-import { Application } from '../../data/interfaces/application';
 import { Role } from 'src/app/data/enums/role.enum';
 
-describe('ApplicationSelectors', () => {
+import { Application } from '../../data/interfaces/application';
+import { selectCurrentApp, selectCurrentAppId, selectUserRollForSelectedApp } from './selectors';
 
+describe('ApplicationSelectors', () => {
   it('selectCurrentAppId', () => {
     expect(selectCurrentAppId.projector({ selectedAppId: 'someId' })).toBe('someId');
   });
@@ -35,16 +34,14 @@ describe('ApplicationSelectors', () => {
           name: 'name1',
           owner: { firstName: '', lastName: '', userId: '' },
           role: '',
-          organizationId: ''
         },
         {
           id: '2',
           name: 'name2',
           owner: { firstName: '', lastName: '', userId: '' },
           role: '',
-          organizationId: ''
-        }
-      ]
+        },
+      ],
     };
     expect(selectCurrentApp.projector(apps, 0)).toEqual(apps.entities[0]);
     expect(selectCurrentApp.projector(apps, 1)).toEqual(apps.entities[1]);
@@ -55,13 +52,13 @@ describe('ApplicationSelectors', () => {
     const app1 = {
       id: 2,
       name: 'name1',
-      role: Role.ADMINISTRATOR
+      role: Role.Administrator,
     };
 
     const app2 = {
       id: 2,
       name: 'name1',
-      role: Role.OWNER
+      role: Role.Owner,
     };
     expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMINISTRATOR');
     expect(selectUserRollForSelectedApp.projector(app2)).toBe('OWNER');

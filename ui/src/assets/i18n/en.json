@@ -1,28 +1,36 @@
 {
   "common": {
     "capital": {
-      "create": "CREATE",
-      "cancel": "CANCEL",
-      "yes": "YES",
-      "add": "ADD",
-      "rename": "RENAME",
-      "edit": "EDIT",
-      "delete": "DELETE"
+      "change": "Change",
+      "create": "Create",
+      "clone": "Clone",
+      "cancel": "Cancel",
+      "save": "Save",
+      "yes": "Yes",
+      "add": "Add",
+      "rename": "Rename",
+      "edit": "Edit",
+      "delete": "Delete",
+      "ok": "Ok"
     },
     "name": "Name",
-    "create": "Create"
+    "email": "Email",
+    "type": "Type",
+    "create": "Create",
+    "unknown_error": "Sorry, something went wrong"
   },
   "login": {
     "title": "Login",
     "email": "Email",
     "password": "Password",
-    "sign_up": "SIGN UP",
+    "no_account": "Do not have an account?",
+    "sign_up": "Sign Up",
     "email_hint": "Email should have correct format",
     "password_hint": "Password is required",
-    "login": "LOGIN"
+    "login": "Login"
   },
   "registration": {
-    "title": "Sign up",
+    "title": "Sign Up",
     "first_name": "First Name",
     "last_name": "Last Name",
     "email": "Email",
@@ -33,93 +41,126 @@
     "name_restriction": "First name is required",
     "last_name_restriction": "Last name is required",
     "email_hint": "Email should have correct format",
-    "login": "LOGIN",
-    "sign_up": "SIGN UP"
+    "login": "Login",
+    "have_account": "Already have an account?",
+    "sign_up": "Sign Up",
+    "statistics": "Allow to send anonymous statistics for product improvement",
+    "more_info": "More info"
   },
-
+  "change_password": {
+    "old_password": "Old password",
+    "new_password": "New Password"
+  },
   "toolbar": {
-    "logout": "Logout"
+    "logout": "Logout",
+    "change_password": "Change password",
+    "user_info": "Change profile",
+    "user_avatar_info": "User avatar",
+    "logo": "CompreFace logo",
+    "signup": "Sign Up"
   },
   "applications": {
+    "build": "build version",
+    "caption": "Table of applications",
     "title": "Applications",
+    "placeholder": "Enter App name",
     "first_steps_title": "Create Application",
-    "name": "Name",
+    "name": "App Name",
     "owner": "Owner",
-    "first_steps_info": "The first step in using face recognition service is to create an application. An application is where you can\n create and manage models.",
+    "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
     "create": {
-      "title": "Create application"
+      "title": "Create application",
+      "button": "Create New",
+      "add_button": "Create New"
     },
     "header": {
       "title": "Application",
-      "edit": "EDIT",
-      "delete": "DELETE",
+      "edit": "Edit",
+      "delete": "Delete",
       "delete_dialog": {
-        "title": "Delete application",
+        "title": "Application Delete",
         "warn_information": "and all related data will be deleted",
         "confirmation_question": "Are you sure"
       },
       "edit_dialog": {
         "title": "Edit application",
-        "rename": "RENAME",
+        "rename": "Rename",
         "name": "Name"
       }
+    },
+    "search": {
+      "title": "Search application"
     }
   },
   "models": {
+    "caption": "Table of face collections",
     "title": "Models",
     "name": "Name",
+    "type": "Type",
     "api_key": "API key",
-    "header": "Face Collection",
-    "create_model_info": " Create the first Face Collection, where you will be able to add, recognize, delete faces,\n      get list of the faces and finally recognize a face.",
+    "header": "Service",
+    "create_model_info": "Create one of face recognition services: Face Recognition, Face Detection or Face Verification.",
     "create_dialog": {
-      "title": "Create Face Collection",
+      "title": "Services",
       "name": "Name"
     },
     "select_menu": {
-      "edit": "EDIT",
-      "delete": "DELETE",
-      "test" : "TEST"
+      "edit": "Edit",
+      "clone": "Clone",
+      "delete": "Delete",
+      "test": "Test"
     },
     "edit_dialog": {
-      "title": "EDIT MODEL",
+      "title": "Edit Model",
       "name": "Name",
-      "rename": "RENAME"
+      "rename": "Rename"
     },
     "delete_dialog": {
-      "title": "Delete model",
+      "title": "Model Delete",
       "warn_information": "and all related data will be deleted.",
       "confirmation_question": "Are you sure?"
+    },
+    "search": {
+      "title": "Search service"
     }
   },
   "users": {
+    "caption": "Table of users",
     "title": "Users",
     "user": "User",
     "role": "Role",
+    "user_role": "User Role",
     "search": {
-      "org_title": "Search User",
-      "app_title": "search",
+      "org_title": "Search user",
+      "app_title": "Search user",
       "no_results": "No matches found"
+    },
+    "create": {
+      "add_button": "Add User"
     }
   },
-  "system-user": "system-user",
   "org_users": {
     "delete_dialog": {
-      "title": "Delete User",
-      "confirmation_question": "Are you sure you want remove user {{name}} {{lastName}}?",
+      "title": "{{type}} Delete",
+      "confirmation_question": "Are you sure you want to delete {{name}} {{lastName}} from your project?",
       "warn_information": "The user {{firstName}} {{lastName}} is OWNER of applications: ",
       "warn_hint_anyway": "You can delete him anyway.",
       "warn_hint_owner": "In this case you will become the OWNER of these applications.",
       "warn_hint_new_owner": "In this case the owner of this applications will be: ",
+      "warn_hint_replace_to_owner": "In this case, the OWNER of the application will be the global OWNER",
       "default_confirmation": "{{type}} {{name}} and all related data will be deleted.\nAre you sure?"
     },
-    "add_users_title": "Add users to the CompreFace",
-    "add_users_info": "You can add other users to the CompreFace application. They need to register and login to CompreFace. After registration and login users will appear automatically in the users' table."
+    "add_users_info": " You are now the only CompreFace user. Once other users sign up, they will appear in this list. You, as an owner, will be able to give them rights to manage system or individual applications.",
+    "edit_user_info": "User info has been successfully updated"
   },
   "app_users": {
-    "add_users_info": "A user should be invited from the Default organization to appear in the list of users.\n* Default organization Owner and Administrators already have access to any application without invite.",
+    "add_users_info": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
+    "add_user_dialog": {
+      "email_hint": "Email is required"
+    },
     "delete_dialog": {
-      "title": "Delete user",
-      "confirmation_question": "Are you sure you want remove user {{name}} from {{application}}?"
+      "title": "User Delete",
+      "confirmation_question": "Are you sure you want to remove user {{name}} from {{application}}?"
     }
   },
   "breadcrumbs": {
@@ -132,5 +173,32 @@
     "add": "Add to model",
     "train": "Train model",
     "recognize": "Recognize Face"
+  },
+  "test_model": {
+    "title": "Test Model",
+    "request": "Request",
+    "response": "Response"
+  },
+  "demo": {
+    "title": "Demo",
+    "link": "Try Demo"
+  },
+  "face_recognition_container": {
+    "file_size_error": "The photo size is more than 5 Mb",
+    "file_unavailable_extension": "File {{filename}} has an unavailable extension"
+  },
+  "face_recognition": {
+    "no_recognized": "No faces recognized",
+    "no_faces_in_collection": "No faces uploaded to the Face Collection"
+  },
+  "auth": {
+    "incorrect_credentials": "E-mail or Password is incorrect.",
+    "already_in_use": "This e-mail is already in use.",
+    "new_account_confirm_email": "You have created new account, please confirm your email",
+    "new_account_login": "You have created new account, please login into your account",
+    "change_password_success": "Password has successfully been changed"
+  },
+  "application_user_list": {
+    "invitation_sent": "Invitation was sent to {{userEmail}}"
   }
 }

@@ -13,21 +13,28 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
-import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
 import { ModelTableComponent } from './model-table.component';
-import {TruncateModule} from '../../ui/truncate-pipe/truncate.module';
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {TranslateModule} from '@ngx-translate/core';
+import { ModelCreateDialogComponent } from '../mode-create-dialog/model-create-dialog.component';
+import { ModelCloneDialogComponent } from '../model-clone-dialog/model-clone-dialog.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
-  declarations: [ModelTableComponent],
+  declarations: [ModelTableComponent, ModelCreateDialogComponent, ModelCloneDialogComponent],
   exports: [ModelTableComponent],
   imports: [
     CommonModule,
@@ -38,6 +45,12 @@ import {TranslateModule} from '@ngx-translate/core';
     TruncateModule,
     MatTooltipModule,
     TranslateModule,
-  ]
+    MatFormFieldModule,
+    FormsModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatDialogModule,
+    MatInputModule,
+  ],
 })
-export class ModelTableModule { }
+export class ModelTableModule {}
