@@ -13,11 +13,12 @@ their access roles or create new [Face Services](Face-services-and-plugins.md).
 Service, you will see it in the Services List with an appropriate name and API key. After this step, you can look at our [demos](#demos).
 
 **Step 6.** To add known subjects to your Face Collection of Face Recognition Service, you can use REST API. 
-Once you’ve uploaded all known faces, you can test the collection using REST API or the TEST page. 
+Once you’ve [uploaded all known faces](Rest-API-description.md#add-an-example-of-a-subject),
+you can test the collection using [REST API](Rest-API-description.md#recognize-faces-from-a-given-image) or the TEST page. 
 We recommend that you use an image size no higher than 5MB, as it could slow down the request process. The supported image formats include JPEG/PNG/JPG/ICO/BMP/GIF/TIF/TIFF.
 
 **Step 7.** Upload your photo and let our open-source face recognition system match the image against the Face Collection. If you use a 
-UI for face recognition, you will see the original picture with marks near every face. If you use REST API, you will receive a response in JSON format.
+UI for face recognition, you will see the original picture with marks near every face. If you use [REST API](Rest-API-description.md#recognize-faces-from-a-given-image), you will receive a response in JSON format.
 
 JSON contains an array of objects that represent each recognized face. Each object has the following fields:
 

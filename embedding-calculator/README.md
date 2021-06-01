@@ -35,9 +35,9 @@ $ docker run -p 3000:3000 exadel/compreface-core:latest
 
 | Tag                    | Scanner     | Build arguments                                                                                          | Comment                            |
 |------------------------|-------------|----------------------------------------------------------------------------------------------------------|------------------------------------|
-| :0.5.0 :latest         | Facenet2018 |                                                                                                          |                                    |
-| :0.5.0-insightface     | InsightFace | FACE_DETECTION_PLUGIN=insightface.FaceDetector<br>CALCULATION_PLUGIN=insightface.Calculator              |                                    |
-| :0.5.0-insightface-gpu | InsightFace | FACE_DETECTION_PLUGIN=insightface.FaceDetector<br>CALCULATION_PLUGIN=insightface.Calculator<br>GPU_IDX=0 | CORE_GPU_IDX - index of GPU-device |
+| :0.5.1 :latest         | Facenet2018 |                                                                                                          |                                    |
+| :0.5.1-insightface     | InsightFace | FACE_DETECTION_PLUGIN=insightface.FaceDetector<br>CALCULATION_PLUGIN=insightface.Calculator              |                                    |
+| :0.5.1-insightface-gpu | InsightFace | FACE_DETECTION_PLUGIN=insightface.FaceDetector<br>CALCULATION_PLUGIN=insightface.Calculator<br>GPU_IDX=0 | CORE_GPU_IDX - index of GPU-device |
 
 
 ##### Build

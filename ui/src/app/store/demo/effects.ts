@@ -20,11 +20,26 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 import { DemoService } from '../../pages/demo/demo.service';
-import { loadDemoApiKey, loadDemoApiKeyFail, loadDemoApiKeySuccess } from './action';
+import { loadDemoApiKey, loadDemoApiKeyFail, loadDemoApiKeySuccess, loadDemoStatus } from './action';
 
 @Injectable()
 export class DemoEffects {
   constructor(private actions: Actions, private demoService: DemoService) {}
+
+  @Effect()
+  loadDemoStatus$ = this.actions.pipe(
+    ofType(loadDemoStatus),
+    switchMap(() =>
+      this.demoService.getStatus().pipe(
+        map(data => {
+          if (!data.demoFaceCollectionIsInconsistent) {
+            return loadDemoApiKey();
+          }
+          return loadDemoApiKeyFail();
+        })
+      )
+    )
+  );
 
   @Effect()
   loadDemoApiKey$ = this.actions.pipe(

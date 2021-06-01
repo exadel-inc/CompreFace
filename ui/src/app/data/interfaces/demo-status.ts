@@ -13,11 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { createAction, props } from '@ngrx/store';
-
-export const loadDemoStatus = createAction('[Demo/API] Load Demo Status');
-export const loadDemoApiKey = createAction('[Demo/API] Load Demo Api Key');
-export const loadDemoApiKeySuccess = createAction('[Demo/API] Load Demo Api Key Success', props<{ apiKey: string }>());
-export const loadDemoApiKeyFail = createAction('[Demo/API] Load Demo Api Key Fail');
-export const setDemoKeyPending = createAction('[Demo/API] Set Demo Key Pending Action');
+export interface DemoStatus {
+  demoFaceCollectionIsInconsistent: boolean;
+  saveImagesToDB: boolean;
+}

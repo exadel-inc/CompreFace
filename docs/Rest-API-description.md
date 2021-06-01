@@ -6,7 +6,7 @@
     + [Add a Subject](#add-a-subject)
     + [Rename a Subject](#rename-a-subject)
     + [Delete a Subject](#delete-a-subject)
-    + [Delete Subjects by Api Key](#delete-subjects-by-api-key)
+    + [Delete All Subjects](#delete-all-subjects)
     + [List Subjects](#list-subjects)
     + [Add an Example of a Subject](#add-an-example-of-a-subject)
     + [Recognize Faces from a Given Image](#recognize-faces-from-a-given-image)
@@ -18,6 +18,7 @@
     + [Verify Faces from a Given Image](#verify-faces-from-a-given-image)
 + [Face Detection Service](#face-detection-service)
 + [Face Verification Service](#face-verification-service)
++ [Base64 Support](#base64-support)
 
 To know more about face services and face plugins visit [this page](Face-services-and-plugins.md).
 
@@ -26,9 +27,8 @@ To know more about face services and face plugins visit [this page](Face-service
 ### Add a Subject
 ```since 0.6 version```
 
-This creates a new subject in Face Collection. You need to add Face Examples to the subject before the system will be able to recognize 
-the subject. Creating a subject is an optional step, you can upload an example without existing subject, and a subject will be created 
-automatically. If subject with such name already exists - 400.  
+Create a new subject in Face Collection. Creating a subject is an optional step, 
+you can [upload an example](#add-an-example-of-a-subject) without an existing subject, and a subject will be created automatically.
 
 ```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/subjects" \
@@ -56,7 +56,8 @@ Response body on success:
 ### Rename a Subject
 ```since 0.6 version```
 
-This renames existing subject. If subject with provided name not found - 404. If new subject name already exists, all faces from old subject name are **reassigned** to subject with new name, old subjected removed.  
+Rename existing subject. If a new subject name already exists, 
+subjects are merged - all faces from the old subject name are **reassigned** to the subject with the new name, old subject removed.  
 
 ```shell
 curl -X PUT "http://localhost:8000/api/v1/recognition/subjects/<subject>" \
@@ -84,7 +85,7 @@ Response body on success:
 ### Delete a Subject
 ```since 0.6 version```
 
-This deletes existing subject and all saved faces. If subject with provided name not found - 404.  
+Delete existing subject and all saved faces.
 
 ```shell
 curl -X DELETE "http://localhost:8000/api/v1/recognition/subjects/<subject>" \
@@ -108,10 +109,10 @@ Response body on success:
 | -------- | ------ | -------------------------- |
 | subject  | string | is the name of the subject |
 
-### Delete all Subjects for face recognition service
+### Delete All Subjects
 ```since 0.6 version```
 
-This deletes all existing subjects and all saved faces.
+Delete all existing subjects and all saved faces.
 
 ```shell
 curl -X DELETE "http://localhost:8000/api/v1/recognition/subjects" \
@@ -168,7 +169,7 @@ Response body on success:
 This creates an example of the subject by saving images. You can add as many images as you want to train the system. Image should 
 contain only one face.
 
-```shell
+```http request
 curl -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
@@ -323,7 +324,7 @@ curl -X DELETE "http://localhost:8000/api/v1/recognition/faces?subject=<subject>
 | Element   | Description | Type   | Required | Notes                                                        |
 | --------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
 | x-api-key | header      | string | required | api key of the Face recognition service, created by the user                    |
-| subject   | param       | string | optional | is the name of the subject |
+| subject   | param       | string | optional | is the name subject. If this parameter is absent, all faces in Face Collection will be removed |
 
 Response body on success:
 ```
@@ -562,52 +563,54 @@ curl  -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&pr
 Response body on success:
 ```json
 {
-  "source_image_face" : {
-    "age" : [ 25, 32 ],
-    "gender" : "female",
-    "embedding" : [ -0.0010271212086081505, "...", -0.008746841922402382 ],
-    "box" : {
-      "probability" : 0.9997453093528748,
-      "x_max" : 205,
-      "y_max" : 167,
-      "x_min" : 48,
-      "y_min" : 0
-    },
-    "landmarks" : [ [ 92, 44 ], [ 130, 68 ], [ 71, 76 ], [ 60, 104 ], [ 95, 125 ] ],
-    "execution_time" : {
-      "age" : 85.0,
-      "gender" : 51.0,
-      "detector" : 67.0,
-      "calculator" : 116.0
-    }
-  },
-  "face_matches": [
-    {
+  "result" : [{
+    "source_image_face" : {
       "age" : [ 25, 32 ],
       "gender" : "female",
-      "embedding" : [ -0.049007344990968704, "...", -0.01753818802535534 ],
+      "embedding" : [ -0.0010271212086081505, "...", -0.008746841922402382 ],
       "box" : {
-        "probability" : 0.99975,
-        "x_max" : 308,
-        "y_max" : 180,
-        "x_min" : 235,
-        "y_min" : 98
+        "probability" : 0.9997453093528748,
+        "x_max" : 205,
+        "y_max" : 167,
+        "x_min" : 48,
+        "y_min" : 0
       },
-      "landmarks" : [ [ 260, 129 ], [ 273, 127 ], [ 258, 136 ], [ 257, 150 ], [ 269, 148 ] ],
-      "similarity" : 0.97858,
+      "landmarks" : [ [ 92, 44 ], [ 130, 68 ], [ 71, 76 ], [ 60, 104 ], [ 95, 125 ] ],
       "execution_time" : {
-        "age" : 59.0,
-        "gender" : 30.0,
-        "detector" : 177.0,
-        "calculator" : 70.0
+        "age" : 85.0,
+        "gender" : 51.0,
+        "detector" : 67.0,
+        "calculator" : 116.0
       }
-    }],
-  "plugins_versions" : {
-    "age" : "agegender.AgeDetector",
-    "gender" : "agegender.GenderDetector",
-    "detector" : "facenet.FaceDetector",
-    "calculator" : "facenet.Calculator"
-  }
+    },
+    "face_matches": [
+      {
+        "age" : [ 25, 32 ],
+        "gender" : "female",
+        "embedding" : [ -0.049007344990968704, "...", -0.01753818802535534 ],
+        "box" : {
+          "probability" : 0.99975,
+          "x_max" : 308,
+          "y_max" : 180,
+          "x_min" : 235,
+          "y_min" : 98
+        },
+        "landmarks" : [ [ 260, 129 ], [ 273, 127 ], [ 258, 136 ], [ 257, 150 ], [ 269, 148 ] ],
+        "similarity" : 0.97858,
+        "execution_time" : {
+          "age" : 59.0,
+          "gender" : 30.0,
+          "detector" : 177.0,
+          "calculator" : 70.0
+        }
+      }],
+    "plugins_versions" : {
+      "age" : "agegender.AgeDetector",
+      "gender" : "agegender.GenderDetector",
+      "detector" : "facenet.FaceDetector",
+      "calculator" : "facenet.Calculator"
+    }
+  }]
 }
 ```
 
@@ -625,3 +628,64 @@ Response body on success:
 | similarity                     | float   | similarity between this face and the face on the source image               |
 | execution_time                 | object  | execution time of all plugins                       |
 | plugins_versions               | object  | contains information about plugin versions                       |
+
+
+
+## Base64 Support
+`since 0.5.1 version`
+
+Except `multipart/form-data`, all CompreFace endpoints, that require images as input, accept images in `Base64` format. 
+The base rule is to use `Content-Type: application/json` header and send JSON in the body. 
+The name of the JSON parameter coincides with the name of the `multipart/form-data` parameter.
+
+### Add an Example of a Subject, Base64
+Full description [here](#add-an-example-of-a-subject).
+
+```http request
+curl -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"file": "<base64_value>"}
+```
+
+### Recognize Faces from a Given Image, Base64
+Full description [here](#recognize-faces-from-a-given-image).
+
+```http request
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"file": "<base64_value>"}
+```
+
+### Verify Faces from a Given Image, Base64
+Full description [here](#verify-faces-from-a-given-image).
+
+```http request
+curl -X POST "http://localhost:8000/api/v1/recognition/faces/<image_id>/verify?
+limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"file": "<base64_value>"}
+```
+
+### Face Detection Service, Base64
+Full description [here](#face-detection-service).
+
+```http request
+curl  -X POST "http://localhost:8000/api/v1/detection/detect?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"file": "<base64_value>"}
+```
+
+### Face Verification Service, Base64
+Full description [here](#face-verification-service).
+
+```http request
+curl -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d {"source_image": "<source_image_base64_value>", "target_image": "<target_image_base64_value>"}
+```
+
