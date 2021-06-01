@@ -13,16 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter, AfterViewInit } from '@angular/core';
 
-import { map, takeUntil, tap } from 'rxjs/operators';
-import { ReplaySubject, Subject } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { RequestResultRecognition } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
-import { ImageSize } from '../../../../data/interfaces/image';
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
+import { ImageSize } from '../../../../data/interfaces/image';
 import { recalculateFaceCoordinate, resultRecognitionFormatter } from '../../face-services.helpers';
 
 @Component({
@@ -30,77 +30,74 @@ import { recalculateFaceCoordinate, resultRecognitionFormatter } from '../../fac
   templateUrl: './recognition-result.component.html',
   styleUrls: ['./recognition-result.component.scss'],
 })
-export class RecognitionResultComponent implements OnChanges, OnDestroy {
+export class RecognitionResultComponent implements OnChanges, AfterViewInit {
   @Input() file: File;
   @Input() requestInfo: RequestInfo;
-  @Input() printData: RequestResultRecognition[];
   @Input() isLoaded: boolean;
   @Input() type: string;
+  @Input() printData: RequestResultRecognition[];
 
   @Output() selectFile = new EventEmitter();
+  @Output() resetFace = new EventEmitter();
 
-  @ViewChild('canvasElement') set canvasElement(canvas: ElementRef) {
-    this.myCanvas = canvas;
-  }
+  @ViewChild('canvasElement', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
 
-  private myCanvas: ElementRef;
-  private unsubscribe: Subject<void> = new Subject();
-  private sizes: ReplaySubject<{ img: ImageBitmap; sizeCanvas: ImageSize }> = new ReplaySubject();
+  private ctx: CanvasRenderingContext2D;
+  private dataPrint$: BehaviorSubject<RequestResultRecognition[]> = new BehaviorSubject(null);
+  private dataPhoto$: BehaviorSubject<any> = new BehaviorSubject(null);
 
   formattedResult: string;
-  filePrintData: RequestResultRecognition[];
   widthCanvas = 500;
   types = ServiceTypes;
+  recalculatePrint$: Observable<RequestResultRecognition[]>;
 
-  constructor(private loadingPhotoService: LoadingPhotoService) {}
+  constructor(private loadingPhotoService: LoadingPhotoService) {
+    this.recalculatePrint$ = this.dataPhoto$.pipe(
+      filter(data => !!data),
+      switchMap(data => this.displayPhoto(data)),
+      switchMap(sizes => this.dataPrint$.pipe(switchMap(printData => this.displayFrames(printData, sizes.imageBitmap, sizes.sizeCanvas))))
+    );
+  }
+
+  ngAfterViewInit(): void {
+    this.ctx = this.canvas.nativeElement.getContext('2d');
+  }
 
   ngOnChanges(changes: SimpleChanges) {
-    if ('file' in changes) this.loadPhoto(this.file, this.myCanvas);
-    if ('printData' in changes) this.getFrames(this.printData);
+    this.dataPhoto$.next(this.file);
+    this.dataPrint$.next(this.printData);
     if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 
-  getFrames(printData: RequestResultRecognition[]): void {
-    if (!printData) return;
+  displayPhoto(file: File): Observable<any> {
+    return this.loadingPhotoService.loader(file).pipe(
+      map(img => ({
+        imageBitmap: img,
+        sizeCanvas: { width: this.widthCanvas, height: (img.height / img.width) * this.widthCanvas },
+      })),
+      tap(({ sizeCanvas }) => this.canvas.nativeElement.setAttribute('height', String(sizeCanvas.height))),
+      tap(({ imageBitmap, sizeCanvas }) => this.ctx.drawImage(imageBitmap, 0, 0, sizeCanvas.width, sizeCanvas.height))
+    );
+  }
 
-    this.sizes.pipe(takeUntil(this.unsubscribe)).subscribe(size => {
-      this.filePrintData = this.recalculateFrames(printData, size.img, size.sizeCanvas);
+  displayFrames<Type extends RequestResultRecognition[]>(data: Type, sizeImage: ImageSize, sizeCanvas: ImageSize): Observable<Type> {
+    return new Observable(observer => {
+      if (!!data) {
+        const recalculate = data.map(val => ({ ...val, box: recalculateFaceCoordinate(val.box, sizeImage, sizeCanvas) })) as Type;
+        observer.next(recalculate);
+      } else {
+        observer.next(null);
+      }
+      observer.complete();
     });
   }
 
-  recalculateFrames<Type extends RequestResultRecognition[]>(data: Type, img, sizeCanvas): Type {
-    return data.map(val => ({ ...val, box: recalculateFaceCoordinate(val.box, img, sizeCanvas) })) as Type;
-  }
+  onResetFile(event?: File): void {
+    const { offsetHeight, offsetWidth } = this.ctx.canvas;
+    this.ctx.clearRect(0, 0, offsetWidth, offsetHeight);
 
-  loadPhoto(file: File, canvas: ElementRef): void {
-    if (!file) return;
+    this.resetFace.emit();
 
-    this.loadingPhotoService
-      .loader(file)
-      .pipe(
-        takeUntil(this.unsubscribe),
-        map(
-          (img: ImageBitmap) =>
-            ({
-              img,
-              sizeCanvas: { width: this.widthCanvas, height: (img.height / img.width) * this.widthCanvas },
-            } as { img: ImageBitmap; sizeCanvas: ImageSize })
-        ),
-        tap(({ sizeCanvas }) => canvas.nativeElement.setAttribute('height', sizeCanvas.height))
-      )
-      .subscribe(value => {
-        this.displayPhoto(value.img, value.sizeCanvas, canvas);
-        this.sizes.next(value);
-      });
-  }
-
-  displayPhoto(img: ImageBitmap, size: ImageSize, canvas: ElementRef): void {
-    const ctx = canvas.nativeElement.getContext('2d');
-    ctx.drawImage(img, 0, 0, size.width, size.height);
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+    if (event) this.selectFile.emit(event);
   }
 }

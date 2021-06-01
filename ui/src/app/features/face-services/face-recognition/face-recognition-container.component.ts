@@ -29,6 +29,7 @@ import {
 } from '../../../store/face-recognition/selectors';
 import { getFileExtension } from '../face-services.helpers';
 import { SnackBarService } from '../../snackbar/snackbar.service';
+import { LoadingPhotoService } from '../../../core/photo-loader/photo-loader.service';
 
 @Component({
   selector: 'app-face-recognition-container',
@@ -48,7 +49,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   @Input()
   type: string;
 
-  constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
+  constructor(private store: Store<AppState>, private snackBarService: SnackBarService, private loadingPhoto: LoadingPhotoService) {}
 
   ngOnInit() {
     this.data$ = this.store.select(selectFaceData);
@@ -58,7 +59,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
     this.isLoaded$ = this.store.select(selectStateReady);
   }
 
-  ngOnDestroy() {
+  resetFace(): void {
     this.store.dispatch(recognizeFaceReset());
   }
 
@@ -74,5 +75,9 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
     } else {
       this.store.dispatch(recognizeFace({ file }));
     }
+  }
+
+  ngOnDestroy() {
+    this.resetFace();
   }
 }

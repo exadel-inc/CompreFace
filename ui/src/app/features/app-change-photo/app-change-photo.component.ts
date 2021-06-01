@@ -13,9 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { createAction, props } from '@ngrx/store';
+import { ChangeDetectionStrategy, Component, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
 
-export const verifyFace = createAction('[Model] Face Verification Save', props<{ processFile?: any; checkFile?: any }>());
-export const verifyFaceSuccess = createAction('[Model] Face Verification Success', props<{ model: any; request: any }>());
-export const verifyFaceFail = createAction('[Model] Face Verification Fail', props<{ error: any }>());
-export const verifyFaceReset = createAction('[Model] Face Verification Reset');
+@Component({
+  selector: 'app-change-photo',
+  templateUrl: './app-change-photo.component.html',
+  styleUrls: ['./app-change-photo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AppChangePhotoComponent {
+  @Output() changePhoto = new EventEmitter();
+  @Output() resetPhoto = new EventEmitter();
+  @Output() addLandmark = new EventEmitter();
+
+  @ViewChild('uploadFile') fileDropEl: ElementRef;
+
+  addFile(event) {
+    console.log(event);
+  }
+}

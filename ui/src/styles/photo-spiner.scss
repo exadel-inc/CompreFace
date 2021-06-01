@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,9 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { createAction, props } from '@ngrx/store';
+@import "mixins.scss";
+@import "colors.scss";
 
-export const verifyFace = createAction('[Model] Face Verification Save', props<{ processFile?: any; checkFile?: any }>());
-export const verifyFaceSuccess = createAction('[Model] Face Verification Success', props<{ model: any; request: any }>());
-export const verifyFaceFail = createAction('[Model] Face Verification Fail', props<{ error: any }>());
-export const verifyFaceReset = createAction('[Model] Face Verification Reset');
+@mixin photo-spinner() {
+  position: absolute;
+  background-color: $light-gray;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 5;
+
+  app-spinner {
+    @include wrapper-center();
+  }
+}

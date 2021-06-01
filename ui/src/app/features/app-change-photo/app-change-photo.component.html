@@ -13,13 +13,18 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-<app-recognition-result
-  [isLoaded]="isLoaded$ | async"
-  [file]="file$ | async"
-  [requestInfo]="requestInfo$ | async"
-  [printData]="data$ | async"
-  [type]="type"
-  (selectFile)="recognizeFace($event)"
-  (resetFace)="resetFace()"
->
-</app-recognition-result>
+<div class="change-photo">
+
+  <button  class="change-photo--btn" mat-flat-button>
+    <input class="btn-input" type="file" (change)="changePhoto.emit($event.target.files[0])">
+    <mat-icon class="change-photo--btn_icon" svgIcon="upload"></mat-icon>
+  </button>
+
+  <button class="change-photo--btn" mat-flat-button (click)="resetPhoto.emit()">
+    <mat-icon class="change-photo--btn_icon" svgIcon="trash"></mat-icon>
+  </button>
+
+  <button class="change-photo--btn" mat-flat-button (click)="addLandmark.emit()">
+    <mat-icon class="change-photo--btn_icon" svgIcon="body-scan"></mat-icon>
+  </button>
+</div>

@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,9 +13,39 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { createAction, props } from '@ngrx/store';
+@import "mixins.scss";
+@import "colors.scss";
 
-export const verifyFace = createAction('[Model] Face Verification Save', props<{ processFile?: any; checkFile?: any }>());
-export const verifyFaceSuccess = createAction('[Model] Face Verification Success', props<{ model: any; request: any }>());
-export const verifyFaceFail = createAction('[Model] Face Verification Fail', props<{ error: any }>());
-export const verifyFaceReset = createAction('[Model] Face Verification Reset');
+.change-photo {
+  position: absolute;
+  padding: 28px;
+  line-height: 0;
+  z-index: 4;
+
+  .btn-input {
+    opacity: 0;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+  }
+
+  &--btn {
+    padding: 11px;
+    margin-right: 8px;
+    border-radius: 8px;
+    line-height: normal;
+    min-width: auto;
+    background: $transparent-black;
+
+    &:last-child {
+      margin-right: 0;
+    }
+
+    &_icon {
+      @include lg-icon-size;
+    }
+  }
+}

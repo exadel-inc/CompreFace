@@ -25,6 +25,7 @@ import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
 import { selectFiles } from './selectors';
 import { verifyFace, verifyFaceSuccess, verifyFaceFail } from './action';
+
 @Injectable()
 export class FaceRecognitionEffects {
   constructor(
