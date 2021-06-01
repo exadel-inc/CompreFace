@@ -36,7 +36,11 @@ class PluginManager:
     def __init__(self):
         self.plugins_modules = defaultdict(list)
         for plugin_name in self.get_plugins_names():
-            module = import_module(f'{__package__}.{plugin_name.split(".")[0]}')
+            # this don't work's
+            # module = import_module(f'{__package__}.{plugin_name.split(".")[0]}')
+            # this how i fix it
+            module = import_module(f'{__package__}.{plugin_name.rsplit(".", 1)[0]}')
+            plugin_name = plugin_name.split('.')[-2] + '.' + plugin_name.split('.')[-1]
             self.plugins_modules[module].append(plugin_name)
 
     @property

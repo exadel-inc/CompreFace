@@ -24,6 +24,12 @@ class AgeDTO(JSONEncodable):
 
 
 @attr.s(auto_attribs=True, frozen=True)
+class MaskDTO(JSONEncodable):
+    mask: str
+    mask_probability: float = attr.ib(converter=float, default=1)
+
+
+@attr.s(auto_attribs=True, frozen=True)
 class LandmarksDTO(JSONEncodable):
     """ 5-points facial landmarks: eyes, nose, mouth """
     landmarks: List[Tuple[int, int]]

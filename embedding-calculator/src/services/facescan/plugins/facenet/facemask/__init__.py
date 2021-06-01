@@ -12,8 +12,6 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-import logging
+from src.services.facescan.plugins.dependencies import get_tensorflow
 
-from src.init_runtime import init_runtime
-
-init_runtime(logging.DEBUG)
+requirements = get_tensorflow()

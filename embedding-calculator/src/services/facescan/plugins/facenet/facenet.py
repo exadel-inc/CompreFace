@@ -18,11 +18,10 @@ from collections import namedtuple
 from typing import List
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf1
 from tensorflow.python.platform import gfile
 from cached_property import cached_property
-from facenet.src.align import detect_face
-from facenet.src.facenet import prewhiten
+from mtcnn import MTCNN
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBoxDTO
@@ -41,6 +40,15 @@ _EmbeddingCalculator = namedtuple('_EmbeddingCalculator', 'graph sess')
 _FaceDetectionNets = namedtuple('_FaceDetectionNets', 'pnet rnet onet')
 
 
+def prewhiten(img):
+    """ Normalize image."""
+    mean = np.mean(img)
+    std = np.std(img)
+    std_adj = np.maximum(std, 1.0 / np.sqrt(img.size))
+    y = np.multiply(np.subtract(img, mean), 1 / std_adj)
+    return y
+
+
 class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
@@ -54,11 +62,19 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     det_threshold_b = 0.7059968943
     det_threshold_c = 0.5506904359
 
-    @cached_property
+    '''    @cached_property
     def _face_detection_nets(self):
-        with tf.Graph().as_default():
-            sess = tf.Session()
-            return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))
+        with tf1.Graph().as_default():
+            sess = tf1.Session()
+            return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))'''
+
+    @cached_property
+    def _face_detection_net(self):
+        return MTCNN(
+            min_face_size=self.FACE_MIN_SIZE,
+            scale_factor=self.SCALE_FACTOR,
+            steps_threshold=[self.det_threshold_a, self.det_threshold_b, self.det_threshold_c]
+        )
 
     def crop_face(self, img: Array3D, box: BoundingBoxDTO) -> Array3D:
         return squish_img(crop_img(img, box), (self.IMAGE_SIZE, self.IMAGE_SIZE))
@@ -70,15 +86,16 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
         scaler = ImgScaler(self.IMG_LENGTH_LIMIT)
         img = scaler.downscale_img(img)
 
-        fdn = self._face_detection_nets
-        detect_face_result = detect_face.detect_face(
+        fdn = self._face_detection_net
+        '''detect_face_result = detect_face.detect_face(
             img, self.FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
             [self.det_threshold_a, self.det_threshold_b, self.det_threshold_c],
-            self.SCALE_FACTOR)
+            self.SCALE_FACTOR)'''
+        detect_face_result = fdn.detect_faces(img)
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
 
-        detect_face_result = list(
+        '''detect_face_result = list(
             zip(detect_face_result[0], detect_face_result[1].transpose()))
         for result_item, landmarks in detect_face_result:
             result_item = np.squeeze(result_item)
@@ -90,6 +107,22 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
                 y_max=int(np.minimum(result_item[3] + margin, img_size[0])),
                 np_landmarks=landmarks.reshape(2, 5).transpose(),
                 probability=result_item[4]
+            )
+            logger.debug(f"Found: {box}")
+            bounding_boxes.append(box)'''
+
+        for face in detect_face_result:
+            #margin = self.BOX_MARGIN / 2
+            x, y, w, h = face['box']
+            margin_x = w / 8
+            margin_y = h / 8
+            box = BoundingBoxDTO(
+                x_min=int(np.maximum(x - margin_x, 0)),
+                y_min=int(np.maximum(y - margin_y, 0)),
+                x_max=int(np.minimum(x + w + margin_x, img_size[1])),
+                y_max=int(np.minimum(y + h + margin_y, img_size[0])),
+                np_landmarks=np.array([list(value) for value in face['keypoints'].values()]),
+                probability=face['confidence']
             )
             logger.debug(f"Found: {box}")
             bounding_boxes.append(box)
@@ -122,13 +155,13 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
 
     @cached_property
     def _embedding_calculator(self):
-        with tf.Graph().as_default() as graph:
-            graph_def = tf.GraphDef()
+        with tf1.Graph().as_default() as graph:
+            graph_def = tf1.GraphDef()
             with gfile.FastGFile(self.ml_model_file, 'rb') as f:
                 model = f.read()
             graph_def.ParseFromString(model)
-            tf.import_graph_def(graph_def, name='')
-            return _EmbeddingCalculator(graph=graph, sess=tf.Session(graph=graph))
+            tf1.import_graph_def(graph_def, name='')
+            return _EmbeddingCalculator(graph=graph, sess=tf1.Session(graph=graph))
 
     def _calculate_embeddings(self, cropped_images):
         """Run forward pass to calculate embeddings"""

@@ -71,11 +71,19 @@ class MLModel:
     def _extract(self, filename: str):
         os.makedirs(self.path, exist_ok=True)
         with ZipFile(filename, 'r') as zf:
-            for info in zf.infolist():
-                if info.is_dir():
-                    continue
-                file_path = Path(self.path) / Path(info.filename).name
-                file_path.write_bytes(zf.read(info))
+            if str(self.path)[-18:] == 'face_mask_detector':
+                for info in zf.infolist():
+                    if info.is_dir():
+                        os.makedirs(Path(self.path) / Path(info.filename))
+                        continue
+                    file_path = Path(self.path) / Path(info.filename)
+                    file_path.write_bytes(zf.read(info))
+            else:
+                for info in zf.infolist():
+                    if info.is_dir():
+                        continue
+                    file_path = Path(self.path) / Path(info.filename).name
+                    file_path.write_bytes(zf.read(info))
 
 
 @attr.s(auto_attribs=True)
