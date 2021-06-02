@@ -30,19 +30,17 @@ class MaskDetector(base.BasePlugin):
     slug = 'mask'
     LABELS = ('without_mask', 'with_mask', 'mask_weared_incorrect')
     ml_models = (
-        ('face_mask_detector', '1AeSYb_E_3cqZM67qXnJ__wJDgw6yqTDV'),
+        ('inception_v3_on_mafa_kaggle123', '1AeSYb_E_3cqZM67qXnJ__wJDgw6yqTDV'),
     )
     INPUT_IMAGE_SIZE = 100
-    category2label = {0: 'without_mask', 1: 'with_mask', 2: 'mask_weared_incorrect'}
+
+    @property
+    def unzip_with_untouched_structure(self) -> bool:
+        return True
 
     @cached_property
     def _model(self):
-        model = tf2.keras.models.load_model(
-            self.ml_model.path,
-            options=tf2.saved_model.LoadOptions(
-                experimental_io_device='/job:localhost'
-            )
-        )
+        model = tf2.keras.models.load_model(self.ml_model.path)
 
         def get_value(img: Array3D) -> Tuple[Union[str, Tuple], float]:
             img = cv2.resize(img, dsize=(self.INPUT_IMAGE_SIZE, self.INPUT_IMAGE_SIZE),
@@ -51,7 +49,6 @@ class MaskDetector(base.BasePlugin):
             img = np.expand_dims(img, 0)
 
             scores = model.predict(img)
-            print('Predictions: ' + str(scores))
             val = self.LABELS[int(np.argmax(scores, axis=1)[0])]
             prob = scores[0][int(np.argmax(scores, axis=1)[0])]
             return val, prob

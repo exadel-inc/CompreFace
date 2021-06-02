@@ -62,12 +62,6 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     det_threshold_b = 0.7059968943
     det_threshold_c = 0.5506904359
 
-    '''    @cached_property
-    def _face_detection_nets(self):
-        with tf1.Graph().as_default():
-            sess = tf1.Session()
-            return _FaceDetectionNets(*detect_face.create_mtcnn(sess, None))'''
-
     @cached_property
     def _face_detection_net(self):
         return MTCNN(
@@ -87,32 +81,11 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
         img = scaler.downscale_img(img)
 
         fdn = self._face_detection_net
-        '''detect_face_result = detect_face.detect_face(
-            img, self.FACE_MIN_SIZE, fdn.pnet, fdn.rnet, fdn.onet,
-            [self.det_threshold_a, self.det_threshold_b, self.det_threshold_c],
-            self.SCALE_FACTOR)'''
         detect_face_result = fdn.detect_faces(img)
         img_size = np.asarray(img.shape)[0:2]
         bounding_boxes = []
 
-        '''detect_face_result = list(
-            zip(detect_face_result[0], detect_face_result[1].transpose()))
-        for result_item, landmarks in detect_face_result:
-            result_item = np.squeeze(result_item)
-            margin = self.BOX_MARGIN / 2
-            box = BoundingBoxDTO(
-                x_min=int(np.maximum(result_item[0] - margin, 0)),
-                y_min=int(np.maximum(result_item[1] - margin, 0)),
-                x_max=int(np.minimum(result_item[2] + margin, img_size[1])),
-                y_max=int(np.minimum(result_item[3] + margin, img_size[0])),
-                np_landmarks=landmarks.reshape(2, 5).transpose(),
-                probability=result_item[4]
-            )
-            logger.debug(f"Found: {box}")
-            bounding_boxes.append(box)'''
-
         for face in detect_face_result:
-            #margin = self.BOX_MARGIN / 2
             x, y, w, h = face['box']
             margin_x = w / 8
             margin_y = h / 8

@@ -71,7 +71,7 @@ class MLModel:
     def _extract(self, filename: str):
         os.makedirs(self.path, exist_ok=True)
         with ZipFile(filename, 'r') as zf:
-            if str(self.path)[-18:] == 'face_mask_detector':
+            if self.plugin.unzip_with_untouched_structure:
                 for info in zf.infolist():
                     if info.is_dir():
                         os.makedirs(Path(self.path) / Path(info.filename))
@@ -131,6 +131,10 @@ class BasePlugin(ABC):
     @property
     def name(self) -> str:
         return f'{self.backend}.{self.__class__.__name__}'
+
+    @property
+    def unzip_with_untouched_structure(self) -> bool:
+        return False
 
     def __str__(self):
         if self.ml_model and self.ml_model_name:

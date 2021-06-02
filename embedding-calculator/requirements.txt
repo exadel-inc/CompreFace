@@ -16,7 +16,6 @@ pylama~=7.7.1
 # dependencies for both scanner backends
 Pillow~=8.0.1
 imagecodecs~=2020.5.30
-#numpy~=1.18.0
 numpy~=1.19.5
 scipy~=1.5.4
 opencv-python~=4.4.0
@@ -27,5 +26,5 @@ joblib~=0.17.0
 # web server
 uWSGI==2.0.19
 
-# for successful tensorflow import
+# for successful import with tensorflow
 mtcnn~=0.1.0
