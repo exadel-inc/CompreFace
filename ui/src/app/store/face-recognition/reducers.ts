@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
-
 import { recognizeFace, recognizeFaceFail, recognizeFaceReset, recognizeFaceSuccess } from './action';
 
 export interface FaceRecognitionEntityState {

@@ -29,7 +29,6 @@ import {
 } from '../../../store/face-recognition/selectors';
 import { getFileExtension } from '../face-services.helpers';
 import { SnackBarService } from '../../snackbar/snackbar.service';
-import { LoadingPhotoService } from '../../../core/photo-loader/photo-loader.service';
 
 @Component({
   selector: 'app-face-recognition-container',
@@ -43,13 +42,10 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;
 
-  @Input()
-  title: string;
+  @Input() title: string;
+  @Input() type: string;
 
-  @Input()
-  type: string;
-
-  constructor(private store: Store<AppState>, private snackBarService: SnackBarService, private loadingPhoto: LoadingPhotoService) {}
+  constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
 
   ngOnInit() {
     this.data$ = this.store.select(selectFaceData);

@@ -13,111 +13,161 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 
-import { ReplaySubject, Subject } from 'rxjs';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
 
 import { FaceMatches, RequestResultVerification, SourceImageFace } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
 import { ImageSize } from '../../../../data/interfaces/image';
 import { recalculateFaceCoordinate, resultRecognitionFormatter } from '../../face-services.helpers';
-
-enum PrintDataKeys {
-  SourceFace = 'source_image_face',
-  MatchesFace = 'face_matches',
-}
+import { VerificationServiceFields } from '../../../../data/enums/verification-service.enum';
 
 @Component({
   selector: 'app-verification-result',
   templateUrl: './verification-result.component.html',
   styleUrls: ['./verification-result.component.scss'],
 })
-export class VerificationResultComponent implements OnChanges, OnDestroy {
+export class VerificationResultComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
   @Input() processFile: File;
   @Input() checkFile: File;
-
   @Input() requestInfo: RequestInfo;
   @Input() printData: RequestResultVerification[];
-
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
 
   @Output() selectProcessFile = new EventEmitter();
   @Output() selectCheckFile = new EventEmitter();
+  @Output() resetProcessFile = new EventEmitter();
+  @Output() resetCheckFile = new EventEmitter();
 
-  @ViewChild('processFileCanvasElement') set processFileCanvasElement(canvas: ElementRef) {
-    this.processFileCanvasLink = canvas;
-  }
-  @ViewChild('checkFileCanvasElement') set checkFileCanvasElement(canvas: ElementRef) {
-    this.checkFileCanvasLink = canvas;
-  }
+  @ViewChild('processFileCanvasElement', { static: true }) canvasProcessFile: ElementRef<HTMLCanvasElement>;
+  @ViewChild('checkFileCanvasElement', { static: true }) canvasCheckFile: ElementRef<HTMLCanvasElement>;
 
-  private processFileCanvasLink: ElementRef;
-  private checkFileCanvasLink: ElementRef;
-  private unsubscribe: Subject<void> = new Subject();
-  private sizes: ReplaySubject<{ key: PrintDataKeys; img: ImageBitmap; sizeCanvas: ImageSize }> = new ReplaySubject();
+  private ctxPhotoProcess: CanvasRenderingContext2D;
+  private photoProcess$: BehaviorSubject<File> = new BehaviorSubject(null);
+
+  private ctxPhotoCheck: CanvasRenderingContext2D;
+  private photoCheck$: BehaviorSubject<File> = new BehaviorSubject(null);
+
+  private unsubscribe$: Subject<void> = new Subject();
+  private printData$: BehaviorSubject<RequestResultVerification[]> = new BehaviorSubject(null);
 
   widthCanvas = 500;
-  processFilePrintData: FaceMatches[];
-  checkFilePrintData: SourceImageFace[];
   formattedResult: string;
+  recalculateProcessFile: SourceImageFace[];
+  recalculateCheckFile: FaceMatches[];
 
   constructor(private loadingPhotoService: LoadingPhotoService) {}
 
+  ngAfterViewInit(): void {
+    this.ctxPhotoProcess = this.canvasProcessFile.nativeElement.getContext('2d');
+    this.ctxPhotoCheck = this.canvasCheckFile.nativeElement.getContext('2d');
+  }
+
+  ngOnInit(): void {
+    this.photoProcess$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter(data => !!data),
+        switchMap(data => this.displayPhoto(data, this.canvasProcessFile, this.ctxPhotoProcess)),
+        switchMap(sizes => this.displayFrames(VerificationServiceFields.ProcessFileData, sizes)),
+        map(data => data as SourceImageFace[])
+      )
+      .subscribe(value => (this.recalculateProcessFile = value));
+
+    this.photoCheck$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter(data => !!data),
+        switchMap(data => this.displayPhoto(data, this.canvasCheckFile, this.ctxPhotoCheck)),
+        switchMap(sizes => this.displayFrames(VerificationServiceFields.CheckFileData, sizes)),
+        map(data => data as FaceMatches[])
+      )
+      .subscribe(value => (this.recalculateCheckFile = value));
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
-    if ('processFile' in changes) this.loadPhoto(this.processFile, this.processFileCanvasLink, PrintDataKeys.SourceFace);
-    if ('checkFile' in changes) this.loadPhoto(this.checkFile, this.checkFileCanvasLink, PrintDataKeys.MatchesFace);
-    if ('printData' in changes) this.getFrames(this.printData);
+    this.photoProcess$.next(this.processFile);
+    this.photoCheck$.next(this.checkFile);
+    this.printData$.next(this.printData);
+
     if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 
-  getFrames(printData: RequestResultVerification[]): void {
-    if (!printData) return;
-
-    this.sizes.pipe(takeUntil(this.unsubscribe)).subscribe(size => {
-      switch (size.key) {
-        case PrintDataKeys.MatchesFace:
-          this.processFilePrintData = this.recalculateFrames(printData[0][size.key], size.img, size.sizeCanvas) as FaceMatches[];
-          return;
-        case PrintDataKeys.SourceFace:
-          this.checkFilePrintData = this.recalculateFrames([printData[0][size.key]], size.img, size.sizeCanvas) as SourceImageFace[];
-          return;
+  recalculateFrames<Type extends any[]>(data: Type, sizeImage: ImageSize, sizeCanvas: ImageSize): Observable<Type> {
+    return new Observable(observer => {
+      if (!!data) {
+        const recalculate = data.map(val => ({ ...val, box: recalculateFaceCoordinate(val.box, sizeImage, sizeCanvas) })) as Type;
+        observer.next(recalculate);
+      } else {
+        observer.next(null);
       }
+      observer.complete();
     });
   }
 
-  recalculateFrames(data: any[], img, sizeCanvas): SourceImageFace[] | FaceMatches[] {
-    return data.map(val => ({ ...val, box: recalculateFaceCoordinate(val.box, img, sizeCanvas) }));
+  getDataFrames(type: VerificationServiceFields, result: RequestResultVerification[]): SourceImageFace[] | FaceMatches[] {
+    switch (type) {
+      case VerificationServiceFields.CheckFileData:
+        return result[0][VerificationServiceFields.CheckFileData] as SourceImageFace[];
+      case VerificationServiceFields.ProcessFileData:
+        return [result[0][VerificationServiceFields.ProcessFileData]] as FaceMatches[];
+    }
   }
 
-  loadPhoto(file: File, canvas: ElementRef, key: PrintDataKeys): void {
-    if (!file) return;
-
-    this.loadingPhotoService
-      .loader(file)
-      .pipe(
-        takeUntil(this.unsubscribe),
-        map((img: ImageBitmap) => ({
-          img,
-          sizeCanvas: { width: this.widthCanvas, height: (img.height / img.width) * this.widthCanvas },
-        })),
-        tap(({ sizeCanvas }) => canvas.nativeElement.setAttribute('height', sizeCanvas.height))
-      )
-      .subscribe(value => {
-        this.displayPhoto(value.img, value.sizeCanvas, canvas);
-        this.sizes.next({ key, ...value });
-      });
+  displayFrames(type: VerificationServiceFields, sizes): Observable<SourceImageFace[] | FaceMatches[]> {
+    return this.printData$.pipe(
+      map(data => (!!data ? this.getDataFrames(type, data) : null)),
+      switchMap(printData => this.recalculateFrames(printData, sizes.imageBitmap, sizes.sizeCanvas))
+    );
   }
 
-  displayPhoto(img: ImageBitmap, size: ImageSize, canvas: ElementRef): void {
-    const ctx = canvas.nativeElement.getContext('2d');
-    ctx.drawImage(img, 0, 0, size.width, size.height);
+  displayPhoto(file: File, el: ElementRef, ctx: CanvasRenderingContext2D): Observable<any> {
+    return this.loadingPhotoService.loader(file).pipe(
+      map(img => ({
+        imageBitmap: img,
+        sizeCanvas: { width: this.widthCanvas, height: (img.height / img.width) * this.widthCanvas },
+      })),
+      tap(({ sizeCanvas }) => el.nativeElement.setAttribute('height', String(sizeCanvas.height))),
+      tap(({ imageBitmap, sizeCanvas }) => ctx.drawImage(imageBitmap, 0, 0, sizeCanvas.width, sizeCanvas.height))
+    );
+  }
+
+  onResetProcessFile(event?: File): void {
+    const { offsetHeight, offsetWidth } = this.ctxPhotoProcess.canvas;
+    this.ctxPhotoProcess.clearRect(0, 0, offsetWidth, offsetHeight);
+
+    this.resetProcessFile.emit();
+
+    if (event) this.resetProcessFile.emit(event);
+  }
+
+  onResetCheckFile(event?: File): void {
+    const { offsetHeight, offsetWidth } = this.ctxPhotoCheck.canvas;
+    this.ctxPhotoCheck.clearRect(0, 0, offsetWidth, offsetHeight);
+
+    this.resetCheckFile.emit();
+
+    if (event) this.resetCheckFile.emit(event);
   }
 
   ngOnDestroy(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

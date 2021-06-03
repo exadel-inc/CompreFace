@@ -13,10 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  ViewChild,
+  OnChanges,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  AfterViewInit,
+  OnInit,
+  OnDestroy,
+} from '@angular/core';
 
-import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { RequestResultRecognition } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
@@ -30,7 +42,7 @@ import { recalculateFaceCoordinate, resultRecognitionFormatter } from '../../fac
   templateUrl: './recognition-result.component.html',
   styleUrls: ['./recognition-result.component.scss'],
 })
-export class RecognitionResultComponent implements OnChanges, AfterViewInit {
+export class RecognitionResultComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
   @Input() file: File;
   @Input() requestInfo: RequestInfo;
   @Input() isLoaded: boolean;
@@ -45,18 +57,24 @@ export class RecognitionResultComponent implements OnChanges, AfterViewInit {
   private ctx: CanvasRenderingContext2D;
   private dataPrint$: BehaviorSubject<RequestResultRecognition[]> = new BehaviorSubject(null);
   private dataPhoto$: BehaviorSubject<any> = new BehaviorSubject(null);
+  private unsubscribe$: Subject<void> = new Subject();
 
   formattedResult: string;
   widthCanvas = 500;
   types = ServiceTypes;
-  recalculatePrint$: Observable<RequestResultRecognition[]>;
+  recalculatePrint: RequestResultRecognition[];
 
-  constructor(private loadingPhotoService: LoadingPhotoService) {
-    this.recalculatePrint$ = this.dataPhoto$.pipe(
-      filter(data => !!data),
-      switchMap(data => this.displayPhoto(data)),
-      switchMap(sizes => this.dataPrint$.pipe(switchMap(printData => this.displayFrames(printData, sizes.imageBitmap, sizes.sizeCanvas))))
-    );
+  constructor(private loadingPhotoService: LoadingPhotoService) {}
+
+  ngOnInit(): void {
+    this.dataPhoto$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        filter(data => !!data),
+        switchMap(data => this.displayPhoto(data)),
+        switchMap(sizes => this.dataPrint$.pipe(switchMap(printData => this.displayFrames(printData, sizes.imageBitmap, sizes.sizeCanvas))))
+      )
+      .subscribe(value => (this.recalculatePrint = value));
   }
 
   ngAfterViewInit(): void {
@@ -99,5 +117,10 @@ export class RecognitionResultComponent implements OnChanges, AfterViewInit {
     this.resetFace.emit();
 
     if (event) this.selectFile.emit(event);
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

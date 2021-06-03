@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
 
 @Component({
   selector: 'app-change-photo',
@@ -22,6 +22,7 @@ import { ChangeDetectionStrategy, Component, Output, EventEmitter, ViewChild, El
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppChangePhotoComponent {
+  @Input() disabledButtons: boolean;
   @Output() changePhoto = new EventEmitter();
   @Output() resetPhoto = new EventEmitter();
   @Output() addLandmark = new EventEmitter();

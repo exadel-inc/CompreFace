@@ -13,7 +13,6 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
 <div class="result">
   <div class="process-img">
     <app-drag-n-drop
@@ -22,14 +21,23 @@
       viewComponentColumn
     ></app-drag-n-drop>
     <mat-card [style.display]="processFile ? 'block' : 'none'">
+      <app-change-photo
+        [disabledButtons]="pending"
+        (resetPhoto)="onResetProcessFile()"
+        (changePhoto)="onResetProcessFile($event)"
+      >
+      </app-change-photo>
       <div class="face-displaying">
         <div class="face-displaying--wrapper">
           <canvas #processFileCanvasElement [width]="widthCanvas"></canvas>
-          <ng-container *ngFor="let frame of checkFilePrintData">
-            <div class="face-box" appFrameTooltip [dataFrames]="frame.box" [framesQuantity]="checkFilePrintData.length">
-              <div class="face-box--face" #boxFace></div>
+          <ng-container *ngFor="let frame of recalculateProcessFile">
+            <div class="face-box" appFrameTooltip [dataFrames]="frame.box">
+              <div class="face-box&#45;&#45;face" #boxFace></div>
             </div>
           </ng-container>
+          <div class="spinner-img" *ngIf="pending">
+            <app-spinner></app-spinner>
+          </div>
         </div>
       </div>
     </mat-card>
@@ -41,17 +49,26 @@
       viewComponentColumn
     ></app-drag-n-drop>
     <mat-card [style.display]="checkFile ? 'block' : 'none'">
+      <app-change-photo
+        [disabledButtons]="pending"
+        (resetPhoto)="onResetCheckFile()"
+        (changePhoto)="onResetCheckFile($event)"
+      >
+      </app-change-photo>
       <div class="face-displaying">
         <div class="face-displaying--wrapper">
           <canvas #checkFileCanvasElement [width]="widthCanvas"></canvas>
-          <ng-container *ngFor="let frame of processFilePrintData">
-            <div class="face-box" appFrameTooltip [dataFrames]="frame.box" [framesQuantity]="processFilePrintData.length">
-              <div class="face-box--face" #boxFace></div>
-              <div class="face-box--info" #boxInfo>
-                <div class="face-box--info_similarity">{{ frame.similarity }}</div>
+          <ng-container *ngFor="let frame of  recalculateCheckFile">
+            <div class="face-box" appFrameTooltip [dataFrames]="frame.box" [framesQuantity]="recalculateCheckFile.length">
+              <div class="face-box&#45;&#45;face" #boxFace></div>
+              <div class="face-box&#45;&#45;info" #boxInfo>
+                <div class="face-box&#45;&#45;info_similarity">{{ frame.similarity }}</div>
               </div>
             </div>
           </ng-container>
+          <div class="spinner-img" *ngIf="pending">
+            <app-spinner></app-spinner>
+          </div>
         </div>
       </div>
     </mat-card>

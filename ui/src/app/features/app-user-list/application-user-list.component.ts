@@ -82,7 +82,6 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   }
 
   onSearch(value: string) {
-    console.log('jlkjl');
     this.search = value;
   }
 

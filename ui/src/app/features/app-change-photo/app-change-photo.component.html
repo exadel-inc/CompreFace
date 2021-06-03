@@ -15,16 +15,16 @@
   -->
 <div class="change-photo">
 
-  <button  class="change-photo--btn" mat-flat-button>
-    <input class="btn-input" type="file" (change)="changePhoto.emit($event.target.files[0])">
+  <button  class="change-photo--btn" mat-flat-button [disabled]="disabledButtons">
+    <input class="btn-input" type="file" (change)="changePhoto.emit($event.target.files[0])" [disabled]="disabledButtons">
     <mat-icon class="change-photo--btn_icon" svgIcon="upload"></mat-icon>
   </button>
 
-  <button class="change-photo--btn" mat-flat-button (click)="resetPhoto.emit()">
+  <button class="change-photo--btn" mat-flat-button (click)="resetPhoto.emit()" [disabled]="disabledButtons">
     <mat-icon class="change-photo--btn_icon" svgIcon="trash"></mat-icon>
   </button>
 
-  <button class="change-photo--btn" mat-flat-button (click)="addLandmark.emit()">
+  <button class="change-photo--btn" mat-flat-button (click)="addLandmark.emit()" [disabled]="disabledButtons">
     <mat-icon class="change-photo--btn_icon" svgIcon="body-scan"></mat-icon>
   </button>
 </div>

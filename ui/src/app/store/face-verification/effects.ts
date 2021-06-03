@@ -16,15 +16,16 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Action, Store } from '@ngrx/store';
+
 import { iif, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
-import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
+import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 import { FaceRecognitionService } from '../../core/face-recognition/face-recognition.service';
 import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
 import { selectFiles } from './selectors';
-import { verifyFace, verifyFaceSuccess, verifyFaceFail } from './action';
+import { verifyFace, verifyFaceSuccess, verifyFaceFail, verifyFaceAddFile } from './action';
 
 @Injectable()
 export class FaceRecognitionEffects {
@@ -36,20 +37,23 @@ export class FaceRecognitionEffects {
   ) {}
 
   @Effect()
+  verifyFaceAddFile$ = this.actions.pipe(
+    ofType(verifyFaceAddFile),
+    withLatestFrom(this.store.select(selectFiles)),
+    switchMap(([action, files]) => (files.processFile && files.checkFile ? [verifyFace()] : []))
+  );
+
+  @Effect()
   verifyFaceSaveToStore$ = this.actions.pipe(
     ofType(verifyFace),
     withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey), this.store.select(selectFiles)),
-    switchMap(([action, model, demoApiKey, files]) => {
-      if (files.processFile && files.checkFile) {
-        return iif(
-          () => !!model,
-          this.verificationFace(files.processFile, files.checkFile, model?.apiKey),
-          this.verificationFace(files.processFile, files.checkFile, demoApiKey)
-        );
-      } else {
-        return [];
-      }
-    })
+    switchMap(([action, model, demoApiKey, files]) =>
+      iif(
+        () => !!model,
+        this.verificationFace(files.processFile, files.checkFile, model?.apiKey),
+        this.verificationFace(files.processFile, files.checkFile, demoApiKey)
+      )
+    )
   );
 
   @Effect({ dispatch: false })
