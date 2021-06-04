@@ -34,6 +34,12 @@
 
         <ng-container *ngIf="recalculatePrint as frames">
 
+          <app-face-landmarks
+            [landmarks]="printData[0].landmarks"
+            [sizes]="canvasElement"
+          >
+          </app-face-landmarks>
+
           <ng-container *ngFor="let frame of frames">
             <div class="face-box" appFrameTooltip [dataFrames]="frame.box" [framesQuantity]="frames.length">
               <div class="face-box--face" #boxFace></div>

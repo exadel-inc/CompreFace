@@ -29,8 +29,11 @@ export interface BoxSubjects {
 }
 
 export interface RequestResultRecognition {
+  age: number[];
+  gender: 'male' | 'female';
   box: BoxSize;
   subjects: BoxSubjects[];
+  landmarks: [number[]];
 }
 
 export interface SourceImageFace {

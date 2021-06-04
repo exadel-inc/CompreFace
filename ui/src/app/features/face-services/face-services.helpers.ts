@@ -81,3 +81,15 @@ export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeTo
     /* eslint-enable @typescript-eslint/naming-convention */
   };
 };
+
+/**
+ * Recalculate face coordinates according to canvas size (design).
+ *
+ * @param landmarks Face coordinates from BE.
+ * @param imageSize Size of image.
+ * @param sizeToCalc Size of image.
+ */
+export const recalculateLandmarks = (landmarks: [number[]], imageSize: ImageSize, sizeToCalc: ImageSize) => {
+  console.log(landmarks);
+  return landmarks;
+};

@@ -35,7 +35,7 @@ import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
 import { ImageSize } from '../../../../data/interfaces/image';
-import { recalculateFaceCoordinate, resultRecognitionFormatter } from '../../face-services.helpers';
+import { recalculateFaceCoordinate, recalculateLandmarks, resultRecognitionFormatter } from '../../face-services.helpers';
 
 @Component({
   selector: 'app-recognition-result',
@@ -81,7 +81,8 @@ export class RecognitionResultComponent implements OnInit, OnChanges, OnDestroy,
     this.ctx = this.canvas.nativeElement.getContext('2d');
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log(this.printData);
     this.dataPhoto$.next(this.file);
     this.dataPrint$.next(this.printData);
     if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
@@ -101,7 +102,11 @@ export class RecognitionResultComponent implements OnInit, OnChanges, OnDestroy,
   displayFrames<Type extends RequestResultRecognition[]>(data: Type, sizeImage: ImageSize, sizeCanvas: ImageSize): Observable<Type> {
     return new Observable(observer => {
       if (!!data) {
-        const recalculate = data.map(val => ({ ...val, box: recalculateFaceCoordinate(val.box, sizeImage, sizeCanvas) })) as Type;
+        const recalculate = data.map(val => ({
+          ...val,
+          box: recalculateFaceCoordinate(val.box, sizeImage, sizeCanvas),
+          landmarks: recalculateLandmarks(val.landmarks, sizeImage, sizeCanvas),
+        })) as Type;
         observer.next(recalculate);
       } else {
         observer.next(null);
