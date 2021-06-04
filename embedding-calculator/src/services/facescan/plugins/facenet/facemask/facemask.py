@@ -31,8 +31,15 @@ class MaskDetector(base.BasePlugin):
     LABELS = ('without_mask', 'with_mask', 'mask_weared_incorrect')
     ml_models = (
         ('inception_v3_on_mafa_kaggle123', '1AeSYb_E_3cqZM67qXnJ__wJDgw6yqTDV'),
+        ('mobilenet_v2_on_mafa_kaggle123', '1-eqivfTVaXC_9Z5INbYeFVEwBzzqIzm3')
     )
-    INPUT_IMAGE_SIZE = 100
+
+    @property
+    def input_image_size(self) -> Tuple[int, int]:
+        if self.ml_model_name == self.ml_models[1][0]:
+            return 128, 128
+        else:
+            return 100, 100
 
     @property
     def unzip_with_untouched_structure(self) -> bool:
@@ -43,7 +50,7 @@ class MaskDetector(base.BasePlugin):
         model = tf2.keras.models.load_model(self.ml_model.path)
 
         def get_value(img: Array3D) -> Tuple[Union[str, Tuple], float]:
-            img = cv2.resize(img, dsize=(self.INPUT_IMAGE_SIZE, self.INPUT_IMAGE_SIZE),
+            img = cv2.resize(img, dsize=self.input_image_size,
                              interpolation=cv2.INTER_CUBIC)
             img = img[:, :, [2, 1, 0]]
             img = np.expand_dims(img, 0)
