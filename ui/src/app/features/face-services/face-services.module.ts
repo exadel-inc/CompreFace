@@ -26,9 +26,9 @@ import { FaceRecognitionContainerComponent } from './face-recognition/face-recog
 import { FaceVerificationContainerComponent } from './face-verification/face-verification-container.component';
 import { RecognitionResultComponent } from './face-recognition/recognition-result/recognition-result.component';
 import { VerificationResultComponent } from './face-verification/verification-result/verification-result.component';
-import { FaceServicesDirective } from './face-services.directive';
+import { FaceServicesDirective } from './face-picture/face-services.directive';
 import { AppChangePhotoModule } from '../app-change-photo/app-change-photo.module';
-import { FaceLandmarksComponent } from './face-landmarks/face-landmarks.component';
+import { FacePictureComponent } from './face-picture/face-picture.component';
 
 @NgModule({
   declarations: [
@@ -36,7 +36,7 @@ import { FaceLandmarksComponent } from './face-landmarks/face-landmarks.componen
     FaceVerificationContainerComponent,
     RecognitionResultComponent,
     VerificationResultComponent,
-    FaceLandmarksComponent,
+    FacePictureComponent,
     FaceServicesDirective,
   ],
   imports: [CommonModule, DragNDropModule, SpinnerModule, MatExpansionModule, TranslateModule, MatCardModule, AppChangePhotoModule],

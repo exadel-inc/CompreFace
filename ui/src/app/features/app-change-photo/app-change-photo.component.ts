@@ -23,13 +23,12 @@ import { ChangeDetectionStrategy, Component, Output, EventEmitter, ViewChild, El
 })
 export class AppChangePhotoComponent {
   @Input() disabledButtons: boolean;
+
   @Output() changePhoto = new EventEmitter();
   @Output() resetPhoto = new EventEmitter();
   @Output() addLandmark = new EventEmitter();
 
   @ViewChild('uploadFile') fileDropEl: ElementRef;
 
-  addFile(event) {
-    console.log(event);
-  }
+  showLandmarks = false;
 }

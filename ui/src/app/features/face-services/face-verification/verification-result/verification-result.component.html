@@ -15,64 +15,69 @@
   -->
 <div class="result">
   <div class="process-img">
+
     <app-drag-n-drop
       *ngIf="!processFile"
       (upload)="selectProcessFile.emit($event)"
       viewComponentColumn
     ></app-drag-n-drop>
-    <mat-card [style.display]="processFile ? 'block' : 'none'">
+
+    <mat-card *ngIf="processFile">
+
       <app-change-photo
+        #changePhoto
         [disabledButtons]="pending"
         (resetPhoto)="onResetProcessFile()"
         (changePhoto)="onResetProcessFile($event)"
+        (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
       >
       </app-change-photo>
-      <div class="face-displaying">
-        <div class="face-displaying--wrapper">
-          <canvas #processFileCanvasElement [width]="widthCanvas"></canvas>
-          <ng-container *ngFor="let frame of recalculateProcessFile">
-            <div class="face-box" appFrameTooltip [dataFrames]="frame.box">
-              <div class="face-box&#45;&#45;face" #boxFace></div>
-            </div>
-          </ng-container>
-          <div class="spinner-img" *ngIf="pending">
-            <app-spinner></app-spinner>
-          </div>
-        </div>
-      </div>
+
+      <app-face-picture
+        *ngIf="processPicture$ | async as picture"
+        [picture]="picture"
+        [printData]="processFileData$ | async"
+        [isLoaded]="!pending"
+        [showLandmarks]="changePhoto.showLandmarks"
+      >
+      </app-face-picture>
+
     </mat-card>
   </div>
+
   <div class="check-img">
+
     <app-drag-n-drop
       *ngIf="!checkFile"
       (upload)="selectCheckFile.emit($event)"
       viewComponentColumn
     ></app-drag-n-drop>
-    <mat-card [style.display]="checkFile ? 'block' : 'none'">
+
+    <mat-card *ngIf="checkFile">
+
       <app-change-photo
+        #changePhoto
         [disabledButtons]="pending"
         (resetPhoto)="onResetCheckFile()"
         (changePhoto)="onResetCheckFile($event)"
+        (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
       >
       </app-change-photo>
-      <div class="face-displaying">
-        <div class="face-displaying--wrapper">
-          <canvas #checkFileCanvasElement [width]="widthCanvas"></canvas>
-          <ng-container *ngFor="let frame of  recalculateCheckFile">
-            <div class="face-box" appFrameTooltip [dataFrames]="frame.box" [framesQuantity]="recalculateCheckFile.length">
-              <div class="face-box&#45;&#45;face" #boxFace></div>
-              <div class="face-box&#45;&#45;info" #boxInfo>
-                <div class="face-box&#45;&#45;info_similarity">{{ frame.similarity }}</div>
-              </div>
-            </div>
-          </ng-container>
-          <div class="spinner-img" *ngIf="pending">
-            <app-spinner></app-spinner>
-          </div>
-        </div>
-      </div>
+
+      <app-face-picture
+        *ngIf="checkPicture$ | async as picture"
+        [picture]="picture"
+        [printData]="checkFileData$ | async"
+        [type]="type"
+        [isLoaded]="!pending"
+        [showLandmarks]="changePhoto.showLandmarks"
+      >
+      </app-face-picture>
+
     </mat-card>
+
   </div>
+
   <ng-container *ngIf="isLoaded">
     <div class="request">
       <mat-expansion-panel>

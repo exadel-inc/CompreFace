@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import "mixins.scss";
-@import "colors.scss";
+import { ImageSize } from './image';
 
-@mixin photo-spinner() {
-  position: absolute;
-  background-color: $light-gray;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 5;
-
-  app-spinner {
-    @include wrapper-center();
-  }
+export interface ImageConvert {
+  imageBitmap: ImageBitmap;
+  sizeCanvas: ImageSize;
 }

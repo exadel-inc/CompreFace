@@ -13,22 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {
-  Component,
-  ElementRef,
-  Input,
-  ViewChild,
-  OnChanges,
-  SimpleChanges,
-  Output,
-  EventEmitter,
-  AfterViewInit,
-  OnInit,
-  OnDestroy,
-} from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
-import { filter, map, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { BehaviorSubject, defer, Observable, of } from 'rxjs';
 
 import { RequestResultRecognition } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
@@ -36,96 +24,85 @@ import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
 import { ImageSize } from '../../../../data/interfaces/image';
 import { recalculateFaceCoordinate, recalculateLandmarks, resultRecognitionFormatter } from '../../face-services.helpers';
+import { ImageConvert } from '../../../../data/interfaces/image-convert';
 
 @Component({
   selector: 'app-recognition-result',
   templateUrl: './recognition-result.component.html',
   styleUrls: ['./recognition-result.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class RecognitionResultComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit {
+export class RecognitionResultComponent implements OnInit, OnChanges {
   @Input() file: File;
   @Input() requestInfo: RequestInfo;
   @Input() isLoaded: boolean;
-  @Input() type: string;
+  @Input() type: ServiceTypes;
   @Input() printData: RequestResultRecognition[];
 
   @Output() selectFile = new EventEmitter();
   @Output() resetFace = new EventEmitter();
 
-  @ViewChild('canvasElement', { static: true }) canvas: ElementRef<HTMLCanvasElement>;
+  dataPrintRecalculate$: BehaviorSubject<RequestResultRecognition[]> = new BehaviorSubject(null);
+  convertFile$: BehaviorSubject<any> = new BehaviorSubject(null);
 
-  private ctx: CanvasRenderingContext2D;
-  private dataPrint$: BehaviorSubject<RequestResultRecognition[]> = new BehaviorSubject(null);
-  private dataPhoto$: BehaviorSubject<any> = new BehaviorSubject(null);
-  private unsubscribe$: Subject<void> = new Subject();
+  picture$: Observable<ImageConvert>;
+  printData$: Observable<RequestResultRecognition[]>;
 
   formattedResult: string;
   widthCanvas = 500;
-  types = ServiceTypes;
-  recalculatePrint: RequestResultRecognition[];
 
   constructor(private loadingPhotoService: LoadingPhotoService) {}
 
   ngOnInit(): void {
-    this.dataPhoto$
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        filter(data => !!data),
-        switchMap(data => this.displayPhoto(data)),
-        switchMap(sizes => this.dataPrint$.pipe(switchMap(printData => this.displayFrames(printData, sizes.imageBitmap, sizes.sizeCanvas))))
-      )
-      .subscribe(value => (this.recalculatePrint = value));
-  }
+    this.picture$ = this.convertFile$.pipe(
+      filter(file => !!file),
+      switchMap(file => this.displayPhotoConvert(file))
+    );
 
-  ngAfterViewInit(): void {
-    this.ctx = this.canvas.nativeElement.getContext('2d');
+    this.printData$ = this.dataPrintRecalculate$.pipe(
+      switchMap(printData =>
+        defer(() =>
+          !!printData
+            ? this.picture$.pipe(
+                tap(data => console.log(data)),
+                switchMap(sizes => this.printDataRecalculate(printData, sizes.imageBitmap, sizes.sizeCanvas))
+              )
+            : of(null)
+        )
+      )
+    );
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(this.printData);
-    this.dataPhoto$.next(this.file);
-    this.dataPrint$.next(this.printData);
+    if (changes.hasOwnProperty('file')) this.convertFile$.next(this.file);
+    if (changes.hasOwnProperty('printData')) this.dataPrintRecalculate$.next(this.printData);
+
     if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 
-  displayPhoto(file: File): Observable<any> {
+  displayPhotoConvert(file: File): Observable<ImageConvert> {
     return this.loadingPhotoService.loader(file).pipe(
       map(img => ({
         imageBitmap: img,
         sizeCanvas: { width: this.widthCanvas, height: (img.height / img.width) * this.widthCanvas },
-      })),
-      tap(({ sizeCanvas }) => this.canvas.nativeElement.setAttribute('height', String(sizeCanvas.height))),
-      tap(({ imageBitmap, sizeCanvas }) => this.ctx.drawImage(imageBitmap, 0, 0, sizeCanvas.width, sizeCanvas.height))
+      }))
     );
   }
 
-  displayFrames<Type extends RequestResultRecognition[]>(data: Type, sizeImage: ImageSize, sizeCanvas: ImageSize): Observable<Type> {
+  printDataRecalculate<Type extends RequestResultRecognition[]>(data: Type, sizeImage: ImageSize, sizeCanvas: ImageSize): Observable<Type> {
     return new Observable(observer => {
-      if (!!data) {
-        const recalculate = data.map(val => ({
-          ...val,
-          box: recalculateFaceCoordinate(val.box, sizeImage, sizeCanvas),
-          landmarks: recalculateLandmarks(val.landmarks, sizeImage, sizeCanvas),
-        })) as Type;
-        observer.next(recalculate);
-      } else {
-        observer.next(null);
-      }
+      const recalculate = data.map(val => ({
+        ...val,
+        box: recalculateFaceCoordinate(val.box, sizeImage, sizeCanvas),
+        landmarks: recalculateLandmarks(val.landmarks, sizeImage, sizeCanvas),
+      })) as Type;
+      observer.next(recalculate);
       observer.complete();
     });
   }
 
   onResetFile(event?: File): void {
-    const { offsetHeight, offsetWidth } = this.ctx.canvas;
-    this.ctx.clearRect(0, 0, offsetWidth, offsetHeight);
-
     this.resetFace.emit();
-
     if (event) this.selectFile.emit(event);
-  }
-
-  ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
   }
 }

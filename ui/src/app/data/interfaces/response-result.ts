@@ -37,12 +37,18 @@ export interface RequestResultRecognition {
 }
 
 export interface SourceImageFace {
+  age: number[];
+  gender: 'male' | 'female';
   box: BoxSize;
+  landmarks: [number[]];
 }
 
 export interface FaceMatches {
+  age: number[];
+  gender: 'male' | 'female';
   box: BoxSize;
   similarity: number;
+  landmarks: [number[]];
 }
 
 export interface RequestResultVerification {

@@ -25,8 +25,8 @@ import {
   SimpleChanges,
 } from '@angular/core';
 
-import { FrameSize } from '../../data/interfaces/frame-size';
-import { BoxSize } from '../../data/interfaces/response-result';
+import { FrameSize } from '../../../data/interfaces/frame-size';
+import { BoxSize } from '../../../data/interfaces/response-result';
 
 @Directive({
   selector: '[appFrameTooltip]',

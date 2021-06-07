@@ -19,62 +19,25 @@
     <app-drag-n-drop *ngIf="!file" (upload)="selectFile.emit($event)"></app-drag-n-drop>
   </div>
 
-  <mat-card class="process-img" [style.display]="file ? 'block' : 'none'">
+  <mat-card class="process-img" *ngIf="file">
 
     <app-change-photo
+      #changePhoto
       [disabledButtons]="!isLoaded"
       (resetPhoto)="onResetFile()"
       (changePhoto)="onResetFile($event)"
+      (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
     ></app-change-photo>
 
-    <div class="face-displaying">
-      <div class="face-displaying--wrapper">
-
-        <canvas #canvasElement [width]="widthCanvas"></canvas>
-
-        <ng-container *ngIf="recalculatePrint as frames">
-
-          <app-face-landmarks
-            [landmarks]="printData[0].landmarks"
-            [sizes]="canvasElement"
-          >
-          </app-face-landmarks>
-
-          <ng-container *ngFor="let frame of frames">
-            <div class="face-box" appFrameTooltip [dataFrames]="frame.box" [framesQuantity]="frames.length">
-              <div class="face-box--face" #boxFace></div>
-              <div class="face-box--info" #boxInfo>
-
-                <ng-container *ngIf="type === types.Recognition">
-
-                  <ng-container *ngIf="frame.subjects[0] as value; else unknown">
-                    <div class="face-box--info_name">{{ value.subject }}</div>
-                    <div class="face-box--info_similarity">{{ value.similarity }}</div>
-                  </ng-container>
-
-                  <ng-template #unknown>
-                    <div class="face-box--info_name">Unknown</div>
-                  </ng-template>
-
-                </ng-container>
-
-                <ng-container *ngIf="type === types.Detection">
-                  <div class="face-box--info_similarity">{{ frame.box.probability }}</div>
-                </ng-container>
-
-              </div>
-            </div>
-
-          </ng-container>
-
-        </ng-container>
-
-        <div class="process-img--spinner" *ngIf="!isLoaded">
-          <app-spinner></app-spinner>
-        </div>
-
-      </div>
-    </div>
+    <app-face-picture
+      *ngIf="picture$ | async as picture"
+      [picture]="picture"
+      [printData]="printData$ | async"
+      [type]="type"
+      [isLoaded]="isLoaded"
+      [showLandmarks]="changePhoto.showLandmarks"
+    >
+    </app-face-picture>
 
   </mat-card>
 

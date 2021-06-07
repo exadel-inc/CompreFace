@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AVAILABLE_IMAGE_EXTENSIONS, MAX_IMAGE_SIZE } from 'src/app/core/constants';
@@ -37,6 +37,7 @@ import {
 import { getFileExtension } from '../face-services.helpers';
 import { SnackBarService } from '../../snackbar/snackbar.service';
 import { map } from 'rxjs/operators';
+import { ServiceTypes } from '../../../data/enums/service-types.enum';
 
 @Component({
   selector: 'app-face-verification-container',
@@ -50,6 +51,8 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
   requestInfo$: Observable<any>;
   pending$: Observable<boolean>;
   isLoaded$: Observable<boolean>;
+
+  @Input() type: ServiceTypes;
 
   constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
 

@@ -14,11 +14,7 @@
  * permissions and limitations under the License.
  */
 @import "media.scss";
-@import "frames.scss";
 @import "mixins.scss";
-@import "photo-spiner.scss";
-
-@include frames();
 
 .result {
   margin-top: 24px;
@@ -45,10 +41,6 @@
   .process-img {
     grid-area: process-img;
     text-align: center;
-
-    &--spinner {
-      @include photo-spinner();
-    }
   }
 
   .request {

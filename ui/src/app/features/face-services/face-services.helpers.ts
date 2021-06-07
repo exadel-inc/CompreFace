@@ -83,13 +83,18 @@ export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeTo
 };
 
 /**
- * Recalculate face coordinates according to canvas size (design).
+ * Recalculate face coordinates landmarks to canvas size (design).
  *
- * @param landmarks Face coordinates from BE.
+ * @param landmarks Landmarks coordinates from BE.
  * @param imageSize Size of image.
  * @param sizeToCalc Size of image.
  */
 export const recalculateLandmarks = (landmarks: [number[]], imageSize: ImageSize, sizeToCalc: ImageSize) => {
-  console.log(landmarks);
-  return landmarks;
+  const divideWidth = imageSize.width / sizeToCalc.width;
+  const divideHeight = imageSize.height / sizeToCalc.height;
+
+  return landmarks.map(val => [
+    val[0] / divideWidth > sizeToCalc.width ? sizeToCalc.width : val[0] / divideWidth,
+    val[1] / divideHeight > sizeToCalc.height ? sizeToCalc.height : val[1] / divideHeight,
+  ]);
 };

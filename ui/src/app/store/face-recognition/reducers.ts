@@ -34,8 +34,8 @@ const reducer: ActionReducer<FaceRecognitionEntityState> = createReducer(
   initialState,
   on(recognizeFace, (state, action) => ({ ...state, ...action, isPending: true })),
   on(recognizeFaceSuccess, (state, action) => ({ ...state, ...action, isPending: false })),
-  on(recognizeFaceReset, () => ({ ...initialState })),
-  on(recognizeFaceFail, state => ({ ...state, isPending: false }))
+  on(recognizeFaceFail, state => ({ ...state, isPending: false })),
+  on(recognizeFaceReset, () => ({ ...initialState }))
 );
 
 export const faceRecognitionReducer = (recognitionState: FaceRecognitionEntityState, action: Action) => reducer(recognitionState, action);

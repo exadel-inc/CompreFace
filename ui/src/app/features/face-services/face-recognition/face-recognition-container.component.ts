@@ -29,6 +29,7 @@ import {
 } from '../../../store/face-recognition/selectors';
 import { getFileExtension } from '../face-services.helpers';
 import { SnackBarService } from '../../snackbar/snackbar.service';
+import { ServiceTypes } from '../../../data/enums/service-types.enum';
 
 @Component({
   selector: 'app-face-recognition-container',
@@ -43,7 +44,7 @@ export class FaceRecognitionContainerComponent implements OnInit, OnDestroy {
   isLoaded$: Observable<boolean>;
 
   @Input() title: string;
-  @Input() type: string;
+  @Input() type: ServiceTypes;
 
   constructor(private store: Store<AppState>, private snackBarService: SnackBarService) {}
 

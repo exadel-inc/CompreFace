@@ -18,7 +18,7 @@
   <div class="container">
     <app-breadcrumbs-container></app-breadcrumbs-container>
     <ng-container [ngSwitch]="type">
-      <app-face-verification-container *ngSwitchCase="verification"></app-face-verification-container>
+      <app-face-verification-container *ngSwitchCase="verification" [type]="type"></app-face-verification-container>
       <app-face-recognition-container *ngSwitchDefault [type]="type"></app-face-recognition-container>
     </ng-container>
   </div>
