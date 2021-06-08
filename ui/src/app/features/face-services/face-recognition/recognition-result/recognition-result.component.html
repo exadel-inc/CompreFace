@@ -16,10 +16,10 @@
 <div class="result">
 
   <div class="drag-n-drop">
-    <app-drag-n-drop *ngIf="!file" (upload)="selectFile.emit($event)"></app-drag-n-drop>
+    <app-drag-n-drop *ngIf="!resizePhoto" (upload)="selectFile.emit($event)"></app-drag-n-drop>
   </div>
 
-  <mat-card class="process-img" *ngIf="file">
+  <mat-card class="process-img" *ngIf="resizePhoto">
 
     <app-change-photo
       #changePhoto
@@ -30,9 +30,8 @@
     ></app-change-photo>
 
     <app-face-picture
-      *ngIf="picture$ | async as picture"
-      [picture]="picture"
-      [printData]="printData$ | async"
+      [picture]="resizePhoto"
+      [printData]="recalculatePrintData"
       [type]="type"
       [isLoaded]="isLoaded"
       [showLandmarks]="changePhoto.showLandmarks"

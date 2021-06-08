@@ -25,7 +25,7 @@ import { FaceRecognitionService } from '../../core/face-recognition/face-recogni
 import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
 import { selectFiles } from './selectors';
-import { verifyFace, verifyFaceSuccess, verifyFaceFail, verifyFaceAddFile } from './action';
+import { verifyFace, verifyFaceSuccess, verifyFaceFail, verifyFaceAddProcessFile, verifyFaceAddCheckFileFile } from './action';
 
 @Injectable()
 export class FaceRecognitionEffects {
@@ -38,16 +38,16 @@ export class FaceRecognitionEffects {
 
   @Effect()
   verifyFaceAddFile$ = this.actions.pipe(
-    ofType(verifyFaceAddFile),
+    ofType(verifyFaceAddProcessFile, verifyFaceAddCheckFileFile),
     withLatestFrom(this.store.select(selectFiles)),
-    switchMap(([action, files]) => (files.processFile && files.checkFile ? [verifyFace()] : []))
+    switchMap(([, files]) => (files.processFile && files.checkFile ? [verifyFace()] : []))
   );
 
   @Effect()
   verifyFaceSaveToStore$ = this.actions.pipe(
     ofType(verifyFace),
     withLatestFrom(this.store.select(selectCurrentModel), this.store.select(selectDemoApiKey), this.store.select(selectFiles)),
-    switchMap(([action, model, demoApiKey, files]) =>
+    switchMap(([, model, demoApiKey, files]) =>
       iif(
         () => !!model,
         this.verificationFace(files.processFile, files.checkFile, model?.apiKey),

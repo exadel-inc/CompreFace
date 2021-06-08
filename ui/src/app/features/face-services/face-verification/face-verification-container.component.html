@@ -15,12 +15,13 @@
   -->
 <div class="face-result">
   <app-verification-result
-    [processFile]="processFile$ | async"
-    [checkFile]="checkFile$ | async"
+    [processPhoto]="processPhoto$ | async"
+    [processPhotoData]="dataProcessPhoto$ | async"
+    [checkPhoto]="checkPhoto$ | async"
+    [checkPhotoData]="dataCheckPhoto$ | async"
     [pending]="pending$ | async"
     [isLoaded]="isLoaded$ | async"
     [requestInfo]="requestInfo$ | async"
-    [printData]="data$ | async"
     [type]="type"
     (selectProcessFile)="processFileUpload($event)"
     (selectCheckFile)="checkFileUpload($event)"

@@ -17,12 +17,12 @@
   <div class="process-img">
 
     <app-drag-n-drop
-      *ngIf="!processFile"
+      *ngIf="!resizeProcessPhoto"
       (upload)="selectProcessFile.emit($event)"
       viewComponentColumn
     ></app-drag-n-drop>
 
-    <mat-card *ngIf="processFile">
+    <mat-card *ngIf="resizeProcessPhoto">
 
       <app-change-photo
         #changePhoto
@@ -34,9 +34,8 @@
       </app-change-photo>
 
       <app-face-picture
-        *ngIf="processPicture$ | async as picture"
-        [picture]="picture"
-        [printData]="processFileData$ | async"
+        [picture]="resizeProcessPhoto"
+        [printData]="printDataProcessPhoto"
         [isLoaded]="!pending"
         [showLandmarks]="changePhoto.showLandmarks"
       >
@@ -48,12 +47,12 @@
   <div class="check-img">
 
     <app-drag-n-drop
-      *ngIf="!checkFile"
+      *ngIf="!resizeCheckPhoto"
       (upload)="selectCheckFile.emit($event)"
       viewComponentColumn
     ></app-drag-n-drop>
 
-    <mat-card *ngIf="checkFile">
+    <mat-card *ngIf="resizeCheckPhoto">
 
       <app-change-photo
         #changePhoto
@@ -65,9 +64,8 @@
       </app-change-photo>
 
       <app-face-picture
-        *ngIf="checkPicture$ | async as picture"
-        [picture]="picture"
-        [printData]="checkFileData$ | async"
+        [picture]="resizeCheckPhoto"
+        [printData]="printDataCheckPhoto"
         [type]="type"
         [isLoaded]="!pending"
         [showLandmarks]="changePhoto.showLandmarks"

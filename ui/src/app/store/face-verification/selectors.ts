@@ -22,9 +22,6 @@ export const selectTestIsPending = createSelector(selectTestEntityState, state =
 
 export const selectFaceData = createSelector(selectTestEntityState, state => (state.model ? state.model.result : null));
 
-export const selectProcessFile = createSelector(selectTestEntityState, state => ({ processFile: state.processFile }));
-export const selectCheckFile = createSelector(selectTestEntityState, state => ({ checkFile: state.checkFile }));
-
 export const selectFiles = createSelector(selectTestEntityState, state => ({ processFile: state.processFile, checkFile: state.checkFile }));
 export const selectStateReady = createSelector(selectTestEntityState, state => !state.isPending && !!state?.model?.result[0]);
 export const selectRequest = createSelector(selectTestEntityState, state => ({

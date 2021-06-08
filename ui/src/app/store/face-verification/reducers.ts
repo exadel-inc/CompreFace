@@ -20,9 +20,10 @@ import {
   verifyFaceReset,
   verifyFace,
   verifyFaceSuccess,
-  verifyFaceAddFile,
   verifyFaceProcessFileReset,
   verifyFaceCheckFileReset,
+  verifyFaceAddProcessFile,
+  verifyFaceAddCheckFileFile,
 } from './action';
 export interface FaceVerificationEntityState {
   isPending: boolean;
@@ -42,8 +43,9 @@ const initialStateVerification: FaceVerificationEntityState = {
 
 const reducerVerification: ActionReducer<FaceVerificationEntityState> = createReducer(
   initialStateVerification,
-  on(verifyFaceAddFile, (state, action) => ({ ...state, ...action })),
-  on(verifyFace, (state, action) => ({ ...state, ...action, isPending: true })),
+  on(verifyFaceAddProcessFile, (state, action) => ({ ...state, ...action })),
+  on(verifyFaceAddCheckFileFile, (state, action) => ({ ...state, ...action })),
+  on(verifyFace, state => ({ ...state, isPending: true })),
   on(verifyFaceSuccess, (state, action) => ({ ...state, ...action, isPending: false })),
   on(verifyFaceFail, state => ({ ...state, isPending: false })),
   on(verifyFaceProcessFileReset, verifyFaceFail, state => ({ ...state, processFile: null, request: null, model: null })),
