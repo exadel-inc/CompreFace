@@ -43,8 +43,7 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
 
-  constructor(private dialog: MatDialog, private translate: TranslateService,
-              private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private dialog: MatDialog, private translate: TranslateService,) {
     super();
     this.refreshPage();
   }
