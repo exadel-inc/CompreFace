@@ -23,6 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class DragNDropComponent implements OnInit, AfterViewInit {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
+  @Input() type: string;
   @Input() title: string;
   @Input() label: string;
   @Input() model: any;

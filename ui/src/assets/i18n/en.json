@@ -172,7 +172,9 @@
     "test": "Test model",
     "add": "Add to model",
     "train": "Train model",
-    "recognize": "Recognize Face"
+    "recognize": "Recognize Face",
+    "comparable": "Comparable",
+    "source": "Source"
   },
   "test_model": {
     "title": "Test Model",

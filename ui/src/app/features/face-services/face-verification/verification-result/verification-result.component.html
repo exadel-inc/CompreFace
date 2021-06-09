@@ -19,6 +19,7 @@
     <app-drag-n-drop
       *ngIf="!resizeProcessPhoto"
       (upload)="selectProcessFile.emit($event)"
+      [type]="'dnd.source' | translate"
       viewComponentColumn
     ></app-drag-n-drop>
 
@@ -49,6 +50,7 @@
     <app-drag-n-drop
       *ngIf="!resizeCheckPhoto"
       (upload)="selectCheckFile.emit($event)"
+      [type]="'dnd.comparable' | translate"
       viewComponentColumn
     ></app-drag-n-drop>
 
