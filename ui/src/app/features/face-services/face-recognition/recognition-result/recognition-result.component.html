@@ -16,7 +16,13 @@
 <div class="result">
 
   <div class="drag-n-drop">
-    <app-drag-n-drop *ngIf="!resizePhoto" (upload)="selectFile.emit($event)"></app-drag-n-drop>
+    <app-drag-n-drop
+      *ngIf="!resizePhoto"
+      [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
+      [label]="'dnd.label' | translate"
+      (upload)="selectFile.emit($event)"
+    >
+    </app-drag-n-drop>
   </div>
 
   <mat-card class="process-img" *ngIf="resizePhoto">

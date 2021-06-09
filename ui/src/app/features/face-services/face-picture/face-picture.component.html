@@ -41,7 +41,7 @@
             </ng-container>
 
             <ng-container *ngIf="type === types.Detection">
-              <div class="face-box--info_similarity">{{ face.box.probability | number : '1.0-2' }}</div>
+              <div class="face-box--info_similarity">Probability: {{ face.box.probability | number : '1.0-2' }}</div>
             </ng-container>
 
             <ng-container *ngIf="type === types.Verification">

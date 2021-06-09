@@ -90,7 +90,7 @@ export class FacePictureComponent implements OnChanges, OnInit {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { x_max, x_min, y_max, y_min } = data.box;
     const frameArea: number = Math.round(x_max - x_min) * Math.round(y_max - y_min);
-    const sizePoint = frameArea / 3000 / 10 > 1.2 || data.landmarks.length >= 108 ? frameArea / 3000 / 10 : 1.2;
+    const sizePoint = frameArea / 3000 / 10 > 1.6 || data.landmarks.length >= 108 ? frameArea / 3000 / 10 : 1.6;
 
     data.landmarks.forEach(landmark => {
       ctx.beginPath();
