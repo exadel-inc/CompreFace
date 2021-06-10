@@ -30,8 +30,9 @@ import {
   verifyFaceAddCheckFileFile,
 } from '../../../store/face-verification/action';
 import {
+  selectCheckFile,
   selectFaceData,
-  selectFiles,
+  selectProcessFile,
   selectRequest,
   selectStateReady,
   selectTestIsPending,
@@ -70,14 +71,12 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
     this.requestInfo$ = this.store.select(selectRequest);
     this.pending$ = this.store.select(selectTestIsPending);
     this.isLoaded$ = this.store.select(selectStateReady);
-    this.processPhoto$ = this.store.select(selectFiles).pipe(
-      map(obj => obj.processFile),
-      switchMap(file => defer(() => (!!file ? this.loadingPhotoService.loader(file) : of(null))))
-    );
-    this.checkPhoto$ = this.store.select(selectFiles).pipe(
-      map(obj => obj.checkFile),
-      switchMap(file => defer(() => (!!file ? this.loadingPhotoService.loader(file) : of(null))))
-    );
+    this.processPhoto$ = this.store
+      .select(selectProcessFile)
+      .pipe(switchMap(file => defer(() => (!!file ? this.loadingPhotoService.loader(file) : of(null)))));
+    this.checkPhoto$ = this.store
+      .select(selectCheckFile)
+      .pipe(switchMap(file => defer(() => (!!file ? this.loadingPhotoService.loader(file) : of(null)))));
   }
 
   ngOnDestroy() {
@@ -90,16 +89,16 @@ export class FaceVerificationContainerComponent implements OnInit, OnDestroy {
     }
   }
 
+  checkFileUpload(file) {
+    if (this.validateImage(file)) {
+      this.store.dispatch(verifyFaceAddCheckFileFile({ checkFile: file }));
+    }
+  }
+
   processFileReset(event?: File) {
     this.store.dispatch(verifyFaceProcessFileReset());
     if (!!event) {
       this.processFileUpload(event);
-    }
-  }
-
-  checkFileUpload(file) {
-    if (this.validateImage(file)) {
-      this.store.dispatch(verifyFaceAddCheckFileFile({ checkFile: file }));
     }
   }
 
