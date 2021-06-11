@@ -15,7 +15,6 @@
 import logging
 import functools
 from typing import List, Tuple
-
 import attr
 import numpy as np
 import mxnet as mx
@@ -160,7 +159,7 @@ class GenderDetector(BaseGenderAge):
 
     def __call__(self, face: plugin_result.FaceDTO):
         gender, age = self._evaluate_model(face)
-        return plugin_result.GenderDTO(gender=self.GENDERS[int(gender)])
+        return plugin_result.GenderDTO(gender=self.GENDERS[int(gender)], gender_probability=1.)
 
 
 class AgeDetector(BaseGenderAge):
@@ -168,7 +167,7 @@ class AgeDetector(BaseGenderAge):
 
     def __call__(self, face: plugin_result.FaceDTO):
         gender, age = self._evaluate_model(face)
-        return plugin_result.AgeDTO(age=(age, age))
+        return plugin_result.AgeDTO(age=(age, age), age_probability=1.)
 
 
 class LandmarksDetector(mixins.LandmarksDetectorMixin, base.BasePlugin):
