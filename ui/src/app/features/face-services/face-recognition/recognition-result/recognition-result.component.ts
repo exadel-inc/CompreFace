@@ -15,11 +15,11 @@
  */
 import { Component, Input, OnChanges, SimpleChanges, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
-import { RequestResultRecognition } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
-import { recalculateFaceCoordinate, recalculateLandmarks, resultRecognitionFormatter } from '../../face-services.helpers';
 import { ImageConvert } from '../../../../data/interfaces/image-convert';
+import { RequestResultRecognition } from '../../../../data/interfaces/request-result-recognition';
+import { recalculateFaceCoordinate, recalculateLandmarks, resultRecognitionFormatter } from '../../face-services.helpers';
 
 @Component({
   selector: 'app-recognition-result',

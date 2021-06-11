@@ -14,9 +14,12 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, OnInit, ViewChild } from '@angular/core';
+
 import { ServiceTypes } from '../../../data/enums/service-types.enum';
-import { FaceMatches, RequestResultRecognition, SourceImageFace } from '../../../data/interfaces/response-result';
 import { ImageConvert } from '../../../data/interfaces/image-convert';
+import { RequestResultRecognition } from '../../../data/interfaces/request-result-recognition';
+import { FaceMatches } from '../../../data/interfaces/face-matches';
+import { SourceImageFace } from '../../../data/interfaces/source-image-face';
 
 @Component({
   selector: 'app-face-picture',
@@ -29,8 +32,7 @@ export class FacePictureComponent implements OnChanges, OnInit {
   @Input() printData: RequestResultRecognition[] | FaceMatches[] | SourceImageFace[];
   @Input() isLoaded: boolean;
   @Input() type: ServiceTypes;
-  @Input()
-  set showLandmarks(value: boolean) {
+  @Input() set showLandmarks(value: boolean) {
     this.disableLandmarks = value;
   }
 
@@ -41,7 +43,6 @@ export class FacePictureComponent implements OnChanges, OnInit {
   disableLandmarks = false;
 
   private currentPicture: () => any;
-  private colorLandmarks = '#27C224';
 
   ngOnInit(): void {
     this.initCanvasSize();
@@ -51,7 +52,7 @@ export class FacePictureComponent implements OnChanges, OnInit {
   ngOnChanges(): void {
     this.initCanvasSize();
     if (!!this.currentPicture) this.currentPicture = this.loadPicture(this.canvasPicture, this.picture, this.currentPicture);
-    this.getLandmarks(this.canvasLandmarks, this.printData, this.colorLandmarks);
+    this.getLandmarks(this.canvasLandmarks, this.printData);
   }
 
   initCanvasSize(): void {
@@ -73,28 +74,24 @@ export class FacePictureComponent implements OnChanges, OnInit {
     return () => ctx.clearRect(0, 0, sizeCanvas.width, sizeCanvas.height);
   }
 
-  getLandmarks(
-    canvasEl: ElementRef<HTMLCanvasElement>,
-    data: RequestResultRecognition[] | FaceMatches[] | SourceImageFace[],
-    color: string
-  ): void {
+  getLandmarks(canvasEl: ElementRef<HTMLCanvasElement>, data: RequestResultRecognition[] | FaceMatches[] | SourceImageFace[]): void {
     if (!data) return;
 
     const ctx: CanvasRenderingContext2D = canvasEl.nativeElement.getContext('2d');
-    ctx.fillStyle = color;
+    ctx.fillStyle = '#27C224';
 
-    data.forEach(val => this.displayLandmarks(ctx, val, color));
+    data.forEach(val => this.displayLandmarks(ctx, val));
   }
 
-  displayLandmarks(ctx: CanvasRenderingContext2D, data: RequestResultRecognition | FaceMatches | SourceImageFace, color: string): void {
+  displayLandmarks(ctx: CanvasRenderingContext2D, data: RequestResultRecognition | FaceMatches | SourceImageFace): void {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { x_max, x_min, y_max, y_min } = data.box;
-    const frameArea: number = Math.round(x_max - x_min) * Math.round(y_max - y_min);
-    const sizePoint = frameArea / 3000 / 10 > 1.6 || data.landmarks.length >= 108 ? frameArea / 3000 / 10 : 1.6;
+    const frameArea: number = (Math.round(x_max - x_min) * Math.round(y_max - y_min)) / 19000;
+    const sizePoint = frameArea > 1.4 || data.landmarks.length >= 108 ? frameArea : 1.4;
 
     data.landmarks.forEach(landmark => {
       ctx.beginPath();
-      ctx.strokeStyle = color;
+      ctx.strokeStyle = '#27C224';
       ctx.arc(landmark[0], landmark[1], sizePoint, 0, Math.PI * 2, false);
       ctx.fill();
       ctx.closePath();

@@ -26,7 +26,7 @@ import {
 } from '@angular/core';
 
 import { FrameSize } from '../../../data/interfaces/frame-size';
-import { BoxSize } from '../../../data/interfaces/response-result';
+import { BoxSize } from '../../../data/interfaces/box-size';
 
 @Directive({
   selector: '[appFrameTooltip]',

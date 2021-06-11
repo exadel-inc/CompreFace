@@ -15,12 +15,13 @@
  */
 import { Component, Input, OnChanges, Output, EventEmitter, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
-import { FaceMatches, RequestResultRecognition, SourceImageFace } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
 import { ServiceTypes } from '../../../../data/enums/service-types.enum';
 import { ImageConvert } from '../../../../data/interfaces/image-convert';
 
 import { recalculateFaceCoordinate, recalculateLandmarks, resultRecognitionFormatter } from '../../face-services.helpers';
+import { SourceImageFace } from '../../../../data/interfaces/source-image-face';
+import { FaceMatches } from '../../../../data/interfaces/face-matches';
 
 @Component({
   selector: 'app-verification-result',
@@ -33,13 +34,13 @@ export class VerificationResultComponent implements OnChanges {
     this.resizeProcessPhoto = this.resize(image);
   }
   @Input() set processPhotoData(data: SourceImageFace[]) {
-    this.printDataProcessPhoto = this.recalculate(data, this.resizeProcessPhoto);
+    this.printDataProcessPhoto = this.recalculate(data, this.resizeProcessPhoto) as SourceImageFace[];
   }
   @Input() set checkPhoto(image: ImageBitmap) {
     this.resizeCheckPhoto = this.resize(image);
   }
   @Input() set checkPhotoData(data: FaceMatches[]) {
-    this.printDataCheckPhoto = this.recalculate(data, this.resizeCheckPhoto);
+    this.printDataCheckPhoto = this.recalculate(data, this.resizeCheckPhoto) as FaceMatches[];
   }
 
   @Input() requestInfo: RequestInfo;
@@ -74,13 +75,13 @@ export class VerificationResultComponent implements OnChanges {
       : null;
   }
 
-  recalculate(data: any[], image: ImageConvert): any[] {
+  recalculate(data: any[], image: ImageConvert): SourceImageFace[] | FaceMatches[] {
     return !!data
       ? (data.map(val => ({
           ...val,
           box: recalculateFaceCoordinate(val.box, image.imageBitmap, image.sizeCanvas),
           landmarks: recalculateLandmarks(val.landmarks, image.imageBitmap, image.sizeCanvas),
-        })) as RequestResultRecognition[])
+        })) as SourceImageFace[] | FaceMatches[])
       : null;
   }
 

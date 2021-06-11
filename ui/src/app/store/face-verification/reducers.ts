@@ -43,12 +43,10 @@ const initialStateVerification: FaceVerificationEntityState = {
 
 const reducerVerification: ActionReducer<FaceVerificationEntityState> = createReducer(
   initialStateVerification,
-  on(verifyFaceAddProcessFile, (state, action) => ({ ...state, ...action })),
-  on(verifyFaceAddCheckFileFile, (state, action) => ({ ...state, ...action })),
+  on(verifyFaceAddProcessFile, verifyFaceAddCheckFileFile, (state, action) => ({ ...state, ...action })),
   on(verifyFace, state => ({ ...state, isPending: true })),
   on(verifyFaceSuccess, (state, action) => ({ ...state, ...action, isPending: false })),
-  on(verifyFaceFail, state => ({ ...state, isPending: false })),
-  on(verifyFaceProcessFileReset, verifyFaceFail, state => ({ ...state, processFile: null, request: null, model: null })),
+  on(verifyFaceProcessFileReset, verifyFaceFail, state => ({ ...state, processFile: null, request: null, model: null, isPending: false })),
   on(verifyFaceCheckFileReset, state => ({ ...state, checkFile: null, request: null, model: null })),
   on(verifyFaceReset, () => ({ ...initialStateVerification }))
 );

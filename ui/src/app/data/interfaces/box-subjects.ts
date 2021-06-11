@@ -13,11 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { SourceImageFace } from './source-image-face';
-import { FaceMatches } from './face-matches';
 
-/* eslint-disable @typescript-eslint/naming-convention */
-export interface RequestResultVerification {
-  source_image_face: SourceImageFace;
-  face_matches: FaceMatches[];
+export interface BoxSubjects {
+  subject: string;
+  similarity: number;
 }
