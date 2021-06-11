@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-.recognition-loading {
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
+
+/* eslint-disable @typescript-eslint/naming-convention */
+export interface BoxSize {
+  probability: number;
+  x_max: number;
+  x_min: number;
+  y_max: number;
+  y_min: number;
 }

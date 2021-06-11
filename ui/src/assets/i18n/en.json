@@ -167,12 +167,15 @@
     "home": "Home"
   },
   "dnd": {
-    "title": "Click here or Drag and drop your image here",
-    "label": "Available images extensions: jpeg, jpg, png, webp. \nMax images size = 5Mb (5242880bytes).",
+    "title": "Click here or Drag and drop your {{typeImage}} here",
+    "label": "Available images extensions: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp \nMax images size = 5Mb (5242880bytes)",
     "test": "Test model",
     "add": "Add to model",
     "train": "Train model",
-    "recognize": "Recognize Face"
+    "recognize": "Recognize Face",
+    "image": "image",
+    "target": "target image",
+    "source": "source image"
   },
   "test_model": {
     "title": "Test Model",

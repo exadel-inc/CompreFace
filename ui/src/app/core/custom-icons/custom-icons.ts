@@ -27,7 +27,6 @@ export enum Icons {
   Profile = 'profile',
   Search = 'search',
   Trash = 'trash',
-  TrashNotActive = 'trash_not_active',
   Upload = 'upload',
   Warning = 'warning',
 }

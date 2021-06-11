@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +13,22 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-.recognition-loading {
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
+import { ChangeDetectionStrategy, Component, Output, EventEmitter, ViewChild, ElementRef, Input } from '@angular/core';
+
+@Component({
+  selector: 'app-change-photo',
+  templateUrl: './app-change-photo.component.html',
+  styleUrls: ['./app-change-photo.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class AppChangePhotoComponent {
+  @Input() disabledButtons: boolean;
+
+  @Output() changePhoto = new EventEmitter();
+  @Output() resetPhoto = new EventEmitter();
+  @Output() addLandmark = new EventEmitter();
+
+  @ViewChild('uploadFile') fileDropEl: ElementRef;
+
+  showLandmarks = false;
 }

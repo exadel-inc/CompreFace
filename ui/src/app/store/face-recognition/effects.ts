@@ -25,6 +25,7 @@ import { selectDemoApiKey } from '../demo/selectors';
 import { selectCurrentModel } from '../model/selectors';
 import { addFace, addFaceFail, addFaceSuccess, recognizeFace, recognizeFaceFail, recognizeFaceSuccess } from './action';
 import { ServiceTypes } from '../../data/enums/service-types.enum';
+
 @Injectable()
 export class FaceRecognitionEffects {
   constructor(
