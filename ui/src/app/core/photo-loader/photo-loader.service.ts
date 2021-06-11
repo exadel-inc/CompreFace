@@ -16,50 +16,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-
-import { decode, decodeImage, IFD, toRGBA8 } from 'utif';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LoadingPhotoService {
-  private type: string[] = [
-    'image/bmp',
-    'image/gif',
-    'image/jpeg',
-    'image/png',
-    'image/tiff',
-    'image/vnd.wap.wbmp',
-    'image/webp',
-    'image/x-icon',
-    'image/x-jng',
-  ];
-
-  get imageType(): string[] {
-    return this.type;
-  }
-
   constructor(private http: HttpClient) {}
-
-  tiffConvertor(url: string): Observable<ImageBitmap> {
-    return this.http.get(url, { responseType: 'arraybuffer' }).pipe(
-      map((array: ArrayBuffer) => {
-        const ifd: IFD = decode(array)[0];
-
-        decodeImage(array, ifd);
-
-        const rgba: Uint8Array = toRGBA8(ifd);
-        const imageData: ImageData = new ImageData(ifd.width, ifd.height);
-
-        rgba.forEach((value: number, index: number) => (imageData.data[index] = value));
-
-        return imageData as ImageData;
-      }),
-      switchMap(async (imageData: ImageData) => (await createImageBitmap(imageData)) as ImageBitmap)
-    );
-  }
 
   createImage(url: string): Observable<ImageBitmap> {
     return this.http
@@ -68,13 +32,8 @@ export class LoadingPhotoService {
   }
 
   loader(file: File): Observable<ImageBitmap> {
-    const checkImageType: boolean = this.imageType.includes(file.type);
-
-    if (!checkImageType) return;
-
     const url: string = URL.createObjectURL(file);
-    const type = 'image/tiff';
 
-    return file.type === type ? this.tiffConvertor(url) : this.createImage(url);
+    return this.createImage(url);
   }
 }

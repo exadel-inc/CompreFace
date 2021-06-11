@@ -17,7 +17,6 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "allowedCommonJsDependencies": ["utif"],
             "outputPath": "dist/compreface",
             "index": "src/index.html",
             "main": "src/main.ts",
