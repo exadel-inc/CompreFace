@@ -19,12 +19,10 @@ import { HttpClient } from '@angular/common/http';
 import { switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class LoadingPhotoService {
-
   constructor(private http: HttpClient) {}
 
   createImage(url: string): Observable<ImageBitmap> {
@@ -34,7 +32,6 @@ export class LoadingPhotoService {
   }
 
   loader(file: File): Observable<ImageBitmap> {
-    console.log(file);
     const url: string = URL.createObjectURL(file);
 
     return this.createImage(url);

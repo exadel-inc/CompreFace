@@ -36,9 +36,9 @@ describe('LoadingPhotoService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should be type check that is not included in list for example: image/x-jg', () => {
-    const file = new File([''], 'image', { type: 'image/x-jg' });
+  it('should check type image example: image/jpg', () => {
+    const file = new File([''], 'image', { type: 'image/jpg' });
 
-    expect(service.loader(file)).toBeUndefined();
+    expect(service.loader(file)).toBeDefined();
   });
 });
