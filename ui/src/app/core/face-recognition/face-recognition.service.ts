@@ -50,6 +50,8 @@ export class FaceRecognitionService {
     return this.http
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        params: { face_plugins: ['landmarks', 'gender', 'age'] },
       })
       .pipe(
         map(data => ({
@@ -67,6 +69,8 @@ export class FaceRecognitionService {
     return this.http
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        params: { face_plugins: ['landmarks', 'gender', 'age'] },
       })
       .pipe(
         map(data => ({
@@ -90,6 +94,8 @@ export class FaceRecognitionService {
     return this.http
       .post(url, formData, {
         headers: { 'x-api-key': apiKey },
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        params: { face_plugins: ['landmarks', 'gender', 'age'] },
       })
       .pipe(
         map(data => data as { result: RequestResultVerification }),
@@ -122,7 +128,7 @@ export class FaceRecognitionService {
       apiKey,
       file: { name: fname },
     } = options;
-    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "file=@${fname}"`;
+    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-H "face_plugins: ['landmarks', 'gender', 'age']" \\\n-F "file=@${fname}"`;
   }
 
   private createUIDoubleFileRequest(url: string, options = {} as UIDoubleFileRequestOptions, params = {}): string {
@@ -131,6 +137,6 @@ export class FaceRecognitionService {
       sourceImage: { name: ffname },
       targetImage: { name: sfname },
     } = options;
-    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-F "source_image=@${ffname}" \\\n-F "target_image=@${sfname}"`;
+    return `curl -X POST "${window.location.origin}${url}" \\\n-H "Content-Type: multipart/form-data" \\\n-H "x-api-key: ${apiKey}" \\\n-H "face_plugins: ['landmarks', 'gender', 'age']" \\\n-F "source_image=@${ffname}" \\\n-F "target_image=@${sfname}"`;
   }
 }

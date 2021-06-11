@@ -66,9 +66,8 @@ export const getFileExtension = (file: File): string =>
  * @param box Face coordinates from BE.
  * @param imageSize Size of image.
  * @param sizeToCalc Canvas size. (design size).
- * @param yAxisPadding padding to ensure capacity for text area on image.
  */
-export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeToCalc: ImageSize, yAxisPadding: number) => {
+export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeToCalc: ImageSize) => {
   const divideWidth = imageSize.width / sizeToCalc.width;
   const divideHeight = imageSize.height / sizeToCalc.height;
 
@@ -77,22 +76,25 @@ export const recalculateFaceCoordinate = (box: any, imageSize: ImageSize, sizeTo
     /* eslint-disable @typescript-eslint/naming-convention */
     x_max: box.x_max / divideWidth > sizeToCalc.width ? sizeToCalc.width : box.x_max / divideWidth,
     x_min: box.x_min / divideWidth,
-    y_max: box.y_max / divideHeight > sizeToCalc.height - yAxisPadding ? sizeToCalc.height - yAxisPadding : box.y_max / divideHeight,
-    y_min: box.y_min / divideHeight > yAxisPadding ? box.y_min / divideHeight : yAxisPadding,
+    y_max: box.y_max / divideHeight > sizeToCalc.height ? sizeToCalc.height : box.y_max / divideHeight,
+    y_min: box.y_min / divideHeight,
     /* eslint-enable @typescript-eslint/naming-convention */
   };
 };
 
-export const createDefaultImage = (ctx, box) => {
-  ctx.beginPath();
-  ctx.strokeStyle = 'green';
-  ctx.moveTo(box.x_min, box.y_min);
-  ctx.lineTo(box.x_max, box.y_min);
-  ctx.lineTo(box.x_max, box.y_max);
-  ctx.lineTo(box.x_min, box.y_max);
-  ctx.lineTo(box.x_min, box.y_min);
-  ctx.stroke();
-  ctx.font = '12pt Roboto Regular Helvetica Neue sans-serif';
+/**
+ * Recalculate face coordinates landmarks to canvas size (design).
+ *
+ * @param landmarks Landmarks coordinates from BE.
+ * @param imageSize Size of image.
+ * @param sizeToCalc Size of image.
+ */
+export const recalculateLandmarks = (landmarks: [number[]], imageSize: ImageSize, sizeToCalc: ImageSize) => {
+  const divideWidth = imageSize.width / sizeToCalc.width;
+  const divideHeight = imageSize.height / sizeToCalc.height;
 
-  return ctx;
+  return landmarks.map(val => [
+    val[0] / divideWidth > sizeToCalc.width ? sizeToCalc.width : val[0] / divideWidth,
+    val[1] / divideHeight > sizeToCalc.height ? sizeToCalc.height : val[1] / divideHeight,
+  ]);
 };

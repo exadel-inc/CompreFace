@@ -1,6 +1,21 @@
-@import '~@angular/material/theming';
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
-@import 'colors.scss';
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+@import "~@angular/material/theming";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap");
+@import "colors.scss";
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -350,6 +365,24 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
 
   .mat-button-focus-overlay {
     background-color: transparent;
+  }
+
+  .mat-flat-button,
+  .mat-icon-button {
+
+    &.mat-button-disabled {
+      background-color: transparent;
+
+      svg path {
+        fill: $special-dark-gray !important;
+      }
+    }
+
+    &.landmarks-active {
+      svg path:not([fill-rule]) {
+        fill: $green;
+      }
+    }
   }
 }
 
