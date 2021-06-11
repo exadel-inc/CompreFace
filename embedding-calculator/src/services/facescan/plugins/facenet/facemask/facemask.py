@@ -30,7 +30,7 @@ class MaskDetector(base.BasePlugin):
     slug = 'mask'
     LABELS = ('without_mask', 'with_mask', 'mask_weared_incorrect')
     ml_models = (
-        ('inception_v3_on_mafa_kaggle123', '1AeSYb_E_3cqZM67qXnJ__wJDgw6yqTDV'),
+        ('inception_v3_on_mafa_kaggle123', '1jm2Wd2JEZxhS8O1JjV-kfBOyOYUMxKHq'),
         ('mobilenet_v2_on_mafa_kaggle123', '1-eqivfTVaXC_9Z5INbYeFVEwBzzqIzm3')
     )
 
@@ -42,7 +42,7 @@ class MaskDetector(base.BasePlugin):
             return 100, 100
 
     @property
-    def unzip_with_untouched_structure(self) -> bool:
+    def retain_folder_structure(self) -> bool:
         return True
 
     @cached_property
@@ -52,7 +52,6 @@ class MaskDetector(base.BasePlugin):
         def get_value(img: Array3D) -> Tuple[Union[str, Tuple], float]:
             img = cv2.resize(img, dsize=self.input_image_size,
                              interpolation=cv2.INTER_CUBIC)
-            img = img[:, :, [2, 1, 0]]
             img = np.expand_dims(img, 0)
 
             scores = model.predict(img)

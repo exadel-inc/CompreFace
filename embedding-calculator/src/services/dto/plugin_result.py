@@ -12,7 +12,7 @@ class EmbeddingDTO(JSONEncodable):
 
 
 class GenderDTO(JSONEncodable):
-    def __init__(self, gender, gender_probability):
+    def __init__(self, gender, gender_probability=1.):
         self.gender = {
             'value': gender,
             'probability': float(gender_probability)
@@ -20,7 +20,7 @@ class GenderDTO(JSONEncodable):
 
 
 class AgeDTO(JSONEncodable):
-    def __init__(self, age, age_probability):
+    def __init__(self, age, age_probability=1.):
         self.age = {
             'low': age[0],
             'high': age[1],
@@ -28,7 +28,7 @@ class AgeDTO(JSONEncodable):
 
 
 class MaskDTO(JSONEncodable):
-    def __init__(self, mask, mask_probability):
+    def __init__(self, mask, mask_probability=1.):
         self.mask = {
             'value': mask,
             'probability': float(mask_probability)

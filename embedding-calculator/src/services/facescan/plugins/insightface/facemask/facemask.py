@@ -46,12 +46,12 @@ class MaskDetector(InsightFaceMixin, base.BasePlugin):
         return 224, 224
 
     @property
-    def unzip_with_untouched_structure(self) -> bool:
+    def retain_folder_structure(self) -> bool:
         return True
 
     @cached_property
     def _model(self):
-        if self.ml_model_name.split('_')[0] == 'resnet18':
+        if self.ml_model_name and self.ml_model_name.split('_')[0] == 'resnet18':
             model = vision.resnet18_v1(classes=len(self.LABELS))
         else:
             model = vision.mobilenet_v2_1_0(classes=len(self.LABELS))

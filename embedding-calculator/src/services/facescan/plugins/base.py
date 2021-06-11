@@ -71,7 +71,7 @@ class MLModel:
     def _extract(self, filename: str):
         os.makedirs(self.path, exist_ok=True)
         with ZipFile(filename, 'r') as zf:
-            if self.plugin.unzip_with_untouched_structure:
+            if self.plugin.retain_folder_structure:
                 for info in zf.infolist():
                     if info.is_dir():
                         os.makedirs(Path(self.path) / Path(info.filename))
@@ -133,7 +133,7 @@ class BasePlugin(ABC):
         return f'{self.backend}.{self.__class__.__name__}'
 
     @property
-    def unzip_with_untouched_structure(self) -> bool:
+    def retain_folder_structure(self) -> bool:
         return False
 
     def __str__(self):
