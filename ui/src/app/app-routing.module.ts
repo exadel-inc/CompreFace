@@ -19,6 +19,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
+import {ManageCollectionComponent} from "./ui/manage-collection/manage-collection.component";
 
 const routes: Routes = [
   {
@@ -46,6 +47,11 @@ const routes: Routes = [
   },
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
   { path: 'sign-up', loadChildren: () => import('./pages/sign-up/sign-up.module').then(m => m.SignUpModule) },
+  {
+    path: 'manage-collection',
+    component: ManageCollectionComponent,
+    loadChildren: () => import('./ui/manage-collection/manage-collection.module').then(m => m.ManageCollectionModule),
+  },
   { path: '**', redirectTo: '/' },
 ];
 

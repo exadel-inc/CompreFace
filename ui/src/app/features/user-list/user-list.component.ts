@@ -27,7 +27,7 @@ import { ITableConfig } from '../table/table.component';
 import { UserListFacade } from './user-list-facade';
 
 @Component({
-  selector: 'app-user-list-container',
+  selector: ' app-user-list-container',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

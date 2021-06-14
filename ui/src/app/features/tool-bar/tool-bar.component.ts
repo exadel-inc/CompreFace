@@ -40,7 +40,7 @@ export class ToolBarComponent implements OnInit{
   constructor(private dialog: MatDialog, private translate: TranslateService) {}
 
   ngOnInit(): void {
-    console.log(this.userName, 'sana');
+
   }
 
   changeArrowIcon(): void {
