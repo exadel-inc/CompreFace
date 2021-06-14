@@ -23,7 +23,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { RoleEditDialogComponent } from '../role-edit-dialog/role-edit-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserRole } from '../../data/interfaces/user-role';
-import {ActivatedRoute, Router} from "@angular/router";
+
 
 @Component({
   selector: 'app-user-table',
@@ -43,7 +43,7 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
 
-  constructor(private dialog: MatDialog, private translate: TranslateService,) {
+  constructor(private dialog: MatDialog, private translate: TranslateService) {
     super();
     this.refreshPage();
   }
@@ -51,7 +51,6 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   ngOnInit() {
     this.message = this.createMessage;
     this.noResultMessage = this.translate.instant('users.search.no_results');
-
   }
 
   ngOnChanges(): void {
@@ -103,12 +102,11 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   }
 
   refreshPage(): void {
-    if (!localStorage.getItem('foo')) {
-      localStorage.setItem('foo', 'no reload')
-      location.reload()
+    if (!localStorage.getItem('refresh-page')) {
+      localStorage.setItem('refresh-page', 'no reload');
+      location.reload();
     } else {
-      localStorage.removeItem('foo')
+      localStorage.removeItem('refresh-page');
     }
   }
-
 }
