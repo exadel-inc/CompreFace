@@ -51,10 +51,13 @@ class MaskDetector(InsightFaceMixin, base.BasePlugin):
 
     @cached_property
     def _model(self):
+        gpu_count = mx.context.num_gpus()
+        ctx = mx.gpu() if gpu_count > 0 else mx.cpu()
+
         if self.ml_model_name and self.ml_model_name.split('_')[0] == 'resnet18':
-            model = vision.resnet18_v1(classes=len(self.LABELS))
+            model = vision.resnet18_v1(classes=len(self.LABELS), ctx=ctx)
         else:
-            model = vision.mobilenet_v2_1_0(classes=len(self.LABELS))
+            model = vision.mobilenet_v2_1_0(classes=len(self.LABELS), ctx=ctx)
         model_path = Path(self.ml_model.path) / Path(os.listdir(self.ml_model.path)[0])
         model.load_parameters(str(model_path))
 
@@ -62,7 +65,7 @@ class MaskDetector(InsightFaceMixin, base.BasePlugin):
             data = img.reshape((1,) + img.shape)
             data = mx.nd.array(data)
 
-            scores = model(self.img_transforms(data)).softmax().asnumpy()
+            scores = model(mx.nd.array(self.img_transforms(data), ctx=ctx)).softmax().asnumpy()
             val = self.LABELS[int(np.argmax(scores, axis=1)[0])]
             prob = scores[0][int(np.argmax(scores, axis=1)[0])]
             return val, prob
