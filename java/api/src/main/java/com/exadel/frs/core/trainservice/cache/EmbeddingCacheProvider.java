@@ -1,6 +1,8 @@
 package com.exadel.frs.core.trainservice.cache;
 
+import com.exadel.frs.core.trainservice.dto.CacheActionDto;
 import com.exadel.frs.core.trainservice.service.EmbeddingService;
+import com.exadel.frs.core.trainservice.service.NotificationSenderService;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,8 @@ public class EmbeddingCacheProvider {
 
     private final EmbeddingService embeddingService;
 
+    private final NotificationSenderService notificationSenderService;
+
     private static final Cache<String, EmbeddingCollection> cache =
             CacheBuilder.newBuilder()
                     .expireAfterAccess(CACHE_EXPIRATION, TimeUnit.SECONDS)
@@ -29,7 +33,10 @@ public class EmbeddingCacheProvider {
         var result = cache.getIfPresent(apiKey);
         if (result == null) {
             result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
+
             cache.put(apiKey, result);
+
+            notifyCacheEvent("UPDATE", apiKey);
         }
 
         return result;
@@ -38,9 +45,29 @@ public class EmbeddingCacheProvider {
     public void ifPresent(String apiKey, Consumer<EmbeddingCollection> consumer) {
         Optional.ofNullable(cache.getIfPresent(apiKey))
                 .ifPresent(consumer);
+        //notify put with key and result
+        EmbeddingCollection dd = cache.getIfPresent(apiKey);
+        notifyCacheEvent("UPDATE", apiKey);
     }
 
     public void invalidate(final String apiKey) {
         cache.invalidate(apiKey);
+        notifyCacheEvent("DELETE", apiKey);
+    }
+
+
+    public void receivePutOnCache(String apiKey) {
+        var result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
+        cache.put(apiKey, result);
+        notifyCacheEvent("UPDATE", apiKey);
+    }
+
+    public void receiveInvalidateCache(final String apiKey) {
+        cache.invalidate(apiKey);
+    }
+
+    private void notifyCacheEvent(String event, String apiKey) {
+        CacheActionDto cacheActionDto = new CacheActionDto(event, apiKey);
+        notificationSenderService.notifyCacheChange(cacheActionDto);
     }
 }
