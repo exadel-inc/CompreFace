@@ -1,0 +1,19 @@
+<div class="main">
+  <div class="button">
+    <button class="btn">Add Subject</button>
+  </div>
+  <div class="search">
+    <input type="text" class="input" placeholder="Search..." />
+  </div>
+  <div class="subjects">
+    <div class="section" *ngFor="let item of testArr">
+      <div class="avatar">
+        <img src="../../assets/img/manage-collection/avatar-subject.svg" alt="" class="default" />
+        <img src="../../assets/img/manage-collection/avatar-subject-hover.svg" alt="" class="hover" />
+        <div class="name">
+          <span> John Done </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -29,6 +29,7 @@ import { UserTableModule } from 'src/app/features/user-table/user-table.module';
 
 import { ToolBarModule } from '../../features/tool-bar/tool-bar.module';
 import { DashboardComponent } from './dashboard.component';
+import {ManageCollectionComponent} from "../manage-collection/manage-collection.component";
 
 @NgModule({
   declarations: [DashboardComponent],
@@ -43,7 +44,7 @@ import { DashboardComponent } from './dashboard.component';
     MatFormFieldModule,
     MatInputModule,
     FormsModule,
-    RouterModule.forChild([{ path: '', component: DashboardComponent }]),
+    RouterModule.forChild([{ path: '', component: DashboardComponent }, {path: 'manage-collection', component: ManageCollectionComponent}]),
     ToolBarModule,
     MatCardModule,
   ],

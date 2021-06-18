@@ -1,0 +1,88 @@
+.main {
+  padding: 24px 8px 0px 8px;
+  //min-height: 425px;
+  //height: 425px;
+  //overflow-y: scroll;
+  .button {
+    padding-bottom: 16px;
+    border-bottom: 1px solid #f1f1f1;
+    .btn {
+      border: none;
+      border-radius: 4px;
+      outline: none;
+      width: 100%;
+      height: 43px;
+      color: #fff;
+      text-align: center;
+      font-family: Poppins;
+      font-size: 16px;
+      font-style: normal;
+      background: #0082ca;
+      cursor: pointer;
+    }
+  }
+  .search {
+    margin-top: 15px;
+    display: flex;
+    margin-bottom: 24px;
+    input {
+      outline: none;
+      border: 1px solid #e5e5e5;
+      height: 39px;
+      width: 100%;
+      font-size: 16px;
+      font-family: Poppins;
+      padding-left: 12px;
+      color: rgba(34, 34, 34, 0.5);
+      border-radius: 4px;
+    }
+    ::placeholder {
+      color: rgba(34, 34, 34, 0.5);
+    }
+  }
+  .subjects {
+    padding-bottom: 20px;
+    height: 260px;
+    min-height: 260px;
+    overflow-y: scroll;
+    .section {
+      padding: 13px 0px 13px 8px;
+      border-bottom: 1px solid rgba(229, 229, 229, 1);
+      border-radius: 1px;
+      .avatar {
+        margin-right: 13px;
+        display: flex;
+        align-items: center;
+        .hover {
+          display: none;
+        }
+        .default {
+          display: block;
+        }
+        .name {
+          span {
+            font-family: Poppins;
+            font-size: 18px;
+            color: rgba(34, 34, 34, 0.8);
+            margin-left: 13px;
+          }
+        }
+      }
+      &:hover {
+        border-bottom: 1px solid rgba(0, 130, 202, 1);
+        background: rgba(0, 130, 202, 0.1);
+        .hover {
+          display: block;
+        }
+        .default {
+          display: none;
+        }
+        .name {
+          span {
+            color: rgba(34, 34, 34, 1);
+          }
+        }
+      }
+    }
+  }
+}
