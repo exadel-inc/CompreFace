@@ -19,7 +19,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
-import {ManageCollectionComponent} from "./pages/manage-collection/manage-collection.component";
+import { ManageCollectionComponent } from './pages/manage-collection/manage-collection.component';
 
 const routes: Routes = [
   {

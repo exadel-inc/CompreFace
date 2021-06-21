@@ -1,7 +1,6 @@
-.grid-container {
+.app-page {
   .navigation {
-    display: flex;
-    align-items: center;
+    margin-bottom: 20px;
     span {
       font-size: 14px;
       font-family: Poppins;
@@ -13,30 +12,36 @@
       }
     }
   }
-  display: flex;
-  justify-content: space-between;
-  .card-left {
-    width: 220px;
-    transform: perspective(1px);
-    padding: 0px !important;
-  }
-  .card-right {
-    padding: 0px !important;
-    width: 100%;
-    transform: perspective(1px);
-    max-width: 100%;
-    margin-left: 20px;
-  }
-  .search {
-    .input {
+  .grid-container {
+    .navigation {
+      display: flex;
+      align-items: center;
+    }
+    display: flex;
+    justify-content: space-between;
+    .card-left {
+      width: 220px;
+      transform: perspective(1px);
+      padding: 0px !important;
+    }
+    .card-right {
+      padding: 0px !important;
       width: 100%;
-      height: 43px;
-      border: 1px solid #e5e5e5;
-      border-radius: 4px;
-      font-size: 15px;
-      padding-left: 20px;
-      font-family: Poppins;
-      color: #222222;
+      transform: perspective(1px);
+      max-width: 100%;
+      margin-left: 20px;
+    }
+    .search {
+      .input {
+        width: 100%;
+        height: 43px;
+        border: 1px solid #e5e5e5;
+        border-radius: 4px;
+        font-size: 15px;
+        padding-left: 20px;
+        font-family: Poppins;
+        color: #222222;
+      }
     }
   }
 }
