@@ -19,6 +19,8 @@ package com.exadel.frs.core.trainservice.system.global;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class Constants {
 
@@ -55,4 +57,5 @@ public class Constants {
 
     public static final String DEMO_API_KEY = "00000000-0000-0000-0000-000000000002";
     public static final String FACENET2018 = "Facenet2018";
+    public static final String SERVER_UUID = UUID.randomUUID().toString();
 }

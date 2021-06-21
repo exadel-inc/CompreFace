@@ -19,17 +19,20 @@ import java.sql.Statement;
 @Slf4j
 @RequiredArgsConstructor
 public class NotificationSenderService {
-    @Qualifier("dsPgNot")
-    private final PGDataSource pgNotificationDatasource;
+//    @Qualifier("dsPgNot")
+//    private final PGDataSource pgNotificationDatasource;
+
+    private final PGConnection connection;
 
     public void notifyCacheChange(CacheActionDto cacheActionDto) {
         try {
-            PGConnection connection = (PGConnection) pgNotificationDatasource.getConnection();
+//            PGConnection connection = (PGConnection) pgNotificationDatasource.getConnection();
             Statement statement = connection.createStatement();
-            ObjectMapper mapper = new ObjectMapper();
+
 
             try {
-                String actionString = String.format("NOTIFY face_collection_update_msg, '%s'", mapper.writerWithDefaultPrettyPrinter().writeValueAsString(cacheActionDto));
+                ObjectMapper objectMapper = new ObjectMapper();
+                String actionString = String.format("NOTIFY face_collection_update_msg, '%s'", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cacheActionDto));
                 statement.execute(actionString);
             } catch (JsonProcessingException e) {
                 log.error(e.getMessage());

@@ -12,6 +12,8 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+import static com.exadel.frs.core.trainservice.system.global.Constants.SERVER_UUID;
+
 @Component
 @RequiredArgsConstructor
 public class EmbeddingCacheProvider {
@@ -67,7 +69,7 @@ public class EmbeddingCacheProvider {
     }
 
     private void notifyCacheEvent(String event, String apiKey) {
-        CacheActionDto cacheActionDto = new CacheActionDto(event, apiKey);
+        CacheActionDto cacheActionDto = new CacheActionDto(event, apiKey, SERVER_UUID);
         notificationSenderService.notifyCacheChange(cacheActionDto);
     }
 }

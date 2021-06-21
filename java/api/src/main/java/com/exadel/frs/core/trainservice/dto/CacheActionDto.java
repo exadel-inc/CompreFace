@@ -13,4 +13,6 @@ public class CacheActionDto {
     private String cacheAction;
     @JsonProperty("apiKey")
     private String apiKey;
+    @JsonProperty("uuid")
+    private String serverUUID;
     }
