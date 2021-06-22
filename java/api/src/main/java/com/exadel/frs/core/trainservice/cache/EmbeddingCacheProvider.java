@@ -6,6 +6,7 @@ import com.exadel.frs.core.trainservice.service.NotificationSenderService;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -15,6 +16,7 @@ import java.util.function.Consumer;
 import static com.exadel.frs.core.trainservice.system.global.Constants.SERVER_UUID;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class EmbeddingCacheProvider {
 
@@ -32,7 +34,9 @@ public class EmbeddingCacheProvider {
                     .build();
 
     public EmbeddingCollection getOrLoad(final String apiKey) {
+
         var result = cache.getIfPresent(apiKey);
+
         if (result == null) {
             result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
 
@@ -47,7 +51,7 @@ public class EmbeddingCacheProvider {
     public void ifPresent(String apiKey, Consumer<EmbeddingCollection> consumer) {
         Optional.ofNullable(cache.getIfPresent(apiKey))
                 .ifPresent(consumer);
-        //notify put with key and result
+
         EmbeddingCollection dd = cache.getIfPresent(apiKey);
         notifyCacheEvent("UPDATE", apiKey);
     }
@@ -61,7 +65,6 @@ public class EmbeddingCacheProvider {
     public void receivePutOnCache(String apiKey) {
         var result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
         cache.put(apiKey, result);
-        notifyCacheEvent("UPDATE", apiKey);
     }
 
     public void receiveInvalidateCache(final String apiKey) {

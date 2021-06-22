@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -19,20 +18,20 @@ import java.sql.Statement;
 @Slf4j
 @RequiredArgsConstructor
 public class NotificationSenderService {
-//    @Qualifier("dsPgNot")
-//    private final PGDataSource pgNotificationDatasource;
+    @Qualifier("dsPgNot")
+    private final PGDataSource pgNotificationDatasource;
+    private PGConnection connection;
 
-    private final PGConnection connection;
 
     public void notifyCacheChange(CacheActionDto cacheActionDto) {
         try {
-//            PGConnection connection = (PGConnection) pgNotificationDatasource.getConnection();
+            connection = (PGConnection) pgNotificationDatasource.getConnection();
             Statement statement = connection.createStatement();
-
 
             try {
                 ObjectMapper objectMapper = new ObjectMapper();
-                String actionString = String.format("NOTIFY face_collection_update_msg, '%s'", objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cacheActionDto));
+                String actionString = String.format("NOTIFY face_collection_update_msg, '%s'",
+                        objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(cacheActionDto));
                 statement.execute(actionString);
             } catch (JsonProcessingException e) {
                 log.error(e.getMessage());

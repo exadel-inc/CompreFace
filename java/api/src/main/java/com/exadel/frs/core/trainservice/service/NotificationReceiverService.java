@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.impossibl.postgres.api.jdbc.PGConnection;
 import com.impossibl.postgres.api.jdbc.PGNotificationListener;
 import com.impossibl.postgres.jdbc.PGDataSource;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -24,25 +25,26 @@ import static com.exadel.frs.core.trainservice.system.global.Constants.SERVER_UU
 @RequiredArgsConstructor
 public class NotificationReceiverService {
 
-//    @Qualifier("dsPgNot")
-//    private final PGDataSource pgNotificationDatasource;
+    @Qualifier("dsPgNot")
+    private final PGDataSource pgNotificationDatasource;
 
 
-    private final PGConnection connection;
+    private PGConnection connection;
+
     private final EmbeddingCacheProvider embeddingCacheProvider;
 
     private final ObjectMapper objectMapper;
 
+    private static PGNotificationListener listener;
+
     @PostConstruct
     public void setUpNotification() {
 
-        System.out.println("!!!!");
-        PGNotificationListener listener = new PGNotificationListener() {
+        listener = new PGNotificationListener() {
 
             @Override
             public void notification(int processId, String channelName, String payload) {
                 log.info(String.format("/channels3/ channel name: %1$s payload %2$s", channelName, payload));
-                System.out.println("!");
                 if (channelName.equals("face_collection_update_msg")) {
                     synchronizeCacheWithNotification(payload);
                 }
@@ -53,22 +55,22 @@ public class NotificationReceiverService {
                 log.info("face_collection_update_msg closed");
             }
         };
-
         try {
-//            PGConnection connection = (PGConnection) pgNotificationDatasource.getConnection();
+            connection = pgNotificationDatasource.getConnection().unwrap(PGConnection.class);
+
             Statement statement = connection.createStatement();
             statement.executeUpdate("LISTEN face_collection_update_msg");
 
             statement.close();
-            connection.addNotificationListener(listener);
         } catch (SQLException ex) {
-            log.error(ex.getMessage());
+            ex.printStackTrace();
         }
 
+        connection.addNotificationListener(listener);
     }
 
     private void synchronizeCacheWithNotification(String payload) {
-        System.out.println("222");
+
         try {
             CacheActionDto cacheActionDto = objectMapper.readValue(payload, CacheActionDto.class);
             if (cacheActionDto != null
