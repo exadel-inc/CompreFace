@@ -228,10 +228,11 @@ public class SubjectService {
                     .subject(subjectName)
                     .similarity(pred.floatValue())
                     .landmarks(findResult.getLandmarks())
-                    .age(findResult.getAge())
                     .gender(findResult.getGender())
                     .embedding(findResult.getEmbedding())
                     .executionTime(findResult.getExecutionTime())
+                    .age(findResult.getAge())
+                    .mask(findResult.getMask())
                     .build()
                     .prepareResponse(processImageParams); // do some tricks with obj
 

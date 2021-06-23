@@ -33,11 +33,12 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @JsonInclude(NON_NULL)
 public class FindFacesResultDto {
 
-    private Integer[] age;
-    private String gender;
+    private FacesAgeDto age;
+    private FacesGenderDto gender;
     private Double[] embedding;
     private FacesBox box;
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
     private List<List<Integer>> landmarks;
+    private FacesMaskDto maskDto;
 }
