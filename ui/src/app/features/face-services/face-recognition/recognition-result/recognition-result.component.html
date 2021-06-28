@@ -13,34 +13,67 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
+<div class="result">
 
-<div class="result" *ngIf="isLoaded">
-  <mat-card class="process-img">
-    <canvas #canvasElement [width]="canvasSize.width"></canvas>
+  <div class="drag-n-drop">
+    <app-drag-n-drop
+      *ngIf="!resizePhoto"
+      [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
+      [label]="'dnd.label' | translate"
+      (upload)="selectFile.emit($event)"
+    >
+    </app-drag-n-drop>
+  </div>
+
+  <mat-card class="process-img" *ngIf="resizePhoto">
+
+    <app-change-photo
+      #changePhoto
+      [disabledButtons]="!isLoaded"
+      (resetPhoto)="onResetFile()"
+      (changePhoto)="onResetFile($event)"
+      (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
+    ></app-change-photo>
+
+    <app-face-picture
+      [picture]="resizePhoto"
+      [printData]="recalculatePrintData"
+      [type]="type"
+      [isLoaded]="isLoaded"
+      [showLandmarks]="changePhoto.showLandmarks"
+    >
+    </app-face-picture>
+
   </mat-card>
-  <div class="request">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ 'test_model.request' | translate }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="content">
-        <pre>{{ requestInfo.request }}</pre>
-      </div>
-    </mat-expansion-panel>
-  </div>
-  <div class="response">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          {{ 'test_model.response' | translate }}
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <div class="content">
-        <pre>{{ formattedResult }}</pre>
-      </div>
-    </mat-expansion-panel>
-  </div>
+
+  <ng-container *ngIf="isLoaded">
+
+    <div class="request">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ 'test_model.request' | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="content">
+          <pre>{{ requestInfo.request }}</pre>
+        </div>
+      </mat-expansion-panel>
+    </div>
+
+    <div class="response">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            {{ 'test_model.response' | translate }}
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="content">
+          <pre>{{ formattedResult }}</pre>
+        </div>
+      </mat-expansion-panel>
+    </div>
+
+  </ng-container>
 </div>
 

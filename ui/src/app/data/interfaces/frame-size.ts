@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,8 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-.recognition-loading {
-  display: flex;
-  justify-content: center;
-  padding-top: 20px;
+
+export interface FrameSize {
+  top: number;
+  left: number;
+  width: number;
+  height: number;
 }
