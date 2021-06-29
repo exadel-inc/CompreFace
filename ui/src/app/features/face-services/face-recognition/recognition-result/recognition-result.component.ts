@@ -38,6 +38,7 @@ export class RecognitionResultComponent implements OnChanges {
 
   @Input() requestInfo: RequestInfo;
   @Input() isLoaded: boolean;
+  @Input() pending: boolean;
   @Input() type: ServiceTypes;
 
   @Output() selectFile = new EventEmitter();

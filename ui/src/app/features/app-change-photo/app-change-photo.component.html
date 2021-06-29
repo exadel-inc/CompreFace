@@ -37,7 +37,7 @@
     class="change-photo--btn"
     mat-flat-button
     (click)="addLandmark.emit()"
-    [disabled]="disabledButtons"
+    [disabled]="disabledButtons || disabledLandmarksButton"
     [class.landmarks-active]="showLandmarks"
   >
     <mat-icon class="change-photo--btn_icon" svgIcon="body-scan"></mat-icon>

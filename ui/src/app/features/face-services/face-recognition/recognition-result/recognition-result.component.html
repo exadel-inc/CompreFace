@@ -29,7 +29,8 @@
 
     <app-change-photo
       #changePhoto
-      [disabledButtons]="!isLoaded"
+      [disabledButtons]="pending"
+      [disabledLandmarksButton]="!recalculatePrintData"
       (resetPhoto)="onResetFile()"
       (changePhoto)="onResetFile($event)"
       (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
@@ -39,7 +40,7 @@
       [picture]="resizePhoto"
       [printData]="recalculatePrintData"
       [type]="type"
-      [isLoaded]="isLoaded"
+      [isLoaded]="!pending"
       [showLandmarks]="changePhoto.showLandmarks"
     >
     </app-face-picture>
