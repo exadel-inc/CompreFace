@@ -17,9 +17,10 @@ import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -72,7 +73,15 @@ public class SubjectService {
         return removed;
     }
 
-    public Subject deleteSubjectByName(final String apiKey, final String subjectName) {
+    public void deleteSubjectByName(final String apiKey, final String subjectName) {
+        if (StringUtils.isBlank(subjectName)) {
+            deleteSubjectsByApiKey(apiKey);
+        } else {
+            deleteSubjectByNameAndApiKey(apiKey, subjectName);
+        }
+    }
+
+    public Subject deleteSubjectByNameAndApiKey(final String apiKey, final String subjectName) {
         var subject = subjectDao.deleteSubjectByName(apiKey, subjectName);
 
         // remove subject from cache if required
