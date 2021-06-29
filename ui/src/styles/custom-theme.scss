@@ -90,6 +90,10 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     color: $pale-gray;
   }
 
+  pre {
+    font-family: $font-family;
+  }
+
   .mat-toolbar {
     background: $white;
     color: mat-color($foreground, text);
