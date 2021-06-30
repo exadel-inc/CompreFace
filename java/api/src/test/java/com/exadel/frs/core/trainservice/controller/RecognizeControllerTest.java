@@ -24,11 +24,14 @@ import com.exadel.frs.commonservice.system.global.Constants;
 import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.config.IntegrationTest;
 import com.exadel.frs.core.trainservice.dto.Base64File;
+import com.exadel.frs.core.trainservice.service.NotificationReceiverService;
+import com.exadel.frs.core.trainservice.service.NotificationSenderService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.val;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -60,6 +63,11 @@ class RecognizeControllerTest {
 
     @MockBean
     private ImageExtensionValidator validator;
+
+    @Mock
+    private NotificationSenderService notificationSenderService;
+    @MockBean
+    private NotificationReceiverService  notificationReceiverService;
 
     @MockBean
     private FacesApiClient client;
