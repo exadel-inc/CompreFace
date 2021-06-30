@@ -24,7 +24,6 @@ import { RoleEditDialogComponent } from '../role-edit-dialog/role-edit-dialog.co
 import { MatDialog } from '@angular/material/dialog';
 import { UserRole } from '../../data/interfaces/user-role';
 
-
 @Component({
   selector: 'app-user-table',
   templateUrl: './user-table.component.html',
@@ -45,7 +44,6 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
 
   constructor(private dialog: MatDialog, private translate: TranslateService) {
     super();
-    this.refreshPage();
   }
 
   ngOnInit() {
@@ -98,15 +96,6 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
       this.message = this.noResultMessage;
     } else {
       this.message = this.createMessage;
-    }
-  }
-
-  refreshPage(): void {
-    if (!localStorage.getItem('refresh-page')) {
-      localStorage.setItem('refresh-page', 'no reload');
-      location.reload();
-    } else {
-      localStorage.removeItem('refresh-page');
     }
   }
 }
