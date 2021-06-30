@@ -13,137 +13,85 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Component, Input, OnChanges, Output, EventEmitter, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
 
-import { Component, ElementRef, Input, ViewChild, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
-import { Observable } from 'rxjs';
-import { first, map, tap } from 'rxjs/operators';
-import { recalculateFaceCoordinate, resultRecognitionFormatter, createDefaultImage } from '../../face-services.helpers';
-import { RequestResultVerification } from '../../../../data/interfaces/response-result';
 import { RequestInfo } from '../../../../data/interfaces/request-info';
-import { VerificationServiceFields } from '../../../../data/enums/verification-service.enum';
-import { LoadingPhotoService } from '../../../../core/photo-loader/photo-loader.service';
-import { ImageSize } from '../../../../data/interfaces/image';
+import { ServiceTypes } from '../../../../data/enums/service-types.enum';
+import { ImageConvert } from '../../../../data/interfaces/image-convert';
+
+import { recalculateFaceCoordinate, recalculateLandmarks, resultRecognitionFormatter } from '../../face-services.helpers';
+import { SourceImageFace } from '../../../../data/interfaces/source-image-face';
+import { FaceMatches } from '../../../../data/interfaces/face-matches';
 
 @Component({
   selector: 'app-verification-result',
   templateUrl: './verification-result.component.html',
   styleUrls: ['./verification-result.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerificationResultComponent implements OnChanges {
+  @Input() set processPhoto(image: ImageBitmap) {
+    this.resizeProcessPhoto = this.resize(image);
+  }
+  @Input() set processPhotoData(data: SourceImageFace[]) {
+    this.printDataProcessPhoto = this.recalculate(data, this.resizeProcessPhoto) as SourceImageFace[];
+  }
+  @Input() set checkPhoto(image: ImageBitmap) {
+    this.resizeCheckPhoto = this.resize(image);
+  }
+  @Input() set checkPhotoData(data: FaceMatches[]) {
+    this.printDataCheckPhoto = this.recalculate(data, this.resizeCheckPhoto) as FaceMatches[];
+  }
+
   @Input() requestInfo: RequestInfo;
-  @Input() printData: RequestResultVerification;
-  @Input() files: any;
   @Input() isLoaded: boolean;
   @Input() pending: boolean;
+  @Input() type: ServiceTypes;
+
   @Output() selectProcessFile = new EventEmitter();
   @Output() selectCheckFile = new EventEmitter();
+  @Output() resetProcessFile = new EventEmitter();
+  @Output() resetCheckFile = new EventEmitter();
 
-  @ViewChild('processFileCanvasElement') set processFileCanvasElement(canvas: ElementRef) {
-    this.processFileCanvasLink = canvas;
-  }
-
-  @ViewChild('checkFileCanvasElement') set checkFileCanvasElement(canvas: ElementRef) {
-    this.checkFileCanvasLink = canvas;
-  }
-
-  processFileCanvasSize: ImageSize = { width: 500, height: null };
-  checkFileCanvasSize: ImageSize = { width: 500, height: null };
-  faceDescriptionHeight = 25;
+  widthCanvas = 500;
   formattedResult: string;
 
-  private processFileCanvasLink: any = null;
-  private checkFileCanvasLink: any = null;
-  private imgCanvas: ImageBitmap;
+  resizeProcessPhoto: ImageConvert;
+  resizeCheckPhoto: ImageConvert;
 
-  constructor(private loadingPhotoService: LoadingPhotoService) {}
+  printDataProcessPhoto: SourceImageFace[];
+  printDataCheckPhoto: FaceMatches[];
 
-  ngOnChanges(changes: SimpleChanges) {
-    if (!changes?.files?.currentValue) return;
-
-    this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
-
-    if (changes.files.currentValue.checkFile) {
-      this.refreshCanvas(
-        this.checkFileCanvasLink,
-        this.checkFileCanvasSize,
-        changes.files.currentValue.checkFile,
-        this.printData,
-        VerificationServiceFields.CheckFileData
-      );
-    }
-
-    if (changes.files.currentValue.processFile) {
-      this.refreshCanvas(
-        this.processFileCanvasLink,
-        this.processFileCanvasSize,
-        changes.files.currentValue.processFile,
-        this.printData,
-        VerificationServiceFields.ProcessFileData
-      );
-    }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!!this.requestInfo) this.formattedResult = resultRecognitionFormatter(this.requestInfo.response);
   }
 
-  printResult(canvas: ElementRef, canvasSize: any, file: any, data, key: string): Observable<any> {
-    return this.loadingPhotoService.loader(file).pipe(
-      tap((bitmap: ImageBitmap) => {
-        canvasSize.height = (bitmap.height / bitmap.width) * canvasSize.width;
-        canvas.nativeElement.setAttribute('height', canvasSize.height);
-        this.imgCanvas = bitmap;
-      }),
-      map(imageSize => this.prepareForDraw(imageSize, data, canvasSize, key)),
-      map(preparedImageData => this.drawCanvas(canvas, preparedImageData, file, canvasSize))
-    );
+  resize(image: ImageBitmap): ImageConvert {
+    return !!image
+      ? ({
+          imageBitmap: image,
+          sizeCanvas: { width: this.widthCanvas, height: (image.height / image.width) * this.widthCanvas },
+        } as ImageConvert)
+      : null;
   }
 
-  private refreshCanvas(canvas, canvasSize, file, data, field) {
-    this.printResult(canvas, canvasSize, file, data, field).pipe(first()).subscribe();
+  recalculate(data: any[], image: ImageConvert): SourceImageFace[] | FaceMatches[] {
+    return !!data
+      ? (data.map(val => ({
+          ...val,
+          box: recalculateFaceCoordinate(val.box, image.imageBitmap, image.sizeCanvas),
+          landmarks: recalculateLandmarks(val.landmarks, image.imageBitmap, image.sizeCanvas),
+        })) as SourceImageFace[] | FaceMatches[])
+      : null;
   }
 
-  private prepareForDraw(size, rawData, canvasSize, key): Observable<any> {
-    return (
-      rawData &&
-      this.getBox(rawData, key).map(value => ({
-        box: recalculateFaceCoordinate(value.box, size, canvasSize, this.faceDescriptionHeight),
-        similarity: value.similarity,
-      }))
-    );
+  onResetProcessFile(event?: File): void {
+    this.resetProcessFile.emit();
+    if (event) this.resetProcessFile.emit(event);
   }
 
-  private getBox(rawData, key) {
-    return rawData.reduce((arr, value) => (value[key] instanceof Array ? [...arr, ...value[key]] : [...arr, value[key]]), []);
-  }
-
-  private createVerificationImage(ctx, box, face) {
-    const description = face.similarity ? this.faceDescriptionHeight : null;
-
-    ctx = createDefaultImage(ctx, box);
-    ctx.fillStyle = 'green';
-    ctx.fillRect(box.x_min, box.y_max, box.x_max - box.x_min, description);
-
-    if (!!description) {
-      ctx.fillStyle = 'white';
-      ctx.fillText(face.similarity, box.x_min + 10, box.y_max + 20);
-    }
-  }
-
-  /*
-   * Make canvas and draw facanvasSizece and info on image.
-   *
-   * @preparedData prepared box data and faces.
-   */
-  drawCanvas(canvas, data, file, canvasSize) {
-    this.createImage(canvas, file, canvasSize, ctx => {
-      if (!data) return;
-      for (const value of data) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        this.createVerificationImage(ctx, value.box, value);
-      }
-    });
-  }
-
-  createImage(canvas, file, canvasSize, draw) {
-    const ctx: CanvasRenderingContext2D = canvas.nativeElement.getContext('2d');
-    ctx.drawImage(this.imgCanvas, 0, 0, canvasSize.width, canvasSize.height);
-    draw(ctx);
+  onResetCheckFile(event?: File): void {
+    this.resetCheckFile.emit();
+    if (event) this.resetCheckFile.emit(event);
   }
 }

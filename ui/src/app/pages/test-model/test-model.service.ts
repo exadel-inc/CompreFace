@@ -25,6 +25,7 @@ import { loadApplications, setSelectedAppIdEntityAction } from '../../store/appl
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
 import { selectModels } from '../../store/model/selectors';
 import { getUserInfo } from '../../store/userInfo/action';
+import { ServiceTypes } from '../../data/enums/service-types.enum';
 
 @Injectable()
 export class TestModelPageService {
@@ -32,7 +33,7 @@ export class TestModelPageService {
   private modelSub: Subscription;
   private appId: string;
   private modelId: string;
-  private type: string;
+  private type: ServiceTypes;
 
   constructor(private router: Router, private route: ActivatedRoute, private store: Store<AppState>) {}
 

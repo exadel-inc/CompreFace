@@ -14,7 +14,12 @@
  * permissions and limitations under the License.
  */
 import { createAction, props } from '@ngrx/store';
-export const verifyFace = createAction('[Model] Face Verification Save', props<{ processFile?: any; checkFile?: any }>());
+
+export const verifyFace = createAction('[Model] Face Verification Save');
+export const verifyFaceAddProcessFile = createAction('[Model] Face Verification Add Process File', props<{ processFile: any }>());
+export const verifyFaceAddCheckFileFile = createAction('[Model] Face Verification Add Check File', props<{ checkFile: any }>());
 export const verifyFaceSuccess = createAction('[Model] Face Verification Success', props<{ model: any; request: any }>());
 export const verifyFaceFail = createAction('[Model] Face Verification Fail', props<{ error: any }>());
 export const verifyFaceReset = createAction('[Model] Face Verification Reset');
+export const verifyFaceProcessFileReset = createAction('[Model] Face Verification Reset Process File');
+export const verifyFaceCheckFileReset = createAction('[Model] Face Verification Reset Check File');
