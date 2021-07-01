@@ -106,7 +106,9 @@ import { ManageCollectionModule } from './pages/manage-collection/manage-collect
     },
   ],
   bootstrap: [AppComponent],
-  exports: [],
+  exports: [
+    CreateDialogComponent
+  ],
   entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent, DeleteDialogComponent, RoleEditDialogComponent],
 })
 export class AppModule {}

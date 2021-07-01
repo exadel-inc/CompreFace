@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManageCollectionComponent } from './manage-collection.component';
-import { CollectionManagerSubjectLeftComponent } from '../../features/collection-manager-subject-left/collection-manager-subject-left.component';
-import { CollectionManagerSubjectRightComponent } from '../../features/collection-manager-subject-right/collection-manager-subject-right.component';
 import { MatCardModule } from '@angular/material/card';
+import {CollectionManagerSubjectLeftModule} from "../../features/collection-manager-subject-left/collection-manager-subject-left.module";
+import {CollectionManagerSubjectRightModule} from "../../features/collection-manager-subject-right/collection-manager-subject-right.module";
 
 @NgModule({
-  declarations: [ManageCollectionComponent, CollectionManagerSubjectLeftComponent, CollectionManagerSubjectRightComponent],
-  imports: [CommonModule, MatCardModule],
+  declarations: [ManageCollectionComponent],
+  imports: [CommonModule, MatCardModule, CollectionManagerSubjectLeftModule, CollectionManagerSubjectRightModule],
 })
 export class ManageCollectionModule {}
