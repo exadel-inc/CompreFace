@@ -18,6 +18,7 @@ package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.core.trainservice.service.EmbeddingService;
+import com.exadel.frs.core.trainservice.service.NotificationSenderService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -42,6 +43,9 @@ class EmbeddingCacheProviderTest {
 
     @Mock
     private EmbeddingService embeddingService;
+
+    @Mock
+    private NotificationSenderService notificationSenderService;
 
     @InjectMocks
     private EmbeddingCacheProvider embeddingCacheProvider;
