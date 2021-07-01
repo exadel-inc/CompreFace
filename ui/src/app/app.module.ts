@@ -50,7 +50,6 @@ import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
 import { RoleEditDialogComponent } from './features/role-edit-dialog/role-edit-dialog.component';
 import { MatSelectModule } from '@angular/material/select';
-import { ManageCollectionModule } from './pages/manage-collection/manage-collection.module';
 
 @NgModule({
   declarations: [
@@ -86,7 +85,6 @@ import { ManageCollectionModule } from './pages/manage-collection/manage-collect
     MatRadioModule,
     BreadcrumbsModule,
     BreadcrumbsContainerModule,
-    ManageCollectionModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
