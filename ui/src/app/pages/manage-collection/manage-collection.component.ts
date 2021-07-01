@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, Inject} from '@angular/core';
 
 @Component({
   selector: 'app-manage-collection',
@@ -6,5 +6,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./manage-collection.component.scss'],
 })
 export class ManageCollectionComponent {
-  constructor() {}
+  constructor(
+  ) {}
+
 }

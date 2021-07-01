@@ -42,13 +42,14 @@
   }
   .subjects {
     padding-bottom: 20px;
-    height: 260px;
-    min-height: 260px;
+    height: 300px;
+    min-height: 300px;
     overflow-y: scroll;
     .section {
       padding: 13px 0px 13px 8px;
       border-bottom: 1px solid rgba(229, 229, 229, 1);
       border-radius: 1px;
+      cursor: pointer;
       .avatar {
         margin-right: 13px;
         display: flex;
