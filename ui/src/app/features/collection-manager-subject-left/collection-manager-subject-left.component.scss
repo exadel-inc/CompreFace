@@ -1,59 +1,71 @@
+@import "colors.scss";
+@import "mixins.scss";
 .main {
   padding: 24px 8px 0px 8px;
-  //min-height: 425px;
-  //height: 425px;
-  //overflow-y: scroll;
-  .button {
+
+  .add-subject {
     padding-bottom: 16px;
     border-bottom: 1px solid #f1f1f1;
-    .btn {
-      border: none;
-      border-radius: 4px;
-      outline: none;
-      width: 100%;
+
+    .mat-flat-button {
       height: 43px;
-      color: #fff;
-      text-align: center;
-      font-family: Poppins;
-      font-size: 16px;
-      font-style: normal;
-      background: #0082ca;
-      cursor: pointer;
+      width: 100%;
     }
   }
+
   .search {
     margin-top: 15px;
     display: flex;
-    margin-bottom: 24px;
-    input {
-      outline: none;
-      border: 1px solid #e5e5e5;
-      height: 39px;
-      width: 100%;
-      font-size: 16px;
-      font-family: Poppins;
-      padding-left: 12px;
-      color: rgba(34, 34, 34, 0.5);
-      border-radius: 4px;
-    }
-    ::placeholder {
-      color: rgba(34, 34, 34, 0.5);
+
+    .app-search {
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+
+      &--form {
+        flex-grow: 1;
+        position: relative;
+
+        &_input {
+          padding: 8px 25px 8px 8px;
+          width: 100%;
+          border: 1px solid $super-light-gray;
+          border-radius: 4px;
+          font-size: 14px;
+          box-sizing: border-box;
+          outline-color: $primary;
+
+          &::placeholder {
+            color: $gray;
+          }
+
+        }
+      }
     }
   }
+
   .subjects {
     padding-bottom: 20px;
-    height: 300px;
+    height: 70vh;
     min-height: 300px;
     overflow-y: scroll;
+
     .section {
-      padding: 13px 0px 13px 8px;
       border-bottom: 1px solid rgba(229, 229, 229, 1);
       border-radius: 1px;
       cursor: pointer;
+
+      div {
+        padding: 0 !important;
+      }
+
       .avatar {
         margin-right: 13px;
         display: flex;
         align-items: center;
+
         .hover {
           display: none;
         }

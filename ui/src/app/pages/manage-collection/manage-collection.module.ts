@@ -6,21 +6,23 @@ import { CollectionManagerSubjectLeftModule } from '../../features/collection-ma
 import { CollectionManagerSubjectRightModule } from '../../features/collection-manager-subject-right/collection-manager-subject-right.module';
 import { RouterModule } from '@angular/router';
 import { BreadcrumbsContainerModule } from '../../features/breadcrumbs.container/breadcrumbs.container.module';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [ManageCollectionComponent],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    CollectionManagerSubjectLeftModule,
-    CollectionManagerSubjectRightModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: ManageCollectionComponent,
-      },
-    ]),
-    BreadcrumbsContainerModule,
-  ],
+    imports: [
+        CommonModule,
+        MatCardModule,
+        CollectionManagerSubjectLeftModule,
+        CollectionManagerSubjectRightModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: ManageCollectionComponent,
+            },
+        ]),
+        TranslateModule,
+      BreadcrumbsContainerModule,
+    ],
 })
 export class ManageCollectionModule {}
