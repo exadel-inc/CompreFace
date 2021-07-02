@@ -5,20 +5,22 @@ import { MatCardModule } from '@angular/material/card';
 import { CollectionManagerSubjectLeftModule } from '../../features/collection-manager-subject-left/collection-manager-subject-left.module';
 import { CollectionManagerSubjectRightModule } from '../../features/collection-manager-subject-right/collection-manager-subject-right.module';
 import { RouterModule } from '@angular/router';
+import {TranslateModule} from "@ngx-translate/core";
 
 @NgModule({
   declarations: [ManageCollectionComponent],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    CollectionManagerSubjectLeftModule,
-    CollectionManagerSubjectRightModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: ManageCollectionComponent,
-      },
-    ]),
-  ],
+    imports: [
+        CommonModule,
+        MatCardModule,
+        CollectionManagerSubjectLeftModule,
+        CollectionManagerSubjectRightModule,
+        RouterModule.forChild([
+            {
+                path: '',
+                component: ManageCollectionComponent,
+            },
+        ]),
+        TranslateModule,
+    ],
 })
 export class ManageCollectionModule {}

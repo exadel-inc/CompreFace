@@ -1,19 +1,22 @@
 <div class="main">
-  <div class="button">
-    <button class="btn" (click)="openModalWindow()">Add Subject</button>
+  <div class="add-subject">
+    <button mat-flat-button color="primary"  (click)="openModalWindow()">
+      {{ 'manage_collection.left_side.add_subject' | translate }}
+    </button>
   </div>
   <div class="search">
-    <input type="text" class="input" placeholder="Search..." />
+    <app-search-table searchPlaceholder="{{'manage_collection.left_side.search' | translate}}"></app-search-table>
   </div>
   <div class="subjects">
-    <div class="section" *ngFor="let item of testArr">
-      <div class="avatar">
-        <img src="../../assets/img/manage-collection/avatar-subject.svg" alt="" class="default" />
-        <img src="../../assets/img/manage-collection/avatar-subject-hover.svg" alt="" class="hover" />
-        <div class="name">
-          <span> John Done </span>
-        </div>
-      </div>
-    </div>
+      <mat-selection-list #shoes [multiple]="false">
+        <mat-list-option *ngFor="let shoe of typesOfShoes" [value]="shoe" class="section">
+          <div class="avatar">
+            <mat-icon svgIcon="avatar-subject"></mat-icon>
+            <div class="name">
+              {{shoe}}
+            </div>
+          </div>
+        </mat-list-option>
+      </mat-selection-list>
   </div>
 </div>
