@@ -138,6 +138,15 @@ export class ModelListComponent implements OnInit, OnDestroy {
     });
   }
 
+  mangeCollection(model: Model) {
+    this.router.navigate([Routes.ManageCollection], {
+      queryParams: {
+        app: this.modelListFacade.selectedApplicationId,
+        apiKey: model.apiKey,
+      },
+    });
+  }
+
   onCreateNewModel(): void {
     const dialog = this.dialog.open(ModelCreateDialogComponent, {
       panelClass: 'custom-mat-dialog',

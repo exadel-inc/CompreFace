@@ -32,6 +32,7 @@ import { RoleStoreModule } from './role/role.module';
 import { AppSerializer } from './router/reducer';
 import { UserStoreModule } from './user/user.module';
 import { UserInfoStoreModule } from './userInfo/user-info.module';
+import { CollectionStoreModule } from './manage-collectiom/collection.module';
 
 @NgModule({
   declarations: [],
@@ -47,6 +48,7 @@ import { UserInfoStoreModule } from './userInfo/user-info.module';
     FaceVerificationStoreModule,
     DemoStoreModule,
     AppUserStoreModule,
+    CollectionStoreModule,
     StoreRouterConnectingModule.forRoot({
       serializer: DefaultRouterStateSerializer,
       stateKey: 'router',

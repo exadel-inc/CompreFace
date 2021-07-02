@@ -122,7 +122,8 @@
     },
     "search": {
       "title": "Search service"
-    }
+    },
+    "mange_collection": "Collection"
   },
   "users": {
     "caption": "Table of users",

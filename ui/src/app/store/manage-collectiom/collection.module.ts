@@ -13,13 +13,15 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
+import { EffectsModule } from '@ngrx/effects';
+import { ModelEffects } from '../model/effects';
+import { StoreModule } from '@ngrx/store';
 
-export enum Routes {
-  Login = '/login',
-  Home = '/',
-  Application = '/application',
-  SignUp = '/sign-up',
-  TestModel = '/test-model',
-  ManageCollection = '/manage-collection',
-  Demo = '/demo',
-}
+import { collectionReducer } from './reducers';
+
+@NgModule({
+  declarations: [],
+  imports: [EffectsModule.forFeature([ModelEffects]), StoreModule.forFeature('collection', collectionReducer)],
+})
+export class CollectionStoreModule {}

@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { CollectionManagerSubjectLeftModule } from '../../features/collection-manager-subject-left/collection-manager-subject-left.module';
 import { CollectionManagerSubjectRightModule } from '../../features/collection-manager-subject-right/collection-manager-subject-right.module';
 import { RouterModule } from '@angular/router';
+import { BreadcrumbsContainerModule } from '../../features/breadcrumbs.container/breadcrumbs.container.module';
 
 @NgModule({
   declarations: [ManageCollectionComponent],
@@ -19,6 +20,7 @@ import { RouterModule } from '@angular/router';
         component: ManageCollectionComponent,
       },
     ]),
+    BreadcrumbsContainerModule,
   ],
 })
 export class ManageCollectionModule {}

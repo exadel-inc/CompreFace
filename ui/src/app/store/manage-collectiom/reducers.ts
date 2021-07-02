@@ -13,13 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Action, ActionReducer, createReducer } from '@ngrx/store';
 
-export enum Routes {
-  Login = '/login',
-  Home = '/',
-  Application = '/application',
-  SignUp = '/sign-up',
-  TestModel = '/test-model',
-  ManageCollection = '/manage-collection',
-  Demo = '/demo',
+export interface CollectionEntityState {
+  isPending: boolean;
 }
+
+const initialState: CollectionEntityState = {
+  isPending: false,
+};
+
+const reducer: ActionReducer<CollectionEntityState> = createReducer(initialState);
+
+export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);

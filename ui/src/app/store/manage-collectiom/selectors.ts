@@ -13,13 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { createFeatureSelector } from '@ngrx/store';
+import { EntityState } from '@ngrx/entity';
+import { Model } from '../../data/interfaces/model';
 
-export enum Routes {
-  Login = '/login',
-  Home = '/',
-  Application = '/application',
-  SignUp = '/sign-up',
-  TestModel = '/test-model',
-  ManageCollection = '/manage-collection',
-  Demo = '/demo',
-}
+export const selectCollectionEntityState = createFeatureSelector<EntityState<Model>>('collection');
