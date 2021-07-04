@@ -21,7 +21,8 @@ import { Store } from '@ngrx/store';
 import { loadSubjects } from '../../store/manage-collectiom/action';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { getUserInfo } from '../../store/userInfo/action';
-import { loadModels } from '../../store/model/action';
+import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
+import { Routes } from '../../data/enums/routers-url.enum';
 
 @Injectable()
 export class ManageCollectionPageService {
@@ -34,15 +35,22 @@ export class ManageCollectionPageService {
   initUrlBindingStreams() {
     this.appId = this.route.snapshot.queryParams.app;
     this.apiKey = this.route.snapshot.queryParams.apiKey;
-    this.modelId = this.route.snapshot.queryParams.modelId;
+    this.modelId = this.route.snapshot.queryParams.model;
 
-    this.store.dispatch(loadModels({ applicationId: this.appId }));
-    this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
+    if (this.appId && this.modelId) {
+      this.store.dispatch(loadSubjects({ apiKey: this.apiKey }));
+      this.store.dispatch(loadModels({ applicationId: this.appId }));
+      this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
+      this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
+      this.store.dispatch(loadApplications());
+      this.store.dispatch(getUserInfo());
+    } else {
+      this.router.navigate([Routes.Home]);
+    }
+  }
 
-    this.store.dispatch(loadApplications());
-    this.store.dispatch(getUserInfo());
-
-    this.store.dispatch(loadSubjects({ apiKey: this.apiKey }));
+  clearSelectedModelId() {
+    this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: null }));
   }
 
   unSubscribe() {}

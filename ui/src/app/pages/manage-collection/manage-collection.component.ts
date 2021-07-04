@@ -29,6 +29,7 @@ export class ManageCollectionComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.manageCollectionService.clearSelectedModelId();
     this.manageCollectionService.unSubscribe();
   }
 }

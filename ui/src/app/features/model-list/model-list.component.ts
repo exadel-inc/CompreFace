@@ -142,6 +142,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     this.router.navigate([Routes.ManageCollection], {
       queryParams: {
         app: this.modelListFacade.selectedApplicationId,
+        model: model.id,
         apiKey: model.apiKey,
       },
     });

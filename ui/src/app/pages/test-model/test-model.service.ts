@@ -29,7 +29,6 @@ import { ServiceTypes } from '../../data/enums/service-types.enum';
 
 @Injectable()
 export class TestModelPageService {
-  private appsSub: Subscription;
   private modelSub: Subscription;
   private appId: string;
   private modelId: string;
@@ -74,11 +73,6 @@ export class TestModelPageService {
   }
 
   unSubscribe() {
-    if (this.appsSub) {
-      this.appsSub.unsubscribe();
-    }
-    if (this.modelSub) {
-      this.modelSub.unsubscribe();
-    }
+    this.modelSub.unsubscribe();
   }
 }
