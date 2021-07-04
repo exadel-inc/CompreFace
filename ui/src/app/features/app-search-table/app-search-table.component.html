@@ -17,7 +17,7 @@
 <div class="app-search">
   <div class="app-search--title mat-title">{{ title }}</div>
   <div class="app-search--form">
-    <input class="app-search--form_input" type="text" (input)="onInputChange($event)" [placeholder]="searchPlaceholder" />
+    <input class="app-search--form_input mat-body-2" type="text" (input)="onInputChange($event)" [placeholder]="searchPlaceholder" />
     <mat-icon svgIcon="search"></mat-icon>
   </div>
   <ng-container *ngIf="currentRole as userRole">

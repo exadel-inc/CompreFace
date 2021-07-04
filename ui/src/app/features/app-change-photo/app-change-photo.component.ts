@@ -23,6 +23,7 @@ import { ChangeDetectionStrategy, Component, Output, EventEmitter, ViewChild, El
 })
 export class AppChangePhotoComponent {
   @Input() disabledButtons: boolean;
+  @Input() disabledLandmarksButton: boolean;
 
   @Output() changePhoto = new EventEmitter();
   @Output() resetPhoto = new EventEmitter();

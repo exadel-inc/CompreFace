@@ -29,6 +29,7 @@
       <app-change-photo
         #changePhoto
         [disabledButtons]="pending"
+        [disabledLandmarksButton]="!printDataProcessPhoto"
         (resetPhoto)="onResetProcessFile()"
         (changePhoto)="onResetProcessFile($event)"
         (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
@@ -61,6 +62,7 @@
       <app-change-photo
         #changePhoto
         [disabledButtons]="pending"
+        [disabledLandmarksButton]="!printDataCheckPhoto"
         (resetPhoto)="onResetCheckFile()"
         (changePhoto)="onResetCheckFile($event)"
         (addLandmark)="changePhoto.showLandmarks = !changePhoto.showLandmarks"
