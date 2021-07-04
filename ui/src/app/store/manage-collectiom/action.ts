@@ -13,3 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
+import { createAction, props } from '@ngrx/store';
+
+export const loadSubjects = createAction('[Collection] Load Subjects', props<{ apiKey: string }>());
+export const loadSubjectsSuccess = createAction('[Collection] Load Subjects Success', props<{ subjects: string[] }>());
+export const loadSubjectsFail = createAction('[Collection] Load Subjects Fail', props<{ error: any }>());

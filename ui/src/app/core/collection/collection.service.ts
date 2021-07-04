@@ -13,16 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { NgModule } from '@angular/core';
-import { EffectsModule } from '@ngrx/effects';
-import { ModelEffects } from '../model/effects';
-import { StoreModule } from '@ngrx/store';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import { collectionReducer } from './reducers';
-import { CollectionEffects } from './effects';
+import { environment } from '../../../environments/environment';
 
-@NgModule({
-  declarations: [],
-  imports: [EffectsModule.forFeature([CollectionEffects]), StoreModule.forFeature('manage-collection', collectionReducer)],
+@Injectable({
+  providedIn: 'root',
 })
-export class CollectionStoreModule {}
+export class CollectionService {
+  constructor(private http: HttpClient) {}
+
+  getSubjectsList(apiKey: string): Observable<{ subjects: string[] }> {
+    return this.http.get<{ subjects: string[] }>(`${environment.userApiUrl}recognition/subjects`, { headers: { 'x-api-key': apiKey } });
+  }
+}

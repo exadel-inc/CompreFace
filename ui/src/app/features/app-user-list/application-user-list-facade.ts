@@ -32,9 +32,8 @@ import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/ap
 import { loadRolesEntity } from 'src/app/store/role/action';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
-import { AppUserService } from '../../core/app-user/app-user.service';
 import { loadUsersEntity } from '../../store/user/action';
-import { selectCurrentUserRole, selectUsers } from '../../store/user/selectors';
+import { selectCurrentUserRole } from '../../store/user/selectors';
 import { Role } from 'src/app/data/enums/role.enum';
 
 @Injectable()

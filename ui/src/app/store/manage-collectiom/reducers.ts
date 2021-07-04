@@ -13,16 +13,25 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Action, ActionReducer, createReducer } from '@ngrx/store';
+import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
+
+import { loadSubjects, loadSubjectsFail, loadSubjectsSuccess } from './action';
 
 export interface CollectionEntityState {
   isPending: boolean;
+  subjects: string[];
 }
 
 const initialState: CollectionEntityState = {
   isPending: false,
+  subjects: [],
 };
 
-const reducer: ActionReducer<CollectionEntityState> = createReducer(initialState);
+const reducer: ActionReducer<CollectionEntityState> = createReducer(
+  initialState,
+  on(loadSubjects, state => ({ ...state, isPending: true })),
+  on(loadSubjectsFail, state => ({ ...state, isPending: false })),
+  on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects }))
+);
 
 export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);

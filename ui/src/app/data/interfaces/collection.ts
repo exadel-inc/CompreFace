@@ -13,16 +13,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { NgModule } from '@angular/core';
-import { EffectsModule } from '@ngrx/effects';
-import { ModelEffects } from '../model/effects';
-import { StoreModule } from '@ngrx/store';
-
-import { collectionReducer } from './reducers';
-import { CollectionEffects } from './effects';
-
-@NgModule({
-  declarations: [],
-  imports: [EffectsModule.forFeature([CollectionEffects]), StoreModule.forFeature('manage-collection', collectionReducer)],
-})
-export class CollectionStoreModule {}
+export interface Collection {
+  subjects: string[];
+}
