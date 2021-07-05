@@ -64,9 +64,11 @@
           <button mat-menu-item (click)="clone.emit(element)">
             <span>{{ 'models.select_menu.clone' | translate }}</span>
           </button>
-          <button mat-menu-item (click)="collection.emit(element)">
-            <span>{{ 'models.mange_collection' | translate }}</span>
-          </button>
+          <ng-container *ngIf="element.type === types.Recognition">
+            <button mat-menu-item (click)="collection.emit(element)">
+              <span>{{ 'models.mange_collection' | translate }}</span>
+            </button>
+          </ng-container>
         </mat-menu>
       </ng-container>
     </td>

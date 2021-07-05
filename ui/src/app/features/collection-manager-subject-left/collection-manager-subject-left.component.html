@@ -9,11 +9,11 @@
   </div>
   <div class="subjects">
       <mat-selection-list #shoes [multiple]="false">
-        <mat-list-option *ngFor="let shoe of typesOfShoes" [value]="shoe" class="section">
+        <mat-list-option *ngFor="let subject of subjectsList" class="section">
           <div class="avatar">
             <mat-icon svgIcon="avatar-subject"></mat-icon>
             <div class="name">
-              {{shoe}}
+              {{ subject }}
             </div>
           </div>
         </mat-list-option>

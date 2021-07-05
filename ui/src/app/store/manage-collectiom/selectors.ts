@@ -13,8 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { createFeatureSelector } from '@ngrx/store';
-import { EntityState } from '@ngrx/entity';
-import { Model } from '../../data/interfaces/model';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { CollectionEntityState } from './reducers';
 
-export const selectCollectionEntityState = createFeatureSelector<EntityState<Model>>('collection');
+export const selectCollectionEntityState = createFeatureSelector<CollectionEntityState>('manage-collection');
+export const selectCollectionSubject = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.subjects);

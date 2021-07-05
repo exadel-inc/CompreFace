@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,8 +10,8 @@ import { ApplicationListFacade } from '../application-list/application-list-faca
   styleUrls: ['./collection-manager-subject-left.component.scss'],
 })
 export class CollectionManagerSubjectLeftComponent {
-  typesOfShoes = ['Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers', 'Boots', 'Clogs', 'Loafers', 'Moccasins', 'Sneakers'];
   @Input() searchPlaceholder: string;
+  @Input() subjectsList: string[];
 
   @Output() inputSearch: EventEmitter<string> = new EventEmitter();
 

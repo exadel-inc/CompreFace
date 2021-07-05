@@ -24,7 +24,7 @@ export interface CollectionEntityState {
 
 const initialState: CollectionEntityState = {
   isPending: false,
-  subjects: [],
+  subjects: null,
 };
 
 const reducer: ActionReducer<CollectionEntityState> = createReducer(

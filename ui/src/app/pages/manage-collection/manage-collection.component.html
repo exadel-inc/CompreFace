@@ -4,7 +4,10 @@
 
   <div class="grid-container">
     <mat-card class="card-left">
-      <app-collection-manager-subject-left searchPlaceholder="{{ 'applications.search.title' | translate }}">
+      <app-collection-manager-subject-left
+        [subjectsList]="subjectList$ | async"
+        searchPlaceholder="{{ 'applications.search.title' | translate }}"
+      >
       </app-collection-manager-subject-left>
     </mat-card>
     <mat-card class="card-right">

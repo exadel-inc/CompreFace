@@ -15,6 +15,9 @@
  */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ManageCollectionPageService } from './manage-collection.service';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { selectCollectionSubject } from '../../store/manage-collectiom/selectors';
 
 @Component({
   selector: 'app-manage-collection',
@@ -22,9 +25,12 @@ import { ManageCollectionPageService } from './manage-collection.service';
   styleUrls: ['./manage-collection.component.scss'],
 })
 export class ManageCollectionComponent implements OnInit, OnDestroy {
-  constructor(private manageCollectionService: ManageCollectionPageService) {}
+  subjectList$: Observable<string[]>;
+
+  constructor(private manageCollectionService: ManageCollectionPageService, private store: Store<any>) {}
 
   ngOnInit(): void {
+    this.subjectList$ = this.store.select(selectCollectionSubject);
     this.manageCollectionService.initUrlBindingStreams();
   }
 
