@@ -30,15 +30,13 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
-      catchError(
-        (response: any): Observable<HttpEvent<any>> => {
-          if (response instanceof HttpErrorResponse && response.status === 401) {
-            this.authService.logOut();
-          }
-
-          return throwError(response);
+      catchError((response: any): Observable<HttpEvent<any>> => {
+        if (response instanceof HttpErrorResponse && response.status === 401) {
+          this.authService.logOut();
         }
-      )
+
+        return throwError(response);
+      })
     );
   }
 }

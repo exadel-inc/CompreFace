@@ -104,9 +104,7 @@ import { MatSelectModule } from '@angular/material/select';
     },
   ],
   bootstrap: [AppComponent],
-  exports: [
-    CreateDialogComponent
-  ],
+  exports: [CreateDialogComponent],
   entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent, DeleteDialogComponent, RoleEditDialogComponent],
 })
 export class AppModule {}

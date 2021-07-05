@@ -8,9 +8,8 @@ describe('CollectionManagerSubjectLeftComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CollectionManagerSubjectLeftComponent ]
-    })
-    .compileComponents();
+      declarations: [CollectionManagerSubjectLeftComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

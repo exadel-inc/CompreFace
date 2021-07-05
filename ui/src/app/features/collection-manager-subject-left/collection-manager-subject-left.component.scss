@@ -1,7 +1,8 @@
 @import "colors.scss";
 @import "mixins.scss";
+
 .main {
-  padding: 24px 8px 0px 8px;
+  padding: 24px 8px 8px 8px;
 
   .add-subject {
     padding-bottom: 16px;
@@ -16,46 +17,27 @@
   .search {
     margin-top: 15px;
     display: flex;
-
-    .app-search {
-      margin-bottom: 20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-
-      &--form {
-        flex-grow: 1;
-        position: relative;
-
-        &_input {
-          padding: 8px 25px 8px 8px;
-          width: 100%;
-          border: 1px solid $super-light-gray;
-          border-radius: 4px;
-          font-size: 14px;
-          box-sizing: border-box;
-          outline-color: $primary;
-
-          &::placeholder {
-            color: $gray;
-          }
-
-        }
-      }
-    }
   }
 
   .subjects {
     padding-bottom: 20px;
-    height: 70vh;
+    height: calc(100vh - 431px);
     min-height: 300px;
     overflow-y: scroll;
 
+    mat-list-option[aria-selected="true"] {
+      background: $primary-active;
+      border-bottom: 1px solid $primary;
+    }
+
     .section {
-      border-bottom: 1px solid rgba(229, 229, 229, 1);
+      border-bottom: 1px solid $special-gray;
       border-radius: 1px;
       cursor: pointer;
+
+      &:hover {
+        border-bottom: 1px solid $primary;
+      }
 
       div {
         padding: 0 !important;
@@ -66,35 +48,17 @@
         display: flex;
         align-items: center;
 
-        .hover {
-          display: none;
+        mat-icon {
+          flex-shrink: 0;
         }
-        .default {
-          display: block;
-        }
+
         .name {
-          span {
-            font-family: Poppins;
             font-size: 18px;
-            color: rgba(34, 34, 34, 0.8);
+            color: $black;
             margin-left: 13px;
-          }
+            @include not-break-string();
         }
-      }
-      &:hover {
-        border-bottom: 1px solid rgba(0, 130, 202, 1);
-        background: rgba(0, 130, 202, 0.1);
-        .hover {
-          display: block;
-        }
-        .default {
-          display: none;
-        }
-        .name {
-          span {
-            color: rgba(34, 34, 34, 1);
-          }
-        }
+
       }
     }
   }

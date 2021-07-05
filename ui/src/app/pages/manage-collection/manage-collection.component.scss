@@ -1,29 +1,15 @@
 .app-page {
-  .navigation {
-    margin-bottom: 20px;
-    span {
-      font-size: 14px;
-      font-family: Poppins;
-      &:first-child {
-        color: #0082ca;
-      }
-      &:last-child {
-        color: rgba(34, 34, 34, 1);
-      }
-    }
-  }
+
   .grid-container {
-    .navigation {
-      display: flex;
-      align-items: center;
-    }
     display: flex;
     justify-content: space-between;
+
     .card-left {
       width: 220px;
       transform: perspective(1px);
       padding: 0px !important;
     }
+
     .card-right {
       padding: 0px !important;
       width: 100%;
@@ -31,32 +17,6 @@
       max-width: 100%;
       margin-left: 20px;
     }
-    .search {
-      .input {
-        width: 100%;
-        height: 43px;
-        border: 1px solid #e5e5e5;
-        border-radius: 4px;
-        font-size: 15px;
-        padding-left: 20px;
-        font-family: Poppins;
-        color: #222222;
-      }
-    }
-  }
-}
-@media (max-width: 990px) {
-  .grid-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: unset;
-    .card-left {
-      width: 100%;
-    }
-    .card-right {
-      width: 100%;
-      margin-left: unset;
-      margin-top: 20px;
-    }
+
   }
 }

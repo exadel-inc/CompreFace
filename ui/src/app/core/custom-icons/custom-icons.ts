@@ -30,5 +30,4 @@ export enum Icons {
   Trash = 'trash',
   Upload = 'upload',
   Warning = 'warning',
-
 }

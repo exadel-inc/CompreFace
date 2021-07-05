@@ -388,6 +388,22 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
       }
     }
   }
+
+  mat-list-option {
+    &:hover {
+      .avatar {
+        svg {
+          fill: $primary;
+        }
+      }
+
+    }
+
+    .mat-list-item-content-reverse {
+      padding: 0px 8px !important;
+    }
+  }
+  
 }
 
 @include angular-material-typography($typography);

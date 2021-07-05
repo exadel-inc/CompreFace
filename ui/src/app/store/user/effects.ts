@@ -43,7 +43,7 @@ export class UserListEffect {
     private actions: Actions,
     private userService: UserService,
     private authService: AuthService,
-    private snackBarService: SnackBarService,
+    private snackBarService: SnackBarService
   ) {}
 
   @Effect()
