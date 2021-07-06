@@ -389,18 +389,31 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
     }
   }
 
-  mat-list-option {
-    &:hover {
+  .subjects {
+
+    mat-list-option[aria-selected="true"] {
+      border-bottom: 1px solid $primary;
+      background: $primary-active;
+
       .avatar {
+
         svg {
-          fill: $primary;
+
+          path {
+            fill: $primary;
+          }
+
+          circle {
+            stroke: $primary;
+          }
         }
       }
-
     }
 
-    .mat-list-item-content-reverse {
-      padding: 0px 8px !important;
+    mat-list-option {
+      .mat-list-item-content-reverse {
+        padding: 0px 8px !important;
+      }
     }
   }
   
