@@ -6,7 +6,7 @@
 
   .add-subject {
     padding-bottom: 16px;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid $light-gray-special;
 
     .mat-flat-button {
       height: 43px;
@@ -21,9 +21,9 @@
 
   .subjects {
     padding-bottom: 20px;
-    height: calc(100vh - 431px);
+    height: calc(100vh - 450px);
     min-height: 300px;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     mat-list-option[aria-selected="true"] {
       background: $primary-active;
