@@ -102,6 +102,8 @@ Pass to `EXTRA_PLUGINS` comma-separated names of plugins.
 | facenet.LandmarksDetector          | landmarks      | Facenet     | Tensorflow |      +      |
 | insightface.LandmarksDetector      | landmarks      | insightface | MXNet      |      +      |
 | insightface.Landmarks2d106Detector | landmarks2d106 | insightface | MXNet      |      +      |
+| facenet.facemask.MaskDetector      | mask           | facemask    | Tensorflow |      +      |
+| insightface.facemask.MaskDetector  | mask           | facemask    | MXNet      |      +      |
 
 Notes:    
 * `facenet.LandmarksDetector` and `insightface.LandmarksDetector` extract landmarks
@@ -114,7 +116,7 @@ Notes:
 ```
 FACE_DETECTION_PLUGIN=facenet.FaceDetector
 CALCULATION_PLUGIN=facenet.Calculator
-EXTRA_PLUGINS=agegender.AgeDetector,agegender.GenderDetector  
+EXTRA_PLUGINS=agegender.AgeDetector,agegender.GenderDetector,facenet.facemask.MaskDetector 
 ```
 
 #### Pre-trained models
@@ -143,6 +145,14 @@ List of pre-trained models:
     * arcface_mobilefacenet
     * [arcface-r50-msfdrop75](https://github.com/deepinsight/insightface/tree/master/recognition/SubCenter-ArcFace)
     * [arcface-r100-msfdrop75](https://github.com/deepinsight/insightface/tree/master/recognition/SubCenter-ArcFace)
+  
+* facenet.facemask.MaskDetector
+    * inception_v3_on_mafa_kaggle123 (default)
+    * mobilenet_v2_on_mafa_kaggle123
+  
+* insightface.facemask.MaskDetector
+    * mobilenet_v2_on_mafa_kaggle123 (default)
+    * resnet18_on_mafa_kaggle123
 
 
 #### Optimization 

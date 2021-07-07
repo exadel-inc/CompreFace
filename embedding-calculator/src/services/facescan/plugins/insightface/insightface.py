@@ -15,7 +15,6 @@
 import logging
 import functools
 from typing import List, Tuple
-
 import attr
 import numpy as np
 import mxnet as mx

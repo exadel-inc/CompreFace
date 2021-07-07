@@ -12,6 +12,6 @@
 #  or implied. See the License for the specific language governing
 #  permissions and limitations under the License.
 
-from src.services.facescan.plugins.dependencies import get_tensorflow
+from src.services.facescan.plugins.dependencies import get_mxnet
 
-requirements = get_tensorflow() # + ('mtcnn~=0.1.0',)
+requirements = get_mxnet()

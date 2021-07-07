@@ -11,16 +11,28 @@ class EmbeddingDTO(JSONEncodable):
     embedding: Array1D
 
 
-@attr.s(auto_attribs=True, frozen=True)
 class GenderDTO(JSONEncodable):
-    gender: str
-    gender_probability: float = attr.ib(converter=float, default=1)
+    def __init__(self, gender, gender_probability=1.):
+        self.gender = {
+            'value': gender,
+            'probability': float(gender_probability)
+        }
 
 
-@attr.s(auto_attribs=True, frozen=True)
 class AgeDTO(JSONEncodable):
-    age: Tuple[int, int]
-    age_probability: float = attr.ib(converter=float, default=1)
+    def __init__(self, age, age_probability=1.):
+        self.age = {
+            'low': age[0],
+            'high': age[1],
+            'probability': float(age_probability)}
+
+
+class MaskDTO(JSONEncodable):
+    def __init__(self, mask, mask_probability=1.):
+        self.mask = {
+            'value': mask,
+            'probability': float(mask_probability)
+        }
 
 
 @attr.s(auto_attribs=True, frozen=True)
