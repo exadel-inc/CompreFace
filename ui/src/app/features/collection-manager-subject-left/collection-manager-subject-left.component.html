@@ -7,6 +7,9 @@
   <div class="search">
     <app-search-table searchPlaceholder="{{ 'manage_collection.left_side.search' | translate }}"></app-search-table>
   </div>
+  <div class="spinner">
+    <app-spinner *ngIf="isLoading$ | async"></app-spinner>
+  </div>
   <div class="subjects">
     <mat-selection-list [multiple]="false">
       <mat-list-option *ngFor="let subject of subjectsList" class="section">

@@ -19,6 +19,12 @@
     display: flex;
   }
 
+  .spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .subjects {
     padding-bottom: 20px;
     height: calc(100vh - 450px);
