@@ -1,0 +1,28 @@
+@import 'colors.scss';
+.main{
+  padding: 24px 25px 8px 14px;
+
+  .wrapper{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .name {
+
+      h3 {
+        color: $black;
+        font-size: 22px;
+        margin-top: 5px;
+      }
+    }
+  }
+
+  .img-quantity {
+
+    span {
+      color: $light-gray;
+      font-size: 14px;
+    }
+  }
+
+}

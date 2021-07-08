@@ -122,7 +122,8 @@
     },
     "search": {
       "title": "Search service"
-    }
+    },
+    "mange_collection": "Collection"
   },
   "users": {
     "caption": "Table of users",
@@ -203,5 +204,11 @@
   },
   "application_user_list": {
     "invitation_sent": "Invitation was sent to {{userEmail}}"
+  },
+  "manage_collection": {
+    "left_side": {
+      "add_subject": "Add subject",
+      "search": "Search..."
+    }
   }
 }

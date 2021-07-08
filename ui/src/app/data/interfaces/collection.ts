@@ -13,13 +13,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-export enum Routes {
-  Login = '/login',
-  Home = '/',
-  Application = '/application',
-  SignUp = '/sign-up',
-  TestModel = '/test-model',
-  ManageCollection = '/manage-collection',
-  Demo = '/demo',
+export interface Collection {
+  subjects: string[];
 }

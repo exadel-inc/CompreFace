@@ -37,6 +37,7 @@
     (edit)="edit($event)"
     (delete)="delete($event)"
     (test)="test($event)"
+    (collection)="mangeCollection($event)"
   >
   </app-model-table>
   <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">

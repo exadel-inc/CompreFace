@@ -15,64 +15,43 @@
  */
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Store } from '@ngrx/store';
-import { Subscription } from 'rxjs';
-import { filter, take } from 'rxjs/operators';
 
-import { Routes } from '../../data/enums/routers-url.enum';
-import { AppState } from '../../store';
+import { Store } from '@ngrx/store';
+
+import { loadSubjects } from '../../store/manage-collectiom/action';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
-import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
-import { selectModels } from '../../store/model/selectors';
 import { getUserInfo } from '../../store/userInfo/action';
-import { ServiceTypes } from '../../data/enums/service-types.enum';
+import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
+import { Routes } from '../../data/enums/routers-url.enum';
 
 @Injectable()
-export class TestModelPageService {
-  private modelSub: Subscription;
+export class ManageCollectionPageService {
   private appId: string;
+  private apiKey: string;
   private modelId: string;
-  private type: ServiceTypes;
 
-  constructor(private router: Router, private route: ActivatedRoute, private store: Store<AppState>) {}
+  constructor(private router: Router, private route: ActivatedRoute, private store: Store<any>) {}
 
   initUrlBindingStreams() {
     this.appId = this.route.snapshot.queryParams.app;
+    this.apiKey = this.route.snapshot.queryParams.apiKey;
     this.modelId = this.route.snapshot.queryParams.model;
-    this.type = this.route.snapshot.queryParams.type;
 
     if (this.appId && this.modelId) {
+      this.store.dispatch(loadSubjects({ apiKey: this.apiKey }));
+      this.store.dispatch(loadModels({ applicationId: this.appId }));
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
       this.store.dispatch(loadApplications());
       this.store.dispatch(getUserInfo());
-      this.modelSub = this.store
-        .select(selectModels)
-        .pipe(
-          filter(models => !models.length),
-          take(1)
-        )
-        .subscribe(() => {
-          this.fetchModels();
-        });
     } else {
       this.router.navigate([Routes.Home]);
     }
-  }
-
-  getServiceType() {
-    return this.type;
-  }
-
-  fetchModels() {
-    this.store.dispatch(loadModels({ applicationId: this.appId }));
   }
 
   clearSelectedModelId() {
     this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: null }));
   }
 
-  unSubscribe() {
-    this.modelSub.unsubscribe();
-  }
+  unSubscribe() {}
 }

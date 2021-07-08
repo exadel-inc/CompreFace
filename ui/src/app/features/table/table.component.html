@@ -15,7 +15,11 @@
   -->
 
 <table mat-table *ngIf="!isLoading" [dataSource]="data" fixedLayout="true">
-  <caption>{{ 'applications.caption' | translate }}</caption>
+  <caption>
+    {{
+      'applications.caption' | translate
+    }}
+  </caption>
 
   <!-- Position Column -->
   <ng-container matColumnDef="name">

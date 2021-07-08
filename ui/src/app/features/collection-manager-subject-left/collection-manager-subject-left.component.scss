@@ -1,0 +1,60 @@
+@import "colors.scss";
+@import "mixins.scss";
+
+.main {
+  padding: 24px 8px 8px 8px;
+
+  .add-subject {
+    padding-bottom: 16px;
+    border-bottom: 1px solid $light-gray-special;
+
+    .mat-flat-button {
+      height: 43px;
+      width: 100%;
+    }
+  }
+
+  .search {
+    margin-top: 15px;
+    display: flex;
+  }
+
+  .subjects {
+    padding-bottom: 20px;
+    height: calc(100vh - 450px);
+    min-height: 300px;
+    overflow-y: auto;
+
+    .section {
+      border-bottom: 1px solid $special-gray;
+      border-radius: 1px;
+      cursor: pointer;
+
+      &:hover {
+        border-bottom: 1px solid $primary;
+      }
+
+      div {
+        padding: 0 !important;
+      }
+
+      .avatar {
+        margin-right: 13px;
+        display: flex;
+        align-items: center;
+
+        mat-icon {
+          flex-shrink: 0;
+        }
+
+        .name {
+            font-size: 18px;
+            color: $black;
+            margin-left: 13px;
+            @include not-break-string();
+        }
+
+      }
+    }
+  }
+}

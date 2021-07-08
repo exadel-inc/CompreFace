@@ -1,0 +1,23 @@
+.app-page {
+
+  .grid-container {
+    display: flex;
+    justify-content: space-between;
+
+    .card-left {
+      width: 220px;
+      min-width: 220px;
+      transform: perspective(1px);
+      padding: 0px !important;
+    }
+
+    .card-right {
+      padding: 0px !important;
+      width: 100%;
+      transform: perspective(1px);
+      max-width: 100%;
+      margin-left: 20px;
+    }
+
+  }
+}

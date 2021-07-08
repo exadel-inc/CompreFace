@@ -29,10 +29,10 @@ export class DemoService {
   constructor(private http: HttpClient) {}
 
   getModel(): Observable<DemoModel> {
-    return this.http.get(`${environment.adminApiUrl}user/demo/model`).pipe(map(data => data as DemoModel));
+    return this.http.get<DemoModel>(`${environment.adminApiUrl}user/demo/model`);
   }
 
   getStatus(): Observable<DemoStatus> {
-    return this.http.get(`${environment.userApiUrl}consistence/status`).pipe(map(data => data as DemoStatus));
+    return this.http.get<DemoStatus>(`${environment.userApiUrl}consistence/status`);
   }
 }

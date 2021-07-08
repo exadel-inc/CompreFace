@@ -16,6 +16,7 @@
 
 // Adding the name of the icons from assets/img/icons
 export enum Icons {
+  Avatar = 'avatar-subject',
   Add = 'add_new',
   BodyScan = 'body-scan',
   Close = 'close',

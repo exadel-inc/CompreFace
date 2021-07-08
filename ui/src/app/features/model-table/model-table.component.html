@@ -15,15 +15,15 @@
   -->
 
 <table class="table" *ngIf="!isLoading" mat-table [dataSource]="data" fixedLayout="true">
-  <caption>{{ 'models.caption' | translate }}</caption>
+  <caption>
+    {{
+      'models.caption' | translate
+    }}
+  </caption>
   <ng-container matColumnDef="content">
     <td mat-cell *matCellDef="let element">
       <div class="content--wrapper mat-subheading-1">
-        <span
-          class="content--wrapper_name"
-          matTooltip="{{ element.name }}"
-          [matTooltipDisabled]="disableToolTip(element.name)"
-        >
+        <span class="content--wrapper_name" matTooltip="{{ element.name }}" [matTooltipDisabled]="disableToolTip(element.name)">
           {{ element.name }}
         </span>
         <span class="content--wrapper_type mat-caption" [ngClass]="element.type | lowercase">
@@ -64,6 +64,11 @@
           <button mat-menu-item (click)="clone.emit(element)">
             <span>{{ 'models.select_menu.clone' | translate }}</span>
           </button>
+          <ng-container *ngIf="element.type === types.Recognition">
+            <button mat-menu-item (click)="collection.emit(element)">
+              <span>{{ 'models.mange_collection' | translate }}</span>
+            </button>
+          </ng-container>
         </mat-menu>
       </ng-container>
     </td>

@@ -32,6 +32,8 @@ export class ModelTableComponent extends TableComponent {
   @Output() edit = new EventEmitter<Model>();
   @Output() delete = new EventEmitter<Model>();
   @Output() test = new EventEmitter<Model>();
+  @Output() collection = new EventEmitter<Model>();
+
   roleEnum = Role;
   types = ServiceTypes;
 

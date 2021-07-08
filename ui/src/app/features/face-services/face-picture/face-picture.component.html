@@ -15,13 +15,12 @@
   -->
 <div class="face-displaying">
   <div class="face-displaying--wrapper">
-
     <div class="spinner" *ngIf="!isLoaded">
       <app-spinner></app-spinner>
     </div>
 
     <canvas class="canvas-picture" #canvasPicture></canvas>
-    <canvas class="canvas-landmarks" #canvasLandmarks [style.visibility]="disableLandmarks  ? 'inherit' : 'hidden'"></canvas>
+    <canvas class="canvas-landmarks" #canvasLandmarks [style.visibility]="disableLandmarks ? 'inherit' : 'hidden'"></canvas>
 
     <ng-container *ngIf="printData as faces">
       <ng-container *ngFor="let face of faces">
@@ -32,7 +31,7 @@
             <ng-container *ngIf="type === types.Recognition">
               <ng-container *ngIf="face.subjects[0] as value; else unknown">
                 <div class="face-box--info_name">{{ value.subject }}</div>
-                <div class="face-box--info_similarity">Similarity: {{ value.similarity | number : '1.0-2' }}</div>
+                <div class="face-box--info_similarity">Similarity: {{ value.similarity | number: '1.0-2' }}</div>
               </ng-container>
 
               <ng-template #unknown>
@@ -41,11 +40,11 @@
             </ng-container>
 
             <ng-container *ngIf="type === types.Detection">
-              <div class="face-box--info_similarity">Probability: {{ face.box.probability | number : '1.0-2' }}</div>
+              <div class="face-box--info_similarity">Probability: {{ face.box.probability | number: '1.0-2' }}</div>
             </ng-container>
 
             <ng-container *ngIf="type === types.Verification">
-              <div class="face-box--info_similarity">Similarity: {{ face.similarity | number : '1.0-2' }}</div>
+              <div class="face-box--info_similarity">Similarity: {{ face.similarity | number: '1.0-2' }}</div>
             </ng-container>
 
             <div class="face-box--info_gender">{{ face.gender.value | titlecase }}, Age: {{ face.age.low + '-' + face.age.high }}</div>
@@ -53,6 +52,5 @@
         </div>
       </ng-container>
     </ng-container>
-
   </div>
 </div>

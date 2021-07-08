@@ -13,13 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-export enum Routes {
-  Login = '/login',
-  Home = '/',
-  Application = '/application',
-  SignUp = '/sign-up',
-  TestModel = '/test-model',
-  ManageCollection = '/manage-collection',
-  Demo = '/demo',
+import { environment } from '../../../environments/environment';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class CollectionService {
+  constructor(private http: HttpClient) {}
+
+  getSubjectsList(apiKey: string): Observable<{ subjects: string[] }> {
+    return this.http.get<{ subjects: string[] }>(`${environment.userApiUrl}recognition/subjects`, { headers: { 'x-api-key': apiKey } });
+  }
 }

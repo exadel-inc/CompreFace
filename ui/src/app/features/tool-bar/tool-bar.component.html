@@ -24,11 +24,7 @@
     </div>
     <div class="header--user-info">
       <ng-container *ngIf="isUserInfoAvailable">
-        <button
-          class="user-info--btn"
-          mat-flat-button
-          (click)="goSignUp()"
-        >
+        <button class="user-info--btn" mat-flat-button (click)="goSignUp()">
           <span>{{ 'toolbar.signup' | translate }}</span>
         </button>
       </ng-container>
