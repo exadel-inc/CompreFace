@@ -6,12 +6,22 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { AppSearchTableModule } from '../app-search-table/app-search-table.module';
-import {CollectionLeftFacade} from "./collection-left-facade";
-import {SpinnerModule} from "../spinner/spinner.module";
+import { CollectionLeftFacade } from './collection-left-facade';
+import { SpinnerModule } from '../spinner/spinner.module';
+import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 
 @NgModule({
   declarations: [CollectionManagerSubjectLeftComponent],
-    imports: [CommonModule, MatListModule, TranslateModule, MatButtonModule, MatIconModule, AppSearchTableModule, SpinnerModule],
+  imports: [
+    CommonModule,
+    MatListModule,
+    TranslateModule,
+    MatButtonModule,
+    MatIconModule,
+    AppSearchTableModule,
+    SpinnerModule,
+    TablePipeModule,
+  ],
   exports: [CollectionManagerSubjectLeftComponent],
   providers: [CollectionLeftFacade],
 })

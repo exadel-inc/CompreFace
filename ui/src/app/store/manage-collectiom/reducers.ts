@@ -15,14 +15,7 @@
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import {
-  addSubject,
-  addSubjectFail,
-  addSubjectSuccess,
-  loadSubjects,
-  loadSubjectsFail,
-  loadSubjectsSuccess
-} from './action';
+import { addSubject, addSubjectFail, addSubjectSuccess, loadSubjects, loadSubjectsFail, loadSubjectsSuccess } from './action';
 
 export interface CollectionEntityState {
   isPending: boolean;
@@ -38,8 +31,8 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   initialState,
   on(loadSubjects, addSubject, state => ({ ...state, isPending: true })),
   on(loadSubjectsFail, addSubjectFail, state => ({ ...state, isPending: false })),
-  on(loadSubjectsSuccess,(state, { subjects }) => ({ ...state, isPending: false, subjects })),
-  on(addSubjectSuccess, (state, {subject }) => ({...state, isPending: false, subjects: [...state.subjects, subject] }))
+  on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects })),
+  on(addSubjectSuccess, (state, { subject }) => ({ ...state, isPending: false, subjects: [...state.subjects, subject] }))
 );
 
 export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);
