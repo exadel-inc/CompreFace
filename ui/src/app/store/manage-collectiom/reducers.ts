@@ -15,16 +15,28 @@
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import { addSubject, addSubjectFail, addSubjectSuccess, loadSubjects, loadSubjectsFail, loadSubjectsSuccess } from './action';
+import {
+  addSubject,
+  addSubjectFail,
+  addSubjectSuccess,
+  loadSubjects,
+  loadSubjectsFail,
+  loadSubjectsSuccess,
+  setSelectedApiKeyEntityAction,
+} from './action';
 
 export interface CollectionEntityState {
   isPending: boolean;
   subjects: string[];
+  currentSubject: string;
+  selectedApiKey: string;
 }
 
 const initialState: CollectionEntityState = {
   isPending: false,
   subjects: null,
+  currentSubject: null,
+  selectedApiKey: null,
 };
 
 const reducer: ActionReducer<CollectionEntityState> = createReducer(
@@ -32,7 +44,8 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(loadSubjects, addSubject, state => ({ ...state, isPending: true })),
   on(loadSubjectsFail, addSubjectFail, state => ({ ...state, isPending: false })),
   on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects })),
-  on(addSubjectSuccess, (state, { subject }) => ({ ...state, isPending: false, subjects: [...state.subjects, subject] }))
+  on(addSubjectSuccess, (state, { subject }) => ({ ...state, isPending: false, currentSubject: subject })),
+  on(setSelectedApiKeyEntityAction, (state, { selectedApiKey }) => ({ ...state, selectedApiKey }))
 );
 
 export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);

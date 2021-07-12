@@ -17,6 +17,6 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 import { CollectionEntityState } from './reducers';
 
 export const selectCollectionEntityState = createFeatureSelector<CollectionEntityState>('manage-collection');
-export const selectCollectionSubject = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.subjects);
-export const selectAddSubject = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.subjects);
+export const selectCollectionSubjects = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.subjects);
 export const selectAddSubjectPending = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.isPending);
+export const selectCollectionApiKey = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.selectedApiKey);
