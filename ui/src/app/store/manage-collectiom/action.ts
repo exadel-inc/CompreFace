@@ -18,3 +18,7 @@ import { createAction, props } from '@ngrx/store';
 export const loadSubjects = createAction('[Collection] Load Subjects', props<{ apiKey: string }>());
 export const loadSubjectsSuccess = createAction('[Collection] Load Subjects Success', props<{ subjects: string[] }>());
 export const loadSubjectsFail = createAction('[Collection] Load Subjects Fail', props<{ error: any }>());
+
+export const addSubject = createAction('[Collection] Add Subjects', props<{ name: string; apiKey: string }>());
+export const addSubjectSuccess = createAction('[Collection] Add Subjects Success', props<{ subject: string }>());
+export const addSubjectFail = createAction('[Collection] Add Subjects Fail', props<{ error: any }>());

@@ -1,41 +1,56 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ApplicationListFacade } from '../application-list/application-list-facade';
+import { CollectionLeftFacade } from './collection-left-facade';
+import { selectAddSubject, selectAddSubjectPending } from '../../store/manage-collectiom/selectors';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-collection-manager-subject-left',
   templateUrl: './collection-manager-subject-left.component.html',
   styleUrls: ['./collection-manager-subject-left.component.scss'],
 })
-export class CollectionManagerSubjectLeftComponent {
+export class CollectionManagerSubjectLeftComponent implements OnInit {
   @Input() searchPlaceholder: string;
   @Input() subjectsList: string[];
 
-  @Output() inputSearch: EventEmitter<string> = new EventEmitter();
+  subjects$: Observable<string[]>;
+  isLoading$: Observable<boolean>;
+  search = '';
 
-  constructor(private translate: TranslateService, private dialog: MatDialog, private applicationFacade: ApplicationListFacade) {}
+  constructor(
+    private translate: TranslateService,
+    private dialog: MatDialog,
+    private collectionLeftFacade: CollectionLeftFacade,
+    private store: Store<any>
+  ) {}
 
-  onInputChange(event: Event): void {
-    const data = event.target as HTMLInputElement;
-    this.inputSearch.emit(data.value);
+  ngOnInit(): void {
+    this.subjects$ = this.store.select(selectAddSubject);
+    this.isLoading$ = this.store.select(selectAddSubjectPending);
+    this.collectionLeftFacade.initUrlBindingStreams();
   }
 
   openModalWindow() {
     const dialog = this.dialog.open(CreateDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
-        entityType: this.translate.instant('applications.header.title'),
+        entityType: this.translate.instant('manage_collection.left_side.modal_title'),
         name: '',
       },
     });
 
     const dialogSubscription = dialog.afterClosed().subscribe(name => {
       if (name) {
-        this.applicationFacade.createApplication(name);
+        this.collectionLeftFacade.addSubject(name);
         dialogSubscription.unsubscribe();
       }
     });
+  }
+
+  onSearch(event: string) {
+    this.search = event;
   }
 }

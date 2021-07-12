@@ -20,7 +20,7 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
 import { CollectionService } from '../../core/collection/collection.service';
-import { loadSubjects, loadSubjectsFail, loadSubjectsSuccess } from './action';
+import { addSubject, addSubjectFail, addSubjectSuccess, loadSubjects, loadSubjectsFail, loadSubjectsSuccess } from './action';
 
 @Injectable()
 export class CollectionEffects {
@@ -37,9 +37,20 @@ export class CollectionEffects {
     )
   );
 
+  @Effect()
+  addSubject$ = this.actions.pipe(
+    ofType(addSubject),
+    switchMap(({ name, apiKey }) =>
+      this.collectionService.addSubject(name, apiKey).pipe(
+        map(({ subject }) => addSubjectSuccess({ subject })),
+        catchError(error => of(addSubjectFail({ error })))
+      )
+    )
+  );
+
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(loadSubjectsFail),
+    ofType(loadSubjectsFail, addSubjectFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
