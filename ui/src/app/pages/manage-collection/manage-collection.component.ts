@@ -17,7 +17,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ManageCollectionPageService } from './manage-collection.service';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import {selectAddSubjectPending, selectCollectionSubjects} from '../../store/manage-collectiom/selectors';
+import { selectAddSubjectPending, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
 
 @Component({
   selector: 'app-manage-collection',

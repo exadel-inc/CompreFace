@@ -18,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
 
-import {loadSubjects, setSelectedApiKeyEntityAction} from '../../store/manage-collectiom/action';
+import { loadSubjects, setSelectedApiKeyEntityAction } from '../../store/manage-collectiom/action';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { getUserInfo } from '../../store/userInfo/action';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';

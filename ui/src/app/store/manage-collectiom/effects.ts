@@ -42,7 +42,7 @@ export class CollectionEffects {
     ofType(addSubject),
     switchMap(({ name, apiKey }) =>
       this.collectionService.addSubject(name, apiKey).pipe(
-        switchMap(({ subject }) => [addSubjectSuccess({ subject }), loadSubjects( {apiKey})]),
+        switchMap(({ subject }) => [addSubjectSuccess({ subject }), loadSubjects({ apiKey })]),
         catchError(error => of(addSubjectFail({ error })))
       )
     )
