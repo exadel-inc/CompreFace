@@ -30,7 +30,6 @@ export class CollectionService {
   }
 
   addSubject(name: string, apiKey: string): Observable<{ subject: string }> {
-    console.log(name, apiKey);
     return this.http.post<{ subject: string }>(
       `${environment.userApiUrl}recognition/subjects`,
       { subject: name },
