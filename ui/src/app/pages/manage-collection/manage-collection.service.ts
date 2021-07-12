@@ -18,7 +18,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
 
-import { loadSubjects } from '../../store/manage-collectiom/action';
+import {loadSubjects, setSelectedApiKeyEntityAction} from '../../store/manage-collectiom/action';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { getUserInfo } from '../../store/userInfo/action';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
@@ -40,6 +40,7 @@ export class ManageCollectionPageService {
     if (this.appId && this.modelId) {
       this.store.dispatch(loadSubjects({ apiKey: this.apiKey }));
       this.store.dispatch(loadModels({ applicationId: this.appId }));
+      this.store.dispatch(setSelectedApiKeyEntityAction({ selectedApiKey: this.apiKey }));
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
       this.store.dispatch(loadApplications());

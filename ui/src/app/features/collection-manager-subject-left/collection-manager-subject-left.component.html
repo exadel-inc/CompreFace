@@ -1,3 +1,18 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
 <div class="main">
   <div class="add-subject">
     <button mat-flat-button color="primary" (click)="openModalWindow()">
@@ -9,18 +24,20 @@
     </app-search-table>
   </div>
   <div class="spinner">
-    <app-spinner *ngIf="isLoading$ | async"></app-spinner>
+    <app-spinner *ngIf="isPending"></app-spinner>
   </div>
   <div class="subjects">
-    <mat-selection-list [multiple]="false">
-      <mat-list-option *ngFor="let subject of subjectsList | subjectFilter: search" class="section">
-        <div class="avatar">
-          <mat-icon svgIcon="avatar-subject"></mat-icon>
-          <div class="name">
-            {{ subject }}
+    <ng-container *ngIf="!isPending">
+      <mat-selection-list [multiple]="false">
+        <mat-list-option *ngFor="let subject of subjectsList | subjectFilter: search" class="section">
+          <div class="avatar">
+            <mat-icon svgIcon="avatar-subject"></mat-icon>
+            <div class="name">
+              {{ subject }}
+            </div>
           </div>
-        </div>
-      </mat-list-option>
-    </mat-selection-list>
+        </mat-list-option>
+      </mat-selection-list>
+    </ng-container>
   </div>
 </div>
