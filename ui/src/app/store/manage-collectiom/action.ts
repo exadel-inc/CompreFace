@@ -15,6 +15,10 @@
  */
 import { createAction, props } from '@ngrx/store';
 
+export const initSelectedSubject = createAction('[Collection] Initializing Selected Subject');
+
+export const resetSubjects = createAction('[Collection] Reset Subjects');
+
 export const loadSubjects = createAction('[Collection] Load Subjects', props<{ apiKey: string }>());
 export const loadSubjectsSuccess = createAction('[Collection] Load Subjects Success', props<{ subjects: string[] }>());
 export const loadSubjectsFail = createAction('[Collection] Load Subjects Fail', props<{ error: any }>());

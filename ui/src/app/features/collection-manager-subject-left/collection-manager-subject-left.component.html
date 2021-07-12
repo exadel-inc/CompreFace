@@ -28,12 +28,17 @@
   </div>
   <div class="subjects">
     <ng-container *ngIf="!isPending">
-      <mat-selection-list [multiple]="false">
-        <mat-list-option *ngFor="let subject of subjectsList | subjectFilter: search" class="section">
+      <mat-selection-list [multiple]="false" (selectionChange)="onSelectedSubject($event.options)">
+        <mat-list-option
+          *ngFor="let name of subjectsList | subjectFilter: search"
+          [selected]="subject === name"
+          [value]="name"
+          class="section"
+        >
           <div class="avatar">
             <mat-icon svgIcon="avatar-subject"></mat-icon>
             <div class="name">
-              {{ subject }}
+              {{ name }}
             </div>
           </div>
         </mat-list-option>

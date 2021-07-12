@@ -16,25 +16,47 @@
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
 import { CollectionService } from '../../core/collection/collection.service';
-import { addSubject, addSubjectFail, addSubjectSuccess, loadSubjects, loadSubjectsFail, loadSubjectsSuccess } from './action';
+import {
+  addSubject,
+  addSubjectFail,
+  addSubjectSuccess,
+  initSelectedSubject,
+  loadSubjects,
+  loadSubjectsFail,
+  loadSubjectsSuccess,
+} from './action';
+import { Store } from '@ngrx/store';
+import { selectCollectionCurrentSubject, selectCollectionSubjects } from './selectors';
 
 @Injectable()
 export class CollectionEffects {
-  constructor(private actions: Actions, private collectionService: CollectionService, private snackBarService: SnackBarService) {}
+  constructor(
+    private actions: Actions,
+    private collectionService: CollectionService,
+    private snackBarService: SnackBarService,
+    private store: Store<any>
+  ) {}
 
   @Effect()
   loadSubjects$ = this.actions.pipe(
     ofType(loadSubjects),
     switchMap(({ apiKey }) =>
       this.collectionService.getSubjectsList(apiKey).pipe(
-        map(({ subjects }) => loadSubjectsSuccess({ subjects })),
+        switchMap(({ subjects }) => [loadSubjectsSuccess({ subjects }), initSelectedSubject()]),
         catchError(error => of(loadSubjectsFail({ error })))
       )
     )
+  );
+
+  @Effect()
+  initSelectedSubject$ = this.actions.pipe(
+    ofType(initSelectedSubject),
+    withLatestFrom(this.store.select(selectCollectionCurrentSubject), this.store.select(selectCollectionSubjects)),
+    switchMap(([, subject, subjects]) => (!subject ? [addSubjectSuccess({ subject: subjects[0] })] : []))
   );
 
   @Effect()

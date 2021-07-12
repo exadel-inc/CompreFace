@@ -18,11 +18,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Store } from '@ngrx/store';
 
-import { loadSubjects, setSelectedApiKeyEntityAction } from '../../store/manage-collectiom/action';
+import { loadSubjects, resetSubjects, setSelectedApiKeyEntityAction } from '../../store/manage-collectiom/action';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { getUserInfo } from '../../store/userInfo/action';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
 import { Routes } from '../../data/enums/routers-url.enum';
+import { selectCollectionApiKey } from '../../store/manage-collectiom/selectors';
+import { filter, take } from 'rxjs/operators';
 
 @Injectable()
 export class ManageCollectionPageService {
@@ -38,7 +40,16 @@ export class ManageCollectionPageService {
     this.modelId = this.route.snapshot.queryParams.model;
 
     if (this.appId && this.modelId) {
-      this.store.dispatch(loadSubjects({ apiKey: this.apiKey }));
+      this.store
+        .select(selectCollectionApiKey)
+        .pipe(
+          take(1),
+          filter(apiKey => apiKey !== this.apiKey)
+        )
+        .subscribe(() => {
+          this.store.dispatch(resetSubjects());
+          this.store.dispatch(loadSubjects({ apiKey: this.apiKey }));
+        });
       this.store.dispatch(loadModels({ applicationId: this.appId }));
       this.store.dispatch(setSelectedApiKeyEntityAction({ selectedApiKey: this.apiKey }));
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));

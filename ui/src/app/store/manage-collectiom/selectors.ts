@@ -19,4 +19,5 @@ import { CollectionEntityState } from './reducers';
 export const selectCollectionEntityState = createFeatureSelector<CollectionEntityState>('manage-collection');
 export const selectCollectionSubjects = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.subjects);
 export const selectAddSubjectPending = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.isPending);
+export const selectCollectionCurrentSubject = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.subject);
 export const selectCollectionApiKey = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.selectedApiKey);

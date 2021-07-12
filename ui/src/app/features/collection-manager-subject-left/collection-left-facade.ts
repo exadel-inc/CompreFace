@@ -17,28 +17,41 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { addSubject } from '../../store/manage-collectiom/action';
-import { filter, take, tap } from 'rxjs/operators';
+import { filter, takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+
+import { addSubject, addSubjectSuccess } from '../../store/manage-collectiom/action';
+import { CollectionEntityState } from '../../store/manage-collectiom/reducers';
 import { selectCollectionApiKey } from '../../store/manage-collectiom/selectors';
 
 @Injectable()
 export class CollectionLeftFacade {
   private apiKey: string;
+  private unsubscribe$: Subject<void> = new Subject();
 
-  constructor(private route: ActivatedRoute, private store: Store<any>) {}
+  constructor(private route: ActivatedRoute, private store: Store<CollectionEntityState>) {}
 
   initUrlBindingStreams() {
     this.store
       .select(selectCollectionApiKey)
       .pipe(
-        take(2),
+        takeUntil(this.unsubscribe$),
         filter(apiKey => !!apiKey),
         tap(apiKey => (this.apiKey = apiKey))
       )
       .subscribe();
   }
 
-  addSubject(name: string) {
+  selectedSubject(subject: string): void {
+    this.store.dispatch(addSubjectSuccess({ subject }));
+  }
+
+  addSubject(name: string): void {
     this.store.dispatch(addSubject({ name, apiKey: this.apiKey }));
+  }
+
+  unsubscribe() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 }

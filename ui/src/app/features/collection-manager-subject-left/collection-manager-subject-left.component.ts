@@ -14,39 +14,33 @@
  * permissions and limitations under the License.
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CollectionLeftFacade } from './collection-left-facade';
-import { selectAddSubjectPending, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { MatListOption } from '@angular/material/list';
 
 @Component({
   selector: 'app-collection-manager-subject-left',
   templateUrl: './collection-manager-subject-left.component.html',
   styleUrls: ['./collection-manager-subject-left.component.scss'],
 })
-export class CollectionManagerSubjectLeftComponent implements OnInit {
+export class CollectionManagerSubjectLeftComponent implements OnInit, OnDestroy {
   @Input() searchPlaceholder: string;
   @Input() subjectsList: string[];
+  @Input() subject: string;
   @Input() isPending: boolean;
 
   search = '';
 
-  constructor(
-    private translate: TranslateService,
-    private dialog: MatDialog,
-    private collectionLeftFacade: CollectionLeftFacade,
-    private store: Store<any>
-  ) {}
+  constructor(private translate: TranslateService, private dialog: MatDialog, private collectionLeftFacade: CollectionLeftFacade) {}
 
   ngOnInit(): void {
     this.collectionLeftFacade.initUrlBindingStreams();
   }
 
-  openModalWindow() {
+  openModalWindow(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -63,7 +57,16 @@ export class CollectionManagerSubjectLeftComponent implements OnInit {
     });
   }
 
-  onSearch(event: string) {
+  onSelectedSubject(change: MatListOption[]): void {
+    const { value } = change[0];
+    this.collectionLeftFacade.selectedSubject(value);
+  }
+
+  onSearch(event: string): void {
     this.search = event;
+  }
+
+  ngOnDestroy(): void {
+    this.collectionLeftFacade.unsubscribe();
   }
 }

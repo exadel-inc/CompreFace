@@ -17,7 +17,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ManageCollectionPageService } from './manage-collection.service';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectAddSubjectPending, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
+import { selectAddSubjectPending, selectCollectionCurrentSubject, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
 
 @Component({
   selector: 'app-manage-collection',
@@ -26,6 +26,7 @@ import { selectAddSubjectPending, selectCollectionSubjects } from '../../store/m
 })
 export class ManageCollectionComponent implements OnInit, OnDestroy {
   subjectList$: Observable<string[]>;
+  currentSubject$: Observable<string>;
   isPending$: Observable<boolean>;
 
   constructor(private manageCollectionService: ManageCollectionPageService, private store: Store<any>) {}
@@ -33,6 +34,7 @@ export class ManageCollectionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subjectList$ = this.store.select(selectCollectionSubjects);
     this.isPending$ = this.store.select(selectAddSubjectPending);
+    this.currentSubject$ = this.store.select(selectCollectionCurrentSubject, selectCollectionSubjects);
     this.manageCollectionService.initUrlBindingStreams();
   }
 
