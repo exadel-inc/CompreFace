@@ -13,17 +13,25 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
-<div class="main">
-  <div class="subject-info">
-    <div class="wrapper">
-      <div class="name">
-        <h3>Personal profile: {{ currentSubject }}</h3>
-      </div>
-      <div class="delete"></div>
-    </div>
-    <div class="img-quantity">
-      <span>Examples: 154pic</span>
-    </div>
+<div class="collection-right">
+  <div class="collection-right--spinner">
+    <app-spinner *ngIf="isPending"></app-spinner>
   </div>
+  <ng-container *ngIf="!isPending">
+    <div class="collection-right--header">
+      <div class="collection-right--header_buttons">
+        <div class="subject-name">Personal profile: {{ currentSubject }}</div>
+        <div class="buttons-wrapper">
+          <ng-container *ngIf="!!currentSubject">
+            <button mat-icon-button (click)="edit()">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button (click)="delete()">
+              <mat-icon svgIcon="trash"></mat-icon>
+            </button>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-container>
 </div>

@@ -13,8 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -25,6 +24,7 @@ import { MatListOption } from '@angular/material/list';
   selector: 'app-collection-manager-subject-left',
   templateUrl: './collection-manager-subject-left.component.html',
   styleUrls: ['./collection-manager-subject-left.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectLeftComponent implements OnInit, OnDestroy {
   @Input() searchPlaceholder: string;

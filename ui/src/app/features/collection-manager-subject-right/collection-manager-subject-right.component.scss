@@ -1,28 +1,45 @@
-@import 'colors.scss';
-.main{
-  padding: 24px 25px 8px 14px;
+/*!
+ * Copyright (c) 2020 the original author or authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
 
-  .wrapper{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+@import 'mixins.scss';
 
-    .name {
+.collection-right {
+  &--spinner {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
 
-      h3 {
-        color: $black;
+  &--header {
+    &_buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .subject-name {
+        font-weight: 600;
         font-size: 22px;
-        margin-top: 5px;
+      }
+
+      .buttons-wrapper {
+        .mat-icon {
+          @include md-icon-size();
+        }
       }
     }
   }
-
-  .img-quantity {
-
-    span {
-      color: $light-gray;
-      font-size: 14px;
-    }
-  }
-
 }

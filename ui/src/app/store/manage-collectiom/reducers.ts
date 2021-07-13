@@ -19,10 +19,17 @@ import {
   addSubject,
   addSubjectFail,
   addSubjectSuccess,
+  deleteSubject,
+  deleteSubjectFail,
+  deleteSubjectSuccess,
+  editSubject,
+  editSubjectFail,
+  editSubjectSuccess,
   loadSubjects,
   loadSubjectsFail,
   loadSubjectsSuccess,
   resetSubjects,
+  selectedSubject,
   setSelectedApiKeyEntityAction,
 } from './action';
 
@@ -42,11 +49,12 @@ const initialState: CollectionEntityState = {
 
 const reducer: ActionReducer<CollectionEntityState> = createReducer(
   initialState,
-  on(loadSubjects, addSubject, state => ({ ...state, isPending: true })),
-  on(loadSubjectsFail, addSubjectFail, state => ({ ...state, isPending: false })),
+  on(loadSubjects, addSubject, editSubject, deleteSubject, state => ({ ...state, isPending: true })),
+  on(addSubjectSuccess, editSubjectSuccess, deleteSubjectSuccess, state => ({ ...state, isPending: false })),
+  on(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail, state => ({ ...state, isPending: false })),
   on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects })),
-  on(addSubjectSuccess, (state, { subject }) => ({ ...state, isPending: false, subject })),
   on(setSelectedApiKeyEntityAction, (state, { selectedApiKey }) => ({ ...state, selectedApiKey })),
+  on(selectedSubject, (state, { subject }) => ({ ...state, subject })),
   on(resetSubjects, () => ({ ...initialState }))
 );
 

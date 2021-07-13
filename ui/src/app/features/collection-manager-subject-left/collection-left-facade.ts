@@ -20,7 +20,7 @@ import { Store } from '@ngrx/store';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import { addSubject, addSubjectSuccess } from '../../store/manage-collectiom/action';
+import { addSubject, selectedSubject } from '../../store/manage-collectiom/action';
 import { CollectionEntityState } from '../../store/manage-collectiom/reducers';
 import { selectCollectionApiKey } from '../../store/manage-collectiom/selectors';
 
@@ -43,7 +43,7 @@ export class CollectionLeftFacade {
   }
 
   selectedSubject(subject: string): void {
-    this.store.dispatch(addSubjectSuccess({ subject }));
+    this.store.dispatch(selectedSubject({ subject }));
   }
 
   addSubject(name: string): void {

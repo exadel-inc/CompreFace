@@ -16,15 +16,23 @@
 import { createAction, props } from '@ngrx/store';
 
 export const initSelectedSubject = createAction('[Collection] Initializing Selected Subject');
-
 export const resetSubjects = createAction('[Collection] Reset Subjects');
+export const selectedSubject = createAction('[Collection] Selected Subject', props<{ subject: string }>());
 
 export const loadSubjects = createAction('[Collection] Load Subjects', props<{ apiKey: string }>());
 export const loadSubjectsSuccess = createAction('[Collection] Load Subjects Success', props<{ subjects: string[] }>());
 export const loadSubjectsFail = createAction('[Collection] Load Subjects Fail', props<{ error: any }>());
 
-export const addSubject = createAction('[Collection] Add Subjects', props<{ name: string; apiKey: string }>());
-export const addSubjectSuccess = createAction('[Collection] Add Subjects Success', props<{ subject: string }>());
-export const addSubjectFail = createAction('[Collection] Add Subjects Fail', props<{ error: any }>());
+export const addSubject = createAction('[Collection] Add Subject', props<{ name: string; apiKey: string }>());
+export const addSubjectSuccess = createAction('[Collection] Add Subject Success');
+export const addSubjectFail = createAction('[Collection] Add Subject Fail', props<{ error: any }>());
+
+export const editSubject = createAction('[Collection] Edit Subject', props<{ name: string; apiKey: string; subject: string }>());
+export const editSubjectSuccess = createAction('[Collection] Edit Subject Success');
+export const editSubjectFail = createAction('[Collection] Edit Subject Fail', props<{ error: any }>());
+
+export const deleteSubject = createAction('[Collection] Delete Subject', props<{ apiKey: string; subject: string }>());
+export const deleteSubjectSuccess = createAction('[Collection] Delete Subject Success');
+export const deleteSubjectFail = createAction('[Collection] Delete Subject Fail', props<{ error: any }>());
 
 export const setSelectedApiKeyEntityAction = createAction('[Collection] Set Selected Api Key', props<{ selectedApiKey: string }>());

@@ -17,11 +17,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CollectionManagerSubjectRightComponent } from './collection-manager-subject-right.component';
 import { CollectionRightFacade } from './collection-right-facade';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { SpinnerModule } from '../spinner/spinner.module';
 
 @NgModule({
   declarations: [CollectionManagerSubjectRightComponent],
   exports: [CollectionManagerSubjectRightComponent],
-  imports: [CommonModule],
+  imports: [CommonModule, MatIconModule, MatButtonModule, SpinnerModule],
   providers: [CollectionRightFacade],
 })
 export class CollectionManagerSubjectRightModule {}

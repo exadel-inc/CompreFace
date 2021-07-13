@@ -210,6 +210,10 @@
       "add_subject": "Add subject",
       "search": "Search...",
       "modal_title": "Subject"
+    },
+    "right_side": {
+      "edit_subject": "Subject",
+      "delete_subject": "Subject"
     }
   }
 }

@@ -24,10 +24,17 @@ import {
   addSubject,
   addSubjectFail,
   addSubjectSuccess,
+  deleteSubject,
+  deleteSubjectFail,
+  deleteSubjectSuccess,
+  editSubject,
+  editSubjectFail,
+  editSubjectSuccess,
   initSelectedSubject,
   loadSubjects,
   loadSubjectsFail,
   loadSubjectsSuccess,
+  selectedSubject,
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectCollectionCurrentSubject, selectCollectionSubjects } from './selectors';
@@ -56,7 +63,7 @@ export class CollectionEffects {
   initSelectedSubject$ = this.actions.pipe(
     ofType(initSelectedSubject),
     withLatestFrom(this.store.select(selectCollectionCurrentSubject), this.store.select(selectCollectionSubjects)),
-    switchMap(([, subject, subjects]) => (!subject ? [addSubjectSuccess({ subject: subjects[0] })] : []))
+    switchMap(([, subject, subjects]) => (!subject ? [selectedSubject({ subject: subjects[0] })] : []))
   );
 
   @Effect()
@@ -64,8 +71,30 @@ export class CollectionEffects {
     ofType(addSubject),
     switchMap(({ name, apiKey }) =>
       this.collectionService.addSubject(name, apiKey).pipe(
-        switchMap(({ subject }) => [addSubjectSuccess({ subject }), loadSubjects({ apiKey })]),
+        switchMap(({ subject }) => [addSubjectSuccess(), selectedSubject({ subject }), loadSubjects({ apiKey })]),
         catchError(error => of(addSubjectFail({ error })))
+      )
+    )
+  );
+
+  @Effect()
+  editSubject$ = this.actions.pipe(
+    ofType(editSubject),
+    switchMap(({ name, apiKey, subject }) =>
+      this.collectionService.editSubject(name, apiKey, subject).pipe(
+        switchMap(() => [editSubjectSuccess(), selectedSubject({ subject: name }), loadSubjects({ apiKey })]),
+        catchError(error => of(editSubjectFail({ error })))
+      )
+    )
+  );
+
+  @Effect()
+  deleteSubject$ = this.actions.pipe(
+    ofType(deleteSubject),
+    switchMap(({ apiKey, subject }) =>
+      this.collectionService.deleteSubject(apiKey, subject).pipe(
+        switchMap(() => [deleteSubjectSuccess(), selectedSubject({ subject: name }), loadSubjects({ apiKey })]),
+        catchError(error => of(deleteSubjectFail({ error })))
       )
     )
   );

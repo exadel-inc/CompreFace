@@ -13,12 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import "colors.scss";
-@import "mixins.scss";
+@import 'colors.scss';
+@import 'mixins.scss';
 
 .main {
-  padding: 24px 8px 8px 8px;
-
   .add-subject {
     padding-bottom: 16px;
     border-bottom: 1px solid $light-gray-special;
@@ -69,12 +67,11 @@
         }
 
         .name {
-            font-size: 18px;
-            color: $black;
-            margin-left: 13px;
-            @include not-break-string();
+          font-size: 18px;
+          color: $black;
+          margin-left: 13px;
+          @include not-break-string();
         }
-
       }
     }
   }

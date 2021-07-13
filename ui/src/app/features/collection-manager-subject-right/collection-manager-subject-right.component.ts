@@ -13,7 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { filter, first, tap } from 'rxjs/operators';
+
+import { CollectionRightFacade } from './collection-right-facade';
+import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-collection-manager-subject-right',
@@ -21,8 +28,53 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
   styleUrls: ['./collection-manager-subject-right.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionManagerSubjectRightComponent {
+export class CollectionManagerSubjectRightComponent implements OnInit, OnDestroy {
   @Input() currentSubject: string;
+  @Input() isPending: boolean;
 
-  constructor() {}
+  constructor(private translate: TranslateService, private dialog: MatDialog, private collectionRightFacade: CollectionRightFacade) {}
+
+  ngOnInit(): void {
+    this.collectionRightFacade.initUrlBindingStreams();
+  }
+
+  delete(): void {
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        entityType: this.translate.instant('manage_collection.right_side.delete_subject'),
+        entityName: this.currentSubject,
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.collectionRightFacade.deleteSubject(this.currentSubject));
+  }
+
+  edit(): void {
+    const dialog = this.dialog.open(EditDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        entityType: this.translate.instant('manage_collection.right_side.edit_subject'),
+        entityName: this.currentSubject,
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(name => name)
+      )
+      .subscribe(name => this.collectionRightFacade.editSubject(name, this.currentSubject));
+  }
+
+  ngOnDestroy(): void {
+    this.collectionRightFacade.unsubscribe();
+  }
 }
