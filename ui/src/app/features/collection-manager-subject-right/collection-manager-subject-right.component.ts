@@ -16,11 +16,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
-import { filter, first, tap } from 'rxjs/operators';
+import { filter, first } from 'rxjs/operators';
 
 import { CollectionRightFacade } from './collection-right-facade';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { JoiningSubjectsDialogComponent } from '../joining-subjects-dialog/joining-subjects-dialog.component';
 
 @Component({
   selector: 'app-collection-manager-subject-right',
@@ -29,6 +30,7 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectRightComponent implements OnInit, OnDestroy {
+  @Input() subjectsList: string[];
   @Input() currentSubject: string;
   @Input() isPending: boolean;
 
@@ -71,7 +73,25 @@ export class CollectionManagerSubjectRightComponent implements OnInit, OnDestroy
         first(),
         filter(name => name)
       )
-      .subscribe(name => this.collectionRightFacade.editSubject(name, this.currentSubject));
+      .subscribe(name =>
+        this.subjectsList.includes(name)
+          ? this.joinSubjects(name, this.currentSubject)
+          : this.collectionRightFacade.editSubject(name, this.currentSubject)
+      );
+  }
+
+  joinSubjects(name: string, subject: string): void {
+    const dialog = this.dialog.open(JoiningSubjectsDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.collectionRightFacade.editSubject(name, subject));
   }
 
   ngOnDestroy(): void {

@@ -28,6 +28,7 @@
     </mat-card>
     <mat-card class="card-right">
       <app-collection-manager-subject-right
+        [subjectsList]="subjectList$ | async"
         [currentSubject]="currentSubject$ | async"
         [isPending]="isPending$ | async"
       ></app-collection-manager-subject-right>

@@ -212,8 +212,12 @@
       "modal_title": "Subject"
     },
     "right_side": {
+      "title": "Join Subject",
       "edit_subject": "Subject",
-      "delete_subject": "Subject"
+      "delete_subject": "Subject",
+      "join_subjects": "Join",
+      "cancel_changes": "Cancel",
+      "join_message": "Subject with the same name already exists."
     }
   }
 }

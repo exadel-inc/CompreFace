@@ -38,6 +38,7 @@ import {
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectCollectionCurrentSubject, selectCollectionSubjects } from './selectors';
+import { CollectionEntityState } from './reducers';
 
 @Injectable()
 export class CollectionEffects {
@@ -45,7 +46,7 @@ export class CollectionEffects {
     private actions: Actions,
     private collectionService: CollectionService,
     private snackBarService: SnackBarService,
-    private store: Store<any>
+    private store: Store<CollectionEntityState>
   ) {}
 
   @Effect()
@@ -57,13 +58,6 @@ export class CollectionEffects {
         catchError(error => of(loadSubjectsFail({ error })))
       )
     )
-  );
-
-  @Effect()
-  initSelectedSubject$ = this.actions.pipe(
-    ofType(initSelectedSubject),
-    withLatestFrom(this.store.select(selectCollectionCurrentSubject), this.store.select(selectCollectionSubjects)),
-    switchMap(([, subject, subjects]) => (!subject ? [selectedSubject({ subject: subjects[0] })] : []))
   );
 
   @Effect()
@@ -99,9 +93,16 @@ export class CollectionEffects {
     )
   );
 
+  @Effect()
+  initSelectedSubject$ = this.actions.pipe(
+    ofType(initSelectedSubject),
+    withLatestFrom(this.store.select(selectCollectionCurrentSubject), this.store.select(selectCollectionSubjects)),
+    switchMap(([, subject, subjects]) => (!subject ? [selectedSubject({ subject: subjects[0] })] : []))
+  );
+
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(loadSubjectsFail, addSubjectFail),
+    ofType(loadSubjectsFail, addSubjectFail, deleteSubjectFail, editSubjectFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })

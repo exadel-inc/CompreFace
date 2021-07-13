@@ -50,6 +50,7 @@ import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
 import { RoleEditDialogComponent } from './features/role-edit-dialog/role-edit-dialog.component';
 import { MatSelectModule } from '@angular/material/select';
+import { JoiningSubjectsDialogComponent } from './features/joining-subjects-dialog/joining-subjects-dialog.component';
 
 @NgModule({
   declarations: [
@@ -61,6 +62,7 @@ import { MatSelectModule } from '@angular/material/select';
     AlertComponent,
     DeleteDialogComponent,
     RoleEditDialogComponent,
+    JoiningSubjectsDialogComponent,
   ],
   imports: [
     BrowserModule,
