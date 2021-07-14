@@ -52,7 +52,6 @@ def prewhiten(img):
 class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
-    BOX_MARGIN = 32
     IMAGE_SIZE = 160
     IMG_LENGTH_LIMIT = ENV.IMG_LENGTH_LIMIT
 
@@ -61,6 +60,12 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     det_threshold_a = 0.9436513301
     det_threshold_b = 0.7059968943
     det_threshold_c = 0.5506904359
+
+    # face alignment settings (were calculated for current detector)
+    left_margin = 0.2125984251968504
+    right_margin = 0.2230769230769231
+    top_margin = 0.10526315789473684
+    bottom_margin = 0.09868421052631579
 
     @cached_property
     def _face_detection_net(self):
@@ -87,13 +92,11 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
 
         for face in detect_face_result:
             x, y, w, h = face['box']
-            margin_x = w / 8
-            margin_y = h / 8
             box = BoundingBoxDTO(
-                x_min=int(np.maximum(x - margin_x, 0)),
-                y_min=int(np.maximum(y - margin_y, 0)),
-                x_max=int(np.minimum(x + w + margin_x, img_size[1])),
-                y_max=int(np.minimum(y + h + margin_y, img_size[0])),
+                x_min=int(np.maximum(x - (self.left_margin * w), 0)),
+                y_min=int(np.maximum(y - (self.top_margin * h), 0)),
+                x_max=int(np.minimum(x + w + (self.right_margin * w), img_size[1])),
+                y_max=int(np.minimum(y + h + (self.bottom_margin * h), img_size[0])),
                 np_landmarks=np.array([list(value) for value in face['keypoints'].values()]),
                 probability=face['confidence']
             )
