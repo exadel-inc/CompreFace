@@ -59,7 +59,7 @@ class MaskDetector(InsightFaceMixin, base.BasePlugin):
         else:
             model = vision.mobilenet_v2_1_0(classes=len(self.LABELS), ctx=ctx)
         model_path = Path(self.ml_model.path) / Path(os.listdir(self.ml_model.path)[0])
-        model.load_parameters(str(model_path))
+        model.load_parameters(str(model_path), ctx=ctx)
 
         def get_value(img: Array3D) -> Tuple[Union[str, Tuple], float]:
             data = img.reshape((1,) + img.shape)
