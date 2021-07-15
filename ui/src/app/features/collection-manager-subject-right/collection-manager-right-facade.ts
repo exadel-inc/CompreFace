@@ -18,21 +18,20 @@ import { Store } from '@ngrx/store';
 import { filter, map, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { addSubject, setSelectedSubject } from '../../store/manage-collectiom/action';
 import { selectCurrentModel } from '../../store/model/selectors';
 import { selectAddSubjectPending, selectCollectionSubject, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
+import { deleteSubject, editSubject } from '../../store/manage-collectiom/action';
 
 @Injectable()
-export class CollectionLeftFacade {
-  subjectsList$: Observable<string[]>;
-  currentSubject$: Observable<string>;
+export class CollectionRightFacade {
+  subjects$: Observable<string[]>;
+  subject$: Observable<string>;
   isPending$: Observable<boolean>;
-
   private apiKey: string;
 
   constructor(private store: Store<any>) {
-    this.subjectsList$ = this.store.select(selectCollectionSubjects);
-    this.currentSubject$ = this.store.select(selectCollectionSubject);
+    this.subjects$ = this.store.select(selectCollectionSubjects);
+    this.subject$ = this.store.select(selectCollectionSubject);
     this.isPending$ = this.store.select(selectAddSubjectPending);
   }
 
@@ -48,11 +47,11 @@ export class CollectionLeftFacade {
       .subscribe();
   }
 
-  addSubject(name: string): void {
-    this.store.dispatch(addSubject({ name, apiKey: this.apiKey }));
+  edit(editName: string, subject: string): void {
+    this.store.dispatch(editSubject({ editName, apiKey: this.apiKey, subject }));
   }
 
-  onSelectedSubject(subject: string): void {
-    this.store.dispatch(setSelectedSubject({ subject }));
+  delete(name: string): void {
+    this.store.dispatch(deleteSubject({ name, apiKey: this.apiKey }));
   }
 }

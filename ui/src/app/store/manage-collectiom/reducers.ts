@@ -19,30 +19,43 @@ import {
   addSubject,
   addSubjectFail,
   addSubjectSuccess,
+  deleteSubject,
+  deleteSubjectFail,
+  deleteSubjectSuccess,
+  editSubject,
+  editSubjectFail,
+  editSubjectSuccess,
   loadSubjects,
   loadSubjectsFail,
   loadSubjectsSuccess,
   resetSubjects,
+  setSelectedSubject,
 } from './action';
 
 export interface CollectionEntityState {
   isPending: boolean;
   subjects: string[];
-  currentSubject: string;
+  subject: string;
 }
 
 const initialState: CollectionEntityState = {
   isPending: false,
   subjects: null,
-  currentSubject: null,
+  subject: null,
 };
 
 const reducer: ActionReducer<CollectionEntityState> = createReducer(
   initialState,
-  on(loadSubjects, addSubject, state => ({ ...state, isPending: true })),
-  on(loadSubjectsFail, addSubjectFail, state => ({ ...state, isPending: false })),
+  on(loadSubjects, addSubject, editSubject, deleteSubject, state => ({ ...state, isPending: true })),
+  on(addSubjectSuccess, addSubjectSuccess, editSubjectSuccess, (state, { subject }) => ({
+    ...state,
+    isPending: false,
+    subject,
+  })),
+  on(deleteSubjectSuccess, state => ({ ...state, isPending: false, subject: null })),
+  on(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail, deleteSubjectSuccess, state => ({ ...state, isPending: false })),
   on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects })),
-  on(addSubjectSuccess, (state, { subject }) => ({ ...state, isPending: false, currentSubject: subject })),
+  on(setSelectedSubject, (state, { subject }) => ({ ...state, subject })),
   on(resetSubjects, () => ({ ...initialState }))
 );
 

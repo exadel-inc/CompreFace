@@ -36,4 +36,20 @@ export class CollectionService {
       { headers: { 'x-api-key': apiKey } }
     );
   }
+
+  editSubject(editName: string, apiKey: string, subject: string): Observable<{ updated: boolean }> {
+    return this.http.put<{ updated: boolean }>(
+      `${environment.userApiUrl}recognition/subjects/${subject}`,
+      { subject: editName },
+      {
+        headers: { 'x-api-key': apiKey },
+      }
+    );
+  }
+
+  deleteSubject(subject: string, apiKey: string): Observable<{ subject: string }> {
+    return this.http.delete<{ subject: string }>(`${environment.userApiUrl}recognition/subjects/${subject}`, {
+      headers: { 'x-api-key': apiKey },
+    });
+  }
 }

@@ -13,25 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatListOption } from '@angular/material/list';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-collection-manager-subject-left',
-  templateUrl: './collection-manager-subject-left.component.html',
-  styleUrls: ['./collection-manager-subject-left.component.scss'],
+  selector: 'app-merger-dialog',
+  templateUrl: './merger-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionManagerSubjectLeftComponent {
-  @Input() subjectsList: string[];
-  @Input() currentSubject: string;
-  @Input() isPending: boolean;
-  @Output() addSubject = new EventEmitter<void>();
-  @Output() selectedSubject = new EventEmitter<MatListOption[]>();
+export class MergerDialogComponent {
+  constructor(public dialogRef: MatDialogRef<MergerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
-  search = '';
-
-  onSearch(event: string) {
-    this.search = event;
+  onCancelClick(): void {
+    this.dialogRef.close();
   }
 }

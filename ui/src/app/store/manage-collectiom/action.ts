@@ -23,4 +23,14 @@ export const addSubject = createAction('[Collection] Add Subjects', props<{ name
 export const addSubjectSuccess = createAction('[Collection] Add Subjects Success', props<{ subject: string }>());
 export const addSubjectFail = createAction('[Collection] Add Subjects Fail', props<{ error: any }>());
 
+export const editSubject = createAction('[Collection] Edit Subject', props<{ editName: string; apiKey: string; subject: string }>());
+export const editSubjectSuccess = createAction('[Collection] Edit Subject Success', props<{ subject: string }>());
+export const editSubjectFail = createAction('[Collection] Edit Subject Fail', props<{ error: any }>());
+
+export const deleteSubject = createAction('[Collection] Delete Subject', props<{ name: string; apiKey: string }>());
+export const deleteSubjectSuccess = createAction('[Collection] Delete Subject Success');
+export const deleteSubjectFail = createAction('[Collection] Delete Subject Fail', props<{ error: any }>());
+
 export const resetSubjects = createAction('[Collection] Reset Subjects');
+export const setSelectedSubject = createAction('[Collection] Set Selected Subject', props<{ subject: any }>());
+export const initSelectedSubject = createAction('[Collection] Init Selected Subject');

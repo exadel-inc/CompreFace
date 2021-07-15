@@ -19,24 +19,30 @@ import { CollectionLeftFacade } from './collection-left-facade';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatListOption } from '@angular/material/list';
 
 @Component({
   selector: 'app-application-list-container',
   template: `<app-collection-manager-subject-left
     [subjectsList]="subjectsList$ | async"
+    [currentSubject]="currentSubject$ | async"
     [isPending]="isPending$ | async"
     (addSubject)="addSubject()"
+    (selectedSubject)="onSelectedSubject($event)"
   ></app-collection-manager-subject-left>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
+  currentSubject$: Observable<string>;
   subjectsList$: Observable<string[]>;
   isPending$: Observable<boolean>;
 
-  constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {}
+  constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {
+    this.collectionLeftFacade.initUrlBindingStreams();
+  }
 
   ngOnInit(): void {
-    this.collectionLeftFacade.initUrlBindingStreams();
+    this.currentSubject$ = this.collectionLeftFacade.currentSubject$;
     this.subjectsList$ = this.collectionLeftFacade.subjectsList$;
     this.isPending$ = this.collectionLeftFacade.isPending$;
   }
@@ -56,5 +62,9 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
         dialogSubscription.unsubscribe();
       }
     });
+  }
+
+  onSelectedSubject(change: MatListOption[]): void {
+    this.collectionLeftFacade.onSelectedSubject(change[0].value);
   }
 }

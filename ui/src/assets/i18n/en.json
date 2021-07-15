@@ -210,6 +210,16 @@
       "add_subject": "Add subject",
       "search": "Search...",
       "modal_title": "Subject"
+    },
+    "right_side": {
+      "title": "Join Subject",
+      "profile": "Personal profile:",
+      "edit_subject": "Subject",
+      "delete_subject": "Subject",
+      "join_subjects": "Join",
+      "cancel_changes": "Cancel",
+      "join_message": "Subject with the same name already exists.",
+      "examples": "Examples:"
     }
   }
 }
