@@ -15,7 +15,7 @@
 from typing import Tuple, Union
 
 import numpy as np
-import tensorflow as tf
+import tensorflow.compat.v1 as tf1
 from cached_property import cached_property
 
 from src.services.imgtools.types import Array3D
@@ -33,18 +33,18 @@ class BaseAgeGender(base.BasePlugin):
         model_dir = self.ml_model.path
         IMAGE_SIZE = managers.plugin_manager.detector.IMAGE_SIZE
 
-        g = tf.Graph()
+        g = tf1.Graph()
         with g.as_default():
-            sess = tf.Session(config=tf.ConfigProto(allow_soft_placement=True))
+            sess = tf1.Session(config=tf1.ConfigProto(allow_soft_placement=True))
 
-            images = tf.placeholder(tf.float32, [None, IMAGE_SIZE, IMAGE_SIZE, 3])
+            images = tf1.placeholder(tf1.float32, [None, IMAGE_SIZE, IMAGE_SIZE, 3])
             logits = helpers.inception_v3(len(labels), images)
-            tf.global_variables_initializer()
+            tf1.global_variables_initializer()
 
-            checkpoint = tf.train.get_checkpoint_state(model_dir)
-            saver = tf.train.Saver()
+            checkpoint = tf1.train.get_checkpoint_state(model_dir)
+            saver = tf1.train.Saver()
             saver.restore(sess, checkpoint.model_checkpoint_path)
-            softmax_output = tf.nn.softmax(logits)
+            softmax_output = tf1.nn.softmax(logits)
 
             def get_value(img: Array3D) -> Tuple[Union[str, Tuple], float]:
                 img = np.expand_dims(helpers.prewhiten(img), 0)
@@ -76,3 +76,4 @@ class GenderDetector(BaseAgeGender):
     def __call__(self, face: plugin_result.FaceDTO):
         value, probability = self._model(face._face_img)
         return plugin_result.GenderDTO(gender=value, gender_probability=probability)
+

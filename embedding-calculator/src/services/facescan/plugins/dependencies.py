@@ -18,7 +18,7 @@ from src.constants import ENV
 from src.services.utils.pyutils import get_env
 
 
-def get_tensorflow(version='1.15.4') -> Tuple[str, ...]:
+def get_tensorflow(version='2.5.0') -> Tuple[str, ...]:
     libs = [f'tensorflow=={version}']
     cuda_version = get_env('CUDA', '').replace('.', '')
     if ENV.GPU_IDX > -1 and cuda_version:

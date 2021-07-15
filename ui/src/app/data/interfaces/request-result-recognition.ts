@@ -15,10 +15,12 @@
  */
 import { BoxSize } from './box-size';
 import { BoxSubjects } from './box-subjects';
+import { PersonAge } from './person-age';
+import { PersonGender } from './person-gender';
 
 export interface RequestResultRecognition {
-  age: number[];
-  gender: 'male' | 'female';
+  age: PersonAge;
+  gender: PersonGender;
   box: BoxSize;
   subjects: BoxSubjects[];
   landmarks: [number[]];

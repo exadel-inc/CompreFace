@@ -17,8 +17,10 @@
 package com.exadel.frs.core.trainservice.dto;
 
 import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
-import com.exadel.frs.commonservice.dto.PluginsVersionsDto;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesGender;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesAge;
+import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesMask;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
@@ -42,12 +44,12 @@ public class FaceVerification extends FaceProcessResponse {
     private String subject;
     private float similarity;
     private List<List<Integer>> landmarks;
-    private Integer[] age;
-    private String gender;
+    private FacesAge age;
+    private FacesGender gender;
     private Double[] embedding;
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
-
+    private FacesMask mask;
     @Override
     public FaceVerification prepareResponse(ProcessImageParams processImageParams) {
         String facePlugins = processImageParams.getFacePlugins();

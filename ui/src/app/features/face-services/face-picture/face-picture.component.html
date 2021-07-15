@@ -47,7 +47,7 @@
               <div class="face-box--info_similarity">Similarity: {{ face.similarity | number: '1.0-2' }}</div>
             </ng-container>
 
-            <div class="face-box--info_gender">{{ face.gender | titlecase }}, Age: {{ face.age[0] + '-' + face.age[1] }}</div>
+            <div class="face-box--info_gender">{{ face.gender.value | titlecase }}, Age: {{ face.age.low + '-' + face.age.high }}</div>
           </div>
         </div>
       </ng-container>

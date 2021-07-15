@@ -29,10 +29,10 @@ To use face service you need to create it in an application on UI. The type of s
 
 Face plugins could be used with any of the face services. By default, face services return only bounding boxes and similarity if 
 applicable. To add more information in response you can add face plugins in your request. To add a plugin you need to list 
-comma-separated needed plugins in the query `plugins` parameter. This parameter is supported by all face recognition services.
+comma-separated needed plugins in the query `face_plugins` parameter. This parameter is supported by all face recognition services.
 Example:
 ```shell
-curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?plugins=age,gender,landmarks" \
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?face_plugins=age,gender,landmarks" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_recognition_api_key>" \
 -F file=<local_file>
