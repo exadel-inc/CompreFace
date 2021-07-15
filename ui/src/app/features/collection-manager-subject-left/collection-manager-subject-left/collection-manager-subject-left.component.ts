@@ -13,23 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ManageCollectionPageService } from './manage-collection.service';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-manage-collection',
-  templateUrl: './manage-collection.component.html',
-  styleUrls: ['./manage-collection.component.scss'],
+  selector: 'app-collection-manager-subject-left',
+  templateUrl: './collection-manager-subject-left.component.html',
+  styleUrls: ['./collection-manager-subject-left.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageCollectionComponent implements OnInit, OnDestroy {
-  constructor(private manageCollectionService: ManageCollectionPageService) {}
+export class CollectionManagerSubjectLeftComponent {
+  @Input() subjectsList: string[];
+  @Input() currentSubject: string;
+  @Input() isPending: boolean;
+  @Output() addSubject = new EventEmitter<void>();
 
-  ngOnInit(): void {
-    this.manageCollectionService.initUrlBindingStreams();
-  }
+  search = '';
 
-  ngOnDestroy(): void {
-    this.manageCollectionService.clearSelectedModelId();
-    this.manageCollectionService.unSubscribe();
+  onSearch(event: string) {
+    this.search = event;
   }
 }

@@ -16,7 +16,7 @@
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CollectionManagerSubjectLeftComponent } from './collection-manager-subject-left.component';
+import { CollectionManagerSubjectLeftComponent } from './collection-manager-subject-left/collection-manager-subject-left.component';
 import { MatListModule } from '@angular/material/list';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -25,9 +25,10 @@ import { AppSearchTableModule } from '../app-search-table/app-search-table.modul
 import { CollectionLeftFacade } from './collection-left-facade';
 import { SpinnerModule } from '../spinner/spinner.module';
 import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
+import { CollectionManagerSubjectLeftContainerComponent } from './collection-manager-subject-left.container.component';
 
 @NgModule({
-  declarations: [CollectionManagerSubjectLeftComponent],
+  declarations: [CollectionManagerSubjectLeftContainerComponent, CollectionManagerSubjectLeftComponent],
   imports: [
     CommonModule,
     MatListModule,
@@ -38,7 +39,7 @@ import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
     SpinnerModule,
     TablePipeModule,
   ],
-  exports: [CollectionManagerSubjectLeftComponent],
+  exports: [CollectionManagerSubjectLeftContainerComponent],
   providers: [CollectionLeftFacade],
 })
 export class CollectionManagerSubjectLeftModule {}

@@ -23,4 +23,4 @@ export const addSubject = createAction('[Collection] Add Subjects', props<{ name
 export const addSubjectSuccess = createAction('[Collection] Add Subjects Success', props<{ subject: string }>());
 export const addSubjectFail = createAction('[Collection] Add Subjects Fail', props<{ error: any }>());
 
-export const setSelectedApiKeyEntityAction = createAction('[Collection] Set Selected Api Key', props<{ selectedApiKey: string }>());
+export const resetSubjects = createAction('[Collection] Reset Subjects');

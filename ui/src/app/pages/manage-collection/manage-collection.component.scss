@@ -13,26 +13,24 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-.app-page {
 
-  .grid-container {
-    display: flex;
-    justify-content: space-between;
+.collection {
+  &--grid {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    height: calc(100vh - 254px);
+    grid-gap: 17px;
+    grid-template-areas: 'subjects-list profile';
 
-    .card-left {
-      width: 220px;
-      min-width: 220px;
-      transform: perspective(1px);
-      padding: 0px !important;
+    &_subjects-list {
+      grid-area: subjects-list;
+      padding: 24px 8px !important;
+      height: 100%;
     }
 
-    .card-right {
-      padding: 0px !important;
-      width: 100%;
-      transform: perspective(1px);
-      max-width: 100%;
-      margin-left: 20px;
+    &_profile {
+      grid-area: profile;
+      height: 100%;
     }
-
   }
 }

@@ -15,26 +15,27 @@
   -->
 <div class="main">
   <div class="add-subject">
-    <button mat-flat-button color="primary" (click)="openModalWindow()">
+    <button mat-flat-button color="primary" (click)="addSubject.emit()">
       {{ 'manage_collection.left_side.add_subject' | translate }}
     </button>
   </div>
   <div class="search">
-    <app-search-table (inputSearch)="onSearch($event)" searchPlaceholder="{{ 'manage_collection.left_side.search' | translate }}">
+    <app-search-table
+      (inputSearch)="onSearch($event)"
+      searchPlaceholder="{{ 'manage_collection.left_side.search' | translate }}"
+    >
     </app-search-table>
   </div>
-  <div class="spinner">
-    <app-spinner *ngIf="isPending"></app-spinner>
-  </div>
   <div class="subjects">
+    <div class="subjects--spinner">
+      <app-spinner *ngIf="isPending"></app-spinner>
+    </div>
     <ng-container *ngIf="!isPending">
       <mat-selection-list [multiple]="false">
         <mat-list-option *ngFor="let subject of subjectsList | subjectFilter: search" class="section">
           <div class="avatar">
             <mat-icon svgIcon="avatar-subject"></mat-icon>
-            <div class="name">
-              {{ subject }}
-            </div>
+            <div class="name">{{ subject }}</div>
           </div>
         </mat-list-option>
       </mat-selection-list>

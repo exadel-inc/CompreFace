@@ -13,40 +13,35 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { CollectionLeftFacade } from './collection-left-facade';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
-import { CollectionLeftFacade } from './collection-left-facade';
-import { selectAddSubjectPending, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
 
 @Component({
-  selector: 'app-collection-manager-subject-left',
-  templateUrl: './collection-manager-subject-left.component.html',
-  styleUrls: ['./collection-manager-subject-left.component.scss'],
+  selector: 'app-application-list-container',
+  template: `<app-collection-manager-subject-left
+    [subjectsList]="subjectsList$ | async"
+    [isPending]="isPending$ | async"
+    (addSubject)="addSubject()"
+  ></app-collection-manager-subject-left>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionManagerSubjectLeftComponent implements OnInit {
-  @Input() searchPlaceholder: string;
-  @Input() subjectsList: string[];
-  @Input() isPending: boolean;
+export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
+  subjectsList$: Observable<string[]>;
+  isPending$: Observable<boolean>;
 
-  search = '';
-
-  constructor(
-    private translate: TranslateService,
-    private dialog: MatDialog,
-    private collectionLeftFacade: CollectionLeftFacade,
-    private store: Store<any>
-  ) {}
+  constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.collectionLeftFacade.initUrlBindingStreams();
+    this.subjectsList$ = this.collectionLeftFacade.subjectsList$;
+    this.isPending$ = this.collectionLeftFacade.isPending$;
   }
 
-  openModalWindow() {
+  addSubject(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -61,9 +56,5 @@ export class CollectionManagerSubjectLeftComponent implements OnInit {
         dialogSubscription.unsubscribe();
       }
     });
-  }
-
-  onSearch(event: string) {
-    this.search = event;
   }
 }

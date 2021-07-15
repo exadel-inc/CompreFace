@@ -13,20 +13,18 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-<div class="container app-page">
+<div class="collection container">
+
   <app-breadcrumbs-container></app-breadcrumbs-container>
 
-  <div class="grid-container">
-    <mat-card class="card-left">
-      <app-collection-manager-subject-left
-        [subjectsList]="subjectList$ | async"
-        [isPending]="isPending$ | async"
-        searchPlaceholder="{{ 'applications.search.title' | translate }}"
-      >
-      </app-collection-manager-subject-left>
+  <div class="collection--grid">
+    <mat-card class="collection--grid_subjects-list">
+      <app-application-list-container></app-application-list-container>
     </mat-card>
-    <mat-card class="card-right">
+
+    <mat-card class="collection--grid_profile">
       <app-collection-manager-subject-right></app-collection-manager-subject-right>
     </mat-card>
   </div>
+
 </div>

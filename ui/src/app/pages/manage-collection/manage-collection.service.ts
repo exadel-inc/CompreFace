@@ -15,36 +15,43 @@
  */
 import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { Store } from '@ngrx/store';
 
-import { loadSubjects, setSelectedApiKeyEntityAction } from '../../store/manage-collectiom/action';
 import { loadApplications, setSelectedAppIdEntityAction } from '../../store/application/action';
 import { getUserInfo } from '../../store/userInfo/action';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
 import { Routes } from '../../data/enums/routers-url.enum';
+import { loadSubjects, resetSubjects } from '../../store/manage-collectiom/action';
+import { selectCurrentModel } from '../../store/model/selectors';
+import { filter, finalize, take, tap } from 'rxjs/operators';
 
 @Injectable()
 export class ManageCollectionPageService {
   private appId: string;
-  private apiKey: string;
   private modelId: string;
+  private apiKey: string;
 
   constructor(private router: Router, private route: ActivatedRoute, private store: Store<any>) {}
 
   initUrlBindingStreams() {
     this.appId = this.route.snapshot.queryParams.app;
-    this.apiKey = this.route.snapshot.queryParams.apiKey;
     this.modelId = this.route.snapshot.queryParams.model;
 
     if (this.appId && this.modelId) {
-      this.store.dispatch(loadSubjects({ apiKey: this.apiKey }));
       this.store.dispatch(loadModels({ applicationId: this.appId }));
-      this.store.dispatch(setSelectedApiKeyEntityAction({ selectedApiKey: this.apiKey }));
       this.store.dispatch(setSelectedAppIdEntityAction({ selectedAppId: this.appId }));
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
       this.store.dispatch(loadApplications());
       this.store.dispatch(getUserInfo());
+      this.store
+        .select(selectCurrentModel)
+        .pipe(
+          take(2),
+          filter(model => !!model),
+          tap(({ apiKey }) => (this.apiKey = apiKey)),
+          finalize(() => this.store.dispatch(loadSubjects({ apiKey: this.apiKey })))
+        )
+        .subscribe();
     } else {
       this.router.navigate([Routes.Home]);
     }
@@ -54,5 +61,7 @@ export class ManageCollectionPageService {
     this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: null }));
   }
 
-  unSubscribe() {}
+  unSubscribe() {
+    this.store.dispatch(resetSubjects());
+  }
 }

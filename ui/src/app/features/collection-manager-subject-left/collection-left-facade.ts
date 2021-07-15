@@ -13,32 +13,42 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { addSubject } from '../../store/manage-collectiom/action';
-import { filter, take, tap } from 'rxjs/operators';
-import { selectCollectionApiKey } from '../../store/manage-collectiom/selectors';
+import { filter, finalize, map, take, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
+import { addSubject, loadSubjects } from '../../store/manage-collectiom/action';
+import { selectCurrentModel } from '../../store/model/selectors';
+import { selectAddSubjectPending, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
 
 @Injectable()
 export class CollectionLeftFacade {
+  subjectsList$: Observable<string[]>;
+  isPending$: Observable<boolean>;
+
   private apiKey: string;
 
-  constructor(private route: ActivatedRoute, private store: Store<any>) {}
+  constructor(private store: Store<any>) {
+    this.subjectsList$ = this.store.select(selectCollectionSubjects);
+    this.isPending$ = this.store.select(selectAddSubjectPending);
+  }
 
-  initUrlBindingStreams() {
+  initUrlBindingStreams(): void {
     this.store
-      .select(selectCollectionApiKey)
+      .select(selectCurrentModel)
       .pipe(
         take(2),
-        filter(apiKey => !!apiKey),
+        filter(model => !!model),
+        map(({ apiKey }) => apiKey),
         tap(apiKey => (this.apiKey = apiKey))
       )
       .subscribe();
   }
 
-  addSubject(name: string) {
+  loadSubjects(): void {}
+
+  addSubject(name: string): void {
     this.store.dispatch(addSubject({ name, apiKey: this.apiKey }));
   }
 }
