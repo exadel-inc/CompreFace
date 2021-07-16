@@ -21,15 +21,12 @@ import { loadApplications, setSelectedAppIdEntityAction } from '../../store/appl
 import { getUserInfo } from '../../store/userInfo/action';
 import { loadModels, setSelectedModelIdEntityAction } from '../../store/model/action';
 import { Routes } from '../../data/enums/routers-url.enum';
-import { loadSubjects, resetSubjects } from '../../store/manage-collectiom/action';
-import { selectCurrentModel } from '../../store/model/selectors';
-import { filter, finalize, take, tap } from 'rxjs/operators';
+import { resetSubjects } from '../../store/manage-collectiom/action';
 
 @Injectable()
 export class ManageCollectionPageService {
   private appId: string;
   private modelId: string;
-  private apiKey: string;
 
   constructor(private router: Router, private route: ActivatedRoute, private store: Store<any>) {}
 
@@ -43,15 +40,6 @@ export class ManageCollectionPageService {
       this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: this.modelId }));
       this.store.dispatch(loadApplications());
       this.store.dispatch(getUserInfo());
-      this.store
-        .select(selectCurrentModel)
-        .pipe(
-          take(2),
-          filter(model => !!model),
-          tap(({ apiKey }) => (this.apiKey = apiKey)),
-          finalize(() => this.store.dispatch(loadSubjects({ apiKey: this.apiKey })))
-        )
-        .subscribe();
     } else {
       this.router.navigate([Routes.Home]);
     }

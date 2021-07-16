@@ -14,31 +14,42 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { CollectionLeftFacade } from './collection-left-facade';
-import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Observable } from 'rxjs';
+
+import { CollectionLeftFacade } from './collection-left-facade';
+import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 
 @Component({
   selector: 'app-application-list-container',
   template: `<app-collection-manager-subject-left
     [subjectsList]="subjectsList$ | async"
+    [apiKey]="apiKey$ | async"
     [isPending]="isPending$ | async"
     (addSubject)="addSubject()"
+    (initApiKey)="initApiKey($event)"
   ></app-collection-manager-subject-left>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
   subjectsList$: Observable<string[]>;
   isPending$: Observable<boolean>;
+  apiKey$: Observable<string>;
+
+  private apiKey: string;
 
   constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.collectionLeftFacade.initUrlBindingStreams();
     this.subjectsList$ = this.collectionLeftFacade.subjectsList$;
     this.isPending$ = this.collectionLeftFacade.isPending$;
+    this.apiKey$ = this.collectionLeftFacade.apiKey$;
+  }
+
+  initApiKey(apiKey: string): void {
+    this.apiKey = apiKey;
+    this.collectionLeftFacade.loadSubjects(apiKey);
   }
 
   addSubject(): void {
@@ -52,7 +63,7 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
 
     const dialogSubscription = dialog.afterClosed().subscribe(name => {
       if (name) {
-        this.collectionLeftFacade.addSubject(name);
+        this.collectionLeftFacade.addSubject(name, this.apiKey);
         dialogSubscription.unsubscribe();
       }
     });

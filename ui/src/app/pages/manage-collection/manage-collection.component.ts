@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ManageCollectionPageService } from './manage-collection.service';
 
 @Component({
@@ -22,6 +22,10 @@ import { ManageCollectionPageService } from './manage-collection.service';
   styleUrls: ['./manage-collection.component.scss'],
 })
 export class ManageCollectionComponent implements OnInit, OnDestroy {
+  @Input() set apiKey(value: string) {
+    if(!!value) this.manageCollectionService.loadSubjects(value)
+  };
+
   constructor(private manageCollectionService: ManageCollectionPageService) {}
 
   ngOnInit(): void {
