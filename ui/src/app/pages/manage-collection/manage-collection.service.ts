@@ -30,7 +30,7 @@ export class ManageCollectionPageService {
 
   constructor(private router: Router, private route: ActivatedRoute, private store: Store<any>) {}
 
-  initUrlBindingStreams() {
+  initUrlBindingStreams(): void {
     this.appId = this.route.snapshot.queryParams.app;
     this.modelId = this.route.snapshot.queryParams.model;
 
@@ -49,7 +49,7 @@ export class ManageCollectionPageService {
     this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId: null }));
   }
 
-  unSubscribe() {
+  clearSubjects(): void {
     this.store.dispatch(resetSubjects());
   }
 }
