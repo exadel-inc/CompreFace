@@ -15,10 +15,9 @@
  */
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { filter, map, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { selectCurrentModel } from '../../store/model/selectors';
+import { selectCurrentApiKey } from '../../store/model/selectors';
 import { selectAddSubjectPending, selectCollectionSubject, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
 import { deleteSubject, editSubject } from '../../store/manage-collectiom/action';
 
@@ -26,32 +25,22 @@ import { deleteSubject, editSubject } from '../../store/manage-collectiom/action
 export class CollectionRightFacade {
   subjects$: Observable<string[]>;
   subject$: Observable<string>;
+  apiKey$: Observable<string>;
   isPending$: Observable<boolean>;
-  private apiKey: string;
 
   constructor(private store: Store<any>) {
     this.subjects$ = this.store.select(selectCollectionSubjects);
     this.subject$ = this.store.select(selectCollectionSubject);
+    this.apiKey$ = this.store.select(selectCurrentApiKey);
     this.isPending$ = this.store.select(selectAddSubjectPending);
   }
 
-  initUrlBindingStreams(): void {
-    this.store
-      .select(selectCurrentModel)
-      .pipe(
-        take(2),
-        filter(model => !!model),
-        map(({ apiKey }) => apiKey),
-        tap(apiKey => (this.apiKey = apiKey))
-      )
-      .subscribe();
+
+  edit(editName: string, subject: string,  apiKey: string): void {
+    this.store.dispatch(editSubject({ editName, apiKey, subject }));
   }
 
-  edit(editName: string, subject: string): void {
-    this.store.dispatch(editSubject({ editName, apiKey: this.apiKey, subject }));
-  }
-
-  delete(name: string): void {
-    this.store.dispatch(deleteSubject({ name, apiKey: this.apiKey }));
+  delete(name: string, apiKey: string): void {
+    this.store.dispatch(deleteSubject({ name, apiKey }));
   }
 }

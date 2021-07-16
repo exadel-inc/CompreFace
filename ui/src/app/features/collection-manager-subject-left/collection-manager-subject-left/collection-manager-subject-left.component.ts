@@ -25,10 +25,10 @@ import { MatListOption } from '@angular/material/list';
 export class CollectionManagerSubjectLeftComponent {
   @Input() subjectsList: string[];
   @Input() currentSubject: string;
+  @Input() isPending: boolean;
   @Input() set apiKey(value: string) {
     if(!!value) this.initApiKey.emit(value)
   };
-  @Input() isPending: boolean;
   @Output() addSubject = new EventEmitter<void>();
   @Output() selectedSubject = new EventEmitter<MatListOption[]>();
   @Output() initApiKey = new EventEmitter<string>();

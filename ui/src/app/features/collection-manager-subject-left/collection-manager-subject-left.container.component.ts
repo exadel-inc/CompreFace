@@ -19,12 +19,14 @@ import { CollectionLeftFacade } from './collection-left-facade';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatListOption } from '@angular/material/list';
 
 @Component({
   selector: 'app-application-list-container',
   template: `<app-collection-manager-subject-left
     [subjectsList]="subjectsList$ | async"
     [currentSubject]="currentSubject$ | async"
+    [apiKey]="apiKey$ | async"
     [isPending]="isPending$ | async"
     (addSubject)="addSubject()"
     (selectedSubject)="onSelectedSubject($event)"
@@ -41,7 +43,6 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
   private apiKey: string;
 
   constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {
-    this.collectionLeftFacade.initUrlBindingStreams();
   }
 
   ngOnInit(): void {

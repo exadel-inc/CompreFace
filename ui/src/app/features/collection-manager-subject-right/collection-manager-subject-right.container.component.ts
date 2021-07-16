@@ -29,9 +29,11 @@ import { MergerDialogComponent } from '../merger-dialog/merger-dialog.component'
   template: `<app-collection-manager-subject-right
     [subject]="subject$ | async"
     [subjects]="subjects$ | async"
+    [apiKey]="apiKey$ | async"
     [isPending]="isPending$ | async"
     (editSubject)="edit($event)"
     (deleteSubject)="delete($event)"
+    (initApiKey)="initApiKey($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -39,17 +41,23 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit {
   subjects$: Observable<string[]>;
   subject$: Observable<string>;
   isPending$: Observable<boolean>;
+  apiKey$: Observable<string>;
 
   private subjectList: string[];
+  private apiKey: string;
 
   constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {
-    this.collectionRightFacade.initUrlBindingStreams();
   }
 
   ngOnInit(): void {
     this.subjects$ = this.collectionRightFacade.subjects$.pipe(tap(subjects => (this.subjectList = subjects)));
     this.subject$ = this.collectionRightFacade.subject$;
+    this.apiKey$ = this.collectionRightFacade.apiKey$;
     this.isPending$ = this.collectionRightFacade.isPending$;
+  }
+
+  initApiKey(apiKey: string): void {
+    this.apiKey = apiKey;
   }
 
   delete(name: string): void {
@@ -67,7 +75,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit {
         first(),
         filter(result => result)
       )
-      .subscribe(() => this.collectionRightFacade.delete(name));
+      .subscribe(() => this.collectionRightFacade.delete(name, this.apiKey));
   }
 
   edit(name: string): void {
@@ -86,7 +94,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit {
         filter(result => result)
       )
       .subscribe(editName =>
-        this.subjectList.includes(editName) ? this.merger(editName, name) : this.collectionRightFacade.edit(editName, name)
+        this.subjectList.includes(editName) ? this.merger(editName, name) : this.collectionRightFacade.edit(editName, name, this.apiKey)
       );
   }
 
@@ -104,6 +112,6 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit {
         first(),
         filter(result => result)
       )
-      .subscribe(() => this.collectionRightFacade.edit(editName, name));
+      .subscribe(() => this.collectionRightFacade.edit(editName, name, this.apiKey));
   }
 }

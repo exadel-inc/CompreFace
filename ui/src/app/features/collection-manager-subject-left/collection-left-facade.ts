@@ -17,20 +17,24 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
-import { addSubject, loadSubjects } from '../../store/manage-collectiom/action';
-import { selectAddSubjectPending, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
-import { selectCurrentApiKey, setSelectedSubject } from "../../store/model/selectors";
-
+import { addSubject, loadSubjects, setSelectedSubject } from '../../store/manage-collectiom/action';
+import {
+  selectAddSubjectPending,
+  selectCollectionSubject,
+  selectCollectionSubjects,
+} from '../../store/manage-collectiom/selectors';
+import { selectCurrentApiKey } from "../../store/model/selectors";
 
 @Injectable()
 export class CollectionLeftFacade {
   subjectsList$: Observable<string[]>;
   currentSubject$: Observable<string>;
+  apiKey$: Observable<string>;
   isPending$: Observable<boolean>;
-  apiKey$: Observable<string>
 
   constructor(private store: Store<any>) {
     this.subjectsList$ = this.store.select(selectCollectionSubjects);
+    this.currentSubject$ = this.store.select(selectCollectionSubject);
     this.isPending$ = this.store.select(selectAddSubjectPending);
     this.apiKey$ = this.store.select(selectCurrentApiKey);
   }
