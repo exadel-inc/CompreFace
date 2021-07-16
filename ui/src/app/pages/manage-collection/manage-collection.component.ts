@@ -22,6 +22,7 @@ import { ManageCollectionPageService } from './manage-collection.service';
   styleUrls: ['./manage-collection.component.scss'],
 })
 export class ManageCollectionComponent implements OnInit, OnDestroy {
+
   constructor(private manageCollectionService: ManageCollectionPageService) {}
 
   ngOnInit(): void {
@@ -30,6 +31,6 @@ export class ManageCollectionComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.manageCollectionService.clearSelectedModelId();
-    this.manageCollectionService.unSubscribe();
+    this.manageCollectionService.clearSubjects();
   }
 }

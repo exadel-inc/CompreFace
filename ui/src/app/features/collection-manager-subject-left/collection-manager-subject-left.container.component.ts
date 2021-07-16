@@ -19,7 +19,6 @@ import { CollectionLeftFacade } from './collection-left-facade';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatListOption } from '@angular/material/list';
 
 @Component({
   selector: 'app-application-list-container',
@@ -29,6 +28,7 @@ import { MatListOption } from '@angular/material/list';
     [isPending]="isPending$ | async"
     (addSubject)="addSubject()"
     (selectedSubject)="onSelectedSubject($event)"
+    (initApiKey)="initApiKey($event)"
   ></app-collection-manager-subject-left>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -36,6 +36,9 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
   currentSubject$: Observable<string>;
   subjectsList$: Observable<string[]>;
   isPending$: Observable<boolean>;
+  apiKey$: Observable<string>;
+
+  private apiKey: string;
 
   constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {
     this.collectionLeftFacade.initUrlBindingStreams();
@@ -45,6 +48,12 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
     this.currentSubject$ = this.collectionLeftFacade.currentSubject$;
     this.subjectsList$ = this.collectionLeftFacade.subjectsList$;
     this.isPending$ = this.collectionLeftFacade.isPending$;
+    this.apiKey$ = this.collectionLeftFacade.apiKey$;
+  }
+
+  initApiKey(apiKey: string): void {
+    this.apiKey = apiKey;
+    this.collectionLeftFacade.loadSubjects(apiKey);
   }
 
   addSubject(): void {
@@ -58,7 +67,7 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
 
     const dialogSubscription = dialog.afterClosed().subscribe(name => {
       if (name) {
-        this.collectionLeftFacade.addSubject(name);
+        this.collectionLeftFacade.addSubject(name, this.apiKey);
         dialogSubscription.unsubscribe();
       }
     });

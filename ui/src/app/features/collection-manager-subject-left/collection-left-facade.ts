@@ -15,41 +15,32 @@
  */
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { filter, map, take, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
-import { addSubject, setSelectedSubject } from '../../store/manage-collectiom/action';
-import { selectCurrentModel } from '../../store/model/selectors';
-import { selectAddSubjectPending, selectCollectionSubject, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
+import { addSubject, loadSubjects } from '../../store/manage-collectiom/action';
+import { selectAddSubjectPending, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
+import { selectCurrentApiKey, setSelectedSubject } from "../../store/model/selectors";
+
 
 @Injectable()
 export class CollectionLeftFacade {
   subjectsList$: Observable<string[]>;
   currentSubject$: Observable<string>;
   isPending$: Observable<boolean>;
-
-  private apiKey: string;
+  apiKey$: Observable<string>
 
   constructor(private store: Store<any>) {
     this.subjectsList$ = this.store.select(selectCollectionSubjects);
-    this.currentSubject$ = this.store.select(selectCollectionSubject);
     this.isPending$ = this.store.select(selectAddSubjectPending);
+    this.apiKey$ = this.store.select(selectCurrentApiKey);
   }
 
-  initUrlBindingStreams(): void {
-    this.store
-      .select(selectCurrentModel)
-      .pipe(
-        take(2),
-        filter(model => !!model),
-        map(({ apiKey }) => apiKey),
-        tap(apiKey => (this.apiKey = apiKey))
-      )
-      .subscribe();
+  loadSubjects(apiKey: string): void {
+    this.store.dispatch(loadSubjects({ apiKey }));
   }
 
-  addSubject(name: string): void {
-    this.store.dispatch(addSubject({ name, apiKey: this.apiKey }));
+  addSubject(name: string, apiKey: string): void {
+    this.store.dispatch(addSubject({ name, apiKey }));
   }
 
   onSelectedSubject(subject: string): void {
