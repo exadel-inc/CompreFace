@@ -2,6 +2,7 @@ package com.exadel.frs.commonservice.repository;
 
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.EmbeddingProjection;
+import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.entity.Subject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,4 +75,7 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
             "   and e.calculator <> :calculator")
     Long countBySubjectApiKeyNotEqAndCalculatorNotEq(@Param("apiKey") String apiKey,
                                                      @Param("calculator") String calculator);
+
+    @Query(value = "select e from Embedding e inner join Subject s on e.subject = s inner join Img i on e.img = i where s.id = :subject_id")
+    List<Embedding> findEmbeddingsBySubjectId(@Param("subject_id") UUID subjectId);
 }

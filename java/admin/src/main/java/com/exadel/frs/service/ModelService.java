@@ -21,6 +21,8 @@ import com.exadel.frs.commonservice.entity.*;
 import com.exadel.frs.commonservice.enums.ModelType;
 import com.exadel.frs.commonservice.enums.StatisticsType;
 import com.exadel.frs.commonservice.exception.ModelNotFoundException;
+import com.exadel.frs.commonservice.repository.EmbeddingRepository;
+import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.ModelRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
@@ -31,7 +33,6 @@ import com.exadel.frs.system.security.AuthorizationManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -49,7 +50,8 @@ public class ModelService {
     private final AuthorizationManager authManager;
     private final UserService userService;
     private final SubjectRepository subjectRepository;
-    private final JdbcTemplate jdbcTemplate;
+    private final EmbeddingRepository embeddingRepository;
+    private final ImgRepository imgRepository;
 
     public Model getModel(final String modelGuid) {
         return modelRepository.findByGuid(modelGuid)
@@ -149,7 +151,7 @@ public class ModelService {
         clonedModel.setAppModelAccess(clonedAppModelAccessList);
 
         // caution: time consuming operation
-        cloneSubjects(model.getApiKey(), clone.getApiKey());
+        cloneSubjects(model.getApiKey(), clonedModel.getApiKey());
 
         return clonedModel;
     }
@@ -175,47 +177,28 @@ public class ModelService {
 
     private void cloneSubject(Subject subject, String newApiKey) {
         var newSubjectId = UUID.randomUUID();
-        jdbcTemplate.update(
-                "insert into subject(id, api_key, subject_name) values (?, ?, ?)",
-                newSubjectId, newApiKey, subject.getSubjectName()
-        );
+        Subject newSubject = new Subject();
+        newSubject.setSubjectName(subject.getSubjectName());
+        newSubject.setApiKey(newApiKey);
+        newSubject.setId(newSubjectId);
+        subjectRepository.save(newSubject);
 
         Map<UUID, UUID> sourceImgId2NewImgId = new HashMap<>();
-        jdbcTemplate.query(
-                "select i.id as img_id from embedding e inner join subject s on e.subject_id = s.id inner join img i on e.img_id = i.id where s.id = ?",
-                new Object[]{subject.getId()},
-                rs -> {
-                    var sourceImgId = rs.getObject("img_id", UUID.class);
-                    var newImgId = UUID.randomUUID();
-                    jdbcTemplate.update(
-                            "insert into img(id, content) select ?, i.content from img i where i.id = ?",
-                            newImgId, sourceImgId
-                    );
-                    sourceImgId2NewImgId.put(sourceImgId, newImgId);
-                }
-        );
+        List<Embedding> embeddings = embeddingRepository.findEmbeddingsBySubjectId(subject.getId());
+        embeddings.forEach(e->{
+            Img img = new Img();
+            img.setId(UUID.randomUUID());
+            img.setContent(e.getImg().getContent());
+            imgRepository.save(img);
 
-        String sql = "select " +
-                "   e.id as embedding_id, " +
-                "   i.id as img_id " +
-                " from " +
-                "   embedding e left join img i on e.img_id = i.id " +
-                "   inner join subject s on s.id = e.subject_id " +
-                " where " +
-                "   s.id = ?";
-
-        jdbcTemplate.query(
-                sql,
-                new Object[]{subject.getId()},
-                rc -> {
-                    var sourceEmbeddingId = rc.getObject("embedding_id", UUID.class);
-                    var sourceImgId = rc.getObject("img_id", UUID.class); // could be null (for demo embeddings)
-                    jdbcTemplate.update(
-                            "insert into embedding(id, subject_id, embedding, calculator, img_id) select ?, ?, e.embedding, e.calculator, ? from embedding e where e.id = ?",
-                            UUID.randomUUID(), newSubjectId, sourceImgId2NewImgId.get(sourceImgId), sourceEmbeddingId
-                    );
-                }
-        );
+            Embedding embedding = new Embedding();
+            embedding.setId(UUID.randomUUID());
+            embedding.setSubject(newSubject);
+            embedding.setImg(img);
+            embedding.setEmbedding(e.getEmbedding());
+            embedding.setCalculator(e.getCalculator());
+            embeddingRepository.save(embedding);
+        });
     }
 
     public Model updateModel(
