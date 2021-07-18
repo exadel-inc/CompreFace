@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,14 +13,38 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { NgModule } from '@angular/core';
 
-import { UserTableFilterPipe } from './user-table-filter.pipe';
-import { ModelTableFilterPipe } from './model-table-filter.pipe';
-import { ApplicationTableFilterPipe } from './application-table-filter.pipe';
-import { SubjectFilter } from './subject-filter.pipe';
-@NgModule({
-  declarations: [UserTableFilterPipe, ModelTableFilterPipe, ApplicationTableFilterPipe, SubjectFilter],
-  exports: [UserTableFilterPipe, ModelTableFilterPipe, ApplicationTableFilterPipe, SubjectFilter],
-})
-export class TablePipeModule {}
+@import 'mixins.scss';
+@import 'colors.scss';
+
+.profile {
+  &--spinner {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &--header {
+    &_profile {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .name {
+        font-weight: 600;
+        font-size: 22px;
+      }
+
+      .buttons {
+        .mat-icon {
+          @include md-icon-size();
+        }
+      }
+    }
+
+    &_examples {
+      font-size: 14px;
+      color: $light-gray;
+    }
+  }
+}

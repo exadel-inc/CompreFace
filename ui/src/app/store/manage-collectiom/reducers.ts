@@ -15,23 +15,48 @@
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 
-import { loadSubjects, loadSubjectsFail, loadSubjectsSuccess } from './action';
+import {
+  addSubject,
+  addSubjectFail,
+  addSubjectSuccess,
+  deleteSubject,
+  deleteSubjectFail,
+  deleteSubjectSuccess,
+  editSubject,
+  editSubjectFail,
+  editSubjectSuccess,
+  loadSubjects,
+  loadSubjectsFail,
+  loadSubjectsSuccess,
+  resetSubjects,
+  setSelectedSubject,
+} from './action';
 
 export interface CollectionEntityState {
   isPending: boolean;
   subjects: string[];
+  subject: string;
 }
 
 const initialState: CollectionEntityState = {
   isPending: false,
   subjects: null,
+  subject: null,
 };
 
 const reducer: ActionReducer<CollectionEntityState> = createReducer(
   initialState,
-  on(loadSubjects, state => ({ ...state, isPending: true })),
-  on(loadSubjectsFail, state => ({ ...state, isPending: false })),
-  on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects }))
+  on(loadSubjects, addSubject, editSubject, deleteSubject, state => ({ ...state, isPending: true })),
+  on(addSubjectSuccess, addSubjectSuccess, editSubjectSuccess, (state, { subject }) => ({
+    ...state,
+    isPending: false,
+    subject,
+  })),
+  on(deleteSubjectSuccess, state => ({ ...state, isPending: false, subject: null })),
+  on(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail, deleteSubjectSuccess, state => ({ ...state, isPending: false })),
+  on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects })),
+  on(setSelectedSubject, (state, { subject }) => ({ ...state, subject })),
+  on(resetSubjects, () => ({ ...initialState }))
 );
 
 export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);

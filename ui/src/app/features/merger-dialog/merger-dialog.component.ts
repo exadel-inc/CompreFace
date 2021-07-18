@@ -13,14 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { NgModule } from '@angular/core';
+import { ChangeDetectionStrategy } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
-import { UserTableFilterPipe } from './user-table-filter.pipe';
-import { ModelTableFilterPipe } from './model-table-filter.pipe';
-import { ApplicationTableFilterPipe } from './application-table-filter.pipe';
-import { SubjectFilter } from './subject-filter.pipe';
-@NgModule({
-  declarations: [UserTableFilterPipe, ModelTableFilterPipe, ApplicationTableFilterPipe, SubjectFilter],
-  exports: [UserTableFilterPipe, ModelTableFilterPipe, ApplicationTableFilterPipe, SubjectFilter],
+@Component({
+  selector: 'app-merger-dialog',
+  templateUrl: './merger-dialog.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TablePipeModule {}
+export class MergerDialogComponent {
+  constructor(public dialogRef: MatDialogRef<MergerDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  onCancelClick(): void {
+    this.dialogRef.close();
+  }
+}
