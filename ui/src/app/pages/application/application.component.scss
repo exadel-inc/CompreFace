@@ -13,7 +13,6 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 @import 'media.scss';
 
 .container {
@@ -35,9 +34,10 @@
   display: flex;
   justify-content: space-between;
 
-  @include tablet-portrait{
+  @include tablet-portrait {
     flex-direction: column;
   }
+
   @include mobile{
     flex-direction: column;
   }
