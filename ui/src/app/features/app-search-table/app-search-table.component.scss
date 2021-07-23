@@ -16,6 +16,7 @@
 
 @import "colors.scss";
 @import "mixins.scss";
+@import "media.scss";
 
 .app-search {
   margin-bottom: 20px;
@@ -26,11 +27,23 @@
 
   &--title {
     margin: 0 16px 0 0;
+
+    @include mobile {
+      margin: 0;
+    }
   }
 
   &--form {
     flex-grow: 1;
     position: relative;
+
+    @include mobile-landscape;
+    @include mobile-portrait;
+    @include mobile {
+      order: 3;
+      width: 100%;
+      margin-top: 8px;
+    }
 
     &_input {
       padding: 8px 25px 8px 8px;
@@ -58,6 +71,10 @@
   &--btn {
     margin-left: 8px;
     padding: 0;
+
+    @include mobile {
+      margin: 0;
+    }
 
     button {
       padding: 10px 8px;

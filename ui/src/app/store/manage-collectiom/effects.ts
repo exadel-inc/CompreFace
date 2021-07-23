@@ -15,31 +15,94 @@
  */
 import { Injectable } from '@angular/core';
 import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Store } from '@ngrx/store';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
 import { CollectionService } from '../../core/collection/collection.service';
-import { loadSubjects, loadSubjectsFail, loadSubjectsSuccess } from './action';
+import {
+  addSubject,
+  addSubjectFail,
+  addSubjectSuccess,
+  deleteSubject,
+  deleteSubjectFail,
+  deleteSubjectSuccess,
+  editSubject,
+  editSubjectFail,
+  editSubjectSuccess,
+  initSelectedSubject,
+  loadSubjects,
+  loadSubjectsFail,
+  loadSubjectsSuccess,
+  setSelectedSubject,
+} from './action';
+import { CollectionEntityState } from './reducers';
+import { selectCollectionSubject, selectCollectionSubjects } from './selectors';
 
 @Injectable()
 export class CollectionEffects {
-  constructor(private actions: Actions, private collectionService: CollectionService, private snackBarService: SnackBarService) {}
+  constructor(
+    private actions: Actions,
+    private collectionService: CollectionService,
+    private snackBarService: SnackBarService,
+    private store: Store<CollectionEntityState>
+  ) {}
 
   @Effect()
   loadSubjects$ = this.actions.pipe(
     ofType(loadSubjects),
     switchMap(({ apiKey }) =>
       this.collectionService.getSubjectsList(apiKey).pipe(
-        map(({ subjects }) => loadSubjectsSuccess({ subjects })),
+        switchMap(({ subjects }) => [loadSubjectsSuccess({ subjects }), initSelectedSubject()]),
         catchError(error => of(loadSubjectsFail({ error })))
       )
     )
   );
 
+  @Effect()
+  addSubject$ = this.actions.pipe(
+    ofType(addSubject),
+    switchMap(({ name, apiKey }) =>
+      this.collectionService.addSubject(name, apiKey).pipe(
+        switchMap(({ subject }) => [addSubjectSuccess({ subject }), loadSubjects({ apiKey })]),
+        catchError(error => of(addSubjectFail({ error })))
+      )
+    )
+  );
+
+  @Effect()
+  editSubject$ = this.actions.pipe(
+    ofType(editSubject),
+    switchMap(({ editName, apiKey, subject }) =>
+      this.collectionService.editSubject(editName, apiKey, subject).pipe(
+        switchMap(() => [editSubjectSuccess({ subject: editName }), loadSubjects({ apiKey })]),
+        catchError(error => of(editSubjectFail({ error })))
+      )
+    )
+  );
+
+  @Effect()
+  deleteSubject$ = this.actions.pipe(
+    ofType(deleteSubject),
+    switchMap(({ name, apiKey }) =>
+      this.collectionService.deleteSubject(name, apiKey).pipe(
+        switchMap(() => [deleteSubjectSuccess(), loadSubjects({ apiKey })]),
+        catchError(error => of(deleteSubjectFail({ error })))
+      )
+    )
+  );
+
+  @Effect()
+  initSelectedSubject$ = this.actions.pipe(
+    ofType(initSelectedSubject),
+    withLatestFrom(this.store.select(selectCollectionSubject), this.store.select(selectCollectionSubjects)),
+    switchMap(([, subject, subjects]) => (!subject ? [setSelectedSubject({ subject: subjects[0] })] : []))
+  );
+
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(loadSubjectsFail),
+    ofType(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
