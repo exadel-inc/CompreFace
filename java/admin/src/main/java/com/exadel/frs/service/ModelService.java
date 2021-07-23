@@ -34,8 +34,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import lombok.val;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 import static java.util.UUID.randomUUID;
@@ -168,32 +170,40 @@ public class ModelService {
         return cloneAppModelAccessList;
     }
 
-    @Transactional
     public void cloneSubjects(final String sourceApiKey, final String newApiKey) {
         subjectRepository
-                .findByApiKey(sourceApiKey)
-                .forEach(subject -> cloneSubject(subject, newApiKey));
+            .findByApiKey( sourceApiKey )
+            .forEach(subject -> {
+            Subject cloneSubject = cloneSubject( subject, newApiKey );
+            cloneEmbedding(subject, cloneSubject);
+        });
     }
 
-    private void cloneSubject(Subject subject, String newApiKey) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Subject cloneSubject(Subject subject, String newApiKey) {
         var newSubjectId = UUID.randomUUID();
         Subject newSubject = new Subject();
         newSubject.setSubjectName(subject.getSubjectName());
         newSubject.setApiKey(newApiKey);
         newSubject.setId(newSubjectId);
-        subjectRepository.save(newSubject);
+        return subjectRepository.save(newSubject);
+    }
 
-        Map<UUID, UUID> sourceImgId2NewImgId = new HashMap<>();
-        List<Embedding> embeddings = embeddingRepository.findEmbeddingsBySubjectId(subject.getId());
-        embeddings.forEach(e->{
-            Img img = new Img();
-            img.setId(UUID.randomUUID());
-            img.setContent(e.getImg().getContent());
-            imgRepository.save(img);
+    private void cloneEmbedding( Subject subject, Subject cloneSubject )
+    {
+        List<Embedding> embeddings = embeddingRepository.findBySubject(subject);
+        embeddings.forEach(e -> {
+            Img img = null;
+            if (e.getImg() != null) {
+                img = new Img();
+                img.setId(UUID.randomUUID());
+                img.setContent(e.getImg().getContent());
+                imgRepository.save(img);
+            }
 
             Embedding embedding = new Embedding();
             embedding.setId(UUID.randomUUID());
-            embedding.setSubject(newSubject);
+            embedding.setSubject(cloneSubject);
             embedding.setImg(img);
             embedding.setEmbedding(e.getEmbedding());
             embedding.setCalculator(e.getCalculator());

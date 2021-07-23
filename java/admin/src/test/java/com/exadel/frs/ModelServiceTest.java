@@ -22,22 +22,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
 
+import com.exadel.frs.commonservice.entity.*;
+import com.exadel.frs.commonservice.repository.EmbeddingRepository;
+import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
 import com.exadel.frs.dto.ui.ModelCloneDto;
 import com.exadel.frs.dto.ui.ModelCreateDto;
 import com.exadel.frs.dto.ui.ModelUpdateDto;
-import com.exadel.frs.commonservice.entity.App;
-import com.exadel.frs.commonservice.entity.Model;
-import com.exadel.frs.commonservice.entity.User;
 import com.exadel.frs.commonservice.enums.AppModelAccess;
 import com.exadel.frs.exception.NameIsNotUniqueException;
 import com.exadel.frs.commonservice.repository.ModelRepository;
@@ -46,15 +41,11 @@ import com.exadel.frs.service.ModelService;
 import com.exadel.frs.service.UserService;
 import com.exadel.frs.system.security.AuthorizationManager;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 import lombok.val;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 class ModelServiceTest {
 
@@ -66,13 +57,19 @@ class ModelServiceTest {
     private static final Long USER_ID = 1L;
     private static final Long MODEL_ID = 2L;
     private static final Long APPLICATION_ID = 3L;
+    private static final double[] EMBEDDING_EMBEDDING = new double[]{0.698567,0.36655555,0.9998568};
+    private static final UUID SUBJECT_ID = randomUUID();
+    private static final String SUBJECT_API_KEY = "subject-api-key";
+    private static final UUID EMBEDDING_ID = randomUUID();
+    private static final String CALCULATOR = "calculator";
 
     private AppService appServiceMock;
     private ModelRepository modelRepositoryMock;
     private ModelService modelService;
     private UserService userServiceMock;
-    private final SubjectRepository subjectRepositry;
-    private final JdbcTemplate jdbcTemplate;
+    private final SubjectRepository subjectRepository;
+    private final EmbeddingRepository embeddingRepository;
+    private final ImgRepository imgRepository;
 
     private AuthorizationManager authManager;
 
@@ -81,16 +78,18 @@ class ModelServiceTest {
         appServiceMock = mock(AppService.class);
         authManager = mock(AuthorizationManager.class);
         userServiceMock = mock(UserService.class);
-        subjectRepositry = mock(SubjectRepository.class);
-        jdbcTemplate = mock(JdbcTemplate.class);
+        subjectRepository = mock(SubjectRepository.class);
+        embeddingRepository = mock(EmbeddingRepository.class);
+        imgRepository = mock(ImgRepository.class);
 
         modelService = new ModelService(
                 modelRepositoryMock,
                 appServiceMock,
                 authManager,
                 userServiceMock,
-                subjectRepositry,
-                jdbcTemplate
+            subjectRepository,
+                embeddingRepository,
+                imgRepository
         );
     }
 
@@ -240,6 +239,81 @@ class ModelServiceTest {
         val clonedModel = modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
+        verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
+        verify(modelRepositoryMock).save(any(Model.class));
+        verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
+        verify(authManager).verifyWritePrivilegesToApp(user, app);
+
+        assertThat(clonedModel.getId(), not(repoModel.getId()));
+        assertThat(clonedModel.getName(), is(modelCloneDto.getName()));
+    }
+
+    @Test
+    void successCloneModelWithSubjectAndEmbeddings() {
+        val user = User.builder()
+                       .id(USER_ID)
+                       .build();
+
+        val modelCloneDto = ModelCloneDto.builder()
+                .name("name_of_clone")
+                .build();
+
+        val app = App.builder()
+                .id(APPLICATION_ID)
+                .guid(APPLICATION_GUID)
+                .build();
+
+        val subject = Subject.builder()
+                .id(SUBJECT_ID)
+                .subjectName("name")
+                .apiKey(SUBJECT_API_KEY)
+                .build();
+
+        val embedding = Embedding.builder()
+                .embedding(EMBEDDING_EMBEDDING)
+                .id(EMBEDDING_ID)
+                .calculator(CALCULATOR)
+                .img(null)
+                .subject(subject)
+                .build();
+
+        val embedding2 = Embedding.builder()
+                .embedding(EMBEDDING_EMBEDDING)
+                .id(EMBEDDING_ID)
+                .calculator(CALCULATOR)
+                .img(null)
+                .subject(subject)
+                .build();
+
+        val embeddings = Arrays.asList(embedding, embedding2);
+
+        val repoModel = Model.builder()
+                .id(MODEL_ID)
+                .name("name")
+                .guid(MODEL_GUID)
+                .app(app)
+                .apiKey(MODEL_API_KEY)
+                .build();
+        repoModel.addAppModelAccess(app, AppModelAccess.READONLY);
+
+        val cloneModel = Model.builder()
+                .id(new Random().nextLong())
+                .name("name_of_clone")
+                .apiKey(randomUUID().toString())
+                .guid(randomUUID().toString())
+                .app(app)
+                .build();
+
+        when(modelRepositoryMock.findByGuid(MODEL_GUID)).thenReturn(Optional.of(repoModel));
+        when(appServiceMock.getApp(APPLICATION_GUID)).thenReturn(app);
+        when(modelRepositoryMock.save(any(Model.class))).thenReturn(cloneModel);
+        when(userServiceMock.getUser(USER_ID)).thenReturn(user);
+        when(subjectRepository.findByApiKey(anyString())).thenReturn(Collections.singletonList(subject));
+        when(embeddingRepository.findBySubject(any())).thenReturn(embeddings);
+
+        val clonedModel = modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
+
+        verify(modelRepositoryMock, atLeast(1)).findByGuid(MODEL_GUID);
         verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
         verify(modelRepositoryMock).save(any(Model.class));
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);

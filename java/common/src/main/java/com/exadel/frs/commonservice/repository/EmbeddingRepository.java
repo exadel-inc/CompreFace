@@ -22,6 +22,7 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
     @EntityGraph("embedding-with-subject")
     Stream<Embedding> findBySubjectApiKey(String apiKey);
 
+    @EntityGraph("embedding-with-subject")
     List<Embedding> findBySubjectId(UUID subjectId);
 
     @Query("select e from Embedding e where e.img is not null and e.calculator <> :calculator")
@@ -76,6 +77,12 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
     Long countBySubjectApiKeyNotEqAndCalculatorNotEq(@Param("apiKey") String apiKey,
                                                      @Param("calculator") String calculator);
 
-    @Query(value = "select e from Embedding e inner join Subject s on e.subject = s inner join Img i on e.img = i where s.id = :subject_id")
+    @EntityGraph("embedding-with-subject")
+    @Query(value = "select e from Embedding e inner join fetch e.subject s inner join fetch e.img where s.id = :subject_id")
     List<Embedding> findEmbeddingsBySubjectId(@Param("subject_id") UUID subjectId);
+
+    List<Embedding> findBySubjectIdIn( List<UUID> subjectIds );
+
+    @EntityGraph("embedding-with-subject")
+    List<Embedding> findBySubject( Subject subject );
 }
