@@ -106,7 +106,7 @@ public class EmbeddingController {
     @DeleteMapping
     public Map<String, Object> removeAllSubjectEmbeddings(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = SUBJECT_DESC, required = true) @RequestParam(name = SUBJECT) @NotEmpty final String subjectName
+            @ApiParam(value = SUBJECT_DESC) @RequestParam( name = SUBJECT, required = false) final String subjectName
     ) {
         return Map.of(
                 "deleted",
