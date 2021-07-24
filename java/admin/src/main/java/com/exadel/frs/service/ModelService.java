@@ -188,8 +188,7 @@ public class ModelService {
         return subjectRepository.save(newSubject);
     }
 
-    private void cloneEmbedding( Subject subject, Subject cloneSubject )
-    {
+    private void cloneEmbedding(Subject subject, Subject cloneSubject) {
         List<Embedding> embeddings = embeddingRepository.findBySubject(subject);
         embeddings.forEach(e -> {
             Img img = null;
