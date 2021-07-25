@@ -15,7 +15,9 @@
   -->
 
 <div class="app-search">
-  <div class="app-search--title mat-title">{{ title }}</div>
+  <ng-container *ngIf="title">
+    <div class="app-search--title mat-title">{{ title }}</div>
+  </ng-container>
   <div class="app-search--form">
     <input class="app-search--form_input mat-body-2" type="text" (input)="onInputChange($event)" [placeholder]="searchPlaceholder" />
     <mat-icon svgIcon="search"></mat-icon>

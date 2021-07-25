@@ -21,9 +21,14 @@
 .app-search {
   margin-bottom: 20px;
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
+
+  @include mobile-landscape;
+  @include mobile-portrait;
+  @include mobile {
+    flex-wrap: wrap;
+  }
 
   &--title {
     margin: 0 16px 0 0;
@@ -43,6 +48,7 @@
       order: 3;
       width: 100%;
       margin-top: 8px;
+      flex-wrap: wrap;
     }
 
     &_input {

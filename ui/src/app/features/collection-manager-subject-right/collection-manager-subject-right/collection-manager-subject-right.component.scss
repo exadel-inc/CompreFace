@@ -16,6 +16,7 @@
 
 @import 'mixins.scss';
 @import 'colors.scss';
+@import 'mixins.scss';
 
 .profile {
   &--spinner {
@@ -31,11 +32,14 @@
       align-items: center;
 
       .name {
+        @include not-break-string();
         font-weight: 600;
         font-size: 22px;
       }
 
       .buttons {
+        display: flex;
+
         .mat-icon {
           @include md-icon-size();
         }
