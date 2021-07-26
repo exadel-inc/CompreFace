@@ -21,11 +21,11 @@
         <div class="app-header--wrapper_name" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxHeaderLinkLength">
           <h1 class="mat-headline">{{ app.name }}</h1>
         </div>
-        <div class="app-header--wrapper_buttons" *ngIf="!isLoading && userRole">
-          <button mat-icon-button *ngIf="userRole === userRoleEnum.Owner || userRole === userRoleEnum.Administrator">
+        <div class="app-header--wrapper_buttons" *ngIf="!isLoading && checkUserRole(userRole)">
+          <button mat-icon-button>
             <mat-icon svgIcon="edit" (click)="onRename(app.name)"></mat-icon>
           </button>
-          <button mat-icon-button *ngIf="userRole === userRoleEnum.Owner || userRole === userRoleEnum.Administrator">
+          <button mat-icon-button>
             <mat-icon svgIcon="trash" (click)="onDelete(app.name)"></mat-icon>
           </button>
         </div>
