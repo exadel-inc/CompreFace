@@ -14,14 +14,12 @@
  * permissions and limitations under the License.
  */
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { AppUserService } from 'src/app/core/app-user/app-user.service';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
-import { Routes } from '../../data/enums/routers-url.enum';
 import { loadApplications } from '../application/action';
 import {
   addAppUserEntityAction,
@@ -43,7 +41,6 @@ export class AppUserEffects {
     private actions: Actions,
     private appUserService: AppUserService,
     private snackBarService: SnackBarService,
-    private router: Router
   ) {}
 
   @Effect()
