@@ -25,7 +25,7 @@
     searchPlaceholder="{{ 'models.search.title' | translate }}"
   >
   </app-search-table>
-  <app-spinner *ngIf="isLoading$ | async">></app-spinner>
+  <app-spinner *ngIf="isLoading$ | async"></app-spinner>
   <app-model-table
     *ngIf="(tableConfig$ | async)?.data.length > 0"
     class="app-table"
@@ -40,8 +40,10 @@
     (collection)="mangeCollection($event)"
   >
   </app-model-table>
-  <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
-    <mat-icon svgIcon="info_new"></mat-icon>
-    <p class="mat-caption">{{ 'models.create_model_info' | translate }}</p>
-  </div>
+  <ng-container *ngIf="(isLoading$ | async) === false">
+    <div class="create-new-message" *ngIf="(tableConfig$ | async)?.data.length === 0">
+      <mat-icon svgIcon="info_new"></mat-icon>
+      <p class="mat-caption">{{ 'models.create_model_info' | translate }}</p>
+    </div>
+  </ng-container>
 </div>
