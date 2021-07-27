@@ -60,9 +60,8 @@ public class SubjectDao {
 
         final int[] deleted = {0};
         subjectList.forEach(subject -> {
-            embeddingRepository.deleteBySubjectId(subject.getId());
+            deleted[0]+=embeddingRepository.deleteBySubjectId(subject.getId());
             imgRepository.deleteBySubjectId(subject.getId());
-            deleted[0]++;
         });
 
         return deleted[0];
