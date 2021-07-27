@@ -46,7 +46,6 @@ spring:
     database: postgresql
     open-in-view: true
     generate-ddl: false
-    show-sql: true
   mail:
     enable: ${ENABLE_EMAIL_SERVER:false}
     host: ${EMAIL_HOST:example.com}
