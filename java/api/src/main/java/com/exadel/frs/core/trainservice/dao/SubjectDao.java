@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -51,18 +49,22 @@ public class SubjectDao {
 
     @Transactional
     public int removeAllSubjectEmbeddings(final String apiKey, final String subjectName) {
+        List<Subject> subjectList = new ArrayList<>();
         final Optional<Subject> subjectOptional = subjectRepository.findByApiKeyAndSubjectNameIgnoreCase(apiKey, subjectName);
         if (subjectOptional.isEmpty()) {
             // nothing has been removed
-            return 0;
+            subjectList = subjectRepository.findByApiKey(apiKey);
+        } else {
+            subjectList.add(subjectOptional.get());
         }
 
-        final var subject = subjectOptional.get();
+        final int[] deleted = {0};
+        subjectList.forEach(subject -> {
+            deleted[0]+=embeddingRepository.deleteBySubjectId(subject.getId());
+            imgRepository.deleteBySubjectId(subject.getId());
+        });
 
-        int deleted = embeddingRepository.deleteBySubjectId(subject.getId());
-        imgRepository.deleteBySubjectId(subject.getId());
-
-        return deleted;
+        return deleted[0];
     }
 
     @Transactional
