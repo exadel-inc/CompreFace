@@ -62,6 +62,7 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('manage_collection.left_side.modal_title'),
+        placeholder: this.translate.instant('manage_collection.left_side.subject_name'),
         name: '',
       },
     });

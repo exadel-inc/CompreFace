@@ -38,6 +38,12 @@ body {
   }
 }
 
+/* Custom scrollbar for Mozilla */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $special-gray $special-light-gray;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;

@@ -207,12 +207,13 @@
   },
   "manage_collection": {
     "left_side": {
-      "add_subject": "Add subject",
+      "add_subject": "Add Subject",
       "search": "Search...",
-      "modal_title": "Subject"
+      "modal_title": "Subject",
+      "subject_name": "Subject Name"
     },
     "right_side": {
-      "title": "Join Subject",
+      "title": "Join Subjects",
       "profile": "Personal profile:",
       "edit_subject": "Subject",
       "delete_subject": "Subject",

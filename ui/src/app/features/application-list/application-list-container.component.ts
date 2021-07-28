@@ -78,6 +78,7 @@ export class ApplicationListContainerComponent implements OnInit {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('applications.header.title'),
+        placeholder: this.translate.instant('applications.name'),
         name: '',
       },
     });
