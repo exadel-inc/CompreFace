@@ -1,9 +1,7 @@
 package com.exadel.frs.commonservice.entity;
 
 import com.vladmihalcea.hibernate.type.array.DoubleArrayType;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
@@ -18,8 +16,10 @@ import java.util.UUID;
 @EqualsAndHashCode(of = "id")
 @Entity
 @Table(schema = "public")
+@Builder
+@AllArgsConstructor
 @TypeDefs(@TypeDef(name = "double-array", typeClass = DoubleArrayType.class))
-@NamedEntityGraph(name = "embedding-with-subject", attributeNodes = @NamedAttributeNode("subject"))
+@NamedEntityGraph(name = "embedding-with-subject", attributeNodes = {@NamedAttributeNode("subject"), @NamedAttributeNode("img")})
 public class Embedding {
 
     @Id
