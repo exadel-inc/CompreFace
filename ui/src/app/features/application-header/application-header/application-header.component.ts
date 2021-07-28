@@ -43,13 +43,6 @@ export class ApplicationHeaderComponent {
 
   // Users who can edit application
   checkUserRole(role: string): boolean {
-    switch (role) {
-      case Role.Owner:
-          return true
-      case Role.Administrator:
-        return true
-      default:
-          return false
-    }
+    return Role.Administrator === role || Role.Owner === role;
   }
 }
