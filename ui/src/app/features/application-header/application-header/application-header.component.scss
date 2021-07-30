@@ -18,6 +18,11 @@
 .app-header {
   margin-bottom: 24px;
 
+  &--spinner {
+    display: flex;
+    justify-content: center;
+  }
+
   &--wrapper {
     display: flex;
     align-items: center;

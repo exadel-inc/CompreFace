@@ -13,21 +13,20 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-
 <div class="app-header">
-  <app-spinner *ngIf="isLoading"></app-spinner>
   <mat-card>
-    <div *ngIf="app">
+    <app-spinner class="app-header--spinner" *ngIf="isLoading"></app-spinner>
+    <div *ngIf="app && !isLoading">
       <div class="app-header--wrapper">
         <div class="app-header--wrapper_name" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxHeaderLinkLength">
           <h1 class="mat-headline">{{ app.name }}</h1>
         </div>
-        <div class="app-header--wrapper_buttons" *ngIf="!isLoading && userRole">
+        <div class="app-header--wrapper_buttons" *ngIf="!isLoading && checkUserRole(userRole)">
           <button mat-icon-button>
-            <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="edit" (click)="onRename(app.name)"></mat-icon>
+            <mat-icon svgIcon="edit" (click)="onRename(app.name)"></mat-icon>
           </button>
           <button mat-icon-button>
-            <mat-icon *ngIf="userRole === userRoleEnum.Owner" svgIcon="trash" (click)="onDelete(app.name)"></mat-icon>
+            <mat-icon svgIcon="trash" (click)="onDelete(app.name)"></mat-icon>
           </button>
         </div>
       </div>

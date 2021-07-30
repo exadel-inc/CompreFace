@@ -13,12 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { Role } from 'src/app/data/enums/role.enum';
 
+import { Role } from 'src/app/data/enums/role.enum';
 import { Application } from '../../../data/interfaces/application';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-application-header',
@@ -34,9 +32,6 @@ export class ApplicationHeaderComponent {
   @Output() delete = new EventEmitter();
 
   maxHeaderLinkLength = 25;
-  userRoleEnum = Role;
-
-  constructor(private dialog: MatDialog) {}
 
   onRename(name: string): void {
     this.rename.emit(name);
@@ -44,5 +39,10 @@ export class ApplicationHeaderComponent {
 
   onDelete(name: string): void {
     this.delete.emit(name);
+  }
+
+  // Users who can edit application
+  checkUserRole(role: string): boolean {
+    return Role.Administrator === role || Role.Owner === role;
   }
 }
