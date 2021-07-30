@@ -25,6 +25,8 @@ class ENV(Constants):
 
     FACE_DETECTION_PLUGIN = get_env('FACE_DETECTION_PLUGIN', 'facenet.FaceDetector')
     CALCULATION_PLUGIN = get_env('CALCULATION_PLUGIN', 'facenet.Calculator')
+    FACE_DETECTION_MOBILE_PLUGIN = "facenet.coralmtcnn.FaceDetector"
+    CALCULATION_MOBILE_PLUGIN = "facenet.coralmtcnn.Calculator"
     EXTRA_PLUGINS = get_env_split('EXTRA_PLUGINS', 'facenet.LandmarksDetector,agegender.AgeDetector,agegender.GenderDetector,facenet.facemask.MaskDetector')
 
     LOGGING_LEVEL_NAME = get_env('LOGGING_LEVEL_NAME', 'debug').upper()
