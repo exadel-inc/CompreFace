@@ -62,12 +62,18 @@ public class SubjectService {
     }
 
     public int removeAllSubjectEmbeddings(final String apiKey, final String subjectName) {
-        int removed = subjectDao.removeAllSubjectEmbeddings(apiKey, subjectName);
-        if (removed > 0) {
-            embeddingCacheProvider.ifPresent(
-                    apiKey,
-                    c -> c.removeEmbeddingsBySubjectName(subjectName)
-            );
+        int removed;
+        if (StringUtils.isNotEmpty(subjectName)) {
+            removed = subjectDao.removeAllSubjectEmbeddings(apiKey, subjectName);
+            if (removed > 0) {
+                embeddingCacheProvider.ifPresent(
+                        apiKey,
+                        c -> c.removeEmbeddingsBySubjectName(subjectName)
+                );
+            }
+        } else {
+            removed = subjectDao.removeAllSubjectEmbeddings(apiKey);
+            embeddingCacheProvider.invalidate(apiKey);
         }
 
         return removed;

@@ -49,22 +49,28 @@ public class SubjectDao {
 
     @Transactional
     public int removeAllSubjectEmbeddings(final String apiKey, final String subjectName) {
-        List<Subject> subjectList = new ArrayList<>();
         final Optional<Subject> subjectOptional = subjectRepository.findByApiKeyAndSubjectNameIgnoreCase(apiKey, subjectName);
         if (subjectOptional.isEmpty()) {
             // nothing has been removed
-            subjectList = subjectRepository.findByApiKey(apiKey);
-        } else {
-            subjectList.add(subjectOptional.get());
+            return 0;
         }
 
-        final int[] deleted = {0};
-        subjectList.forEach(subject -> {
-            deleted[0]+=embeddingRepository.deleteBySubjectId(subject.getId());
-            imgRepository.deleteBySubjectId(subject.getId());
-        });
+        final var subject = subjectOptional.get();
 
-        return deleted[0];
+        int deleted = embeddingRepository.deleteBySubjectId(subject.getId());
+        imgRepository.deleteBySubjectId(subject.getId());
+        subjectRepository.delete(subject);
+
+        return deleted;
+    }
+
+    @Transactional
+    public int removeAllSubjectEmbeddings(final String apiKey) {
+        int deleted = embeddingRepository.deleteBySubjectApiKey(apiKey);
+        imgRepository.deleteBySubjectApiKey(apiKey);
+        subjectRepository.deleteByApiKey(apiKey);
+
+        return deleted;
     }
 
     @Transactional
