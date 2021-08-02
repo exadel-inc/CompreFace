@@ -1,0 +1,1 @@
+include mtcnn_tflite/data/mtcnn_weights.npy

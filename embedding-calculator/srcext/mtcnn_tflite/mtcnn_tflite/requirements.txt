@@ -1,0 +1,5 @@
+tensorflow
+numpy
+opencv-python
+pytest
+fcache
