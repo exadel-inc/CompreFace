@@ -103,7 +103,7 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
         ('20180402-114759-edgetpu', '1DuUi7WpIDfnwwdciaWzW3UCzPxG51vSQ', (1.1817961, 5.291995557), 0.4),
     )
     BATCH_SIZE = 25
-    DELIGATES = 'libedgetpu.1.dylib'
+    DELIGATES = 'libedgetpu.so.1'
 
     @property
     def ml_model_file(self):
