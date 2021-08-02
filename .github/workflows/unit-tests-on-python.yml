@@ -25,7 +25,7 @@ jobs:
         sudo apt-get update && sudo apt-get install -y libjpeg-dev libpng-dev \
           libtiff-dev libavformat-dev libpq-dev libfreeimage3
         python -m pip install --upgrade pip
-        python -m pip --no-cache-dir install -r requirements.txt
+        python -m pip --no-cache-dir install -r requirements.txt -e srcext/mtcnn_tflite/
         python -m src.services.facescan.plugins.setup
     - name: Test with pytest
       working-directory: ./embedding-calculator/
