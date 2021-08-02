@@ -35,6 +35,7 @@ ENV FACE_DETECTION_PLUGIN=$FACE_DETECTION_PLUGIN CALCULATION_PLUGIN=$CALCULATION
     EXTRA_PLUGINS=$EXTRA_PLUGINS
 COPY src src
 COPY srcext srcext
+RUN pip --no-cache-dir install srcext/mtcnn_tflite/
 RUN python -m src.services.facescan.plugins.setup
 
 # copy rest of the code
