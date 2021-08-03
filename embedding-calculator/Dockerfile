@@ -6,6 +6,11 @@ RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         libpng-dev libtiff-dev libavformat-dev libpq-dev libfreeimage3 \
     && rm -rf /var/lib/apt/lists/*
 
+# install drivers for coral tau
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN apt-get update && apt-get install -y libedgetpu1-std
+
 # install common python packages
 SHELL ["/bin/bash", "-c"]
 WORKDIR /app/ml
