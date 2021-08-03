@@ -9,6 +9,11 @@ RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
 	libsnappy-dev libwebp-dev libzopfli-dev libzstd-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# install drivers for coral tau
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN apt-get update && apt-get install -y libedgetpu1-std
+
 # Dependencies for imagecodecs
 WORKDIR /tmp
 
