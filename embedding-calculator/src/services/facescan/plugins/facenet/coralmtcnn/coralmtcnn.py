@@ -100,7 +100,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
 class Calculator(mixins.CalculatorMixin, base.BasePlugin):
     ml_models = (
         # converted facenet .tflite model
-        ('20180402-114759-edgetpu', '1DuUi7WpIDfnwwdciaWzW3UCzPxG51vSQ', (1.1817961, 5.291995557), 0.4),
+        ('20180402-114759-edgetpu', '1Uwv8w6Uj5M_xdJI9sjay_wkoFoI_zbjk', (1.1817961, 5.291995557), 0.4),
     )
     BATCH_SIZE = 25
     DELIGATES = 'libedgetpu.so.1'
