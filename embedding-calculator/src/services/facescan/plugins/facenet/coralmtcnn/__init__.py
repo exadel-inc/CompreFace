@@ -12,4 +12,4 @@
 
 from src.services.facescan.plugins.dependencies import get_tensorflow
 
-requirements = get_tensorflow() + ('mtcnn-tflite-0.0.4',)
+requirements = get_tensorflow()
