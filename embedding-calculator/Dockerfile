@@ -33,9 +33,7 @@ ARG GPU_IDX=-1
 ENV GPU_IDX=$GPU_IDX INTEL_OPTIMIZATION=$INTEL_OPTIMIZATION
 ARG FACE_DETECTION_PLUGIN="facenet.FaceDetector"
 ARG CALCULATION_PLUGIN="facenet.Calculator"
-ARG FACE_DETECTION_MOBILE_PLUGIN="facenet.coralmtcnn.FaceDetector"
-ARG CALCULATION_MOBILE_PLUGIN="facenet.coralmtcnn.Calculator"
-ARG EXTRA_PLUGINS="facenet.LandmarksDetector,agegender.AgeDetector,agegender.GenderDetector,facenet.facemask.MaskDetector"
+ARG EXTRA_PLUGINS="facenet.LandmarksDetector,agegender.AgeDetector,agegender.GenderDetector,facenet.facemask.MaskDetector,facenet.coralmtcnn.FaceDetector,facenet.coralmtcnn.Calculator"
 ENV FACE_DETECTION_PLUGIN=$FACE_DETECTION_PLUGIN CALCULATION_PLUGIN=$CALCULATION_PLUGIN \
     EXTRA_PLUGINS=$EXTRA_PLUGINS
 COPY src src
