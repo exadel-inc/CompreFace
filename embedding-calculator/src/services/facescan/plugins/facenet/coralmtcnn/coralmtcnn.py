@@ -58,7 +58,7 @@ class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
         )
 
     def crop_face(self, img: Array3D, box: BoundingBoxDTO) -> Array3D:
-        return squish_img(crop_img(img, box), (self.IMAGE_SIZE, self.IMAGE_SIZE))
+        return cv2.resize(crop_img(img, box), (self.IMAGE_SIZE, self.IMAGE_SIZE))
 
     def find_faces(self, img: Array3D, det_prob_threshold: float = None) -> List[BoundingBoxDTO]:
         if det_prob_threshold is None:
@@ -122,10 +122,10 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
         model = tf.lite.Interpreter(model_path=self.ml_model_file)
         return model
 
-    def calc_embedding(self, face_img: Array3D, resize=False, mode='TPU') -> Array3D:
-        return self._calculate_embeddings([face_img], resize, mode)[0]
+    def calc_embedding(self, face_img: Array3D, mode='CPU') -> Array3D:
+        return self._calculate_embeddings([face_img], mode)[0]
 
-    def _calculate_embeddings(self, cropped_images, resize=False, mode='TPU'):
+    def _calculate_embeddings(self, cropped_images, mode='CPU'):
         """Run forward pass to calculate embeddings"""
         if mode == 'TPU':
             calc_model = self._embedding_calculator_tpu
@@ -140,9 +140,6 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
         output_details = calc_model.get_output_details()
         output_index = output_details[0]['index']
         embedding_size = output_details[0]['shape'][1]
-
-        if resize:
-            cropped_images = [cv2.resize(img, (tuple(input_shape[1:3]))) for img in cropped_images]
 
         image_count = len(cropped_images)
         batches_per_epoch = int(math.ceil(1.0 * image_count / self.BATCH_SIZE))
