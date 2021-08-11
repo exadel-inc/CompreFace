@@ -6,6 +6,11 @@ RUN apt-get update && apt-get install -y build-essential cmake git wget unzip \
         libpng-dev libtiff-dev libavformat-dev libpq-dev libfreeimage3 \
     && rm -rf /var/lib/apt/lists/*
 
+# install drivers for coral tau
+RUN echo "deb https://packages.cloud.google.com/apt coral-edgetpu-stable main" | tee /etc/apt/sources.list.d/coral-edgetpu.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN apt-get update && apt-get install -y libedgetpu1-std
+
 # install common python packages
 SHELL ["/bin/bash", "-c"]
 WORKDIR /app/ml
@@ -26,13 +31,14 @@ ENV JOBLIB_MULTIPROCESSING=0
 ARG INTEL_OPTIMIZATION=false
 ARG GPU_IDX=-1
 ENV GPU_IDX=$GPU_IDX INTEL_OPTIMIZATION=$INTEL_OPTIMIZATION
-ARG FACE_DETECTION_PLUGIN="facenet.FaceDetector"
-ARG CALCULATION_PLUGIN="facenet.Calculator"
+ARG FACE_DETECTION_PLUGIN="facenet.coralmtcnn.FaceDetector"
+ARG CALCULATION_PLUGIN="facenet.coralmtcnn.Calculator"
 ARG EXTRA_PLUGINS="facenet.LandmarksDetector,agegender.AgeDetector,agegender.GenderDetector,facenet.facemask.MaskDetector"
 ENV FACE_DETECTION_PLUGIN=$FACE_DETECTION_PLUGIN CALCULATION_PLUGIN=$CALCULATION_PLUGIN \
     EXTRA_PLUGINS=$EXTRA_PLUGINS
 COPY src src
 COPY srcext srcext
+RUN pip --no-cache-dir install srcext/mtcnn_tflite/
 RUN python -m src.services.facescan.plugins.setup
 
 # copy rest of the code
@@ -43,6 +49,11 @@ COPY sample_images sample_images
 ARG SKIP_TESTS
 COPY pytest.ini .
 RUN if [ -z $SKIP_TESTS  ]; then pytest -m "not performance" /app/ml/src; fi
+
+# create folder for tflite model
+RUN mkdir -p /app/ml/.cache/mtcnn-tflite-models
+RUN chmod a+rwx -R /app/ml/.cache/mtcnn-tflite-models
+USER root
 
 EXPOSE 3000
 
