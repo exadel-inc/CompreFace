@@ -35,7 +35,14 @@ from src.services.facescan.plugins import base
 CURRENT_DIR = get_current_dir(__file__)
 logger = logging.getLogger(__name__)
 
-
+def prewhiten(img):
+    """ Normalize image."""
+    mean = np.mean(img)
+    std = np.std(img)
+    std_adj = np.maximum(std, 1.0 / np.sqrt(img.size))
+    y = np.multiply(np.subtract(img, mean), 1 / std_adj)
+    return y
+    
 class FaceDetector(mixins.FaceDetectorMixin, base.BasePlugin):
     FACE_MIN_SIZE = 20
     SCALE_FACTOR = 0.709
@@ -126,11 +133,12 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
         return self._calculate_embeddings([face_img], mode)[0]
 
     def _calculate_embeddings(self, cropped_images, mode='CPU'):
-        """Run forward pass to calculate embeddings"""
+       """Run forward pass to calculate embeddings"""
         if mode == 'TPU':
             calc_model = self._embedding_calculator_tpu
         else:
             calc_model = self._embedding_calculator
+            cropped_images = [prewhiten(img).astype(np.float32) for img in cropped_images]
 
         input_details = calc_model.get_input_details()
         input_index = input_details[0]['index']
