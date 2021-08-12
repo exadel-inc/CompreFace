@@ -133,10 +133,10 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
         return self._calculate_embeddings([face_img], mode)[0]
 
     def _calculate_embeddings(self, cropped_images, mode='CPU'):
-       """Run forward pass to calculate embeddings"""
-       if mode == 'TPU':
+        """Run forward pass to calculate embeddings"""
+        if mode == 'TPU':
             calc_model = self._embedding_calculator_tpu
-       else:
+        else:
             calc_model = self._embedding_calculator
             cropped_images = [prewhiten(img).astype(np.float32) for img in cropped_images]
 
