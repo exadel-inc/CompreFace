@@ -40,7 +40,7 @@ class ModelBuilder:
         self.cache = FileCache('mtcnn-tflite-models')
         data_path = os.path.join(os.path.dirname(mtcnn_tflite.__file__), "data")
         self.weights_file = os.path.join(data_path, "mtcnn_weights.npy")
-        delegate_list = tf.lite.experimental.load_delegate('libedgetpu.so.1') 
+        #delegate_list = tf.lite.experimental.load_delegate('libedgetpu.so.1') 
         
         if "r_net" not in self.cache:
             r_net = self.build_rnet()
@@ -50,7 +50,7 @@ class ModelBuilder:
             r_net = converter.convert()
             self.cache["r_net"] = r_net
         
-        self.r_net = tf.lite.Interpreter(model_content=self.cache["r_net"], experimental_delegates = [delegate_list])
+        self.r_net = tf.lite.Interpreter(model_content=self.cache["r_net"], experimental_delegates = None) #[delegate_list]
 
         if "o_net" not in self.cache:
             o_net = self.build_onet()
@@ -60,7 +60,7 @@ class ModelBuilder:
             o_net = converter.convert()
             self.cache["o_net"] = o_net
         
-        self.o_net = tf.lite.Interpreter(model_content=self.cache["o_net"], experimental_delegates = [delegate_list])
+        self.o_net = tf.lite.Interpreter(model_content=self.cache["o_net"], experimental_delegates = None )#[delegate_list]
 
         self.cache.sync()
 
@@ -76,7 +76,7 @@ class ModelBuilder:
     def create_pnet(self, image_dimension):
         img_width, img_height = image_dimension
         scales = self.get_scales(self.min_face_size, img_width, img_height, self.scale_factor)
-        delegate_list = tf.lite.experimental.load_delegate('libedgetpu.so.1') #
+        #delegate_list = tf.lite.experimental.load_delegate('libedgetpu.so.1') #
         if str(image_dimension) not in self.cache:
             ctr = 0
             p_nets = []
@@ -91,7 +91,7 @@ class ModelBuilder:
 
         self.p_nets = []
         for p_net in self.cache[str(image_dimension)]:            
-            self.p_nets.append(tf.lite.Interpreter(model_content=p_net, experimental_delegates = [delegate_list]))
+            self.p_nets.append(tf.lite.Interpreter(model_content=p_net, experimental_delegates = None))#[delegate_list]
 
         return self.p_nets
 
