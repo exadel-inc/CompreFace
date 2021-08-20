@@ -40,5 +40,5 @@ public class FindFacesResultDto {
     @JsonProperty(value = "execution_time")
     private ExecutionTimeDto executionTime;
     private List<List<Integer>> landmarks;
-    private FacesMaskDto maskDto;
+    private FacesMaskDto mask;
 }
