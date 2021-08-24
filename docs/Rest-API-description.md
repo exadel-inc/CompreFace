@@ -222,8 +222,19 @@ Response body on success:
 ```json
 {
   "result" : [ {
-    "age" : [ 25, 32 ],
-    "gender" : "female",
+    "age" : {
+      "probability": 0.9308982491493225,
+      "high": 32,
+      "low": 25
+    },
+    "gender" : {
+      "probability": 0.9898611307144165,
+      "value": "female"
+    },
+    "mask" : {
+      "probability": 0.9999470710754395,
+      "value": "without_mask"
+    },
     "embedding" : [ 9.424854069948196E-4, "...", -0.011415496468544006 ],
     "box" : {
       "probability" : 1.0,
@@ -255,8 +266,9 @@ Response body on success:
 
 | Element                        | Type    | Description                                                  |
 | ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | array   | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | string  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled.          |
 | embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | box                            | object  | list of parameters of the bounding box for this face         |
 | probability                    | float   | probability that a found face is actually a face             |
@@ -429,8 +441,19 @@ Response body on success:
 {
   "result": [
     {
-      "age" : [ 25, 32 ],
-      "gender" : "female",
+      "age" : {
+        "probability": 0.9308982491493225,
+        "high": 32,
+        "low": 25
+      },
+      "gender" : {
+        "probability": 0.9898611307144165,
+        "value": "female"
+      },
+      "mask" : {
+        "probability": 0.9999470710754395,
+        "value": "without_mask"
+      },
       "embedding" : [ -0.049007344990968704, "...", -0.01753818802535534 ],
       "box" : {
         "probability" : 0.9997453093528748,
@@ -460,8 +483,9 @@ Response body on success:
 
 | Element                        | Type    | Description                                                  |
 | ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | array   | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | string  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
 | embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | box                            | object  | list of parameters of the bounding box for this face         |
 | probability                    | float   | probability that a found face is actually a face             |
@@ -497,8 +521,19 @@ Response body on success:
 ```json
 {
   "result" : [ {
-    "age" : [ 25, 32 ],
-    "gender" : "female",
+    "age" : {
+      "probability": 0.9308982491493225,
+      "high": 32,
+      "low": 25
+    },
+    "gender" : {
+      "probability": 0.9898611307144165,
+      "value": "female"
+    },
+    "mask" : {
+      "probability": 0.9999470710754395,
+      "value": "without_mask"
+    },
     "embedding" : [ -0.03027934394776821, "...", -0.05117142200469971 ],
     "box" : {
       "probability" : 0.9987509250640869,
@@ -526,8 +561,9 @@ Response body on success:
 
 | Element                        | Type    | Description                                                  |
 | ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | array   | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | string  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
 | embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | box                            | object  | list of parameters of the bounding box for this face (on processedImage) |
 | probability                    | float   | probability that a found face is actually a face (on processedImage)     |
@@ -565,8 +601,19 @@ Response body on success:
 {
   "result" : [{
     "source_image_face" : {
-      "age" : [ 25, 32 ],
-      "gender" : "female",
+      "age" : {
+        "probability": 0.9308982491493225,
+        "high": 32,
+        "low": 25
+      },
+      "gender" : {
+        "probability": 0.9898611307144165,
+        "value": "female"
+      },
+      "mask" : {
+        "probability": 0.9999470710754395,
+        "value": "without_mask"
+      },
       "embedding" : [ -0.0010271212086081505, "...", -0.008746841922402382 ],
       "box" : {
         "probability" : 0.9997453093528748,
@@ -585,8 +632,19 @@ Response body on success:
     },
     "face_matches": [
       {
-        "age" : [ 25, 32 ],
-        "gender" : "female",
+        "age" : {
+          "probability": 0.9308982491493225,
+          "high": 32,
+          "low": 25
+        },
+        "gender" : {
+          "probability": 0.9898611307144165,
+          "value": "female"
+        },
+        "mask" : {
+          "probability": 0.9999470710754395,
+          "value": "without_mask"
+        },
         "embedding" : [ -0.049007344990968704, "...", -0.01753818802535534 ],
         "box" : {
           "probability" : 0.99975,
@@ -618,8 +676,9 @@ Response body on success:
 | ------------------------------ | ------- | ------------------------------------------------------------ |
 | source_image_face              | object  | additional info about source image face |
 | face_matches                   | array   | result of face verification |
-| age                            | array   | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | string  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
 | embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
 | box                            | object  | list of parameters of the bounding box for this face         |
 | probability                    | float   | probability that a found face is actually a face             |

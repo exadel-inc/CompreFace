@@ -9,5 +9,7 @@
 * [Configuration](Configuration.md)
 * [Architecture and Scalability](Architecture-and-scalability.md)
 * [Custom Builds](Custom-builds.md)
+* [Face data migration](Face-data-migration.md)
 * [User Roles System](User-Roles-System.md)
+* [Face Mask Detection Plugin](Mask-detection-plugin.md)
 * [Gathering Anonymous Statistics](Gathering-anonymous-statistics.md)

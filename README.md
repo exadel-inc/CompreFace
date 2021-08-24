@@ -7,7 +7,8 @@
  </a>
   <br>
   <i>CompreFace can be easily integrated into any system without prior machine learning skills. CompreFace provides REST API for face 
-recognition, face verification, face detection, landmark detection, age, and gender recognition and is easily deployed with docker
+recognition, face verification, face detection, face mask detection, landmark detection, age, and gender recognition and is easily deployed with 
+docker
      </i>
   <br>
 </p>
@@ -56,6 +57,7 @@ recognition, face verification, face detection, landmark detection, age, and gen
     * [Custom Builds](/docs/Custom-builds.md)
     * [Face data migration](/docs/Face-data-migration.md)
     * [User Roles System](/docs/User-Roles-System.md)
+    * [Face Mask Detection Plugin](/docs/Mask-detection-plugin.md)
     * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
   * [Contributing](#contributing)
   * [License info](#license-info)
@@ -63,16 +65,27 @@ recognition, face verification, face detection, landmark detection, age, and gen
 
 # Overview
 
-CompreFace is a free and open-source face detection and recognition GitHub project. Essentially, it is a docker-based application that can be used as a standalone server or deployed in the cloud. You don’t need prior machine learning skills to set up and use CompreFace.
+CompreFace is a free and open-source face detection and recognition GitHub project. 
+Essentially, it is a docker-based application that can be used as a standalone server or deployed in the cloud. 
+You don’t need prior machine learning skills to set up and use CompreFace.
 
-CompreFace provides REST API for face recognition, face verification, face detection, landmark detection, age, and gender recognition. The solution also features a role management system that allows you to easily control who has access to your Face Recognition Services.
+CompreFace provides REST API for face recognition, face verification, face detection, face mask detection, landmark detection, age, and gender recognition. 
+The solution also features a role management system that allows you to easily control who has access to your Face Recognition Services.
 
 CompreFace is delivered as a docker-compose config and supports different models that work on CPU and GPU. Our solution is based on state-of-the-art methods and libraries like FaceNet and InsightFace.
 
 # Screenshots
 <p align="center">
-<img src="https://user-images.githubusercontent.com/3736126/107061938-6a151080-67e1-11eb-95ba-c4dd43471f5b.png" alt="compreface-test-page" width=390px style="padding: 10px;">
-<img src="https://user-images.githubusercontent.com/3736126/107063429-0f7cb400-67e3-11eb-9ecc-27a1a0955923.png" alt="compreface-main-page" width=390px style="padding: 10px;">
+<img src="https://user-images.githubusercontent.com/3736126/130649323-b52d787c-8ba4-4064-97a6-6ffa70ef5f46.png" 
+alt="compreface-recognition-page" width=390px style="padding: 0px 10px 0px 0px;">
+<img src="https://user-images.githubusercontent.com/3736126/130649405-72d5324f-8ba6-4fa6-9e37-cac6f0b80c92.png" 
+alt="compreface-main-page" width="390px" style="padding: 0px 0px 0px 10px;">
+</p>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/3736126/130649939-15f40c5b-5cda-4627-a6d1-c243a8095411.png" 
+alt="compreface-recognition-page" width=390px style="padding: 0px 10px 0px 0px;">
+<img src="https://user-images.githubusercontent.com/3736126/130650028-c82dc1c7-0c8d-43a5-9e50-5c52125cbf1a.png" 
+alt="compreface-main-page" width="390px" style="padding: 0px 0px 0px 10px;">
 </p>
 
 # News and updates
@@ -83,7 +96,8 @@ CompreFace is delivered as a docker-compose config and supports different models
 
 The system can accurately identify people even when it has only “seen” their photo once. Technology-wise, CompreFace has several advantages over similar free face recognition solutions. CompreFace:
 
-- Supports many face recognition services: face identification, face verification, face detection, landmark detection, and age and 
+- Supports many face recognition services: face identification, face verification, face detection, face mask detection, landmark detection, 
+  and age and 
 gender recognition
 - Supports both CPU and GPU and is easy to scale up
 - Is open source and self-hosted, which gives you additional guarantees for data security
