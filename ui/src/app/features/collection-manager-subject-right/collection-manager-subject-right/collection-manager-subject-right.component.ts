@@ -31,5 +31,11 @@ export class CollectionManagerSubjectRightComponent {
   @Output() editSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();
 
+  file: any;
+
   constructor() {}
+
+  uploadFile(event: any): void {
+	this.file = event;
+  }
 }

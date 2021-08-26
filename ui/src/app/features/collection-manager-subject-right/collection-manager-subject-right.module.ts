@@ -22,11 +22,13 @@ import { SpinnerModule } from '../spinner/spinner.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
+import {DragNDropModule} from '../drag-n-drop/drag-n-drop.module';
+import {ImageHolderComponent} from '../image-holder/image-holder.component';
 
 @NgModule({
-  declarations: [CollectionManagerSubjectRightContainerComponent, CollectionManagerSubjectRightComponent],
+  declarations: [CollectionManagerSubjectRightContainerComponent, CollectionManagerSubjectRightComponent, ImageHolderComponent],
   exports: [CollectionManagerSubjectRightContainerComponent],
-  imports: [CommonModule, SpinnerModule, MatIconModule, MatButtonModule, TranslateModule],
+  imports: [CommonModule, SpinnerModule, MatIconModule, MatButtonModule, TranslateModule, DragNDropModule],
   providers: [CollectionRightFacade],
 })
 export class CollectionManagerSubjectRightModule {}
