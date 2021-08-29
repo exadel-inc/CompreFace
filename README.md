@@ -144,6 +144,7 @@ Follow this [link](/dev)
 | SDK        | Repository   | 
 | ---------- | ------ | 
 | JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk   |
+| Python     | https://github.com/exadel-inc/compreface-python-sdk       |
 
 # Documentation
 
