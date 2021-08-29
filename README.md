@@ -58,6 +58,7 @@ docker
     * [Face data migration](/docs/Face-data-migration.md)
     * [User Roles System](/docs/User-Roles-System.md)
     * [Face Mask Detection Plugin](/docs/Mask-detection-plugin.md)
+    * [Kubernetes configuration](https://github.com/exadel-inc/compreface-kubernetes)
     * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
   * [Contributing](#contributing)
   * [License info](#license-info)
