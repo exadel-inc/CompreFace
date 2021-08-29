@@ -35,16 +35,16 @@ public class StatisticsJob extends QuartzJobBean {
     private ModelRepository modelRepository;
     private UserRepository userRepository;
 
-    private List<Range> ranges = List.of(
-            Range.between(1, 10),
-            Range.between(11, 50),
-            Range.between(51, 200),
-            Range.between(201, 500),
-            Range.between(501, 2000),
-            between(2001, 10000),
-            between(10001, 50000),
-            between(50001, 200000),
-            between(200001, 1000000)
+    private final List<Range<Long>> ranges = List.of(
+            Range.between(1L, 10L),
+            Range.between(11L, 50L),
+            Range.between(51L, 200L),
+            Range.between(201L, 500L),
+            Range.between(501L, 2000L),
+            between(2001L, 10000L),
+            between(10001L, 50000L),
+            between(50001L, 200000L),
+            between(200001L, 1000000L)
     );
 
     @Autowired
@@ -92,7 +92,7 @@ public class StatisticsJob extends QuartzJobBean {
             return "0";
         }
 
-        for (Range range : ranges) {
+        for (Range<Long> range : ranges) {
             if (range.contains(subjectCount)) {
                 return range.getMinimum() + "-" + range.getMaximum();
             }
