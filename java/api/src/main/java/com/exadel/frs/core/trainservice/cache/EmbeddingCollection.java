@@ -138,7 +138,7 @@ public class EmbeddingCollection {
         return findByEmbeddingId(
                 embeddingId,
                 // return duplicated row
-                entry -> embeddings.getRow(entry.getValue()).dup()
+                entry -> embeddings.getRow(entry.getValue(), true).dup()
         );
     }
 

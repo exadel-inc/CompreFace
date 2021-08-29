@@ -7,15 +7,15 @@ CUDA_IMAGE = $(IMAGE)-base:base-cuda100-py37
 
 MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1 \
                           --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface_mobilefacenet \
-                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
+                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector
 
 ARCFACE_r100_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1 \
                           --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface-r100-msfdrop75 \
-                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
+                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector
 
 FACENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=facenet.FaceDetector \
                           --build-arg CALCULATION_PLUGIN=facenet.Calculator \
-                          --build-arg EXTRA_PLUGINS=facenet.LandmarksDetector,agegender.GenderDetector,agegender.AgeDetector
+                          --build-arg EXTRA_PLUGINS=facenet.LandmarksDetector,agegender.GenderDetector,agegender.AgeDetector,facenet.facemask.MaskDetector
 
 define get_from_remote_tgz
 	mkdir -p $(2)

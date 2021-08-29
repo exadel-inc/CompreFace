@@ -32,7 +32,7 @@ applicable. To add more information in response you can add face plugins in your
 comma-separated needed plugins in the query `face_plugins` parameter. This parameter is supported by all face recognition services.
 Example:
 ```shell
-curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?face_plugins=age,gender,landmarks" \
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?face_plugins=age,gender,landmarks,mask" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <faces_recognition_api_key>" \
 -F file=<local_file>
@@ -44,5 +44,6 @@ The list of possible plugins:
 * gender - returns the supposed person’s gender
 * landmarks - returns face landmarks. This plugin is supported by all configurations and returns 5 points of eyes, nose, and mouth
 * calculator - returns face embeddings.  
+* mask - returns if the person wears a mask. Possible results: `without_mask`, `mask_worn_incorrectly`, `mask_worn_correctly`. Learn more about [mask plugin](Mask-detection-plugin.md)
 * landmarks2d106 - returns face landmarks. This plugin is supported only by the configuration that uses insightface library. It’s not 
   available by default. More information about landmarks [here](https://github.com/deepinsight/insightface/tree/master/alignment/coordinateReg#visualization).

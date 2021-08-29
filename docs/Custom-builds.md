@@ -57,21 +57,21 @@ libraries. All you need to do is
 2. Take the `docker-compose` file from `/dev` folder as a template
 3. Specify new model name in build arguments. For more information look at [this documentation](https://github.
    com/exadel-inc/CompreFace/tree/master/embedding-calculator#run-service). E.g. here is a part of `docker-compose` file for building with custom model with GPU support:
-```
+```dockerfile
 compreface-core:
-    image: ${registry}compreface-core:${CORE_VERSION}
-    container_name: "compreface-core"
-    ports:
-      - "3300:3000"
-    runtime: nvidia
-    build:
-      context: ../embedding-calculator
-      args:
-        - FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1
-        - CALCULATION_PLUGIN=insightface.Calculator@arcface_r100_v1
-        - EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector
-        - BASE_IMAGE=${registry}compreface-core-base:base-cuda100-py37
-        - GPU_IDX=0
-    environment:
-      - ML_PORT=3000
+  image: ${registry}compreface-core:${CORE_VERSION}
+  container_name: "compreface-core"
+  ports:
+    - "3300:3000"
+  runtime: nvidia
+  build:
+    context: ../embedding-calculator
+    args:
+      - FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1
+      - CALCULATION_PLUGIN=insightface.Calculator@arcface_r100_v1
+      - EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector
+      - BASE_IMAGE=compreface-core-base:base-cuda100-py37
+      - GPU_IDX=0
+  environment:
+    - ML_PORT=3000
 ```
