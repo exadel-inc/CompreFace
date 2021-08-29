@@ -2,27 +2,44 @@
 
 ## Table Of Contents
 
-+ [Face Recognition Service Endpoints](#face-recognition-service-endpoints)
-    + [Add a Subject](#add-a-subject)
-    + [Rename a Subject](#rename-a-subject)
-    + [Delete a Subject](#delete-a-subject)
-    + [Delete All Subjects](#delete-all-subjects)
-    + [List Subjects](#list-subjects)
++ [Face Recognition Service](#face-recognition-service)
+  + [Managing Subjects](#managing-subjects)
+      + [Add a Subject](#add-a-subject)
+      + [Rename a Subject](#rename-a-subject)
+      + [Delete a Subject](#delete-a-subject)
+      + [Delete All Subjects](#delete-all-subjects)
+      + [List Subjects](#list-subjects)
+  + [Managing Subject Examples](#managing-subject-examples)
     + [Add an Example of a Subject](#add-an-example-of-a-subject)
-    + [Recognize Faces from a Given Image](#recognize-faces-from-a-given-image)
     + [List of All Saved Examples of the Subject](#list-of-all-saved-examples-of-the-subject)
     + [Delete All Examples of the Subject by Name](#delete-all-examples-of-the-subject-by-name)
     + [Delete an Example of the Subject by ID](#delete-an-example-of-the-subject-by-id)
     + [Direct Download an Image example of the Subject by ID](#direct-download-an-image-example-of-the-subject-by-id)
     + [Download an Image example of the Subject by ID](#download-an-image-example-of-the-subject-by-id)
-    + [Verify Faces from a Given Image](#verify-faces-from-a-given-image)
+  + [Recognize Faces from a Given Image](#recognize-faces-from-a-given-image)
+  + [Verify Faces from a Given Image](#verify-faces-from-a-given-image)
 + [Face Detection Service](#face-detection-service)
 + [Face Verification Service](#face-verification-service)
 + [Base64 Support](#base64-support)
 
 To know more about face services and face plugins visit [this page](Face-services-and-plugins.md).
 
-## Face Recognition Service Endpoints
+## Face Recognition Service
+
+### Managing Subjects
+
+These endpoints allow you to work with subjects.
+
+The most popular case of subject usage is to assign a subject to one person. 
+So, to upload several images of one person, you need to upload them to one subject. 
+As a result, when you perform face recognition, you find a person who is on the image.
+
+Another case of subject usage is assigning a photo of several people as a subject. 
+In this case, you need to detect all faces on the image and then save them to one subject. 
+As a result, when you perform face recognition, you find all photos on which there is the person who is on the image.
+You don’t need to work with subjects explicitly. 
+You can just upload a new example of the subject and the subject will be created automatically. 
+Or if you delete all the examples of the subject, it will be deleted automatically.
 
 ### Add a Subject
 ```since 0.6 version```
@@ -164,6 +181,15 @@ Response body on success:
 | -------- | ------ | -------------------------- |
 | subjects | array  | the list of subjects in Face Collection |
 
+### Managing Subject Examples
+
+The subject example is basically an image of a known face that you want to save to face collection. 
+
+When you save a subject example, CompreFace calculates the embedding of the face (faceprint) and saves it into the database. 
+By default, the image itself is also saved, it is needed for managing images, e.g. [download of the image](#direct-download-an-image-example-of-the-subject-by-id). You can change it using `save_images_to_db` parameter in [configuration](Configuration.md). 
+
+One subject example is enough for face recognition, the accuracy will be high enough. But if you add more examples, the accuracy may be even better. 
+
 ### Add an Example of a Subject
 
 This creates an example of the subject by saving images. You can add as many images as you want to train the system. Image should 
@@ -195,90 +221,6 @@ Response body on success:
 | -------- | ------ | -------------------------- |
 | image_id | UUID   | UUID of uploaded image     |
 | subject  | string | Subject of the saved image |
-
-### Recognize Faces from a Given Image
-
-To recognize faces from the uploaded image:  
-
-```http request
-curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
--H "Content-Type: multipart/form-data" \
--H "x-api-key: <service_api_key>" \
--F file=<local_file>
-```
-
-| Element            | Description | Type    | Required | Notes                                                        |
-| ------------------ | ----------- | ------- | -------- | ------------------------------------------------------------ |
-| Content-Type       | header      | string  | required | multipart/form-data                                          |
-| x-api-key          | header      | string  | required | api key of the Face recognition service, created by the user                    |
-| file               | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
-| limit              | param       | integer | optional | maximum number of faces on the image to be recognized. It recognizes the biggest faces first. Value of 0 represents no limit. Default value: 0 |
-| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
-| prediction_count   | param       | integer | optional | maximum number of subject predictions per face. It returns the most similar subjects. Default value: 1    |
-| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
-
-Response body on success:
-```json
-{
-  "result" : [ {
-    "age" : {
-      "probability": 0.9308982491493225,
-      "high": 32,
-      "low": 25
-    },
-    "gender" : {
-      "probability": 0.9898611307144165,
-      "value": "female"
-    },
-    "mask" : {
-      "probability": 0.9999470710754395,
-      "value": "without_mask"
-    },
-    "embedding" : [ 9.424854069948196E-4, "...", -0.011415496468544006 ],
-    "box" : {
-      "probability" : 1.0,
-      "x_max" : 1420,
-      "y_max" : 1368,
-      "x_min" : 548,
-      "y_min" : 295
-    },
-    "landmarks" : [ [ 814, 713 ], [ 1104, 829 ], [ 832, 937 ], [ 704, 1030 ], [ 1017, 1133 ] ],
-    "subjects" : [ {
-      "similarity" : 0.97858,
-      "subject" : "subject1"
-    } ],
-    "execution_time" : {
-      "age" : 28.0,
-      "gender" : 26.0,
-      "detector" : 117.0,
-      "calculator" : 45.0
-    }
-  } ],
-  "plugins_versions" : {
-    "age" : "agegender.AgeDetector",
-    "gender" : "agegender.GenderDetector",
-    "detector" : "facenet.FaceDetector",
-    "calculator" : "facenet.Calculator"
-  }
-}
-```
-
-| Element                        | Type    | Description                                                  |
-| ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled.          |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| box                            | object  | list of parameters of the bounding box for this face         |
-| probability                    | float   | probability that a found face is actually a face             |
-| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| subjects                       | list    | list of similar subjects with size of <prediction_count> order by similarity |
-| similarity                     | float   | similarity that on that image predicted person               |
-| subject                        | string  | name of the subject in Face Collection                       |
-| execution_time                 | object  | execution time of all plugins                       |
-| plugins_versions               | object  | contains information about plugin versions                       |
 
 
 ### List of All Saved Examples of the Subject
@@ -413,6 +355,94 @@ curl -X GET "http://localhost:8000/api/v1/recognition/faces/<image_id>/img"
 
 Response body is binary image. Empty bytes if image not found.
 
+
+### Recognize Faces from a Given Image
+
+To recognize faces from the uploaded image:
+
+```http request
+curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+-H "Content-Type: multipart/form-data" \
+-H "x-api-key: <service_api_key>" \
+-F file=<local_file>
+```
+
+| Element            | Description | Type    | Required | Notes                                                        |
+| ------------------ | ----------- | ------- | -------- | ------------------------------------------------------------ |
+| Content-Type       | header      | string  | required | multipart/form-data                                          |
+| x-api-key          | header      | string  | required | api key of the Face recognition service, created by the user                    |
+| file               | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| limit              | param       | integer | optional | maximum number of faces on the image to be recognized. It recognizes the biggest faces first. Value of 0 represents no limit. Default value: 0 |
+| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+| prediction_count   | param       | integer | optional | maximum number of subject predictions per face. It returns the most similar subjects. Default value: 1    |
+| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
+
+Response body on success:
+```json
+{
+  "result" : [ {
+    "age" : {
+      "probability": 0.9308982491493225,
+      "high": 32,
+      "low": 25
+    },
+    "gender" : {
+      "probability": 0.9898611307144165,
+      "value": "female"
+    },
+    "mask" : {
+      "probability": 0.9999470710754395,
+      "value": "without_mask"
+    },
+    "embedding" : [ 9.424854069948196E-4, "...", -0.011415496468544006 ],
+    "box" : {
+      "probability" : 1.0,
+      "x_max" : 1420,
+      "y_max" : 1368,
+      "x_min" : 548,
+      "y_min" : 295
+    },
+    "landmarks" : [ [ 814, 713 ], [ 1104, 829 ], [ 832, 937 ], [ 704, 1030 ], [ 1017, 1133 ] ],
+    "subjects" : [ {
+      "similarity" : 0.97858,
+      "subject" : "subject1"
+    } ],
+    "execution_time" : {
+      "age" : 28.0,
+      "gender" : 26.0,
+      "detector" : 117.0,
+      "calculator" : 45.0,
+      "mask": 36.0
+    }
+  } ],
+  "plugins_versions" : {
+    "age" : "agegender.AgeDetector",
+    "gender" : "agegender.GenderDetector",
+    "detector" : "facenet.FaceDetector",
+    "calculator" : "facenet.Calculator",
+    "mask": "facemask.MaskDetector"
+  }
+}
+```
+
+| Element                        | Type    | Description                                                  |
+| ------------------------------ | ------- | ------------------------------------------------------------ |
+| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
+| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled.          |
+| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
+| box                            | object  | list of parameters of the bounding box for this face         |
+| probability                    | float   | probability that a found face is actually a face             |
+| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
+| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
+| subjects                       | list    | list of similar subjects with size of <prediction_count> order by similarity |
+| similarity                     | float   | similarity that on that image predicted person               |
+| subject                        | string  | name of the subject in Face Collection                       |
+| execution_time                 | object  | execution time of all plugins                       |
+| plugins_versions               | object  | contains information about plugin versions                       |
+
+
 ### Verify Faces from a Given Image
 
 To compare faces from the uploaded images with the face in saved image ID:
@@ -468,7 +498,8 @@ Response body on success:
         "age" : 59.0,
         "gender" : 30.0,
         "detector" : 177.0,
-        "calculator" : 70.0
+        "calculator" : 70.0,
+        "mask": 36.0
       }
     }
   ],
@@ -476,7 +507,8 @@ Response body on success:
     "age" : "agegender.AgeDetector",
     "gender" : "agegender.GenderDetector",
     "detector" : "facenet.FaceDetector",
-    "calculator" : "facenet.Calculator"
+    "calculator" : "facenet.Calculator",
+    "mask": "facemask.MaskDetector"
   }
 }
 ```
@@ -547,14 +579,16 @@ Response body on success:
       "age" : 30.0,
       "gender" : 26.0,
       "detector" : 130.0,
-      "calculator" : 49.0
+      "calculator" : 49.0,
+      "mask": 36.0
     }
   } ],
   "plugins_versions" : {
     "age" : "agegender.AgeDetector",
     "gender" : "agegender.GenderDetector",
     "detector" : "facenet.FaceDetector",
-    "calculator" : "facenet.Calculator"
+    "calculator" : "facenet.Calculator",
+    "mask": "facemask.MaskDetector"
   }
 }
 ```
@@ -627,7 +661,8 @@ Response body on success:
         "age" : 85.0,
         "gender" : 51.0,
         "detector" : 67.0,
-        "calculator" : 116.0
+        "calculator" : 116.0,
+        "mask": 36.0
       }
     },
     "face_matches": [
@@ -659,14 +694,16 @@ Response body on success:
           "age" : 59.0,
           "gender" : 30.0,
           "detector" : 177.0,
-          "calculator" : 70.0
+          "calculator" : 70.0,
+          "mask": 36.0
         }
       }],
     "plugins_versions" : {
       "age" : "agegender.AgeDetector",
       "gender" : "agegender.GenderDetector",
       "detector" : "facenet.FaceDetector",
-      "calculator" : "facenet.Calculator"
+      "calculator" : "facenet.Calculator",
+      "mask": "facemask.MaskDetector"
     }
   }]
 }
