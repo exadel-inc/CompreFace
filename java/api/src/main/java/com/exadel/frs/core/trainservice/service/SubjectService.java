@@ -79,11 +79,11 @@ public class SubjectService {
         return removed;
     }
 
-    public void deleteSubjectByName(final String apiKey, final String subjectName) {
+    public Pair<Integer, Subject> deleteSubjectByName(final String apiKey, final String subjectName) {
         if (StringUtils.isBlank(subjectName)) {
-            deleteSubjectsByApiKey(apiKey);
+            return Pair.of(deleteSubjectsByApiKey(apiKey), null);
         } else {
-            deleteSubjectByNameAndApiKey(apiKey, subjectName);
+            return Pair.of(null, deleteSubjectByNameAndApiKey(apiKey, subjectName));
         }
     }
 
