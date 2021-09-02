@@ -13,28 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Component({
-  selector: 'app-collection-manager-subject-right',
-  templateUrl: './collection-manager-subject-right.component.html',
-  styleUrls: ['./collection-manager-subject-right.component.scss'],
+  selector: 'image-holder-collection',
+  templateUrl: './image-holder-collection.component.html',
+  styleUrls: ['./image-holder-collection.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CollectionManagerSubjectRightComponent {
-  @Input() isPending: boolean;
-  @Input() isCollectionPending: boolean;
-  @Input() subject: string;
-  @Input() subjects: string[];
-  @Input() set apiKey(value: string) {
-    if(!!value) this.initApiKey.emit(value)
-  };
-  @Input() collectionItems: CollectionItem[];
+export class ImageHolderCollectionComponent {
+  @Input() items: CollectionItem[] = [];
 
-  @Output() deleteSubject = new EventEmitter<string>();
-  @Output() editSubject = new EventEmitter<string>();
-  @Output() initApiKey = new EventEmitter<string>();
-  @Output() readFiles = new EventEmitter<File[]>();
   @Output() deleteItem = new EventEmitter<CollectionItem>();
   @Output() cancelUploadItem = new EventEmitter<CollectionItem>();
 }

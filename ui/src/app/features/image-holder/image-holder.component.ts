@@ -13,8 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectorRef, EventEmitter, SimpleChanges } from '@angular/core';
+import { EventEmitter, SimpleChanges } from '@angular/core';
 import { Component, Input, Output, ChangeDetectionStrategy, OnChanges } from '@angular/core';
+import {CircleLoadingProgressEnum} from 'src/app/data/enums/circle-loading-progress.enum';
+import {CollectionItem} from 'src/app/data/interfaces/collection';
 
 @Component({
 	selector: 'image-holder',
@@ -23,29 +25,16 @@ import { Component, Input, Output, ChangeDetectionStrategy, OnChanges } from '@a
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageHolderComponent implements OnChanges {
-	dataUrl: string;
+	@Input() item: CollectionItem;
+
 	isDeleteVisible: boolean;
-	isLoading: boolean;
 
-	@Input() file: File;
-	@Output() onDelete = new EventEmitter();
-
-	constructor(private cd: ChangeDetectorRef) {}
+	@Output() onDelete = new EventEmitter<CollectionItem>();
+	@Output() onCancel = new EventEmitter<CollectionItem>();
 
 	ngOnChanges(changes: SimpleChanges): void {
-		if (changes?.file.currentValue) {
-			this.readFile(this.file);
+		if (changes.item?.currentValue) {
+			this.isDeleteVisible = this.item.status === CircleLoadingProgressEnum.Uploaded || this.item.status === CircleLoadingProgressEnum.Failed;
 		}
-	}
-
-	readFile(file: File): void {
-		const reader = new FileReader();
-
-		reader.onload = (eve: any) => {
-			this.dataUrl = eve.target.result;
-			this.cd.detectChanges();
-		};
-
-		reader.readAsDataURL(file);
 	}
 }

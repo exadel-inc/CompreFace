@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,22 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {CircleLoadingProgressEnum} from "../enums/circle-loading-progress.enum";
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ImageHolderModule } from '../image-holder/image-holder.module';
+import {ImageHolderCollectionComponent} from './image-holder-collection.component';
 
-export interface Collection {
-  subjects: string[];
-}
-
-export interface CollectionItem {
-	url: string;
-	id?: string;
-	subject: string;
-	status: CircleLoadingProgressEnum;
-	file?: File;
-	error?: string;
-}
-
-export interface SubjectExampleResponseItem {
-	subject: string;
-	image_id: string;
-}
+@NgModule({
+  declarations: [ImageHolderCollectionComponent],
+  exports: [ImageHolderCollectionComponent],
+  imports: [
+    CommonModule,
+	ImageHolderModule
+  ]
+})
+export class ImageHolderCollectionModule { }

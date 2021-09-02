@@ -32,7 +32,7 @@ export class DragNDropComponent implements AfterViewInit {
   set view(val: boolean) {
     this.viewColumn = true;
   }
-  @Output() upload: EventEmitter<File> = new EventEmitter();
+  @Output() upload: EventEmitter<File[]> = new EventEmitter();
 
   viewColumn = false;
 
@@ -65,9 +65,9 @@ export class DragNDropComponent implements AfterViewInit {
    * @param files (Files List)
    * TODO Send file to api
    */
-  uploadFile(files: Array<any>) {
+  uploadFile(files: FileList) {
     if (files.length > 0) {
-      this.upload.emit(files[0]);
+      this.upload.emit(Array.from(files));
     }
   }
 }

@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,44 +13,10 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-.image-holder {
-	position: relative;
-	min-width: 5rem;
-    max-width: 13rem;
 
-	.delete-icon {
-		position: absolute;
-    	top: -0.7rem;
-    	z-index: 1;
-    	width: 100%;
-    	display: flex;
-    	flex-direction: row-reverse;
-    	padding-left: 0.4rem;
-
-		button {
-			height: 30px;
-			width: 30px;
-
-			.mat-button-wrapper {
-				padding: 8px 0;
-			}
-
-			::ng-deep .mat-button-wrapper {
-				padding: 0;
-
-				mat-icon {
-					font-size: 17px;
-				}
-			}
-		}
-	}
-
-	img {
-		display: block;
-		width: 100%;
-
-		&.blurred {
-			filter: blur(5px) brightness(50%);
-		}
-	}
-}
+export enum CircleLoadingProgressEnum {
+	Uploaded = 'uploaded',
+	Failed = 'failed',
+	InProgress = 'inprogress',
+	OnHold = 'onhold'
+};

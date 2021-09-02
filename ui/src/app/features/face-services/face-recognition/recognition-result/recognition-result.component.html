@@ -19,7 +19,7 @@
       *ngIf="!resizePhoto"
       [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
       [label]="'dnd.label' | translate"
-      (upload)="selectFile.emit($event)"
+      (upload)="selectFile.emit($event[0])"
     >
     </app-drag-n-drop>
   </div>
