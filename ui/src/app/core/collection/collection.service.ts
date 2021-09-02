@@ -18,14 +18,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
-import {CollectionItem, SubjectExampleResponseItem} from 'src/app/data/interfaces/collection';
-import {map} from 'rxjs/operators';
+import { CollectionItem, SubjectExampleResponseItem } from 'src/app/data/interfaces/collection';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
 })
 export class CollectionService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   getSubjectsList(apiKey: string): Observable<{ subjects: string[] }> {
     return this.http.get<{ subjects: string[] }>(`${environment.userApiUrl}recognition/subjects`, { headers: { 'x-api-key': apiKey } });
@@ -56,26 +56,26 @@ export class CollectionService {
   }
 
   getSubjectExampleList(apiKey: string): Observable<SubjectExampleResponseItem[]> {
-	return this.http.get(`${environment.userApiUrl}recognition/faces?size=1000`, {
-		headers: { 'x-api-key': apiKey },
-	  }).pipe(
-		  map((resp: {faces: SubjectExampleResponseItem[]}) => resp.faces.map(face => face))
-	  );
+    return this.http.get(`${environment.userApiUrl}recognition/faces?size=1000`, {
+      headers: { 'x-api-key': apiKey },
+    }).pipe(
+      map((resp: { faces: SubjectExampleResponseItem[] }) => resp.faces.map(face => face))
+    );
   }
 
   uploadSubjectExamples(item: CollectionItem, subject: string, apiKey: string): Observable<SubjectExampleResponseItem> {
-	const {file} = item;
-	const formData = new FormData();
+    const { file } = item;
+    const formData = new FormData();
     formData.append('file', file, file.name);
 
-	return this.http.post<SubjectExampleResponseItem>(`${environment.userApiUrl}recognition/faces?subject=${subject}`, formData, {
-		headers: { 'x-api-key': apiKey }
-	  });
+    return this.http.post<SubjectExampleResponseItem>(`${environment.userApiUrl}recognition/faces?subject=${subject}`, formData, {
+      headers: { 'x-api-key': apiKey }
+    });
   }
 
   deleteSubjectExample(item: CollectionItem, apiKey: string): Observable<SubjectExampleResponseItem> {
-	  return this.http.delete<SubjectExampleResponseItem>(`${environment.userApiUrl}recognition/faces/${item.id}`, {
-		headers: { 'x-api-key': apiKey }
-	  });
+    return this.http.delete<SubjectExampleResponseItem>(`${environment.userApiUrl}recognition/faces/${item.id}`, {
+      headers: { 'x-api-key': apiKey }
+    });
   }
 }
