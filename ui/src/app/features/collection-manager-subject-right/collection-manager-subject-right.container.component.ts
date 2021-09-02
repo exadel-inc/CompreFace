@@ -13,16 +13,18 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { combineLatest, Observable, Subscription } from 'rxjs';
 
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CollectionRightFacade } from './collection-manager-right-facade';
-import { filter, first, tap } from 'rxjs/operators';
+import { filter, first, map, tap } from 'rxjs/operators';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { MergerDialogComponent } from '../merger-dialog/merger-dialog.component';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
 @Component({
   selector: 'app-application-right-container',
@@ -30,18 +32,26 @@ import { MergerDialogComponent } from '../merger-dialog/merger-dialog.component'
     [subject]="subject$ | async"
     [subjects]="subjects$ | async"
     [apiKey]="apiKey$ | async"
+	[collectionItems]="collectionItems$ | async"
     [isPending]="isPending$ | async"
+    [isCollectionPending]="isCollectionPending$ | async"
     (editSubject)="edit($event)"
     (deleteSubject)="delete($event)"
     (initApiKey)="initApiKey($event)"
+	(readFiles)="readFiles($event)"
+	(deleteItem)="deleteItem($event)"
+	(cancelUploadItem)="cancelUploadItem($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionManagerSubjectRightContainerComponent implements OnInit {
+export class CollectionManagerSubjectRightContainerComponent implements OnInit, OnDestroy {
   subjects$: Observable<string[]>;
   subject$: Observable<string>;
   isPending$: Observable<boolean>;
+  isCollectionPending$: Observable<boolean>;
   apiKey$: Observable<string>;
+  collectionItems$: Observable<CollectionItem[]>;
+  apiKeyInitSubscription: Subscription;
 
   private subjectList: string[];
   private apiKey: string;
@@ -53,7 +63,12 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit {
     this.subjects$ = this.collectionRightFacade.subjects$.pipe(tap(subjects => (this.subjectList = subjects)));
     this.subject$ = this.collectionRightFacade.subject$;
     this.apiKey$ = this.collectionRightFacade.apiKey$;
+	this.collectionItems$ = combineLatest([this.subject$, this.collectionRightFacade.collectionItems$]).pipe(
+		map(([subject, collection]) => collection.filter(item => item.subject === subject))
+	);
     this.isPending$ = this.collectionRightFacade.isPending$;
+    this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
+	this.apiKeyInitSubscription = this.collectionRightFacade.apiKey$.subscribe(() => this.collectionRightFacade.loadExamplesList());
   }
 
   initApiKey(apiKey: string): void {
@@ -113,5 +128,28 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit {
         filter(result => result)
       )
       .subscribe(() => this.collectionRightFacade.edit(editName, name, this.apiKey));
+  }
+
+  readFiles(fileList: File[]): void {
+	  this.collectionRightFacade.addImageFilesToCollection(fileList);
+  }
+
+  deleteItem(item: CollectionItem): void {
+	  if (item.status === CircleLoadingProgressEnum.Uploaded) {
+		this.collectionRightFacade.deleteSubjectExample(item);
+
+		return;
+	  }
+
+	  this.collectionRightFacade.deleteItemFromUploadOrder(item);
+  }
+
+  cancelUploadItem(item: CollectionItem): void {
+	  this.collectionRightFacade.deleteItemFromUploadOrder(item);
+  }
+
+  ngOnDestroy(): void {
+	  this.apiKeyInitSubscription.unsubscribe();
+	  this.collectionRightFacade.resetSubjectExamples();
   }
 }

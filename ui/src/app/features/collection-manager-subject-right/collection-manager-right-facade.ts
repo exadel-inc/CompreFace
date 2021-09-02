@@ -18,21 +18,26 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { selectCurrentApiKey } from '../../store/model/selectors';
-import { selectAddSubjectPending, selectCollectionSubject, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
-import { deleteSubject, editSubject } from '../../store/manage-collectiom/action';
+import { selectAddSubjectPending, selectCollectionSubject, selectCollectionSubjects, selectImageCollection, selectImageCollectionPending } from '../../store/manage-collectiom/selectors';
+import { deleteItemFromUploadOrder, deleteSubject, deleteSubjectExample, editSubject, getSubjectExamples, readImageFiles, resetSubjectExamples, uploadImage } from '../../store/manage-collectiom/action';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Injectable()
 export class CollectionRightFacade {
   subjects$: Observable<string[]>;
   subject$: Observable<string>;
   apiKey$: Observable<string>;
+  collectionItems$: Observable<CollectionItem[]>;
   isPending$: Observable<boolean>;
+  isCollectionPending$: Observable<boolean>;
 
   constructor(private store: Store<any>) {
     this.subjects$ = this.store.select(selectCollectionSubjects);
     this.subject$ = this.store.select(selectCollectionSubject);
     this.apiKey$ = this.store.select(selectCurrentApiKey);
+	this.collectionItems$ = this.store.select(selectImageCollection);
     this.isPending$ = this.store.select(selectAddSubjectPending);
+	this.isCollectionPending$ = this.store.select(selectImageCollectionPending);
   }
 
 
@@ -42,5 +47,29 @@ export class CollectionRightFacade {
 
   delete(name: string, apiKey: string): void {
     this.store.dispatch(deleteSubject({ name, apiKey }));
+  }
+
+  loadExamplesList(): void {
+	  this.store.dispatch(getSubjectExamples())
+  }
+
+  addImageFilesToCollection(fileDescriptors: File[]): void {
+	this.store.dispatch(readImageFiles({fileDescriptors}));
+  }
+
+  uploadImage(item: CollectionItem): void {
+	this.store.dispatch(uploadImage({item}));
+  }
+
+  deleteSubjectExample(item: CollectionItem): void {
+	  this.store.dispatch(deleteSubjectExample({item}));
+  }
+
+  deleteItemFromUploadOrder(item: CollectionItem): void {
+	  this.store.dispatch(deleteItemFromUploadOrder({item}));
+  }
+
+  resetSubjectExamples(): void {
+	  this.store.dispatch(resetSubjectExamples());
   }
 }

@@ -20,3 +20,5 @@ export const selectCollectionEntityState = createFeatureSelector<CollectionEntit
 export const selectCollectionSubjects = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.subjects);
 export const selectCollectionSubject = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.subject);
 export const selectAddSubjectPending = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.isPending);
+export const selectImageCollection = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.collection);
+export const selectImageCollectionPending = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.isPending);
