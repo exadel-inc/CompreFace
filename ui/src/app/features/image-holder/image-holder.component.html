@@ -1,0 +1,7 @@
+<div class="image-holder">
+	<ng-container *ngIf="dataUrl">
+		<div class="delete-icon"><button mat-fab color="warn" (click)="onDelete.emit()"><mat-icon>delete</mat-icon></button></div>
+		<img class="blurred" [src]="dataUrl" />
+		<div *ngIf="isLoading">loading...</div>
+	</ng-container>
+</div>

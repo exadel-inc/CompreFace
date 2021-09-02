@@ -1,0 +1,17 @@
+.image-holder {
+	position: relative;
+	width: fit-content;
+
+	.delete-icon {
+		position: absolute;
+		top: 0;
+		z-index: 1;
+		width: 100%;
+		display: flex;
+		flex-direction: row-reverse;
+	}
+
+	img.blurred {
+		filter: blur(5px) brightness(50%);
+	}
+}

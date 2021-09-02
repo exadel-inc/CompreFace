@@ -13,6 +13,7 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
+<ng-container>
 <div class="profile">
   <div class="profile--spinner">
     <app-spinner *ngIf="isPending"></app-spinner>
@@ -34,3 +35,10 @@
     </div>
   </ng-container>
 </div>
+<div class="drag-and-drop-container">
+	<app-drag-n-drop label="woob woob" (upload)="uploadFile($event)"></app-drag-n-drop>
+</div>
+<div>
+	<image-holder [file]="file"></image-holder>
+</div>
+</ng-container>
