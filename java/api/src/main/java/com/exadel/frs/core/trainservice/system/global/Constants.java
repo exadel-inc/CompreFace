@@ -58,4 +58,5 @@ public class Constants {
     public static final String DEMO_API_KEY = "00000000-0000-0000-0000-000000000002";
     public static final String FACENET2018 = "Facenet2018";
     public static final String SERVER_UUID = UUID.randomUUID().toString();
+    public static final String CACHE_CONTROL_HEADER_VALUE = "public, max-age=31536000";
 }
