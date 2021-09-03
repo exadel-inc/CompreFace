@@ -76,6 +76,7 @@
     "nodemod": "^2.2.3",
     "prettier": "^2.1.1",
     "prettier-eslint": "^12.0.0",
+    "pretty-quick": "^3.1.1",
     "protractor": "~7.0.0",
     "ts-node": "~7.0.0",
     "typescript": "~4.0.3"
