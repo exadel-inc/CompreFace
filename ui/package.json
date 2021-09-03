@@ -12,7 +12,8 @@
     "lint:fix": "ng lint --fix",
     "e2e": "ng e2e",
     "postinstall": "ngcc",
-    "pretty": "prettier --write \"./src/**/*.{js,ts,json,html}\""
+    "pretty": "prettier --write \"./src/**/*.{js,ts,json,html}\"",
+    "prepare": "cd .. && husky install ui/.husky"
   },
   "private": true,
   "dependencies": {
@@ -64,6 +65,7 @@
     "eslint-plugin-prefer-arrow": "1.2.2",
     "express": "^4.16.4",
     "formidable": "^1.2.1",
+    "husky": "^7.0.2",
     "jasmine-core": "~3.6.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "~5.1.1",
