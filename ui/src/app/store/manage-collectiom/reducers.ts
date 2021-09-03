@@ -48,6 +48,27 @@ import {
   resetSubjectExamples
 } from './action';
 
+function updateCollectionItemStatus(state: CollectionEntityState, item: CollectionItem, status: CircleLoadingProgressEnum, error?: string): CollectionEntityState {
+  const collectionCopy = [...state.collection];
+	const targetItemIndex = collectionCopy.findIndex((collectionCopyItem) => item.url === collectionCopyItem.url);
+
+	if (~targetItemIndex) {
+		collectionCopy[targetItemIndex] = {
+			...collectionCopy[targetItemIndex],
+			status
+		};
+
+    if (error) {
+      collectionCopy[targetItemIndex].error = error;
+    }
+	}
+
+	return ({
+		...state,
+		collection: collectionCopy
+	});
+}
+
 export interface CollectionEntityState {
   isPending: boolean;
   isCollectionPending: boolean;
@@ -103,103 +124,9 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
 		]
 	})
   ),
-  on(uploadImage, (state, {item}) => {
-	const collectionCopy = [...state.collection];
-	const targetItemIndex = collectionCopy.findIndex((collectionCopyItem) => item.url === collectionCopyItem.url);
-
-	if (~targetItemIndex) {
-		collectionCopy[targetItemIndex] = {
-			...collectionCopy[targetItemIndex],
-			status: CircleLoadingProgressEnum.InProgress
-		}
-	}
-
-	return ({
-	  ...state,
-	  collection: collectionCopy
-	});
-  }),
-  on(uploadImageSuccess, (state, {item}) => {
-	const collectionCopy = [...state.collection];
-	const targetItemIndex = collectionCopy.findIndex((collectionCopyItem) => item.url === collectionCopyItem.url);
-
-	if (~targetItemIndex) {
-		collectionCopy[targetItemIndex] = {
-			...collectionCopy[targetItemIndex],
-			status: CircleLoadingProgressEnum.Uploaded
-		}
-	}
-
-	return ({
-		...state,
-		collection: collectionCopy
-	});
-  }),
-  on(uploadImageFail, (state, {item, error}) => {
-	const collectionCopy = [...state.collection];
-	const targetItemIndex = collectionCopy.findIndex((collectionCopyItem) => item.url === collectionCopyItem.url);
-
-	if (~targetItemIndex) {
-		collectionCopy[targetItemIndex] = {
-			...collectionCopy[targetItemIndex],
-			status: CircleLoadingProgressEnum.Failed,
-			error
-		}
-	}
-
-	return ({
-		...state,
-		collection: collectionCopy
-	});
-  }),
-  on(deleteSubjectExample, (state, {item}) => {
-	const collectionCopy = [...state.collection];
-	const targetItemIndex = collectionCopy.findIndex((collectionCopyItem) => item.url === collectionCopyItem.url);
-
-	if (~targetItemIndex) {
-		collectionCopy[targetItemIndex] = {
-			...collectionCopy[targetItemIndex],
-			status: CircleLoadingProgressEnum.InProgress
-		}
-	}
-
-	return ({
-		...state,
-		collection: collectionCopy
-	});
-  }),
-  on(deleteSubjectExampleSuccess, (state, {item}) => {
-	const collectionCopy = [...state.collection];
-	const targetItemIndex = collectionCopy.findIndex((collectionCopyItem) => item.url === collectionCopyItem.url);
-
-	if (~targetItemIndex) {
-		collectionCopy[targetItemIndex] = {
-			...collectionCopy[targetItemIndex],
-			status: CircleLoadingProgressEnum.Uploaded
-		}
-	}
-
-	return ({
-		...state,
-		collection: collectionCopy
-	});
-  }),
-  on(deleteSubjectExampleFail, (state, {item}) => {
-	const collectionCopy = [...state.collection];
-	const targetItemIndex = collectionCopy.findIndex((collectionCopyItem) => item.url === collectionCopyItem.url);
-
-	if (~targetItemIndex) {
-		collectionCopy[targetItemIndex] = {
-			...collectionCopy[targetItemIndex],
-			status: CircleLoadingProgressEnum.Failed
-		}
-	}
-
-	return ({
-		...state,
-		collection: collectionCopy
-	});
-  }),
+  on(uploadImage, deleteSubjectExample, (state, {item}) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.InProgress)),
+  on(uploadImageSuccess, deleteSubjectExampleSuccess, (state, {item}) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded)),
+  on(uploadImageFail, deleteSubjectExampleFail, (state, {item, error}) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Failed, error)),
   on(deleteItemFromUploadOrder, (state, {item}) => {
 	const collection = state.collection.filter((collectionItem) => collectionItem.url !== item.url);
 
