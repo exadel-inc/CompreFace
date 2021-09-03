@@ -20,7 +20,7 @@ import { CollectionItem } from 'src/app/data/interfaces/collection';
   selector: 'image-holder-collection',
   templateUrl: './image-holder-collection.component.html',
   styleUrls: ['./image-holder-collection.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageHolderCollectionComponent {
   @Input() items: CollectionItem[] = [];

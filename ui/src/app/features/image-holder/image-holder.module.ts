@@ -16,18 +16,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageHolderComponent } from './image-holder.component';
-import {CircleLoadingProgressModule} from '../circle-loading-progress/circle-loading-progress.module';
-import {MatIconModule} from '@angular/material/icon';
-import {MatButtonModule} from '@angular/material/button';
+import { CircleLoadingProgressModule } from '../circle-loading-progress/circle-loading-progress.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [ImageHolderComponent],
   exports: [ImageHolderComponent],
-  imports: [
-    CommonModule,
-	MatIconModule,
-	MatButtonModule,
-	CircleLoadingProgressModule
-  ]
+  imports: [CommonModule, MatIconModule, MatButtonModule, CircleLoadingProgressModule],
 })
-export class ImageHolderModule { }
+export class ImageHolderModule {}

@@ -14,9 +14,11 @@
   ~ permissions and limitations under the License.
   -->
 <div class="image-holder">
-	<ng-container *ngIf="item.url">
-		<div *ngIf="isDeleteVisible" class="delete-icon"><button mat-fab color="warn" (click)="onDelete.emit(item)"><mat-icon>delete</mat-icon></button></div>
-			<img [src]="item.url" />
-			<circle-progress [state]="item.status" (cancel)="onCancel.emit(item)" [error]="item.error"></circle-progress>
-	</ng-container>
+  <ng-container *ngIf="item.url">
+    <div *ngIf="isDeleteVisible" class="delete-icon">
+      <button mat-fab color="warn" (click)="onDelete.emit(item)"><mat-icon>delete</mat-icon></button>
+    </div>
+    <img [src]="item.url" />
+    <circle-progress [state]="item.status" (cancel)="onCancel.emit(item)" [error]="item.error"></circle-progress>
+  </ng-container>
 </div>

@@ -27,8 +27,8 @@ export class CollectionManagerSubjectRightComponent {
   @Input() subject: string;
   @Input() subjects: string[];
   @Input() set apiKey(value: string) {
-    if(!!value) this.initApiKey.emit(value)
-  };
+    if (!!value) this.initApiKey.emit(value);
+  }
   @Input() collectionItems: CollectionItem[];
 
   @Output() deleteSubject = new EventEmitter<string>();

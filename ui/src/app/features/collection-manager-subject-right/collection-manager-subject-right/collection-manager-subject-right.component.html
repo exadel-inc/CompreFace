@@ -14,45 +14,43 @@
   ~ permissions and limitations under the License.
   -->
 <ng-container>
-	<div class="profile">
-		<div class="profile--spinner">
-			<app-spinner *ngIf="isPending"></app-spinner>
-		</div>
-		<ng-container *ngIf="!isPending">
-			<div class="profile--header">
-				<div class="profile--header_profile">
-					<div class="name">{{ "manage_collection.right_side.profile" | translate }}
-						{{ subject }}</div>
-					<div class="buttons">
-						<button mat-icon-button (click)="editSubject.emit(subject)"
-							[disabled]="!subject">
-							<mat-icon svgIcon="edit"></mat-icon>
-						</button>
-						<button mat-icon-button (click)="deleteSubject.emit(subject)"
-							[disabled]="!subject">
-							<mat-icon svgIcon="trash"></mat-icon>
-						</button>
-					</div>
-				</div>
-				<div class="profile--header_examples">{{
-					'manage_collection.right_side.examples' | translate }}</div>
-			</div>
-		</ng-container>
-	</div>
-	<div class="drag-and-drop-container">
-		<app-drag-n-drop
-			[title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
-			[label]="'dnd.label' | translate"
-			(upload)="readFiles.emit($event)">
-		</app-drag-n-drop>
-	</div>
-	<div class="image-holder-collection-container">
-		<app-spinner *ngIf="isCollectionPending"></app-spinner>
-		<image-holder-collection
-			*ngIf="!isCollectionPending"
-			[items]="collectionItems"
-			(deleteItem)="deleteItem.emit($event)"
-			(cancelUploadItem)="cancelUploadItem.emit($event)">
-		</image-holder-collection>
-	</div>
+  <div class="profile">
+    <div class="profile--spinner">
+      <app-spinner *ngIf="isPending"></app-spinner>
+    </div>
+    <ng-container *ngIf="!isPending">
+      <div class="profile--header">
+        <div class="profile--header_profile">
+          <div class="name">{{ 'manage_collection.right_side.profile' | translate }} {{ subject }}</div>
+          <div class="buttons">
+            <button mat-icon-button (click)="editSubject.emit(subject)" [disabled]="!subject">
+              <mat-icon svgIcon="edit"></mat-icon>
+            </button>
+            <button mat-icon-button (click)="deleteSubject.emit(subject)" [disabled]="!subject">
+              <mat-icon svgIcon="trash"></mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="profile--header_examples">{{ 'manage_collection.right_side.examples' | translate }}</div>
+      </div>
+    </ng-container>
+  </div>
+  <div class="drag-and-drop-container">
+    <app-drag-n-drop
+      [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
+      [label]="'dnd.label' | translate"
+      (upload)="readFiles.emit($event)"
+    >
+    </app-drag-n-drop>
+  </div>
+  <div class="image-holder-collection-container">
+    <app-spinner *ngIf="isCollectionPending"></app-spinner>
+    <image-holder-collection
+      *ngIf="!isCollectionPending"
+      [items]="collectionItems"
+      (deleteItem)="deleteItem.emit($event)"
+      (cancelUploadItem)="cancelUploadItem.emit($event)"
+    >
+    </image-holder-collection>
+  </div>
 </ng-container>

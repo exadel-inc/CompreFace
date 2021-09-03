@@ -13,31 +13,41 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, OnInit, Output, OnChanges, SimpleChanges } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnInit,
+  Output,
+  OnChanges,
+  SimpleChanges,
+} from '@angular/core';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
 @Component({
-	selector: 'circle-progress',
-	templateUrl: './circle-loading-progress.component.html',
-	styleUrls: ['./circle-loading-progress.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'circle-progress',
+  templateUrl: './circle-loading-progress.component.html',
+  styleUrls: ['./circle-loading-progress.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CircleLoadingProgressComponent {
-	@Input() state = CircleLoadingProgressEnum.InProgress;
-	@Input() error: string;
+  @Input() state = CircleLoadingProgressEnum.InProgress;
+  @Input() error: string;
 
-	@Output() cancel = new EventEmitter();
+  @Output() cancel = new EventEmitter();
 
-	inProgressDiameter = 80;
-	inProgressStrokeWidth = 4;
+  inProgressDiameter = 80;
+  inProgressStrokeWidth = 4;
 
-	progressEnum = CircleLoadingProgressEnum;
+  progressEnum = CircleLoadingProgressEnum;
 
-	@HostBinding('class.blurred') isBlurred: boolean = false;
+  @HostBinding('class.blurred') isBlurred: boolean = false;
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes.state?.currentValue) {
-			this.isBlurred = this.state !== CircleLoadingProgressEnum.Uploaded;
-		}
-	}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.state?.currentValue) {
+      this.isBlurred = this.state !== CircleLoadingProgressEnum.Uploaded;
+    }
+  }
 }

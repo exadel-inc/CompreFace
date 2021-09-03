@@ -14,11 +14,10 @@
  * permissions and limitations under the License.
  */
 
-import { environment } from "src/environments/environment";
-
+import { environment } from 'src/environments/environment';
 
 export class CollectionHelper {
-	static getCollectionItemUrl(apiKey: string, imageId: string): string {
-		return `${environment.userApiUrl}static/${apiKey}/images/${imageId}`;
-	}
+  static getCollectionItemUrl(apiKey: string, imageId: string): string {
+    return `${environment.userApiUrl}static/${apiKey}/images/${imageId}`;
+  }
 }

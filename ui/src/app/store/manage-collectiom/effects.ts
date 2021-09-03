@@ -22,7 +22,7 @@ import { catchError, filter, map, mergeMap, switchMap, take, tap, withLatestFrom
 import { SnackBarService } from '../../features/snackbar/snackbar.service';
 import { CollectionService } from '../../core/collection/collection.service';
 import {
-	addFileToCollection,
+  addFileToCollection,
   addSubject,
   addSubjectFail,
   addSubjectSuccess,
@@ -124,90 +124,93 @@ export class CollectionEffects {
 
   @Effect()
   loadSubjectExamples$ = this.actions.pipe(
-	  ofType(getSubjectExamples),
-	  withLatestFrom(this.store.select(selectCurrentApiKey)),
-	  switchMap(([,apiKey]) =>
-	  	this.collectionService.getSubjectExampleList(apiKey).pipe(
-			map((items) => getSubjectExamplesSuccess({items, apiKey})),
-			catchError((error) => of(getSubjectExamplesFail({error})))
-		  )
-		)
+    ofType(getSubjectExamples),
+    withLatestFrom(this.store.select(selectCurrentApiKey)),
+    switchMap(([, apiKey]) =>
+      this.collectionService.getSubjectExampleList(apiKey).pipe(
+        map(items => getSubjectExamplesSuccess({ items, apiKey })),
+        catchError(error => of(getSubjectExamplesFail({ error })))
+      )
+    )
   );
 
   @Effect()
   deleteSubjectExample$ = this.actions.pipe(
-	  ofType(deleteSubjectExample),
-	  withLatestFrom(this.store.select(selectCurrentApiKey)),
-	  switchMap(([{item}, apiKey]) =>
-	  	this.collectionService.deleteSubjectExample(item, apiKey).pipe(
-			switchMap(() => [deleteSubjectExampleSuccess({item}), getSubjectExamples()]),
-			catchError(error => of(deleteSubjectExampleFail({item, error})))
-	    )
-	  )
-  )
+    ofType(deleteSubjectExample),
+    withLatestFrom(this.store.select(selectCurrentApiKey)),
+    switchMap(([{ item }, apiKey]) =>
+      this.collectionService.deleteSubjectExample(item, apiKey).pipe(
+        switchMap(() => [deleteSubjectExampleSuccess({ item }), getSubjectExamples()]),
+        catchError(error => of(deleteSubjectExampleFail({ item, error })))
+      )
+    )
+  );
 
   @Effect()
   readImageFile$ = this.actions.pipe(
-	  ofType(readImageFiles),
-	  withLatestFrom(this.store.select(selectCollectionSubject)),
-	  switchMap(([action, subject]) => {
-		  return from(action.fileDescriptors).pipe(
-			  mergeMap((file) => {
-				  const fileReader = new FileReader();
-				  const resSubject = new Subject<{file: File, url: string, subject: string}>();
+    ofType(readImageFiles),
+    withLatestFrom(this.store.select(selectCollectionSubject)),
+    switchMap(([action, subject]) => {
+      return from(action.fileDescriptors).pipe(
+        mergeMap(file => {
+          const fileReader = new FileReader();
+          const resSubject = new Subject<{ file: File; url: string; subject: string }>();
 
-				  fileReader.onload = (e) => resSubject.next({
-					  url: e.target.result as string,
-					  file,
-					  subject
-					});
-				  fileReader.readAsDataURL(file);
+          fileReader.onload = e =>
+            resSubject.next({
+              url: e.target.result as string,
+              file,
+              subject,
+            });
+          fileReader.readAsDataURL(file);
 
-				  return resSubject.asObservable();
-			  }),
-			  switchMap((payload) => [addFileToCollection(payload), startUploadImageOrder()])
-		  )
-	  })
+          return resSubject.asObservable();
+        }),
+        switchMap(payload => [addFileToCollection(payload), startUploadImageOrder()])
+      );
+    })
   );
 
   @Effect()
   startUploadOrder$ = this.actions.pipe(
-	  ofType(startUploadImageOrder),
-	  switchMap(() => this.store.select(selectImageCollection).pipe(
-		take(1),
-		filter(collection => !collection.some(item => item.status === CircleLoadingProgressEnum.InProgress)),
-		map(collection => collection.find(item => item.status === CircleLoadingProgressEnum.OnHold))
-		)),
-	  map((item) => {
-		  if (item) {
-			  return uploadImage({item, continueUpload: true})
-		  }
+    ofType(startUploadImageOrder),
+    switchMap(() =>
+      this.store.select(selectImageCollection).pipe(
+        take(1),
+        filter(collection => !collection.some(item => item.status === CircleLoadingProgressEnum.InProgress)),
+        map(collection => collection.find(item => item.status === CircleLoadingProgressEnum.OnHold))
+      )
+    ),
+    map(item => {
+      if (item) {
+        return uploadImage({ item, continueUpload: true });
+      }
 
-		  return getSubjectExamples();
-	  }),
-  )
+      return getSubjectExamples();
+    })
+  );
 
   @Effect()
   uploadImage$ = this.actions.pipe(
-	  ofType(uploadImage),
-	  withLatestFrom(this.store.select(selectCurrentApiKey), this.store.select(selectCollectionSubject)),
-	  switchMap(([{item, continueUpload}, apiKey, subject]) => {
-		  return this.collectionService.uploadSubjectExamples(item, subject, apiKey).pipe(
-			  map(() => uploadImageSuccess({item, continueUpload})),
-			  catchError(error => {
-				  return of(uploadImageFail({ error: error.error?.message, item, continueUpload }))
-				})
-		  )
-	  })
+    ofType(uploadImage),
+    withLatestFrom(this.store.select(selectCurrentApiKey), this.store.select(selectCollectionSubject)),
+    switchMap(([{ item, continueUpload }, apiKey, subject]) => {
+      return this.collectionService.uploadSubjectExamples(item, subject, apiKey).pipe(
+        map(() => uploadImageSuccess({ item, continueUpload })),
+        catchError(error => {
+          return of(uploadImageFail({ error: error.error?.message, item, continueUpload }));
+        })
+      );
+    })
   );
 
-  @Effect({dispatch: false})
+  @Effect({ dispatch: false })
   uploadImageSuccess$ = this.actions.pipe(
-	  ofType(uploadImageSuccess, uploadImageFail),
-	  tap( ({continueUpload}) => {
-		  if (continueUpload) {
-			this.store.dispatch(startUploadImageOrder())
-		  }
-	  })
-  )
+    ofType(uploadImageSuccess, uploadImageFail),
+    tap(({ continueUpload }) => {
+      if (continueUpload) {
+        this.store.dispatch(startUploadImageOrder());
+      }
+    })
+  );
 }

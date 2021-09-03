@@ -16,14 +16,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ImageHolderModule } from '../image-holder/image-holder.module';
-import {ImageHolderCollectionComponent} from './image-holder-collection.component';
+import { ImageHolderCollectionComponent } from './image-holder-collection.component';
 
 @NgModule({
   declarations: [ImageHolderCollectionComponent],
   exports: [ImageHolderCollectionComponent],
-  imports: [
-    CommonModule,
-	ImageHolderModule
-  ]
+  imports: [CommonModule, ImageHolderModule],
 })
-export class ImageHolderCollectionModule { }
+export class ImageHolderCollectionModule {}

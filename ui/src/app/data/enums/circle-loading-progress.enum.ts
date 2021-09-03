@@ -15,8 +15,8 @@
  */
 
 export enum CircleLoadingProgressEnum {
-	Uploaded = 'uploaded',
-	Failed = 'failed',
-	InProgress = 'inprogress',
-	OnHold = 'onhold'
-};
+  Uploaded = 'uploaded',
+  Failed = 'failed',
+  InProgress = 'inprogress',
+  OnHold = 'onhold',
+}

@@ -42,8 +42,7 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
 
   private apiKey: string;
 
-  constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {
-  }
+  constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.currentSubject$ = this.collectionLeftFacade.currentSubject$;

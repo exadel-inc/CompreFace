@@ -18,8 +18,23 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { selectCurrentApiKey } from '../../store/model/selectors';
-import { selectAddSubjectPending, selectCollectionSubject, selectCollectionSubjects, selectImageCollection, selectImageCollectionPending } from '../../store/manage-collectiom/selectors';
-import { deleteItemFromUploadOrder, deleteSubject, deleteSubjectExample, editSubject, getSubjectExamples, readImageFiles, resetSubjectExamples, uploadImage } from '../../store/manage-collectiom/action';
+import {
+  selectAddSubjectPending,
+  selectCollectionSubject,
+  selectCollectionSubjects,
+  selectImageCollection,
+  selectImageCollectionPending,
+} from '../../store/manage-collectiom/selectors';
+import {
+  deleteItemFromUploadOrder,
+  deleteSubject,
+  deleteSubjectExample,
+  editSubject,
+  getSubjectExamples,
+  readImageFiles,
+  resetSubjectExamples,
+  uploadImage,
+} from '../../store/manage-collectiom/action';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Injectable()
@@ -35,13 +50,12 @@ export class CollectionRightFacade {
     this.subjects$ = this.store.select(selectCollectionSubjects);
     this.subject$ = this.store.select(selectCollectionSubject);
     this.apiKey$ = this.store.select(selectCurrentApiKey);
-	this.collectionItems$ = this.store.select(selectImageCollection);
+    this.collectionItems$ = this.store.select(selectImageCollection);
     this.isPending$ = this.store.select(selectAddSubjectPending);
-	this.isCollectionPending$ = this.store.select(selectImageCollectionPending);
+    this.isCollectionPending$ = this.store.select(selectImageCollectionPending);
   }
 
-
-  edit(editName: string, subject: string,  apiKey: string): void {
+  edit(editName: string, subject: string, apiKey: string): void {
     this.store.dispatch(editSubject({ editName, apiKey, subject }));
   }
 
@@ -50,26 +64,26 @@ export class CollectionRightFacade {
   }
 
   loadExamplesList(): void {
-	  this.store.dispatch(getSubjectExamples())
+    this.store.dispatch(getSubjectExamples());
   }
 
   addImageFilesToCollection(fileDescriptors: File[]): void {
-	this.store.dispatch(readImageFiles({fileDescriptors}));
+    this.store.dispatch(readImageFiles({ fileDescriptors }));
   }
 
   uploadImage(item: CollectionItem): void {
-	this.store.dispatch(uploadImage({item}));
+    this.store.dispatch(uploadImage({ item }));
   }
 
   deleteSubjectExample(item: CollectionItem): void {
-	  this.store.dispatch(deleteSubjectExample({item}));
+    this.store.dispatch(deleteSubjectExample({ item }));
   }
 
   deleteItemFromUploadOrder(item: CollectionItem): void {
-	  this.store.dispatch(deleteItemFromUploadOrder({item}));
+    this.store.dispatch(deleteItemFromUploadOrder({ item }));
   }
 
   resetSubjectExamples(): void {
-	  this.store.dispatch(resetSubjectExamples());
+    this.store.dispatch(resetSubjectExamples());
   }
 }

@@ -20,10 +20,7 @@
     </button>
   </div>
   <div class="search">
-    <app-search-table
-      (inputSearch)="onSearch($event)"
-      searchPlaceholder="{{ 'manage_collection.left_side.search' | translate }}"
-    >
+    <app-search-table (inputSearch)="onSearch($event)" searchPlaceholder="{{ 'manage_collection.left_side.search' | translate }}">
     </app-search-table>
   </div>
   <div class="subjects">

@@ -32,15 +32,15 @@ import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-pro
     [subject]="subject$ | async"
     [subjects]="subjects$ | async"
     [apiKey]="apiKey$ | async"
-	[collectionItems]="collectionItems$ | async"
+    [collectionItems]="collectionItems$ | async"
     [isPending]="isPending$ | async"
     [isCollectionPending]="isCollectionPending$ | async"
     (editSubject)="edit($event)"
     (deleteSubject)="delete($event)"
     (initApiKey)="initApiKey($event)"
-	(readFiles)="readFiles($event)"
-	(deleteItem)="deleteItem($event)"
-	(cancelUploadItem)="cancelUploadItem($event)"
+    (readFiles)="readFiles($event)"
+    (deleteItem)="deleteItem($event)"
+    (cancelUploadItem)="cancelUploadItem($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -56,19 +56,18 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   private subjectList: string[];
   private apiKey: string;
 
-  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {
-  }
+  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.subjects$ = this.collectionRightFacade.subjects$.pipe(tap(subjects => (this.subjectList = subjects)));
     this.subject$ = this.collectionRightFacade.subject$;
     this.apiKey$ = this.collectionRightFacade.apiKey$;
-	this.collectionItems$ = combineLatest([this.subject$, this.collectionRightFacade.collectionItems$]).pipe(
-		map(([subject, collection]) => collection.filter(item => item.subject === subject))
-	);
+    this.collectionItems$ = combineLatest([this.subject$, this.collectionRightFacade.collectionItems$]).pipe(
+      map(([subject, collection]) => collection.filter(item => item.subject === subject))
+    );
     this.isPending$ = this.collectionRightFacade.isPending$;
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
-	this.apiKeyInitSubscription = this.collectionRightFacade.apiKey$.subscribe(() => this.collectionRightFacade.loadExamplesList());
+    this.apiKeyInitSubscription = this.collectionRightFacade.apiKey$.subscribe(() => this.collectionRightFacade.loadExamplesList());
   }
 
   initApiKey(apiKey: string): void {
@@ -131,25 +130,25 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   }
 
   readFiles(fileList: File[]): void {
-	  this.collectionRightFacade.addImageFilesToCollection(fileList);
+    this.collectionRightFacade.addImageFilesToCollection(fileList);
   }
 
   deleteItem(item: CollectionItem): void {
-	  if (item.status === CircleLoadingProgressEnum.Uploaded) {
-		this.collectionRightFacade.deleteSubjectExample(item);
+    if (item.status === CircleLoadingProgressEnum.Uploaded) {
+      this.collectionRightFacade.deleteSubjectExample(item);
 
-		return;
-	  }
+      return;
+    }
 
-	  this.collectionRightFacade.deleteItemFromUploadOrder(item);
+    this.collectionRightFacade.deleteItemFromUploadOrder(item);
   }
 
   cancelUploadItem(item: CollectionItem): void {
-	  this.collectionRightFacade.deleteItemFromUploadOrder(item);
+    this.collectionRightFacade.deleteItemFromUploadOrder(item);
   }
 
   ngOnDestroy(): void {
-	  this.apiKeyInitSubscription.unsubscribe();
-	  this.collectionRightFacade.resetSubjectExamples();
+    this.apiKeyInitSubscription.unsubscribe();
+    this.collectionRightFacade.resetSubjectExamples();
   }
 }

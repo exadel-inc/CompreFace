@@ -15,26 +15,27 @@
  */
 import { EventEmitter, SimpleChanges } from '@angular/core';
 import { Component, Input, Output, ChangeDetectionStrategy, OnChanges } from '@angular/core';
-import {CircleLoadingProgressEnum} from 'src/app/data/enums/circle-loading-progress.enum';
-import {CollectionItem} from 'src/app/data/interfaces/collection';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Component({
-	selector: 'image-holder',
-	templateUrl: './image-holder.component.html',
-	styleUrls: ['./image-holder.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'image-holder',
+  templateUrl: './image-holder.component.html',
+  styleUrls: ['./image-holder.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ImageHolderComponent implements OnChanges {
-	@Input() item: CollectionItem;
+  @Input() item: CollectionItem;
 
-	isDeleteVisible: boolean;
+  isDeleteVisible: boolean;
 
-	@Output() onDelete = new EventEmitter<CollectionItem>();
-	@Output() onCancel = new EventEmitter<CollectionItem>();
+  @Output() onDelete = new EventEmitter<CollectionItem>();
+  @Output() onCancel = new EventEmitter<CollectionItem>();
 
-	ngOnChanges(changes: SimpleChanges): void {
-		if (changes.item?.currentValue) {
-			this.isDeleteVisible = this.item.status === CircleLoadingProgressEnum.Uploaded || this.item.status === CircleLoadingProgressEnum.Failed;
-		}
-	}
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.item?.currentValue) {
+      this.isDeleteVisible =
+        this.item.status === CircleLoadingProgressEnum.Uploaded || this.item.status === CircleLoadingProgressEnum.Failed;
+    }
+  }
 }
