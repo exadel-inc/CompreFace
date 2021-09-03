@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Subject;
+import com.exadel.frs.commonservice.exception.EmbeddingNotFoundException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FindFacesResponse;
@@ -15,6 +16,7 @@ import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
 import com.exadel.frs.core.trainservice.dto.FaceVerification;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
 import com.exadel.frs.core.trainservice.system.global.Constants;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -109,6 +111,17 @@ public class SubjectService {
         );
 
         return embedding;
+    }
+    public List<Embedding> removeSubjectEmbeddings(final String apiKey, final List<UUID> embeddingIds){
+        List<Embedding> result = new ArrayList<>();
+        for (UUID id: embeddingIds) {
+            try {
+                result.add(removeSubjectEmbedding(apiKey, id));
+            } catch (EmbeddingNotFoundException e){
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     public boolean updateSubjectName(final String apiKey, final String oldSubjectName, final String newSubjectName) {
