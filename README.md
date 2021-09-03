@@ -108,6 +108,18 @@ gender recognition
 - Features a UI panel for convenient user roles and access management
 - Starts quickly with just one docker command
 
+# Functionalities
+
+- Supports many face recognition services:
+  - face identification
+  - face verification
+  - face detection
+  - adjustable face recognition similarity threshold 
+  - landmark detection
+  - age recognition 
+  - gender recognition
+  - face mask detection
+- Use the ComperFace UI panel for convenient user roles and access management
 
 # Getting Started with CompreFace
 
