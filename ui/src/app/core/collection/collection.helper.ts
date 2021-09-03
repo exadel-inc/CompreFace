@@ -13,8 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+
+import { environment } from "src/environments/environment";
+
+
 export class CollectionHelper {
 	static getCollectionItemUrl(apiKey: string, imageId: string): string {
-		return `api/v1/static/${apiKey}/images/${imageId}`;
+		return `${environment.userApiUrl}static/${apiKey}/images/${imageId}`;
 	}
 }

@@ -59,7 +59,7 @@ export class CollectionService {
     return this.http.get(`${environment.userApiUrl}recognition/faces?size=1000`, {
       headers: { 'x-api-key': apiKey },
     }).pipe(
-      map((resp: { faces: SubjectExampleResponseItem[] }) => resp.faces.map(face => face))
+      map((resp: { faces: SubjectExampleResponseItem[] }) => resp.faces)
     );
   }
 
