@@ -18,6 +18,8 @@
 @import 'mixins.scss';
 
 .profile {
+  margin-bottom: 2rem;
+
   &--spinner {
     position: absolute;
     left: 50%;
@@ -33,7 +35,7 @@
       .name {
         @include not-break-string();
         font-weight: 600;
-        font-size: 22px;
+        font-size: 1.4rem;
       }
 
       .buttons {
@@ -46,13 +48,21 @@
     }
 
     &_examples {
-      font-size: 14px;
+      font-size: 0.9rem;
       color: $light-gray;
     }
   }
 }
 
+.drag-and-drop-container {
+  margin-bottom: 2rem;
+}
+
 .image-holder-collection-container {
-  display: flex;
-  justify-content: center;
+  padding: 1rem 0 0;
+
+  &--spinner {
+    display: flex;
+    justify-content: center;
+  }
 }

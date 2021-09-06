@@ -31,7 +31,7 @@
             </button>
           </div>
         </div>
-        <div class="profile--header_examples">{{ 'manage_collection.right_side.examples' | translate }}</div>
+        <div class="profile--header_examples">{{ 'manage_collection.right_side.examples' | translate }} {{ collectionItems.length }}</div>
       </div>
     </ng-container>
   </div>
@@ -40,11 +40,14 @@
       [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
       [label]="'dnd.label' | translate"
       (upload)="readFiles.emit($event)"
+      inline
     >
     </app-drag-n-drop>
   </div>
   <div class="image-holder-collection-container">
-    <app-spinner *ngIf="isCollectionPending"></app-spinner>
+    <div class="image-holder-collection-container--spinner">
+      <app-spinner *ngIf="isCollectionPending"></app-spinner>
+    </div>
     <image-holder-collection
       *ngIf="!isCollectionPending"
       [items]="collectionItems"
