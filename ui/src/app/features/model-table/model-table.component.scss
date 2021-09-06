@@ -14,17 +14,15 @@
  * permissions and limitations under the License.
  */
 
-@import "colors.scss";
-@import "mixins.scss";
+@import 'colors.scss';
+@import 'mixins.scss';
 
 caption {
   display: none;
 }
 
 .mat {
-
   &-column {
-
     &-content {
       width: 100%;
 
@@ -82,7 +80,6 @@ caption {
       width: 58px;
 
       .test {
-
         &--btn {
           min-width: 0;
           font-size: 12px;

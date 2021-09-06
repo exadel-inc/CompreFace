@@ -14,8 +14,8 @@
  * permissions and limitations under the License.
  */
 
-@import "media.scss";
-@import "mixins.scss";
+@import 'media.scss';
+@import 'mixins.scss';
 
 .header {
   height: 100%;
@@ -28,12 +28,11 @@
   &--logo {
     display: flex;
 
-    &_link{
+    &_link {
       padding: 4px;
       min-width: 0;
 
       .logo-main {
-
         @include mobile-portrait {
           display: none;
         }
@@ -51,7 +50,6 @@
   }
 
   &--user-info {
-
     .user-info--btn {
       padding: 6px;
       line-height: 24px;
