@@ -99,4 +99,8 @@ $border-radius: 12px;
     background-color: $special-light-blue;
     border-color: $special-blue;
   }
+
+  &_inline {
+    padding: 0;
+  }
 }
