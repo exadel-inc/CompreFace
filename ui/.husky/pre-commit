@@ -2,4 +2,4 @@
 . "$(dirname "$0")/_/husky.sh"
 
 cd ui
-npx pretty-quick --staged --pattern "**/*.{js,ts,json,html}"
+npx pretty-quick --staged --pattern "**/*.{js,ts,json,html,scss}"

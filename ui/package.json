@@ -12,7 +12,7 @@
     "lint:fix": "ng lint --fix",
     "e2e": "ng e2e",
     "postinstall": "ngcc",
-    "pretty": "prettier --write \"./src/**/*.{js,ts,json,html}\"",
+    "pretty": "prettier --write \"./src/**/*.{js,ts,json,html,scss}\"",
     "prepare": "cd .. && husky install ui/.husky"
   },
   "private": true,
