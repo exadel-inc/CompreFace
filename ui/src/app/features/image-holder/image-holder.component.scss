@@ -20,26 +20,23 @@
 
   .delete-icon {
     position: absolute;
-    top: -0.7rem;
+    top: -1rem;
+    right: -1rem;
     z-index: 1;
-    width: 100%;
-    display: flex;
-    flex-direction: row-reverse;
-    padding-left: 0.4rem;
 
     button {
-      height: 30px;
-      width: 30px;
+      height: 2rem;
+      width: 2rem;
 
       .mat-button-wrapper {
-        padding: 8px 0;
+        padding: .5rem 0;
       }
 
       ::ng-deep .mat-button-wrapper {
         padding: 0;
 
         mat-icon {
-          font-size: 17px;
+          font-size: 1.2rem;
         }
       }
     }
