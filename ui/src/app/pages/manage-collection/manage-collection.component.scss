@@ -13,6 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+ @import 'media.scss';
 
 .collection {
   &--grid {
@@ -21,6 +22,16 @@
     height: calc(100vh - 254px);
     grid-gap: 17px;
     grid-template-areas: 'subjects-list profile';
+
+    @include mobile-portrait {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'subjects-list' 'profile';
+    }
+  
+    @include mobile {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'subjects-list' 'profile';
+    }
 
     &_subjects-list {
       grid-area: subjects-list;
