@@ -45,9 +45,5 @@
   img {
     display: block;
     width: 100%;
-
-    &.blurred {
-      filter: blur(5px) brightness(50%);
-    }
   }
 }

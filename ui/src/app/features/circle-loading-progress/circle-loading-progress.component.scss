@@ -27,7 +27,7 @@ $attention-icon-size: 6rem;
   justify-content: center;
 
   &.blurred {
-    backdrop-filter: blur(4px) brightness(0.6);
+    backdrop-filter: blur(20px) brightness(0.2);
   }
 
   .image-load-failed,
