@@ -13,12 +13,9 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-<ng-container>
-  <div class="profile">
-    <div class="profile--spinner">
-      <app-spinner *ngIf="isPending"></app-spinner>
-    </div>
-    <ng-container *ngIf="!isPending">
+<ng-container *ngIf="!isPending; else spinner">
+  <ng-container *ngIf="subject; else emptySubject">
+    <div class="profile">
       <div class="profile--header">
         <div class="profile--header_profile">
           <div class="name">{{ 'manage_collection.right_side.profile' | translate }} {{ subject }}</div>
@@ -33,27 +30,37 @@
         </div>
         <div class="profile--header_examples">{{ 'manage_collection.right_side.examples' | translate }} {{ collectionItems.length }}</div>
       </div>
-    </ng-container>
-  </div>
-  <div class="drag-and-drop-container">
-    <app-drag-n-drop
-      [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
-      [label]="'dnd.label' | translate"
-      (upload)="readFiles.emit($event)"
-      inline
-    >
-    </app-drag-n-drop>
-  </div>
-  <div class="image-holder-collection-container">
-    <div class="image-holder-collection-container--spinner">
-      <app-spinner *ngIf="isCollectionPending"></app-spinner>
     </div>
-    <image-holder-collection
-      *ngIf="!isCollectionPending"
-      [items]="collectionItems"
-      (deleteItem)="deleteItem.emit($event)"
-      (cancelUploadItem)="cancelUploadItem.emit($event)"
-    >
-    </image-holder-collection>
-  </div>
+    <div class="drag-and-drop-container">
+      <app-drag-n-drop
+        [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
+        [label]="'dnd.label' | translate"
+        (upload)="readFiles.emit($event)"
+        inline
+      >
+      </app-drag-n-drop>
+    </div>
+    <div class="image-holder-collection-container">
+      <div class="image-holder-collection-container--spinner" *ngIf="isCollectionPending">
+        <app-spinner></app-spinner>
+      </div>
+      <image-holder-collection
+        *ngIf="!isCollectionPending"
+        [items]="collectionItems"
+        (deleteItem)="deleteItem.emit($event)"
+        (cancelUploadItem)="cancelUploadItem.emit($event)"
+      >
+      </image-holder-collection>
+    </div>
+  </ng-container>
 </ng-container>
+
+<ng-template #spinner>
+  <div class="spinner">
+    <app-spinner></app-spinner>
+  </div>
+</ng-template>
+
+<ng-template #emptySubject>
+  <div class="emptyMessage">{{ 'manage_collection.right_side.empty_message' | translate }}</div>
+</ng-template>

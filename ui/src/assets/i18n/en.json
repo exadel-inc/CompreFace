@@ -220,7 +220,8 @@
       "join_subjects": "Join",
       "cancel_changes": "Cancel",
       "join_message": "Subject with the same name already exists.",
-      "examples": "Examples:"
+      "examples": "Examples:",
+      "empty_message": "There is no subject to display. Select/add one."
     }
   }
 }

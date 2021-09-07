@@ -17,14 +17,15 @@
 @import 'colors.scss';
 @import 'mixins.scss';
 
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 .profile {
   margin-bottom: 2rem;
-
-  &--spinner {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
 
   &--header {
     &_profile {
