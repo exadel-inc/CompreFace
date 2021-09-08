@@ -19,16 +19,19 @@
       <div class="profile--header">
         <div class="profile--header_profile">
           <div class="name">{{ 'manage_collection.right_side.profile' | translate }} {{ subject }}</div>
-          <div class="buttons">
-            <button mat-icon-button (click)="editSubject.emit(subject)" [disabled]="!subject">
-              <mat-icon svgIcon="edit"></mat-icon>
-            </button>
-            <button mat-icon-button (click)="deleteSubject.emit(subject)" [disabled]="!subject">
-              <mat-icon svgIcon="trash"></mat-icon>
-            </button>
+          <div class="buttons" [ngSwitch]="mode">
+            <ng-container *ngSwitchCase="subjectModeEnum.BulkSelect" [ngTemplateOutlet]="bulkButtons"></ng-container>
+            <ng-container *ngSwitchDefault [ngTemplateOutlet]="defaultButtons"></ng-container>
           </div>
         </div>
-        <div class="profile--header_examples">{{ 'manage_collection.right_side.examples' | translate }} {{ collectionItems.length }}</div>
+        <div class="profile--header_examples" [ngSwitch]="mode">
+          <ng-container *ngSwitchCase="subjectModeEnum.BulkSelect"
+            >{{ 'manage_collection.right_side.selected_examples' | translate }} {{ selectedIds.length }}</ng-container
+          >
+          <ng-container *ngSwitchDefault
+            >{{ 'manage_collection.right_side.examples' | translate }} {{ collectionItems.length }}</ng-container
+          >
+        </div>
       </div>
     </div>
     <div class="drag-and-drop-container">
@@ -63,4 +66,51 @@
 
 <ng-template #emptySubject>
   <div class="emptyMessage">{{ 'manage_collection.right_side.empty_message' | translate }}</div>
+</ng-template>
+
+<ng-template #defaultButtons>
+  <button
+    mat-icon-button
+    (click)="editSubject.emit(subject)"
+    class="control-button"
+    [title]="'manage_collection.right_side.control_button_edit_title' | translate"
+  >
+    <mat-icon svgIcon="edit" class="control-icon"></mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    (click)="deleteSubject.emit(subject)"
+    class="control-button"
+    [title]="'manage_collection.right_side.control_button_delete_title' | translate"
+  >
+    <mat-icon svgIcon="trash" class="control-icon"></mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    (click)="setMode.emit(subjectModeEnum.BulkSelect)"
+    class="control-button"
+    [title]="'manage_collection.right_side.control_button_bulk-select_title' | translate"
+  >
+    <mat-icon class="control-icon">library_add_check</mat-icon>
+  </button>
+</ng-template>
+
+<ng-template #bulkButtons>
+  <button
+    mat-icon-button
+    (click)="deleteSelectedItems.emit(selectedIds)"
+    [disabled]="!selectedIds.length"
+    class="control-button"
+    [title]="'manage_collection.right_side.control_button_bulk-delete_title' | translate"
+  >
+    <mat-icon class="control-icon control-icon_delete-bulk" color="warn">delete_outline</mat-icon>
+  </button>
+  <button
+    mat-icon-button
+    (click)="setMode.emit(subjectModeEnum.Default)"
+    class="control-button"
+    [title]="'manage_collection.right_side.control_button_bulk-select-exit_title' | translate"
+  >
+    <mat-icon class="control-icon">indeterminate_check_box</mat-icon>
+  </button>
 </ng-template>

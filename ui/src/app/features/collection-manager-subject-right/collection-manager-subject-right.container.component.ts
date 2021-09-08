@@ -25,6 +25,7 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 import { MergerDialogComponent } from '../merger-dialog/merger-dialog.component';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
+import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 
 @Component({
   selector: 'app-application-right-container',
@@ -35,12 +36,16 @@ import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-pro
     [collectionItems]="collectionItems$ | async"
     [isPending]="isPending$ | async"
     [isCollectionPending]="isCollectionPending$ | async"
+    [mode]="mode$ | async"
+    [selectedIds]="selectedIds$ | async"
     (editSubject)="edit($event)"
     (deleteSubject)="delete($event)"
     (initApiKey)="initApiKey($event)"
     (readFiles)="readFiles($event)"
     (deleteItem)="deleteItem($event)"
     (cancelUploadItem)="cancelUploadItem($event)"
+    (setMode)="setSubjectMode($event)"
+    (deleteSelectedItems)="deleteSelectedItems($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -51,6 +56,8 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   isCollectionPending$: Observable<boolean>;
   apiKey$: Observable<string>;
   collectionItems$: Observable<CollectionItem[]>;
+  selectedIds$: Observable<string[]>;
+  mode$: Observable<SubjectModeEnum>;
   apiKeyInitSubscription: Subscription;
 
   private subjectList: string[];
@@ -67,6 +74,10 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     );
     this.isPending$ = this.collectionRightFacade.isPending$;
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
+    this.mode$ = this.collectionRightFacade.subjectMode$;
+    this.selectedIds$ = this.collectionItems$.pipe(
+      map(items => items.filter(item => item.status === CircleLoadingProgressEnum.Selected).map(item => item.id))
+    );
     this.apiKeyInitSubscription = this.collectionRightFacade.apiKey$.subscribe(() => this.collectionRightFacade.loadExamplesList());
   }
 
@@ -145,6 +156,14 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
 
   cancelUploadItem(item: CollectionItem): void {
     this.collectionRightFacade.deleteItemFromUploadOrder(item);
+  }
+
+  setSubjectMode(mode: SubjectModeEnum) {
+    this.collectionRightFacade.setSubjectMode(mode);
+  }
+
+  deleteSelectedItems(ids: string[]) {
+    console.log(ids);
   }
 
   ngOnDestroy(): void {

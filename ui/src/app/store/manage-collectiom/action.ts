@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 import { createAction, props } from '@ngrx/store';
+import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem, SubjectExampleResponseItem } from 'src/app/data/interfaces/collection';
 
 export const loadSubjects = createAction('[Collection] Load Subjects', props<{ apiKey: string }>());
@@ -74,3 +75,8 @@ export const finishUploadImageOrder = createAction('[Collection] Finish Upload I
 export const deleteItemFromUploadOrder = createAction('[Collection] Delete Item From Upload Order', props<{ item: CollectionItem }>());
 
 export const resetSubjectExamples = createAction('[Collection] Reset Subject Examples');
+
+export const setSubjectMode = createAction('[Collection] Set Subject Mode', props<{ mode: SubjectModeEnum }>());
+
+export const resetSelectedExamples = createAction('[Collection] Reset Selected Examples');
+export const rdeleteSelectedExamples = createAction('[Collection] Delete Selected Examples');

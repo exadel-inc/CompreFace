@@ -41,10 +41,6 @@
 
       .buttons {
         display: flex;
-
-        .mat-icon {
-          @include md-icon-size();
-        }
       }
     }
 
@@ -52,6 +48,18 @@
       font-size: 0.9rem;
       color: $light-gray;
     }
+  }
+}
+
+.control-button {
+  color: rgba(34, 34, 34, 0.84);
+}
+
+.control-icon {
+  @include md-icon-size();
+
+  &_delete-bulk {
+    @include md-icon-size(24px);
   }
 }
 

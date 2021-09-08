@@ -14,6 +14,7 @@
  * permissions and limitations under the License.
  */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Component({
@@ -30,6 +31,8 @@ export class CollectionManagerSubjectRightComponent {
     if (!!value) this.initApiKey.emit(value);
   }
   @Input() collectionItems: CollectionItem[];
+  @Input() mode = SubjectModeEnum.Default;
+  @Input() selectedIds: string[];
 
   @Output() deleteSubject = new EventEmitter<string>();
   @Output() editSubject = new EventEmitter<string>();
@@ -37,4 +40,8 @@ export class CollectionManagerSubjectRightComponent {
   @Output() readFiles = new EventEmitter<File[]>();
   @Output() deleteItem = new EventEmitter<CollectionItem>();
   @Output() cancelUploadItem = new EventEmitter<CollectionItem>();
+  @Output() setMode = new EventEmitter<SubjectModeEnum>();
+  @Output() deleteSelectedItems =  new EventEmitter<string[]>();
+
+  subjectModeEnum = SubjectModeEnum;
 }

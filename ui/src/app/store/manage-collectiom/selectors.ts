@@ -22,3 +22,4 @@ export const selectCollectionSubject = createSelector(selectCollectionEntityStat
 export const selectAddSubjectPending = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.isPending);
 export const selectImageCollection = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.collection);
 export const selectImageCollectionPending = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.isPending);
+export const selectSubjectMode = createSelector(selectCollectionEntityState, (state: CollectionEntityState) => state.mode);

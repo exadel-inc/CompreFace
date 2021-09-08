@@ -16,6 +16,7 @@
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
 import { CollectionHelper } from 'src/app/core/collection/collection.helper';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
+import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 import {
@@ -45,6 +46,7 @@ import {
   getSubjectExamples,
   getSubjectExamplesFail,
   resetSubjectExamples,
+  setSubjectMode,
 } from './action';
 
 function updateCollectionItemStatus(
@@ -79,6 +81,7 @@ export interface CollectionEntityState {
   subjects: string[];
   subject: string;
   collection: CollectionItem[];
+  mode: SubjectModeEnum;
 }
 
 const initialState: CollectionEntityState = {
@@ -87,6 +90,7 @@ const initialState: CollectionEntityState = {
   subjects: null,
   subject: null,
   collection: [],
+  mode: SubjectModeEnum.Default,
 };
 
 const reducer: ActionReducer<CollectionEntityState> = createReducer(
@@ -139,7 +143,8 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
       collection,
     };
   }),
-  on(resetSubjectExamples, state => ({ ...state, collection: [] }))
+  on(resetSubjectExamples, state => ({ ...state, collection: [] })),
+  on(setSubjectMode, (state, { mode }) => ({ ...state, mode }))
 );
 
 export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);

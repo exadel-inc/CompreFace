@@ -24,6 +24,7 @@ import {
   selectCollectionSubjects,
   selectImageCollection,
   selectImageCollectionPending,
+  selectSubjectMode,
 } from '../../store/manage-collectiom/selectors';
 import {
   deleteItemFromUploadOrder,
@@ -33,9 +34,11 @@ import {
   getSubjectExamples,
   readImageFiles,
   resetSubjectExamples,
+  setSubjectMode,
   uploadImage,
 } from '../../store/manage-collectiom/action';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
+import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 
 @Injectable()
 export class CollectionRightFacade {
@@ -45,6 +48,7 @@ export class CollectionRightFacade {
   collectionItems$: Observable<CollectionItem[]>;
   isPending$: Observable<boolean>;
   isCollectionPending$: Observable<boolean>;
+  subjectMode$: Observable<SubjectModeEnum>;
 
   constructor(private store: Store<any>) {
     this.subjects$ = this.store.select(selectCollectionSubjects);
@@ -53,6 +57,7 @@ export class CollectionRightFacade {
     this.collectionItems$ = this.store.select(selectImageCollection);
     this.isPending$ = this.store.select(selectAddSubjectPending);
     this.isCollectionPending$ = this.store.select(selectImageCollectionPending);
+    this.subjectMode$ = this.store.select(selectSubjectMode);
   }
 
   edit(editName: string, subject: string, apiKey: string): void {
@@ -85,5 +90,9 @@ export class CollectionRightFacade {
 
   resetSubjectExamples(): void {
     this.store.dispatch(resetSubjectExamples());
+  }
+
+  setSubjectMode(mode: SubjectModeEnum) {
+    this.store.dispatch(setSubjectMode({ mode }));
   }
 }

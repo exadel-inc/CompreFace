@@ -221,7 +221,13 @@
       "cancel_changes": "Cancel",
       "join_message": "Subject with the same name already exists.",
       "examples": "Examples:",
-      "empty_message": "There is no subject to display. Select/add one."
+      "selected_examples": "Selected examples:",
+      "empty_message": "There is no subject to display. Select/add one.",
+      "control_button_delete_title": "Delete subject",
+      "control_button_edit_title": "Edit subject",
+      "control_button_bulk-select_title": "Enter selection mode",
+      "control_button_bulk-select-exit_title": "Exit selection mode",
+      "control_button_bulk-delete_title": "Delete selected"
     }
   }
 }
