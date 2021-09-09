@@ -28,6 +28,7 @@ import {
 } from '../../store/manage-collectiom/selectors';
 import {
   deleteItemFromUploadOrder,
+  deleteSelectedExamples,
   deleteSubject,
   deleteSubjectExample,
   editSubject,
@@ -99,5 +100,9 @@ export class CollectionRightFacade {
 
   selectSubjectExample(item: CollectionItem) {
     this.store.dispatch(toggleExampleSelection({ item }));
+  }
+
+  deleteSelectedExamples(ids: string[]) {
+    this.store.dispatch(deleteSelectedExamples({ ids }));
   }
 }

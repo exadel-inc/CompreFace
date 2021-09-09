@@ -227,7 +227,9 @@
       "control_button_edit_title": "Edit subject",
       "control_button_bulk-select_title": "Enter selection mode",
       "control_button_bulk-select-exit_title": "Exit selection mode",
-      "control_button_bulk-delete_title": "Delete selected"
+      "control_button_bulk-delete_title": "Delete selected",
+      "modal_bulk-delete_type": "Examples",
+      "modal_bulk-delete_name": " item(s)"
     }
   }
 }

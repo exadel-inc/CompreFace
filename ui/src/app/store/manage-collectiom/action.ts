@@ -80,4 +80,6 @@ export const setSubjectMode = createAction('[Collection] Set Subject Mode', prop
 
 export const toggleExampleSelection = createAction('[Collection] Toggle Example Selected State', props<{ item: CollectionItem }>());
 export const resetSelectedExamples = createAction('[Collection] Reset Selected Examples');
-export const deleteSelectedExamples = createAction('[Collection] Delete Selected Examples');
+export const deleteSelectedExamples = createAction('[Collection] Delete Selected Examples', props<{ ids: string[] }>());
+export const deleteSelectedExamplesSuccess = createAction('[Collection] Delete Selected Examples Success');
+export const deleteSelectedExamplesFail = createAction('[Collection] Delete Selected Examples Fail', props<{ error: any }>());

@@ -78,4 +78,10 @@ export class CollectionService {
       headers: { 'x-api-key': apiKey },
     });
   }
+
+  deleteSubjectExamplesBulk(ids: string[], apiKey: string): Observable<SubjectExampleResponseItem[]> {
+    return this.http.post<SubjectExampleResponseItem[]>(`${environment.userApiUrl}recognition/faces/delete`, ids, {
+      headers: { 'x-api-key': apiKey },
+    });
+  }
 }

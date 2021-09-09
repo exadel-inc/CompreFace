@@ -45,7 +45,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
     (deleteItem)="deleteItem($event)"
     (cancelUploadItem)="cancelUploadItem($event)"
     (setMode)="setSubjectMode($event)"
-    (deleteSelectedItems)="deleteSelectedItems($event)"
+    (deleteSelectedExamples)="deleteSelectedExamples($event)"
     (selectExample)="selectExample($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -163,8 +163,22 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.collectionRightFacade.setSubjectMode(mode);
   }
 
-  deleteSelectedItems(ids: string[]) {
-    console.log(ids);
+  deleteSelectedExamples(ids: string[]) {
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        entityType: this.translate.instant('manage_collection.right_side.modal_bulk-delete_type'),
+        entityName: `(${ids.length} ${this.translate.instant('manage_collection.right_side.modal_bulk-delete_name')})`,
+      },
+    });
+
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(result => result)
+      )
+      .subscribe(() => this.collectionRightFacade.deleteSelectedExamples(ids));
   }
 
   selectExample(item: CollectionItem) {

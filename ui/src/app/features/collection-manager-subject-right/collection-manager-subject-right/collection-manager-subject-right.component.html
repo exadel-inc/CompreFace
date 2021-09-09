@@ -100,7 +100,7 @@
 <ng-template #bulkButtons>
   <button
     mat-icon-button
-    (click)="deleteSelectedItems.emit(selectedIds)"
+    (click)="deleteSelectedExamples.emit(selectedIds)"
     [disabled]="!selectedIds.length"
     class="control-button"
     [title]="'manage_collection.right_side.control_button_bulk-delete_title' | translate"

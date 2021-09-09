@@ -26,6 +26,9 @@ import {
   addSubject,
   addSubjectFail,
   addSubjectSuccess,
+  deleteSelectedExamples,
+  deleteSelectedExamplesFail,
+  deleteSelectedExamplesSuccess,
   deleteSubject,
   deleteSubjectExample,
   deleteSubjectExampleFail,
@@ -119,7 +122,7 @@ export class CollectionEffects {
 
   @Effect({ dispatch: false })
   showError$ = this.actions.pipe(
-    ofType(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail),
+    ofType(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail, deleteSelectedExamplesFail),
     tap(action => {
       this.snackBarService.openHttpError(action.error);
     })
@@ -227,5 +230,17 @@ export class CollectionEffects {
   setSelectedSubject$ = this.actions.pipe(
     ofType(setSelectedSubject),
     switchMap(() => [setSubjectMode({ mode: SubjectModeEnum.Default })])
+  );
+
+  @Effect()
+  deleteSelectedExamples$ = this.actions.pipe(
+    ofType(deleteSelectedExamples),
+    withLatestFrom(this.store.select(selectCurrentApiKey)),
+    switchMap(([{ ids }, apiKey]) =>
+      this.collectionService.deleteSubjectExamplesBulk(ids, apiKey).pipe(
+        switchMap(() => [deleteSelectedExamplesSuccess(), getSubjectExamples()]),
+        catchError(error => of(deleteSelectedExamplesFail({ error })))
+      )
+    )
   );
 }

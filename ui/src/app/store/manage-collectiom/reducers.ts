@@ -49,6 +49,9 @@ import {
   setSubjectMode,
   toggleExampleSelection,
   resetSelectedExamples,
+  deleteSelectedExamples,
+  deleteSelectedExamplesFail,
+  deleteSelectedExamplesSuccess,
 } from './action';
 
 function updateCollectionItemStatus(
@@ -168,7 +171,10 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
       ...state,
       collection: state.collection.map(item => (item.isSelected ? { ...item, isSelected: false } : item)),
     };
-  })
+  }),
+  on(deleteSelectedExamples, state => ({ ...state, isCollectionPending: true })),
+  on(deleteSelectedExamplesSuccess, state => ({ ...state, isCollectionPending: false })),
+  on(deleteSelectedExamplesFail, state => ({ ...state, isCollectionPending: false }))
 );
 
 export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);

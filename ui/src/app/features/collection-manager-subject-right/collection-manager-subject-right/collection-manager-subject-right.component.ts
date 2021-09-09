@@ -41,7 +41,7 @@ export class CollectionManagerSubjectRightComponent {
   @Output() deleteItem = new EventEmitter<CollectionItem>();
   @Output() cancelUploadItem = new EventEmitter<CollectionItem>();
   @Output() setMode = new EventEmitter<SubjectModeEnum>();
-  @Output() deleteSelectedItems =  new EventEmitter<string[]>();
+  @Output() deleteSelectedExamples =  new EventEmitter<string[]>();
   @Output() selectExample = new EventEmitter<CollectionItem>();
 
   subjectModeEnum = SubjectModeEnum;
