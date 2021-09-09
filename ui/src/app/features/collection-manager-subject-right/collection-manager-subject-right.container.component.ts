@@ -76,7 +76,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
     this.mode$ = this.collectionRightFacade.subjectMode$;
     this.selectedIds$ = this.collectionItems$.pipe(
-      map(items => items.filter(item => item.status === CircleLoadingProgressEnum.Selected).map(item => item.id))
+      map(items => items.filter(item => item.isSelected).map(item => item.id))
     );
     this.apiKeyInitSubscription = this.collectionRightFacade.apiKey$.subscribe(() => this.collectionRightFacade.loadExamplesList());
   }

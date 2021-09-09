@@ -26,6 +26,7 @@ export interface CollectionItem {
   status: CircleLoadingProgressEnum;
   file?: File;
   error?: string;
+  isSelected?: boolean;
 }
 
 export interface SubjectExampleResponseItem {
