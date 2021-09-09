@@ -24,7 +24,9 @@ import { CollectionItem } from 'src/app/data/interfaces/collection';
 })
 export class ImageHolderCollectionComponent {
   @Input() items: CollectionItem[] = [];
+  @Input() selectionMode: boolean = false;
 
   @Output() deleteItem = new EventEmitter<CollectionItem>();
   @Output() cancelUploadItem = new EventEmitter<CollectionItem>();
+  @Output() selectItem = new EventEmitter<CollectionItem>();
 }

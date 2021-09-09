@@ -43,7 +43,9 @@ import {
   loadSubjectsFail,
   loadSubjectsSuccess,
   readImageFiles,
+  resetSelectedExamples,
   setSelectedSubject,
+  setSubjectMode,
   startUploadImageOrder,
   uploadImage,
   uploadImageFail,
@@ -53,6 +55,7 @@ import { CollectionEntityState } from './reducers';
 import { selectCollectionSubject, selectCollectionSubjects, selectImageCollection } from './selectors';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { selectCurrentApiKey } from '../model/selectors';
+import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 
 @Injectable()
 export class CollectionEffects {
@@ -212,5 +215,17 @@ export class CollectionEffects {
         this.store.dispatch(startUploadImageOrder());
       }
     })
+  );
+
+  @Effect()
+  setSubjectMode$ = this.actions.pipe(
+    ofType(setSubjectMode),
+    switchMap(({ mode }) => (mode === SubjectModeEnum.Default ? [resetSelectedExamples()] : []))
+  );
+
+  @Effect()
+  setSelectedSubject$ = this.actions.pipe(
+    ofType(setSelectedSubject),
+    switchMap(() => [setSubjectMode({ mode: SubjectModeEnum.Default })])
   );
 }

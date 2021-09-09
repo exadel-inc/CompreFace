@@ -46,6 +46,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
     (cancelUploadItem)="cancelUploadItem($event)"
     (setMode)="setSubjectMode($event)"
     (deleteSelectedItems)="deleteSelectedItems($event)"
+    (selectExample)="selectExample($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -164,6 +165,10 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
 
   deleteSelectedItems(ids: string[]) {
     console.log(ids);
+  }
+
+  selectExample(item: CollectionItem) {
+    this.collectionRightFacade.selectSubjectExample(item);
   }
 
   ngOnDestroy(): void {

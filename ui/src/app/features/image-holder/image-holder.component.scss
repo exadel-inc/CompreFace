@@ -13,6 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+@import 'mixins.scss';
+
 .image-holder {
   position: relative;
   min-width: 5rem;
@@ -29,7 +31,7 @@
       width: 2rem;
 
       .mat-button-wrapper {
-        padding: .5rem 0;
+        padding: 0.5rem 0;
       }
 
       ::ng-deep .mat-button-wrapper {
@@ -46,4 +48,24 @@
     display: block;
     width: 100%;
   }
+
+  &_selection-mode {
+    cursor: pointer;
+  }
+}
+
+.selection-overlay {
+  @include wrapper-center();
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  backdrop-filter: blur(20px) brightness(0.6);
+}
+
+.selection-icon {
+  @include xl-icon-size(6rem);
+  color: #fff;
+  opacity: 0.7;
 }

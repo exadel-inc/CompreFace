@@ -50,8 +50,10 @@
       <image-holder-collection
         *ngIf="!isCollectionPending"
         [items]="collectionItems"
+        [selectionMode]="mode === subjectModeEnum.BulkSelect"
         (deleteItem)="deleteItem.emit($event)"
         (cancelUploadItem)="cancelUploadItem.emit($event)"
+        (selectItem)="selectExample.emit($event)"
       >
       </image-holder-collection>
     </div>

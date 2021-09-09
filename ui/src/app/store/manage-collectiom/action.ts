@@ -78,5 +78,6 @@ export const resetSubjectExamples = createAction('[Collection] Reset Subject Exa
 
 export const setSubjectMode = createAction('[Collection] Set Subject Mode', props<{ mode: SubjectModeEnum }>());
 
+export const toggleExampleSelection = createAction('[Collection] Toggle Example Selected State', props<{ item: CollectionItem }>());
 export const resetSelectedExamples = createAction('[Collection] Reset Selected Examples');
-export const rdeleteSelectedExamples = createAction('[Collection] Delete Selected Examples');
+export const deleteSelectedExamples = createAction('[Collection] Delete Selected Examples');

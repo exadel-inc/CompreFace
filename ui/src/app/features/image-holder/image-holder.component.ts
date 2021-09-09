@@ -26,16 +26,24 @@ import { CollectionItem } from 'src/app/data/interfaces/collection';
 })
 export class ImageHolderComponent implements OnChanges {
   @Input() item: CollectionItem;
+  @Input() selectionMode: CollectionItem;
 
   isDeleteVisible: boolean;
 
   @Output() onDelete = new EventEmitter<CollectionItem>();
   @Output() onCancel = new EventEmitter<CollectionItem>();
+  @Output() onSelect = new EventEmitter<CollectionItem>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.item?.currentValue) {
       this.isDeleteVisible =
         this.item.status === CircleLoadingProgressEnum.Uploaded || this.item.status === CircleLoadingProgressEnum.Failed;
+    }
+  }
+
+  onItemClick() {
+    if (this.selectionMode) {
+      this.onSelect.emit(this.item);
     }
   }
 }

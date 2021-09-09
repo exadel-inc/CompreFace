@@ -15,6 +15,13 @@
   -->
 <div class="image-holder-collection">
   <div *ngFor="let item of items">
-    <image-holder [item]="item" (onDelete)="deleteItem.emit($event)" (onCancel)="cancelUploadItem.emit($event)"> </image-holder>
+    <image-holder
+      [item]="item"
+      [selectionMode]="selectionMode"
+      (onDelete)="deleteItem.emit($event)"
+      (onCancel)="cancelUploadItem.emit($event)"
+      (onSelect)="selectItem.emit($event)"
+    >
+    </image-holder>
   </div>
 </div>

@@ -35,6 +35,7 @@ import {
   readImageFiles,
   resetSubjectExamples,
   setSubjectMode,
+  toggleExampleSelection,
   uploadImage,
 } from '../../store/manage-collectiom/action';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
@@ -94,5 +95,9 @@ export class CollectionRightFacade {
 
   setSubjectMode(mode: SubjectModeEnum) {
     this.store.dispatch(setSubjectMode({ mode }));
+  }
+
+  selectSubjectExample(item: CollectionItem) {
+    this.store.dispatch(toggleExampleSelection({ item }));
   }
 }

@@ -47,6 +47,8 @@ import {
   getSubjectExamplesFail,
   resetSubjectExamples,
   setSubjectMode,
+  toggleExampleSelection,
+  resetSelectedExamples,
 } from './action';
 
 function updateCollectionItemStatus(
@@ -144,7 +146,29 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
     };
   }),
   on(resetSubjectExamples, state => ({ ...state, collection: [] })),
-  on(setSubjectMode, (state, { mode }) => ({ ...state, mode }))
+  on(setSubjectMode, (state, { mode }) => ({ ...state, mode })),
+  on(toggleExampleSelection, (state, { item }) => {
+    const collectionCopy = [...state.collection];
+    const targetItemIndex = collectionCopy.indexOf(item);
+
+    if (~targetItemIndex) {
+      collectionCopy[targetItemIndex] = {
+        ...item,
+        isSelected: !item.isSelected,
+      };
+    }
+
+    return {
+      ...state,
+      collection: collectionCopy,
+    };
+  }),
+  on(resetSelectedExamples, state => {
+    return {
+      ...state,
+      collection: state.collection.map(item => (item.isSelected ? { ...item, isSelected: false } : item)),
+    };
+  })
 );
 
 export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);
