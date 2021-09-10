@@ -14,28 +14,19 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatListOption } from '@angular/material/list';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Component({
-  selector: 'app-collection-manager-subject-left',
-  templateUrl: './collection-manager-subject-left.component.html',
-  styleUrls: ['./collection-manager-subject-left.component.scss'],
+  selector: 'image-holder-collection',
+  templateUrl: './image-holder-collection.component.html',
+  styleUrls: ['./image-holder-collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CollectionManagerSubjectLeftComponent {
-  @Input() subjectsList: string[];
-  @Input() currentSubject: string;
-  @Input() isPending: boolean;
-  @Input() set apiKey(value: string) {
-    if (!!value) this.initApiKey.emit(value);
-  }
-  @Output() addSubject = new EventEmitter<void>();
-  @Output() selectedSubject = new EventEmitter<MatListOption[]>();
-  @Output() initApiKey = new EventEmitter<string>();
+export class ImageHolderCollectionComponent {
+  @Input() items: CollectionItem[] = [];
+  @Input() selectionMode: boolean = false;
 
-  search = '';
-
-  onSearch(event: string) {
-    this.search = event;
-  }
+  @Output() deleteItem = new EventEmitter<CollectionItem>();
+  @Output() cancelUploadItem = new EventEmitter<CollectionItem>();
+  @Output() selectItem = new EventEmitter<CollectionItem>();
 }

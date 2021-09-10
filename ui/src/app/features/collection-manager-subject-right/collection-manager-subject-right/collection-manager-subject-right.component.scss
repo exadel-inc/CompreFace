@@ -13,17 +13,19 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
 @import 'mixins.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
 
+.spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
 .profile {
-  &--spinner {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+  margin-bottom: 2rem;
 
   &--header {
     &_profile {
@@ -34,21 +36,42 @@
       .name {
         @include not-break-string();
         font-weight: 600;
-        font-size: 22px;
+        font-size: 1.4rem;
       }
 
       .buttons {
         display: flex;
-
-        .mat-icon {
-          @include md-icon-size();
-        }
       }
     }
 
     &_examples {
-      font-size: 14px;
+      font-size: 0.9rem;
       color: $light-gray;
     }
+  }
+}
+
+.control-button {
+  color: rgba(34, 34, 34, 0.84);
+}
+
+.control-icon {
+  @include md-icon-size();
+
+  &_delete-bulk {
+    @include md-icon-size(24px);
+  }
+}
+
+.drag-and-drop-container {
+  margin-bottom: 2rem;
+}
+
+.image-holder-collection-container {
+  padding: 1rem 0 0;
+
+  &--spinner {
+    display: flex;
+    justify-content: center;
   }
 }

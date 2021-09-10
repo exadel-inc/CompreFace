@@ -20,30 +20,24 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Rend
   templateUrl: './drag-n-drop.component.html',
   styleUrls: ['./drag-n-drop.component.scss'],
 })
-export class DragNDropComponent implements AfterViewInit {
+export class DragNDropComponent {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
-  @Input() model: any;
-  @Input('viewComponentColumn')
-  get view() {
-    return this.viewColumn;
+
+  viewComponentColumn: boolean;
+  @Input('viewComponentColumn') set setViewComponentColumn(val: boolean | '') {
+    this.viewComponentColumn = val === '' || val;
   }
-  set view(val: boolean) {
-    this.viewColumn = true;
+
+  inline: boolean;
+  @Input('inline') set setInline(val: boolean | '') {
+    this.inline = val === '' || val;
   }
-  @Output() upload: EventEmitter<File> = new EventEmitter();
+  
+  @Output() upload: EventEmitter<File[]> = new EventEmitter();
 
-  viewColumn = false;
-
-  constructor(private renderer: Renderer2, private elementRef: ElementRef<HTMLElement>) {}
-
-  ngAfterViewInit(): void {
-    const nativeElement: ChildNode = this.elementRef.nativeElement.firstChild.firstChild;
-    const classValue = this.viewColumn ? 'column' : 'row';
-
-    this.renderer.addClass(nativeElement, classValue);
-  }
+  constructor() {}
 
   /**
    * on file drop handler
@@ -65,9 +59,9 @@ export class DragNDropComponent implements AfterViewInit {
    * @param files (Files List)
    * TODO Send file to api
    */
-  uploadFile(files: Array<any>) {
+  uploadFile(files: FileList) {
     if (files.length > 0) {
-      this.upload.emit(files[0]);
+      this.upload.emit(Array.from(files));
     }
   }
 }

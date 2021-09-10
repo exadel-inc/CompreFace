@@ -13,23 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import "media.scss";
+@import 'media.scss';
 
 .result {
   display: grid;
   grid-template-columns: 1fr 1fr;
   width: 100%;
   grid-gap: 20px;
-  grid-template-areas:"process-img check-img" "request response";
+  grid-template-areas: 'process-img check-img' 'request response';
 
   @include mobile-portrait {
     grid-template-columns: 1fr;
-    grid-template-areas:"process-img" " check-img" "request" "response";
+    grid-template-areas: 'process-img' ' check-img' 'request' 'response';
   }
 
   @include mobile {
     grid-template-columns: 1fr;
-    grid-template-areas:"process-img" " check-img" "request" "response";
+    grid-template-areas: 'process-img' ' check-img' 'request' 'response';
   }
 
   .process-img {

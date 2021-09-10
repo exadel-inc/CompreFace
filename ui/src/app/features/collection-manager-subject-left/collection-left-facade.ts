@@ -18,12 +18,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 
 import { addSubject, loadSubjects, setSelectedSubject } from '../../store/manage-collectiom/action';
-import {
-  selectAddSubjectPending,
-  selectCollectionSubject,
-  selectCollectionSubjects,
-} from '../../store/manage-collectiom/selectors';
-import { selectCurrentApiKey } from "../../store/model/selectors";
+import { selectAddSubjectPending, selectCollectionSubject, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';
+import { selectCurrentApiKey } from '../../store/model/selectors';
 
 @Injectable()
 export class CollectionLeftFacade {

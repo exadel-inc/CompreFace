@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,34 +14,8 @@
  * permissions and limitations under the License.
  */
 
-@import 'colors.scss';
-
-.mat-dialog-title,
-.mat-dialog-content {
-  text-align: center;
-}
-
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: column;
-}
-
-.alert {
-  &-info {
-    background-color: $green;
-    color: $white;
+export enum SubjectModeEnum {
+    Default = 'default',
+    BulkSelect = 'bulk_select',
   }
-
-  &-warning {
-    background-color: $pale-gray;
-  }
-
-  &-error {
-    background-color: $red;
-    color: $white;
-  }
-}
-
-button {
-  color: $white;
-}
+  

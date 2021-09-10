@@ -13,16 +13,15 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-<div class="collection container">
-  <app-breadcrumbs-container></app-breadcrumbs-container>
-
-  <div class="collection--grid">
-    <mat-card class="collection--grid_subjects-list">
-      <app-application-list-container></app-application-list-container>
-    </mat-card>
-
-    <mat-card class="collection--grid_profile">
-      <app-application-right-container></app-application-right-container>
-    </mat-card>
+<ng-container [ngSwitch]="state">
+  <div *ngSwitchCase="progressEnum.OnHold" class="image-load-onhold" (click)="cancel.emit()" matTooltip="cancel upload">
+    <mat-icon>highlight_off</mat-icon>
   </div>
-</div>
+  <div *ngSwitchCase="progressEnum.Failed" class="image-load-failed" [matTooltip]="error">
+    <mat-icon>warning_amber</mat-icon>
+  </div>
+  <div *ngSwitchCase="progressEnum.InProgress" class="image-load-in-progress">
+    <mat-spinner [diameter]="inProgressDiameter" [strokeWidth]="inProgressStrokeWidth"></mat-spinner>
+  </div>
+  <div *ngSwitchCase="progressEnum.Uploaded" class="image-load-uploaded"></div>
+</ng-container>

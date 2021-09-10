@@ -13,35 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ImageHolderComponent } from './image-holder.component';
+import { CircleLoadingProgressModule } from '../circle-loading-progress/circle-loading-progress.module';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
-@import 'colors.scss';
-
-.mat-dialog-title,
-.mat-dialog-content {
-  text-align: center;
-}
-
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: column;
-}
-
-.alert {
-  &-info {
-    background-color: $green;
-    color: $white;
-  }
-
-  &-warning {
-    background-color: $pale-gray;
-  }
-
-  &-error {
-    background-color: $red;
-    color: $white;
-  }
-}
-
-button {
-  color: $white;
-}
+@NgModule({
+  declarations: [ImageHolderComponent],
+  exports: [ImageHolderComponent],
+  imports: [CommonModule, MatIconModule, MatButtonModule, CircleLoadingProgressModule],
+})
+export class ImageHolderModule {}

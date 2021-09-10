@@ -13,8 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import "media.scss";
-@import "mixins.scss";
+@import 'media.scss';
+@import 'mixins.scss';
 
 .result {
   margin-top: 24px;
@@ -22,16 +22,16 @@
   grid-template-columns: 1fr 1fr;
   width: 100%;
   grid-gap: 20px;
-  grid-template-areas:"drag-n-drop drag-n-drop" "process-img process-img" "request response";
+  grid-template-areas: 'drag-n-drop drag-n-drop' 'process-img process-img' 'request response';
 
   @include mobile-portrait {
     grid-template-columns: 1fr;
-    grid-template-areas:"process-img" "request" "response";
+    grid-template-areas: 'process-img' 'request' 'response';
   }
 
   @include mobile {
     grid-template-columns: 1fr;
-    grid-template-areas:"process-img" "request" "response";
+    grid-template-areas: 'process-img' 'request' 'response';
   }
 
   .drag-n-drop {

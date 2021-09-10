@@ -38,7 +38,7 @@
     flex-direction: column;
   }
 
-  @include mobile{
+  @include mobile {
     flex-direction: column;
   }
 
@@ -62,7 +62,7 @@
       }
     }
 
-    @include tablet-portrait{
+    @include tablet-portrait {
       width: 99%;
 
       &:not(:last-child) {
@@ -80,7 +80,7 @@
 }
 
 @include tablet-landscape {
-  .grid-container{
+  .grid-container {
     flex-direction: column !important;
 
     mat-card {

@@ -13,35 +13,16 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CircleLoadingProgressComponent } from './circle-loading-progress.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
-@import 'colors.scss';
-
-.mat-dialog-title,
-.mat-dialog-content {
-  text-align: center;
-}
-
-.mat-dialog-actions {
-  display: flex;
-  flex-direction: column;
-}
-
-.alert {
-  &-info {
-    background-color: $green;
-    color: $white;
-  }
-
-  &-warning {
-    background-color: $pale-gray;
-  }
-
-  &-error {
-    background-color: $red;
-    color: $white;
-  }
-}
-
-button {
-  color: $white;
-}
+@NgModule({
+  declarations: [CircleLoadingProgressComponent],
+  exports: [CircleLoadingProgressComponent],
+  imports: [CommonModule, MatIconModule, MatProgressSpinnerModule, MatTooltipModule],
+})
+export class CircleLoadingProgressModule {}

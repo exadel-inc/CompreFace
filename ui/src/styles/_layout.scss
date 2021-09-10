@@ -17,7 +17,7 @@
 .layout {
   display: grid;
   grid-template-rows: 64px 1fr 50px;
-  grid-template-areas: "header" "main" "footer";
+  grid-template-areas: 'header' 'main' 'footer';
   height: 100%;
   overflow-y: hidden;
 
