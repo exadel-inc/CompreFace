@@ -14,10 +14,12 @@ import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiParam;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -87,9 +89,10 @@ public class EmbeddingController {
 
     @GetMapping(value = "/{embeddingId}/img", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public @ResponseBody
-    byte[] downloadImg(
-            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final UUID embeddingId) {
+    byte[] downloadImg(HttpServletResponse response,
+                       @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
+                       @ApiParam(value = IMAGE_ID_DESC, required = true) @PathVariable final UUID embeddingId) {
+        response.addHeader(HttpHeaders.CACHE_CONTROL, CACHE_CONTROL_HEADER_VALUE);
         return embeddingService.getImg(apiKey, embeddingId)
                 .map(Img::getContent)
                 .orElse(new byte[]{});

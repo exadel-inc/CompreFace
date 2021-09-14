@@ -13,26 +13,23 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import "colors.scss";
-@import "mixins.scss";
+@import 'colors.scss';
+@import 'mixins.scss';
 
 caption {
   display: none;
 }
 
 .mat {
-
   &-header-row {
     display: none;
   }
 
   &-column {
-
     &-user {
       width: 100%;
 
       .user {
-
         &--name {
           @include not-break-string();
         }
