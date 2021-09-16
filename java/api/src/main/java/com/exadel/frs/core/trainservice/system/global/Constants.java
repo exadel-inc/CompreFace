@@ -47,6 +47,7 @@ public class Constants {
     public static final String LIMIT_DEFAULT_VALUE = "0";
     public static final String IMAGE_WITH_ONE_FACE_DESC = "A picture with one face (accepted formats: jpeg, png).";
     public static final String IMAGE_ID_DESC = "Image Id from collection to compare with face.";
+    public static final String IMAGE_IDS_DESC = "List of image Ids from collection to compare with face";
     public static final String SUBJECT_DESC = "Person's name to whom the face belongs to.";
     public static final String SUBJECT = "subject";
     public static final String SUBJECTS = "faces";
