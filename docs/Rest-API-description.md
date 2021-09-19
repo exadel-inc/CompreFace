@@ -289,7 +289,7 @@ Response body on success:
 
 | Element  | Type    | Description              |
 | -------- | ------- | ------------------------ |
-| count    | integer | Number of deleted faces  |
+| deleted  | integer | Number of deleted faces  |
 
 
 

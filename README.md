@@ -1,14 +1,13 @@
 
-<h1 align="center">CompreFace is a free and open-source face recognition system from Exadel</h1>
+<h1 align="center">Exadel CompreFace is a leading free and open-source face recognition system</h1>
 
 <p align="center">
     <a target="_blank" href="https://exadel.com/solutions/compreface/">
   <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="angular-logo" height="250px"/>
  </a>
   <br>
-  <i>CompreFace can be easily integrated into any system without prior machine learning skills. CompreFace provides REST API for face 
-recognition, face verification, face detection, face mask detection, landmark detection, age, and gender recognition and is easily deployed with 
-docker
+  <i>Exadel CompreFace is a free and open-source face recognition service that can be easily integrated into any system without prior machine learning skills. 
+     CompreFace provides REST API for face recognition, face verification, face detection, landmark detection, age, and gender recognition and is easily deployed with docker.
      </i>
   <br>
 </p>
@@ -66,14 +65,15 @@ docker
 
 # Overview
 
-CompreFace is a free and open-source face detection and recognition GitHub project. 
+Exadel CompreFace is a free and open-source face recognition GitHub project. 
 Essentially, it is a docker-based application that can be used as a standalone server or deployed in the cloud. 
 You don’t need prior machine learning skills to set up and use CompreFace.
 
-CompreFace provides REST API for face recognition, face verification, face detection, face mask detection, landmark detection, age, and gender recognition. 
+The system provides REST API for face recognition, face verification, face detection, landmark detection, age, and gender recognition. 
 The solution also features a role management system that allows you to easily control who has access to your Face Recognition Services.
 
-CompreFace is delivered as a docker-compose config and supports different models that work on CPU and GPU. Our solution is based on state-of-the-art methods and libraries like FaceNet and InsightFace.
+CompreFace is delivered as a docker-compose config and supports different models that work on CPU and GPU. 
+Our solution is based on state-of-the-art methods and libraries like FaceNet and InsightFace.
 
 # Screenshots
 <p align="center">
