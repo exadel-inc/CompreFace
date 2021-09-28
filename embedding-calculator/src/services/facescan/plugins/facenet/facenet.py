@@ -119,6 +119,8 @@ class Calculator(mixins.CalculatorMixin, base.BasePlugin):
         ('20180402-114759', '1im5Qq006ZEV_tViKh3cgia_Q4jJ13bRK', (1.1817961, 5.291995557), 0.4),
         # CASIA-WebFace training set, 0.9905 LFW accuracy
         ('20180408-102900', '100w4JIUz44Tkwte9F-wEH0DOFsY-bPaw', (1.1362496, 5.803152427), 0.4),
+        # CASIA-WebFace-Masked, 0.9873 LFW, 0.9667 LFW-Masked (orig model has 0.9350 on LFW-Masked)
+        ('inception_resnetv1_casia_masked', '1FddVjS3JbtUOjgO0kWs43CAh0nJH2RrG', (1.1362496, 5.803152427), 0.6)
     )
     BATCH_SIZE = 25
 
