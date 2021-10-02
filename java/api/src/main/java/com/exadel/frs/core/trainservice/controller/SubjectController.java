@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.Map;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.*;
@@ -41,7 +42,7 @@ public class SubjectController {
     @PutMapping("/{subject}")
     public Map<String, Object> renameSubject(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = SUBJECT_DESC, required = true) @PathVariable("subject") final String oldSubjectName,
+            @ApiParam(value = SUBJECT_DESC, required = true) @Valid @NotBlank(message = "Subject name is empty") @PathVariable("subject") final String oldSubjectName,
             @Valid @RequestBody final SubjectDto subjectDto) {
         return Map.of(
                 "updated",
@@ -52,7 +53,7 @@ public class SubjectController {
     @DeleteMapping("/{subject}")
     public Map<String, Object> deleteSubject(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = SUBJECT_DESC, required = true) @PathVariable("subject") final String subjectName) {
+            @ApiParam(value = SUBJECT_DESC, required = true) @Valid @NotBlank(message = "Subject name is empty") @PathVariable("subject") final String subjectName) {
         return Map.of(
                 "subject",
                 subjectService.deleteSubjectByName(apiKey, subjectName)
