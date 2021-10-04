@@ -18,7 +18,7 @@
 <div mat-dialog-content>
   <mat-form-field appearance="outline" floatLabel="always">
     <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="data.entityName" placeholder="{{ 'common.name' | translate }}" />
+    <input matInput cdkFocusInitial [(ngModel)]="data.entityName" placeholder="{{ 'common.name' | translate }}" />
   </mat-form-field>
   <mat-form-field appearance="outline">
     <mat-label>{{ 'common.type' | translate }}</mat-label>
@@ -28,7 +28,7 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
+  <button mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
   <button mat-flat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.entityName || !data.type">
     {{ 'common.capital.create' | translate }}
   </button>
