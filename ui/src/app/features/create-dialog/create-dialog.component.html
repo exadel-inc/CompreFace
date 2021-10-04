@@ -22,7 +22,7 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate | titlecase }}</button>
+  <button mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate | titlecase }}</button>
   <button mat-flat-button color="primary" [mat-dialog-close]="data.entityName" [disabled]="!data.entityName">
     {{ 'common.capital.create' | translate | titlecase }}
   </button>

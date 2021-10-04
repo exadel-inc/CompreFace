@@ -28,7 +28,7 @@
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
+  <button mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate }}</button>
   <button mat-flat-button color="primary" [mat-dialog-close]="data" [disabled]="!data.entityName || !data.type">
     {{ 'common.capital.create' | translate }}
   </button>
