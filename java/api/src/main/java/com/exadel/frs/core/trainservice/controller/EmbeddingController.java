@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -36,6 +37,7 @@ import static com.exadel.frs.commonservice.system.global.Constants.DET_PROB_THRE
 import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
+@Validated
 @RestController
 @RequestMapping(API_V1 + "/recognition/faces")
 @RequiredArgsConstructor

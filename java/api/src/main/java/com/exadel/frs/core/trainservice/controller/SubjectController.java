@@ -5,6 +5,7 @@ import com.exadel.frs.core.trainservice.dto.SubjectDto;
 import com.exadel.frs.core.trainservice.service.SubjectService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -14,6 +15,7 @@ import java.util.Map;
 import static com.exadel.frs.core.trainservice.system.global.Constants.*;
 import static org.springframework.http.HttpStatus.CREATED;
 
+@Validated
 @RestController
 @RequestMapping(API_V1 + "/recognition/subjects")
 @RequiredArgsConstructor
