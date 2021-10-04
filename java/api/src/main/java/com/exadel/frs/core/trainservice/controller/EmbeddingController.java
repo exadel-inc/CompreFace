@@ -54,7 +54,7 @@ public class EmbeddingController {
     @PostMapping
     public EmbeddingDto addEmbedding(
             @ApiParam(value = IMAGE_WITH_ONE_FACE_DESC, required = true) @RequestParam final MultipartFile file,
-            @ApiParam(value = SUBJECT_DESC, required = true) @Valid @NotBlank(message = "Subject name is empty") @RequestParam(SUBJECT) final String subjectName,
+            @ApiParam(value = SUBJECT_DESC, required = true) @Valid @NotBlank(message = SUBJECT_NAME_IS_EMPTY) @RequestParam(SUBJECT) final String subjectName,
             @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey
     ) throws IOException {
@@ -75,7 +75,7 @@ public class EmbeddingController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EmbeddingDto addEmbeddingBase64(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = SUBJECT_DESC) @Valid @NotBlank(message = "Subject name is empty") @RequestParam(value = SUBJECT) String subjectName,
+            @ApiParam(value = SUBJECT_DESC) @Valid @NotBlank(message = SUBJECT_NAME_IS_EMPTY) @RequestParam(value = SUBJECT) String subjectName,
             @ApiParam(value = DET_PROB_THRESHOLD_DESC) @RequestParam(value = DET_PROB_THRESHOLD, required = false) final Double detProbThreshold,
             @Valid @RequestBody Base64File request) {
         imageValidator.validateBase64(request.getContent());
@@ -112,7 +112,7 @@ public class EmbeddingController {
     @DeleteMapping
     public Map<String, Object> removeAllSubjectEmbeddings(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = SUBJECT_DESC) @Valid @NotBlank(message = "Subject name is empty") @RequestParam( name = SUBJECT, required = false) final String subjectName
+            @ApiParam(value = SUBJECT_DESC) @Validated @NotBlank(message = SUBJECT_NAME_IS_EMPTY) @RequestParam( name = SUBJECT, required = false) final String subjectName
     ) {
         return Map.of(
                 "deleted",
