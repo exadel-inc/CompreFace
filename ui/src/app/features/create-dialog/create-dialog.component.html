@@ -18,11 +18,11 @@
 <div mat-dialog-content>
   <mat-form-field appearance="outline" floatLabel="always">
     <mat-label>{{ data.placeholder }}</mat-label>
-    <input matInput [(ngModel)]="data.entityName" placeholder="{{ data.placeholder }}" />
+    <input matInput cdkFocusInitial [(ngModel)]="data.entityName" placeholder="{{ data.placeholder }}" />
   </mat-form-field>
 </div>
 <div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate | titlecase }}</button>
+  <button mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate | titlecase }}</button>
   <button mat-flat-button color="primary" [mat-dialog-close]="data.entityName" [disabled]="!data.entityName">
     {{ 'common.capital.create' | translate | titlecase }}
   </button>
