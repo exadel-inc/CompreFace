@@ -17,12 +17,13 @@ import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { TranslateModule } from '@ngx-translate/core';
 
 import { AppChangePhotoComponent } from './app-change-photo.component';
 
 @NgModule({
   declarations: [AppChangePhotoComponent],
   exports: [AppChangePhotoComponent],
-  imports: [MatIconModule, MatButtonModule, MatTooltipModule],
+  imports: [MatIconModule, MatButtonModule, MatTooltipModule, TranslateModule],
 })
 export class AppChangePhotoModule {}
