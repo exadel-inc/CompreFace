@@ -187,7 +187,7 @@ class Landmarks2d106Detector(InsightFaceMixin, mixins.LandmarksDetectorMixin,
                               base.BasePlugin):
     slug = 'landmarks2d106'
     ml_models = (
-        ('2d106det', '1MBWbTEYRhZFzj_O2f2Dc6fWGXFWtbMFw'),
+        ('2d106det', '18cL35hF2exZ8u4pfLKWjJGxF0ySuYM2o'),
     )
     CROP_SIZE = (192, 192) # model requirements
 
