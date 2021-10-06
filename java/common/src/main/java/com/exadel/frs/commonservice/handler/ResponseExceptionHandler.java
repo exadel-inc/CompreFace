@@ -184,14 +184,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
         switch (code) {
             case "NotBlank":
             case "ValidEnum":
+            case "Size":
                 basicException = new ConstraintViolationException(fieldError.getDefaultMessage());
                 break;
             case "NotNull":
             case "NotEmpty":
                 basicException = new EmptyRequiredFieldException(fieldError.getField());
-                break;
-            case "Size":
-                basicException = new ConstraintViolationException(fieldError.getField(), fieldError.getDefaultMessage());
                 break;
             default:
                 basicException = new BasicException(UNDEFINED, "");
