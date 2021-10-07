@@ -45,6 +45,7 @@ docker
   * [Screenshots](#screenshots)
   * [News and updates](#news-and-updates)
   * [Features](#features)
+  * [Functionalities](#functionalities)
   * [Getting Started with CompreFace](#getting-started-with-compreface)
   * [CompreFace SDKs](#compreface-sdks)
   * [Documentation](/docs)
