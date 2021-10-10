@@ -15,7 +15,7 @@
   -->
 <div class="change-photo">
   <button class="change-photo--btn" mat-flat-button [matTooltip]="'tooltip.upload_new_image' | translate" [disabled]="disabledButtons">
-    <input class="btn-input" type="file" (change)="changePhoto.emit($event.target.files[0])" [disabled]="disabledButtons" />
+    <input class="btn-input" type="file" title="" (change)="changePhoto.emit($event.target.files[0])" [disabled]="disabledButtons" />
     <mat-icon class="change-photo--btn_icon" svgIcon="upload"></mat-icon>
   </button>
 
