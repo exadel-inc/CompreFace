@@ -231,5 +231,10 @@
       "modal_bulk-delete_type": "Examples",
       "modal_bulk-delete_name": " item(s)"
     }
+  },
+  "tooltip": {
+    "upload_new_image": "Upload new image",
+    "clear_image": "Clear results",
+    "show_landmarks": "Show landmarks"
   }
 }
