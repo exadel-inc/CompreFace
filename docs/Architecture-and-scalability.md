@@ -30,6 +30,8 @@ In the default config number of API servers is 1, but for production environment
 
 Classification is not a very heavy operation as embedding calculation and in most cases doesn’t require GPU. API server connects to PostgreSQL database to store the data.
 
+There is a `PYTHON_URL` environment variable that tells this container where to send requests to `compreface-core` containers. Default value: `http://compreface-core:3000`.
+
 ## Embedding Servers
 Container name in docker-compose file: compreface-core
 
