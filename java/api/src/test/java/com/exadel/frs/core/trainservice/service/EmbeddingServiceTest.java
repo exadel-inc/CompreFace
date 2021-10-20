@@ -38,8 +38,9 @@ class EmbeddingServiceTest extends EmbeddedPostgreSQLTest {
 
         // new EmbeddingInfo("calc", new double[]{1.0, 2.0}, img())
 
+        var subjectName = "Johnny Depp";
         var size = 5;
-        final Page<EmbeddingProjection> page = embeddingService.listEmbeddings(model.getApiKey(), PageRequest.of(0, size));
+        final Page<EmbeddingProjection> page = embeddingService.listEmbeddings(model.getApiKey(), subjectName, PageRequest.of(0, size));
 
         assertThat(page.getTotalElements(), is((long) count));
         assertThat(page.getTotalPages(), is(count / size));

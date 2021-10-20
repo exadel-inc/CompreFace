@@ -180,7 +180,8 @@ class EmbeddingControllerTest extends EmbeddedPostgreSQLTest {
 
     @Test
     void testListEmbeddings() throws Exception {
-        when(embeddingService.listEmbeddings(eq(API_KEY), any()))
+        var subjectName = "Johnny Depp";
+        when(embeddingService.listEmbeddings(eq(API_KEY), subjectName, any()))
                 .thenReturn(new PageImpl<>(
                         List.of(
                                 new EmbeddingProjection(UUID.randomUUID(), "name1"),
