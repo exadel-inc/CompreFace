@@ -60,7 +60,7 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
             "   Embedding e " +
             " where " +
             "   e.subject.apiKey = :apiKey" +
-            "   and (:subjectName is not null and e.subject.subjectName = :subjectName)")
+            "   and (COALESCE(:subjectName, null) is null or e.subject.subjectName = :subjectName)")
     Page<EmbeddingProjection> findBySubjectApiKeyAndSubjectName(String apiKey, String subjectName, Pageable pageable);
 
     @Query("select distinct(e.calculator) from Embedding e")
