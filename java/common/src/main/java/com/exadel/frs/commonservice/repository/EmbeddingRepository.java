@@ -54,6 +54,15 @@ public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
             "   e.subject.apiKey = :apiKey")
     Page<EmbeddingProjection> findBySubjectApiKey(String apiKey, Pageable pageable);
 
+    @Query("select " +
+            " new com.exadel.frs.commonservice.entity.EmbeddingProjection(e.id, e.subject.subjectName)" +
+            " from " +
+            "   Embedding e " +
+            " where " +
+            "   e.subject.apiKey = :apiKey" +
+            "   and (:subjectName is not null and e.subject.subjectName = :subjectName)")
+    Page<EmbeddingProjection> findBySubjectApiKeyAndSubjectName(String apiKey, String subjectName, Pageable pageable);
+
     @Query("select distinct(e.calculator) from Embedding e")
     List<String> getUniqueCalculators();
 

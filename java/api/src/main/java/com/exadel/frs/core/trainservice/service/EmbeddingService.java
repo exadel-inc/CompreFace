@@ -8,7 +8,6 @@ import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import static com.exadel.frs.core.trainservice.util.StringUtils.empty;
 
 @Service
 @RequiredArgsConstructor
@@ -55,18 +51,7 @@ public class EmbeddingService {
     }
 
     public Page<EmbeddingProjection> listEmbeddings(String apiKey, String subjectName, Pageable pageable) {
-        Page<EmbeddingProjection> embeddings = embeddingRepository.findBySubjectApiKey(apiKey, pageable);
-        embeddings = filterEmbeddings(subjectName, embeddings.getContent());
-        return embeddings;
-    }
-
-    private Page<EmbeddingProjection> filterEmbeddings(String subjectName, List<EmbeddingProjection> embeddings) {
-        if (!empty(subjectName)) embeddings = filterBySubjectName(subjectName, embeddings);
-        return new PageImpl<>(embeddings);
-    }
-
-    private List<EmbeddingProjection> filterBySubjectName(String subjectName, List<EmbeddingProjection> embeddings) {
-        return embeddings.stream().filter(e -> e.getSubjectName().equals(subjectName)).collect(Collectors.toList());
+        return embeddingRepository.findBySubjectApiKeyAndSubjectName(apiKey, subjectName, pageable);
     }
 
     public boolean isDemoCollectionInconsistent() {
