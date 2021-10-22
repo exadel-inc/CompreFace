@@ -47,7 +47,7 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - API_JAVA_OPTS=${compreface_api_java_options}
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
-
+      - IMAGE_LENGTH_LIMIT=${max_detect_size}
   compreface-fe:
     restart: always
     image: ${registry}compreface-fe:${FE_VERSION}
