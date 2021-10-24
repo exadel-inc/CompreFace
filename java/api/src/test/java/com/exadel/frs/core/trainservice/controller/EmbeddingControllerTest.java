@@ -180,6 +180,29 @@ class EmbeddingControllerTest extends EmbeddedPostgreSQLTest {
 
     @Test
     void testListEmbeddings() throws Exception {
+        when(embeddingService.listEmbeddings(eq(API_KEY), null, any()))
+                .thenReturn(new PageImpl<>(
+                        List.of(
+                                new EmbeddingProjection(UUID.randomUUID(), "name1"),
+                                new EmbeddingProjection(UUID.randomUUID(), "name2")
+                        ),
+                        PageRequest.of(1, 10), // second page
+                        12
+                ));
+
+        mockMvc.perform(
+                get(API_V1 + "/recognition/faces")
+                        .header(X_FRS_API_KEY_HEADER, API_KEY)
+        ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.faces.length()", is(2)))
+                .andExpect(jsonPath("$.page_number", is(1))) // page number
+                .andExpect(jsonPath("$.page_size", is(10))) // page size
+                .andExpect(jsonPath("$.total_pages", is(2)))
+                .andExpect(jsonPath("$.total_elements", is(12)));
+    }
+
+    @Test
+    void testListEmbeddingsWithSubjectName() throws Exception {
         var subjectName = "Johnny Depp";
         when(embeddingService.listEmbeddings(eq(API_KEY), subjectName, any()))
                 .thenReturn(new PageImpl<>(
