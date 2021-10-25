@@ -19,6 +19,7 @@ package com.exadel.frs.core.trainservice.service;
 import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Subject;
+import com.exadel.frs.commonservice.exception.InvalidImageIdException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
@@ -31,7 +32,6 @@ import com.exadel.frs.core.trainservice.component.FaceClassifierPredictor;
 import com.exadel.frs.core.trainservice.component.classifiers.EuclideanDistanceClassifier;
 import com.exadel.frs.core.trainservice.dao.SubjectDao;
 import com.exadel.frs.core.trainservice.dto.ProcessImageParams;
-import com.exadel.frs.core.trainservice.mapper.FacesMapper;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,10 +39,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,6 +56,7 @@ import static com.exadel.frs.core.trainservice.service.SubjectService.MAX_FACES_
 import static com.exadel.frs.core.trainservice.system.global.Constants.IMAGE_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -71,9 +70,6 @@ class SubjectServiceTest {
 
     @Mock
     private FacesApiClient facesApiClient;
-
-    @Spy
-    private FacesMapper facesMapper = Mappers.getMapper(FacesMapper.class);
 
     @Mock
     private EmbeddingCacheProvider embeddingCacheProvider;
@@ -214,15 +210,16 @@ class SubjectServiceTest {
     @ValueSource(booleans = {true, false})
     void testVerifyFaces(boolean status) {
         var detProbThreshold = 0.7;
+        var randomUUId = UUID.randomUUID();
         MultipartFile file = new MockMultipartFile("anyname", new byte[]{0xA});
+        Embedding a = makeEmbedding("A", API_KEY);
+        a.setId(randomUUId);
+        EmbeddingCollection embeddingCollection = EmbeddingCollection.from(Stream.of(a));
 
         when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any()))
                 .thenReturn(findFacesResponse(2));
         when(embeddingCacheProvider.getOrLoad(API_KEY))
-                .thenReturn(EmbeddingCollection.from(Stream.of(
-                        makeEmbedding("A", API_KEY),
-                        makeEmbedding("B", API_KEY)
-                )));
+                .thenReturn(embeddingCollection);
         when(classifierPredictor.verify(any(), any(), any()))
                 .thenReturn(0.0);
 
@@ -233,7 +230,7 @@ class SubjectServiceTest {
                         .limit(MAX_FACES_TO_RECOGNIZE)
                         .detProbThreshold(detProbThreshold)
                         .status(status)
-                        .additionalParams(Map.of(IMAGE_ID, UUID.randomUUID()))
+                        .additionalParams(Map.of(IMAGE_ID, randomUUId))
                         .build()
         );
 
@@ -247,6 +244,32 @@ class SubjectServiceTest {
             verifications.forEach(v -> assertThat(v.getExecutionTime()).isNull());
             assertThat(result.getRight()).isNull();
         }
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = {true, false})
+    void testInvalidImageIdException(boolean status){
+        var detProbThreshold = 0.7;
+        var randomUUId = UUID.randomUUID();
+        MultipartFile file = new MockMultipartFile("anyname", new byte[]{0xA});
+        EmbeddingCollection embeddingCollection = EmbeddingCollection.from(Stream.of(makeEmbedding("A", API_KEY)));
+
+        when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any()))
+                .thenReturn(findFacesResponse(2));
+        when(embeddingCacheProvider.getOrLoad(API_KEY))
+                .thenReturn(embeddingCollection);
+        when(classifierPredictor.verify(any(), any(), any()))
+                .thenReturn(0.0);
+        assertThrows(InvalidImageIdException.class, ()->  subjectService.verifyFace(
+                ProcessImageParams.builder()
+                        .apiKey(API_KEY)
+                        .file(file)
+                        .limit(MAX_FACES_TO_RECOGNIZE)
+                        .detProbThreshold(detProbThreshold)
+                        .status(status)
+                        .additionalParams(Map.of(IMAGE_ID, randomUUId))
+                        .build()
+        ));
     }
 
     private static FindFacesResponse findFacesResponse(int faceCount) {

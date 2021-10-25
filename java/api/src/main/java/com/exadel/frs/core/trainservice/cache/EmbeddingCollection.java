@@ -2,6 +2,7 @@ package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.EmbeddingProjection;
+import com.exadel.frs.commonservice.exception.InvalidImageIdException;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import lombok.AccessLevel;
@@ -151,12 +152,17 @@ public class EmbeddingCollection {
 
     private <T> Optional<T> findByEmbeddingId(UUID embeddingId, Function<Map.Entry<EmbeddingProjection, Integer>, T> func) {
         if (embeddingId == null) {
-            return Optional.empty();
+            throw new InvalidImageIdException();
         }
 
         return projection2Index.entrySet()
                 .stream()
-                .filter(entry -> embeddingId.equals(entry.getKey().getEmbeddingId()))
+                .filter(entry -> {
+                    if(embeddingId.equals(entry.getKey().getEmbeddingId()))
+                        return embeddingId.equals(entry.getKey().getEmbeddingId());
+                    else
+                        throw new InvalidImageIdException();
+                })
                 .findFirst()
                 .map(func);
     }
