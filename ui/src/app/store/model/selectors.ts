@@ -36,8 +36,10 @@ export const selectCurrentModel = createSelector(selectModelEntityState, selectC
   models.entities ? models.entities[selectedModelId] : null
 );
 
-export const selectCurrentApiKey = createSelector(selectModelEntityState, selectCurrentModel, (models, selectedModel) =>
-    selectedModel?.apiKey
+export const selectCurrentApiKey = createSelector(
+  selectModelEntityState,
+  selectCurrentModel,
+  (models, selectedModel) => selectedModel?.apiKey
 );
 
 export const selectUserRole = createSelector(selectUserRollForSelectedApp, selectCurrentUserRole, (applicationRole, globalRole) =>

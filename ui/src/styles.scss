@@ -15,15 +15,16 @@
  */
 
 /* You can add global styles to this file, and also import other style files */
-@import "media.scss";
-@import "colors.scss";
-@import "mixins.scss";
-@import "layout.scss";
-@import "custom-theme.scss";
+@import 'media.scss';
+@import 'colors.scss';
+@import 'mixins.scss';
+@import 'layout.scss';
+@import 'custom-theme.scss';
 
 @include custom-theme($custom-theme);
 
-body, html {
+body,
+html {
   height: 100%;
 }
 
@@ -90,7 +91,9 @@ mat-card {
   }
 }
 
-app-table, app-user-table, app-model-table {
+app-table,
+app-user-table,
+app-model-table {
   overflow: auto;
   display: block;
   min-height: 425px;
@@ -139,7 +142,6 @@ app-table, app-user-table, app-model-table {
 }
 
 .app-page {
-
   .card-single-action-container {
     position: fixed;
     bottom: 10px;
@@ -189,5 +191,3 @@ app-table, app-user-table, app-model-table {
     }
   }
 }
-
-

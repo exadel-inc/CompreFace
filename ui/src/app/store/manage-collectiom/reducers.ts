@@ -14,8 +14,13 @@
  * permissions and limitations under the License.
  */
 import { Action, ActionReducer, createReducer, on } from '@ngrx/store';
+import { CollectionHelper } from 'src/app/core/collection/collection.helper';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
+import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 import {
+  addFileToCollection,
   addSubject,
   addSubjectFail,
   addSubjectSuccess,
@@ -30,18 +35,67 @@ import {
   loadSubjectsSuccess,
   resetSubjects,
   setSelectedSubject,
+  uploadImage,
+  uploadImageSuccess,
+  uploadImageFail,
+  getSubjectExamplesSuccess,
+  deleteSubjectExample,
+  deleteSubjectExampleFail,
+  deleteSubjectExampleSuccess,
+  deleteItemFromUploadOrder,
+  getSubjectExamples,
+  getSubjectExamplesFail,
+  resetSubjectExamples,
+  setSubjectMode,
+  toggleExampleSelection,
+  resetSelectedExamples,
+  deleteSelectedExamples,
+  deleteSelectedExamplesFail,
+  deleteSelectedExamplesSuccess,
 } from './action';
+
+function updateCollectionItemStatus(
+  state: CollectionEntityState,
+  item: CollectionItem,
+  status: CircleLoadingProgressEnum,
+  error?: string
+): CollectionEntityState {
+  const collectionCopy = [...state.collection];
+  const targetItemIndex = collectionCopy.findIndex(collectionCopyItem => item.url === collectionCopyItem.url);
+
+  if (~targetItemIndex) {
+    collectionCopy[targetItemIndex] = {
+      ...collectionCopy[targetItemIndex],
+      status,
+    };
+
+    if (error) {
+      collectionCopy[targetItemIndex].error = error;
+    }
+  }
+
+  return {
+    ...state,
+    collection: collectionCopy,
+  };
+}
 
 export interface CollectionEntityState {
   isPending: boolean;
+  isCollectionPending: boolean;
   subjects: string[];
   subject: string;
+  collection: CollectionItem[];
+  mode: SubjectModeEnum;
 }
 
 const initialState: CollectionEntityState = {
   isPending: false,
+  isCollectionPending: false,
   subjects: null,
   subject: null,
+  collection: [],
+  mode: SubjectModeEnum.Default,
 };
 
 const reducer: ActionReducer<CollectionEntityState> = createReducer(
@@ -56,7 +110,71 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(loadSubjectsFail, addSubjectFail, editSubjectFail, deleteSubjectFail, deleteSubjectSuccess, state => ({ ...state, isPending: false })),
   on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects })),
   on(setSelectedSubject, (state, { subject }) => ({ ...state, subject })),
-  on(resetSubjects, () => ({ ...initialState }))
+  on(resetSubjects, () => ({ ...initialState })),
+  on(getSubjectExamples, state => ({ ...state, isCollectionPending: true })),
+  on(getSubjectExamplesSuccess, (state, { items, apiKey }) => {
+    const collectionCopy = [...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded)];
+
+    const newCollectionItems = items.map(item => ({
+      url: CollectionHelper.getCollectionItemUrl(apiKey, item.image_id),
+      id: item.image_id,
+      status: CircleLoadingProgressEnum.Uploaded,
+      subject: item.subject,
+    }));
+
+    return {
+      ...state,
+      isCollectionPending: false,
+      collection: [...newCollectionItems, ...collectionCopy],
+    };
+  }),
+  on(getSubjectExamplesFail, state => ({ ...state, isCollectionPending: false })),
+  on(addFileToCollection, (state, { url, file, subject }) => ({
+    ...state,
+    collection: [...state.collection, { url, file, subject, status: CircleLoadingProgressEnum.OnHold }],
+  })),
+  on(uploadImage, deleteSubjectExample, (state, { item }) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.InProgress)),
+  on(uploadImageSuccess, deleteSubjectExampleSuccess, (state, { item }) =>
+    updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded)
+  ),
+  on(uploadImageFail, deleteSubjectExampleFail, (state, { item, error }) =>
+    updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Failed, error)
+  ),
+  on(deleteItemFromUploadOrder, (state, { item }) => {
+    const collection = state.collection.filter(collectionItem => collectionItem.url !== item.url);
+
+    return {
+      ...state,
+      collection,
+    };
+  }),
+  on(resetSubjectExamples, state => ({ ...state, collection: [] })),
+  on(setSubjectMode, (state, { mode }) => ({ ...state, mode })),
+  on(toggleExampleSelection, (state, { item }) => {
+    const collectionCopy = [...state.collection];
+    const targetItemIndex = collectionCopy.indexOf(item);
+
+    if (~targetItemIndex) {
+      collectionCopy[targetItemIndex] = {
+        ...item,
+        isSelected: !item.isSelected,
+      };
+    }
+
+    return {
+      ...state,
+      collection: collectionCopy,
+    };
+  }),
+  on(resetSelectedExamples, state => {
+    return {
+      ...state,
+      collection: state.collection.map(item => (item.isSelected ? { ...item, isSelected: false } : item)),
+    };
+  }),
+  on(deleteSelectedExamples, state => ({ ...state, isCollectionPending: true })),
+  on(deleteSelectedExamplesSuccess, state => ({ ...state, isCollectionPending: false })),
+  on(deleteSelectedExamplesFail, state => ({ ...state, isCollectionPending: false }))
 );
 
 export const collectionReducer = (modelState: CollectionEntityState, action: Action) => reducer(modelState, action);

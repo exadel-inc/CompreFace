@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-@import "colors.scss";
+@import 'colors.scss';
 
 $border-radius: 12px;
 
@@ -51,7 +51,7 @@ $border-radius: 12px;
     width: 100%;
     border: dashed 2px $light-gray;
     border-radius: $border-radius;
-    transition: .2s;
+    transition: 0.2s;
 
     &.column {
       padding: 55px 0 24px;
@@ -95,10 +95,12 @@ $border-radius: 12px;
   }
 
   &:hover &--container {
-    transition: .2s;
+    transition: 0.2s;
     background-color: $special-light-blue;
     border-color: $special-blue;
   }
+
+  &_inline {
+    padding: 0;
+  }
 }
-
-

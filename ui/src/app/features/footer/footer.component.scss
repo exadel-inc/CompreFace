@@ -17,29 +17,29 @@
 @import 'colors.scss';
 @import 'media.scss';
 
-:host{
+:host {
   position: fixed;
   width: 100%;
   bottom: 0;
 }
 
-.mat-toolbar{
+.mat-toolbar {
   height: 50px;
-  min-height: 50px
+  min-height: 50px;
 }
 
-.mat-toolbar-row{
-  justify-content: flex-end
+.mat-toolbar-row {
+  justify-content: flex-end;
 }
 
-.mat-button-focus-overlay{
+.mat-button-focus-overlay {
   background: none;
 }
 
-.mat-button{
+.mat-button {
   text-decoration: underline;
 
-  &:hover{
+  &:hover {
     color: $hovered;
   }
 
@@ -48,6 +48,3 @@
     min-width: 55px;
   }
 }
-
-
-
