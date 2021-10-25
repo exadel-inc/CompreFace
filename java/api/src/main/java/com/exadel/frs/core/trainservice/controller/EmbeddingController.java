@@ -104,8 +104,9 @@ public class EmbeddingController {
     @GetMapping
     public Faces listEmbeddings(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
+            @ApiParam(value = SUBJECT_DESC) @Valid @RequestParam(name = SUBJECT, required = false) final String subjectName,
             Pageable pageable) {
-        return new Faces(embeddingService.listEmbeddings(apiKey, pageable).map(embeddingMapper::toResponseDto));
+        return new Faces(embeddingService.listEmbeddings(apiKey, subjectName, pageable).map(embeddingMapper::toResponseDto));
     }
 
     @WriteEndpoint
