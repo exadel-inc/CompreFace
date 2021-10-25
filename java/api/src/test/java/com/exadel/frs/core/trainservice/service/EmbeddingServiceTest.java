@@ -53,6 +53,7 @@ class EmbeddingServiceTest extends EmbeddedPostgreSQLTest {
         int count = 1;
         var subjectName = "Johnny Depp";
         dbHelper.insertEmbeddingNoImg(dbHelper.insertSubject(model, subjectName));
+        dbHelper.insertEmbeddingNoImg(dbHelper.insertSubject(model, "Not Johnny Depp"));
 
         var size = 1;
         final Page<EmbeddingProjection> page = embeddingService.listEmbeddings(model.getApiKey(), subjectName, PageRequest.of(0, size));
