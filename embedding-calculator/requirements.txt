@@ -5,6 +5,7 @@ flasgger==0.9.5
 Flask==1.1.2
 gdown~=3.12
 Werkzeug==1.0.1
+PyYAML==5.4.1
 
 # tests
 mock~=4.0.2
