@@ -55,6 +55,7 @@ public class Constants {
     public static final String SOURCE_IMAGE_DESC = "File to be verified";
     public static final String TARGET_IMAGE_DESC = "Reference file to check the processed file";
     public static final String STATUS = "status";
+    public static final String SUBJECT_NAME_IS_EMPTY = "Subject name is empty";
 
     public static final String DEMO_API_KEY = "00000000-0000-0000-0000-000000000002";
     public static final String FACENET2018 = "Facenet2018";

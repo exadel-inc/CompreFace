@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import static com.exadel.frs.core.trainservice.system.global.Constants.SUBJECT_DESC;
 
@@ -17,6 +17,6 @@ public class SubjectDto {
 
     @ApiParam(value = SUBJECT_DESC, required = true)
     @JsonProperty("subject")
-    @NotNull
+    @NotBlank(message = "Subject name is empty")
     private String subjectName;
 }

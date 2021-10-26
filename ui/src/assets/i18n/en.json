@@ -64,7 +64,7 @@
     "caption": "Table of applications",
     "title": "Applications",
     "placeholder": "Enter App name",
-    "first_steps_title": "Create Application",
+    "first_steps_title": "Applications",
     "name": "App Name",
     "owner": "Owner",
     "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
@@ -231,5 +231,10 @@
       "modal_bulk-delete_type": "Examples",
       "modal_bulk-delete_name": " item(s)"
     }
+  },
+  "tooltip": {
+    "upload_new_image": "Upload new image",
+    "clear_image": "Clear results",
+    "show_landmarks": "Show landmarks"
   }
 }

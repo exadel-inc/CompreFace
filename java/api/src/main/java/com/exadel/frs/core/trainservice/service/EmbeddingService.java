@@ -50,8 +50,8 @@ public class EmbeddingService {
         return imgRepository.getImgByEmbeddingId(apiKey, embeddingId);
     }
 
-    public Page<EmbeddingProjection> listEmbeddings(String apiKey, Pageable pageable) {
-        return embeddingRepository.findBySubjectApiKey(apiKey, pageable);
+    public Page<EmbeddingProjection> listEmbeddings(String apiKey, String subjectName, Pageable pageable) {
+        return embeddingRepository.findBySubjectApiKeyAndSubjectName(apiKey, subjectName, pageable);
     }
 
     public boolean isDemoCollectionInconsistent() {
