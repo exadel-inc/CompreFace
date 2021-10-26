@@ -32,6 +32,12 @@ public class ItemsBuilder {
                 makeImg()
         );
     }
+    public static Embedding makeEmbedding(UUID embeddingId, String subjectName, String apiKey) {
+        return makeEmbedding(
+                makeSubject(apiKey, subjectName),
+                makeImg()
+        ).setId(embeddingId);
+    }
 
     public static Embedding makeEmbedding(Subject subject, String calculator, double[] embedding, Img img) {
         return new Embedding()

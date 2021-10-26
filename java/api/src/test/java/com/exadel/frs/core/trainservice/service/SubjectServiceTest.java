@@ -19,7 +19,7 @@ package com.exadel.frs.core.trainservice.service;
 import com.exadel.frs.commonservice.dto.ExecutionTimeDto;
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.Subject;
-import com.exadel.frs.commonservice.exception.InvalidImageIdException;
+import com.exadel.frs.commonservice.exception.IncorrectImageIdException;
 import com.exadel.frs.commonservice.exception.TooManyFacesException;
 import com.exadel.frs.commonservice.sdk.faces.FacesApiClient;
 import com.exadel.frs.commonservice.sdk.faces.feign.dto.FacesBox;
@@ -58,7 +58,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 class SubjectServiceTest {
@@ -212,9 +215,7 @@ class SubjectServiceTest {
         var detProbThreshold = 0.7;
         var randomUUId = UUID.randomUUID();
         MultipartFile file = new MockMultipartFile("anyname", new byte[]{0xA});
-        Embedding a = makeEmbedding("A", API_KEY);
-        a.setId(randomUUId);
-        EmbeddingCollection embeddingCollection = EmbeddingCollection.from(Stream.of(a));
+        EmbeddingCollection embeddingCollection = EmbeddingCollection.from(Stream.of(makeEmbedding(randomUUId,"A", API_KEY)));
 
         when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any()))
                 .thenReturn(findFacesResponse(2));
@@ -260,7 +261,7 @@ class SubjectServiceTest {
                 .thenReturn(embeddingCollection);
         when(classifierPredictor.verify(any(), any(), any()))
                 .thenReturn(0.0);
-        assertThrows(InvalidImageIdException.class, ()->  subjectService.verifyFace(
+        assertThrows(IncorrectImageIdException.class, ()->  subjectService.verifyFace(
                 ProcessImageParams.builder()
                         .apiKey(API_KEY)
                         .file(file)
