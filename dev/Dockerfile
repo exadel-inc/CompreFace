@@ -5,6 +5,7 @@ LABEL intermidiate_frs=true
 COPY pom.xml .
 COPY api/pom.xml api/
 COPY admin/pom.xml admin/
+COPY common/pom.xml common/
 RUN mvn -B clean install -DskipTests -Dcheckstyle.skip -Dasciidoctor.skip -Djacoco.skip -Dmaven.gitcommitid.skip -Dspring-boot.repackage.skip -Dmaven.exec.skip=true -Dmaven.install.skip -Dmaven.resources.skip
 COPY api api
 COPY admin admin
