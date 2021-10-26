@@ -8,6 +8,7 @@ COPY admin/pom.xml admin/
 RUN mvn -B clean install -DskipTests -Dcheckstyle.skip -Dasciidoctor.skip -Djacoco.skip -Dmaven.gitcommitid.skip -Dspring-boot.repackage.skip -Dmaven.exec.skip=true -Dmaven.install.skip -Dmaven.resources.skip
 COPY api api
 COPY admin admin
+COPY common common
 RUN mvn package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.skip=true
 
 FROM openjdk:11.0.8-jre-slim as frs_core
