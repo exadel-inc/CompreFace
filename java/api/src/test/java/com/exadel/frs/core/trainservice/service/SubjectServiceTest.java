@@ -215,7 +215,9 @@ class SubjectServiceTest {
         var detProbThreshold = 0.7;
         var randomUUId = UUID.randomUUID();
         MultipartFile file = new MockMultipartFile("anyname", new byte[]{0xA});
-        EmbeddingCollection embeddingCollection = EmbeddingCollection.from(Stream.of(makeEmbedding(randomUUId,"A", API_KEY)));
+        EmbeddingCollection embeddingCollection = EmbeddingCollection.from(Stream.of(
+                makeEmbedding(randomUUId,"A", API_KEY),
+                makeEmbedding("B", API_KEY)));
 
         when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any()))
                 .thenReturn(findFacesResponse(2));
@@ -253,7 +255,9 @@ class SubjectServiceTest {
         var detProbThreshold = 0.7;
         var randomUUId = UUID.randomUUID();
         MultipartFile file = new MockMultipartFile("anyname", new byte[]{0xA});
-        EmbeddingCollection embeddingCollection = EmbeddingCollection.from(Stream.of(makeEmbedding("A", API_KEY)));
+        EmbeddingCollection embeddingCollection = EmbeddingCollection.from(Stream.of(
+                makeEmbedding("A", API_KEY),
+                makeEmbedding("B", API_KEY)));
 
         when(facesApiClient.findFacesWithCalculator(any(), any(), any(), any()))
                 .thenReturn(findFacesResponse(2));

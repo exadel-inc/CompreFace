@@ -153,16 +153,12 @@ public class EmbeddingCollection {
     private <T> Optional<T> findByEmbeddingId(UUID embeddingId, Function<Map.Entry<EmbeddingProjection, Integer>, T> func) {
         validImageId(embeddingId);
 
-        return projection2Index.entrySet()
+        return Optional.ofNullable(projection2Index.entrySet()
                 .stream()
-                .filter(entry -> {
-                    if(embeddingId.equals(entry.getKey().getEmbeddingId()))
-                        return embeddingId.equals(entry.getKey().getEmbeddingId());
-                    else
-                        throw new IncorrectImageIdException();
-                })
+                .filter(entry ->  embeddingId.equals(entry.getKey().getEmbeddingId()))
                 .findFirst()
-                .map(func);
+                .map(func)
+                .orElseThrow(IncorrectImageIdException::new));
     }
 
     private void validImageId(UUID embeddingId) {
