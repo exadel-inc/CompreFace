@@ -10,7 +10,7 @@ RUN mvn -B clean install -DskipTests -Dcheckstyle.skip -Dasciidoctor.skip -Djaco
 COPY api api
 COPY admin admin
 COPY common common
-RUN mvn package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.skip=true
+RUN mvn package -Dmaven.test.skip=true -Dmaven.site.skip=true -Dmaven.javadoc.skip=true -Dnd4j.classifier=$ND4J_CLASSIFIER
 
 FROM openjdk:11.0.8-jre-slim as frs_core
 ARG DIR=/workspace/compreface
