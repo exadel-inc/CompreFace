@@ -27,8 +27,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ChangePasswordDto {
 
-    @NotEmpty(message = "User's old password is incorrect")
-    @Size(min = 8, max = 255, message = "User's old password is incorrect")
+    @NotEmpty(message = "User's password is incorrect")
+    @Size(min = 8, max = 255, message = "User's password is incorrect")
     private String oldPassword;
 
     @NotEmpty(message = "User's new password is incorrect")
