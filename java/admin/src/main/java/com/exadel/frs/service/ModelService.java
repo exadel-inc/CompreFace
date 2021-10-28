@@ -63,6 +63,12 @@ public class ModelService {
         }
     }
 
+    private void verifyNameIsUniqueAndCaseInsensitive(final String name, final Long appId) {
+        if (modelRepository.existsByUniqueNameAndAppId(name, appId)) {
+            throw new NameIsNotUniqueException(name);
+        }
+    }
+
     public Model getModel(final String appGuid, final String modelGuid, final Long userId) {
         val model = getModel(modelGuid);
         val user = userService.getUser(userId);
@@ -88,7 +94,7 @@ public class ModelService {
 
         authManager.verifyWritePrivilegesToApp(user, app);
 
-        verifyNameIsUnique(modelCreateDto.getName(), app.getId());
+        verifyNameIsUniqueAndCaseInsensitive(modelCreateDto.getName(), app.getId());
 
         log.info("model type: {}", modelCreateDto.getType());
 
@@ -138,7 +144,7 @@ public class ModelService {
 
         authManager.verifyWritePrivilegesToApp(user, model.getApp());
 
-        verifyNameIsUnique(modelCloneDto.getName(), model.getApp().getId());
+        verifyNameIsUniqueAndCaseInsensitive(modelCloneDto.getName(), model.getApp().getId());
 
         val clonedModel = modelCloneService.cloneModel(model, modelCloneDto);
 

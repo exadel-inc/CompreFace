@@ -40,6 +40,11 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
 
     boolean existsByNameAndAppId(String name, Long appId);
 
+    @Query("select case when count(m) > 0 then TRUE else FALSE end " +
+            "from Model m " +
+            "where lower(m.name) = lower(:name) AND m.app.id = :appId")
+    boolean existsByUniqueNameAndAppId(String name, Long appId);
+
     @Query("SELECT " +
             "   new com.exadel.frs.commonservice.entity.ModelSubjectProjection(m.guid, count(s.id)) " +
             " FROM " +
