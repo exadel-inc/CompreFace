@@ -309,7 +309,7 @@ class ModelServiceTest {
         modelService.updateModel(modelUpdateDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
-        verify(modelRepositoryMock).existsByNameAndAppId("new_name", APPLICATION_ID);
+        verify(modelRepositoryMock).existsByUniqueNameAndAppId("new_name", APPLICATION_ID);
         verify(modelRepositoryMock).save(any(Model.class));
         verify(authManager).verifyReadPrivilegesToApp(user, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
@@ -339,7 +339,7 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(anyString())).thenReturn(app);
-        when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
+        when(modelRepositoryMock.existsByUniqueNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
                 modelService.updateModel(modelUpdateDto, APPLICATION_GUID, MODEL_GUID, USER_ID)

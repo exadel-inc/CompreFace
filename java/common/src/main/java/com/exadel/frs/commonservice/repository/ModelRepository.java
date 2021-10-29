@@ -45,6 +45,11 @@ public interface ModelRepository extends JpaRepository<Model, Long> {
             "where lower(m.name) = lower(:name) AND m.app.id = :appId")
     boolean existsByUniqueNameAndAppId(String name, Long appId);
 
+    @Query("select count(m) " +
+            "from Model m " +
+            "where lower(m.name) = lower(:name) AND m.app.id = :appId")
+    int countByUniqueNameAndAppId(String name, Long appId);
+
     @Query("SELECT " +
             "   new com.exadel.frs.commonservice.entity.ModelSubjectProjection(m.guid, count(s.id)) " +
             " FROM " +
