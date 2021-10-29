@@ -19,3 +19,5 @@ than 0.5. Still, we recommend for high-security systems set the
 threshold more than 0.5. This is the distribution of similarities for a
 custom dataset of 50,000 faces for the FaceNet model (blue - is
 incorrect guesses, red is correct):
+
+<img src="https://user-images.githubusercontent.com/3736126/111870491-bb422380-898d-11eb-901d-0fad65eee69c.png" alt="distribution of similarities" width=800px style="padding: 10px;">

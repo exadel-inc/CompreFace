@@ -46,15 +46,18 @@ Running custom-build is very similar to running the default build - all
 you need to do is open the corresponding folder and run
 `docker-compose up -d`.
 
-Things to consider: - If you run CompreFace from the custom-build
+Things to consider:
+
+- If you run CompreFace from the custom-build
 folder, it creates a new docker volume so that you won't see your saved
 information. To run custom-build with your previously saved information,
 you need to copy files from custom-build to folder with the original
-build (and replace the original files) - In most cases, face recognition
+build (and replace the original files) 
+- In most cases, face recognition
 models are not interchangeable; this means that all you saved examples
 from the old build won't work on new builds. See [migrations
-documentation](Face-data-migration.md) to know what is the options. - Do
-not run two instances of CompreFace simultaneously without changing the
+documentation](Face-data-migration.md) to know what is the options. 
+- Do not run two instances of CompreFace simultaneously without changing the
 port. To change the port, go to the `docker-compose` file and change the
 post for the `compreface-fe` container.
 

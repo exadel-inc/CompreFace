@@ -7,7 +7,7 @@ through them and set up CompreFace accordingly
 
 -   `registry` - this is the docker hub registry. For release and
     pre-build images, it should be set to `exadel/` value
--   `postgres_passwo``rd` - password for Postgres database. It should be
+-   `postgres_password` - password for Postgres database. It should be
     changed for production systems from the default value.
 -   `postgres_domain` - the domain where Postgres database is run
 -   `postgres_port` - Postgres database port
@@ -21,11 +21,11 @@ through them and set up CompreFace accordingly
 -   `email_password` - a password of the email provider for
     authentication. It should be set if the `enable_email_server`
     variable is true
--   `email_from` - this value reads users in the '`from``’` fields when
+-   `email_from` - this value reads users in the `from` fields when
     they receive emails from CompreFace. Corresponds to `From` field in
     rfc2822. Optional, if not set, then `email_username` is used instead
 -   `save_images_to_db` - should the CompreFace save photos to the
-    database. Be careful; [migrations](Face-data-migration.md) could be
+    database. Be careful, [migrations](Face-data-migration.md) could be
     run only if this value is `true`
 -   `compreface_api_java_options` - java options of compreface-API
     container

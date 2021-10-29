@@ -22,7 +22,7 @@ the model changed, you need to run a migration.
 ## Limitations
 
 If you run CompreFace in the ["not saving images to database"
-mode](Configuration.md)(`save_images_to_db``=``false`), you won't be
+mode](Configuration.md)(`save_images_to_db=false`), you won't be
 able to migrate data as the original images are required for migration.
 
 The only solution here is to delete all images from Face Collection and
