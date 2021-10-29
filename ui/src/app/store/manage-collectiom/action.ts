@@ -37,7 +37,7 @@ export const resetSubjects = createAction('[Collection] Reset Subjects');
 export const setSelectedSubject = createAction('[Collection] Set Selected Subject', props<{ subject: any }>());
 export const initSelectedSubject = createAction('[Collection] Init Selected Subject');
 
-export const getSubjectExamples = createAction('[Collection] Get Subject Examples Request');
+export const getSubjectExamples = createAction('[Collection] Get Subject Examples Request', props<{ subject: any }>());
 export const getSubjectExamplesSuccess = createAction(
   '[Collection] Get Subject Examples Success',
   props<{ items: SubjectExampleResponseItem[]; apiKey: string }>()

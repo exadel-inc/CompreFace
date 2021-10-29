@@ -46,6 +46,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 export class CollectionRightFacade {
   subjects$: Observable<string[]>;
   subject$: Observable<string>;
+  defaultSubject$: Observable<string>;
   apiKey$: Observable<string>;
   collectionItems$: Observable<CollectionItem[]>;
   isPending$: Observable<boolean>;
@@ -53,6 +54,7 @@ export class CollectionRightFacade {
   subjectMode$: Observable<SubjectModeEnum>;
 
   constructor(private store: Store<any>) {
+    this.defaultSubject$ = this.store.select(selectCollectionSubject);
     this.subjects$ = this.store.select(selectCollectionSubjects);
     this.subject$ = this.store.select(selectCollectionSubject);
     this.apiKey$ = this.store.select(selectCurrentApiKey);
@@ -70,8 +72,8 @@ export class CollectionRightFacade {
     this.store.dispatch(deleteSubject({ name, apiKey }));
   }
 
-  loadExamplesList(): void {
-    this.store.dispatch(getSubjectExamples());
+  loadSubjectMedia(subject: string): void {
+    this.store.dispatch(getSubjectExamples({ subject }));
   }
 
   addImageFilesToCollection(fileDescriptors: File[]): void {

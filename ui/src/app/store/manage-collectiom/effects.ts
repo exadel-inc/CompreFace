@@ -59,6 +59,7 @@ import { selectCollectionSubject, selectCollectionSubjects, selectImageCollectio
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { selectCurrentApiKey } from '../model/selectors';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Injectable()
 export class CollectionEffects {
@@ -132,8 +133,8 @@ export class CollectionEffects {
   loadSubjectExamples$ = this.actions.pipe(
     ofType(getSubjectExamples),
     withLatestFrom(this.store.select(selectCurrentApiKey)),
-    switchMap(([, apiKey]) =>
-      this.collectionService.getSubjectExampleList(apiKey).pipe(
+    switchMap(([{ subject }, apiKey]) =>
+      this.collectionService.getSubjectMedia(apiKey, subject).pipe(
         map(items => getSubjectExamplesSuccess({ items, apiKey })),
         catchError(error => of(getSubjectExamplesFail({ error })))
       )
@@ -146,7 +147,8 @@ export class CollectionEffects {
     withLatestFrom(this.store.select(selectCurrentApiKey)),
     switchMap(([{ item }, apiKey]) =>
       this.collectionService.deleteSubjectExample(item, apiKey).pipe(
-        switchMap(() => [deleteSubjectExampleSuccess({ item }), getSubjectExamples()]),
+        map(item => item.subject),
+        switchMap(subject => [deleteSubjectExampleSuccess({ item }), getSubjectExamples({ subject })]),
         catchError(error => of(deleteSubjectExampleFail({ item, error })))
       )
     )
@@ -177,6 +179,8 @@ export class CollectionEffects {
     })
   );
 
+  collectionItem: CollectionItem;
+
   @Effect()
   startUploadOrder$ = this.actions.pipe(
     ofType(startUploadImageOrder),
@@ -189,10 +193,11 @@ export class CollectionEffects {
     ),
     map(item => {
       if (item) {
+        this.collectionItem = item;
         return uploadImage({ item, continueUpload: true });
       }
-
-      return getSubjectExamples();
+      let subject = this.collectionItem.subject;
+      return getSubjectExamples({ subject });
     })
   );
 
@@ -238,7 +243,8 @@ export class CollectionEffects {
     withLatestFrom(this.store.select(selectCurrentApiKey)),
     switchMap(([{ ids }, apiKey]) =>
       this.collectionService.deleteSubjectExamplesBulk(ids, apiKey).pipe(
-        switchMap(() => [deleteSelectedExamplesSuccess(), getSubjectExamples()]),
+        map(item => item[0].subject),
+        switchMap(subject => [deleteSelectedExamplesSuccess(), getSubjectExamples({ subject })]),
         catchError(error => of(deleteSelectedExamplesFail({ error })))
       )
     )

@@ -55,9 +55,9 @@ export class CollectionService {
     });
   }
 
-  getSubjectExampleList(apiKey: string): Observable<SubjectExampleResponseItem[]> {
+  getSubjectMedia(apiKey: string, subject: string): Observable<SubjectExampleResponseItem[]> {
     return this.http
-      .get(`${environment.userApiUrl}recognition/faces?size=1000`, {
+      .get(`${environment.userApiUrl}recognition/faces?size=1000&subject=${subject}`, {
         headers: { 'x-api-key': apiKey },
       })
       .pipe(map((resp: { faces: SubjectExampleResponseItem[] }) => resp.faces));

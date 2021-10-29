@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -51,6 +51,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectRightContainerComponent implements OnInit, OnDestroy {
+  defaultSubjectSubscription: Subscription;
   subjects$: Observable<string[]>;
   subject$: Observable<string>;
   isPending$: Observable<boolean>;
@@ -76,10 +77,11 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.isPending$ = this.collectionRightFacade.isPending$;
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
     this.mode$ = this.collectionRightFacade.subjectMode$;
-    this.selectedIds$ = this.collectionItems$.pipe(
-      map(items => items.filter(item => item.isSelected).map(item => item.id))
+    this.selectedIds$ = this.collectionItems$.pipe(map(items => items.filter(item => item.isSelected).map(item => item.id)));
+
+    this.defaultSubjectSubscription = this.collectionRightFacade.defaultSubject$.subscribe(subject =>
+      this.collectionRightFacade.loadSubjectMedia(subject)
     );
-    this.apiKeyInitSubscription = this.collectionRightFacade.apiKey$.subscribe(() => this.collectionRightFacade.loadExamplesList());
   }
 
   initApiKey(apiKey: string): void {
@@ -186,7 +188,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   }
 
   ngOnDestroy(): void {
-    this.apiKeyInitSubscription.unsubscribe();
+    this.defaultSubjectSubscription.unsubscribe();
     this.collectionRightFacade.resetSubjectExamples();
   }
 }
