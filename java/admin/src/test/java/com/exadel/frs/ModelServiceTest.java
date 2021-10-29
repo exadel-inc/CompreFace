@@ -175,7 +175,7 @@ class ModelServiceTest {
         modelService.createRecognitionModel(modelCreateDto, APPLICATION_GUID, USER_ID);
 
         val varArgs = ArgumentCaptor.forClass(Model.class);
-        verify(modelRepositoryMock).existsByNameAndAppId("model-name", APPLICATION_ID);
+        verify(modelRepositoryMock).existsByUniqueNameAndAppId("model-name", APPLICATION_ID);
         verify(modelRepositoryMock).save(varArgs.capture());
         verify(authManager).verifyWritePrivilegesToApp(user, app);
         verifyNoMoreInteractions(modelRepositoryMock, authManager);
@@ -196,7 +196,7 @@ class ModelServiceTest {
                      .build();
 
         when(appServiceMock.getApp(anyString())).thenReturn(app);
-        when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
+        when(modelRepositoryMock.existsByUniqueNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
                 modelService.createRecognitionModel(modelCreateDto, APPLICATION_GUID, USER_ID)
@@ -242,7 +242,7 @@ class ModelServiceTest {
         val clonedModel = modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
-        verify(modelRepositoryMock).existsByNameAndAppId("name_of_clone", APPLICATION_ID);
+        verify(modelRepositoryMock).existsByUniqueNameAndAppId("name_of_clone", APPLICATION_ID);
         verify(modelCloneService).cloneModel(any(Model.class), any(ModelCloneDto.class));
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
         verify(authManager).verifyWritePrivilegesToApp(user, app);
@@ -271,7 +271,7 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(anyString())).thenReturn(app);
-        when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
+        when(modelRepositoryMock.existsByUniqueNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
                 modelService.cloneModel(modelCloneDto, APPLICATION_GUID, MODEL_GUID, USER_ID)
@@ -309,7 +309,7 @@ class ModelServiceTest {
         modelService.updateModel(modelUpdateDto, APPLICATION_GUID, MODEL_GUID, USER_ID);
 
         verify(modelRepositoryMock).findByGuid(MODEL_GUID);
-        verify(modelRepositoryMock).existsByNameAndAppId("new_name", APPLICATION_ID);
+        verify(modelRepositoryMock).existsByUniqueNameAndAppId("new_name", APPLICATION_ID);
         verify(modelRepositoryMock).save(any(Model.class));
         verify(authManager).verifyReadPrivilegesToApp(user, app);
         verify(authManager).verifyAppHasTheModel(APPLICATION_GUID, repoModel);
@@ -339,7 +339,7 @@ class ModelServiceTest {
 
         when(modelRepositoryMock.findByGuid(anyString())).thenReturn(Optional.of(repoModel));
         when(appServiceMock.getApp(anyString())).thenReturn(app);
-        when(modelRepositoryMock.existsByNameAndAppId(anyString(), anyLong())).thenReturn(true);
+        when(modelRepositoryMock.existsByUniqueNameAndAppId(anyString(), anyLong())).thenReturn(true);
 
         assertThatThrownBy(() ->
                 modelService.updateModel(modelUpdateDto, APPLICATION_GUID, MODEL_GUID, USER_ID)
