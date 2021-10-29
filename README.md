@@ -1,6 +1,6 @@
 
 <h1 align="center">Exadel CompreFace is a leading free and open-source face recognition system</h1>
-
+# hacktoberfest 2021
 <p align="center">
     <a target="_blank" href="https://exadel.com/solutions/compreface/">
   <img src="https://user-images.githubusercontent.com/3736126/101276437-6e0ebd00-37b5-11eb-9df8-6bc2bb0f922d.png" alt="angular-logo" height="250px"/>
