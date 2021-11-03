@@ -33,6 +33,7 @@ import {
   deleteSubjectExample,
   editSubject,
   getSubjectExamples,
+  getSubjectMediaNextPage,
   readImageFiles,
   resetSubjectExamples,
   setSubjectMode,
@@ -74,6 +75,10 @@ export class CollectionRightFacade {
 
   loadSubjectMedia(subject: string): void {
     this.store.dispatch(getSubjectExamples({ subject }));
+  }
+
+  loadNextPage(subject: string, page: number, totalPages: number) {
+    this.store.dispatch(getSubjectMediaNextPage({ subject, page, totalPages }));
   }
 
   addImageFilesToCollection(fileDescriptors: File[]): void {

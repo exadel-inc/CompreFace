@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 
 import { TranslateService } from '@ngx-translate/core';
@@ -46,6 +46,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
     (cancelUploadItem)="cancelUploadItem($event)"
     (setMode)="setSubjectMode($event)"
     (deleteSelectedExamples)="deleteSelectedExamples($event)"
+    (loadMore)="loadMore($event)"
     (selectExample)="selectExample($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -72,7 +73,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.subject$ = this.collectionRightFacade.subject$;
     this.apiKey$ = this.collectionRightFacade.apiKey$;
     this.collectionItems$ = combineLatest([this.subject$, this.collectionRightFacade.collectionItems$]).pipe(
-      map(([subject, collection]) => collection.filter(item => item.subject === subject))
+      map(([subject, collection]) => collection)
     );
     this.isPending$ = this.collectionRightFacade.isPending$;
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
@@ -86,6 +87,10 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
 
   initApiKey(apiKey: string): void {
     this.apiKey = apiKey;
+  }
+
+  loadMore(item: CollectionItem) {
+    this.collectionRightFacade.loadNextPage(item['subject'], item['page'], item['totalPages']);
   }
 
   delete(name: string): void {

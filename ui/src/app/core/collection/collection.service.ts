@@ -15,7 +15,7 @@
  */
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { environment } from '../../../environments/environment';
 import { CollectionItem, SubjectExampleResponseItem } from 'src/app/data/interfaces/collection';
@@ -55,12 +55,26 @@ export class CollectionService {
     });
   }
 
-  getSubjectMedia(apiKey: string, subject: string): Observable<SubjectExampleResponseItem[]> {
+  getSubjectMediaNextPage(apiKey: string, subject: string, next: number): Observable<SubjectExampleResponseItem[]> {
+    const pageSize = 15;
+    return this.getSubjectMedia(apiKey, subject, next, pageSize);
+  }
+
+  getSubjectMedia(apiKey: string, subject: string, page: number = 0, size: number = 15) {
     return this.http
-      .get(`${environment.userApiUrl}recognition/faces?size=1000&subject=${subject}`, {
+      .get(`${environment.userApiUrl}recognition/faces?size=${size}&subject=${subject}&page=${page}`, {
         headers: { 'x-api-key': apiKey },
       })
-      .pipe(map((resp: { faces: SubjectExampleResponseItem[] }) => resp.faces));
+      .pipe(
+        map((resp: { faces: SubjectExampleResponseItem[] }) => {
+          const totalPages = resp['total_pages'];
+          const transformedArr = [];
+          resp.faces.map(el => {
+            transformedArr.push({ ...el, page: page, totalPages: totalPages });
+          });
+          return transformedArr;
+        })
+      );
   }
 
   uploadSubjectExamples(item: CollectionItem, subject: string, apiKey: string): Observable<SubjectExampleResponseItem> {

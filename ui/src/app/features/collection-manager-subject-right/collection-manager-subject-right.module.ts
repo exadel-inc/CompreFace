@@ -25,10 +25,21 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DragNDropModule } from '../drag-n-drop/drag-n-drop.module';
 import { ImageHolderCollectionModule } from '../image-holder-collection/image-holder-collection.module';
 
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
+
 @NgModule({
   declarations: [CollectionManagerSubjectRightContainerComponent, CollectionManagerSubjectRightComponent],
   exports: [CollectionManagerSubjectRightContainerComponent],
-  imports: [CommonModule, SpinnerModule, MatIconModule, MatButtonModule, TranslateModule, DragNDropModule, ImageHolderCollectionModule],
+  imports: [
+    CommonModule,
+    SpinnerModule,
+    MatIconModule,
+    MatButtonModule,
+    TranslateModule,
+    DragNDropModule,
+    ImageHolderCollectionModule,
+    InfiniteScrollModule,
+  ],
   providers: [CollectionRightFacade],
 })
 export class CollectionManagerSubjectRightModule {}

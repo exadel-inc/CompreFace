@@ -38,9 +38,11 @@ import {
   editSubject,
   editSubjectFail,
   editSubjectSuccess,
+  getNextPageSubjectExamplesSuccess,
   getSubjectExamples,
   getSubjectExamplesFail,
   getSubjectExamplesSuccess,
+  getSubjectMediaNextPage,
   initSelectedSubject,
   loadSubjects,
   loadSubjectsFail,
@@ -139,6 +141,21 @@ export class CollectionEffects {
         catchError(error => of(getSubjectExamplesFail({ error })))
       )
     )
+  );
+
+  @Effect()
+  loadNextPage$ = this.actions.pipe(
+    ofType(getSubjectMediaNextPage),
+    withLatestFrom(this.store.select(selectCurrentApiKey)),
+    switchMap(([{ subject, page, totalPages }, apiKey]) => {
+      const nextPage = page + 1;
+      if (nextPage !== totalPages) {
+        return this.collectionService.getSubjectMediaNextPage(apiKey, subject, nextPage).pipe(
+          map(items => getNextPageSubjectExamplesSuccess({ items, apiKey })),
+          catchError(error => of(getSubjectExamplesFail({ error })))
+        );
+      }
+    })
   );
 
   @Effect()

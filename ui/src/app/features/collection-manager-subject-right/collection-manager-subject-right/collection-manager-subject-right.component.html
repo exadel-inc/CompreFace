@@ -13,52 +13,60 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-<ng-container *ngIf="!isPending; else spinner">
-  <ng-container *ngIf="subject; else emptySubject">
-    <div class="profile">
-      <div class="profile--header">
-        <div class="profile--header_profile">
-          <div class="name">{{ 'manage_collection.right_side.profile' | translate }} {{ subject }}</div>
-          <div class="buttons" [ngSwitch]="mode">
-            <ng-container *ngSwitchCase="subjectModeEnum.BulkSelect" [ngTemplateOutlet]="bulkButtons"></ng-container>
-            <ng-container *ngSwitchDefault [ngTemplateOutlet]="defaultButtons"></ng-container>
+<div
+  class="collection-right-container"
+  infiniteScroll
+  [infiniteScrollDistance]="infiniteScrollDistance"
+  [scrollWindow]="scrollWindow"
+  (scrolled)="onScrollDown()"
+>
+  <ng-container *ngIf="!isPending; else spinner">
+    <ng-container *ngIf="subject; else emptySubject">
+      <div class="profile">
+        <div class="profile--header">
+          <div class="profile--header_profile">
+            <div class="name">{{ 'manage_collection.right_side.profile' | translate }} {{ subject }}</div>
+            <div class="buttons" [ngSwitch]="mode">
+              <ng-container *ngSwitchCase="subjectModeEnum.BulkSelect" [ngTemplateOutlet]="bulkButtons"></ng-container>
+              <ng-container *ngSwitchDefault [ngTemplateOutlet]="defaultButtons"></ng-container>
+            </div>
+          </div>
+          <div class="profile--header_examples" [ngSwitch]="mode">
+            <ng-container *ngSwitchCase="subjectModeEnum.BulkSelect"
+              >{{ 'manage_collection.right_side.selected_examples' | translate }} {{ selectedIds.length }}</ng-container
+            >
+            <ng-container *ngSwitchDefault
+              >{{ 'manage_collection.right_side.examples' | translate }} {{ collectionItems.length }}</ng-container
+            >
           </div>
         </div>
-        <div class="profile--header_examples" [ngSwitch]="mode">
-          <ng-container *ngSwitchCase="subjectModeEnum.BulkSelect"
-            >{{ 'manage_collection.right_side.selected_examples' | translate }} {{ selectedIds.length }}</ng-container
-          >
-          <ng-container *ngSwitchDefault
-            >{{ 'manage_collection.right_side.examples' | translate }} {{ collectionItems.length }}</ng-container
-          >
+      </div>
+      <div class="drag-and-drop-container">
+        <app-drag-n-drop
+          [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
+          [label]="'dnd.label' | translate"
+          (upload)="readFiles.emit($event)"
+          inline
+        >
+        </app-drag-n-drop>
+      </div>
+      <div class="image-holder-collection-container">
+        <div class="image-holder-collection-container--spinner" *ngIf="isCollectionPending">
+          <app-spinner></app-spinner>
         </div>
+        <image-holder-collection
+          *ngIf="!isCollectionPending"
+          [items]="collectionItems"
+          [selectionMode]="mode === subjectModeEnum.BulkSelect"
+          (deleteItem)="deleteItem.emit($event)"
+          (cancelUploadItem)="cancelUploadItem.emit($event)"
+          (selectItem)="selectExample.emit($event)"
+        >
+        </image-holder-collection>
       </div>
-    </div>
-    <div class="drag-and-drop-container">
-      <app-drag-n-drop
-        [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"
-        [label]="'dnd.label' | translate"
-        (upload)="readFiles.emit($event)"
-        inline
-      >
-      </app-drag-n-drop>
-    </div>
-    <div class="image-holder-collection-container">
-      <div class="image-holder-collection-container--spinner" *ngIf="isCollectionPending">
-        <app-spinner></app-spinner>
-      </div>
-      <image-holder-collection
-        *ngIf="!isCollectionPending"
-        [items]="collectionItems"
-        [selectionMode]="mode === subjectModeEnum.BulkSelect"
-        (deleteItem)="deleteItem.emit($event)"
-        (cancelUploadItem)="cancelUploadItem.emit($event)"
-        (selectItem)="selectExample.emit($event)"
-      >
-      </image-holder-collection>
-    </div>
+    </ng-container>
   </ng-container>
-</ng-container>
+</div>
 
 <ng-template #spinner>
   <div class="spinner">
