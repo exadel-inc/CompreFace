@@ -77,7 +77,7 @@ export class CollectionRightFacade {
     this.store.dispatch(getSubjectExamples({ subject }));
   }
 
-  loadNextPage(subject: string, page: number, totalPages: number) {
+  loadNextPage(subject: string, page: number, totalPages: number): void {
     this.store.dispatch(getSubjectMediaNextPage({ subject, page, totalPages }));
   }
 
@@ -101,15 +101,15 @@ export class CollectionRightFacade {
     this.store.dispatch(resetSubjectExamples());
   }
 
-  setSubjectMode(mode: SubjectModeEnum) {
+  setSubjectMode(mode: SubjectModeEnum): void {
     this.store.dispatch(setSubjectMode({ mode }));
   }
 
-  selectSubjectExample(item: CollectionItem) {
+  selectSubjectExample(item: CollectionItem): void {
     this.store.dispatch(toggleExampleSelection({ item }));
   }
 
-  deleteSelectedExamples(ids: string[]) {
+  deleteSelectedExamples(ids: string[]): void {
     this.store.dispatch(deleteSelectedExamples({ ids }));
   }
 }

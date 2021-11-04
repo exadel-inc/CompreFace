@@ -82,12 +82,6 @@ function updateCollectionItemStatus(
   };
 }
 
-function getSubject(items: CollectionItem[]) {
-  if (items.length) {
-    return items[items.length - 1]['subject'];
-  }
-}
-
 export interface CollectionEntityState {
   isPending: boolean;
   isCollectionPending: boolean;

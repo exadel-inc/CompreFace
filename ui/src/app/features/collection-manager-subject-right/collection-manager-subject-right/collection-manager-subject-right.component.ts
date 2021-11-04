@@ -50,12 +50,12 @@ export class CollectionManagerSubjectRightComponent {
   @Output() selectExample = new EventEmitter<CollectionItem>();
   @Output() loadMore = new EventEmitter<CollectionItem>();
 
-  onScrollDown() {
+  onScrollDown(): void {
     const lastItem = this.collectionItems[this.collectionItems.length - 1];
     const nextPage = lastItem['page'] + 1;
     const totalPages = lastItem['totalPages'];
 
-    if (totalPages !== nextPage) {
+    if (totalPages !== nextPage && !isNaN(nextPage)) {
       this.prevItemCollection = this.collectionItems;
       this.loadMore.emit(lastItem);
     }

@@ -52,7 +52,6 @@ export const getNextPageSubjectExamplesSuccess = createAction(
   '[Collection] Get Next Page Subject Examples Success',
   props<{ items: SubjectExampleResponseItem[]; apiKey: string }>()
 );
-// export const getSubjectExamplesFail = createAction('[Collection] Get Subject Examples Fail', props<{ error: string }>());
 
 export const readImageFiles = createAction('[Collection] Read Image Files', props<{ fileDescriptors: File[] }>());
 export const addFileToCollection = createAction(

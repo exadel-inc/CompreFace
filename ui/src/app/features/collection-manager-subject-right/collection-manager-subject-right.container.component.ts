@@ -89,7 +89,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.apiKey = apiKey;
   }
 
-  loadMore(item: CollectionItem) {
+  loadMore(item: CollectionItem): void {
     this.collectionRightFacade.loadNextPage(item['subject'], item['page'], item['totalPages']);
   }
 
@@ -166,11 +166,11 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.collectionRightFacade.deleteItemFromUploadOrder(item);
   }
 
-  setSubjectMode(mode: SubjectModeEnum) {
+  setSubjectMode(mode: SubjectModeEnum): void {
     this.collectionRightFacade.setSubjectMode(mode);
   }
 
-  deleteSelectedExamples(ids: string[]) {
+  deleteSelectedExamples(ids: string[]): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -188,7 +188,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
       .subscribe(() => this.collectionRightFacade.deleteSelectedExamples(ids));
   }
 
-  selectExample(item: CollectionItem) {
+  selectExample(item: CollectionItem): void {
     this.collectionRightFacade.selectSubjectExample(item);
   }
 
