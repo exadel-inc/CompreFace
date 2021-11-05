@@ -25,6 +25,7 @@ jobs:
         aws ec2 authorize-security-group-ingress --group-id ${SECURITY_GROUP_ID} --protocol tcp --port 22 --cidr 0.0.0.0/0
     - name: Run Instance
       run: |
+        echo ${SECURITY_GROUP_ID}
         export INSTANCE_ID=$(aws ec2 run-instances --image-id ami-04e612d1108883950 --count 1 --instance-type t2.medium --key-name IharB --security-group-ids ${SECURITY_GROUP_ID} --subnet-id subnet-080dc6a6ed9580c77 --query 'Instances[0].InstanceId' --output text)
         aws ec2 wait instance-running --instance-ids ${INSTANCE_ID}
         sleep 10
@@ -35,4 +36,5 @@ jobs:
       run: |
         echo "$SSH_KEY" > private_key && chmod 600 private_key
         export INSTANCE_IP_ADDRESS_EXTERNAL=$(aws ec2 describe-instances --instance-id ${INSTANCE_ID} --query 'Reservations[].Instances[].NetworkInterfaces[].Association.PublicIp' --output text)
+        echo $INSTANCE_IP_ADDRESS_EXTERNAL
         ssh -i private_key -oStrictHostKeyChecking=no ec2-user@$INSTANCE_IP_ADDRESS_EXTERNAL "wget -q -O tmp.zip '$RELEASE' && unzip -o tmp.zip && rm tmp.zip && docker-compose stop && docker-compose rm --force && docker image prune -a --force && docker-compose up -d && rm /home/ec2-user/.ssh/authorized_keys && sudo rm /root/.ssh/authorized_keys"
