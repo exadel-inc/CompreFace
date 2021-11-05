@@ -23,11 +23,13 @@ jobs:
       run: |
         export SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name MySecurityGroup --description "My security group" --query 'GroupId' --output text)
         aws ec2 authorize-security-group-ingress --group-id ${SECURITY_GROUP_ID} --protocol tcp --port 22 --cidr 0.0.0.0/0
+        echo "::set-env name=SECURITY_GROUP_ID::$SECURITY_GROUP_ID"
     - name: Run Instance
       run: |
         echo ${SECURITY_GROUP_ID}
         export INSTANCE_ID=$(aws ec2 run-instances --image-id ami-04e612d1108883950 --count 1 --instance-type t2.medium --key-name IharB --security-group-ids ${SECURITY_GROUP_ID} --subnet-id subnet-080dc6a6ed9580c77 --query 'Instances[0].InstanceId' --output text)
         aws ec2 wait instance-running --instance-ids ${INSTANCE_ID}
+        echo "::set-env name=INSTANCE_ID::$INSTANCE_ID"
         sleep 10
     - name: Install Release
       env:
