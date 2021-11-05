@@ -33,5 +33,6 @@ jobs:
          RELEASE: ${{ github.event.inputs.release }}
          SSH_KEY: ${{secrets.SSH_KEY}}
       run: |
+        echo "$SSH_KEY" > private_key && chmod 600 private_key
         export INSTANCE_IP_ADDRESS_EXTERNAL=$(aws ec2 describe-instances --instance-id ${INSTANCE_ID} --query 'Reservations[].Instances[].NetworkInterfaces[].Association.PublicIp' --output text)
-        ssh -i ${SSH_KEY} -oStrictHostKeyChecking=no ec2-user@$INSTANCE_IP_ADDRESS_EXTERNAL "wget -q -O tmp.zip '$RELEASE' && unzip -o tmp.zip && rm tmp.zip && docker-compose stop && docker-compose rm --force && docker image prune -a --force && docker-compose up -d && rm /home/ec2-user/.ssh/authorized_keys && sudo rm /root/.ssh/authorized_keys"
+        ssh -i private_key -oStrictHostKeyChecking=no ec2-user@$INSTANCE_IP_ADDRESS_EXTERNAL "wget -q -O tmp.zip '$RELEASE' && unzip -o tmp.zip && rm tmp.zip && docker-compose stop && docker-compose rm --force && docker image prune -a --force && docker-compose up -d && rm /home/ec2-user/.ssh/authorized_keys && sudo rm /root/.ssh/authorized_keys"
