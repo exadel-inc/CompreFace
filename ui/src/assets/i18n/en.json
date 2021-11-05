@@ -123,7 +123,7 @@
     "search": {
       "title": "Search service"
     },
-    "mange_collection": "Collection"
+    "mange_collection": "Manage Collection"
   },
   "users": {
     "caption": "Table of users",
@@ -169,7 +169,7 @@
   },
   "dnd": {
     "title": "Click here or Drag and drop your {{typeImage}} here",
-    "label": "Available images extensions: jpeg, jpg, png, webp \nMax images size = 5Mb (5242880bytes)",
+    "label": "Available images extensions: jpeg, jpg, png, webp \nMax images size = ",
     "test": "Test model",
     "add": "Add to model",
     "train": "Train model",

@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-drag-n-drop',
@@ -24,6 +24,7 @@ export class DragNDropComponent {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
+  size: string = '5Mb (5242880bytes)';
 
   viewComponentColumn: boolean;
   @Input('viewComponentColumn') set setViewComponentColumn(val: boolean | '') {
@@ -34,7 +35,7 @@ export class DragNDropComponent {
   @Input('inline') set setInline(val: boolean | '') {
     this.inline = val === '' || val;
   }
-  
+
   @Output() upload: EventEmitter<File[]> = new EventEmitter();
 
   constructor() {}
