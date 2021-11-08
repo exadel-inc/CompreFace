@@ -223,6 +223,18 @@ export class CollectionEffects {
     ofType(uploadImage),
     withLatestFrom(this.store.select(selectCurrentApiKey), this.store.select(selectCollectionSubject)),
     switchMap(([{ item, continueUpload }, apiKey, subject]) => {
+      const { file } = item;
+      const sizeInBytes = 5242880;
+      const ext = /(\.jpg|\.jpeg|\.webp|\.png)$/i;
+      const type = /(\/jpg|\/jpeg|\/webp|\/png)$/i;
+
+      if (file.size > sizeInBytes) {
+        return of(uploadImageFail({ error: `Invalid File Size ! \n File Name: ${file.name}`, item, continueUpload }));
+      }
+      if (!ext.exec(file.name) || !type.exec(file.type)) {
+        return of(uploadImageFail({ error: `Invalid File Type ! \n File Name: ${file.name}`, item, continueUpload }));
+      }
+
       return this.collectionService.uploadSubjectExamples(item, subject, apiKey).pipe(
         map(() => uploadImageSuccess({ item, continueUpload })),
         catchError(error => {

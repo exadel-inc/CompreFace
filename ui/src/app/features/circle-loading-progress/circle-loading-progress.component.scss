@@ -28,6 +28,11 @@ $attention-icon-size: 6rem;
 
   &.blurred {
     backdrop-filter: blur(20px) brightness(0.6);
+
+    &:hover {
+      opacity: 0.7;
+      transition: all 0.3s ease-in-out;
+    }
   }
 
   .image-load-failed,
