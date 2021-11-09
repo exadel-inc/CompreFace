@@ -128,7 +128,6 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
       totalPages: item['totalPages'],
     }));
 
-    console.log(newCollectionItems);
     return {
       ...state,
       isCollectionPending: false,

@@ -24,7 +24,6 @@ export class DragNDropComponent {
   @ViewChild('fileDropRef') fileDropEl: ElementRef;
   @Input() title: string;
   @Input() label: string;
-  size: string = '5Mb (5242880bytes)';
 
   viewComponentColumn: boolean;
   @Input('viewComponentColumn') set setViewComponentColumn(val: boolean | '') {

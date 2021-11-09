@@ -23,7 +23,6 @@ import { CollectionItem } from 'src/app/data/interfaces/collection';
   styleUrls: ['./collection-manager-subject-right.component.scss'],
 })
 export class CollectionManagerSubjectRightComponent {
-  infiniteScrollDistance: number = 1;
   scrollWindow: boolean = false;
   prevItemCollection: CollectionItem[] = [];
   subjectModeEnum = SubjectModeEnum;
@@ -51,6 +50,7 @@ export class CollectionManagerSubjectRightComponent {
   @Output() loadMore = new EventEmitter<CollectionItem>();
 
   onScrollDown(): void {
+    console.log('scrolled');
     const lastItem = this.collectionItems[this.collectionItems.length - 1];
     const nextPage = lastItem['page'] + 1;
     const totalPages = lastItem['totalPages'];

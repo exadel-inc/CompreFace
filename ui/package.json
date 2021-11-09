@@ -37,6 +37,7 @@
     "@ngx-translate/core": "^13.0.0",
     "@ngx-translate/http-loader": "^6.0.0",
     "jasmine-marbles": "^0.6.0",
+    "ngx-infinite-scroll": "^10.0.1",
     "rxjs": "~6.6.3",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"
