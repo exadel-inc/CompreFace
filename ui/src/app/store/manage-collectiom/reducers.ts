@@ -115,7 +115,9 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(resetSubjects, () => ({ ...initialState })),
   on(getSubjectExamples, state => ({ ...state, isCollectionPending: true })),
   on(getSubjectExamplesSuccess, (state, { items, apiKey }) => {
-    const collectionCopy = [...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded)];
+    const collectionCopy = [
+      ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded && item.subject === state.subject),
+    ];
 
     const newCollectionItems = items.map(item => ({
       url: CollectionHelper.getCollectionItemUrl(apiKey, item.image_id),
@@ -126,6 +128,7 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
       totalPages: item['totalPages'],
     }));
 
+    console.log(newCollectionItems);
     return {
       ...state,
       isCollectionPending: false,
@@ -135,7 +138,9 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
 
   on(getSubjectMediaNextPage, state => ({ ...state, isCollectionPending: true })),
   on(getNextPageSubjectExamplesSuccess, (state, { items, apiKey }) => {
-    const collectionCopy = [...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded)];
+    const collectionCopy = [
+      ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded && item.subject === state.subject),
+    ];
 
     let prevCollection = [...state.collection];
 
