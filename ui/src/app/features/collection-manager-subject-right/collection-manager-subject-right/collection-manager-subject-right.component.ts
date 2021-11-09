@@ -50,7 +50,6 @@ export class CollectionManagerSubjectRightComponent {
   @Output() loadMore = new EventEmitter<CollectionItem>();
 
   onScrollDown(): void {
-    console.log('scrolled');
     const lastItem = this.collectionItems[this.collectionItems.length - 1];
     const nextPage = lastItem['page'] + 1;
     const totalPages = lastItem['totalPages'];
