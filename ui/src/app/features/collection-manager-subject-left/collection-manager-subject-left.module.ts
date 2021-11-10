@@ -26,6 +26,7 @@ import { CollectionLeftFacade } from './collection-left-facade';
 import { SpinnerModule } from '../spinner/spinner.module';
 import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 import { CollectionManagerSubjectLeftContainerComponent } from './collection-manager-subject-left.container.component';
+import { CollectionRightFacade } from '../collection-manager-subject-right/collection-manager-right-facade';
 
 @NgModule({
   declarations: [CollectionManagerSubjectLeftContainerComponent, CollectionManagerSubjectLeftComponent],
@@ -40,6 +41,6 @@ import { CollectionManagerSubjectLeftContainerComponent } from './collection-man
     TablePipeModule,
   ],
   exports: [CollectionManagerSubjectLeftContainerComponent],
-  providers: [CollectionLeftFacade],
+  providers: [CollectionLeftFacade, CollectionRightFacade],
 })
 export class CollectionManagerSubjectLeftModule {}

@@ -38,9 +38,11 @@ import {
   editSubject,
   editSubjectFail,
   editSubjectSuccess,
+  getNextPageSubjectExamplesSuccess,
   getSubjectExamples,
   getSubjectExamplesFail,
   getSubjectExamplesSuccess,
+  getSubjectMediaNextPage,
   initSelectedSubject,
   loadSubjects,
   loadSubjectsFail,
@@ -59,6 +61,7 @@ import { selectCollectionSubject, selectCollectionSubjects, selectImageCollectio
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { selectCurrentApiKey } from '../model/selectors';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
+import { CollectionItem } from 'src/app/data/interfaces/collection';
 
 @Injectable()
 export class CollectionEffects {
@@ -132,12 +135,27 @@ export class CollectionEffects {
   loadSubjectExamples$ = this.actions.pipe(
     ofType(getSubjectExamples),
     withLatestFrom(this.store.select(selectCurrentApiKey)),
-    switchMap(([, apiKey]) =>
-      this.collectionService.getSubjectExampleList(apiKey).pipe(
+    switchMap(([{ subject }, apiKey]) =>
+      this.collectionService.getSubjectMedia(apiKey, subject).pipe(
         map(items => getSubjectExamplesSuccess({ items, apiKey })),
         catchError(error => of(getSubjectExamplesFail({ error })))
       )
     )
+  );
+
+  @Effect()
+  loadNextPage$ = this.actions.pipe(
+    ofType(getSubjectMediaNextPage),
+    withLatestFrom(this.store.select(selectCurrentApiKey)),
+    switchMap(([{ subject, page, totalPages }, apiKey]) => {
+      const nextPage = page + 1;
+      if (nextPage !== totalPages) {
+        return this.collectionService.getSubjectMediaNextPage(apiKey, subject, nextPage).pipe(
+          map(items => getNextPageSubjectExamplesSuccess({ items, apiKey })),
+          catchError(error => of(getSubjectExamplesFail({ error })))
+        );
+      }
+    })
   );
 
   @Effect()
@@ -146,7 +164,8 @@ export class CollectionEffects {
     withLatestFrom(this.store.select(selectCurrentApiKey)),
     switchMap(([{ item }, apiKey]) =>
       this.collectionService.deleteSubjectExample(item, apiKey).pipe(
-        switchMap(() => [deleteSubjectExampleSuccess({ item }), getSubjectExamples()]),
+        map(item => item.subject),
+        switchMap(subject => [deleteSubjectExampleSuccess({ item }), getSubjectExamples({ subject })]),
         catchError(error => of(deleteSubjectExampleFail({ item, error })))
       )
     )
@@ -177,6 +196,8 @@ export class CollectionEffects {
     })
   );
 
+  collectionItem: CollectionItem;
+
   @Effect()
   startUploadOrder$ = this.actions.pipe(
     ofType(startUploadImageOrder),
@@ -189,10 +210,11 @@ export class CollectionEffects {
     ),
     map(item => {
       if (item) {
+        this.collectionItem = item;
         return uploadImage({ item, continueUpload: true });
       }
-
-      return getSubjectExamples();
+      let subject = this.collectionItem.subject;
+      return getSubjectExamples({ subject });
     })
   );
 
@@ -201,6 +223,18 @@ export class CollectionEffects {
     ofType(uploadImage),
     withLatestFrom(this.store.select(selectCurrentApiKey), this.store.select(selectCollectionSubject)),
     switchMap(([{ item, continueUpload }, apiKey, subject]) => {
+      const { file } = item;
+      const sizeInBytes = 5242880;
+      const ext = /(\.jpg|\.jpeg|\.webp|\.png)$/i;
+      const type = /(\/jpg|\/jpeg|\/webp|\/png)$/i;
+
+      if (file.size > sizeInBytes) {
+        return of(uploadImageFail({ error: `Invalid File Size ! \n File Name: ${file.name}`, item, continueUpload }));
+      }
+      if (!ext.exec(file.name) || !type.exec(file.type)) {
+        return of(uploadImageFail({ error: `Invalid File Type ! \n File Name: ${file.name}`, item, continueUpload }));
+      }
+
       return this.collectionService.uploadSubjectExamples(item, subject, apiKey).pipe(
         map(() => uploadImageSuccess({ item, continueUpload })),
         catchError(error => {
@@ -238,7 +272,8 @@ export class CollectionEffects {
     withLatestFrom(this.store.select(selectCurrentApiKey)),
     switchMap(([{ ids }, apiKey]) =>
       this.collectionService.deleteSubjectExamplesBulk(ids, apiKey).pipe(
-        switchMap(() => [deleteSelectedExamplesSuccess(), getSubjectExamples()]),
+        map(item => item[0].subject),
+        switchMap(subject => [deleteSelectedExamplesSuccess(), getSubjectExamples({ subject })]),
         catchError(error => of(deleteSelectedExamplesFail({ error })))
       )
     )

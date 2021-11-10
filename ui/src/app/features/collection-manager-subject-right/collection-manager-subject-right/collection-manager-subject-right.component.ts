@@ -23,6 +23,10 @@ import { CollectionItem } from 'src/app/data/interfaces/collection';
   styleUrls: ['./collection-manager-subject-right.component.scss'],
 })
 export class CollectionManagerSubjectRightComponent {
+  scrollWindow: boolean = false;
+  prevItemCollection: CollectionItem[] = [];
+  subjectModeEnum = SubjectModeEnum;
+
   @Input() isPending: boolean;
   @Input() isCollectionPending: boolean;
   @Input() subject: string;
@@ -41,8 +45,18 @@ export class CollectionManagerSubjectRightComponent {
   @Output() deleteItem = new EventEmitter<CollectionItem>();
   @Output() cancelUploadItem = new EventEmitter<CollectionItem>();
   @Output() setMode = new EventEmitter<SubjectModeEnum>();
-  @Output() deleteSelectedExamples =  new EventEmitter<string[]>();
+  @Output() deleteSelectedExamples = new EventEmitter<string[]>();
   @Output() selectExample = new EventEmitter<CollectionItem>();
+  @Output() loadMore = new EventEmitter<CollectionItem>();
 
-  subjectModeEnum = SubjectModeEnum;
+  onScrollDown(): void {
+    const lastItem = this.collectionItems[this.collectionItems.length - 1];
+    const nextPage = lastItem['page'] + 1;
+    const totalPages = lastItem['totalPages'];
+
+    if (totalPages !== nextPage && !isNaN(nextPage)) {
+      this.prevItemCollection = this.collectionItems;
+      this.loadMore.emit(lastItem);
+    }
+  }
 }

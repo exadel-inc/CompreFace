@@ -16,6 +16,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { CollectionLeftFacade } from './collection-left-facade';
+import { CollectionRightFacade } from '../collection-manager-subject-right/collection-manager-right-facade';
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -42,7 +43,12 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
 
   private apiKey: string;
 
-  constructor(private collectionLeftFacade: CollectionLeftFacade, private translate: TranslateService, private dialog: MatDialog) {}
+  constructor(
+    private collectionLeftFacade: CollectionLeftFacade,
+    private translate: TranslateService,
+    private dialog: MatDialog,
+    private collectionRightFacade: CollectionRightFacade
+  ) {}
 
   ngOnInit(): void {
     this.currentSubject$ = this.collectionLeftFacade.currentSubject$;
@@ -76,5 +82,6 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit {
 
   onSelectedSubject(change: MatListOption[]): void {
     this.collectionLeftFacade.onSelectedSubject(change[0].value);
+    this.collectionRightFacade.loadSubjectMedia(change[0].value);
   }
 }

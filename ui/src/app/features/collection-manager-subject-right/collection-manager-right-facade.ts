@@ -33,6 +33,7 @@ import {
   deleteSubjectExample,
   editSubject,
   getSubjectExamples,
+  getSubjectMediaNextPage,
   readImageFiles,
   resetSubjectExamples,
   setSubjectMode,
@@ -46,6 +47,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 export class CollectionRightFacade {
   subjects$: Observable<string[]>;
   subject$: Observable<string>;
+  defaultSubject$: Observable<string>;
   apiKey$: Observable<string>;
   collectionItems$: Observable<CollectionItem[]>;
   isPending$: Observable<boolean>;
@@ -53,6 +55,7 @@ export class CollectionRightFacade {
   subjectMode$: Observable<SubjectModeEnum>;
 
   constructor(private store: Store<any>) {
+    this.defaultSubject$ = this.store.select(selectCollectionSubject);
     this.subjects$ = this.store.select(selectCollectionSubjects);
     this.subject$ = this.store.select(selectCollectionSubject);
     this.apiKey$ = this.store.select(selectCurrentApiKey);
@@ -70,8 +73,12 @@ export class CollectionRightFacade {
     this.store.dispatch(deleteSubject({ name, apiKey }));
   }
 
-  loadExamplesList(): void {
-    this.store.dispatch(getSubjectExamples());
+  loadSubjectMedia(subject: string): void {
+    this.store.dispatch(getSubjectExamples({ subject }));
+  }
+
+  loadNextPage(subject: string, page: number, totalPages: number): void {
+    this.store.dispatch(getSubjectMediaNextPage({ subject, page, totalPages }));
   }
 
   addImageFilesToCollection(fileDescriptors: File[]): void {
@@ -94,15 +101,15 @@ export class CollectionRightFacade {
     this.store.dispatch(resetSubjectExamples());
   }
 
-  setSubjectMode(mode: SubjectModeEnum) {
+  setSubjectMode(mode: SubjectModeEnum): void {
     this.store.dispatch(setSubjectMode({ mode }));
   }
 
-  selectSubjectExample(item: CollectionItem) {
+  selectSubjectExample(item: CollectionItem): void {
     this.store.dispatch(toggleExampleSelection({ item }));
   }
 
-  deleteSelectedExamples(ids: string[]) {
+  deleteSelectedExamples(ids: string[]): void {
     this.store.dispatch(deleteSelectedExamples({ ids }));
   }
 }

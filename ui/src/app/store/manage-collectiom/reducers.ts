@@ -52,6 +52,8 @@ import {
   deleteSelectedExamples,
   deleteSelectedExamplesFail,
   deleteSelectedExamplesSuccess,
+  getSubjectMediaNextPage,
+  getNextPageSubjectExamplesSuccess,
 } from './action';
 
 function updateCollectionItemStatus(
@@ -113,13 +115,17 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(resetSubjects, () => ({ ...initialState })),
   on(getSubjectExamples, state => ({ ...state, isCollectionPending: true })),
   on(getSubjectExamplesSuccess, (state, { items, apiKey }) => {
-    const collectionCopy = [...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded)];
+    const collectionCopy = [
+      ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded && item.subject === state.subject),
+    ];
 
     const newCollectionItems = items.map(item => ({
       url: CollectionHelper.getCollectionItemUrl(apiKey, item.image_id),
       id: item.image_id,
       status: CircleLoadingProgressEnum.Uploaded,
       subject: item.subject,
+      page: item['page'],
+      totalPages: item['totalPages'],
     }));
 
     return {
@@ -128,6 +134,31 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
       collection: [...newCollectionItems, ...collectionCopy],
     };
   }),
+
+  on(getSubjectMediaNextPage, state => ({ ...state, isCollectionPending: true })),
+  on(getNextPageSubjectExamplesSuccess, (state, { items, apiKey }) => {
+    const collectionCopy = [
+      ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded && item.subject === state.subject),
+    ];
+
+    let prevCollection = [...state.collection];
+
+    const newCollectionItems = items.map(item => ({
+      url: CollectionHelper.getCollectionItemUrl(apiKey, item.image_id),
+      id: item.image_id,
+      status: CircleLoadingProgressEnum.Uploaded,
+      subject: item.subject,
+      page: item['page'],
+      totalPages: item['totalPages'],
+    }));
+
+    return {
+      ...state,
+      isCollectionPending: false,
+      collection: [...prevCollection, ...newCollectionItems, ...collectionCopy],
+    };
+  }),
+
   on(getSubjectExamplesFail, state => ({ ...state, isCollectionPending: false })),
   on(addFileToCollection, (state, { url, file, subject }) => ({
     ...state,
