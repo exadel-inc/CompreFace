@@ -22,6 +22,7 @@ jobs:
     - name: Create Security Group
       run: |
         export SECURITY_GROUP_ID=$(aws ec2 create-security-group --group-name MySecurityGroup --description "My security group" --query 'GroupId' --output text)
+        aws ec2 wait security-group-exists --group-ids ${SECURITY_GROUP_ID}
         aws ec2 authorize-security-group-ingress --group-id ${SECURITY_GROUP_ID} --protocol tcp --port 22 --cidr 0.0.0.0/0
         echo "SECURITY_GROUP_ID=$SECURITY_GROUP_ID" >> $GITHUB_ENV
     - name: Run Instance
