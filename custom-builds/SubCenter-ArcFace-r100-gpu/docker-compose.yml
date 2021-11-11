@@ -6,6 +6,7 @@ volumes:
 services:
   compreface-postgres-db:
     image: postgres:11.5
+    restart: always
     container_name: "compreface-postgres-db"
     environment:
       - POSTGRES_USER=${postgres_username}
@@ -16,6 +17,7 @@ services:
 
   compreface-admin:
     image: ${registry}compreface-admin:${ADMIN_VERSION}
+    restart: always
     container_name: "compreface-admin"
     environment:
       - POSTGRES_USER=${postgres_username}
@@ -34,6 +36,7 @@ services:
 
   compreface-api:
     image: ${registry}compreface-api:${API_VERSION}
+    restart: always
     container_name: "compreface-api"
     depends_on:
       - compreface-postgres-db
@@ -47,6 +50,7 @@ services:
 
   compreface-fe:
     image: ${registry}compreface-fe:${FE_VERSION}
+    restart: always
     container_name: "compreface-ui"
     ports:
       - "8000:80"
@@ -56,6 +60,7 @@ services:
 
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}
+    restart: always
     container_name: "compreface-core"
     runtime: nvidia
     environment:
