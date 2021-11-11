@@ -4,10 +4,10 @@ on:
   workflow_dispatch:
     inputs:
       release:
-        description: release zip (e.g., https://github.com/exadel-inc/CompreFace/releases/download/v0.6.0/CompreFace_0.6.0.zip)
+        description: release zip (e.g., https://github.com/exadel-inc/CompreFace/releases/download/v0.6.1/CompreFace_0.6.1.zip)
         required: true
       version:
-        description: version (e.g., 0.6.0)
+        description: version (e.g., 0.6.1)
         required: true
 jobs:
   build:
