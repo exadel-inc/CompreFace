@@ -111,6 +111,8 @@ class Calculator(InsightFaceMixin, mixins.CalculatorMixin, base.BasePlugin):
         ('arcface_resnet50', '1a9nib4I9OIVORwsqLB0gz0WuLC32E8gf', (1.2375747, 5.973354538), 400),
         ('arcface-r50-msfdrop75', '1gNuvRNHCNgvFtz7SjhW82v2-znlAYaRO', (1.2350148, 7.071431642), 400),
         ('arcface-r100-msfdrop75', '1lAnFcBXoMKqE-SkZKTmi6MsYAmzG0tFw', (1.224676, 6.322647217), 400),
+        # CASIA-WebFace-Masked, 0.9840 LFW, 0.9667 LFW-Masked (orig mobilefacenet has 0.9482 on LFW-Masked)
+        ('arcface_mobilefacenet_casia_masked', '1ltcJChTdP1yQWF9e1ESpTNYAVwxLSNLP', (1.22507105, 7.321198934), 200),
     )
 
     def calc_embedding(self, face_img: Array3D) -> Array3D:
