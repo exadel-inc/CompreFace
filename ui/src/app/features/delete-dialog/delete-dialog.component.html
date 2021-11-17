@@ -69,7 +69,9 @@
   </ng-container>
 </div>
 <div mat-dialog-actions>
-  <button class="color-red" mat-flat-button [mat-dialog-close]="data.selectedOption">{{ 'common.capital.delete' | translate }}</button>
+  <button class="color-red" mat-flat-button [mat-dialog-close]="data.selectedOption || true">
+    {{ 'common.capital.delete' | translate }}
+  </button>
   <button mat-flat-button color="primary" [mat-dialog-close]="false" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
 </div>
 <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
