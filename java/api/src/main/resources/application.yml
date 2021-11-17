@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: ${API_PORT:8080}
 
 spring:
   liquibase:
