@@ -7,7 +7,7 @@ on:
         description: Version (e.g., 0.4.1)
         required: true
       docker_registry:
-        description: exadel/
+        description: DockerHub repository (e.g., exadel/)
         required: true
 jobs:
   build:
@@ -17,8 +17,6 @@ jobs:
      - name: build images
        env:
          VERSION: ${{ github.event.inputs.version }}
-         DOCKER_USER: ${{secrets.DOCKER_HUB_LOGIN}}
-         DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PWD}}
          DOCKER_REGISTRY: ${{ github.event.inputs.docker_registry }}
        working-directory: ./custom-builds/Single-Docker-File/
        run: |
@@ -30,4 +28,12 @@ jobs:
          docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}-mobilenet        --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:${VERSION}-mobilenet ./../..
          docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}-mobilenet-gpu    --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:${VERSION}-mobilenet-gpu ./../..
          docker images
+     - name: push images
+       env:
+         DOCKER_USER: ${{secrets.DOCKER_HUB_LOGIN}}
+         DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PWD}}
+         DOCKER_REGISTRY: ${{ github.event.inputs.docker_registry }}
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker push --all-tags ${DOCKER_REGISTRY}compreface
 
