@@ -1,0 +1,33 @@
+name: Build and push Docker image to DockerHub
+
+on: 
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Version (e.g., 0.4.1)
+        required: true
+      docker_registry:
+        description: exadel/
+        required: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+     - uses: actions/checkout@v2
+     - name: build images
+       env:
+         VERSION: ${{ github.event.inputs.version }}
+         DOCKER_USER: ${{secrets.DOCKER_HUB_LOGIN}}
+         DOCKER_PASSWORD: ${{secrets.DOCKER_HUB_PWD}}
+         DOCKER_REGISTRY: ${{ github.event.inputs.docker_registry }}
+       working-directory: ./custom-builds/Single-Docker-File/
+       run: |
+         docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}                  --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:latest ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}                  --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:${VERSION} ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}-facenet          --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:${VERSION}-facenet ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}-arcface-r100     --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:${VERSION}-arcface-r100 ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}-arcface-r100-gpu --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:${VERSION}-arcface-r100-gpu ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}-mobilenet        --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:${VERSION}-mobilenet ./../..
+         docker build -f Dockerfile --build-arg BASE_IMAGE=${DOCKER_REGISTRY}compreface-core:${VERSION}-mobilenet-gpu    --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t ${DOCKER_REGISTRY}compreface:${VERSION}-mobilenet-gpu ./../..
+         docker images
+
