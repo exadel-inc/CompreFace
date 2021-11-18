@@ -15,7 +15,6 @@ jobs:
      - name: Build images
        env:
          VERSION: ${{ github.event.inputs.version }}
-         DOCKER_REGISTRY: ${{ github.event.inputs.docker_registry }}
        working-directory: ./custom-builds/Single-Docker-File/
        run: |
          docker build -f Dockerfile --build-arg BASE_IMAGE=exadel/compreface-core:${VERSION}                  --build-arg VERSION=${VERSION} --build-arg APPERY_API_KEY=4b0e22a3-8d61-4a89-8003-812ef052f8a5 -t exadel/compreface:latest ./../..
@@ -32,9 +31,7 @@ jobs:
          username: ${{ secrets.DOCKER_HUB_LOGIN }}
          password: ${{ secrets.DOCKER_HUB_PWD }}
      - name: Push images to Docker Hub
-       env:
-         DOCKER_REGISTRY: ${{ github.event.inputs.docker_registry }}
        working-directory: ./custom-builds/Single-Docker-File/
        run: |
-         docker push --all-tags ${DOCKER_REGISTRY}compreface
+         docker push --all-tags exadel/compreface
 
