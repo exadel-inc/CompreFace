@@ -176,17 +176,26 @@ export class CollectionEffects {
     ofType(readImageFiles),
     withLatestFrom(this.store.select(selectCollectionSubject)),
     switchMap(([action, subject]) => {
+      const fileUrls = [];
+
       return from(action.fileDescriptors).pipe(
         mergeMap(file => {
           const fileReader = new FileReader();
           const resSubject = new Subject<{ file: File; url: string; subject: string }>();
 
-          fileReader.onload = e =>
+          fileReader.onload = e => {
+            const url = e.target.result as string;
+
+            if (fileUrls.indexOf(url) !== -1) return;
+
             resSubject.next({
-              url: e.target.result as string,
+              url: url,
               file,
               subject,
             });
+
+            fileUrls.push(url);
+          };
           fileReader.readAsDataURL(file);
 
           return resSubject.asObservable();
