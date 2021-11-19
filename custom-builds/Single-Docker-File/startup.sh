@@ -1,5 +1,7 @@
 #!/bin/bash
 
+chown -R postgres:postgres $PGDATA
+
 # wait until DB starts
 sleep 10
 echo Starting compreface-admin
