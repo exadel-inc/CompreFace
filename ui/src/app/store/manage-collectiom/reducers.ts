@@ -162,15 +162,16 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(getSubjectExamplesFail, state => ({ ...state, isCollectionPending: false })),
 
   on(addFileToCollection, (state, { url, file, subject }) => {
-    const collectionCopy = [
-      ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Failed && item.subject === state.subject),
-    ];
-
-    const failedCollection = [...state.collection.filter(item => item.status === CircleLoadingProgressEnum.Failed && item.url !== url)];
-
     return {
       ...state,
-      collection: [...collectionCopy, ...failedCollection, { url, file, subject, status: CircleLoadingProgressEnum.OnHold }],
+      collection: [
+        ...state.collection.filter(
+          item =>
+            (item.status !== CircleLoadingProgressEnum.Failed && item.subject === state.subject) ||
+            (item => item.status === CircleLoadingProgressEnum.Failed && item.url !== url)
+        ),
+        { url, file, subject, status: CircleLoadingProgressEnum.OnHold },
+      ],
     };
   }),
   on(uploadImage, deleteSubjectExample, (state, { item }) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.InProgress)),
