@@ -165,11 +165,7 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
     return {
       ...state,
       collection: [
-        ...state.collection.filter(
-          item =>
-            (item.status !== CircleLoadingProgressEnum.Failed && item.subject === state.subject) ||
-            (item => item.status === CircleLoadingProgressEnum.Failed && item.url !== url)
-        ),
+        ...state.collection.filter(item => item.subject === state.subject && item.url !== url),
         { url, file, subject, status: CircleLoadingProgressEnum.OnHold },
       ],
     };
