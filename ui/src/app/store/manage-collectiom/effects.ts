@@ -247,7 +247,7 @@ export class CollectionEffects {
       return this.collectionService.uploadSubjectExamples(item, subject, apiKey).pipe(
         map(() => uploadImageSuccess({ item, continueUpload })),
         catchError(error => {
-          return of(uploadImageFail({ error: error.error?.message, item, continueUpload }));
+          return of(uploadImageFail({ error: error.error?.message + `! \n File Name: ${item.file.name}`, item, continueUpload }));
         })
       );
     })
