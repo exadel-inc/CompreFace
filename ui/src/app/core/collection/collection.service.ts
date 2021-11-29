@@ -68,7 +68,8 @@ export class CollectionService {
       .pipe(
         map((resp: { faces: SubjectExampleResponseItem[] }) => {
           const totalPages = resp['total_pages'];
-          return resp.faces.map(el => ({ ...el, page: page, totalPages: totalPages }));
+          const totalElements = resp['total_elements'];
+          return resp.faces.map(el => ({ ...el, page: page, totalPages: totalPages, totalElements: totalElements }));
         })
       );
   }

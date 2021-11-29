@@ -29,9 +29,7 @@
             <ng-container *ngSwitchCase="subjectModeEnum.BulkSelect"
               >{{ 'manage_collection.right_side.selected_examples' | translate }} {{ selectedIds.length }}</ng-container
             >
-            <ng-container *ngSwitchDefault
-              >{{ 'manage_collection.right_side.examples' | translate }} {{ uploadedExamples.length }}</ng-container
-            >
+            <ng-container *ngSwitchDefault>{{ 'manage_collection.right_side.examples' | translate }} {{ totalElements }}</ng-container>
           </div>
         </div>
       </div>

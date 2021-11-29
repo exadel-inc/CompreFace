@@ -28,6 +28,7 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
   prevItemCollection: CollectionItem[] = [];
   subjectModeEnum = SubjectModeEnum;
   uploadedExamples: CollectionItem[] = [];
+  totalElements: number = 0;
 
   @Input() isPending: boolean;
   @Input() isCollectionPending: boolean;
@@ -55,9 +56,15 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
     const change = changes['collectionItems'];
 
     if (change && change['currentValue'] !== change['previousValue']) {
-      const examples = this.collectionItems.filter(item => item.status === CircleLoadingProgressEnum.Uploaded);
+      const examples = this.collectionItems.filter(
+        item => item['totalElements'] === undefined && item.status === CircleLoadingProgressEnum.Uploaded
+      );
 
-      this.uploadedExamples = examples;
+      this.uploadedExamples = this.collectionItems.filter(item => item.status === CircleLoadingProgressEnum.Uploaded);
+
+      this.uploadedExamples.length && this.collectionItems[0]['totalElements']
+        ? (this.totalElements = examples.length + this.collectionItems[0]['totalElements'])
+        : (this.totalElements = examples.length || 0);
     }
   }
 
