@@ -28,23 +28,19 @@
       <app-spinner *ngIf="isPending"></app-spinner>
     </div>
     <ng-container *ngIf="!isPending">
-      <mat-selection-list [multiple]="false" (selectionChange)="onChange($event)">
-        <mat-list-option
-          #option
+      <ul class="select">
+        <li
           *ngFor="let subject of subjectsList | subjectFilter: search"
-          class="section"
-          [value]="subject"
-          [selected]="subject === currentSubject"
-          [attr.selection-data]="subject === currentSubject"
-          [attr.aria-selected]="false"
+          (click)="selectedSubject.emit(subject)"
+          class="option"
+          [attr.selected]="subject === currentSubject"
         >
-          <!-- [ngStyle]="{'background': subject === currentSubject ? '#7cbee3':'transparent'}" -->
           <div class="avatar">
-            <mat-icon svgIcon="avatar-subject"></mat-icon>
+            <mat-icon class="material-icon" [ngClass]="{ 'selected-icon': subject === currentSubject }"> account_circle </mat-icon>
             <div class="name">{{ subject }}</div>
           </div>
-        </mat-list-option>
-      </mat-selection-list>
+        </li>
+      </ul>
     </ng-container>
   </div>
 </div>

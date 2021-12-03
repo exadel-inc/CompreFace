@@ -92,24 +92,24 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
     });
   }
 
-  onSelectedSubject(change: MatListOption[]): void {
+  onSelectedSubject(subject): void {
     if (this.itemsInProgress) {
-      this.openDialog(change);
+      this.openDialog(subject);
     } else {
-      this.collectionLeftFacade.onSelectedSubject(change[0].value);
-      this.collectionRightFacade.loadSubjectMedia(change[0].value);
+      this.collectionLeftFacade.onSelectedSubject(subject);
+      this.collectionRightFacade.loadSubjectMedia(subject);
     }
   }
 
-  openDialog(change: MatListOption[]) {
+  openDialog(subject): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
     });
 
     dialog.afterClosed().subscribe(confirm => {
       if (confirm) {
-        this.collectionLeftFacade.onSelectedSubject(change[0].value);
-        this.collectionRightFacade.loadSubjectMedia(change[0].value);
+        this.collectionLeftFacade.onSelectedSubject(subject);
+        this.collectionRightFacade.loadSubjectMedia(subject);
       }
 
       this.itemsInProgress = false;

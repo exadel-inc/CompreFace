@@ -13,8 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
-import { MatListOption } from '@angular/material/list';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-collection-manager-subject-left',
@@ -23,8 +22,6 @@ import { MatListOption } from '@angular/material/list';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectLeftComponent {
-  @ViewChild('option', { static: false }) option: MatListOption;
-
   @Input() subjectsList: string[];
   @Input() currentSubject: string;
   @Input() isPending: boolean;
@@ -32,21 +29,12 @@ export class CollectionManagerSubjectLeftComponent {
     if (!!value) this.initApiKey.emit(value);
   }
   @Output() addSubject = new EventEmitter<void>();
-  @Output() selectedSubject = new EventEmitter<MatListOption[]>();
+  @Output() selectedSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();
 
   search = '';
 
   onSearch(event: string) {
     this.search = event;
-  }
-
-  constructor(private renderer: Renderer2) {}
-
-  onChange(event: any) {
-    if (this.currentSubject === this.option.value) {
-      this.option.focus();
-    }
-    this.selectedSubject.emit(event.options);
   }
 }

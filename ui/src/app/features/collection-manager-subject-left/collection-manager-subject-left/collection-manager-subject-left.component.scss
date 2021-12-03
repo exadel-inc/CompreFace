@@ -36,16 +36,29 @@
     min-height: 300px;
     overflow-y: auto;
 
+    .select {
+      border: none;
+      padding: 0;
+      margin: 0;
+    }
+
     &--spinner {
       position: absolute;
       left: 50%;
       transform: translateX(-50%);
     }
 
-    .section {
+    .option {
       border-bottom: 1px solid $special-gray;
       border-radius: 1px;
       cursor: pointer;
+
+      list-style: none;
+      padding: 0.7rem;
+
+      &[selected='true'] {
+        background: #e5f2fa;
+      }
 
       &:hover {
         border-bottom: 1px solid $primary;
@@ -53,6 +66,14 @@
 
       div {
         padding: 0 !important;
+
+        .material-icon {
+          font-size: 28px;
+          color: $special-gray;
+        }
+        .selected-icon {
+          color: $primary;
+        }
       }
 
       .avatar {
@@ -73,12 +94,4 @@
       }
     }
   }
-}
-
-mat-list-option[selection-data='false'] {
-  background: none;
-}
-
-mat-list-option[selection-data='true'] {
-  background: #e5f2fa;
 }
