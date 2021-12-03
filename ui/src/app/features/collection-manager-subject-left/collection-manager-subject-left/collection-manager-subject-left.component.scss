@@ -74,3 +74,11 @@
     }
   }
 }
+
+mat-list-option[selection-data='false'] {
+  background: none;
+}
+
+mat-list-option[selection-data='true'] {
+  background: #e5f2fa;
+}

@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
 import { MatListOption } from '@angular/material/list';
 
 @Component({
@@ -23,6 +23,8 @@ import { MatListOption } from '@angular/material/list';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectLeftComponent {
+  @ViewChild('option', { static: false }) option: MatListOption;
+
   @Input() subjectsList: string[];
   @Input() currentSubject: string;
   @Input() isPending: boolean;
@@ -37,5 +39,14 @@ export class CollectionManagerSubjectLeftComponent {
 
   onSearch(event: string) {
     this.search = event;
+  }
+
+  constructor(private renderer: Renderer2) {}
+
+  onChange(event: any) {
+    if (this.currentSubject === this.option.value) {
+      this.option.focus();
+    }
+    this.selectedSubject.emit(event.options);
   }
 }

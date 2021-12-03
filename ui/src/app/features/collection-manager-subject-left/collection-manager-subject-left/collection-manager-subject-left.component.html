@@ -28,13 +28,17 @@
       <app-spinner *ngIf="isPending"></app-spinner>
     </div>
     <ng-container *ngIf="!isPending">
-      <mat-selection-list [multiple]="false" (selectionChange)="selectedSubject.emit($event.options)">
+      <mat-selection-list [multiple]="false" (selectionChange)="onChange($event)">
         <mat-list-option
+          #option
           *ngFor="let subject of subjectsList | subjectFilter: search"
           class="section"
           [value]="subject"
           [selected]="subject === currentSubject"
+          [attr.selection-data]="subject === currentSubject"
+          [attr.aria-selected]="false"
         >
+          <!-- [ngStyle]="{'background': subject === currentSubject ? '#7cbee3':'transparent'}" -->
           <div class="avatar">
             <mat-icon svgIcon="avatar-subject"></mat-icon>
             <div class="name">{{ subject }}</div>
