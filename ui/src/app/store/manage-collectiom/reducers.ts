@@ -126,6 +126,7 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
       subject: item.subject,
       page: item['page'],
       totalPages: item['totalPages'],
+      totalElements: item['totalElements'],
     }));
 
     return {
@@ -150,6 +151,7 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
       subject: item.subject,
       page: item['page'],
       totalPages: item['totalPages'],
+      totalElements: item['totalElements'],
     }));
 
     return {

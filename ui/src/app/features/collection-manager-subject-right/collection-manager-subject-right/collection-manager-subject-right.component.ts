@@ -13,7 +13,8 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 
@@ -22,10 +23,12 @@ import { CollectionItem } from 'src/app/data/interfaces/collection';
   templateUrl: './collection-manager-subject-right.component.html',
   styleUrls: ['./collection-manager-subject-right.component.scss'],
 })
-export class CollectionManagerSubjectRightComponent {
+export class CollectionManagerSubjectRightComponent implements OnChanges {
   scrollWindow: boolean = false;
   prevItemCollection: CollectionItem[] = [];
   subjectModeEnum = SubjectModeEnum;
+  uploadedExamples: CollectionItem[] = [];
+  totalElements: number = 0;
 
   @Input() isPending: boolean;
   @Input() isCollectionPending: boolean;
@@ -49,8 +52,24 @@ export class CollectionManagerSubjectRightComponent {
   @Output() selectExample = new EventEmitter<CollectionItem>();
   @Output() loadMore = new EventEmitter<CollectionItem>();
 
+  ngOnChanges(changes: SimpleChanges) {
+    const change = changes['collectionItems'];
+
+    if (change && change['currentValue'] !== change['previousValue']) {
+      const examples = this.collectionItems.filter(
+        item => item['totalElements'] === undefined && item.status === CircleLoadingProgressEnum.Uploaded
+      );
+
+      this.uploadedExamples = this.collectionItems.filter(item => item.status === CircleLoadingProgressEnum.Uploaded);
+
+      this.uploadedExamples.length && this.collectionItems[0]['totalElements']
+        ? (this.totalElements = examples.length + this.collectionItems[0]['totalElements'])
+        : (this.totalElements = examples.length || 0);
+    }
+  }
+
   onScrollDown(): void {
-    const lastItem = this.collectionItems[this.collectionItems.length - 1];
+    const lastItem = this.uploadedExamples[this.uploadedExamples.length - 1];
     const nextPage = lastItem['page'] + 1;
     const totalPages = lastItem['totalPages'];
 
