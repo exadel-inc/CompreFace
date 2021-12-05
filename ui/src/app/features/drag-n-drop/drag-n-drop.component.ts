@@ -39,6 +39,11 @@ export class DragNDropComponent {
 
   constructor() {}
 
+  onChange(event): void {
+    this.fileBrowseHandler(event.target.files);
+    this.fileDropEl.nativeElement.value = null;
+  }
+
   /**
    * on file drop handler
    */
