@@ -39,17 +39,22 @@ export class DragNDropComponent {
 
   constructor() {}
 
+  onChange(event): void {
+    this.fileBrowseHandler(event.target.files);
+    this.fileDropEl.nativeElement.value = null;
+  }
+
   /**
    * on file drop handler
    */
-  onFileDropped($event) {
+  onFileDropped($event): void {
     this.uploadFile($event);
   }
 
   /**
    * handle file from browsing
    */
-  fileBrowseHandler(files) {
+  fileBrowseHandler(files): void {
     this.uploadFile(files);
   }
 
@@ -59,7 +64,7 @@ export class DragNDropComponent {
    * @param files (Files List)
    * TODO Send file to api
    */
-  uploadFile(files: FileList) {
+  uploadFile(files: FileList): void {
     if (files.length > 0) {
       this.upload.emit(Array.from(files));
     }
