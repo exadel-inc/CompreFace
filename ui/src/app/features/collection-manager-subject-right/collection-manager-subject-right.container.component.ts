@@ -72,7 +72,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.subjects$ = this.collectionRightFacade.subjects$.pipe(tap(subjects => (this.subjectList = subjects)));
     this.subject$ = this.collectionRightFacade.subject$;
     this.apiKey$ = this.collectionRightFacade.apiKey$;
-    this.collectionItems$ = this.collectionRightFacade.collectionItems$.pipe(map(collection => collection));
+    this.collectionItems$ = this.collectionRightFacade.collectionItems$;
     this.isPending$ = this.collectionRightFacade.isPending$;
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
     this.mode$ = this.collectionRightFacade.subjectMode$;
