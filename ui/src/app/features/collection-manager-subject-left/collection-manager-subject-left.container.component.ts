@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { CollectionLeftFacade } from './collection-left-facade';
@@ -22,7 +22,6 @@ import { CollectionRightFacade } from '../collection-manager-subject-right/colle
 import { CreateDialogComponent } from '../create-dialog/create-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatListOption } from '@angular/material/list';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
@@ -61,9 +60,9 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
     this.subjectsList$ = this.collectionLeftFacade.subjectsList$;
     this.isPending$ = this.collectionLeftFacade.isPending$;
     this.apiKey$ = this.collectionLeftFacade.apiKey$;
-    this.collectionItemsSubs = combineLatest([this.currentSubject$, this.collectionRightFacade.collectionItems$])
+    this.collectionItemsSubs = this.collectionRightFacade.collectionItems$
       .pipe(
-        map(([, collection]) => collection.filter(item => item.status === CircleLoadingProgressEnum.InProgress)),
+        map(collection => collection.filter(item => item.status === CircleLoadingProgressEnum.InProgress)),
         tap(collection => (this.itemsInProgress = !!collection.length))
       )
       .subscribe();
