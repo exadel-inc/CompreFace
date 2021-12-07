@@ -7,6 +7,7 @@
       "cancel": "Cancel",
       "save": "Save",
       "yes": "Yes",
+      "no": "No",
       "add": "Add",
       "rename": "Rename",
       "edit": "Edit",
@@ -141,6 +142,10 @@
     }
   },
   "org_users": {
+    "confirm_dialog": {
+      "title": "Stop Uploading",
+      "confirmation_question": "You have loading images in the background. If you leave this page, the load will be canceled.Do you really want to leave the page?"
+    },
     "delete_dialog": {
       "title": "{{type}} Delete",
       "confirmation_question": "Are you sure you want to delete {{name}} {{lastName}} from your project?",
