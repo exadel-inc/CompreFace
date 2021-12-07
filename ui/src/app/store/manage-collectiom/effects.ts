@@ -206,10 +206,13 @@ export class CollectionEffects {
   );
 
   collectionItem: CollectionItem;
+  currentSubject: string;
 
   @Effect()
   startUploadOrder$ = this.actions.pipe(
     ofType(startUploadImageOrder),
+    withLatestFrom(this.store.select(selectCollectionSubject)),
+    tap(([, subject]) => (this.currentSubject = subject)),
     switchMap(() =>
       this.store.select(selectImageCollection).pipe(
         take(1),
@@ -218,11 +221,12 @@ export class CollectionEffects {
       )
     ),
     map(item => {
-      if (item) {
+      if (item && this.currentSubject === item.subject) {
         this.collectionItem = item;
         return uploadImage({ item, continueUpload: true });
       }
-      let subject = this.collectionItem.subject;
+
+      let subject = this.currentSubject;
       return getSubjectExamples({ subject });
     })
   );

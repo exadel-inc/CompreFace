@@ -14,7 +14,6 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatListOption } from '@angular/material/list';
 
 @Component({
   selector: 'app-collection-manager-subject-left',
@@ -30,7 +29,7 @@ export class CollectionManagerSubjectLeftComponent {
     if (!!value) this.initApiKey.emit(value);
   }
   @Output() addSubject = new EventEmitter<void>();
-  @Output() selectedSubject = new EventEmitter<MatListOption[]>();
+  @Output() selectedSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();
 
   search = '';

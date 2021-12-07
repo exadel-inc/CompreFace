@@ -23,6 +23,6 @@
       <div class="title">{{ title }}</div>
       <div class="label">{{ label }}</div>
     </div>
-    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event.target.files)" />
+    <input type="file" #fileDropRef id="fileDropRef" multiple (change)="onChange($event)" />
   </div>
 </div>
