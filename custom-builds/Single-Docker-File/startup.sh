@@ -1,6 +1,16 @@
 #!/bin/bash
 
+# restore default data if it was cleared by volume creation
+if [ -z "$(ls -A $PGDATA)" ]; then
+   echo "Postgres directory is empty. Copy default values into it"
+   cp -r /var/lib/postgresql/default/* $PGDATA
+fi
+# change permissions in case they were corrupted
 chown -R postgres:postgres $PGDATA
+chmod 700 $PGDATA
+
+echo Starting compreface-postgres-db
+supervisorctl start compreface-postgres-db
 
 # wait until DB starts
 sleep 10
