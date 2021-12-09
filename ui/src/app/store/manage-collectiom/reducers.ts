@@ -176,7 +176,6 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   }),
   on(uploadImage, deleteSubjectExample, (state, { item }) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.InProgress)),
   on(uploadImageSuccess, (state, { item, itemId }) => {
-    const collectionItem = { ...item, id: itemId };
     return updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded, itemId);
   }),
   on(deleteSubjectExampleSuccess, (state, { item }) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded)),
