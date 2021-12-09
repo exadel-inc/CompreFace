@@ -65,7 +65,7 @@ export const uploadImage = createAction(
 );
 export const uploadImageSuccess = createAction(
   '[Collection] Upload File to Collection Success',
-  props<{ item: CollectionItem; continueUpload?: boolean }>()
+  props<{ item: CollectionItem; itemId: string; continueUpload?: boolean }>()
 );
 export const uploadImageFail = createAction(
   '[Collection] Upload File to Collection Fail',

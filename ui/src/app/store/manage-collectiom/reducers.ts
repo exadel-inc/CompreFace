@@ -60,6 +60,7 @@ function updateCollectionItemStatus(
   state: CollectionEntityState,
   item: CollectionItem,
   status: CircleLoadingProgressEnum,
+  id?: string,
   error?: string
 ): CollectionEntityState {
   const collectionCopy = [...state.collection];
@@ -69,6 +70,7 @@ function updateCollectionItemStatus(
     collectionCopy[targetItemIndex] = {
       ...collectionCopy[targetItemIndex],
       status,
+      id,
     };
 
     if (error) {
@@ -173,9 +175,11 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
     };
   }),
   on(uploadImage, deleteSubjectExample, (state, { item }) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.InProgress)),
-  on(uploadImageSuccess, deleteSubjectExampleSuccess, (state, { item }) =>
-    updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded)
-  ),
+  on(uploadImageSuccess, (state, { item, itemId }) => {
+    const collectionItem = { ...item, id: itemId };
+    return updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded, itemId);
+  }),
+  on(deleteSubjectExampleSuccess, (state, { item }) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded)),
   on(uploadImageFail, deleteSubjectExampleFail, (state, { item, error }) =>
     updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Failed, error)
   ),
