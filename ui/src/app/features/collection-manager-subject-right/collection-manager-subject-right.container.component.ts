@@ -48,6 +48,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
     (deleteSelectedExamples)="deleteSelectedExamples($event)"
     (loadMore)="loadMore($event)"
     (selectExample)="selectExample($event)"
+    (restartUploading)="restartUploading($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -144,6 +145,11 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
         filter(result => result)
       )
       .subscribe(() => this.collectionRightFacade.edit(editName, name, this.apiKey));
+  }
+
+  restartUploading(item: CollectionItem[]): void {
+    const filesArr = item.map(item => item.file);
+    this.collectionRightFacade.addImageFilesToCollection(filesArr);
   }
 
   readFiles(fileList: File[]): void {
