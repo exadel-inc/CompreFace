@@ -34,6 +34,7 @@
           (click)="selectedSubject.emit(subject)"
           class="option"
           [attr.selected]="subject === currentSubject"
+          [ngStyle]="{ 'pointer-events': subject === currentSubject ? 'none' : 'auto' }"
         >
           <div class="avatar">
             <mat-icon class="material-icon" [ngClass]="{ 'selected-icon': subject === currentSubject }"> account_circle </mat-icon>

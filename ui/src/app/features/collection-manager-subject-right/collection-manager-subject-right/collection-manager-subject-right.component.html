@@ -73,27 +73,50 @@
 <ng-template #defaultButtons>
   <button
     mat-icon-button
+    [disabled]="isCollectionOnHold"
     (click)="editSubject.emit(subject)"
     class="control-button"
     [title]="'manage_collection.right_side.control_button_edit_title' | translate"
   >
-    <mat-icon svgIcon="edit" class="control-icon"></mat-icon>
+    <mat-icon
+      svgIcon="edit"
+      [matTooltipPosition]="'above'"
+      [matTooltipDisabled]="!isCollectionOnHold"
+      [matTooltip]="'manage_collection.right_side.control_button_tooltip' | translate"
+      class="control-icon"
+    ></mat-icon>
   </button>
+
   <button
     mat-icon-button
+    [disabled]="isCollectionOnHold"
     (click)="deleteSubject.emit(subject)"
     class="control-button"
     [title]="'manage_collection.right_side.control_button_delete_title' | translate"
   >
-    <mat-icon svgIcon="trash" class="control-icon"></mat-icon>
+    <mat-icon
+      svgIcon="trash"
+      [matTooltipPosition]="'above'"
+      [matTooltipDisabled]="!isCollectionOnHold"
+      [matTooltip]="'manage_collection.right_side.control_button_tooltip' | translate"
+      class="control-icon"
+    ></mat-icon>
   </button>
+
   <button
     mat-icon-button
+    [disabled]="isCollectionOnHold"
     (click)="setMode.emit(subjectModeEnum.BulkSelect)"
     class="control-button"
     [title]="'manage_collection.right_side.control_button_bulk-select_title' | translate"
   >
-    <mat-icon class="control-icon">library_add_check</mat-icon>
+    <mat-icon
+      [matTooltipPosition]="'above'"
+      [matTooltipDisabled]="!isCollectionOnHold"
+      [matTooltip]="'manage_collection.right_side.control_button_tooltip' | translate"
+      class="control-icon"
+      >library_add_check</mat-icon
+    >
   </button>
 </ng-template>
 
