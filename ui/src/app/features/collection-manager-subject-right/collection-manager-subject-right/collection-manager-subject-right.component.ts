@@ -28,6 +28,7 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
   prevItemCollection: CollectionItem[] = [];
   subjectModeEnum = SubjectModeEnum;
   uploadedExamples: CollectionItem[] = [];
+  isCollectionOnHold: boolean = false;
   totalElements: number = 0;
 
   @Input() isPending: boolean;
@@ -56,6 +57,10 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
     const change = changes['collectionItems'];
 
     if (change && change['currentValue'] !== change['previousValue']) {
+      const collectionOnHold = this.collectionItems.filter(item => item.status === CircleLoadingProgressEnum.OnHold);
+
+      this.isCollectionOnHold = !!collectionOnHold.length;
+
       const examples = this.collectionItems.filter(
         item => item['totalElements'] === undefined && item.status === CircleLoadingProgressEnum.Uploaded
       );
