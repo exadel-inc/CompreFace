@@ -76,6 +76,12 @@ To install CompreFace single docker container run command (you don’t need anyt
 docker run -d --name=CompreFace -v compreface-db:/var/lib/postgresql/data -p 8000:80 exadel/compreface
 ```
 
+To use your own database for storing the data, specify these environment variables: POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_URL, EXTERNAL_DB, e.g.:
+
+```commandline
+docker run -d --name=CompreFace -e "POSTGRES_URL=jdbc:postgresql://url:port/db_name" -e POSTGRES_USER=user -e POSTGRES_PASSWORD=pass -e EXTERNAL_DB=true -p 8000:80 exadel/compreface
+```
+
 To run the custom version of CompreFace, specify it in the end, e.g.:
 ```commandline
 docker run -d --name=CompreFace -v compreface-db:/var/lib/postgresql/data -p 8000:80 exadel/compreface:0.6.0
