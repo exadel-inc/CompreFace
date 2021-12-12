@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, HostListener, SimpleChange } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -22,8 +22,7 @@ import { AppState } from './store';
 import { CustomIconsService } from './core/custom-icons/custom-icons.service';
 import { restartInactivityTimer } from './store/auth/action';
 import { selectUserId } from './store/userInfo/selectors';
-import { Observable, Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
