@@ -144,7 +144,7 @@
   "org_users": {
     "confirm_dialog": {
       "title": "Stop Uploading",
-      "confirmation_question": "You have loading images in the background. If you leave this page, the load will be canceled.Do you really want to leave the page?"
+      "confirmation_question": "You have loading images in the background. If you leave this page, the load will be canceled. Do you really want to leave the page?"
     },
     "delete_dialog": {
       "title": "{{type}} Delete",
@@ -234,7 +234,8 @@
       "control_button_bulk-select-exit_title": "Exit selection mode",
       "control_button_bulk-delete_title": "Delete selected",
       "modal_bulk-delete_type": "Examples",
-      "modal_bulk-delete_name": " item(s)"
+      "modal_bulk-delete_name": " item(s)",
+      "control_button_tooltip": "Uploading is in process"
     }
   },
   "tooltip": {
