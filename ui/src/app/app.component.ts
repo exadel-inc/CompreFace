@@ -35,11 +35,9 @@ export class AppComponent {
   userId: string;
 
   @HostListener('click', ['$event'])
-  @HostListener('mousemove', ['$event'])
-  @HostListener('wheel', ['$event'])
+  @HostListener('scroll', ['$event'])
   onEvent() {
     if (!this.userId) return;
-
     this.store.dispatch(restartInactivityTimer());
   }
 
