@@ -16,7 +16,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { Observable, of as observableOf } from 'rxjs';
+import { Observable, of as observableOf, timer } from 'rxjs';
 import { catchError, map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { SnackBarService } from 'src/app/features/snackbar/snackbar.service';
 
@@ -35,9 +35,12 @@ import {
   changePassword,
   changePasswordSuccess,
   changePasswordFail,
+  inactivityTimerStart,
+  restartInactivityTimer,
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectQueryParams } from '../router/selectors';
+import { INACTIVITY_TIMEOUT_IN_MINUTES, MINUTE_IN_MS } from 'src/app/core/constants';
 
 @Injectable()
 export class AuthEffects {
@@ -49,16 +52,27 @@ export class AuthEffects {
     private store: Store<any>
   ) {}
 
+  inactivityTimer: number = MINUTE_IN_MS * INACTIVITY_TIMEOUT_IN_MINUTES;
+
+  @Effect()
+  restartInactivityTimer$ = this.actions.pipe(
+    ofType(restartInactivityTimer),
+    map(() => inactivityTimerStart())
+  );
+
+  @Effect()
+  inactivityTimerStart$ = this.actions.pipe(
+    ofType(inactivityTimerStart),
+    switchMap(() => timer(this.inactivityTimer).pipe(map(() => logOut())))
+  );
+
   // Listen for the 'LOGIN' action
   @Effect()
   logIn$ = this.actions.pipe(
     ofType(logIn),
-    switchMap(action =>
-      this.authService.logIn(action.email, action.password).pipe(
-        map(() => logInSuccess()),
-        catchError(error => observableOf(logInFail(error)))
-      )
-    )
+    switchMap(action => this.authService.logIn(action.email, action.password)),
+    switchMap(() => [logInSuccess(), inactivityTimerStart()]),
+    catchError(error => observableOf(logInFail(error)))
   );
 
   // Listen for the 'LogInSuccess' action

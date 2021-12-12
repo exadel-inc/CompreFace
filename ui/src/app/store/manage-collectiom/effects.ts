@@ -62,6 +62,7 @@ import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-pro
 import { selectCurrentApiKey } from '../model/selectors';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
+import { restartInactivityTimer } from '../auth/action';
 
 @Injectable()
 export class CollectionEffects {
@@ -265,6 +266,7 @@ export class CollectionEffects {
     ofType(uploadImageSuccess, uploadImageFail),
     tap(({ continueUpload }) => {
       if (continueUpload) {
+        this.store.dispatch(restartInactivityTimer());
         this.store.dispatch(startUploadImageOrder());
       }
     })

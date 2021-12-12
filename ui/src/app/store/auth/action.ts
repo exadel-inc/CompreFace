@@ -18,6 +18,9 @@ import { createAction, props } from '@ngrx/store';
 import { SignUp } from '../../data/interfaces/sign-up';
 import { ChangePassword } from '../../data/interfaces/change-password';
 
+export const inactivityTimerStart = createAction('[Application] Inactivity Timer Start');
+export const restartInactivityTimer = createAction('[Application] restart Inactivity Timer');
+
 export const logIn = createAction('[Auth] Login', props<{ email: string; password: string }>());
 export const logInSuccess = createAction('[Auth] Login Success');
 export const logInFail = createAction('[Auth] Login Failure', props<{ error: any }>());

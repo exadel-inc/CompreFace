@@ -13,13 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component } from '@angular/core';
+import { Component, HostListener, SimpleChange } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthService } from './core/auth/auth.service';
 import { AppState } from './store';
 import { CustomIconsService } from './core/custom-icons/custom-icons.service';
+import { restartInactivityTimer } from './store/auth/action';
+import { selectUserId } from './store/userInfo/selectors';
+import { Observable, Subscription } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -27,13 +31,33 @@ import { CustomIconsService } from './core/custom-icons/custom-icons.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
+  subs: Subscription;
+  userId: string;
+
+  @HostListener('click', ['$event'])
+  @HostListener('mousemove', ['$event'])
+  @HostListener('wheel', ['$event'])
+  onEvent() {
+    if (!this.userId) return;
+
+    this.store.dispatch(restartInactivityTimer());
+  }
+
   constructor(
     auth: AuthService,
-    store: Store<AppState>,
+    private store: Store<AppState>,
     private translate: TranslateService,
     private customIconsService: CustomIconsService
   ) {
     translate.setDefaultLang('en');
     customIconsService.registerIcons();
+  }
+
+  ngOnInit() {
+    this.subs = this.store.select(selectUserId).subscribe(id => (this.userId = id));
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
   }
 }
