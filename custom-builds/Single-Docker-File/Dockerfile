@@ -38,7 +38,6 @@ RUN /etc/init.d/postgresql start && \
 
 RUN cp -r $PGDATA /var/lib/postgresql/default
 
-VOLUME $PGDATA
 USER root
 
 ################# compreface-postgres-db end ####################
