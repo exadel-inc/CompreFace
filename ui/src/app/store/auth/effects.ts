@@ -70,9 +70,12 @@ export class AuthEffects {
   @Effect()
   logIn$ = this.actions.pipe(
     ofType(logIn),
-    switchMap(action => this.authService.logIn(action.email, action.password)),
-    switchMap(() => [logInSuccess(), inactivityTimerStart()]),
-    catchError(error => observableOf(logInFail(error)))
+    switchMap(action =>
+      this.authService.logIn(action.email, action.password).pipe(
+        switchMap(() => [logInSuccess(), inactivityTimerStart()]),
+        catchError(error => observableOf(logInFail(error)))
+      )
+    )
   );
 
   // Listen for the 'LogInSuccess' action
