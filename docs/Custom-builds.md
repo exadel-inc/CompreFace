@@ -68,26 +68,27 @@ CompreFace supports two face recognition libraries - FaceNet and
 InsightFace. It means CompreFace can run any model that can run these
 libraries. So all you need to do is 
 1. Upload your model to Google Drive and add it to one of the following files into the `Calculator` class:
-- /embedding-calculator/src/services/facescan/plugins/facenet/facenet.py
-- /embedding-calculator/src/services/facescan/plugins/insightface/insightface.py
+   - /embedding-calculator/src/services/facescan/plugins/facenet/facenet.py
+   - /embedding-calculator/src/services/facescan/plugins/insightface/insightface.py
 2. Take the `docker-compose` file from `/dev` folder as a template 
 3. Specify new model names in build arguments. For more information, look
-   at [this documentation](#run-service). E.g. here is a part of the
+   at [this documentation](https://github.com/exadel-inc/CompreFace/tree/master/embedding-calculator#run-service). E.g. here is a part of the
    `docker-compose` file for building with a custom model with GPU support:
-
-   compreface-core:
-   image: ${registry}compreface-core:${CORE_VERSION}
-   container_name: "compreface-core"
-   ports:
-   - "3300:3000"
-   runtime: nvidia
-   build:
-   context: ../embedding-calculator
-   args:
-   - FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1
-   - CALCULATION_PLUGIN=insightface.Calculator@arcface_r100_v1
-   - EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector
-   - BASE_IMAGE=compreface-core-base:base-cuda100-py37
-   - GPU_IDX=0
-   environment:
-   - ML_PORT=3000
+```yaml
+compreface-core:
+  image: ${registry}compreface-core:${CORE_VERSION}
+  container_name: "compreface-core"
+  ports:
+    - "3300:3000"
+  runtime: nvidia
+  build:
+    context: ../embedding-calculator
+    args:
+      - FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1
+      - CALCULATION_PLUGIN=insightface.Calculator@arcface_r100_v1
+      - EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector
+      - BASE_IMAGE=compreface-core-base:base-cuda100-py37
+      - GPU_IDX=0
+  environment:
+    - ML_PORT=3000
+```
