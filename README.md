@@ -95,18 +95,13 @@ alt="compreface-main-page" width="390px" style="padding: 0px 0px 0px 10px;">
 [Subscribe](https://exadel-7026941.hs-sites.com/en/en/compreface-news-and-updates) to CompreFace News and Updates to never miss new features and product improvements.
 
 # Features
-
 The system can accurately identify people even when it has only “seen” their photo once. Technology-wise, CompreFace has several advantages over similar free face recognition solutions. CompreFace:
 
-- Supports many face recognition services: face identification, face verification, face detection, face mask detection, landmark detection, 
-  and age and 
-gender recognition
 - Supports both CPU and GPU and is easy to scale up
 - Is open source and self-hosted, which gives you additional guarantees for data security
 - Can be deployed either in the cloud or on premises
 - Can be set up and used without machine learning expertise
 - Uses FaceNet and InsightFace libraries, which use state-of-the-art face recognition methods
-- Features a UI panel for convenient user roles and access management
 - Starts quickly with just one docker command
 
 # Functionalities
@@ -154,10 +149,10 @@ Follow this [link](/dev)
 
 # CompreFace SDKs
 
-| SDK        | Repository   | 
-| ---------- | ------ | 
-| JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk   |
-| Python     | https://github.com/exadel-inc/compreface-python-sdk       |
+| SDK        | Repository                                              |
+|------------|---------------------------------------------------------|
+| JavaScript | https://github.com/exadel-inc/compreface-javascript-sdk |
+| Python     | https://github.com/exadel-inc/compreface-python-sdk     |
 
 # Documentation
 
