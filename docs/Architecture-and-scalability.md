@@ -65,7 +65,7 @@ age and gender detection. These servers are stateless, don't have a
 connection to a database, and don't require any synchronization between
 them.
 
-By default, the number of API servers in the config is 1, but for production
+By default, the number of embedding servers in the config is 1, but for production
 environments to increase possible bandwidth and achieve high
 availability, there should be at least two such servers, and they should
 be on different machines.
