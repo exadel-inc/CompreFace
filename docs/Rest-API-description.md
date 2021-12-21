@@ -51,7 +51,7 @@ you can [upload an example](#add-an-example-of-a-subject) without an existing su
 curl -X POST "http://localhost:8000/api/v1/recognition/subjects" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>" \
--d '{"subject: <subject_name>"}'
+-d '{"subject": "<subject_name>"}'
 ```
 | Element             | Description | Type   | Required | Notes                                                        |
 | ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
