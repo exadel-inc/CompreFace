@@ -11,11 +11,15 @@ CompreFace supports these face services and plugins:
 
 # Services
 
-To use face service you need to create it in an application on UI. The type of service depends on your application needs. Each service has its own REST API context and there is no possibility to change the service type after creation. Here is a short description of each of them:
+To use face service you need to create it in an application on UI. 
+The type of service depends on your application needs. 
+Each service has its own REST API context and there is no possibility to change the service type after creation. 
+Here is a short description of each of them:
 
 ## Face detection
 
-Face detection service is used to detect all faces in the image. It doesn’t recognize faces, just finds them on the image.
+Face detection service is used to detect all faces in the image. 
+It doesn’t recognize faces, just finds them on the image.
 
 **Cases of use**
 
@@ -24,6 +28,7 @@ The most useful cases include face plugins for face analysis:
   * gather statistics on among what ages your event is popular
   * get landmark information to know where customers look at
   * gather statistics on how many customers in the store
+  * recognize if all customers wear masks properly
 
 **How to test**
 
@@ -38,15 +43,17 @@ The most useful cases include face plugins for face analysis:
 **Output**
 
 Below the picture, you can see the Request processed, and the Response to the request.
-The Response is the output which ComperFace provides via [API](Rest-API-description.md).
+The Response is the output which ComperFace provides via [API](Rest-API-description.md#face-detection-service).
 
 Example:
 
-![](pics/13h41m46s_001_.png)
+![Example](https://user-images.githubusercontent.com/3736126/146967067-c6413d3e-3b23-45ad-abe8-0f8bc8f4800f.png)
 
 ## Face recognition
 
-Face recognition service is used for face identification. This means that you first need to upload known faces to faces collection and then recognize unknown faces among them. When you upload an unknown face, the service returns the most similar faces to it. Also, face recognition service supports verify endpoint to check if this person from face collection is the correct one. 
+Face recognition service is used for face identification. This means that you first need to upload known faces to faces collection and 
+then recognize unknown faces among them. When you upload an unknown face, the service returns the most similar faces to it. 
+Also, face recognition service supports verify endpoint to check if this person from face collection is the correct one. 
 
 **Cases of use**
 
@@ -68,15 +75,16 @@ The possible cases include:
 **Output**
 
 Below the picture, you can see the Request processed, and the Response to the request.
-The Response is the output which ComperFace provides via [API](Rest-API-description.md).
+The Response is the output which ComperFace provides via [API](Rest-API-description.md#face-recognition-service).
 
 Example:
 
-![](pics/14h03m09s_002_.png)
+![image](https://user-images.githubusercontent.com/3736126/146967594-40684d12-e106-43b2-92ad-6a34176ddf87.png)
 
 ## Face verification
 
-Face verification service is used to check if this person is the correct one. The service compares two faces you send to the rest endpoint and returns their similarity. 
+Face verification service is used to check if this person is the correct one. 
+The service compares two faces you send to the rest endpoint and returns their similarity. 
 
 **Cases of use**
 
@@ -97,11 +105,11 @@ The possible cases include:
 **Output**
 
 Below the picture, you can see the Request processed, and the Response to the request.
-The Response is the output which ComperFace provides via [API](Rest-API-description.md).
+The Response is the output which ComperFace provides via [API](Rest-API-description.md#face-verification-service).
 
 Example:
 
-![](pics/14h06m24s_003_.png)
+![image](https://user-images.githubusercontent.com/3736126/146967889-ba8bdd9b-359f-4970-bfe0-71f3e6d21692.png)
 
 #  Face plugins
 
@@ -117,7 +125,7 @@ curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?face_plugins=a
 -F file=<local_file>
 ```
 
-This request will recognize faces on the image and return additional information about age, gender, and landmarks.
+This request will recognize faces on the image and return additional information about age, gender, face mask, and landmarks.
 
 The list of possible plugins:
 * age - returns the supposed range of a person’s age in format [min, max]
