@@ -43,7 +43,7 @@ $ docker run -p 3000:3000 exadel/compreface-core:latest
 ##### Build
 Builds container (also runs main tests during the build):
 ```
-$ docker build -t embedding-calculator 
+$ docker build -t embedding-calculator .
 ```
 To skip tests during build, use:
 ```

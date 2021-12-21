@@ -7,6 +7,7 @@
       "cancel": "Cancel",
       "save": "Save",
       "yes": "Yes",
+      "no": "No",
       "add": "Add",
       "rename": "Rename",
       "edit": "Edit",
@@ -64,7 +65,7 @@
     "caption": "Table of applications",
     "title": "Applications",
     "placeholder": "Enter App name",
-    "first_steps_title": "Create Application",
+    "first_steps_title": "Applications",
     "name": "App Name",
     "owner": "Owner",
     "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
@@ -123,7 +124,7 @@
     "search": {
       "title": "Search service"
     },
-    "mange_collection": "Collection"
+    "mange_collection": "Manage Collection"
   },
   "users": {
     "caption": "Table of users",
@@ -141,6 +142,10 @@
     }
   },
   "org_users": {
+    "confirm_dialog": {
+      "title": "Stop Uploading",
+      "confirmation_question": "You have loading images in the background. If you leave this page, the load will be canceled. Do you really want to leave the page?"
+    },
     "delete_dialog": {
       "title": "{{type}} Delete",
       "confirmation_question": "Are you sure you want to delete {{name}} {{lastName}} from your project?",
@@ -229,7 +234,13 @@
       "control_button_bulk-select-exit_title": "Exit selection mode",
       "control_button_bulk-delete_title": "Delete selected",
       "modal_bulk-delete_type": "Examples",
-      "modal_bulk-delete_name": " item(s)"
+      "modal_bulk-delete_name": " item(s)",
+      "control_button_tooltip": "Uploading is in process"
     }
+  },
+  "tooltip": {
+    "upload_new_image": "Upload new image",
+    "clear_image": "Clear results",
+    "show_landmarks": "Show landmarks"
   }
 }

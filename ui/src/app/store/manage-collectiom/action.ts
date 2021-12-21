@@ -37,12 +37,21 @@ export const resetSubjects = createAction('[Collection] Reset Subjects');
 export const setSelectedSubject = createAction('[Collection] Set Selected Subject', props<{ subject: any }>());
 export const initSelectedSubject = createAction('[Collection] Init Selected Subject');
 
-export const getSubjectExamples = createAction('[Collection] Get Subject Examples Request');
+export const getSubjectExamples = createAction('[Collection] Get Subject Examples Request', props<{ subject: string }>());
 export const getSubjectExamplesSuccess = createAction(
   '[Collection] Get Subject Examples Success',
   props<{ items: SubjectExampleResponseItem[]; apiKey: string }>()
 );
 export const getSubjectExamplesFail = createAction('[Collection] Get Subject Examples Fail', props<{ error: string }>());
+
+export const getSubjectMediaNextPage = createAction(
+  '[Collection] Get Next Page Request',
+  props<{ subject: string; page: number; totalPages: number }>()
+);
+export const getNextPageSubjectExamplesSuccess = createAction(
+  '[Collection] Get Next Page Subject Examples Success',
+  props<{ items: SubjectExampleResponseItem[]; apiKey: string }>()
+);
 
 export const readImageFiles = createAction('[Collection] Read Image Files', props<{ fileDescriptors: File[] }>());
 export const addFileToCollection = createAction(
@@ -56,7 +65,7 @@ export const uploadImage = createAction(
 );
 export const uploadImageSuccess = createAction(
   '[Collection] Upload File to Collection Success',
-  props<{ item: CollectionItem; continueUpload?: boolean }>()
+  props<{ item: CollectionItem; itemId: string; continueUpload?: boolean }>()
 );
 export const uploadImageFail = createAction(
   '[Collection] Upload File to Collection Fail',

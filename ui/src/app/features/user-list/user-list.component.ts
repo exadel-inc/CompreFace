@@ -91,6 +91,7 @@ export class UserListComponent implements OnInit, OnDestroy {
               data: {
                 entityType: this.translate.instant('users.user'),
                 entity: deletion.userToDelete,
+                deleterUserId: deletion.deleterUserId,
                 options: [
                   { name: email, value: 'deleter' },
                   { name: this.orgOwnerEmail, value: 'owner' },
@@ -102,6 +103,7 @@ export class UserListComponent implements OnInit, OnDestroy {
               },
             })
             .afterClosed()
+            .pipe(tap(selectedOption => (this.selectedOption = selectedOption)))
         ),
         filter((isClosed: boolean) => isClosed),
         tap(() => this.userListFacade.deleteUser(deletion, this.selectedOption))

@@ -5,7 +5,9 @@ volumes:
 
 services:
   compreface-postgres-db:
+    restart: always
     image: postgres:11.5
+    restart: always
     container_name: "compreface-postgres-db"
     environment:
       - POSTGRES_USER=${postgres_username}
@@ -15,7 +17,9 @@ services:
       - postgres-data:/var/lib/postgresql/data
 
   compreface-admin:
+    restart: always
     image: ${registry}compreface-admin:${ADMIN_VERSION}
+    restart: always
     container_name: "compreface-admin"
     environment:
       - POSTGRES_USER=${postgres_username}
@@ -33,7 +37,9 @@ services:
       - compreface-api
 
   compreface-api:
+    restart: always
     image: ${registry}compreface-api:${API_VERSION}
+    restart: always
     container_name: "compreface-api"
     depends_on:
       - compreface-postgres-db
@@ -46,7 +52,9 @@ services:
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
 
   compreface-fe:
+    restart: always
     image: ${registry}compreface-fe:${FE_VERSION}
+    restart: always
     container_name: "compreface-ui"
     ports:
       - "8000:80"
@@ -55,7 +63,9 @@ services:
       - compreface-admin
 
   compreface-core:
+    restart: always
     image: ${registry}compreface-core:${CORE_VERSION}
+    restart: always
     container_name: "compreface-core"
     environment:
       - ML_PORT=3000

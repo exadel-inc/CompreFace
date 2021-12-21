@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { combineLatest, Observable, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -46,11 +46,13 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
     (cancelUploadItem)="cancelUploadItem($event)"
     (setMode)="setSubjectMode($event)"
     (deleteSelectedExamples)="deleteSelectedExamples($event)"
+    (loadMore)="loadMore($event)"
     (selectExample)="selectExample($event)"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectRightContainerComponent implements OnInit, OnDestroy {
+  defaultSubjectSubscription: Subscription;
   subjects$: Observable<string[]>;
   subject$: Observable<string>;
   isPending$: Observable<boolean>;
@@ -70,20 +72,23 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.subjects$ = this.collectionRightFacade.subjects$.pipe(tap(subjects => (this.subjectList = subjects)));
     this.subject$ = this.collectionRightFacade.subject$;
     this.apiKey$ = this.collectionRightFacade.apiKey$;
-    this.collectionItems$ = combineLatest([this.subject$, this.collectionRightFacade.collectionItems$]).pipe(
-      map(([subject, collection]) => collection.filter(item => item.subject === subject))
-    );
+    this.collectionItems$ = this.collectionRightFacade.collectionItems$;
     this.isPending$ = this.collectionRightFacade.isPending$;
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
     this.mode$ = this.collectionRightFacade.subjectMode$;
-    this.selectedIds$ = this.collectionItems$.pipe(
-      map(items => items.filter(item => item.isSelected).map(item => item.id))
+    this.selectedIds$ = this.collectionItems$.pipe(map(items => items.filter(item => item.isSelected).map(item => item.id)));
+
+    this.defaultSubjectSubscription = this.collectionRightFacade.defaultSubject$.subscribe(subject =>
+      this.collectionRightFacade.loadSubjectMedia(subject)
     );
-    this.apiKeyInitSubscription = this.collectionRightFacade.apiKey$.subscribe(() => this.collectionRightFacade.loadExamplesList());
   }
 
   initApiKey(apiKey: string): void {
     this.apiKey = apiKey;
+  }
+
+  loadMore(item: CollectionItem): void {
+    this.collectionRightFacade.loadNextPage(item['subject'], item['page'], item['totalPages']);
   }
 
   delete(name: string): void {
@@ -159,11 +164,11 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.collectionRightFacade.deleteItemFromUploadOrder(item);
   }
 
-  setSubjectMode(mode: SubjectModeEnum) {
+  setSubjectMode(mode: SubjectModeEnum): void {
     this.collectionRightFacade.setSubjectMode(mode);
   }
 
-  deleteSelectedExamples(ids: string[]) {
+  deleteSelectedExamples(ids: string[]): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -181,12 +186,12 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
       .subscribe(() => this.collectionRightFacade.deleteSelectedExamples(ids));
   }
 
-  selectExample(item: CollectionItem) {
+  selectExample(item: CollectionItem): void {
     this.collectionRightFacade.selectSubjectExample(item);
   }
 
   ngOnDestroy(): void {
-    this.apiKeyInitSubscription.unsubscribe();
+    this.defaultSubjectSubscription.unsubscribe();
     this.collectionRightFacade.resetSubjectExamples();
   }
 }

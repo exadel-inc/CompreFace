@@ -17,6 +17,11 @@
 @import 'colors.scss';
 @import 'mixins.scss';
 
+.collection-right-container {
+  height: 100%;
+  padding-right: 1.5rem;
+  overflow-y: scroll;
+}
 .spinner {
   display: flex;
   align-items: center;

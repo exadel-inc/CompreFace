@@ -26,9 +26,12 @@ import { CollectionLeftFacade } from './collection-left-facade';
 import { SpinnerModule } from '../spinner/spinner.module';
 import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 import { CollectionManagerSubjectLeftContainerComponent } from './collection-manager-subject-left.container.component';
+import { CollectionRightFacade } from '../collection-manager-subject-right/collection-manager-right-facade';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
-  declarations: [CollectionManagerSubjectLeftContainerComponent, CollectionManagerSubjectLeftComponent],
+  declarations: [CollectionManagerSubjectLeftContainerComponent, CollectionManagerSubjectLeftComponent, ConfirmDialogComponent],
   imports: [
     CommonModule,
     MatListModule,
@@ -38,8 +41,9 @@ import { CollectionManagerSubjectLeftContainerComponent } from './collection-man
     AppSearchTableModule,
     SpinnerModule,
     TablePipeModule,
+    MatDialogModule,
   ],
   exports: [CollectionManagerSubjectLeftContainerComponent],
-  providers: [CollectionLeftFacade],
+  providers: [CollectionLeftFacade, CollectionRightFacade],
 })
 export class CollectionManagerSubjectLeftModule {}

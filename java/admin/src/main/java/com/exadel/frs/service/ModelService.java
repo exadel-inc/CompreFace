@@ -57,8 +57,20 @@ public class ModelService {
                               .orElseThrow(() -> new ModelNotFoundException(modelGuid, ""));
     }
 
+    private void validateName(final String newName, final String oldName, final Long appId) {
+        if (oldName.equals(newName)) throw new NameIsNotUniqueException(newName);
+        boolean hasNewNameEntryInDb = modelRepository.existsByUniqueNameAndAppId(newName, appId);
+        if (hasNewNameEntryInDb) {
+            boolean hasNewNameMoreThanOneEntryInDb = modelRepository.countByUniqueNameAndAppId(newName, appId) > 1;
+            boolean isNotEqualsIgnoreCase = !oldName.equalsIgnoreCase(newName);
+            if (hasNewNameMoreThanOneEntryInDb || isNotEqualsIgnoreCase) {
+                throw new NameIsNotUniqueException(newName);
+            }
+        }
+    }
+
     private void verifyNameIsUnique(final String name, final Long appId) {
-        if (modelRepository.existsByNameAndAppId(name, appId)) {
+        if (modelRepository.existsByUniqueNameAndAppId(name, appId)) {
             throw new NameIsNotUniqueException(name);
         }
     }
@@ -226,10 +238,8 @@ public class ModelService {
 
         authManager.verifyWritePrivilegesToApp(user, model.getApp());
 
-        if (!model.getName().equals(modelUpdateDto.getName())) {
-            verifyNameIsUnique(modelUpdateDto.getName(), model.getApp().getId());
-            model.setName(modelUpdateDto.getName());
-        }
+        validateName(modelUpdateDto.getName(), model.getName(), model.getApp().getId());
+        model.setName(modelUpdateDto.getName());
 
         return modelRepository.save(model);
     }

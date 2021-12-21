@@ -52,12 +52,15 @@ import {
   deleteSelectedExamples,
   deleteSelectedExamplesFail,
   deleteSelectedExamplesSuccess,
+  getSubjectMediaNextPage,
+  getNextPageSubjectExamplesSuccess,
 } from './action';
 
 function updateCollectionItemStatus(
   state: CollectionEntityState,
   item: CollectionItem,
   status: CircleLoadingProgressEnum,
+  id?: string,
   error?: string
 ): CollectionEntityState {
   const collectionCopy = [...state.collection];
@@ -67,6 +70,7 @@ function updateCollectionItemStatus(
     collectionCopy[targetItemIndex] = {
       ...collectionCopy[targetItemIndex],
       status,
+      id,
     };
 
     if (error) {
@@ -113,13 +117,18 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(resetSubjects, () => ({ ...initialState })),
   on(getSubjectExamples, state => ({ ...state, isCollectionPending: true })),
   on(getSubjectExamplesSuccess, (state, { items, apiKey }) => {
-    const collectionCopy = [...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded)];
+    const collectionCopy = [
+      ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded && item.subject === state.subject),
+    ];
 
     const newCollectionItems = items.map(item => ({
       url: CollectionHelper.getCollectionItemUrl(apiKey, item.image_id),
       id: item.image_id,
       status: CircleLoadingProgressEnum.Uploaded,
       subject: item.subject,
+      page: item['page'],
+      totalPages: item['totalPages'],
+      totalElements: item['totalElements'],
     }));
 
     return {
@@ -128,15 +137,48 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
       collection: [...newCollectionItems, ...collectionCopy],
     };
   }),
+
+  on(getSubjectMediaNextPage, state => ({ ...state, isCollectionPending: false })),
+  on(getNextPageSubjectExamplesSuccess, (state, { items, apiKey }) => {
+    const collectionCopy = [
+      ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded && item.subject === state.subject),
+    ];
+
+    let prevCollection = [...state.collection];
+
+    const newCollectionItems = items.map(item => ({
+      url: CollectionHelper.getCollectionItemUrl(apiKey, item.image_id),
+      id: item.image_id,
+      status: CircleLoadingProgressEnum.Uploaded,
+      subject: item.subject,
+      page: item['page'],
+      totalPages: item['totalPages'],
+      totalElements: item['totalElements'],
+    }));
+
+    return {
+      ...state,
+      isCollectionPending: false,
+      collection: [...prevCollection, ...newCollectionItems, ...collectionCopy],
+    };
+  }),
+
   on(getSubjectExamplesFail, state => ({ ...state, isCollectionPending: false })),
-  on(addFileToCollection, (state, { url, file, subject }) => ({
-    ...state,
-    collection: [...state.collection, { url, file, subject, status: CircleLoadingProgressEnum.OnHold }],
-  })),
+
+  on(addFileToCollection, (state, { url, file, subject }) => {
+    return {
+      ...state,
+      collection: [
+        ...state.collection.filter(item => item.subject === state.subject && item.url !== url),
+        { url, file, subject, status: CircleLoadingProgressEnum.OnHold },
+      ],
+    };
+  }),
   on(uploadImage, deleteSubjectExample, (state, { item }) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.InProgress)),
-  on(uploadImageSuccess, deleteSubjectExampleSuccess, (state, { item }) =>
-    updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded)
-  ),
+  on(uploadImageSuccess, (state, { item, itemId }) => {
+    return updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded, itemId);
+  }),
+  on(deleteSubjectExampleSuccess, (state, { item }) => updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Uploaded)),
   on(uploadImageFail, deleteSubjectExampleFail, (state, { item, error }) =>
     updateCollectionItemStatus(state, item, CircleLoadingProgressEnum.Failed, error)
   ),

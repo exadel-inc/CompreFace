@@ -53,6 +53,8 @@ There is a `PYTHON_UR`L environment variable that tells this container where
 to send requests to `compreface-core` containers.
 Default value: http://compreface-core:3000.
 
+There is a `PYTHON_URL` environment variable that tells this container where to send requests to `compreface-core` containers. Default value: `http://compreface-core:3000`.
+
 ## Embedding Servers
 
 Container name in the docker-compose file: `compreface-core`
