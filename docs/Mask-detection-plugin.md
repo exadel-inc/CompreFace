@@ -7,21 +7,15 @@ correctly automatically. There are three possible results:
 There was no suitable free and ready-to-use model for face mask
 detection at the moment of adding this plugin, so we created our model.
 
-**Disclaimer:**
-
-- We are not medical experts' organization!
-- The plugin doesn't contain the recommendations of how to use and wear face mask correctly!
-- The current recommendation of [the WHO about face mask usage](https://www.who.int/emergencies/diseases/novel-coronavirus-2019/advice-for-public/when-and-how-to-use-masks) 
-are the reference point in the plugin's data analysis.
-- The accuracy of the model is not 100%.
-- Please use the plugin at your own risk.
+    Disclaimer:
+    Software developers, not medical experts, created the plugin. 
+    The plugin doesn't contain the recommendations of how to use and wear face mask correctly.
+    The accuracy of the model is not 100%.
+    Please use the plugin at your own risk.
 
 # Face mask detection example
 
-![results](media/image1.png){width="5.833333333333333in"
-height="4.373164916885389in"}
-
-results
+![results](https://user-images.githubusercontent.com/3736126/130656086-3167421e-f697-4837-8cf9-e3889d49a44d.png)
 
 # Training process
 
