@@ -2,6 +2,7 @@
 
 ## Table Of Contents
 
++ [Postman REST API documentation](#postman-documentation)
 + [Face Recognition Service](#face-recognition-service)
   + [Managing Subjects](#managing-subjects)
       + [Add a Subject](#add-a-subject)
@@ -23,6 +24,11 @@
 + [Base64 Support](#base64-support)
 
 To know more about face services and face plugins visit [this page](Face-services-and-plugins.md).
+
+## Postman documentation
+
+There is a [Postman REST API documentation](https://documenter.getpostman.com/view/17578263/UUxzAnde)
+that covers the same REST endpoint. Postman documentation supports snippets on the most popular programming languages.
 
 ## Face Recognition Service
 
