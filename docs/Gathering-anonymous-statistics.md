@@ -47,19 +47,21 @@ one machine. We send it in every request to our server to understand
 that this is the same installation as before.
 
 #### Examples of saved data:
-
-    "_createdAt:date","install_guid:string","action_name:string"
-    "2021-03-15 09:16:31.676","560eee90-5fca-11eb-988b-0242ac120003","USER_CREATE"
-    "2021-03-15 09:16:32.031","560eee90-5fca-11eb-988b-0242ac120003","APP_CREATE"
-    "2021-03-15 09:16:32.291","560eee90-5fca-11eb-988b-0242ac120003","FACE_DETECTION_CREATE"
-    "2021-03-15 09:16:32.607","560eee90-5fca-11eb-988b-0242ac120003","FACE_VERIFICATION_CREATE"
-    "2021-03-15 09:16:32.998","560eee90-5fca-11eb-988b-0242ac120003","FACE_RECOGNITION_CREATE"
-    "_createdAt:date","install_guid:string","collection_guid:string","faces_range:string"
-    "2021-03-13 13:25:49.700","59638de4-5fca-11eb-848b-0242ac120002","a3d5dda8-b53a-4465-a44e-f1c3c81c7551","501-2000"
-    "2021-03-13 13:25:49.840","59638de4-5fca-11eb-848b-0242ac120002","a4594ccc-198a-492e-8146-8bbf27972296","0"
-    "2021-03-13 13:25:50.003","59638de4-5fca-11eb-848b-0242ac120002","39c1925d-a1a9-4d44-8eb3-6acf132b89f2","1-10"
-    "2021-03-13 13:25:50.763","59638de4-5fca-11eb-848b-0242ac120002","794dd0ec-ac88-4552-90a8-f0bb0ddcee1e","201-500"
-
+```csv
+"_createdAt:date","install_guid:string","action_name:string"
+"2021-03-15 09:16:31.676","560eee90-5fca-11eb-988b-0242ac120003","USER_CREATE"
+"2021-03-15 09:16:32.031","560eee90-5fca-11eb-988b-0242ac120003","APP_CREATE"
+"2021-03-15 09:16:32.291","560eee90-5fca-11eb-988b-0242ac120003","FACE_DETECTION_CREATE"
+"2021-03-15 09:16:32.607","560eee90-5fca-11eb-988b-0242ac120003","FACE_VERIFICATION_CREATE"
+"2021-03-15 09:16:32.998","560eee90-5fca-11eb-988b-0242ac120003","FACE_RECOGNITION_CREATE"
+```
+```csv
+"_createdAt:date","install_guid:string","collection_guid:string","faces_range:string"
+"2021-03-13 13:25:49.700","59638de4-5fca-11eb-848b-0242ac120002","a3d5dda8-b53a-4465-a44e-f1c3c81c7551","501-2000"
+"2021-03-13 13:25:49.840","59638de4-5fca-11eb-848b-0242ac120002","a4594ccc-198a-492e-8146-8bbf27972296","0"
+"2021-03-13 13:25:50.003","59638de4-5fca-11eb-848b-0242ac120002","39c1925d-a1a9-4d44-8eb3-6acf132b89f2","1-10"
+"2021-03-13 13:25:50.763","59638de4-5fca-11eb-848b-0242ac120002","794dd0ec-ac88-4552-90a8-f0bb0ddcee1e","201-500"
+```
 #### How we use the data
 
 The data is used to understand the popularity of different services, how
