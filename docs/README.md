@@ -13,3 +13,4 @@
 * [User Roles System](User-Roles-System.md)
 * [Face Mask Detection Plugin](Mask-detection-plugin.md)
 * [Gathering Anonymous Statistics](Gathering-anonymous-statistics.md)
+* [Installation Options](/docs/Installation-options.md)

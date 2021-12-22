@@ -61,6 +61,7 @@
     * [Face Mask Detection Plugin](/docs/Mask-detection-plugin.md)
     * [Kubernetes configuration](https://github.com/exadel-inc/compreface-kubernetes)
     * [Gathering Anonymous Statistics](/docs/Gathering-anonymous-statistics.md)
+    * [Installation Options](/docs/Installation-options.md)
   * [Contributing](#contributing)
   * [License info](#license-info)
 
