@@ -32,7 +32,7 @@ The most useful cases include face plugins for face analysis:
 
 **How to test**
 
-1. On the ComperFace application page, at the bottom of the frame, click Create button.
+1. On the CompreFace application page, at the bottom of the frame, click Create button.
 2. In the Create Service dialog, from the Type drop-down menu, select DETECTION.
 3. Enter the name of the service you are going to create.
 4. From the list of the services in the Services frame, select the service you created; you can use search field to filter the services.
@@ -43,7 +43,7 @@ The most useful cases include face plugins for face analysis:
 **Output**
 
 Below the picture, you can see the Request processed, and the Response to the request.
-The Response is the output which ComperFace provides via [API](Rest-API-description.md#face-detection-service).
+The Response is the output which CompreFace provides via [API](Rest-API-description.md#face-detection-service).
 
 Example:
 
@@ -64,7 +64,7 @@ The possible cases include:
 
 **How to test**
 
-1. On the ComperFace application page, at the bottom of the frame, click Create button.
+1. On the CompreFace application page, at the bottom of the frame, click Create button.
 2. In the Create Service dialog, from the Type drop-down menu, select RECOGNITION.
 3. Enter the name of the service you are going to create.
 4. From the list of the services in the Services frame, select the service you created; you can use search field to filter the services.
@@ -75,7 +75,7 @@ The possible cases include:
 **Output**
 
 Below the picture, you can see the Request processed, and the Response to the request.
-The Response is the output which ComperFace provides via [API](Rest-API-description.md#face-recognition-service).
+The Response is the output which CompreFace provides via [API](Rest-API-description.md#face-recognition-service).
 
 Example:
 
@@ -94,7 +94,7 @@ The possible cases include:
 
 **How to test**
 
-1. On the ComperFace application page, at the bottom of the frame, click Create button.
+1. On the CompreFace application page, at the bottom of the frame, click Create button.
 2. In the Create Service dialog, from the Type drop-down menu, select VERIFICATION.
 3. Enter the name of the service you are going to create.
 4. From the list of the services in the Services frame, select the service you created; you can use search field to filter the services.
@@ -105,7 +105,7 @@ The possible cases include:
 **Output**
 
 Below the picture, you can see the Request processed, and the Response to the request.
-The Response is the output which ComperFace provides via [API](Rest-API-description.md#face-verification-service).
+The Response is the output which CompreFace provides via [API](Rest-API-description.md#face-verification-service).
 
 Example:
 

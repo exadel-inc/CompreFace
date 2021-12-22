@@ -115,7 +115,7 @@ The system can accurately identify people even when it has only “seen” their
   - [age recognition plugin](/docs/Face-services-and-plugins.md#face-plugins)
   - [gender recognition plugin](/docs/Face-services-and-plugins.md#face-plugins)
   - [face mask detection plugin](/docs/Face-services-and-plugins.md#face-plugins)
-- Use the ComperFace UI panel for convenient user roles and access management
+- Use the CompreFace UI panel for convenient user roles and access management
 
 # Getting Started with CompreFace
 
