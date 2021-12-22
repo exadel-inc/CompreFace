@@ -2,6 +2,7 @@
 
 ## Table Of Contents
 
++ [Postman REST API documentation](#postman-documentation)
 + [Face Recognition Service](#face-recognition-service)
   + [Managing Subjects](#managing-subjects)
       + [Add a Subject](#add-a-subject)
@@ -23,6 +24,11 @@
 + [Base64 Support](#base64-support)
 
 To know more about face services and face plugins visit [this page](Face-services-and-plugins.md).
+
+## Postman documentation
+
+There is a [Postman REST API documentation](https://documenter.getpostman.com/view/17578263/UUxzAnde)
+that covers the same REST endpoint. Postman documentation supports snippets on the most popular programming languages.
 
 ## Face Recognition Service
 
@@ -53,11 +59,11 @@ curl -X POST "http://localhost:8000/api/v1/recognition/subjects" \
 -H "x-api-key: <service_api_key>" \
 -d '{"subject": "<subject_name>"}'
 ```
-| Element             | Description | Type   | Required | Notes                                                        |
-| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| Content-Type        | header      | string | required | application/json                                          |
-| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
-| subject             | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string                 |
+| Element      | Description | Type   | Required | Notes                                                                         |
+|--------------|-------------|--------|----------|-------------------------------------------------------------------------------|
+| Content-Type | header      | string | required | application/json                                                              |
+| x-api-key    | header      | string | required | api key of the Face recognition service, created by the user                  |
+| subject      | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string |
 
 Response body on success:
 ```json
@@ -66,9 +72,9 @@ Response body on success:
 }
 ```
 
-| Element  | Type   | Description                |
-| -------- | ------ | -------------------------- |
-| subject  | string | is the name of the subject |
+| Element | Type   | Description                |
+|---------|--------|----------------------------|
+| subject | string | is the name of the subject |
 
 ### Rename a Subject
 ```since 0.6 version```
@@ -82,11 +88,11 @@ curl -X PUT "http://localhost:8000/api/v1/recognition/subjects/<subject>" \
 -H "x-api-key: <service_api_key>" \
 -d '{"subject: <subject_name>"}'
 ```
-| Element             | Description | Type   | Required | Notes                                                        |
-| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| Content-Type        | header      | string | required | application/json                                          |
-| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
-| subject             | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string                 |
+| Element      | Description | Type   | Required | Notes                                                                         |
+|--------------|-------------|--------|----------|-------------------------------------------------------------------------------|
+| Content-Type | header      | string | required | application/json                                                              |
+| x-api-key    | header      | string | required | api key of the Face recognition service, created by the user                  |
+| subject      | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string |
 
 Response body on success:
 ```json
@@ -95,9 +101,9 @@ Response body on success:
 }
 ```
 
-| Element  | Type    | Description |
-| -------- | ------- | ----------------- |
-| updated  | boolean | failed or success |
+| Element | Type    | Description       |
+|---------|---------|-------------------|
+| updated | boolean | failed or success |
 
 ### Delete a Subject
 ```since 0.6 version```
@@ -109,11 +115,11 @@ curl -X DELETE "http://localhost:8000/api/v1/recognition/subjects/<subject>" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>"
 ```
-| Element             | Description | Type   | Required | Notes                                                        |
-| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| Content-Type        | header      | string | required | application/json                                          |
-| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
-| subject             | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string |
+| Element      | Description | Type   | Required | Notes                                                                         |
+|--------------|-------------|--------|----------|-------------------------------------------------------------------------------|
+| Content-Type | header      | string | required | application/json                                                              |
+| x-api-key    | header      | string | required | api key of the Face recognition service, created by the user                  |
+| subject      | body param  | string | required | is the name of the subject. It can be a person name, but it can be any string |
 
 Response body on success:
 ```json
@@ -122,9 +128,9 @@ Response body on success:
 }
 ```
 
-| Element  | Type   | Description                |
-| -------- | ------ | -------------------------- |
-| subject  | string | is the name of the subject |
+| Element | Type   | Description                |
+|---------|--------|----------------------------|
+| subject | string | is the name of the subject |
 
 ### Delete All Subjects
 ```since 0.6 version```
@@ -136,10 +142,10 @@ curl -X DELETE "http://localhost:8000/api/v1/recognition/subjects" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>"
 ```
-| Element             | Description | Type   | Required | Notes                                                        |
-| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| Content-Type        | header      | string | required | application/json                                          |
-| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
+| Element      | Description | Type   | Required | Notes                                                        |
+|--------------|-------------|--------|----------|--------------------------------------------------------------|
+| Content-Type | header      | string | required | application/json                                             |
+| x-api-key    | header      | string | required | api key of the Face recognition service, created by the user |
 
 Response body on success:
 ```json
@@ -148,9 +154,9 @@ Response body on success:
 }
 ```
 
-| Element  | Type    | Description                |
-| -------- | ------- | -------------------------- |
-| deleted  | integer | number of deleted subjects |
+| Element | Type    | Description                |
+|---------|---------|----------------------------|
+| deleted | integer | number of deleted subjects |
 
 ### List Subjects
 ```since 0.6 version```
@@ -162,10 +168,10 @@ curl -X GET "http://localhost:8000/api/v1/recognition/subjects/" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>"
 ```
-| Element             | Description | Type   | Required | Notes                                                        |
-| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| Content-Type        | header      | string | required | application/json                                          |
-| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
+| Element      | Description | Type   | Required | Notes                                                        |
+|--------------|-------------|--------|----------|--------------------------------------------------------------|
+| Content-Type | header      | string | required | application/json                                             |
+| x-api-key    | header      | string | required | api key of the Face recognition service, created by the user |
 
 Response body on success:
 ```json
@@ -177,9 +183,9 @@ Response body on success:
 }
 ```
 
-| Element  | Type   | Description                |
-| -------- | ------ | -------------------------- |
-| subjects | array  | the list of subjects in Face Collection |
+| Element  | Type  | Description                             |
+|----------|-------|-----------------------------------------|
+| subjects | array | the list of subjects in Face Collection |
 
 ### Managing Subject Examples
 
@@ -201,13 +207,13 @@ curl -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&d
 -H "x-api-key: <service_api_key>" \
 -F file=@<local_file> 
 ```
-| Element             | Description | Type   | Required | Notes                                                        |
-| ------------------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| Content-Type        | header      | string | required | multipart/form-data                                          |
-| x-api-key           | header      | string | required | api key of the Face recognition service, created by the user          |
-| subject             | param       | string | required | is the name you assign to the image you save                 |
-| det_prob_threshold  | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
-| file                | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| Element            | Description | Type   | Required | Notes                                                                                                |
+|--------------------|-------------|--------|----------|------------------------------------------------------------------------------------------------------|
+| Content-Type       | header      | string | required | multipart/form-data                                                                                  |
+| x-api-key          | header      | string | required | api key of the Face recognition service, created by the user                                         |
+| subject            | param       | string | required | is the name you assign to the image you save                                                         |
+| det_prob_threshold | param       | string | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
+| file               | body        | image  | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb               |
 
 Response body on success:  
 ```json
@@ -218,7 +224,7 @@ Response body on success:
 ```
 
 | Element  | Type   | Description                |
-| -------- | ------ | -------------------------- |
+|----------|--------|----------------------------|
 | image_id | UUID   | UUID of uploaded image     |
 | subject  | string | Subject of the saved image |
 
@@ -232,11 +238,11 @@ curl -X GET "http://localhost:8000/api/v1/recognition/faces?page=<page>&size=<si
 -H "x-api-key: <service_api_key>" \
 ```
 
-| Element   | Description | Type    | Required | Notes                                     |
-| --------- | ----------- | ------- | -------- | ----------------------------------------- |
-| x-api-key | header      | string  | required | api key of the Face recognition service, created by the user |
+| Element   | Description | Type    | Required | Notes                                                                                                |
+|-----------|-------------|---------|----------|------------------------------------------------------------------------------------------------------|
+| x-api-key | header      | string  | required | api key of the Face recognition service, created by the user                                         |
 | page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. Since 0.6 version |
-| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. Since 0.6 version |
+| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. Since 0.6 version        |
 
 Response body on success:
 
@@ -256,14 +262,14 @@ Response body on success:
 }
 ```
 
-| Element        | Type    | Description                                                  |
-| -------------- | ------- | ------------------------------------------------------------ |
-| face.image_id  | UUID    | UUID of the face                                             |
+| Element        | Type    | Description                                                       |
+|----------------|---------|-------------------------------------------------------------------|
+| face.image_id  | UUID    | UUID of the face                                                  |
 | fase.subject   | string  | <subject> of the person, whose picture was saved for this api key |
-| page_number    | integer | page number |
-| page_size      | integer | **requested** page size |
-| total_pages    | integer | total pages |
-| total_elements | integer | total faces |
+| page_number    | integer | page number                                                       |
+| page_size      | integer | **requested** page size                                           |
+| total_pages    | integer | total pages                                                       |
+| total_elements | integer | total faces                                                       |
 
 
 ### Delete All Examples of the Subject by Name
@@ -275,9 +281,9 @@ curl -X DELETE "http://localhost:8000/api/v1/recognition/faces?subject=<subject>
 -H "x-api-key: <service_api_key>"
 ```
 
-| Element   | Description | Type   | Required | Notes                                                        |
-| --------- | ----------- | ------ | -------- | ------------------------------------------------------------ |
-| x-api-key | header      | string | required | api key of the Face recognition service, created by the user                    |
+| Element   | Description | Type   | Required | Notes                                                                                          |
+|-----------|-------------|--------|----------|------------------------------------------------------------------------------------------------|
+| x-api-key | header      | string | required | api key of the Face recognition service, created by the user                                   |
 | subject   | param       | string | optional | is the name subject. If this parameter is absent, all faces in Face Collection will be removed |
 
 Response body on success:
@@ -287,9 +293,9 @@ Response body on success:
 }
 ```
 
-| Element  | Type    | Description              |
-| -------- | ------- | ------------------------ |
-| deleted  | integer | Number of deleted faces  |
+| Element | Type    | Description             |
+|---------|---------|-------------------------|
+| deleted | integer | Number of deleted faces |
 
 
 
@@ -302,10 +308,10 @@ curl -X DELETE "http://localhost:8000/api/v1/recognition/faces/<image_id>" \
 -H "x-api-key: <service_api_key>"
 ```
 
-| Element   | Description | Type   | Required | Notes                                     |
-| --------- | ----------- | ------ | -------- | ----------------------------------------- |
+| Element   | Description | Type   | Required | Notes                                                        |
+|-----------|-------------|--------|----------|--------------------------------------------------------------|
 | x-api-key | header      | string | required | api key of the Face recognition service, created by the user |
-| image_id  | variable    | UUID   | required | UUID of the removing face                 |
+| image_id  | variable    | UUID   | required | UUID of the removing face                                    |
 
 Response body on success:
 ```
@@ -315,9 +321,9 @@ Response body on success:
 }
 ```
 
-| Element  | Type   | Description                                                  |
-| -------- | ------ | ------------------------------------------------------------ |
-| image_id | UUID   | UUID of the removed face                                     |
+| Element  | Type   | Description                                                       |
+|----------|--------|-------------------------------------------------------------------|
+| image_id | UUID   | UUID of the removed face                                          |
 | subject  | string | <subject> of the person, whose picture was saved for this api key |
 
 
@@ -330,10 +336,10 @@ You can paste this URL into the <img> html tag to show the image.
 curl -X GET "http://localhost:8000/api/v1/static/<service_api_key>/images/<image_id>"
 ```
 
-| Element         | Description | Type   | Required | Notes                                     |
-| --------------- | ----------- | ------ | -------- | ----------------------------------------- |
+| Element         | Description | Type   | Required | Notes                                                        |
+|-----------------|-------------|--------|----------|--------------------------------------------------------------|
 | service_api_key | variable    | string | required | api key of the Face recognition service, created by the user |
-| image_id        | variable    | UUID   | required | UUID of the image to download                 |
+| image_id        | variable    | UUID   | required | UUID of the image to download                                |
 
 Response body is binary image. Empty bytes if image not found.
 
@@ -348,10 +354,10 @@ curl -X GET "http://localhost:8000/api/v1/recognition/faces/<image_id>/img"
 -H "x-api-key: <service_api_key>"
 ```
 
-| Element   | Description | Type   | Required | Notes                                     |
-| --------- | ----------- | ------ | -------- | ----------------------------------------- |
+| Element   | Description | Type   | Required | Notes                                                        |
+|-----------|-------------|--------|----------|--------------------------------------------------------------|
 | x-api-key | header      | string | required | api key of the Face recognition service, created by the user |
-| image_id  | variable    | UUID   | required | UUID of the image to download                 |
+| image_id  | variable    | UUID   | required | UUID of the image to download                                |
 
 Response body is binary image. Empty bytes if image not found.
 
@@ -367,16 +373,16 @@ curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&
 -F file=<local_file>
 ```
 
-| Element            | Description | Type    | Required | Notes                                                        |
-| ------------------ | ----------- | ------- | -------- | ------------------------------------------------------------ |
-| Content-Type       | header      | string  | required | multipart/form-data                                          |
-| x-api-key          | header      | string  | required | api key of the Face recognition service, created by the user                    |
-| file               | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| Element            | Description | Type    | Required | Notes                                                                                                                                          |
+|--------------------|-------------|---------|----------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| Content-Type       | header      | string  | required | multipart/form-data                                                                                                                            |
+| x-api-key          | header      | string  | required | api key of the Face recognition service, created by the user                                                                                   |
+| file               | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb                                                         |
 | limit              | param       | integer | optional | maximum number of faces on the image to be recognized. It recognizes the biggest faces first. Value of 0 represents no limit. Default value: 0 |
-| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
-| prediction_count   | param       | integer | optional | maximum number of subject predictions per face. It returns the most similar subjects. Default value: 1    |
-| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
+| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0.                                           |
+| prediction_count   | param       | integer | optional | maximum number of subject predictions per face. It returns the most similar subjects. Default value: 1                                         |
+| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)             |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false                                      |
 
 Response body on success:
 ```json
@@ -426,45 +432,44 @@ Response body on success:
 }
 ```
 
-| Element                        | Type    | Description                                                  |
-| ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled.          |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| box                            | object  | list of parameters of the bounding box for this face         |
-| probability                    | float   | probability that a found face is actually a face             |
-| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| subjects                       | list    | list of similar subjects with size of <prediction_count> order by similarity |
-| similarity                     | float   | similarity that on that image predicted person               |
-| subject                        | string  | name of the subject in Face Collection                       |
-| execution_time                 | object  | execution time of all plugins                       |
-| plugins_versions               | object  | contains information about plugin versions                       |
+| Element                    | Type    | Description                                                                                                                                                 |
+|----------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| age                        | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                       |
+| gender                     | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                       |
+| mask                       | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled.                                                     |
+| embedding                  | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                   |
+| box                        | object  | list of parameters of the bounding box for this face                                                                                                        |
+| probability                | float   | probability that a found face is actually a face                                                                                                            |
+| x_max, y_max, x_min, y_min | integer | coordinates of the frame containing the face                                                                                                                |
+| landmarks                  | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled |
+| subjects                   | list    | list of similar subjects with size of <prediction_count> order by similarity                                                                                |
+| similarity                 | float   | similarity that on that image predicted person                                                                                                              |
+| subject                    | string  | name of the subject in Face Collection                                                                                                                      |
+| execution_time             | object  | execution time of all plugins                                                                                                                               |
+| plugins_versions           | object  | contains information about plugin versions                                                                                                                  |
 
 
 ### Verify Faces from a Given Image
 
 To compare faces from the uploaded images with the face in saved image ID:
 ```http request
-curl -X POST "http://localhost:8000/api/v1/recognition/faces/<image_id>/verify?
-limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
+curl -X POST "http://localhost:8000/api/v1/recognition/faces/<image_id>/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
 -F file=<local_file>
 ```
 
 
-| Element            | Description | Type    | Required | Notes                                                        |
-| ------------------ | ----------- | ------- | -------- | ------------------------------------------------------------ |
-| Content-Type       | header      | string  | required | multipart/form-data                                          |
-| x-api-key          | header      | string  | required | api key of the Face recognition service, created by the user                    |
-| image_id           | variable    | UUID    | required | UUID of the verifying face                                   |
-| file               | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| Element            | Description | Type    | Required | Notes                                                                                                                                                 |
+|--------------------|-------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Content-Type       | header      | string  | required | multipart/form-data                                                                                                                                   |
+| x-api-key          | header      | string  | required | api key of the Face recognition service, created by the user                                                                                          |
+| image_id           | variable    | UUID    | required | UUID of the verifying face                                                                                                                            |
+| file               | body        | image   | required | allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb                                                                |
 | limit              | param       | integer | optional | maximum number of faces on the target image to be recognized. It recognizes the biggest faces first. Value of 0 represents no limit. Default value: 0 |
-| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
-| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
+| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0.                                                  |
+| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)                    |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false                                             |
 
 Response body on success:
 ```json
@@ -513,19 +518,19 @@ Response body on success:
 }
 ```
 
-| Element                        | Type    | Description                                                  |
-| ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| box                            | object  | list of parameters of the bounding box for this face         |
-| probability                    | float   | probability that a found face is actually a face             |
-| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| similarity                     | float   | similarity that on that image predicted person               |
-| execution_time                 | object  | execution time of all plugins                       |
-| plugins_versions               | object  | contains information about plugin versions                       |
+| Element                    | Type    | Description                                                                                                                                                 |
+|----------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| age                        | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                       |
+| gender                     | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                       |
+| mask                       | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                      |
+| embedding                  | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                   |
+| box                        | object  | list of parameters of the bounding box for this face                                                                                                        |
+| probability                | float   | probability that a found face is actually a face                                                                                                            |
+| x_max, y_max, x_min, y_min | integer | coordinates of the frame containing the face                                                                                                                |
+| landmarks                  | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled |
+| similarity                 | float   | similarity that on that image predicted person                                                                                                              |
+| execution_time             | object  | execution time of all plugins                                                                                                                               |
+| plugins_versions           | object  | contains information about plugin versions                                                                                                                  |
 
 ## Face Detection Service
 
@@ -539,15 +544,15 @@ curl  -X POST "http://localhost:8000/api/v1/detection/detect?limit=<limit>&det_p
 ```
 
 
-| Element            | Description | Type    | Required | Notes                                                        |
-| ------------------ | ----------- | ------- | -------- | ------------------------------------------------------------ |
-| Content-Type       | header      | string  | required | multipart/form-data                                          |
-| x-api-key          | header      | string  | required | api key of the Face Detection service, created by the user                    |
-| file               | body        | image   | required | image where to detect faces. Allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| Element            | Description | Type    | Required | Notes                                                                                                                                          |
+|--------------------|-------------|---------|----------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| Content-Type       | header      | string  | required | multipart/form-data                                                                                                                            |
+| x-api-key          | header      | string  | required | api key of the Face Detection service, created by the user                                                                                     |
+| file               | body        | image   | required | image where to detect faces. Allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb                            |
 | limit              | param       | integer | optional | maximum number of faces on the image to be recognized. It recognizes the biggest faces first. Value of 0 represents no limit. Default value: 0 |
-| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0 |
-| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
+| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0                                            |
+| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)             |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false                                      |
 
 Response body on success:
 ```json
@@ -593,18 +598,18 @@ Response body on success:
 }
 ```
 
-| Element                        | Type    | Description                                                  |
-| ------------------------------ | ------- | ------------------------------------------------------------ |
-| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| box                            | object  | list of parameters of the bounding box for this face (on processedImage) |
-| probability                    | float   | probability that a found face is actually a face (on processedImage)     |
-| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face (on processedImage)         |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| execution_time                 | object  | execution time of all plugins                       |
-| plugins_versions               | object  | contains information about plugin versions                       |
+| Element                    | Type    | Description                                                                                                                                                 |
+|----------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| age                        | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                       |
+| gender                     | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                       |
+| mask                       | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                      |
+| embedding                  | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                   |
+| box                        | object  | list of parameters of the bounding box for this face (on processedImage)                                                                                    |
+| probability                | float   | probability that a found face is actually a face (on processedImage)                                                                                        |
+| x_max, y_max, x_min, y_min | integer | coordinates of the frame containing the face (on processedImage)                                                                                            |
+| landmarks                  | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled |
+| execution_time             | object  | execution time of all plugins                                                                                                                               |
+| plugins_versions           | object  | contains information about plugin versions                                                                                                                  |
 
 
 ## Face Verification Service
@@ -619,16 +624,16 @@ curl  -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&pr
 ```
 
 
-| Element            | Description | Type    | Required | Notes                                                        |
-| ------------------ | ----------- | ------- | -------- | ------------------------------------------------------------ |
-| Content-Type       | header      | string  | required | multipart/form-data                                          |
-| x-api-key          | header      | string  | required | api key of the Face verification service, created by the user                    |
-| source_image       | body        | image   | required | file to be verified. Allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
-| target_image       | body        | image   | required | reference file to check the source file. Allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb |
+| Element            | Description | Type    | Required | Notes                                                                                                                                                 |
+|--------------------|-------------|---------|----------|-------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Content-Type       | header      | string  | required | multipart/form-data                                                                                                                                   |
+| x-api-key          | header      | string  | required | api key of the Face verification service, created by the user                                                                                         |
+| source_image       | body        | image   | required | file to be verified. Allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb                                           |
+| target_image       | body        | image   | required | reference file to check the source file. Allowed image formats: jpeg, jpg, ico, png, bmp, gif, tif, tiff, webp. Max size is 5Mb                       |
 | limit              | param       | integer | optional | maximum number of faces on the target image to be recognized. It recognizes the biggest faces first. Value of 0 represents no limit. Default value: 0 |
-| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0. |
-| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)  |
-| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false |
+| det_prob_threshold | param       | string  | optional | minimum required confidence that a recognized face is actually a face. Value is between 0.0 and 1.0.                                                  |
+| face_plugins       | param       | string  | optional | comma-separated slugs of face plugins. If empty, no additional information is returned. [Learn more](Face-services-and-plugins.md)                    |
+| status             | param       | boolean | optional | if true includes system information like execution_time and plugin_version fields. Default value is false                                             |
 
 Response body on success:
 ```json
@@ -709,21 +714,21 @@ Response body on success:
 }
 ```
 
-| Element                        | Type    | Description                                                  |
-| ------------------------------ | ------- | ------------------------------------------------------------ |
-| source_image_face              | object  | additional info about source image face |
-| face_matches                   | array   | result of face verification |
-| age                            | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| gender                         | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| mask                           | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled         |
-| embedding                      | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| box                            | object  | list of parameters of the bounding box for this face         |
-| probability                    | float   | probability that a found face is actually a face             |
-| x_max, y_max, x_min, y_min     | integer | coordinates of the frame containing the face                 |
-| landmarks                      | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled      |
-| similarity                     | float   | similarity between this face and the face on the source image               |
-| execution_time                 | object  | execution time of all plugins                       |
-| plugins_versions               | object  | contains information about plugin versions                       |
+| Element                    | Type    | Description                                                                                                                                                 |
+|----------------------------|---------|-------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| source_image_face          | object  | additional info about source image face                                                                                                                     |
+| face_matches               | array   | result of face verification                                                                                                                                 |
+| age                        | object  | detected age range. Return only if [age plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                       |
+| gender                     | object  | detected gender. Return only if [gender plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                       |
+| mask                       | object  | detected mask. Return only if [face mask plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                      |
+| embedding                  | array   | face embeddings. Return only if [calculator plugin](Face-services-and-plugins.md#face-plugins) is enabled                                                   |
+| box                        | object  | list of parameters of the bounding box for this face                                                                                                        |
+| probability                | float   | probability that a found face is actually a face                                                                                                            |
+| x_max, y_max, x_min, y_min | integer | coordinates of the frame containing the face                                                                                                                |
+| landmarks                  | array   | list of the coordinates of the frame containing the face-landmarks. Return only if [landmarks plugin](Face-services-and-plugins.md#face-plugins) is enabled |
+| similarity                 | float   | similarity between this face and the face on the source image                                                                                               |
+| execution_time             | object  | execution time of all plugins                                                                                                                               |
+| plugins_versions           | object  | contains information about plugin versions                                                                                                                  |
 
 
 
