@@ -134,7 +134,8 @@ public class SecurityValidationFilter implements Filter {
         response.setStatus(responseEntity.getStatusCode().value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.getWriter().append(objectMapper.writeValueAsString(responseEntity.getBody()));
-        response.getWriter().flush();
+        //response.getWriter().flush();
+        //don't need to flush or close the writer
     }
 
     private ModelType getModelTypeByUrl(String url) {

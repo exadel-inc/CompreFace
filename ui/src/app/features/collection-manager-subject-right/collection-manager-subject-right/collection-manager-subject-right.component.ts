@@ -52,6 +52,7 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
   @Output() deleteSelectedExamples = new EventEmitter<string[]>();
   @Output() selectExample = new EventEmitter<CollectionItem>();
   @Output() loadMore = new EventEmitter<CollectionItem>();
+  @Output() restartUploading = new EventEmitter<CollectionItem[]>();
 
   ngOnChanges(changes: SimpleChanges) {
     const change = changes['collectionItems'];
@@ -60,6 +61,12 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
       const collectionOnHold = this.collectionItems.filter(item => item.status === CircleLoadingProgressEnum.OnHold);
 
       this.isCollectionOnHold = !!collectionOnHold.length;
+
+      const itemInProgress = this.collectionItems.find(item => item.status === CircleLoadingProgressEnum.InProgress);
+
+      if (this.isCollectionOnHold && !itemInProgress) {
+        this.restartUploading.emit(collectionOnHold);
+      }
 
       const examples = this.collectionItems.filter(
         item => item['totalElements'] === undefined && item.status === CircleLoadingProgressEnum.Uploaded
