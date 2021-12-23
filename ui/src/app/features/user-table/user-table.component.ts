@@ -23,6 +23,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { RoleEditDialogComponent } from '../role-edit-dialog/role-edit-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserRole } from '../../data/interfaces/user-role';
+import { Router } from '@angular/router';
+import { Routes } from 'src/app/data/enums/routers-url.enum';
 
 @Component({
   selector: 'app-user-table',
@@ -42,7 +44,7 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
   @Input() searchText: string;
   @Output() deleteUser = new EventEmitter<UserDeletion>();
 
-  constructor(private dialog: MatDialog, private translate: TranslateService) {
+  constructor(private dialog: MatDialog, private translate: TranslateService, private router: Router) {
     super();
   }
 
@@ -53,6 +55,14 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
 
   ngOnChanges(): void {
     this.getMessageContent();
+
+    if (!this.data.length) return;
+
+    const userIsInvited = !!this.data.find(item => item.id === this.currentUserId);
+
+    if (!userIsInvited) {
+      this.router.navigate([Routes.Home]);
+    }
   }
 
   isRoleChangeAllowed(user: AppUser): boolean {
