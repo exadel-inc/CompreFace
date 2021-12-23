@@ -18,6 +18,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { of, Subscription } from 'rxjs';
 import { SnackBarModule } from 'src/app/features/snackbar/snackbar.module';
@@ -36,7 +37,16 @@ describe('ApplicationUserListComponent', () => {
     waitForAsync(() => {
       TestBed.configureTestingModule({
         declarations: [ApplicationUserListComponent, TranslatePipe],
-        imports: [SpinnerModule, UserTableModule, NoopAnimationsModule, FormsModule, TablePipeModule, MatInputModule, SnackBarModule],
+        imports: [
+          SpinnerModule,
+          UserTableModule,
+          NoopAnimationsModule,
+          FormsModule,
+          TablePipeModule,
+          MatInputModule,
+          SnackBarModule,
+          RouterTestingModule,
+        ],
         providers: [
           {
             provide: MatDialog,

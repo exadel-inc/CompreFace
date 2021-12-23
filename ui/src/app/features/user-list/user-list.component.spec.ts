@@ -19,6 +19,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatInputModule } from '@angular/material/input';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { of, Subscription } from 'rxjs';
 import { SpinnerModule } from 'src/app/features/spinner/spinner.module';
@@ -47,6 +48,7 @@ describe('UserListComponent', () => {
           MatInputModule,
           MatDialogModule,
           InviteDialogModule,
+          RouterTestingModule,
         ],
         declarations: [UserListComponent, TranslatePipe],
         providers: [
