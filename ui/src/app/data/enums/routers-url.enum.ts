@@ -22,4 +22,5 @@ export enum Routes {
   TestModel = '/test-model',
   ManageCollection = '/manage-collection',
   Demo = '/demo',
+  CreateApplication = '/create-application',
 }

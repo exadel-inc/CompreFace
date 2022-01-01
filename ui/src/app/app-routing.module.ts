@@ -40,6 +40,18 @@ const routes: Routes = [
     children: [{ path: '', loadChildren: () => import('./pages/test-model/test-model.module').then(m => m.TestModelModule) }],
   },
   {
+    path: 'create-application',
+    component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./pages/create-application-wizard/create-application-wizard.module').then(m => m.CreateApplicationWizardModule),
+      },
+    ],
+  },
+  {
     path: 'manage-collection',
     component: MainLayoutComponent,
     resolve: [UserInfoResolver],

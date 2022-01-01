@@ -207,6 +207,16 @@
     "new_account_login": "You have created new account, please login into your account",
     "change_password_success": "Password has successfully been changed"
   },
+  "create_application_wizard": {
+    "title": {
+      "p1": "Create your",
+      "p2": "application"
+    },
+    "info_about_application": "Application is where you can create and manage your face recognition services. It allows restricting their visibility from other users",
+    "application_name_question": "What would you like to name this application ?",
+    "application_name": "Application name",
+    "next": "Next"
+  },
   "application_user_list": {
     "invitation_sent": "Invitation was sent to {{userEmail}}"
   },

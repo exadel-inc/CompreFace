@@ -1,0 +1,43 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+<div class="container">
+  <div class="application">
+    <h2 class="application__title">
+      {{ 'create_application_wizard.title.p1' | translate }} <br />{{ 'create_application_wizard.title.p2' | translate }}
+    </h2>
+
+    <p class="application__info">
+      <i>{{ 'create_application_wizard.info_about_application' | translate }}</i>
+    </p>
+
+    <p class="application__question">{{ 'create_application_wizard.application_name_question' | translate }}</p>
+
+    <div class="application__form">
+      <input
+        class="name-input"
+        type="text"
+        placeholder=" {{ 'create_application_wizard.application_name' | translate }}"
+        [(ngModel)]="applicationName"
+      />
+
+      <div class="next-btn">
+        <button mat-flat-button color="primary" (click)="onNext()">
+          {{ 'create_application_wizard.next' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
