@@ -30,11 +30,12 @@ export class EditUserInfoDialogComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<EditUserInfoDialogComponent>,
     private formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: { userName: string }
+    @Inject(MAT_DIALOG_DATA) public data: { firstName: string; lastName: string }
   ) {}
 
   ngOnInit(): void {
-    [this.firstName, this.lastName] = this.data?.userName.split(' ');
+    this.firstName = this.data?.firstName;
+    this.lastName = this.data?.lastName;
     this.form = this.formBuilder.group({
       firstName: new FormControl(this.firstName, [Validators.required]),
       lastName: new FormControl(this.lastName, [Validators.required]),
