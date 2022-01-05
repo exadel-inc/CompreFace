@@ -17,14 +17,37 @@
 @import 'media.scss';
 
 .sign-up-card {
+  .desktop-screen {
+    display: block;
+  }
+  .mobile-screen {
+    display: none;
+  }
+
   @include form-card();
 
   .mat-input-wrapper {
     display: flex;
     justify-content: space-between;
+  }
+  @include mobile-portrait {
+    margin-top: 150px;
+    flex-direction: column;
 
-    @include mobile-portrait {
+    .mat-input-wrapper {
+      display: flex;
       flex-direction: column;
+    }
+
+    .desktop-screen {
+      display: none;
+    }
+    .mobile-screen {
+      height: 150px;
+      transform: scale(1.3);
+      object-fit: cover;
+      overflow: hidden;
+      display: block;
     }
   }
 }
