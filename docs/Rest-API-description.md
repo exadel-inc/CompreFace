@@ -54,6 +54,12 @@ Or if you delete all the examples of the subject, it will be deleted automatical
 Create a new subject in Face Collection. Creating a subject is an optional step, 
 you can [upload an example](#add-an-example-of-a-subject) without an existing subject, and a subject will be created automatically.
 
+```shell
+curl -X POST "http://localhost:8000/api/v1/recognition/subjects" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d '{"subject": "<subject_name>"}'
+```
 
 | Element      | Description | Type   | Required | Notes                                                                         |
 |--------------|-------------|--------|----------|-------------------------------------------------------------------------------|
