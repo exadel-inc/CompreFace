@@ -37,6 +37,7 @@ import {
   readImageFiles,
   resetSubjectExamples,
   setSubjectMode,
+  startUploadImageOrder,
   toggleExampleSelection,
   uploadImage,
 } from '../../store/manage-collectiom/action';
@@ -79,6 +80,10 @@ export class CollectionRightFacade {
 
   loadNextPage(subject: string, page: number, totalPages: number): void {
     this.store.dispatch(getSubjectMediaNextPage({ subject, page, totalPages }));
+  }
+
+  restartUploading(): void {
+    this.store.dispatch(startUploadImageOrder());
   }
 
   addImageFilesToCollection(fileDescriptors: File[]): void {

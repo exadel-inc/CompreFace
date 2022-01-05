@@ -147,9 +147,8 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
       .subscribe(() => this.collectionRightFacade.edit(editName, name, this.apiKey));
   }
 
-  restartUploading(item: CollectionItem[]): void {
-    const filesArr = item.map(item => item.file);
-    this.collectionRightFacade.addImageFilesToCollection(filesArr);
+  restartUploading(): void {
+    this.collectionRightFacade.restartUploading();
   }
 
   readFiles(fileList: File[]): void {
