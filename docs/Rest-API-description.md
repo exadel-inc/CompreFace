@@ -15,6 +15,7 @@
     + [List of All Saved Examples of the Subject](#list-of-all-saved-examples-of-the-subject)
     + [Delete All Examples of the Subject by Name](#delete-all-examples-of-the-subject-by-name)
     + [Delete an Example of the Subject by ID](#delete-an-example-of-the-subject-by-id)
+    + [Delete Multiple Examples](#delete-multiple-examples)
     + [Direct Download an Image example of the Subject by ID](#direct-download-an-image-example-of-the-subject-by-id)
     + [Download an Image example of the Subject by ID](#download-an-image-example-of-the-subject-by-id)
   + [Recognize Faces from a Given Image](#recognize-faces-from-a-given-image)
@@ -53,12 +54,7 @@ Or if you delete all the examples of the subject, it will be deleted automatical
 Create a new subject in Face Collection. Creating a subject is an optional step, 
 you can [upload an example](#add-an-example-of-a-subject) without an existing subject, and a subject will be created automatically.
 
-```shell
-curl -X POST "http://localhost:8000/api/v1/recognition/subjects" \
--H "Content-Type: application/json" \
--H "x-api-key: <service_api_key>" \
--d '{"subject": "<subject_name>"}'
-```
+
 | Element      | Description | Type   | Required | Notes                                                                         |
 |--------------|-------------|--------|----------|-------------------------------------------------------------------------------|
 | Content-Type | header      | string | required | application/json                                                              |
@@ -326,6 +322,41 @@ Response body on success:
 | image_id | UUID   | UUID of the removed face                                          |
 | subject  | string | <subject> of the person, whose picture was saved for this api key |
 
+  
+### Delete Multiple Examples
+  
+  Endpoint to delete an image by ID. If no image found by id - 404.
+  
+  ```shell
+curl -X POST "http://localhost:8000/api/v1/recognition/faces/delete" \
+-H "x-api-key: <service_api_key>"
+-BODYraw
+  [
+  "{{image_id}}",
+  "{{image_id}}"
+  ]
+```
+
+| Element         | Description | Type   | Required | Notes                                                        |
+|-----------------|-------------|--------|----------|--------------------------------------------------------------|
+| service_api_key | header      | string | required | api key of the Face recognition service, created by the user |
+| image_id        | variable    | UUID   | required | UUID of the removing face                                    |
+  
+
+  
+Response body on success:
+``` 
+{
+  "image_id": <image_id>,
+  "subject": <subject>
+}
+``` 
+
+| Element         | Description                                               | Type   | 
+|-----------------|-----------------------------------------------------------|--------|
+| image_id        | UUID of the removed face                                  | UUID   | 
+| subject         | of the person, whose picture was saved for this api key   | string | 
+  
 
 ### Direct Download an Image example of the Subject by ID
 ```since 0.6 version```
