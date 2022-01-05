@@ -101,18 +101,16 @@ export class AuthEffects {
     ofType(signUp),
     switchMap(payload =>
       this.authService.signUp(payload.firstName, payload.password, payload.email, payload.lastName, payload.isAllowStatistics).pipe(
-        map(res => signUpSuccess({ confirmationNeeded: res.status === 200 })),
+        map(res => signUpSuccess({ confirmationNeeded: res.status === 200, email: payload.email, password: payload.password })),
         catchError(error => observableOf(signUpFail(error)))
       )
     )
   );
 
-  @Effect({ dispatch: false })
+  @Effect()
   signUpSuccess$: Observable<any> = this.actions.pipe(
     ofType(signUpSuccess),
-    tap(() => {
-      this.router.navigateByUrl(Routes.Login);
-    })
+    map(res => logIn({ email: res.email, password: res.password }))
   );
 
   @Effect({ dispatch: false })

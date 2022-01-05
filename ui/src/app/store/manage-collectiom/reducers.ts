@@ -141,7 +141,12 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(getSubjectMediaNextPage, state => ({ ...state, isCollectionPending: false })),
   on(getNextPageSubjectExamplesSuccess, (state, { items, apiKey }) => {
     const collectionCopy = [
-      ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded && item.subject === state.subject),
+      ...state.collection.filter(
+        item =>
+          item.status !== CircleLoadingProgressEnum.Uploaded &&
+          item.status !== CircleLoadingProgressEnum.Failed &&
+          item.subject === state.subject
+      ),
     ];
 
     let prevCollection = [...state.collection];
