@@ -48,7 +48,7 @@ import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
     (deleteSelectedExamples)="deleteSelectedExamples($event)"
     (loadMore)="loadMore($event)"
     (selectExample)="selectExample($event)"
-    (restartUploading)="restartUploading($event)"
+    (restartUploading)="restartUploading()"
   ></app-collection-manager-subject-right>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
