@@ -60,7 +60,7 @@ export class UserTableComponent extends TableComponent implements OnInit, OnChan
 
     const userIsInvited = !!this.data.find(item => item.id === this.currentUserId);
 
-    if (!userIsInvited) {
+    if (!userIsInvited && this.userRole === Role.User) {
       this.router.navigate([Routes.Home]);
     }
   }
