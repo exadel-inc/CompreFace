@@ -334,8 +334,7 @@ Response body on success:
 ### Delete Multiple Examples
   ```since 1.0 version```
   
-  Endpoint to delete an image by ID. If no image found by id - 404.
-  
+To delete several subject examples:  
   ```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/faces/delete" \
 -H "Content-Type: application/json" \
@@ -362,6 +361,8 @@ Response body on success:
 |-----------------|-----------------------------------------------------------|--------|
 | image_id        | UUID of the removed face                                  | UUID   | 
 | subject         | of the person, whose picture was saved for this api key   | string | 
+  
+If some image ids are not exists, they will be ignored
   
 
 ### Direct Download an Image example of the Subject by ID
