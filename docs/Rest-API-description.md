@@ -246,7 +246,7 @@ curl -X GET "http://localhost:8000/api/v1/recognition/faces?page=<page>&size=<si
 | x-api-key | header      | string  | required | api key of the Face recognition service, created by the user                                         |
 | page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. Since 0.6 version |
 | size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. Since 0.6 version        |
-| subject   | param       | string  | required | is the name you assign to the image you save                                                         |
+| subject   | param       | string  | required | is the name you assign to the image you save. Since 1.0 version                                                         |
 
 Response body on success:
 
