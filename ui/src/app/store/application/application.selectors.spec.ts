@@ -52,7 +52,7 @@ describe('ApplicationSelectors', () => {
     const app1 = {
       id: 2,
       name: 'name1',
-      role: Role.Administrator,
+      role: Role.Admin,
     };
 
     const app2 = {
@@ -60,7 +60,7 @@ describe('ApplicationSelectors', () => {
       name: 'name1',
       role: Role.Owner,
     };
-    expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMINISTRATOR');
+    expect(selectUserRollForSelectedApp.projector(app1)).toBe('ADMIN');
     expect(selectUserRollForSelectedApp.projector(app2)).toBe('OWNER');
     expect(selectUserRollForSelectedApp.projector(null)).toBeFalsy();
   });

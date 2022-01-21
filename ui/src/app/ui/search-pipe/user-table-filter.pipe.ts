@@ -15,14 +15,12 @@
  */
 
 import { Pipe, PipeTransform } from '@angular/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Pipe({
   name: 'userTableFilter',
 })
 export class UserTableFilterPipe implements PipeTransform {
-  transform(value, search: string): Observable<any> {
+  transform(value, search: string): any {
     if (!search.trim()) {
       return value;
     }

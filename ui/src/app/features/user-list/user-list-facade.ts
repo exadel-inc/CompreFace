@@ -17,7 +17,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppUser } from 'src/app/data/interfaces/app-user';
-import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { AppState } from 'src/app/store';
 import { loadRolesEntity } from 'src/app/store/role/action';

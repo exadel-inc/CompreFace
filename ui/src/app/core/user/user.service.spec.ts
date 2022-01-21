@@ -51,7 +51,7 @@ describe('UserService', () => {
         id: 1,
         firstName: 'Tony',
         lastName: 'Stark',
-        role: Role.Administrator,
+        role: Role.Admin,
       },
     ];
 

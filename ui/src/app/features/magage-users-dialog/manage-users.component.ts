@@ -22,7 +22,7 @@ import { Role } from 'src/app/data/enums/role.enum';
 
 export interface UserData {
   role: string;
-  id: string;
+  userId: string;
   firstName: string;
   lastName: string;
 }
@@ -57,7 +57,7 @@ export class ManageUsersDialog {
     this.collection = this.data.userCollection.map(user => {
       return {
         role: user.role,
-        id: user.id,
+        userId: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
       };
@@ -65,10 +65,9 @@ export class ManageUsersDialog {
   }
 
   onChange(user: UserData): void {
-    const currenctUserData = this.data.userCollection.find(userData => user.id === userData.id);
-    const updatedUserData = this.collection.find(userData => user.id === userData.id);
+    const currentUserData = this.data.userCollection.find(userData => user.userId === userData.userId);
 
-    if (currenctUserData.role === updatedUserData.role) {
+    if (currentUserData.role === user.role) {
       const index = this.updatedUsersCollection.indexOf(user);
       this.updatedUsersCollection.splice(index, 1);
 
@@ -80,9 +79,10 @@ export class ManageUsersDialog {
 
   onDelete(user: UserData): void {
     const index = this.collection.indexOf(user);
-    this.collection.splice(index, 1);
 
     this.deletedUsersCollection.push(this.collection[index]);
+
+    this.collection.splice(index, 1);
   }
 
   onSave(): void {
@@ -90,6 +90,7 @@ export class ManageUsersDialog {
       deletedUsers: this.deletedUsersCollection,
       updatedUsers: this.updatedUsersCollection,
     };
+
     this.dialogRef.close(res);
     this.subs.unsubscribe();
   }

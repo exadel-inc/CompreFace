@@ -32,7 +32,7 @@
           </option>
         </select>
 
-        <div class="user__delete" *ngIf="(data.currentUserId | async) !== user.id">
+        <div class="user__delete" *ngIf="data.currentUserId !== user.userId">
           <mat-icon class="user__delete--icon" (click)="onDelete(user)"> delete_outline </mat-icon>
         </div>
       </div>

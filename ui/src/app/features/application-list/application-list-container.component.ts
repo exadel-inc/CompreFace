@@ -21,10 +21,12 @@ import { Observable } from 'rxjs';
 import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Application } from 'src/app/data/interfaces/application';
+import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { ManageUsersDialog } from '../magage-users-dialog/manage-users.component';
+import { UserListFacade } from '../user-list/user-list-facade';
 import { ApplicationListFacade } from './application-list-facade';
 
 @Component({
@@ -48,9 +50,11 @@ export class ApplicationListContainerComponent implements OnInit {
   application$: Observable<Application[]>;
   users$: Observable<AppUser[]>;
   currentUserId$: Observable<string>;
+  selectedOption = 'deleter';
 
   constructor(
     private applicationFacade: ApplicationListFacade,
+    private userListFacade: UserListFacade,
     private dialog: MatDialog,
     private router: Router,
     private translate: TranslateService
@@ -94,23 +98,40 @@ export class ApplicationListContainerComponent implements OnInit {
 
   onManageUsers() {
     let userCollection;
+    let userId;
 
     const userSubs = this.users$.subscribe(res => (userCollection = res));
+
+    const userIdSubs = this.currentUserId$.subscribe(res => (userId = res));
 
     const dialog = this.dialog.open(ManageUsersDialog, {
       data: {
         userCollection: userCollection,
         userRoles: Role,
-        currentUserId: this.currentUserId$,
+        currentUserId: userId,
         currentUserRole: this.userRole$,
       },
     });
 
     const dialogSubs = dialog.afterClosed().subscribe(res => {
-      const deletedUsers = res.deletedUsers;
-      const updatedUsers = res.updatedUsers;
+      const deletedUsers = res?.deletedUsers;
+      const updatedUsers = res?.updatedUsers;
+
+      if (updatedUsers) {
+        updatedUsers.forEach(user => {
+          this.userListFacade.updateUserRole(user.userId, user.role);
+        });
+      }
+
+      if (deletedUsers) {
+        deletedUsers.forEach(user => {
+          const deletion: UserDeletion = { deleterUserId: userId, userToDelete: user, isDeleteHimSelf: false };
+          this.userListFacade.deleteUser(deletion, this.selectedOption);
+        });
+      }
 
       userSubs.unsubscribe();
+      userIdSubs.unsubscribe();
       dialogSubs.unsubscribe();
     });
   }
