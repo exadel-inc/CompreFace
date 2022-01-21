@@ -48,7 +48,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   selectedOption = 'deleter';
 
   constructor(private userListFacade: UserListFacade, public dialog: MatDialog, translate: TranslateService) {
-    userListFacade.initSubscriptions();
     this.translate = translate;
   }
 

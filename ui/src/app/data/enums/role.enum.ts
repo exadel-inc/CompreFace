@@ -16,6 +16,6 @@
 
 export enum Role {
   Owner = 'OWNER',
-  Administrator = 'ADMINISTRATOR',
+  Admin = 'ADMIN',
   User = 'USER',
 }

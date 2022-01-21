@@ -22,18 +22,16 @@ import { map } from 'rxjs/operators';
   name: 'userTableFilter',
 })
 export class UserTableFilterPipe implements PipeTransform {
-  transform(value: Observable<any>, search: string): Observable<any> {
+  transform(value, search: string): Observable<any> {
     if (!search.trim()) {
       return value;
     }
 
-    return value.pipe(
-      map(e => {
-        e.data = e.data.filter(row =>
-          (row.firstName.toLocaleLowerCase() + ' ' + row.lastName.toLocaleLowerCase()).includes(search.toLocaleLowerCase())
-        );
-        return e;
-      })
+    let result = Object.assign({}, value);
+
+    result = value.filter(row =>
+      (row.firstName.toLocaleLowerCase() + ' ' + row.lastName.toLocaleLowerCase()).includes(search.toLocaleLowerCase())
     );
+    return result;
   }
 }

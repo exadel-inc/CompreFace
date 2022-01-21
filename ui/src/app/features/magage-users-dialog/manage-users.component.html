@@ -1,0 +1,45 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+<div class="container">
+  <h1 class="container__title">{{ 'users.manage.manage_users_title' | translate }}</h1>
+
+  <div class="search__form">
+    <label class="search__form--label">{{ 'users.manage.search_label' | translate }}</label>
+    <input type="text" class="search__form--input" [(ngModel)]="search" placeholder="{{ 'users.manage.user_name' | translate }}" />
+  </div>
+
+  <div class="user">
+    <div class="user__list" *ngFor="let user of collection | userTableFilter: search">
+      <div class="user__list--items">
+        <label class="user__name">{{ user.firstName }} {{ user.lastName }}</label>
+        <span class="user__role">{{ user.role | lowercase }}</span>
+        <select class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
+          <option *ngFor="let role of roleValues" class="user__role--option" name="role" [value]="role | uppercase">
+            {{ role }}
+          </option>
+        </select>
+
+        <div class="user__delete" *ngIf="(data.currentUserId | async) !== user.id">
+          <mat-icon class="user__delete--icon" (click)="onDelete(user)"> delete_outline </mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button class="container__btn" (click)="onSave()">
+    {{ 'users.manage.save' | translate }}
+  </button>
+</div>

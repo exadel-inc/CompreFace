@@ -42,7 +42,7 @@ export const selectUserRole = createSelector(selectUserRollForSelectedApp, selec
       return globalRole;
     }
 
-    if (globalRole === Role.Administrator) {
+    if (globalRole === Role.Admin) {
       return applicationRole === Role.Owner ? applicationRole : globalRole;
     }
   }
@@ -56,7 +56,7 @@ export const selectAvailableRoles = createSelector(
   (allRoles, userRole, applicationRole, globalRole) => {
     if (globalRole === Role.Owner || applicationRole === Role.Owner) {
       return allRoles;
-    } else if (globalRole === Role.Administrator) {
+    } else if (globalRole === Role.Admin) {
       return allRoles;
     } else {
       const roleIndex = allRoles.indexOf(userRole);

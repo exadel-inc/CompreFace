@@ -139,6 +139,13 @@
     },
     "create": {
       "add_button": "Add User"
+    },
+    "manage": {
+      "manage_users_title": "Manage Users",
+      "search_label": "Search Users",
+      "user_name": "User Name",
+      "users": "Users",
+      "save": "Save"
     }
   },
   "org_users": {

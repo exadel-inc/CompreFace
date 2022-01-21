@@ -27,7 +27,7 @@ import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors'
 import { Role } from '../../data/enums/role.enum';
 
 @Injectable()
-export class UserListFacade implements IFacade {
+export class UserListFacade {
   users$: Observable<AppUser[]>;
   availableRoles$: Observable<string[]>;
   isLoading$: Observable<boolean>;
@@ -43,11 +43,6 @@ export class UserListFacade implements IFacade {
 
     this.currentUserId$ = this.store.select(selectUserId);
     this.currentUserEmail$ = this.store.select(selectUserEmail);
-  }
-
-  initSubscriptions(): void {
-    this.loadUsers();
-    this.loadAvailableRoles();
   }
 
   loadUsers(): void {
