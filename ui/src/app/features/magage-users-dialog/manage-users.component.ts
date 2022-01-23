@@ -16,9 +16,8 @@
 
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subscription } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
 
 export interface UserData {
   role: string;
@@ -34,40 +33,40 @@ export interface UserData {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ManageUsersDialog {
-  roleValues = Object.keys(this.data.userRoles);
-  collection: UserData[];
   deletedUsersCollection: UserData[] = [];
   updatedUsersCollection: UserData[] = [];
+  collection: UserData[];
+  currentUserData: AppUser;
+  roleValues: string[];
   search: string = '';
-  subs: Subscription;
 
   constructor(public dialogRef: MatDialogRef<ManageUsersDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit(): void {
-    this.subs = this.data.currentUserRole
-      .pipe(
-        tap((role: string) => {
-          if (role.toLocaleLowerCase() !== Role.Owner.toLocaleLowerCase()) {
-            this.roleValues.shift();
-          }
-        })
-      )
-      .subscribe();
+    this.currentUserData = this.data.userCollection.find(user => user.userId === this.data.currentUserId);
 
-    this.collection = this.data.userCollection.map(user => {
-      return {
-        role: user.role,
-        userId: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      };
-    });
+    this.currentUserData.role === Role.Owner
+      ? (this.roleValues = Object.keys(Role))
+      : (this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]]);
+
+    this.collection = this.data.userCollection
+      .filter(user => user.role !== Role.Owner)
+      .map(user => {
+        return {
+          role: user.role,
+          userId: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        };
+      });
   }
 
   onChange(user: UserData): void {
-    const currentUserData = this.data.userCollection.find(userData => user.userId === userData.userId);
+    const updatedUserData = this.data.userCollection.find(userData => user.userId === userData.userId);
 
-    if (currentUserData.role === user.role) {
+    this.updateRoles();
+
+    if (updatedUserData.role === user.role) {
       const index = this.updatedUsersCollection.indexOf(user);
       this.updatedUsersCollection.splice(index, 1);
 
@@ -75,6 +74,18 @@ export class ManageUsersDialog {
     }
 
     this.updatedUsersCollection.push(user);
+
+    const ownerUser = this.updatedUsersCollection.find(user => user.role === Role.Owner);
+
+    if (ownerUser) {
+      this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]];
+    }
+  }
+
+  updateRoles(): void {
+    this.currentUserData.role === Role.Owner
+      ? (this.roleValues = Object.keys(Role))
+      : (this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]]);
   }
 
   onDelete(user: UserData): void {
@@ -92,6 +103,5 @@ export class ManageUsersDialog {
     };
 
     this.dialogRef.close(res);
-    this.subs.unsubscribe();
   }
 }

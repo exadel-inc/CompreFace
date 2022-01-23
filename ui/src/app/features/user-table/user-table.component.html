@@ -43,7 +43,7 @@
       <ng-container
         *ngIf="
           (element.userId === this.currentUserId && element.role !== roleEnum.Owner) ||
-            (userRole === roleEnum.Admin && element.role !== roleEnum.Owner) ||
+            (userRole === roleEnum.Administrator && element.role !== roleEnum.Owner) ||
             (userRole === roleEnum.Owner && element.role !== roleEnum.Owner);
           then active;
           else notActive

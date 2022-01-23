@@ -107,9 +107,7 @@ export class ApplicationListContainerComponent implements OnInit {
     const dialog = this.dialog.open(ManageUsersDialog, {
       data: {
         userCollection: userCollection,
-        userRoles: Role,
         currentUserId: userId,
-        currentUserRole: this.userRole$,
       },
     });
 

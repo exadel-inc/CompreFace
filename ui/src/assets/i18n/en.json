@@ -68,6 +68,7 @@
     "first_steps_title": "Applications",
     "name": "App Name",
     "owner": "Owner",
+    "no_application_msg": "You have no applications. Create a new application or contact your administrator to be added to an existing one.",
     "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
     "create": {
       "title": "Create application",

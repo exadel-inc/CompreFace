@@ -69,13 +69,12 @@
     }
 
     &__role {
-      width: 13%;
+      width: 22%;
       color: #787878;
       text-transform: capitalize;
+      text-align: center;
 
       &--select {
-        position: relative;
-        right: 16px;
         background: none;
         border: none;
         outline: none;
