@@ -94,7 +94,7 @@ alt="compreface-main-page" width="390px" style="padding: 0px 0px 0px 10px;">
 
 # News and updates
 
-[Subscribe](https://exadel-7026941.hs-sites.com/en/en/compreface-news-and-updates) to CompreFace News and Updates to never miss new features and product improvements.
+[Subscribe](https://info.exadel.com/en/compreface-news-and-updates) to CompreFace News and Updates to never miss new features and product improvements.
 
 # Features
 The system can accurately identify people even when it has only “seen” their photo once. Technology-wise, CompreFace has several advantages over similar free face recognition solutions. CompreFace:
