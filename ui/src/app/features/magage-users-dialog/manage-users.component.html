@@ -26,13 +26,18 @@
       <div class="user__list--items">
         <label class="user__name">{{ user.firstName }} {{ user.lastName }}</label>
         <span class="user__role">{{ user.role | lowercase }}</span>
-        <select *ngIf="data.currentUserId !== user.userId" class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
+        <select
+          *ngIf="data.currentUserId !== user.userId && user.userId !== owner.id"
+          class="user__role--select"
+          [(ngModel)]="user.role"
+          (change)="onChange(user)"
+        >
           <option *ngFor="let role of roleValues" class="user__role--option" name="role" [value]="role | uppercase">
             {{ role }}
           </option>
         </select>
 
-        <div class="user__delete" *ngIf="data.currentUserId !== user.userId">
+        <div class="user__delete" *ngIf="data.currentUserId !== user.userId && user.userId !== owner.id">
           <mat-icon class="user__delete--icon" (click)="onDelete(user)"> delete_outline </mat-icon>
         </div>
       </div>

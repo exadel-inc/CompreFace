@@ -37,6 +37,7 @@ export class ManageUsersDialog {
   updatedUsersCollection: UserData[] = [];
   collection: UserData[];
   currentUserData: AppUser;
+  owner: AppUser;
   roleValues: string[];
   search: string = '';
 
@@ -49,16 +50,16 @@ export class ManageUsersDialog {
       ? (this.roleValues = Object.keys(Role))
       : (this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]]);
 
-    this.collection = this.data.userCollection
-      .filter(user => user.role !== Role.Owner)
-      .map(user => {
-        return {
-          role: user.role,
-          userId: user.id,
-          firstName: user.firstName,
-          lastName: user.lastName,
-        };
-      });
+    this.owner = this.data.userCollection.find(user => user.role === Role.Owner);
+
+    this.collection = this.data.userCollection.map(user => {
+      return {
+        role: user.role,
+        userId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      };
+    });
   }
 
   onChange(user: UserData): void {
