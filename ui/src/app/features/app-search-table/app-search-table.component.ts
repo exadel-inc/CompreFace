@@ -29,6 +29,7 @@ export class AppSearchTableComponent {
   @Input() requiredRole: string;
   @Input() currentRole: string;
 
+  @Output() manageUsersView = new EventEmitter();
   @Output() inputSearch: EventEmitter<string> = new EventEmitter();
   @Output() modalWindow: EventEmitter<MouseEvent> = new EventEmitter();
 
@@ -39,5 +40,9 @@ export class AppSearchTableComponent {
 
   onButtonChange(event: MouseEvent): void {
     this.modalWindow.emit(event);
+  }
+
+  onOpenUserList() {
+    this.manageUsersView.emit();
   }
 }

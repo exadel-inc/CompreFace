@@ -23,6 +23,11 @@
     <mat-icon svgIcon="search"></mat-icon>
   </div>
   <ng-container *ngIf="currentRole as userRole">
+    <button class="app-search--btn_user_list" type="button" *ngIf="userRole !== requiredRole" (click)="onOpenUserList()">
+      <mat-icon>face</mat-icon>
+    </button>
+  </ng-container>
+  <ng-container *ngIf="currentRole as userRole">
     <div class="app-search--btn">
       <button mat-flat-button *ngIf="userRole !== requiredRole" (click)="onButtonChange($event)">
         <mat-icon svgIcon="add_new"></mat-icon>

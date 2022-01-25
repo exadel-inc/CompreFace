@@ -56,7 +56,7 @@ themselves from the application, so they have to assign the application
 owner role to somebody else before deleting themselves.
 
 Users with the application administrator role (global user role +
-application admin role) can create and manage [Face
+application administrator role) can create and manage [Face
 Services](Face-services-and-plugins.md) but can't manage an application
 and its users.
 

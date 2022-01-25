@@ -17,7 +17,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { AppUser } from 'src/app/data/interfaces/app-user';
-import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { AppState } from 'src/app/store';
 import { loadRolesEntity } from 'src/app/store/role/action';
@@ -27,7 +26,7 @@ import { selectUserEmail, selectUserId } from 'src/app/store/userInfo/selectors'
 import { Role } from '../../data/enums/role.enum';
 
 @Injectable()
-export class UserListFacade implements IFacade {
+export class UserListFacade {
   users$: Observable<AppUser[]>;
   availableRoles$: Observable<string[]>;
   isLoading$: Observable<boolean>;
@@ -43,11 +42,6 @@ export class UserListFacade implements IFacade {
 
     this.currentUserId$ = this.store.select(selectUserId);
     this.currentUserEmail$ = this.store.select(selectUserEmail);
-  }
-
-  initSubscriptions(): void {
-    this.loadUsers();
-    this.loadAvailableRoles();
   }
 
   loadUsers(): void {
