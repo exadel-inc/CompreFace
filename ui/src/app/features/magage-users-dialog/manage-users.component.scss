@@ -49,19 +49,28 @@
     border: 1px solid $gray;
     border-radius: 15px;
     margin: 2rem 0;
-    padding: 0 2rem 2rem;
+    padding: 0 0.2rem 2rem 2rem;
     background: #f5f5f5;
 
     &__title {
       margin: 1rem 1rem 0.5rem 0;
+      color: rgb(63, 63, 63);
+      font-weight: 600;
+      font-size: 1.2rem;
     }
 
-    &__list--items {
-      display: flex;
-      box-sizing: border-box;
-      border-bottom: 1px solid #bebebe;
-      padding: 0.5rem 0 0;
-      width: 100%;
+    &__list {
+      max-height: 250px;
+      overflow-y: scroll;
+      padding-right: 1.8rem;
+
+      &--items {
+        display: flex;
+        box-sizing: border-box;
+        border-bottom: 1px solid #bebebe;
+        padding: 0.5rem 0 0;
+        width: 100%;
+      }
     }
 
     &__name {

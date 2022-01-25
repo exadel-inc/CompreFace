@@ -21,6 +21,7 @@ import { Application } from 'src/app/data/interfaces/application';
 @Component({
   selector: 'application-collection-container',
   templateUrl: './application-collection-container.component.html',
+  styleUrls: ['./application-collection-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationCollectionContainerComponent {
