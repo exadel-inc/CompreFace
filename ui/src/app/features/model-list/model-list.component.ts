@@ -42,8 +42,9 @@ export class ModelListComponent implements OnInit, OnDestroy {
   tableConfig$: Observable<ITableConfig>;
   roleEnum = Role;
   columns = [
-    { title: 'content', property: 'content' },
-    { title: 'test', property: 'test' },
+    { title: 'name', property: 'name' },
+    { title: 'apiKey', property: 'apiKey' },
+    { title: 'type', property: 'type' },
     { title: 'actions', property: 'id' },
   ];
   search = '';

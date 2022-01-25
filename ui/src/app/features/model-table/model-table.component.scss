@@ -75,24 +75,9 @@ caption {
       }
     }
 
-    &-test {
-      text-align: center;
-      width: 58px;
-
-      .test {
-        &--btn {
-          min-width: 0;
-          font-size: 12px;
-          line-height: 14px;
-          padding: 5px 14px;
-          border-radius: 2px;
-        }
-      }
-    }
-
     &-actions {
-      text-align: center;
-      width: 40px;
+      text-align: end;
+      width: 40%;
 
       .actions--btn {
         display: flex;

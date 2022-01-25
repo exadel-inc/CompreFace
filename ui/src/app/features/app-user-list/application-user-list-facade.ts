@@ -29,10 +29,8 @@ import {
   selectUserRole,
 } from 'src/app/store/app-user/selectors';
 import { selectCurrentApp, selectUserRollForSelectedApp } from 'src/app/store/application/selectors';
-import { loadRolesEntity } from 'src/app/store/role/action';
 import { selectUserId } from 'src/app/store/userInfo/selectors';
 
-import { loadUsersEntity } from '../../store/user/action';
 import { selectCurrentUserRole } from '../../store/user/selectors';
 import { Role } from 'src/app/data/enums/role.enum';
 
@@ -66,20 +64,8 @@ export class ApplicationUserListFacade implements IFacade {
     this.sub = this.store.select(selectCurrentApp).subscribe(app => {
       if (app) {
         this.selectedApplicationId = app.id;
-        this.selectedApplicationName = app.name;
-        this.loadData();
       }
     });
-  }
-
-  loadData(): void {
-    this.store.dispatch(
-      loadAppUserEntityAction({
-        applicationId: this.selectedApplicationId,
-      })
-    );
-    this.store.dispatch(loadRolesEntity());
-    this.store.dispatch(loadUsersEntity());
   }
 
   updateUserRole(id: string, role: Role): void {

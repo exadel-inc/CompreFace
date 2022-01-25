@@ -20,57 +20,55 @@
       'models.caption' | translate
     }}
   </caption>
-  <ng-container matColumnDef="content">
+  <ng-container matColumnDef="name">
     <td mat-cell *matCellDef="let element">
       <div class="content--wrapper mat-subheading-1">
         <span class="content--wrapper_name" matTooltip="{{ element.name }}" [matTooltipDisabled]="disableToolTip(element.name)">
           {{ element.name }}
         </span>
-        <span class="content--wrapper_type mat-caption" [ngClass]="element.type | lowercase">
-          {{ getKeyType(element.type) | titlecase }}
-        </span>
       </div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="apiKey">
+    <td mat-cell *matCellDef="let element">
       <div class="content--wrapper mat-body-2">
         <div class="content--wrapper_key">
           <span class="title">API-Key: </span>
           <span class="key">{{ element.apiKey }}</span>
         </div>
-        <button class="content--wrapper_btn" mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
-          <mat-icon svgIcon="copy"></mat-icon>
-        </button>
       </div>
     </td>
   </ng-container>
-  <ng-container matColumnDef="test">
+
+  <ng-container matColumnDef="type">
     <td mat-cell *matCellDef="let element">
-      <button class="test--btn" color="accent" mat-flat-button (click)="test.emit(element)">
-        <span>{{ 'models.select_menu.test' | translate }}</span>
-      </button>
+      <div class="content--wrapper mat-body-2">
+        <div class="content--wrapper_key">
+          <span class="key">{{ element.type }}</span>
+        </div>
+      </div>
+      <button class="test--btn" color="accent" mat-flat-button (click)="test.emit(element)"></button>
     </td>
   </ng-container>
   <ng-container matColumnDef="actions">
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="userRole !== roleEnum.User">
-        <button class="actions--btn" mat-icon-button [matMenuTriggerFor]="menu" aria-label="model actions">
-          <mat-icon svgIcon="more-vert_new" inline="true"></mat-icon>
+      <div class="actions">
+        <button mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
+          <mat-icon svgIcon="copy"></mat-icon>
         </button>
-        <mat-menu #menu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="edit.emit(element)">
-            <span>{{ 'models.select_menu.edit' | translate }}</span>
+        <button mat-menu-item (click)="edit.emit(element)">
+          <span>{{ 'models.select_menu.edit' | translate }}</span>
+        </button>
+        <button class="test--btn" mat-flat-button (click)="test.emit(element)">
+          <!-- <img src="../../../assets/img/avatar.svg" /> -->
+        </button>
+
+        <ng-container *ngIf="element.type === types.Recognition">
+          <button mat-menu-item (click)="collection.emit(element)">
+            <mat-icon>play_circle</mat-icon>
           </button>
-          <button mat-menu-item (click)="delete.emit(element)">
-            <span>{{ 'models.select_menu.delete' | translate }}</span>
-          </button>
-          <button mat-menu-item (click)="clone.emit(element)">
-            <span>{{ 'models.select_menu.clone' | translate }}</span>
-          </button>
-          <ng-container *ngIf="element.type === types.Recognition">
-            <button mat-menu-item (click)="collection.emit(element)">
-              <span>{{ 'models.mange_collection' | translate }}</span>
-            </button>
-          </ng-container>
-        </mat-menu>
-      </ng-container>
+        </ng-container>
+      </div>
     </td>
   </ng-container>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
