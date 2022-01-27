@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { Application } from '../../data/interfaces/application';
@@ -29,4 +29,9 @@ export class BreadcrumbsComponent {
   maxNameLength = 30;
   @Input() model: Model;
   @Input() app: Application;
+
+  @Output() usersList = new EventEmitter<Application>();
+  @Output() appSettings = new EventEmitter<Application>();
+
+  openUserList() {}
 }

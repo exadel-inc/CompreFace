@@ -21,8 +21,8 @@
     }}
   </caption>
   <ng-container matColumnDef="name">
-    <td mat-cell *matCellDef="let element">
-      <div class="content--wrapper mat-subheading-1">
+    <td mat-cell *matCellDef="let element" class="name">
+      <div class="content--wrapper">
         <span class="content--wrapper_name" matTooltip="{{ element.name }}" [matTooltipDisabled]="disableToolTip(element.name)">
           {{ element.name }}
         </span>
@@ -31,10 +31,13 @@
   </ng-container>
   <ng-container matColumnDef="apiKey">
     <td mat-cell *matCellDef="let element">
-      <div class="content--wrapper mat-body-2">
+      <div class="content--wrapper">
         <div class="content--wrapper_key">
           <span class="title">API-Key: </span>
           <span class="key">{{ element.apiKey }}</span>
+          <button mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
+            <mat-icon svgIcon="copy"></mat-icon>
+          </button>
         </div>
       </div>
     </td>
@@ -42,32 +45,29 @@
 
   <ng-container matColumnDef="type">
     <td mat-cell *matCellDef="let element">
-      <div class="content--wrapper mat-body-2">
-        <div class="content--wrapper_key">
-          <span class="key">{{ element.type }}</span>
+      <div class="content--wrapper">
+        <div class="content--wrapper_type">
+          <span class="type">{{ element.type | lowercase }}</span>
         </div>
       </div>
-      <button class="test--btn" color="accent" mat-flat-button (click)="test.emit(element)"></button>
     </td>
   </ng-container>
+
   <ng-container matColumnDef="actions">
     <td mat-cell *matCellDef="let element">
       <div class="actions">
-        <button mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
+        <button mat-icon-button (click)="clone.emit(element)">
           <mat-icon svgIcon="copy"></mat-icon>
         </button>
-        <button mat-menu-item (click)="edit.emit(element)">
-          <span>{{ 'models.select_menu.edit' | translate }}</span>
+        <button mat-icon-button (click)="edit.emit(element)">
+          <mat-icon svgIcon="edit"></mat-icon>
         </button>
-        <button class="test--btn" mat-flat-button (click)="test.emit(element)">
-          <!-- <img src="../../../assets/img/avatar.svg" /> -->
+        <button mat-icon-button (click)="collection.emit(element)" *ngIf="element.type === types.Recognition">
+          <mat-icon mat-icon-button svgIcon="body-scan"></mat-icon>
         </button>
-
-        <ng-container *ngIf="element.type === types.Recognition">
-          <button mat-menu-item (click)="collection.emit(element)">
-            <mat-icon>play_circle</mat-icon>
-          </button>
-        </ng-container>
+        <button mat-icon-button (click)="test.emit(element)">
+          <mat-icon>play_circle</mat-icon>
+        </button>
       </div>
     </td>
   </ng-container>

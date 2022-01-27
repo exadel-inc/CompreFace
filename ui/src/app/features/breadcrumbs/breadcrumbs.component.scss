@@ -17,6 +17,8 @@
 @import 'mixins.scss';
 
 .breadcrumbs {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 24px;
 
   &--container {
@@ -29,8 +31,24 @@
       @include not-break-string();
     }
 
+    .last {
+      text-decoration: underline;
+    }
+
     .separator {
       margin-right: 8px;
+    }
+  }
+
+  &--actions {
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+
+      .mat-icon {
+        color: rgb(92, 92, 92);
+      }
     }
   }
 }

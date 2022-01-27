@@ -16,6 +16,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -27,7 +28,7 @@ import { BreadcrumbsFacade } from './breadcrumbs.facade';
 @NgModule({
   declarations: [BreadcrumbsComponent],
   exports: [BreadcrumbsComponent],
-  imports: [CommonModule, RouterModule, MatCardModule, TruncateModule, MatTooltipModule, TranslateModule],
+  imports: [CommonModule, RouterModule, MatCardModule, TruncateModule, MatTooltipModule, TranslateModule, MatIconModule],
   providers: [BreadcrumbsFacade],
 })
 export class BreadcrumbsModule {}

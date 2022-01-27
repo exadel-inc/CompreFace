@@ -22,7 +22,13 @@ import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 
 @Component({
   selector: 'app-breadcrumbs-container',
-  template: ` <app-breadcrumbs [model]="model$ | async" [app]="app$ | async"> </app-breadcrumbs>`,
+  template: ` <app-breadcrumbs
+    [model]="model$ | async"
+    [app]="app$ | async"
+    (usersList)="onUsersList($event)"
+    (appSettings)="onAppSettings($event)"
+  >
+  </app-breadcrumbs>`,
   styleUrls: ['./breadcrumbs.container.component.scss'],
 })
 export class BreadcrumbsContainerComponent implements OnInit {
@@ -34,5 +40,31 @@ export class BreadcrumbsContainerComponent implements OnInit {
   ngOnInit() {
     this.app$ = this.breadcrumbsFacade.app$;
     this.model$ = this.breadcrumbsFacade.model$;
+  }
+
+  onAppSettings(app: Application) {
+    // const dialog = this.dialog.open(EditDialogComponent, {
+    //   panelClass: 'custom-mat-dialog',
+    //   data: {
+    //     entityType: this.translate.instant('models.header'),
+    //     entityName: model.name,
+    //   },
+    // });
+    // dialog
+    //   .afterClosed()
+    //   .pipe(
+    //     first(),
+    //     filter(res => res),
+    //     tap(res => {
+    //       res.update ? this.modelListFacade.renameModel(model.id, res.name) :
+    //         this.modelListFacade.deleteModel(model.id);
+    //       }
+    //     )
+    //   )
+    //   .subscribe();
+  }
+
+  onUsersList(app: Application) {
+    console.log(app);
   }
 }

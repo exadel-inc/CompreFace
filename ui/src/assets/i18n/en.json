@@ -120,7 +120,7 @@
     "delete_dialog": {
       "title": "Model Delete",
       "warn_information": "and all related data will be deleted.",
-      "confirmation_question": "Are you sure?"
+      "confirmation_question": "Are you sure you want to delete {{ entityType }}? This action can not be undone. Type the {{ entityType }} to confirm."
     },
     "search": {
       "title": "Search service"

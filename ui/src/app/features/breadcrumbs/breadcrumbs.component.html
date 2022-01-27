@@ -39,4 +39,14 @@
       </div>
     </div>
   </ng-template>
+  <ng-container *ngIf="app">
+    <div class="breadcrumbs--actions">
+      <button (click)="usersList.emit(app)">
+        <mat-icon>face</mat-icon>
+      </button>
+      <button (click)="appSettings.emit(app)">
+        <mat-icon>settings</mat-icon>
+      </button>
+    </div>
+  </ng-container>
 </div>

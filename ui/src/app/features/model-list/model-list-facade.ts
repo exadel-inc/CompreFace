@@ -21,7 +21,7 @@ import { IFacade } from 'src/app/data/interfaces/IFacade';
 import { Model } from 'src/app/data/interfaces/model';
 import { AppState } from 'src/app/store';
 import { loadAppUserEntityAction } from 'src/app/store/app-user/action';
-import { selectCurrentApp, selectCurrentAppId } from 'src/app/store/application/selectors';
+import { selectCurrentApp } from 'src/app/store/application/selectors';
 import { createModel, cloneModel, deleteModel, loadModels, updateModel } from 'src/app/store/model/action';
 import { selectModels, selectPendingModel, selectUserRole } from 'src/app/store/model/selectors';
 import { loadRolesEntity } from 'src/app/store/role/action';
@@ -34,7 +34,6 @@ export class ModelListFacade implements IFacade {
   userRole$: Observable<string>;
   selectedApplication$: Observable<Application>;
   selectedApplicationId: string;
-  selectedApplicationName: string;
   private selectedApplicationSubscription: Subscription;
 
   constructor(private store: Store<AppState>) {
@@ -48,7 +47,6 @@ export class ModelListFacade implements IFacade {
     this.selectedApplicationSubscription = this.selectedApplication$.subscribe(result => {
       if (result) {
         this.selectedApplicationId = result.id;
-        this.selectedApplicationName = result.name;
         this.loadModels();
         this.loadData();
       }

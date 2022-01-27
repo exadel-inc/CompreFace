@@ -14,8 +14,9 @@
  * permissions and limitations under the License.
  */
 
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 
@@ -32,12 +33,16 @@ export interface UserData {
   styleUrls: ['./manage-users.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageUsersDialog {
+export class ManageUsersDialog implements OnInit, OnDestroy {
   deletedUsersCollection: UserData[] = [];
   updatedUsersCollection: UserData[] = [];
   collection: UserData[];
+
   currentUserData: AppUser;
   owner: AppUser;
+
+  closeSubs: Subscription;
+  disable: boolean = false;
   roleValues: string[];
   search: string = '';
 
@@ -60,12 +65,17 @@ export class ManageUsersDialog {
         lastName: user.lastName,
       };
     });
+
+    this.closeSubs = this.dialogRef.backdropClick().subscribe(() =>
+      this.dialogRef.close({
+        deletedUsers: this.deletedUsersCollection,
+        updatedUsers: this.updatedUsersCollection,
+      })
+    );
   }
 
   onChange(user: UserData): void {
     const updatedUserData = this.data.userCollection.find(userData => user.userId === userData.userId);
-
-    this.updateRoles();
 
     if (updatedUserData.role === user.role) {
       const index = this.updatedUsersCollection.indexOf(user);
@@ -78,15 +88,7 @@ export class ManageUsersDialog {
 
     const ownerUser = this.updatedUsersCollection.find(user => user.role === Role.Owner);
 
-    if (ownerUser) {
-      this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]];
-    }
-  }
-
-  updateRoles(): void {
-    this.currentUserData.role === Role.Owner
-      ? (this.roleValues = Object.keys(Role))
-      : (this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]]);
+    ownerUser ? (this.disable = true) : (this.disable = false);
   }
 
   onDelete(user: UserData): void {
@@ -97,12 +99,7 @@ export class ManageUsersDialog {
     this.collection.splice(index, 1);
   }
 
-  onSave(): void {
-    const res = {
-      deletedUsers: this.deletedUsersCollection,
-      updatedUsers: this.updatedUsersCollection,
-    };
-
-    this.dialogRef.close(res);
+  ngOnDestroy(): void {
+    this.closeSubs.unsubscribe();
   }
 }

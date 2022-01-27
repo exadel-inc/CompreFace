@@ -14,19 +14,39 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{ 'common.capital.edit' | translate }} {{ data.entityType }}</h1>
-<div mat-dialog-content>
-  <mat-form-field appearance="outline" floatLabel="always">
-    <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="data.entityName" placeholder="{{ 'common.name' | translate }}" />
-  </mat-form-field>
+<div class="container">
+  <h1 class="container--title">{{ 'common.capital.edit' | translate }} {{ data.entityType }}</h1>
+  <div mat-dialog-content>
+    <div class="form-field">
+      <label>{{ 'common.name' | translate }}</label>
+      <input [(ngModel)]="initialName" placeholder="{{ data.entityType }} {{ 'common.name' | translate }}" />
+    </div>
+  </div>
+
+  <div class="actions" mat-dialog-actions>
+    <button mat-flat-button class="save-btn" [disabled]="isRenameDisabled || !initialName" (click)="onSave()">
+      {{ 'common.capital.save' | translate }}
+    </button>
+
+    <mat-accordion>
+      <mat-expansion-panel hideToggle (opened)="panelOpenState = true">
+        <mat-expansion-panel-header>
+          <mat-icon>error_outline</mat-icon>
+          {{ 'common.capital.delete' | translate }} {{ data.entityType }}
+        </mat-expansion-panel-header>
+
+        <div class="delete__container" *ngIf="panelOpenState">
+          <span class="delete__container--question">
+            {{ 'models.delete_dialog.confirmation_question' | translate: { entityType: data.entityType | lowercase } }}
+          </span>
+          <div class="form-field">
+            <input [(ngModel)]="deleteInput" placeholder="{{ data.entityType }} {{ 'common.name' | translate }}" />
+          </div>
+          <button mat-flat-button class="del-btn" (click)="onDelete()" [disabled]="data.entityName !== deleteInput">
+            {{ 'common.capital.delete' | translate }} {{ data.entityType }}
+          </button>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+  </div>
 </div>
-<div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="data.entityName" cdkFocusInitial [disabled]="isRenameDisabled">
-    {{ 'common.capital.rename' | translate }}
-  </button>
-</div>
-<button class="button-cross" mat-icon-button (click)="onCancelClick()">
-  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
-</button>

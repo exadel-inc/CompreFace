@@ -18,7 +18,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
 import { ITableConfig } from 'src/app/features/table/table.component';
@@ -91,9 +91,12 @@ export class ModelListComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         first(),
-        filter(name => name)
+        filter(res => res),
+        tap(res => {
+          res.update ? this.modelListFacade.renameModel(model.id, res.name) : this.modelListFacade.deleteModel(model.id);
+        })
       )
-      .subscribe(name => this.modelListFacade.renameModel(model.id, name));
+      .subscribe();
   }
 
   clone(model: Model) {
@@ -109,24 +112,6 @@ export class ModelListComponent implements OnInit, OnDestroy {
         filter(name => name)
       )
       .subscribe(name => this.modelListFacade.cloneModel(model.id, name));
-  }
-
-  delete(model: Model) {
-    const dialog = this.dialog.open(DeleteDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('models.header'),
-        entityName: model.name,
-      },
-    });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(() => this.modelListFacade.deleteModel(model.id));
   }
 
   test(model: Model) {

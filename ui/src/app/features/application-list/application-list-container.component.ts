@@ -117,7 +117,10 @@ export class ApplicationListContainerComponent implements OnInit {
 
       if (updatedUsers) {
         updatedUsers.forEach(user => {
-          this.userListFacade.updateUserRole(user.userId, user.role);
+          const deletedUser = deletedUsers.find(userData => userData.userId === user.userId);
+          if (!deletedUser) {
+            this.userListFacade.updateUserRole(user.userId, user.role);
+          }
         });
       }
 
