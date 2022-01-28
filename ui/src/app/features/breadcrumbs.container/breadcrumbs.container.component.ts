@@ -13,11 +13,13 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { first, filter, tap } from 'rxjs/operators';
+import { Routes } from 'src/app/data/enums/routers-url.enum';
 
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
@@ -29,6 +31,7 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
   template: ` <app-breadcrumbs
     [model]="model$ | async"
     [app]="app$ | async"
+    [hideControls]="hideControls"
     (usersList)="onUsersList($event)"
     (appSettings)="onAppSettings($event)"
   >
@@ -38,15 +41,21 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 export class BreadcrumbsContainerComponent implements OnInit {
   app$: Observable<Application>;
   model$: Observable<Model>;
+  @Input() hideControls: boolean;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade, private translate: TranslateService, private dialog: MatDialog) {}
+  constructor(
+    private breadcrumbsFacade: BreadcrumbsFacade,
+    private translate: TranslateService,
+    private dialog: MatDialog,
+    private router: Router
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.app$ = this.breadcrumbsFacade.app$;
     this.model$ = this.breadcrumbsFacade.model$;
   }
 
-  onAppSettings(app: Application) {
+  onAppSettings(app: Application): void {
     const dialog = this.dialog.open(EditDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -66,7 +75,11 @@ export class BreadcrumbsContainerComponent implements OnInit {
       .subscribe();
   }
 
-  onUsersList(app: Application) {
-    console.log(app);
+  onUsersList(app: Application): void {
+    this.router.navigate([Routes.AppUsers], {
+      queryParams: {
+        app: app.id,
+      },
+    });
   }
 }

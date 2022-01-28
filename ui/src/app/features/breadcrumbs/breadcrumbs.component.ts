@@ -29,6 +29,7 @@ export class BreadcrumbsComponent {
   maxNameLength = 30;
   @Input() model: Model;
   @Input() app: Application;
+  @Input() hideControls: boolean;
 
   @Output() usersList = new EventEmitter<Application>();
   @Output() appSettings = new EventEmitter<Application>();

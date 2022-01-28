@@ -20,12 +20,14 @@
 @import 'mixins.scss';
 @import 'layout.scss';
 @import 'custom-theme.scss';
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
 
 @include custom-theme($custom-theme);
 
 body,
 html {
   height: 100%;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {

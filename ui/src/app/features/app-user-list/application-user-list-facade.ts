@@ -33,6 +33,9 @@ import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 import { selectCurrentUserRole } from '../../store/user/selectors';
 import { Role } from 'src/app/data/enums/role.enum';
+import { loadRolesEntity } from 'src/app/store/role/action';
+import { loadUsersEntity } from 'src/app/store/user/action';
+import { Application } from 'src/app/data/interfaces/application';
 
 @Injectable()
 export class ApplicationUserListFacade implements IFacade {
@@ -42,6 +45,7 @@ export class ApplicationUserListFacade implements IFacade {
   availableEmails$: Observable<string[]>;
   userRole$: Observable<string>;
   currentUserId$: Observable<string>;
+  selectedApplication$: Observable<Application>;
   selectedApplicationName: string;
 
   private selectedApplicationId: string;
@@ -58,14 +62,26 @@ export class ApplicationUserListFacade implements IFacade {
     this.currentUserId$ = this.store.select(selectUserId);
     this.availableRoles$ = this.store.select(selectAvailableRoles);
     this.isLoading$ = this.store.select(selectIsApplicationLoading);
+    this.selectedApplication$ = this.store.select(selectCurrentApp);
   }
 
   initSubscriptions(): void {
-    this.sub = this.store.select(selectCurrentApp).subscribe(app => {
+    this.sub = this.selectedApplication$.subscribe(app => {
       if (app) {
         this.selectedApplicationId = app.id;
+        this.loadData();
       }
     });
+  }
+
+  loadData(): void {
+    this.store.dispatch(
+      loadAppUserEntityAction({
+        applicationId: this.selectedApplicationId,
+      })
+    );
+    this.store.dispatch(loadRolesEntity());
+    this.store.dispatch(loadUsersEntity());
   }
 
   updateUserRole(id: string, role: Role): void {

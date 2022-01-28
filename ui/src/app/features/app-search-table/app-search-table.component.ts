@@ -30,6 +30,7 @@ export class AppSearchTableComponent {
   @Input() requiredRole: string;
   @Input() currentRole: string;
   @Input() app: Application;
+  @Input() hideContent: boolean;
 
   @Output() manageUsersView = new EventEmitter();
   @Output() inputSearch: EventEmitter<string> = new EventEmitter();

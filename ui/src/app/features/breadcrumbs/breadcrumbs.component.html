@@ -38,15 +38,15 @@
         {{ app.name }}
       </div>
     </div>
+    <ng-container *ngIf="app && !hideControls">
+      <div class="breadcrumbs--actions">
+        <button (click)="usersList.emit(app)">
+          <mat-icon>face</mat-icon>
+        </button>
+        <button (click)="appSettings.emit(app)">
+          <mat-icon>settings</mat-icon>
+        </button>
+      </div>
+    </ng-container>
   </ng-template>
-  <ng-container *ngIf="app && !model">
-    <div class="breadcrumbs--actions">
-      <button (click)="usersList.emit(app)">
-        <mat-icon>face</mat-icon>
-      </button>
-      <button (click)="appSettings.emit(app)">
-        <mat-icon>settings</mat-icon>
-      </button>
-    </div>
-  </ng-container>
 </div>
