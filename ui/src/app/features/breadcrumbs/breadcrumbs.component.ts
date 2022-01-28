@@ -32,6 +32,4 @@ export class BreadcrumbsComponent {
 
   @Output() usersList = new EventEmitter<Application>();
   @Output() appSettings = new EventEmitter<Application>();
-
-  openUserList() {}
 }

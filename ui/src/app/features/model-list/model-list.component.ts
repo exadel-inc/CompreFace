@@ -24,11 +24,11 @@ import { Model } from 'src/app/data/interfaces/model';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
 import { Routes } from '../../data/enums/routers-url.enum';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
 import { ModelCreateDialogComponent } from '../mode-create-dialog/model-create-dialog.component';
 import { ModelCloneDialogComponent } from '../model-clone-dialog/model-clone-dialog.component';
+import { Application } from 'src/app/data/interfaces/application';
 
 @Component({
   selector: 'app-model-list',
@@ -40,6 +40,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   tableConfig$: Observable<ITableConfig>;
+  currentApp$: Observable<Application>;
   roleEnum = Role;
   columns = [
     { title: 'name', property: 'name' },
@@ -59,6 +60,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.currentApp$ = this.modelListFacade.selectedApplication$;
     this.isLoading$ = this.modelListFacade.isLoading$;
     this.userRole$ = this.modelListFacade.userRole$;
     this.tableConfig$ = this.modelListFacade.models$.pipe(

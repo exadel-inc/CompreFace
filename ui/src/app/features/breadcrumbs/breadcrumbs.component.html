@@ -39,7 +39,7 @@
       </div>
     </div>
   </ng-template>
-  <ng-container *ngIf="app">
+  <ng-container *ngIf="app && !model">
     <div class="breadcrumbs--actions">
       <button (click)="usersList.emit(app)">
         <mat-icon>face</mat-icon>

@@ -51,40 +51,4 @@ export class ApplicationHeaderContainerComponent implements OnInit {
     this.userRole$ = this.applicationHeaderFacade.userRole$;
     this.isLoading$ = this.applicationHeaderFacade.isLoadingAppList$;
   }
-
-  rename(name: string): void {
-    const dialog = this.dialog.open(EditDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('applications.header.title'),
-        entityName: name,
-      },
-    });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(result => this.applicationHeaderFacade.rename(result));
-  }
-
-  delete(name: string) {
-    const dialog = this.dialog.open(DeleteDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('applications.header.title'),
-        entityName: name,
-      },
-    });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(() => this.applicationHeaderFacade.delete());
-  }
 }

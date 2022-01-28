@@ -17,10 +17,10 @@
 <div class="model-list">
   <app-search-table
     [currentRole]="userRole$ | async"
+    [app]="currentApp$ | async"
     [requiredRole]="roleEnum.User"
     (inputSearch)="onSearch($event)"
     (modalWindow)="onCreateNewModel()"
-    title="{{ 'models.create_dialog.title' | translate }}"
     buttonText="{{ 'applications.create.button' | translate }}"
     searchPlaceholder="{{ 'models.search.title' | translate }}"
   >
@@ -35,7 +35,6 @@
     (copyApiKey)="copyApiKey($event)"
     (clone)="clone($event)"
     (edit)="edit($event)"
-    (delete)="delete($event)"
     (test)="test($event)"
     (collection)="mangeCollection($event)"
   >

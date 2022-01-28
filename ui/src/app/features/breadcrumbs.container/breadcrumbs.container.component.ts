@@ -14,11 +14,15 @@
  * permissions and limitations under the License.
  */
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
+import { first, filter, tap } from 'rxjs/operators';
 
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
 import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
+import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 
 @Component({
   selector: 'app-breadcrumbs-container',
@@ -35,7 +39,7 @@ export class BreadcrumbsContainerComponent implements OnInit {
   app$: Observable<Application>;
   model$: Observable<Model>;
 
-  constructor(private breadcrumbsFacade: BreadcrumbsFacade) {}
+  constructor(private breadcrumbsFacade: BreadcrumbsFacade, private translate: TranslateService, private dialog: MatDialog) {}
 
   ngOnInit() {
     this.app$ = this.breadcrumbsFacade.app$;
@@ -43,25 +47,23 @@ export class BreadcrumbsContainerComponent implements OnInit {
   }
 
   onAppSettings(app: Application) {
-    // const dialog = this.dialog.open(EditDialogComponent, {
-    //   panelClass: 'custom-mat-dialog',
-    //   data: {
-    //     entityType: this.translate.instant('models.header'),
-    //     entityName: model.name,
-    //   },
-    // });
-    // dialog
-    //   .afterClosed()
-    //   .pipe(
-    //     first(),
-    //     filter(res => res),
-    //     tap(res => {
-    //       res.update ? this.modelListFacade.renameModel(model.id, res.name) :
-    //         this.modelListFacade.deleteModel(model.id);
-    //       }
-    //     )
-    //   )
-    //   .subscribe();
+    const dialog = this.dialog.open(EditDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+      data: {
+        entityType: this.translate.instant('applications.header.title'),
+        entityName: app.name,
+      },
+    });
+    dialog
+      .afterClosed()
+      .pipe(
+        first(),
+        filter(res => res),
+        tap(res => {
+          res.update ? this.breadcrumbsFacade.rename(res.name, app) : this.breadcrumbsFacade.delete(app);
+        })
+      )
+      .subscribe();
   }
 
   onUsersList(app: Application) {

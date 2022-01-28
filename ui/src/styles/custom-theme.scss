@@ -315,8 +315,7 @@ $custom-theme: mat-light-theme($custom-theme-primary, $custom-theme-accent, $cus
   }
 
   .custom-mat-dialog {
-    width: 600px;
-    min-height: 400px;
+    width: 500px;
 
     .mat-dialog {
       &-container {
