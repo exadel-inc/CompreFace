@@ -56,11 +56,15 @@ export class BreadcrumbsContainerComponent implements OnInit {
   }
 
   onAppSettings(app: Application): void {
+    const fullName = app.owner.firstName + ' ' + app.owner.lastName;
+
     const dialog = this.dialog.open(EditDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
-        entityType: this.translate.instant('applications.header.title'),
+        type: this.translate.instant('applications.header.title'),
+        label: this.translate.instant('applications.header.owner'),
         entityName: app.name,
+        ownerName: fullName,
       },
     });
     dialog

@@ -84,8 +84,10 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(EditDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
-        entityType: this.translate.instant('models.header'),
+        type: this.translate.instant('models.header'),
+        label: this.translate.instant('models.type'),
         entityName: model.name,
+        entityType: model.type,
       },
     });
 

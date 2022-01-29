@@ -26,7 +26,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class EditDialogComponent {
   initialName: string;
-  entityType: string;
   panelOpenState: boolean = false;
   deleteInput: string = '';
 

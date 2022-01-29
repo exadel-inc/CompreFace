@@ -15,11 +15,18 @@
   -->
 
 <div class="container">
-  <h1 class="container--title">{{ 'common.capital.edit' | translate }} {{ data.entityType }}</h1>
+  <h1 class="container--title">{{ 'common.capital.edit' | translate }} {{ data.type }}</h1>
   <div mat-dialog-content>
     <div class="form-field">
       <label>{{ 'common.name' | translate }}</label>
-      <input [(ngModel)]="initialName" placeholder="{{ data.entityType }} {{ 'common.name' | translate }}" />
+      <input [(ngModel)]="initialName" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
+    </div>
+    <div class="content">
+      <p class="label">{{ data.label }}</p>
+      <p *ngIf="data.entityType; else ownerName" class="type">{{ data.entityType | lowercase }}</p>
+      <ng-template #ownerName>
+        <p class="owner">{{ data.ownerName }}</p>
+      </ng-template>
     </div>
   </div>
 
@@ -32,18 +39,18 @@
       <mat-expansion-panel hideToggle (opened)="panelOpenState = true">
         <mat-expansion-panel-header>
           <mat-icon>error_outline</mat-icon>
-          {{ 'common.capital.delete' | translate }} {{ data.entityType }}
+          {{ 'common.capital.delete' | translate }} {{ data.type }}
         </mat-expansion-panel-header>
 
         <div class="delete__container" *ngIf="panelOpenState">
           <span class="delete__container--question">
-            {{ 'models.delete_dialog.confirmation_question' | translate: { entityType: data.entityType | lowercase } }}
+            {{ 'models.delete_dialog.confirmation_question' | translate: { entityType: data.type | lowercase } }}
           </span>
           <div class="form-field">
-            <input [(ngModel)]="deleteInput" placeholder="{{ data.entityType }} {{ 'common.name' | translate }}" />
+            <input [(ngModel)]="deleteInput" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
           </div>
           <button mat-flat-button class="del-btn" (click)="onDelete()" [disabled]="data.entityName !== deleteInput">
-            {{ 'common.capital.delete' | translate }} {{ data.entityType }}
+            {{ 'common.capital.delete' | translate }} {{ data.type }}
           </button>
         </div>
       </mat-expansion-panel>

@@ -29,6 +29,7 @@
     padding: 1rem 0;
 
     label {
+      color: rgb(66, 66, 66);
       font-weight: bold;
       margin-bottom: 20px;
     }
@@ -36,11 +37,27 @@
     input,
     select {
       outline: none;
-      margin-bottom: 30px;
       padding: 7px 0;
       border: none;
       border-bottom: 1px solid black;
       background: none;
+    }
+  }
+
+  .content {
+    margin-bottom: 30px;
+    .label {
+      color: rgb(66, 66, 66);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .type {
+      font-size: 14px;
+      text-transform: capitalize;
+    }
+
+    .owner {
+      font-size: 14px;
     }
   }
 

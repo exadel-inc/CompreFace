@@ -4,6 +4,8 @@
       "change": "Change",
       "create": "Create",
       "clone": "Clone",
+      "copy": "Copy",
+      "test": "Test",
       "cancel": "Cancel",
       "save": "Save",
       "yes": "Yes",
@@ -79,6 +81,7 @@
       "title": "Application",
       "edit": "Edit",
       "delete": "Delete",
+      "owner": "Owner",
       "delete_dialog": {
         "title": "Application Delete",
         "warn_information": "and all related data will be deleted",
