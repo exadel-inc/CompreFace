@@ -22,28 +22,30 @@
   </div>
 
   <div class="user">
-    <div class="user__list" *ngFor="let user of collection | userTableFilter: search">
-      <div class="user__list--items">
-        <label class="user__name">{{ user.firstName }} {{ user.lastName }}</label>
-        <select class="user__role" [(ngModel)]="user.role" (change)="onChange(user)">
-          <ng-container *ngIf="data.currentUserId !== user.userId && user.userId !== owner.id; else disabled">
-            <option
-              *ngFor="let role of roleValues"
-              [disabled]="(role | uppercase) === owner.role && disable"
-              class="user__role--option"
-              name="role"
-              [value]="role | uppercase"
-            >
-              {{ role }}
-            </option>
-          </ng-container>
+    <p class="user__title">{{ 'users.manage.users' | translate }}</p>
+    <div class="user__list">
+      <ng-container *ngFor="let user of collection | userTableFilter: search">
+        <div class="user__list--items">
+          <label class="user__name">{{ user.firstName }} {{ user.lastName }}</label>
+          <select class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
+            <ng-container *ngIf="data.currentUserId !== user.userId && user.userId !== owner.id; else disabled">
+              <option
+                *ngFor="let role of roleValues"
+                [disabled]="(role | uppercase) === owner.role && disable"
+                class="user__role--option"
+                name="role"
+                [value]="role | uppercase"
+              >
+                {{ role }}
+              </option>
+            </ng-container>
 
-          <ng-template #disabled>
-            <option class="user__role--option" name="role" [value]="user.role | uppercase">
-              {{ user.role | lowercase }}
-            </option>
-          </ng-template>
-        </select>
+            <ng-template #disabled>
+              <option class="user__role--option" name="role" [value]="user.role | uppercase">
+                {{ user.role | lowercase }}
+              </option>
+            </ng-template>
+          </select>
 
           <div class="user__delete" *ngIf="data.currentUserId !== user.userId && user.userId !== owner.id">
             <mat-icon class="user__delete--icon" (click)="onDelete(user)"> delete_outline </mat-icon>

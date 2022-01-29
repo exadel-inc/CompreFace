@@ -79,13 +79,15 @@
     }
 
     &__role {
-      width: 20%;
-      color: #787878;
-      text-align: center;
-      text-transform: capitalize;
-      background: none;
-      border: none;
-      outline: none;
+      &--select {
+        width: 20%;
+        color: #787878;
+        text-align: center;
+        text-transform: capitalize;
+        background: none;
+        border: none;
+        outline: none;
+      }
 
       &--option {
         background: #dadada;
