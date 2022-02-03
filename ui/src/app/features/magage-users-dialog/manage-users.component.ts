@@ -14,10 +14,13 @@
  * permissions and limitations under the License.
  */
 
-import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, Inject, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 export interface UserData {
   role: string;
@@ -32,16 +35,25 @@ export interface UserData {
   styleUrls: ['./manage-users.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ManageUsersDialog {
+export class ManageUsersDialog implements OnInit, OnDestroy {
   deletedUsersCollection: UserData[] = [];
   updatedUsersCollection: UserData[] = [];
   collection: UserData[];
+
   currentUserData: AppUser;
   owner: AppUser;
+
+  closeSubs: Subscription;
+  disable: boolean = false;
   roleValues: string[];
   search: string = '';
 
-  constructor(public dialogRef: MatDialogRef<ManageUsersDialog>, @Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    public dialogRef: MatDialogRef<ManageUsersDialog>,
+    public confirmDialog: MatDialog,
+    private readonly cdRef: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   ngOnInit(): void {
     this.currentUserData = this.data.userCollection.find(user => user.userId === this.data.currentUserId);
@@ -60,49 +72,61 @@ export class ManageUsersDialog {
         lastName: user.lastName,
       };
     });
+
+    this.closeSubs = this.dialogRef.backdropClick().subscribe(() =>
+      this.dialogRef.close({
+        deletedUsers: this.deletedUsersCollection,
+        updatedUsers: this.updatedUsersCollection,
+      })
+    );
   }
 
   onChange(user: UserData): void {
     const updatedUserData = this.data.userCollection.find(userData => user.userId === userData.userId);
 
-    this.updateRoles();
-
     if (updatedUserData.role === user.role) {
       const index = this.updatedUsersCollection.indexOf(user);
       this.updatedUsersCollection.splice(index, 1);
+      this.disableOption();
 
       return;
     }
 
     this.updatedUsersCollection.push(user);
-
-    const ownerUser = this.updatedUsersCollection.find(user => user.role === Role.Owner);
-
-    if (ownerUser) {
-      this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]];
-    }
-  }
-
-  updateRoles(): void {
-    this.currentUserData.role === Role.Owner
-      ? (this.roleValues = Object.keys(Role))
-      : (this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]]);
+    this.disableOption();
   }
 
   onDelete(user: UserData): void {
-    const index = this.collection.indexOf(user);
+    const dialog = this.confirmDialog.open(DeleteDialogComponent, {
+      panelClass: 'custom-mat-dialog',
+    });
 
-    this.deletedUsersCollection.push(this.collection[index]);
+    dialog
+      .afterClosed()
+      .pipe(
+        filter(data => data),
+        tap(() => {
+          const index = this.collection.indexOf(user);
 
-    this.collection.splice(index, 1);
+          this.deletedUsersCollection.push(this.collection[index]);
+
+          this.collection.splice(index, 1);
+
+          this.cdRef.markForCheck();
+        })
+      )
+      .subscribe();
   }
 
-  onSave(): void {
-    const res = {
-      deletedUsers: this.deletedUsersCollection,
-      updatedUsers: this.updatedUsersCollection,
-    };
+  disableOption(): void {
+    if (this.currentUserData.userId === this.owner.userId) {
+      const ownerUser = this.updatedUsersCollection.find(user => user.role === Role.Owner);
 
-    this.dialogRef.close(res);
+      ownerUser ? (this.disable = true) : (this.disable = false);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.closeSubs.unsubscribe();
   }
 }

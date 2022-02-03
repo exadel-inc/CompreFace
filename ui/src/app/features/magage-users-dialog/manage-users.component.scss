@@ -74,20 +74,28 @@
     }
 
     &__name {
-      width: 32%;
+      font-size: 14px;
+      width: 30%;
     }
 
     &__role {
-      width: 22%;
-      color: #787878;
-      text-transform: capitalize;
-      text-align: center;
-
       &--select {
+        width: 20%;
+        color: #787878;
+        text-align: center;
+        text-transform: capitalize;
         background: none;
         border: none;
         outline: none;
-        width: 16px;
+      }
+
+      &--option {
+        background: #dadada;
+      }
+
+      &--option[disabled] {
+        background: #7e7e7e;
+        color: white;
       }
     }
 

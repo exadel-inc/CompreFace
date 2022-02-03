@@ -18,17 +18,17 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { filter, first, map } from 'rxjs/operators';
+import { filter, first, map, tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { Model } from 'src/app/data/interfaces/model';
 import { ITableConfig } from 'src/app/features/table/table.component';
 
 import { Routes } from '../../data/enums/routers-url.enum';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 import { ModelListFacade } from './model-list-facade';
 import { ModelCreateDialogComponent } from '../mode-create-dialog/model-create-dialog.component';
 import { ModelCloneDialogComponent } from '../model-clone-dialog/model-clone-dialog.component';
+import { Application } from 'src/app/data/interfaces/application';
 
 @Component({
   selector: 'app-model-list',
@@ -40,10 +40,12 @@ export class ModelListComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
   tableConfig$: Observable<ITableConfig>;
+  currentApp$: Observable<Application>;
   roleEnum = Role;
   columns = [
-    { title: 'content', property: 'content' },
-    { title: 'test', property: 'test' },
+    { title: 'name', property: 'name' },
+    { title: 'apiKey', property: 'apiKey' },
+    { title: 'type', property: 'type' },
     { title: 'actions', property: 'id' },
   ];
   search = '';
@@ -58,6 +60,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.currentApp$ = this.modelListFacade.selectedApplication$;
     this.isLoading$ = this.modelListFacade.isLoading$;
     this.userRole$ = this.modelListFacade.userRole$;
     this.tableConfig$ = this.modelListFacade.models$.pipe(
@@ -81,8 +84,10 @@ export class ModelListComponent implements OnInit, OnDestroy {
     const dialog = this.dialog.open(EditDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
-        entityType: this.translate.instant('models.header'),
+        type: this.translate.instant('models.header'),
+        label: this.translate.instant('models.type'),
         entityName: model.name,
+        entityType: model.type,
       },
     });
 
@@ -90,9 +95,12 @@ export class ModelListComponent implements OnInit, OnDestroy {
       .afterClosed()
       .pipe(
         first(),
-        filter(name => name)
+        filter(res => res),
+        tap(res => {
+          res.update ? this.modelListFacade.renameModel(model.id, res.name) : this.modelListFacade.deleteModel(model.id);
+        })
       )
-      .subscribe(name => this.modelListFacade.renameModel(model.id, name));
+      .subscribe();
   }
 
   clone(model: Model) {
@@ -108,24 +116,6 @@ export class ModelListComponent implements OnInit, OnDestroy {
         filter(name => name)
       )
       .subscribe(name => this.modelListFacade.cloneModel(model.id, name));
-  }
-
-  delete(model: Model) {
-    const dialog = this.dialog.open(DeleteDialogComponent, {
-      panelClass: 'custom-mat-dialog',
-      data: {
-        entityType: this.translate.instant('models.header'),
-        entityName: model.name,
-      },
-    });
-
-    dialog
-      .afterClosed()
-      .pipe(
-        first(),
-        filter(result => result)
-      )
-      .subscribe(() => this.modelListFacade.deleteModel(model.id));
   }
 
   test(model: Model) {

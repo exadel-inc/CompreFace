@@ -20,44 +20,35 @@ caption {
   display: none;
 }
 
-.mat {
-  &-header-row {
-    display: none;
+table {
+  .mat-column-user {
+    width: 15%;
   }
 
-  &-column {
-    &-user {
-      width: 100%;
+  .mat-column-email {
+    width: 35%;
+  }
 
-      .user {
-        &--name {
-          @include not-break-string();
-        }
+  .mat-column-role {
+    width: 15%;
+    text-transform: capitalize;
+  }
 
-        &--role {
-          color: $light-gray;
-        }
+  .mat-column-delete {
+    width: 35%;
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+
+      button {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
       }
     }
 
-    &-role {
-      width: 44px;
-      text-align: center;
-
-      .mat-icon {
-        vertical-align: sub;
-        @include md-icon-size();
-      }
-    }
-
-    &-delete {
-      width: 44px;
-      text-align: center;
-
-      .mat-icon {
-        vertical-align: sub;
-        @include md-icon-size();
-      }
+    .mat-icon {
+      @include sm-icon-size();
     }
   }
 }

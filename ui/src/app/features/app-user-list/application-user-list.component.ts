@@ -17,14 +17,14 @@ import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
-import { filter, first, map, takeWhile } from 'rxjs/operators';
+import { filter, first, map, takeWhile, tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
+import { Application } from 'src/app/data/interfaces/application';
 
 import { UserDeletion } from '../../data/interfaces/user-deletion';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
-import { SnackBarService } from '../snackbar/snackbar.service';
 import { ITableConfig } from '../table/table.component';
 import { ApplicationUserListFacade } from './application-user-list-facade';
 
@@ -44,15 +44,11 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
   search = '';
   availableRoles: string[];
   currentUserId$: Observable<string>;
+  currentApp$: Observable<Application>;
   roleEnum = Role;
   availableRolesSubscription: Subscription;
 
-  constructor(
-    private appUserListFacade: ApplicationUserListFacade,
-    private dialog: MatDialog,
-    private snackBarService: SnackBarService,
-    private translate: TranslateService
-  ) {
+  constructor(private appUserListFacade: ApplicationUserListFacade, private dialog: MatDialog, private translate: TranslateService) {
     appUserListFacade.initSubscriptions();
   }
 
@@ -61,11 +57,13 @@ export class ApplicationUserListComponent implements OnInit, OnDestroy {
     this.userRole$ = this.appUserListFacade.userRole$;
     this.availableEmails$ = this.appUserListFacade.availableEmails$;
     this.currentUserId$ = this.appUserListFacade.currentUserId$;
+    this.currentApp$ = this.appUserListFacade.selectedApplication$;
 
     this.tableConfig$ = this.appUserListFacade.appUsers$.pipe(
       map((users: AppUser[]) => ({
         columns: [
           { title: 'user', property: 'username' },
+          { title: 'email', property: 'userEmail' },
           { title: 'role', property: 'role' },
           { title: 'delete', property: 'delete' },
         ],

@@ -4,6 +4,8 @@
       "change": "Change",
       "create": "Create",
       "clone": "Clone",
+      "copy": "Copy",
+      "test": "Test",
       "cancel": "Cancel",
       "save": "Save",
       "yes": "Yes",
@@ -79,6 +81,7 @@
       "title": "Application",
       "edit": "Edit",
       "delete": "Delete",
+      "owner": "Owner",
       "delete_dialog": {
         "title": "Application Delete",
         "warn_information": "and all related data will be deleted",
@@ -120,7 +123,7 @@
     "delete_dialog": {
       "title": "Model Delete",
       "warn_information": "and all related data will be deleted.",
-      "confirmation_question": "Are you sure?"
+      "confirmation_question": "Are you sure you want to delete {{ entityType }}? This action can not be undone. Type the {{ entityType }} to confirm."
     },
     "search": {
       "title": "Search service"
@@ -131,8 +134,12 @@
     "caption": "Table of users",
     "title": "Users",
     "user": "User",
+    "delete": "Delete User",
     "role": "Role",
     "user_role": "User Role",
+    "confirmation_dialog": {
+      "delete_confirmation_question": "Are you sure you want to delete this user? This action can not be undone."
+    },
     "search": {
       "org_title": "Search user",
       "app_title": "Search user",

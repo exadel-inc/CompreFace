@@ -20,57 +20,60 @@
       'models.caption' | translate
     }}
   </caption>
-  <ng-container matColumnDef="content">
-    <td mat-cell *matCellDef="let element">
-      <div class="content--wrapper mat-subheading-1">
+  <ng-container matColumnDef="name">
+    <td mat-cell *matCellDef="let element" class="name">
+      <div class="content--wrapper">
         <span class="content--wrapper_name" matTooltip="{{ element.name }}" [matTooltipDisabled]="disableToolTip(element.name)">
           {{ element.name }}
         </span>
-        <span class="content--wrapper_type mat-caption" [ngClass]="element.type | lowercase">
-          {{ getKeyType(element.type) | titlecase }}
-        </span>
       </div>
-      <div class="content--wrapper mat-body-2">
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="apiKey">
+    <td mat-cell *matCellDef="let element">
+      <div class="content--wrapper">
         <div class="content--wrapper_key">
           <span class="title">API-Key: </span>
           <span class="key">{{ element.apiKey }}</span>
+          <button mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
+            <mat-icon svgIcon="copy" matTooltip="{{ 'common.capital.copy' | translate }}" [matTooltipPosition]="'above'"></mat-icon>
+          </button>
         </div>
-        <button class="content--wrapper_btn" mat-icon-button (click)="copyApiKey.emit(element.apiKey)">
-          <mat-icon svgIcon="copy"></mat-icon>
-        </button>
       </div>
     </td>
   </ng-container>
-  <ng-container matColumnDef="test">
+
+  <ng-container matColumnDef="type">
     <td mat-cell *matCellDef="let element">
-      <button class="test--btn" color="accent" mat-flat-button (click)="test.emit(element)">
-        <span>{{ 'models.select_menu.test' | translate }}</span>
-      </button>
+      <div class="content--wrapper">
+        <div class="content--wrapper_type">
+          <span class="type">{{ element.type | lowercase }}</span>
+        </div>
+      </div>
     </td>
   </ng-container>
+
   <ng-container matColumnDef="actions">
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="userRole !== roleEnum.User">
-        <button class="actions--btn" mat-icon-button [matMenuTriggerFor]="menu" aria-label="model actions">
-          <mat-icon svgIcon="more-vert_new" inline="true"></mat-icon>
+      <div class="actions">
+        <button mat-icon-button (click)="clone.emit(element)">
+          <mat-icon svgIcon="copy" matTooltip="{{ 'common.capital.clone' | translate }}" [matTooltipPosition]="'above'"></mat-icon>
         </button>
-        <mat-menu #menu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="edit.emit(element)">
-            <span>{{ 'models.select_menu.edit' | translate }}</span>
-          </button>
-          <button mat-menu-item (click)="delete.emit(element)">
-            <span>{{ 'models.select_menu.delete' | translate }}</span>
-          </button>
-          <button mat-menu-item (click)="clone.emit(element)">
-            <span>{{ 'models.select_menu.clone' | translate }}</span>
-          </button>
-          <ng-container *ngIf="element.type === types.Recognition">
-            <button mat-menu-item (click)="collection.emit(element)">
-              <span>{{ 'models.mange_collection' | translate }}</span>
-            </button>
-          </ng-container>
-        </mat-menu>
-      </ng-container>
+        <button mat-icon-button (click)="edit.emit(element)">
+          <mat-icon svgIcon="edit" matTooltip="{{ 'common.capital.edit' | translate }}" [matTooltipPosition]="'above'"></mat-icon>
+        </button>
+        <button mat-icon-button (click)="collection.emit(element)" *ngIf="element.type === types.Recognition">
+          <mat-icon
+            mat-icon-button
+            svgIcon="body-scan"
+            matTooltip="{{ 'models.mange_collection' | translate }}"
+            [matTooltipPosition]="'above'"
+          ></mat-icon>
+        </button>
+        <button mat-icon-button (click)="test.emit(element)">
+          <mat-icon matTooltip="{{ 'common.capital.test' | translate }}" [matTooltipPosition]="'above'">play_circle</mat-icon>
+        </button>
+      </div>
     </td>
   </ng-container>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

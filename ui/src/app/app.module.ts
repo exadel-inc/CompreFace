@@ -51,6 +51,7 @@ import { UserInfoResolver } from './core/user-info/user-info.resolver';
 import { RoleEditDialogComponent } from './features/role-edit-dialog/role-edit-dialog.component';
 import { MatSelectModule } from '@angular/material/select';
 import { MergerDialogComponent } from './features/merger-dialog/merger-dialog.component';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import { MergerDialogComponent } from './features/merger-dialog/merger-dialog.co
     HttpClientModule,
     SnackBarModule,
     MatRadioModule,
+    MatExpansionModule,
     BreadcrumbsModule,
     BreadcrumbsContainerModule,
     TranslateModule.forRoot({

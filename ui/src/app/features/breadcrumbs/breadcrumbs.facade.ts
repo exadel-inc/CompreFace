@@ -15,21 +15,34 @@
  */
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
+import { updateApplication, deleteApplication } from 'src/app/store/application/action';
 
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
 import { AppState } from '../../store';
-import { selectCurrentApp } from '../../store/application/selectors';
+import { selectCurrentApp, selectCurrentAppId } from '../../store/application/selectors';
 import { selectCurrentModel } from '../../store/model/selectors';
 
 @Injectable()
 export class BreadcrumbsFacade {
   app$: Observable<Application>;
   model$: Observable<Model>;
+  selectedId$: Observable<string | null>;
+  selectedId: string | null;
+  appIdSub: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
     this.model$ = this.store.select(selectCurrentModel);
+    this.selectedId$ = store.select(selectCurrentAppId);
+  }
+
+  rename(name: string, app: Application) {
+    this.store.dispatch(updateApplication({ name, id: app.id }));
+  }
+
+  delete(app: Application) {
+    this.store.dispatch(deleteApplication({ id: app.id }));
   }
 }
