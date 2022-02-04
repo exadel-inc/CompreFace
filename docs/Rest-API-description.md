@@ -244,9 +244,9 @@ curl -X GET "http://localhost:8000/api/v1/recognition/faces?page=<page>&size=<si
 | Element   | Description | Type    | Required | Notes                                                                                                |
 |-----------|-------------|---------|----------|------------------------------------------------------------------------------------------------------|
 | x-api-key | header      | string  | required | api key of the Face recognition service, created by the user                                         |
-| page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. Since 0.6 version |
-| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. Since 0.6 version        |
-| subject   | param       | string  | required | is the name you assign to the image you save. Since 1.0 version                                                         |
+| page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0.                   |
+| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20.                          |
+| subject   | param       | string  | optional | is the name you assign to the image you save. Since 1.0 version                                                         |
 
 Response body on success:
 
@@ -266,14 +266,14 @@ Response body on success:
 }
 ```
 
-| Element        | Type    | Description                                                                           |
-|----------------|---------|---------------------------------------------------------------------------------------|
-| face.image_id  | UUID    | UUID of the face                                                                      |
-| fase.subject   | string  | <subject> of the person, whose picture was saved in selected subject for this api key |
-| page_number    | integer | page number                                                                           |
-| page_size      | integer | **requested** page size                                                               |
-| total_pages    | integer | total pages                                                                           |
-| total_elements | integer | total faces                                                                           |
+| Element        | Type    | Description                                                       |
+|----------------|---------|-------------------------------------------------------------------|
+| face.image_id  | UUID    | UUID of the face                                                  |
+| faсe.subject   | string  | <subject> of the person, whose picture was saved for this api key |
+| page_number    | integer | page number                                                       |
+| page_size      | integer | **requested** page size                                           |
+| total_pages    | integer | total pages                                                       |
+| total_elements | integer | total faces                                                       |
 
 
 ### Delete All Examples of the Subject by Name
