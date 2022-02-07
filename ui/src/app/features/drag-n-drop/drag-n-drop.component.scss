@@ -41,7 +41,8 @@ $border-radius: 12px;
 .dropzone {
   position: relative;
   padding: 24px;
-  background-color: $white;
+  background: #dfdfdf;
+
   border-radius: $border-radius;
 
   &--container {
@@ -49,6 +50,9 @@ $border-radius: 12px;
     justify-content: center;
     align-items: center;
     width: 100%;
+    height: 100px;
+    font-weight: 800;
+    font-size: 14px;
     border: dashed 2px $light-gray;
     border-radius: $border-radius;
     transition: 0.2s;
@@ -96,8 +100,8 @@ $border-radius: 12px;
 
   &:hover &--container {
     transition: 0.2s;
-    background-color: $special-light-blue;
-    border-color: $special-blue;
+    background-color: rgb(200, 200, 200);
+    border-color: grey;
   }
 
   &_inline {

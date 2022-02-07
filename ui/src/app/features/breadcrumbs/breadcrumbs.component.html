@@ -23,18 +23,21 @@
       [routerLink]="[routes.Application]"
       [queryParams]="{ app: app.id }"
       matTooltip="{{ app.name }}"
+      matTooltipClass="top-arrow"
       [matTooltipDisabled]="app.name.length <= maxNameLength"
     >
       {{ app.name }}
     </a>
     <div class="separator">/</div>
-    <div class="link" matTooltip="{{ model.name }}" [matTooltipDisabled]="model.name.length <= maxNameLength">{{ model.name }}</div>
+    <div class="link" matTooltip="{{ model.name }}" matTooltipClass="top-arrow" [matTooltipDisabled]="model.name.length <= maxNameLength">
+      {{ model.name }}
+    </div>
   </div>
   <ng-template #onlyApp>
     <div class="breadcrumbs--container">
       <a class="link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
       <div class="separator">/</div>
-      <div class="link" matTooltip="{{ app.name }}" [matTooltipDisabled]="app.name.length <= maxNameLength">
+      <div class="link" matTooltip="{{ app.name }}" matTooltipClass="top-arrow" [matTooltipDisabled]="app.name.length <= maxNameLength">
         {{ app.name }}
       </div>
     </div>

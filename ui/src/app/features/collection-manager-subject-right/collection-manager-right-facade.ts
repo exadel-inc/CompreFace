@@ -66,14 +66,6 @@ export class CollectionRightFacade {
     this.subjectMode$ = this.store.select(selectSubjectMode);
   }
 
-  edit(editName: string, subject: string, apiKey: string): void {
-    this.store.dispatch(editSubject({ editName, apiKey, subject }));
-  }
-
-  delete(name: string, apiKey: string): void {
-    this.store.dispatch(deleteSubject({ name, apiKey }));
-  }
-
   loadSubjectMedia(subject: string): void {
     this.store.dispatch(getSubjectExamples({ subject }));
   }

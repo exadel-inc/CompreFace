@@ -14,13 +14,16 @@
   ~ permissions and limitations under the License.
   -->
 
-<ng-container>
-  <div class="app" (click)="selectApp.emit(element)">
-    <div class="app--container mat-subheading-1">
-      <span class="app--container_title">{{ element.name }}</span>
-    </div>
-    <div class="app--name mat-body-2">
-      <span class="app--name_owner"> {{ element.owner.firstName }} {{ element.owner.lastName }} </span>
-    </div>
+<div class="container">
+  <h1 class="container--title">{{ 'common.capital.edit' | translate }} {{ data.type }}</h1>
+  <div class="container--form">
+    <label>{{ 'common.name' | translate }}</label>
+    <input [(ngModel)]="initialName" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
   </div>
-</ng-container>
+
+  <div class="actions" mat-dialog-actions>
+    <button mat-flat-button class="save-btn" [disabled]="isRenameDisabled || !initialName" (click)="onSave()">
+      {{ 'common.capital.save' | translate }}
+    </button>
+  </div>
+</div>

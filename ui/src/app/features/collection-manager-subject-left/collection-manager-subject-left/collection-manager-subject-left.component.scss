@@ -17,15 +17,7 @@
 @import 'mixins.scss';
 
 .main {
-  .add-subject {
-    padding-bottom: 16px;
-    border-bottom: 1px solid $light-gray-special;
-
-    .mat-flat-button {
-      height: 43px;
-      width: 100%;
-    }
-  }
+  height: 100%;
 
   .search {
     margin-top: 15px;
@@ -33,8 +25,15 @@
 
   .subjects {
     height: calc(100vh - 438px);
-    min-height: 300px;
+    height: 90%;
+    padding-right: 16px;
     overflow-y: auto;
+
+    .label {
+      padding-left: 8px;
+      font-size: 13px;
+      color: rgb(42, 42, 42);
+    }
 
     .select {
       border: none;
@@ -50,48 +49,66 @@
 
     .option {
       border-bottom: 1px solid $special-gray;
-      border-radius: 1px;
-      cursor: pointer;
-
       list-style: none;
-      padding: 0.7rem;
+      padding: 0.5rem 0.7rem;
 
-      &[selected='true'] {
-        background: #e5f2fa;
-      }
-
+      &[selected='true'],
       &:hover {
-        border-bottom: 1px solid $primary;
-      }
-
-      div {
-        padding: 0 !important;
-
-        .material-icon {
-          font-size: 28px;
-          color: $special-gray;
-        }
-        .selected-icon {
-          color: $primary;
-        }
+        background: rgb(204, 204, 204);
+        border-radius: 8px;
       }
 
       .avatar {
-        margin-right: 13px;
         display: flex;
+        justify-content: space-between;
         align-items: center;
 
-        mat-icon {
-          flex-shrink: 0;
+        .name {
+          cursor: pointer;
+        }
+
+        .actions {
+          display: flex;
+
+          button {
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 20px;
+            height: 20px;
+
+            .mat-icon {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              height: 12px;
+              flex-shrink: 0;
+            }
+          }
         }
 
         .name {
-          font-size: 18px;
+          font-size: 14px;
           color: $black;
-          margin-left: 13px;
           @include not-break-string();
         }
       }
+    }
+  }
+
+  .add-subject {
+    padding: 1rem;
+    padding-left: 0;
+
+    .mat-flat-button {
+      font-size: 14px;
+      border: 2px solid rgb(199, 199, 199);
+      border-radius: 16px;
+      background: #797979;
+      color: white;
+      height: 10%;
+      width: 100%;
     }
   }
 }

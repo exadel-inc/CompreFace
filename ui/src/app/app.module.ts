@@ -52,6 +52,7 @@ import { RoleEditDialogComponent } from './features/role-edit-dialog/role-edit-d
 import { MatSelectModule } from '@angular/material/select';
 import { MergerDialogComponent } from './features/merger-dialog/merger-dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { EditSubjectDialog } from './features/edit-subject/edit-subject-dialog.component';
 
 @NgModule({
   declarations: [
@@ -60,6 +61,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     DemoLayoutComponent,
     CreateDialogComponent,
     EditDialogComponent,
+    EditSubjectDialog,
     AlertComponent,
     DeleteDialogComponent,
     RoleEditDialogComponent,
@@ -109,6 +111,13 @@ import { MatExpansionModule } from '@angular/material/expansion';
   ],
   bootstrap: [AppComponent],
   exports: [CreateDialogComponent],
-  entryComponents: [CreateDialogComponent, AlertComponent, EditDialogComponent, DeleteDialogComponent, RoleEditDialogComponent],
+  entryComponents: [
+    CreateDialogComponent,
+    AlertComponent,
+    EditDialogComponent,
+    EditSubjectDialog,
+    DeleteDialogComponent,
+    RoleEditDialogComponent,
+  ],
 })
 export class AppModule {}
