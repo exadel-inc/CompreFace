@@ -1,4 +1,8 @@
 databaseChangeLog:
+  - preConditions:
+      - sqlCheck:
+          expectedResult: 1
+          sql: select count(1) from app where id=0
   - changeSet:
       id: add-detection-verification-services
       author: Shreyansh Sancheti
