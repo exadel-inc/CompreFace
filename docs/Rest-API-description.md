@@ -232,7 +232,6 @@ Response body on success:
 
 
 ### List of All Saved Examples of the Subject
-```since 1.0 version```
 
 To retrieve a list of subjects saved in a Face Collection:
 
@@ -241,12 +240,12 @@ curl -X GET "http://localhost:8000/api/v1/recognition/faces?page=<page>&size=<si
 -H "x-api-key: <service_api_key>" \
 ```
 
-| Element   | Description | Type    | Required | Notes                                                                              |
-|-----------|-------------|---------|----------|------------------------------------------------------------------------------------|
-| x-api-key | header      | string  | required | api key of the Face recognition service, created by the user                       |
-| page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. |
-| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20.        |
-| subject   | param       | string  | optional | is the name you assign to the image you save. Since 1.0 version                                                         |
+| Element   | Description | Type    | Required | Notes                                                                                               |
+|-----------|-------------|---------|----------|-----------------------------------------------------------------------------------------------------|
+| x-api-key | header      | string  | required | api key of the Face recognition service, created by the user                                        |
+| page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. Since 0.6 version|
+| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. Since 0.6 version       |
+| subject   | param       | string  | optional | is the name you assign to the image you save. Since 1.0 version                                     |
 
 Response body on success:
 
