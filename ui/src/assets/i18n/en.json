@@ -188,7 +188,7 @@
     "home": "Home"
   },
   "dnd": {
-    "title": "Click here or Drag and drop your {{typeImage}} here",
+    "title": "Click here or Drag and drop your {{typeImage}}",
     "label": "Available images extensions: jpeg, jpg, png, webp \nMax images size = 5Mb (5242880bytes)",
     "test": "Test model",
     "add": "Add to model",
@@ -226,11 +226,16 @@
     "invitation_sent": "Invitation was sent to {{userEmail}}"
   },
   "manage_collection": {
+    "header": "Subjects",
+    "bulk_select": "Bulk Select",
+    "cancel_select": "Cancel Select",
+    "delete": "Delete Selected",
     "left_side": {
       "add_subject": "Add Subject",
       "search": "Search...",
       "modal_title": "Subject",
-      "subject_name": "Subject Name"
+      "subject_name": "Subject Name",
+      "name": "A Name"
     },
     "right_side": {
       "title": "Join Subjects",

@@ -29,9 +29,16 @@
   margin: 1rem;
   box-shadow: 1px 1px 1px $light-gray;
 
-  &--title {
+  &--container {
+    display: flex;
+    justify-content: center;
     font-size: 1.8rem;
     margin-bottom: 20px;
+
+    &_title {
+      width: 100%;
+      text-align: center;
+    }
   }
 
   &--name {
