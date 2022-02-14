@@ -64,14 +64,7 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
 
     this.owner = this.data.userCollection.find(user => user.role === Role.Owner);
 
-    this.collection = this.data.userCollection.map(user => {
-      return {
-        role: user.role,
-        userId: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      };
-    });
+    this.sortUsers();
 
     this.closeSubs = this.dialogRef.backdropClick().subscribe(() =>
       this.dialogRef.close({
@@ -94,6 +87,24 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
 
     this.updatedUsersCollection.push(user);
     this.disableOption();
+  }
+
+  sortUsers(): void {
+    const usersCollection = this.data.userCollection.map(user => {
+      return {
+        role: user.role,
+        userId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      };
+    });
+
+    const owner = usersCollection.find(user => user.role === Role.Owner);
+
+    const administrators = usersCollection.filter(user => user.role === Role.Administrator);
+    const users = usersCollection.filter(user => user.role === Role.User);
+
+    this.collection = [owner, ...administrators, ...users];
   }
 
   onDelete(user: UserData): void {

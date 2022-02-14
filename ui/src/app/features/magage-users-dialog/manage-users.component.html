@@ -22,7 +22,10 @@
   </div>
 
   <div class="user">
-    <p class="user__title">{{ 'users.manage.users' | translate }}</p>
+    <div class="user__container">
+      <p class="user__container--title">{{ 'users.manage.users' | translate }}</p>
+      <p class="user__container--title">{{ 'users.manage.roles' | translate }}</p>
+    </div>
     <div class="user__list">
       <ng-container *ngFor="let user of collection | userTableFilter: search">
         <div class="user__list--items">
