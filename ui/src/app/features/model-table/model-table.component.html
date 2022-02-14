@@ -29,7 +29,7 @@
           matTooltipClass="bottom-arrow"
           [matTooltipDisabled]="disableToolTip(element.name)"
         >
-          {{ element.name }}
+          {{ element.name | truncate: 20 }}
         </span>
       </div>
     </td>

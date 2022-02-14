@@ -19,12 +19,13 @@ import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { TablePipeModule } from 'src/app/ui/search-pipe/table-filter.module';
+import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
 import { ApplicationCollectionContainerComponent } from './application-collection-container.component';
 import { ApplicationCollectionComponent } from './application-collection/application-collection.component';
 
 @NgModule({
   declarations: [ApplicationCollectionContainerComponent, ApplicationCollectionComponent],
-  imports: [CommonModule, TranslateModule, TablePipeModule, MatIconModule],
+  imports: [CommonModule, TranslateModule, TablePipeModule, MatIconModule, TruncateModule],
   exports: [ApplicationCollectionContainerComponent, ApplicationCollectionComponent],
 })
 export class ApplicationCollectionContainerModule {}

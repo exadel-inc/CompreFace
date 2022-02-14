@@ -25,8 +25,7 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 export interface UserData {
   role: string;
   userId: string;
-  firstName: string;
-  lastName: string;
+  fullName: string;
 }
 
 @Component({
@@ -94,8 +93,7 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
       return {
         role: user.role,
         userId: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        fullName: user.firstName + ' ' + user.lastName,
       };
     });
 

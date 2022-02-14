@@ -23,10 +23,11 @@ import { MatInputModule } from '@angular/material/input';
 
 import { AppSearchTableComponent } from './app-search-table.component';
 import { MatButtonModule } from '@angular/material/button';
+import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
 
 @NgModule({
   declarations: [AppSearchTableComponent],
   exports: [AppSearchTableComponent],
-  imports: [CommonModule, TranslateModule, MatIconModule, FormsModule, MatInputModule, MatButtonModule],
+  imports: [CommonModule, TranslateModule, MatIconModule, FormsModule, MatInputModule, MatButtonModule, TruncateModule],
 })
 export class AppSearchTableModule {}

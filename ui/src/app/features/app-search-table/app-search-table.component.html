@@ -16,7 +16,7 @@
 
 <div class="app-search">
   <ng-container *ngIf="app; else appTitle">
-    <div class="app-search--title mat-title">{{ app.name }} {{ title }}</div>
+    <div class="app-search--title mat-title">{{ app.name | truncate: 20 }} {{ title }}</div>
   </ng-container>
   <ng-template #appTitle>
     <div class="app-search--title mat-title">{{ title }}</div>

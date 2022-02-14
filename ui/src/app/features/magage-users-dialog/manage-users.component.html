@@ -29,7 +29,7 @@
     <div class="user__list">
       <ng-container *ngFor="let user of collection | userTableFilter: search">
         <div class="user__list--items">
-          <label class="user__name">{{ user.firstName }} {{ user.lastName }}</label>
+          <label class="user__name">{{ user.fullName | truncate: 20 }} </label>
           <select class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
             <ng-container *ngIf="data.currentUserId !== user.userId && user.userId !== owner.id; else disabled">
               <option
