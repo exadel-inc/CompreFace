@@ -9,6 +9,7 @@ import com.exadel.frs.commonservice.exception.SubjectNotFoundException;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.commonservice.repository.SubjectRepository;
+import com.exadel.frs.commonservice.system.global.ImageProperties;
 import com.exadel.frs.core.trainservice.dto.EmbeddingInfo;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +28,7 @@ public class SubjectDao {
     private final SubjectRepository subjectRepository;
     private final EmbeddingRepository embeddingRepository;
     private final ImgRepository imgRepository;
+    private final ImageProperties imageProperties;
 
     public Collection<String> getSubjectNames(final String apiKey) {
         return subjectRepository.getSubjectNames(apiKey);
@@ -182,7 +186,10 @@ public class SubjectDao {
         if (embeddingInfo.getSource() != null) {
             img = new Img();
             img.setContent(embeddingInfo.getSource());
+        }
 
+        boolean isSavingImageEnabled = imageProperties.isSaveImagesToDB();
+        if (img != null && isSavingImageEnabled) {
             imgRepository.save(img);
         }
 
@@ -190,7 +197,9 @@ public class SubjectDao {
         embedding.setSubject(subject);
         embedding.setEmbedding(embeddingInfo.getEmbedding());
         embedding.setCalculator(embeddingInfo.getCalculator());
-        embedding.setImg(img);
+        if (isSavingImageEnabled) {
+            embedding.setImg(img);
+        }
 
         return embeddingRepository.save(embedding);
     }
