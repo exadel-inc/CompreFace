@@ -23,13 +23,13 @@
 
   <div class="user">
     <div class="user__container">
-      <p class="user__container--title">{{ 'users.manage.users' | translate }}</p>
-      <p class="user__container--title">{{ 'users.manage.roles' | translate }}</p>
+      <p class="user__container--users title">{{ 'users.manage.users' | translate }}</p>
+      <p class="user__container--roles title">{{ 'users.manage.roles' | translate }}</p>
     </div>
     <div class="user__list">
       <ng-container *ngFor="let user of collection | userTableFilter: search">
         <div class="user__list--items">
-          <label class="user__name">{{ user.fullName | truncate: 20 }} </label>
+          <label class="user__name">{{ user.fullName | truncate: 30 }} </label>
           <select class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
             <ng-container *ngIf="data.currentUserId !== user.userId && user.userId !== owner.id; else disabled">
               <option

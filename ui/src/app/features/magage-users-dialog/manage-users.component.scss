@@ -55,12 +55,18 @@
     &__container {
       display: flex;
       width: 100%;
-      &--title {
-        width: 50%;
+
+      .title {
         margin: 1rem 0 0.5rem 0;
         color: rgb(63, 63, 63);
         font-weight: 600;
         font-size: 1.2rem;
+      }
+      &--users {
+        width: 60%;
+      }
+      &--roles {
+        width: 40%;
       }
     }
 
@@ -80,7 +86,7 @@
 
     &__name {
       font-size: 14px;
-      width: 50%;
+      width: 60%;
     }
 
     &__role {
@@ -105,7 +111,7 @@
     }
 
     &__delete {
-      width: 25%;
+      width: 15%;
       border: none;
       background: none;
 
