@@ -15,6 +15,7 @@
     + [List of All Saved Examples of the Subject](#list-of-all-saved-examples-of-the-subject)
     + [Delete All Examples of the Subject by Name](#delete-all-examples-of-the-subject-by-name)
     + [Delete an Example of the Subject by ID](#delete-an-example-of-the-subject-by-id)
+    + [Delete Multiple Examples](#delete-multiple-examples)
     + [Direct Download an Image example of the Subject by ID](#direct-download-an-image-example-of-the-subject-by-id)
     + [Download an Image example of the Subject by ID](#download-an-image-example-of-the-subject-by-id)
   + [Recognize Faces from a Given Image](#recognize-faces-from-a-given-image)
@@ -59,6 +60,7 @@ curl -X POST "http://localhost:8000/api/v1/recognition/subjects" \
 -H "x-api-key: <service_api_key>" \
 -d '{"subject": "<subject_name>"}'
 ```
+
 | Element      | Description | Type   | Required | Notes                                                                         |
 |--------------|-------------|--------|----------|-------------------------------------------------------------------------------|
 | Content-Type | header      | string | required | application/json                                                              |
@@ -201,7 +203,7 @@ One subject example is enough for face recognition, the accuracy will be high en
 This creates an example of the subject by saving images. You can add as many images as you want to train the system. Image should 
 contain only one face.
 
-```http request
+```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
@@ -233,16 +235,17 @@ Response body on success:
 
 To retrieve a list of subjects saved in a Face Collection:
 
-```http request
-curl -X GET "http://localhost:8000/api/v1/recognition/faces?page=<page>&size=<size>" \
+```shell
+curl -X GET "http://localhost:8000/api/v1/recognition/faces?page=<page>&size=<size>&subject=<subject>" \
 -H "x-api-key: <service_api_key>" \
 ```
 
-| Element   | Description | Type    | Required | Notes                                                                                                |
-|-----------|-------------|---------|----------|------------------------------------------------------------------------------------------------------|
-| x-api-key | header      | string  | required | api key of the Face recognition service, created by the user                                         |
-| page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. Since 0.6 version |
-| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. Since 0.6 version        |
+| Element   | Description | Type    | Required | Notes                                                                                                      |
+|-----------|-------------|---------|----------|------------------------------------------------------------------------------------------------------------|
+| x-api-key | header      | string  | required | api key of the Face recognition service, created by the user                                               |
+| page      | param       | integer | optional | page number of examples to return. Can be used for pagination. Default value is 0. Since 0.6 version       |
+| size      | param       | integer | optional | faces on page (page size). Can be used for pagination. Default value is 20. Since 0.6 version              |
+| subject   | param       | string  | optional | what subject examples endpoint should return. If empty, return examples for all subjects. Since 1.0 version|
 
 Response body on success:
 
@@ -265,7 +268,7 @@ Response body on success:
 | Element        | Type    | Description                                                       |
 |----------------|---------|-------------------------------------------------------------------|
 | face.image_id  | UUID    | UUID of the face                                                  |
-| fase.subject   | string  | <subject> of the person, whose picture was saved for this api key |
+| faсe.subject   | string  | <subject> of the person, whose picture was saved for this api key |
 | page_number    | integer | page number                                                       |
 | page_size      | integer | **requested** page size                                           |
 | total_pages    | integer | total pages                                                       |
@@ -276,7 +279,7 @@ Response body on success:
 
 To delete all image examples of the <subject>:
 
-```http request
+```shell
 curl -X DELETE "http://localhost:8000/api/v1/recognition/faces?subject=<subject>" \
 -H "x-api-key: <service_api_key>"
 ```
@@ -303,7 +306,7 @@ Response body on success:
 
 Endpoint to delete an image by ID. If no image found by id - 404.
 
-```http request
+```shell
 curl -X DELETE "http://localhost:8000/api/v1/recognition/faces/<image_id>" \
 -H "x-api-key: <service_api_key>"
 ```
@@ -326,13 +329,47 @@ Response body on success:
 | image_id | UUID   | UUID of the removed face                                          |
 | subject  | string | <subject> of the person, whose picture was saved for this api key |
 
+  
+### Delete Multiple Examples
+  ```since 1.0 version```
+  
+To delete several subject examples:  
+  ```shell
+curl -X POST "http://localhost:8000/api/v1/recognition/faces/delete" \
+-H "Content-Type: application/json" \
+-H "x-api-key: <service_api_key>" \
+-d '["<image_id1>","<image_id2>", ..., "<image_idN>"]'
+```
+
+| Element         | Description | Type   | Required | Notes                                                        |
+|-----------------|-------------|--------|----------|--------------------------------------------------------------|
+| service_api_key | header      | string | required | api key of the Face recognition service, created by the user |
+| image_id        | variable    | UUID   | required | UUID of the removing face                                    |
+  
+
+  
+Response body on success:
+``` 
+{
+  "image_id": <image_id>,
+  "subject": <subject>
+}
+``` 
+
+| Element         | Description                                               | Type   | 
+|-----------------|-----------------------------------------------------------|--------|
+| image_id        | UUID of the removed face                                  | UUID   | 
+| subject         | of the person, whose picture was saved for this api key   | string | 
+  
+If some image ids are not exists, they will be ignored
+  
 
 ### Direct Download an Image example of the Subject by ID
 ```since 0.6 version```
 
 You can paste this URL into the <img> html tag to show the image.
 
-```http request
+```shell
 curl -X GET "http://localhost:8000/api/v1/static/<service_api_key>/images/<image_id>"
 ```
 
@@ -349,7 +386,7 @@ Response body is binary image. Empty bytes if image not found.
 
 To download an image example of the Subject by ID:
 
-```http request
+```shell
 curl -X GET "http://localhost:8000/api/v1/recognition/faces/<image_id>/img"
 -H "x-api-key: <service_api_key>"
 ```
@@ -366,7 +403,7 @@ Response body is binary image. Empty bytes if image not found.
 
 To recognize faces from the uploaded image:
 
-```http request
+```shell
 curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
@@ -452,7 +489,7 @@ Response body on success:
 ### Verify Faces from a Given Image
 
 To compare faces from the uploaded images with the face in saved image ID:
-```http request
+```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/faces/<image_id>/verify?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
@@ -536,7 +573,7 @@ Response body on success:
 
 To detect faces from the uploaded image:
 
-```http request
+```shell
 curl  -X POST "http://localhost:8000/api/v1/detection/detect?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
@@ -615,7 +652,7 @@ Response body on success:
 ## Face Verification Service
 
 To compare faces from given two images:
-```http request
+```shell
 curl  -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: multipart/form-data" \
 -H "x-api-key: <service_api_key>" \
@@ -742,7 +779,7 @@ The name of the JSON parameter coincides with the name of the `multipart/form-da
 ### Add an Example of a Subject, Base64
 Full description [here](#add-an-example-of-a-subject).
 
-```http request
+```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&det_prob_threshold=<det_prob_threshold>" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>" \
@@ -752,7 +789,7 @@ curl -X POST "http://localhost:8000/api/v1/recognition/faces?subject=<subject>&d
 ### Recognize Faces from a Given Image, Base64
 Full description [here](#recognize-faces-from-a-given-image).
 
-```http request
+```shell
 curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>" \
@@ -762,7 +799,7 @@ curl  -X POST "http://localhost:8000/api/v1/recognition/recognize?limit=<limit>&
 ### Verify Faces from a Given Image, Base64
 Full description [here](#verify-faces-from-a-given-image).
 
-```http request
+```shell
 curl -X POST "http://localhost:8000/api/v1/recognition/faces/<image_id>/verify?
 limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: application/json" \
@@ -773,7 +810,7 @@ limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins
 ### Face Detection Service, Base64
 Full description [here](#face-detection-service).
 
-```http request
+```shell
 curl  -X POST "http://localhost:8000/api/v1/detection/detect?limit=<limit>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>" \
@@ -783,7 +820,7 @@ curl  -X POST "http://localhost:8000/api/v1/detection/detect?limit=<limit>&det_p
 ### Face Verification Service, Base64
 Full description [here](#face-verification-service).
 
-```http request
+```shell
 curl -X POST "http://localhost:8000/api/v1/verification/verify?limit=<limit>&prediction_count=<prediction_count>&det_prob_threshold=<det_prob_threshold>&face_plugins=<face_plugins>&status=<status>" \
 -H "Content-Type: application/json" \
 -H "x-api-key: <service_api_key>" \

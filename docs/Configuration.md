@@ -26,7 +26,7 @@ through them and set up CompreFace accordingly
     rfc2822. Optional, if not set, then `email_username` is used instead
 -   `save_images_to_db` - should the CompreFace save photos to the
     database. Be careful, [migrations](Face-data-migration.md) could be
-    run only if this value is `true`
+    run only if this value is `true`. Doesn't work in 0.6.0 and 0.6.1 version, please use 0.5.1 version or >0.6.1 version instead
 -   `compreface_api_java_options` - java options of compreface-api
     container
 -   `compreface_admin_java_options` - java options of compreface-admin

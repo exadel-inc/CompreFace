@@ -25,9 +25,13 @@ export class CollectionManagerSubjectLeftComponent {
   @Input() subjectsList: string[];
   @Input() currentSubject: string;
   @Input() isPending: boolean;
+  @Input() isCollectionOnHold: boolean;
   @Input() set apiKey(value: string) {
     if (!!value) this.initApiKey.emit(value);
   }
+
+  @Output() deleteSubject = new EventEmitter<string>();
+  @Output() editSubject = new EventEmitter<string>();
   @Output() addSubject = new EventEmitter<void>();
   @Output() selectedSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();

@@ -40,23 +40,17 @@ export class CollectionManagerSubjectRightComponent implements OnChanges {
   }
   @Input() collectionItems: CollectionItem[];
   @Input() mode = SubjectModeEnum.Default;
-  @Input() selectedIds: string[];
 
-  @Output() deleteSubject = new EventEmitter<string>();
-  @Output() editSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();
   @Output() readFiles = new EventEmitter<File[]>();
   @Output() deleteItem = new EventEmitter<CollectionItem>();
   @Output() cancelUploadItem = new EventEmitter<CollectionItem>();
-  @Output() setMode = new EventEmitter<SubjectModeEnum>();
-  @Output() deleteSelectedExamples = new EventEmitter<string[]>();
   @Output() selectExample = new EventEmitter<CollectionItem>();
   @Output() loadMore = new EventEmitter<CollectionItem>();
   @Output() restartUploading = new EventEmitter();
 
   ngOnChanges(changes: SimpleChanges) {
     const change = changes['collectionItems'];
-
     if (change && change['currentValue'] !== change['previousValue']) {
       const collectionOnHold = this.collectionItems.filter(item => item.status === CircleLoadingProgressEnum.OnHold);
 
