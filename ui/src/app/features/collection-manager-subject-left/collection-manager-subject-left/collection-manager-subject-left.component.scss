@@ -59,13 +59,10 @@
       }
 
       .avatar {
+        cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        .name {
-          cursor: pointer;
-        }
 
         .actions {
           display: flex;

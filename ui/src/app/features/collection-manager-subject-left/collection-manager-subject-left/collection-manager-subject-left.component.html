@@ -19,14 +19,14 @@
       <p class="label">{{ 'manage_collection.left_side.name' | translate }}</p>
       <ul class="select">
         <li *ngFor="let subject of subjectsList | subjectFilter: search" class="option" [attr.selected]="subject === currentSubject">
-          <div class="avatar">
-            <div class="name" (click)="selectedSubject.emit(subject)">{{ subject }}</div>
+          <div class="avatar" (click)="selectedSubject.emit(subject)">
+            <span class="name">{{ subject }}</span>
 
             <div class="actions">
               <button
                 mat-icon-button
                 class="control-button"
-                (click)="deleteSubject.emit(subject)"
+                (click)="deleteSubject.emit(subject); $event.stopPropagation()"
                 [disabled]="isCollectionOnHold && currentSubject === subject"
               >
                 <mat-icon svgIcon="trash" class="control-icon"></mat-icon>
@@ -35,7 +35,7 @@
               <button
                 mat-icon-button
                 class="control-button"
-                (click)="editSubject.emit(subject)"
+                (click)="editSubject.emit(subject); $event.stopPropagation()"
                 [disabled]="isCollectionOnHold && currentSubject === subject"
               >
                 <mat-icon svgIcon="edit" class="control-icon"></mat-icon>
