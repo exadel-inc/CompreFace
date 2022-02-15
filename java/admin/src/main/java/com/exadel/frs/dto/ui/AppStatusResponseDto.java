@@ -16,9 +16,10 @@
 
 package com.exadel.frs.dto.ui;
 
+import com.exadel.frs.commonservice.enums.AppStatus;
 import lombok.Data;
 
 @Data
 public class AppStatusResponseDto {
-    private Boolean status;
+    private AppStatus status;
 }
