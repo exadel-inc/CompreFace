@@ -27,7 +27,6 @@
                 mat-icon-button
                 class="control-button"
                 (click)="deleteSubject.emit(subject)"
-                [title]="'manage_collection.right_side.control_button_delete_title' | translate"
                 [disabled]="isCollectionOnHold && currentSubject === subject"
               >
                 <mat-icon svgIcon="trash" class="control-icon"></mat-icon>
@@ -37,7 +36,6 @@
                 mat-icon-button
                 class="control-button"
                 (click)="editSubject.emit(subject)"
-                [title]="'manage_collection.right_side.control_button_edit_title' | translate"
                 [disabled]="isCollectionOnHold && currentSubject === subject"
               >
                 <mat-icon svgIcon="edit" class="control-icon"></mat-icon>
