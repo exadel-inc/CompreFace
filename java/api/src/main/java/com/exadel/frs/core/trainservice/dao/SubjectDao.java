@@ -182,22 +182,14 @@ public class SubjectDao {
     }
 
     private Embedding saveEmbeddingInfo(Subject subject, EmbeddingInfo embeddingInfo) {
-        Img img = null;
-        if (embeddingInfo.getSource() != null) {
-            img = new Img();
-            img.setContent(embeddingInfo.getSource());
-        }
-
-        boolean isSavingImageEnabled = imageProperties.isSaveImagesToDB();
-        if (img != null && isSavingImageEnabled) {
-            imgRepository.save(img);
-        }
-
         var embedding = new Embedding();
         embedding.setSubject(subject);
         embedding.setEmbedding(embeddingInfo.getEmbedding());
         embedding.setCalculator(embeddingInfo.getCalculator());
-        if (isSavingImageEnabled) {
+        if (embeddingInfo.getSource() != null || imageProperties.isSaveImagesToDB()) {
+            Img img = new Img();
+            img.setContent(embeddingInfo.getSource());
+            imgRepository.save(img);
             embedding.setImg(img);
         }
 
