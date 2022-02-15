@@ -73,16 +73,17 @@
 
     &_subjects-list {
       grid-area: subjects-list;
-      max-height: 500px;
+      max-height: 90%;
       padding-right: 1.5rem;
       border-right: 1px solid grey;
     }
 
     &_profile {
+      overflow-y: hidden;
       grid-area: profile;
       margin-left: 1.5rem;
       min-width: 100%;
-      max-height: 500px;
+      max-height: 90%;
     }
   }
 }

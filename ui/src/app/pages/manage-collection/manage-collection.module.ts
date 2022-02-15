@@ -21,6 +21,7 @@ import { RouterModule } from '@angular/router';
 
 import { BreadcrumbsContainerModule } from '../../features/breadcrumbs.container/breadcrumbs.container.module';
 import { ManageCollectionPageService } from './manage-collection.service';
+import { TranslateModule } from '@ngx-translate/core';
 import { CollectionManagerModule } from 'src/app/features/collection-manager/collection-manager.module';
 
 @NgModule({
@@ -36,6 +37,7 @@ import { CollectionManagerModule } from 'src/app/features/collection-manager/col
       },
     ]),
     BreadcrumbsContainerModule,
+    TranslateModule,
   ],
   providers: [ManageCollectionPageService],
 })

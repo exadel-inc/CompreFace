@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,19 +13,17 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-import { TablePipeModule } from 'src/app/ui/search-pipe/table-filter.module';
-import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
-import { ApplicationCollectionContainerComponent } from './application-collection-container.component';
-import { ApplicationCollectionComponent } from './application-collection/application-collection.component';
+import { SideMenuComponent } from './side-menu.component';
+import { MatListModule } from '@angular/material/list';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
-  declarations: [ApplicationCollectionContainerComponent, ApplicationCollectionComponent],
-  imports: [CommonModule, TranslateModule, TablePipeModule, MatIconModule, TruncateModule],
-  exports: [ApplicationCollectionContainerComponent, ApplicationCollectionComponent],
+  declarations: [SideMenuComponent],
+  exports: [SideMenuComponent],
+  imports: [CommonModule, MatIconModule, MatListModule, MatExpansionModule, TranslateModule],
 })
-export class ApplicationCollectionContainerModule {}
+export class SideMenuModule {}

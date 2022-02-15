@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Application } from 'src/app/data/interfaces/application';
 
 @Component({
@@ -23,7 +23,13 @@ import { Application } from 'src/app/data/interfaces/application';
   styleUrls: ['./application-collection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApplicationCollectionComponent {
+export class ApplicationCollectionComponent implements OnInit {
   @Output() selectApp = new EventEmitter();
   @Input() element: Application;
+
+  fullName: string;
+
+  ngOnInit(): void {
+    this.fullName = this.element.owner.firstName + ' ' + this.element.owner.lastName;
+  }
 }

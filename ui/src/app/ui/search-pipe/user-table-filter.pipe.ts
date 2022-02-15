@@ -27,9 +27,7 @@ export class UserTableFilterPipe implements PipeTransform {
 
     let result = Object.assign({}, value);
 
-    result = value.filter(row =>
-      (row.firstName.toLocaleLowerCase() + ' ' + row.lastName.toLocaleLowerCase()).includes(search.toLocaleLowerCase())
-    );
+    result = value.filter(row => row.fullName.toLocaleLowerCase().includes(search.toLocaleLowerCase()));
     return result;
   }
 }

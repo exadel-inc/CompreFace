@@ -123,7 +123,7 @@
     "delete_dialog": {
       "title": "Model Delete",
       "warn_information": "and all related data will be deleted.",
-      "confirmation_question": "Are you sure you want to delete {{ entityType }}? This action can not be undone. Type the {{ entityType }} to confirm."
+      "confirmation_question": "Are you sure you want to delete {{ entityType }}? This action can not be undone. Type the {{ entityType }} name to confirm."
     },
     "search": {
       "title": "Search service"
@@ -153,6 +153,7 @@
       "search_label": "Search Users",
       "user_name": "User Name",
       "users": "Users",
+      "roles": "Roles",
       "save": "Save"
     }
   },
@@ -173,6 +174,11 @@
     },
     "add_users_info": " You are now the only CompreFace user. Once other users sign up, they will appear in this list. You, as an owner, will be able to give them rights to manage system or individual applications.",
     "edit_user_info": "User info has been successfully updated"
+  },
+  "side_menu": {
+    "dashboard": "Dashboard",
+    "face_collection": "Face Collection",
+    "test": "Test"
   },
   "app_users": {
     "add_users_info": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
