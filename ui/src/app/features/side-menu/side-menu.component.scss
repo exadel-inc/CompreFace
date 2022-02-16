@@ -19,23 +19,33 @@
   background: #d8d8d8;
   color: grey;
   font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .toggle-list {
-    cursor: pointer;
     display: flex;
-    padding-top: 1rem;
-    width: 100%;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+    width: 50px;
     border: none;
     background: none;
 
     .mat-icon {
       display: flex;
       align-items: center;
-      margin: auto;
+      justify-content: center;
+      width: 100%;
+      text-align: center;
       font-size: 14px;
-      width: 80%;
-      color: grey;
-      border-bottom: 1px solid grey;
+      color: rgb(83, 83, 83);
+
+      &:hover {
+        border-radius: 5px;
+        background: rgb(180, 180, 180);
+      }
     }
   }
 
@@ -43,6 +53,11 @@
     cursor: pointer;
     padding: 0.5rem;
     display: flex;
+
+    &:hover {
+      background: rgb(180, 180, 180);
+      border-radius: 5px;
+    }
 
     .mat-icon {
       text-align: center;

@@ -17,6 +17,7 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Routes } from 'src/app/data/enums/routers-url.enum';
+import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 
 @Component({
   selector: 'side-menu',
@@ -28,6 +29,7 @@ export class SideMenuComponent {
   model: string;
   type: string;
   closed: boolean = true;
+  recognition: string = ServiceTypes.Recognition;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
@@ -56,6 +58,7 @@ export class SideMenuComponent {
       queryParams: {
         app: this.app,
         model: this.model,
+        type: this.type,
       },
     });
   }
