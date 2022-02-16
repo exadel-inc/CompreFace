@@ -47,11 +47,14 @@
 
   <div class="collection--grid">
     <div class="collection--grid_subjects-list">
-      <app-application-list-container [isCollectionOnHold]="isCollectionOnHold"></app-application-list-container>
+      <app-application-list-container
+        [isCollectionOnHold]="isCollectionOnHold"
+        (setDefaultMode)="setDefaultMode()"
+      ></app-application-list-container>
     </div>
 
     <div class="collection--grid_profile">
-      <app-application-right-container></app-application-right-container>
+      <app-application-right-container (setDefaultMode)="setDefaultMode()"></app-application-right-container>
     </div>
   </div>
 </mat-card>
