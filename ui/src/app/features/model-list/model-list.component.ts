@@ -133,6 +133,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
       queryParams: {
         app: this.modelListFacade.selectedApplicationId,
         model: model.id,
+        type: model.type,
       },
     });
   }

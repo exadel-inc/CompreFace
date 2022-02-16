@@ -15,36 +15,37 @@
   -->
 
 <div *ngIf="model" class="menu" [ngStyle]="{ width: closed ? '55px' : '200px' }">
-  <button mat-icon-button class="toggle-list" (click)="closed = !closed">
-    <mat-icon *ngIf="closed; else opened"> keyboard_double_arrow_right </mat-icon>
-    <ng-template #opened>
-      <mat-icon style="width: 90%"> keyboard_double_arrow_left </mat-icon>
-    </ng-template>
-  </button>
   <mat-list>
-    <mat-nav-list>
+    <mat-nav-list (click)="onDashBoard()">
       <mat-icon> bar_chart </mat-icon>
-      <a mat-nav-list (click)="onDashBoard()">
+      <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.dashboard' | translate }}
         </span>
       </a>
     </mat-nav-list>
-    <mat-nav-list>
+    <mat-nav-list (click)="onTest()">
       <mat-icon>play_circle</mat-icon>
-      <a mat-nav-list (click)="onTest()">
+      <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.test' | translate }}
         </span>
       </a>
     </mat-nav-list>
-    <mat-nav-list>
+    <mat-nav-list (click)="onManageCollection()" *ngIf="type === recognition">
       <mat-icon svgIcon="body-scan"></mat-icon>
-      <a mat-nav-list (click)="onManageCollection()">
+      <a mat-nav-list>
         <span *ngIf="!closed">
           {{ 'side_menu.face_collection' | translate }}
         </span>
       </a>
     </mat-nav-list>
   </mat-list>
+
+  <button mat-icon-button class="toggle-list" (click)="closed = !closed">
+    <mat-icon *ngIf="closed; else opened"> keyboard_double_arrow_right </mat-icon>
+    <ng-template #opened>
+      <mat-icon> keyboard_double_arrow_left </mat-icon>
+    </ng-template>
+  </button>
 </div>
