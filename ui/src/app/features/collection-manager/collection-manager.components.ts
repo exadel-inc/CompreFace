@@ -17,7 +17,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
@@ -35,8 +35,11 @@ export class CollectionManagerComponent implements OnInit, OnDestroy {
   subs: Subscription;
   isCollectionOnHold: boolean;
   selectedIds: string[];
+  currentModelName$: Observable<string>;
 
-  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {}
+  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {
+    this.currentModelName$ = this.collectionRightFacade.currentModelName$;
+  }
 
   ngOnInit(): void {
     this.subs = this.collectionRightFacade.collectionItems$

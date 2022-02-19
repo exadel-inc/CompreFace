@@ -15,6 +15,14 @@
  */
 @import 'media.scss';
 
+.title {
+  color: rgb(71, 71, 71);
+  padding-bottom: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  border-bottom: 1px solid grey;
+}
+
 .collection {
   height: 90%;
   background: #ededed;
