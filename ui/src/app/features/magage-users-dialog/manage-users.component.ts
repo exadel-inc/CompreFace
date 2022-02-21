@@ -99,8 +99,13 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
 
     const owner = usersCollection.find(user => user.role === Role.Owner);
 
-    const administrators = usersCollection.filter(user => user.role === Role.Administrator);
-    const users = usersCollection.filter(user => user.role === Role.User);
+    const administrators = usersCollection
+      .filter(user => user.role === Role.Administrator)
+      .sort((user, next) => (user.fullName > next.fullName ? 1 : user.fullName > next.fullName ? -1 : 0));
+
+    const users = usersCollection
+      .filter(user => user.role === Role.User)
+      .sort((user, next) => (user.fullName > next.fullName ? 1 : user.fullName > next.fullName ? -1 : 0));
 
     this.collection = [owner, ...administrators, ...users];
   }
