@@ -14,7 +14,7 @@
   ~ permissions and limitations under the License.
   -->
 
-<table class="table" *ngIf="!isLoading" mat-table [dataSource]="data" fixedLayout="true">
+<table class="table" *ngIf="!isLoading" mat-table [dataSource]="data | modelSort" fixedLayout="true">
   <caption>
     {{
       'models.caption' | translate
