@@ -3,7 +3,8 @@ cached-property==1.5.2
 colour==0.1.5
 flasgger==0.9.5
 Flask==1.1.2
-gdown~=3.12
+itsdangerous==2.0.1 # itsdangerous is a Flask dependency, update it with Flask
+gdown~=4.3.1
 Werkzeug==1.0.1
 PyYAML==5.4.1
 
