@@ -2,6 +2,11 @@ databaseChangeLog:
   - changeSet:
       id: add-detection-verification-services
       author: Shreyansh Sancheti
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 1
+            sql: select count(1) from app where id=0
       changes:
         - insert:
             tableName: model
