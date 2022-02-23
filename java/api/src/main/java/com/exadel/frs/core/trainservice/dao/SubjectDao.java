@@ -162,8 +162,8 @@ public class SubjectDao {
                                                  final @Nullable EmbeddingInfo embeddingInfo) {
 
         var subject = subjectRepository
-                .findByApiKeyAndSubjectNameIgnoreCase(apiKey, subjectName)  // subject already exists
-                .orElseGet(() -> saveSubject(apiKey, subjectName));         // add new subject
+            .findByApiKeyAndSubjectNameIgnoreCase(apiKey, subjectName)  // subject already exists
+            .orElseGet(() -> saveSubject(apiKey, subjectName));         // add new subject
 
         Embedding embedding = null;
         if (embeddingInfo != null) {
