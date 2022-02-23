@@ -186,7 +186,7 @@ public class SubjectDao {
         embedding.setSubject(subject);
         embedding.setEmbedding(embeddingInfo.getEmbedding());
         embedding.setCalculator(embeddingInfo.getCalculator());
-        if (embeddingInfo.getSource() != null || imageProperties.isSaveImagesToDB()) {
+        if (embeddingInfo.getSource() != null && imageProperties.isSaveImagesToDB()) {
             Img img = new Img();
             img.setContent(embeddingInfo.getSource());
             imgRepository.save(img);
