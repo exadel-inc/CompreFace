@@ -41,6 +41,7 @@ import { MatInputModule } from '@angular/material/input';
     MatButtonModule,
     MatTableModule,
     MatIconModule,
+    MatTooltipModule,
     MatMenuModule,
     TruncateModule,
     MatTooltipModule,

@@ -13,17 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import {
-  ChangeDetectionStrategy,
-  Component,
-  EventEmitter,
-  HostBinding,
-  Input,
-  OnInit,
-  Output,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 
 @Component({
@@ -32,7 +22,7 @@ import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-pro
   styleUrls: ['./circle-loading-progress.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CircleLoadingProgressComponent {
+export class CircleLoadingProgressComponent implements OnChanges {
   @Input() state = CircleLoadingProgressEnum.InProgress;
   @Input() error: string;
 

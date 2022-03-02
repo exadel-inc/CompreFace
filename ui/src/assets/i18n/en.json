@@ -4,6 +4,8 @@
       "change": "Change",
       "create": "Create",
       "clone": "Clone",
+      "copy": "Copy",
+      "test": "Test",
       "cancel": "Cancel",
       "save": "Save",
       "yes": "Yes",
@@ -68,6 +70,7 @@
     "first_steps_title": "Applications",
     "name": "App Name",
     "owner": "Owner",
+    "no_application_msg": "You have no applications. Create a new application or contact your administrator to be added to an existing one.",
     "first_steps_info": "The first step in using CompreFace is to create an application. An application is where you can\n create and manage face recognition services.",
     "create": {
       "title": "Create application",
@@ -78,6 +81,7 @@
       "title": "Application",
       "edit": "Edit",
       "delete": "Delete",
+      "owner": "Owner",
       "delete_dialog": {
         "title": "Application Delete",
         "warn_information": "and all related data will be deleted",
@@ -119,7 +123,7 @@
     "delete_dialog": {
       "title": "Model Delete",
       "warn_information": "and all related data will be deleted.",
-      "confirmation_question": "Are you sure?"
+      "confirmation_question": "Are you sure you want to delete {{ entityType }}? This action can not be undone. Type the {{ entityType }} name to confirm."
     },
     "search": {
       "title": "Search service"
@@ -130,8 +134,12 @@
     "caption": "Table of users",
     "title": "Users",
     "user": "User",
+    "delete": "Delete User",
     "role": "Role",
     "user_role": "User Role",
+    "confirmation_dialog": {
+      "delete_confirmation_question": "Are you sure you want to delete this user? This action can not be undone."
+    },
     "search": {
       "org_title": "Search user",
       "app_title": "Search user",
@@ -139,6 +147,14 @@
     },
     "create": {
       "add_button": "Add User"
+    },
+    "manage": {
+      "manage_users_title": "Manage Users",
+      "search_label": "Search Users",
+      "user_name": "User Name",
+      "users": "Users",
+      "roles": "Roles",
+      "save": "Save"
     }
   },
   "org_users": {
@@ -159,6 +175,11 @@
     "add_users_info": " You are now the only CompreFace user. Once other users sign up, they will appear in this list. You, as an owner, will be able to give them rights to manage system or individual applications.",
     "edit_user_info": "User info has been successfully updated"
   },
+  "side_menu": {
+    "dashboard": "Dashboard",
+    "face_collection": "Face Collection",
+    "test": "Test"
+  },
   "app_users": {
     "add_users_info": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",
     "add_user_dialog": {
@@ -173,7 +194,7 @@
     "home": "Home"
   },
   "dnd": {
-    "title": "Click here or Drag and drop your {{typeImage}} here",
+    "title": "Click here or Drag and drop your {{typeImage}}",
     "label": "Available images extensions: jpeg, jpg, png, webp \nMax images size = 5Mb (5242880bytes)",
     "test": "Test model",
     "add": "Add to model",
@@ -204,18 +225,23 @@
     "incorrect_credentials": "E-mail or Password is incorrect.",
     "already_in_use": "This e-mail is already in use.",
     "new_account_confirm_email": "You have created new account, please confirm your email",
-    "new_account_login": "You have created new account, please login into your account",
+    "new_account_login": "You have successfully created new account",
     "change_password_success": "Password has successfully been changed"
   },
   "application_user_list": {
     "invitation_sent": "Invitation was sent to {{userEmail}}"
   },
   "manage_collection": {
+    "header": "Subjects",
+    "bulk_select": "Bulk Select",
+    "cancel_select": "Cancel Select",
+    "delete": "Delete Selected",
     "left_side": {
       "add_subject": "Add Subject",
       "search": "Search...",
       "modal_title": "Subject",
-      "subject_name": "Subject Name"
+      "subject_name": "Subject Name",
+      "name": "A Name"
     },
     "right_side": {
       "title": "Join Subjects",

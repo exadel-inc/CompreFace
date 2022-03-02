@@ -15,13 +15,21 @@
   -->
 
 <div class="app-search">
-  <ng-container *ngIf="title">
-    <div class="app-search--title mat-title">{{ title }}</div>
+  <ng-container *ngIf="app; else appTitle">
+    <div class="app-search--title mat-title">{{ app.name | truncate: 20 }} {{ title }}</div>
   </ng-container>
-  <div class="app-search--form">
+  <ng-template #appTitle>
+    <div class="app-search--title mat-title">{{ title }}</div>
+  </ng-template>
+  <div class="app-search--form" *ngIf="!hideContent">
     <input class="app-search--form_input mat-body-2" type="text" (input)="onInputChange($event)" [placeholder]="searchPlaceholder" />
     <mat-icon svgIcon="search"></mat-icon>
   </div>
+  <ng-container *ngIf="!hideContent && title && currentRole as userRole">
+    <button class="app-search--btn_user_list" type="button" *ngIf="userRole !== requiredRole" (click)="onOpenUserList()">
+      <mat-icon>face</mat-icon>
+    </button>
+  </ng-container>
   <ng-container *ngIf="currentRole as userRole">
     <div class="app-search--btn">
       <button mat-flat-button *ngIf="userRole !== requiredRole" (click)="onButtonChange($event)">

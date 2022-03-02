@@ -18,6 +18,8 @@
   <app-search-table
     [currentRole]="userRole$ | async"
     [requiredRole]="roleEnum.User"
+    [app]="currentApp$ | async"
+    [hideContent]="true"
     (inputSearch)="onSearch($event)"
     (modalWindow)="onInviteUser()"
     title="{{ 'users.title' | translate }}"

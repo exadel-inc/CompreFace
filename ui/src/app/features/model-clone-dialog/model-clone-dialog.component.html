@@ -29,6 +29,6 @@
     {{ 'common.capital.clone' | translate }}
   </button>
 </div>
-<button class="button-cross" mat-icon-button [mat-dialog-close]="initialName">
+<button class="button-cross" mat-icon-button (click)="dialogRef.close()">
   <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
 </button>

@@ -28,18 +28,8 @@ export class ApplicationHeaderComponent {
   @Input() app: Application;
   @Input() isLoading: boolean;
   @Input() userRole: string;
-  @Output() rename = new EventEmitter();
-  @Output() delete = new EventEmitter();
 
   maxHeaderLinkLength = 25;
-
-  onRename(name: string): void {
-    this.rename.emit(name);
-  }
-
-  onDelete(name: string): void {
-    this.delete.emit(name);
-  }
 
   // Users who can edit application
   checkUserRole(role: string): boolean {

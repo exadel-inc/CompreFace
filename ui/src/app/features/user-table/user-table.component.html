@@ -1,4 +1,4 @@
-<!--
+<!-- 
   ~ Copyright (c) 2020 the original author or authors
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,24 +21,22 @@
     }}
   </caption>
 
-  <!-- Position Column -->
   <ng-container matColumnDef="user">
-    <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.user' | translate }}</th>
     <td mat-cell *matCellDef="let element">
       <div class="user--name mat-subheading-1">{{ element.firstName }} {{ element.lastName }}</div>
-      <div class="user--role mat-body-2">{{ element.role | titlecase }}</div>
+    </td>
+  </ng-container>
+  <ng-container matColumnDef="email">
+    <td mat-cell *matCellDef="let element">
+      <div class="user--email">{{ element.email }}</div>
     </td>
   </ng-container>
   <ng-container matColumnDef="role">
-    <th mat-header-cell *matHeaderCellDef scope="col">{{ 'users.role' | translate }}</th>
     <td mat-cell *matCellDef="let element">
-      <button mat-icon-button>
-        <mat-icon svgIcon="edit" (click)="onEditAppRole(element)"></mat-icon>
-      </button>
+      <div class="user--role mat-body-2">{{ element.role | titlecase }}</div>
     </td>
   </ng-container>
   <ng-container matColumnDef="delete">
-    <th mat-header-cell *matHeaderCellDef scope="col"></th>
     <td mat-cell *matCellDef="let element">
       <ng-container
         *ngIf="
@@ -50,23 +48,20 @@
         "
       ></ng-container>
       <ng-template #active>
-        <button mat-icon-button>
-          <mat-icon svgIcon="trash" (click)="delete(element)"></mat-icon>
-        </button>
+        <div class="actions">
+          <button mat-icon-button>
+            <mat-icon svgIcon="trash" (click)="delete(element)"></mat-icon>
+          </button>
+        </div>
       </ng-template>
       <ng-template #notActive>
-        <button mat-icon-button disabled>
-          <mat-icon svgIcon="trash"></mat-icon>
-        </button>
+        <div class="actions">
+          <button mat-icon-button disabled>
+            <mat-icon svgIcon="trash"></mat-icon>
+          </button>
+        </div>
       </ng-template>
     </td>
   </ng-container>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-<ng-container *ngIf="(data.length < 1 || (data.length <= 1 && searchText == '')) && createMessage && !isLoading">
-  <div class="create-new-message">
-    <mat-icon svgIcon="info_new" inline="true"></mat-icon>
-    <p class="mat-caption">{{ message }}</p>
-  </div>
-</ng-container>
