@@ -16,6 +16,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 import { addSubject, deleteSubject, editSubject, loadSubjects, setSelectedSubject } from '../../store/manage-collectiom/action';
 import { selectAddSubjectPending, selectCollectionSubject, selectCollectionSubjects } from '../../store/manage-collectiom/selectors';

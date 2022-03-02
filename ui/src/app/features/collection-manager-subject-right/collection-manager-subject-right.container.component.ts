@@ -16,8 +16,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
 import { CollectionRightFacade } from './collection-manager-right-facade';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
@@ -56,7 +54,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
 
   private apiKey: string;
 
-  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {}
+  constructor(private collectionRightFacade: CollectionRightFacade) {}
 
   ngOnInit(): void {
     this.subject$ = this.collectionRightFacade.subject$;

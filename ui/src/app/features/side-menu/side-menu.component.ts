@@ -40,7 +40,13 @@ export class SideMenuComponent {
   }
 
   onDashBoard(): void {
-    this.router.navigate([Routes.Dashboard]);
+    this.router.navigate([Routes.Dashboard], {
+      queryParams: {
+        app: this.app,
+        model: this.model,
+        type: this.type,
+      },
+    });
   }
 
   onTest(): void {

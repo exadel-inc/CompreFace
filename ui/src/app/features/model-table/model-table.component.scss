@@ -22,7 +22,12 @@ caption {
 }
 
 table {
+  height: 100%;
+  border: 1px solid red;
+  overflow: scroll;
+
   .mat-column-name {
+    cursor: pointer;
     width: 25%;
   }
 

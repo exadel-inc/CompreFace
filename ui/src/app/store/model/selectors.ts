@@ -15,7 +15,7 @@
  */
 
 import { EntityState } from '@ngrx/entity';
-import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { createFeatureSelector, createSelector, select } from '@ngrx/store';
 import { Model } from 'src/app/data/interfaces/model';
 
 import { modelAdapter, ModelEntityState } from './reducers';
@@ -28,19 +28,25 @@ const { selectAll } = modelAdapter.getSelectors();
 
 export const selectModels = createSelector(selectModelEntityState, selectAll);
 
-export const selectPendingModel = createSelector(selectModelEntityState, (state: ModelEntityState) => state.isPending);
+export const selectPendingModel = createSelector(selectModelEntityState, (state: ModelEntityState) => {
+  console.log(state);
+  return state.isPending;
+});
 
-export const selectCurrentModelId = createSelector(selectModelEntityState, (state: ModelEntityState) => state.selectedModelId);
+export const selectCurrentModelId = createSelector(selectModelEntityState, (state: ModelEntityState) => {
+  console.log(state);
+  return state.selectedModelId;
+});
 
-export const selectCurrentModel = createSelector(selectModelEntityState, selectCurrentModelId, (models, selectedModelId) =>
-  models.entities ? models.entities[selectedModelId] : null
-);
+export const selectCurrentModel = createSelector(selectModelEntityState, selectCurrentModelId, (models, selectedModelId) => {
+  console.log(selectedModelId);
+  return models.entities ? models.entities[selectedModelId] : null;
+});
 
-export const selectCurrentApiKey = createSelector(
-  selectModelEntityState,
-  selectCurrentModel,
-  (models, selectedModel) => selectedModel?.apiKey
-);
+export const selectCurrentApiKey = createSelector(selectModelEntityState, selectCurrentModel, (models, selectedModel) => {
+  // console.log(selectedModel)
+  return selectedModel?.apiKey;
+});
 
 export const selectUserRole = createSelector(selectUserRollForSelectedApp, selectCurrentUserRole, (applicationRole, globalRole) =>
   globalRole !== Role.User ? globalRole : applicationRole

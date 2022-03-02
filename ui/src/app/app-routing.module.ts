@@ -56,6 +56,14 @@ const routes: Routes = [
     ],
   },
   {
+    path: 'dashboard',
+    component: MainLayoutComponent,
+    resolve: [UserInfoResolver],
+    children: [
+      { path: '', loadChildren: () => import('./pages/model-dashboard/model-dashboard.module').then(m => m.ModelDashboardModule) },
+    ],
+  },
+  {
     path: 'demo',
     component: DemoLayoutComponent,
     children: [{ path: '', loadChildren: () => import('./pages/demo/demo.module').then(m => m.DemoModule) }],

@@ -16,19 +16,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManageCollectionComponent } from './manage-collection.component';
-import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 
 import { BreadcrumbsContainerModule } from '../../features/breadcrumbs.container/breadcrumbs.container.module';
 import { ManageCollectionPageService } from './manage-collection.service';
-import { TranslateModule } from '@ngx-translate/core';
 import { CollectionManagerModule } from 'src/app/features/collection-manager/collection-manager.module';
 
 @NgModule({
   declarations: [ManageCollectionComponent],
   imports: [
     CommonModule,
-    MatCardModule,
     CollectionManagerModule,
     RouterModule.forChild([
       {
@@ -37,7 +34,6 @@ import { CollectionManagerModule } from 'src/app/features/collection-manager/col
       },
     ]),
     BreadcrumbsContainerModule,
-    TranslateModule,
   ],
   providers: [ManageCollectionPageService],
 })

@@ -41,7 +41,7 @@ import {
 } from '../../store/manage-collectiom/action';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 
 @Injectable()
 export class CollectionRightFacade {

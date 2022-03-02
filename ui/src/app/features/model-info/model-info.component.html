@@ -1,0 +1,61 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+
+<div class="service" *ngIf="currentModel">
+  <div class="service__header">
+    <p class="service__header--title">{{ 'model_info.service_name' | translate }}</p>
+    <p class="service__header--type">{{ currentModel.type | lowercase }}</p>
+  </div>
+
+  <div class="service__api-key">
+    <p class="service__api-key--label">{{ 'models.api_key' | translate }}</p>
+    <p class="service__api-key--content">{{ currentModel.apiKey }}</p>
+
+    <button mat-icon-button class="service__api-key--clone" [cdkCopyToClipboard]="currentModel.apiKey">
+      <mat-icon svgIcon="copy"></mat-icon>
+    </button>
+  </div>
+  <div class="service__container">
+    <div class="service__info">
+      <p class="service__info--title">{{ 'model_info.service_info' | translate }}</p>
+
+      <p class="service__info--label">{{ 'model_info.created_on' | translate }}</p>
+      <p class="service__info--date">2020-01-01</p>
+    </div>
+
+    <div class="service__collection">
+      <p class="service__collection--title">{{ 'side_menu.face_collection' | translate }}</p>
+
+      <div class="service__collection--container">
+        <div class="aside">
+          <span class="material-icons icon">image</span>
+          <div class="content">
+            <p class="content--title">{{ 'model_info.total_images' | translate }}</p>
+            <p class="content--value">3000</p>
+          </div>
+        </div>
+
+        <div class="aside">
+          <mat-icon class="icon" svgIcon="body-scan"> </mat-icon>
+          <div class="content">
+            <p class="content--title">{{ 'model_info.total_faces' | translate }}</p>
+            <p class="content--value">600</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
