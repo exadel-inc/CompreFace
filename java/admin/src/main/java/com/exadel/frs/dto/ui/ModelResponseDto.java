@@ -26,4 +26,6 @@ public class ModelResponseDto {
     private String name;
     private String apiKey;
     private ModelType type;
+    private Long subjectCount;
+    private Long imageCount;
 }
