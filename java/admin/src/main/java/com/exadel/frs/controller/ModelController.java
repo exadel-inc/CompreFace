@@ -58,10 +58,7 @@ public class ModelController {
             @ApiParam(value = "GUID of model to return", required = true, example = GUID_EXAMPLE)
             @PathVariable final String guid
     ) {
-        return modelMapper.toResponseDto(
-                modelService.getModel(appGuid, guid, SecurityUtils.getPrincipalId()),
-                appGuid
-        );
+        return modelService.getModelDto(appGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @GetMapping("/models")
@@ -70,10 +67,7 @@ public class ModelController {
             @ApiParam(value = "GUID of application", required = true, example = GUID_EXAMPLE)
             @PathVariable final String appGuid
     ) {
-        return modelMapper.toResponseDto(
-                modelService.getModels(appGuid, SecurityUtils.getPrincipalId()),
-                appGuid
-        );
+        return modelService.getModels(appGuid, SecurityUtils.getPrincipalId());
     }
 
     @ResponseStatus(CREATED)
@@ -155,7 +149,7 @@ public class ModelController {
     ) {
         modelService.regenerateApiKey(appGuid, guid, SecurityUtils.getPrincipalId());
 
-        return modelMapper.toResponseDto(modelService.getModel(appGuid, guid, SecurityUtils.getPrincipalId()), appGuid);
+        return modelService.getModelDto(appGuid, guid, SecurityUtils.getPrincipalId());
     }
 
     @DeleteMapping("/model/{guid}")
