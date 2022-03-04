@@ -116,7 +116,6 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(setSelectedSubject, (state, { subject }) => ({ ...state, subject })),
   on(resetSubjects, () => ({ ...initialState })),
   on(getSubjectExamples, state => ({ ...state, isCollectionPending: true })),
-
   on(getSubjectExamplesSuccess, (state, { items, apiKey }) => {
     const collectionCopy = [
       ...state.collection.filter(item => item.status !== CircleLoadingProgressEnum.Uploaded && item.subject === state.subject),

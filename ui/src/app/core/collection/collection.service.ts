@@ -41,10 +41,8 @@ export class CollectionService {
   }
 
   editSubject(editName: string, apiKey: string, subject: string): Observable<{ updated: boolean }> {
-    const urlEncoded = encodeURIComponent(subject);
-
     return this.http.put<{ updated: boolean }>(
-      `${environment.userApiUrl}recognition/subjects/${urlEncoded}`,
+      `${environment.userApiUrl}recognition/subjects/${subject}`,
       { subject: editName },
       {
         headers: { 'x-api-key': apiKey },
