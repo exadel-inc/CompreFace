@@ -45,9 +45,6 @@ import {
   getSubjectExamples,
   getSubjectExamplesSuccess,
   getSubjectExamplesFail,
-  getTotalImagesInfo,
-  getTotalImagesInfoSuccess,
-  getTotalImagesInfoFail,
   resetSubjectExamples,
   setSubjectMode,
   toggleExampleSelection,
@@ -118,15 +115,7 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
   on(loadSubjectsSuccess, (state, { subjects }) => ({ ...state, isPending: false, subjects })),
   on(setSelectedSubject, (state, { subject }) => ({ ...state, subject })),
   on(resetSubjects, () => ({ ...initialState })),
-  on(getSubjectExamples, getTotalImagesInfo, state => ({ ...state, isCollectionPending: true })),
-
-  on(getTotalImagesInfoSuccess, (state, action) => {
-    console.log(action);
-
-    console.log(state);
-
-    return { ...state, isCollectionPending: true };
-  }),
+  on(getSubjectExamples, state => ({ ...state, isCollectionPending: true })),
 
   on(getSubjectExamplesSuccess, (state, { items, apiKey }) => {
     const collectionCopy = [
@@ -180,7 +169,7 @@ const reducer: ActionReducer<CollectionEntityState> = createReducer(
     };
   }),
 
-  on(getSubjectExamplesFail, getTotalImagesInfoFail, state => ({ ...state, isCollectionPending: false })),
+  on(getSubjectExamplesFail, state => ({ ...state, isCollectionPending: false })),
 
   on(addFileToCollection, (state, { url, file, subject }) => {
     return {

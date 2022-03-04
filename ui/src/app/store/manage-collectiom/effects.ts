@@ -43,9 +43,6 @@ import {
   getSubjectExamplesFail,
   getSubjectExamplesSuccess,
   getSubjectMediaNextPage,
-  getTotalImagesInfo,
-  getTotalImagesInfoFail,
-  getTotalImagesInfoSuccess,
   initSelectedSubject,
   loadSubjects,
   loadSubjectsFail,
@@ -138,25 +135,10 @@ export class CollectionEffects {
   loadSubjectExamples$ = this.actions.pipe(
     ofType(getSubjectExamples),
     withLatestFrom(this.store.select(selectCurrentApiKey)),
-    tap(console.log),
-
     switchMap(([{ subject }, apiKey]) =>
       this.collectionService.getSubjectMedia(apiKey, subject).pipe(
         map(items => getSubjectExamplesSuccess({ items, apiKey })),
         catchError(error => of(getSubjectExamplesFail({ error })))
-      )
-    )
-  );
-
-  @Effect()
-  getTotalImages$ = this.actions.pipe(
-    ofType(getTotalImagesInfo),
-    withLatestFrom(this.store.select(selectCurrentApiKey)),
-    // tap(console.log),
-    switchMap(([, apiKey]) =>
-      this.collectionService.getTotalImagesInfo(apiKey).pipe(
-        map((total: number) => getTotalImagesInfoSuccess({ total })),
-        catchError(error => of(getTotalImagesInfoFail({ error })))
       )
     )
   );
@@ -312,7 +294,4 @@ export class CollectionEffects {
       )
     )
   );
-}
-function getTotalImages(getTotalImages: any): import('rxjs').OperatorFunction<import('@ngrx/store').Action, any> {
-  throw new Error('Function not implemented.');
 }

@@ -21,10 +21,6 @@ export const loadSubjects = createAction('[Collection] Load Subjects', props<{ a
 export const loadSubjectsSuccess = createAction('[Collection] Load Subjects Success', props<{ subjects: string[] }>());
 export const loadSubjectsFail = createAction('[Collection] Load Subjects Fail', props<{ error: any }>());
 
-export const getTotalImagesInfo = createAction('[Model Dashboard] Get Total Number Of Images');
-export const getTotalImagesInfoSuccess = createAction('[Model Dashboard] Get Total Number Of Images Succes', props<{ total: number }>());
-export const getTotalImagesInfoFail = createAction('[Model Dashboard] Get Total Number Of Images Fail', props<{ error: any }>());
-
 export const addSubject = createAction('[Collection] Add Subjects', props<{ name: string; apiKey: string }>());
 export const addSubjectSuccess = createAction('[Collection] Add Subjects Success', props<{ subject: string }>());
 export const addSubjectFail = createAction('[Collection] Add Subjects Fail', props<{ error: any }>());

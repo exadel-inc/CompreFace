@@ -33,7 +33,7 @@
       <p class="service__info--title">{{ 'model_info.service_info' | translate }}</p>
 
       <p class="service__info--label">{{ 'model_info.created_on' | translate }}</p>
-      <p class="service__info--date">2020-01-01</p>
+      <p class="service__info--date"></p>
     </div>
 
     <div class="service__collection">
@@ -44,7 +44,7 @@
           <span class="material-icons icon">image</span>
           <div class="content">
             <p class="content--title">{{ 'model_info.total_images' | translate }}</p>
-            <p class="content--value">3000</p>
+            <p class="content--value">{{ currentModel.imageCount }}</p>
           </div>
         </div>
 
@@ -52,7 +52,7 @@
           <mat-icon class="icon" svgIcon="body-scan"> </mat-icon>
           <div class="content">
             <p class="content--title">{{ 'model_info.total_faces' | translate }}</p>
-            <p class="content--value">600</p>
+            <p class="content--value">{{ currentModel.subjectCount }}</p>
           </div>
         </div>
       </div>

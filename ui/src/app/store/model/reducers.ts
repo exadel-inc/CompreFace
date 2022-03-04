@@ -56,10 +56,7 @@ const reducer: ActionReducer<ModelEntityState> = createReducer(
   on(createModelSuccess, cloneModelSuccess, (state, { model }) => modelAdapter.addOne(model, { ...state, isPending: false })),
   on(updateModelSuccess, (state, { model }) => modelAdapter.updateOne({ id: model.id, changes: model }, { ...state, isPending: false })),
   on(deleteModelSuccess, (state, { modelId }) => modelAdapter.removeOne(modelId, { ...state, isPending: false })),
-  on(setSelectedModelIdEntityAction, (state, { selectedModelId }) => {
-    console.log('from selected model');
-    return { ...state, selectedModelId };
-  })
+  on(setSelectedModelIdEntityAction, (state, { selectedModelId }) => ({ ...state, selectedModelId }))
 );
 
 export const modelReducer = (modelState: ModelEntityState, action: Action) => reducer(modelState, action);

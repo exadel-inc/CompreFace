@@ -54,7 +54,6 @@ export class ModelEffects {
     ofType(loadModels),
     switchMap(action =>
       this.modelService.getAll(action.applicationId).pipe(
-        // tap(s=>console.log('1111', s)),
         map(models => loadModelsSuccess({ models })),
         catchError(error => of(loadModelsFail({ error })))
       )
