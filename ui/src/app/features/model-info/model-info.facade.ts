@@ -17,19 +17,21 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { Model } from 'src/app/data/interfaces/model';
-import { loadModels } from 'src/app/store/model/action';
-import { selectModels } from 'src/app/store/model/selectors';
+import { loadModels, setSelectedModelIdEntityAction } from 'src/app/store/model/action';
+import { selectCurrentModel } from 'src/app/store/model/selectors';
 
 @Injectable()
 export class ModelInfoFacade {
-  currentModel$: Observable<Model[]>;
+  currentModel$: Observable<Model>;
 
   constructor(private store: Store<any>) {
-    this.currentModel$ = this.store.select(selectModels);
+    this.currentModel$ = this.store.select(selectCurrentModel).pipe(filter(model => !!model));
   }
 
-  loadTotalImagesInfo(applicationId): void {
+  loadTotalImagesInfo(applicationId: string, selectedModelId: string): void {
     this.store.dispatch(loadModels({ applicationId }));
+    this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId }));
   }
 }

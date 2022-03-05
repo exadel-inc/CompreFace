@@ -17,7 +17,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
 import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 import { Model } from 'src/app/data/interfaces/model';
 import { ModelInfoFacade } from './model-info.facade';
@@ -29,7 +28,7 @@ import { ModelInfoFacade } from './model-info.facade';
 })
 export class ModelInfoComponent implements OnInit, OnDestroy {
   currentModel: Model;
-  currentModelSubs: Subscription;
+  subs: Subscription;
   recognition = ServiceTypes.Recognition;
 
   constructor(private modelInfoFacade: ModelInfoFacade, private route: ActivatedRoute) {}
@@ -38,17 +37,11 @@ export class ModelInfoComponent implements OnInit, OnDestroy {
     const modelId = this.route.snapshot.queryParams.model;
     const app = this.route.snapshot.queryParams.app;
 
-    this.modelInfoFacade.loadTotalImagesInfo(app);
-    this.currentModelSubs = this.modelInfoFacade.currentModel$
-      .pipe(
-        filter(model => !!model),
-        map(models => models.find(model => model.id === modelId)),
-        tap(model => (this.currentModel = model))
-      )
-      .subscribe();
+    this.modelInfoFacade.loadTotalImagesInfo(app, modelId);
+    this.subs = this.modelInfoFacade.currentModel$.subscribe(model => (this.currentModel = model));
   }
 
   ngOnDestroy(): void {
-    this.currentModelSubs.unsubscribe();
+    this.subs.unsubscribe();
   }
 }
