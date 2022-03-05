@@ -18,6 +18,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map, tap } from 'rxjs/operators';
+import { ServiceTypes } from 'src/app/data/enums/service-types.enum';
 import { Model } from 'src/app/data/interfaces/model';
 import { ModelInfoFacade } from './model-info.facade';
 
@@ -29,6 +30,7 @@ import { ModelInfoFacade } from './model-info.facade';
 export class ModelInfoComponent implements OnInit, OnDestroy {
   currentModel: Model;
   currentModelSubs: Subscription;
+  recognition = ServiceTypes.Recognition;
 
   constructor(private modelInfoFacade: ModelInfoFacade, private route: ActivatedRoute) {}
 

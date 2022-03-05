@@ -77,7 +77,6 @@
   }
   &__info {
     padding: 1rem;
-    margin-right: 1rem;
     width: 50%;
     background: rgb(230, 230, 230);
     border-radius: 1rem;
@@ -104,6 +103,7 @@
     width: 50%;
     background: rgb(230, 230, 230);
     border-radius: 1rem;
+    margin-left: 1rem;
 
     &--container {
       display: flex;

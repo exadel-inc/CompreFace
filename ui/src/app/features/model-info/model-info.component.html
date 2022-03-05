@@ -29,14 +29,14 @@
     </button>
   </div>
   <div class="service__container">
-    <div class="service__info">
+    <div class="service__info" [ngStyle]="{ width: currentModel.type === recognition ? '50%' : '100%' }">
       <p class="service__info--title">{{ 'model_info.service_info' | translate }}</p>
 
       <p class="service__info--label">{{ 'model_info.created_on' | translate }}</p>
       <p class="service__info--date"></p>
     </div>
 
-    <div class="service__collection">
+    <div class="service__collection" *ngIf="currentModel.type === recognition">
       <p class="service__collection--title">{{ 'side_menu.face_collection' | translate }}</p>
 
       <div class="service__collection--container">
