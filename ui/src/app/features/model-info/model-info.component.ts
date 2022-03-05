@@ -37,7 +37,7 @@ export class ModelInfoComponent implements OnInit, OnDestroy {
     const modelId = this.route.snapshot.queryParams.model;
     const app = this.route.snapshot.queryParams.app;
 
-    this.modelInfoFacade.loadTotalImagesInfo(app, modelId);
+    this.modelInfoFacade.loadModels(app, modelId);
     this.subs = this.modelInfoFacade.currentModel$.subscribe(model => (this.currentModel = model));
   }
 

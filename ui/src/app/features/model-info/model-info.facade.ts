@@ -30,7 +30,7 @@ export class ModelInfoFacade {
     this.currentModel$ = this.store.select(selectCurrentModel).pipe(filter(model => !!model));
   }
 
-  loadTotalImagesInfo(applicationId: string, selectedModelId: string): void {
+  loadModels(applicationId: string, selectedModelId: string): void {
     this.store.dispatch(loadModels({ applicationId }));
     this.store.dispatch(setSelectedModelIdEntityAction({ selectedModelId }));
   }
