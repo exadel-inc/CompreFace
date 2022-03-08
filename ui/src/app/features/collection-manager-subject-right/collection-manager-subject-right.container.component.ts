@@ -13,11 +13,9 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
-import { TranslateService } from '@ngx-translate/core';
-import { MatDialog } from '@angular/material/dialog';
 import { CollectionRightFacade } from './collection-manager-right-facade';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
@@ -52,9 +50,11 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   mode$: Observable<SubjectModeEnum>;
   apiKeyInitSubscription: Subscription;
 
+  @Output() setDefaultMode = new EventEmitter();
+
   private apiKey: string;
 
-  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {}
+  constructor(private collectionRightFacade: CollectionRightFacade) {}
 
   ngOnInit(): void {
     this.subject$ = this.collectionRightFacade.subject$;
@@ -82,6 +82,7 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   }
 
   readFiles(fileList: File[]): void {
+    this.setDefaultMode.emit();
     this.collectionRightFacade.addImageFilesToCollection(fileList);
   }
 

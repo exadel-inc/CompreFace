@@ -48,4 +48,9 @@ export class AppSearchTableComponent {
   onOpenUserList() {
     this.manageUsersView.emit();
   }
+
+  disableToolTip(element: string): boolean {
+    const maxElementLength = 20;
+    return element.length <= maxElementLength;
+  }
 }

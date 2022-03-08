@@ -14,16 +14,10 @@
  * permissions and limitations under the License.
  */
 
-.layout {
-  overflow-y: scroll;
+import { Component } from '@angular/core';
 
-  .container {
-    display: flex;
-    justify-content: center;
-    flex-wrap: nowrap;
-  }
-
-  &--main {
-    width: 100%;
-  }
-}
+@Component({
+  selector: 'app-model-dashboard',
+  templateUrl: './model-dashboard.component.html',
+})
+export class ModelDashboardComponent {}

@@ -13,6 +13,9 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
+
+<p class="title">{{ currentModelName$ | async }}</p>
+
 <mat-card class="collection">
   <div class="collection--header">
     <p class="header">{{ 'manage_collection.header' | translate }}</p>
@@ -47,11 +50,14 @@
 
   <div class="collection--grid">
     <div class="collection--grid_subjects-list">
-      <app-application-list-container [isCollectionOnHold]="isCollectionOnHold"></app-application-list-container>
+      <app-application-list-container
+        [isCollectionOnHold]="isCollectionOnHold"
+        (setDefaultMode)="setDefaultMode()"
+      ></app-application-list-container>
     </div>
 
     <div class="collection--grid_profile">
-      <app-application-right-container></app-application-right-container>
+      <app-application-right-container (setDefaultMode)="setDefaultMode()"></app-application-right-container>
     </div>
   </div>
 </mat-card>

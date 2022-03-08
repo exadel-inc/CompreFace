@@ -30,6 +30,8 @@ export interface Model {
   };
   role: string;
   apiKey?: string;
+  imageCount?: number;
+  subjectCount?: number;
 }
 
 export interface ModelUpdate {

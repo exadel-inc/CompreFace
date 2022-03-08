@@ -13,13 +13,8 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
+<div class="container" style="height: calc(100vh - 160px)">
+  <app-breadcrumbs-container [hideControls]="true"></app-breadcrumbs-container>
 
-<div class="container app-page">
-  <div class="header-container">
-    <app-breadcrumbs-container [hideControls]="true"></app-breadcrumbs-container>
-  </div>
-
-  <mat-card class="container">
-    <app-application-user-list></app-application-user-list>
-  </mat-card>
+  <model-info></model-info>
 </div>

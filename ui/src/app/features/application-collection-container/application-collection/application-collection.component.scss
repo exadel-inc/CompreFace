@@ -36,7 +36,9 @@
     margin-bottom: 20px;
 
     &_title {
-      width: 100%;
+      word-break: break-all;
+      line-height: 2rem;
+      width: 90%;
       text-align: center;
     }
   }
