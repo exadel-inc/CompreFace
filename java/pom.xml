@@ -45,7 +45,7 @@
         <nd4j.version>1.0.0-beta7</nd4j.version>
         <maven.compiler.source>11</maven.compiler.source>
         <nd4j.classifier>linux-x86_64</nd4j.classifier>
-        <liquibase.version>4.3.5</liquibase.version>
+        <liquibase.version>4.8.0</liquibase.version>
         <pgjdbc-ng.version>0.8.9</pgjdbc-ng.version>
     </properties>
 
