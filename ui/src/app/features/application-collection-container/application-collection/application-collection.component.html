@@ -17,7 +17,7 @@
 <ng-container>
   <div class="app" (click)="selectApp.emit(element)">
     <div class="app--container mat-subheading-1">
-      <span class="app--container_title">{{ element.name | truncate: 20 }}</span>
+      <span class="app--container_title">{{ element.name | truncate: 15 }}</span>
     </div>
     <div class="app--name mat-body-2">
       <span class="app--name_owner"> {{ fullName | truncate: 20 }} </span>

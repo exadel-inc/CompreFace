@@ -152,7 +152,7 @@
       "manage_users_title": "Manage Users",
       "search_label": "Search Users",
       "user_name": "User Name",
-      "users": "Users",
+      "users": "Names",
       "roles": "Roles",
       "save": "Save"
     }
@@ -179,6 +179,13 @@
     "dashboard": "Dashboard",
     "face_collection": "Face Collection",
     "test": "Test"
+  },
+  "model_info": {
+    "service_info": "Service Info",
+    "created_on": "Created on",
+    "service_name": "Service Name",
+    "total_images": "Total Images",
+    "total_faces": "Total Faces"
   },
   "app_users": {
     "add_users_info": "All registered CompreFace users except the first one won't see any applications. To give them access you need to add them to individual application. Global Owner and Global Administrators have full access to all applications.",

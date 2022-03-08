@@ -13,7 +13,7 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -54,6 +54,7 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
   itemsInProgress: boolean;
 
   @Input() isCollectionOnHold: boolean;
+  @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
 
   constructor(
@@ -160,6 +161,8 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
   }
 
   onSelectedSubject(subject): void {
+    this.setDefaultMode.emit();
+
     if (this.itemsInProgress) {
       this.openDialog(subject);
     } else {
