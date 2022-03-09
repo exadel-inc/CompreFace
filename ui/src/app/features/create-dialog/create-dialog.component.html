@@ -14,19 +14,22 @@
   ~ permissions and limitations under the License.
   -->
 
-<h1 mat-dialog-title>{{ 'common.create' | translate }} {{ data.entityType }}</h1>
-<div mat-dialog-content>
-  <mat-form-field appearance="outline" floatLabel="always">
-    <mat-label>{{ data.placeholder }}</mat-label>
-    <input matInput cdkFocusInitial [(ngModel)]="data.entityName" placeholder="{{ data.placeholder }}" />
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()">{{ 'common.capital.cancel' | translate | titlecase }}</button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="data.entityName" [disabled]="!data.entityName">
-    {{ 'common.capital.create' | translate | titlecase }}
+<div class="dialog" mat-dialog>
+  <div mat-dialog-header class="dialog__header">
+    <h1 mat-dialog-title>{{ 'common.create' | translate }} {{ data.entityType }}</h1>
+  </div>
+  <div mat-dialog-content class="dialog__content">
+    <div class="dialog__content--form_field">
+      <label>{{ data.placeholder }}</label>
+      <input matInput cdkFocusInitial [(ngModel)]="data.entityName" placeholder="{{ data.placeholder }}" />
+    </div>
+  </div>
+  <div mat-dialog-actions class="dialog__actions">
+    <button mat-flat-button [mat-dialog-close]="data.entityName" [disabled]="!data.entityName">
+      {{ 'common.capital.create' | translate | titlecase }}
+    </button>
+  </div>
+  <button class="button-cross" mat-icon-button (click)="onCancelClick()">
+    <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
 </div>
-<button class="button-cross" mat-icon-button (click)="onCancelClick()">
-  <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
-</button>

@@ -18,7 +18,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
-import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Application } from 'src/app/data/interfaces/application';
 import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
