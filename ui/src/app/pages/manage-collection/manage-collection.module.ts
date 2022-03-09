@@ -16,7 +16,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManageCollectionComponent } from './manage-collection.component';
-import { MatCardModule } from '@angular/material/card';
 import { RouterModule } from '@angular/router';
 
 import { BreadcrumbsContainerModule } from '../../features/breadcrumbs.container/breadcrumbs.container.module';
@@ -27,7 +26,6 @@ import { CollectionManagerModule } from 'src/app/features/collection-manager/col
   declarations: [ManageCollectionComponent],
   imports: [
     CommonModule,
-    MatCardModule,
     CollectionManagerModule,
     RouterModule.forChild([
       {

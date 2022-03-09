@@ -18,6 +18,9 @@
 
 .main {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .search {
     margin-top: 15px;
@@ -59,13 +62,10 @@
       }
 
       .avatar {
+        cursor: pointer;
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        .name {
-          cursor: pointer;
-        }
 
         .actions {
           display: flex;
@@ -97,18 +97,13 @@
     }
   }
 
-  .add-subject {
-    padding: 1rem;
-    padding-left: 0;
-
-    .mat-flat-button {
-      font-size: 14px;
-      border: 2px solid rgb(199, 199, 199);
-      border-radius: 16px;
-      background: #797979;
-      color: white;
-      height: 10%;
-      width: 100%;
-    }
+  .mat-flat-button {
+    background: #797979;
+    border: 2px solid rgb(199, 199, 199);
+    border-radius: 16px;
+    font-size: 14px;
+    color: white;
+    height: 40px;
+    width: 100%;
   }
 }

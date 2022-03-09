@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,16 +16,17 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
-import { TablePipeModule } from 'src/app/ui/search-pipe/table-filter.module';
-import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
-import { ApplicationCollectionContainerComponent } from './application-collection-container.component';
-import { ApplicationCollectionComponent } from './application-collection/application-collection.component';
+import { ModelInfoComponent } from './model-info.component';
+import { ModelInfoFacade } from './model-info.facade';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
-  declarations: [ApplicationCollectionContainerComponent, ApplicationCollectionComponent],
-  imports: [CommonModule, TranslateModule, TablePipeModule, MatIconModule, TruncateModule],
-  exports: [ApplicationCollectionContainerComponent, ApplicationCollectionComponent],
+  declarations: [ModelInfoComponent],
+  imports: [CommonModule, TranslateModule, MatButtonModule, MatIconModule, ClipboardModule],
+  exports: [ModelInfoComponent],
+  providers: [ModelInfoFacade],
 })
-export class ApplicationCollectionContainerModule {}
+export class ModelInfoModule {}

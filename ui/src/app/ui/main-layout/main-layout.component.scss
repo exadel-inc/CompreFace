@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,41 +14,16 @@
  * permissions and limitations under the License.
  */
 
-@import './colors.scss';
+.layout {
+  overflow-y: scroll;
 
-.app {
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  border-radius: 20px;
-  background: white;
-  width: 250px;
-  height: 200px;
-  margin: 1rem;
-  box-shadow: 1px 1px 1px $light-gray;
-
-  &--container {
+  .container {
     display: flex;
     justify-content: center;
-    font-size: 1.8rem;
-    margin-bottom: 20px;
-
-    &_title {
-      word-break: break-all;
-      line-height: 2rem;
-      width: 90%;
-      text-align: center;
-    }
+    flex-wrap: nowrap;
   }
 
-  &--name {
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  &:hover {
-    box-shadow: 2px 2px 4px $light-gray;
+  &--main {
+    width: 100%;
   }
 }

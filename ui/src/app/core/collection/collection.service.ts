@@ -20,6 +20,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CollectionItem, SubjectExampleResponseItem } from 'src/app/data/interfaces/collection';
 import { map } from 'rxjs/operators';
+import { CollectionInfo } from 'src/app/data/interfaces/collection-info';
 
 @Injectable({
   providedIn: 'root',
@@ -66,12 +67,20 @@ export class CollectionService {
         headers: { 'x-api-key': apiKey },
       })
       .pipe(
-        map((resp: { faces: SubjectExampleResponseItem[] }) => {
-          const totalPages = resp['total_pages'];
-          const totalElements = resp['total_elements'];
+        map((resp: CollectionInfo) => {
+          const totalPages = resp.total_pages;
+          const totalElements = resp.total_elements;
           return resp.faces.map(el => ({ ...el, page: page, totalPages: totalPages, totalElements: totalElements }));
         })
       );
+  }
+
+  getTotalImagesInfo(apiKey: string): Observable<number> {
+    return this.http
+      .get(`${environment.userApiUrl}recognition/faces`, {
+        headers: { 'x-api-key': apiKey },
+      })
+      .pipe(map((resp: CollectionInfo) => resp.total_elements));
   }
 
   uploadSubjectExamples(item: CollectionItem, subject: string, apiKey: string): Observable<SubjectExampleResponseItem> {

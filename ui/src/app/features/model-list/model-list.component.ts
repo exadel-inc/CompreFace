@@ -71,15 +71,6 @@ export class ModelListComponent implements OnInit, OnDestroy {
     );
   }
 
-  copyApiKey(apiKey: string) {
-    const input = document.createElement('input');
-    input.setAttribute('value', apiKey);
-    document.body.appendChild(input);
-    input.select();
-    document.execCommand('copy');
-    document.body.removeChild(input);
-  }
-
   edit(model: Model) {
     const dialog = this.dialog.open(EditDialogComponent, {
       panelClass: 'custom-mat-dialog',
@@ -128,11 +119,22 @@ export class ModelListComponent implements OnInit, OnDestroy {
     });
   }
 
-  mangeCollection(model: Model) {
+  mangeCollection(model: Model): void {
     this.router.navigate([Routes.ManageCollection], {
       queryParams: {
         app: this.modelListFacade.selectedApplicationId,
         model: model.id,
+        type: model.type,
+      },
+    });
+  }
+
+  dashboard(model: Model): void {
+    this.router.navigate([Routes.Dashboard], {
+      queryParams: {
+        app: this.modelListFacade.selectedApplicationId,
+        model: model.id,
+        type: model.type,
       },
     });
   }

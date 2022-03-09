@@ -20,17 +20,29 @@
 caption {
   display: none;
 }
+:host {
+  height: 100%;
+  max-height: 600px;
+}
 
 table {
+  height: 100%;
+  overflow: scroll;
+
   .mat-column-name {
-    width: 15%;
+    cursor: pointer;
+    width: 25%;
   }
 
   .mat-column-apiKey {
     width: 40%;
     font-size: 12px;
-    .mat-icon {
-      font-size: 12px;
+    button {
+      padding-left: 10px;
+      width: 14px;
+      .mat-icon {
+        @include sm-icon-size(9px);
+      }
     }
   }
 
@@ -41,7 +53,7 @@ table {
   }
 
   .mat-column-action {
-    width: 35%;
+    width: 25%;
   }
 
   .actions {

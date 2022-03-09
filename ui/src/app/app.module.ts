@@ -53,6 +53,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MergerDialogComponent } from './features/merger-dialog/merger-dialog.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { EditSubjectDialog } from './features/edit-subject/edit-subject-dialog.component';
+import { SideMenuModule } from './features/side-menu/side-menu.module';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { EditSubjectDialog } from './features/edit-subject/edit-subject-dialog.c
     FormsModule,
     ToolBarModule,
     FooterModule,
+    SideMenuModule,
     AppStoreModule,
     HttpClientModule,
     SnackBarModule,

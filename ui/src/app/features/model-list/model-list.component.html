@@ -32,11 +32,11 @@
     [isLoading]="isLoading$ | async"
     [userRole]="userRole$ | async"
     [tableConfig]="tableConfig$ | modelTableFilter: search | async"
-    (copyApiKey)="copyApiKey($event)"
     (clone)="clone($event)"
     (edit)="edit($event)"
     (test)="test($event)"
     (collection)="mangeCollection($event)"
+    (dashboard)="dashboard($event)"
   >
   </app-model-table>
   <ng-container *ngIf="(isLoading$ | async) === false">
