@@ -38,6 +38,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -138,6 +139,7 @@ public class ModelService {
                 .apiKey(randomUUID().toString())
                 .app(app)
                 .type(ModelType.valueOf(modelCreateDto.getType()))
+                .createdDate(LocalDateTime.now())
                 .build();
     }
 
