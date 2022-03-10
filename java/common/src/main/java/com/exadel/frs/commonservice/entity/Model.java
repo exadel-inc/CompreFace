@@ -22,6 +22,7 @@ import com.exadel.frs.commonservice.helpers.ModelTypeConverter;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +46,7 @@ public class Model {
         this.app = model.getApp();
         this.appModelAccess = model.appModelAccess;
         this.type = model.type;
+        this.createdDate = LocalDateTime.now();
     }
 
     @Id
@@ -66,6 +68,8 @@ public class Model {
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppModel> appModelAccess = new ArrayList<>();
 
+    private LocalDateTime createdDate;
+
     public void addAppModelAccess(App app, AppModelAccess access) {
         AppModel appModel = new AppModel(app, this, access);
         appModelAccess.add(appModel);
@@ -74,7 +78,7 @@ public class Model {
 
     public Optional<AppModel> getAppModel(String appGuid) {
         return appModelAccess.stream()
-                             .filter(appModel -> appModel.getApp().getGuid().equals(appGuid))
-                             .findFirst();
+                .filter(appModel -> appModel.getApp().getGuid().equals(appGuid))
+                .findFirst();
     }
 }
