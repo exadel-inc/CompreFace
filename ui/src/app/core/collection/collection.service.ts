@@ -52,7 +52,8 @@ export class CollectionService {
   }
 
   deleteSubject(subject: string, apiKey: string): Observable<{ subject: string }> {
-    return this.http.delete<{ subject: string }>(`${environment.userApiUrl}recognition/subjects/${subject}`, {
+    const subjectEncoded = encodeURIComponent(subject);
+    return this.http.delete<{ subject: string }>(`${environment.userApiUrl}recognition/subjects/${subjectEncoded}`, {
       headers: { 'x-api-key': apiKey },
     });
   }
@@ -63,8 +64,9 @@ export class CollectionService {
   }
 
   getSubjectMedia(apiKey: string, subject: string, page: number = 0, size: number = 15) {
+    const subjectEncoded = encodeURIComponent(subject);
     return this.http
-      .get(`${environment.userApiUrl}recognition/faces?size=${size}&subject=${subject}&page=${page}`, {
+      .get(`${environment.userApiUrl}recognition/faces?size=${size}&subject=${subjectEncoded}&page=${page}`, {
         headers: { 'x-api-key': apiKey },
       })
       .pipe(
