@@ -1,7 +1,6 @@
 package com.exadel.frs.core.trainservice.controller;
 
 
-import com.exadel.frs.core.trainservice.dto.RenameSubjectRequest;
 import com.exadel.frs.core.trainservice.dto.SubjectDto;
 import com.exadel.frs.core.trainservice.service.SubjectService;
 import io.swagger.annotations.ApiParam;
@@ -42,13 +41,14 @@ public class SubjectController {
         );
     }
 
-    @PutMapping
+    @PutMapping("/{subject}")
     public Map<String, Object> renameSubject(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey,
-            @Valid @RequestBody final RenameSubjectRequest renameSubjectRequest) {
+            @ApiParam(value = SUBJECT_DESC, required = true) @Valid @NotBlank(message = SUBJECT_NAME_IS_EMPTY) @PathVariable("subject") final String oldSubjectName,
+            @Valid @RequestBody final SubjectDto subjectDto) {
         return Map.of(
                 "updated",
-                subjectService.updateSubjectName(apiKey, renameSubjectRequest.getOldSubjectName(), renameSubjectRequest.getSubjectDto().getSubjectName())
+                subjectService.updateSubjectName(apiKey, oldSubjectName, subjectDto.getSubjectName())
         );
     }
 

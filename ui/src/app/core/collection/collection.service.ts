@@ -41,8 +41,9 @@ export class CollectionService {
   }
 
   editSubject(editName: string, apiKey: string, subject: string): Observable<{ updated: boolean }> {
+    const subjectEncoded = encodeURIComponent(subject);
     return this.http.put<{ updated: boolean }>(
-      `${environment.userApiUrl}recognition/subjects/${subject}`,
+      `${environment.userApiUrl}recognition/subjects/${subjectEncoded}`,
       { subject: editName },
       {
         headers: { 'x-api-key': apiKey },
@@ -87,8 +88,9 @@ export class CollectionService {
     const { file } = item;
     const formData = new FormData();
     formData.append('file', file, file.name);
+    const subjectEncoded = encodeURIComponent(subject);
 
-    return this.http.post<SubjectExampleResponseItem>(`${environment.userApiUrl}recognition/faces?subject=${subject}`, formData, {
+    return this.http.post<SubjectExampleResponseItem>(`${environment.userApiUrl}recognition/faces?subject=${subjectEncoded}`, formData, {
       headers: { 'x-api-key': apiKey },
     });
   }
