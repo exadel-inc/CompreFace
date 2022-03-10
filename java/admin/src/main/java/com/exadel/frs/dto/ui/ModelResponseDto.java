@@ -19,6 +19,8 @@ package com.exadel.frs.dto.ui;
 import com.exadel.frs.commonservice.enums.ModelType;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 public class ModelResponseDto {
 
@@ -28,4 +30,5 @@ public class ModelResponseDto {
     private ModelType type;
     private Long subjectCount;
     private Long imageCount;
+    private LocalDateTime createdDate;
 }
