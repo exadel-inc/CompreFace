@@ -42,8 +42,8 @@ spring:
   servlet:
     multipart:
       enabled: true
-      max-file-size: 10MB
-      max-request-size: 10MB
+      max-file-size: ${CLIENT_MAX_FILE_SIZE:10MB}
+      max-request-size: ${CLIENT_MAX_BODY_SIZE:10MB}
 
 # "environment" and "image" blocks should be same in those files:
 #    * api/src/main/resources/application.properties

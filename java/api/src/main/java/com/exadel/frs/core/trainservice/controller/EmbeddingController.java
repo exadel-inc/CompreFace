@@ -13,10 +13,9 @@ import com.exadel.frs.core.trainservice.service.SubjectService;
 import com.exadel.frs.core.trainservice.validation.ImageExtensionValidator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiParam;
-import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
@@ -25,6 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static com.exadel.frs.commonservice.system.global.Constants.DET_PROB_THRESHOLD;
 import static com.exadel.frs.core.trainservice.system.global.Constants.*;
@@ -48,6 +49,10 @@ public class EmbeddingController {
     private final ImageExtensionValidator imageValidator;
     private final EmbeddingMapper embeddingMapper;
     private final FacesMapper facesMapper;
+    @Value("${spring.servlet.multipart.max-request-size}")
+    private String clientMaxBodySize;
+    @Value("${spring.servlet.multipart.max-file-size}")
+    private String clientMaxFileSize;
 
     @WriteEndpoint
     @ResponseStatus(CREATED)
@@ -113,7 +118,7 @@ public class EmbeddingController {
     @DeleteMapping
     public Map<String, Object> removeAllSubjectEmbeddings(
             @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(name = X_FRS_API_KEY_HEADER) final String apiKey,
-            @ApiParam(value = SUBJECT_DESC) @Validated @NotBlank(message = SUBJECT_NAME_IS_EMPTY) @RequestParam( name = SUBJECT, required = false) final String subjectName
+            @ApiParam(value = SUBJECT_DESC) @Validated @NotBlank(message = SUBJECT_NAME_IS_EMPTY) @RequestParam(name = SUBJECT, required = false) final String subjectName
     ) {
         return Map.of(
                 "deleted",
@@ -129,6 +134,7 @@ public class EmbeddingController {
         var embedding = subjectService.removeSubjectEmbedding(apiKey, embeddingId);
         return new EmbeddingDto(embeddingId.toString(), embedding.getSubject().getSubjectName());
     }
+
     @WriteEndpoint
     @PostMapping("/delete")
     public List<EmbeddingDto> deleteEmbeddingsById(
@@ -136,8 +142,8 @@ public class EmbeddingController {
             @ApiParam(value = IMAGE_IDS_DESC, required = true) @RequestBody List<UUID> embeddingIds) {
         List<Embedding> list = subjectService.removeSubjectEmbeddings(apiKey, embeddingIds);
         List<EmbeddingDto> dtoList = list.stream()
-                                         .map(c -> new EmbeddingDto(c.getId().toString(), c.getSubject().getSubjectName()))
-                                         .collect(Collectors.toList());
+                .map(c -> new EmbeddingDto(c.getId().toString(), c.getSubject().getSubjectName()))
+                .collect(Collectors.toList());
         return dtoList;
     }
 
@@ -196,6 +202,20 @@ public class EmbeddingController {
                 pair.getLeft(),
                 facesMapper.toPluginVersionsDto(pair.getRight())
         );
+    }
+
+    @GetMapping(value = "/upload-size")
+    public UploadFileSizeResponse getUploadFileSize(
+            @ApiParam(value = API_KEY_DESC, required = true) @RequestHeader(X_FRS_API_KEY_HEADER) final String apiKey
+    ) {
+        UploadFileSizeResponse response = new UploadFileSizeResponse();
+        try {
+            response.setClientMaxFileSize(Integer.parseInt(clientMaxFileSize.substring(0, clientMaxFileSize.length() - 2)));
+            response.setClientMaxBodySize(Integer.parseInt(clientMaxBodySize.substring(0, clientMaxBodySize.length() - 2)));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return response;
     }
 
     @RequiredArgsConstructor

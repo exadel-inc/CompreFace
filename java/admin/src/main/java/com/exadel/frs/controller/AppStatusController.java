@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
+import java.sql.Connection;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,7 +22,15 @@ public class AppStatusController {
     public AppStatusResponseDto getAppStatus() {
         AppStatusResponseDto responseDto = new AppStatusResponseDto();
         try {
-            responseDto.setStatus(dataSource.getConnection().isValid(1000) ? AppStatus.OK : AppStatus.NOT_READY);
+            Connection connection = dataSource.getConnection();
+            boolean valid = connection.isValid(1000);
+            if (valid) {
+                responseDto.setStatus(AppStatus.OK);
+                connection.close();
+            } else {
+                responseDto.setStatus(AppStatus.NOT_READY);
+            }
+
             return responseDto;
         } catch (Exception e) {
             responseDto.setStatus(AppStatus.NOT_READY);
