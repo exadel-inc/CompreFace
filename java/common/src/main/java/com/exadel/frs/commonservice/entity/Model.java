@@ -68,6 +68,7 @@ public class Model {
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppModel> appModelAccess = new ArrayList<>();
 
+    @Column(name = "created_date")
     private LocalDateTime createdDate;
 
     public void addAppModelAccess(App app, AppModelAccess access) {
