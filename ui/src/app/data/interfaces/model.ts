@@ -32,6 +32,7 @@ export interface Model {
   apiKey?: string;
   imageCount?: number;
   subjectCount?: number;
+  createdDate?: Date;
 }
 
 export interface ModelUpdate {
