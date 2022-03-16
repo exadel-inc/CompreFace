@@ -30,7 +30,7 @@ import { TablePipeModule } from '../../ui/search-pipe/table-filter.module';
 import { MatInputModule } from '@angular/material/input';
 import { AppSearchTableModule } from '../app-search-table/app-search-table.module';
 import { ApplicationCollectionContainerModule } from '../application-collection-container/application-collection-container.module';
-import { ManageUsersModule } from '../magage-users-dialog/manage-users.module';
+import { ManageUsersModule } from '../manage-users-dialog/manage-users.module';
 
 @NgModule({
   declarations: [ApplicationListContainerComponent, ApplicationListComponent],
