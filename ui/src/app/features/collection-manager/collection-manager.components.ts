@@ -17,7 +17,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { filter, first, map, tap } from 'rxjs/operators';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
@@ -32,16 +32,24 @@ import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component'
 export class CollectionManagerComponent implements OnInit, OnDestroy {
   subjectModeEnum = SubjectModeEnum;
   mode = SubjectModeEnum.Default;
+
   subs: Subscription;
+  modelSubs: Subscription;
+
   isCollectionOnHold: boolean;
   selectedIds: string[];
-  currentModelName$: Observable<string>;
+  currentModelName: string;
 
-  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {
-    this.currentModelName$ = this.collectionRightFacade.currentModelName$;
-  }
+  constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
+    this.modelSubs = this.collectionRightFacade.currentModelName$
+      .pipe(
+        filter(val => !!val),
+        tap(val => (this.currentModelName = val))
+      )
+      .subscribe();
+
     this.subs = this.collectionRightFacade.collectionItems$
       .pipe(
         tap(items => (this.isCollectionOnHold = !!items.filter(item => item.status === CircleLoadingProgressEnum.OnHold).length)),
@@ -80,5 +88,6 @@ export class CollectionManagerComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subs.unsubscribe();
+    this.modelSubs.unsubscribe();
   }
 }
