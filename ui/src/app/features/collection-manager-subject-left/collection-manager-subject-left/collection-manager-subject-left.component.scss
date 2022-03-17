@@ -20,14 +20,8 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-
-  .search {
-    margin-top: 15px;
-  }
 
   .subjects {
-    height: calc(100vh - 438px);
     height: 90%;
     padding-right: 16px;
     overflow-y: auto;
@@ -97,13 +91,19 @@
     }
   }
 
-  .mat-flat-button {
-    background: #797979;
-    border: 2px solid rgb(199, 199, 199);
-    border-radius: 16px;
-    font-size: 14px;
-    color: white;
-    height: 40px;
+  .btn-container {
+    height: 10%;
     width: 100%;
+    display: flex;
+
+    button {
+      margin: auto 0 10px;
+      background: #797979;
+      border: 2px solid rgb(199, 199, 199);
+      border-radius: 16px;
+      font-size: 14px;
+      color: white;
+      width: 100%;
+    }
   }
 }

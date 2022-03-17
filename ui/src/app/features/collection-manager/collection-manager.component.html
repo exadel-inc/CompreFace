@@ -13,53 +13,54 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
+<div class="collection">
+  <p class="title" matTooltip="{{ currentModelName }}" matTooltipClass="top-arrow" [matTooltipDisabled]="currentModelName?.length <= 50">
+    {{ currentModelName | truncate: 50 }}
+  </p>
 
-<p class="title" matTooltip="{{ currentModelName }}" matTooltipClass="top-arrow" [matTooltipDisabled]="currentModelName?.length <= 50">
-  {{ currentModelName | truncate: 50 }}
-</p>
+  <mat-card class="content">
+    <div class="content--header">
+      <p class="header">{{ 'manage_collection.header' | translate }}</p>
 
-<mat-card class="collection">
-  <div class="collection--header">
-    <p class="header">{{ 'manage_collection.header' | translate }}</p>
-
-    <div class="container">
-      <button
-        class="container--btn"
-        [disabled]="isCollectionOnHold"
-        *ngIf="mode === subjectModeEnum.Default; else bulkSelect"
-        mat-flat-button
-        (click)="setBulkSelectMode()"
-      >
-        {{ 'manage_collection.bulk_select' | translate }}
-      </button>
-
-      <ng-template #bulkSelect>
+      <div class="container">
         <button
-          class="container--btn container--btn_del"
-          [disabled]="isCollectionOnHold || !selectedIds.length"
+          class="container--btn"
+          [disabled]="isCollectionOnHold"
+          *ngIf="mode === subjectModeEnum.Default; else bulkSelect"
           mat-flat-button
-          (click)="deleteSelectedExamples()"
+          (click)="setBulkSelectMode()"
         >
-          {{ 'manage_collection.delete' | translate }}
+          {{ 'manage_collection.bulk_select' | translate }}
         </button>
 
-        <button class="container--btn" mat-flat-button [disabled]="isCollectionOnHold" (click)="setDefaultMode()">
-          {{ 'manage_collection.cancel_select' | translate }}
-        </button>
-      </ng-template>
-    </div>
-  </div>
+        <ng-template #bulkSelect>
+          <button
+            class="container--btn container--btn_del"
+            [disabled]="isCollectionOnHold || !selectedIds.length"
+            mat-flat-button
+            (click)="deleteSelectedExamples()"
+          >
+            {{ 'manage_collection.delete' | translate }}
+          </button>
 
-  <div class="collection--grid">
-    <div class="collection--grid_subjects-list">
-      <app-application-list-container
-        [isCollectionOnHold]="isCollectionOnHold"
-        (setDefaultMode)="setDefaultMode()"
-      ></app-application-list-container>
+          <button class="container--btn" mat-flat-button [disabled]="isCollectionOnHold" (click)="setDefaultMode()">
+            {{ 'manage_collection.cancel_select' | translate }}
+          </button>
+        </ng-template>
+      </div>
     </div>
 
-    <div class="collection--grid_profile">
-      <app-application-right-container (setDefaultMode)="setDefaultMode()"></app-application-right-container>
+    <div class="content--grid">
+      <div class="content--grid_subjects-list">
+        <app-application-list-container
+          [isCollectionOnHold]="isCollectionOnHold"
+          (setDefaultMode)="setDefaultMode()"
+        ></app-application-list-container>
+      </div>
+
+      <div class="content--grid_profile">
+        <app-application-right-container (setDefaultMode)="setDefaultMode()"></app-application-right-container>
+      </div>
     </div>
-  </div>
-</mat-card>
+  </mat-card>
+</div>
