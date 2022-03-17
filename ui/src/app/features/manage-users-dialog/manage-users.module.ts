@@ -20,6 +20,7 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { TablePipeModule } from 'src/app/ui/search-pipe/table-filter.module';
 import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
@@ -27,7 +28,17 @@ import { ManageUsersDialog } from './manage-users.component';
 
 @NgModule({
   declarations: [ManageUsersDialog],
-  imports: [CommonModule, MatDialogModule, FormsModule, MatIconModule, TranslateModule, MatButtonModule, TablePipeModule, TruncateModule],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    FormsModule,
+    MatIconModule,
+    TranslateModule,
+    MatButtonModule,
+    MatTooltipModule,
+    TablePipeModule,
+    TruncateModule,
+  ],
   exports: [ManageUsersDialog],
 })
 export class ManageUsersModule {}

@@ -24,7 +24,7 @@ import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
 import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dialog.component';
 
 import { Routes } from '../../data/enums/routers-url.enum';
-import { ManageUsersDialog } from '../magage-users-dialog/manage-users.component';
+import { ManageUsersDialog } from '../manage-users-dialog/manage-users.component';
 import { UserListFacade } from '../user-list/user-list-facade';
 import { ApplicationListFacade } from './application-list-facade';
 

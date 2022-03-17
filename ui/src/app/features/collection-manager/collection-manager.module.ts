@@ -17,14 +17,24 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
+import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
 import { CollectionManagerSubjectLeftModule } from '../collection-manager-subject-left/collection-manager-subject-left.module';
 import { CollectionManagerSubjectRightModule } from '../collection-manager-subject-right/collection-manager-subject-right.module';
 import { CollectionManagerComponent } from './collection-manager.components';
 
 @NgModule({
   declarations: [CollectionManagerComponent],
-  imports: [CommonModule, MatCardModule, TranslateModule, CollectionManagerSubjectLeftModule, CollectionManagerSubjectRightModule],
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatTooltipModule,
+    TranslateModule,
+    CollectionManagerSubjectLeftModule,
+    CollectionManagerSubjectRightModule,
+    TruncateModule,
+  ],
   exports: [CollectionManagerComponent],
 })
 export class CollectionManagerModule {}
