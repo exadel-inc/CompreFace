@@ -15,7 +15,7 @@
   -->
 
 <div *ngIf="app" class="breadcrumbs mat-body-2">
-  <div *ngIf="model; else onlyApp" class="breadcrumbs--container">
+  <div *ngIf="modelSelected; else onlyApp" class="breadcrumbs--container">
     <a class="link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
     <div class="separator">></div>
     <a
@@ -29,7 +29,12 @@
       {{ app.name }}
     </a>
     <div class="separator">></div>
-    <div class="link" matTooltip="{{ model.name }}" matTooltipClass="top-arrow" [matTooltipDisabled]="model.name.length <= maxNameLength">
+    <div
+      class="link current"
+      matTooltip="{{ model.name }}"
+      matTooltipClass="top-arrow"
+      [matTooltipDisabled]="model.name.length <= maxNameLength"
+    >
       {{ model.name }}
     </div>
   </div>
@@ -37,7 +42,12 @@
     <div class="breadcrumbs--container">
       <a class="link" [routerLink]="[routes.Home]">{{ 'breadcrumbs.home' | translate }}</a>
       <div class="separator">></div>
-      <div class="link" matTooltip="{{ app.name }}" matTooltipClass="top-arrow" [matTooltipDisabled]="app.name.length <= maxNameLength">
+      <div
+        class="link current"
+        matTooltip="{{ app.name }}"
+        matTooltipClass="top-arrow"
+        [matTooltipDisabled]="app.name.length <= maxNameLength"
+      >
         {{ app.name }}
       </div>
     </div>

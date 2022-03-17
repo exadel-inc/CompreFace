@@ -40,7 +40,7 @@
       <p class="service__info--title">{{ 'model_info.service_info' | translate }}</p>
 
       <p class="service__info--label">{{ 'model_info.created_on' | translate }}</p>
-      <p class="service__info--date"></p>
+      <p class="service__info--date">{{ currentModel.createdDate | date: 'yyyy-MM-dd' }}</p>
     </div>
 
     <div class="service__collection" *ngIf="currentModel.type === recognition">
