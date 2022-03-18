@@ -15,7 +15,7 @@
  */
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { first, filter, tap } from 'rxjs/operators';
@@ -32,6 +32,7 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
     [model]="model$ | async"
     [app]="app$ | async"
     [hideControls]="hideControls"
+    [modelSelected]="modelSelected"
     (usersList)="onUsersList($event)"
     (appSettings)="onAppSettings($event)"
   >
@@ -41,18 +42,21 @@ import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
 export class BreadcrumbsContainerComponent implements OnInit {
   app$: Observable<Application>;
   model$: Observable<Model>;
+  modelSelected: boolean;
   @Input() hideControls: boolean;
 
   constructor(
     private breadcrumbsFacade: BreadcrumbsFacade,
     private translate: TranslateService,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.app$ = this.breadcrumbsFacade.app$;
     this.model$ = this.breadcrumbsFacade.model$;
+    this.modelSelected = !!this.route.snapshot.queryParams.model;
   }
 
   onAppSettings(app: Application): void {

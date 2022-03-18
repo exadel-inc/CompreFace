@@ -22,10 +22,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ModelInfoComponent } from './model-info.component';
 import { ModelInfoFacade } from './model-info.facade';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [ModelInfoComponent],
-  imports: [CommonModule, TranslateModule, MatButtonModule, MatIconModule, ClipboardModule],
+  imports: [CommonModule, TranslateModule, MatButtonModule, MatIconModule, ClipboardModule, MatTooltipModule, TruncateModule],
   exports: [ModelInfoComponent],
   providers: [ModelInfoFacade],
 })

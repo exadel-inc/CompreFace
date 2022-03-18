@@ -30,6 +30,7 @@ export class BreadcrumbsComponent {
   @Input() model: Model;
   @Input() app: Application;
   @Input() hideControls: boolean;
+  @Input() modelSelected: boolean;
 
   @Output() usersList = new EventEmitter<Application>();
   @Output() appSettings = new EventEmitter<Application>();

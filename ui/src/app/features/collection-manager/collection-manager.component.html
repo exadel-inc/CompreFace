@@ -14,7 +14,9 @@
   ~ permissions and limitations under the License.
   -->
 
-<p class="title">{{ currentModelName$ | async }}</p>
+<p class="title" matTooltip="{{ currentModelName }}" matTooltipClass="top-arrow" [matTooltipDisabled]="currentModelName?.length <= 50">
+  {{ currentModelName | truncate: 50 }}
+</p>
 
 <mat-card class="collection">
   <div class="collection--header">
