@@ -20,9 +20,9 @@
       class="service__header--title"
       matTooltip="{{ currentModel.name }}"
       matTooltipClass="top-arrow"
-      [matTooltipDisabled]="currentModel.name.length <= 40"
+      [matTooltipDisabled]="currentModel.name.length <= 50"
     >
-      {{ currentModel.name | truncate: 40 }}
+      {{ currentModel.name | truncate: 50 }}
     </p>
     <p class="service__header--type">{{ currentModel.type | lowercase }}</p>
   </div>
