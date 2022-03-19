@@ -22,11 +22,11 @@ caption {
 
 table {
   .mat-column-user {
-    width: 15%;
+    width: 50%;
   }
 
   .mat-column-email {
-    width: 35%;
+    width: 30%;
   }
 
   .mat-column-role {
@@ -35,7 +35,7 @@ table {
   }
 
   .mat-column-delete {
-    width: 35%;
+    width: 5%;
     .actions {
       display: flex;
       justify-content: flex-end;

@@ -23,7 +23,7 @@
 
   <ng-container matColumnDef="user">
     <td mat-cell *matCellDef="let element">
-      <div class="user--name mat-subheading-1">{{ element.firstName }} {{ element.lastName }}</div>
+      <div class="user--name mat-subheading-1">{{ element.firstName + ' ' + element.lastName | truncate: 50 }}</div>
     </td>
   </ng-container>
   <ng-container matColumnDef="email">

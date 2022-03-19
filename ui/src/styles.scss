@@ -74,8 +74,8 @@ body {
 
 .container {
   width: 100%;
-  padding-right: 16px;
-  padding-left: 16px;
+  padding-right: 5px;
+  padding-left: 5px;
   margin-right: auto;
   margin-left: auto;
   flex-wrap: wrap;
@@ -101,33 +101,11 @@ app-model-table {
 }
 
 @include mobile {
-  .container {
-    max-width: 540px;
-  }
-
   .mat-column-apiKey.mat-cell {
     max-width: $short-apiKey-length;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-}
-
-@include tablet-portrait {
-  .container {
-    max-width: 100%;
-  }
-}
-
-@include tablet-landscape {
-  .container {
-    max-width: 960px;
-  }
-}
-
-@include desktop {
-  .container {
-    max-width: 1180px;
   }
 }
 
