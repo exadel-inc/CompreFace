@@ -78,7 +78,7 @@ $title-height: 70px;
       }
     }
 
-    &--grid {
+    &--container {
       height: calc(100% - #{$title-height});
       padding: 0 !important;
       display: flex;
@@ -86,13 +86,13 @@ $title-height: 70px;
       &_subjects-list {
         padding-right: 1rem;
         border-right: 1px solid grey;
-        width: 30%;
+        width: 25%;
       }
 
       &_profile {
         overflow-y: hidden;
         margin-left: 1rem;
-        width: 70%;
+        width: 75%;
       }
     }
   }

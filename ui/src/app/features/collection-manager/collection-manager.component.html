@@ -50,15 +50,15 @@
       </div>
     </div>
 
-    <div class="content--grid">
-      <div class="content--grid_subjects-list">
+    <div class="content--container">
+      <div class="content--container_subjects-list">
         <app-application-list-container
           [isCollectionOnHold]="isCollectionOnHold"
           (setDefaultMode)="setDefaultMode()"
         ></app-application-list-container>
       </div>
 
-      <div class="content--grid_profile">
+      <div class="content--container_profile">
         <app-application-right-container (setDefaultMode)="setDefaultMode()"></app-application-right-container>
       </div>
     </div>
