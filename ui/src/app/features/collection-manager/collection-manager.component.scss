@@ -15,17 +15,16 @@
  */
 @import 'media.scss';
 
-$title-height: 45px;
+$title-height: 70px;
 
 .collection {
-  height: 90%;
+  height: 95%;
 
   .title {
     color: rgb(71, 71, 71);
     padding-bottom: 10px;
     font-size: 1.5rem;
     font-weight: bold;
-    height: $title-height;
     border-bottom: 1px solid grey;
     word-break: break-all;
   }
@@ -80,27 +79,20 @@ $title-height: 45px;
     }
 
     &--grid {
-      height: 100%;
+      height: calc(100% - #{$title-height});
       padding: 0 !important;
-      display: grid;
-      grid-template-columns: 1fr 3fr;
-      grid-template-areas: 'subjects-list profile';
+      display: flex;
 
       &_subjects-list {
-        grid-area: subjects-list;
-        max-height: 90%;
         padding-right: 1rem;
         border-right: 1px solid grey;
-        position: relative;
-        bottom: 10px;
+        width: 30%;
       }
 
       &_profile {
         overflow-y: hidden;
-        grid-area: profile;
         margin-left: 1rem;
-        min-width: 100%;
-        max-height: 90%;
+        width: 70%;
       }
     }
   }

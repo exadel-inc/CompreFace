@@ -20,7 +20,9 @@
       <ul class="select">
         <li *ngFor="let subject of subjectsList | subjectFilter: search" class="option" [attr.selected]="subject === currentSubject">
           <div class="avatar" (click)="selectedSubject.emit(subject)">
-            <span class="name">{{ subject }}</span>
+            <span class="name" matTooltip="{{ subject }}" matTooltipClass="top-arrow" [matTooltipDisabled]="subject.length <= 40">{{
+              subject | truncate: 40
+            }}</span>
 
             <div class="actions">
               <button
