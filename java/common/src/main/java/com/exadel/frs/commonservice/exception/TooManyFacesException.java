@@ -25,4 +25,9 @@ public class TooManyFacesException extends BasicException {
     public TooManyFacesException() {
         super(TOO_MANY_FACES, MESSAGE);
     }
+
+    @Override
+    public LogLevel getLogLevel() {
+        return LogLevel.DEBUG;
+    }
 }

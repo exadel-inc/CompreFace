@@ -6,6 +6,10 @@ import lombok.Getter;
 @Getter
 public class BasicException extends RuntimeException {
 
+    public enum LogLevel {
+        DEBUG, ERROR
+    }
+
     private final HttpExceptionCode exceptionCode;
     private final String message;
 
@@ -13,5 +17,9 @@ public class BasicException extends RuntimeException {
         super(message);
         this.exceptionCode = exceptionCode;
         this.message = message;
+    }
+
+    public LogLevel getLogLevel() {
+        return LogLevel.ERROR;
     }
 }
