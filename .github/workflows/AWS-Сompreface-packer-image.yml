@@ -1,5 +1,5 @@
 ---
-name: Сompreface packer image
+name: (AWS) Сompreface packer image
 on: 
   workflow_dispatch:
 jobs:

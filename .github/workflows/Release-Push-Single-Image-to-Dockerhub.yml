@@ -1,10 +1,10 @@
-name: Build and push Docker image to DockerHub
+name: (Release) Build and Push Single image to Production
 
 on: 
   workflow_dispatch:
     inputs:
       version:
-        description: Version (e.g., 0.4.1)
+        description: Version (e.g., 1.0.0)
         required: true
 jobs:
   build:
