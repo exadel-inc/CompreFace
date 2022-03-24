@@ -1,4 +1,4 @@
-name: Create CompreFace image for new release
+name: (AWS) Create CompreFace image for new release
 
 on: 
   workflow_dispatch:
