@@ -16,7 +16,12 @@
 
 <div *ngIf="model" class="menu" [ngStyle]="{ width: closed ? '55px' : '200px' }">
   <mat-list>
-    <mat-nav-list (click)="onDashBoard()">
+    <mat-nav-list
+      (click)="onDashBoard()"
+      matTooltip="{{ 'side_menu.dashboard' | translate }}"
+      [matTooltipPosition]="'right'"
+      [matTooltipDisabled]="!closed"
+    >
       <mat-icon> bar_chart </mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">
@@ -24,7 +29,12 @@
         </span>
       </a>
     </mat-nav-list>
-    <mat-nav-list (click)="onTest()">
+    <mat-nav-list
+      (click)="onTest()"
+      matTooltip="{{ 'side_menu.test' | translate }}"
+      [matTooltipDisabled]="!closed"
+      [matTooltipPosition]="'right'"
+    >
       <mat-icon>play_circle</mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">
@@ -32,7 +42,13 @@
         </span>
       </a>
     </mat-nav-list>
-    <mat-nav-list (click)="onManageCollection()" *ngIf="type === recognition">
+    <mat-nav-list
+      (click)="onManageCollection()"
+      matTooltip="{{ 'side_menu.face_collection' | translate }}"
+      [matTooltipPosition]="'right'"
+      [matTooltipDisabled]="!closed"
+      *ngIf="type === recognition"
+    >
       <mat-icon svgIcon="body-scan"></mat-icon>
       <a mat-nav-list>
         <span *ngIf="!closed">

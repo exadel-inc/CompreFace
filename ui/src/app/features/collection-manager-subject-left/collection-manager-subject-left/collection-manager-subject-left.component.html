@@ -20,7 +20,9 @@
       <ul class="select">
         <li *ngFor="let subject of subjectsList | subjectFilter: search" class="option" [attr.selected]="subject === currentSubject">
           <div class="avatar" (click)="selectedSubject.emit(subject)">
-            <span class="name">{{ subject }}</span>
+            <span class="name" matTooltip="{{ subject }}" matTooltipClass="top-arrow" [matTooltipDisabled]="subject.length <= 40">{{
+              subject | truncate: 40
+            }}</span>
 
             <div class="actions">
               <button
@@ -46,8 +48,10 @@
       </ul>
     </ng-container>
   </div>
-  <button mat-flat-button (click)="addSubject.emit()">
-    +
-    {{ 'manage_collection.left_side.add_subject' | translate }}
-  </button>
+  <div class="btn-container">
+    <button mat-flat-button (click)="addSubject.emit()">
+      +
+      {{ 'manage_collection.left_side.add_subject' | translate }}
+    </button>
+  </div>
 </div>

@@ -28,11 +28,14 @@
       font-size: 1.5rem;
       font-weight: bold;
       color: rgb(71, 71, 71);
+      width: 80%;
     }
 
     &--type {
       display: flex;
-      align-self: flex-end;
+      justify-content: flex-end;
+      align-items: center;
+      width: 20%;
       margin: 0;
       padding-bottom: 0.7rem;
       font-weight: bold;

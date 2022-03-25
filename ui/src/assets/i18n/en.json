@@ -186,6 +186,7 @@
     "test": "Test"
   },
   "model_info": {
+    "copy_key": "Copy Api Key",
     "service_info": "Service Info",
     "created_on": "Created on",
     "service_name": "Service Name",
