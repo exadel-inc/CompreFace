@@ -31,7 +31,14 @@
     <p class="service__api-key--label">{{ 'models.api_key' | translate }}</p>
     <p class="service__api-key--content">{{ currentModel.apiKey }}</p>
 
-    <button mat-icon-button class="service__api-key--clone" [cdkCopyToClipboard]="currentModel.apiKey">
+    <button
+      mat-icon-button
+      class="service__api-key--clone"
+      matTooltipClass="bottom-arrow"
+      matTooltip="{{ 'model_info.copy_key' | translate }}"
+      [matTooltipPosition]="'above'"
+      [cdkCopyToClipboard]="currentModel.apiKey"
+    >
       <mat-icon svgIcon="copy"></mat-icon>
     </button>
   </div>

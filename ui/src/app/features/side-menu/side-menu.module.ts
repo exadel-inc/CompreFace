@@ -20,10 +20,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SideMenuComponent } from './side-menu.component';
 import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [SideMenuComponent],
   exports: [SideMenuComponent],
-  imports: [CommonModule, MatIconModule, MatListModule, MatExpansionModule, TranslateModule],
+  imports: [CommonModule, MatIconModule, MatListModule, MatExpansionModule, MatTooltipModule, TranslateModule],
 })
 export class SideMenuModule {}

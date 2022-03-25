@@ -23,10 +23,20 @@ import { MatTableModule } from '@angular/material/table';
 import { CommonModule } from '@angular/common';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatButtonModule } from '@angular/material/button';
+import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
 
 @NgModule({
   declarations: [UserTableComponent],
   exports: [UserTableComponent],
-  imports: [CommonModule, MatFormFieldModule, MatTableModule, MatSelectModule, MatIconModule, TranslateModule, MatButtonModule],
+  imports: [
+    CommonModule,
+    MatFormFieldModule,
+    MatTableModule,
+    MatSelectModule,
+    MatIconModule,
+    TranslateModule,
+    MatButtonModule,
+    TruncateModule,
+  ],
 })
 export class UserTableModule {}
