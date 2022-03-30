@@ -23,7 +23,16 @@
   <div mat-dialog-content class="dialog__content">
     <div class="dialog__content--form_field">
       <label>{{ 'models.model_name_label' | translate }}</label>
-      <input matInput cdkFocusInitial [(ngModel)]="data.entityName" placeholder="{{ 'models.model_name' | translate }}" />
+      <input
+        matInput
+        cdkFocusInitial
+        [(ngModel)]="data.entityName"
+        (input)="onChange(data.entityName)"
+        placeholder="{{ 'models.model_name' | translate }}"
+      />
+      <mat-error *ngIf="alreadyExists">
+        <small>{{ data.errorMsg }}</small>
+      </mat-error>
     </div>
     <div class="dialog__content--form_field">
       <label>{{ 'models.model_type_label' | translate }}</label>
@@ -33,7 +42,7 @@
     </div>
   </div>
   <div mat-dialog-actions class="dialog__actions">
-    <button mat-flat-button [mat-dialog-close]="data" [disabled]="!data.entityName || !data.type">
+    <button mat-flat-button [mat-dialog-close]="data" [disabled]="!data.entityName || !data.type || alreadyExists">
       {{ 'models.create_dialog.create' | translate }}
     </button>
   </div>

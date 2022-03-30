@@ -41,6 +41,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
   userRole$: Observable<string>;
   tableConfig$: Observable<ITableConfig>;
   currentApp$: Observable<Application>;
+  models: Model[];
   roleEnum = Role;
   columns = [
     { title: 'name', property: 'name' },
@@ -64,6 +65,7 @@ export class ModelListComponent implements OnInit, OnDestroy {
     this.isLoading$ = this.modelListFacade.isLoading$;
     this.userRole$ = this.modelListFacade.userRole$;
     this.tableConfig$ = this.modelListFacade.models$.pipe(
+      tap(models => (this.models = models)),
       map(models => ({
         columns: this.columns,
         data: models,
@@ -77,6 +79,8 @@ export class ModelListComponent implements OnInit, OnDestroy {
       data: {
         type: this.translate.instant('models.header'),
         label: this.translate.instant('models.type'),
+        errorMsg: this.translate.instant('models.error_msg'),
+        models: this.models,
         entityName: model.name,
         entityType: model.type,
       },
@@ -97,7 +101,11 @@ export class ModelListComponent implements OnInit, OnDestroy {
   clone(model: Model) {
     const dialog = this.dialog.open(ModelCloneDialogComponent, {
       panelClass: 'custom-mat-dialog',
-      data: { entityType: this.translate.instant('models.header') },
+      data: {
+        entityType: this.translate.instant('models.header'),
+        errorMsg: this.translate.instant('models.error_msg'),
+        models: this.models,
+      },
     });
 
     dialog
@@ -144,6 +152,8 @@ export class ModelListComponent implements OnInit, OnDestroy {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('models.header'),
+        errorMsg: this.translate.instant('models.error_msg'),
+        models: this.models,
       },
     });
 
