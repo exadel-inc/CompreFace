@@ -38,7 +38,7 @@ export class SideMenuComponent {
     this.app = this.route.snapshot.queryParams.app;
     this.model = this.route.snapshot.queryParams.model;
     this.type = this.route.snapshot.queryParams.type;
-    this.currentPage = '/' + this.route.snapshot.url[0].path;
+    this.currentPage = '/' + this.route.snapshot.url[0]?.path;
   }
 
   get routes(): typeof Routes {
