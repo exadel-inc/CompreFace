@@ -26,7 +26,7 @@
       {{ 'common.capital.save' | translate }}
     </button>
   </div>
-  <button class="button-cross" mat-icon-button (click)="onCancelClick()">
+  <button class="button-cross" mat-icon-button [mat-dialog-close]="false">
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
   </button>
 </div>
