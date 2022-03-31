@@ -51,8 +51,14 @@
 
   .mat-nav-list {
     cursor: pointer;
+    margin: 5px;
     padding: 0.5rem;
     display: flex;
+
+    &.highlighted {
+      border-radius: 5px;
+      background: rgb(180, 180, 180);
+    }
 
     &:hover {
       background: rgb(180, 180, 180);
