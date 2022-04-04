@@ -18,14 +18,17 @@
 <div mat-dialog-content>
   <mat-form-field appearance="outline" floatLabel="always">
     <mat-label>{{ 'common.name' | translate }}</mat-label>
-    <input matInput [(ngModel)]="initialName" placeholder="{{ 'common.name' | translate }}" />
+    <input matInput [(ngModel)]="initialName" (input)="onChange(initialName)" placeholder="{{ 'common.name' | translate }}" />
   </mat-form-field>
+  <mat-error *ngIf="alreadyExists">
+    <small>{{ data.errorMsg }}</small>
+  </mat-error>
 </div>
 <div mat-dialog-actions>
   <button mat-flat-button cdkFocusInitial (click)="dialogRef.close()">
     {{ 'common.capital.cancel' | translate }}
   </button>
-  <button mat-flat-button color="primary" [mat-dialog-close]="initialName" [disabled]="isCloneDisabled">
+  <button mat-flat-button color="primary" [mat-dialog-close]="initialName" [disabled]="isCloneDisabled || alreadyExists">
     {{ 'common.capital.clone' | translate }}
   </button>
 </div>

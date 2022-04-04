@@ -13,14 +13,12 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-@import 'mixins.scss';
 @import 'colors.scss';
 @import 'mixins.scss';
 
 .collection-right-container {
   height: 98%;
   padding-right: 1.5rem;
-  margin-right: 1rem;
   overflow-y: scroll;
 }
 .spinner {

@@ -87,12 +87,14 @@ $title-height: 70px;
         padding-right: 1rem;
         border-right: 1px solid grey;
         width: 25%;
+        min-width: 200px;
+        max-width: 300px;
       }
 
       &_profile {
         overflow-y: hidden;
         margin-left: 1rem;
-        width: 75%;
+        width: 100%;
       }
     }
   }

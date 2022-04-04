@@ -32,8 +32,8 @@ import { Input } from '@angular/core';
 @Component({
   selector: 'app-application-list-container',
   template: `<app-collection-manager-subject-left
-    [subjectsList]="subjectsList$ | async"
     [currentSubject]="currentSubject$ | async"
+    [subjectsList]="subjectsList"
     [isCollectionOnHold]="isCollectionOnHold"
     [apiKey]="apiKey$ | async"
     [isPending]="isPending$ | async"
@@ -47,11 +47,13 @@ import { Input } from '@angular/core';
 })
 export class CollectionManagerSubjectLeftContainerComponent implements OnInit, OnDestroy {
   currentSubject$: Observable<string>;
-  subjectsList$: Observable<string[]>;
   isPending$: Observable<boolean>;
   apiKey$: Observable<string>;
+
   collectionItemsSubs: Subscription;
+  subjectsSubs: Subscription;
   itemsInProgress: boolean;
+  subjectsList: string[];
 
   @Input() isCollectionOnHold: boolean;
   @Output() setDefaultMode = new EventEmitter();
@@ -66,9 +68,11 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
 
   ngOnInit(): void {
     this.currentSubject$ = this.collectionLeftFacade.currentSubject$;
-    this.subjectsList$ = this.collectionLeftFacade.subjectsList$;
     this.isPending$ = this.collectionLeftFacade.isPending$;
     this.apiKey$ = this.collectionLeftFacade.apiKey$;
+
+    this.subjectsSubs = this.collectionLeftFacade.subjectsList$.subscribe(subjects => (this.subjectsList = subjects));
+
     this.collectionItemsSubs = this.collectionRightFacade.collectionItems$
       .pipe(
         map(collection => collection.filter(item => item.status === CircleLoadingProgressEnum.InProgress)),
@@ -101,9 +105,6 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
   }
 
   edit(name: string): void {
-    let subjectList;
-    const subs = this.collectionRightFacade.subjects$.subscribe(subjects => (subjectList = subjects));
-
     const dialog = this.dialog.open(EditSubjectDialog, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -119,9 +120,7 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
         filter(result => result)
       )
       .subscribe(editName => {
-        subjectList.includes(editName) ? this.merger(editName, name) : this.collectionLeftFacade.edit(editName, name, this.apiKey);
-
-        subs.unsubscribe();
+        this.subjectsList.includes(editName) ? this.merger(editName, name) : this.collectionLeftFacade.edit(editName, name, this.apiKey);
       });
   }
 
@@ -148,6 +147,8 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
       data: {
         entityType: this.translate.instant('manage_collection.left_side.modal_title'),
         placeholder: this.translate.instant('manage_collection.left_side.subject_name'),
+        errorMsg: this.translate.instant('manage_collection.error_msg'),
+        nameList: this.subjectsList,
         name: '',
       },
     });
@@ -188,5 +189,6 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
 
   ngOnDestroy() {
     this.collectionItemsSubs.unsubscribe();
+    this.subjectsSubs.unsubscribe();
   }
 }

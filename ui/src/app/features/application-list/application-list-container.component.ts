@@ -13,11 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AppUser } from 'src/app/data/interfaces/app-user';
 import { Application } from 'src/app/data/interfaces/application';
 import { UserDeletion } from 'src/app/data/interfaces/user-deletion';
@@ -34,7 +34,7 @@ import { ApplicationListFacade } from './application-list-facade';
     <app-application-list
       [isLoading]="isLoading$ | async"
       [userRole]="userRole$ | async"
-      [applicationCollection]="application$ | async"
+      [applicationCollection]="applications"
       (selectApp)="onClick($event)"
       (createApp)="onCreateNewApp()"
       (manageUsers)="onManageUsers()"
@@ -43,13 +43,15 @@ import { ApplicationListFacade } from './application-list-facade';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApplicationListContainerComponent implements OnInit {
+export class ApplicationListContainerComponent implements OnInit, OnDestroy {
   isLoading$: Observable<boolean>;
   userRole$: Observable<string>;
-  application$: Observable<Application[]>;
   users$: Observable<AppUser[]>;
   currentUserId$: Observable<string>;
+
   selectedOption = 'deleter';
+  applications: Application[];
+  subs: Subscription;
 
   constructor(
     private applicationFacade: ApplicationListFacade,
@@ -64,9 +66,9 @@ export class ApplicationListContainerComponent implements OnInit {
   ngOnInit() {
     this.isLoading$ = this.applicationFacade.isLoading$;
     this.userRole$ = this.applicationFacade.userRole$;
-    this.application$ = this.applicationFacade.applications$;
     this.users$ = this.applicationFacade.appUsers$;
     this.currentUserId$ = this.applicationFacade.currentUserId$;
+    this.subs = this.applicationFacade.applications$.subscribe(applications => (this.applications = applications));
   }
 
   onClick(application): void {
@@ -78,11 +80,15 @@ export class ApplicationListContainerComponent implements OnInit {
   }
 
   onCreateNewApp(): void {
+    const applicationNames = this.applications.map(app => app.name);
+
     const dialog = this.dialog.open(CreateDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('applications.header.title'),
         placeholder: this.translate.instant('applications.name'),
+        errorMsg: this.translate.instant('applications.error_msg'),
+        nameList: applicationNames,
         name: '',
       },
     });
@@ -134,5 +140,9 @@ export class ApplicationListContainerComponent implements OnInit {
       userIdSubs.unsubscribe();
       dialogSubs.unsubscribe();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 }

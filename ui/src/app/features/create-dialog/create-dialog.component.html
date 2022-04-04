@@ -21,11 +21,20 @@
   <div mat-dialog-content class="dialog__content">
     <div class="dialog__content--form_field">
       <label>{{ data.placeholder }}</label>
-      <input matInput cdkFocusInitial [(ngModel)]="data.entityName" placeholder="{{ data.placeholder }}" />
+      <input
+        matInput
+        cdkFocusInitial
+        (input)="onChange(data.entityName)"
+        [(ngModel)]="data.entityName"
+        placeholder="{{ data.placeholder }}"
+      />
+      <mat-error *ngIf="alreadyExists">
+        <small>{{ data.errorMsg }}</small>
+      </mat-error>
     </div>
   </div>
   <div mat-dialog-actions class="dialog__actions">
-    <button mat-flat-button [mat-dialog-close]="data.entityName" [disabled]="!data.entityName">
+    <button mat-flat-button [mat-dialog-close]="data.entityName" [disabled]="!data.entityName || alreadyExists">
       {{ 'common.capital.create' | translate | titlecase }}
     </button>
   </div>

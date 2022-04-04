@@ -19,7 +19,10 @@
   <div mat-dialog-content>
     <div class="form-field">
       <label>{{ 'common.name' | translate }}</label>
-      <input [(ngModel)]="initialName" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
+      <input [(ngModel)]="initialName" (input)="onChange(initialName)" placeholder="{{ data.type }} {{ 'common.name' | translate }}" />
+      <mat-error *ngIf="data.entityType && alreadyExists">
+        <small>{{ data.errorMsg }}</small>
+      </mat-error>
     </div>
     <div class="content">
       <p class="label">{{ data.label }}</p>
@@ -31,7 +34,7 @@
   </div>
 
   <div class="actions" mat-dialog-actions>
-    <button mat-flat-button class="save-btn" [disabled]="isRenameDisabled || !initialName" (click)="onSave()">
+    <button mat-flat-button class="save-btn" [disabled]="isRenameDisabled || !initialName || alreadyExists" (click)="onSave()">
       {{ 'common.capital.save' | translate }}
     </button>
 

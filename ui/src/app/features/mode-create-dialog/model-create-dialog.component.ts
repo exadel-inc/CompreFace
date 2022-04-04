@@ -23,10 +23,17 @@ import { ServiceTypes } from '../../data/enums/service-types.enum';
   styleUrls: ['./model-create-dialog.component.scss'],
 })
 export class ModelCreateDialogComponent extends CreateDialogComponent {
+  alreadyExists: boolean;
+
   constructor(public dialogRef: MatDialogRef<CreateDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     super(dialogRef, data);
     this.data.type = ServiceTypes.Recognition;
   }
+
+  onChange(name): void {
+    this.alreadyExists = !!this.data.models.find(model => model.name === name);
+  }
+
   typeValues = ServiceTypes;
   typeValuesKeysArray = Object.keys(ServiceTypes);
 }

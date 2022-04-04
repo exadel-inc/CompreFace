@@ -13,18 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
- @import 'media.scss';
- 
-.image-holder-collection {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  grid-gap: 1.5rem;
+@import 'media.scss';
 
-  @include tablet {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
+.image-holder-collection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 
   @include mobile {
-    grid-template-columns: 1fr 1fr;
+    justify-content: center;
   }
 }

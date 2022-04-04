@@ -28,6 +28,7 @@ export class EditDialogComponent {
   initialName: string;
   panelOpenState: boolean = false;
   deleteInput: string = '';
+  alreadyExists: boolean;
 
   get isRenameDisabled(): any {
     return this.data.entityName === this.initialName || !this.data.entityName;
@@ -35,6 +36,10 @@ export class EditDialogComponent {
 
   constructor(public dialogRef: MatDialogRef<EditDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: any) {
     this.initialName = data.entityName;
+  }
+
+  onChange(name): void {
+    this.alreadyExists = !!this.data.models.find(model => model.name === name);
   }
 
   onSave() {

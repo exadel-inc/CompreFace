@@ -77,6 +77,7 @@
       "button": "Create New",
       "add_button": "Create New"
     },
+    "error_msg": "Application with this name already exists.",
     "header": {
       "title": "Application",
       "edit": "Edit",
@@ -104,6 +105,7 @@
     "type": "Type",
     "api_key": "API key",
     "header": "Service",
+    "error_msg": "Model with this name already exists",
     "create_model_info": "Create one of face recognition services: Face Recognition, Face Detection or Face Verification.",
     "info_about_service": "Services provide you with different face recognition functionality. Each service has an API key you need to make requests. Please choose service type according to your business needs.",
     "model_name_label": "What would you like to name this service ?",
@@ -246,6 +248,7 @@
   },
   "manage_collection": {
     "header": "Subjects",
+    "error_msg": "Subject with this name already exists",
     "bulk_select": "Bulk Select",
     "cancel_select": "Cancel Select",
     "delete": "Delete Selected",
