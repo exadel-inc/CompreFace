@@ -20,13 +20,8 @@ import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
 import { AppUser } from 'src/app/data/interfaces/app-user';
+import { UserData } from 'src/app/data/interfaces/user-data';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-
-export interface UserData {
-  role: string;
-  userId: string;
-  fullName: string;
-}
 
 @Component({
   selector: 'manage-users',
@@ -56,7 +51,6 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.currentUserData = this.data.userCollection.find(user => user.userId === this.data.currentUserId);
-
     this.currentUserData.role === Role.Owner
       ? (this.roleValues = Object.keys(Role))
       : (this.roleValues = [Object.keys(Role)[1], Object.keys(Role)[2]]);
@@ -93,6 +87,7 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
       return {
         role: user.role,
         userId: user.id,
+        email: user.email,
         fullName: user.firstName + ' ' + user.lastName,
       };
     });
