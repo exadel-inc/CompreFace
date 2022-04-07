@@ -251,8 +251,8 @@
     "header": "Subjects",
     "error_msg": "Subject with this name already exists",
     "bulk_select": "Bulk Select",
-    "cancel_select": "Cancel Select",
-    "delete": "Delete Selected",
+    "cancel_select": "Cancel",
+    "delete": "Delete",
     "left_side": {
       "add_subject": "Add Subject",
       "search": "Search...",

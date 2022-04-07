@@ -49,6 +49,26 @@ $title-height: 70px;
         margin: 0;
       }
 
+      .form-group {
+        display: flex;
+        align-self: flex-end;
+        margin-left: 50px;
+        width: 40%;
+        min-width: 300px;
+        border-bottom: 1px solid rgb(202, 202, 202);
+
+        input {
+          width: 100%;
+          background: none;
+          border: none;
+          outline: none;
+
+          &::placeholder {
+            font-size: 16px;
+          }
+        }
+      }
+
       .container {
         padding: 0;
         display: flex;
@@ -60,19 +80,21 @@ $title-height: 70px;
           color: rgb(131, 130, 130);
           border: 2px solid rgb(131, 131, 131);
           background: #dfdfdf;
-          padding: 0.4rem 1.5rem;
-          border-radius: 8px;
-          margin-left: 20px;
+          padding: 0.3rem 2rem;
+          border-radius: 10px;
 
           &[disabled] {
             cursor: auto;
             opacity: 0.6;
           }
 
-          &_del {
-            border: 2px solid rgb(199, 82, 82);
-            background: rgb(230, 112, 112);
-            color: white;
+          &_cancel {
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-weight: 700;
+            margin: 0 20px 0 40px;
+            color: rgb(131, 130, 130);
           }
         }
       }

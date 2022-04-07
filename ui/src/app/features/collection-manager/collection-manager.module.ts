@@ -16,7 +16,9 @@
 
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
@@ -33,6 +35,8 @@ import { CollectionManagerComponent } from './collection-manager.components';
     TranslateModule,
     CollectionManagerSubjectLeftModule,
     CollectionManagerSubjectRightModule,
+    FormsModule,
+    MatIconModule,
     TruncateModule,
   ],
   exports: [CollectionManagerComponent],
