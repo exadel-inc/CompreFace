@@ -22,13 +22,25 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { TruncateModule } from '../../ui/truncate-pipe/truncate.module';
+import { InviteDialogComponent } from '../invite-dialog/invite-dialog.component';
+import { InviteDialogModule } from '../invite-dialog/invite-dialog.module';
 import { BreadcrumbsComponent } from './breadcrumbs.component';
 import { BreadcrumbsFacade } from './breadcrumbs.facade';
 
 @NgModule({
   declarations: [BreadcrumbsComponent],
   exports: [BreadcrumbsComponent],
-  imports: [CommonModule, RouterModule, MatCardModule, TruncateModule, MatTooltipModule, TranslateModule, MatIconModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatCardModule,
+    TruncateModule,
+    MatTooltipModule,
+    TranslateModule,
+    MatIconModule,
+    InviteDialogModule,
+  ],
   providers: [BreadcrumbsFacade],
+  entryComponents: [InviteDialogComponent],
 })
 export class BreadcrumbsModule {}

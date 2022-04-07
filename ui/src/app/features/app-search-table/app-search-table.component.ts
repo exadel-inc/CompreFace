@@ -29,7 +29,6 @@ export class AppSearchTableComponent {
   @Input() buttonText: string;
   @Input() requiredRole: string;
   @Input() currentRole: string;
-  @Input() app: Application;
   @Input() hideContent: boolean;
 
   @Output() manageUsersView = new EventEmitter();
@@ -47,10 +46,5 @@ export class AppSearchTableComponent {
 
   onOpenUserList() {
     this.manageUsersView.emit();
-  }
-
-  disableToolTip(element: string): boolean {
-    const maxElementLength = 20;
-    return element.length <= maxElementLength;
   }
 }

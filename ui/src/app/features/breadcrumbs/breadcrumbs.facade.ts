@@ -16,7 +16,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable, Subscription } from 'rxjs';
+import { Role } from 'src/app/data/enums/role.enum';
+import { AppUser } from 'src/app/data/interfaces/app-user';
+import { deleteUserFromApplication, inviteAppUser, updateAppUserRole } from 'src/app/store/app-user/action';
+import { selectAppUsers, selectAvailableEmails, selectAvailableRoles } from 'src/app/store/app-user/selectors';
 import { updateApplication, deleteApplication } from 'src/app/store/application/action';
+import { selectUserId } from 'src/app/store/userInfo/selectors';
 
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
@@ -29,13 +34,21 @@ export class BreadcrumbsFacade {
   app$: Observable<Application>;
   model$: Observable<Model>;
   selectedId$: Observable<string | null>;
+  appUsers$: Observable<AppUser[]>;
+  availableRoles$: Observable<string[]>;
+  availableEmails$: Observable<string[]>;
+  currentUserId$: Observable<string>;
   selectedId: string | null;
   appIdSub: Subscription;
 
   constructor(private store: Store<AppState>) {
     this.app$ = this.store.select(selectCurrentApp);
     this.model$ = this.store.select(selectCurrentModel);
-    this.selectedId$ = store.select(selectCurrentAppId);
+    this.selectedId$ = this.store.select(selectCurrentAppId);
+    this.appUsers$ = this.store.select(selectAppUsers);
+    this.currentUserId$ = this.store.select(selectUserId);
+    this.availableEmails$ = this.store.select(selectAvailableEmails);
+    this.availableRoles$ = this.store.select(selectAvailableRoles);
   }
 
   rename(name: string, app: Application) {
@@ -44,5 +57,36 @@ export class BreadcrumbsFacade {
 
   delete(app: Application) {
     this.store.dispatch(deleteApplication({ id: app.id }));
+  }
+
+  updateUserRole(id: string, role: Role, appId: string): void {
+    this.store.dispatch(
+      updateAppUserRole({
+        applicationId: appId,
+        user: {
+          id,
+          role,
+        },
+      })
+    );
+  }
+
+  deleteAppUsers(userId: string, appId: string) {
+    this.store.dispatch(
+      deleteUserFromApplication({
+        applicationId: appId,
+        userId,
+      })
+    );
+  }
+
+  inviteUser(email: string, role: Role, appId: string): void {
+    this.store.dispatch(
+      inviteAppUser({
+        applicationId: appId,
+        userEmail: email,
+        role,
+      })
+    );
   }
 }

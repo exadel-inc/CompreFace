@@ -1,4 +1,4 @@
-/*!
+/*
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,11 +14,9 @@
  * permissions and limitations under the License.
  */
 
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'application-users',
-  templateUrl: './application-users.component.html',
-  styleUrls: ['./application-users.component.scss'],
-})
-export class ApplicationUsersComponent {}
+export interface UserData {
+  role: string;
+  userId: string;
+  email: string;
+  fullName: string;
+}

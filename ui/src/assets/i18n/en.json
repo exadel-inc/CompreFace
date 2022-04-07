@@ -158,6 +158,7 @@
       "search_label": "Search Users",
       "user_name": "User Name",
       "users": "Names",
+      "emails": "Emails",
       "roles": "Roles",
       "save": "Save"
     }
