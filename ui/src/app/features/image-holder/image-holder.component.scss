@@ -65,6 +65,12 @@
   top: 0;
   bottom: 0;
   backdrop-filter: blur(20px) brightness(0.6);
+
+  input {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
 }
 
 .selection-icon {

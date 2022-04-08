@@ -20,7 +20,7 @@
     </div>
     <img [src]="item.url" />
     <div *ngIf="selectionMode && item.isSelected" class="selection-overlay">
-      <mat-icon class="selection-icon">check_circle_outline</mat-icon>
+      <input type="checkbox" [(ngModel)]="item.isSelected" />
     </div>
     <circle-progress *ngIf="!selectionMode" [state]="item.status" (cancel)="onCancel.emit(item)" [error]="item.error"></circle-progress>
   </ng-container>
