@@ -21,13 +21,14 @@
 
   .delete-icon {
     position: absolute;
-    top: -1rem;
-    right: -1rem;
+    top: 0.5rem;
+    right: 0.5rem;
     z-index: 1;
 
     button {
-      height: 2rem;
-      width: 2rem;
+      cursor: pointer;
+      border: none;
+      background: none;
 
       .mat-button-wrapper {
         padding: 0.5rem 0;
@@ -46,8 +47,9 @@
   img {
     display: block;
     width: 100%;
-    height: 250px;
+    height: 150px;
     object-fit: cover;
+    border-radius: 10px;
   }
 
   &_selection-mode {
@@ -63,6 +65,12 @@
   top: 0;
   bottom: 0;
   backdrop-filter: blur(20px) brightness(0.6);
+
+  input {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+  }
 }
 
 .selection-icon {

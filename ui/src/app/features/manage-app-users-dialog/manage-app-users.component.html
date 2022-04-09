@@ -1,0 +1,65 @@
+<!--
+  ~ Copyright (c) 2020 the original author or authors
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      https://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+  ~ or implied. See the License for the specific language governing
+  ~ permissions and limitations under the License.
+  -->
+<div class="container">
+  <h1 class="container__title">Manage Application Users</h1>
+
+  <div class="search__form">
+    <label class="search__form--label">{{ 'users.manage.search_label' | translate }}</label>
+    <input type="text" class="search__form--input" [(ngModel)]="search" placeholder="{{ 'users.manage.user_name' | translate }}" />
+    <button class="search__form--btn" (click)="onInvite()">
+      {{ 'users.create.add_button' | translate }}
+    </button>
+  </div>
+
+  <div class="user">
+    <div class="user__container">
+      <p class="user__container--users title">{{ 'users.manage.users' | translate }}</p>
+      <p class="user__container--emails title">{{ 'users.manage.emails' | translate }}</p>
+      <p class="user__container--roles title">{{ 'users.manage.roles' | translate }}</p>
+    </div>
+    <div class="user__list">
+      <ng-container *ngFor="let user of collection | userTableFilter: search">
+        <div class="user__list--items">
+          <p class="user__name">{{ user.fullName | truncate: 15 }}</p>
+          <p class="user__name">{{ user.email | truncate: 15 }}</p>
+
+          <select class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
+            <ng-container *ngIf="data.currentUserId === appOwner.userId; else disabled">
+              <option *ngFor="let role of roleValues" class="user__role--option" name="role" [value]="role | uppercase">
+                {{ role }}
+              </option>
+            </ng-container>
+
+            <ng-template #disabled>
+              <option class="user__role--option" name="role" [value]="user.role | uppercase">
+                {{ user.role | lowercase }}
+              </option>
+            </ng-template>
+          </select>
+          <div class="user__delete" *ngIf="data.currentUserId === user.userId || data.currentUserId === appOwner.userId">
+            <mat-icon
+              class="user__delete--icon"
+              (click)="onDelete(user)"
+              [ngStyle]="{ display: user.userId === appOwner.userId ? 'none' : 'block' }"
+            >
+              delete_outline
+            </mat-icon>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -17,10 +17,11 @@
 <div class="model-list">
   <app-search-table
     [currentRole]="userRole$ | async"
-    [app]="currentApp$ | async"
     [requiredRole]="roleEnum.User"
+    [hideContent]="true"
     (inputSearch)="onSearch($event)"
     (modalWindow)="onCreateNewModel()"
+    title="{{ 'models.create_dialog.title' | translate }}"
     buttonText="{{ 'applications.create.button' | translate }}"
     searchPlaceholder="{{ 'models.search.title' | translate }}"
   >

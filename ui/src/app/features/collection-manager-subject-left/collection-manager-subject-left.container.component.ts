@@ -37,6 +37,7 @@ import { Input } from '@angular/core';
     [isCollectionOnHold]="isCollectionOnHold"
     [apiKey]="apiKey$ | async"
     [isPending]="isPending$ | async"
+    [search]="search"
     (editSubject)="edit($event)"
     (deleteSubject)="delete($event)"
     (addSubject)="addSubject()"
@@ -56,6 +57,7 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
   subjectsList: string[];
 
   @Input() isCollectionOnHold: boolean;
+  @Input() search: string;
   @Output() setDefaultMode = new EventEmitter();
   private apiKey: string;
 

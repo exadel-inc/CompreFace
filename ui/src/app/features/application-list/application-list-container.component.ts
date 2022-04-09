@@ -25,7 +25,6 @@ import { CreateDialogComponent } from 'src/app/features/create-dialog/create-dia
 
 import { Routes } from '../../data/enums/routers-url.enum';
 import { ManageUsersDialog } from '../manage-users-dialog/manage-users.component';
-import { UserListFacade } from '../user-list/user-list-facade';
 import { ApplicationListFacade } from './application-list-facade';
 
 @Component({
@@ -55,7 +54,6 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
 
   constructor(
     private applicationFacade: ApplicationListFacade,
-    private userListFacade: UserListFacade,
     private dialog: MatDialog,
     private router: Router,
     private translate: TranslateService
@@ -124,7 +122,7 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
         updatedUsers.forEach(user => {
           const deletedUser = deletedUsers.find(userData => userData.userId === user.userId);
           if (!deletedUser) {
-            this.userListFacade.updateUserRole(user.userId, user.role);
+            this.applicationFacade.updateUserRole(user.userId, user.role);
           }
         });
       }
@@ -132,7 +130,7 @@ export class ApplicationListContainerComponent implements OnInit, OnDestroy {
       if (deletedUsers) {
         deletedUsers.forEach(user => {
           const deletion: UserDeletion = { deleterUserId: userId, userToDelete: user, isDeleteHimSelf: false };
-          this.userListFacade.deleteUser(deletion, this.selectedOption);
+          this.applicationFacade.deleteUser(deletion, this.selectedOption);
         });
       }
 

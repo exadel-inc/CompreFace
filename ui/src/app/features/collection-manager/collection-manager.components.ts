@@ -39,6 +39,7 @@ export class CollectionManagerComponent implements OnInit, OnDestroy {
   isCollectionOnHold: boolean;
   selectedIds: string[];
   currentModelName: string;
+  search: string = '';
 
   constructor(private collectionRightFacade: CollectionRightFacade, private translate: TranslateService, private dialog: MatDialog) {}
 

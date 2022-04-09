@@ -15,16 +15,16 @@
  */
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { first, filter, tap } from 'rxjs/operators';
-import { Routes } from 'src/app/data/enums/routers-url.enum';
 
 import { Application } from '../../data/interfaces/application';
 import { Model } from '../../data/interfaces/model';
 import { BreadcrumbsFacade } from '../breadcrumbs/breadcrumbs.facade';
 import { EditDialogComponent } from '../edit-dialog/edit-dialog.component';
+import { ManageAppUsersDialog } from '../manage-app-users-dialog/manage-app-users.component';
 
 @Component({
   selector: 'app-breadcrumbs-container',
@@ -49,7 +49,6 @@ export class BreadcrumbsContainerComponent implements OnInit {
     private breadcrumbsFacade: BreadcrumbsFacade,
     private translate: TranslateService,
     private dialog: MatDialog,
-    private router: Router,
     private route: ActivatedRoute
   ) {}
 
@@ -84,10 +83,41 @@ export class BreadcrumbsContainerComponent implements OnInit {
   }
 
   onUsersList(app: Application): void {
-    this.router.navigate([Routes.AppUsers], {
-      queryParams: {
-        app: app.id,
+    let appUsers;
+    let currentUserId;
+
+    const collectionSubs = this.breadcrumbsFacade.appUsers$.subscribe(users => (appUsers = users));
+
+    const userSubs = this.breadcrumbsFacade.currentUserId$.subscribe(userId => (currentUserId = userId));
+
+    const dialog = this.dialog.open(ManageAppUsersDialog, {
+      data: {
+        collection: appUsers,
+        currentApp: app,
+        currentUserId: currentUserId,
       },
+    });
+
+    const dialogSubs = dialog.afterClosed().subscribe(res => {
+      const deletedUsers = res?.deletedUsers;
+      const updatedUsers = res?.updatedUsers;
+      const appId = res.appId;
+
+      if (updatedUsers.length) {
+        updatedUsers.forEach(user => {
+          this.breadcrumbsFacade.updateUserRole(user.userId, user.role, appId);
+        });
+      }
+
+      if (deletedUsers.length) {
+        deletedUsers.forEach(user => {
+          this.breadcrumbsFacade.deleteAppUsers(user.userId, appId);
+        });
+      }
+
+      userSubs.unsubscribe();
+      collectionSubs.unsubscribe();
+      dialogSubs.unsubscribe();
     });
   }
 }

@@ -19,10 +19,11 @@ import { ImageHolderComponent } from './image-holder.component';
 import { CircleLoadingProgressModule } from '../circle-loading-progress/circle-loading-progress.module';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ImageHolderComponent],
   exports: [ImageHolderComponent],
-  imports: [CommonModule, MatIconModule, MatButtonModule, CircleLoadingProgressModule],
+  imports: [CommonModule, MatIconModule, FormsModule, MatButtonModule, CircleLoadingProgressModule],
 })
 export class ImageHolderModule {}

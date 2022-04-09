@@ -17,28 +17,28 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
+import { TablePipeModule } from 'src/app/ui/search-pipe/table-filter.module';
 import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
-import { CollectionManagerSubjectLeftModule } from '../collection-manager-subject-left/collection-manager-subject-left.module';
-import { CollectionManagerSubjectRightModule } from '../collection-manager-subject-right/collection-manager-subject-right.module';
-import { CollectionManagerComponent } from './collection-manager.components';
+import { ManageAppUsersDialog } from './manage-app-users.component';
 
 @NgModule({
-  declarations: [CollectionManagerComponent],
+  declarations: [ManageAppUsersDialog],
   imports: [
     CommonModule,
-    MatCardModule,
-    MatTooltipModule,
-    TranslateModule,
-    CollectionManagerSubjectLeftModule,
-    CollectionManagerSubjectRightModule,
+    MatDialogModule,
     FormsModule,
     MatIconModule,
+    TranslateModule,
+    MatButtonModule,
+    MatTooltipModule,
+    TablePipeModule,
     TruncateModule,
   ],
-  exports: [CollectionManagerComponent],
+  exports: [ManageAppUsersDialog],
 })
-export class CollectionManagerModule {}
+export class ManageAppUsersModule {}
