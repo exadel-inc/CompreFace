@@ -89,12 +89,12 @@ docker run -d --name=CompreFace -v compreface-db:/var/lib/postgresql/data -p 800
 
 To run custom builds you can use corresponding tags, e.g.:
 ```commandline
-docker run -d --name=CompreFace -v compreface-db:/var/lib/postgresql/data -p 8000:80 exadel/compreface:0.6.1-mobilenet
+docker run -d --name=CompreFace -v compreface-db:/var/lib/postgresql/data -p 8000:80 exadel/compreface:1.0.0-mobilenet
 ```
 
 To run version with GPU, you need to specify `--runtime=nvidia` and corresponding tag, e.g.:
 ```commandline
-docker run -d --name=CompreFace -v compreface-db:/var/lib/postgresql/data --runtime=nvidia -p 8000:80 exadel/compreface:0.6.1-arcface-r100-gpu 
+docker run -d --name=CompreFace -v compreface-db:/var/lib/postgresql/data --runtime=nvidia -p 8000:80 exadel/compreface:1.0.0-arcface-r100-gpu 
 ```
 
 ### Maintaining tips
