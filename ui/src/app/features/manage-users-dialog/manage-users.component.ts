@@ -47,7 +47,7 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
     public confirmDialog: MatDialog,
     private readonly cdRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.currentUserData = this.data.userCollection.find(user => user.userId === this.data.currentUserId);
@@ -59,12 +59,7 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
 
     this.sortUsers();
 
-    this.closeSubs = this.dialogRef.backdropClick().subscribe(() =>
-      this.dialogRef.close({
-        deletedUsers: this.deletedUsersCollection,
-        updatedUsers: this.updatedUsersCollection,
-      })
-    );
+    this.closeSubs = this.dialogRef.backdropClick().subscribe(() => this.onClose());
   }
 
   onChange(user: UserData): void {
@@ -131,6 +126,13 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
 
       ownerUser ? (this.disable = true) : (this.disable = false);
     }
+  }
+
+  onClose(): void {
+    this.dialogRef.close({
+      deletedUsers: this.deletedUsersCollection,
+      updatedUsers: this.updatedUsersCollection,
+    })
   }
 
   ngOnDestroy(): void {

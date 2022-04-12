@@ -15,6 +15,7 @@
  */
 
 @import './colors.scss';
+@import './mixins.scss';
 
 .container {
   width: 600px;
@@ -129,5 +130,15 @@
     border: 2px solid #e0e0e0;
     border-radius: 10px;
     font-weight: bold;
+  }
+
+  .button-cross {
+    position: absolute;
+    top: -1.5rem;
+    right: 0rem;
+  
+    .mat-icon {
+      @include sm-icon-size(16px)
+    }
   }
 }

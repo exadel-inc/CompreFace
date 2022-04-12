@@ -62,13 +62,7 @@ export class ManageAppUsersDialog implements OnInit {
     this.roleValues = Object.keys(Role);
     this.availableRolesSubscription = this.breadcrumbsFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
 
-    this.closeSubs = this.dialogRef.backdropClick().subscribe(() =>
-      this.dialogRef.close({
-        deletedUsers: this.deletedUsersCollection,
-        updatedUsers: this.updatedUsersCollection,
-        appId: this.data.currentApp.id,
-      })
-    );
+    this.closeSubs = this.dialogRef.backdropClick().subscribe(() => this.onClose());
   }
 
   sortUsers(collection: AppUser[]): void {
@@ -146,6 +140,14 @@ export class ManageAppUsersDialog implements OnInit {
         })
       )
       .subscribe(() => dialogSubs.unsubscribe());
+  }
+
+  onClose(): void {
+    this.dialogRef.close({
+      deletedUsers: this.deletedUsersCollection,
+      updatedUsers: this.updatedUsersCollection,
+      appId: this.data.currentApp.id,
+    })
   }
 
   ngOnDestroy(): void {
