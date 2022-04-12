@@ -40,7 +40,7 @@
               {{ user.fullName | truncate: 15 }}
           </p>
           <p class="user__name">{{ user.email | truncate: 15 }}</p>
-
+          
           <select class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
             <ng-container *ngIf="data.currentUserId === appOwner.userId; else disabled">
               <option *ngFor="let role of roleValues" class="user__role--option" name="role" [value]="role | uppercase">
@@ -67,7 +67,7 @@
       </ng-container>
     </div>
   </div>
-  <button class="button-cross" mat-icon-button (click)="onClose()">
+  <button class="button-cross" mat-icon-button mat-dialog-close>
     <mat-icon svgIcon="cross_new" ></mat-icon>
   </button>
 </div>
