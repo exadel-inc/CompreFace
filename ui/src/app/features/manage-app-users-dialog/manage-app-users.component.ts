@@ -14,7 +14,7 @@
  * permissions and limitations under the License.
  */
 
-import { Component, Inject, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, Inject, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, Subscription } from 'rxjs';
 import { filter, takeWhile, tap } from 'rxjs/operators';
@@ -35,14 +35,11 @@ export class ManageAppUsersDialog implements OnInit {
   availableRoles$: Observable<string[]>;
   availableEmails$: Observable<string[]>;
 
-  deletedUsersCollection: UserData[] = [];
-  updatedUsersCollection: UserData[] = [];
   collection: UserData[];
   appOwner: UserData;
   roleValues: string[];
   availableRoles: string[];
   search: string = '';
-  closeSubs: Subscription;
   availableRolesSubscription: Subscription;
 
   constructor(
@@ -54,21 +51,14 @@ export class ManageAppUsersDialog implements OnInit {
   ) {
     this.availableEmails$ = this.breadcrumbsFacade.availableEmails$;
     this.availableRoles$ = this.breadcrumbsFacade.availableRoles$;
+    this.data.collection.subscribe((collection:AppUser[]) => this.sortUsers(collection))
   }
 
   ngOnInit(): void {
-    this.sortUsers(this.data.collection);
-    this.appOwner = this.collection.find(user => user.role === Role.Owner);
+
     this.roleValues = Object.keys(Role);
     this.availableRolesSubscription = this.breadcrumbsFacade.availableRoles$.subscribe(value => (this.availableRoles = value));
 
-    this.closeSubs = this.dialogRef.backdropClick().subscribe(() =>
-      this.dialogRef.close({
-        deletedUsers: this.deletedUsersCollection,
-        updatedUsers: this.updatedUsersCollection,
-        appId: this.data.currentApp.id,
-      })
-    );
   }
 
   sortUsers(collection: AppUser[]): void {
@@ -81,29 +71,24 @@ export class ManageAppUsersDialog implements OnInit {
           fullName: user.firstName + ' ' + user.lastName,
         };
       })
-      .sort((user, next) => user.fullName.localeCompare(next.fullName));
 
-    const owner = usersCollection.find(user => user.role === Role.Owner);
+    this.appOwner = usersCollection.find(user => user.role === Role.Owner);
 
     const administrators = usersCollection
       .filter(user => user.role === Role.Administrator)
       .sort((user, next) => user.fullName.localeCompare(next.fullName));
 
-    const users = usersCollection.filter(user => user.role === Role.User).sort((user, next) => user.fullName.localeCompare(next.fullName));
+    const users = usersCollection.filter(user => user.role === Role.User)
+      .sort((user, next) => user.fullName.localeCompare(next.fullName));
 
-    this.collection = [owner, ...administrators, ...users];
+    this.collection = [this.appOwner, ...administrators, ...users];
+
+    this.cdRef.markForCheck();
+
   }
 
   onChange(user: UserData): void {
-    const updatedUserData = this.data.collection.find(userData => user.userId === userData.userId);
-
-    if (updatedUserData.role === user.role) {
-      const index = this.updatedUsersCollection.indexOf(user);
-      this.updatedUsersCollection.splice(index, 1);
-
-      return;
-    }
-    this.updatedUsersCollection.push(user);
+    this.breadcrumbsFacade.updateUserRole(user.userId, user.role as Role, this.data.currentApp.id);
   }
 
   onDelete(user: UserData): void {
@@ -116,13 +101,7 @@ export class ManageAppUsersDialog implements OnInit {
       .pipe(
         filter(data => data),
         tap(() => {
-          const index = this.collection.indexOf(user);
-
-          this.deletedUsersCollection.push(this.collection[index]);
-
-          this.collection.splice(index, 1);
-
-          this.cdRef.markForCheck();
+          this.breadcrumbsFacade.deleteAppUsers(user.userId, this.data.currentApp.id);
         })
       )
       .subscribe(() => dialogSubs.unsubscribe());
@@ -148,7 +127,4 @@ export class ManageAppUsersDialog implements OnInit {
       .subscribe(() => dialogSubs.unsubscribe());
   }
 
-  ngOnDestroy(): void {
-    this.closeSubs.unsubscribe();
-  }
 }

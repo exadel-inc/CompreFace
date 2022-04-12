@@ -83,41 +83,24 @@ export class BreadcrumbsContainerComponent implements OnInit {
   }
 
   onUsersList(app: Application): void {
-    let appUsers;
     let currentUserId;
 
-    const collectionSubs = this.breadcrumbsFacade.appUsers$.subscribe(users => (appUsers = users));
+    const collection$= this.breadcrumbsFacade.appUsers$;
 
     const userSubs = this.breadcrumbsFacade.currentUserId$.subscribe(userId => (currentUserId = userId));
 
     const dialog = this.dialog.open(ManageAppUsersDialog, {
       data: {
-        collection: appUsers,
+        collection: collection$,
         currentApp: app,
         currentUserId: currentUserId,
-      },
+      }
     });
 
-    const dialogSubs = dialog.afterClosed().subscribe(res => {
-      const deletedUsers = res?.deletedUsers;
-      const updatedUsers = res?.updatedUsers;
-      const appId = res.appId;
-
-      if (updatedUsers.length) {
-        updatedUsers.forEach(user => {
-          this.breadcrumbsFacade.updateUserRole(user.userId, user.role, appId);
-        });
-      }
-
-      if (deletedUsers.length) {
-        deletedUsers.forEach(user => {
-          this.breadcrumbsFacade.deleteAppUsers(user.userId, appId);
-        });
-      }
-
-      userSubs.unsubscribe();
-      collectionSubs.unsubscribe();
-      dialogSubs.unsubscribe();
-    });
+    const dialogSubs = dialog.afterClosed()
+      .subscribe(() => {
+        userSubs.unsubscribe();
+        dialogSubs.unsubscribe();
+      });
   }
 }

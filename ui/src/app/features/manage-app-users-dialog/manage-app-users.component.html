@@ -33,9 +33,14 @@
     <div class="user__list">
       <ng-container *ngFor="let user of collection | userTableFilter: search">
         <div class="user__list--items">
-          <p class="user__name">{{ user.fullName | truncate: 15 }}</p>
+          <p class="user__name"
+            matTooltip="{{ user.fullName }}"
+            matTooltipClass="top-arrow"
+            [matTooltipDisabled]="user.fullName.length <= 30">
+              {{ user.fullName | truncate: 15 }}
+          </p>
           <p class="user__name">{{ user.email | truncate: 15 }}</p>
-
+          
           <select class="user__role--select" [(ngModel)]="user.role" (change)="onChange(user)">
             <ng-container *ngIf="data.currentUserId === appOwner.userId; else disabled">
               <option *ngFor="let role of roleValues" class="user__role--option" name="role" [value]="role | uppercase">
@@ -62,4 +67,7 @@
       </ng-container>
     </div>
   </div>
+  <button class="button-cross" mat-icon-button mat-dialog-close>
+    <mat-icon svgIcon="cross_new" ></mat-icon>
+  </button>
 </div>

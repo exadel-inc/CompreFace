@@ -15,8 +15,10 @@
  */
 
 @import './colors.scss';
+@import './mixins.scss';
 
 .container {
+  position: relative;
   width: 600px;
   color: #787878;
 
@@ -72,12 +74,15 @@
         font-weight: 600;
         font-size: 1.2rem;
       }
+
       &--users {
         width: 40%;
       }
+
       &--emails {
         width: 30%;
       }
+
       &--roles {
         width: 30%;
       }
@@ -143,5 +148,14 @@
     border: 2px solid #e0e0e0;
     border-radius: 10px;
     font-weight: bold;
+  }
+  .button-cross {
+    position: absolute;
+    top: -1.5rem;
+    right: 0rem;
+  
+    .mat-icon {
+      @include sm-icon-size(16px)
+    }
   }
 }
