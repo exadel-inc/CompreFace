@@ -170,6 +170,10 @@ app-model-table {
   }
 }
 
+.mat-horizontal-stepper-header-container {
+  display: none !important;
+}
+
 .mat-tooltip {
   word-break: break-all;
   text-align: center;

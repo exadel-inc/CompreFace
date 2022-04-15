@@ -38,6 +38,7 @@ import {
 } from './action';
 import { Store } from '@ngrx/store';
 import { selectQueryParams } from '../router/selectors';
+import { selectDemoPageAvailability } from '../demo/selectors';
 
 @Injectable()
 export class AuthEffects {
@@ -65,12 +66,16 @@ export class AuthEffects {
   @Effect({ dispatch: false })
   logInSuccess$: Observable<any> = this.actions.pipe(
     ofType(logInSuccess),
-    withLatestFrom(this.store.select(selectQueryParams)),
-    map(([, queryParams]) => {
+    withLatestFrom(
+      this.store.select(selectQueryParams),
+      this.store.select(selectDemoPageAvailability)),
+    map(([, queryParams, isDemoPageAvailable]) => {
       const { redirect } = queryParams;
-      return redirect;
+      return [redirect, isDemoPageAvailable];
     }),
-    tap(redirect => this.router.navigateByUrl(redirect || Routes.Home))
+    tap(([redirect, isDemoPageAvailable]) => 
+      isDemoPageAvailable ? this.router.navigateByUrl(Routes.CreateApplication) : 
+        this.router.navigateByUrl(redirect || Routes.Home))
   );
 
   @Effect({ dispatch: false })
