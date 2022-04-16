@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Application } from 'src/app/data/interfaces/application';
-import { Model } from 'src/app/data/interfaces/model';
 import { AppState } from 'src/app/store';
 import { createApplication } from 'src/app/store/application/action';
 import { selectApplications } from 'src/app/store/application/selectors';
