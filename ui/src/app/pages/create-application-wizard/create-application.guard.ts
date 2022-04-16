@@ -28,8 +28,6 @@ import { selectDemoPageAvailability } from "src/app/store/demo/selectors";
 
 export class CreateApplicationGuard implements CanActivate {
 
-    demoPageIsAvailable$: Observable<boolean>;
-
     constructor(private store: Store<any>,
         private router: Router) { }
 
