@@ -19,6 +19,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { MainLayoutComponent } from './ui/main-layout/main-layout.component';
 import { DemoLayoutComponent } from './ui/demo-layout/demo-layout.component';
 import { UserInfoResolver } from './core/user-info/user-info.resolver';
+import { CreateApplicationGuard } from './pages/create-application-wizard/create-application.guard';
 
 const routes: Routes = [
   {
@@ -42,6 +43,7 @@ const routes: Routes = [
   {
     path: 'create-application',
     component: MainLayoutComponent,
+    canActivate: [CreateApplicationGuard],
     resolve: [UserInfoResolver],
     children: [
       {
@@ -81,4 +83,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' })],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

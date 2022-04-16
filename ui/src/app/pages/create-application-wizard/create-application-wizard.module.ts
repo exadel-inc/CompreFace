@@ -20,6 +20,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { RouterModule } from '@angular/router';
 import { CreateApplicationModule } from 'src/app/features/create-application/create-application.module';
 import { CreateApplicationWizardComponent } from './create-application-wizard.component';
+import { CreateApplicationGuard } from './create-application.guard';
 
 @NgModule({
   declarations: [CreateApplicationWizardComponent],
@@ -29,6 +30,6 @@ import { CreateApplicationWizardComponent } from './create-application-wizard.co
     MatCardModule,
     MatStepperModule,
     RouterModule.forChild([{ path: '', component: CreateApplicationWizardComponent }]),
-  ],
+  ]
 })
 export class CreateApplicationWizardModule {}
