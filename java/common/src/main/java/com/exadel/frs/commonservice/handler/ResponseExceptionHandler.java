@@ -53,7 +53,14 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BasicException.class)
     public ResponseEntity<ExceptionResponseDto> handleDefinedExceptions(final BasicException ex) {
-        log.error("Defined exception occurred", ex);
+        switch (ex.getLogLevel()) {
+            case ERROR:
+                log.error("Defined exception occurred", ex);
+                break;
+            case DEBUG:
+                log.debug("Defined exception occurred", ex);
+                break;
+        }
 
         return ResponseEntity
                 .status(ex.getExceptionCode().getHttpStatus())

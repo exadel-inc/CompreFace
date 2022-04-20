@@ -28,4 +28,9 @@ public class NoFacesFoundException extends BasicException {
     public NoFacesFoundException() {
         super(NO_FACES_FOUND, MESSAGE);
     }
+
+    @Override
+    public LogLevel getLogLevel() {
+        return LogLevel.DEBUG;
+    }
 }
