@@ -18,6 +18,7 @@ export enum Routes {
   Login = '/login',
   Home = '/',
   Application = '/application',
+  CreateApplication = '/create-application',
   SignUp = '/sign-up',
   TestModel = '/test-model',
   ManageCollection = '/manage-collection',

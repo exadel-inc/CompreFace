@@ -244,6 +244,33 @@
     "new_account_login": "You have successfully created new account",
     "change_password_success": "Password has successfully been changed"
   },
+  "create_application_wizard": {
+    "application": {
+      "title": {
+        "p1": "Create your",
+        "p2": "application"
+      },
+      "info_about_application": "Application is where you can create and manage your face recognition services. It allows restricting their visibility from other users",
+      "application_name_question": "What would you like to name this application ?",
+      "application_name": "Application name",
+      "error_msg": "Application name is not unique",
+      "next": "Next"
+    },
+    "service": {
+      "title": "Add a service",
+      "info_about_service": "Services provide you with different face recognition functionality. Each service has an API key you need to make requests. Please choose service type according to your business needs.",
+      "service_name_question": "What would you like to name this service ?",
+      "service_name": "Service name",
+      "service_type": "What kind of service is it?",
+      "create_btn": "Create Service",
+      "recognition":"Recognition",
+      "detection": "Detection",
+      "verification":"Verification",
+      "recognition_type":"Face recognition service is used for face identification. You first need to upload known faces to the faces collection and then recognize unknown faces among them.",
+      "detection_type":"Face detection service is used to detect all faces in the image. It doesn’t recognize faces, just finds them on the image.",
+      "verification_type":"Face verification service is used to check if this person is the correct one. The service compares two faces you send to the rest endpoint and returns their similarity."
+    }
+  },
   "application_user_list": {
     "invitation_sent": "Invitation was sent to {{userEmail}}"
   },

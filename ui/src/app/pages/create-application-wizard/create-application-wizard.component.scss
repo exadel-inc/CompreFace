@@ -1,4 +1,4 @@
-/*
+/*!
  * Copyright (c) 2020 the original author or authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,31 +14,10 @@
  * permissions and limitations under the License.
  */
 
-export interface Model {
-  id: string;
-  name: string;
-  type: string;
-  accessLevel: string;
-  relations: {
-    id: string;
-    shareMode: string;
-  }[];
-  owner: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-  role: string;
-  apiKey?: string;
-  imageCount?: number;
-  subjectCount?: number;
-  createdDate?: Date;
-}
-
-export interface ModelUpdate {
-  name: string;
-  applicationId: string;
-  modelId: string;
-  type: string;
-  isFirstService: boolean
-}
+ .container {
+     height: 100%;
+   .create-application {
+     min-width: 100%;
+     height: calc(100vh-254px);
+   }
+ }

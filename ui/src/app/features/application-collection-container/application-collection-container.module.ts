@@ -17,6 +17,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { TablePipeModule } from 'src/app/ui/search-pipe/table-filter.module';
 import { TruncateModule } from 'src/app/ui/truncate-pipe/truncate.module';
@@ -25,7 +26,7 @@ import { ApplicationCollectionComponent } from './application-collection/applica
 
 @NgModule({
   declarations: [ApplicationCollectionContainerComponent, ApplicationCollectionComponent],
-  imports: [CommonModule, TranslateModule, TablePipeModule, MatIconModule, TruncateModule],
+  imports: [CommonModule, TranslateModule, TablePipeModule, MatIconModule,MatTooltipModule, TruncateModule],
   exports: [ApplicationCollectionContainerComponent, ApplicationCollectionComponent],
 })
 export class ApplicationCollectionContainerModule {}

@@ -13,32 +13,11 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+import { Component } from '@angular/core';
 
-export interface Model {
-  id: string;
-  name: string;
-  type: string;
-  accessLevel: string;
-  relations: {
-    id: string;
-    shareMode: string;
-  }[];
-  owner: {
-    id: string;
-    firstName: string;
-    lastName: string;
-  };
-  role: string;
-  apiKey?: string;
-  imageCount?: number;
-  subjectCount?: number;
-  createdDate?: Date;
-}
-
-export interface ModelUpdate {
-  name: string;
-  applicationId: string;
-  modelId: string;
-  type: string;
-  isFirstService: boolean
-}
+@Component({
+  selector: 'app-create-application-wizard',
+  templateUrl: './create-application-wizard.component.html',
+  styleUrls: ['./create-application-wizard.component.scss'],
+})
+export class CreateApplicationWizardComponent {}
