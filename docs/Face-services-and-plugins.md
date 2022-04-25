@@ -134,4 +134,4 @@ The list of possible plugins:
 * calculator - returns face embeddings.  
 * mask - returns if the person wears a mask. Possible results: `without_mask`, `mask_worn_incorrectly`, `mask_worn_correctly`. Learn more about [mask plugin](Mask-detection-plugin.md)
 * landmarks2d106 - returns face landmarks. This plugin is supported only by the configuration that uses insightface library. It’s not 
-  available by default. More information about landmarks [here](https://github.com/deepinsight/insightface/tree/master/alignment/coordinateReg#visualization).
+  available by default. More information about landmarks [here](https://github.com/deepinsight/insightface/tree/ce3600a74209808017deaf73c036759b96a44ccb/alignment/coordinate_reg#visualization).
