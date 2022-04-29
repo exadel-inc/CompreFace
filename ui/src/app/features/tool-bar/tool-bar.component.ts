@@ -31,7 +31,6 @@ export class ToolBarComponent {
   @Input() userAvatarInfo: string;
   @Input() userFirstName: string;
   @Input() userLastName: string;
-  @Input() isUserInfoAvailable: boolean;
   @Output() logout = new EventEmitter();
   @Output() signUp = new EventEmitter();
   @Output() changePassword = new EventEmitter();

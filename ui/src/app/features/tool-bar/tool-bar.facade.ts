@@ -21,7 +21,6 @@ import { Routes } from 'src/app/data/enums/routers-url.enum';
 import { logOut, changePassword } from 'src/app/store/auth/action';
 import { editUserInfo } from 'src/app/store/userInfo/action';
 import { loadDemoApiKeySuccess } from 'src/app/store/demo/action';
-import { selectDemoPageAvailability } from 'src/app/store/demo/selectors';
 import { selectUserAvatar, selectUserFirstName, selectUserLastName } from 'src/app/store/userInfo/selectors';
 
 import { AppState } from '../../store';
@@ -33,13 +32,11 @@ export class ToolBarFacade {
   userAvatarInfo$: Observable<string>;
   userFirstName$: Observable<string>;
   userLastName$: Observable<string>;
-  isUserInfoAvailable$: Observable<boolean>;
 
   constructor(private store: Store<AppState>, private router: Router) {
     this.userAvatarInfo$ = this.store.select(selectUserAvatar);
     this.userFirstName$ = this.store.select(selectUserFirstName);
     this.userLastName$ = this.store.select(selectUserLastName);
-    this.isUserInfoAvailable$ = this.store.select(selectDemoPageAvailability);
   }
 
   goSignUp() {

@@ -26,7 +26,6 @@ import { EditUserInfo } from '../../data/interfaces/edit-user-info';
     [userAvatarInfo]="userAvatarInfo$ | async"
     [userFirstName]="userFirstName$ | async"
     [userLastName]="userLastName$ | async"
-    [isUserInfoAvailable]="isUserInfoAvailable$ | async"
     (logout)="logout()"
     (signUp)="goSignUp()"
     (changePassword)="changePassword($event)"
@@ -38,7 +37,6 @@ export class ToolBarContainerComponent implements OnInit {
   userAvatarInfo$: Observable<string>;
   userFirstName$: Observable<string>;
   userLastName$: Observable<string>;
-  isUserInfoAvailable$: Observable<boolean>;
 
   constructor(private toolBarFacade: ToolBarFacade) {}
 
@@ -46,7 +44,6 @@ export class ToolBarContainerComponent implements OnInit {
     this.userAvatarInfo$ = this.toolBarFacade.userAvatarInfo$;
     this.userFirstName$ = this.toolBarFacade.userFirstName$;
     this.userLastName$ = this.toolBarFacade.userLastName$;
-    this.isUserInfoAvailable$ = this.toolBarFacade.isUserInfoAvailable$;
   }
 
   goSignUp() {
