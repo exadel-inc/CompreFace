@@ -2,13 +2,14 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := default
 .PHONY := default up build-images build-cuda
 
-IMAGE := ${DOCKER_REGISTRY}compreface-core
-CUDA_IMAGE = $(IMAGE)-base:base-cuda100-py37
+VERSION := 1.0.0
+IMAGE := pospielov/compreface-core
+CUDA_IMAGE = $(IMAGE)-base:base-cuda112-py37
 APPERY_ARG := --build-arg APPERY_API_KEY=${APPERY_API_KEY}
 
 MOBILENET_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_mnet025_v1 \
                           --build-arg CALCULATION_PLUGIN=insightface.Calculator@arcface_mobilefacenet \
-                          --build-arg EXTRA_PLUGINS=insightface.LandmarksDetector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector \
+                          --build-arg EXTRA_PLUGINS=insightface.Landmarks2d106Detector,insightface.GenderDetector,insightface.AgeDetector,insightface.facemask.MaskDetector \
                           $(APPERY_ARG)
 
 ARCFACE_r100_BUILD_ARGS := --build-arg FACE_DETECTION_PLUGIN=insightface.FaceDetector@retinaface_r50_v1 \
@@ -57,9 +58,11 @@ build-images-cpu:
 	docker build . -t $(IMAGE):$(VERSION)-mobilenet $(MOBILENET_BUILD_ARGS)
 	docker build . -t $(IMAGE):$(VERSION)-arcface-r100 $(ARCFACE_r100_BUILD_ARGS)
 
+build-images-2d106:
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet-2d106 $(MOBILENET_BUILD_ARGS)
+
 build-images-gpu: build-cuda
-	docker build . -t $(IMAGE):$(VERSION)-mobilenet-gpu $(MOBILENET_BUILD_ARGS) $(GPU_ARGS)
-	docker build . -t $(IMAGE):$(VERSION)-arcface-r100-gpu $(ARCFACE_r100_BUILD_ARGS) $(GPU_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet-3xxx $(MOBILENET_BUILD_ARGS) $(GPU_ARGS)
 
 up:
 	docker run -p3000:3000 embedding-calculator
