@@ -39,6 +39,8 @@ services:
       - EMAIL_FROM=${email_from}
       - EMAIL_PASSWORD=${email_password}
       - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
+      - MULTIPART_MAX_FILE_SIZE=${multipart_max_file_size}
+      - MULTIPART_MAX_REQUEST_SIZE=${multipart_max_request_size}
     depends_on:
       - compreface-postgres-db
       - compreface-api
@@ -65,6 +67,8 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - API_JAVA_OPTS=${compreface_api_java_options}
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
+      - MULTIPART_MAX_FILE_SIZE=${multipart_max_file_size}
+      - MULTIPART_MAX_REQUEST_SIZE=${multipart_max_request_size}
 
   compreface-fe:
     image: ${registry}compreface-fe:${FE_VERSION}
