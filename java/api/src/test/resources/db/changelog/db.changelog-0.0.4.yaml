@@ -22,6 +22,9 @@ databaseChangeLog:
               - column:
                   name: api_key
                   type: varchar(36)
+              - column:
+                  name: created_date
+                  type: timestamp
 
         - addPrimaryKey:
             columnNames: id
