@@ -80,6 +80,8 @@ services:
     depends_on:
       - compreface-api
       - compreface-admin
+    environment:
+      - CLIENT_MAX_BODY_SIZE=${client_max_body_size}
 
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}

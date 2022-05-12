@@ -59,6 +59,10 @@ services:
     depends_on:
       - compreface-api
       - compreface-admin
+    environment:
+      - CLIENT_MAX_BODY_SIZE=${client_max_body_size}
+    volumes:
+      - "./ui/nginx/templates:/etc/nginx/templates/"
 
   compreface-core:
     restart: always
