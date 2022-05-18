@@ -38,8 +38,6 @@ table {
     width: 40%;
     font-size: 12px;
     button {
-      padding-left: 10px;
-      width: 14px;
       .mat-icon {
         @include sm-icon-size(9px);
       }
