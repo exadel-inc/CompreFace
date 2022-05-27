@@ -5,9 +5,12 @@ volumes:
 
 services:
   compreface-postgres-db:
-    image: postgres:11.5
+    image: postgres
     restart: always
     container_name: "compreface-postgres-db"
+    build:
+      context: ..
+      dockerfile: PostgresDockerfile
     ports:
       - "6432:5432"
     environment:
