@@ -7,9 +7,7 @@ services:
   compreface-postgres-db:
     image: ${registry}postgres:${POSTGRES_VERSION}
     container_name: "compreface-postgres-db"
-    build: 
-      context: .
-      dockerfile: PostgresDockerfile
+    build: ../db
     ports:
       - "6432:5432"
     environment:
