@@ -25,9 +25,4 @@ export class DeleteDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<DeleteDialogComponent>, 
     @Inject(MAT_DIALOG_DATA) public data: any) {}
-
-    ngOnInit(){
-      console.log(this.data)
-    }
-
 }
