@@ -74,7 +74,6 @@ export class CollectionManagerComponent implements OnInit, OnDestroy {
       panelClass: 'custom-mat-dialog',
       data: {
         entityType: this.translate.instant('manage_collection.right_side.modal_bulk-delete_type'),
-        entityName: `(${this.selectedIds.length} ${this.translate.instant('manage_collection.right_side.modal_bulk-delete_name')})`,
       },
     });
 

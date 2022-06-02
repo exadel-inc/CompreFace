@@ -38,8 +38,11 @@ table {
     width: 40%;
     font-size: 12px;
     button {
-      padding-left: 10px;
-      width: 14px;
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       .mat-icon {
         @include sm-icon-size(9px);
       }
