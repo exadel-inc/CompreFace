@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.common.DefaultExpiringOAuth2RefreshToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
+import org.springframework.security.oauth2.common.OAuth2RefreshToken;
 import org.springframework.security.oauth2.provider.endpoint.TokenEndpoint;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,20 +31,19 @@ public class CustomTokenEndpoint extends TokenEndpoint {
     @Autowired
     private HttpServletRequest currentRequest;
 
+    @Override
     @PostMapping
     public ResponseEntity<OAuth2AccessToken> postAccessToken(
             Principal principal,
-            @RequestParam
-            Map<String, String> parameters
+            @RequestParam Map<String, String> parameters
     ) throws HttpRequestMethodNotSupportedException {
 
-        if (principal instanceof UsernamePasswordAuthenticationToken) {
-            if (((UsernamePasswordAuthenticationToken) principal).getPrincipal() instanceof User) {
-                return ResponseEntity.status(HttpStatus.OK).build();
-            }
+        if (principal instanceof UsernamePasswordAuthenticationToken
+                && ((UsernamePasswordAuthenticationToken) principal).getPrincipal() instanceof User) {
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
 
-        if (isRefreshTokenRequest(parameters)) {
+        if (isRefreshTokenGrantType(parameters)) {
             val refreshTokenValue = extractRefreshTokenCookieValueFromRequest(currentRequest);
             parameters.put("refresh_token", refreshTokenValue);
         }
@@ -51,10 +51,10 @@ public class CustomTokenEndpoint extends TokenEndpoint {
         val tokenResponse = super.postAccessToken(principal, parameters);
 
         val accessToken = tokenResponse.getBody();
-        val refreshToken = (DefaultExpiringOAuth2RefreshToken) accessToken.getRefreshToken();
+        val refreshToken = accessToken.getRefreshToken();
 
-        val accessTokenCookie = buildAccessTokenCookie(accessToken.getValue(), accessToken.getExpiresIn());
-        val refreshTokenCookie = buildRefreshTokenCookie(refreshToken.getValue(), refreshToken.getExpiration().getTime());
+        val accessTokenCookie = buildAccessTokenCookie(accessToken);
+        val refreshTokenCookie = buildRefreshTokenCookie(refreshToken);
 
         val headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, accessTokenCookie);
@@ -66,16 +66,19 @@ public class CustomTokenEndpoint extends TokenEndpoint {
     private String extractRefreshTokenCookieValueFromRequest(final HttpServletRequest request) {
         return Arrays.stream(request.getCookies())
                      .filter(cookie -> cookie.getName().equals(REFRESH_TOKEN_COOKIE_NAME))
-                     .map(Cookie::getValue)
                      .findFirst()
+                     .map(Cookie::getValue)
                      .orElse(EMPTY);
     }
 
-    private boolean isRefreshTokenRequest(final Map<String, String> requestParams) {
+    private boolean isRefreshTokenGrantType(final Map<String, String> requestParams) {
         return "refresh_token".equals(requestParams.get("grant_type"));
     }
 
-    private String buildAccessTokenCookie(final String value, final long expiresIn) {
+    private String buildAccessTokenCookie(final OAuth2AccessToken token) {
+        val value = token.getValue();
+        val expiresIn = token.getExpiresIn();
+
         return ResponseCookie.from(ACCESS_TOKEN_COOKIE_NAME, value)
                              .httpOnly(true)
                              .maxAge(expiresIn)
@@ -84,7 +87,11 @@ public class CustomTokenEndpoint extends TokenEndpoint {
                              .toString();
     }
 
-    private String buildRefreshTokenCookie(final String value, final long expiresIn) {
+    private String buildRefreshTokenCookie(final OAuth2RefreshToken token) {
+        val expiringToken = (DefaultExpiringOAuth2RefreshToken) token;
+        val value = expiringToken.getValue();
+        val expiresIn = expiringToken.getExpiration().getTime();
+
         return ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, value)
                              .httpOnly(true)
                              .maxAge(expiresIn)
