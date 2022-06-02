@@ -6,4 +6,4 @@ services:
       context: ../ui
       dockerfile: docker-dev/Dockerfile
     environment:
-      - CLIENT_MAX_BODY_SIZE=${client_max_body_size}
+      - CLIENT_MAX_BODY_SIZE=${max_request_size}
