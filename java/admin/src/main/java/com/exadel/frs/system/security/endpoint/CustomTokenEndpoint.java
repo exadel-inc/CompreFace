@@ -88,9 +88,8 @@ public class CustomTokenEndpoint extends TokenEndpoint {
     }
 
     private String buildRefreshTokenCookie(final OAuth2RefreshToken token) {
-        val expiringToken = (DefaultExpiringOAuth2RefreshToken) token;
-        val value = expiringToken.getValue();
-        val expiresIn = expiringToken.getExpiration().getTime();
+        val value = token.getValue();
+        val expiresIn = extractExpiresInFromRefreshToken(token);
 
         return ResponseCookie.from(REFRESH_TOKEN_COOKIE_NAME, value)
                              .httpOnly(true)
@@ -98,5 +97,14 @@ public class CustomTokenEndpoint extends TokenEndpoint {
                              .path("/oauth/token")
                              .build()
                              .toString();
+    }
+
+    private long extractExpiresInFromRefreshToken(final OAuth2RefreshToken token) {
+        val refreshToken = (DefaultExpiringOAuth2RefreshToken) token;
+        val expiration = refreshToken.getExpiration();
+
+        return expiration != null
+                ? (expiration.getTime() - System.currentTimeMillis()) / 1000L
+                : -1L;
     }
 }
