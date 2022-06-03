@@ -7,6 +7,7 @@ import com.exadel.frs.commonservice.entity.User;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Objects;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.val;
@@ -64,7 +65,9 @@ public class CustomTokenEndpoint extends TokenEndpoint {
     }
 
     private String extractRefreshTokenCookieValueFromRequest(final HttpServletRequest request) {
-        return Arrays.stream(request.getCookies())
+        val cookies = Objects.requireNonNullElse(request.getCookies(), new Cookie[0]);
+
+        return Arrays.stream(cookies)
                      .filter(cookie -> cookie.getName().equals(REFRESH_TOKEN_COOKIE_NAME))
                      .findFirst()
                      .map(Cookie::getValue)
