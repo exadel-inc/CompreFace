@@ -5,7 +5,7 @@ volumes:
 
 services:
   compreface-postgres-db:
-    image: ${registry}postgres:${POSTGRES_VERSION}
+    image: ${registry}compreface-postgres-db:${POSTGRES_VERSION}
     restart: always
     container_name: "compreface-postgres-db"
     build: ../db
