@@ -21,7 +21,7 @@
   color: $medium-gray;
   min-height: 450px;
   padding: 2rem;
-  box-shadow: 5px 5px 10px $lighter-gray;
+  box-shadow: 0 0 10px $lighter-gray, 0 0 10px $lighter-gray;
   border-radius: 2rem;
   &--title {
     margin: 0.5rem 0 2rem;
