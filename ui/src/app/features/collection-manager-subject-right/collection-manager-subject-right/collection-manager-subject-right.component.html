@@ -16,6 +16,12 @@
 <div class="collection-right-container" infiniteScroll [scrollWindow]="scrollWindow" (scrolled)="onScrollDown()">
   <ng-container *ngIf="!isPending; else spinner">
     <ng-container *ngIf="subject; else emptySubject">
+      <div class="collection-right-container--header">
+        <span class="title" *ngIf="defaultSubject">{{ defaultSubject }}</span>
+        <span class="count"
+          ><b>{{ collectionItems.length }}</b> {{ 'common.capital.images' | translate }}</span
+        >
+      </div>
       <div class="drag-and-drop-container">
         <app-drag-n-drop
           [title]="'dnd.title' | translate: { typeImage: 'dnd.image' | translate }"

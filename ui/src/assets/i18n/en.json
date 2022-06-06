@@ -14,7 +14,8 @@
       "rename": "Rename",
       "edit": "Edit",
       "delete": "Delete",
-      "ok": "Ok"
+      "ok": "Ok",
+      "images": "images"
     },
     "name": "Name",
     "email": "Email",
@@ -263,12 +264,12 @@
       "service_name": "Service name",
       "service_type": "What kind of service is it?",
       "create_btn": "Create Service",
-      "recognition":"Recognition",
+      "recognition": "Recognition",
       "detection": "Detection",
-      "verification":"Verification",
-      "recognition_type":"Face recognition service is used for face identification. You first need to upload known faces to the faces collection and then recognize unknown faces among them.",
-      "detection_type":"Face detection service is used to detect all faces in the image. It doesn’t recognize faces, just finds them on the image.",
-      "verification_type":"Face verification service is used to check if this person is the correct one. The service compares two faces you send to the rest endpoint and returns their similarity."
+      "verification": "Verification",
+      "recognition_type": "Face recognition service is used for face identification. You first need to upload known faces to the faces collection and then recognize unknown faces among them.",
+      "detection_type": "Face detection service is used to detect all faces in the image. It doesn’t recognize faces, just finds them on the image.",
+      "verification_type": "Face verification service is used to check if this person is the correct one. The service compares two faces you send to the rest endpoint and returns their similarity."
     }
   },
   "application_user_list": {
