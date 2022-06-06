@@ -15,6 +15,77 @@
  */
 @import 'forms.scss';
 @import 'media.scss';
+@import 'colors.scss';
+
+.sign-up-card {
+  color: $medium-gray;
+  padding: 1rem 2rem;
+  box-shadow: 5px 5px 10px $lighter-gray;
+  border-radius: 2rem;
+  &--title {
+    margin: 0.5rem 0;
+    padding-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    color: $medium-gray;
+    border-bottom: 1px solid $lighter-gray;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 1.5rem;
+
+  width: 100%;
+  label {
+    font-weight: bold;
+    font-size: 18px;
+    .hint {
+      color: $light-gray;
+    }
+  }
+  input {
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    width: 100%;
+    border: none;
+    background: none;
+    outline: none;
+    border-bottom: 1px solid $lighter-gray;
+
+    &::placeholder {
+      color: $light-gray;
+      font-weight: bold;
+    }
+  }
+  .err {
+    font-weight: bold;
+    font-size: 12px;
+    color: $red;
+  }
+}
+.btn {
+  background: $lighter-gray;
+  border: 2px solid $light-gray;
+  width: 100%;
+  margin: 1.5rem 0 1rem;
+  padding: 5px;
+  border-radius: 1rem;
+}
+.link {
+  font-size: 14px;
+  font-weight: 500;
+  span {
+    a {
+      color: $medium-gray;
+      text-decoration: underline;
+    }
+  }
+}
 
 .sign-up-card {
   .desktop-screen {
@@ -26,18 +97,9 @@
 
   @include form-card();
 
-  .mat-input-wrapper {
-    display: flex;
-    justify-content: space-between;
-  }
   @include mobile-portrait {
     margin-top: 150px;
     flex-direction: column;
-
-    .mat-input-wrapper {
-      display: flex;
-      flex-direction: column;
-    }
 
     .desktop-screen {
       display: none;

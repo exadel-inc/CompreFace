@@ -24,14 +24,15 @@
     "unknown_error": "Sorry, something went wrong"
   },
   "login": {
-    "title": "Login",
-    "email": "Email",
+    "email": "E-mail",
+    "email_placeholder": "Enter E-mail",
+    "password_placeholder": "Enter Password",
     "password": "Password",
     "no_account": "Do not have an account?",
     "sign_up": "Sign Up",
     "email_hint": "Email should have correct format",
     "password_hint": "Password is required",
-    "login": "Login"
+    "login": "Log In"
   },
   "registration": {
     "title": "Sign Up",

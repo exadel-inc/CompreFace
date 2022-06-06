@@ -13,55 +13,53 @@
   ~ or implied. See the License for the specific language governing
   ~ permissions and limitations under the License.
   -->
-<mat-card class="sign-up-card">
-  <div class="form-card--logo">
-    <img src="assets/img/face-recognition-logo.svg" class="logo-img desktop-screen" alt="log-in-logo" />
-    <img src="assets/img/face-recognition-logo-mobile-login.svg" class="logo-img mobile-screen" alt="log-in-logo" />
-  </div>
-  <mat-card-header class="form-card--title">
-    <mat-card-title>{{ 'registration.title' | translate }}</mat-card-title>
-  </mat-card-header>
-  <mat-card-content>
+<div class="sign-up-card">
+  <p class="sign-up-card--title">
+    {{ 'registration.title' | translate }}
+  </p>
+  <div class="form-card">
     <form class="form-card--form" [formGroup]="form" (ngSubmit)="onSubmit()" id="signUpForm">
-      <div class="mat-input-wrapper">
-        <mat-form-field appearance="outline" hideRequiredMarker>
-          <mat-label>{{ 'registration.first_name' | translate }}</mat-label>
-          <mat-error>
-            <span>{{ 'registration.name_restriction' | translate }}</span>
-          </mat-error>
-          <input matInput formControlName="firstName" class="first-name" name="firstName" required />
-        </mat-form-field>
-        <mat-form-field appearance="outline" hideRequiredMarker>
-          <mat-label>{{ 'registration.last_name' | translate }}</mat-label>
-          <mat-error>
-            <span>{{ 'registration.last_name_restriction' | translate }}</span>
-          </mat-error>
-          <input matInput formControlName="lastName" class="last-name" name="lastName" required />
-        </mat-form-field>
+      <div class="form-field" appearance="outline" hideRequiredMarker>
+        <label>{{ 'registration.first_name' | translate }}</label>
+        <input formControlName="firstName" class="first-name" name="firstName" required />
+        <span class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched">
+          <span>{{ 'registration.name_restriction' | translate }}</span>
+        </span>
       </div>
-      <mat-form-field appearance="outline" hideRequiredMarker>
-        <mat-label>{{ 'registration.email' | translate }}</mat-label>
-        <mat-error>
+      <div class="form-field" appearance="outline" hideRequiredMarker>
+        <label>{{ 'registration.last_name' | translate }}</label>
+        <input formControlName="lastName" class="last-name" name="lastName" required />
+        <span class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched">
+          <span>{{ 'registration.last_name_restriction' | translate }}</span>
+        </span>
+      </div>
+      <div class="form-field" appearance="outline" hideRequiredMarker>
+        <label>{{ 'registration.email' | translate }}</label>
+        <input formControlName="email" name="email" type="email" required />
+        <span class="err" *ngIf="form.controls.email.status === 'INVALID' && form.controls.email.touched">
           <span>{{ 'registration.email_hint' | translate }}</span>
-        </mat-error>
-        <input matInput formControlName="email" name="email" type="email" required />
-      </mat-form-field>
-      <mat-form-field appearance="outline" hideRequiredMarker>
-        <mat-label>{{ 'registration.password' | translate }}</mat-label>
-        <mat-hint>{{ 'registration.password_restriction' | translate }}</mat-hint>
-        <mat-error>
+        </span>
+      </div>
+      <div class="form-field" appearance="outline" hideRequiredMarker>
+        <label
+          >{{ 'registration.password' | translate }}
+          <small class="hint">{{ 'registration.password_restriction' | translate }}</small>
+        </label>
+        <input formControlName="password" type="password" name="password" required />
+        <span class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
           <span>{{ 'registration.password_restriction' | translate }}</span>
-        </mat-error>
-        <input matInput formControlName="password" type="password" name="password" required />
-      </mat-form-field>
-      <mat-form-field appearance="outline" hideRequiredMarker>
-        <mat-label>{{ 'registration.confirm_password' | translate }}</mat-label>
-        <mat-hint>{{ 'registration.password_restriction' | translate }}</mat-hint>
-        <mat-error>
+        </span>
+      </div>
+      <div class="form-field" appearance="outline" hideRequiredMarker>
+        <label>{{ 'registration.confirm_password' | translate }}</label>
+        <input formControlName="confirmPassword" type="password" name="confirmPassword" required />
+        <span class="err" *ngIf="form.controls.password.status === 'INVALID' && form.controls.password.touched">
           <span>{{ 'registration.password_restriction' | translate }}</span>
-        </mat-error>
-        <input matInput formControlName="confirmPassword" type="password" name="confirmPassword" required />
-      </mat-form-field>
+        </span>
+        <p class="err" *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
+          <span>{{ 'registration.password_dont_match' | translate }}</span>
+        </p>
+      </div>
       <mat-checkbox formControlName="isAllowStatistics" class="sign-up-full-width" *ngIf="isDemoPageAvailable$ | async">
         <span class="white-space-fix"
           >{{ 'registration.statistics' | translate }}
@@ -70,21 +68,17 @@
           }}</a></span
         >
       </mat-checkbox>
-
-      <mat-error *ngIf="form.errors?.passwordMismatch && !form.get('confirmPassword').errors?.minlength">
-        <span>{{ 'registration.password_dont_match' | translate }}</span>
-      </mat-error>
     </form>
-  </mat-card-content>
-  <mat-card-actions class="form-card--btn-wrapper">
-    <button class="btn" mat-flat-button type="submit" form="signUpForm" color="primary" [disabled]="form.invalid || (isLoading$ | async)">
+  </div>
+  <div class="form-card--btn-wrapper">
+    <button class="btn" mat-flat-button type="submit" form="signUpForm" [disabled]="form.invalid || (isLoading$ | async)">
       {{ 'registration.sign_up' | translate }}
     </button>
     <div class="link">
       <span
         >{{ 'registration.have_account' | translate }}
-        <a color="primary" [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</a>
+        <a [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</a>
       </span>
     </div>
-  </mat-card-actions>
-</mat-card>
+  </div>
+</div>

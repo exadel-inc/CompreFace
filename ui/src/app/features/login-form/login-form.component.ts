@@ -16,7 +16,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngrx/store';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EMAIL_REGEXP_PATTERN } from 'src/app/core/constants';
 
 import { environment } from '../../../environments/environment';
@@ -47,6 +47,7 @@ export class LoginFormComponent implements OnInit, OnDestroy {
       email: new FormControl(null, [Validators.required, Validators.pattern(EMAIL_REGEXP_PATTERN)]),
       password: new FormControl(null, [Validators.required]),
     });
+    console.log(this.form.controls.password);
   }
 
   ngOnDestroy() {
