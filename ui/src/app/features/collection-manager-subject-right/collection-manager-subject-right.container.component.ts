@@ -13,13 +13,14 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-import { ChangeDetectionStrategy, Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { CollectionRightFacade } from './collection-manager-right-facade';
 import { CircleLoadingProgressEnum } from 'src/app/data/enums/circle-loading-progress.enum';
 import { SubjectModeEnum } from 'src/app/data/enums/subject-mode.enum';
 import { CollectionItem } from 'src/app/data/interfaces/collection';
+import { tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-application-right-container',
@@ -30,6 +31,7 @@ import { CollectionItem } from 'src/app/data/interfaces/collection';
     [isPending]="isPending$ | async"
     [isCollectionPending]="isCollectionPending$ | async"
     [mode]="mode$ | async"
+    [defaultSubject]="defaultSubject$ | async"
     (initApiKey)="initApiKey($event)"
     (readFiles)="readFiles($event)"
     (deleteItem)="deleteItem($event)"
@@ -41,7 +43,7 @@ import { CollectionItem } from 'src/app/data/interfaces/collection';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CollectionManagerSubjectRightContainerComponent implements OnInit, OnDestroy {
-  defaultSubjectSubscription: Subscription;
+  defaultSubject$: Observable<string>;
   subject$: Observable<string>;
   isPending$: Observable<boolean>;
   isCollectionPending$: Observable<boolean>;
@@ -51,7 +53,6 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   apiKeyInitSubscription: Subscription;
 
   @Output() setDefaultMode = new EventEmitter();
-
   private apiKey: string;
 
   constructor(private collectionRightFacade: CollectionRightFacade) {}
@@ -64,8 +65,8 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
     this.isCollectionPending$ = this.collectionRightFacade.isCollectionPending$;
     this.mode$ = this.collectionRightFacade.subjectMode$;
 
-    this.defaultSubjectSubscription = this.collectionRightFacade.defaultSubject$.subscribe(subject =>
-      this.collectionRightFacade.loadSubjectMedia(subject)
+    this.defaultSubject$ = this.collectionRightFacade.defaultSubject$.pipe(
+      tap(subject => this.collectionRightFacade.loadSubjectMedia(subject))
     );
   }
 
@@ -105,7 +106,6 @@ export class CollectionManagerSubjectRightContainerComponent implements OnInit, 
   }
 
   ngOnDestroy(): void {
-    this.defaultSubjectSubscription.unsubscribe();
     this.collectionRightFacade.resetSubjectExamples();
   }
 }
