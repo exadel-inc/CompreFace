@@ -5,8 +5,8 @@ volumes:
 
 services:
   compreface-postgres-db:
+    image: ${registry}compreface-postgres-db:${POSTGRES_VERSION}
     restart: always
-    image: postgres:11.5
     container_name: "compreface-postgres-db"
     environment:
       - POSTGRES_USER=${postgres_username}

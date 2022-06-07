@@ -5,8 +5,9 @@ volumes:
 
 services:
   compreface-postgres-db:
-    image: postgres:11.5
+    image: ${registry}compreface-postgres-db:${POSTGRES_VERSION}
     container_name: "compreface-postgres-db"
+    build: ../db
     ports:
       - "6432:5432"
     environment:
