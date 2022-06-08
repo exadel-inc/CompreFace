@@ -1,11 +1,7 @@
-#ARG BASE_IMAGE=compreface-core:latest
 ARG BASE_IMAGE=exadel/compreface-core:latest
 ARG VERSION=latest
 
 ################# init images start ####################
-#FROM compreface-admin:latest as admin
-#FROM compreface-api:latest as api
-#FROM compreface-fe:latest as fe
 FROM exadel/compreface-admin:${VERSION} as admin
 FROM exadel/compreface-api:${VERSION} as api
 FROM exadel/compreface-fe:${VERSION} as fe
@@ -71,8 +67,6 @@ ENV APPERY_API_KEY ${APPERY_API_KEY}
 ENV API_JAVA_OPTS=-Xmx4g
 ENV SAVE_IMAGES_TO_DB=true
 ENV API_PORT=8080
-ENV MAX_FILE_SIZE=10MB
-ENV MAX_REQUEST_SIZE=10MB
 
 COPY --from=api /home/app.jar /app/api/app.jar
 
@@ -80,28 +74,15 @@ COPY --from=api /home/app.jar /app/api/app.jar
 
 ################# compreface-fe start ####################
 
-ENV CLIENT_MAX_BODY_SIZE=10M
-
-RUN su - && apt update && apt install sudo -y \
-    && sudo apt update && sudo apt upgrade -y && su \
-    && apt install curl gnupg2 ca-certificates lsb-release debian-archive-keyring -y \
-    && curl https://nginx.org/keys/nginx_signing.key | gpg --dearmor \
-           | sudo tee /usr/share/keyrings/nginx-archive-keyring.gpg >/dev/null \
-    && echo "deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] \
-           http://nginx.org/packages/mainline/debian `lsb_release -cs` nginx" \
-           | sudo tee /etc/apt/sources.list.d/nginx.list \
-    && echo -e "Package: *\nPin: origin nginx.org\nPin: release o=nginx\nPin-Priority: 900\n" \
-           | sudo tee /etc/apt/preferences.d/99nginx \
-    && apt update && apt install nginx -y \
+RUN apt-get update && apt-get install -y nginx \
     && rm -rf /var/lib/apt/lists/*
-
 RUN adduser --system --no-create-home --shell /bin/false --group --disabled-login nginx
 
 USER nginx
 
 COPY --from=fe /usr/share/nginx/html /usr/share/nginx/html
 COPY --from=fe /etc/nginx/ /etc/nginx/
-COPY custom-builds/Single-Docker-File/nginx.conf.template /etc/nginx/templates/nginx.conf.template
+COPY custom-builds/Single-Docker-File/nginx.conf /etc/nginx/conf.d/nginx.conf
 
 USER root
 ################# compreface-fe end ####################
