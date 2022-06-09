@@ -32,7 +32,5 @@ def get_mxnet() -> Tuple[str, ...]:
     mxnet_lib = 'mxnet-'
     if ENV.GPU_IDX > -1 and cuda_version:
         mxnet_lib += f"cu{cuda_version}"
-    elif not ENV.INTEL_OPTIMIZATION:
-        mxnet_lib += 'native'
     mxnet_lib = mxnet_lib.rstrip('-')
     return (f'{mxnet_lib}==1.9.0',)
