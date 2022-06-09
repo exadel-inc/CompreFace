@@ -13,6 +13,8 @@
  * or implied. See the License for the specific language go verning
  * permissions and limitations under the License.
  */
+@import './forms.scss';
+@import './colors.scss';
 
 .dialog {
   &__header {
@@ -22,34 +24,28 @@
       font-size: 2rem;
     }
   }
+}
+.mat-select {
+  @include plain-element;
+  width: 100%;
+  border-bottom: 1px solid $light-gray;
+  padding-bottom: 10px;
+}
 
-  &__content {
-    box-sizing: border-box;
-    overflow: hidden;
+.form-field {
+  @include form-field($light-gray, $lighter-gray);
+}
+.actions {
+  margin: 2rem 0 1rem;
 
-    &--form_field {
-      margin: 20px 0;
-
-      label {
-        display: block;
-        margin-bottom: 20px;
-      }
-
-      input,
-      .mat-select {
-        width: 100%;
-        outline: none;
-        border: none;
-        border-bottom: 1px solid grey;
-        padding-bottom: 10px;
-      }
-    }
+  button {
+    @include plain-element;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 2.5rem;
+    color: #5c5c5c;
   }
-
-  &__actions {
-    button {
-      border: 1px solid grey;
-      border-radius: 15px;
-    }
+  .add {
+    @include submit-btn;
   }
 }

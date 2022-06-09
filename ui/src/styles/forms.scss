@@ -21,19 +21,7 @@ $min-width-container: 320px;
 $padding-RL: 32px;
 $padding-container: 49px $padding-RL;
 $font-size-link: 12px;
-
-@mixin reset-form-card() {
-  .mat-card-content,
-  .mat-card-actions,
-  .mat-card-title {
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-
-  ::ng-deep .mat-card-header-text {
-    margin: 0 !important;
-  }
-}
+$medium-gray: #5c5c5c;
 
 @mixin form-btn() {
   width: 100%;
@@ -48,46 +36,75 @@ $font-size-link: 12px;
   text-align: center;
 }
 
-@mixin form-card() {
-  @include reset-form-card();
+@mixin plain-element {
+  border: none;
+  background: none;
+  outline: none;
+}
 
-  @include mobile-portrait {
-    padding: 34px 24px !important;
-  }
-
-  .form-card {
-    &--logo {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 32px;
-
-      img {
-        min-width: 320px;
-      }
-    }
-
-    &--title {
-      margin-bottom: 19px;
-    }
-
-    &--form {
-      margin-bottom: 6px;
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-    }
-
-    &--btn-wrapper {
-      text-align: center;
-
-      .btn {
-        @include form-btn();
-      }
-
-      .link {
-        margin-top: 16px;
-        font-size: $font-size-link;
-      }
+@mixin form-field($lighter-gray, $light-grey) {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 1.5rem;
+  width: 100%;
+  label {
+    color: $medium-gray;
+    font-weight: bold;
+    font-size: 18px;
+    .hint {
+      font-size: 12px;
+      font-weight: normal;
     }
   }
+  input {
+    @include plain-element;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+    width: 100%;
+    border-bottom: 1px solid $lighter-gray;
+
+    &::placeholder {
+      color: $light-gray;
+      font-weight: bold;
+    }
+  }
+  .err {
+    font-weight: bold;
+    font-size: 12px;
+    color: $red;
+  }
+}
+@mixin login-card($medium-gray, $lighter-grey) {
+  color: $medium-gray;
+  padding: 1rem 2rem;
+  box-shadow: 0 0 10px $lighter-gray, 0 0 10px $lighter-gray;
+  border-radius: 2rem;
+  &--title {
+    margin: 0.5rem 0;
+    padding-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    color: $medium-gray;
+    border-bottom: 1px solid $lighter-gray;
+  }
+}
+@mixin login-link($medium-grey) {
+  font-size: 14px;
+  font-weight: 500;
+  a {
+    color: $medium-gray;
+    text-decoration: underline;
+  }
+}
+
+@mixin submit-btn {
+  color: $medium-gray;
+  background: #d3d3d3;
+  border: 2px solid #c3c3c3;
+  font-weight: bold;
+  border-radius: 1.2rem;
+  padding: 0.7rem 2.5rem;
 }

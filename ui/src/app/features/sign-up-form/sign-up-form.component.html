@@ -75,10 +75,8 @@
       {{ 'registration.sign_up' | translate }}
     </button>
     <div class="link">
-      <span
-        >{{ 'registration.have_account' | translate }}
-        <a [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</a>
-      </span>
+      {{ 'registration.have_account' | translate }}
+      <a [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</a>
     </div>
   </div>
 </div>

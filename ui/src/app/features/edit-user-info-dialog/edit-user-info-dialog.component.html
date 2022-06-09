@@ -17,28 +17,28 @@
 <h1 mat-dialog-title>{{ 'toolbar.user_info' | translate }}</h1>
 <div mat-dialog-content>
   <form [formGroup]="form">
-    <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
-      <mat-label>{{ 'registration.first_name' | translate }}</mat-label>
-      <mat-error>
+    <div class="form-field" appearance="outline" floatLabel="always" hideRequiredMarker>
+      <label>{{ 'registration.first_name' | translate }}</label>
+      <div class="err" *ngIf="form.controls.firstName.status === 'INVALID' && form.controls.firstName.touched">
         <span>{{ 'registration.name_restriction' | translate }}</span>
-      </mat-error>
-      <input matInput formControlName="firstName" name="firstName" placeholder="{{ 'registration.first_name' | translate }}" required />
-    </mat-form-field>
+      </div>
+      <input formControlName="firstName" name="firstName" placeholder="{{ 'registration.first_name' | translate }}" required />
+    </div>
 
-    <mat-form-field appearance="outline" floatLabel="always" hideRequiredMarker>
-      <mat-label>{{ 'registration.last_name' | translate }}</mat-label>
-      <mat-error>
+    <div class="form-field" appearance="outline" floatLabel="always" hideRequiredMarker>
+      <label>{{ 'registration.last_name' | translate }}</label>
+      <div class="err" *ngIf="form.controls.lastName.status === 'INVALID' && form.controls.lastName.touched">
         <span>{{ 'registration.last_name_restriction' | translate }}</span>
-      </mat-error>
-      <input matInput formControlName="lastName" name="lastName" placeholder="{{ 'registration.last_name' | translate }}" required />
-    </mat-form-field>
+      </div>
+      <input formControlName="lastName" name="lastName" placeholder="{{ 'registration.last_name' | translate }}" required />
+    </div>
   </form>
 </div>
-<div mat-dialog-actions>
-  <button mat-flat-button (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
-  <button mat-flat-button color="primary" (click)="onChangeClick()" [disabled]="!form.valid">
+<div class="actions">
+  <button class="rename" (click)="onChangeClick()" [disabled]="!form.valid">
     {{ 'common.capital.rename' | translate }}
   </button>
+  <button class="cancel" (click)="onCancelClick()" cdkFocusInitial>{{ 'common.capital.cancel' | translate }}</button>
 </div>
 <button class="button-cross" mat-icon-button (click)="onCancelClick()">
   <mat-icon svgIcon="cross_new" inline="true"></mat-icon>
