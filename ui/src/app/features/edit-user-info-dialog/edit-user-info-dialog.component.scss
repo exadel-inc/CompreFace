@@ -1,0 +1,23 @@
+@import 'forms.scss';
+@import 'colors.scss';
+
+.form-field {
+  @include form-field($light-gray, $lighter-gray);
+}
+.actions {
+  margin: 2rem 0 1rem;
+
+  button {
+    @include plain-element;
+    font-weight: bold;
+    font-size: 16px;
+    margin-right: 2.5rem;
+    color: #5c5c5c;
+  }
+  .cancel {
+    text-decoration: underline;
+  }
+  .rename {
+    @include submit-btn;
+  }
+}

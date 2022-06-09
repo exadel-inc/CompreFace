@@ -46,10 +46,10 @@
       {{ 'login.login' | translate }}
     </button>
     <div class="link">
-      <span
-        >{{ 'login.no_account' | translate }}
-        <a [routerLink]="[routes.SignUp]">{{ 'login.sign_up' | translate }}</a>
-      </span>
+      <a [routerLink]="[routes.SignUp]">{{ 'login.create_account' | translate }}</a>
+    </div>
+    <div class="build-version">
+      <span class="mat-caption">{{ 'applications.build' | translate }} {{ env.buildNumber }}</span>
     </div>
   </div>
 </div>

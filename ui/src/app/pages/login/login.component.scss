@@ -30,10 +30,6 @@
   &--wrapper {
     @include form-wrapper();
 
-    .build-version {
-      margin: 16px 0;
-    }
-
     .demo-btn-wrapper {
       padding: 0 $padding-RL;
 
