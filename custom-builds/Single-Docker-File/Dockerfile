@@ -50,7 +50,7 @@ ENV ENABLE_EMAIL_SERVER=false
 ENV ADMIN_JAVA_OPTS=-Xmx1g
 ENV CRUD_PORT=8081
 ENV PYTHON_URL=http://localhost:3000
-ENV MAX_FILE_SIZE=10MB
+ENV MAX_FILE_SIZE=5MB
 ENV MAX_REQUEST_SIZE=10MB
 
 RUN apt-get update && apt-get install -y openjdk-11-jre-headless \
