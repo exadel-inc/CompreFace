@@ -161,8 +161,15 @@ There are two build arguments for optimization:
 * `GPU_IDX` - id of NVIDIA GPU device, starts from `0` (empty or `-1` for disable)
 * `INTEL_OPTIMIZATION` - enable Intel MKL optimization (true/false)
 
+##### GPU Setup (Windows):
 
-##### NVIDIA Runtime   
+1. Install or update Docker Desktop.
+2. Make sure that you have Windows version 21H2 or higher.
+3. Update your NVIDIA drivers.
+4. Install or update WSL2 Linux kernel.
+5. Make sure the WSL2 backend is enabled in Docker Desktop.
+
+##### GPU Setup (Linux): 
 
 Install the nvidia-docker2 package and dependencies on the host machine:
 ```
@@ -171,7 +178,7 @@ sudo apt-get install -y nvidia-docker2
 sudo systemctl restart docker
 ```
 
-Build and run with enabled gpu
+##### Build and run with enabled gpu
 ```
 docker build . -t embedding-calculator-cuda -f gpu.Dockerfile
 docker build . -t embedding-calculator-gpu --build-arg GPU_IDX=0 --build-arg BASE_IMAGE=embedding-calculator-cuda
