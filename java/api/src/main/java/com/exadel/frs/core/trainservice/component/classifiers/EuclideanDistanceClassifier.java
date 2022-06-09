@@ -139,6 +139,7 @@ public class EuclideanDistanceClassifier implements Classifier {
         }
 
         List<Double> coefficients = status.getSimilarityCoefficients();
+        // (tanh ((coef0 - distance) * coef1) + 1) / 2
         return Transforms.tanh(distance.rsubi(coefficients.get(0)).muli(coefficients.get(1)), false).addi(1).divi(2);
     }
 

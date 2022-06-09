@@ -16,6 +16,7 @@
 
 import { Component, Inject, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, Subscription } from 'rxjs';
 import { filter, takeWhile, tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
@@ -47,7 +48,8 @@ export class ManageAppUsersDialog implements OnInit {
     public dialog: MatDialog,
     private readonly cdRef: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    private breadcrumbsFacade: BreadcrumbsFacade
+    private breadcrumbsFacade: BreadcrumbsFacade,
+    private translate:TranslateService
   ) {
     this.availableEmails$ = this.breadcrumbsFacade.availableEmails$;
     this.availableRoles$ = this.breadcrumbsFacade.availableRoles$;
@@ -94,6 +96,9 @@ export class ManageAppUsersDialog implements OnInit {
   onDelete(user: UserData): void {
     const dialog = this.dialog.open(DeleteDialogComponent, {
       panelClass: 'custom-mat-dialog',
+      data:{
+        entityType: this.translate.instant( 'users.user'),
+      }
     });
 
     const dialogSubs = dialog
