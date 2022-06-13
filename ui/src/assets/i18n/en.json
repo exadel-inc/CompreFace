@@ -51,7 +51,10 @@
     "have_account": "Already have an account?",
     "sign_up": "Sign Up",
     "statistics": "Allow to send anonymous statistics for product improvement",
-    "more_info": "More info"
+    "more_info": "More info",
+    "name_placeholder": "Enter Name",
+    "password_placeholder": "Enter Password",
+    "confirm_password_placeholder": "Confirm Password"
   },
   "change_password": {
     "old_password": "Old password",
