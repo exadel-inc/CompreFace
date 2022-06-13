@@ -55,12 +55,14 @@
   },
   "change_password": {
     "old_password": "Old password",
-    "new_password": "New Password"
+    "new_password": "New Password",
+    "enter_password": "Enter Password"
   },
   "toolbar": {
     "logout": "Logout",
     "change_password": "Change password",
     "user_info": "Change profile",
+    "user_info_change": "Change Profile Name",
     "user_avatar_info": "User avatar",
     "logo": "CompreFace logo",
     "signup": "Sign Up"

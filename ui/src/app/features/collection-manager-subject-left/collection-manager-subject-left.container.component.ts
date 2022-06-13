@@ -40,7 +40,7 @@ import { Input } from '@angular/core';
     [search]="search"
     (editSubject)="edit($event)"
     (deleteSubject)="delete($event)"
-    (addSubject)="addSubject()"
+    (addSubject)="addSubject($event)"
     (selectedSubject)="onSelectedSubject($event)"
     (initApiKey)="initApiKey($event)"
   ></app-collection-manager-subject-left>`,
@@ -143,7 +143,7 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
       .subscribe(() => this.collectionLeftFacade.edit(editName, name, this.apiKey));
   }
 
-  addSubject(): void {
+  openCreateDialog(): void {
     const dialog = this.dialog.open(CreateDialogComponent, {
       panelClass: 'custom-mat-dialog',
       data: {
@@ -156,14 +156,17 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
     });
 
     const dialogSubscription = dialog.afterClosed().subscribe(name => {
-      if (name) {
-        this.collectionLeftFacade.addSubject(name, this.apiKey);
-        dialogSubscription.unsubscribe();
-      }
+      dialogSubscription.unsubscribe();
+      if (!name) return;
+      this.collectionLeftFacade.addSubject(name, this.apiKey);
     });
   }
 
-  onSelectedSubject(subject): void {
+  addSubject(currentSubject: string): void {
+    this.itemsInProgress ? this.openDialog(currentSubject, true) : this.openCreateDialog();
+  }
+
+  onSelectedSubject(subject: string): void {
     this.setDefaultMode.emit();
 
     if (this.itemsInProgress) {
@@ -174,18 +177,20 @@ export class CollectionManagerSubjectLeftContainerComponent implements OnInit, O
     }
   }
 
-  openDialog(subject): void {
+  openDialog(subject: string, addSubjectInprogress = false): void {
     const dialog = this.dialog.open(ConfirmDialogComponent, {
       panelClass: 'custom-mat-dialog',
     });
 
     dialog.afterClosed().subscribe(confirm => {
-      if (confirm) {
-        this.collectionLeftFacade.onSelectedSubject(subject);
-        this.collectionRightFacade.loadSubjectMedia(subject);
-      }
+      if (!confirm) return;
 
       this.itemsInProgress = false;
+
+      if (addSubjectInprogress) this.addSubject(subject);
+
+      this.collectionLeftFacade.onSelectedSubject(subject);
+      this.collectionRightFacade.loadSubjectMedia(subject);
     });
   }
 
