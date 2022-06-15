@@ -78,5 +78,8 @@
       {{ 'registration.have_account' | translate }}
       <a [routerLink]="[routes.Login]">{{ 'registration.login' | translate }}</a>
     </div>
+    <div class="build-version">
+      <span class="mat-caption">{{ 'applications.build' | translate }} {{ env.buildNumber }}</span>
+    </div>
   </div>
 </div>

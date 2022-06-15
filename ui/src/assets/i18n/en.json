@@ -51,16 +51,21 @@
     "have_account": "Already have an account?",
     "sign_up": "Sign Up",
     "statistics": "Allow to send anonymous statistics for product improvement",
-    "more_info": "More info"
+    "more_info": "More info",
+    "name_placeholder": "Enter Name",
+    "password_placeholder": "Enter Password",
+    "confirm_password_placeholder": "Confirm Password"
   },
   "change_password": {
     "old_password": "Old password",
-    "new_password": "New Password"
+    "new_password": "New Password",
+    "enter_password": "Enter Password"
   },
   "toolbar": {
     "logout": "Logout",
     "change_password": "Change password",
     "user_info": "Change profile",
+    "user_info_change": "Change Profile Name",
     "user_avatar_info": "User avatar",
     "logo": "CompreFace logo",
     "signup": "Sign Up"

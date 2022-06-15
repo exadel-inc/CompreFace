@@ -49,7 +49,7 @@
     </ng-container>
   </div>
   <div class="btn-container">
-    <button mat-flat-button (click)="addSubject.emit()">
+    <button mat-flat-button (click)="addSubject.emit(currentSubject)">
       +
       {{ 'manage_collection.left_side.add_subject' | translate }}
     </button>
