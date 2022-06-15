@@ -2,11 +2,13 @@ package com.exadel.frs.core.trainservice.service;
 
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.EmbeddingProjection;
+import com.exadel.frs.commonservice.entity.EmbeddingSubjectProjection;
 import com.exadel.frs.commonservice.entity.Img;
 import com.exadel.frs.commonservice.repository.EmbeddingRepository;
 import com.exadel.frs.commonservice.repository.ImgRepository;
 import com.exadel.frs.core.trainservice.system.global.Constants;
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -31,8 +33,8 @@ public class EmbeddingService {
     }
 
     @Transactional
-    public <T> T doWithEmbeddingsStream(String apiKey, Function<Stream<Embedding>, T> func) {
-        try (Stream<Embedding> stream = embeddingRepository.findBySubjectApiKey(apiKey)) {
+    public <T> T doWithEmbeddingSubjectProjectionStream(String apiKey, Function<Stream<EmbeddingSubjectProjection>, T> func) {
+        try (val stream = embeddingRepository.findEmbeddingSubjectProjectionBySubjectApiKey(apiKey)) {
             return func.apply(stream);
         }
     }

@@ -38,7 +38,7 @@ public class EmbeddingCacheProvider {
         var result = cache.getIfPresent(apiKey);
 
         if (result == null) {
-            result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
+            result = embeddingService.doWithEmbeddingSubjectProjectionStream(apiKey, EmbeddingCollection::from);
 
             cache.put(apiKey, result);
 
@@ -63,7 +63,7 @@ public class EmbeddingCacheProvider {
 
 
     public void receivePutOnCache(String apiKey) {
-        var result = embeddingService.doWithEmbeddingsStream(apiKey, EmbeddingCollection::from);
+        var result = embeddingService.doWithEmbeddingSubjectProjectionStream(apiKey, EmbeddingCollection::from);
         cache.put(apiKey, result);
     }
 
