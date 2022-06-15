@@ -1,8 +1,7 @@
 package com.exadel.frs.commonservice.entity;
 
-import lombok.Value;
-
 import java.util.UUID;
+import lombok.Value;
 
 @Value
 public class EmbeddingProjection {
@@ -14,6 +13,13 @@ public class EmbeddingProjection {
         return new EmbeddingProjection(
                 embedding.getId(),
                 embedding.getSubject().getSubjectName()
+        );
+    }
+
+    public static EmbeddingProjection from(EnhancedEmbeddingProjection projection) {
+        return new EmbeddingProjection(
+                projection.getEmbeddingId(),
+                projection.getSubjectName()
         );
     }
 

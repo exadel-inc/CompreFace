@@ -2,10 +2,11 @@ package com.exadel.frs.core.trainservice.cache;
 
 import com.exadel.frs.commonservice.entity.Embedding;
 import com.exadel.frs.commonservice.entity.EmbeddingProjection;
-import com.exadel.frs.commonservice.entity.EmbeddingSubjectProjection;
+import com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection;
 import com.exadel.frs.commonservice.exception.IncorrectImageIdException;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.val;
@@ -25,14 +26,13 @@ public class EmbeddingCollection {
     private final BiMap<EmbeddingProjection, Integer> projection2Index;
     private INDArray embeddings;
 
-    public static EmbeddingCollection from(final Stream<EmbeddingSubjectProjection> projectionStream) {
+    public static EmbeddingCollection from(final Stream<EnhancedEmbeddingProjection> stream) {
         val rawEmbeddings = new LinkedList<double[]>();
         val projections2Index = new HashMap<EmbeddingProjection, Integer>();
         val index = new AtomicInteger(); // just to bypass 'final' variables restriction inside lambdas
 
-        projectionStream.forEach(projection -> {
-            val embeddingProjection = new EmbeddingProjection(projection.getEmbeddingId(), projection.getSubjectName());
-            projections2Index.put(embeddingProjection, index.getAndIncrement());
+        stream.forEach(projection -> {
+            projections2Index.put(EmbeddingProjection.from(projection), index.getAndIncrement());
             rawEmbeddings.add(projection.getEmbeddingData());
         });
 

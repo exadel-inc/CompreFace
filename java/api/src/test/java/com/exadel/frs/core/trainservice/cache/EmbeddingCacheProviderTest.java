@@ -58,7 +58,7 @@ class EmbeddingCacheProviderTest {
                 makeEmbedding("C", API_KEY)
         };
 
-        when(embeddingService.doWithEmbeddingSubjectProjectionStream(eq(API_KEY), any()))
+        when(embeddingService.doWithEnhancedEmbeddingProjectionStream(eq(API_KEY), any()))
                 .thenAnswer(invocation -> {
                     var function = (Function<Stream<Embedding>, ?>) invocation.getArgument(1);
                     return function.apply(Stream.of(embeddings));

@@ -4,9 +4,9 @@ import java.util.UUID;
 import lombok.Value;
 
 @Value
-public class EmbeddingSubjectProjection {
+public class EnhancedEmbeddingProjection {
 
     UUID embeddingId;
-    double[] embeddingData;
+    double[] embeddingData; // embedding column of embedding table
     String subjectName;
 }
