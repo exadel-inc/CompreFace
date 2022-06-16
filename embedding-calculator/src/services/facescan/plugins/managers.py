@@ -92,5 +92,12 @@ class PluginManager:
             if isinstance(plugin, plugin_class):
                 return plugin
 
+    def make_extra_imports(self):
+        for plugin_name in self.get_plugins_names():
+            module_name = f'{__package__}.{plugin_name.rsplit(".", 1)[0]}'
+            plugin_file_name = plugin_name.split('.')[-2]
+            plugin_file = import_module(f'{module_name}.{plugin_file_name}')
+            if 'make_extra_imports' in dir(plugin_file):
+                plugin_file.make_extra_imports()
 
 plugin_manager = PluginManager()

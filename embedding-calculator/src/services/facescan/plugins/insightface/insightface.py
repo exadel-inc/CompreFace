@@ -17,12 +17,7 @@ import functools
 from typing import List, Tuple
 import attr
 import numpy as np
-import mxnet as mx
 from cached_property import cached_property
-from insightface.app import FaceAnalysis
-from insightface.model_zoo import (model_store, face_detection,
-                                   face_recognition, face_genderage)
-from insightface.utils import face_align
 
 from src.constants import ENV
 from src.services.dto.bounding_box import BoundingBoxDTO
@@ -37,6 +32,26 @@ from src.services.imgtools.types import Array3D
 logger = logging.getLogger(__name__)
 
 
+def make_extra_imports():
+    global mx, FaceAnalysis, model_store, face_detection, face_recognition, face_genderage, face_align, DetectionOnlyFaceAnalysis
+    
+    import mxnet as mx
+
+    from insightface.app import FaceAnalysis
+    from insightface.model_zoo import (model_store, face_detection,
+                                    face_recognition, face_genderage)
+    from insightface.utils import face_align
+
+    insight_helpers.make_extra_imports()
+
+    class DetectionOnlyFaceAnalysis(FaceAnalysis):
+        rec_model = None
+        ga_model = None
+
+        def __init__(self, file):
+            self.det_model = face_detection.FaceDetector(file, 'net3')
+
+
 class InsightFaceMixin:
     _CTX_ID = ENV.GPU_IDX
     _NMS = 0.4
@@ -46,14 +61,6 @@ class InsightFaceMixin:
             raise exceptions.ModelImportException(
                 f'Model {ml_model.name} does not exists')
         return model_store.find_params_file(ml_model.path)
-
-
-class DetectionOnlyFaceAnalysis(FaceAnalysis):
-    rec_model = None
-    ga_model = None
-
-    def __init__(self, file):
-        self.det_model = face_detection.FaceDetector(file, 'net3')
 
 
 class FaceDetector(InsightFaceMixin, mixins.FaceDetectorMixin, base.BasePlugin):

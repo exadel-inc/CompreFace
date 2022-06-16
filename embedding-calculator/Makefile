@@ -58,13 +58,12 @@ build-images-cpu-tf:
 
 build-images-cpu-mxnet:
 	docker build . -t $(IMAGE):$(VERSION)-mobilenet $(MOBILENET_BUILD_ARGS)
-	docker build . -t $(IMAGE):$(VERSION)-arcface-r100 $(ARCFACE_r100_BUILD_ARGS)
 
 build-images-2d106:
 	docker build . -t $(IMAGE):$(VERSION)-mobilenet-2d106 $(MOBILENET_BUILD_ARGS)
 
 build-images-gpu: build-cuda
-	docker build . -t $(IMAGE):$(VERSION)-mobilenet-3xxx-builded $(MOBILENET_BUILD_ARGS) $(GPU_ARGS)
+	docker build . -t $(IMAGE):$(VERSION)-mobilenet-3xxx-builded-separate_imports $(MOBILENET_BUILD_ARGS) $(GPU_ARGS)
 
 build-images-gpu-r100: build-cuda
 	docker build . -t $(IMAGE):$(VERSION)-arcface-r100-gpu $(ARCFACE_r100_BUILD_ARGS) $(GPU_ARGS)

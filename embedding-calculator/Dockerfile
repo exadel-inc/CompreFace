@@ -34,10 +34,6 @@ ENV FACE_DETECTION_PLUGIN=$FACE_DETECTION_PLUGIN CALCULATION_PLUGIN=$CALCULATION
 COPY src src
 COPY srcext srcext
 
-COPY libcuda.so.1 /usr/lib/x86_64-linux-gnu/libcuda.so.21
-
-COPY libcuda.so.1 /usr/lib/x86_64-linux-gnu/libcuda.so.1
-
 RUN python -m src.services.facescan.plugins.setup
 
 # copy rest of the code
