@@ -6,7 +6,6 @@ import com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection;
 import com.exadel.frs.commonservice.exception.IncorrectImageIdException;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import java.util.stream.IntStream;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.val;
