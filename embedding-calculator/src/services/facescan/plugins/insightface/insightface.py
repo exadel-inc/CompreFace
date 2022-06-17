@@ -32,17 +32,13 @@ from src.services.imgtools.types import Array3D
 logger = logging.getLogger(__name__)
 
 
-def make_extra_imports():
-    global mx, FaceAnalysis, model_store, face_detection, face_recognition, face_genderage, face_align, DetectionOnlyFaceAnalysis
-    
+if ENV.RUN_MODE:
     import mxnet as mx
 
     from insightface.app import FaceAnalysis
     from insightface.model_zoo import (model_store, face_detection,
                                     face_recognition, face_genderage)
     from insightface.utils import face_align
-
-    insight_helpers.make_extra_imports()
 
     class DetectionOnlyFaceAnalysis(FaceAnalysis):
         rec_model = None

@@ -17,9 +17,10 @@ import numpy as np
 import cv2
 from skimage import transform as trans
 
+from src.constants import ENV
 
-def make_extra_imports():
-    global mx 
+
+if ENV.RUN_MODE:
     import mxnet as mx
 
 
