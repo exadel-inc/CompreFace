@@ -16,6 +16,7 @@
 
 import { Component, Inject, ChangeDetectionStrategy, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { TranslateService } from '@ngx-translate/core';
 import { Subscription } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 import { Role } from 'src/app/data/enums/role.enum';
@@ -46,7 +47,8 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
     public dialogRef: MatDialogRef<ManageUsersDialog>,
     public confirmDialog: MatDialog,
     private readonly cdRef: ChangeDetectorRef,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private translate:TranslateService
   ) { }
 
   ngOnInit(): void {
@@ -101,6 +103,9 @@ export class ManageUsersDialog implements OnInit, OnDestroy {
   onDelete(user: UserData): void {
     const dialog = this.confirmDialog.open(DeleteDialogComponent, {
       panelClass: 'custom-mat-dialog',
+      data:{
+        entityType: this.translate.instant( 'users.user'),
+      }
     });
 
     dialog

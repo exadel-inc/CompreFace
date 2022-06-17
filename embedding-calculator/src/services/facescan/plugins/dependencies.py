@@ -33,4 +33,4 @@ def get_mxnet() -> Tuple[str, ...]:
     if ENV.GPU_IDX > -1 and cuda_version:
         mxnet_lib += f"cu{cuda_version}"
     mxnet_lib = mxnet_lib.rstrip('-')
-    return (f'{mxnet_lib}==1.9.0',)
+    return (f'{mxnet_lib}<1.7',)

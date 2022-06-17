@@ -11,10 +11,11 @@ upstream frscore {
 }
 
 server {
+
     listen 80;
     server_name ui;
 
-    client_max_body_size 5000K;
+    client_max_body_size ${CLIENT_MAX_BODY_SIZE};
 
     location / {
         root /usr/share/nginx/html/;

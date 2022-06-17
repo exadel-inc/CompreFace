@@ -5,8 +5,9 @@ volumes:
 
 services:
   compreface-postgres-db:
-    image: postgres:11.5
+    image: ${registry}compreface-postgres-db:${POSTGRES_VERSION}
     container_name: "compreface-postgres-db"
+    build: ../db
     ports:
       - "6432:5432"
     environment:
@@ -37,6 +38,8 @@ services:
       - EMAIL_FROM=${email_from}
       - EMAIL_PASSWORD=${email_password}
       - ADMIN_JAVA_OPTS=${compreface_admin_java_options}
+      - MAX_FILE_SIZE=${max_file_size}
+      - MAX_REQUEST_SIZE=${max_request_size}B
     depends_on:
       - compreface-postgres-db
       - compreface-api
@@ -62,6 +65,8 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - API_JAVA_OPTS=${compreface_api_java_options}
       - SAVE_IMAGES_TO_DB=${save_images_to_db}
+      - MAX_FILE_SIZE=${max_file_size}
+      - MAX_REQUEST_SIZE=${max_request_size}B
 
   compreface-fe:
     image: ${registry}compreface-fe:${FE_VERSION}
@@ -74,6 +79,8 @@ services:
     depends_on:
       - compreface-api
       - compreface-admin
+    environment:
+      - CLIENT_MAX_BODY_SIZE=${max_request_size}
 
   compreface-core:
     image: ${registry}compreface-core:${CORE_VERSION}

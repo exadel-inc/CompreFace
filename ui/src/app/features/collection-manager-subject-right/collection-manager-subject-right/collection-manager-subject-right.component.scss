@@ -20,6 +20,21 @@
   height: 98%;
   padding-right: 1.5rem;
   overflow-y: scroll;
+
+  &--header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid $light-gray;
+    margin-bottom: 1.5rem;
+    color: $medium-gray;
+    .title {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .count {
+      font-size: 20px;
+    }
+  }
 }
 .spinner {
   display: flex;

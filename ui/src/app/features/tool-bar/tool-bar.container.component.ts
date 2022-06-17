@@ -19,6 +19,7 @@ import { Observable } from 'rxjs';
 import { ToolBarFacade } from './tool-bar.facade';
 import { ChangePassword } from '../../data/interfaces/change-password';
 import { EditUserInfo } from '../../data/interfaces/edit-user-info';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-tool-bar-container',
@@ -46,7 +47,7 @@ export class ToolBarContainerComponent implements OnInit {
     this.userAvatarInfo$ = this.toolBarFacade.userAvatarInfo$;
     this.userFirstName$ = this.toolBarFacade.userFirstName$;
     this.userLastName$ = this.toolBarFacade.userLastName$;
-    this.isUserInfoAvailable$ = this.toolBarFacade.isUserInfoAvailable$;
+    this.isUserInfoAvailable$ = this.toolBarFacade.isUserInfoAvailable$.pipe(map(id => !!id));
   }
 
   goSignUp() {

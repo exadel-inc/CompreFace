@@ -16,6 +16,7 @@
 
 @import './colors.scss';
 @import './mixins.scss';
+@import './forms.scss';
 
 .container {
   position: relative;
@@ -44,16 +45,6 @@
       &::placeholder {
         color: $gray;
       }
-    }
-
-    &--btn {
-      cursor: pointer;
-      margin-top: 10px;
-      padding: 0.5rem 0;
-      background: gray;
-      border-radius: 8px;
-      color: white;
-      border: none;
     }
   }
 
@@ -141,21 +132,20 @@
     }
   }
 
-  &__btn {
-    cursor: pointer;
-    padding: 0.7rem 2.5rem;
-    color: #787878;
-    border: 2px solid #e0e0e0;
-    border-radius: 10px;
+  .add--btn {
+    @include submit-btn;
+    font-size: 16px;
     font-weight: bold;
+    padding: 0.8rem 4rem;
   }
+
   .button-cross {
     position: absolute;
-    top: -1.5rem;
-    right: 0rem;
-  
+    top: -2.5rem;
+    right: -1rem;
+
     .mat-icon {
-      @include sm-icon-size(16px)
+      @include sm-icon-size(16px);
     }
   }
 }

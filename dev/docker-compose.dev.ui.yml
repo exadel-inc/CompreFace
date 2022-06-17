@@ -5,3 +5,5 @@ services:
     build:
       context: ../ui
       dockerfile: docker-dev/Dockerfile
+    environment:
+      - CLIENT_MAX_BODY_SIZE=${max_request_size}

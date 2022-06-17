@@ -15,13 +15,11 @@
   -->
 
 <div class="login-form">
+  <p class="login-form--header">Compreface</p>
   <div class="login-form--wrapper container">
     <app-spinner *ngIf="isPending$ | async; else loginContent"></app-spinner>
     <ng-template #loginContent>
       <app-login-form></app-login-form>
-      <div class="build-version">
-        <span class="mat-caption">{{ 'applications.build' | translate }} {{ env.buildNumber }}</span>
-      </div>
       <div class="demo-btn-wrapper" *ngIf="isDemoPageAvailable$ | async">
         <button class="demo-btn" mat-stroked-button color="primary" [routerLink]="[routes.Demo]">{{ 'demo.link' | translate }}</button>
       </div>

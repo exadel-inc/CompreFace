@@ -33,7 +33,7 @@ export class CollectionManagerSubjectLeftComponent {
 
   @Output() deleteSubject = new EventEmitter<string>();
   @Output() editSubject = new EventEmitter<string>();
-  @Output() addSubject = new EventEmitter<void>();
+  @Output() addSubject = new EventEmitter<string>();
   @Output() selectedSubject = new EventEmitter<string>();
   @Output() initApiKey = new EventEmitter<string>();
 

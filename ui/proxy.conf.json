@@ -10,5 +10,11 @@
     "secure": false,
     "logLevel": "debug",
     "changeOrigin": true
+  },
+  "/core/*": {
+    "target": "http://localhost:8000",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true
   }
 }

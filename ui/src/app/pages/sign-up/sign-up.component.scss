@@ -17,9 +17,17 @@
 @import 'mixins.scss';
 @import 'forms.scss';
 @import 'media.scss';
+@import 'colors.scss';
 
 .sign-up-form {
   @include wrapper-center();
+
+  &--header {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 2rem;
+    color: $medium-gray;
+  }
 
   .container {
     padding: 0;
@@ -30,9 +38,5 @@
 
   &--wrapper {
     @include form-wrapper();
-
-    .build-version {
-      margin: 16px 0;
-    }
   }
 }

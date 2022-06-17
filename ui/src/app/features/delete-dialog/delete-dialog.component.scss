@@ -13,15 +13,30 @@
  * or implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
+ @import './mixins.scss';
 
-.actions {
-  margin-top: 20px;
+.delete-container{
+  position: relative;
+  .actions {
+    margin-top: 20px;
+  
+    .delete-btn {
+      padding: 0.5rem 2.5rem;
+      border-radius: 1rem;
+      border: 2px solid grey;
+      background: rgb(195, 195, 195);
+      margin-right: 30px;
+    }
+  }
 
-  .delete-btn {
-    padding: 0.5rem 2.5rem;
-    border-radius: 1rem;
-    border: 2px solid grey;
-    background: rgb(195, 195, 195);
-    margin-right: 30px;
+  
+  .button-cross {
+    position: absolute;
+    top: -1rem;
+    right: -0.6rem;
+  
+    .mat-icon {
+      @include sm-icon-size(16px)
+    }
   }
 }

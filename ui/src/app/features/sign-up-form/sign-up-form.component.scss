@@ -14,40 +14,21 @@
  * permissions and limitations under the License.
  */
 @import 'forms.scss';
-@import 'media.scss';
+@import 'colors.scss';
 
 .sign-up-card {
-  .desktop-screen {
-    display: block;
-  }
-  .mobile-screen {
-    display: none;
-  }
+  @include login-card($medium-gray, $lighter-gray);
+}
 
-  @include form-card();
-
-  .mat-input-wrapper {
-    display: flex;
-    justify-content: space-between;
-  }
-  @include mobile-portrait {
-    margin-top: 150px;
-    flex-direction: column;
-
-    .mat-input-wrapper {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .desktop-screen {
-      display: none;
-    }
-    .mobile-screen {
-      height: 150px;
-      transform: scale(1.3);
-      object-fit: cover;
-      overflow: hidden;
-      display: block;
-    }
-  }
+.form-field {
+  @include form-field($light-gray, $lighter-gray);
+}
+.btn {
+  @include submit-btn;
+  width: 100%;
+  margin: 1.5rem 0 1rem;
+  padding: 5px;
+}
+.link {
+  @include login-link($medium-gray);
 }

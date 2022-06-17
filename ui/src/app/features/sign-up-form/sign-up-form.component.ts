@@ -27,6 +27,7 @@ import { resetErrorMessage, signUp } from '../../store/auth/action';
 import { selectLoadingState } from '../../store/auth/selectors';
 import { selectDemoPageAvailability } from '../../store/demo/selectors';
 import { loadDemoStatus } from '../../store/demo/action';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-sign-up-form',
@@ -42,6 +43,7 @@ export class SignUpFormComponent implements OnInit, OnDestroy {
   routes = Routes;
   stateSubscription: Subscription;
   isFirstRegistration: boolean;
+  env = environment;
 
   passwordMatchValidator: ValidatorFn = (formGroup: FormGroup): ValidationErrors | null => {
     if (formGroup.get('password').value === formGroup.get('confirmPassword').value) {

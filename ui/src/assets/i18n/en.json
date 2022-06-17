@@ -14,7 +14,8 @@
       "rename": "Rename",
       "edit": "Edit",
       "delete": "Delete",
-      "ok": "Ok"
+      "ok": "Ok",
+      "images": "images"
     },
     "name": "Name",
     "email": "Email",
@@ -23,14 +24,16 @@
     "unknown_error": "Sorry, something went wrong"
   },
   "login": {
-    "title": "Login",
-    "email": "Email",
+    "email": "E-mail",
+    "email_placeholder": "Enter E-mail",
+    "password_placeholder": "Enter Password",
     "password": "Password",
     "no_account": "Do not have an account?",
     "sign_up": "Sign Up",
+    "create_account": "Create an account",
     "email_hint": "Email should have correct format",
     "password_hint": "Password is required",
-    "login": "Login"
+    "login": "Log In"
   },
   "registration": {
     "title": "Sign Up",
@@ -48,16 +51,21 @@
     "have_account": "Already have an account?",
     "sign_up": "Sign Up",
     "statistics": "Allow to send anonymous statistics for product improvement",
-    "more_info": "More info"
+    "more_info": "More info",
+    "name_placeholder": "Enter Name",
+    "password_placeholder": "Enter Password",
+    "confirm_password_placeholder": "Confirm Password"
   },
   "change_password": {
     "old_password": "Old password",
-    "new_password": "New Password"
+    "new_password": "New Password",
+    "enter_password": "Enter Password"
   },
   "toolbar": {
     "logout": "Logout",
     "change_password": "Change password",
     "user_info": "Change profile",
+    "user_info_change": "Change Profile Name",
     "user_avatar_info": "User avatar",
     "logo": "CompreFace logo",
     "signup": "Sign Up"
@@ -263,12 +271,12 @@
       "service_name": "Service name",
       "service_type": "What kind of service is it?",
       "create_btn": "Create Service",
-      "recognition":"Recognition",
+      "recognition": "Recognition",
       "detection": "Detection",
-      "verification":"Verification",
-      "recognition_type":"Face recognition service is used for face identification. You first need to upload known faces to the faces collection and then recognize unknown faces among them.",
-      "detection_type":"Face detection service is used to detect all faces in the image. It doesn’t recognize faces, just finds them on the image.",
-      "verification_type":"Face verification service is used to check if this person is the correct one. The service compares two faces you send to the rest endpoint and returns their similarity."
+      "verification": "Verification",
+      "recognition_type": "Face recognition service is used for face identification. You first need to upload known faces to the faces collection and then recognize unknown faces among them.",
+      "detection_type": "Face detection service is used to detect all faces in the image. It doesn’t recognize faces, just finds them on the image.",
+      "verification_type": "Face verification service is used to check if this person is the correct one. The service compares two faces you send to the rest endpoint and returns their similarity."
     }
   },
   "application_user_list": {

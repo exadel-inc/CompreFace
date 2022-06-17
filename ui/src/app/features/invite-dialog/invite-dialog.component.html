@@ -19,11 +19,11 @@
     <h1 mat-dialog-title>{{ 'common.capital.add' | translate }} {{ 'users.user' | translate }}</h1>
   </div>
   <form [formGroup]="form" mat-dialog-content class="dialog__content">
-    <div class="dialog__content--form_field">
+    <div class="form-field">
       <label>{{ 'common.email' | translate }}</label>
       <input matInput name="email" formControlName="userEmail" [matAutocomplete]="auto" placeholder="{{ 'common.email' | translate }}" />
     </div>
-    <div class="dialog__content--form_field">
+    <div class="form-field">
       <label>{{ 'common.type' | translate }}</label>
       <mat-select formControlName="role">
         <mat-option *ngFor="let role of availableRoles" [value]="role">{{ role }}</mat-option>
@@ -34,8 +34,8 @@
       <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option">{{ option }}</mat-option>
     </mat-autocomplete>
   </form>
-  <div mat-dialog-actions class="dialog__actions">
-    <button mat-flat-button [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
+  <div class="actions">
+    <button class="add" [disabled]="!form.valid" (click)="onInviteClick()">{{ 'common.capital.add' | translate }}</button>
   </div>
   <button class="button-cross" mat-icon-button (click)="onCancelClick()">
     <mat-icon svgIcon="cross_new" inline="true"></mat-icon>

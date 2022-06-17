@@ -16,16 +16,19 @@
 
 @import 'mixins.scss';
 @import 'forms.scss';
+@import 'colors.scss';
 
 .login-form {
   @include wrapper-center();
 
+  &--header {
+    font-size: 1.3rem;
+    font-weight: bold;
+    margin: 3rem;
+    color: $medium-gray;
+  }
   &--wrapper {
     @include form-wrapper();
-
-    .build-version {
-      margin: 16px 0;
-    }
 
     .demo-btn-wrapper {
       padding: 0 $padding-RL;
