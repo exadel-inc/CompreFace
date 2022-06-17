@@ -18,10 +18,14 @@ import org.springframework.data.repository.query.Param;
 public interface EmbeddingRepository extends JpaRepository<Embedding, UUID> {
 
     // Note: consumer should consume in transaction
-    @Query("select new com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection(e.id, e.embedding, s.subjectName) " +
-            "from Embedding e " +
-            "left join e.subject s " +
-            "where s.apiKey = :apiKey")
+    @Query("select " +
+            " new com.exadel.frs.commonservice.entity.EnhancedEmbeddingProjection(e.id, e.embedding, s.subjectName)" +
+            " from " +
+            "   Embedding e " +
+            " left join " +
+            "   e.subject s " +
+            " where " +
+            "   s.apiKey = :apiKey")
     Stream<EnhancedEmbeddingProjection> findBySubjectApiKey(@Param("apiKey") String apiKey);
 
     @EntityGraph("embedding-with-subject")
