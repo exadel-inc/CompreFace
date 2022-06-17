@@ -92,4 +92,5 @@ class PluginManager:
             if isinstance(plugin, plugin_class):
                 return plugin
 
+
 plugin_manager = PluginManager()
