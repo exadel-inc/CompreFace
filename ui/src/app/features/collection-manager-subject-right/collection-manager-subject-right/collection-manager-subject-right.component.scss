@@ -20,10 +20,14 @@
   height: 98%;
   padding-right: 1.5rem;
   overflow-y: scroll;
+  position: relative;
 
   &--header {
-    display: flex;
-    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: $light-bg;
+
     border-bottom: 1px solid $light-gray;
     margin-bottom: 1.5rem;
     color: $medium-gray;
@@ -32,6 +36,7 @@
       font-weight: bold;
     }
     .count {
+      float: right;
       font-size: 20px;
     }
   }
@@ -42,34 +47,6 @@
   justify-content: center;
   height: 100%;
 }
-
-.profile {
-  margin-bottom: 2rem;
-
-  &--header {
-    &_profile {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      .name {
-        @include not-break-string();
-        font-weight: 600;
-        font-size: 1.4rem;
-      }
-
-      .buttons {
-        display: flex;
-      }
-    }
-
-    &_examples {
-      font-size: 0.9rem;
-      color: $light-gray;
-    }
-  }
-}
-
 .control-button {
   color: rgba(34, 34, 34, 0.84);
 }

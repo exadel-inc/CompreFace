@@ -81,27 +81,25 @@
     padding: 0;
 
     &_user_list {
+      display: flex;
+      align-items: center;
       cursor: pointer;
       border: none;
       background: none;
     }
 
-    @include mobile {
-      margin: 0;
-    }
-
     button {
-      padding: 10px 8px;
+      background: $dark-bg;
+      padding: 1rem 2rem;
+      border-radius: 7px;
+      box-shadow: inset 1px 1px 1px 1px white, inset 1px 1px 1px 1px white;
+      border: none;
+      color: white;
       line-height: 10px;
-    }
 
-    .mat-icon {
-      @include sm-icon-size();
-      margin-right: 5px;
-    }
-
-    &_text {
-      color: $primary;
+      span {
+        margin-left: 10px;
+      }
     }
   }
 }

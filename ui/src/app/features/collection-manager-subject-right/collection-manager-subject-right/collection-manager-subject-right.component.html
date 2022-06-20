@@ -18,9 +18,9 @@
     <ng-container *ngIf="subject; else emptySubject">
       <div class="collection-right-container--header">
         <span class="title" *ngIf="defaultSubject">{{ defaultSubject }}</span>
-        <span class="count"
-          ><b>{{ totalElements }}</b> {{ 'common.capital.images' | translate }}</span
-        >
+        <span class="count">
+          <b>{{ totalElements }}</b> {{ 'common.capital.images' | translate }}
+        </span>
       </div>
       <div class="drag-and-drop-container">
         <app-drag-n-drop

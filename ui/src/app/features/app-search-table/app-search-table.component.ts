@@ -15,7 +15,6 @@
  */
 
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
-import { Application } from 'src/app/data/interfaces/application';
 
 @Component({
   selector: 'app-search-table',

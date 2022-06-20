@@ -30,4 +30,8 @@ export enum Icons {
   Trash = 'trash',
   Upload = 'upload',
   Warning = 'warning',
+  User = 'user-icon',
+  Play = 'play-icon',
+  Face = 'face-icon',
+  Settings = 'settings',
 }
